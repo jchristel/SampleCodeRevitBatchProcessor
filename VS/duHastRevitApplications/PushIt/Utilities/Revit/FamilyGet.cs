@@ -7,7 +7,7 @@ namespace duHastNet.PushIt.Utilities.Revit
     public static class FamilyGet
     {
 
-        public static List<duHastNet.PushIt.Models.RoomsRevit> GetAllSupportedFamilies(
+        public static List<duHastNet.PushIt.Models.RoomRevit> GetAllSupportedFamilies(
             Document doc,
             List<Models.RoomDataModel> roomsDataModel,
             List<string> supportedCategoryName,
@@ -64,7 +64,7 @@ namespace duHastNet.PushIt.Utilities.Revit
             }
 
             // convert family instances to revit rooms
-            List<duHastNet.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(
+            List<duHastNet.PushIt.Models.RoomRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(
                 familyInstances,
                 roomsDataModel[0],
                 AddMessage

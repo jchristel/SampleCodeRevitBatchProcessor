@@ -30,7 +30,7 @@ namespace duHastNet.PushIt.Utilities.Revit
     public static class RevitRoomObjectsConverter
     {
 
-        public static Models.RoomsRevit ConvertSingleFamilyToRevitRoom(
+        public static Models.RoomRevit ConvertSingleFamilyToRevitRoom(
             FamilyInstance familyInstance,
             Models.RoomDataModel sampleModelRoom,
             Dictionary<string, ElementId> sharedParameterIdsByGUIDs
@@ -91,7 +91,7 @@ namespace duHastNet.PushIt.Utilities.Revit
             var designSetAndOptionData = duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionsUtils.GetDesignSetOptionInfo(familyInstance.Document, familyInstance);
 
             // create a new revit room
-            Models.RoomsRevit revitRoom = new Models.RoomsRevit(
+            Models.RoomRevit revitRoom = new Models.RoomRevit(
                 id: IdProperty,
                 properties: properties,
                 designSet: designSetAndOptionData[duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.DESIGN_SET_NAME].ToString(),
@@ -101,13 +101,13 @@ namespace duHastNet.PushIt.Utilities.Revit
 
             return revitRoom;
         }
-        public static List<duHastNet.PushIt.Models.RoomsRevit> ConvertFamiliesToRevitRooms(
+        public static List<duHastNet.PushIt.Models.RoomRevit> ConvertFamiliesToRevitRooms(
             List<FamilyInstance> familyInstances,
             Models.RoomDataModel sampleModelRoom,
             Action<string, Utils.WPF.Stores.MessageTypes> AddMessage)
         {
             // create a list of revit rooms
-            List<Models.RoomsRevit> revitRooms = new List<duHastNet.PushIt.Models.RoomsRevit>();
+            List<Models.RoomRevit> revitRooms = new List<duHastNet.PushIt.Models.RoomRevit>();
 
             // get shared parameter ids by GUID
             Dictionary<string, ElementId> sharedParameterIdsByGUIDs = duHastNet.RevitUtils.Parameters.SharedParaUtils.GetSharedParameterIdsByGUID(familyInstances[0].Document);
@@ -117,7 +117,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                 try
                 {
                     // create a new revit room
-                    Models.RoomsRevit revitRoom = ConvertSingleFamilyToRevitRoom(familyInstance, sampleModelRoom, sharedParameterIdsByGUIDs);
+                    Models.RoomRevit revitRoom = ConvertSingleFamilyToRevitRoom(familyInstance, sampleModelRoom, sharedParameterIdsByGUIDs);
 
                     // ignore if revit room is null
                     if (revitRoom == null)

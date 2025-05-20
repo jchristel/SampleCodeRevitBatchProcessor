@@ -39,7 +39,7 @@ namespace duHastNet.PushIt.RevitActions
         /// <param name="revitRooms">push it mock room intances</param>
         /// <param name="doc">Revit document</param>
         /// <returns></returns>
-        public Dictionary<string, (RoomDataModel, List<FamilyInstance>)> GetFamilyInstancesWithIdInDataModel(List<Models.RoomDataModel> roomsDataModel, List<duHastNet.PushIt.Models.RoomsRevit> revitRooms, Document doc)
+        public Dictionary<string, (RoomDataModel, List<FamilyInstance>)> GetFamilyInstancesWithIdInDataModel(List<Models.RoomDataModel> roomsDataModel, List<duHastNet.PushIt.Models.RoomRevit> revitRooms, Document doc)
         {
             // build a dictioanry of family instances that contain valid data ( valid data is a family instance where the room id has a match in the rooms data model)
             // the dictionary key is the room id and the value is a tuple of the room data model and a list of revit family instances
@@ -216,7 +216,7 @@ namespace duHastNet.PushIt.RevitActions
             }
 
             // get the revit rooms
-            List<duHastNet.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
+            List<duHastNet.PushIt.Models.RoomRevit> revitRooms = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
                 doc: doc,
                 roomsDataModel: roomsDataModel,
                 supportedCategoryName: RevitModel.Settings.SupportedCategories,

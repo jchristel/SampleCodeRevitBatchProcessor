@@ -34,7 +34,7 @@ namespace duHastNet.PushIt.RevitActions
         public ViewModels.RoomsSelectionViewModel RoomsSelectionViewModel => _roomsSelectionViewModel;
 
         //current set or push it mock rooms
-        private List<RoomsRevit> _roomsData;
+        private List<RoomRevit> _roomsData;
 
         public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
         {
@@ -148,7 +148,7 @@ namespace duHastNet.PushIt.RevitActions
         public RefreshRoomDataWithRevitData(
             RevitDataModel revitModel, 
             ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
-            List<Models.RoomsRevit> revitMockRooms = null)
+            List<Models.RoomRevit> revitMockRooms = null)
         {
             RevitModel = revitModel;
             _roomsSelectionViewModel = roomsSelectionViewModel;

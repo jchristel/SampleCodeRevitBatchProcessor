@@ -21,6 +21,8 @@
 //
 //
 
+using Autodesk.Revit.DB.Architecture;
+using Autodesk.Revit.DB.Electrical;
 using duHastNet.FileIOWrapper;
 using duHastNet.PushIt.RevitActions;
 using duHastNet.PushIt.Utilities;
@@ -29,6 +31,7 @@ using Revit.Async;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 
 namespace duHastNet.PushIt.Commands
 {
@@ -37,8 +40,6 @@ namespace duHastNet.PushIt.Commands
         private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
         //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitDataModel _revitDataModel;
-
-
 
         public override bool CanExecute(object parameter)
         {
@@ -49,7 +50,6 @@ namespace duHastNet.PushIt.Commands
             }
             return _roomsSelectionViewModel.DataFilePathValid && base.CanExecute(parameter);
         }
-
 
         public override async void Execute(object parameter)
         {
@@ -224,6 +224,44 @@ namespace duHastNet.PushIt.Commands
 
 
         /// <summary>
+        /// builds a list of property values from a Room data model room.
+        /// order of properties is defined by properties list past in.
+        /// </summary>
+        /// <param name="room"></param>
+        /// <param name="properties"></param>
+        /// <returns></returns>
+        private List<string> BuildDataRowFromRoom(
+            Models.RoomBase room,
+            List<Models.RoomDataProperty> properties,
+            int countPushed = 0,
+            int countSplit = 0)
+        {
+            // get the property values for the room
+            List<string> dataRow = new List<string>();
+
+            // get the properties from the data model
+            foreach (var property in properties)
+            {
+                string propertyValue = room.GetPropertyValueByGUID(property.ParameterGUID);
+                if (propertyValue == null)
+                {
+                    dataRow.Add(string.Empty);
+                }
+                else
+                {
+                    dataRow.Add(propertyValue);
+                }
+            }
+
+            // add count and split count
+            dataRow.Add(countPushed.ToString());
+            dataRow.Add(countSplit.ToString());
+
+            return dataRow;
+        }
+
+
+        /// <summary>
         /// Build the data rows for the rooms
         /// </summary>
         /// <param name="rooms"></param>
@@ -235,58 +273,57 @@ namespace duHastNet.PushIt.Commands
         {
             //build data rows
             List<List<string>> dataRows = new List<List<string>>();
-            
+
             //loop over each room and get its report data
             foreach (Models.RoomDataModel room in rooms)
             {
-                // get the property values for the room
-                List<string> dataRow = new List<string>();
-                foreach (var property in properties)
+                
+                //build data for non pushed room (no matching room or split room in revit )
+                if (room.MatchingRevitRooms.Count == 0 &&
+                    room.MatchingSplitRevitRooms.Count == 0)
                 {
-                    string propertyValue = room.GetPropertyValueByName(property.Name);
-                    if (propertyValue == null)
-                    {
-                        dataRow.Add(string.Empty);
-                    }
-                    else
-                    {
-                        dataRow.Add(propertyValue);
-                    }
+                    // get the property values for the room
+                    List<string> dataRow = BuildDataRowFromRoom(
+                        room,
+                        properties);
+
+                    //add to overall data
+                    dataRows.Add(dataRow);
                 }
+                else { 
+                    // need to check how many matching rooms there are and add 1 entry for each of them
+                    for (int i = 0; i < room.MatchingRevitRooms.Count; i++)
+                    {
+                        // get the property values for the room
+                        List<string> dataRow = BuildDataRowFromRoom(
+                            room: room.MatchingRevitRooms[i],
+                            properties: properties,
+                            countPushed:1,
+                            countSplit:0
+                        );
 
-                // need to check how many matching rooms there are and add 1 entry for each of them
-                for (int i = 0; i < room.MatchingRevitRooms.Count; i++)
-                {
-                    //duplicate the data row list
-                    List<string> copyData = new List<string>(dataRow);
+                        //add to overall data
+                        dataRows.Add(dataRow);
+                    }
 
-                    // add 1 for count and 0 for split count
-                    copyData.Add(1.ToString());
-                    copyData.Add(0.ToString());
+                    //loop over any split rooms:
+                    for (int i = 0; i < room.MatchingSplitRevitRooms.Count; i++)
+                    {
+                        // get the property values for the room
+                        List<string> dataRow = BuildDataRowFromRoom(
+                            room: room.MatchingSplitRevitRooms[i],
+                            properties: properties,
+                            countPushed:0,
+                            countSplit:1
+                        );
 
-                    // add the new list to the return value
-                    dataRows.Add(copyData);
-                }
-
-                //loop over any split rooms:
-                for (int i = 0; i < room.MatchingSplitRevitRooms.Count; i++)
-                {
-                    //duplicate the data row list
-                    List<string> copySplitData = new List<string>(dataRow);
-                    
-                    // add 0 for count and 1 for split count
-                    copySplitData.Add(0.ToString());
-                    copySplitData.Add(1.ToString());
-
-                    //update the id value ( first entry in the list) with the value from the split room
-                    copySplitData[0] = room.MatchingSplitRevitRooms[i].Id.Value;
-                    // add the new list to the return value
-                    dataRows.Add(copySplitData);
+                        //add to overall data
+                        dataRows.Add(dataRow);
+                    }
                 }
             }
             return dataRows;
         }
-
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {

@@ -100,12 +100,12 @@ namespace duHastNet.PushIt.Models
             );
         }
 
-        public void AddPlacedRevitRoom(string roomId, Models.RoomsRevit revitRoom)
+        public void AddPlacedRevitRoom(string roomId, Models.RoomRevit revitRoom)
         {
             _roomsContainer.AddPlacedRevitRoom(roomId, revitRoom);
         }
 
-        public void AddPlacedNewRevitRoom(string roomId, Models.RoomsRevit revitRoom)
+        public void AddPlacedNewRevitRoom(string roomId, Models.RoomRevit revitRoom)
         {
             _roomsContainer.AddPlacedNewRevitRoom(roomId, revitRoom);
         }

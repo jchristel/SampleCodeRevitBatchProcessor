@@ -67,7 +67,7 @@ namespace duHastNet.PushIt.RevitActions
             }
 
             // convert family instances to revit rooms
-            List<duHastNet.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(
+            List<duHastNet.PushIt.Models.RoomRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(
                 _pushTargets,
                 roomsDataModel[0],
                 AddMessage

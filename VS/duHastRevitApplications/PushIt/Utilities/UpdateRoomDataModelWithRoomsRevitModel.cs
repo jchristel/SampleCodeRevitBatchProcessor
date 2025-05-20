@@ -35,7 +35,7 @@ namespace duHastNet.PushIt.Utilities
         /// <param name="revitModelActiveDesignOptionName"></param>
         /// <returns></returns>
         public static bool AddRoom(
-            Models.RoomsRevit revitRoom,
+            Models.RoomRevit revitRoom,
             string revitModelActiveDesignSetName,
             string revitModelActiveDesignOptionName)
         {
@@ -73,18 +73,18 @@ namespace duHastNet.PushIt.Utilities
         /// <\summary>
         public static List<Models.RoomDataModel> UpdateRoomDataModelWithRoomsRevitModel(
             List<Models.RoomDataModel> roomsDataModel,
-            List<Models.RoomsRevit> roomsRevit,
+            List<Models.RoomRevit> roomsRevit,
             string revitModelActiveDesignSetName,
             string revitModelActiveDesignOptionName
         )
         {
             // build a dictionary of room revit id to store all rooms with the same id
-            Dictionary<string, List<Models.RoomsRevit>> roomsRevitById = new Dictionary<string, List<Models.RoomsRevit>>();
-            foreach (Models.RoomsRevit revitRoom in roomsRevit)
+            Dictionary<string, List<Models.RoomRevit>> roomsRevitById = new Dictionary<string, List<Models.RoomRevit>>();
+            foreach (Models.RoomRevit revitRoom in roomsRevit)
             {
                 if (!roomsRevitById.ContainsKey(revitRoom.Id.Value))
                 {
-                    roomsRevitById[revitRoom.Id.Value] = new List<Models.RoomsRevit>();
+                    roomsRevitById[revitRoom.Id.Value] = new List<Models.RoomRevit>();
                 }
                 roomsRevitById[revitRoom.Id.Value].Add(revitRoom);
             }
@@ -108,7 +108,7 @@ namespace duHastNet.PushIt.Utilities
                 {
                     // iterate over all rooms with the same id and check if they match the active design set and design option
                     // if they do, add them to the list of matching rooms in the data model
-                    foreach (Models.RoomsRevit revitRoom in roomsRevitById[roomDataModel.Id.Value])
+                    foreach (Models.RoomRevit revitRoom in roomsRevitById[roomDataModel.Id.Value])
                     {
                         if (AddRoom(
                             revitRoom: revitRoom,
@@ -132,7 +132,7 @@ namespace duHastNet.PushIt.Utilities
                 if (roomsRevitById.ContainsKey(splitRoomId))
                 {
                     // check if the room id exists in the revit model as a split room
-                    foreach (Models.RoomsRevit revitRoom in roomsRevitById[splitRoomId])
+                    foreach (Models.RoomRevit revitRoom in roomsRevitById[splitRoomId])
                     {
                         if (AddRoom(
                             revitRoom: revitRoom,

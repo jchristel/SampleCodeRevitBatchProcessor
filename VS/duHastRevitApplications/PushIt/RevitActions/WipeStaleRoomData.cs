@@ -34,7 +34,7 @@ namespace duHastNet.PushIt.RevitActions
         private int _wipeCounter = 0;
 
         //current set or push it mock rooms
-        private List<RoomsRevit> _roomsData;
+        private List<RoomRevit> _roomsData;
 
         public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
         {
@@ -190,7 +190,7 @@ namespace duHastNet.PushIt.RevitActions
         public WipeStaleRoomData(
             Models.RevitDataModel revitModel, 
             ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
-            List<RoomsRevit> roomsData = null)
+            List<RoomRevit> roomsData = null)
         {
             RevitModel = revitModel;
             _roomsSelectionViewModel = roomsSelectionViewModel;

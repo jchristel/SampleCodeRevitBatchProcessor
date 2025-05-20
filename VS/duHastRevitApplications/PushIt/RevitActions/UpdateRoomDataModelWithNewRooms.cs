@@ -35,8 +35,8 @@ namespace duHastNet.PushIt.RevitActions
         public ViewModels.RoomsSelectionViewModel RoomsSelectionViewModel => _roomsSelectionViewModel;
 
         //current set or push it mock rooms
-        private List<RoomsRevit> _roomsData;
-        public List<RoomsRevit> CurrentMockRoomsData { get { return _roomsData; } }
+        private List<RoomRevit> _roomsData;
+        public List<RoomRevit> CurrentMockRoomsData { get { return _roomsData; } }
 
         public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
         {
@@ -59,7 +59,7 @@ namespace duHastNet.PushIt.RevitActions
                 }
 
                 // set up a dictionary to hold the new rooms by their id...in case there are multiple rooms with the same id
-                Dictionary<string, List<duHastNet.PushIt.Models.RoomsRevit>> newRoomsInModel = new Dictionary<string, List<RoomsRevit>>();
+                Dictionary<string, List<duHastNet.PushIt.Models.RoomRevit>> newRoomsInModel = new Dictionary<string, List<RoomRevit>>();
 
                 //check which rooms are marked as new and add them to the data model
                 foreach (var room in _roomsData)
@@ -70,7 +70,7 @@ namespace duHastNet.PushIt.RevitActions
                         if (!newRoomsInModel.ContainsKey(room.Id.Value))
                         {
                             // add the room to the data model
-                            newRoomsInModel.Add(room.Id.Value, new List<RoomsRevit>());
+                            newRoomsInModel.Add(room.Id.Value, new List<RoomRevit>());
                         }
                         // add the room to the data model
                         newRoomsInModel[room.Id.Value].Add(room);
@@ -81,7 +81,7 @@ namespace duHastNet.PushIt.RevitActions
                 int countNewRooms = 0;
 
                 // loop over new rooms and add them to the data model
-                foreach (KeyValuePair<string, List<duHastNet.PushIt.Models.RoomsRevit>> kvp in newRoomsInModel)
+                foreach (KeyValuePair<string, List<duHastNet.PushIt.Models.RoomRevit>> kvp in newRoomsInModel)
                 {
                     // create a new room data model from the first room in the list
                     Models.RoomDataModel newRoom = Utilities.ConvertRevitRoomObjectToDataModelRoomObject.ConvertRevitRoomToDataModelRoom(

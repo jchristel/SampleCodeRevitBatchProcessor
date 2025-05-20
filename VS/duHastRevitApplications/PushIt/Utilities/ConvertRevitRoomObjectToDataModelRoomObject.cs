@@ -4,7 +4,7 @@
     {
 
         public static Models.RoomDataModel ConvertRevitRoomToDataModelRoom(
-            Models.RoomsRevit revitRoom)
+            Models.RoomRevit revitRoom)
         {
             // create a new room data model object
             Models.RoomDataModel roomDataModel = new Models.RoomDataModel();

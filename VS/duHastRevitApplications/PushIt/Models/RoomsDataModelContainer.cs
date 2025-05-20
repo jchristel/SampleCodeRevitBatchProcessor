@@ -206,7 +206,7 @@ namespace duHastNet.PushIt.Models
         /// </summary>
         /// <param name="roomId"></param>
         /// <param name="revitRoom"></param>
-        public void AddPlacedRevitRoom(string roomId, Models.RoomsRevit revitRoom)
+        public void AddPlacedRevitRoom(string roomId, Models.RoomRevit revitRoom)
         {
             //get the room id without the split mode indicator
             string roomIdWithoutSplit = Utilities.PushModeUtils.GetIdWithoutSplitModeIndicator(roomId);
@@ -238,7 +238,7 @@ namespace duHastNet.PushIt.Models
         /// <summary>
         /// Adds the placed room to the list of new rooms added through the Push It UI
         /// </summary>
-        public void AddPlacedNewRevitRoom(string roomId, Models.RoomsRevit revitRoom)
+        public void AddPlacedNewRevitRoom(string roomId, Models.RoomRevit revitRoom)
         {
             bool roomFound = false;
 

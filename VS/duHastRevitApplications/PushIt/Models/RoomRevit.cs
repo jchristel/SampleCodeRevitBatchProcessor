@@ -25,7 +25,7 @@ using System.Collections.Generic;
 
 namespace duHastNet.PushIt.Models
 {
-    public class RoomsRevit
+    public class RoomRevit:RoomBase
     {
         Models.RoomDataProperty _id;
         List<Models.RoomDataProperty> _properties;
@@ -34,10 +34,6 @@ namespace duHastNet.PushIt.Models
         string _designOption;
         bool _designOptionIsPrimary;
         int _revitElementId;
-
-        public Models.RoomDataProperty Id { get => _id; set => _id = value; }
-
-        public List<Models.RoomDataProperty> Properties { get => _properties; set => _properties = value; }
 
         public string DesignSet { get => _designSet; set => _designSet = value; }
         public string DesignOption { get => _designOption; set => _designOption = value; }
@@ -63,12 +59,16 @@ namespace duHastNet.PushIt.Models
             return properties;
         }
 
-        public RoomsRevit() { }
 
-        public RoomsRevit(Models.RoomDataProperty id, List<Models.RoomDataProperty> properties, string designSet, string designOption, bool designOptionIsPrimary, int revitElementId)
+        public RoomRevit() { }
+
+        public RoomRevit(Models.RoomDataProperty id, List<Models.RoomDataProperty> properties, string designSet, string designOption, bool designOptionIsPrimary, int revitElementId)
         {
-            _id = id;
-            _properties = properties;
+            // set the id and other properties
+            Id = id;
+            Properties = properties;
+
+
             _designSet = designSet;
             _designOption = designOption;
             _designOptionIsPrimary = designOptionIsPrimary;

@@ -27,34 +27,6 @@ from duHast.Revit.ColourFillSchemes.Objects.colour_fill_storage import ColourFil
 from duHast.Revit.ColourFillSchemes.colour_fill_scheme_entry import get_entry_value_storage_type
 
 
-# csv property names for colour fill scheme
-PROPERTY_FILL_SCHEME_NAME = "Fill Scheme Name"
-PROPERTY_AREA_SCHEME_NAME = "Area Scheme Name"
-PROPERTY_PARAMETER_VALUE = "Parameter Value"
-PROPERTY_STORAGE_TYPE = "Parameter Storage Type"
-PROPERTY_FILL_PATTERN_ID = "Fill Pattern ID"
-PROPERTY_IS_IN_USE = "Is In Use"
-PROPERTY_IS_VISIBLE = "Is Visible"
-PROPERTY_COLOUR_RED = "Colour Red"
-PROPERTY_COLOUR_GREEN = "Colour Green"
-PROPERTY_COLOUR_BLUE = "Colour Blue"
-
-# CSV property index for colour fill scheme
-COLOUR_FILL_SCHEME_CSV_PROPERTY_INDEX = {
-    PROPERTY_FILL_SCHEME_NAME: 0,
-    PROPERTY_AREA_SCHEME_NAME: 1,
-    PROPERTY_PARAMETER_VALUE: 2,
-    PROPERTY_STORAGE_TYPE: 3,
-    PROPERTY_FILL_PATTERN_ID: 4,
-    PROPERTY_IS_IN_USE: 5,
-    PROPERTY_IS_VISIBLE: 6,
-    PROPERTY_COLOUR_RED: 7,
-    PROPERTY_COLOUR_GREEN: 8,
-    PROPERTY_COLOUR_BLUE: 9
-}
-
-
-
 def get_report_data_of_colour_fill_scheme(doc, colour_fill_scheme):
 
     """

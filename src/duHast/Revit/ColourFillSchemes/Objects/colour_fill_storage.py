@@ -23,7 +23,7 @@
 
 from duHast.Utilities.Objects.base import Base
 
-from duHast.Revit.ColourFillSchemes.Reporting.colour_fill_scheme_report import (
+from duHast.Revit.ColourFillSchemes.Reporting.colour_fill_scheme_defaults import (
     COLOUR_FILL_SCHEME_CSV_PROPERTY_INDEX,
     PROPERTY_FILL_SCHEME_NAME,
     PROPERTY_AREA_SCHEME_NAME,

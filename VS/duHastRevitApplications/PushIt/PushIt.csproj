@@ -146,6 +146,7 @@
   <ItemGroup>
     <Compile Include="Commands\HighlightRoomsInRevitAsyncCommand.cs" />
     <Compile Include="Commands\PushAllRoomsInRevitAsyncCommand.cs" />
+    <Compile Include="Commands\PushSelectedRoomsInRevitCommand.cs" />
     <Compile Include="Commands\PushSingleRoomInRevitAsyncCommand.cs" />
     <Compile Include="Commands\RefreshUIFromRevitModelAsyncCommand.cs" />
     <Compile Include="Commands\ReloadDataFromFileAsyncCommand.cs" />

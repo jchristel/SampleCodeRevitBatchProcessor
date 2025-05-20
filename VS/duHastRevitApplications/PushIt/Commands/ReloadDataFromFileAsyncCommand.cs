@@ -73,7 +73,7 @@ namespace duHastNet.PushIt.Commands
 
                             // Execute the action to refresh the room data with the Revit data
                             RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(
-                                revitModel: _revitDataModel, 
+                                revitModel: _revitDataModel,
                                 roomsSelectionViewModel: _roomsSelectionViewModel,
                                 revitMockRooms: actionUpdate.CurrentMockRoomsData //re-use mock room data to speed things up
                             );

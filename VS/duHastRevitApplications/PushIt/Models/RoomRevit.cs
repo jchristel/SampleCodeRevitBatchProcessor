@@ -25,7 +25,7 @@ using System.Collections.Generic;
 
 namespace duHastNet.PushIt.Models
 {
-    public class RoomRevit:RoomBase
+    public class RoomRevit : RoomBase
     {
         Models.RoomDataProperty _id;
         List<Models.RoomDataProperty> _properties;

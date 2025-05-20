@@ -21,9 +21,6 @@
 //
 //
 
-using Autodesk.Revit.DB.Architecture;
-using Autodesk.Revit.DB.Electrical;
-using duHastNet.FileIOWrapper;
 using duHastNet.PushIt.RevitActions;
 using duHastNet.PushIt.Utilities;
 using duHastNet.Utils.WPF.Stores;
@@ -31,7 +28,6 @@ using Revit.Async;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 
 namespace duHastNet.PushIt.Commands
 {
@@ -66,7 +62,7 @@ namespace duHastNet.PushIt.Commands
                         Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
                         try
                         {
-                            
+
                             //add new rooms to the data model first
                             UpdateRoomDataModelWithNewRooms actionUpdate = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(_revitDataModel, _roomsSelectionViewModel);
                             (string messageActionUpdate, Utils.WPF.Stores.MessageTypes messageActionTypeUpdate) = actionUpdate.Execute(doc);
@@ -105,7 +101,7 @@ namespace duHastNet.PushIt.Commands
                             List<List<string>> headerRows = BuildHeaderRows(properties);
 
                             var writer = new duHastNet.FileIOWrapper.WriteToColumnBasedTextFile();
-                            
+
                             //write the data to the file, start with the header rows
                             writer.WriteToTextFile(
                                 filePath: _roomsSelectionViewModel.SaveFilePath,
@@ -132,7 +128,7 @@ namespace duHastNet.PushIt.Commands
                                 filePath: _roomsSelectionViewModel.SaveFilePath,
                                 header: new List<string>(), //write empty header since this supports single line headers only
                                 data: roomData,
-                                writeType:"a"
+                                writeType: "a"
                             );
 
                             //check if any probs
@@ -187,7 +183,7 @@ namespace duHastNet.PushIt.Commands
 
 
 
-        private List<List<string>>BuildHeaderRows(List<Models.RoomDataProperty> properties)
+        private List<List<string>> BuildHeaderRows(List<Models.RoomDataProperty> properties)
         {
             //build header rows
             List<List<string>> headerRows = new List<List<string>>();
@@ -214,7 +210,7 @@ namespace duHastNet.PushIt.Commands
             headerRow2.Add(string.Empty);
             headerRow3.Add(string.Empty);
 
-            
+
             headerRows.Add(headerRow0);
             headerRows.Add(headerRow1);
             headerRows.Add(headerRow2);
@@ -277,7 +273,7 @@ namespace duHastNet.PushIt.Commands
             //loop over each room and get its report data
             foreach (Models.RoomDataModel room in rooms)
             {
-                
+
                 //build data for non pushed room (no matching room or split room in revit )
                 if (room.MatchingRevitRooms.Count == 0 &&
                     room.MatchingSplitRevitRooms.Count == 0)
@@ -290,7 +286,8 @@ namespace duHastNet.PushIt.Commands
                     //add to overall data
                     dataRows.Add(dataRow);
                 }
-                else { 
+                else
+                {
                     // need to check how many matching rooms there are and add 1 entry for each of them
                     for (int i = 0; i < room.MatchingRevitRooms.Count; i++)
                     {
@@ -298,8 +295,8 @@ namespace duHastNet.PushIt.Commands
                         List<string> dataRow = BuildDataRowFromRoom(
                             room: room.MatchingRevitRooms[i],
                             properties: properties,
-                            countPushed:1,
-                            countSplit:0
+                            countPushed: 1,
+                            countSplit: 0
                         );
 
                         //add to overall data
@@ -313,8 +310,8 @@ namespace duHastNet.PushIt.Commands
                         List<string> dataRow = BuildDataRowFromRoom(
                             room: room.MatchingSplitRevitRooms[i],
                             properties: properties,
-                            countPushed:0,
-                            countSplit:1
+                            countPushed: 0,
+                            countSplit: 1
                         );
 
                         //add to overall data

@@ -21,14 +21,14 @@
 //
 //
 
-using System;
 using Autodesk.Revit.DB;
 using duHastNet.AtTheLibrary.Models;
+using System;
 
 
 namespace duHastNet.AtTheLibrary.RevitActions
 {
-    public class LoadFamilyAction: RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
+    public class LoadFamilyAction : RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
     {
 
         private ViewModels.FamiliesSelectionViewModel _familiesSelectionViewModel;
@@ -36,12 +36,12 @@ namespace duHastNet.AtTheLibrary.RevitActions
 
         public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
         {
-            
+
             try
             {
                 //family to load
                 var fam = _familiesSelectionViewModel.SelectedFamily;
-                
+
                 // log the action
                 AddMessage($"Loading family {fam.FamilyName} and type {fam.FamilyTypeName} into Revit", Utils.WPF.Stores.MessageTypes.Log);
 
@@ -49,7 +49,7 @@ namespace duHastNet.AtTheLibrary.RevitActions
                 try
                 {
                     var familyLoader = new duHastNet.RevitUtils.Families.FamilyLoad();
-                    bool loadResult = familyLoader.LoadFamilyType(doc, fam.FamilyFilePath.Value,fam.FamilyTypeName.Value, true);
+                    bool loadResult = familyLoader.LoadFamilyType(doc, fam.FamilyFilePath.Value, fam.FamilyTypeName.Value, true);
 
                     if (familyLoader.GetErrorMessages().Count > 0)
                     {

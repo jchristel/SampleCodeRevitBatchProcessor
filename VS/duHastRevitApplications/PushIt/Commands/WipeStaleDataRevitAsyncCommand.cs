@@ -77,7 +77,7 @@ namespace duHastNet.PushIt.Commands
                                 $"{messageActionUpdate}\n{messageAction}",
                                 Utilities.MessageActionTypesUtils.CombineMessageActionType(new List<MessageTypes> { messageActionTypeUpdate, messageActionType })
                             );
-                            
+
                         }
                         catch (Exception ex)
                         {

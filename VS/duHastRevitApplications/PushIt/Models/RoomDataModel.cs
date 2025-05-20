@@ -26,7 +26,7 @@ using System.Collections.Generic;
 
 namespace duHastNet.PushIt.Models
 {
-    public class RoomDataModel:RoomBase
+    public class RoomDataModel : RoomBase
     {
         /// <summary>
         /// List of matching rooms

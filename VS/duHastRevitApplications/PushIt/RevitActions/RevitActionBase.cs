@@ -21,13 +21,9 @@
 //
 //
 
-
-using System.Collections.Generic;
-using System.Linq;
-
 namespace duHastNet.PushIt.RevitActions
 {
-    public class RevitActionBase:duHastNet.Utils.Logging.LogActionsBase
+    public class RevitActionBase : duHastNet.Utils.Logging.LogActionsBase
     {
         public Models.RevitDataModel RevitModel { get; set; }
 

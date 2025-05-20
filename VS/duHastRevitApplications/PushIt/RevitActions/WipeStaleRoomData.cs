@@ -84,14 +84,14 @@ namespace duHastNet.PushIt.RevitActions
                     return;
                 }
             }
-            
+
 
             //build a list of family instances that contain stale data ( stale data is a family instance where the room id is not in the rooms data model)
             List<FamilyInstance> staleFamilyInstances = new List<FamilyInstance>();
             foreach (var revitRoomInstance in _roomsData)
             {
                 string revitRoomInstanceId = revitRoomInstance.Id.Value;
-                
+
                 // check if the room is a split room
                 if (Utilities.PushModeUtils.IsSplitRoomMode(revitRoomInstance.Id.Value))
                 {
@@ -188,7 +188,7 @@ namespace duHastNet.PushIt.RevitActions
         }
 
         public WipeStaleRoomData(
-            Models.RevitDataModel revitModel, 
+            Models.RevitDataModel revitModel,
             ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
             List<RoomRevit> roomsData = null)
         {

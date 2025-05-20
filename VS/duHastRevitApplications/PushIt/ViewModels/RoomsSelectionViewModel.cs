@@ -237,7 +237,7 @@ namespace duHastNet.PushIt.ViewModels
             }
         }
 
-        
+
         // the currently active design set name
         public string ActiveDesignSetName
         {
@@ -397,7 +397,7 @@ namespace duHastNet.PushIt.ViewModels
             get
             {
                 var selectedRoom = SelectedRoom;
-                if (selectedRoom != null && SelectedIndex >=0)
+                if (selectedRoom != null && SelectedIndex >= 0)
                 {
                     return SelectedRoom.MatchingSplitRevitRooms.Count == 0;
                 }

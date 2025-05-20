@@ -136,7 +136,7 @@ namespace duHastNet.PushIt.Commands
             {
                 return false;
             }
-            else if(_roomsSelectionViewModel.SelectedRoom == null)
+            else if (_roomsSelectionViewModel.SelectedRoom == null)
             {
                 return false;
             }
@@ -144,7 +144,7 @@ namespace duHastNet.PushIt.Commands
             //dont allow split mode on a new room
             else if (_roomsSelectionViewModel.PushOperationMode == PushMode.Split &&
                 !_roomsSelectionViewModel.IsMatchingRevitRoomsEmpty &&
-                !Utilities.PushModeUtils.IsNewRoomMode (_roomsSelectionViewModel.SelectedRoom.Id.Value))
+                !Utilities.PushModeUtils.IsNewRoomMode(_roomsSelectionViewModel.SelectedRoom.Id.Value))
             {
                 return true;
             }

@@ -119,7 +119,7 @@ namespace duHastNet.PushIt.RevitActions
                     supportedCategoryName: supportedCategoryName,
                     AddMessage: AddMessage);
             }
-            
+
 
             //if the update failed return the rooms data model unchanged
             if (_roomsData == null || _roomsData.Count == 0)
@@ -146,7 +146,7 @@ namespace duHastNet.PushIt.RevitActions
 
 
         public RefreshRoomDataWithRevitData(
-            RevitDataModel revitModel, 
+            RevitDataModel revitModel,
             ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
             List<Models.RoomRevit> revitMockRooms = null)
         {

@@ -146,9 +146,9 @@ namespace duHastNet.PushIt.Utilities.Revit
         /// <param name="AddMessage">Function to provide user feedback</param>
         /// <returns></returns>
         public static HashSet<ElementId> CheckOutFamilyInstances(
-            Document doc, 
-            HashSet<ElementId> processElementIds, 
-            Dictionary<ElementId, string> roomIdByFamilyInstanceIdMapper, 
+            Document doc,
+            HashSet<ElementId> processElementIds,
+            Dictionary<ElementId, string> roomIdByFamilyInstanceIdMapper,
             Action<string, Utils.WPF.Stores.MessageTypes> AddMessage
             )
         {
@@ -196,8 +196,8 @@ namespace duHastNet.PushIt.Utilities.Revit
         /// <returns>True if the update was successful, false if not</returns>
         /// <exception cref="Exception"></exception>
         public static bool UpdateMultipleFamilyInstances(
-            Document doc, 
-            Dictionary<string, (duHastNet.PushIt.Models.RoomDataModel, List<FamilyInstance>)> familyData, 
+            Document doc,
+            Dictionary<string, (duHastNet.PushIt.Models.RoomDataModel, List<FamilyInstance>)> familyData,
             Action<string, Utils.WPF.Stores.MessageTypes> AddMessage)
         {
             // set up an action to run inside a Revit transaction
@@ -215,7 +215,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                 //build list of all family instance ids to check out
                 foreach (var (roomData, familyInstances) in familyData.Values)
                 {
-                    
+
                     foreach (var familyInstance in familyInstances)
                     {
                         processElementIds.Add(familyInstance.Id);
@@ -224,13 +224,14 @@ namespace duHastNet.PushIt.Utilities.Revit
                 }
 
                 // check if the document is workshared and if so attempt to check out the elements to be edited
-                if (doc.IsWorkshared){
-                    
+                if (doc.IsWorkshared)
+                {
+
                     // attempt to check out elements prior to updating them
                     processElementIds = CheckOutFamilyInstances(
-                        doc:doc,
-                         processElementIds: processElementIds, 
-                         roomIdByFamilyInstanceIdMapper: familyInstancesByRoomId, 
+                        doc: doc,
+                         processElementIds: processElementIds,
+                         roomIdByFamilyInstanceIdMapper: familyInstancesByRoomId,
                          AddMessage: AddMessage
                     );
 
@@ -258,7 +259,7 @@ namespace duHastNet.PushIt.Utilities.Revit
 
                         // update the family instance
                         bool flag_update = UpdateProperties(doc, familyInstance, roomData, duHastNet.PushIt.Utilities.PushMode.Push, AddMessage);
-                        
+
                         //log the overall success of the update
                         overallUpdateSuccess = overallUpdateSuccess && flag_update;
 

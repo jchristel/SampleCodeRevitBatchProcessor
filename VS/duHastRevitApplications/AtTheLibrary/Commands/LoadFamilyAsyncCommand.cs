@@ -31,7 +31,7 @@ using System.ComponentModel;
 
 namespace duHastNet.AtTheLibrary.Commands
 {
-    public class LoadFamilyAsyncCommand: Utils.WPF.Commands.CommandBase
+    public class LoadFamilyAsyncCommand : Utils.WPF.Commands.CommandBase
     {
 
         private readonly ViewModels.FamiliesSelectionViewModel _familiesSelectionViewModel;

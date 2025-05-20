@@ -99,10 +99,12 @@ namespace duHastNet.PushIt.Commands
             if (_roomsSelectionViewModel.IsWaitingForRevitCommandToFinish)
             {
                 return false;
-            } else if (!_roomsSelectionViewModel.IsMatchingRevitRoomsEmpty)
+            }
+            else if (!_roomsSelectionViewModel.IsMatchingRevitRoomsEmpty)
             {
                 return true;
-            }else if(!_roomsSelectionViewModel.IsMatchingSplitRoomsEmpty)
+            }
+            else if (!_roomsSelectionViewModel.IsMatchingSplitRoomsEmpty)
             {
                 return true;
             }

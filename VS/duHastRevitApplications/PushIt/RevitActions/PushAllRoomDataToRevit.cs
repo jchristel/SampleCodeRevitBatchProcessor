@@ -24,7 +24,6 @@
 using Autodesk.Revit.DB;
 using duHastNet.PushIt.Models;
 using System.Collections.Generic;
-using System.Windows.Controls;
 
 namespace duHastNet.PushIt.RevitActions
 {
@@ -167,7 +166,7 @@ namespace duHastNet.PushIt.RevitActions
 
                     //update all families in the task bucket
                     (updateFamily, updateCounter) = UpdateFamiliesInBucket(updateCounter, taskBucketFamilyInstancesCounter, updateFamilyInstances, doc);
-                    
+
                     // update the overall success
                     overallUpdateSuccess = overallUpdateSuccess && updateFamily;
 

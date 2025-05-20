@@ -37,7 +37,7 @@ namespace duHastNet.PushIt.Utilities
         /// <summary>
         /// get the header rows from the file as properties
         /// </summary>
-        public static List<RoomDataProperty> GetRoomsDataHeaderRows(string filePath, int headerRowsCount=4)
+        public static List<RoomDataProperty> GetRoomsDataHeaderRows(string filePath, int headerRowsCount = 4)
         {
             List<List<string>> headerRows = new List<List<string>>();
 

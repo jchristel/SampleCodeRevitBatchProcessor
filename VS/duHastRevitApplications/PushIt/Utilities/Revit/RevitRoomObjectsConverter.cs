@@ -75,6 +75,12 @@ namespace duHastNet.PushIt.Utilities.Revit
                     value = duHastNet.RevitUtils.Parameters.ParaUtils.GetParameterValueByName(familyInstance, property.ParameterName);
                 }
 
+                // check if value is null (parameter does not exist on element)
+                if (value == null)
+                {
+                    value = $"Failed to retrieve value for property: {property.Name} with GUID: [{property.ParameterGUID}]";
+                }
+
                 // create a new room data property
                 Models.RoomDataProperty roomDataProperty = new Models.RoomDataProperty(
                     name: property.Name,

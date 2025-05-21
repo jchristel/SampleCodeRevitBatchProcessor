@@ -116,7 +116,7 @@ namespace duHastNet.PushIt.RevitActions
                 _roomsData = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
                     doc: doc,
                     roomsDataModel: roomsDataModel,
-                    supportedCategoryName: supportedCategoryName,
+                    supportedCategoryNames: supportedCategoryName,
                     AddMessage: AddMessage);
             }
 

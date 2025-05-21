@@ -76,9 +76,6 @@ namespace duHastNet.PushIt.RevitActions
                         // get the data model of the original room
                         var originalRoom = roomsDataModel.Find(x => x.Id.Value == idValue);
 
-                        //make a copy of the original room and update the id to include split
-                        //??
-
                         // add the split room to the family instances
                         if (currentFamilyInstances.ContainsKey(idValue))
                         {
@@ -116,7 +113,8 @@ namespace duHastNet.PushIt.RevitActions
             bool updateFamily = Utilities.Revit.FamilyUpdate.UpdateMultipleFamilyInstances(
                 doc: doc,
                 familyData: updateFamilyInstances,
-                AddMessage: AddMessage
+                AddMessage: AddMessage,
+                updateId: false // keep the ids unchanged to support split room id format !
             );
 
             // log the error if the update failed
@@ -197,6 +195,23 @@ namespace duHastNet.PushIt.RevitActions
             return (overallUpdateSuccess, updateCounter);
         }
 
+
+        private int DefineBucketSize(Dictionary<string, (RoomDataModel, List<FamilyInstance>)> currentFamilyInstances, int numberOfBuckets)
+        {
+            int taskBucketFamilyInstancesCounter = 0;
+
+            // loop through the family instances and add them to the task bucket
+            foreach (var currentFamilyInstance in currentFamilyInstances)
+            {
+                //update the running count of number of family instances per room id
+                taskBucketFamilyInstancesCounter = taskBucketFamilyInstancesCounter + currentFamilyInstance.Value.Item2.Count;
+            }
+
+            // return the bucket size for a given number of buckets
+            return taskBucketFamilyInstancesCounter / numberOfBuckets;
+        }
+
+
         /// <summary>
         /// Execute the action
         /// </summary>
@@ -218,7 +233,7 @@ namespace duHastNet.PushIt.RevitActions
             List<duHastNet.PushIt.Models.RoomRevit> revitRooms = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
                 doc: doc,
                 roomsDataModel: roomsDataModel,
-                supportedCategoryName: RevitModel.Settings.SupportedCategories,
+                supportedCategoryNames: RevitModel.Settings.SupportedCategories,
                 AddMessage: AddMessage
             );
 
@@ -231,7 +246,7 @@ namespace duHastNet.PushIt.RevitActions
             }
 
             // build a dictionary of family instances that contain valid data ( valid data is a family instance where the room id has a match in the rooms data model)
-            // the dictionary key is the room id and the value is a tuple of the room data model and a list of revit family instances
+            // the dictionary key is the room id and the value is a tuple of the room data model and a list of revit family instances ( direct push rooms and split rooms in one list!)
             Dictionary<string, (RoomDataModel, List<FamilyInstance>)> currentFamilyInstances = GetFamilyInstancesWithIdInDataModel(
                 roomsDataModel,
                 revitRooms,
@@ -245,15 +260,22 @@ namespace duHastNet.PushIt.RevitActions
                 return ("No push it family instances with valid id's found in the model to push data to.", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
             }
 
-            // keep track of the overall success of the wipe operation
+            // keep track of the overall success of the update operation
             bool overallUpdateSuccess = true;
             int updateCounter = 0;
 
-            //attempt to update room data in bundles of 20 family instances to speed up the process
+            //this can take a long time, minutes rather than seconds if buckets are small in terms of total number of families...work out a bucket size 
+            //which attempts to process all families within 5 buckets
+            int bucketSize = DefineBucketSize(currentFamilyInstances, 5);
+
+            // log entry
+            AddMessage($"Set bucket size for batch update to {bucketSize}", Utils.WPF.Stores.MessageTypes.Log);
+
+            //attempt to update room data in bundles to speed up the process
             (overallUpdateSuccess, updateCounter) = UpdateRevitModel(
                 currentFamilyInstances,
                 doc,
-                bucketSize: 20
+                bucketSize: bucketSize
             );
 
             // build the return message depending on error count

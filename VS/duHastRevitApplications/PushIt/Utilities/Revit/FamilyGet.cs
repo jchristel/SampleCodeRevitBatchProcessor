@@ -10,7 +10,7 @@ namespace duHastNet.PushIt.Utilities.Revit
         public static List<duHastNet.PushIt.Models.RoomRevit> GetAllSupportedFamilies(
             Document doc,
             List<Models.RoomDataModel> roomsDataModel,
-            List<string> supportedCategoryName,
+            List<string> supportedCategoryNames,
             Action<string, Utils.WPF.Stores.MessageTypes> AddMessage
             )
         {
@@ -19,7 +19,7 @@ namespace duHastNet.PushIt.Utilities.Revit
             bool parameterCheck = Utilities.Revit.SharedParameters.SharedParametersCheck(
                 doc,
                 roomsDataModel,
-                supportedCategoryName,
+                supportedCategoryNames,
                 out refreshMessage);
 
             // if not get out
@@ -34,13 +34,13 @@ namespace duHastNet.PushIt.Utilities.Revit
             }
 
             // get supported categories
-            List<Category> categories = duHastNet.RevitUtils.Categories.CategoryUtils.GetMainCategoriesByName(doc, supportedCategoryName);
+            List<Category> categories = duHastNet.RevitUtils.Categories.CategoryUtils.GetMainCategoriesByName(doc, supportedCategoryNames);
             if (categories.Count == 0)
             {
-                if (supportedCategoryName.Count > 0)
+                if (supportedCategoryNames.Count > 0)
                 {
                     // build a string of supported categories
-                    string supportedCategories = string.Join(", ", supportedCategoryName);
+                    string supportedCategories = string.Join(", ", supportedCategoryNames);
                     AddMessage($"Supported categories are invalid: {supportedCategories}", Utils.WPF.Stores.MessageTypes.Error);
                 }
                 else

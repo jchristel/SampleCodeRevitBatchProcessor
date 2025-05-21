@@ -38,8 +38,17 @@ namespace duHastNet.PushIt.Utilities.Revit
         /// <param name="familyInstance"></param>
         /// <param name="roomData"></param>
         /// <param name="pushMode"></param>
+        /// <param name="AddMessage"> a way to log messages</param>
+        /// <param name="updateId">if true the ID of the element will be updated (default), otherwise it will be left as is. That can be usefull when updating existing rooms based on an ID ( the id value
+        /// is already set and does need to be changed. Especially when that room is a split room.)</param>
         /// <returns></returns>
-        public static bool UpdateProperties(Document doc, FamilyInstance familyInstance, Models.RoomDataModel roomData, duHastNet.PushIt.Utilities.PushMode pushMode, Action<string, Utils.WPF.Stores.MessageTypes> AddMessage)
+        public static bool UpdateProperties(
+            Document doc, 
+            FamilyInstance familyInstance, 
+            Models.RoomDataModel roomData, 
+            duHastNet.PushIt.Utilities.PushMode pushMode, 
+            Action<string, Utils.WPF.Stores.MessageTypes> AddMessage,
+            bool updateId = true)
         {
 
             // set up a variable to store the name of the property that is being updated in case of an exception
@@ -47,20 +56,30 @@ namespace duHastNet.PushIt.Utilities.Revit
 
             try
             {
-                string room_id = roomData.Id.Value;
-                if (pushMode == PushMode.Split)
+                // assume id update was successful ( can also be true if no id update was required )
+                bool flagId = true;
+                if (updateId)
                 {
+                    string room_id = roomData.Id.Value;
+                    if (pushMode == PushMode.Split)
+                    {
 
-                    room_id = PushModeUtils.GetSplitModeIdValue(idValue: room_id);
+                        room_id = PushModeUtils.GetSplitModeIdValue(idValue: room_id);
+                    }
+                    else if (pushMode == PushMode.New)
+                    {
+                        room_id = PushModeUtils.GetNewModeIdValue(idValue: room_id);
+                    }
+
+                    // set the room id parameter
+                    flagId = duHastNet.RevitUtils.Parameters.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.Id.ParameterGUID, room_id);
+                    AddMessage($"Updated room id with value [{room_id}] for family instance [{familyInstance.Id}] with status: [{flagId}]", Utils.WPF.Stores.MessageTypes.Log);
                 }
-                else if (pushMode == PushMode.New)
+                else
                 {
-                    room_id = PushModeUtils.GetNewModeIdValue(idValue: room_id);
+                    // add a log message
+                    AddMessage($"Skipping ID update for room [{roomData.Id.Value}]", Utils.WPF.Stores.MessageTypes.Log);
                 }
-
-                // set the room id parameter
-                bool flagId = duHastNet.RevitUtils.Parameters.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.Id.ParameterGUID, room_id);
-                AddMessage($"Updated room id with value [{room_id}] for family instance [{familyInstance.Id}] with status: [{flagId}]", Utils.WPF.Stores.MessageTypes.Log);
 
                 //update other properties
                 bool flagOtherProperties = true;
@@ -193,12 +212,15 @@ namespace duHastNet.PushIt.Utilities.Revit
         /// </summary>
         /// <param name="doc">The current Revit document</param>
         /// <param name="familyData"></param>
+        /// <param name="AddMessage"> Function to log messages</param>
+        /// <param name="updateId">If true Id will be updated during th update process to the id in the room data model, if false ID will be left as is. ( usefull for split room updates )</param>
         /// <returns>True if the update was successful, false if not</returns>
         /// <exception cref="Exception"></exception>
         public static bool UpdateMultipleFamilyInstances(
             Document doc,
             Dictionary<string, (duHastNet.PushIt.Models.RoomDataModel, List<FamilyInstance>)> familyData,
-            Action<string, Utils.WPF.Stores.MessageTypes> AddMessage)
+            Action<string, Utils.WPF.Stores.MessageTypes> AddMessage,
+            bool updateId)
         {
             // set up an action to run inside a Revit transaction
             Func<bool> actionInTranny = () =>
@@ -258,7 +280,14 @@ namespace duHastNet.PushIt.Utilities.Revit
                         }
 
                         // update the family instance
-                        bool flag_update = UpdateProperties(doc, familyInstance, roomData, duHastNet.PushIt.Utilities.PushMode.Push, AddMessage);
+                        bool flag_update = UpdateProperties(
+                            doc: doc,
+                            familyInstance: familyInstance,
+                            roomData: roomData,
+                            pushMode: duHastNet.PushIt.Utilities.PushMode.Push,
+                            AddMessage: AddMessage,
+                            updateId: updateId
+                        );
 
                         //log the overall success of the update
                         overallUpdateSuccess = overallUpdateSuccess && flag_update;

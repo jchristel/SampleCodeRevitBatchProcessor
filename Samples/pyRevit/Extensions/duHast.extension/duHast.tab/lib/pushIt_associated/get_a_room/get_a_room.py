@@ -282,8 +282,8 @@ def get_a_room_entry(doc, uiapp,output, forms):
     active_view = doc.ActiveView
 
     # check if the active view is a floor plan
-    if active_view.ViewType != ViewType.FloorPlan:
-        message = "Active view is not a floor plan."
+    if active_view.ViewType != ViewType.FloorPlan and active_view.ViewType != ViewType.AreaPlan:
+        message = "Active view is not a floor plan or area plan: {}".format(active_view.ViewType)
         return_value.update_sep(False, message)
         print(message)
         return return_value

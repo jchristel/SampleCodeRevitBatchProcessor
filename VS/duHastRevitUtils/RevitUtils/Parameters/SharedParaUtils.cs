@@ -147,7 +147,7 @@ namespace duHastNet.RevitUtils.Parameters
             {
                 try
                 {
-                    if (parameter.GUID.ToString() == parameterGUID)
+                    if (parameter.IsShared && parameter.GUID.ToString() == parameterGUID)
                     {
                         // get parameter value as string. This will also convert imperial units to metric!
                         parameterValue = ParameterGetUtils.GetParameterValueAsString(para:parameter);

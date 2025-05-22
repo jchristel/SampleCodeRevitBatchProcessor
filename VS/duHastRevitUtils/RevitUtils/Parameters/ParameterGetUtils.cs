@@ -40,7 +40,7 @@ namespace duHastNet.RevitUtils.Parameters
         public static string GetParameterValueAsString(Parameter para)
         {
             // Set return value default
-            string parameterValue = "no Value";
+            string parameterValueDefault = "no Value";
             try
             {
                 var valueGetter = new Dictionary<StorageType, Func<Parameter, object>>
@@ -52,14 +52,24 @@ namespace duHastNet.RevitUtils.Parameters
                     { StorageType.None, GetterNone }
                 };
 
-                parameterValue = GetParameterValueWithOverLoad(para, valueGetter).ToString();
+                object parameterValue = GetParameterValueWithOverLoad(para, valueGetter);
+                
+                //check the type of object and convert to string
+                if (parameterValue == null)
+                {
+                    return parameterValueDefault;
+                }
+                else
+                {
+                    return parameterValue.ToString();
+                }
             }
             catch (Exception e)
             {
-                parameterValue = $"Exception: {e.Message}";
+                parameterValueDefault = $"Exception: {e.Message}";
             }
 
-            return parameterValue;
+            return parameterValueDefault;
         }
 
         /// <summary>
@@ -127,7 +137,7 @@ namespace duHastNet.RevitUtils.Parameters
             }
             catch (Exception e)
             {
-                parameterValue = $"Exception: {e.Message}";
+                parameterValue = $"Exception parameter get utils: {e.Message}";
             }
             return parameterValue;
         }

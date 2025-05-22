@@ -66,8 +66,19 @@ namespace duHastNet.PushIt.Utilities.Revit
                 //check if property is retrieved from shared parameter
                 if (property.ParameterGUID != "")
                 {
-                    // get the value of the property
-                    value = duHastNet.RevitUtils.Parameters.SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[property.ParameterGUID]);
+                    if (sharedParameterIdsByGUIDs.ContainsKey(property.ParameterGUID))
+                    {
+                        // get the value of the property
+                        value = duHastNet.RevitUtils.Parameters.SharedParaUtils.GetSharedParameterValueFromElementByElementId(
+                            familyInstance,
+                            sharedParameterIdsByGUIDs[property.ParameterGUID]
+                        );
+                    }
+                    else
+                    {
+                        //this bit of code should not be reached since parameters are checked at startup...but just in case
+                        value = $"{property.Name} parameter does not exist in model on element";
+                    }
                 }
                 else
                 {
@@ -78,7 +89,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                 // check if value is null (parameter does not exist on element)
                 if (value == null)
                 {
-                    value = $"Failed to retrieve value for property: {property.Name} with GUID: [{property.ParameterGUID}]";
+                    value = $"Failed to retrieve value for property: {property.Name} with GUID: [{property.ParameterGUID}] or name: [{property.ParameterName}]";
                 }
 
                 // create a new room data property
@@ -89,6 +100,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                     value: value,
                     showInUI: property.ShowInUI,
                     isReadOnly: property.IsReadOnly);
+
                 // add to the list of properties
                 properties.Add(roomDataProperty);
             }

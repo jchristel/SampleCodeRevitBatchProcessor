@@ -22,6 +22,7 @@
 //
 
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace duHastNet.PushIt.Models
 {
@@ -103,6 +104,52 @@ namespace duHastNet.PushIt.Models
                 // if the property is not found, return an empty string
                 return $"Property {propertyGUID} does not exist on room: {Id.Value}";
             }
+        }
+
+
+        /// <summary>
+        /// Compares the other room properties and returns true if they are identical, otherwise false.
+        /// Identical is: the other room has the same properties by name and count.
+        /// excludes an y read properties sicen they dont get pushed
+        /// The other rooms preoperty match by value
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool IsEqualInPropertNameAndValue(RoomBase other)
+        {
+            bool result = true;
+
+            //check if null
+            if (other == null) { return false; }
+
+            // compare properties count on each room
+            if (other.Properties.Count != Properties.Count) { return false; }
+
+            // loop over all properties and check if they exist and if so if the value is equal
+            foreach (RoomDataProperty property in Properties)
+            {
+                // ignore read only properties
+                if (property.IsReadOnly) { continue; }
+
+                // check if other has the same property
+                if (other.Properties.Exists(x => x.Name == property.Name))
+                {
+                    // get the property by name and compare its ...properties
+                    RoomDataProperty otherProp = other.Properties.Find(x => x.Name == property.Name);
+
+                    if (otherProp.Value != property.Value)
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            //are equal
+            return result;
         }
 
         public RoomBase()

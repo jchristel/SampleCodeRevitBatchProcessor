@@ -22,6 +22,7 @@
 //
 
 using Autodesk.Revit.DB;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -88,6 +89,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                 foreach (var property in roomData.Properties)
                 {
                     propertyName = property.Name;
+
                     // skip read only properties
                     if (property.IsReadOnly)
                     {
@@ -98,15 +100,38 @@ namespace duHastNet.PushIt.Utilities.Revit
                     // update the property depending on whether it has a GUID or not
                     if (property.ParameterGUID != "")
                     {
-                        bool flag = duHastNet.RevitUtils.Parameters.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, property.ParameterGUID, property.Value);
-                        AddMessage($"Updated shared parameter property [{property.Name}] with value [{property.Value}] for family instance [{familyInstance.Id}] with status: {flag}", Utils.WPF.Stores.MessageTypes.Log);
-                        flagOtherProperties = flagOtherProperties && flag;
+                        // get the current value of the property
+                        string currentValue = duHastNet.RevitUtils.Parameters.SharedParaUtils.GetSharedParameterValueFromElementByGUID(
+                            familyInstance,
+                            property.ParameterGUID
+                        );
+
+                        if (currentValue != property.Value)
+                        {
+                            bool flag = duHastNet.RevitUtils.Parameters.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, property.ParameterGUID, property.Value);
+                            AddMessage($"Updated shared parameter property [{property.Name}] with value [{property.Value}] from [{currentValue}] for family instance [{familyInstance.Id}] with status: {flag}", Utils.WPF.Stores.MessageTypes.Log);
+                            flagOtherProperties = flagOtherProperties && flag;
+                        }
+                        else
+                        {
+                            AddMessage($"Property [{property.Name}] value does not need updating: current value [{currentValue}] equals SoA value [{property.Value}]", Utils.WPF.Stores.MessageTypes.Log);
+                        }
                     }
                     else
                     {
-                        bool flag = duHastNet.RevitUtils.Parameters.ParaUtils.SetParameterValueByName(familyInstance, property.Name, property.Value);
-                        AddMessage($"Updated non shared parameter property [{property.Name}] with value [{property.Value}] for family instance [{familyInstance.Id}] with status: {flag}", Utils.WPF.Stores.MessageTypes.Log);
-                        flagOtherProperties = flagOtherProperties && flag;
+                        // get the current value of the property
+                        string currentValue = duHastNet.RevitUtils.Parameters.ParaUtils.GetParameterValueByName( familyInstance, property.Name );
+
+                        if (currentValue != property.Value)
+                        {
+                            bool flag = duHastNet.RevitUtils.Parameters.ParaUtils.SetParameterValueByName(familyInstance, property.Name, property.Value);
+                            AddMessage($"Updated non shared parameter property [{property.Name}] with value [{property.Value}] for family instance [{familyInstance.Id}] with status: {flag}", Utils.WPF.Stores.MessageTypes.Log);
+                            flagOtherProperties = flagOtherProperties && flag;
+                        }
+                        else
+                        {
+                            AddMessage($"Property [{property.Name}] value does not need updating: current value [{currentValue}] equals SoA value [{property.Value}]", Utils.WPF.Stores.MessageTypes.Log);
+                        }
                     }
                 }
                 return flagId && flagOtherProperties;
@@ -152,7 +177,6 @@ namespace duHastNet.PushIt.Utilities.Revit
                 doc, $"Pushing room {roomData.Id.Value}", actionInTranny);
 
             return transactionFlag;
-
         }
 
 

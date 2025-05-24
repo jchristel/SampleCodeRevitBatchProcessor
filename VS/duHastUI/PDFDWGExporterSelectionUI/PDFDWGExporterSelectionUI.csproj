@@ -49,8 +49,11 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -62,19 +65,24 @@
       <HintPath>..\..\_References\duHast\Utils.23.0.0.3.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\PropertyConflictException.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Models\Constants.cs" />
+    <Compile Include="Models\RevitSheet.cs" />
+    <Compile Include="Models\SheetProperty.cs" />
+    <Compile Include="Models\SheetsDataModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\Settings.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\DocumentSelectionViewModel.cs" />
     <Compile Include="Views\DocumentSelectionView.xaml.cs" />
     <Compile Include="Views\MainWindow.xaml.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Commands\" />
-    <Folder Include="Models\" />
-    <Folder Include="Utils\" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\DocumentSelectionView.xaml">

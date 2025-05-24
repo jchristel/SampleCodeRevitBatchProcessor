@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDFDWGExportTester", "PDFDW
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelectFiles", "SelectFiles\SelectFiles.csproj", "{C196FD5D-4EF5-4CD4-A9E1-F3346D83F68B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDFDWGExporterSelectionUI", "PDFDWGExporterSelectionUI\PDFDWGExporterSelectionUI.csproj", "{0413BA8D-E793-4AD1-94AB-2B984EB56BFD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,8 +41,19 @@ Global
 		{C196FD5D-4EF5-4CD4-A9E1-F3346D83F68B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C196FD5D-4EF5-4CD4-A9E1-F3346D83F68B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C196FD5D-4EF5-4CD4-A9E1-F3346D83F68B}.Release|x64.ActiveCfg = Release|x64
+		{0413BA8D-E793-4AD1-94AB-2B984EB56BFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0413BA8D-E793-4AD1-94AB-2B984EB56BFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0413BA8D-E793-4AD1-94AB-2B984EB56BFD}.Debug|x64.ActiveCfg = Debug|x64
+		{0413BA8D-E793-4AD1-94AB-2B984EB56BFD}.Debug|x64.Build.0 = Debug|x64
+		{0413BA8D-E793-4AD1-94AB-2B984EB56BFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0413BA8D-E793-4AD1-94AB-2B984EB56BFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0413BA8D-E793-4AD1-94AB-2B984EB56BFD}.Release|x64.ActiveCfg = Release|x64
+		{0413BA8D-E793-4AD1-94AB-2B984EB56BFD}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F1870F40-B995-4428-BF23-8AF607F72335}
 	EndGlobalSection
 EndGlobal

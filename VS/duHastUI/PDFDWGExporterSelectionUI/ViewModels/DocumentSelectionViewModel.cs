@@ -25,11 +25,14 @@
 using duHastNet.Utils.WPF.Commands;
 using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Net.NetworkInformation;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
@@ -61,72 +64,12 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         }
 
         /// <summary>
-        /// data table containing the available parameters
-        /// </summary>
-        private DataTable _dtAvailableParameters;
-
-        /// <summary>
-        /// default view of the data table
-        /// </summary>
-        private DataView _dvAvailableParameters;
-
-        /// <summary>
-        /// Contains the settings data tables for the different document types
-        /// </summary>
-        private Dictionary<string, DataTable> _documentSettingsTables;
-
-        /// <summary>
         ///  default view of the data table containing sheets for selection
         /// </summary>
         private DataView _dvSheets;
 
-        /// <summary>
-        /// Command to add a parameter to the document name table
-        /// </summary>
-        private readonly duHastNet.Utils.WPF.Commands.RelayCommand _moveParameterToDocumentNameTableCommand;
-        public ICommand MoveParameterToDocumentNameTableCommand { get { return _moveParameterToDocumentNameTableCommand; } }
-
-        /// <summary>
-        /// Command to remove a parameter from the document name table
-        /// </summary>
-        private readonly duHastNet.Utils.WPF.Commands.RelayCommand _removeParameterFromDocumentNameTableCommand;
-        public ICommand RemoveParameterFromDocumentNameTableCommand { get { return _removeParameterFromDocumentNameTableCommand; } }
-
-        /// <summary>
-        /// command move selected parameter up in the document name table
-        /// </summary>
-        private readonly duHastNet.Utils.WPF.Commands.RelayCommand _moveUpCommand;
-        public ICommand MoveUpCommand { get { return _moveUpCommand; } }
-
-        /// <summary>
-        /// command move selected parameter down in the document name table
-        /// </summary>
-        private readonly duHastNet.Utils.WPF.Commands.RelayCommand _moveDownCommand;
-        public ICommand MoveDownCommand { get { return _moveDownCommand; } }
-
-        /// <summary>
-        /// command to save the settings and close the window
-        /// </summary>
-        private readonly duHastNet.Utils.WPF.Commands.RelayCommand _saveAndCloseCommand;
-        public ICommand SaveAndCloseCommand { get { return _saveAndCloseCommand; } }
-
-
-        #region column names
-
-        /// <summary>
-        /// single column name for available property table
-        /// </summary>
-        private string _columnNameAvailableProperties = "Sheet properties";
-
-        /// <summary>
-        /// column names for document naming table
-        /// </summary>
-        private string _columnNameRulePrefix = "Prefix";
-        private string _columnNameRuleSuffix = "Suffix";
-        private string _columnNameRuleParameter = "Sheet property";
-        private string _columnNameRuleSeparator = "Separator";
-
-        #endregion column names
+        //command to update the view model if the column order changes
+        public RelayCommand ColumnOrderChangedCommand { get; private set; }
 
         #region event handlers
 
@@ -147,267 +90,58 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
         #endregion event handlers
 
-        #region document type filter
+        #region print set filter
 
-        /// <summary>
-        /// available document types
-        /// </summary>
-        private string _documentTypePDFName = "PDF";
-        private string _documentTypeDWGName = "DWG";
-
-        // Field to return a default list of document type names
-        private readonly List<string> _documentTypeNameDefaultList = new List<string>();
+        // Field to return a default list of print set  names
+        private readonly List<string> _printSetNamesDefaultList = new List<string>();
 
         // Property to expose the default list of document type names
-        public List<string> DocumentTypeNameDefaultList => _documentTypeNameDefaultList;
+        public List<string> PrintSetNamesDefaultList => _printSetNamesDefaultList;
 
-        // field to store the selected document type
-        private string _selectedDocumentType;
-        public string SelectedDocumentType
+        // field to store the selected Revit print set
+        private string _selectedPrintSet;
+        public string SelectedPrintSet
         {
-            get => _selectedDocumentType;
+            get => _selectedPrintSet;
             set
             {
-                _selectedDocumentType = value;
+                _selectedPrintSet = value;
 
                 //set the data view to the pdf settings table
                 //this will also clear the selection in the document name table
-                DataViewDocumentTypeSettings = new DataView(_documentSettingsTables[_selectedDocumentType]);
-
-                // hide or show the dwg export option scheme names
-                IsDWGExportSchemeVisible = _selectedDocumentType == _documentTypeDWGName;
+                //DataViewDocumentTypeSettings = new DataView(_documentSettingsTables[_selectedPrintSet]);
 
                 //update UI
-                OnPropertyChanged(nameof(SelectedDocumentType));
+                OnPropertyChanged(nameof(SelectedPrintSet));
             }
         }
-
-        #endregion document type filter
-
-        #region dwg export scheme name
-
-        /// json Field to return the selected export scheme name
-        private string _dwgExportSchemeNameProperty = "DWGExportSchemeName";
-
-        // Field to return a list of dwg export scheme names
-        private readonly List<string> _dwgExportSchemeNameList = new List<string>();
-
-        // Property to expose the list of dwg export scheme names
-        public List<string> DWGExportSchemeNameList => _dwgExportSchemeNameList;
-
-        //field to store the selected export scheme name
-        private string _selectedDWGExportSchemeName;
-        public string SelectedDWGExportSchemeName
-        {
-            get => _selectedDWGExportSchemeName;
-            set
-            {
-                _selectedDWGExportSchemeName = value;
-                OnPropertyChanged(nameof(SelectedDWGExportSchemeName));
-            }
-        }
-
-        // stores whether the dweg export scheme name is visible or not
-        // this is used to show or hide the export scheme name in the UI
-        private bool _isDWGExportSchemeVisible;
-
-        public bool IsDWGExportSchemeVisible
-        {
-            get => _isDWGExportSchemeVisible;
-            set
-            {
-                _isDWGExportSchemeVisible = value;
-                OnPropertyChanged(nameof(IsDWGExportSchemeVisible));
-            }
-        }
-
 
         /// <summary>
-        /// populates the list of dwg export scheme names
+        /// set the print set at the end of the GUI ini phase
         /// </summary>
-        /// <param name="dwgExportSchemes"></param>
-        public void populateDWGExportSchemeNameList(List<string> dwgExportSchemes)
+        private void setPrintSetFilter()
         {
-            //populate the list of dwg export scheme names
-            //check if the current settings contain a dwg export scheme name
-            //and set up the data tables accordingly
-            //clear the list
-            _dwgExportSchemeNameList.Clear();
-            //add the values
-            foreach (var scheme in dwgExportSchemes)
-            {
-                _dwgExportSchemeNameList.Add(scheme);
-            }
-            //trigger property changed event
-            OnPropertyChanged(nameof(DWGExportSchemeNameList));
+            //set the filter to display pdf settings by default
+            //this will be trigger a view change to show the selected data table
+            //SelectedPrintSet = _documentTypePDFName;
         }
 
-        #endregion dwg export scheme name
-
-        #region user selection
-
-        /// <summary>
-        /// binding to show selected index of available parameters
-        /// </summary>
-        private int _selectedIndexAvailableParameters;
-
-        public int SelectedIndexAvailableParameters
-        {
-            get => _selectedIndexAvailableParameters;
-            set
-            {
-                if (_selectedIndexAvailableParameters != value)
-                {
-                    _selectedIndexAvailableParameters = value;
-                    OnPropertyChanged(nameof(SelectedIndexAvailableParameters));
-                    OnPropertyChanged(nameof(SelectedParameter));
-                }
-            }
-        }
-
-
-        /// <summary>
-        /// property to get the selected parameter from the UI
-        /// </summary>
-        public string SelectedParameter
-        {
-            get
-            {
-                // check if a default view exists
-                if (_dvAvailableParameters == null)
-                {
-                    return null;
-                }
-                // check if the selected index is within the bounds of the rooms collection
-                if (_selectedIndexAvailableParameters >= 0 && _selectedIndexAvailableParameters < _dvAvailableParameters.Count)
-                {
-                    var selectedRow = _dvAvailableParameters[_selectedIndexAvailableParameters].Row;
-                    var parameterName = selectedRow[_columnNameAvailableProperties].ToString();
-                    return parameterName;
-
-                }
-                // return null if the selected index is out of bounds
-                return null;
-            }
-        }
-
-
-        /// <summary>
-        /// binding to show selected index of document name settings
-        /// </summary>
-        private int _selectedIndexDocumentNameSetting;
-
-        public int SelectedIndexDocumentNameSetting
-        {
-            get => _selectedIndexDocumentNameSetting;
-            set
-            {
-                if (_selectedIndexDocumentNameSetting != value)
-                {
-                    _selectedIndexDocumentNameSetting = value;
-                    OnPropertyChanged(nameof(SelectedIndexDocumentNameSetting));
-
-                    if (_selectedIndexDocumentNameSetting >= 0 && _selectedIndexDocumentNameSetting <= _documentSettingsDictionary[SelectedDocumentType].Count)
-                        //change the selected item as well... that will trigger the command can execute state updates for move up and down buttons
-                        SelectedItemDocumentNameSetting = _documentSettingsDictionary[SelectedDocumentType][_selectedIndexDocumentNameSetting];
-                    else if (_selectedIndexDocumentNameSetting == -1)
-                    {
-                        //reset the selected item in the naming table
-                        SelectedItemDocumentNameSetting = null;
-                    }
-                }
-            }
-        }
-
-
-        /// <summary>
-        /// The selected document name setting
-        /// </summary>
-        private Utils.DocumentSetting _selectedItemDocumentNameSetting;
-
-        public Utils.DocumentSetting SelectedItemDocumentNameSetting
-        {
-            get => _selectedItemDocumentNameSetting;
-            set
-            {
-
-                //sync data table with the document settings dictionary before doc change
-                synchronizeDocumentNameTable();
-
-                _selectedItemDocumentNameSetting = value;
-                OnPropertyChanged(nameof(SelectedItemDocumentNameSetting));
-
-                // update the command can execute state
-                if (MoveUpCommand != null)
-                {
-                    //update the command can execute state
-                    ((RelayCommand)MoveUpCommand).RaiseCanExecuteChanged();
-                }
-
-                // update the command can execute state
-                if (MoveDownCommand != null)
-                {
-                    ((RelayCommand)MoveDownCommand).RaiseCanExecuteChanged();
-                }
-            }
-        }
-
-        #endregion user selection
+        #endregion print set filter
 
         #region data views
 
         /// <summary>
         /// binding in xaml property to the default view of the available parameters collection
         /// </summary>
-        public DataView DataViewAvailableParameters
-        {
-            get => _dvAvailableParameters;
-            private set
-            {
-                _dvAvailableParameters = value;
-                OnPropertyChanged(nameof(DataViewAvailableParameters));
-            }
-
-        }
-
-        /// <summary>
-        /// binding in xaml property to the default view of the document type settings collection
-        /// </summary>
-        public DataView DataViewDocumentTypeSettings
+        public DataView DataViewSheets
         {
             get => _dvSheets;
             private set
             {
                 _dvSheets = value;
-                OnPropertyChanged(nameof(DataViewDocumentTypeSettings));
-
-                //clear selection when changing doc type
-                if (SelectedIndexDocumentNameSetting != -1 || SelectedItemDocumentNameSetting != null) { ClearSelection(); }
-
-                // update the command can execute state
-                if (MoveParameterToDocumentNameTableCommand != null)
-                {
-                    //update the command can execute state
-                    ((RelayCommand)MoveParameterToDocumentNameTableCommand).RaiseCanExecuteChanged();
-                }
-                // update the command can execute state
-                if (RemoveParameterFromDocumentNameTableCommand != null)
-                {
-                    //update the command can execute state
-                    ((RelayCommand)RemoveParameterFromDocumentNameTableCommand).RaiseCanExecuteChanged();
-                }
-                // update the command can execute state
-                if (MoveUpCommand != null)
-                {
-                    //update the command can execute state
-                    ((RelayCommand)MoveUpCommand).RaiseCanExecuteChanged();
-                }
-                // update the command can execute state
-                if (MoveDownCommand != null)
-                {
-                    ((RelayCommand)MoveDownCommand).RaiseCanExecuteChanged();
-                }
+                OnPropertyChanged(nameof(DataViewSheets));
             }
+
         }
 
         #endregion data views
@@ -426,166 +160,100 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
         #region data tables
 
-        /// <summary>
-        /// Populate the data table containing the available parameters (sheet properties)
-        /// </summary>
-        private void populateParameterDataTable()
+        #region column order
+
+        //property to store the column order
+        private IEnumerable<string> _columnOrder;
+
+        //property to expose the column order
+        public IEnumerable<string> ColumnOrder
         {
-            //populate the data table containing the available parameters
-            //check if the current settings contain a dwg or pdf settings string
-            //and set up the data tables accordingly
-
-            // check if any parameter names are present
-            if (_sheetsDataModel.ParameterNames == null || _sheetsDataModel.ParameterNames.Count == 0)
+            get => _columnOrder;
+            set
             {
-                //pop message to user
-                AddMessage("No parameter names available.", MessageTypes.Error);
-                return;
+                _columnOrder = value;
             }
-
-            // Set up the data table
-            DataTable dataTable = new DataTable();
-            //add the default column
-            dataTable.Columns.Add(_columnNameAvailableProperties);
-
-            //add the values
-            foreach (var propname in _sheetsDataModel.ParameterNames)
-            {
-                // Add a row per room
-                DataRow row = dataTable.NewRow();
-                row[_columnNameAvailableProperties] = propname;
-
-                // Add the row to the data table
-                dataTable.Rows.Add(row);
-            }
-
-            //store the table in global
-            _dtAvailableParameters = dataTable;
-
-            //setup a new data view based on the table created
-            //this will also trigger an on property changed event
-            DataViewAvailableParameters = new DataView(dataTable);
         }
 
         /// <summary>
-        /// Create an empty data table with the default columns for the document settings
+        /// Relay command target for column order changed event
+        /// </summary>
+        private void OnColumnOrderChanged(object parameter)
+        {
+            if (parameter is Tuple<IEnumerable<string>, DataView> data && data.Item2 is DataView dataView)
+            {
+                // update the column order
+                ColumnOrder = data.Item1;
+            }
+        }
+
+        #endregion column order
+
+        /// <summary>
+        /// Create an empty data table with the default columns for the sheets  (number and name)
         /// </summary>
         /// <returns>An empty data table.</returns>
-        private DataTable CreateEmptySettingsDataTable()
+        private DataTable CreateEmptySheetsDataTable()
         {
             //create an empty data table
             DataTable dataTable = new DataTable();
             //add the default columns
-            dataTable.Columns.Add(_columnNameRulePrefix);
-            dataTable.Columns.Add(_columnNameRuleParameter);
-            dataTable.Columns.Add(_columnNameRuleSuffix);
-            dataTable.Columns.Add(_columnNameRuleSeparator);
+            dataTable.Columns.Add(Models.Constants.ColumnHeaderSheetNumber);
+            dataTable.Columns.Add(Models.Constants.ColumnHeaderSheetName);
+            
             return dataTable;
         }
 
-        /// <summary>
-        /// populate the data table containing the pdf name settings
-        /// </summary>
-        private void populatePDFSettingsDataTable()
-        {
-            //populate the data table containing the pdf settings
-            //check if the current settings contain a pdf settings string
-            //and set up the data tables accordingly
-
-            //set up an empty table
-            DataTable dataTable = CreateEmptySettingsDataTable();
-
-            //check if the current settings contain a pdf settings string
-            if (_sheetsDataModel.Settings.PDFRenameString == null || _sheetsDataModel.Settings.PDFRenameString == "")
-            {
-                //store the table in global
-                _documentSettingsTables.Add(_documentTypePDFName, dataTable);
-                //setup a new data view based on the table created
-                //this will also trigger an on property changed event
-                DataViewDocumentTypeSettings = new DataView(dataTable);
-
-                // get out of the function
-                return;
-            }
-
-            //parse the settings string and add the values
-            ObservableCollection<Utils.DocumentSetting> pdfDocumentSettings = Utils.SettingsStringParser.ParsePdfSettingsString(
-                _sheetsDataModel.Settings.PDFRenameString,
-                _sheetsDataModel.ParameterNames
-            );
-
-            //update the global dictionary with the parsed values
-            _documentSettingsDictionary[_documentTypePDFName] = pdfDocumentSettings;
-
-            //update the data table with the parsed values
-            foreach (var pdfDocumentSetting in pdfDocumentSettings)
-            {
-                // Add a row per room
-                DataRow row = dataTable.NewRow();
-                row[_columnNameRulePrefix] = pdfDocumentSetting.Prefix;
-                row[_columnNameRuleParameter] = pdfDocumentSetting.PropertyName;
-                row[_columnNameRuleSuffix] = pdfDocumentSetting.Suffix;
-                row[_columnNameRuleSeparator] = pdfDocumentSetting.Separator;
-                // Add the row to the data table
-                dataTable.Rows.Add(row);
-            }
-
-            //store the table in global
-            _documentSettingsTables.Add(_documentTypePDFName, dataTable);
-
-            //refresh the data view
-            DataViewDocumentTypeSettings = new DataView(dataTable);
-
-            return;
-        }
-
+        
         /// <summary>
         /// populate the data table containing the dwg name settings
         /// </summary>
-        private void popualateDWGSettingsDataTable()
+        private void popualateSheetsDataTable()
         {
             //populate the data table containing the dwg settings
             //check if the current settings contain a  dwg settings string
             //and set up the data tables accordingly
 
             //set up an empty table
-            DataTable dataTable = CreateEmptySettingsDataTable();
+            DataTable dataTable = CreateEmptySheetsDataTable();
 
-            //check if the current settings contain a dwg settings string
-            if (_sheetsDataModel.Settings.DWGRenameString == null || _sheetsDataModel.Settings.DWGRenameString == "")
-            {
-                //store the table in global
-                _documentSettingsTables.Add(_documentTypeDWGName, dataTable);
-                // do not set the data view here, as this will be done in the populateAvailableFilters function
-                //and the default view will be set to the pdf settings table
-                // get out of the function
-                return;
-            }
+            //TODO:
 
-            //parse the settings string and add the values
-            ObservableCollection<Utils.DocumentSetting> dwgDocumentSettings = Utils.SettingsStringParser.ParseDwgSettingsString(
-                _sheetsDataModel.Settings.DWGRenameString,
-                _sheetsDataModel.ParameterNames
-            );
+            ////check if the current settings contain a dwg settings string
+            //if (_sheetsDataModel.Settings.DWGRenameString == null || _sheetsDataModel.Settings.DWGRenameString == "")
+            //{
+            //    //store the table in global
+            //    _documentSettingsTables.Add(_documentTypeDWGName, dataTable);
+            //    // do not set the data view here, as this will be done in the populateAvailableFilters function
+            //    //and the default view will be set to the pdf settings table
+            //    // get out of the function
+            //    return;
+            //}
 
-            //update the global dictionary with the parsed values
-            _documentSettingsDictionary[_documentTypeDWGName] = dwgDocumentSettings;
+            ////parse the settings string and add the values
+            //ObservableCollection<Utils.DocumentSetting> dwgDocumentSettings = Utils.SettingsStringParser.ParseDwgSettingsString(
+            //    _sheetsDataModel.Settings.DWGRenameString,
+            //    _sheetsDataModel.ParameterNames
+            //);
 
-            //update the data table with the parsed values
-            foreach (var dwgDocumentSetting in dwgDocumentSettings)
-            {
-                // Add a row per room
-                DataRow row = dataTable.NewRow();
-                row[_columnNameRulePrefix] = dwgDocumentSetting.Prefix;
-                row[_columnNameRuleParameter] = dwgDocumentSetting.PropertyName;
-                row[_columnNameRuleSuffix] = dwgDocumentSetting.Suffix;
-                row[_columnNameRuleSeparator] = dwgDocumentSetting.Separator;
-                // Add the row to the data table
-                dataTable.Rows.Add(row);
-            }
+            ////update the global dictionary with the parsed values
+            //_documentSettingsDictionary[_documentTypeDWGName] = dwgDocumentSettings;
 
-            //store the table in global
-            _documentSettingsTables.Add(_documentTypeDWGName, dataTable);
+            ////update the data table with the parsed values
+            //foreach (var dwgDocumentSetting in dwgDocumentSettings)
+            //{
+            //    // Add a row per room
+            //    DataRow row = dataTable.NewRow();
+            //    row[_columnNameRulePrefix] = dwgDocumentSetting.Prefix;
+            //    row[_columnNameRuleParameter] = dwgDocumentSetting.PropertyName;
+            //    row[_columnNameRuleSuffix] = dwgDocumentSetting.Suffix;
+            //    row[_columnNameRuleSeparator] = dwgDocumentSetting.Separator;
+            //    // Add the row to the data table
+            //    dataTable.Rows.Add(row);
+            //}
+
+            ////store the table in global
+            //_documentSettingsTables.Add(_documentTypeDWGName, dataTable);
 
             // do not set the data view here, as this will be done in the populateAvailableFilters function
             //and the default view will be set to the pdf settings table
@@ -596,375 +264,44 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
         #endregion data tables
 
-        private void populateAvailableFilters()
+        private void populateAvailablePrintSets()
         {
-            //populate the available filters list ( PDF and DWG)
-            //set the filter to display pdf settings by default
-            //this will be trigger a view change to show the selected data table
+            //clear just in case
+            _printSetNamesDefaultList.Clear();
 
-            _documentTypeNameDefaultList.Add(_documentTypePDFName);
-            _documentTypeNameDefaultList.Add(_documentTypeDWGName);
-
-            //also populat global dictionary of document settings
-            foreach (var documentType in _documentTypeNameDefaultList)
-            {
-                //create an empty list of document settings
-                ObservableCollection<Utils.DocumentSetting> documentSettings = new ObservableCollection<Utils.DocumentSetting>();
-                //add the empty list to the dictionary
-                _documentSettingsDictionary.Add(documentType, documentSettings);
-            }
+            //populate the available filters list with print set names
+            _printSetNamesDefaultList.Add(Models.Constants.DefaultPrintSetName);
 
             // trigger the property changed event
-            OnPropertyChanged(nameof(DocumentTypeNameDefaultList));
+            OnPropertyChanged(nameof(PrintSetNamesDefaultList));
         }
 
-        private void setFilterToPDFSettings()
-        {
-            //set the filter to display pdf settings by default
-            //this will be trigger a view change to show the selected data table
-            SelectedDocumentType = _documentTypePDFName;
-        }
-
-        /// <summary>
-        /// Set the selected export scheme name to the one in the settings if it exists
-        /// </summary>
-        private void setSelectedDWGExportScheme()
-        {
-            // set the dwg export scheme name to the first one in the list if none in settings
-            if (_sheetsDataModel.Settings.DWGExportScheme == null || _sheetsDataModel.Settings.DWGExportScheme == "")
-            {
-                //set the selected export scheme name to the first one in the list
-                if (_dwgExportSchemeNameList.Count > 0)
-                {
-                    SelectedDWGExportSchemeName = _dwgExportSchemeNameList[0];
-                }
-            }
-            else
-            {
-                //set the selected export scheme name to the one in the settings if it exists
-                //check if the selected export scheme name is in the list
-                if (_dwgExportSchemeNameList.Contains(_sheetsDataModel.Settings.DWGExportScheme))
-                {
-                    SelectedDWGExportSchemeName = _sheetsDataModel.Settings.DWGExportScheme;
-                }
-                else
-                {
-                    //add message to user
-                    AddMessage("Retrieved DWG export scheme name not in list.", MessageTypes.Error);
-                    //set the selected export scheme name to the first one in the list
-                    if (_dwgExportSchemeNameList.Count > 0)
-                    {
-                        SelectedDWGExportSchemeName = _dwgExportSchemeNameList[0];
-                    }
-                }
-            }
-        }
+        
 
 
         #region button underlying functions
 
         /// <summary>
-        /// checks if there are any parameters available to move to the document name table
-        /// and if not all parameteers are already in the document settings table
+        /// The file path for the exports to be saved to
         /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        private bool CanMoveToTableDocumentSettings(object parameter) => _dvAvailableParameters.Count > 0 && _dvAvailableParameters.Count > _dvSheets.Count;
-
-        /// <summary>
-        /// Checks if there are any parameters available to move to the property namer table
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        private bool CanMoveToTableParameterNames(object parameter) => _dvSheets.Count > 0;
-
-        /// <summary>
-        /// Move the selected parameter to the document name table
-        /// </summary>
-        /// <param name="parameter"></param>
-        private void MoveParameterToDocumentNameTable(object parameter)
-        {
-
-            //sync the document name table with the document settings dictionary
-            synchronizeDocumentNameTable();
-
-            // get the parameter from the selected row and check if already in the document settings table
-            //if not, add it to the document settings table
-
-            foreach (Utils.DocumentSetting documentSetting in _documentSettingsDictionary[SelectedDocumentType])
-            {
-                //check if the parameter is already in the document settings table
-                if (documentSetting.PropertyName == SelectedParameter)
-                {
-                    //add message to user
-                    AddMessage("Parameter already in document settings table.", MessageTypes.Error);
-                    return;
-                }
-            }
-
-            //create a new document setting object
-            Utils.DocumentSetting newDocumentSetting = new Utils.DocumentSetting(SelectedParameter);
-            //add the new document setting to the document settings table add the end
-            _documentSettingsDictionary[SelectedDocumentType].Add(newDocumentSetting);
-
-            //update the UI!!
-            RefreshDocumentNameTable();
-        }
-
-        /// <summary>
-        /// Removes the selected parameter from the document name table
-        /// </summary>
-        private void RemoveParameterFromDocumentNameTable(object parameter)
-        {
-            //sync the document name table with the document settings dictionary
-            synchronizeDocumentNameTable();
-
-            // remove the selected parameter from the document name table
-            // check if the selected index is within the bounds of the rooms collection
-            if (_selectedIndexDocumentNameSetting >= 0 && _selectedIndexDocumentNameSetting < _dvSheets.Count)
-            {
-                var selectedRow = _dvSheets[_selectedIndexDocumentNameSetting].Row;
-                var parameterName = selectedRow[_columnNameRuleParameter].ToString();
-                //remove the parameter from the document settings table
-                foreach (Utils.DocumentSetting documentSetting in _documentSettingsDictionary[SelectedDocumentType])
-                {
-                    if (documentSetting.PropertyName == parameterName)
-                    {
-                        _documentSettingsDictionary[SelectedDocumentType].Remove(documentSetting);
-                        break;
-                    }
-                }
-            }
-
-            //update the UI!!
-            RefreshDocumentNameTable();
-        }
-
-        /// <summary>
-        /// Refreshes the document name table after moving a parameter up or down or adding a new parameter or removing a parameter
-        /// </summary>
-        private void RefreshDocumentNameTable()
-        {
-            DataTable dt = CreateEmptySettingsDataTable();
-            //update the data table with the parsed values
-            foreach (var documentSetting in _documentSettingsDictionary[SelectedDocumentType])
-            {
-                // Add a row per room
-                DataRow row = dt.NewRow();
-                row[_columnNameRulePrefix] = documentSetting.Prefix;
-                row[_columnNameRuleParameter] = documentSetting.PropertyName;
-                row[_columnNameRuleSuffix] = documentSetting.Suffix;
-                row[_columnNameRuleSeparator] = documentSetting.Separator;
-                // Add the row to the data table
-                dt.Rows.Add(row);
-            }
-
-            _documentSettingsTables[SelectedDocumentType].Clear();
-            _documentSettingsTables[SelectedDocumentType] = dt;
-
-            //update the UI!!
-            DataViewDocumentTypeSettings = new DataView(dt);
-        }
-
-        /// <summary>
-        /// Synchronizes the document settings with data entered in the document name table
-        /// </summary>
-        private void synchronizeDocumentNameTable()
-        {
-
-            //check if sync is required ( data table is empty )
-            if (SelectedDocumentType == null || _documentSettingsTables[SelectedDocumentType].Rows.Count == 0)
-            {
-                //if the data table is empty, return
-                return;
-            }
-
-            //update the objects in the document settings table with the values in the data table
-            //loop over data table and update the objects in the document dictionary
-            foreach (DataRow row in _documentSettingsTables[SelectedDocumentType].Rows)
-            {
-                //get the values from the data table
-                string prefix = row[_columnNameRulePrefix].ToString();
-                string suffix = row[_columnNameRuleSuffix].ToString();
-                string separator = row[_columnNameRuleSeparator].ToString();
-                string propertyName = row[_columnNameRuleParameter].ToString();
-
-                //loop over the document settings dictionary and update the objects
-                foreach (Utils.DocumentSetting documentSetting in _documentSettingsDictionary[SelectedDocumentType])
-                {
-                    if (documentSetting.PropertyName == propertyName)
-                    {
-                        documentSetting.Prefix = prefix;
-                        documentSetting.Suffix = suffix;
-                        documentSetting.Separator = separator;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Checks if the selected item in the document name table can be moved up
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        private bool CanMoveUp(object parameter) => SelectedItemDocumentNameSetting != null &&
-            SelectedIndexDocumentNameSetting > 0;
-
-        /// <summary>
-        /// Checks if the selected item in the document name table can be moved down
-        /// </summary>
-        private bool CanMoveDown(object parameter) => SelectedItemDocumentNameSetting != null &&
-            SelectedIndexDocumentNameSetting < _documentSettingsDictionary[SelectedDocumentType].Count - 1;
-
-        /// <summary>
-        /// Moves a selected item in the document name settings data table up
-        /// </summary>
-        private void MoveUp(object parameter)
-        {
-            //sync the document name table with the document settings dictionary
-            synchronizeDocumentNameTable();
-
-            // get the current index of the selected item
-            int index = _documentSettingsDictionary[SelectedDocumentType].IndexOf(SelectedItemDocumentNameSetting);
-            if (index > 0)
-            {
-                var item = _documentSettingsDictionary[SelectedDocumentType][index];
-                _documentSettingsDictionary[SelectedDocumentType].RemoveAt(index);
-                _documentSettingsDictionary[SelectedDocumentType].Insert(index - 1, item);
-                RefreshDocumentNameTable();
-                //SelectedItemDocumentNameSetting = item; // Ensure selection follows move
-            }
-
-            // keep the row selected
-            var dataGrid = parameter as DataGrid;  // Get the actual DataGrid instance
-            if (dataGrid != null)
-            {
-                // Select the row by index
-                SelectRowByIndex(dataGrid, index - 1);
-            }
-        }
-
-        /// <summary>
-        /// Moves a selected item in the document name settings data table down
-        /// </summary>
-        private void MoveDown(object parameter)
-        {
-            //sync the document name table with the document settings dictionary
-            synchronizeDocumentNameTable();
-            // get the current index of the selected item
-            int index = _documentSettingsDictionary[SelectedDocumentType].IndexOf(SelectedItemDocumentNameSetting);
-            if (index < _documentSettingsDictionary[SelectedDocumentType].Count - 1)
-            {
-                var item = _documentSettingsDictionary[SelectedDocumentType][index];
-                _documentSettingsDictionary[SelectedDocumentType].RemoveAt(index);
-                _documentSettingsDictionary[SelectedDocumentType].Insert(index + 1, item);
-                RefreshDocumentNameTable();
-                //SelectedItemDocumentNameSetting = item;
-            }
-
-            // keep the row selected
-            var dataGrid = parameter as DataGrid;  // Get the actual DataGrid instance
-            if (dataGrid != null)
-            {
-                // Select the row by index
-                SelectRowByIndex(dataGrid, index + 1);
-            }
-        }
-
-
-        /// <summary>
-        /// The file path for the export settings file
-        /// </summary>
-        private string _selectedExportFilePath;
+        private string _selectedSheetsExportFilePath;
 
         /// <summary>
         /// property handling file path changes
         /// </summary>
-        public string ExportSettingsFilePath
+        public string ExportSheetsFilePath
         {
-            get => _selectedExportFilePath;
+            get => _selectedSheetsExportFilePath;
             set
             {
-                if (_selectedExportFilePath != value)
+                if (_selectedSheetsExportFilePath != value)
                 {
-                    _selectedExportFilePath = value;
+                    _selectedSheetsExportFilePath = value;
 
-                    //build a dictioanry to be written to file
-                    Dictionary<string, object> settingsDictionary = new Dictionary<string, object>()
-                    {
-                        { _documentTypePDFName, _documentSettingsDictionary[_documentTypePDFName] },
-                        { _documentTypeDWGName, _documentSettingsDictionary[_documentTypeDWGName] },
-                        {_dwgExportSchemeNameProperty, SelectedDWGExportSchemeName }
-                    };
+                    //TODO:
+                    //do something
 
-                    //export settings to given file path
-                    duHastNet.UI.PDFDWGExporterUI.Utils.SettingsExport.ExportSettingsToJson(
-                        filePath: _selectedExportFilePath,
-                        settings: settingsDictionary,
-                        AddMessage: AddMessage);
-
-                    OnPropertyChanged(nameof(ExportSettingsFilePath));
-                }
-            }
-        }
-
-        /// <summary>
-        /// The file path for the import settings file
-        /// </summary>
-        private string _selectedImportFilePath;
-
-        /// <summary>
-        /// property handling import file path changes
-        /// </summary>
-        public string ImportSettingsFilePath
-        {
-            get => _selectedImportFilePath;
-            set
-            {
-                if (_selectedImportFilePath != value)
-                {
-                    _selectedImportFilePath = value;
-
-                    //import settings from given file path
-                    Dictionary<string, string> settingsDictionary = Utils.SettingsImport.ImportSettingsFromJson(
-                        filePath: _selectedImportFilePath,
-                        AddMessage: AddMessage
-                    );
-
-                    //check if the settings dictionary is not null
-                    if (settingsDictionary != null)
-                    {
-                        //check if required keys are present
-                        if (!settingsDictionary.ContainsKey(_documentTypePDFName) || 
-                            !settingsDictionary.ContainsKey(_documentTypeDWGName )||
-                            !settingsDictionary.ContainsKey(_dwgExportSchemeNameProperty))
-                        {
-                            //add message to user
-                            AddMessage("Settings file does not contain required keys.", MessageTypes.Error);
-                            return;
-                        }
-
-                        //clear the overalll settings tables dictionary so it can be repopulated
-                        _documentSettingsTables.Clear();
-
-                        //store settings strings in settings
-                        _sheetsDataModel.Settings.PDFRenameString = settingsDictionary[_documentTypePDFName];
-                        _sheetsDataModel.Settings.DWGRenameString = settingsDictionary[_documentTypeDWGName];
-                        _sheetsDataModel.Settings.DWGExportScheme = settingsDictionary[_dwgExportSchemeNameProperty];
-
-                        //populate data tables with the settings strings
-                        populatePDFSettingsDataTable();
-                        popualateDWGSettingsDataTable();
-
-                        //set the selected export scheme name
-                        setSelectedDWGExportScheme();
-
-                        // reset the current document type to the pdf settings
-                        //this will be trigger a view change to show the selected data table
-                        setFilterToPDFSettings();
-                    }
-
-                    OnPropertyChanged(nameof(ImportSettingsFilePath));
+                    OnPropertyChanged(nameof(ExportSheetsFilePath));
                 }
             }
         }
@@ -975,14 +312,8 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// <param name="window"></param>
         private void SaveSettingsAndClose(object window)
         {
-
-            //sync the document name table with the document settings dictionary
-            synchronizeDocumentNameTable();
-
-            // save the settings to the export data model
-            _sheetsDataModel.Settings.PDFRenameString = Utils.SettingsStringParser.ConvertSettingsToPDFString(_documentSettingsDictionary[_documentTypePDFName]);
-            _sheetsDataModel.Settings.DWGRenameString = Utils.SettingsStringParser.ConvertSettingsToDwgString(_documentSettingsDictionary[_documentTypeDWGName]);
-            _sheetsDataModel.Settings.DWGExportScheme = SelectedDWGExportSchemeName;
+            //TODO:
+            //update settings and save to local app data
 
             if (window is Window w)
             {
@@ -996,8 +327,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// </summary>
         public void ClearSelection()
         {
-            SelectedItemDocumentNameSetting = null;
-            SelectedIndexDocumentNameSetting = -1;
+            //TODO:
         }
 
         /// <summary>
@@ -1035,73 +365,64 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// <param name="globalMessageViewModel"></param>
         /// <param name="messageStore"></param>
         public DocumentSelectionViewModel(
-            Models.ExportDataModel exportDataModel,
+            Models.SheetsDataModel sheetDataModel,
             duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel globalMessageViewModel,
             duHastNet.Utils.WPF.Stores.MessageStore messageStore
             )
         {
 
             //store the export data model
-            _sheetsDataModel = exportDataModel;
+            _sheetsDataModel = sheetDataModel;
             //store the global message view model
             GlobalMessageViewModel = globalMessageViewModel;
             //store the message store
             _messageStore = messageStore;
 
-            _documentSettingsTables = new Dictionary<string, DataTable>();
-            _documentSettingsDictionary = new Dictionary<string, ObservableCollection<Utils.DocumentSetting>>();
-
-            //populate the data table containing the available parameters
-            populateParameterDataTable();
-
             //populate the available filters list ( PDF and DWG)
-            populateAvailableFilters();
+            populateAvailablePrintSets();
 
-            //populate available dwg export scheme names
-            populateDWGExportSchemeNameList(_sheetsDataModel.DWGExportSchemeNames);
-
-            //check if the current settings contain a dwg or pdf settings string
-            //and set up the data tables accordingly
-            populatePDFSettingsDataTable();
-            popualateDWGSettingsDataTable();
+            //and set up sheets data table
+            popualateSheetsDataTable();
 
             //set up all commands:
-            //push in
-            _moveParameterToDocumentNameTableCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
-                MoveParameterToDocumentNameTable,
-                CanMoveToTableDocumentSettings
-            );
+            // create the column order changed command
+            ColumnOrderChangedCommand = new RelayCommand(OnColumnOrderChanged);
 
-            //push out
-            _removeParameterFromDocumentNameTableCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
-                RemoveParameterFromDocumentNameTable,
-                CanMoveToTableParameterNames
-            );
 
-            //push up
-            _moveUpCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
-                MoveUp,
-                CanMoveUp
-            );
 
-            //push down
-            _moveDownCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
-                MoveDown,
-                CanMoveDown
-            );
+            ////push in
+            //_moveParameterToDocumentNameTableCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
+            //    MoveParameterToDocumentNameTable,
+            //    CanMoveToTableDocumentSettings
+            //);
 
-            //save and exit
-            _saveAndCloseCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
-                SaveSettingsAndClose,
-                (object parameter) => true //always enabled
-            );
+            ////push out
+            //_removeParameterFromDocumentNameTableCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
+            //    RemoveParameterFromDocumentNameTable,
+            //    CanMoveToTableParameterNames
+            //);
 
-            //set the selected dwg export scheme
-            setSelectedDWGExportScheme();
+            ////push up
+            //_moveUpCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
+            //    MoveUp,
+            //    CanMoveUp
+            //);
 
-            //set the filter to display pdf settings by default
+            ////push down
+            //_moveDownCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
+            //    MoveDown,
+            //    CanMoveDown
+            //);
+
+            ////save and exit
+            //_saveAndCloseCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
+            //    SaveSettingsAndClose,
+            //    (object parameter) => true //always enabled
+            //);
+
+            //set the filter to display sheets selected depending on print exports set
             //this will be trigger a view change to show the selected data table, hence last thing in the constructor
-            setFilterToPDFSettings();
+            setPrintSetFilter();
         }
     }
 }

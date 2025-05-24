@@ -63,10 +63,10 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
         /// <summary>
         /// Constructor for the sheets data model
         /// </summary>
-        public SheetsDataModel(List<RevitSheet>revitSheets, List<RevitPrintSet>revitPrintSets)
+        public SheetsDataModel(Utils.Settings settings, List<RevitSheet>revitSheets, List<RevitPrintSet>revitPrintSets)
         {
             // Initialize the settings object
-            _settings = new Utils.Settings();
+            _settings = settings;
 
             //initialise sheets
             _revitSheets = revitSheets;

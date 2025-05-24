@@ -53,6 +53,16 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
         }
 
         /// <summary>
+        /// the folder to which sheets are going to be exported
+        /// </summary>
+        private string _exportFolderPath;
+        public string ExportFolderPath
+        {
+            get => _exportFolderPath;
+            set => _exportFolderPath = value;
+        }
+
+        /// <summary>
         /// default constructor
         /// </summary>
         public Settings()

@@ -23,6 +23,9 @@
 
 
 using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using System.Windows.Controls;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Views
@@ -39,18 +42,43 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Views
 
         private void Export_OnClick(object sender, EventArgs e)
         {
-            var dialog = new System.Windows.Forms.SaveFileDialog();
-            dialog.Filter = "json Files (*.json)|*.json";
+            var dialog = new System.Windows.Forms.FolderBrowserDialog();
+            dialog.Description = "Browse to export folder";
             var dialogResult = dialog.ShowDialog();
             if (dialogResult == System.Windows.Forms.DialogResult.OK)
             {
-                ExportFilePathTextBox.Text = dialog.FileName;
+                ExportFilePathTextBox.Text = dialog.SelectedPath;
 
                 // Since setting the property explicitly bypasses the data binding, 
                 // we must explicitly update it by calling BindingExpression.UpdateSource()
                 this.ExportFilePathTextBox
                   .GetBindingExpression(TextBox.TextProperty)
                   .UpdateSource();
+            }
+        }
+
+        /// <summary>
+        /// keep track of columns re-ordered by user
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RoomsDataGrid_ColumnReordered(object sender, EventArgs e)
+        {
+            // check the view model
+            if (DataContext is ViewModels.DocumentSelectionViewModel vm)
+            {
+
+                var dataGrid = sender as DataGrid;
+                if (dataGrid != null && dataGrid.ItemsSource is DataView dataView)
+                {
+                    var reorderedColumns = dataGrid.Columns
+                                                   .OrderBy(c => c.DisplayIndex)
+                                                   .Select(c => c.Header.ToString())
+                                                   .ToList();
+
+                    // Pass the new column order and the DataView to the ViewModel
+                    vm.ColumnOrderChangedCommand.Execute(new Tuple<IEnumerable<string>, DataView>(reorderedColumns, dataView));
+                }
             }
         }
     }

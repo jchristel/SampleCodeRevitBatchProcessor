@@ -21,6 +21,9 @@
 //
 //
 
+using duHastNet.UI.PDFDWGExporterSelectionUI.Models;
+using duHastNet.UI.PDFDWGExporterSelectionUI.Views;
+using duHastNet.Utils.WPF.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,5 +34,71 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
 {
     public class Main
     {
+
+        duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
+        duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
+        Models.SheetsDataModel _exportSheetsDataModel;
+        Utils.Settings _settings;
+
+
+        public Main(List<RevitSheet>sheetsInModel, List<RevitPrintSet>printSetsInModel)
+        {
+            //set up stores
+            _navigationStore = new NavigationStore();
+            _messageStore = new MessageStore();
+
+            //set up a setting object
+            _settings = new Utils.Settings();
+            //TODO:
+            //load settings from file...
+
+
+            //set up the export data model
+            _exportSheetsDataModel = new Models.SheetsDataModel(
+                settings:_settings,
+                revitSheets: sheetsInModel,
+                revitPrintSets: printSetsInModel);
+        }
+
+
+        /// <summary>
+        /// Function which will display the document selection window and return the selected sheets to the caller
+        /// </summary>
+        public Utils.Settings Execute()
+        {
+
+            //create the settings view model
+            var settingsViewModel = CreateDocumentSelectionViewModel();
+
+            //set the current view model to the settings view model
+            _navigationStore.CurrentViewModel = settingsViewModel;
+
+            //show the main window
+            MainWindow mainWindow = new MainWindow(_settings)
+            {
+                DataContext = new ViewModels.MainWindowViewModel(_navigationStore)
+            };
+
+            mainWindow.ShowDialog();
+
+            // return the settings object
+            return mainWindow.Settings;
+        }
+
+        /// <summary>
+        /// Creates the document selection view model.
+        /// </summary>
+        /// <returns></returns>
+        private ViewModels.DocumentSelectionViewModel CreateDocumentSelectionViewModel()
+        {
+            duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel _globalMessageViewModel = new duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);
+
+            return new ViewModels.DocumentSelectionViewModel(
+                _exportSheetsDataModel,
+                //_navigationStore,
+                _globalMessageViewModel,
+                _messageStore);
+        }
+
     }
 }

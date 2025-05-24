@@ -1,4 +1,4 @@
-﻿<Window x:Class="duHastNet.UI.PDFDWGExporterUI.Views.MainWindow"
+﻿<Window x:Class="duHastNet.UI.PDFDWGExporterSelectionUI.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,8 +9,8 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.Resources>
-            <DataTemplate DataType="{x:Type vms:SettingsViewModel}">
-                <local:SettingsView />
+            <DataTemplate DataType="{x:Type vms:DocumentSelectionViewModel}">
+                <local:DocumentSelectionView />
             </DataTemplate>
         </Grid.Resources>
         <ContentControl Content="{Binding CurrentViewModel}"/>

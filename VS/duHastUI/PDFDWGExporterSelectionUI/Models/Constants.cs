@@ -32,8 +32,26 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 {
     public class Constants
     {
+
+        #region sheet property names
+
         public const string PropertyNameSheetName = "SheetName";
         public const string PropertyValueSheetNumber = "SheetNumber";
         public const string PropertyValueSheetRevitId = "SheetRevitId";
+
+        #endregion
+
+        #region column names data grid view
+
+        public const string ColumnHeaderSheetNumber = "Number";
+        public const string ColumnHeaderSheetName = "Name";
+
+        #endregion
+
+        #region default print set name
+
+        public const string DefaultPrintSetName = "<None>";
+
+        #endregion
     }
 }

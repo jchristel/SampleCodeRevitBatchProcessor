@@ -21,7 +21,6 @@
 //
 //
 
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,49 +29,53 @@ using System.Threading.Tasks;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 {
-    public class SheetsDataModel : duHastNet.Utils.WPF.Models.DataModelBase
+    public class RevitPrintSet
     {
         /// <summary>
-        /// contains the user settings for the UI
+        /// the revit print set name
         /// </summary>
-        private Utils.Settings _settings;
-        public Utils.Settings Settings { get => _settings; set => _settings = value; }
+        string _name;
 
+        public string Name {
+            get => _name; 
+            set => _name = value;
+        }
 
         /// <summary>
-        /// contains the Revit sheets in the model
+        /// a lsit off Revit sheet ids belonging to this print set
         /// </summary>
-        private List<Models.RevitSheet> _revitSheets;
-        public List<Models.RevitSheet> RevitSheets
+        private List<RevitSheet> _revitSheets;
+
+        public List<RevitSheet> RevitSheets
         {
             get => _revitSheets;
         }
 
 
         /// <summary>
-        /// print set from the revit model
+        /// adds an revit sheet to the print set
         /// </summary>
-        private List<Models.RevitPrintSet> _printSets;
-        public List<Models.RevitPrintSet> PrintSets
+        /// <param name="revitSheet"></param>
+        /// <exception cref="Exceptions.SheetConflictException"></exception>
+        public void AddRevitSheet(RevitSheet revitSheet)
         {
-            get => _printSets;
+            //check if id allready in use
+            if(!RevitSheets.Exists(x=> x.RevitElementId.Value == revitSheet.RevitElementId.Value))
+            {
+                _revitSheets.Add(revitSheet);
+            }
+            else
+            {
+                // get the existing sheet
+                var existingSheet = RevitSheets.Find(x => x.RevitElementId.Value == revitSheet.RevitElementId.Value);
+                //pop an exception
+                throw new Exceptions.SheetConflictException(existingSheet, revitSheet);
+            }
         }
-        
 
-
-        /// <summary>
-        /// Constructor for the sheets data model
-        /// </summary>
-        public SheetsDataModel(List<RevitSheet>revitSheets, List<RevitPrintSet>revitPrintSets)
-        {
-            // Initialize the settings object
-            _settings = new Utils.Settings();
-
-            //initialise sheets
-            _revitSheets = revitSheets;
-
-            //initialise print sets
-            _printSets = revitPrintSets;
+        public RevitPrintSet(string name) {
+            string Name = name;
+            _revitSheets = new List<RevitSheet>();
         }
     }
 }

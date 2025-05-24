@@ -53,6 +53,20 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
             set => _sheetNumber = value;
         }
 
+
+        /// <summary>
+        /// The revit element id of this sheet
+        /// </summary>
+        private SheetProperty _revitElementId;
+        public SheetProperty RevitElementId
+        {
+            get => _revitElementId;
+            set => _revitElementId = value;
+        }
+
+        /// <summary>
+        /// All other sheet properties
+        /// </summary>
         private List<SheetProperty> _properties;
         public List<SheetProperty> Properties
         {
@@ -81,11 +95,11 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
         }
 
 
-        public RevitSheet(string sheetNumber, string sheetName)
+        public RevitSheet(string sheetNumber, string sheetName, string revitElementId)
         {
             _sheetName = new SheetProperty(name: Models.Constants.PropertyNameSheetName, value: sheetName);
             _sheetNumber = new SheetProperty(name:Models.Constants.PropertyValueSheetNumber, value: sheetNumber);
-
+            _revitElementId = new SheetProperty(name:Models.Constants.PropertyValueSheetRevitId, value:  revitElementId);
 
             _properties = new List<SheetProperty>();
         }

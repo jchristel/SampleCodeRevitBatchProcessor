@@ -34,5 +34,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
     {
         public const string PropertyNameSheetName = "SheetName";
         public const string PropertyValueSheetNumber = "SheetNumber";
+        public const string PropertyValueSheetRevitId = "SheetRevitId";
     }
 }

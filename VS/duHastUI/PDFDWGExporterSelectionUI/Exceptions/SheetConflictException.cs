@@ -21,58 +21,33 @@
 //
 //
 
-
+using duHastNet.UI.PDFDWGExporterSelectionUI.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
+
+namespace duHastNet.UI.PDFDWGExporterSelectionUI.Exceptions
 {
-    public class SheetsDataModel : duHastNet.Utils.WPF.Models.DataModelBase
+    public class SheetConflictException : Exception
     {
-        /// <summary>
-        /// contains the user settings for the UI
-        /// </summary>
-        private Utils.Settings _settings;
-        public Utils.Settings Settings { get => _settings; set => _settings = value; }
+        public RevitSheet ExistingSheet { get; }
+        public RevitSheet IncomingSheet { get; }
 
-
-        /// <summary>
-        /// contains the Revit sheets in the model
-        /// </summary>
-        private List<Models.RevitSheet> _revitSheets;
-        public List<Models.RevitSheet> RevitSheets
+        public SheetConflictException(RevitSheet existingSheet, RevitSheet incomingSheet)
         {
-            get => _revitSheets;
+            ExistingSheet = existingSheet;
+            IncomingSheet = incomingSheet;
         }
 
-
-        /// <summary>
-        /// print set from the revit model
-        /// </summary>
-        private List<Models.RevitPrintSet> _printSets;
-        public List<Models.RevitPrintSet> PrintSets
+        public SheetConflictException(string message, RevitSheet existingSheet, RevitSheet incomingSheet) : base(message)
         {
-            get => _printSets;
+            ExistingSheet = existingSheet;
+            IncomingSheet = incomingSheet;
         }
-        
 
-
-        /// <summary>
-        /// Constructor for the sheets data model
-        /// </summary>
-        public SheetsDataModel(List<RevitSheet>revitSheets, List<RevitPrintSet>revitPrintSets)
+        public SheetConflictException(string message, Exception innerException, RevitSheet existingSheet, RevitSheet incomingSheet) : base(message, innerException)
         {
-            // Initialize the settings object
-            _settings = new Utils.Settings();
-
-            //initialise sheets
-            _revitSheets = revitSheets;
-
-            //initialise print sets
-            _printSets = revitPrintSets;
+            ExistingSheet = existingSheet;
+            IncomingSheet = incomingSheet;
         }
     }
 }

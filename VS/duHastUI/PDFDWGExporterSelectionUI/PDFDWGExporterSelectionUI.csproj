@@ -68,9 +68,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\SheetConflictException.cs" />
     <Compile Include="Exceptions\PropertyConflictException.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Models\Constants.cs" />
+    <Compile Include="Models\RevitPrintSet.cs" />
     <Compile Include="Models\RevitSheet.cs" />
     <Compile Include="Models\SheetProperty.cs" />
     <Compile Include="Models\SheetsDataModel.cs" />

@@ -22,17 +22,17 @@
 //
 
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using CsvHelper;
 using CsvHelper.Configuration;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.Text;
 
 namespace duHastNet.FileIOWrapper
 {
-    public class WriteToColumnBasedTextFile:WrapperBase
+    public class WriteToColumnBasedTextFile : WrapperBase
     {
 
         /// <summary>
@@ -99,14 +99,14 @@ namespace duHastNet.FileIOWrapper
                     }
                 }
                 // Success
-                return true; 
+                return true;
             }
             catch (Exception ex)
             {
                 ErrorHistory.Add($"Error at {DateTime.Now}: {ex.Message}");
 
                 // Failure
-                return false; 
+                return false;
             }
         }
     }

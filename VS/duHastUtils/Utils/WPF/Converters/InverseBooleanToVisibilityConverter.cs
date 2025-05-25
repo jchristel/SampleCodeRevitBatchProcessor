@@ -27,7 +27,7 @@ using System.Windows.Data;
 
 namespace duHastNet.Utils.WPF.Converters
 {
-    public class InverseBooleanToVisibilityConverter: IValueConverter
+    public class InverseBooleanToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
@@ -45,6 +45,6 @@ namespace duHastNet.Utils.WPF.Converters
             throw new NotImplementedException();
         }
     }
-   
+
 }
 

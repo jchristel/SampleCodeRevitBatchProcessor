@@ -31,7 +31,7 @@ namespace duHastNet.Utils.WPF.ViewModels
         private readonly Stores.MessageStore _messageStore;
 
         public string CurrentMessage => _messageStore.CurrentMessage;
-        public bool IsErrorMessage  => _messageStore.CurrentMessageType == Stores.MessageTypes.Error;
+        public bool IsErrorMessage => _messageStore.CurrentMessageType == Stores.MessageTypes.Error;
         public bool IsInformationMessage => _messageStore.CurrentMessageType == Stores.MessageTypes.Information;
         public bool HasMessage => _messageStore.HasCurrentMessage;
 
@@ -40,8 +40,8 @@ namespace duHastNet.Utils.WPF.ViewModels
 
 
         private void MessageStore_CurrentMessageChanged()
-        {   
-           OnPropertyChanged(nameof(CurrentMessage));
+        {
+            OnPropertyChanged(nameof(CurrentMessage));
             OnPropertyChanged(nameof(HasMessage));
         }
 

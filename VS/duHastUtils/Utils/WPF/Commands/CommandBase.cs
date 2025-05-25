@@ -40,7 +40,7 @@ namespace duHastNet.Utils.WPF.Commands
 
         protected void OnCanExecutedChanged()
         {
-            CanExecuteChanged?.Invoke(this, new EventArgs ());
+            CanExecuteChanged?.Invoke(this, new EventArgs());
         }
     }
 }

@@ -27,9 +27,9 @@ using System.IO;
 
 namespace duHastNet.FileIOWrapper
 {
-    public class WriteToTextFile:WrapperBase
+    public class WriteToTextFile : WrapperBase
     {
-        
+
         /// <summary>
         /// Writes JSON formatted text to a file.
         /// </summary>

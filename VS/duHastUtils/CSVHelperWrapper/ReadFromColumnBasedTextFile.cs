@@ -22,16 +22,16 @@
 //
 
 
-using System;
-using System.Collections.Generic;
-using System.IO;
 using CsvHelper;
 using CsvHelper.Configuration;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 
 namespace duHastNet.FileIOWrapper
 {
-    public class ReadFromColumnBasedTextFile:WrapperBase
+    public class ReadFromColumnBasedTextFile : WrapperBase
     {
 
         /// <summary>

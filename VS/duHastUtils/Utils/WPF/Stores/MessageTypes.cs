@@ -21,8 +21,6 @@
 //
 //
 
-using System;
-
 namespace duHastNet.Utils.WPF.Stores
 {
     public enum MessageTypes

@@ -22,13 +22,13 @@
 //
 
 
+using CsvHelper;
+using CsvHelper.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
-using CsvHelper;
-using CsvHelper.Configuration;
 
 
 namespace duHastNet.Utils.Logging
@@ -64,7 +64,7 @@ namespace duHastNet.Utils.Logging
             {
                 writer = new StreamWriter(_filePath, true);
                 csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture));
-                
+
                 // Write records in custom order
                 foreach (var record in records)
                 {
@@ -72,7 +72,7 @@ namespace duHastNet.Utils.Logging
                     csv.WriteField(record.Type);
                     csv.WriteField(record.Message);
                 }
-                
+
             }
             catch (Exception ex)
             {

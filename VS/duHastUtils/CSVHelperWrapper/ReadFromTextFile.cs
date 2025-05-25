@@ -28,14 +28,14 @@ using System.IO;
 
 namespace duHastNet.FileIOWrapper
 {
-    public class ReadFromTextFile:WrapperBase
+    public class ReadFromTextFile : WrapperBase
     {
         /// <summary>
         /// Reads a non-column based text file.
         /// </summary>
         /// <param name="filePath">The fully qualified file path of the file to be read.</param>
         /// <returns>A list of strings representing each line in the file read.</returns>
-        public  List<string> ReadNonColumnBasedTextFile(string filePath)
+        public List<string> ReadNonColumnBasedTextFile(string filePath)
         {
             var lines = new List<string>();
 

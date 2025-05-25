@@ -42,9 +42,9 @@ if (Test-Path $commonDir) {
 
     # Verify removal
     if ((Get-ChildItem -Path $commonDir).Count -eq 0) {
-        Write-Host "✅ Successfully removed all contents from $commonDir."
+        Write-Host "Successfully removed all contents from $commonDir."
     } else {
-        Write-Host "⚠️ Warning: Some files may not have been removed from $commonDir."
+        Write-Host "Warning: Some files may not have been removed from $commonDir."
     }
 } else {
     Write-Host "Creating directory: $commonDir..."

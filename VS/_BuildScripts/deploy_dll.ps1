@@ -22,12 +22,14 @@ function Get-BuildType($basePath, $config) {
 $pushItBasePath = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastRevitApplications\PushIt"
 $atTheLibraryBasePath = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastRevitApplications\AtTheLibrary"
 $uiPDFDWGExporterBasePath = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastUI\PDFDWGExporterUI"
+$uiPDFDWGExporterSelectionBasePath = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastUI\PDFDWGExporterSelectionUI"
 
 
 # Determine correct build paths using user-selected configuration
 $pushItBuildPath = Get-BuildType $pushItBasePath $buildConfig
 $atTheLibraryBuildPath = Get-BuildType $atTheLibraryBasePath $buildConfig
 $uiPDFDWGExporterBuildPath = Get-BuildType $uiPDFDWGExporterBasePath $buildConfig
+$uiPDFDWGExporterSelectionBuildPath = Get-BuildType $uiPDFDWGExporterSelectionBasePath $buildConfig
 
 # Define source and destination paths for PushIt
 $sourceFilePushIt = "$pushItBuildPath\PushIt.dll"
@@ -60,6 +62,13 @@ $destinationFileUI = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatch
 
 Copy-Item -Path $sourceFileUI -Destination $destinationFileUI -Force
 Write-Output "File copied successfully from $sourceFileUI to $destinationFileUI"
+
+# copy UI dlls
+$sourceFileUISelection = "$uiPDFDWGExporterSelectionBuildPath\PDFDWGExporterSelectionUI.dll"
+$destinationFileUISelection = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\_References\duHast\PDFDWGExporterSelectionUI.dll"
+
+Copy-Item -Path $sourceFileUISelection -Destination $destinationFileUISelection -Force
+Write-Output "File copied successfully from $sourceFileUISelection to $destinationFileUISelection"
 
 
 # lib directory

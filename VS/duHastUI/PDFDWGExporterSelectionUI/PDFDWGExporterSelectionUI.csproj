@@ -51,7 +51,7 @@
   <ItemGroup>
     <Reference Include="duHastUICustomControls">
       <HintPath>..\..\_References\duHast\duHastUICustomControls.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -67,7 +67,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="Utils.23.0.0.3">
       <HintPath>..\..\_References\duHast\Utils.23.0.0.3.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>

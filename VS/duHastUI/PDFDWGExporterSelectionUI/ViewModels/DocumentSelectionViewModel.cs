@@ -115,6 +115,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             {
                 _selectedPrintSet = value;
 
+                //store print set in settings
+                _sheetsDataModel.Settings.Printset = value;
+
                 //TODO: 
                 //update data table and uncheck / check sheets as required
 
@@ -336,19 +339,19 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
                     if (_exportTypes == ThreeWaySwitch.SwitchState.Left)
                     {
-                        ExportButtonText = Models.Constants.ExportModusPDF;
+                        ExportButtonText = $"Export {Models.Constants.ExportModusPDF}s";
                         _sheetsDataModel.Settings.ExportModus = Models.Constants.ExportModusPDF;
 
 
                     }
                     else if (_exportTypes == ThreeWaySwitch.SwitchState.Centre)
                     {
-                        ExportButtonText = Models.Constants.ExportModusDWG;
+                        ExportButtonText = $"Export {Models.Constants.ExportModusDWG}s";
                         _sheetsDataModel.Settings.ExportModus = Models.Constants.ExportModusDWG;
                     }
                     else
                     {
-                        ExportButtonText = Models.Constants.ExportModusPDFandDWG;
+                        ExportButtonText = $"Export {Models.Constants.ExportModusPDFandDWG}s";
                         _sheetsDataModel.Settings.ExportModus = Models.Constants.ExportModusPDFandDWG;
                     }
 
@@ -392,8 +395,8 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                 {
                     _selectedSheetsExportFilePath = value;
 
-                    //TODO:
-                    //do something
+                    //save in settings
+                    _sheetsDataModel.Settings.ExportFolderPath = value;
 
                     OnPropertyChanged(nameof(ExportSheetsFilePath));
                 }
@@ -407,9 +410,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         private void SaveSettingsAndClose(object window)
         {
             //save settings to file is done in the main window close event
-            //duHastNet.UI.PDFDWGExporterSelectionUI.Utils.SettingsUtils.SaveSettings(
-            //    settings: _sheetsDataModel.Settings,
-            //    AddMessage: AddMessage);
+            duHastNet.UI.PDFDWGExporterSelectionUI.Utils.SettingsUtils.SaveSettings(
+                settings: _sheetsDataModel.Settings,
+                AddMessage: AddMessage);
 
             if (window is Window w)
             {

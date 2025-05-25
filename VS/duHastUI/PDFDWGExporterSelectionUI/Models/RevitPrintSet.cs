@@ -74,7 +74,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
         }
 
         public RevitPrintSet(string name) {
-            string Name = name;
+            _name = name;
             _revitSheets = new List<RevitSheet>();
         }
     }

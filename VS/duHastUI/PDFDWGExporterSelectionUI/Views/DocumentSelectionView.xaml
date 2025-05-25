@@ -123,7 +123,8 @@
                 <Button Grid.Column="0"
                      Margin="2 5 2 5" 
                      Content = "{Binding  ExportButtonText}"
-                     Command="{Binding SaveAndCloseCommand}" 
+                     Command="{Binding SaveAndCloseCommand}"
+                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
                      FontSize="24"/>
             </Grid>
         </Border>

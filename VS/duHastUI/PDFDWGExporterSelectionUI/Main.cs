@@ -48,11 +48,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
             _messageStore = new MessageStore();
 
             //set up a setting object
+            //load settings from file is done in the view model
             _settings = new Utils.Settings();
-            //TODO:
-            //load settings from file...
-
-
+         
             //set up the export data model
             _exportSheetsDataModel = new Models.SheetsDataModel(
                 settings:_settings,

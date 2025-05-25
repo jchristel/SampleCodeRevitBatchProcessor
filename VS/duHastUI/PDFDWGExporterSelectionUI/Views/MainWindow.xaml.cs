@@ -61,6 +61,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Views
             }
 
             // may need to do something with settings here??
+            Utils.SettingsUtils.SaveSettings(settings: _settings, AddMessage: null);
         }
     }
 }

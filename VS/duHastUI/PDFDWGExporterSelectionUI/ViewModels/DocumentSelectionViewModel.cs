@@ -22,6 +22,7 @@
 //
 
 
+using duHastNet.UI.CustomControls;
 using duHastNet.Utils.WPF.Commands;
 using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
@@ -71,6 +72,13 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         //command to update the view model if the column order changes
         public RelayCommand ColumnOrderChangedCommand { get; private set; }
 
+        /// <summary>
+        /// command to save the settings and close the window
+        /// </summary>
+        private readonly duHastNet.Utils.WPF.Commands.RelayCommand _saveAndCloseCommand;
+        public ICommand SaveAndCloseCommand { get { return _saveAndCloseCommand; } }
+
+
         #region event handlers
 
         /// <summary>
@@ -107,9 +115,8 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             {
                 _selectedPrintSet = value;
 
-                //set the data view to the pdf settings table
-                //this will also clear the selection in the document name table
-                //DataViewDocumentTypeSettings = new DataView(_documentSettingsTables[_selectedPrintSet]);
+                //TODO: 
+                //update data table and uncheck / check sheets as required
 
                 //update UI
                 OnPropertyChanged(nameof(SelectedPrintSet));
@@ -119,11 +126,31 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// <summary>
         /// set the print set at the end of the GUI ini phase
         /// </summary>
-        private void setPrintSetFilter()
+        private void SetPrintSetFilterFromSettings()
         {
-            //set the filter to display pdf settings by default
-            //this will be trigger a view change to show the selected data table
-            //SelectedPrintSet = _documentTypePDFName;
+            //set the filter to the value stored in settings
+            //check if valid value
+            if (_sheetsDataModel.Settings.Printset == null)
+            {
+                AddMessage($"No valid print set in settings. Defaulting to {Models.Constants.DefaultPrintSetName}", messageType: MessageTypes.Error);
+                SelectedPrintSet = Models.Constants.DefaultPrintSetName;
+                //update the print set in settings
+                _sheetsDataModel.Settings.Printset = Models.Constants.DefaultPrintSetName;
+            }
+            //check if print set still exists in model
+            else if (_printSetNamesDefaultList.Contains(_sheetsDataModel.Settings.Printset))
+            {
+                //set the print set and mark sheets belonging to it
+                SelectedPrintSet = _sheetsDataModel.Settings.Printset;
+            }
+            else
+            {
+                //print set no longer exists in the model...go with default option
+                AddMessage($"Print set in settings no longer exists in file. Defaulting to {Models.Constants.DefaultPrintSetName}", messageType: MessageTypes.Error);
+                SelectedPrintSet = Models.Constants.DefaultPrintSetName;
+                //update the print set in settings
+                _sheetsDataModel.Settings.Printset = Models.Constants.DefaultPrintSetName;
+            }
         }
 
         #endregion print set filter
@@ -264,22 +291,89 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
         #endregion data tables
 
-        private void populateAvailablePrintSets()
+        /// <summary>
+        /// updates the default print set list with default value and any print sets in the sheet data model
+        /// </summary>
+        private void PopulateAvailablePrintSets()
         {
             //clear just in case
             _printSetNamesDefaultList.Clear();
 
             //populate the available filters list with print set names
+            //add the default (None)
             _printSetNamesDefaultList.Add(Models.Constants.DefaultPrintSetName);
+
+            // add from model
+            if (_sheetsDataModel.PrintSets != null && _sheetsDataModel.PrintSets.Count > 0)
+            {
+                foreach (Models.RevitPrintSet pSet in _sheetsDataModel.PrintSets)
+                {
+                    _printSetNamesDefaultList.Add(pSet.Name);
+                }
+            }
 
             // trigger the property changed event
             OnPropertyChanged(nameof(PrintSetNamesDefaultList));
         }
 
-        
 
+        #region export types
+
+        //three way control setting the operation modus
+        private ThreeWaySwitch.SwitchState _exportTypes;
+
+        /// <summary>
+        /// property containing the three possible export modi
+        /// </summary>
+        public ThreeWaySwitch.SwitchState ExportTypes
+        {
+            get => _exportTypes;
+            set
+            {
+                if (_exportTypes != value)
+                {
+                    _exportTypes = value;
+
+                    if (_exportTypes == ThreeWaySwitch.SwitchState.Left)
+                    {
+                        ExportButtonText = Models.Constants.ExportModusPDF;
+                        _sheetsDataModel.Settings.ExportModus = Models.Constants.ExportModusPDF;
+
+
+                    }
+                    else if (_exportTypes == ThreeWaySwitch.SwitchState.Centre)
+                    {
+                        ExportButtonText = Models.Constants.ExportModusDWG;
+                        _sheetsDataModel.Settings.ExportModus = Models.Constants.ExportModusDWG;
+                    }
+                    else
+                    {
+                        ExportButtonText = Models.Constants.ExportModusPDFandDWG;
+                        _sheetsDataModel.Settings.ExportModus = Models.Constants.ExportModusPDFandDWG;
+                    }
+
+                    OnPropertyChanged(nameof(ExportTypes));
+                }
+            }
+        }
+        #endregion export types
 
         #region button underlying functions
+
+        //default button text for export mode
+        string _exportButtonText = Models.Constants.ExportModusPDF;
+
+        //button text for export button
+        public string ExportButtonText
+        {
+            get => _exportButtonText;
+            set
+            {
+                _exportButtonText = value;
+                OnPropertyChanged(nameof(ExportButtonText));
+            }
+        }
+
 
         /// <summary>
         /// The file path for the exports to be saved to
@@ -312,14 +406,26 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// <param name="window"></param>
         private void SaveSettingsAndClose(object window)
         {
-            //TODO:
-            //update settings and save to local app data
+            //save settings to file is done in the main window close event
+            //duHastNet.UI.PDFDWGExporterSelectionUI.Utils.SettingsUtils.SaveSettings(
+            //    settings: _sheetsDataModel.Settings,
+            //    AddMessage: AddMessage);
 
             if (window is Window w)
             {
                 w.Close(); // Closes the window
             }
         }
+
+        private void LoadSettings()
+        {
+            //load settings first
+            var settings = duHastNet.UI.PDFDWGExporterSelectionUI.Utils.SettingsUtils.LoadSettings(AddMessage: AddMessage);
+
+            //cant simply replace the settings object in the data model...since it is used else where....need to update instead
+            _sheetsDataModel.Settings.UpdateSettingsFromSettings(settings);
+        }
+
 
         /// <summary>
         /// Method to clear selection in document naming table
@@ -357,6 +463,29 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             }
         }
 
+        /// <summary>
+        /// Set the export type selector depending on string from settings
+        /// </summary>
+        private void SetExportTypeFromSettings()
+        {
+            string exportType = _sheetsDataModel.Settings.ExportModus;
+            //check if dwg modus
+            if (exportType == Models.Constants.ExportModusDWG)
+            {
+                ExportTypes = ThreeWaySwitch.SwitchState.Centre;
+            }
+            //check if pdf and dwg
+            else if (exportType == Models.Constants.ExportModusPDFandDWG)
+            {
+                ExportTypes = ThreeWaySwitch.SwitchState.Right;
+            }
+            //assume it is pdf
+            else
+            {
+                ExportTypes = ThreeWaySwitch.SwitchState.Left;
+            }
+        }
+
         #endregion button underlying functions
 
         /// <summary>
@@ -378,8 +507,11 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             //store the message store
             _messageStore = messageStore;
 
-            //populate the available filters list ( PDF and DWG)
-            populateAvailablePrintSets();
+            //load settings first
+            LoadSettings();
+
+            //populate the available print set list from the model
+            PopulateAvailablePrintSets();
 
             //and set up sheets data table
             popualateSheetsDataTable();
@@ -387,7 +519,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             //set up all commands:
             // create the column order changed command
             ColumnOrderChangedCommand = new RelayCommand(OnColumnOrderChanged);
-
 
 
             ////push in
@@ -414,15 +545,21 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             //    CanMoveDown
             //);
 
-            ////save and exit
-            //_saveAndCloseCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
-            //    SaveSettingsAndClose,
-            //    (object parameter) => true //always enabled
-            //);
+            //save and exit
+            _saveAndCloseCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
+                SaveSettingsAndClose,
+                (object parameter) => true //always enabled
+            );
+
+            //set the export file path from settings:
+            ExportSheetsFilePath = _sheetsDataModel.Settings.ExportFolderPath;
+
+            // set the default export operation from the settings
+            SetExportTypeFromSettings();
 
             //set the filter to display sheets selected depending on print exports set
             //this will be trigger a view change to show the selected data table, hence last thing in the constructor
-            setPrintSetFilter();
+            SetPrintSetFilterFromSettings();
         }
     }
 }

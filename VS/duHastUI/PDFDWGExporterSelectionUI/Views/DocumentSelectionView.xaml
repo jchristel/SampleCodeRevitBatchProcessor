@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:duHastNet.UI.PDFDWGExporterSelectionUI.Views"
              xmlns:utilsViews="clr-namespace:duHastNet.Utils.WPF.Views;assembly=Utils.23.0.0.3"
              xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.23.0.0.3"
+             xmlns:customControls="clr-namespace:duHastNet.UI.CustomControls;assembly=duHastUICustomControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -18,13 +19,15 @@
             <RowDefinition Height="Auto"/>
             <!-- message banner -->
             <RowDefinition Height="Auto"/>
-            <!-- document type selector -->
+            <!-- print set selector -->
             <RowDefinition Height="auto"/>
             <!-- data -->
             <RowDefinition Height="*"/>
-            <!-- buttons export import-->
+            <!-- export path -->
             <RowDefinition Height="Auto"/>
-            <!-- buttons -->
+            <!-- Export doc type selectot-->
+            <RowDefinition Height="Auto"/>
+            <!-- Export sheet buttons -->
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <!-- header row content -->
@@ -99,8 +102,17 @@
                  Content="Browse"
                  Click="Export_OnClick"/>
         </Grid>
-        <!-- export row content -->
+        <!--export format selector -->
         <Border Grid.Row="5" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+            <customControls:ThreeWaySwitch Width="Auto" 
+                Height="Auto"
+                Margin="10 2 10 2"
+                LabelLeft="PDF" LabelCenter="DWG" LabelRight="PDF and DWG" DisplayName="Mode"
+                Value="{Binding ExportTypes, Mode=TwoWay}"/>
+        </Border>
+        
+        <!-- export row content -->
+        <Border Grid.Row="6" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
             <Grid Margin="5 2 5 2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -110,7 +122,8 @@
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0"
                      Margin="2 5 2 5" 
-                     Content="Export Sheets" 
+                     Content = "{Binding  ExportButtonText}"
+                     Command="{Binding SaveAndCloseCommand}" 
                      FontSize="24"/>
             </Grid>
         </Border>

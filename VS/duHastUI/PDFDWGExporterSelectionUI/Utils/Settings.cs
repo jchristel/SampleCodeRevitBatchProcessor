@@ -63,11 +63,53 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
         }
 
         /// <summary>
+        /// which type of documents to export
+        /// </summary>
+        private string _exportModus;
+        public string ExportModus
+        {
+            get => _exportModus;
+            set => _exportModus = value;
+        }
+
+
+        /// <summary>
+        /// updates this settings object from another one. If null is past in this will be reset to default values
+        /// </summary>
+        /// <param name="settings"></param>
+        public void UpdateSettingsFromSettings(Settings settings)
+        {
+            if (settings == null)
+            {
+                //reset to default
+                _columnNames = new List<string>();
+                _printSet = Models.Constants.DefaultPrintSetName;
+                _exportFolderPath = string.Empty;
+                _exportModus = Models.Constants.ExportModusPDF;
+                return;
+            }
+            else
+            {
+                //deep copy of the column names
+                _columnNames = new List<string>(settings.ColumnNames);
+                _printSet = settings.Printset;
+                _exportFolderPath = settings.ExportFolderPath;
+                _exportModus = settings.ExportModus;
+                return;
+            }
+        }
+
+
+        /// <summary>
         /// default constructor
         /// </summary>
         public Settings()
         {
+            // set default values
             _columnNames = new List<string>();
+            _printSet = Models.Constants.DefaultPrintSetName;
+            _exportFolderPath = string.Empty;
+            _exportModus = Models.Constants.ExportModusPDF;
         }
     }
 }

@@ -53,5 +53,13 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
         public const string DefaultPrintSetName = "<None>";
 
         #endregion
+
+        #region export modus options
+
+        public const string ExportModusPDF = "PDF";
+        public const string ExportModusDWG = "DWG";
+        public const string ExportModusPDFandDWG = "PDF and DWG";
+
+        #endregion
     }
 }

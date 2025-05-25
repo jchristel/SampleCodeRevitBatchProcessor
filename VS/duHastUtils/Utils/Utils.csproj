@@ -97,6 +97,7 @@
     <Compile Include="Logging\LogEntry.cs" />
     <Compile Include="Logging\SimpleLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings\SettingsUtils.cs" />
     <Compile Include="WPF\Commands\ClearMessageCommand.cs" />
     <Compile Include="WPF\Commands\CommandBase.cs" />
     <Compile Include="WPF\Commands\RelayCommand.cs" />

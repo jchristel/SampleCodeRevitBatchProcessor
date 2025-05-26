@@ -43,6 +43,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 
         #region column names data grid view
 
+        public const string ColumnHeaderExport = "Export";
         public const string ColumnHeaderSheetNumber = "Number";
         public const string ColumnHeaderSheetName = "Name";
 

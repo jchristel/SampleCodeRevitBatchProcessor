@@ -30,7 +30,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Linq;
 using System.Net.NetworkInformation;
+using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -68,6 +70,8 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         ///  default view of the data table containing sheets for selection
         /// </summary>
         private DataView _dvSheets;
+
+        private DataTable _dataTable;
 
         //command to update the view model if the column order changes
         public RelayCommand ColumnOrderChangedCommand { get; private set; }
@@ -228,68 +232,59 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             //create an empty data table
             DataTable dataTable = new DataTable();
             //add the default columns
+            dataTable.Columns.Add(Models.Constants.ColumnHeaderExport, typeof(bool)); // Checkbox column
             dataTable.Columns.Add(Models.Constants.ColumnHeaderSheetNumber);
             dataTable.Columns.Add(Models.Constants.ColumnHeaderSheetName);
+
+            //add custom columns
+            var sampleSheet = _sheetsDataModel.RevitSheets.First();
+            if (sampleSheet != null)
+            {
+                foreach (var sheetProperty in sampleSheet.Properties)
+                {
+                    dataTable.Columns.Add($"{sheetProperty.Name}", typeof(string));
+                }
+            }
             
             return dataTable;
         }
 
-        
         /// <summary>
         /// populate the data table containing the dwg name settings
         /// </summary>
-        private void popualateSheetsDataTable()
+        private void PopualateSheetsDataTable()
         {
-            //populate the data table containing the dwg settings
-            //check if the current settings contain a  dwg settings string
-            //and set up the data tables accordingly
-
+            //populate the data table containing the sheet data
+            
             //set up an empty table
             DataTable dataTable = CreateEmptySheetsDataTable();
 
-            //TODO:
+            //update the data table with the parsed values
+            foreach (var sheetData in _sheetsDataModel.RevitSheets)
+            {
+                // Add a row per room
+                DataRow row = dataTable.NewRow();
+                row[Models.Constants.ColumnHeaderExport] =false;
+                row[Models.Constants.ColumnHeaderSheetNumber] = sheetData.SheetNumber.Value;
+                row[Models.Constants.ColumnHeaderSheetName] = sheetData.SheetName.Value;
 
-            ////check if the current settings contain a dwg settings string
-            //if (_sheetsDataModel.Settings.DWGRenameString == null || _sheetsDataModel.Settings.DWGRenameString == "")
-            //{
-            //    //store the table in global
-            //    _documentSettingsTables.Add(_documentTypeDWGName, dataTable);
-            //    // do not set the data view here, as this will be done in the populateAvailableFilters function
-            //    //and the default view will be set to the pdf settings table
-            //    // get out of the function
-            //    return;
-            //}
+                // add all other sheet properties
+                foreach (var sheetProperty in sheetData.Properties)
+                {
+                    row[sheetProperty.Name] = sheetProperty.Value;
+                }
 
-            ////parse the settings string and add the values
-            //ObservableCollection<Utils.DocumentSetting> dwgDocumentSettings = Utils.SettingsStringParser.ParseDwgSettingsString(
-            //    _sheetsDataModel.Settings.DWGRenameString,
-            //    _sheetsDataModel.ParameterNames
-            //);
+                // Add the row to the data table
+                dataTable.Rows.Add(row);
+            }
 
-            ////update the global dictionary with the parsed values
-            //_documentSettingsDictionary[_documentTypeDWGName] = dwgDocumentSettings;
+            // store the data table in global
+            _dataTable = dataTable;
 
-            ////update the data table with the parsed values
-            //foreach (var dwgDocumentSetting in dwgDocumentSettings)
-            //{
-            //    // Add a row per room
-            //    DataRow row = dataTable.NewRow();
-            //    row[_columnNameRulePrefix] = dwgDocumentSetting.Prefix;
-            //    row[_columnNameRuleParameter] = dwgDocumentSetting.PropertyName;
-            //    row[_columnNameRuleSuffix] = dwgDocumentSetting.Suffix;
-            //    row[_columnNameRuleSeparator] = dwgDocumentSetting.Separator;
-            //    // Add the row to the data table
-            //    dataTable.Rows.Add(row);
-            //}
-
-            ////store the table in global
-            //_documentSettingsTables.Add(_documentTypeDWGName, dataTable);
-
-            // do not set the data view here, as this will be done in the populateAvailableFilters function
-            //and the default view will be set to the pdf settings table
+            // do not set the data view here, as this will be done elsewhere
+            
             // get out of the function
             return;
-
         }
 
         #endregion data tables
@@ -517,7 +512,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             PopulateAvailablePrintSets();
 
             //and set up sheets data table
-            popualateSheetsDataTable();
+            PopualateSheetsDataTable();
 
             //set up all commands:
             // create the column order changed command
@@ -563,6 +558,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             //set the filter to display sheets selected depending on print exports set
             //this will be trigger a view change to show the selected data table, hence last thing in the constructor
             SetPrintSetFilterFromSettings();
+
+            //update the data view with the data table
+            DataViewSheets = new DataView(_dataTable);
         }
     }
 }

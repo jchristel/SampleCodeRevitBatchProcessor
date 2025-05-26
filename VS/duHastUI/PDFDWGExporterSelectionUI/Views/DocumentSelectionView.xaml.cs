@@ -81,5 +81,30 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Views
                 }
             }
         }
+
+
+        /// <summary>
+        /// lock all columns but the check box column
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
+        {
+            // List of columns that should be editable
+            var editableColumns = new HashSet<string>
+            {
+                Models.Constants.ColumnHeaderExport // Example: Allow editing only the checkbox column
+            };
+
+            // Lock all columns except those in the editable list
+            if (!editableColumns.Contains(e.Column.Header.ToString()))
+            {
+                e.Column.IsReadOnly = true; // Prevent editing
+            }
+            else
+            {
+                e.Column.IsReadOnly = false; // Allow editing for the specific column
+            }
+        }
     }
 }

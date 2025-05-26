@@ -57,20 +57,22 @@
         <!-- Sheet selection -->
         <Grid Grid.Row="3">
             <!-- grid view -->
-            <DataGrid Grid.Row="3" x:Name="dataGrid" 
+            <DataGrid x:Name="dataGrid" 
                     ItemsSource="{Binding DataViewSheets}"
                     EnableRowVirtualization="True" 
                     EnableColumnVirtualization="True" 
                     VirtualizingPanel.IsVirtualizing="True" 
                     VirtualizingPanel.VirtualizationMode="Recycling"
                     AutoGenerateColumns="True" 
-                    IsReadOnly="True"
+                    IsReadOnly="False"
+                    CanUserAddRows="False"
                     CanUserSortColumns="True"
                     SelectionMode="Extended" 
                     ColumnWidth="*"
                     RowHeight="23"
                     HorizontalAlignment="Stretch"
-                    ColumnReordered="RoomsDataGrid_ColumnReordered">
+                    ColumnReordered="RoomsDataGrid_ColumnReordered"
+                    AutoGeneratingColumn="DataGrid_AutoGeneratingColumn">
             </DataGrid>
         </Grid>
         <!--Export path -->

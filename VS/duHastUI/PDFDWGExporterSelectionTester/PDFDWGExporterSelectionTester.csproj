@@ -55,6 +55,9 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -106,6 +109,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -118,6 +122,10 @@
     <ProjectReference Include="..\PDFDWGExporterSelectionUI\PDFDWGExporterSelectionUI.csproj">
       <Project>{0413ba8d-e793-4ad1-94ab-2b984eb56bfd}</Project>
       <Name>PDFDWGExporterSelectionUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PDFDWGExporterUI\PDFDWGExporterUI.csproj">
+      <Project>{e3d8a25e-62ca-4e17-a2ee-cb43b92a31b6}</Project>
+      <Name>PDFDWGExporterUI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

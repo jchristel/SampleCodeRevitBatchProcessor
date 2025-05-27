@@ -23,46 +23,50 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
-namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
+namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
 {
-    public class Constants
+    public static class FileNamePreviewUtils
     {
+        public static string GetFileName(Models.RevitSheet sheet, ObservableCollection<duHastNet.UI.PDFDWGExporterUI.Utils.DocumentSetting> settings)
+        {
 
-        #region sheet property names
+            StringBuilder pdfFileName = new StringBuilder();
 
-        public const string PropertyNameSheetName = "SheetName";
-        public const string PropertyValueSheetNumber = "SheetNumber";
-        public const string PropertyValueSheetRevitId = "SheetRevitId";
+            foreach (var setting in settings)
+            {
+                // add the prefix
+                pdfFileName.Append(setting.Prefix);
 
-        #endregion
+                //get the sheet property and its value
+                //check for sheet number ( works in english only??)
+                if (setting.PropertyName == "Sheet Number")
+                    pdfFileName.Append(sheet.SheetNumber.Value);
+                else if (setting.PropertyName == "Sheet Name")
+                    // sheet name check
+                    pdfFileName.Append(sheet.SheetName.Value);
+                else
+                {
+                    // must be another property
+                    if (sheet.Properties.Exists(x=>x.Name == setting.PropertyName))
+                    {
+                        var prop = sheet.Properties.Find(x=>x.Name == setting.PropertyName);
+                        pdfFileName.Append(prop.Value);
+                    }
+                }
 
-        #region column names data grid view
 
-        public const string ColumnHeaderExport = "Export";
-        public const string ColumnHeaderPDFPreviewName = "PDF Name";
-        public const string ColumnHeaderDWGPreviewName = "DWG Name";
-        public const string ColumnHeaderSheetNumber = "Number";
-        public const string ColumnHeaderSheetName = "Name";
+                //add the suffix
+                pdfFileName.Append(setting.Suffix);
+                //add the separator
+                pdfFileName.Append(setting.Separator);
+            }
 
-        #endregion
-
-        #region default print set name
-
-        public const string DefaultPrintSetName = "<None>";
-
-        #endregion
-
-        #region export modus options
-
-        public const string ExportModusPDF = "PDF";
-        public const string ExportModusDWG = "DWG";
-        public const string ExportModusPDFandDWG = "PDF and DWG";
-
-        #endregion
+            return pdfFileName.ToString();
+        }
     }
 }

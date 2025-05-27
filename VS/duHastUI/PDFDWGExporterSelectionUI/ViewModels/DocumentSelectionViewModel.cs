@@ -233,6 +233,23 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             DataTable dataTable = new DataTable();
             //add the default columns
             dataTable.Columns.Add(Models.Constants.ColumnHeaderExport, typeof(bool)); // Checkbox column
+
+            // add preview columns depending on export type:
+            if (ExportTypes == ThreeWaySwitch.SwitchState.Left)
+            {
+                dataTable.Columns.Add(Models.Constants.ColumnHeaderPDFPreviewName);
+            }
+            else if (ExportTypes == ThreeWaySwitch.SwitchState.Centre)
+            {
+                dataTable.Columns.Add(Models.Constants.ColumnHeaderDWGPreviewName);
+            }
+            else
+            {
+                dataTable.Columns.Add(Models.Constants.ColumnHeaderPDFPreviewName);
+                dataTable.Columns.Add(Models.Constants.ColumnHeaderDWGPreviewName);
+            }
+
+            // add sheet number and name
             dataTable.Columns.Add(Models.Constants.ColumnHeaderSheetNumber);
             dataTable.Columns.Add(Models.Constants.ColumnHeaderSheetName);
 
@@ -265,6 +282,21 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                 // Add a row per room
                 DataRow row = dataTable.NewRow();
                 row[Models.Constants.ColumnHeaderExport] =false;
+
+                //check which preview to add
+                if (ExportTypes == ThreeWaySwitch.SwitchState.Left)
+                {
+                    row[Models.Constants.ColumnHeaderDWGPreviewName] = sheetData.PDFPreviewName;
+                }
+                else if (ExportTypes == ThreeWaySwitch.SwitchState.Centre)
+                {
+                    row[Models.Constants.ColumnHeaderDWGPreviewName] = sheetData.DWGPreviewName;
+                }
+                else {
+                    row[Models.Constants.ColumnHeaderPDFPreviewName] = sheetData.PDFPreviewName;
+                    row[Models.Constants.ColumnHeaderDWGPreviewName] = sheetData.DWGPreviewName;
+                }
+
                 row[Models.Constants.ColumnHeaderSheetNumber] = sheetData.SheetNumber.Value;
                 row[Models.Constants.ColumnHeaderSheetName] = sheetData.SheetName.Value;
 
@@ -336,8 +368,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                     {
                         ExportButtonText = $"Export {Models.Constants.ExportModusPDF}s";
                         _sheetsDataModel.Settings.ExportModus = Models.Constants.ExportModusPDF;
-
-
                     }
                     else if (_exportTypes == ThreeWaySwitch.SwitchState.Centre)
                     {
@@ -508,12 +538,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             //load settings first
             LoadSettings();
 
-            //populate the available print set list from the model
-            PopulateAvailablePrintSets();
-
-            //and set up sheets data table
-            PopualateSheetsDataTable();
-
             //set up all commands:
             // create the column order changed command
             ColumnOrderChangedCommand = new RelayCommand(OnColumnOrderChanged);
@@ -552,8 +576,14 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             //set the export file path from settings:
             ExportSheetsFilePath = _sheetsDataModel.Settings.ExportFolderPath;
 
+            //populate the available print set list from the model
+            PopulateAvailablePrintSets();
+
             // set the default export operation from the settings
             SetExportTypeFromSettings();
+
+            //and set up sheets data table
+            PopualateSheetsDataTable();
 
             //set the filter to display sheets selected depending on print exports set
             //this will be trigger a view change to show the selected data table, hence last thing in the constructor

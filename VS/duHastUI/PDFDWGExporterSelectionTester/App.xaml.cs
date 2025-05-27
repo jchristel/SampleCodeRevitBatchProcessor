@@ -1,11 +1,13 @@
-﻿using System;
+﻿using duHastNet.UI.PDFDWGExporterSelectionUI;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using duHastNet.UI.PDFDWGExporterSelectionUI;
+using System.Xml;
+using Newtonsoft.Json;
 
 namespace PDFDWGExporterSelectionTester
 {
@@ -29,9 +31,34 @@ namespace PDFDWGExporterSelectionTester
                 new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 2")
             };
 
+
+            var settingsPDF = new List<duHastNet.UI.PDFDWGExporterUI.Utils.DocumentSetting>
+            {
+                new duHastNet.UI.PDFDWGExporterUI.Utils.DocumentSetting("", "", "_", "Sheet Number"),
+                new duHastNet.UI.PDFDWGExporterUI.Utils.DocumentSetting("", "", "-", "Sheet Name"),
+                new duHastNet.UI.PDFDWGExporterUI.Utils.DocumentSetting("", "", "", "Parameter3"),
+                new duHastNet.UI.PDFDWGExporterUI.Utils.DocumentSetting("[", "]", "", "Parameter4")
+            };
+
+            string jsonPDF = JsonConvert.SerializeObject(settingsPDF, Newtonsoft.Json.Formatting.None);
+
+            var settingsDWG = new List<duHastNet.UI.PDFDWGExporterUI.Utils.DocumentSetting>
+            {
+                new duHastNet.UI.PDFDWGExporterUI.Utils.DocumentSetting("", "-DWG", " ", "Sheet Number"),
+                new duHastNet.UI.PDFDWGExporterUI.Utils.DocumentSetting("", "", "", "Sheet Name"),
+                new duHastNet.UI.PDFDWGExporterUI.Utils.DocumentSetting("", "", "", "Parameter3"),
+                new duHastNet.UI.PDFDWGExporterUI.Utils.DocumentSetting("[", "]", "", "Parameter4")
+            };
+
+            string jsonDWG = JsonConvert.SerializeObject(settingsDWG, Newtonsoft.Json.Formatting.None);
+
+
             var main = new duHastNet.UI.PDFDWGExporterSelectionUI.Main(
                 sheetsInModel: sheets,
-                printSetsInModel: printSets);
+                printSetsInModel: printSets,
+                currentPDFExportString:jsonPDF,
+                currentDWGExportString:jsonDWG,
+                parameterNames: new List<string> { "Sheet Number", "Sheet Name", "Parameter4" });
 
             var settings = main.Execute();
         }

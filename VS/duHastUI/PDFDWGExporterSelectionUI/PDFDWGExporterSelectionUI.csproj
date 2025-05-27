@@ -81,6 +81,7 @@
     <Compile Include="Models\SheetProperty.cs" />
     <Compile Include="Models\SheetsDataModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\FileNamePreviewUtils.cs" />
     <Compile Include="Utils\Settings.cs" />
     <Compile Include="Utils\SettingsUtils.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
@@ -100,6 +101,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PDFDWGExporterUI\PDFDWGExporterUI.csproj">
+      <Project>{e3d8a25e-62ca-4e17-a2ee-cb43b92a31b6}</Project>
+      <Name>PDFDWGExporterUI</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

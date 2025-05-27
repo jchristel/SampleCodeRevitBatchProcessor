@@ -94,6 +94,25 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
             }
         }
 
+        /// <summary>
+        /// pdf file name preview
+        /// </summary>
+        private string _pdfPreviewName;
+        public string PDFPreviewName
+        {
+            get { return _pdfPreviewName; }
+            set { _pdfPreviewName = value; }
+        }
+
+        /// <summary>
+        /// dwg preview name
+        /// </summary>
+        private string _dwgPreviewName;
+        public string DWGPreviewName
+        {
+            get { return _dwgPreviewName; }
+            set { _dwgPreviewName = value; }
+        }
 
         public RevitSheet(string sheetNumber, string sheetName, string revitElementId)
         {

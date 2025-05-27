@@ -41,7 +41,13 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
         Utils.Settings _settings;
 
 
-        public Main(List<RevitSheet>sheetsInModel, List<RevitPrintSet>printSetsInModel)
+        public Main(
+            List<RevitSheet>sheetsInModel, 
+            List<RevitPrintSet>printSetsInModel,
+            string currentPDFExportString,
+            string currentDWGExportString,
+            List<string> parameterNames)
+
         {
             //set up stores
             _navigationStore = new NavigationStore();
@@ -55,7 +61,10 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
             _exportSheetsDataModel = new Models.SheetsDataModel(
                 settings:_settings,
                 revitSheets: sheetsInModel,
-                revitPrintSets: printSetsInModel);
+                revitPrintSets: printSetsInModel,
+                currentPDFExportString:currentPDFExportString,
+                currentDWGExportString: currentDWGExportString,
+                parameterNames:parameterNames);
         }
 
 

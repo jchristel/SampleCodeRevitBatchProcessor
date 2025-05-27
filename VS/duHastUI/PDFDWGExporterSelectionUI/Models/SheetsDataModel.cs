@@ -48,7 +48,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
             get => _revitSheets;
         }
 
-
         /// <summary>
         /// print set from the revit model
         /// </summary>
@@ -57,13 +56,63 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
         {
             get => _printSets;
         }
-        
+
+        /// <summary>
+        /// json formatted string representing pdf name settings
+        /// </summary>
+        private string _currentPDFExportString;
+        public string CurrentPDFExportString { get => _currentPDFExportString; }
+
+        /// <summary>
+        /// jso formatted string representing dwg name settings
+        /// </summary>
+        private string _currentDWGExportString;
+        public string CurrentDWGExportString {  get => _currentDWGExportString; }
+
+        /// <summary>
+        /// available sheet parameters
+        /// </summary>
+        private List<string> _parameterNames;
+        public List<string> ParameterNames { get => _parameterNames; }
+
+
+        private void AddPreviewNames()
+        {
+            // get the pdf name settings
+            var pdfSettings = duHastNet.UI.PDFDWGExporterUI.Utils.SettingsStringParser.ParsePdfSettingsString(
+                settingsString: CurrentPDFExportString,
+                availableParameters: ParameterNames);
+
+
+            // get the dwg name settings
+            var dwgSettings = duHastNet.UI.PDFDWGExporterUI.Utils.SettingsStringParser.ParseDwgSettingsString(
+                settingsString: CurrentDWGExportString, 
+                availableParameters: ParameterNames);
+
+            // update sheets
+            foreach (var sheet in RevitSheets)
+            {
+                // get the pdf name
+                sheet.PDFPreviewName = Utils.FileNamePreviewUtils.GetFileName(sheet, pdfSettings);
+                
+                //get the dwg name
+                sheet.DWGPreviewName = Utils.FileNamePreviewUtils.GetFileName(sheet, dwgSettings);
+
+            }
+        }
 
 
         /// <summary>
         /// Constructor for the sheets data model
         /// </summary>
-        public SheetsDataModel(Utils.Settings settings, List<RevitSheet>revitSheets, List<RevitPrintSet>revitPrintSets)
+        public SheetsDataModel(
+            Utils.Settings settings, 
+            List<RevitSheet>revitSheets, 
+            List<RevitPrintSet>revitPrintSets,
+            string currentPDFExportString,
+            string currentDWGExportString,
+            List<string> parameterNames
+            )
         {
             // Initialize the settings object
             _settings = settings;
@@ -73,6 +122,14 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 
             //initialise print sets
             _printSets = revitPrintSets;
+
+            //initialise exporter file name settings
+            _currentPDFExportString = currentPDFExportString;
+            _currentDWGExportString = currentDWGExportString;
+            _parameterNames = parameterNames;
+
+            //add preview names for pdf and dwg export for each sheet
+            AddPreviewNames();
         }
     }
 }

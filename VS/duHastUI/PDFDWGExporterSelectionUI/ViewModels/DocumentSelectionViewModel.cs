@@ -286,7 +286,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                 //check which preview to add
                 if (ExportTypes == ThreeWaySwitch.SwitchState.Left)
                 {
-                    row[Models.Constants.ColumnHeaderDWGPreviewName] = sheetData.PDFPreviewName;
+                    row[Models.Constants.ColumnHeaderPDFPreviewName] = sheetData.PDFPreviewName;
                 }
                 else if (ExportTypes == ThreeWaySwitch.SwitchState.Centre)
                 {

@@ -30,7 +30,6 @@ class Settings(Base):
         # ini super class to allow multi inheritance in children!
         super(Settings, self).__init__()
 
-
         self.pdf_settings = None
         self.dwg_settings = None
         self.dwg_export_scheme_name = None

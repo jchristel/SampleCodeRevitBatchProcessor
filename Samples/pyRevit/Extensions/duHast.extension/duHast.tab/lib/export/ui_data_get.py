@@ -58,31 +58,26 @@ def get_ui_print_set_data(doc, sheets):
     # create a .net list to hold the print set objects
     print_set_data = List[RevitPrintSet]()
 
-    print('here1')
+    # get the view sets in the model
     col = get_view_sets(doc)
-    print('here2')
-
+    
     for set in col:
         
         # check if the set has any views
         if set.OrderedViewList is None or set.OrderedViewList.Count == 0:
             continue
         
-        print(set.Name)
         view_ids = []
         for sheet_in_set in set.OrderedViewList:
             if (isinstance(sheet_in_set, ViewSheet)):
                 view_ids.append(sheet_in_set.Id.IntegerValue)
             
-            print("...View in set: {} is of type: {}".format(sheet_in_set.Name, type(sheet_in_set)))
         
         # check if any sheet ids where found in the set
         if len(view_ids) == 0:
             continue
         
-
         sheets_in_set = List[RevitSheet]() 
-
 
         for id_found in view_ids:
             for sheet in sheets:
@@ -94,9 +89,6 @@ def get_ui_print_set_data(doc, sheets):
         if sheets_in_set.Count == 0:
             # no sheets found in the set, skip this set
             continue
-
-        # print the name of the set and the number of sheets in it
-        print("Found print set: {} with {} sheets".format(set.Name, sheets_in_set.Count))
 
         # create a RevitPrintSet object with the set data
         revit_print_set = RevitPrintSet(
@@ -159,6 +151,8 @@ def get_ui_sheet_data(doc):
 
             # add the sheet to the list of sheets
             sheet_ui_data.Add(revit_sheet)
+
+
     except Exception as e:
         # handle any exceptions that occur while getting sheet data
         print_error("Error getting sheet data: {}".format(e))

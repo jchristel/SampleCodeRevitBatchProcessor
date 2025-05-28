@@ -28,7 +28,7 @@ from duHast.Revit.ExtensibleSchemas.extensible_schemas import does_schema_exist
 from duHast.pyRevit.net_dll_loader import load_net_dll_path
 
 
-from export.utility import get_sheet_parameter_data
+from export.utility import get_sheet_parameter_data, get_sheet_parameter_names
 from export import settings
 from export.settings_utils import get_name_settings_from_schema
 from export.ui_data_get import get_ui_data
@@ -52,7 +52,7 @@ def export_pdf_dwg_entry(doc, output, forms):
     return_value = Result()
 
     try:
-        print_header("Exporting sheets to PDF and DWG files")
+        
 
         # load .net interface dlls
         set_dll_path_result = load_net_dll_path([ "PDFDWGExporterSelectionUI.dll"]) #"Utils.23.0.0.3.dll",
@@ -83,20 +83,31 @@ def export_pdf_dwg_entry(doc, output, forms):
         else:
             # get the rename settings from the schema
             rename_settings = settings_getter_result.result[0]
-            
 
+        # get the parameters assigned to sheets
+        parameter_names = get_sheet_parameter_names(doc)
+
+        # get the data required for the UI
         ui_data = get_ui_data(doc)
-        print("UI data for sheets: {}".format(ui_data))
 
         # import the UI class from the PDFDWGExporterUI namespace
         from duHastNet.UI.PDFDWGExporterSelectionUI import Main
        
         # create an instance of the Main class
-        main = Main(sheetsInModel=ui_data[0], printSetsInModel=ui_data[1])
+        main = Main(
+            sheetsInModel=ui_data[0], 
+            printSetsInModel=ui_data[1],
+            currentPDFExportString = rename_settings.pdf_settings,
+            currentDWGExportString = rename_settings.dwg_settings,
+            parameterNames=parameter_names,
+        )
+
         # show the output window
         export_settings = main.Execute()
 
 
+        print_header("Exporting sheets to PDF and DWG files")
+        
         # # get going
         # sheet_counter = 0
 

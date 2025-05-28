@@ -20,13 +20,74 @@
 #
 #
 
+import clr
+import os
+import sys
+
+from System.Collections.Generic import List
+
 from duHast.Revit.Common import parameter_get_utils as rParaGet
+from duHast.Revit.Views.sheets import get_all_sheets
+
+from Autodesk.Revit.DB import BuiltInParameter
 
 # set up some options for the user to select
 EXPORT_PDF_ONLY = "PDF only"
 EXPORT_PDF_AND_DWG = "PDF and DWG"
 
-def get_sheet_parameter_data (view_sheet):
+# exclude the following parameters from sheet data retrieval
+DEFAULT_PARAMETER_EXCLUDE_LIST = [
+    BuiltInParameter.VIEW_VISIBLE_CATEGORIES,
+    BuiltInParameter.VIEW_DEPENDENCY,
+    BuiltInParameter.VIEW_FIXED_SKETCH_PLANE,
+    BuiltInParameter.ELEM_PARTITION_PARAM,
+]
+
+def get_sheet_parameter_names(doc):
+
+    """
+    Get the parameter names assigned to sheets.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: List of parameter names assigned to sheets.
+    :rtype: List[str]
+    """
+    
+    # get all sheets in the document
+    sheets = get_all_sheets(doc)
+
+    parameter_names = List[str]()
+
+    parameter_names_not_ordered =[]
+    # get the parameter names from the first sheet
+    for sheet in sheets:
+        parameters = sheet.GetOrderedParameters()
+        for p in parameters:
+            parameter_names_not_ordered.append(p.Definition.Name)
+       
+        break
+   
+    # order the parameter names
+    parameter_names_not_ordered = sorted(parameter_names_not_ordered, key=lambda x: x.lower())
+
+    # add to .net list to be returned
+    for name in parameter_names_not_ordered:
+        parameter_names.Add(name)
+
+    return parameter_names
+
+def get_sheet_parameter_data (view_sheet, exclude_parameters = DEFAULT_PARAMETER_EXCLUDE_LIST):
+    """
+    Gets the parameter data for a given view sheet.
+
+    :param view_sheet: The view sheet to get the parameter data from.
+    :type view_sheet: Autodesk.Revit.DB.ViewSheet
+    :param exclude_parameters: A list of parameters to exclude from the data.
+    :type exclude_parameters: list
+    :return: A dictionary containing the parameter data.
+    :rtype: dict
+    """
 
     data = {}
     paras = view_sheet.GetOrderedParameters()
@@ -34,6 +95,13 @@ def get_sheet_parameter_data (view_sheet):
     for para in paras:
             # get values as utf-8 encoded strings
             # for some characters this still throws an exception...added ascii encoding
+
+            # ignore visibility graphics
+            if para.Definition.BuiltInParameter in exclude_parameters:
+                continue
+
+
+            # get the value of the parameter
             value = rParaGet.get_parameter_value_utf8_string(para)
             try:
                 data[para.Definition.Name] = value

@@ -35,8 +35,8 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 
         #region sheet property names
 
-        public const string PropertyNameSheetName = "SheetName";
-        public const string PropertyValueSheetNumber = "SheetNumber";
+        public const string PropertyNameSheetName = "Sheet Name";
+        public const string PropertyValueSheetNumber = "Sheet Number";
         public const string PropertyValueSheetRevitId = "SheetRevitId";
 
         #endregion
@@ -46,8 +46,17 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
         public const string ColumnHeaderExport = "Export";
         public const string ColumnHeaderPDFPreviewName = "PDF Name";
         public const string ColumnHeaderDWGPreviewName = "DWG Name";
-        public const string ColumnHeaderSheetNumber = "Number";
-        public const string ColumnHeaderSheetName = "Name";
+        public const string ColumnHeaderSheetNumber = "Sheet Number";
+        public const string ColumnHeaderSheetName = "Sheet Name";
+
+        public static List<string> ReservedColumnNames = new List<string>
+        {
+            ColumnHeaderExport,
+            ColumnHeaderPDFPreviewName,
+            ColumnHeaderDWGPreviewName,
+            ColumnHeaderSheetNumber,
+            ColumnHeaderSheetName
+        };
 
         #endregion
 

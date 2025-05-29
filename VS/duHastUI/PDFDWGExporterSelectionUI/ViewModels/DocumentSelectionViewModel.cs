@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Security.Cryptography;
@@ -197,15 +198,24 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         #region column order
 
         //property to store the column order
-        private IEnumerable<string> _columnOrder;
+        private List<string> _columnOrder;
 
         //property to expose the column order
-        public IEnumerable<string> ColumnOrder
+        public List<string> ColumnOrder
         {
             get => _columnOrder;
             set
             {
                 _columnOrder = value;
+
+                // store column order in settings
+                //clear the currrent list
+                _sheetsDataModel.Settings.ColumnNames.Clear();
+
+                //populate the list from column order
+                foreach (var column in _columnOrder) {
+                    _sheetsDataModel.Settings.ColumnNames.Add(column);
+                }
             }
         }
 
@@ -217,7 +227,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             if (parameter is Tuple<IEnumerable<string>, DataView> data && data.Item2 is DataView dataView)
             {
                 // update the column order
-                ColumnOrder = data.Item1;
+                ColumnOrder = data.Item1.ToList();
             }
         }
 
@@ -231,7 +241,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         {
             //create an empty data table
             DataTable dataTable = new DataTable();
+            
             //add the default columns
+            //start with check box column
             dataTable.Columns.Add(Models.Constants.ColumnHeaderExport, typeof(bool)); // Checkbox column
 
             // add preview columns depending on export type:
@@ -253,18 +265,68 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             dataTable.Columns.Add(Models.Constants.ColumnHeaderSheetNumber);
             dataTable.Columns.Add(Models.Constants.ColumnHeaderSheetName);
 
-            //add custom columns
-            var sampleSheet = _sheetsDataModel.RevitSheets.First();
-            if (sampleSheet != null)
+            // populate the balance of columns depending on column order
+            foreach (string colName in ColumnOrder)
             {
-                foreach (var sheetProperty in sampleSheet.Properties)
+                //chek if column already exists
+                if (!dataTable.Columns.Contains(colName))
                 {
-                    dataTable.Columns.Add($"{sheetProperty.Name}", typeof(string));
+                    dataTable.Columns.Add($"{colName}", typeof(string));
                 }
             }
             
+            //return the empty data table
             return dataTable;
         }
+
+
+        /// <summary>
+        /// set the column order depending on settings from file or rename settings
+        /// </summary>
+        private void InitialiseColumnOrder()
+        {
+            //if there are columns stored in  settings retrieved from file
+            if (_sheetsDataModel.Settings.ColumnNames != null &&
+                _sheetsDataModel.Settings.ColumnNames.Count > 0)
+            {
+                // these column names do not contain export, preview columns, sheet number and sheet name
+                foreach (string columnName in _sheetsDataModel.Settings.ColumnNames)
+                {
+                    //check if column name is still available and not a reserved name
+                    if (_sheetsDataModel.ParameterNames.Contains(columnName) &&
+                        !Models.Constants.ReservedColumnNames.Contains(columnName))
+                    {
+                        _columnOrder.Add(columnName);
+                    }
+                }
+            }
+            else
+            {
+                List<string> newColumnOrder = new List<string>();
+                //use the extra parameter, if any, from the rename pdf settings
+                foreach(var settings in _sheetsDataModel.PDFSettings)
+                {
+                    if (!Models.Constants.ReservedColumnNames.Contains(settings.PropertyName))
+                    {
+                        newColumnOrder.Add(settings.PropertyName);
+                    }
+                }
+                //use the extra parameter, if any, from the rename dwg settings
+                foreach (var setting in _sheetsDataModel.DWGSettings)
+                {
+                    // make sure not to double up property names
+                    if (!Models.Constants.ReservedColumnNames.Contains(setting.PropertyName) &&
+                        !newColumnOrder.Contains(setting.PropertyName))
+                    {
+                        newColumnOrder.Add(setting.PropertyName);
+                    }
+                }
+
+                // set the column order property whcih will also update the column order stored in settings
+                ColumnOrder = newColumnOrder;
+            }
+        }
+
 
         /// <summary>
         /// populate the data table containing the dwg name settings
@@ -281,7 +343,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             {
                 // Add a row per room
                 DataRow row = dataTable.NewRow();
-                row[Models.Constants.ColumnHeaderExport] =false;
+
+                //set check box value
+                row[Models.Constants.ColumnHeaderExport] = false;
 
                 //check which preview to add
                 if (ExportTypes == ThreeWaySwitch.SwitchState.Left)
@@ -297,15 +361,31 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                     row[Models.Constants.ColumnHeaderDWGPreviewName] = sheetData.DWGPreviewName;
                 }
 
+                // set sheet number and name values
                 row[Models.Constants.ColumnHeaderSheetNumber] = sheetData.SheetNumber.Value;
                 row[Models.Constants.ColumnHeaderSheetName] = sheetData.SheetName.Value;
 
-                // add all other sheet properties
-                foreach (var sheetProperty in sheetData.Properties)
+                // add all other sheet properties depending on column order stored
+                foreach (string colName in ColumnOrder)
                 {
-                    row[sheetProperty.Name] = sheetProperty.Value;
-                }
+                    bool foundMatch = false;
+                    //loop over sheet properties and find match
+                    foreach (var sheetProperty in sheetData.Properties)
+                    {
+                        if (colName == sheetProperty.Name)
+                        {
+                            row[colName] = sheetProperty.Value;
+                            foundMatch = true;
+                            break;
+                        }
+                    }
 
+                    //check if match was found
+                    if (!foundMatch)
+                    {
+                        row[colName] = "N/A";
+                    }
+                }
                 // Add the row to the data table
                 dataTable.Rows.Add(row);
             }
@@ -345,7 +425,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             // trigger the property changed event
             OnPropertyChanged(nameof(PrintSetNamesDefaultList));
         }
-
 
         #region export types
 
@@ -401,7 +480,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                 OnPropertyChanged(nameof(ExportButtonText));
             }
         }
-
 
         /// <summary>
         /// The file path for the exports to be saved to
@@ -535,6 +613,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             //store the message store
             _messageStore = messageStore;
 
+            //initialise empty column order list
+            _columnOrder = new List<string>();
+
             //load settings first
             LoadSettings();
 
@@ -575,6 +656,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
             //set the export file path from settings:
             ExportSheetsFilePath = _sheetsDataModel.Settings.ExportFolderPath;
+
+            //set the data table column order from settings from file or rename settings
+            InitialiseColumnOrder();
 
             //populate the available print set list from the model
             PopulateAvailablePrintSets();

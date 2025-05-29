@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -75,17 +76,30 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
         private List<string> _parameterNames;
         public List<string> ParameterNames { get => _parameterNames; }
 
+        /// <summary>
+        /// pdf settings
+        /// </summary>
+        private ObservableCollection<PDFDWGExporterUI.Utils.DocumentSetting> _pdfSettings;
+        
+        public ObservableCollection<PDFDWGExporterUI.Utils.DocumentSetting> PDFSettings
+        { get => _pdfSettings; }
+
+        /// <summary>
+        /// dwg settings
+        /// </summary>
+        private ObservableCollection<PDFDWGExporterUI.Utils.DocumentSetting> _dwgSettings;
+        public ObservableCollection<PDFDWGExporterUI.Utils .DocumentSetting> DWGSettings
+        { get => _dwgSettings; }
 
         private void AddPreviewNames()
         {
             // get the pdf name settings
-            var pdfSettings = duHastNet.UI.PDFDWGExporterUI.Utils.SettingsStringParser.ParsePdfSettingsString(
+            _pdfSettings = duHastNet.UI.PDFDWGExporterUI.Utils.SettingsStringParser.ParsePdfSettingsString(
                 settingsString: CurrentPDFExportString,
                 availableParameters: ParameterNames);
 
-
             // get the dwg name settings
-            var dwgSettings = duHastNet.UI.PDFDWGExporterUI.Utils.SettingsStringParser.ParseDwgSettingsString(
+            _dwgSettings = duHastNet.UI.PDFDWGExporterUI.Utils.SettingsStringParser.ParseDwgSettingsString(
                 settingsString: CurrentDWGExportString, 
                 availableParameters: ParameterNames);
 
@@ -93,11 +107,10 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
             foreach (var sheet in RevitSheets)
             {
                 // get the pdf name
-                sheet.PDFPreviewName = Utils.FileNamePreviewUtils.GetFileName(sheet, pdfSettings);
+                sheet.PDFPreviewName = Utils.FileNamePreviewUtils.GetFileName(sheet, _pdfSettings);
                 
                 //get the dwg name
-                sheet.DWGPreviewName = Utils.FileNamePreviewUtils.GetFileName(sheet, dwgSettings);
-
+                sheet.DWGPreviewName = Utils.FileNamePreviewUtils.GetFileName(sheet, _dwgSettings);
             }
         }
 

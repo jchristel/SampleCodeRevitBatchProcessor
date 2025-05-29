@@ -39,7 +39,7 @@ def create_ceiling( doc, level_id, outline, elevation, ceiling_type_id, transact
     :type doc: Autodesk.Revit.DB.Document
     :param level_id: The ElementId of the level where the ceiling should be created.
     :type level_id: Autodesk.Revit.DB.ElementId
-    :param outline: The outline of the ceiling as a list of XYZ points.
+    :param outline: The outline of the ceiling as a list of curve loops.
     :type outline: Autodesk.Revit.DB.CurveLoop
     :param elevation: The elevation in mmm of the ceiling above the level.
     :type elevation: float

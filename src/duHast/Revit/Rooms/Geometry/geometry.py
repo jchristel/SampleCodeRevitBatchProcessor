@@ -42,6 +42,8 @@ def get_room_boundary_loops(
     Returns all boundary loops for a rooms. Default value set to the center
     boundary location.
 
+    Note: Revit will return multiple BoundarySegments if the wall, which bounding a room, has another wall joining it on the opposing site of the room.
+
     :param revit_room: The room.
     :type revit_room: Autodesk.Revit.DB.Architecture.Room
     :return: List of boundary loops defining the room.

@@ -72,7 +72,17 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// </summary>
         private DataView _dvSheets;
 
-        private DataTable _dataTable;
+        /// <summary>
+        /// the data table used to create the view from
+        /// </summary>
+        private DataTable _dataTableView;
+
+
+        /// <summary>
+        /// the data table used to store all properties from a sheet
+        /// which gets used to create the view data table from
+        /// </summary>
+        private DataTable _dataTableSource;
 
         //command to update the view model if the column order changes
         public RelayCommand ColumnOrderChangedCommand { get; private set; }
@@ -233,6 +243,69 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
         #endregion column order
 
+
+        private void CreateSourceDataTable ()
+        {
+            //create an empty data table
+            _dataTableSource = new DataTable();
+
+            // add the default columns
+            //start with check box column
+            _dataTableSource.Columns.Add(Models.Constants.ColumnHeaderExport, typeof(bool)); // Checkbox column
+
+            //preview columns
+            _dataTableSource.Columns.Add(Models.Constants.ColumnHeaderPDFPreviewName);
+            _dataTableSource.Columns.Add(Models.Constants.ColumnHeaderDWGPreviewName);
+
+            // add sheet number and name
+            _dataTableSource.Columns.Add(Models.Constants.ColumnHeaderSheetNumber);
+            _dataTableSource.Columns.Add(Models.Constants.ColumnHeaderSheetName);
+
+            //add all other available properties as string
+            foreach (string propertyName in _sheetsDataModel.ParameterNames)
+            {
+                //check if column already exists
+                if (!_dataTableSource.Columns.Contains(propertyName))
+                {
+                    _dataTableSource.Columns.Add($"{propertyName}", typeof(string));
+                }
+            }
+
+            //populate the data table
+            //update the data table with the parsed values
+            foreach (var sheetData in _sheetsDataModel.RevitSheets)
+            {
+                // Add a row per room
+                DataRow row = _dataTableSource.NewRow();
+
+                //set check box value
+                row[Models.Constants.ColumnHeaderExport] = false;
+
+                //set the previews
+                row[Models.Constants.ColumnHeaderPDFPreviewName] = sheetData.PDFPreviewName;
+                row[Models.Constants.ColumnHeaderDWGPreviewName] = sheetData.DWGPreviewName;
+
+                //set sheet number and name values
+                row[Models.Constants.ColumnHeaderSheetNumber] = sheetData.SheetNumber.Value;
+                row[Models.Constants.ColumnHeaderSheetName] = sheetData.SheetName.Value;
+
+                //set all other values
+                //loop over sheet properties and find match
+                foreach (var sheetProperty in sheetData.Properties)
+                {
+                    if (_dataTableSource.Columns.Contains(sheetProperty.Name))
+                        {
+                        row[sheetProperty.Name] = sheetProperty.Value;
+                    }
+                }
+
+                // Add the row to the data table
+                _dataTableSource.Rows.Add(row);
+            }
+        }
+
+
+
         /// <summary>
         /// Create an empty data table with the default columns for the sheets  (number and name)
         /// </summary>
@@ -391,7 +464,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             }
 
             // store the data table in global
-            _dataTable = dataTable;
+            _dataTableView = dataTable;
 
             // do not set the data view here, as this will be done elsewhere
             
@@ -657,6 +730,10 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             //set the export file path from settings:
             ExportSheetsFilePath = _sheetsDataModel.Settings.ExportFolderPath;
 
+
+            //set up the source data table which contains all data for each sheet
+            CreateSourceDataTable();
+
             //set the data table column order from settings from file or rename settings
             InitialiseColumnOrder();
 
@@ -674,7 +751,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             SetPrintSetFilterFromSettings();
 
             //update the data view with the data table
-            DataViewSheets = new DataView(_dataTable);
+            DataViewSheets = new DataView(_dataTableView);
         }
     }
 }

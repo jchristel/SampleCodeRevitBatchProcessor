@@ -23,10 +23,12 @@
 
 
 using duHastNet.UI.CustomControls;
+using duHastNet.UI.PDFDWGExporterSelectionUI.Models;
 using duHastNet.Utils.WPF.Commands;
 using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -181,7 +183,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         public DataView DataViewSheets
         {
             get => _dvSheets;
-            private set
+            set
             {
                 _dvSheets = value;
                 OnPropertyChanged(nameof(DataViewSheets));
@@ -304,99 +306,19 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             }
         }
 
-
-
         /// <summary>
-        /// Create an empty data table with the default columns for the sheets  (number and name)
+        /// Transfers the export column value for the view table to the source table
         /// </summary>
-        /// <returns>An empty data table.</returns>
-        private DataTable CreateEmptySheetsDataTable()
+        private void SyncViewTableToSourceTable()
         {
-            //create an empty data table
-            DataTable dataTable = new DataTable();
-            
-            //add the default columns
-            //start with check box column
-            dataTable.Columns.Add(Models.Constants.ColumnHeaderExport, typeof(bool)); // Checkbox column
-
-            // add preview columns depending on export type:
-            if (ExportTypes == ThreeWaySwitch.SwitchState.Left)
+            if (_dataTableSource != null && _dataTableView != null)
             {
-                dataTable.Columns.Add(Models.Constants.ColumnHeaderPDFPreviewName);
-            }
-            else if (ExportTypes == ThreeWaySwitch.SwitchState.Centre)
-            {
-                dataTable.Columns.Add(Models.Constants.ColumnHeaderDWGPreviewName);
-            }
-            else
-            {
-                dataTable.Columns.Add(Models.Constants.ColumnHeaderPDFPreviewName);
-                dataTable.Columns.Add(Models.Constants.ColumnHeaderDWGPreviewName);
-            }
-
-            // add sheet number and name
-            dataTable.Columns.Add(Models.Constants.ColumnHeaderSheetNumber);
-            dataTable.Columns.Add(Models.Constants.ColumnHeaderSheetName);
-
-            // populate the balance of columns depending on column order
-            foreach (string colName in ColumnOrder)
-            {
-                //chek if column already exists
-                if (!dataTable.Columns.Contains(colName))
+                for (int i = 0; i < _dataTableView.Rows.Count; i++)
                 {
-                    dataTable.Columns.Add($"{colName}", typeof(string));
+                    // get the export status
+                    object newValue = _dataTableView.Rows[i][Models.Constants.ColumnHeaderExport];
+                    _dataTableSource.Rows[i][Models.Constants.ColumnHeaderExport] = newValue;
                 }
-            }
-            
-            //return the empty data table
-            return dataTable;
-        }
-
-
-        /// <summary>
-        /// set the column order depending on settings from file or rename settings
-        /// </summary>
-        private void InitialiseColumnOrder()
-        {
-            //if there are columns stored in  settings retrieved from file
-            if (_sheetsDataModel.Settings.ColumnNames != null &&
-                _sheetsDataModel.Settings.ColumnNames.Count > 0)
-            {
-                // these column names do not contain export, preview columns, sheet number and sheet name
-                foreach (string columnName in _sheetsDataModel.Settings.ColumnNames)
-                {
-                    //check if column name is still available and not a reserved name
-                    if (_sheetsDataModel.ParameterNames.Contains(columnName) &&
-                        !Models.Constants.ReservedColumnNames.Contains(columnName))
-                    {
-                        _columnOrder.Add(columnName);
-                    }
-                }
-            }
-            else
-            {
-                List<string> newColumnOrder = new List<string>();
-                //use the extra parameter, if any, from the rename pdf settings
-                foreach(var settings in _sheetsDataModel.PDFSettings)
-                {
-                    if (!Models.Constants.ReservedColumnNames.Contains(settings.PropertyName))
-                    {
-                        newColumnOrder.Add(settings.PropertyName);
-                    }
-                }
-                //use the extra parameter, if any, from the rename dwg settings
-                foreach (var setting in _sheetsDataModel.DWGSettings)
-                {
-                    // make sure not to double up property names
-                    if (!Models.Constants.ReservedColumnNames.Contains(setting.PropertyName) &&
-                        !newColumnOrder.Contains(setting.PropertyName))
-                    {
-                        newColumnOrder.Add(setting.PropertyName);
-                    }
-                }
-
-                // set the column order property whcih will also update the column order stored in settings
-                ColumnOrder = newColumnOrder;
             }
         }
 
@@ -406,70 +328,113 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// </summary>
         private void PopualateSheetsDataTable()
         {
-            //populate the data table containing the sheet data
-            
+            //populate the data table containing the sheet data based on the source data table
+
+            // sync the existing view table ( export column) with the source table
+            SyncViewTableToSourceTable();
+
             //set up an empty table
-            DataTable dataTable = CreateEmptySheetsDataTable();
+            DataTable dataTable = new DataTable();
 
-            //update the data table with the parsed values
-            foreach (var sheetData in _sheetsDataModel.RevitSheets)
+            //build table column
+            foreach (string colName in ColumnOrder)
             {
-                // Add a row per room
-                DataRow row = dataTable.NewRow();
-
-                //set check box value
-                row[Models.Constants.ColumnHeaderExport] = false;
-
-                //check which preview to add
-                if (ExportTypes == ThreeWaySwitch.SwitchState.Left)
+                if (_dataTableSource.Columns.Contains(colName))
                 {
-                    row[Models.Constants.ColumnHeaderPDFPreviewName] = sheetData.PDFPreviewName;
+                    dataTable.Columns.Add(colName, _dataTableSource.Columns[colName].DataType);
                 }
-                else if (ExportTypes == ThreeWaySwitch.SwitchState.Centre)
-                {
-                    row[Models.Constants.ColumnHeaderDWGPreviewName] = sheetData.DWGPreviewName;
-                }
-                else {
-                    row[Models.Constants.ColumnHeaderPDFPreviewName] = sheetData.PDFPreviewName;
-                    row[Models.Constants.ColumnHeaderDWGPreviewName] = sheetData.DWGPreviewName;
-                }
+            }
 
-                // set sheet number and name values
-                row[Models.Constants.ColumnHeaderSheetNumber] = sheetData.SheetNumber.Value;
-                row[Models.Constants.ColumnHeaderSheetName] = sheetData.SheetName.Value;
+            //add table data
+            foreach (DataRow sourceRow in _dataTableSource.Rows)
+            {
+                DataRow newRow = dataTable.NewRow();
 
-                // add all other sheet properties depending on column order stored
                 foreach (string colName in ColumnOrder)
                 {
-                    bool foundMatch = false;
-                    //loop over sheet properties and find match
-                    foreach (var sheetProperty in sheetData.Properties)
-                    {
-                        if (colName == sheetProperty.Name)
-                        {
-                            row[colName] = sheetProperty.Value;
-                            foundMatch = true;
-                            break;
-                        }
-                    }
-
-                    //check if match was found
-                    if (!foundMatch)
-                    {
-                        row[colName] = "N/A";
-                    }
+                    newRow[colName] = sourceRow[colName];
                 }
-                // Add the row to the data table
-                dataTable.Rows.Add(row);
+                dataTable.Rows.Add(newRow);
             }
 
             // store the data table in global
             _dataTableView = dataTable;
 
-            // do not set the data view here, as this will be done elsewhere
-            
+            // do set the data view here
+            DataViewSheets = new DataView(_dataTableView);
+
             // get out of the function
             return;
+        }
+
+        /// <summary>
+        /// set the column order depending on settings from file or rename settings
+        /// </summary>
+        private void InitialiseColumnOrder()
+        {
+            // clear th4e current order
+            ColumnOrder.Clear();
+           
+
+            //if there are columns stored in  settings retrieved from file
+            if (_sheetsDataModel.Settings.ColumnNames != null &&
+                _sheetsDataModel.Settings.ColumnNames.Count > 0)
+            {
+                // these column names do not contain export, preview columns, sheet number and sheet name
+                foreach (string columnName in _sheetsDataModel.Settings.ColumnNames)
+                {
+                    //check if column name is still available and not a reserved name
+                    if (_sheetsDataModel.ParameterNames.Contains(columnName) || Constants.ReservedColumnNames.Contains(columnName))
+                    {
+                        _columnOrder.Add(columnName);
+                    }
+                }
+            }
+            else
+            {
+                List<string> newColumnOrder = new List<string>();
+                //use the extra parameter, if any, from the rename pdf settings
+                foreach (var settings in _sheetsDataModel.PDFSettings)
+                {
+
+                    newColumnOrder.Add(settings.PropertyName);
+
+                }
+                //use the extra parameter, if any, from the rename dwg settings
+                foreach (var setting in _sheetsDataModel.DWGSettings)
+                {
+                    // make sure not to double up property names
+                    if (!newColumnOrder.Contains(setting.PropertyName))
+                    {
+                        newColumnOrder.Add(setting.PropertyName);
+                    }
+                }
+
+                // set the column order property whichwill also update the column order stored in settings
+                ColumnOrder = newColumnOrder;
+            }
+        }
+
+        private void UpdateColumnOrder(List<string> newOrder)
+        {
+            // clear th4e current order
+            ColumnOrder.Clear();
+
+            List<string> newColumnOrder = new List<string>();
+
+            // these column names do not contain export, preview columns, sheet number and sheet name
+            foreach (string columnName in newOrder)
+            {
+                //check if column name is still available and not a reserved name
+                if (_sheetsDataModel.ParameterNames.Contains(columnName) || Constants.ReservedColumnNames.Contains(columnName))
+                {
+                    newColumnOrder.Add(columnName);
+                }
+            }
+
+            // set the column order property which will also update the column order stored in settings
+            ColumnOrder = newColumnOrder;
+
         }
 
         #endregion data tables
@@ -516,23 +481,65 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                 {
                     _exportTypes = value;
 
+                    List<string> previewColumNames = new List<string>();
+                    List<string> removeColumnNames = new List<string>();
+
                     if (_exportTypes == ThreeWaySwitch.SwitchState.Left)
                     {
                         ExportButtonText = $"Export {Models.Constants.ExportModusPDF}s";
                         _sheetsDataModel.Settings.ExportModus = Models.Constants.ExportModusPDF;
+                        //add pdf preview
+                        previewColumNames.Add(Models.Constants.ColumnHeaderPDFPreviewName);
+                        // remove dwg preview
+                        removeColumnNames.Add(Models.Constants.ColumnHeaderDWGPreviewName);
                     }
                     else if (_exportTypes == ThreeWaySwitch.SwitchState.Centre)
                     {
                         ExportButtonText = $"Export {Models.Constants.ExportModusDWG}s";
                         _sheetsDataModel.Settings.ExportModus = Models.Constants.ExportModusDWG;
+                        // add dwg preview
+                        previewColumNames.Add(Models.Constants.ColumnHeaderDWGPreviewName);
+                        //remove pdf preview
+                        removeColumnNames.Add(Models.Constants.ColumnHeaderPDFPreviewName);
                     }
                     else
                     {
                         ExportButtonText = $"Export {Models.Constants.ExportModusPDFandDWG}s";
                         _sheetsDataModel.Settings.ExportModus = Models.Constants.ExportModusPDFandDWG;
+                        previewColumNames.Add(Models.Constants.ColumnHeaderPDFPreviewName);
+                        previewColumNames.Add(Models.Constants.ColumnHeaderDWGPreviewName);
+                        //no previews to remove
                     }
 
                     OnPropertyChanged(nameof(ExportTypes));
+
+                    // remove old preview headers
+                    foreach(string removeHeader in removeColumnNames)
+                    {
+                        if (ColumnOrder.Contains(removeHeader))
+                        {
+                            ColumnOrder.Remove(removeHeader);
+                        }
+                    }
+
+                    // previews are inserted at 2nd position always
+                    int indexCounter = 1;
+                    
+                    // add new preview headers at specific start index
+                    foreach (string newHeader in previewColumNames)
+                    {
+                        if (!ColumnOrder.Contains(newHeader))
+                        {
+                            ColumnOrder.Insert(indexCounter, newHeader);
+
+                            //increase index
+                            indexCounter++;
+                        }
+                    }
+
+                    //update data table
+                    PopualateSheetsDataTable();
+
                 }
             }
         }
@@ -730,6 +737,8 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             //set the export file path from settings:
             ExportSheetsFilePath = _sheetsDataModel.Settings.ExportFolderPath;
 
+            // set the default export operation from the settings
+            SetExportTypeFromSettings();
 
             //set up the source data table which contains all data for each sheet
             CreateSourceDataTable();
@@ -740,9 +749,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             //populate the available print set list from the model
             PopulateAvailablePrintSets();
 
-            // set the default export operation from the settings
-            SetExportTypeFromSettings();
-
             //and set up sheets data table
             PopualateSheetsDataTable();
 
@@ -750,8 +756,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             //this will be trigger a view change to show the selected data table, hence last thing in the constructor
             SetPrintSetFilterFromSettings();
 
-            //update the data view with the data table
-            DataViewSheets = new DataView(_dataTableView);
         }
     }
 }

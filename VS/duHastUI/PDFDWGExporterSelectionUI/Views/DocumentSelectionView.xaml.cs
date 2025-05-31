@@ -106,5 +106,14 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Views
                 e.Column.IsReadOnly = false; // Allow editing for the specific column
             }
         }
+
+        public void OnCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            if (e.Row.DataContext is DataRowView rowView)
+            {
+                rowView.EndEdit(); // Forces the update
+            }
+        }
+
     }
 }

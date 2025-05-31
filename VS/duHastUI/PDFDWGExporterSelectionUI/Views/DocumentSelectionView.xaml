@@ -58,7 +58,8 @@
         <Grid Grid.Row="3">
             <!-- grid view -->
             <DataGrid x:Name="dataGrid" 
-                    ItemsSource="{Binding DataViewSheets}"
+                    ItemsSource="{Binding DataViewSheets, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                    CellEditEnding="OnCellEditEnding"
                     EnableRowVirtualization="True" 
                     EnableColumnVirtualization="True" 
                     VirtualizingPanel.IsVirtualizing="True" 

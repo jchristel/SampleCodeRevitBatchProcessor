@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   duHast.Revit.Exports.Objects
    duHast.Revit.Exports.Utility
 
 Submodules
@@ -28,6 +29,14 @@ duHast.Revit.Exports.export\_data module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Exports.export\_dwg module
+---------------------------------------
+
+.. automodule:: duHast.Revit.Exports.export_dwg
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Exports.export\_ifc module
 ---------------------------------------
 
@@ -40,6 +49,14 @@ duHast.Revit.Exports.export\_navis module
 -----------------------------------------
 
 .. automodule:: duHast.Revit.Exports.export_navis
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Exports.export\_pdf module
+---------------------------------------
+
+.. automodule:: duHast.Revit.Exports.export_pdf
    :members:
    :undoc-members:
    :show-inheritance:

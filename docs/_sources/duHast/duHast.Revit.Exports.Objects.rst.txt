@@ -1,0 +1,21 @@
+duHast.Revit.Exports.Objects package
+====================================
+
+Submodules
+----------
+
+duHast.Revit.Exports.Objects.export\_file\_name\_rule module
+------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Exports.Objects.export_file_name_rule
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.Exports.Objects
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,21 @@
+duHast.Revit.ColourFillSchemes.Objects package
+==============================================
+
+Submodules
+----------
+
+duHast.Revit.ColourFillSchemes.Objects.colour\_fill\_storage module
+-------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.ColourFillSchemes.Objects.colour_fill_storage
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.ColourFillSchemes.Objects
+   :members:
+   :undoc-members:
+   :show-inheritance:

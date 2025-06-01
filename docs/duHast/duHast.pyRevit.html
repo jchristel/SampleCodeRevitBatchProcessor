@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.pyRevit package &#8212; Sample Code Revit Batch Processor 1.1.14 documentation</title>
+    <title>duHast.pyRevit package &#8212; Sample Code Revit Batch Processor 1.1.15 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.14 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.15 documentation" href="../index.html" />
     <link rel="up" title="duHast package" href="duHast.html" />
     <link rel="next" title="duHast.pyRevit.Objects package" href="duHast.pyRevit.Objects.html" />
     <link rel="prev" title="duHast.Utilities.Objects package" href="duHast.Utilities.Objects.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.14 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.15 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.pyRevit package</h1></div>
@@ -171,6 +171,17 @@
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.pyRevit.console_output.print_error">
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.console_output.</span></span><span class="sig-name descname"><span class="pre">print_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.console_output.print_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints an error message to the pyRevit console.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em>) – The error message to be printed.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-duHast.pyRevit.directory_picker">
 <span id="duhast-pyrevit-directory-picker-module"></span><h2>duHast.pyRevit.directory_picker module<a class="headerlink" href="#module-duHast.pyRevit.directory_picker" title="Permalink to this heading">¶</a></h2>
@@ -212,6 +223,23 @@
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.pyRevit.directory_picker.get_process_directory">
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.directory_picker.</span></span><span class="sig-name descname"><span class="pre">get_process_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Select</span> <span class="pre">directory'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.directory_picker.get_process_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the directories to process</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>forms</strong> (<em>Forms</em>) – the forms object</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the directories to process</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-duHast.pyRevit.file_picker">
 <span id="duhast-pyrevit-file-picker-module"></span><h2>duHast.pyRevit.file_picker module<a class="headerlink" href="#module-duHast.pyRevit.file_picker" title="Permalink to this heading">¶</a></h2>
@@ -236,6 +264,27 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str, [str],None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.pyRevit.net_dll_loader">
+<span id="duhast-pyrevit-net-dll-loader-module"></span><h2>duHast.pyRevit.net_dll_loader module<a class="headerlink" href="#module-duHast.pyRevit.net_dll_loader" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.pyRevit.net_dll_loader.load_net_dll_path">
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.net_dll_loader.</span></span><span class="sig-name descname"><span class="pre">load_net_dll_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dlls_to_load</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.net_dll_loader.load_net_dll_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads dlls from the libs folder of the duHast extension.
+Useful if a dll is not loaded through the startup script of a pyRevit extension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dlls_to_load</strong> (<em>list</em>) – List of dlls to load.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object with status and message.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
 </dd>
 </dl>
 </dd></dl>

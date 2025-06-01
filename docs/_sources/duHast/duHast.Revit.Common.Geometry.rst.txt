@@ -12,6 +12,14 @@ duHast.Revit.Common.Geometry.curve module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Common.Geometry.curve\_loops module
+------------------------------------------------
+
+.. automodule:: duHast.Revit.Common.Geometry.curve_loops
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Common.Geometry.geometry module
 --------------------------------------------
 
@@ -40,6 +48,14 @@ duHast.Revit.Common.Geometry.to\_data\_conversion module
 --------------------------------------------------------
 
 .. automodule:: duHast.Revit.Common.Geometry.to_data_conversion
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Common.Geometry.transforms module
+----------------------------------------------
+
+.. automodule:: duHast.Revit.Common.Geometry.transforms
    :members:
    :undoc-members:
    :show-inheritance:

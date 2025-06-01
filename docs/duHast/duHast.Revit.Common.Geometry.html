@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Common.Geometry package &#8212; Sample Code Revit Batch Processor 1.1.14 documentation</title>
+    <title>duHast.Revit.Common.Geometry package &#8212; Sample Code Revit Batch Processor 1.1.15 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.14 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.15 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Common package" href="duHast.Revit.Common.html" />
     <link rel="next" title="duHast.Revit.Common.Objects package" href="duHast.Revit.Common.Objects.html" />
     <link rel="prev" title="duHast.Revit.Common package" href="duHast.Revit.Common.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.14 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.15 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Common.Geometry package</h1></div>
@@ -222,6 +222,165 @@ line_two (object): The second line to compare.</p>
 line_two (object): The second line to compare.</p>
 </dd>
 <dt>Returns:</dt><dd><p>bool: True if the lines are perpendicular, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.curve.offset_curve">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.curve.</span></span><span class="sig-name descname"><span class="pre">offset_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curve</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal_vector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_distance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.curve.offset_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Offsets a curve in the direction of the normal vector by a specified distance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>curve</strong> (<em>Autodesk.Revit.DB.Curve</em>) – The curve to be offset.</p></li>
+<li><p><strong>normal_vector</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The normal vector indicating the offset direction.</p></li>
+<li><p><strong>offset_distance</strong> (<em>float</em>) – The distance to offset the curve.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The offset curve.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.Curve</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.Geometry.curve_loops">
+<span id="duhast-revit-common-geometry-curve-loops-module"></span><h2>duHast.Revit.Common.Geometry.curve_loops module<a class="headerlink" href="#module-duHast.Revit.Common.Geometry.curve_loops" title="Permalink to this heading">¶</a></h2>
+<section id="revit-curve-loops-helper-functions">
+<h3>Revit curve loops helper functions<a class="headerlink" href="#revit-curve-loops-helper-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.curve_loops.create_curve_loops_through_transform">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.curve_loops.</span></span><span class="sig-name descname"><span class="pre">create_curve_loops_through_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curve_loops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convert_net_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.curve_loops.create_curve_loops_through_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new curve loop by transforming the existing curve loops using the provided transform.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>curve_loops</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.CurveLoop</em>) – The curve loops to be transformed.</p></li>
+<li><p><strong>transform</strong> (<em>Autodesk.Revit.DB.Transform</em>) – The transform to be applied to the curve loops.</p></li>
+<li><p><strong>convert_net_list</strong> (<em>bool</em>) – Flag to indicate whether to convert the curve loops to a .net List of curves (true) or python list (false).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of transformed curve loops.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>.net List of Autodesk.Revit.DB.CurveLoop or python list of Autodesk.Revit.DB.CurveLoop</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.curve_loops.create_curve_loop_through_offset">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.curve_loops.</span></span><span class="sig-name descname"><span class="pre">create_curve_loop_through_offset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curve_loop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_distance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_to_inside</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.curve_loops.create_curve_loop_through_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new curve loop by offsetting it a given distance.</p>
+<p>Some</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>curve_loop</strong> (<em>Autodesk.Revit.DB.CurveLoop</em>) – The curve loop to be transformed.</p></li>
+<li><p><strong>offset_distance</strong> (<em>float</em>) – The distance to offset the curve loop.</p></li>
+<li><p><strong>offset_normal</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The normal vector to offset the curve loop.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A transformed curve loops.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.CurveLoop</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.curve_loops.get_area_from_closed_curve_loop">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.curve_loops.</span></span><span class="sig-name descname"><span class="pre">get_area_from_closed_curve_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve_loop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filled_region_type_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.curve_loops.get_area_from_closed_curve_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the area of a closed curve loop in a given view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which the curve loop is located.</p></li>
+<li><p><strong>curve_loop</strong> (<em>Autodesk.Revit.DB.CurveLoop</em>) – The closed curve loop.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The area of the closed curve loop.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.curve_loops.convert_loop_to_curve_array">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.curve_loops.</span></span><span class="sig-name descname"><span class="pre">convert_loop_to_curve_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curve_loop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.curve_loops.convert_loop_to_curve_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a curve loop to a CurveArray object.
+Curve loop can not contain nested loops.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>curve_loop</strong> (<em>Autodesk.Revit.DB.CurveLoop</em>) – The curve loop to convert.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>CurveArray object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.curve_loops.convert_curve_loops_to_curve_arr_array">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.curve_loops.</span></span><span class="sig-name descname"><span class="pre">convert_curve_loops_to_curve_arr_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curve_loops</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.curve_loops.convert_curve_loops_to_curve_arr_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a list of curve loops to a CurveArrArray object.
+This is used to create a new extrusion in the family document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>curve_loops</strong> – list of curve loops</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>CurveArrArray object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.curve_loops.get_curve_loop_centroid">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.curve_loops.</span></span><span class="sig-name descname"><span class="pre">get_curve_loop_centroid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curve_loop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.curve_loops.get_curve_loop_centroid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds an approximate centroid inside the given CurveLoop. The curve loop is assumed to be closed and planar.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>original_loop</strong> (<em>Autodesk.Revit.DB.CurveLoop</em>) – The CurveLoop to find the centroid of.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The centroid point of the CurveLoop.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.XYZ</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.curve_loops.get_curve_loop_by_offset_towards_centroid">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.curve_loops.</span></span><span class="sig-name descname"><span class="pre">get_curve_loop_by_offset_towards_centroid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curve_loop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_distance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.curve_loops.get_curve_loop_by_offset_towards_centroid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new curve loop by offsetting the original curve loop towards its centroid.
+This is not a size change but a position change!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>curve_loop</strong> (<em>Autodesk.Revit.DB.CurveLoop</em>) – The original CurveLoop to be offset.</p></li>
+<li><p><strong>offset_distance</strong> (<em>float</em>) – The distance to offset the curve loop.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new CurveLoop that is offset from the original.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.CurveLoop</p>
 </dd>
 </dl>
 </dd></dl>
@@ -725,6 +884,16 @@ Note: works only on planar faces</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.geometry.get_bounding_box_centre">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">get_bounding_box_centre</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounding_box</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.geometry.get_bounding_box_centre" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the center of a bounding box.
+:param bounding_box: The bounding box
+:type bounding_box: Autodesk.Revit.DB.BoundingBoxXYZ
+:return: The center point of the bounding box
+:rtype: Autodesk.Revit.DB.XYZ</p>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Revit.Common.Geometry.points">
 <span id="duhast-revit-common-geometry-points-module"></span><h2>duHast.Revit.Common.Geometry.points module<a class="headerlink" href="#module-duHast.Revit.Common.Geometry.points" title="Permalink to this heading">¶</a></h2>
@@ -1126,6 +1295,29 @@ Does not work with in place elements.</p>
 <dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.to_data_conversion.convert_revit_bounding_box_to_geometry2_bounding_box">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.to_data_conversion.</span></span><span class="sig-name descname"><span class="pre">convert_revit_bounding_box_to_geometry2_bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounding_box</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.to_data_conversion.convert_revit_bounding_box_to_geometry2_bounding_box" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.Geometry.transforms">
+<span id="duhast-revit-common-geometry-transforms-module"></span><h2>duHast.Revit.Common.Geometry.transforms module<a class="headerlink" href="#module-duHast.Revit.Common.Geometry.transforms" title="Permalink to this heading">¶</a></h2>
+<section id="revit-transform-helper-functions">
+<h3>Revit transform helper functions<a class="headerlink" href="#revit-transform-helper-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.transforms.move_xyz_to_zero">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.transforms.</span></span><span class="sig-name descname"><span class="pre">move_xyz_to_zero</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.transforms.move_xyz_to_zero" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves the given XYZ point to the origin (0, 0, 0) by creating a translation transform.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>xyz</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The XYZ point to move.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Transform object representing the translation to move the point to the origin.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.Transform</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-duHast.Revit.Common.Geometry">

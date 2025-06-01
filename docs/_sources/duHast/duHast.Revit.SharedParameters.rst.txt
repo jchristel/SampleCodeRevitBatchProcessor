@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    duHast.Revit.SharedParameters.Data
+   duHast.Revit.SharedParameters.Objects
    duHast.Revit.SharedParameters.Reporting
 
 Submodules

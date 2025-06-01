@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Rooms.Geometry package &#8212; Sample Code Revit Batch Processor 1.1.14 documentation</title>
+    <title>duHast.Revit.Rooms.Geometry package &#8212; Sample Code Revit Batch Processor 1.1.15 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.14 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.15 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Rooms package" href="duHast.Revit.Rooms.html" />
     <link rel="next" title="duHast.Revit.Rooms.Objects package" href="duHast.Revit.Rooms.Objects.html" />
     <link rel="prev" title="duHast.Revit.Rooms.Export package" href="duHast.Revit.Rooms.Export.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.14 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.15 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Rooms.Geometry package</h1></div>
@@ -104,6 +104,7 @@
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">get_room_boundary_loops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">revit_room</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial_boundary_option</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.SpatialElementBoundaryOptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.SpatialElementBoundaryLocation.Center</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.geometry.get_room_boundary_loops" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns all boundary loops for a rooms. Default value set to the center
 boundary location.</p>
+<p>Note: Revit will return multiple BoundarySegments if the wall, which bounding a room, has another wall joining it on the opposing site of the room.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>revit_room</strong> (<em>Autodesk.Revit.DB.Architecture.Room</em>) – The room.</p>

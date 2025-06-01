@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.DetailItems package &#8212; Sample Code Revit Batch Processor 1.1.14 documentation</title>
+    <title>duHast.Revit.DetailItems package &#8212; Sample Code Revit Batch Processor 1.1.15 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.14 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.15 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.DetailItems.Reporting package" href="duHast.Revit.DetailItems.Reporting.html" />
     <link rel="prev" title="duHast.Revit.Common.Utility package" href="duHast.Revit.Common.Utility.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.14 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.15 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.DetailItems package</h1></div>
@@ -122,6 +122,73 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
+<section id="module-duHast.Revit.DetailItems.curve_create">
+<span id="duhast-revit-detailitems-curve-create-module"></span><h2>duHast.Revit.DetailItems.curve_create module<a class="headerlink" href="#module-duHast.Revit.DetailItems.curve_create" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-functions-around-revit-2d-curve-creation">
+<h3>This module contains a number of functions around Revit 2D curve creation.<a class="headerlink" href="#this-module-contains-a-number-of-functions-around-revit-2d-curve-creation" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.DetailItems.curve_create.draw_line_between_points">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.DetailItems.curve_create.</span></span><span class="sig-name descname"><span class="pre">draw_line_between_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.DetailItems.curve_create.draw_line_between_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws a line between two points in a Revit view.
+:param doc: The Revit document.
+:type doc: Autodesk.Revit.DB.Document
+:param view: The view in which to draw the line.
+:type view: Autodesk.Revit.DB.View
+:param start_point: The start point of the line.
+:type start_point: Autodesk.Revit.DB.XYZ
+:param end_point: The end point of the line.
+:type end_point: Autodesk.Revit.DB.XYZ
+:return: Result object containing the status of the operation.
+:rtype: Result</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.DetailItems.curve_create.draw_2D_lines_on_bounding_box">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.DetailItems.curve_create.</span></span><span class="sig-name descname"><span class="pre">draw_2D_lines_on_bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounding_box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.DetailItems.curve_create.draw_2D_lines_on_bounding_box" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw 2D lines on the bounding box of an element in view provided</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document.</p></li>
+<li><p><strong>bounding_box</strong> (<em>Autodesk.Revit.DB.BoundingBoxXYZ</em>) – The bounding box of the element.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which to draw the lines.</p></li>
+<li><p><strong>transaction_manager</strong> (<em>function</em>) – The transaction manager to use.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object containing the status of the operation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.DetailItems.curve_create.draw_2D_lines_on_bounding_box_and_separate_point">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.DetailItems.curve_create.</span></span><span class="sig-name descname"><span class="pre">draw_2D_lines_on_bounding_box_and_separate_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounding_box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.DetailItems.curve_create.draw_2D_lines_on_bounding_box_and_separate_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw 2D lines on the bounding box of an element in view provided and in addition lines from each corner of the bounding box to the additional point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document.</p></li>
+<li><p><strong>bounding_box</strong> (<em>Autodesk.Revit.DB.BoundingBoxXYZ</em>) – The bounding box of the element.</p></li>
+<li><p><strong>additional_point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The additional point to draw lines to.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which to draw the lines.</p></li>
+<li><p><strong>transaction_manager</strong> (<em>function</em>) – The transaction manager to use.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object containing the status of the operation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.DetailItems.detail_items">
 <span id="duhast-revit-detailitems-detail-items-module"></span><h2>duHast.Revit.DetailItems.detail_items module<a class="headerlink" href="#module-duHast.Revit.DetailItems.detail_items" title="Permalink to this heading">¶</a></h2>
 <section id="this-module-contains-a-number-of-functions-around-revit-detail-items">
@@ -149,41 +216,6 @@
 <dt class="sig sig-object py" id="duHast.Revit.DetailItems.detail_items.DETAIL_COMPONENT_TYPES">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.DetailItems.detail_items.</span></span><span class="sig-name descname"><span class="pre">DETAIL_COMPONENT_TYPES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Autodesk.Revit.DB.ElementType',</span> <span class="pre">'Autodesk.Revit.DB.FilledRegionType',</span> <span class="pre">'Autodesk.Revit.DB.FamilySymbol']</span></em><a class="headerlink" href="#duHast.Revit.DetailItems.detail_items.DETAIL_COMPONENT_TYPES" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of class names which can be detailed components</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.DetailItems.detail_items.get_filled_regions_in_model">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.DetailItems.detail_items.</span></span><span class="sig-name descname"><span class="pre">get_filled_regions_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.DetailItems.detail_items.get_filled_regions_in_model" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all filled region instances in a model.</p>
-<p>Filters by class.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list containing floor instances.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list Autodesk.Revit.DB.FilledRegion</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.DetailItems.detail_items.get_all_filled_region_type_ids_available">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.DetailItems.detail_items.</span></span><span class="sig-name descname"><span class="pre">get_all_filled_region_type_ids_available</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.DetailItems.detail_items.get_all_filled_region_type_ids_available" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all filled region types ids in model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of element ids representing filled region types.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list Autodesk.Revit.DB.ElementIds</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -254,6 +286,129 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list Autodesk.Revit.DB.ElementIds</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.DetailItems.filled_regions">
+<span id="duhast-revit-detailitems-filled-regions-module"></span><h2>duHast.Revit.DetailItems.filled_regions module<a class="headerlink" href="#module-duHast.Revit.DetailItems.filled_regions" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-functions-around-revit-filled-regions">
+<h3>This module contains a number of functions around Revit filled regions.<a class="headerlink" href="#this-module-contains-a-number-of-functions-around-revit-filled-regions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.DetailItems.filled_regions.get_filled_regions_in_model">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.DetailItems.filled_regions.</span></span><span class="sig-name descname"><span class="pre">get_filled_regions_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.DetailItems.filled_regions.get_filled_regions_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all filled region instances in a model.</p>
+<p>Filters by class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list containing floor instances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.FilledRegion</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.DetailItems.filled_regions.get_all_filled_region_type_ids_available">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.DetailItems.filled_regions.</span></span><span class="sig-name descname"><span class="pre">get_all_filled_region_type_ids_available</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.DetailItems.filled_regions.get_all_filled_region_type_ids_available" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all filled region types ids in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of element ids representing filled region types.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.ElementIds</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.DetailItems.filled_regions.get_filled_region_curve_loops">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.DetailItems.filled_regions.</span></span><span class="sig-name descname"><span class="pre">get_filled_region_curve_loops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filled_region</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.DetailItems.filled_regions.get_filled_region_curve_loops" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the curve loops of a filled region.
+:param filled_region: A filled region instance.
+:type filled_region: Autodesk.Revit.DB.FilledRegion</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of curve loops.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list Autodesk.Revit.DB.CurveLoop</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.DetailItems.filled_regions.get_filled_region_loop_area">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.DetailItems.filled_regions.</span></span><span class="sig-name descname"><span class="pre">get_filled_region_loop_area</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filled_region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.DetailItems.filled_regions.get_filled_region_loop_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets loop area of a filled region.
+This will create a temporary filled region using just the loop and get the area.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filled_region</strong> (<em>Autodesk.Revit.DB.FilledRegion</em>) – A filled region instance.</p></li>
+<li><p><strong>loop_index</strong> (<em>int</em>) – The index of the loop to get the area for.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The area of the loop.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.DetailItems.filled_regions.get_filled_region_area">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.DetailItems.filled_regions.</span></span><span class="sig-name descname"><span class="pre">get_filled_region_area</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filled_region</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.DetailItems.filled_regions.get_filled_region_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the area of a filled region using the built-in parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filled_region</strong> (<em>Autodesk.Revit.DB.FilledRegion</em>) – A filled region instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The area of the filled region.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.DetailItems.filled_regions_create">
+<span id="duhast-revit-detailitems-filled-regions-create-module"></span><h2>duHast.Revit.DetailItems.filled_regions_create module<a class="headerlink" href="#module-duHast.Revit.DetailItems.filled_regions_create" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-functions-around-creating-revit-filled-regions">
+<h3>This module contains a number of functions around creating Revit filled regions.<a class="headerlink" href="#this-module-contains-a-number-of-functions-around-creating-revit-filled-regions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.DetailItems.filled_regions_create.create_filled_region_by_view">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.DetailItems.filled_regions_create.</span></span><span class="sig-name descname"><span class="pre">create_filled_region_by_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve_loops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filled_region_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.DetailItems.filled_regions_create.create_filled_region_by_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a filled region in the specified view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view to create the filled region in.</p></li>
+<li><p><strong>curve_loops</strong> (<em>list Autodesk.Revit.DB.CurveLoop</em>) – The curve loops to use for the filled region.</p></li>
+<li><p><strong>filled_region_type</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The type of filled region to create.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A result object containing the created filled region instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
 </dd>
 </dl>
 </dd></dl>

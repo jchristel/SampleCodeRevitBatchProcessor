@@ -4,10 +4,42 @@ duHast.Revit.ExtensibleSchemas package
 Submodules
 ----------
 
+duHast.Revit.ExtensibleSchemas.data\_storage module
+---------------------------------------------------
+
+.. automodule:: duHast.Revit.ExtensibleSchemas.data_storage
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.ExtensibleSchemas.data\_storage\_create module
+-----------------------------------------------------------
+
+.. automodule:: duHast.Revit.ExtensibleSchemas.data_storage_create
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.ExtensibleSchemas.extensible\_schema\_delete module
+----------------------------------------------------------------
+
+.. automodule:: duHast.Revit.ExtensibleSchemas.extensible_schema_delete
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.ExtensibleSchemas.extensible\_schemas module
 ---------------------------------------------------------
 
 .. automodule:: duHast.Revit.ExtensibleSchemas.extensible_schemas
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.ExtensibleSchemas.extensible\_schemas\_create module
+-----------------------------------------------------------------
+
+.. automodule:: duHast.Revit.ExtensibleSchemas.extensible_schemas_create
    :members:
    :undoc-members:
    :show-inheritance:

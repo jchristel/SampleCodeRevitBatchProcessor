@@ -583,3 +583,35 @@ def offset_curve(curve, normal_vector, offset_distance):
     transform = Transform.CreateTranslation(offset_vector)
     return curve.CreateTransformed(transform)
 
+
+def splice_adjacent_lines(curve_1, curve_2):
+    """
+    Splices two adjacent lines if they share an endpoint.
+
+    :param curve_1: The first line to splice.
+    :type curve_1: Autodesk.Revit.DB.Line
+    :param curve_2: The second line to splice.
+    :type curve_2: Autodesk.Revit.DB.Line
+    :return: A new line that combines the two lines if they are adjacent, otherwise None.
+    :rtype: Autodesk.Revit.DB.Line
+    """
+
+    # make sure we got lines
+    if not isinstance(curve_1, Line) or not isinstance(curve_2, Line):
+        # if not, return None
+        raise TypeError("Both curves must be of type Line. curve_1 {} curve_2 {}".format(type(curve_1), type(curve_2)))
+    
+    combined_curve = None
+
+    # check which curves points are almost equal to each other
+    if curve_1.GetEndPoint(1).IsAlmostEqualTo(curve_2.GetEndPoint(0)):
+        combined_curve = Line.CreateBound(curve_1.GetEndPoint(0), curve_2.GetEndPoint(1))
+    elif curve_1.GetEndPoint(1).IsAlmostEqualTo(curve_2.GetEndPoint(1)):
+        combined_curve = Line.CreateBound(curve_1.GetEndPoint(0), curve_2.GetEndPoint(0))
+    elif curve_1.GetEndPoint(0).IsAlmostEqualTo(curve_2.GetEndPoint(1)):
+        combined_curve = Line.CreateBound(curve_1.GetEndPoint(1), curve_2.GetEndPoint(0))
+    elif curve_1.GetEndPoint(0).IsAlmostEqualTo(curve_2.GetEndPoint(0)):
+        combined_curve = Line.CreateBound(curve_1.GetEndPoint(1), curve_2.GetEndPoint(1))
+    
+    
+    return combined_curve

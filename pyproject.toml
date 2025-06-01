@@ -8,6 +8,9 @@ build-backend = "setuptools.build_meta"
 [project.urls]
 Homepage = "https://github.com/jchristel/SampleCodeRevitBatchProcessor"
 
+[tool.setuptools.package-data]
+"duHast" = ["lib/*.dll"]
+
 [tool.bumpver]
 current_version = "1.1.14"
 version_pattern = "MAJOR.MINOR.PATCH"

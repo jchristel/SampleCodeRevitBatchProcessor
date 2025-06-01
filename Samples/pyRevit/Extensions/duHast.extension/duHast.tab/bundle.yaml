@@ -7,6 +7,8 @@ layout:
   - Purge Unused
   - Warnings
   - Families
+  - Ceilings
+  - Walls
   - PushIt
   - Export
 

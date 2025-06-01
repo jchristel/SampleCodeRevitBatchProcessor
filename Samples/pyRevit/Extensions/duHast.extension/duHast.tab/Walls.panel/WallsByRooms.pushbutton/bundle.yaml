@@ -1,0 +1,20 @@
+# bundle title
+title: "Walls By Room"
+
+# bundle tooltip
+tooltip: Assigns walls to rooms based on room bounding elements in the model. If a wall bounds multiple rooms it will be assigned to the room with the longest intersection.
+
+
+# bundle author
+author: 
+  - Jan Christel
+
+
+# bundle highlighting ('new' or 'updated')
+# Revit UI will show a orange marker on the button and a border around the tooltip
+highlight: new      # highlight as new
+##highlight: updated  # highlight as updated
+
+
+# bundle help url
+help_url: "https://www.youtube.com/watch?v=H7b8hjHbauE&t=8s&list=PLc_1PNcpnV57FWI6G8Cd09umHpSOzvamf"

@@ -1,0 +1,10 @@
+layout:
+  - CeilingsByRooms
+
+# bundle tooltip
+tooltip: Ceilings
+
+
+# bundle author
+author: 
+  - Jan Christel

@@ -47,6 +47,14 @@ duHast.Revit.Rooms.rooms module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Rooms.rooms\_create module
+---------------------------------------
+
+.. automodule:: duHast.Revit.Rooms.rooms_create
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

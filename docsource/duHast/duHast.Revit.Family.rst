@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    duHast.Revit.Family.Data
+   duHast.Revit.Family.Geometry
    duHast.Revit.Family.Reporting
    duHast.Revit.Family.Utility
 

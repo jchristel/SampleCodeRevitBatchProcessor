@@ -15,6 +15,14 @@ Subpackages
 Submodules
 ----------
 
+duHast.Revit.Common.adesk\_info module
+--------------------------------------
+
+.. automodule:: duHast.Revit.Common.adesk_info
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Common.common module
 ---------------------------------
 
@@ -75,6 +83,14 @@ duHast.Revit.Common.element\_filtering\_by\_design\_option module
 -----------------------------------------------------------------
 
 .. automodule:: duHast.Revit.Common.element_filtering_by_design_option
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Common.element\_id module
+--------------------------------------
+
+.. automodule:: duHast.Revit.Common.element_id
    :members:
    :undoc-members:
    :show-inheritance:

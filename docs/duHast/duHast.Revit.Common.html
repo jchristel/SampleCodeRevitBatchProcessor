@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Common package &#8212; Sample Code Revit Batch Processor 1.1.14 documentation</title>
+    <title>duHast.Revit.Common package &#8212; Sample Code Revit Batch Processor 1.1.15 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.14 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.15 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.Common.Geometry package" href="duHast.Revit.Common.Geometry.html" />
-    <link rel="prev" title="duHast.Revit.Ceilings.Utility package" href="duHast.Revit.Ceilings.Utility.html" />
+    <link rel="prev" title="duHast.Revit.ColourFillSchemes.Reporting package" href="duHast.Revit.ColourFillSchemes.Reporting.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.14 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.15 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Common package</h1></div>
@@ -32,7 +32,7 @@
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
             <div class="headerButton"><a href="duHast.Revit.Common.Geometry.html" title="duHast.Revit.Common.Geometry package" accesskey="N">next</a></div>
-            <div class="headerButton"><a href="duHast.Revit.Ceilings.Utility.html" title="duHast.Revit.Ceilings.Utility package" accesskey="P">previous</a></div>
+            <div class="headerButton"><a href="duHast.Revit.ColourFillSchemes.Reporting.html" title="duHast.Revit.ColourFillSchemes.Reporting package" accesskey="P">previous</a></div>
         </li>
     </ul>
 </div>
@@ -108,6 +108,18 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve.get_curve_level"><code class="docutils literal notranslate"><span class="pre">get_curve_level()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve.are_lines_parallel"><code class="docutils literal notranslate"><span class="pre">are_lines_parallel()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve.are_lines_perpendicular"><code class="docutils literal notranslate"><span class="pre">are_lines_perpendicular()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve.offset_curve"><code class="docutils literal notranslate"><span class="pre">offset_curve()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#module-duHast.Revit.Common.Geometry.curve_loops">duHast.Revit.Common.Geometry.curve_loops module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#revit-curve-loops-helper-functions">Revit curve loops helper functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve_loops.create_curve_loops_through_transform"><code class="docutils literal notranslate"><span class="pre">create_curve_loops_through_transform()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve_loops.create_curve_loop_through_offset"><code class="docutils literal notranslate"><span class="pre">create_curve_loop_through_offset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve_loops.get_area_from_closed_curve_loop"><code class="docutils literal notranslate"><span class="pre">get_area_from_closed_curve_loop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve_loops.convert_loop_to_curve_array"><code class="docutils literal notranslate"><span class="pre">convert_loop_to_curve_array()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve_loops.convert_curve_loops_to_curve_arr_array"><code class="docutils literal notranslate"><span class="pre">convert_curve_loops_to_curve_arr_array()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve_loops.get_curve_loop_centroid"><code class="docutils literal notranslate"><span class="pre">get_curve_loop_centroid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve_loops.get_curve_loop_by_offset_towards_centroid"><code class="docutils literal notranslate"><span class="pre">get_curve_loop_by_offset_towards_centroid()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#module-duHast.Revit.Common.Geometry.geometry">duHast.Revit.Common.Geometry.geometry module</a><ul>
@@ -139,6 +151,7 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.build_loops_dictionary"><code class="docutils literal notranslate"><span class="pre">build_loops_dictionary()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.negate_vector"><code class="docutils literal notranslate"><span class="pre">negate_vector()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.merge_bounding_box_xyz"><code class="docutils literal notranslate"><span class="pre">merge_bounding_box_xyz()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.get_bounding_box_centre"><code class="docutils literal notranslate"><span class="pre">get_bounding_box_centre()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#module-duHast.Revit.Common.Geometry.points">duHast.Revit.Common.Geometry.points module</a><ul>
@@ -174,6 +187,11 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.to_data_conversion.convert_bounding_box_to_flattened_2d_points"><code class="docutils literal notranslate"><span class="pre">convert_bounding_box_to_flattened_2d_points()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.to_data_conversion.get_2d_points_from_revit_element_type_in_model"><code class="docutils literal notranslate"><span class="pre">get_2d_points_from_revit_element_type_in_model()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.to_data_conversion.convert_revit_bounding_box_to_geometry2_bounding_box"><code class="docutils literal notranslate"><span class="pre">convert_revit_bounding_box_to_geometry2_bounding_box()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#module-duHast.Revit.Common.Geometry.transforms">duHast.Revit.Common.Geometry.transforms module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#revit-transform-helper-functions">Revit transform helper functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.transforms.move_xyz_to_zero"><code class="docutils literal notranslate"><span class="pre">move_xyz_to_zero()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#module-duHast.Revit.Common.Geometry">Module contents</a></li>
@@ -289,6 +307,12 @@
 </section>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Common.adesk_info">
+<span id="duhast-revit-common-adesk-info-module"></span><h2>duHast.Revit.Common.adesk_info module<a class="headerlink" href="#module-duHast.Revit.Common.adesk_info" title="Permalink to this heading">¶</a></h2>
+<section id="common-autodesk-info">
+<h3>Common Autodesk info.<a class="headerlink" href="#common-autodesk-info" title="Permalink to this heading">¶</a></h3>
+</section>
 </section>
 <section id="module-duHast.Revit.Common.common">
 <span id="duhast-revit-common-common-module"></span><h2>duHast.Revit.Common.common module<a class="headerlink" href="#module-duHast.Revit.Common.common" title="Permalink to this heading">¶</a></h2>
@@ -1181,6 +1205,27 @@ isPrimary:bool</p>
 </dd></dl>
 
 </section>
+<section id="module-duHast.Revit.Common.element_id">
+<span id="duhast-revit-common-element-id-module"></span><h2>duHast.Revit.Common.element_id module<a class="headerlink" href="#module-duHast.Revit.Common.element_id" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.element_id.get_el_id">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.element_id.</span></span><span class="sig-name descname"><span class="pre">get_el_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">el</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.element_id.get_el_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the ID of a Revit element.
+:param el: The Revit element.
+:return: The ID of the element.
+:rtype: int</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.element_id.get_el_id_int">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.element_id.</span></span><span class="sig-name descname"><span class="pre">get_el_id_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">el</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.element_id.get_el_id_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the integer ID of a Revit element.
+:param el: The Revit element.
+:return: The integer ID of the element.
+:rtype: int</p>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Common.failure_handling">
 <span id="duhast-revit-common-failure-handling-module"></span><h2>duHast.Revit.Common.failure_handling module<a class="headerlink" href="#module-duHast.Revit.Common.failure_handling" title="Permalink to this heading">¶</a></h2>
 <section id="a-number-of-helper-functions-regarding-advanced-failure-handling">
@@ -1405,6 +1450,58 @@ On exception:
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.file_io.get_family_from_template">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.file_io.</span></span><span class="sig-name descname"><span class="pre">get_family_from_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_template_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.file_io.get_family_from_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a family document from a template
+:param doc: The Revit document
+:type doc: Autodesk.Revit.DB.Document
+:param family_template_path: The path to the family template
+:type family_template_path: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>Result class instance.
+- .status True if family was created from template. Otherwise False.
+- .message: ‘Family document created from template:’
+- .result: family document as first entry in the result list.</p>
+<p>On exception:
+- result.status (bool) will be False.
+- result.message will contain exception message.</p>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.file_io.open_family">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.file_io.</span></span><span class="sig-name descname"><span class="pre">open_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.file_io.open_family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a family document</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document</p></li>
+<li><p><strong>family_path</strong> (<em>str</em>) – The path to the family</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.
+- .status True if family was opened. Otherwise False.
+- .message: ‘Family document opened:’
+- .result: family document as first entry in the result list.</p>
+<p>On exception:
+- result.status (bool) will be False.
+- result.message will contain exception message.</p>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2585,6 +2682,37 @@ Whether the used or unused type ids depends on the useType value.
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.transaction.</span></span><span class="sig-name descname"><span class="pre">in_transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tranny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.transaction.in_transaction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Revit transaction wrapper.</p>
 <p>This function is used to execute any actions requiring a transaction in the Revit api. On exception this will roll back the transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tranny</strong> (<em>Autodesk.Revit.DB.Transaction</em>) – The transaction to be executed.</p></li>
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document. (not used in this function)</p></li>
+<li><p><strong>action</strong> (<em>action</em><em>(</em><em>)</em><em>.</em>) – The action to be nested within the transaction. This needs to return a Result class instance!</p></li>
+<li><p><strong>*args</strong> – <p>is just a placeholder in case this function is called with the same args than in_transaction_with_failure_handling</p>
+</p></li>
+<li><p><strong>**kwargs</strong> – <p>is just a placeholder in case this function is called with the same args than in_transaction_with_failure_handling</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.status True if successfully executed transaction, otherwise False.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.transaction.in_temp_transaction">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.transaction.</span></span><span class="sig-name descname"><span class="pre">in_temp_transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tranny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.transaction.in_temp_transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revit transaction wrapper for temporary transactions.</p>
+<p>This function is used to execute any actions requiring a transaction in the Revit api. 
+The action will be executed within the transaction but the transaction itself will be rolled back at the end.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

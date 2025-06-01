@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Utilities package &#8212; Sample Code Revit Batch Processor 1.1.14 documentation</title>
+    <title>duHast.Utilities package &#8212; Sample Code Revit Batch Processor 1.1.15 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.14 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.15 documentation" href="../index.html" />
     <link rel="up" title="duHast package" href="duHast.html" />
     <link rel="next" title="duHast.Utilities.Objects package" href="duHast.Utilities.Objects.html" />
     <link rel="prev" title="duHast.UI.files_select package" href="duHast.UI.files_select.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.14 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.15 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Utilities package</h1></div>
@@ -795,6 +795,12 @@ def function_to_measure():</p>
 </dd></dl>
 
 <dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.date_stamps.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC_MSEC">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.date_stamps.</span></span><span class="sig-name descname"><span class="pre">FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC_MSEC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%Y_%m_%d_%H_%M_%S_%f'</span></em><a class="headerlink" href="#duHast.Utilities.date_stamps.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC_MSEC" title="Permalink to this definition">¶</a></dt>
+<dd><p>file stamp date time format using underscores as delimiter: 2021_03_01_18_59_59_123</p>
+</dd></dl>
+
+<dl class="py data">
 <dt class="sig sig-object py" id="duHast.Utilities.date_stamps.TIME_STAMP_HHMMSEC_COLON">
 <span class="sig-prename descclassname"><span class="pre">duHast.Utilities.date_stamps.</span></span><span class="sig-name descname"><span class="pre">TIME_STAMP_HHMMSEC_COLON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%H:%M:%S'</span></em><a class="headerlink" href="#duHast.Utilities.date_stamps.TIME_STAMP_HHMMSEC_COLON" title="Permalink to this definition">¶</a></dt>
 <dd><p>time stamp using colons: 18:59:59</p>
@@ -835,23 +841,57 @@ def function_to_measure():</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.date_stamps.date_time_stamp_builder">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.date_stamps.</span></span><span class="sig-name descname"><span class="pre">date_time_stamp_builder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.date_stamps.date_time_stamp_builder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a formatted date stamp.</p>
+<p>Note: milliseconds, if required, are capped to 3 digits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>format</strong> (<em>str</em>) – The date stamp format</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>datetime.now() string formatted using supplied format string</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.date_stamps.get_folder_date_stamp">
 <span class="sig-prename descclassname"><span class="pre">duHast.Utilities.date_stamps.</span></span><span class="sig-name descname"><span class="pre">get_folder_date_stamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%Y%m%d'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.date_stamps.get_folder_date_stamp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a date stamp formatted suitable for a folder name.
-:param format: The date stamp format, defaults to FOLDER_DATE_STAMP_YYYYMMDD
-:type format: str, optional
-:return: datetime.now() string formatted using supplied format string
-:rtype: str</p>
+<dd><p>Returns a date stamp formatted suitable for a folder name.</p>
+<p>Note: milliseconds, if required, are capped to 3 digits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>format</strong> (<em>str</em><em>, </em><em>optional</em>) – The date stamp format, defaults to FOLDER_DATE_STAMP_YYYYMMDD</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>datetime.now() string formatted using supplied format string</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.date_stamps.get_date_stamp">
 <span class="sig-prename descclassname"><span class="pre">duHast.Utilities.date_stamps.</span></span><span class="sig-name descname"><span class="pre">get_date_stamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.date_stamps.get_date_stamp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a date stamp formatted using past in format string.
-:param format: The date stamp format
-:type format: str
-:return: datetime.now() string formatted using supplied format string
-:rtype: str</p>
+<dd><p>Returns a date stamp formatted using past in format string.</p>
+<p>Note: milliseconds, if required, are capped to 3 digits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>format</strong> (<em>str</em>) – The date stamp format</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>datetime.now() string formatted using supplied format string</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -897,11 +937,18 @@ def function_to_measure():</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.directory_io.directory_delete">
 <span class="sig-prename descclassname"><span class="pre">duHast.Utilities.directory_io.</span></span><span class="sig-name descname"><span class="pre">directory_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.directory_io.directory_delete" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes a directory (even if it contains files)
-:param full_directory_path: Path to directory
-:type full_directory_path: str
-:return: True directory deleted, otherwise False
-:rtype: bool</p>
+<dd><p>Deletes a directory (even if it contains files)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>full_directory_path</strong> (<em>str</em>) – Path to directory</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True directory deleted, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -989,6 +1036,37 @@ Checks whether folder exists and if not attempts to create it.</p>
 :type directory_path: str
 :return: True if directory exists, otherwise False
 :rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.directory_io.get_current_user_documents_directory">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.directory_io.</span></span><span class="sig-name descname"><span class="pre">get_current_user_documents_directory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.directory_io.get_current_user_documents_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current user’s documents directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path to the user’s documents directory.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.directory_io.create_temp_directory">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.directory_io.</span></span><span class="sig-name descname"><span class="pre">create_temp_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.directory_io.create_temp_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a temporary directory in the system temp folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>root_directory</strong> (<em>str</em><em> or </em><em>None. If none provided</em><em>, </em><em>the user's documents folder is used.</em>) – Root directory to create the temp folder in. If None, uses the system temp folder.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path to the created temporary directory.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -1827,6 +1905,18 @@ value: lit of str</p>
 :param new_name: Fully qualified path to new file location and name.
 :type new_name: str
 :return: True file moved, otherwise False
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.move_all_files_from_dir_to_dir">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_io.</span></span><span class="sig-name descname"><span class="pre">move_all_files_from_dir_to_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_io.move_all_files_from_dir_to_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves all files from one directory to another.
+:param src_dir: Source directory path
+:type src_dir: str
+:param dest_dir: Destination directory path
+:type dest_dir: str
+:return: True if moved, otherwise False
 :rtype: bool</p>
 </dd></dl>
 

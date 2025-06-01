@@ -13,6 +13,7 @@ Subpackages
    duHast.Revit.BuildingPads
    duHast.Revit.Categories
    duHast.Revit.Ceilings
+   duHast.Revit.ColourFillSchemes
    duHast.Revit.Common
    duHast.Revit.DetailItems
    duHast.Revit.DetailLines

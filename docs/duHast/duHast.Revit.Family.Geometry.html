@@ -1,0 +1,474 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>duHast.Revit.Family.Geometry package &#8212; Sample Code Revit Batch Processor 1.1.15 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.15 documentation" href="../index.html" />
+    <link rel="up" title="duHast.Revit.Family package" href="duHast.Revit.Family.html" />
+    <link rel="next" title="duHast.Revit.Family.Reporting package" href="duHast.Revit.Family.Reporting.html" />
+    <link rel="prev" title="duHast.Revit.Family.Data.Objects package" href="duHast.Revit.Family.Data.Objects.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.15 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Family.Geometry package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Family.Reporting.html" title="duHast.Revit.Family.Reporting package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Family.Data.Objects.html" title="duHast.Revit.Family.Data.Objects package" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">duHast</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.html">duHast.pyRevit package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Revit.Family.Geometry.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-revit-family-geometry-package">
+<h1>duHast.Revit.Family.Geometry package<a class="headerlink" href="#duhast-revit-family-geometry-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Family.Geometry.extrusion_create">
+<span id="duhast-revit-family-geometry-extrusion-create-module"></span><h2>duHast.Revit.Family.Geometry.extrusion_create module<a class="headerlink" href="#module-duHast.Revit.Family.Geometry.extrusion_create" title="Permalink to this heading">¶</a></h2>
+<section id="revit-extrusion-create-helper-functions">
+<h3>Revit extrusion create helper functions<a class="headerlink" href="#revit-extrusion-create-helper-functions" title="Permalink to this heading">¶</a></h3>
+<p>These functions work within a Revit family document to create and manipulate extrusions.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Geometry.extrusion_create.create_extrusion">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Geometry.extrusion_create.</span></span><span class="sig-name descname"><span class="pre">create_extrusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sketch_plane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve_loops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height=100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Geometry.extrusion_create.create_extrusion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new extrusion in the family document using the provided curve loops.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The family document.</p></li>
+<li><p><strong>sketch_plane</strong> (<em>Autodesk.Revit.DB.SketchPlane</em>) – The sketch plane to use for the new extrusion.</p></li>
+<li><p><strong>curve_loops</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.CurveLoop</em>) – The curve loops to use for the new extrusion.</p></li>
+<li><p><strong>func</strong> (<em>function</em>) – A function to execute on the new extrusion. ( need to take the doc and the new extrusion as arguments and need to return a Result class instance)</p></li>
+<li><p><strong>transaction_manager</strong> (<em>function</em>) – A function to manage transactions. (default is in_transaction)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p><cite>result.status</cite> (bool): True if the extrusion was created successfully, otherwise False.</p></li>
+<li><p><cite>result.message</cite> (str): Confirmation of successful creation of the extrusion.</p></li>
+<li><p><cite>result.result</cite> (list): The new extrusion element.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>On exception:</dt><dd><ul class="simple">
+<li><p><cite>result.status</cite> (bool): False.</p></li>
+<li><p><cite>result.message</cite> (str): Generic exception message.</p></li>
+<li><p><cite>result.result</cite> (list): Empty.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Geometry.extrusion_create.create_extrusion_on_level">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Geometry.extrusion_create.</span></span><span class="sig-name descname"><span class="pre">create_extrusion_on_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve_loops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height=100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Geometry.extrusion_create.create_extrusion_on_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new extrusion in the family document on the level provided using the provided curve loops.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The family document.</p></li>
+<li><p><strong>level</strong> (<em>Autodesk.Revit.DB.Level</em>) – The level to use for the new extrusion.</p></li>
+<li><p><strong>curve_loops</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.CurveLoop</em>) – The curve loops to use for the new extrusion.</p></li>
+<li><p><strong>func</strong> (<em>function</em>) – A function to execute on the new extrusion. ( need to take the doc and the new extrusion as arguments and need to return a Result class instance)</p></li>
+<li><p><strong>transaction_manager</strong> – A function to manage transactions. (default is in_transaction)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>On exception:</dt><dd><ul class="simple">
+<li><p><cite>result.status</cite> (bool): False.</p></li>
+<li><p><cite>result.message</cite> (str): Generic exception message.</p></li>
+<li><p><cite>result.result</cite> (list): Empty.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Geometry.extrusion_create.associate_extrusion_height_with_parameter">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Geometry.extrusion_create.</span></span><span class="sig-name descname"><span class="pre">associate_extrusion_height_with_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extrusion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_parameter_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Geometry.extrusion_create.associate_extrusion_height_with_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the height parameter of an extrusion to a parameter in the family.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The family document.</p></li>
+<li><p><strong>extrusion</strong> (<em>Autodesk.Revit.DB.Extrusion</em>) – The extrusion element.</p></li>
+<li><p><strong>height_parameter_name</strong> (<em>str</em>) – The name of the height parameter in the family.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p><cite>result.status</cite> (bool): True if the extrusion height parameter was set successfully, otherwise False.</p></li>
+<li><p><cite>result.message</cite> (str): Confirmation of successful setting of the extrusion height parameter.</p></li>
+<li><p><cite>result.result</cite> (list): The new extrusion element.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>On exception:</dt><dd><ul class="simple">
+<li><p><cite>result.status</cite> (bool): False.</p></li>
+<li><p><cite>result.message</cite> (str): Generic exception message.</p></li>
+<li><p><cite>result.result</cite> (list): Empty.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Geometry.extrusion_create.set_extrusion_sub_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Geometry.extrusion_create.</span></span><span class="sig-name descname"><span class="pre">set_extrusion_sub_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extrusion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_graphic_style</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Geometry.extrusion_create.set_extrusion_sub_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the subcategory of an extrusion in a family document.
+The subcategory is set to the subcategory of the source 3D graphic style.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The family document.</p></li>
+<li><p><strong>extrusion</strong> (<em>Autodesk.Revit.DB.Extrusion</em>) – The extrusion element.</p></li>
+<li><p><strong>source_graphic_style</strong> (<em>Autodesk.Revit.DB.GraphicStyle</em>) – The graphic style of the source extrusion.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p><cite>result.status</cite> (bool): True if the extrusion subcategory was set successfully, otherwise False.</p></li>
+<li><p><cite>result.message</cite> (str): Confirmation of successful setting of the extrusion subcategory.</p></li>
+<li><p><cite>result.result</cite> (list): Empty.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>On exception:</dt><dd><ul class="simple">
+<li><p><cite>result.status</cite> (bool): False.</p></li>
+<li><p><cite>result.message</cite> (str): Generic exception message.</p></li>
+<li><p><cite>result.result</cite> (list): Empty.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.Geometry.symbolic_curve_create">
+<span id="duhast-revit-family-geometry-symbolic-curve-create-module"></span><h2>duHast.Revit.Family.Geometry.symbolic_curve_create module<a class="headerlink" href="#module-duHast.Revit.Family.Geometry.symbolic_curve_create" title="Permalink to this heading">¶</a></h2>
+<section id="revit-symbolic-curve-create-helper-functions">
+<h3>Revit symbolic curve create helper functions<a class="headerlink" href="#revit-symbolic-curve-create-helper-functions" title="Permalink to this heading">¶</a></h3>
+<p>These functions work within a Revit family document to create and manipulate symbolic curves.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Geometry.symbolic_curve_create.create_symbolic_curves_by_curve_loop">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Geometry.symbolic_curve_create.</span></span><span class="sig-name descname"><span class="pre">create_symbolic_curves_by_curve_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sketch_plane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve_loop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Geometry.symbolic_curve_create.create_symbolic_curves_by_curve_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create new symbolic curves in the family document using the provided curve loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The family document.</p></li>
+<li><p><strong>sketch_plane</strong> (<em>Autodesk.Revit.DB.SketchPlane</em>) – The sketch plane to use for the new curve(s).</p></li>
+<li><p><strong>curve_loop</strong> (<em>Autodesk.Revit.DB.CurveLoop</em>) – The curve loop to use for the new curve(s).</p></li>
+<li><p><strong>func</strong> (<em>function</em>) – A function to execute on the new curves. ( need to take the doc and  a single new curves as arguments and need to return a Result class instance)</p></li>
+<li><p><strong>transaction_manager</strong> (<em>function</em>) – A function to manage transactions. (default is in_transaction)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p><cite>result.status</cite> (bool): True if the symbolic curves where created successfully, otherwise False.</p></li>
+<li><p><cite>result.message</cite> (str): Confirmation of successful creation of the symbolic curves.</p></li>
+<li><p><cite>result.result</cite> (list): The new symbolic curve elements.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p>On exception:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>result.status</cite> (bool): False.</p></li>
+<li><p><cite>result.message</cite> (str): Generic exception message.</p></li>
+<li><p><cite>result.result</cite> (list): Empty.</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Geometry.symbolic_curve_create.create_symbolic_curves_on_level">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Geometry.symbolic_curve_create.</span></span><span class="sig-name descname"><span class="pre">create_symbolic_curves_on_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve_loop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Geometry.symbolic_curve_create.create_symbolic_curves_on_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new symbolic curves in the family document on the level provided using the provided curve loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The family document.</p></li>
+<li><p><strong>level</strong> (<em>Autodesk.Revit.DB.Level</em>) – The level to use for the new symbolic curves.</p></li>
+<li><p><strong>curve_loops</strong> (<em>Autodesk.Revit.DB.CurveLoop</em>) – The curve loop to use for the new symbolic curves.</p></li>
+<li><p><strong>func</strong> (<em>function</em>) – A function to execute on the new symbolic curves. ( need to take the doc and a new symbolic curve as arguments and need to return a Result class instance)</p></li>
+<li><p><strong>transaction_manager</strong> – A function to manage transactions. (default is in_transaction)</p></li>
+</ul>
+</dd>
+</dl>
+<p>On exception:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>result.status</cite> (bool): False.</p></li>
+<li><p><cite>result.message</cite> (str): Generic exception message.</p></li>
+<li><p><cite>result.result</cite> (list): Empty.</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Geometry.symbolic_curve_create.set_symbolic_curve_sub_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Geometry.symbolic_curve_create.</span></span><span class="sig-name descname"><span class="pre">set_symbolic_curve_sub_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_graphic_style</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Geometry.symbolic_curve_create.set_symbolic_curve_sub_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the subcategory of an symbolic curve in a family document.
+The subcategory is set to the subcategory of the source projection graphic style.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The family document.</p></li>
+<li><p><strong>curve</strong> (<em>Autodesk.Revit.DB.Curve</em>) – The curve element.</p></li>
+<li><p><strong>source_graphic_style</strong> (<em>Autodesk.Revit.DB.GraphicStyle</em>) – The graphic style of the source curve.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p><cite>result.status</cite> (bool): True if the curve subcategory was set successfully, otherwise False.</p></li>
+<li><p><cite>result.message</cite> (str): Confirmation of successful setting of the curve subcategory.</p></li>
+<li><p><cite>result.result</cite> (list): Empty.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>On exception:</dt><dd><ul class="simple">
+<li><p><cite>result.status</cite> (bool): False.</p></li>
+<li><p><cite>result.message</cite> (str): Generic exception message.</p></li>
+<li><p><cite>result.result</cite> (list): Empty.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.Geometry.utils">
+<span id="duhast-revit-family-geometry-utils-module"></span><h2>duHast.Revit.Family.Geometry.utils module<a class="headerlink" href="#module-duHast.Revit.Family.Geometry.utils" title="Permalink to this heading">¶</a></h2>
+<section id="revit-common-family-element-helper-functions">
+<h3>Revit common family element helper functions<a class="headerlink" href="#revit-common-family-element-helper-functions" title="Permalink to this heading">¶</a></h3>
+<p>These functions work within a Revit family document to create and manipulate elements.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Geometry.utils.set_element_sub_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Geometry.utils.</span></span><span class="sig-name descname"><span class="pre">set_element_sub_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_graphic_style</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_graphic_style_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Geometry.utils.set_element_sub_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the subcategory of an element in a family document.
+The subcategory is set to the subcategory of the source projection graphic style.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The family document.</p></li>
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element.</p></li>
+<li><p><strong>source_graphic_style</strong> (<em>Autodesk.Revit.DB.GraphicStyle</em>) – The graphic style of the source curve.</p></li>
+<li><p><strong>source_graphic_style_key</strong> (<em>str</em>) – The key of the graphic style to set. (e.g. “Projection”, “Cut”, “3D”)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p><cite>result.status</cite> (bool): True if the elements subcategory was set successfully, otherwise False.</p></li>
+<li><p><cite>result.message</cite> (str): Confirmation of successful setting of the elements subcategory.</p></li>
+<li><p><cite>result.result</cite> (list): Empty.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>On exception:</dt><dd><ul class="simple">
+<li><p><cite>result.status</cite> (bool): False.</p></li>
+<li><p><cite>result.message</cite> (str): Generic exception message.</p></li>
+<li><p><cite>result.result</cite> (list): Empty.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Geometry.utils.set_curve_sub_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Geometry.utils.</span></span><span class="sig-name descname"><span class="pre">set_curve_sub_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_graphic_style</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Geometry.utils.set_curve_sub_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the subcategory of a curve in a family document. ( its really the graphic style…)
+The subcategory is set to the subcategory of the source projection graphic style.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The family document.</p></li>
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element.</p></li>
+<li><p><strong>source_graphic_style</strong> (<em>Autodesk.Revit.DB.GraphicStyle</em>) – The graphic style of the source curve.</p></li>
+<li><p><strong>transaction_manager</strong> (<em>function</em>) – The transaction manager.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- <cite>result.status</cite> (bool): True if the elements subcategory was set successfully, otherwise False.
+- <cite>result.message</cite> (str): Confirmation of successful setting of the elements subcategory.
+- <cite>result.result</cite> (list): Empty.</p>
+</dd>
+</dl>
+<p>On exception:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>result.status</cite> (bool): False.</p></li>
+<li><p><cite>result.message</cite> (str): Generic exception message.</p></li>
+<li><p><cite>result.result</cite> (list): Empty.</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.Geometry">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Family.Geometry" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="modules.html" accesskey="U">duHast</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.html" >duHast package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.html" >duHast.Revit package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.Family.html" >duHast.Revit.Family package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                duHast.Revit.Family.Geometry package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

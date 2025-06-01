@@ -1,0 +1,46 @@
+duHast.Revit.ColourFillSchemes package
+======================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.Revit.ColourFillSchemes.Objects
+   duHast.Revit.ColourFillSchemes.Reporting
+
+Submodules
+----------
+
+duHast.Revit.ColourFillSchemes.colour\_fill\_scheme\_entry module
+-----------------------------------------------------------------
+
+.. automodule:: duHast.Revit.ColourFillSchemes.colour_fill_scheme_entry
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.ColourFillSchemes.colour\_fill\_schemes module
+-----------------------------------------------------------
+
+.. automodule:: duHast.Revit.ColourFillSchemes.colour_fill_schemes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.ColourFillSchemes.colour\_fill\_schemes\_updates module
+--------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.ColourFillSchemes.colour_fill_schemes_updates
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.ColourFillSchemes
+   :members:
+   :undoc-members:
+   :show-inheritance:

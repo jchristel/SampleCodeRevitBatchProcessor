@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.ExtensibleSchemas package &#8212; Sample Code Revit Batch Processor 1.1.14 documentation</title>
+    <title>duHast.Revit.ExtensibleSchemas package &#8212; Sample Code Revit Batch Processor 1.1.15 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.14 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.15 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.Family package" href="duHast.Revit.Family.html" />
     <link rel="prev" title="duHast.Revit.Exports.Utility package" href="duHast.Revit.Exports.Utility.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.14 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.15 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.ExtensibleSchemas package</h1></div>
@@ -94,14 +94,167 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
+<section id="module-duHast.Revit.ExtensibleSchemas.data_storage">
+<span id="duhast-revit-extensibleschemas-data-storage-module"></span><h2>duHast.Revit.ExtensibleSchemas.data_storage module<a class="headerlink" href="#module-duHast.Revit.ExtensibleSchemas.data_storage" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-functions-around-data-storage-in-revit">
+<h3>This module contains a number of functions around data storage in Revit.<a class="headerlink" href="#this-module-contains-a-number-of-functions-around-data-storage-in-revit" title="Permalink to this heading">¶</a></h3>
+<p>Data storage can be used to project wide settings not associated with a specific element.</p>
+<p>Obsolete in Revit 2025 …</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.ExtensibleSchemas.data_storage.find_data_storage">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ExtensibleSchemas.data_storage.</span></span><span class="sig-name descname"><span class="pre">find_data_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_guid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.ExtensibleSchemas.data_storage.find_data_storage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find a DataStorage element in the Revit document that contains the specified schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document to search in.</p></li>
+<li><p><strong>schema_guid</strong> (<em>str</em>) – The GUID of the schema to look for.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The DataStorage element if found, None otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.DataStorage or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.ExtensibleSchemas.data_storage.update_entity_on_data_storage">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ExtensibleSchemas.data_storage.</span></span><span class="sig-name descname"><span class="pre">update_entity_on_data_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_storage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.ExtensibleSchemas.data_storage.update_entity_on_data_storage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the entity of a DataStorage element with new data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document to update the DataStorage element in.</p></li>
+<li><p><strong>data_storage</strong> (<em>Autodesk.Revit.DB.DataStorage</em>) – The DataStorage element to update.</p></li>
+<li><p><strong>entity</strong> (<em>Autodesk.Revit.DB.ExtensibleStorage.Entity</em>) – The new entity to set on the DataStorage element.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Result object containing the updated DataStorage element in its result list or an error message.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">duHast.Utilities.Objects.result.Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.ExtensibleSchemas.data_storage_create">
+<span id="duhast-revit-extensibleschemas-data-storage-create-module"></span><h2>duHast.Revit.ExtensibleSchemas.data_storage_create module<a class="headerlink" href="#module-duHast.Revit.ExtensibleSchemas.data_storage_create" title="Permalink to this heading">¶</a></h2>
+<section id="id1">
+<h3>This module contains a number of functions around data storage in Revit.<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<p>Data storage can be used to project wide settings not associated with a specific element.</p>
+<p>Obsolete in Revit 2025 …</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.ExtensibleSchemas.data_storage_create.create_project_data_storage">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ExtensibleSchemas.data_storage_create.</span></span><span class="sig-name descname"><span class="pre">create_project_data_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.ExtensibleSchemas.data_storage_create.create_project_data_storage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new DataStorage element in the Revit document and set its schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document to create the DataStorage element in.</p></li>
+<li><p><strong>schema</strong> (<em>Autodesk.Revit.DB.ExtensibleStorage.Schema</em>) – The schema to set on the DataStorage element.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Result object containing the created DataStorage element in its result list or an error message.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">duHast.Utilities.Objects.result.Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.ExtensibleSchemas.extensible_schema_delete">
+<span id="duhast-revit-extensibleschemas-extensible-schema-delete-module"></span><h2>duHast.Revit.ExtensibleSchemas.extensible_schema_delete module<a class="headerlink" href="#module-duHast.Revit.ExtensibleSchemas.extensible_schema_delete" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-functions-around-extensible-storage-deletion-in-revit">
+<h3>This module contains a number of functions around Extensible storage deletion in Revit.<a class="headerlink" href="#this-module-contains-a-number-of-functions-around-extensible-storage-deletion-in-revit" title="Permalink to this heading">¶</a></h3>
+<p>Notes from the building coder website: <a class="reference external" href="https://thebuildingcoder.typepad.com/blog/2022/11/extensible-storage-schema-deletion.html">https://thebuildingcoder.typepad.com/blog/2022/11/extensible-storage-schema-deletion.html</a></p>
+<p>The devteam replied: After running DeleteSchemas macro, open Manage &gt; Purge Unused. In the tree, select Extensible Storage Schema. Check the schema a9dc2b48 and click OK to purge it. Run ListSchemas – the schema is purged. So, please use Purge Unused to delete schemas without entities.</p>
+<p>Extensible storage schema is an application-wide object. If it exists at all in the application, it will populate and “infect” every single document that you touch. That makes it hard to remove, and complicated to understand.</p>
+<p>Personally I found:</p>
+<ul class="simple">
+<li><p>The schema is not removed from the document when you delete it. You have to purge it manually.</p></li>
+<li><p>If the schema exists in a link and you delete it, it will not go away … unload  any links or replace any links with dummy links without the schema and attempt to delete and purge again.</p></li>
+</ul>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.ExtensibleSchemas.extensible_schema_delete.delete_schema_by_guid">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ExtensibleSchemas.extensible_schema_delete.</span></span><span class="sig-name descname"><span class="pre">delete_schema_by_guid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.ExtensibleSchemas.extensible_schema_delete.delete_schema_by_guid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a schema by its guid. This will also delete all entities that are using this schema.</p>
+<p>Note:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document</p></li>
+<li><p><strong>guid</strong> (<em>str</em>) – The guid of the schema to delete</p></li>
+<li><p><strong>transaction_manager</strong> (<em>function</em>) – The transaction manager to use. Defaults to in_transaction.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Result object with the result of the operation</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.ExtensibleSchemas.extensible_schemas">
 <span id="duhast-revit-extensibleschemas-extensible-schemas-module"></span><h2>duHast.Revit.ExtensibleSchemas.extensible_schemas module<a class="headerlink" href="#module-duHast.Revit.ExtensibleSchemas.extensible_schemas" title="Permalink to this heading">¶</a></h2>
 <section id="this-module-contains-a-number-of-functions-around-extensible-storage-in-revit">
 <h3>This module contains a number of functions around Extensible storage in Revit.<a class="headerlink" href="#this-module-contains-a-number-of-functions-around-extensible-storage-in-revit" title="Permalink to this heading">¶</a></h3>
 </section>
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.ExtensibleSchemas.extensible_schemas.create_schema">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ExtensibleSchemas.extensible_schemas.</span></span><span class="sig-name descname"><span class="pre">create_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_documentation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string_guid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access_level_read</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.ExtensibleStorage.AccessLevel.Public</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access_level_write</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.ExtensibleStorage.AccessLevel.Public</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.ExtensibleSchemas.extensible_schemas.create_schema" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="duHast.Revit.ExtensibleSchemas.extensible_schemas.does_schema_exist">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ExtensibleSchemas.extensible_schemas.</span></span><span class="sig-name descname"><span class="pre">does_schema_exist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema_guid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.ExtensibleSchemas.extensible_schemas.does_schema_exist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a schema exists in the memory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>schema_guid</strong> (<em>str</em>) – The guid of the schema to check</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the schema exists, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.ExtensibleSchemas.extensible_schemas.get_schema">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ExtensibleSchemas.extensible_schemas.</span></span><span class="sig-name descname"><span class="pre">get_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema_guid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.ExtensibleSchemas.extensible_schemas.get_schema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a schema by its guid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>schema_guid</strong> (<em>str</em>) – The guid of the schema to get</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The schema if it exists, None otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.ExtensibleStorage.Schema</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.ExtensibleSchemas.extensible_schemas_create">
+<span id="duhast-revit-extensibleschemas-extensible-schemas-create-module"></span><h2>duHast.Revit.ExtensibleSchemas.extensible_schemas_create module<a class="headerlink" href="#module-duHast.Revit.ExtensibleSchemas.extensible_schemas_create" title="Permalink to this heading">¶</a></h2>
+<section id="id2">
+<h3>This module contains a number of functions around Extensible storage in Revit.<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.ExtensibleSchemas.extensible_schemas_create.create_schema">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ExtensibleSchemas.extensible_schemas_create.</span></span><span class="sig-name descname"><span class="pre">create_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_documentation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string_guid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vendor_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'DUHA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access_level_read</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.ExtensibleStorage.AccessLevel.Public</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access_level_write</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.ExtensibleStorage.AccessLevel.Public</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_builder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.ExtensibleSchemas.extensible_schemas_create.create_schema" title="Permalink to this definition">¶</a></dt>
 <dd><p>Basic schema creation sample (excludes any fields).
 Creates a scheme or returns the already existing scheme with the same guid.</p>
 <dl class="field-list simple">
@@ -124,6 +277,32 @@ Creates a scheme or returns the already existing scheme with the same guid.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.ExtensibleStorage.Schema</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.ExtensibleSchemas.extensible_schemas_create.verify_schema_data_storage_based">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ExtensibleSchemas.extensible_schemas_create.</span></span><span class="sig-name descname"><span class="pre">verify_schema_data_storage_based</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_docs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_guid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access_level_read</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.ExtensibleStorage.AccessLevel.Public</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access_level_write</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.ExtensibleStorage.AccessLevel.Public</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vendor_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'DUHA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_builder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.ExtensibleSchemas.extensible_schemas_create.verify_schema_data_storage_based" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verify if the schema exists in the file. if not it will attempt to create it and add to data storage element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if schema was verified or created successfully, otherwise False.</p></li>
+<li><p>result.message will contain messages status messages.</p></li>
+<li><p>result.result tuple (schema,data_storage)</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>

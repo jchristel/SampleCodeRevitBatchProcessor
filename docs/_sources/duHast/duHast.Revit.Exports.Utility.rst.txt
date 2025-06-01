@@ -4,6 +4,14 @@ duHast.Revit.Exports.Utility package
 Submodules
 ----------
 
+duHast.Revit.Exports.Utility.convert\_pdf\_dwg\_settings module
+---------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Exports.Utility.convert_pdf_dwg_settings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Exports.Utility.export\_ifc\_config\_2019 module
 -------------------------------------------------------------
 
@@ -48,6 +56,22 @@ duHast.Revit.Exports.Utility.export\_ifc\_config\_2024 module
 -------------------------------------------------------------
 
 .. automodule:: duHast.Revit.Exports.Utility.export_ifc_config_2024
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Exports.Utility.export\_options\_pdf\_2024 module
+--------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Exports.Utility.export_options_pdf_2024
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Exports.Utility.export\_utility module
+---------------------------------------------------
+
+.. automodule:: duHast.Revit.Exports.Utility.export_utility
    :members:
    :undoc-members:
    :show-inheritance:

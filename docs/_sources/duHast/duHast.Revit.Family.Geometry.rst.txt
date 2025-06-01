@@ -1,0 +1,37 @@
+duHast.Revit.Family.Geometry package
+====================================
+
+Submodules
+----------
+
+duHast.Revit.Family.Geometry.extrusion\_create module
+-----------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Geometry.extrusion_create
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Geometry.symbolic\_curve\_create module
+-----------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Geometry.symbolic_curve_create
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Geometry.utils module
+-----------------------------------------
+
+.. automodule:: duHast.Revit.Family.Geometry.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.Family.Geometry
+   :members:
+   :undoc-members:
+   :show-inheritance:

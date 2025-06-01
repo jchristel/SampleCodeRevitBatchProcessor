@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.ModelHealth package &#8212; Sample Code Revit Batch Processor 1.1.14 documentation</title>
+    <title>duHast.Revit.ModelHealth package &#8212; Sample Code Revit Batch Processor 1.1.15 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.14 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.15 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.ModelHealth.Reporting package" href="duHast.Revit.ModelHealth.Reporting.html" />
     <link rel="prev" title="duHast.Revit.Materials.Reporting package" href="duHast.Revit.Materials.Reporting.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.14 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.15 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.ModelHealth package</h1></div>
@@ -106,7 +106,7 @@
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.ModelHealth.Reporting.Properties.html#module-duHast.Revit.ModelHealth.Reporting.Properties.families">duHast.Revit.ModelHealth.Reporting.Properties.families module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.ModelHealth.Reporting.Properties.html#module-duHast.Revit.ModelHealth.Reporting.Properties.general">duHast.Revit.ModelHealth.Reporting.Properties.general module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.ModelHealth.Reporting.Properties.html#module-duHast.Revit.ModelHealth.Reporting.Properties.groups">duHast.Revit.ModelHealth.Reporting.Properties.groups module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.ModelHealth.Reporting.Properties.html#module-duHast.Revit.ModelHealth.Reporting.Properties.line_styles_types">duHast.Revit.ModelHealth.Reporting.Properties.line_styles_types module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.ModelHealth.Reporting.Properties.html#duhast-revit-modelhealth-reporting-properties-line-styles-types-module">duHast.Revit.ModelHealth.Reporting.Properties.line_styles_types module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.ModelHealth.Reporting.Properties.html#module-duHast.Revit.ModelHealth.Reporting.Properties.links_cad">duHast.Revit.ModelHealth.Reporting.Properties.links_cad module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.ModelHealth.Reporting.Properties.html#module-duHast.Revit.ModelHealth.Reporting.Properties.links_images">duHast.Revit.ModelHealth.Reporting.Properties.links_images module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.ModelHealth.Reporting.Properties.html#module-duHast.Revit.ModelHealth.Reporting.Properties.rooms">duHast.Revit.ModelHealth.Reporting.Properties.rooms module</a></li>
@@ -170,123 +170,8 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
-<section id="module-duHast.Revit.ModelHealth.model_health">
-<span id="duhast-revit-modelhealth-model-health-module"></span><h2>duHast.Revit.ModelHealth.model_health module<a class="headerlink" href="#module-duHast.Revit.ModelHealth.model_health" title="Permalink to this heading">¶</a></h2>
-<section id="model-health-report-functions">
-<h3>Model health report functions.<a class="headerlink" href="#model-health-report-functions" title="Permalink to this heading">¶</a></h3>
-<p>Model health report metrics can either be displayed in a family where each parameter is assigned to a metric 
-and or data can be exported to text files which can be used to visualize key metrics over time.</p>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.model_health.get_instances_of_model_health">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.model_health.</span></span><span class="sig-name descname"><span class="pre">get_instances_of_model_health</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.ModelHealth.model_health.get_instances_of_model_health" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all instances of the model health tracker family in a model.</p>
-<p>Built in parameter containing family name when filtering familyInstance elements:
-BuiltInParameter.ELEM_FAMILY_PARAM
-This is a faster filter in terms of performance then LINQ query refer to:
-<a class="reference external" href="https://jeremytammik.github.io/tbc/a/1382_filter_shortcuts.html">https://jeremytammik.github.io/tbc/a/1382_filter_shortcuts.html</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list containing all model health tracker families in the model.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of Autodesk.Revit.DB.FamilyInstance</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.model_health.get_parameters_of_instance">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.model_health.</span></span><span class="sig-name descname"><span class="pre">get_parameters_of_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fam_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.ModelHealth.model_health.get_parameters_of_instance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates parameter values of model tracker family instance.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fam_instance</strong> (<em>Autodesk.Revit.DB.FamilyInstance</em>) – An instance of the model health tracker family.</p></li>
-<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>Result class instance.</p>
-<ul class="simple">
-<li><p>.status True if all parameters where found on the family and got updated successfully or no update at all was required. Otherwise False.</p></li>
-<li><p>.message will be ‘Failed to get value for’</p></li>
-</ul>
-</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.model_health.health_data_action">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.model_health.</span></span><span class="sig-name descname"><span class="pre">health_data_action</span></span><a class="headerlink" href="#duHast.Revit.ModelHealth.model_health.health_data_action" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">healthDataAction</span></code></p>
-</dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.model_health.PARAM_ACTIONS">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.model_health.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ValueArrowHeadStyles':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_arrow_head_types&gt;,</span> <span class="pre">report_file_name='_NumberOfArrowHeadStyles'),</span> <span class="pre">'ValueArrowHeadStylesUnused':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_unused_arrow_head_types&gt;,</span> <span class="pre">report_file_name='_NumberOfArrowHeadStylesUnused'),</span> <span class="pre">'ValueCADImports':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_cad_imports&gt;,</span> <span class="pre">report_file_name='_NumberOfCadImports'),</span> <span class="pre">'ValueCADLinksToModel':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_cad_links_to_model&gt;,</span> <span class="pre">report_file_name='_NumberOfCadLinksModel'),</span> <span class="pre">'ValueCADLinksToView':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_cad_links_to_view&gt;,</span> <span class="pre">report_file_name='_NumberOfCadLinksView'),</span> <span class="pre">'ValueDateLastUpdated':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_current_date&gt;,</span> <span class="pre">report_file_name='_DateLastUpdated'),</span> <span class="pre">'ValueDesignOptions':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_design_options&gt;,</span> <span class="pre">report_file_name='_NumberOfDesignOptions'),</span> <span class="pre">'ValueDesignSets':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_design_sets&gt;,</span> <span class="pre">report_file_name='_NumberOfDesignSets'),</span> <span class="pre">'ValueDetailGroups':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_detail_groups&gt;,</span> <span class="pre">report_file_name='_NumberOfDetailGroups'),</span> <span class="pre">'ValueDetailGroupsUnplaced':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_unplaced_detail_groups&gt;,</span> <span class="pre">report_file_name='_NumberOfUnplacedDetailGroups'),</span> <span class="pre">'ValueDimensionStyles':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_dimension_types&gt;,</span> <span class="pre">report_file_name='_NumberOfDimStyles'),</span> <span class="pre">'ValueDimensionStylesUnused':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_unused_dimension_types&gt;,</span> <span class="pre">report_file_name='_NumberOfDimStylesUnused'),</span> <span class="pre">'ValueFamilies':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_families&gt;,</span> <span class="pre">report_file_name='_NumberOfFamilies'),</span> <span class="pre">'ValueFamiliesInPlace':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_in_place_families&gt;,</span> <span class="pre">report_file_name='_NumberOfInPlaceFamilies'),</span> <span class="pre">'ValueFileSize':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_current_file_size&gt;,</span> <span class="pre">report_file_name='_FileSize'),</span> <span class="pre">'ValueFillPatterns':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_fill_patterns&gt;,</span> <span class="pre">report_file_name='_NumberOfFillPatterns'),</span> <span class="pre">'ValueFilledRegions':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_filled_regions&gt;,</span> <span class="pre">report_file_name='_NumberOfRegions'),</span> <span class="pre">'ValueImageImports':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_image_imports&gt;,</span> <span class="pre">report_file_name='_NumberOfImageImports'),</span> <span class="pre">'ValueImageLinks':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_image_links&gt;,</span> <span class="pre">report_file_name='_NumberOfImageLinks'),</span> <span class="pre">'ValueLinePatterns':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_line_patterns&gt;,</span> <span class="pre">report_file_name='_NumberOfLinePatterns'),</span> <span class="pre">'ValueLineStyles':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_line_styles&gt;,</span> <span class="pre">report_file_name='_NumberOfLineStyles'),</span> <span class="pre">'ValueModelGroups':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_model_groups&gt;,</span> <span class="pre">report_file_name='_NumberOfModelGroups'),</span> <span class="pre">'ValueModelGroupsUnplaced':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_unplaced_model_groups&gt;,</span> <span class="pre">report_file_name='_NumberOfUnplacedModelGroups'),</span> <span class="pre">'ValueRooms':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_rooms&gt;,</span> <span class="pre">report_file_name='_NumberOfRooms'),</span> <span class="pre">'ValueRoomsNotEnclosed':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_not_enclosed_rooms&gt;,</span> <span class="pre">report_file_name='_NumberOfNotEnclosedRooms'),</span> <span class="pre">'ValueRoomsRedundant':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_redundant_rooms&gt;,</span> <span class="pre">report_file_name='_NumberOfRedundantRooms'),</span> <span class="pre">'ValueRoomsUnplaced':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_unplaced_rooms&gt;,</span> <span class="pre">report_file_name='_NumberOfUnplacedRooms'),</span> <span class="pre">'ValueSheets':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_sheets&gt;,</span> <span class="pre">report_file_name='_NumberOfSheets'),</span> <span class="pre">'ValueTextStyles':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_text_types&gt;,</span> <span class="pre">report_file_name='_NumberOfTextStyles'),</span> <span class="pre">'ValueTextStylesUnused':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_unused_text_types&gt;,</span> <span class="pre">report_file_name='_NumberOfTextStylesUnused'),</span> <span class="pre">'ValueViewFilters':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_view_filters&gt;,</span> <span class="pre">report_file_name='_NumberOfViewFilters'),</span> <span class="pre">'ValueViewFiltersUnused':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_unused_view_filters&gt;,</span> <span class="pre">report_file_name='_NumberOfViewFiltersUnused'),</span> <span class="pre">'ValueViewTemplates':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_view_templates&gt;,</span> <span class="pre">report_file_name='_NumberOfViewTemplates'),</span> <span class="pre">'ValueViewTemplatesUnused':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_unused_view_templates&gt;,</span> <span class="pre">report_file_name='_NumberOfViewTemplatesUnused'),</span> <span class="pre">'ValueViews':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_views&gt;,</span> <span class="pre">report_file_name='_NumberOfViews'),</span> <span class="pre">'ValueViewsNotPlaced':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_unplaced_views&gt;,</span> <span class="pre">report_file_name='_NumberOfViewsNotPlaced'),</span> <span class="pre">'ValueWarnings':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_number_of_warnings&gt;,</span> <span class="pre">report_file_name='_NumberOfWarnings'),</span> <span class="pre">'ValueWorksets':</span> <span class="pre">healthDataAction(get_data=&lt;function</span> <span class="pre">get_workset_number&gt;,</span> <span class="pre">report_file_name='_NumberOfWorksets')}</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.model_health.PARAM_ACTIONS" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of actions reporting model health metrics and their associated parameter name</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.model_health.update_model_health_tracer_family">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.model_health.</span></span><span class="sig-name descname"><span class="pre">update_model_health_tracer_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.ModelHealth.model_health.update_model_health_tracer_family" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates instances of model health tracker family in project.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>revit_file_path</strong> (<em>str</em>) – Fully qualified revit model file path.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>Result class instance.</p>
-<ul class="simple">
-<li><p>.status True if all model key health metric where updated successfully. Otherwise False.</p></li>
-<li><p>.message will be listing each parameter update: old value to new value</p></li>
-</ul>
-</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.model_health.write_model_health_report">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.model_health.</span></span><span class="sig-name descname"><span class="pre">write_model_health_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_directory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.ModelHealth.model_health.write_model_health_report" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write out health tracker data to file.</p>
-<p>Each value gets written to a separate file. The file name is made up of time stamp and the revit file name.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>revit_file_path</strong> (<em>str</em>) – Fully qualified revit model file path.</p></li>
-<li><p><strong>output_directory</strong> (<em>str</em>) – The directory path of where to write the data to.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>Result class instance.</p>
-<ul class="simple">
-<li><p>.status True if data was written to files successfully. Otherwise False.</p></li>
-<li><p>.message will be contain data file path for each file.</p></li>
-</ul>
-</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
+<section id="duhast-revit-modelhealth-model-health-module">
+<h2>duHast.Revit.ModelHealth.model_health module<a class="headerlink" href="#duhast-revit-modelhealth-model-health-module" title="Permalink to this heading">¶</a></h2>
 </section>
 <section id="module-duHast.Revit.ModelHealth">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.ModelHealth" title="Permalink to this heading">¶</a></h2>

@@ -1,0 +1,29 @@
+duHast.Revit.ColourFillSchemes.Reporting package
+================================================
+
+Submodules
+----------
+
+duHast.Revit.ColourFillSchemes.Reporting.colour\_fill\_scheme\_defaults module
+------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.ColourFillSchemes.Reporting.colour_fill_scheme_defaults
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.ColourFillSchemes.Reporting.colour\_fill\_scheme\_report module
+----------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.ColourFillSchemes.Reporting.colour_fill_scheme_report
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.ColourFillSchemes.Reporting
+   :members:
+   :undoc-members:
+   :show-inheritance:

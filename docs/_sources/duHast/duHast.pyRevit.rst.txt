@@ -37,6 +37,14 @@ duHast.pyRevit.file\_picker module
    :undoc-members:
    :show-inheritance:
 
+duHast.pyRevit.net\_dll\_loader module
+--------------------------------------
+
+.. automodule:: duHast.pyRevit.net_dll_loader
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.pyRevit.ui\_element\_selection module
 --------------------------------------------
 

@@ -613,3 +613,6 @@ FodyWeavers.xsd
 !Samples/pyRevit/Extensions/duHast.extension/duHast.tab/Families.panel/bin
 !Samples/pyRevit/Extensions/duHast.extension/bin
 /test/adHoc
+
+# include lib folder
+!src/duHast/lib

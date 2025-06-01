@@ -26,7 +26,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Views
 {
@@ -107,13 +111,74 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Views
             }
         }
 
-        public void OnCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        public void DataGrid_OnCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
+            //in wpf add:
+            //CellEditEnding="DataGrid_OnCellEditEnding"
             if (e.Row.DataContext is DataRowView rowView)
             {
                 rowView.EndEdit(); // Forces the update
             }
         }
 
+        public void DataGrid_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            //in wpf add:
+            //LostFocus = "DataGrid_OnLostFocus"
+            var grid = sender as DataGrid;
+            if (grid!=null)
+            {
+                grid.CommitEdit(DataGridEditingUnit.Cell, true);
+                //grid.CommitEdit(DataGridEditingUnit.Row,true);
+            }
+        }
+
+        public void DataGRid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            //in wpf add
+            //PreviewMouseLeftButtonDown="DataGRid_PreviewMouseLeftButtonDown"
+            var originalElement = e.OriginalSource as DependencyObject;
+            var cell = FindParent<DataGridCell>(originalElement);
+            if (cell != null)
+            {
+                var dataGrid = sender as DataGrid;
+                if (dataGrid != null)
+                {
+                    if (!cell.IsFocused) cell.Focus();
+                    dataGrid.BeginEdit();
+                }
+
+                //need this for check boxes:
+                var checkBox = FindParent<CheckBox>(originalElement);
+                if (checkBox != null) 
+                { 
+                    DataGrid grid = sender as DataGrid;
+                    grid.CommitEdit(DataGridEditingUnit.Cell, true);
+                    grid.CommitEdit(DataGridEditingUnit.Row, true);
+                    //Console.WriteLine(checkBox.IsChecked);
+
+                    if(cell.DataContext is DataRowView drv && cell.Column is DataGridBoundColumn boundCol)
+                    {
+                        var bindingPath = (boundCol.Binding as Binding).Path.Path;
+                        if(!string.IsNullOrEmpty(bindingPath))
+                        {
+                            var isChecked = checkBox.IsChecked ?? false;
+                            // inverse the result since this is executed just before the check box is clicked on
+                            drv[bindingPath] = !isChecked;
+                            System.Diagnostics.Debug.WriteLine(isChecked);
+                        }
+                    }
+                }
+            }
+        }
+
+        private T FindParent<T>(DependencyObject child) where T : DependencyObject
+        {
+            while (child != null && !(child is T)) 
+            {
+                child = VisualTreeHelper.GetParent(child);
+            }
+            return child as T;
+        }
     }
 }

@@ -58,8 +58,9 @@
         <Grid Grid.Row="3">
             <!-- grid view -->
             <DataGrid x:Name="dataGrid" 
-                    ItemsSource="{Binding DataViewSheets, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                    CellEditEnding="OnCellEditEnding"
+                    ItemsSource="{Binding DataViewSheets}"
+                    PreviewMouseLeftButtonDown="DataGRid_PreviewMouseLeftButtonDown"
+                    CellEditEnding="DataGrid_OnCellEditEnding"
                     EnableRowVirtualization="True" 
                     EnableColumnVirtualization="True" 
                     VirtualizingPanel.IsVirtualizing="True" 

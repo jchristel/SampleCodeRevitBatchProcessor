@@ -23,9 +23,8 @@
 
 
 from duHast.Utilities.Objects.result import Result
-from duHast.Revit.Common.transaction import in_transaction
-
 from duHast.Utilities.unit_conversion import convert_mm_to_imperial_feet
+from duHast.Revit.Common.transaction import in_transaction
 
 from Autodesk.Revit.DB import BuiltInParameter, Ceiling,ElementId, Transaction
 
@@ -47,8 +46,20 @@ def create_ceiling( doc, level_id, outline, elevation, ceiling_type_id, transact
     :type ceiling_type_id: Autodesk.Revit.DB.ElementId
     :param transaction_manager: Optional transaction manager to handle transactions.
     :type transaction_manager: function
-    :return: Result object containing the created ceiling and any messages.
-    :rtype: duHast.Utilities.Objects.result.Result
+    
+    :return:
+        Result class instance.
+
+        - Ceiling creation status (bool) returned in result.status. False if an exception occurred, otherwise True.
+        - Result.message property contains id of ceiling created.
+        - Result.result will contain the created ceiling element if successful, otherwise an empty list.
+
+        On exception:
+
+        - .status (bool) will be False.
+        - .message will contain the exception message.
+
+    :rtype: :class:`.Result`
     """
 
     return_value = Result()

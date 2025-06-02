@@ -66,11 +66,17 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="CustomDataGrid\CustomDataGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Converters\SwitchStateToValueConverter.cs" />
+    <Compile Include="CustomDataGrid\CustomDataGrid.cs" />
+    <Compile Include="CustomDataGrid\CustomDataGridBase.cs" />
     <Compile Include="ThreeWaySwitch\ThreeWaySwitch.cs">
       <SubType>Code</SubType>
     </Compile>

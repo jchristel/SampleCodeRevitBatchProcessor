@@ -1,0 +1,18 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:duHastNet.UI.CustomControls">
+
+    <Style x:Key="CustomColumnHeaderStyle" TargetType="DataGridColumnHeader">
+        <Setter Property="ContextMenu">
+            <Setter.Value>
+                <ContextMenu>
+                    <MenuItem Header="Filter Column"/>
+                    <MenuItem Header="Clear Filter"/>
+                </ContextMenu>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type local:CustomDataGridBase}">
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource CustomColumnHeaderStyle}"/>
+    </Style>
+</ResourceDictionary>

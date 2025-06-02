@@ -8,10 +8,19 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <!-- three way switch -->
+            <RowDefinition Height="auto"/>
+            <!-- custom data grid -->
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
         <custom:ThreeWaySwitch 
+            Grid.Row="0"
             Width="Auto" 
             Height="Auto"
             Margin="10 2 10 2"
             LabelLeft="Push It" LabelCenter="Split It" LabelRight="New Room" DisplayName="Mode" />
+        <custom:CustomDataGridBase x:Name="TestDataGrid"
+            Grid.Row="1"/>
     </Grid>
 </Window>

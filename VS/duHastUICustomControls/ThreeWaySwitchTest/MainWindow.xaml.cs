@@ -1,4 +1,5 @@
 ﻿using duHastNet.UI.CustomControls;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -10,37 +11,26 @@ namespace ThreeWaySwitchTest
     /// </summary>
     public partial class MainWindow : Window
     {
-        public ObservableCollection<TestData> SampleItems { get; set; } = new ObservableCollection<TestData>
-        {
-            new TestData { Name = "Alice", Age = 25, IsActive = true },
-            new TestData { Name = "Bob", Age = 30, IsActive = false },
-            new TestData { Name = "Charlie", Age = 22, IsActive = true }
-        };
+        
 
         public MainWindow()
         {
             InitializeComponent();
 
-           
 
-            // Replace the existing XAML grid with this instance
-            //Content = testGrid;
 
-            TestDataGrid.ItemsSource = new ObservableCollection<TestData>
-            {
-                new TestData { Name = "Alice", Age = 25, IsActive = true },
-                new TestData { Name = "Bob", Age = 30, IsActive = false },
-                new TestData { Name = "Charlie", Age = 22, IsActive = true }
-            };
+            duHastNet.UI.CustomControls.Data.Headers = new List<string> { "Name", "Age", "Salary", "IsActive" }; // Define headers at startup
+
+            var testDataCollection = new ObservableCollection<duHastNet.UI.CustomControls.Data>
+{
+            new Data { Values = new Dictionary<string, object> { { "Name", "Alice" }, { "Age", 25 }, { "Salary", 50000 }, { "IsActive", true } } },
+            new Data { Values = new Dictionary<string, object> { { "Name", "Bob" }, { "Age", 30 }, { "Salary", 60000 }, { "IsActive", false } } }
+};
+
+            TestDataGrid.ItemsSource= testDataCollection;
+
+
         }
     }
-
-    public class TestData
-    {
-        public string Name { get; set; }
-        public int Age { get; set; }
-        public bool IsActive { get; set; }
-    }
-
 
 }

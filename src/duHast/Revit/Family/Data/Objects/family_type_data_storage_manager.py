@@ -49,6 +49,7 @@ class FamilyTypeDataStorageManager(Base):
         # set up fields for family name and category
         self._family_name = None
         self._family_category = None
+        self._family_file_path = None
 
     @property
     def family_type_data_storage(self):
@@ -75,6 +76,31 @@ class FamilyTypeDataStorageManager(Base):
         if self._family_category is not None:
             raise ValueError("family_category can only be set once")
         self._family_category = family_category
+
+
+    @property
+    def family_file_path(self):
+        """
+        Get the family file path
+
+        :return: the family file path
+        :rtype: str
+        """
+        return self._family_file_path
+    
+    @family_file_path.setter
+    def family_file_path(self, family_file_path):
+        """
+        Set the family file path
+
+        :param family_file_path: the family file path
+        :type family_file_path: str
+        """
+        # only allow to set the family file path if its current value is None
+        if self._family_file_path is not None:
+            raise ValueError("family_file_path can only be set once")
+        self._family_file_path = family_file_path
+
 
     @property
     def family_has_types(self):

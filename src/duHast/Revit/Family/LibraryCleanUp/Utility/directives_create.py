@@ -1,0 +1,160 @@
+# License:
+#
+#
+# Revit Batch Processor Sample Code
+#
+# BSD License
+# Copyright 2025, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+#
+#
+#
+
+
+
+from duHast.Utilities.Objects.result import Result
+
+
+
+from duHast.Revit.Family.LibraryCleanUp.Utility.defaults import GROUPING_CODE_PARAMETER_NAME
+from duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code import clean_code, convert_to_file_name_code
+from duHast.Revit.Family.LibraryCleanUp.Utility.family_file_name import clean_up_family_name
+
+
+from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import FamilyTypeDataStorageManager
+from duHast.Revit.Family.Data.Objects.family_type_data_storage import FamilyTypeDataStorage
+from duHast.Revit.Family.Data.Objects.family_directive_copy import FamilyDirectiveCopy
+
+
+def get_unique_group_codes(family_storage_data):
+    """
+    Get unique group codes from the family storage data.
+
+    if codes are ITSE-001.2 and ITSE-002.1 it will return ITSE-001 and ITSE-002 as unique group codes.
+
+    :param family_storage_data: The family storage data from which to get the unique group codes.
+    :type family_storage_data: :class:`.FamilyTypeDataStorageManager`
+    :return: A list of unique group codes.
+    :rtype: list[str]
+    """
+
+
+    unique_group_codes = []
+
+    if (isinstance(family_storage_data, FamilyTypeDataStorageManager)==False):
+        raise TypeError("family_storage_data must be an instance of FamilyTypeDataStorageManager. Got instead: {}".format(type(family_storage_data)))
+    
+    if (family_storage_data.family_has_types() == False):
+        # return an empty list if the family has no types
+        return unique_group_codes
+    
+    # loop over types and try to get the grouping code
+    for family_type_storage in family_storage_data.family_type_data_storage:
+        if (isinstance(family_type_storage, FamilyTypeDataStorage)==False):
+            raise TypeError("family_type_storage must be an instance of FamilyTypeDataStorage. Got instead: {}".format(type(family_type_storage)))
+        
+        grouping_code_parameter = family_type_storage.get_parameter_by_name(GROUPING_CODE_PARAMETER_NAME)
+
+        #check if successfull
+        if (grouping_code_parameter is None):
+            raise ValueError("Grouping code parameter '{}' not found in family type data storage.".format(GROUPING_CODE_PARAMETER_NAME))
+        
+        # remove any sub codes 
+        group_code_cleaned = clean_code(grouping_code_parameter.value)
+        if group_code_cleaned not in unique_group_codes:
+            unique_group_codes.append(group_code_cleaned)
+    
+    return unique_group_codes
+
+        
+
+def create_copy_directives(family_storage_data, unique_group_codes, output_directory):
+
+    # set up a list containing all copy directives to be created
+    copy_directives = []
+
+    for each_group_code in unique_group_codes:
+        # build new family name
+        new_file_name = "{}_{}.rfa".format(clean_up_family_name(family_storage_data.family_name),  convert_to_file_name_code( each_group_code))
+        # create a copy directive for each unique group code
+        #name, category, source_file_path, target_directory, new_name
+        copy_directive = FamilyDirectiveCopy(
+            name = family_storage_data.family_name, 
+            category = family_storage_data.family_category, 
+            source_file_path = family_storage_data.family_file_path, 
+            target_directory =  output_directory, 
+            new_name = new_file_name,
+        )
+        
+        # add to over all list
+        copy_directives.append(copy_directive)
+
+    # return the list of copy directives
+    return copy_directives
+
+
+def create_directives(family_storage_data_list, output_directory):
+    """
+    Create directives based on family storage data.
+
+    :param family_storage_data: The family storage data from which to create directives.
+    :type family_storage_data: a list of :class:`.FamilyTypeDataStorageManager`
+    
+    :return:
+        Result class instance.
+
+        - result.status: Directive creation status will be returned in result.status. False if an exception occurred, otherwise True.
+        - result.message will be a log of conversion steps.
+        - result.result will be [tbc]
+
+        On exception
+
+        - Reload.status (bool) will be False
+        - Reload.message will contain the exception message
+        - Reload.result will be an empty list
+
+    :rtype: :class:`.Result`
+    """
+    return_value = Result()
+    
+    try:
+       # analyse each family:
+       # set up a copy directive for each unique group code
+       # set up a sap directive for each family type from old family to new family
+       # create a list of types to keep per new family ( text file with same name as the new family name )
+
+        for family_data_storage_instance in family_storage_data_list:
+
+            # get the uniq group codes from the family storage data
+            unique_group_codes = get_unique_group_codes(family_data_storage_instance)
+
+            # if no codes found move on to the next family
+            if len(unique_group_codes) == 0:
+                return_value.update_sep(
+                    False,
+                    "No unique group codes found in family storage data. {}".format(family_data_storage_instance.family_name),
+                )
+                continue
+
+            # create directives for each unique group code
+            copy_directives = create_copy_directives(family_data_storage_instance, unique_group_codes, output_directory)
+
+       
+        
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "Failed to create directives with exception: {}".format(e),
+        )
+    
+    return return_value

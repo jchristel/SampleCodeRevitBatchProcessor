@@ -463,10 +463,12 @@ def read_xml_into_storage(doc_xml, family_name, family_path, root_category_path 
             # Add the family type to the storage manager for this family
             type_data_storage_manager.add_family_type_data_storage(fam_type)
 
-    # set the family name and category if they are not set yet
+    # set the family name, category, file path if they are not set yet
     if type_data_storage_manager.family_name is None:
         type_data_storage_manager.family_name = family_name
     if type_data_storage_manager.family_category is None:
         type_data_storage_manager.family_category = root_category_path
+    if type_data_storage_manager.family_file_path is None:
+        type_data_storage_manager.family_file_path = family_path
 
     return type_data_storage_manager

@@ -1,18 +1,10 @@
-"""
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Element id functions.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-"""
-
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 # License:
 #
 #
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2025 Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -26,39 +18,22 @@ Element id functions.
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
-
-def get_el_id(el):
-    """
-    Gets the ID of a Revit element.
-    :param el: The Revit element.
-    :return: The ID of the element.
-    :rtype: int
-    """
-
-    if el:
-        el_id = getattr(el, "Id", None)
-        if el_id:
-            return el_id
-        else:
-            raise ValueError("Element provided does not have an Id attribute.")
-    else:
-        raise ValueError("Element is None, cannot get ID.")
+#
 
 
-def get_el_id_int(el):
-    """
-    Gets the integer ID of a Revit element.
-    :param el: The Revit element.
-    :return: The integer ID of the element.
-    :rtype: int
+from duHast.Utilities.Objects.base import Base
 
-    """
 
-    el_id = get_el_id(el)
+class FilledRegionAction(Base):
+    def __init__(
+        self
+     
+    ):
 
-    if getattr(el_id, "IntegerValue", None):
-        return int(el_id.IntegerValue)
-    elif getattr(el_id, "Value", None):
-        return int(el_id.Value)
-    else:
-        raise ValueError("Element ID does not have an IntegerValue or Value attribute.")
+        """
+        Constructor for the Filled Region Action class.
+
+       
+        """
+
+        super(FilledRegionAction, self).__init__()

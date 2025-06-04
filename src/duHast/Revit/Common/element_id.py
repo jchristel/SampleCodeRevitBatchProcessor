@@ -26,6 +26,8 @@ Element id functions.
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
+from Autodesk.Revit.DB import ElementId
+
 
 def get_el_id(el):
     """
@@ -53,8 +55,10 @@ def get_el_id_int(el):
     :rtype: int
 
     """
-
-    el_id = get_el_id(el)
+    if not isinstance(el, ElementId):
+        el_id = get_el_id(el)
+    else:
+        el_id = el
 
     if getattr(el_id, "IntegerValue", None):
         return int(el_id.IntegerValue)

@@ -31,9 +31,16 @@ class FilledRegionAction(Base):
     ):
 
         """
-        Constructor for the Filled Region Action class.
-
+        Constructor for the Filled Region Action class
        
         """
 
         super(FilledRegionAction, self).__init__()
+
+
+        # Initialize properties
+
+        # always delete: If True, the filled region will always be deleted.
+        self.always_delete = False
+        # always keep: If True, the filled region will always be kept. I need both since always_delete false does not automatically mean always_keep true.
+        self.always_keep = False

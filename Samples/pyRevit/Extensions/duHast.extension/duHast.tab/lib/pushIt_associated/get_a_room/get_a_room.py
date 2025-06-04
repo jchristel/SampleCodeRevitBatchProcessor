@@ -46,6 +46,7 @@ from pushIt_associated.get_a_room.Objects.FamilyTypeConfig import FamilyTypeConf
 from pushIt_associated.get_a_room.utilities import get_filled_region_with_two_loops_area, FAMILY_TYPE_NAME_BAY, FAMILY_TYPE_NAME_ROOM, verify_filled_region
 from pushIt_associated.get_a_room import debug as debug
 from pushIt_associated.get_a_room.post_processing import post_processing_filled_region,  move_family_files
+from pushIt_associated.get_a_room.Objects.filled_region_action import FilledRegionAction
 
 from Autodesk.Revit.DB import Element, ViewType
 
@@ -288,9 +289,16 @@ def get_a_room_entry(doc, uiapp,output, forms):
         print(message)
         return return_value
     
+
+    # set up a filled region action object which will record the users choice re handling the source filled region
+    # after a family was created from it
+    filled_region_action = FilledRegionAction()
+
     # loop over the filtered regions
     for f in filtered_regions:
         
+        print_header("Processing filled region: {}".format(f.Id.IntegerValue))
+
         if DEBUG :
             debug.draw_bounding_box_around_filled_region(doc, active_view, f)# get the bounding box of the filled region
             area = get_built_in_parameter_value(
@@ -393,6 +401,7 @@ def get_a_room_entry(doc, uiapp,output, forms):
             forms=forms,
             filled_region=f,
             number_of_all_regions_selected=len(filtered_regions),
+            filled_region_action=filled_region_action,
         )
 
         if post_process_filled_region_result.status == False:
@@ -400,6 +409,9 @@ def get_a_room_entry(doc, uiapp,output, forms):
             return_value.update_sep(False, message)
             print_error(message)
             continue
+
+        # get the action object back
+        filled_region_action = post_process_filled_region_result.result[0]
 
     # do some clean up
     # move files from temp to output directory

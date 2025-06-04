@@ -36,7 +36,7 @@ YES_ALL = "Yes, delete all filled regions"
 NO_GET_ME_OUT_OF_HERE_ALL = "Oh No, keep all filled regions!"
 
 
-def get_user_options(forms, count_regions=1):
+def get_user_options(forms, count_regions=1, filled_region_action=None):
     """
     Gets the user options for saving the family output directory.
 
@@ -73,7 +73,7 @@ def get_user_options(forms, count_regions=1):
     return ui_options
 
 
-def post_processing_filled_region(doc, forms, filled_region, number_of_all_regions_selected=1):
+def post_processing_filled_region(doc, forms, filled_region, number_of_all_regions_selected=1, filled_region_action=None):
     """
     Check if the filled region the push it family is based on is meant to be deleted.
 
@@ -106,12 +106,36 @@ def post_processing_filled_region(doc, forms, filled_region, number_of_all_regio
         # output a header to the console
         print_header("Get A Room - post processing filled region")
 
-        user_selection = get_user_options(forms,  number_of_all_regions_selected)
+        user_selection = None
 
-        # check if user selection is valid
+        # check if the filled region action is set to always keep or always delete
+        if filled_region_action is not None:
+            if filled_region_action.always_delete:
+                return_value.append_message("Filled region {} will be deleted.".format(filled_region.Id.IntegerValue))
+                user_selection = YES
+            elif filled_region_action.always_keep:
+                return_value.append_message("Filled region {} will be kept.".format(filled_region.Id.IntegerValue))
+                user_selection = NO_GET_ME_OUT_OF_HERE
+            else:
+                # ask the user to confirm deletion of the filled region
+                user_selection = get_user_options(forms,  number_of_all_regions_selected, filled_region_action)
+
+        # check if user selection is valid and update the filled region action accordingly
         if user_selection == None or user_selection == NO_GET_ME_OUT_OF_HERE:
             return_value.append_message("User cancelled operation, no filled region deleted.")
+            return_value.result.append(filled_region_action)
+            print("Keeping filled region")
             return return_value
+        elif user_selection == NO_GET_ME_OUT_OF_HERE_ALL:
+            return_value.append_message("User cancelled operation to delete any filled region, no filled region will be deleted.")
+            filled_region_action.always_keep = True
+            return_value.result.append(filled_region_action)
+            print("Keeping all filled region")
+            return return_value
+        elif user_selection == YES_ALL:
+            return_value.append_message("User choose to delete all selected filled regions.")
+            filled_region_action.always_delete = True
+            print("Deleting all filled regions")
     
         # delete the filled region
         delete_result = delete_by_element_ids(
@@ -121,7 +145,15 @@ def post_processing_filled_region(doc, forms, filled_region, number_of_all_regio
             element_name="Filled Region",
         )
 
+        if delete_result.status:
+            print("Deleted filled region: {}".format(delete_result.status))
+        else:
+            print_error("Failed to delete filled region: {}".format(delete_result.message))
+
         return_value.update(delete_result)
+
+        # overwrite the result and just return the filled region action
+        return_value.result = [filled_region_action]
 
     except Exception as e:
         message = "Failed to post process filled region: {}".format(e)

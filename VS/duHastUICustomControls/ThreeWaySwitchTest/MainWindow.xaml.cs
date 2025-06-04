@@ -17,19 +17,6 @@ namespace ThreeWaySwitchTest
         {
             InitializeComponent();
 
-
-
-            duHastNet.UI.CustomControls.Data.Headers = new List<string> { "Name", "Age", "Salary", "IsActive" }; // Define headers at startup
-
-            var testDataCollection = new ObservableCollection<duHastNet.UI.CustomControls.Data>
-{
-            new Data { Values = new Dictionary<string, object> { { "Name", "Alice" }, { "Age", 25 }, { "Salary", 50000 }, { "IsActive", true } } },
-            new Data { Values = new Dictionary<string, object> { { "Name", "Bob" }, { "Age", 30 }, { "Salary", 60000 }, { "IsActive", false } } }
-};
-
-            TestDataGrid.ItemsSource= testDataCollection;
-
-
         }
     }
 

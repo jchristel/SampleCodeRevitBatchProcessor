@@ -5,6 +5,5 @@
     <ResourceDictionary.MergedDictionaries>
         <!-- add the three way switch style !-->
         <ResourceDictionary Source="/duHastUICustomControls;component/ThreeWaySwitch/ThreeWaySwitchStyle.xaml"/>
-        <ResourceDictionary Source="/duHastUICustomControls;component/CustomDataGrid/CustomDataGrid.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

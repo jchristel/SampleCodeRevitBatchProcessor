@@ -22,4 +22,4 @@
 
 
 # the parameter containing the grouping code in each family
-GROUPING_CODE_PARAMETER_NAME = ""
+GROUPING_CODE_PARAMETER_NAME = "HSL_AHFG_CODE"

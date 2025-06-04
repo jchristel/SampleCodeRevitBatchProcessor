@@ -51,7 +51,7 @@ def get_family_data_from_file(libraryPath):
 
     :rtype: :class:`.Result`
     """
-    xml_files =  get_all_xml_files_from_directories[libraryPath]
+    xml_files =  get_all_xml_files_from_directories([libraryPath])
 
     if len(xml_files) == 0:
         return None
@@ -63,7 +63,7 @@ def get_family_data_from_file(libraryPath):
         return family_data_result.result
     
 
-def pre_process(libraryPath) :
+def pre_process(library_path, output_path):
     """
     Pre-process function to prepare for the family type data extraction.
     
@@ -76,7 +76,7 @@ def pre_process(libraryPath) :
     try:
         
         # get type data from library as [:class:`.FamilyTypeDataStorageManager`]
-        family_data = get_family_data_from_file(libraryPath)
+        family_data = get_family_data_from_file(library_path)
 
         # check if anything came back
         if family_data is None:
@@ -84,7 +84,7 @@ def pre_process(libraryPath) :
             return return_value
 
         # built copy file directives / swap file directives
-        directives_result = create_directives(family_data)
+        directives_result = create_directives(family_data, output_path)
 
         if directives_result.status is False:
             return_value.update_sep(
@@ -93,6 +93,7 @@ def pre_process(libraryPath) :
             )
             return return_value
         
+        return directives_result
         # execute copy directives
 
         # write swap directives to file

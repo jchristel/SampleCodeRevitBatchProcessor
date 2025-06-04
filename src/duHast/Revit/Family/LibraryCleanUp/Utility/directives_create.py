@@ -54,7 +54,7 @@ def get_unique_group_codes(family_storage_data):
     if (isinstance(family_storage_data, FamilyTypeDataStorageManager)==False):
         raise TypeError("family_storage_data must be an instance of FamilyTypeDataStorageManager. Got instead: {}".format(type(family_storage_data)))
     
-    if (family_storage_data.family_has_types() == False):
+    if (family_storage_data.family_has_types == False):
         # return an empty list if the family has no types
         return unique_group_codes
     
@@ -65,7 +65,7 @@ def get_unique_group_codes(family_storage_data):
         
         grouping_code_parameter = family_type_storage.get_parameter_by_name(GROUPING_CODE_PARAMETER_NAME)
 
-        #check if successfull
+        #check if successful
         if (grouping_code_parameter is None):
             raise ValueError("Grouping code parameter '{}' not found in family type data storage.".format(GROUPING_CODE_PARAMETER_NAME))
         
@@ -76,9 +76,21 @@ def get_unique_group_codes(family_storage_data):
     
     return unique_group_codes
 
-        
 
 def create_copy_directives(family_storage_data, unique_group_codes, output_directory):
+    """
+    Create copy directives for each unique group code in the family storage data.
+
+    :param family_storage_data: The family storage data from which to create copy directives. (takes the family name, category and file path from this data)
+    :type family_storage_data: :class:`.FamilyTypeDataStorageManager`
+    :param unique_group_codes: A list of unique group codes to create copy directives for.
+    :type unique_group_codes: list[str]
+    :param output_directory: The directory where the copied families will be saved.
+    :type output_directory: str
+    
+    :return: A list of copy directives.
+    :rtype: list[:class:`.FamilyDirectiveCopy`]
+    """
 
     # set up a list containing all copy directives to be created
     copy_directives = []
@@ -101,6 +113,45 @@ def create_copy_directives(family_storage_data, unique_group_codes, output_direc
 
     # return the list of copy directives
     return copy_directives
+
+
+def create_type_maintained_lists(family_storage_data, unique_group_codes, copy_directives):
+
+    """
+    Create lists of family types to be maintained in the new family based on unique group codes.
+
+    :param family_storage_data: The family storage data from which to create type maintained lists.
+    :type family_storage_data: :class:`.FamilyTypeDataStorageManager`
+    :param unique_group_codes: A list of unique group codes to create type maintained lists for.
+    :type unique_group_codes: list[str]
+    :param copy_directives: A list of copy directives to be used for creating type maintained lists.
+    :type copy_directives: list[:class:`.FamilyDirectiveCopy`]
+    
+    :return: A list of type maintained lists with two entries each: new family name, family type name to be maintained. ( a family with multiple times to be maintained will have multiple entries in the list )
+    :rtype: list[str]
+    """
+    
+    # Placeholder for implementation
+    return []
+
+
+def create_swap_directives(family_storage_data, unique_group_codes, copy_directives):
+    """
+    Create swap directives for each unique group code in the family storage data.
+
+    :param family_storage_data: The family storage data from which to create swap directives.
+    :type family_storage_data: :class:`.FamilyTypeDataStorageManager`
+    :param unique_group_codes: A list of unique group codes to create swap directives for.
+    :type unique_group_codes: list[str]
+    :param copy_directives: A list of copy directives to be used for creating swap directives.
+    :type copy_directives: list[:class:`.FamilyDirectiveCopy`]
+    
+    :return: A list of swap directives.
+    :rtype: list[:class:`.FamilyDirectiveSwap`]
+    """
+    
+    # Placeholder for implementation
+    return []
 
 
 def create_directives(family_storage_data_list, output_directory):
@@ -133,6 +184,10 @@ def create_directives(family_storage_data_list, output_directory):
        # set up a sap directive for each family type from old family to new family
        # create a list of types to keep per new family ( text file with same name as the new family name )
 
+        overall_copy_directives = []
+        overall_swap_directives = []
+        overall_type_keep_lists = []
+
         for family_data_storage_instance in family_storage_data_list:
 
             # get the uniq group codes from the family storage data
@@ -148,9 +203,22 @@ def create_directives(family_storage_data_list, output_directory):
 
             # create directives for each unique group code
             copy_directives = create_copy_directives(family_data_storage_instance, unique_group_codes, output_directory)
+            # add directives to be returned
+            overall_copy_directives = overall_copy_directives + copy_directives
 
-       
-        
+            # create lists of types to be maintained in the new family
+            type_keep_lists = create_type_maintained_lists(family_data_storage_instance, unique_group_codes, copy_directives)
+            overall_type_keep_lists = overall_type_keep_lists + type_keep_lists
+            
+            # create swap directives
+            swap_directives = create_swap_directives(family_data_storage_instance, unique_group_codes, copy_directives)
+            overall_swap_directives = overall_swap_directives + swap_directives
+
+        # return the overall copy directives, keep lists, swap directives
+        return_value.result.append(overall_copy_directives)
+        return_value.result.append(overall_type_keep_lists)
+        return_value.result.append(overall_swap_directives)
+            
     except Exception as e:
         return_value.update_sep(
             False,

@@ -283,7 +283,7 @@ def get_a_room_entry(doc, uiapp,output, forms):
 
     # check if the active view is a floor plan
     if active_view.ViewType != ViewType.FloorPlan and active_view.ViewType != ViewType.AreaPlan:
-        message = "Active view is not a floor plan or area plan: {}".format(active_view.ViewType)
+        message = "Active view is not a floor plan. {}".format(active_view.ViewType)
         return_value.update_sep(False, message)
         print(message)
         return return_value
@@ -391,7 +391,8 @@ def get_a_room_entry(doc, uiapp,output, forms):
         post_process_filled_region_result = post_processing_filled_region(
             doc=doc,
             forms=forms,
-            filled_region=f
+            filled_region=f,
+            number_of_all_regions_selected=len(filtered_regions),
         )
 
         if post_process_filled_region_result.status == False:

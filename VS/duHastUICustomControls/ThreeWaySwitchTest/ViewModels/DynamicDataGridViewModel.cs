@@ -39,11 +39,14 @@ namespace duHastNet.UI.ThreeWaySwitchTest.ViewModels
 
         public ICommand InitializeGridCommand { get; }
         public ICommand AddRowCommand { get; }
+        public ICommand ToggleColumnLockCommand { get; }
+
 
         public DynamicDataGridViewModel()
         {
             InitializeGridCommand = new RelayCommand(_ => InitializeGrid());
             AddRowCommand = new RelayCommand(_ => AddRow());
+            ToggleColumnLockCommand = new RelayCommand(param => ToggleColumnLock(param?.ToString()));
 
 
             // Initialize with sample data
@@ -56,9 +59,9 @@ namespace duHastNet.UI.ThreeWaySwitchTest.ViewModels
             ColumnDefinitions = new ObservableCollection<DynamicColumnDefinition>
         {
             new DynamicColumnDefinition("Id", "ID", typeof(int)) { Width = 80, IsReadOnly = true },
-            new DynamicColumnDefinition("Name", "Name", typeof(string)) { Width = 150 },
-            new DynamicColumnDefinition("Age", "Age", typeof(int)) { Width = 80 },
-            new DynamicColumnDefinition("Email", "Email", typeof(string)) { Width = 200 },
+            new DynamicColumnDefinition("Name", "Name", typeof(string)) { Width = 150 , IsReadOnly = true },
+            new DynamicColumnDefinition("Age", "Age", typeof(int)) { Width = 80,IsReadOnly = true  },
+            new DynamicColumnDefinition("Email", "Email", typeof(string)) { Width = 200,IsReadOnly = true  },
             new DynamicColumnDefinition("IsActive", "Active", typeof(bool)) { Width = 80 }
         };
 
@@ -101,6 +104,59 @@ namespace duHastNet.UI.ThreeWaySwitchTest.ViewModels
             newRow["IsActive"] = false;
 
             Data.Add(newRow);
+        }
+
+        // Methods to manage column locking
+        public void LockColumn(string propertyName)
+        {
+            var column = ColumnDefinitions.FirstOrDefault(c => c.PropertyName == propertyName);
+            if (column != null)
+            {
+                column.IsReadOnly = true;
+                // Force grid refresh by triggering collection change
+                RefreshGrid();
+            }
+        }
+
+        public void UnlockColumn(string propertyName)
+        {
+            var column = ColumnDefinitions.FirstOrDefault(c => c.PropertyName == propertyName);
+            if (column != null)
+            {
+                column.IsReadOnly = false;
+                RefreshGrid();
+            }
+        }
+
+        public void ToggleColumnLock(string propertyName)
+        {
+            var column = ColumnDefinitions.FirstOrDefault(c => c.PropertyName == propertyName);
+            if (column != null)
+            {
+                column.IsReadOnly = !column.IsReadOnly;
+                RefreshGrid();
+            }
+        }
+
+        public void SetColumnLockStates(Dictionary<string, bool> lockStates)
+        {
+            foreach (var kvp in lockStates)
+            {
+                var column = ColumnDefinitions.FirstOrDefault(c => c.PropertyName == kvp.Key);
+                if (column != null)
+                {
+                    column.IsReadOnly = kvp.Value;
+                }
+            }
+            RefreshGrid();
+        }
+
+        private void RefreshGrid()
+        {
+            // Trigger collection change to refresh the grid
+            var temp = ColumnDefinitions;
+            ColumnDefinitions = null;
+            ColumnDefinitions = temp;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

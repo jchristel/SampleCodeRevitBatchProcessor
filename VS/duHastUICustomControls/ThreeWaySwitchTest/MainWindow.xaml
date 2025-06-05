@@ -10,6 +10,80 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
 
+    <Window.Resources>
+        <!-- 1. Striped/Hatched Pattern Style -->
+        <Style x:Key="StripedReadOnlyStyle" TargetType="DataGridCell">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <DrawingBrush Viewport="0,0,10,10" ViewportUnits="Absolute" TileMode="Tile">
+                        <DrawingBrush.Drawing>
+                            <GeometryDrawing Brush="#F0F0F0">
+                                <GeometryDrawing.Geometry>
+                                    <RectangleGeometry Rect="0,0,10,10"/>
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingBrush.Drawing>
+                    </DrawingBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="#888888"/>
+            <Setter Property="FontWeight" Value="Light"/>
+        </Style>
+
+        <!-- 2. Gradient Background Style -->
+        <Style x:Key="GradientReadOnlyStyle" TargetType="DataGridCell">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#F8F8F8" Offset="0"/>
+                        <GradientStop Color="#EEEEEE" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="#666666"/>
+            <Setter Property="BorderBrush" Value="#DDDDDD"/>
+            <Setter Property="BorderThickness" Value="0,0,2,0"/>
+        </Style>
+
+        <!-- 3. Warning/Caution Style -->
+        <Style x:Key="CautionReadOnlyStyle" TargetType="DataGridCell">
+            <Setter Property="Background" Value="#FFF8DC"/>
+            <Setter Property="Foreground" Value="#8B4513"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderBrush" Value="#DAA520"/>
+            <Setter Property="BorderThickness" Value="2,0,0,0"/>
+        </Style>
+
+        <!-- 4. Minimal/Subtle Style -->
+        <Style x:Key="MinimalReadOnlyStyle" TargetType="DataGridCell">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#999999"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="Opacity" Value="0.7"/>
+        </Style>
+
+        <!-- 5. Corporate/Professional Style -->
+        <Style x:Key="CorporateReadOnlyStyle" TargetType="DataGridCell">
+            <Setter Property="Background" Value="#F5F5F5"/>
+            <Setter Property="Foreground" Value="#2C3E50"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="BorderBrush" Value="#BDC3C7"/>
+            <Setter Property="BorderThickness" Value="0,0,1,0"/>
+        </Style>
+
+        <!-- Header styles to match -->
+        <Style x:Key="CorporateReadOnlyHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#34495E"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="BorderBrush" Value="#2C3E50"/>
+            <Setter Property="BorderThickness" Value="0,0,1,0"/>
+        </Style>
+    </Window.Resources>
+    
     <Window.DataContext>
         <vms:DynamicDataGridViewModel />
     </Window.DataContext>
@@ -28,6 +102,7 @@
             Height="Auto"
             Margin="10 2 10 2"
             LabelLeft="Push It" LabelCenter="Split It" LabelRight="New Room" DisplayName="Mode" />
+        <!-- Dynamic DataGrid -->
         <custom:DynamicDataGrid Grid.Row="1"
                                ColumnDefinitions="{Binding ColumnDefinitions}"
                                ItemsSource="{Binding Data}"
@@ -37,19 +112,48 @@
                                SelectionMode="Single"
                                Background="White"
                                AlternatingRowBackground="LightGray"/>
+
+        <!-- Controls -->
         <StackPanel Grid.Row="2" 
-                    Orientation="Horizontal" 
+                    Orientation="Vertical" 
                     HorizontalAlignment="Left" 
                     Margin="0,10,0,0">
 
-            <Button Content="Add Row" 
-                    Command="{Binding AddRowCommand}"
-                    Padding="10,5" 
-                    Margin="0,0,10,0"/>
+            <!-- Row Operations -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                <Button Content="Add Row" 
+                        Command="{Binding AddRowCommand}"
+                        Padding="10,5" 
+                        Margin="0,0,10,0"/>
 
-            <Button Content="Reinitialize Grid" 
-                    Command="{Binding InitializeGridCommand}"
-                    Padding="10,5"/>
+                <Button Content="Reinitialize Grid" 
+                        Command="{Binding InitializeGridCommand}"
+                        Padding="10,5"/>
+            </StackPanel>
+
+            <!-- Column Lock Controls -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Toggle Column Lock:" 
+                           VerticalAlignment="Center" 
+                           Margin="0,0,10,0"/>
+
+                <Button Content="Lock/Unlock Name" 
+                        Command="{Binding ToggleColumnLockCommand}"
+                        CommandParameter="Name"
+                        Padding="8,3" 
+                        Margin="0,0,5,0"/>
+
+                <Button Content="Lock/Unlock Age" 
+                        Command="{Binding ToggleColumnLockCommand}"
+                        CommandParameter="Age"
+                        Padding="8,3" 
+                        Margin="0,0,5,0"/>
+
+                <Button Content="Lock/Unlock Active" 
+                        Command="{Binding ToggleColumnLockCommand}"
+                        CommandParameter="IsActive"
+                        Padding="8,3"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

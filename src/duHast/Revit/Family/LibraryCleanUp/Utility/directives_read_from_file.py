@@ -20,15 +20,31 @@
 #
 #
 
+import os
 
+from duHast.Utilities.Objects.result import Result
+from duHast.Revit.Family.LibraryCleanUp.Utility.defaults import SWAP_DIRECTIVE_FILE_NAME, MAINTAIN_TYPES_BY_FAMILY_FILE_NAME
 
-from duHast.Utilities.date_stamps import FILE_DATE_STAMP_YYYY_MM_DD, get_date_stamp
+from duHast.Utilities.files_csv import read_csv_file
 
-# the parameter containing the grouping code in each family
-GROUPING_CODE_PARAMETER_NAME = "HSL_AHFG_CODE"
+def read_maintain_types (directory_path):
+    return_value = Result()
 
-# file name of swap directives
-SWAP_DIRECTIVE_FILE_NAME = "SwapDirective {}.csv".format(get_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD))
+    try:
+        # build the file path for the maintain directives
+        file_path = os.path.join(directory_path, MAINTAIN_TYPES_BY_FAMILY_FILE_NAME)
 
-# file name of maintain family types by family directives
-MAINTAIN_TYPES_BY_FAMILY_FILE_NAME = "maintain_types_by_family {}.csv".format(get_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD))
+        print("Reading maintain directives to file: {}".format(file_path))
+
+        # write the maintain directives to the file
+        csv_file_result = read_csv_file(file_path=file_path)
+
+        return csv_file_result
+        
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "Failed to read maintain directives with exception: {}".format(e),
+        )
+    
+    return return_value

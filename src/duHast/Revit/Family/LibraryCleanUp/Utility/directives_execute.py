@@ -22,13 +22,27 @@
 
 
 
-from duHast.Utilities.date_stamps import FILE_DATE_STAMP_YYYY_MM_DD, get_date_stamp
+from duHast.Utilities.Objects.result import Result
+from duHast.Revit.Family.Utility.family_copy_directive_utils import execute_copy_directives
 
-# the parameter containing the grouping code in each family
-GROUPING_CODE_PARAMETER_NAME = "HSL_AHFG_CODE"
 
-# file name of swap directives
-SWAP_DIRECTIVE_FILE_NAME = "SwapDirective {}.csv".format(get_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD))
+def execute_copy_directives_for_library_families(copy_directives):
+    """
+    Executes the copy directives for library families.
+    
+    :param copy_directives: List of copy directives to execute.
+    :type copy_directives: list
+    :return: Result object containing the status and messages.
+    :rtype: Result
+    """
+    return_value = Result()
+    try:
+        execute_copy_result = execute_copy_directives(copy_directives)
+        return execute_copy_result
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "Failed to execute copy directives with exception: {}".format(e),
+        )
 
-# file name of maintain family types by family directives
-MAINTAIN_TYPES_BY_FAMILY_FILE_NAME = "maintain_types_by_family {}.csv".format(get_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD))
+    return return_value

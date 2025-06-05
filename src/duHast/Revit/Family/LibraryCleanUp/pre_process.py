@@ -29,8 +29,9 @@ from duHast.Utilities.files_xml import get_all_xml_files_from_directories
 from duHast.Revit.Family.family_types_get_data_from_xml import get_family_type_data_from_library
 
 from duHast.Revit.Family.LibraryCleanUp.Utility.directives_create import create_directives
-
-
+from duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file import write_directives_to_file
+from duHast.Revit.Family.LibraryCleanUp.Utility.directives_execute import execute_copy_directives_for_library_families
+from duHast.Revit.Family.LibraryCleanUp.Utility.write_task_lists import write_task_lists
 
 def get_family_data_from_file(libraryPath):
     """
@@ -63,7 +64,7 @@ def get_family_data_from_file(libraryPath):
         return family_data_result.result
     
 
-def pre_process(library_path, output_path):
+def pre_process(library_path, output_path, task_list_directory_path):
     """
     Pre-process function to prepare for the family type data extraction.
     
@@ -75,13 +76,24 @@ def pre_process(library_path, output_path):
     return_value = Result()
     try:
         
+        # do some logging to user
+        print("Processing family data from library path: {}".format(library_path))
+
         # get type data from library as [:class:`.FamilyTypeDataStorageManager`]
         family_data = get_family_data_from_file(library_path)
+        print("Families {} loaded from library path.".format(len(family_data)))
 
         # check if anything came back
         if family_data is None:
             return_value.update_sep (False, "No family data found in the specified library path.")
             return return_value
+        else:
+            return_value.append_message(
+                "Found {} families in library path.".format(len(family_data))
+            )
+            
+        # do some logging to user
+        print("Creating directives for {} families.".format(len(family_data)))
 
         # built copy file directives / swap file directives
         directives_result = create_directives(family_data, output_path)
@@ -89,20 +101,67 @@ def pre_process(library_path, output_path):
         if directives_result.status is False:
             return_value.update_sep(
                 False,
-                "{}".format(directives_result.message),
+                "Failed to create directives",
             )
             return return_value
+        else:
+            return_value.append_message(
+                "Created {} directives.".format(len(directives_result.result))
+            )
         
-        return directives_result
+        # get directives
+        copy_directives = directives_result.result[0]
+        type_maintain_list = directives_result.result[1]
+        swap_directives = directives_result.result[2]
+
+        # do some logging to user
+        print("Created {} copy directives, {} type maintain directives and {} swap directives.".format(
+            len(copy_directives), len(type_maintain_list), len(swap_directives)))
+
+        # write swap directives and type maintain lists to file
+        write_directives_result = write_directives_to_file (swap_directives, type_maintain_list,output_path)
+        if write_directives_result.status is False:
+            return_value.update_sep(
+                False,
+                "Failed to write directives to file",
+            )
+            return return_value
+        else:
+            return_value.append_message(
+                "Wrote {} swap directives and {} type maintain directives to file.".format(
+                    len(swap_directives), len(type_maintain_list))
+            )
+        
+        print("Wrote swap directives and type maintain directives to file.")
+
         # execute copy directives
+        copy_result = execute_copy_directives_for_library_families(copy_directives)
+        if copy_result.status is False:
+            return_value.update_sep(
+                False,
+                "Failed to execute copy directives",
+            )
+            return return_value
+        else:
+            return_value.append_message(
+                "Executed {} copy directives.".format(len(copy_directives))
+            )
 
-        # write swap directives to file
+        print("Executed copy directives.")
 
+        # write task list to file
+        write_task_lists_result = write_task_lists(
+            family_directory= library_path, 
+            task_list_directory = task_list_directory_path, 
+            number_of_task_lists=3)
         
+        print(write_task_lists_result)
+
+        return return_value
     except Exception as e:
         return_value.update_sep(
             False,
             "Failed to get family data with exception: {}".format(e),
         )
-    
+        print("Failed to get family data with exception: {}".format(e))
     return return_value

@@ -145,3 +145,47 @@ def get_swap_directives(directory_path):
         )
 
     return return_value
+
+
+def write_swap_directives_to_file(swap_directives, file_path):
+    """
+    Writes swap directives to a specified file in CSV format.
+
+    :param swap_directives: List of swap directives to write to file.
+    :type swap_directives: list of FamilyDirectiveSwap
+    :param file_path: Fully qualified file path where the directives will be written.
+    :type file_path: str
+    :return: Result object indicating success or failure of the write operation.
+    :rtype: Result
+    """
+    
+    return_value = res.Result()
+
+
+    # loop over directives and convert them to a list of lists
+    swap_directives_list = []
+    try:
+        for directive in swap_directives:
+            swap_directives_list.append([
+                directive.name,
+                directive.category,
+                directive.source_type_name,
+                directive.target_family_name,
+                directive.target_family_type_name
+            ])
+
+        # write the directives to the file
+        return_value = fileCSV.write_report_data_as_csv(
+            file_name=file_path,
+            header = [],
+            data=swap_directives_list,
+            quoting=fileCSV.csv.QUOTE_MINIMAL,
+        )
+
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "Failed to write swap directives with exception: {}".format(e),
+        )
+    
+    return return_value

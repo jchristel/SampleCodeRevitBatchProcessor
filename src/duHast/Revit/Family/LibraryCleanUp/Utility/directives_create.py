@@ -34,6 +34,7 @@ from duHast.Revit.Family.LibraryCleanUp.Utility.family_file_name import clean_up
 from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import FamilyTypeDataStorageManager
 from duHast.Revit.Family.Data.Objects.family_type_data_storage import FamilyTypeDataStorage
 from duHast.Revit.Family.Data.Objects.family_directive_copy import FamilyDirectiveCopy
+from duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type import FamilyDirectiveSwap
 
 
 def get_unique_group_codes(family_storage_data):
@@ -127,12 +128,36 @@ def create_type_maintained_lists(family_storage_data, unique_group_codes, copy_d
     :param copy_directives: A list of copy directives to be used for creating type maintained lists.
     :type copy_directives: list[:class:`.FamilyDirectiveCopy`]
     
-    :return: A list of type maintained lists with two entries each: new family name, family type name to be maintained. ( a family with multiple times to be maintained will have multiple entries in the list )
-    :rtype: list[str]
+    :return: A list of nested type maintained lists with two entries each: new family name, family type name to be maintained. ( a family with multiple times to be maintained will have multiple entries in the list )
+    :rtype: list[ list[str] ]
     """
     
-    # Placeholder for implementation
-    return []
+    #loop over unique group codes and
+    # find associated copy directive
+    # all types with matching group code
+
+    type_keep_lists = []
+
+    for each_group_code in unique_group_codes:
+
+        # amend the group code to the copy directive file name
+        group_code_in_file_name = "{}.rfa".format(convert_to_file_name_code(each_group_code))
+        # find the copy directive for this group code
+        copy_directive = next((cd for cd in copy_directives if cd.new_name.endswith(group_code_in_file_name)), None)
+
+        if copy_directive is not None:
+            # loop over family types and add to type keep list
+            for family_type_storage in family_storage_data.family_type_data_storage:
+                grouping_code_parameter = family_type_storage.get_parameter_by_name(GROUPING_CODE_PARAMETER_NAME)
+                if grouping_code_parameter and clean_code(grouping_code_parameter.value) == each_group_code:
+                    type_keep_lists.append([copy_directive.new_name, family_type_storage.family_type_name])
+        else:
+            print("Le impossibele: No copy directive found for group code: {}".format(group_code_in_file_name))
+            for cp in copy_directives:
+                print("Copy Directive: {}".format(cp.new_name))
+
+    
+    return type_keep_lists
 
 
 def create_swap_directives(family_storage_data, unique_group_codes, copy_directives):
@@ -150,8 +175,38 @@ def create_swap_directives(family_storage_data, unique_group_codes, copy_directi
     :rtype: list[:class:`.FamilyDirectiveSwap`]
     """
     
-    # Placeholder for implementation
-    return []
+    #loop over unique group codes and
+    # find associated copy directive
+    # build swap directive from old family name , new family name nad same family type name
+
+    swap_directives = []
+
+    for each_group_code in unique_group_codes:
+        # amend the group code to the copy directive file name
+        group_code_in_file_name = "{}.rfa".format(convert_to_file_name_code(each_group_code))
+        # find the copy directive for this group code
+        copy_directive = next((cd for cd in copy_directives if cd.new_name.endswith(group_code_in_file_name)), None)
+
+        if copy_directive is not None:
+            # loop over family types and create swap directives
+            for family_type_storage in family_storage_data.family_type_data_storage:
+                grouping_code_parameter = family_type_storage.get_parameter_by_name(GROUPING_CODE_PARAMETER_NAME)
+                if grouping_code_parameter and clean_code(grouping_code_parameter.value) == each_group_code:
+                    swap_directive = FamilyDirectiveSwap(
+                        name = family_storage_data.family_name,
+                        category= family_storage_data.family_category,
+                        source_type_name= family_type_storage.family_type_name,
+                        target_family_name = copy_directive.new_name[:-4]   , # remove the '.rfa' !!
+                        target_family_type_name = family_type_storage.family_type_name
+                    )
+                    swap_directives.append(swap_directive)
+        else:
+            print("Le impossibele: No copy directive found for group code: {}".format(group_code_in_file_name))
+            for cp in copy_directives:
+                print("Copy Directive: {}".format(cp.new_name))
+
+
+    return swap_directives
 
 
 def create_directives(family_storage_data_list, output_directory):

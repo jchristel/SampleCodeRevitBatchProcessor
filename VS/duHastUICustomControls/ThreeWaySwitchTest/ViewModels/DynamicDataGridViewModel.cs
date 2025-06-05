@@ -1,4 +1,5 @@
 ﻿using duHastNet.UI.CustomControls.CustomDataGrid;
+using duHastNet.Utils.WPF.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -41,8 +42,9 @@ namespace duHastNet.UI.ThreeWaySwitchTest.ViewModels
 
         public DynamicDataGridViewModel()
         {
-            InitializeGridCommand = new RelayCommand(InitializeGrid);
-            AddRowCommand = new RelayCommand(AddRow);
+            InitializeGridCommand = new RelayCommand(_ => InitializeGrid());
+            AddRowCommand = new RelayCommand(_ => AddRow());
+
 
             // Initialize with sample data
             InitializeGrid();
@@ -109,25 +111,5 @@ namespace duHastNet.UI.ThreeWaySwitchTest.ViewModels
         }
     }
 
-    public class RelayCommand : ICommand
-    {
-        private readonly Action _execute;
-        private readonly Func<bool> _canExecute;
-
-        public RelayCommand(Action execute, Func<bool> canExecute = null)
-        {
-            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
-            _canExecute = canExecute;
-        }
-
-        public bool CanExecute(object parameter) => _canExecute?.Invoke() ?? true;
-
-        public void Execute(object parameter) => _execute();
-
-        public event EventHandler CanExecuteChanged
-        {
-            add => CommandManager.RequerySuggested += value;
-            remove => CommandManager.RequerySuggested -= value;
-        }
-    }
+    
 }

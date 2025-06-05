@@ -37,7 +37,6 @@ namespace duHastNet.Utils.WPF.Commands
 
         public abstract void Execute(object parameter);
 
-
         protected void OnCanExecutedChanged()
         {
             CanExecuteChanged?.Invoke(this, new EventArgs());

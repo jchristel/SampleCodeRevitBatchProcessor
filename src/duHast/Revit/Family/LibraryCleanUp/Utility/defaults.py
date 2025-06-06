@@ -27,8 +27,12 @@ from duHast.Utilities.date_stamps import FILE_DATE_STAMP_YYYY_MM_DD, get_date_st
 # the parameter containing the grouping code in each family
 GROUPING_CODE_PARAMETER_NAME = "HSL_AHFG_CODE"
 
+# prefix for the file name of swap directives
+SWAP_DIRECTIVE_FILE_NAME_PREFIX = "SwapDirective"
 # file name of swap directives
-SWAP_DIRECTIVE_FILE_NAME = "SwapDirective {}.csv".format(get_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD))
+SWAP_DIRECTIVE_FILE_NAME = "{} {}.csv".format(SWAP_DIRECTIVE_FILE_NAME_PREFIX, get_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD))
 
+# prefix for the file name of maintain family types by family directives
+MAINTAIN_TYPES_BY_FAMILY_FILE_NAME_PREFIX = "maintain_types_by_family"
 # file name of maintain family types by family directives
-MAINTAIN_TYPES_BY_FAMILY_FILE_NAME = "maintain_types_by_family {}.csv".format(get_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD))
+MAINTAIN_TYPES_BY_FAMILY_FILE_NAME = "{} {}.csv".format(MAINTAIN_TYPES_BY_FAMILY_FILE_NAME_PREFIX, get_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD))

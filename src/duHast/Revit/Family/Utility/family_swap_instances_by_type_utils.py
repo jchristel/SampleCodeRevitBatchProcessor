@@ -177,7 +177,7 @@ def write_swap_directives_to_file(swap_directives, file_path):
         # write the directives to the file
         return_value = fileCSV.write_report_data_as_csv(
             file_name=file_path,
-            header = [],
+            header = FamilyDirectiveSwap.SWAP_DIRECTIVE_HEADER_ROW,
             data=swap_directives_list,
             quoting=fileCSV.csv.QUOTE_MINIMAL,
         )

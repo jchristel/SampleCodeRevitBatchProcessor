@@ -23,7 +23,8 @@
 import os
 
 from duHast.Utilities.Objects.result import Result
-from duHast.Revit.Family.LibraryCleanUp.Utility.defaults import SWAP_DIRECTIVE_FILE_NAME, MAINTAIN_TYPES_BY_FAMILY_FILE_NAME
+from duHast.Revit.Family.LibraryCleanUp.Utility.defaults import SWAP_DIRECTIVE_FILE_NAME, MAINTAIN_TYPES_BY_FAMILY_FILE_NAME_PREFIX
+from duHast.Utilities.files_get import get_files_single_directory
 
 from duHast.Utilities.files_csv import read_csv_file
 
@@ -31,8 +32,19 @@ def read_maintain_types (directory_path):
     return_value = Result()
 
     try:
+
+        # get type maintain file path
+        files = get_files_single_directory(directory_path,MAINTAIN_TYPES_BY_FAMILY_FILE_NAME_PREFIX, "", ".csv")
+           
+        if len(files) == 0:
+            return_value.update_sep(
+                False,
+                "No maintain directives found in directory: {}".format(directory_path),
+            )
+            return return_value
+        
         # build the file path for the maintain directives
-        file_path = os.path.join(directory_path, MAINTAIN_TYPES_BY_FAMILY_FILE_NAME)
+        file_path = files[0]  # assuming we take the first file found
 
         print("Reading maintain directives to file: {}".format(file_path))
 

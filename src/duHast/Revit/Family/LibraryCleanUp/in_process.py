@@ -19,12 +19,27 @@
 #
 #
 #
-
+import os
 
 from duHast.Utilities.Objects.result import Result
+from duHast.Utilities.files_io import get_file_name_without_ext
 
+from duHast.Revit.Family.Utility.family_swap_instances_by_type_utils import get_swap_directives
+from duHast.Revit.Family.family_swap_instances_of_types import swap_family_instances_of_types
 from duHast.Revit.Family.LibraryCleanUp.Utility.directives_read_from_file import read_maintain_types
 from duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute import delete_non_conforming_types
+from duHast.Revit.Family.LibraryCleanUp.Utility.family_load import load_families_required_for_swapping
+
+from duHast.Revit.Purge.purge_unused_e_transmit import purge_unused_e_transmit
+from duHast.Revit.Common.file_io import save_as_family
+
+from duHast.Revit.RBP.Objects.ProgressRBPConsole import ProgressRBPConsole
+from duHast.pyRevit.Objects.ProgressPyRevit import ProgressPyRevit
+
+
+DEBUG = True
+
+
 
 def in_process_family(doc, library_path):
     """
@@ -59,7 +74,7 @@ def in_process_family(doc, library_path):
         # get the maintain types from the result
         main_tain_types = read_maintain_result.result
 
-        print(len(main_tain_types), "maintain types read from file.")
+        print("{} maintain types read from file.".format(len(main_tain_types)))
 
         # attempt to delete non-conforming types
         delete_non_conforming_types_result = delete_non_conforming_types(doc, main_tain_types)
@@ -68,6 +83,72 @@ def in_process_family(doc, library_path):
             return return_value
         
         print(delete_non_conforming_types_result.message)
+
+        # load swap directives
+        swap_directives_result = get_swap_directives(directory_path=library_path)
+
+        if not swap_directives_result.status:
+            return_value.update_sep(False, "Failed to read swap directives: {}".format(swap_directives_result.message))
+            print("Failed to read swap directives: {}".format(swap_directives_result.message))
+            return return_value
+        
+        swap_directives = swap_directives_result.result
+
+        # load families required for swapping
+        load_result = load_families_required_for_swapping(doc,  swap_directives, library_path)
+
+        if not load_result.status:
+            return_value.update_sep(False, "Failed to load families required for swapping: {}".format(load_result.message))
+            print("Failed to load families required for swapping: {}".format(load_result.message))
+            return return_value
+        
+        print("Families successfully loaded for swapping: {}".format(len(load_result.result)))
+
+        # swap out families if necessary
+        if( len(load_result.result) == 0):
+            return_value.update_sep(True, "No families needing swapping in file")
+            print("No families needing swapping in file")
+            return return_value
+
+        # set up a call back for progressbar
+        #progress_callback = ProgressPyRevit(form=pb)
+
+        # swap away
+        swap_result = swap_family_instances_of_types(doc, library_path, progress_callback=None)
+
+        # print logs
+        print("Swapped families with status: {}".format(swap_result.status))
+
+        # check what came back
+        if not swap_result.status:
+            return_value.update_sep(False, "Failed to swap families: {}".format(swap_result.message))
+            print("Failed to swap families: {}".format(swap_result.message))
+            return return_value
+        
+        # if we get here... do a purge unused and than save that family document
+        purge_action_result = purge_unused_e_transmit(doc)
+
+        if not purge_action_result.status:
+            return_value.update_sep(False, "Failed to purge unused elements: {}".format(purge_action_result.message))
+            print("Failed to purge unused elements: {}".format(purge_action_result.message))
+            return return_value
+        
+        print("Purged unused elements successfully.")
+
+        file_name_without_ext = get_file_name_without_ext(doc.PathName)
+        
+        revit_fam_file_path = os.path.join(library_path, file_name_without_ext + ".rfa")
+        print("Saving family to: {}".format(revit_fam_file_path))
+
+        # save the family document
+        save_result = save_as_family(
+            doc=doc,
+            target_directory_path=library_path,
+            name_data=[[file_name_without_ext, file_name_without_ext]],
+            file_extension= ".rfa",
+            compact_file=True)
+        
+        print("Save result: {}".format(save_result.status))
 
 
     except Exception as e:

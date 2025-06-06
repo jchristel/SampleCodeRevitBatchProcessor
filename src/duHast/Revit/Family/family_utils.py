@@ -145,7 +145,7 @@ def load_family(doc, family_file_path, transaction_manager=in_transaction_with_f
                 )
                 
                 # check if reload returned a family and if so return it to caller
-                # needs to be 'is not None test sincean exception will thrown otherwise:
+                # needs to be 'is not None test since an exception will thrown otherwise:
                 # Can't convert a Reference<> instance to a bool
                 if return_family is not None:
                     action_return_value.result.append(return_family.Value)

@@ -27,8 +27,8 @@ from duHast.Utilities.Objects.result import Result
 
 
 from duHast.Revit.Family.LibraryCleanUp.Utility.defaults import GROUPING_CODE_PARAMETER_NAME
-from duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code import clean_code, convert_to_file_name_code
-from duHast.Revit.Family.LibraryCleanUp.Utility.family_file_name import clean_up_family_name
+from duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code import clean_code, convert_to_file_name_code, load_group_code_description
+from duHast.Revit.Family.LibraryCleanUp.Utility.family_file_name import clean_up_family_name, build_family_name_from_descriptor
 
 
 from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import FamilyTypeDataStorageManager
@@ -78,7 +78,7 @@ def get_unique_group_codes(family_storage_data):
     return unique_group_codes
 
 
-def create_copy_directives(family_storage_data, unique_group_codes, output_directory):
+def create_copy_directives(family_storage_data, unique_group_codes, output_directory,  code_to_descriptor_map):
     """
     Create copy directives for each unique group code in the family storage data.
 
@@ -97,8 +97,20 @@ def create_copy_directives(family_storage_data, unique_group_codes, output_direc
     copy_directives = []
 
     for each_group_code in unique_group_codes:
+
+        # get the description for the group code
+        group_code_description = code_to_descriptor_map.get(each_group_code, None)
+        # this should not happen....
+        if group_code_description is None:
+            raise ValueError("Grouping code '{}' not found in code description mapping.".format(each_group_code))
+        
+        # build family name from the group code description
+        fam_name_part = build_family_name_from_descriptor(group_code_description)
+
         # build new family name
-        new_file_name = "{}_{}.rfa".format(clean_up_family_name(family_storage_data.family_name),  convert_to_file_name_code( each_group_code))
+        new_file_name = "{}_{}.rfa".format(fam_name_part,  convert_to_file_name_code( each_group_code))
+
+        print("Creating copy directive for group code: {} with new file name: {}".format(each_group_code, new_file_name))
         # create a copy directive for each unique group code
         #name, category, source_file_path, target_directory, new_name
         copy_directive = FamilyDirectiveCopy(
@@ -209,7 +221,7 @@ def create_swap_directives(family_storage_data, unique_group_codes, copy_directi
     return swap_directives
 
 
-def create_directives(family_storage_data_list, output_directory):
+def create_directives(family_storage_data_list, output_directory, code_descriptor_path):
     """
     Create directives based on family storage data.
 
@@ -243,6 +255,18 @@ def create_directives(family_storage_data_list, output_directory):
         overall_swap_directives = []
         overall_type_keep_lists = []
 
+        print("loading code description mapping from file: {}".format(code_descriptor_path))
+        # load code  to descriptor mapper
+        code_to_descriptor_map = load_group_code_description(code_descriptor_path)
+        print("Loaded code to descriptor with {} entries from mapping from file.".format(len(code_to_descriptor_map)))
+        if code_to_descriptor_map is None:
+            return_value.update_sep(
+                False,
+                "Failed to load code description mapping from file: {}".format(code_descriptor_path),
+            )
+            return return_value
+
+        # loop over all family storage instances and build directives
         for family_data_storage_instance in family_storage_data_list:
 
             # get the uniq group codes from the family storage data
@@ -256,8 +280,17 @@ def create_directives(family_storage_data_list, output_directory):
                 )
                 continue
 
+            # check all group codes exist in descriptor mapper
+            for group_code in unique_group_codes:
+                if group_code not in code_to_descriptor_map:
+                    return_value.update_sep(
+                        False,
+                        "Grouping code '{}' not found in code description mapping.".format(group_code),
+                    )
+                    continue
+
             # create directives for each unique group code
-            copy_directives = create_copy_directives(family_data_storage_instance, unique_group_codes, output_directory)
+            copy_directives = create_copy_directives(family_data_storage_instance, unique_group_codes, output_directory,  code_to_descriptor_map)
             # add directives to be returned
             overall_copy_directives = overall_copy_directives + copy_directives
 

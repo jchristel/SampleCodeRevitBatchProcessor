@@ -202,6 +202,7 @@ def execute_copy_directives(copy_directives):
                     "No target directory path provided for copy directive: {}".format(directive.name))
                 continue
 
+            print("copy target file path: {}".format(target_file_path))
             # copy file to target directory
             copy_file_flag = copy_file(
                 directive.source_file_path, target_file_path

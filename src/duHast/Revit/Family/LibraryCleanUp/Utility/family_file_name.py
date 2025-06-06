@@ -41,3 +41,61 @@ def clean_up_family_name (fam_name):
     fam_name = fam_name.replace(' ', '_')
 
     return fam_name
+
+def build_family_name_from_descriptor(description):
+    """
+    Builds a family name from the given description by cleaning it up.
+
+    Description is in format
+
+    MAJOR CATEGORY: description part, description part, description part
+
+    :param description: The description to build the family name from.
+    :type description: str
+    :return: The cleaned up family name.
+    :rtype: str
+    """
+    
+    # isolate the major category and change to sentence case
+
+
+    if description is None:
+        return None
+    
+    # split the description into parts
+    parts = description.split(':')
+    if len(parts) < 2:
+        raise ValueError("Description must contain a major category followed by a colon.")
+    
+    # get the major category and clean it up
+    major_category = parts[0].title().strip().replace(' ', '')
+    description_parts = []
+    try:
+        
+        # get the description parts and clean it up: break up in parts at each comma, Capitalize case each part, remove all spaces in each part, join parts by underscore
+        for part in parts[1].split(','):
+            
+            # strip leading/trailing spaces from the part
+            part = part.strip()
+
+            # break up into words at each space
+            words = []
+            # check each word in the part
+            for word in part.split(" "):
+                # check if part is all upper case idf not capitalize it
+                if not word.isupper():
+                    print("word '{}' is not all upper case, capitalizing it.".format(word))
+                    word = word.title()  # Capitalize the first letter of each word and strip leading/trailing spaces
+                else:
+                    print("Word '{}' is all upper case, keeping it as is.".format(word))
+                words.append(word)
+
+
+            description_parts.append("".join(words))
+    except Exception as e:
+        print("Error processing description parts: {}".format(e))
+           
+    # join the major category and description parts with an underscore
+    family_name = major_category + '_' + '_'.join(description_parts)
+
+    return family_name

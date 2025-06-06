@@ -64,7 +64,7 @@ def get_family_data_from_file(libraryPath):
         return family_data_result.result
     
 
-def pre_process(library_path, output_path, task_list_directory_path):
+def pre_process(library_path, output_path, task_list_directory_path, code_descriptor_path):
     """
     Pre-process function to prepare for the family type data extraction.
     
@@ -96,7 +96,7 @@ def pre_process(library_path, output_path, task_list_directory_path):
         print("Creating directives for {} families.".format(len(family_data)))
 
         # built copy file directives / swap file directives
-        directives_result = create_directives(family_data, output_path)
+        directives_result = create_directives(family_data, output_path,  code_descriptor_path)
 
         if directives_result.status is False:
             return_value.update_sep(

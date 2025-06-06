@@ -19,6 +19,7 @@
 #
 #
 
+from duHast.Utilities.files_csv import read_csv_file
 
 def clean_code(code):
     """
@@ -38,10 +39,55 @@ def convert_to_file_name_code(code):
     """
     Converts the grouping code to a file name safe format.
     """
-    if code is None:
+
+    # return code as is for now
+    return code
+
+    # if code is None:
+    #     return None
+    
+    # # replace "-" with "_"
+    # code = code.replace('-', '_')
+    
+    # return code
+
+
+def load_group_code_description(file_path):
+    """
+    Loads the grouping code and description from a CSV file.
+    
+    :param file_path: The path to the CSV file containing the grouping codes and descriptions.
+    :return: A dictionary mapping cleaned grouping codes to their descriptions.
+    """
+
+    code_description_map = {}
+    try:
+        read_result = read_csv_file(file_path=file_path)
+        
+        if not read_result.status:
+            return None
+        
+        code_description_map = {}
+        
+        # ignore header row
+        if len(read_result.result) == 0:
+            return  None
+        
+        # iterate over the rows and create a map of code to description
+        # ignore header row
+        for i in range(1, len(read_result.result)):
+            row = read_result.result[i]
+            if len(row) < 2:
+                continue
+            code = row[0]
+            description = row[1]
+            
+            # add to map
+            code_description_map[code] = description
+    
+    except Exception as e:
+        print("Error loading grouping codes from file {}: {}".format(file_path, e))
         return None
     
-    # replace "-" with "_"
-    code = code.replace('-', '_')
-    
-    return code
+
+    return code_description_map

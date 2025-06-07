@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -144,8 +141,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             // Apply read-only styling
             if (columnDef.IsReadOnly)
             {
-                // thinking about this one...
-                //ApplyReadOnlyStyle(column);
+                ApplyReadOnlyStyle(column);
             }
 
             // Create binding
@@ -170,41 +166,39 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
 
         private void ApplyReadOnlyStyle(DataGridColumn column)
         {
-            // Apply header style
+            // Apply header style (custom or default from Generic.xaml)
             if (ReadOnlyHeaderStyle != null)
             {
                 column.HeaderStyle = ReadOnlyHeaderStyle;
             }
+            else if (TryFindResource("DefaultReadOnlyHeaderStyle") is Style defaultHeaderStyle)
+            {
+                column.HeaderStyle = defaultHeaderStyle;
+            }
 
-            // Apply cell style
+            // Apply cell style (custom or default from Generic.xaml)
             if (ReadOnlyColumnStyle != null)
             {
                 column.CellStyle = ReadOnlyColumnStyle;
             }
+            else if (TryFindResource("DefaultReadOnlyColumnStyle") is Style defaultCellStyle)
+            {
+                column.CellStyle = defaultCellStyle;
+            }
             else
             {
-                // Default read-only styling if no custom style provided
-                column.CellStyle = CreateDefaultReadOnlyStyle();
+                // Final fallback if Generic.xaml resources aren't found
+                column.CellStyle = CreateFallbackReadOnlyStyle();
             }
         }
 
-        private Style CreateDefaultReadOnlyStyle()
+        private Style CreateFallbackReadOnlyStyle()
         {
+            // Simplified fallback style if resource dictionary fails to load
             var style = new Style(typeof(DataGridCell));
-
-            // Set background to light gray
             style.Setters.Add(new Setter(BackgroundProperty, new SolidColorBrush(Color.FromRgb(240, 240, 240))));
-
-            // Set foreground to darker color
             style.Setters.Add(new Setter(ForegroundProperty, new SolidColorBrush(Color.FromRgb(100, 100, 100))));
-
-            // Add italic font style
             style.Setters.Add(new Setter(FontStyleProperty, FontStyles.Italic));
-
-            // Optional: Add a subtle border
-            style.Setters.Add(new Setter(BorderBrushProperty, new SolidColorBrush(Color.FromRgb(200, 200, 200))));
-            style.Setters.Add(new Setter(BorderThicknessProperty, new Thickness(0, 0, 1, 0)));
-
             return style;
         }
     }

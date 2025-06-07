@@ -61,11 +61,18 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="Utils.23.0.0.3">
+      <HintPath>..\..\_References\duHast\Utils.23.0.0.3.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomDataGrid\AvailableColumnDefinition.cs" />
+    <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.cs" />
+    <Compile Include="CustomDataGrid\FilterIndicatorBehavior.cs" />
+    <Compile Include="ViewModels\BaseDynamicGridViewModel.cs" />
     <Page Include="CustomDataGrid\DynamicDataGridStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

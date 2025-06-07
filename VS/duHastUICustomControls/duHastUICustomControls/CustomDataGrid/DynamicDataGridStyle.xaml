@@ -1,77 +1,33 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:duHastNet.UI.CustomControls.CustomDataGrid">
 
-    <!-- Alternative styling approaches for read-only columns -->
-
-    <!-- 1. Striped/Hatched Pattern Style -->
-    <Style x:Key="StripedReadOnlyStyle" TargetType="DataGridCell">
-        <Setter Property="Background">
-            <Setter.Value>
-                <DrawingBrush Viewport="0,0,10,10" ViewportUnits="Absolute" TileMode="Tile">
-                    <DrawingBrush.Drawing>
-                        <GeometryDrawing Brush="#F0F0F0">
-                            <GeometryDrawing.Geometry>
-                                <RectangleGeometry Rect="0,0,10,10"/>
-                            </GeometryDrawing.Geometry>
-                        </GeometryDrawing>
-                    </DrawingBrush.Drawing>
-                </DrawingBrush>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Foreground" Value="#888888"/>
-        <Setter Property="FontWeight" Value="Light"/>
+    <!-- Simple style that changes background when filtered -->
+    <Style x:Key="FilterableColumnHeaderStyle" TargetType="DataGridColumnHeader">
+        <Style.Triggers>
+            <Trigger Property="local:FilterIndicatorBehavior.HasActiveFilter" Value="True">
+                <Setter Property="Background" Value="LightCoral"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
-    <!-- 2. Gradient Background Style -->
-    <Style x:Key="GradientReadOnlyStyle" TargetType="DataGridCell">
-        <Setter Property="Background">
-            <Setter.Value>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                    <GradientStop Color="#F8F8F8" Offset="0"/>
-                    <GradientStop Color="#EEEEEE" Offset="1"/>
-                </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Foreground" Value="#666666"/>
-        <Setter Property="BorderBrush" Value="#DDDDDD"/>
-        <Setter Property="BorderThickness" Value="0,0,2,0"/>
+    <!-- Default Read-Only Cell Style - NO CHANGES, normal appearance -->
+    <Style x:Key="DefaultReadOnlyColumnStyle" TargetType="DataGridCell">
+        <!-- This style intentionally has no setters - cells look normal -->
     </Style>
 
-    <!-- 3. Warning/Caution Style -->
-    <Style x:Key="CautionReadOnlyStyle" TargetType="DataGridCell">
-        <Setter Property="Background" Value="#FFF8DC"/>
-        <Setter Property="Foreground" Value="#8B4513"/>
-        <Setter Property="FontWeight" Value="SemiBold"/>
-        <Setter Property="BorderBrush" Value="#DAA520"/>
-        <Setter Property="BorderThickness" Value="2,0,0,0"/>
+    <!-- Default Read-Only Header Style - Only gray background -->
+    <Style x:Key="DefaultReadOnlyHeaderStyle" TargetType="DataGridColumnHeader">
+        <Setter Property="Background" Value="#E0E0E0"/>
     </Style>
 
-    <!-- 4. Minimal/Subtle Style -->
-    <Style x:Key="MinimalReadOnlyStyle" TargetType="DataGridCell">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="#999999"/>
-        <Setter Property="FontStyle" Value="Italic"/>
-        <Setter Property="Opacity" Value="0.7"/>
-    </Style>
-
-    <!-- 5. Corporate/Professional Style -->
-    <Style x:Key="CorporateReadOnlyStyle" TargetType="DataGridCell">
-        <Setter Property="Background" Value="#F5F5F5"/>
-        <Setter Property="Foreground" Value="#2C3E50"/>
-        <Setter Property="FontFamily" Value="Segoe UI"/>
-        <Setter Property="FontSize" Value="12"/>
-        <Setter Property="Padding" Value="8,4"/>
-        <Setter Property="BorderBrush" Value="#BDC3C7"/>
-        <Setter Property="BorderThickness" Value="0,0,1,0"/>
-    </Style>
-
-    <!-- Header styles to match -->
-    <Style x:Key="CorporateReadOnlyHeaderStyle" TargetType="DataGridColumnHeader">
-        <Setter Property="Background" Value="#34495E"/>
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="FontWeight" Value="SemiBold"/>
-        <Setter Property="Padding" Value="8,6"/>
-        <Setter Property="BorderBrush" Value="#2C3E50"/>
-        <Setter Property="BorderThickness" Value="0,0,1,0"/>
+    <!-- Optional: Default style for the DynamicDataGrid control itself -->
+    <Style TargetType="{x:Type local:DynamicDataGrid}" BasedOn="{StaticResource {x:Type DataGrid}}">
+        <!-- Add any default properties for the control here -->
+        <Setter Property="GridLinesVisibility" Value="All"/>
+        <Setter Property="HeadersVisibility" Value="Column"/>
+        <Setter Property="SelectionMode" Value="Single"/>
+        <Setter Property="CanUserAddRows" Value="False"/>
+        <Setter Property="CanUserDeleteRows" Value="True"/>
     </Style>
 </ResourceDictionary>

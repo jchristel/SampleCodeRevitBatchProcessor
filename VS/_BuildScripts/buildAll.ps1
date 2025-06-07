@@ -8,7 +8,7 @@ $solution6 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcesso
 
 $commonDir = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\_References\duHast"
 
-$targetDirSolution5 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\src\duHast\libs"
+$targetDirSolution5 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\src\duHast\lib"
 
 # Ask user for build configuration (Release or Debug)
 $buildConfig = Read-Host "Enter build configuration (Release/Debug)"

@@ -74,7 +74,7 @@ Write-Output "File copied successfully from $sourceFileUISelection to $destinati
 # lib directory
 $sourceFolderLib="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\_References\duHast"
 $destinationFolderLib_one="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\pyRevit\Extensions\duHast.extension\bin"
-$destinationFolderLib_two="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\src\duHast\libs"
+$destinationFolderLib_two="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\src\duHast\lib"
 
 # Function to clean and copy files
 function CleanAndCopy($source, $destination) {

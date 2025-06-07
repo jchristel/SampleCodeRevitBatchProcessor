@@ -239,7 +239,6 @@ namespace duHastNet.Utils.WPF.ViewModels
             }
 
             _removedColumnData[propertyName] = columnData;
-            System.Diagnostics.Debug.WriteLine($"Stored data for removed column: {propertyName}, {columnData.Count} values");
         }
 
         private void RestoreOrSetDefaultColumnData(string propertyName, AvailableColumnDefinition availableColumn)
@@ -248,8 +247,7 @@ namespace duHastNet.Utils.WPF.ViewModels
             {
                 // Restore original data
                 var storedData = _removedColumnData[propertyName];
-                System.Diagnostics.Debug.WriteLine($"Restoring data for column: {propertyName}, {storedData.Count} values");
-
+               
                 for (int i = 0; i < Data.Count; i++)
                 {
                     if (storedData.ContainsKey(i))
@@ -269,7 +267,6 @@ namespace duHastNet.Utils.WPF.ViewModels
             else
             {
                 // No stored data, use defaults (new column or data was cleared)
-                System.Diagnostics.Debug.WriteLine($"No stored data for column: {propertyName}, using defaults");
                 foreach (var row in Data)
                 {
                     row[propertyName] = GetDefaultValueForColumn(availableColumn);

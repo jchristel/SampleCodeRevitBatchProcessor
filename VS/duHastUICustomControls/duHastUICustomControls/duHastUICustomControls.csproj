@@ -71,7 +71,6 @@
   <ItemGroup>
     <Compile Include="CustomDataGrid\AvailableColumnDefinition.cs" />
     <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.cs" />
-    <Compile Include="CustomDataGrid\FilterIndicatorBehavior.cs" />
     <Compile Include="ViewModels\BaseDynamicGridViewModel.cs" />
     <Page Include="CustomDataGrid\DynamicDataGridStyle.xaml">
       <SubType>Designer</SubType>

@@ -95,7 +95,8 @@ namespace duHastNet.UI.ThreeWaySwitchTest.ViewModels
             var sampleData = new[]
             {
                 new { Id = 1, Name = "John Doe", Age = 30, Email = "john@example.com", IsActive = true },
-                new { Id = 2, Name = "Jane Smith", Age = 25, Email = "jane@example.com", IsActive = false }
+                new { Id = 2, Name = "Jane Smith", Age = 25, Email = "jane@example.com", IsActive = false },
+                new { Id = 3, Name = "Jan Smith", Age = 25, Email = "jan@example.com", IsActive = true }
             };
 
             foreach (var item in sampleData)

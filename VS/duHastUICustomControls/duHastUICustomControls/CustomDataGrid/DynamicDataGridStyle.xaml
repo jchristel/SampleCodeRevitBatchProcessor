@@ -2,32 +2,23 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:duHastNet.UI.CustomControls.CustomDataGrid">
 
-    <!-- Simple style that changes background when filtered -->
+    <!-- Simple base style for all headers -->
     <Style x:Key="FilterableColumnHeaderStyle" TargetType="DataGridColumnHeader">
-        <Style.Triggers>
-            <Trigger Property="local:FilterIndicatorBehavior.HasActiveFilter" Value="True">
-                <Setter Property="Background" Value="LightCoral"/>
-            </Trigger>
-        </Style.Triggers>
+        <!-- Just basic styling, background handled in code -->
     </Style>
 
-    <!-- Default Read-Only Cell Style - NO CHANGES, normal appearance -->
+    <!-- Default Read-Only Cell Style -->
     <Style x:Key="DefaultReadOnlyColumnStyle" TargetType="DataGridCell">
         <!-- This style intentionally has no setters - cells look normal -->
     </Style>
 
-    <!-- Default Read-Only Header Style - Only gray background -->
-    <Style x:Key="DefaultReadOnlyHeaderStyle" TargetType="DataGridColumnHeader">
-        <Setter Property="Background" Value="#E0E0E0"/>
-    </Style>
-
-    <!-- Optional: Default style for the DynamicDataGrid control itself -->
+    <!-- DataGrid control style -->
     <Style TargetType="{x:Type local:DynamicDataGrid}" BasedOn="{StaticResource {x:Type DataGrid}}">
-        <!-- Add any default properties for the control here -->
         <Setter Property="GridLinesVisibility" Value="All"/>
         <Setter Property="HeadersVisibility" Value="Column"/>
         <Setter Property="SelectionMode" Value="Single"/>
         <Setter Property="CanUserAddRows" Value="False"/>
         <Setter Property="CanUserDeleteRows" Value="True"/>
     </Style>
+
 </ResourceDictionary>

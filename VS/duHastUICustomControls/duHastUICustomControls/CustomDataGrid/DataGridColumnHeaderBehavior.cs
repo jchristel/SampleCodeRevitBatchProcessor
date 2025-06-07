@@ -173,13 +173,46 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
         {
             var hasFilter = HasActiveFilter(dataGrid, propertyName);
 
-            System.Diagnostics.Debug.WriteLine($"UpdateFilterIcon: {propertyName}, HasFilter: {hasFilter}");
-
             dataGrid.Dispatcher.BeginInvoke(new Action(() =>
             {
-                FilterIndicatorBehavior.SetHasActiveFilter(column, hasFilter);
-                System.Diagnostics.Debug.WriteLine($"Set HasActiveFilter on column {propertyName} to {hasFilter}");
-            }), System.Windows.Threading.DispatcherPriority.Background);
+                // Get the current style or create a new one
+                var currentStyle = column.HeaderStyle;
+                var newStyle = currentStyle != null
+                    ? new Style(typeof(DataGridColumnHeader), currentStyle)
+                    : new Style(typeof(DataGridColumnHeader));
+
+                // Remove any existing background setters
+                var backgroundSetters = newStyle.Setters
+                    .OfType<Setter>()
+                    .Where(s => s.Property == Control.BackgroundProperty)
+                    .ToList();
+
+                foreach (var setter in backgroundSetters)
+                {
+                    newStyle.Setters.Remove(setter);
+                }
+
+                // Add the appropriate background
+                if (hasFilter)
+                {
+                    newStyle.Setters.Add(new Setter(Control.BackgroundProperty, Brushes.Red));
+                }
+                else if (column.IsReadOnly)
+                {
+                    newStyle.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Color.FromRgb(245, 245, 245))));
+                }
+                else
+                {
+                    newStyle.Setters.Add(new Setter(Control.BackgroundProperty, Brushes.Transparent));
+                }
+
+                // Apply the style
+                column.HeaderStyle = newStyle;
+
+                // Force a visual refresh
+                dataGrid.UpdateLayout();
+
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private static bool HasActiveFilter(DataGrid dataGrid, string propertyName)

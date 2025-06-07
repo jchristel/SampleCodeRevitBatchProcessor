@@ -166,17 +166,10 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
 
         private void ApplyReadOnlyStyle(DataGridColumn column)
         {
-            // Apply header style (custom or default from Generic.xaml)
-            if (ReadOnlyHeaderStyle != null)
-            {
-                column.HeaderStyle = ReadOnlyHeaderStyle;
-            }
-            else if (TryFindResource("DefaultReadOnlyHeaderStyle") is Style defaultHeaderStyle)
-            {
-                column.HeaderStyle = defaultHeaderStyle;
-            }
+            // DON'T apply a separate read-only style - use the filterable style that handles both states
+            // The FilterableColumnHeaderStyle already handles read-only appearance via triggers
 
-            // Apply cell style (custom or default from Generic.xaml)
+            // Apply cell style (this can still be separate)
             if (ReadOnlyColumnStyle != null)
             {
                 column.CellStyle = ReadOnlyColumnStyle;
@@ -185,21 +178,8 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             {
                 column.CellStyle = defaultCellStyle;
             }
-            else
-            {
-                // Final fallback if Generic.xaml resources aren't found
-                column.CellStyle = CreateFallbackReadOnlyStyle();
-            }
-        }
 
-        private Style CreateFallbackReadOnlyStyle()
-        {
-            // Simplified fallback style if resource dictionary fails to load
-            var style = new Style(typeof(DataGridCell));
-            style.Setters.Add(new Setter(BackgroundProperty, new SolidColorBrush(Color.FromRgb(240, 240, 240))));
-            style.Setters.Add(new Setter(ForegroundProperty, new SolidColorBrush(Color.FromRgb(100, 100, 100))));
-            style.Setters.Add(new Setter(FontStyleProperty, FontStyles.Italic));
-            return style;
+            // Don't apply header style here - let the behavior handle it with FilterableColumnHeaderStyle
         }
     }
 }

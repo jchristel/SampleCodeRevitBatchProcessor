@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -43,6 +43,9 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
 
                     // Subscribe to column collection changes
                     ((INotifyCollectionChanged)dataGrid.Columns).CollectionChanged += (s, args) => RefreshContextMenus(dataGrid);
+
+                    // Add row context menu if bulk selection is enabled
+                    dataGrid.Loaded += (s, args) => SetupRowContextMenus(dataGrid);
                 }
                 else
                 {
@@ -51,6 +54,42 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 }
             }
         }
+
+
+        public static readonly DependencyProperty EnableBulkSelectionProperty =
+        DependencyProperty.RegisterAttached(
+                "EnableBulkSelection",
+                typeof(bool),
+                typeof(DataGridColumnHeaderBehavior),
+                new PropertyMetadata(false));
+
+        public static readonly DependencyProperty BulkSelectionColumnProperty =
+            DependencyProperty.RegisterAttached(
+                "BulkSelectionColumn",
+                typeof(string),
+                typeof(DataGridColumnHeaderBehavior),
+                new PropertyMetadata(null));
+
+        public static bool GetEnableBulkSelection(DependencyObject obj)
+        {
+            return (bool)obj.GetValue(EnableBulkSelectionProperty);
+        }
+
+        public static void SetEnableBulkSelection(DependencyObject obj, bool value)
+        {
+            obj.SetValue(EnableBulkSelectionProperty, value);
+        }
+
+        public static string GetBulkSelectionColumn(DependencyObject obj)
+        {
+            return (string)obj.GetValue(BulkSelectionColumnProperty);
+        }
+
+        public static void SetBulkSelectionColumn(DependencyObject obj, string value)
+        {
+            obj.SetValue(BulkSelectionColumnProperty, value);
+        }
+
 
         private static void DataGrid_Loaded(object sender, RoutedEventArgs e)
         {
@@ -560,5 +599,264 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
 
             return null;
         }
+
+        private static void SetupRowContextMenus(DataGrid dataGrid)
+        {
+            if (!GetEnableBulkSelection(dataGrid)) return;
+
+            // Don't show bulk selection menu if grid is set to single selection
+            if (dataGrid.SelectionMode == DataGridSelectionMode.Single)
+            {
+                return;
+            }
+
+            // Create static context menu - we'll just update the text dynamically
+            var staticContextMenu = CreateStaticRowContextMenu(dataGrid);
+
+            // Apply to DataGrid rows
+            var style = new Style(typeof(DataGridRow));
+            style.Setters.Add(new Setter(FrameworkElement.ContextMenuProperty, staticContextMenu));
+
+            if (dataGrid.RowStyle == null)
+            {
+                dataGrid.RowStyle = style;
+            }
+            else
+            {
+                var newStyle = new Style(typeof(DataGridRow), dataGrid.RowStyle);
+                newStyle.Setters.Add(new Setter(FrameworkElement.ContextMenuProperty, staticContextMenu));
+                dataGrid.RowStyle = newStyle;
+            }
+        }
+
+        private static ContextMenu CreateStaticRowContextMenu(DataGrid dataGrid)
+        {
+            var contextMenu = new ContextMenu();
+            var checkboxColumnName = GetBulkSelectionColumn(dataGrid);
+
+            if (string.IsNullOrEmpty(checkboxColumnName))
+            {
+                checkboxColumnName = AutoDetectCheckboxColumn(dataGrid);
+            }
+
+            if (!string.IsNullOrEmpty(checkboxColumnName))
+            {
+                // Create menu items that we'll update dynamically
+                var checkSelectedItem = new MenuItem { Header = "☑️ Check Selected" };
+                checkSelectedItem.Click += (s, e) => BulkSetSelectedCheckboxes(dataGrid, checkboxColumnName, true);
+
+                var uncheckSelectedItem = new MenuItem { Header = "☐ Uncheck Selected" };
+                uncheckSelectedItem.Click += (s, e) => BulkSetSelectedCheckboxes(dataGrid, checkboxColumnName, false);
+
+                // Update the headers when the menu opens
+                contextMenu.Opened += (s, e) =>
+                {
+                    var count = dataGrid.SelectedItems.Count;
+                    checkSelectedItem.Header = $"☑️ Check Selected ({count} row{(count > 1 ? "s" : "")})";
+                    uncheckSelectedItem.Header = $"☐ Uncheck Selected ({count} row{(count > 1 ? "s" : "")})";
+                };
+
+                contextMenu.Items.Add(checkSelectedItem);
+                contextMenu.Items.Add(uncheckSelectedItem);
+                contextMenu.Items.Add(new Separator());
+
+                // Rest of the static menu items...
+                var checkAllVisibleItem = new MenuItem { Header = "☑️ Check All Visible" };
+                checkAllVisibleItem.Click += (s, e) => BulkSetCheckboxes(dataGrid, checkboxColumnName, true, false);
+                contextMenu.Items.Add(checkAllVisibleItem);
+
+                var checkAllItem = new MenuItem { Header = "☑️ Check All Rows" };
+                checkAllItem.Click += (s, e) => BulkSetCheckboxes(dataGrid, checkboxColumnName, true, true);
+                contextMenu.Items.Add(checkAllItem);
+
+                var uncheckAllVisibleItem = new MenuItem { Header = "☐ Uncheck All Visible" };
+                uncheckAllVisibleItem.Click += (s, e) => BulkSetCheckboxes(dataGrid, checkboxColumnName, false, false);
+                contextMenu.Items.Add(uncheckAllVisibleItem);
+
+                var uncheckAllItem = new MenuItem { Header = "☐ Uncheck All Rows" };
+                uncheckAllItem.Click += (s, e) => BulkSetCheckboxes(dataGrid, checkboxColumnName, false, true);
+                contextMenu.Items.Add(uncheckAllItem);
+            }
+
+            return contextMenu;
+        }
+
+        private static string AutoDetectCheckboxColumn(DataGrid dataGrid)
+        {
+            // Look for boolean columns that might be checkboxes
+            var boolColumns = dataGrid.Columns
+                .OfType<DataGridBoundColumn>()
+                .Where(c => c.Binding is Binding binding &&
+                           GetColumnDataType(dataGrid, GetColumnPropertyName(c)) == typeof(bool))
+                .ToList();
+
+            // Prefer columns with selection-related names
+            var selectionColumn = boolColumns.FirstOrDefault(c =>
+            {
+                var propName = GetColumnPropertyName(c).ToLower();
+                return propName.Contains("select") || propName.Contains("check") || propName.Contains("chosen");
+            });
+
+            return selectionColumn != null ? GetColumnPropertyName(selectionColumn) :
+                   boolColumns.FirstOrDefault() != null ? GetColumnPropertyName(boolColumns.First()) : null;
+        }
+
+        private static Type GetColumnDataType(DataGrid dataGrid, string propertyName)
+        {
+            // Get data type from the ViewModel's available columns or column definitions
+            var viewModel = dataGrid.DataContext;
+            var availableColumnsProperty = viewModel?.GetType().GetProperty("AvailableColumns");
+
+            if (availableColumnsProperty?.GetValue(viewModel) is IEnumerable availableColumns)
+            {
+                foreach (var column in availableColumns)
+                {
+                    var propNameProp = column.GetType().GetProperty("PropertyName");
+                    var dataTypeProp = column.GetType().GetProperty("DataType");
+
+                    if (propNameProp?.GetValue(column)?.ToString() == propertyName)
+                    {
+                        return dataTypeProp?.GetValue(column) as Type;
+                    }
+                }
+            }
+
+            return typeof(object);
+        }
+
+        private static void BulkSetSelectedCheckboxes(DataGrid dataGrid, string checkboxColumnName, bool isChecked)
+        {
+            var selectedItems = dataGrid.SelectedItems.Cast<object>();
+
+            if (!selectedItems.Any()) return;
+
+            foreach (var item in selectedItems)
+            {
+                SetItemCheckboxValue(item, checkboxColumnName, isChecked);
+            }
+
+            // Force DataGrid to refresh its UI
+            dataGrid.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                dataGrid.Items.Refresh();
+
+                // Also refresh the collection view if available
+                var collectionView = System.Windows.Data.CollectionViewSource.GetDefaultView(dataGrid.ItemsSource);
+                collectionView?.Refresh();
+
+            }), System.Windows.Threading.DispatcherPriority.Background);
+        }
+
+        private static void BulkSetCheckboxes(DataGrid dataGrid, string checkboxColumnName, bool isChecked, bool includeFiltered)
+        {
+            var itemsToUpdate = includeFiltered ?
+                dataGrid.ItemsSource?.Cast<object>() :
+                GetVisibleItems(dataGrid);
+
+            if (itemsToUpdate == null) return;
+
+            foreach (var item in itemsToUpdate)
+            {
+                SetItemCheckboxValue(item, checkboxColumnName, isChecked);
+            }
+
+            // Force DataGrid to refresh its UI
+            dataGrid.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                dataGrid.Items.Refresh();
+
+                // Also refresh the collection view if available
+                var collectionView = System.Windows.Data.CollectionViewSource.GetDefaultView(dataGrid.ItemsSource);
+                collectionView?.Refresh();
+
+            }), System.Windows.Threading.DispatcherPriority.Background);
+
+        }
+
+        private static IEnumerable<object> GetVisibleItems(DataGrid dataGrid)
+        {
+            var collectionView = System.Windows.Data.CollectionViewSource.GetDefaultView(dataGrid.ItemsSource);
+            return collectionView?.Cast<object>() ?? dataGrid.ItemsSource?.Cast<object>() ?? Enumerable.Empty<object>();
+        }
+
+
+        private static void SetItemCheckboxValue(object item, string propertyName, bool value)
+        {
+            if (item == null) return;
+
+            // Handle DynamicRowData
+            if (item.GetType().GetProperty("Values") != null)
+            {
+                var valuesDict = item.GetType().GetProperty("Values").GetValue(item) as System.Collections.IDictionary;
+                if (valuesDict != null)
+                {
+                    // Use the indexer property instead of direct dictionary access
+                    // This ensures PropertyChanged events are fired
+                    var indexerProperty = item.GetType().GetProperty("Item", new[] { typeof(string) });
+                    if (indexerProperty != null)
+                    {
+                        indexerProperty.SetValue(item, value, new object[] { propertyName });
+                    }
+                    else
+                    {
+                        // Fallback to direct dictionary access
+                        valuesDict[propertyName] = value;
+
+                        // Try to manually trigger PropertyChanged
+                        if (item is INotifyPropertyChanged)
+                        {
+                            TriggerPropertyChanged(item, propertyName);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // Handle regular objects
+                var property = item.GetType().GetProperty(propertyName);
+                if (property != null && property.PropertyType == typeof(bool) && property.CanWrite)
+                {
+                    property.SetValue(item, value);
+                }
+            }
+        }
+
+        private static void TriggerPropertyChanged(object item, string propertyName)
+        {
+            try
+            {
+                // Try to find and invoke OnPropertyChanged method
+                var onPropertyChangedMethod = item.GetType().GetMethod("OnPropertyChanged",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public,
+                    null,
+                    new[] { typeof(string) },
+                    null);
+
+                if (onPropertyChangedMethod != null)
+                {
+                    onPropertyChangedMethod.Invoke(item, new object[] { propertyName });
+                }
+                else
+                {
+                    // Try parameterless OnPropertyChanged with CallerMemberName
+                    var parameterlessMethod = item.GetType().GetMethod("OnPropertyChanged",
+                        System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public,
+                        null,
+                        new Type[0],
+                        null);
+
+                    if (parameterlessMethod != null)
+                    {
+                        // This won't work perfectly since we can't pass the property name, but it's worth a try
+                        parameterlessMethod.Invoke(item, new object[0]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error triggering PropertyChanged: {ex.Message}");
+            }
+        }
+
     }
 }

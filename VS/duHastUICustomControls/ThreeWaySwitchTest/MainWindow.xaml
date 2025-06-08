@@ -40,7 +40,8 @@
                                SelectionMode="Single"
                                Background="White"
                                AlternatingRowBackground="LightGray"
-                               custom:DataGridColumnHeaderBehavior.EnableColumnManagement="True"/>
+                               custom:DataGridColumnHeaderBehavior.EnableColumnManagement="True"
+                               custom:DataGridColumnHeaderBehavior.EnableBulkSelection="True"/>
 
     </Grid>
 </Window>

@@ -1,0 +1,95 @@
+﻿<Window x:Class="duHastNet.UI.CustomControls.CustomDataGrid.FilterBooleanDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Filter Boolean Column"
+        Width="400"
+        Height="250"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        WindowStyle="SingleBorderWindow">
+
+    <Window.Resources>
+        <!-- Reuse the same button and styling from FilterTextDialog -->
+        <Style x:Key="DialogButtonStyle" TargetType="Button">
+            <Setter Property="MinWidth" Value="80"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="Margin" Value="5,0"/>
+            <Setter Property="Padding" Value="12,4"/>
+            <Setter Property="Background" Value="#F0F0F0"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E3F2FD"/>
+                    <Setter Property="BorderBrush" Value="#2196F3"/>
+                </Trigger>
+                <Trigger Property="IsDefault" Value="True">
+                    <Setter Property="Background" Value="#2196F3"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="BorderBrush" Value="#1976D2"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Instructions -->
+        <TextBlock Grid.Row="0" 
+                   Text="Choose which values to show:"
+                   FontWeight="Medium"
+                   Margin="0,0,0,16"/>
+
+        <!-- Filter options -->
+        <StackPanel Grid.Row="1" Margin="0,0,0,16">
+            <CheckBox x:Name="ShowTrueCheckBox"
+                      Content="☑️ Show True values"
+                      IsChecked="True"
+                      Margin="0,0,0,8"
+                      FontSize="14"/>
+
+            <CheckBox x:Name="ShowFalseCheckBox"
+                      Content="☐ Show False values"
+                      IsChecked="True"
+                      FontSize="14"/>
+        </StackPanel>
+
+        <!-- Current filter display -->
+        <TextBlock x:Name="CurrentFilterText"
+                   Grid.Row="2"
+                   FontStyle="Italic"
+                   Foreground="Gray"
+                   Margin="0,0,0,16"/>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="4"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+
+            <Button x:Name="ClearButton"
+                    Content="Clear Filter"
+                    Style="{StaticResource DialogButtonStyle}"
+                    Click="ClearButton_Click"/>
+
+            <Button x:Name="ApplyButton"
+                    Content="Apply Filter"
+                    Style="{StaticResource DialogButtonStyle}"
+                    IsDefault="True"
+                    Click="ApplyButton_Click"/>
+
+            <Button x:Name="CancelButton"
+                    Content="Cancel"
+                    Style="{StaticResource DialogButtonStyle}"
+                    IsCancel="True"
+                    Click="CancelButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -50,7 +50,6 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
 
         static DynamicDataGrid()
         {
-            System.Diagnostics.Debug.WriteLine("DynamicDataGrid static constructor called");
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata(typeof(DynamicDataGrid)));
         }

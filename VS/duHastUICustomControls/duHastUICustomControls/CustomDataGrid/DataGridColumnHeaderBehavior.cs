@@ -163,23 +163,85 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             contextMenu.Items.Add(filterSubmenu);
 
             // Separator
-            contextMenu.Items.Add(new Separator());
+            var separator1 = new Separator();
+            contextMenu.Items.Add(separator1);
 
-            // Remove Column menu item
+            // Remove Column menu item - disable if it's the last column
             var removeItem = new MenuItem { Header = "Remove Column" };
             removeItem.Command = GetCommandFromViewModel(viewModel, "RemoveColumnCommand");
             removeItem.CommandParameter = propertyName;
+
+            // Check if this is the last visible column
+            if (dataGrid.Columns.Count <= 1)
+            {
+                removeItem.IsEnabled = false;
+                removeItem.Header = "Remove Column (Cannot remove last column)";
+            }
+
             contextMenu.Items.Add(removeItem);
 
             // Separator
-            contextMenu.Items.Add(new Separator());
+            var separator2 = new Separator();
+            contextMenu.Items.Add(separator2);
 
             // Add available columns submenu
             var addSubmenu = new MenuItem { Header = "Add Column" };
             PopulateAddColumnSubmenu(addSubmenu, viewModel);
             contextMenu.Items.Add(addSubmenu);
 
+            // Apply styling when context menu opens
+            contextMenu.Opened += (s, e) =>
+            {
+                if (contextMenu.Style == null)
+                {
+                    try
+                    {
+                        // Use helper to load resource dictionary
+                        var resourceDict = LoadResourceDictionary();
+
+                        var contextMenuStyle = resourceDict["ColumnHeaderContextMenuStyle"] as Style;
+                        var menuItemStyle = resourceDict["ColumnHeaderMenuItemStyle"] as Style;
+                        var separatorStyle = resourceDict["ColumnHeaderSeparatorStyle"] as Style;
+
+                        if (contextMenuStyle != null)
+                        {
+                            contextMenu.Style = contextMenuStyle;
+                        }
+
+                        if (menuItemStyle != null)
+                        {
+                            filterSubmenu.Style = menuItemStyle;
+                            removeItem.Style = menuItemStyle;
+                            addSubmenu.Style = menuItemStyle;
+
+                            // Apply to submenu items as well
+                            ApplyStyleToSubItems(filterSubmenu, menuItemStyle);
+                            ApplyStyleToSubItems(addSubmenu, menuItemStyle);
+                        }
+
+                        if (separatorStyle != null)
+                        {
+                            separator1.Style = separatorStyle;
+                            separator2.Style = separatorStyle;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"❌ Error loading column context menu styles: {ex.Message}");
+                    }
+                }
+            };
+
             return contextMenu;
+        }
+
+        private static void ApplyStyleToSubItems(MenuItem parentItem, Style menuItemStyle)
+        {
+            foreach (var subItem in parentItem.Items.OfType<MenuItem>())
+            {
+                subItem.Style = menuItemStyle;
+                ApplyStyleToSubItems(subItem, menuItemStyle); // Recursive for nested items
+            }
         }
 
         private static Style CreateHeaderStyleWithContextMenu(ContextMenu contextMenu)
@@ -190,9 +252,8 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             Style filterableStyle = null;
             try
             {
-                var resourceDict = new ResourceDictionary();
-                // Change this line to use the pack URI format
-                resourceDict.Source = new Uri("pack://application:,,,/duHastUICustomControls;component/CustomDataGrid/DynamicDataGridStyle.xaml", UriKind.Absolute);
+                // Use helper to load resource dictionary
+                var resourceDict = LoadResourceDictionary(); 
                 filterableStyle = resourceDict["FilterableColumnHeaderStyle"] as Style;
 
                 if (filterableStyle != null)
@@ -221,9 +282,8 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             {
                 try
                 {
-                    // Load styles from resource dictionary
-                    var resourceDict = new ResourceDictionary();
-                    resourceDict.Source = new Uri("pack://application:,,,/duHastUICustomControls;component/CustomDataGrid/DynamicDataGridStyle.xaml", UriKind.Absolute);
+                    // Load styles from resource dictionary using helper method
+                    var resourceDict = LoadResourceDictionary();
 
                     Style targetStyle = null;
 
@@ -231,17 +291,14 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                     if (hasFilter)
                     {
                         targetStyle = resourceDict["FilteredColumnHeaderStyle"] as Style;
-                        System.Diagnostics.Debug.WriteLine($"Applied FilteredColumnHeaderStyle to {propertyName}");
                     }
                     else if (column.IsReadOnly)
                     {
                         targetStyle = resourceDict["ReadOnlyColumnHeaderStyle"] as Style;
-                        System.Diagnostics.Debug.WriteLine($"Applied ReadOnlyColumnHeaderStyle to {propertyName}");
                     }
                     else
                     {
                         targetStyle = resourceDict["FilterableColumnHeaderStyle"] as Style;
-                        System.Diagnostics.Debug.WriteLine($"Applied FilterableColumnHeaderStyle to {propertyName}");
                     }
 
                     if (targetStyle != null)
@@ -267,8 +324,6 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 {
                     System.Diagnostics.Debug.WriteLine($"❌ Error applying header style: {ex.Message}");
 
-                    // Fallback to the old hardcoded approach
-                    ApplyFallbackHeaderStyle(column, hasFilter);
                 }
 
                 // Force a visual refresh
@@ -286,42 +341,6 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 .FirstOrDefault(s => s.Property == FrameworkElement.ContextMenuProperty);
 
             return contextMenuSetter?.Value as ContextMenu;
-        }
-
-        private static void ApplyFallbackHeaderStyle(DataGridColumn column, bool hasFilter)
-        {
-            // Fallback to the old approach if resource loading fails
-            var currentStyle = column.HeaderStyle;
-            var newStyle = currentStyle != null
-                ? new Style(typeof(DataGridColumnHeader), currentStyle)
-                : new Style(typeof(DataGridColumnHeader));
-
-            // Remove any existing background setters
-            var backgroundSetters = newStyle.Setters
-                .OfType<Setter>()
-                .Where(s => s.Property == Control.BackgroundProperty)
-                .ToList();
-
-            foreach (var setter in backgroundSetters)
-            {
-                newStyle.Setters.Remove(setter);
-            }
-
-            // Add the appropriate background
-            if (hasFilter)
-            {
-                newStyle.Setters.Add(new Setter(Control.BackgroundProperty, Brushes.Red));
-            }
-            else if (column.IsReadOnly)
-            {
-                newStyle.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Color.FromRgb(245, 245, 245))));
-            }
-            else
-            {
-                newStyle.Setters.Add(new Setter(Control.BackgroundProperty, Brushes.Transparent));
-            }
-
-            column.HeaderStyle = newStyle;
         }
 
 
@@ -659,8 +678,8 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                     {
                         try
                         {
-                            var resourceDict = new ResourceDictionary();
-                            resourceDict.Source = new Uri("pack://application:,,,/duHastUICustomControls;component/CustomDataGrid/DynamicDataGridStyle.xaml", UriKind.Absolute);
+                            // Use helper to load resource dictionary
+                            var resourceDict = LoadResourceDictionary();
 
                             var contextMenuStyle = resourceDict["BulkSelectionContextMenuStyle"] as Style;
                             var menuItemStyle = resourceDict["BulkOperationMenuItemStyle"] as Style;
@@ -884,6 +903,13 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             {
                 System.Diagnostics.Debug.WriteLine($"Error triggering PropertyChanged: {ex.Message}");
             }
+        }
+
+        private static ResourceDictionary LoadResourceDictionary()
+        {
+            var resourceDict = new ResourceDictionary();
+            resourceDict.Source = new Uri("pack://application:,,,/duHastUICustomControls;component/CustomDataGrid/DynamicDataGridStyle.xaml", UriKind.Absolute);
+            return resourceDict;
         }
 
     }

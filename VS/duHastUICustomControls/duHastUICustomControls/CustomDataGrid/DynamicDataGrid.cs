@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Media;
 
 namespace duHastNet.UI.CustomControls.CustomDataGrid
 {
@@ -47,6 +46,13 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
         {
             get => (Style)GetValue(ReadOnlyHeaderStyleProperty);
             set => SetValue(ReadOnlyHeaderStyleProperty, value);
+        }
+
+        static DynamicDataGrid()
+        {
+            System.Diagnostics.Debug.WriteLine("DynamicDataGrid static constructor called");
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(DynamicDataGrid),
+                new FrameworkPropertyMetadata(typeof(DynamicDataGrid)));
         }
 
         public DynamicDataGrid()

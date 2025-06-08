@@ -37,7 +37,7 @@
                                CanUserDeleteRows="True"
                                GridLinesVisibility="All"
                                HeadersVisibility="Column"
-                               SelectionMode="Single"
+                               SelectionMode="Extended"
                                Background="White"
                                AlternatingRowBackground="LightGray"
                                custom:DataGridColumnHeaderBehavior.EnableColumnManagement="True"

@@ -1,13 +1,7 @@
 ﻿using duHastNet.UI.CustomControls.CustomDataGrid;
-using duHastNet.Utils.WPF.Commands;
 using duHastNet.Utils.WPF.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
 
 
 namespace duHastNet.UI.ThreeWaySwitchTest.ViewModels
@@ -50,7 +44,7 @@ namespace duHastNet.UI.ThreeWaySwitchTest.ViewModels
         /// <returns></returns>
         protected override bool GetDefaultReadOnlyForColumn(string propertyName)
         {
-            var readOnlyColumns = new[] { "Id", "Name", "Age", "Email"};
+            var readOnlyColumns = new[] { "Id", "Name", "Age", "Email" };
             return readOnlyColumns.Contains(propertyName, StringComparer.OrdinalIgnoreCase);
         }
 

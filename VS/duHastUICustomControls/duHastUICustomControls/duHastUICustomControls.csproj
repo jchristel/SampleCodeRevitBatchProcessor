@@ -69,10 +69,18 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\StringContainsConverter.cs" />
     <Compile Include="CustomDataGrid\AvailableColumnDefinition.cs" />
     <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.cs" />
+    <Compile Include="CustomDataGrid\FilterTextDialog.xaml.cs">
+      <DependentUpon>FilterTextDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\BaseDynamicGridViewModel.cs" />
     <Page Include="CustomDataGrid\DynamicDataGridStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomDataGrid\FilterTextDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

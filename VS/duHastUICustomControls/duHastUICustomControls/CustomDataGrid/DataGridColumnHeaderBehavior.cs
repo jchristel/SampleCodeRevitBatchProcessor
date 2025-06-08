@@ -191,17 +191,22 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             try
             {
                 var resourceDict = new ResourceDictionary();
-                resourceDict.Source = new Uri("/duHastUICustomControls;component/CustomDataGrid/DynamicDataGridStyle.xaml", UriKind.Relative);
+                // Change this line to use the pack URI format
+                resourceDict.Source = new Uri("pack://application:,,,/duHastUICustomControls;component/CustomDataGrid/DynamicDataGridStyle.xaml", UriKind.Absolute);
                 filterableStyle = resourceDict["FilterableColumnHeaderStyle"] as Style;
 
                 if (filterableStyle != null)
                 {
                     style.BasedOn = filterableStyle;
                 }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("❌ FilterableColumnHeaderStyle not found in resource dictionary");
+                }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"❌ Error loading header style: {ex.Message}");
             }
 
             style.Setters.Add(new Setter(FrameworkElement.ContextMenuProperty, contextMenu));
@@ -214,45 +219,111 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
 
             dataGrid.Dispatcher.BeginInvoke(new Action(() =>
             {
-                // Get the current style or create a new one
-                var currentStyle = column.HeaderStyle;
-                var newStyle = currentStyle != null
-                    ? new Style(typeof(DataGridColumnHeader), currentStyle)
-                    : new Style(typeof(DataGridColumnHeader));
-
-                // Remove any existing background setters
-                var backgroundSetters = newStyle.Setters
-                    .OfType<Setter>()
-                    .Where(s => s.Property == Control.BackgroundProperty)
-                    .ToList();
-
-                foreach (var setter in backgroundSetters)
+                try
                 {
-                    newStyle.Setters.Remove(setter);
-                }
+                    // Load styles from resource dictionary
+                    var resourceDict = new ResourceDictionary();
+                    resourceDict.Source = new Uri("pack://application:,,,/duHastUICustomControls;component/CustomDataGrid/DynamicDataGridStyle.xaml", UriKind.Absolute);
 
-                // Add the appropriate background
-                if (hasFilter)
-                {
-                    newStyle.Setters.Add(new Setter(Control.BackgroundProperty, Brushes.Red));
-                }
-                else if (column.IsReadOnly)
-                {
-                    newStyle.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Color.FromRgb(245, 245, 245))));
-                }
-                else
-                {
-                    newStyle.Setters.Add(new Setter(Control.BackgroundProperty, Brushes.Transparent));
-                }
+                    Style targetStyle = null;
 
-                // Apply the style
-                column.HeaderStyle = newStyle;
+                    // Determine which style to use
+                    if (hasFilter)
+                    {
+                        targetStyle = resourceDict["FilteredColumnHeaderStyle"] as Style;
+                        System.Diagnostics.Debug.WriteLine($"Applied FilteredColumnHeaderStyle to {propertyName}");
+                    }
+                    else if (column.IsReadOnly)
+                    {
+                        targetStyle = resourceDict["ReadOnlyColumnHeaderStyle"] as Style;
+                        System.Diagnostics.Debug.WriteLine($"Applied ReadOnlyColumnHeaderStyle to {propertyName}");
+                    }
+                    else
+                    {
+                        targetStyle = resourceDict["FilterableColumnHeaderStyle"] as Style;
+                        System.Diagnostics.Debug.WriteLine($"Applied FilterableColumnHeaderStyle to {propertyName}");
+                    }
+
+                    if (targetStyle != null)
+                    {
+                        // Create a new style based on the target style
+                        var newStyle = new Style(typeof(DataGridColumnHeader), targetStyle);
+
+                        // Preserve any existing context menu from the current style
+                        var existingContextMenu = GetContextMenuFromStyle(column.HeaderStyle);
+                        if (existingContextMenu != null)
+                        {
+                            newStyle.Setters.Add(new Setter(FrameworkElement.ContextMenuProperty, existingContextMenu));
+                        }
+
+                        column.HeaderStyle = newStyle;
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"❌ Could not find header style for {propertyName}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"❌ Error applying header style: {ex.Message}");
+
+                    // Fallback to the old hardcoded approach
+                    ApplyFallbackHeaderStyle(column, hasFilter);
+                }
 
                 // Force a visual refresh
                 dataGrid.UpdateLayout();
 
             }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
+
+        private static ContextMenu GetContextMenuFromStyle(Style style)
+        {
+            if (style == null) return null;
+
+            var contextMenuSetter = style.Setters
+                .OfType<Setter>()
+                .FirstOrDefault(s => s.Property == FrameworkElement.ContextMenuProperty);
+
+            return contextMenuSetter?.Value as ContextMenu;
+        }
+
+        private static void ApplyFallbackHeaderStyle(DataGridColumn column, bool hasFilter)
+        {
+            // Fallback to the old approach if resource loading fails
+            var currentStyle = column.HeaderStyle;
+            var newStyle = currentStyle != null
+                ? new Style(typeof(DataGridColumnHeader), currentStyle)
+                : new Style(typeof(DataGridColumnHeader));
+
+            // Remove any existing background setters
+            var backgroundSetters = newStyle.Setters
+                .OfType<Setter>()
+                .Where(s => s.Property == Control.BackgroundProperty)
+                .ToList();
+
+            foreach (var setter in backgroundSetters)
+            {
+                newStyle.Setters.Remove(setter);
+            }
+
+            // Add the appropriate background
+            if (hasFilter)
+            {
+                newStyle.Setters.Add(new Setter(Control.BackgroundProperty, Brushes.Red));
+            }
+            else if (column.IsReadOnly)
+            {
+                newStyle.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Color.FromRgb(245, 245, 245))));
+            }
+            else
+            {
+                newStyle.Setters.Add(new Setter(Control.BackgroundProperty, Brushes.Transparent));
+            }
+
+            column.HeaderStyle = newStyle;
+        }
+
 
         private static bool HasActiveFilter(DataGrid dataGrid, string propertyName)
         {
@@ -342,103 +413,15 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
         {
             var currentFilter = GetCurrentFilterText(dataGrid, propertyName);
 
-            // Create a simple input dialog
-            var dialog = new Window
+            var dialog = new FilterTextDialog(propertyName, currentFilter)
             {
-                Title = $"Filter {propertyName}",
-                Width = 400,
-                Height = 200,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Window.GetWindow(dataGrid),
-                ResizeMode = ResizeMode.NoResize
+                Owner = Window.GetWindow(dataGrid)
             };
 
-            var stackPanel = new StackPanel { Margin = new Thickness(10) };
-
-            // Instructions
-            var instructions = new TextBlock
+            if (dialog.ShowDialog() == true)
             {
-                Text = "Enter filter values separated by spaces.\nChoose how multiple values should be combined:",
-                TextWrapping = TextWrapping.Wrap,
-                Margin = new Thickness(0, 0, 0, 10)
-            };
-            stackPanel.Children.Add(instructions);
-
-            // Radio buttons for OR/AND logic
-            var orRadio = new RadioButton
-            {
-                Content = "OR (show rows that match ANY value)",
-                IsChecked = true,
-                Margin = new Thickness(0, 0, 0, 5)
-            };
-            stackPanel.Children.Add(orRadio);
-
-            var andRadio = new RadioButton
-            {
-                Content = "AND (show rows that contain ALL values)",
-                Margin = new Thickness(0, 0, 0, 10)
-            };
-            stackPanel.Children.Add(andRadio);
-
-            // Text input
-            var textBox = new TextBox
-            {
-                Text = currentFilter,
-                Margin = new Thickness(0, 0, 0, 10),
-                Height = 25
-            };
-            stackPanel.Children.Add(textBox);
-
-            // Buttons
-            var buttonPanel = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                HorizontalAlignment = HorizontalAlignment.Right
-            };
-
-            var okButton = new Button
-            {
-                Content = "Apply Filter",
-                Width = 80,
-                Margin = new Thickness(0, 0, 10, 0),
-                IsDefault = true
-            };
-
-            var cancelButton = new Button
-            {
-                Content = "Cancel",
-                Width = 80,
-                IsCancel = true
-            };
-
-            buttonPanel.Children.Add(okButton);
-            buttonPanel.Children.Add(cancelButton);
-            stackPanel.Children.Add(buttonPanel);
-
-            dialog.Content = stackPanel;
-
-            // Event handlers
-            okButton.Click += (s, e) =>
-            {
-                var filterText = textBox.Text?.Trim();
-                var useAndLogic = andRadio.IsChecked == true;
-                ApplyTextFilter(dataGrid, propertyName, filterText, useAndLogic);
-                dialog.DialogResult = true;
-            };
-
-            textBox.KeyDown += (s, e) =>
-            {
-                if (e.Key == Key.Enter)
-                {
-                    okButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-                }
-            };
-
-            // Focus the textbox
-            textBox.Focus();
-            textBox.SelectAll();
-
-            dialog.ShowDialog();
+                ApplyTextFilter(dataGrid, propertyName, dialog.FilterText, dialog.UseAndLogic);
+            }
         }
 
         private static void ApplyTextFilter(DataGrid dataGrid, string propertyName, string filterText, bool useAndLogic)
@@ -632,8 +615,8 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
         private static ContextMenu CreateStaticRowContextMenu(DataGrid dataGrid)
         {
             var contextMenu = new ContextMenu();
-            var checkboxColumnName = GetBulkSelectionColumn(dataGrid);
 
+            var checkboxColumnName = GetBulkSelectionColumn(dataGrid);
             if (string.IsNullOrEmpty(checkboxColumnName))
             {
                 checkboxColumnName = AutoDetectCheckboxColumn(dataGrid);
@@ -641,40 +624,85 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
 
             if (!string.IsNullOrEmpty(checkboxColumnName))
             {
-                // Create menu items that we'll update dynamically
+                // Selected rows operations
                 var checkSelectedItem = new MenuItem { Header = "☑️ Check Selected" };
                 checkSelectedItem.Click += (s, e) => BulkSetSelectedCheckboxes(dataGrid, checkboxColumnName, true);
 
                 var uncheckSelectedItem = new MenuItem { Header = "☐ Uncheck Selected" };
                 uncheckSelectedItem.Click += (s, e) => BulkSetSelectedCheckboxes(dataGrid, checkboxColumnName, false);
 
-                // Update the headers when the menu opens
+                var separator1 = new Separator();
+
+                // All rows operations
+                var checkAllVisibleItem = new MenuItem { Header = "☑️ Check All Visible" };
+                checkAllVisibleItem.Click += (s, e) => BulkSetCheckboxes(dataGrid, checkboxColumnName, true, false);
+
+                var checkAllItem = new MenuItem { Header = "☑️ Check All Rows" };
+                checkAllItem.Click += (s, e) => BulkSetCheckboxes(dataGrid, checkboxColumnName, true, true);
+
+                var uncheckAllVisibleItem = new MenuItem { Header = "☐ Uncheck All Visible" };
+                uncheckAllVisibleItem.Click += (s, e) => BulkSetCheckboxes(dataGrid, checkboxColumnName, false, false);
+
+                var uncheckAllItem = new MenuItem { Header = "☐ Uncheck All Rows" };
+                uncheckAllItem.Click += (s, e) => BulkSetCheckboxes(dataGrid, checkboxColumnName, false, true);
+
+                // Load styles directly from resource dictionary
                 contextMenu.Opened += (s, e) =>
                 {
+                    // Update headers with current selection count
                     var count = dataGrid.SelectedItems.Count;
                     checkSelectedItem.Header = $"☑️ Check Selected ({count} row{(count > 1 ? "s" : "")})";
                     uncheckSelectedItem.Header = $"☐ Uncheck Selected ({count} row{(count > 1 ? "s" : "")})";
+
+                    // Load styles directly from resource dictionary
+                    if (contextMenu.Style == null)
+                    {
+                        try
+                        {
+                            var resourceDict = new ResourceDictionary();
+                            resourceDict.Source = new Uri("pack://application:,,,/duHastUICustomControls;component/CustomDataGrid/DynamicDataGridStyle.xaml", UriKind.Absolute);
+
+                            var contextMenuStyle = resourceDict["BulkSelectionContextMenuStyle"] as Style;
+                            var menuItemStyle = resourceDict["BulkOperationMenuItemStyle"] as Style;
+                            var separatorStyle = resourceDict["BulkOperationSeparatorStyle"] as Style;
+
+                            if (contextMenuStyle != null)
+                            {
+                                contextMenu.Style = contextMenuStyle;
+                            }
+                            else
+                            {
+                                System.Diagnostics.Debug.WriteLine("❌ BulkSelectionContextMenuStyle not found in resource dictionary");
+                            }
+
+                            if (menuItemStyle != null)
+                            {
+                                checkSelectedItem.Style = menuItemStyle;
+                                uncheckSelectedItem.Style = menuItemStyle;
+                                checkAllVisibleItem.Style = menuItemStyle;
+                                checkAllItem.Style = menuItemStyle;
+                                uncheckAllVisibleItem.Style = menuItemStyle;
+                                uncheckAllItem.Style = menuItemStyle;
+                            }
+
+                            if (separatorStyle != null)
+                            {
+                                separator1.Style = separatorStyle;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"❌ Error loading resource dictionary: {ex.Message}");
+                        }
+                    }
                 };
 
                 contextMenu.Items.Add(checkSelectedItem);
                 contextMenu.Items.Add(uncheckSelectedItem);
-                contextMenu.Items.Add(new Separator());
-
-                // Rest of the static menu items...
-                var checkAllVisibleItem = new MenuItem { Header = "☑️ Check All Visible" };
-                checkAllVisibleItem.Click += (s, e) => BulkSetCheckboxes(dataGrid, checkboxColumnName, true, false);
+                contextMenu.Items.Add(separator1);
                 contextMenu.Items.Add(checkAllVisibleItem);
-
-                var checkAllItem = new MenuItem { Header = "☑️ Check All Rows" };
-                checkAllItem.Click += (s, e) => BulkSetCheckboxes(dataGrid, checkboxColumnName, true, true);
                 contextMenu.Items.Add(checkAllItem);
-
-                var uncheckAllVisibleItem = new MenuItem { Header = "☐ Uncheck All Visible" };
-                uncheckAllVisibleItem.Click += (s, e) => BulkSetCheckboxes(dataGrid, checkboxColumnName, false, false);
                 contextMenu.Items.Add(uncheckAllVisibleItem);
-
-                var uncheckAllItem = new MenuItem { Header = "☐ Uncheck All Rows" };
-                uncheckAllItem.Click += (s, e) => BulkSetCheckboxes(dataGrid, checkboxColumnName, false, true);
                 contextMenu.Items.Add(uncheckAllItem);
             }
 

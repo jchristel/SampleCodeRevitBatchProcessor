@@ -1,4 +1,5 @@
 ﻿
+using duHastNet.Utils.WPF.Commands;
 using global::duHastNet.UI.CustomControls.CustomDataGrid;
 using System;
 using System.Collections.Generic;
@@ -7,8 +8,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-
-using duHastNet.Utils.WPF.Commands;
 
 namespace duHastNet.Utils.WPF.ViewModels
 {
@@ -247,7 +246,7 @@ namespace duHastNet.Utils.WPF.ViewModels
             {
                 // Restore original data
                 var storedData = _removedColumnData[propertyName];
-               
+
                 for (int i = 0; i < Data.Count; i++)
                 {
                     if (storedData.ContainsKey(i))

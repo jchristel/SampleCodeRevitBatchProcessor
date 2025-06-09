@@ -9,7 +9,6 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace duHastNet.UI.CustomControls.CustomDataGrid
 {
@@ -717,6 +716,37 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             var collectionView = System.Windows.Data.CollectionViewSource.GetDefaultView(dataGrid.ItemsSource);
             if (collectionView == null) return;
 
+            // Commit any pending edits before applying filters
+            try
+            {
+                dataGrid.CommitEdit();
+
+                // Also commit at the row level if needed
+                if (dataGrid.CurrentItem != null)
+                {
+                    dataGrid.CommitEdit(DataGridEditingUnit.Row, true);
+                }
+
+                // Cast to IEditableCollectionView to access edit methods
+                if (collectionView is IEditableCollectionView editableView)
+                {
+                    if (editableView.IsEditingItem)
+                    {
+                        editableView.CommitEdit();
+                    }
+
+                    if (editableView.IsAddingNew)
+                    {
+                        editableView.CommitNew();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error committing edits: {ex.Message}");
+                // Continue with filtering even if commit fails
+            }
+
             collectionView.Filter = item =>
             {
                 if (item == null) return false;
@@ -754,8 +784,21 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 return true;
             };
 
-            collectionView.Refresh();
+            // Use dispatcher to ensure the refresh happens after any pending UI updates
+            dataGrid.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                try
+                {
+                    collectionView.Refresh();
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error refreshing collection view: {ex.Message}");
+                }
+            }), System.Windows.Threading.DispatcherPriority.Background);
         }
+
+
 
         /// <summary>
         /// Tests whether an item passes a boolean filter.

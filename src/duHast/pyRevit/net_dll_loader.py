@@ -73,11 +73,11 @@ def load_net_dll_path(dlls_to_load):
                 if os.path.exists(duHast_path):
                     return_value.append_message("Valid duHast path: {}".format(duHast_path))
                     # add the library path within the duHast folder to the sys.path
-                    duHast_lib_path = os.path.join(duHast_path, "libs")
+                    duHast_lib_path = os.path.join(duHast_path, "lib")
                     
                     # valid path check
                     if os.path.exists(duHast_lib_path):
-                        return_value.append_message("Valid duHast//libs path: {}".format(duHast_lib_path))
+                        return_value.append_message("Valid duHast//lib path: {}".format(duHast_lib_path))
                         
                         # load dlls
                         for dll in dlls_to_load:
@@ -100,7 +100,7 @@ def load_net_dll_path(dlls_to_load):
                                 )
                     else:
                         return_value.update_sep(
-                            False, "Path to duHast//libs does not exist: {}".format(duHast_lib_path)
+                            False, "Path to duHast//lib does not exist: {}".format(duHast_lib_path)
                         )
                         return return_value
                     break

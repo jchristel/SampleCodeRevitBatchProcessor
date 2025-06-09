@@ -22,13 +22,7 @@
 //
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
 {
@@ -54,7 +48,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
                 Utils.Settings settings = settingsLoader.LoadSettings<Utils.Settings>();
 
                 //check if anything went wrong during settings load
-                if (settingsLoader.GetErrorMessages() != null && settingsLoader.GetErrorMessages().Count > 0 )
+                if (settingsLoader.GetErrorMessages() != null && settingsLoader.GetErrorMessages().Count > 0)
                 {
                     foreach (string message in settingsLoader.GetErrorMessages())
                     {
@@ -108,7 +102,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
                 if (!saveFlag)
                 {
                     //check if anything went wrong during settings load
-                    if (settingsSaver.GetErrorMessages() != null && settingsSaver.GetErrorMessages().Count > 0 )
+                    if (settingsSaver.GetErrorMessages() != null && settingsSaver.GetErrorMessages().Count > 0)
                     {
                         foreach (string message in settingsSaver.GetErrorMessages())
                         {
@@ -124,7 +118,8 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
                     }
                     else
                     {
-                        if(AddMessage != null) { 
+                        if (AddMessage != null)
+                        {
                             //not to sure what went wrong...pop message
                             AddMessage("Failed to save settings with unknown error.", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
                         }

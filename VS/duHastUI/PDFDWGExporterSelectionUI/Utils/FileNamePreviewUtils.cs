@@ -21,12 +21,8 @@
 //
 //
 
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
 {
@@ -52,9 +48,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
                 else
                 {
                     // must be another property
-                    if (sheet.Properties.Exists(x=>x.Name == setting.PropertyName))
+                    if (sheet.Properties.Exists(x => x.Name == setting.PropertyName))
                     {
-                        var prop = sheet.Properties.Find(x=>x.Name == setting.PropertyName);
+                        var prop = sheet.Properties.Find(x => x.Name == setting.PropertyName);
                         pdfFileName.Append(prop.Value);
                     }
                 }

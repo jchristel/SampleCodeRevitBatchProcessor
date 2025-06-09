@@ -21,12 +21,7 @@
 //
 //
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 {
@@ -43,20 +38,22 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 
         #region column names data grid view
 
+        public static readonly Dictionary<string, string> ColumnInfo = new Dictionary<string, string>
+        {
+            {ColumnHeaderExport.Replace(" ", ""), ColumnHeaderExport },
+            {ColumnHeaderPDFPreviewName.Replace(" ", ""), ColumnHeaderPDFPreviewName },
+            {ColumnHeaderDWGPreviewName.Replace(" ", "") , ColumnHeaderDWGPreviewName },
+            {ColumnHeaderSheetNumber.Replace(" ", "") , ColumnHeaderSheetNumber },
+            {ColumnHeaderSheetName.Replace(" ", "") , ColumnHeaderSheetName },
+        };
+
+
         public const string ColumnHeaderExport = "Export";
         public const string ColumnHeaderPDFPreviewName = "PDF Name";
         public const string ColumnHeaderDWGPreviewName = "DWG Name";
         public const string ColumnHeaderSheetNumber = "Sheet Number";
         public const string ColumnHeaderSheetName = "Sheet Name";
 
-        public static List<string> ReservedColumnNames = new List<string>
-        {
-            ColumnHeaderExport,
-            ColumnHeaderPDFPreviewName,
-            ColumnHeaderDWGPreviewName,
-            ColumnHeaderSheetNumber,
-            ColumnHeaderSheetName
-        };
 
         #endregion
 

@@ -22,12 +22,8 @@
 //
 
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 {
@@ -68,7 +64,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
         /// jso formatted string representing dwg name settings
         /// </summary>
         private string _currentDWGExportString;
-        public string CurrentDWGExportString {  get => _currentDWGExportString; }
+        public string CurrentDWGExportString { get => _currentDWGExportString; }
 
         /// <summary>
         /// available sheet parameters
@@ -80,7 +76,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
         /// pdf settings
         /// </summary>
         private ObservableCollection<PDFDWGExporterUI.Utils.DocumentSetting> _pdfSettings;
-        
+
         public ObservableCollection<PDFDWGExporterUI.Utils.DocumentSetting> PDFSettings
         { get => _pdfSettings; }
 
@@ -88,7 +84,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
         /// dwg settings
         /// </summary>
         private ObservableCollection<PDFDWGExporterUI.Utils.DocumentSetting> _dwgSettings;
-        public ObservableCollection<PDFDWGExporterUI.Utils .DocumentSetting> DWGSettings
+        public ObservableCollection<PDFDWGExporterUI.Utils.DocumentSetting> DWGSettings
         { get => _dwgSettings; }
 
         private void AddPreviewNames()
@@ -100,7 +96,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 
             // get the dwg name settings
             _dwgSettings = duHastNet.UI.PDFDWGExporterUI.Utils.SettingsStringParser.ParseDwgSettingsString(
-                settingsString: CurrentDWGExportString, 
+                settingsString: CurrentDWGExportString,
                 availableParameters: ParameterNames);
 
             // update sheets
@@ -108,7 +104,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
             {
                 // get the pdf name
                 sheet.PDFPreviewName = Utils.FileNamePreviewUtils.GetFileName(sheet, _pdfSettings);
-                
+
                 //get the dwg name
                 sheet.DWGPreviewName = Utils.FileNamePreviewUtils.GetFileName(sheet, _dwgSettings);
             }
@@ -119,9 +115,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
         /// Constructor for the sheets data model
         /// </summary>
         public SheetsDataModel(
-            Utils.Settings settings, 
-            List<RevitSheet>revitSheets, 
-            List<RevitPrintSet>revitPrintSets,
+            Utils.Settings settings,
+            List<RevitSheet> revitSheets,
+            List<RevitPrintSet> revitPrintSets,
             string currentPDFExportString,
             string currentDWGExportString,
             List<string> parameterNames

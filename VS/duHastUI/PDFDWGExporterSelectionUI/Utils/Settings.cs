@@ -22,23 +22,21 @@
 //
 
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
 {
     public class Settings
     {
         /// <summary>
-        /// filed containing all the column names (sheet properties) to be displayed
+        /// field containing all the column ids (sheet properties) to be displayed
+        /// and id is the same as the parameter name but without any spaces!
         /// </summary>
-        private List<string> _columnNames;
+        private List<string> _columnIds;
 
-        public List<string> ColumnNames { 
-            get  => _columnNames;
+        public List<string> ColumnIds
+        {
+            get => _columnIds;
         }
 
         /// <summary>
@@ -82,7 +80,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
             if (settings == null)
             {
                 //reset to default
-                _columnNames = new List<string>();
+                _columnIds = new List<string>();
                 _printSet = Models.Constants.DefaultPrintSetName;
                 _exportFolderPath = string.Empty;
                 _exportModus = Models.Constants.ExportModusPDF;
@@ -91,7 +89,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
             else
             {
                 //deep copy of the column names
-                _columnNames = new List<string>(settings.ColumnNames);
+                _columnIds = new List<string>(settings.ColumnIds);
                 _printSet = settings.Printset;
                 _exportFolderPath = settings.ExportFolderPath;
                 _exportModus = settings.ExportModus;
@@ -106,7 +104,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
         public Settings()
         {
             // set default values
-            _columnNames = new List<string>();
+            _columnIds = new List<string>();
             _printSet = Models.Constants.DefaultPrintSetName;
             _exportFolderPath = string.Empty;
             _exportModus = Models.Constants.ExportModusPDF;

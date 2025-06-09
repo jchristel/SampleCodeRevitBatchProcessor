@@ -24,11 +24,7 @@
 using duHastNet.UI.PDFDWGExporterSelectionUI.Models;
 using duHastNet.UI.PDFDWGExporterSelectionUI.Views;
 using duHastNet.Utils.WPF.Stores;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI
 {
@@ -42,8 +38,8 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
 
 
         public Main(
-            List<RevitSheet>sheetsInModel, 
-            List<RevitPrintSet>printSetsInModel,
+            List<RevitSheet> sheetsInModel,
+            List<RevitPrintSet> printSetsInModel,
             string currentPDFExportString,
             string currentDWGExportString,
             List<string> parameterNames)
@@ -56,15 +52,15 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
             //set up a setting object
             //load settings from file is done in the view model
             _settings = new Utils.Settings();
-         
+
             //set up the export data model
             _exportSheetsDataModel = new Models.SheetsDataModel(
-                settings:_settings,
+                settings: _settings,
                 revitSheets: sheetsInModel,
                 revitPrintSets: printSetsInModel,
-                currentPDFExportString:currentPDFExportString,
+                currentPDFExportString: currentPDFExportString,
                 currentDWGExportString: currentDWGExportString,
-                parameterNames:parameterNames);
+                parameterNames: parameterNames);
         }
 
 

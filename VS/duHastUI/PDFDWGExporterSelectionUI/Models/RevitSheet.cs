@@ -21,17 +21,22 @@
 //
 //
 
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 {
     public class RevitSheet
     {
+
+        /// <summary>
+        /// add a is selected for export property
+        /// </summary>
+        private bool _isSelected = false;
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set { _isSelected = value; }
+        }
 
         /// <summary>
         /// The revit sheet name property
@@ -74,7 +79,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
         }
 
 
-        public void AddSheetProperty( SheetProperty sheetProperty)
+        public void AddSheetProperty(SheetProperty sheetProperty)
         {
             // add a new sheet property but only if not already exists
             if (sheetProperty != null)
@@ -87,7 +92,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
                 else
                 {
                     //get the existing property the new one is conflicting with
-                    var existingProperty = Properties.Find(x=>x.Name == sheetProperty.Name);
+                    var existingProperty = Properties.Find(x => x.Name == sheetProperty.Name);
                     //throw an exception
                     throw new Exceptions.PropertyConflictException(existingProperty, sheetProperty);
                 }
@@ -117,8 +122,8 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
         public RevitSheet(string sheetNumber, string sheetName, string revitElementId)
         {
             _sheetName = new SheetProperty(name: Models.Constants.PropertyNameSheetName, value: sheetName);
-            _sheetNumber = new SheetProperty(name:Models.Constants.PropertyValueSheetNumber, value: sheetNumber);
-            _revitElementId = new SheetProperty(name:Models.Constants.PropertyValueSheetRevitId, value:  revitElementId);
+            _sheetNumber = new SheetProperty(name: Models.Constants.PropertyValueSheetNumber, value: sheetNumber);
+            _revitElementId = new SheetProperty(name: Models.Constants.PropertyValueSheetRevitId, value: revitElementId);
 
             _properties = new List<SheetProperty>();
         }

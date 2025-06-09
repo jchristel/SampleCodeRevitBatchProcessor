@@ -7,6 +7,7 @@
              xmlns:utilsViews="clr-namespace:duHastNet.Utils.WPF.Views;assembly=Utils.23.0.0.3"
              xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.23.0.0.3"
              xmlns:customControls="clr-namespace:duHastNet.UI.CustomControls;assembly=duHastUICustomControls"
+             xmlns:dynamicDataGrid="clr-namespace:duHastNet.UI.CustomControls.CustomDataGrid;assembly=duHastUICustomControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -57,25 +58,15 @@
         <!-- Sheet selection -->
         <Grid Grid.Row="3">
             <!-- grid view -->
-            <DataGrid x:Name="dataGrid" 
-                    ItemsSource="{Binding DataViewSheets}"
-                    PreviewMouseLeftButtonDown="DataGRid_PreviewMouseLeftButtonDown"
-                    CellEditEnding="DataGrid_OnCellEditEnding"
-                    EnableRowVirtualization="True" 
-                    EnableColumnVirtualization="True" 
-                    VirtualizingPanel.IsVirtualizing="True" 
-                    VirtualizingPanel.VirtualizationMode="Recycling"
-                    AutoGenerateColumns="True" 
-                    IsReadOnly="False"
-                    CanUserAddRows="False"
-                    CanUserSortColumns="True"
-                    SelectionMode="Extended" 
-                    ColumnWidth="*"
-                    RowHeight="23"
-                    HorizontalAlignment="Stretch"
-                    ColumnReordered="RoomsDataGrid_ColumnReordered"
-                    AutoGeneratingColumn="DataGrid_AutoGeneratingColumn">
-            </DataGrid>
+            <dynamicDataGrid:DynamicDataGrid  x:Name="dataGrid" 
+                Grid.Row="0"
+                DataContext="{Binding  ViewSelectionDataGridViewModel}"
+                ItemsSource="{Binding Data}"
+                ColumnDefinitions="{Binding ColumnDefinitions}"
+                SelectionMode="Extended"
+                dynamicDataGrid:DataGridColumnHeaderBehavior.EnableColumnManagement="True"
+                dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="True"/>
+            
         </Grid>
         <!--Export path -->
         <Grid Grid.Row="4">

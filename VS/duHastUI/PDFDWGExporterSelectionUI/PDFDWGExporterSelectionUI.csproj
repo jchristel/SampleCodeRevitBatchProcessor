@@ -49,9 +49,9 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="duHastUICustomControls">
+    <Reference Include="duHastUICustomControls, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\_References\duHast\duHastUICustomControls.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -86,6 +86,8 @@
     <Compile Include="Utils\SettingsUtils.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\DocumentSelectionViewModel.cs" />
+    <Compile Include="ViewModels\ViewDataViewModel.cs" />
+    <Compile Include="ViewModels\ViewSelectionDataGridViewModel.cs" />
     <Compile Include="Views\DocumentSelectionView.xaml.cs" />
     <Compile Include="Views\MainWindow.xaml.cs" />
   </ItemGroup>

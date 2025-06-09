@@ -21,10 +21,6 @@
 //
 //
 
-using System;
-using System.Collections.Generic;
-using System.Windows.Documents;
-
 namespace duHastNet.UI.PDFDWGExporterUI.Utils
 {
     public class Settings
@@ -33,13 +29,13 @@ namespace duHastNet.UI.PDFDWGExporterUI.Utils
         public string PDFRenameString { get; set; }
         public string DWGRenameString { get; set; }
 
-        
-        public string DWGExportScheme { get; set; } 
-        
-        
+
+        public string DWGExportScheme { get; set; }
+
+
         public Settings()
         {
-           
+
         }
 
 

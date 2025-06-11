@@ -19,7 +19,7 @@ namespace duHastNet.Utils.WPF.ViewModels
         private ObservableCollection<AvailableColumnDefinition> _availableColumns;
 
         // field to store removed column data
-        private Dictionary<string, Dictionary<int, object>> _removedColumnData = new Dictionary<string, Dictionary<int, object>>();
+        protected Dictionary<string, Dictionary<int, object>> _removedColumnData = new Dictionary<string, Dictionary<int, object>>();
 
         #region Properties
 
@@ -240,7 +240,8 @@ namespace duHastNet.Utils.WPF.ViewModels
             _removedColumnData[propertyName] = columnData;
         }
 
-        private void RestoreOrSetDefaultColumnData(string propertyName, AvailableColumnDefinition availableColumn)
+        // protected virtual so it can be overriden in inehrited class!!
+        protected virtual void RestoreOrSetDefaultColumnData(string propertyName, AvailableColumnDefinition availableColumn)
         {
             if (_removedColumnData.ContainsKey(propertyName))
             {

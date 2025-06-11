@@ -1223,6 +1223,8 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 SetItemCheckboxValue(item, checkboxColumnName, isChecked);
             }
 
+            SyncWithUnderlyingModel(dataGrid);
+
             // Force DataGrid to refresh its UI
             dataGrid.Dispatcher.BeginInvoke(new Action(() =>
             {
@@ -1254,6 +1256,8 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             {
                 SetItemCheckboxValue(item, checkboxColumnName, isChecked);
             }
+
+            SyncWithUnderlyingModel(dataGrid);
 
             // Force DataGrid to refresh its UI
             dataGrid.Dispatcher.BeginInvoke(new Action(() =>
@@ -1367,6 +1371,32 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error triggering PropertyChanged: {ex.Message}");
+            }
+        }
+
+
+        /// <summary>
+        /// Attempts to call a sync method on the ViewModel to synchronize grid changes with underlying data
+        /// </summary>
+        /// <param name="dataGrid">The DataGrid whose ViewModel to sync</param>
+        private static void SyncWithUnderlyingModel(DataGrid dataGrid)
+        {
+            try
+            {
+                var viewModel = dataGrid.DataContext;
+                if (viewModel != null)
+                {
+                    // Try to find and call SyncGridDataToUnderlyingModel method
+                    var syncMethod = viewModel.GetType().GetMethod("SyncGridDataToUnderlyingModel");
+                    if (syncMethod != null)
+                    {
+                        syncMethod.Invoke(viewModel, null);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error syncing with underlying model: {ex.Message}");
             }
         }
 

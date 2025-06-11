@@ -4,6 +4,7 @@ using duHastNet.Utils.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
@@ -49,6 +50,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
             // Populate the grid with data from the sheets model
             LoadDataFromSheetsModel();
+
+            // Set up automatic data synchronization
+            SetupDataSynchronization();
         }
 
         /// <summary>
@@ -349,23 +353,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                 {
                     defaultColumns.Add(entry.Key);
                 }
-
-                ////use the extra parameter, if any, from the rename pdf settings
-                //foreach (var settings in SheetsDataModel.PDFSettings)
-                //{
-
-                //    defaultColumns.Add(settings.PropertyName);
-
-                //}
-                ////use the extra parameter, if any, from the rename dwg settings
-                //foreach (var setting in SheetsDataModel.DWGSettings)
-                //{
-                //    // make sure not to double up property names
-                //    if (!defaultColumns.Contains(setting.PropertyName))
-                //    {
-                //        defaultColumns.Add(setting.PropertyName);
-                //    }
-                //}
             }
 
             foreach (var columnName in defaultColumns)
@@ -404,6 +391,102 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             return _columnIdToParameterNameLookUp.TryGetValue(id, out string displayName) ? displayName : null;
         }
 
+        /// <summary>
+        /// Synchronizes changes from the grid data back to the underlying SheetsDataModel
+        /// Call this method after bulk operations or when you need to ensure data consistency
+        /// </summary>
+        public void SyncGridDataToUnderlyingModel()
+        {
+            if (SheetsDataModel?.RevitSheets == null || Data == null) return;
+
+            var exportColumnId = Constants.ColumnHeaderExport.Replace(" ", "");
+
+            for (int i = 0; i < Data.Count && i < SheetsDataModel.RevitSheets.Count; i++)
+            {
+                var gridRow = Data[i];
+                var sheet = SheetsDataModel.RevitSheets[i];
+
+                // Sync the export/selection status
+                if (gridRow.Values.ContainsKey(exportColumnId))
+                {
+                    var gridValue = gridRow.Values[exportColumnId];
+                    if (gridValue is bool isSelected)
+                    {
+                        sheet.IsSelected = isSelected;
+                    }
+                }
+
+                // Sync other editable properties if needed
+                // Add more sync logic here for other properties that can be edited
+            }
+        }
+
+        /// <summary>
+        /// Sets up a property changed event handler to automatically sync data
+        /// Call this in your constructor after initializing the data
+        /// </summary>
+        private void SetupDataSynchronization()
+        {
+            // Monitor changes to the Data collection
+            if (Data != null)
+            {
+                foreach (var row in Data)
+                {
+                    if (row is INotifyPropertyChanged notifyRow)
+                    {
+                        notifyRow.PropertyChanged += OnGridRowPropertyChanged;
+                    }
+                }
+
+                // Also monitor when new rows are added
+                Data.CollectionChanged += (s, e) =>
+                {
+                    if (e.NewItems != null)
+                    {
+                        foreach (var newItem in e.NewItems.OfType<INotifyPropertyChanged>())
+                        {
+                            newItem.PropertyChanged += OnGridRowPropertyChanged;
+                        }
+                    }
+
+                    if (e.OldItems != null)
+                    {
+                        foreach (var oldItem in e.OldItems.OfType<INotifyPropertyChanged>())
+                        {
+                            oldItem.PropertyChanged -= OnGridRowPropertyChanged;
+                        }
+                    }
+                };
+            }
+        }
+
+        /// <summary>
+        /// Handles property changes in grid rows and syncs to underlying model
+        /// </summary>
+        private void OnGridRowPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (sender is DynamicRowData row && e.PropertyName != null)
+            {
+                // Find the index of this row
+                var index = Data.IndexOf(row);
+                if (index >= 0 && index < SheetsDataModel.RevitSheets.Count)
+                {
+                    var sheet = SheetsDataModel.RevitSheets[index];
+
+                    // Sync specific properties
+                    var exportColumnId = Constants.ColumnHeaderExport.Replace(" ", "");
+                    if (e.PropertyName == exportColumnId || e.PropertyName == "Values")
+                    {
+                        if (row.Values.ContainsKey(exportColumnId) && row.Values[exportColumnId] is bool isSelected)
+                        {
+                            sheet.IsSelected = isSelected;
+                        }
+                    }
+
+                    // Add other property syncing as needed
+                }
+            }
+        }
         #endregion
     }
 }

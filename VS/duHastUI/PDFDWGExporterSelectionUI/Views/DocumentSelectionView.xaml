@@ -158,7 +158,7 @@
             <customControls:ThreeWaySwitch Width="Auto" 
                 Height="Auto"
                 Margin="10 2 10 2"
-                LabelLeft="PDF" LabelCenter="DWG" LabelRight="PDF and DWG" DisplayName="Export Mode"
+                LabelLeft="Export PDF(s)" LabelCenter="Export DWG(s)" LabelRight="Export PDF(s) and DWG(s)" DisplayName="Export Mode"
                 Value="{Binding ExportTypes, Mode=TwoWay}"/>
         </Border>
         

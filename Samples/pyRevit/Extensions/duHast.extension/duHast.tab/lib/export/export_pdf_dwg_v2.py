@@ -26,12 +26,16 @@ from duHast.Revit.Views.sheets import get_all_sheets
 from duHast.pyRevit.console_output import print_header, print_error
 from duHast.Revit.ExtensibleSchemas.extensible_schemas import does_schema_exist
 from duHast.pyRevit.net_dll_loader import load_net_dll_path
+from duHast.Revit.Exports.export_pdf import export_sheet_to_pdf
+from duHast.Revit.Exports.export_dwg import export_sheet_to_dwg
 
 
 from export.utility import get_sheet_parameter_data, get_sheet_parameter_names
 from export import settings
 from export.settings_utils import get_name_settings_from_schema
 from export.ui_data_get import get_ui_data
+
+from Autodesk.Revit.DB import ElementId
 
 DEBUG = True
 
@@ -113,84 +117,126 @@ def export_pdf_dwg_entry(doc, output, forms):
         )
 
         # show the output window
-        sheet_ids_selected = main.Execute()
+        selection_settings = main.Execute()
         if DEBUG:
-            print("...export settings: \n...{}".format(sheet_ids_selected))
+            print("...export settings: \n...{}".format(selection_settings))
 
         print_header("Exporting sheets to PDF and DWG files")
         
-        # # get going
-        # sheet_counter = 0
-
-        # # convert sheet ids to view sheets
-        # sheets_to_export = []
-        # for sheet_id in selected_sheet_ids:
-        #     # get the sheet element
-        #     sheet_to_export= doc.GetElement(sheet_id)
-        #     sheets_to_export.append(sheet_to_export)
-
-
-        # # set up a pyRevit progress bar
-        # with forms.ProgressBar(
-        #     title="Exporting sheets: {value} of {max_value}", cancellable=True
-        # ) as pb:
+        # check if any sheets were selected
+        if not selection_settings.SheetIdsToExport or selection_settings.SheetIdsToExport.Count == 0:
+            message = "No sheets selected for export."
+            return_value.update_sep(False, message)
+            print_error(message)
+            return return_value
+        
+        if DEBUG:
+            print("...sheets to export: {}".format(selection_settings.SheetIdsToExport.Count))
+        
+        # check if the output directory is set
+        if not selection_settings.ExportDirectoryPath or selection_settings.ExportDirectoryPath == "":
+            message = "No output directory set. Please set an output directory."
+            return_value.update_sep(False, message)
+            print_error(message)
+            return return_value
+        
+        if DEBUG:
+            print("...output directory: {}".format(selection_settings.ExportDirectoryPath))
             
-        #     for sheet_id in selected_sheet_ids:
-        #         # increase the progress bar
-        #         sheet_counter += 1
+        # check the export mode
+        if not selection_settings.ExportModus  or selection_settings.ExportModus  == "":
+            message = "No export mode set. Please set an export mode."
+            return_value.update_sep(False, message)
+            print_error(message)
+            return return_value
+        
+        if DEBUG:
+            print("...export mode: {}".format(selection_settings.ExportModus ))
+        
+        # check what we are exporting in terms of format
+        from duHastNet.UI.PDFDWGExporterSelectionUI.Models import Constants    
+        export_pdf = True if selection_settings.ExportModus  == Constants.ExportModusPDF or selection_settings.ExportModus  == Constants.ExportModusPDFandDWG  else False
+        export_dwg = True if selection_settings.ExportModus  == Constants.ExportModusDWG or selection_settings.ExportModus  == Constants.ExportModusPDFandDWG  else False
+        
+        if DEBUG:
+            print("...export PDF: {}".format(export_pdf))
+            print("...export DWG: {}".format(export_dwg))
+        
+        # get going
+        sheet_counter = 0
 
-        #         pb.update_progress(sheet_counter, max_value=len(selected_sheet_ids))
+        # convert sheet ids to view sheets
+        sheets_to_export = []
+        for sheet_id in selection_settings.SheetIdsToExport:
+            # get the sheet element
+            sheet_to_export= doc.GetElement(ElementId(sheet_id))
+            sheets_to_export.append(sheet_to_export)
 
-        #         # get the sheet element
-        #         sheet = doc.GetElement(sheet_id)
 
-        #         print_header ("Exporting sheet {}-{}...".format(sheet.SheetNumber, sheet.Name))
+        # set up a pyRevit progress bar
+        with forms.ProgressBar(
+            title="Exporting sheets: {value} of {max_value}", cancellable=True
+        ) as pb:
+            
+            for sheet in sheets_to_export:
+                # increase the progress bar
+                sheet_counter += 1
 
-           
-        #         # export the pdf
-        #         export_sheet_pdf_result = export_sheet_to_pdf(
-        #             doc=doc,
-        #             view_sheet=sheet,
-        #             sheet_name_string=rename_settings.pdf_settings,    
-        #             output_directory= output_directory, 
-        #         )
+                pb.update_progress(sheet_counter, max_value=len(sheets_to_export))
 
-        #         # check if the export was successful
-        #         if export_sheet_pdf_result.status == False:
-        #             print_error(export_sheet_pdf_result.message)
-        #         else:
-        #             print(export_sheet_pdf_result.message)
-        #         return_value.update(export_sheet_pdf_result)
+                print_header ("Exporting sheet {}-{}...".format(sheet.SheetNumber, sheet.Name))
 
-        #         # check if sheet need to be exported to dwg
-        #         if export_sheets_flag:
+                if export_pdf:
+                    # export the pdf
+                    export_sheet_pdf_result = export_sheet_to_pdf(
+                        doc=doc,
+                        view_sheet=sheet,
+                        sheet_name_string=rename_settings.pdf_settings,    
+                        output_directory= selection_settings.ExportDirectoryPath, 
+                    )
+
+                    # check if the export was successful
+                    if export_sheet_pdf_result.status == False:
+                        print_error(export_sheet_pdf_result.message)
+                    else:
+                        print(export_sheet_pdf_result.message)
+                    return_value.update(export_sheet_pdf_result)
+                else:
+                    message = "...Skipped exporting sheet {} to PDF.".format(sheet.Name)
+                    return_value.update_sep(
+                        True, message
+                    )
+                    print(message)
+
+                # check if sheet need to be exported to dwg
+                if export_dwg:
                     
-        #             # export dwg
-        #             export_sheet_dwg_result = export_sheet_to_dwg(
-        #                 doc=doc,
-        #                 view_sheet=sheet,
-        #                 sheet_name_string=rename_settings.dwg_settings, 
-        #                 output_directory= output_directory,
-        #                 dwg_export_option_name=rename_settings.dwg_export_scheme_name,
-        #             )
-        #             # check if the export was successful
-        #             if export_sheet_dwg_result.status == False:
-        #                 print_error(export_sheet_dwg_result.message)
-        #             else:
-        #                 print(export_sheet_dwg_result.message)
-        #             return_value.update(export_sheet_dwg_result)
+                    # export dwg
+                    export_sheet_dwg_result = export_sheet_to_dwg(
+                        doc=doc,
+                        view_sheet=sheet,
+                        sheet_name_string=rename_settings.dwg_settings, 
+                        output_directory= selection_settings.ExportDirectoryPath,
+                        dwg_export_option_name=rename_settings.dwg_export_scheme_name,
+                    )
+                    # check if the export was successful
+                    if export_sheet_dwg_result.status == False:
+                        print_error(export_sheet_dwg_result.message)
+                    else:
+                        print(export_sheet_dwg_result.message)
+                    return_value.update(export_sheet_dwg_result)
                   
-        #         else:
-        #             message = "...Skipped exporting sheet {} to DWG.".format(sheet.Name)
-        #             return_value.update_sep(
-        #                 True, message
-        #             )
-        #             print(message)
+                else:
+                    message = "...Skipped exporting sheet {} to DWG.".format(sheet.Name)
+                    return_value.update_sep(
+                        True, message
+                    )
+                    print(message)
                     
-        #         # check for cancel
-        #         if pb.cancelled:
-        #             return_value.update_sep(False, "User cancelled.")
-        #             break
+                # check for cancel
+                if pb.cancelled:
+                    return_value.update_sep(False, "User cancelled.")
+                    break
 
     except Exception as e:
         # handle any exceptions that occur during the export process

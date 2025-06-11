@@ -223,65 +223,23 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                 {
                     _exportTypes = value;
 
-                    //List<string> previewColumNames = new List<string>();
-                    //List<string> removeColumnNames = new List<string>();
-
                     if (_exportTypes == ThreeWaySwitch.SwitchState.Left)
                     {
                         ExportButtonText = $"Export {Models.Constants.ExportModusPDF}s";
                         _sheetsDataModel.Settings.ExportModus = Models.Constants.ExportModusPDF;
-                        //add pdf preview
-                        //previewColumNames.Add(Models.Constants.ColumnHeaderPDFPreviewName);
-                        // remove dwg preview
-                        //removeColumnNames.Add(Models.Constants.ColumnHeaderDWGPreviewName);
                     }
                     else if (_exportTypes == ThreeWaySwitch.SwitchState.Centre)
                     {
                         ExportButtonText = $"Export {Models.Constants.ExportModusDWG}s";
                         _sheetsDataModel.Settings.ExportModus = Models.Constants.ExportModusDWG;
-                        // add dwg preview
-                        //previewColumNames.Add(Models.Constants.ColumnHeaderDWGPreviewName);
-                        //remove pdf preview
-                        //removeColumnNames.Add(Models.Constants.ColumnHeaderPDFPreviewName);
                     }
                     else
                     {
                         ExportButtonText = $"Export {Models.Constants.ExportModusPDFandDWG}s";
                         _sheetsDataModel.Settings.ExportModus = Models.Constants.ExportModusPDFandDWG;
-                        //previewColumNames.Add(Models.Constants.ColumnHeaderPDFPreviewName);
-                        //previewColumNames.Add(Models.Constants.ColumnHeaderDWGPreviewName);
-                        //no previews to remove
                     }
 
                     OnPropertyChanged(nameof(ExportTypes));
-
-                    // remove old preview headers
-                    //foreach(string removeHeader in removeColumnNames)
-                    //{
-                    //    if (ColumnOrder.Contains(removeHeader))
-                    //    {
-                    //        ColumnOrder.Remove(removeHeader);
-                    //    }
-                    //}
-
-                    // previews are inserted at 2nd position always
-                    //int indexCounter = 1;
-
-                    //// add new preview headers at specific start index
-                    //foreach (string newHeader in previewColumNames)
-                    //{
-                    //    if (!ColumnOrder.Contains(newHeader))
-                    //    {
-                    //        ColumnOrder.Insert(indexCounter, newHeader);
-
-                    //        //increase index
-                    //        indexCounter++;
-                    //    }
-                    //}
-
-                    ////update data table
-                    //PopualateSheetsDataTable();
-
                 }
             }
         }
@@ -290,7 +248,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         #region button underlying functions
 
         //default button text for export mode
-        string _exportButtonText = Models.Constants.ExportModusPDF;
+        string _exportButtonText = $"Export {Models.Constants.ExportModusPDF}s";
 
         //button text for export button
         public string ExportButtonText
@@ -452,6 +410,12 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             // The ErrorsChanged event will be automatically raised through the interface
             OnPropertyChanged(nameof(HasErrors));
             OnPropertyChanged(nameof(ExportDirectoryPathValid));
+
+            // Trigger the command to re-evaluate its CanExecute state
+            if (_saveAndCloseCommand != null)
+            {
+                _saveAndCloseCommand.RaiseCanExecuteChanged();
+            }
         }
 
         #endregion data validation
@@ -489,9 +453,10 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             ViewSelectionDataGridViewModel = new ViewSelectionDataGridViewModel(_sheetsDataModel);
 
             //save and exit
+            //only if there are no errors
             _saveAndCloseCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
                 SaveSettingsAndClose,
-                (object parameter) => true //always enabled
+                (object parameter) => !HasErrors // Only enabled when there are no errors
             );
 
             //set the export file path from settings:

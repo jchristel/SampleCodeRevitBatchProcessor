@@ -33,6 +33,7 @@ from export import settings
 from export.settings_utils import get_name_settings_from_schema
 from export.ui_data_get import get_ui_data
 
+DEBUG = True
 
 def export_pdf_dwg_entry(doc, output, forms):
     """
@@ -52,8 +53,6 @@ def export_pdf_dwg_entry(doc, output, forms):
     return_value = Result()
 
     try:
-        
-
         # load .net interface dlls
         set_dll_path_result = load_net_dll_path([ "PDFDWGExporterSelectionUI.dll"]) #"Utils.23.0.0.3.dll",
 
@@ -83,16 +82,27 @@ def export_pdf_dwg_entry(doc, output, forms):
         else:
             # get the rename settings from the schema
             rename_settings = settings_getter_result.result[0]
+            if DEBUG:
+                print_header("Got rename settings")
+                print("...PDF settings: [{}]".format(rename_settings.pdf_settings))
+                print("...DWG settings: [{}]".format(rename_settings.dwg_settings))
+                print("...DWG export scheme name: [{}]".format(rename_settings.dwg_export_scheme_name))
 
         # get the parameters assigned to sheets
         parameter_names = get_sheet_parameter_names(doc)
+        if DEBUG:
+            print_header("Got parameter names")
+            print ("\n...".join(parameter_names))
+
 
         # get the data required for the UI
         ui_data = get_ui_data(doc)
-
+        
         # import the UI class from the PDFDWGExporterUI namespace
         from duHastNet.UI.PDFDWGExporterSelectionUI import Main
-       
+        
+        print_header("Exporting sheets to PDF and DWG files") 
+        
         # create an instance of the Main class
         main = Main(
             sheetsInModel=ui_data[0], 
@@ -104,7 +114,8 @@ def export_pdf_dwg_entry(doc, output, forms):
 
         # show the output window
         export_settings = main.Execute()
-
+        if DEBUG:
+            print("...export settings: \n...{}".format(export_settings))
 
         print_header("Exporting sheets to PDF and DWG files")
         

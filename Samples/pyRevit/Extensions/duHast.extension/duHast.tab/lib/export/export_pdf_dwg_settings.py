@@ -173,6 +173,10 @@ def settings_export_pdf_dwg_entry(doc, output, forms):
 
         # get the stored entity from the data storage and retrieve settings
         stored_entity = data_storage.GetEntity(schema)
+        
+        if DEBUG:
+            print("...stored entity: [{}]".format(stored_entity))
+        
         if stored_entity.IsValid():
             # get the pdf name settings from the entity
             pdf_settings = stored_entity.Get[str](settings.DU_HAST_EXPORTER_PDF_SETTING_FIELD_NAME)
@@ -198,7 +202,10 @@ def settings_export_pdf_dwg_entry(doc, output, forms):
 
         # get the parameters assigned to sheets
         parameter_names = get_sheet_parameter_names(doc)
-
+        
+        if DEBUG:
+            print("...parameter names assigned to sheets: [{}]".format(parameter_names))
+        
         # check if the parameters are empty
         if parameter_names.Count == 0:
             print_error("No parameters assigned to sheets.")
@@ -217,14 +224,26 @@ def settings_export_pdf_dwg_entry(doc, output, forms):
 
         if DEBUG:
             # get the settings from the UI
-            print("{}\n{}\n{}".format(export_settings.PDFRenameString, export_settings.DWGRenameString, export_settings.DWGExportScheme))
+            print("pdf settings: {}\nDWG settings: {}\nDWG Export scheme: [{}]".format(
+                export_settings.PDFRenameString, 
+                export_settings.DWGRenameString, 
+                export_settings.DWGExportScheme))
+        
+        pdf_string = export_settings.PDFRenameString if export_settings.PDFRenameString else ""
+        dwg_string = export_settings.DWGRenameString if export_settings.DWGRenameString else ""
+        dwg_export_scheme_name = export_settings.DWGExportScheme if export_settings.DWGExportScheme else ""
         
         # save the settings in the file
         # Set the fields for dwg and pdf settings
-        stored_entity.Set(settings.DU_HAST_EXPORTER_PDF_SETTING_FIELD_NAME, export_settings.PDFRenameString)
-        stored_entity.Set(settings.DU_HAST_EXPORTER_DWG_SETTING_FIELD_NAME, export_settings.DWGRenameString)
-        stored_entity.Set(settings.DU_HAST_EXPORTER_DWG_SCHEME_NAME_SETTING_FIELD_NAME, export_settings.DWGExportScheme)
+        stored_entity.Set(settings.DU_HAST_EXPORTER_PDF_SETTING_FIELD_NAME, pdf_string)
+        stored_entity.Set(settings.DU_HAST_EXPORTER_DWG_SETTING_FIELD_NAME, dwg_string)
+        stored_entity.Set(settings.DU_HAST_EXPORTER_DWG_SCHEME_NAME_SETTING_FIELD_NAME, dwg_export_scheme_name)
 
+        if DEBUG:
+            print("...stored pdf settings: [{}]".format(pdf_string))
+            print("...stored dwg settings: [{}]".format(dwg_string))
+            print("...stored dwg export scheme settings: [{}]".format(dwg_export_scheme_name))
+            
         # update the data storage with the new entity and save it to the project information object
         update_entity_result = update_entity_on_data_storage(doc, data_storage, stored_entity)
         
@@ -242,7 +261,7 @@ def settings_export_pdf_dwg_entry(doc, output, forms):
         dwg_scheme_verify = stored_entity.Get[str](settings.DU_HAST_EXPORTER_DWG_SCHEME_NAME_SETTING_FIELD_NAME)
 
         # check if the pdf name settings name have been stored successfully
-        if pdf_verify != export_settings.PDFRenameString:
+        if pdf_verify != pdf_string:
             message = "Failed to verify pdf settings: [{}]".format(pdf_verify)
             print_error(message)
             return_value.update_sep(False, message)
@@ -253,7 +272,7 @@ def settings_export_pdf_dwg_entry(doc, output, forms):
                 print("...verified pdf settings: [{}]".format(pdf_verify))
 
         # check if the dwg name settings name have been stored successfully
-        if dwg_verify != export_settings.DWGRenameString:
+        if dwg_verify != dwg_string:
             message = "Failed to verify dwg settings: [{}]".format(dwg_verify)
             print_error(message)
             return_value.update_sep(False, message)
@@ -264,7 +283,7 @@ def settings_export_pdf_dwg_entry(doc, output, forms):
                 print("...verified dwg settings: [{}]".format(dwg_verify))
     
         # check if the export scheme name has been stored successfully
-        if dwg_scheme_verify != export_settings.DWGExportScheme:
+        if dwg_scheme_verify != dwg_export_scheme_name:
             message = "Failed to verify dwg export scheme settings: [{}]".format(dwg_scheme_verify)
             print_error(message)
             return_value.update_sep(False, message)
@@ -274,6 +293,8 @@ def settings_export_pdf_dwg_entry(doc, output, forms):
             if DEBUG:
                 print("...verified dwg export scheme settings: [{}]".format(dwg_scheme_verify))
 
+        if DEBUG:
+            print("...export settings updated successfully.")
         return return_value
 
     except Exception as e:

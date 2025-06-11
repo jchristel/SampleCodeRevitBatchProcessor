@@ -33,3 +33,31 @@ class Settings(Base):
         self.pdf_settings = None
         self.dwg_settings = None
         self.dwg_export_scheme_name = None
+        
+    
+    def get_dwg_export_scheme_name(self):
+        """
+        Returns the DWG export scheme name.
+        
+        :return: DWG export scheme name.
+        :rtype: str
+        """
+        return self.dwg_export_scheme_name if self.dwg_export_scheme_name else "Default"
+    
+    def get_pdf_settings(self):
+        """
+        Returns the PDF settings.
+        
+        :return: PDF settings.
+        :rtype: str
+        """
+        return self.pdf_settings if self.pdf_settings else ""
+    
+    def get_dwg_settings(self):
+        """
+        Returns the DWG settings.
+        
+        :return: DWG settings.
+        :rtype: str
+        """
+        return self.dwg_settings if self.dwg_settings else ""

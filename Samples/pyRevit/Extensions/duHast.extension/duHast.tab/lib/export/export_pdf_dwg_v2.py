@@ -22,7 +22,6 @@
 
 
 from duHast.Utilities.Objects.result import Result
-from duHast.Revit.Views.sheets import get_all_sheets
 from duHast.pyRevit.console_output import print_header, print_error
 from duHast.Revit.ExtensibleSchemas.extensible_schemas import does_schema_exist
 from duHast.pyRevit.net_dll_loader import load_net_dll_path
@@ -30,14 +29,14 @@ from duHast.Revit.Exports.export_pdf import export_sheet_to_pdf
 from duHast.Revit.Exports.export_dwg import export_sheet_to_dwg
 
 
-from export.utility import get_sheet_parameter_data, get_sheet_parameter_names
+from export.utility import get_sheet_parameter_names
 from export import settings
 from export.settings_utils import get_name_settings_from_schema
 from export.ui_data_get import get_ui_data
 
 from Autodesk.Revit.DB import ElementId
 
-DEBUG = True
+DEBUG = False
 
 def export_pdf_dwg_entry(doc, output, forms):
     """
@@ -104,9 +103,7 @@ def export_pdf_dwg_entry(doc, output, forms):
         
         # import the UI class from the PDFDWGExporterUI namespace
         from duHastNet.UI.PDFDWGExporterSelectionUI import Main
-        
-        print_header("Exporting sheets to PDF and DWG files") 
-        
+         
         # create an instance of the Main class
         main = Main(
             sheetsInModel=ui_data[0], 

@@ -113,9 +113,9 @@ def export_pdf_dwg_entry(doc, output, forms):
         )
 
         # show the output window
-        export_settings = main.Execute()
+        sheet_ids_selected = main.Execute()
         if DEBUG:
-            print("...export settings: \n...{}".format(export_settings))
+            print("...export settings: \n...{}".format(sheet_ids_selected))
 
         print_header("Exporting sheets to PDF and DWG files")
         

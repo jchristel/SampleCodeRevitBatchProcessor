@@ -45,6 +45,22 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
             List<string> parameterNames)
 
         {
+
+            // do some sanity checking before proceeding:
+            // do we have any sheets?
+            if (sheetsInModel == null || sheetsInModel.Count == 0)
+            { throw new System.Exception("No sheets supplied."); }
+
+            // any sheet parameters?
+            if (parameterNames == null || parameterNames.Count == 0)
+            { throw new System.Exception("No sheet parameters supplied"); }
+
+            // any export strings?
+            if (string.IsNullOrEmpty(currentDWGExportString) && string.IsNullOrEmpty(currentPDFExportString))
+            {
+                throw new System.Exception("Neither a pdf export setting nor a dwg export setting was supplied.");
+            }
+
             //set up stores
             _navigationStore = new NavigationStore();
             _messageStore = new MessageStore();
@@ -67,7 +83,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
         /// <summary>
         /// Function which will display the document selection window and return the selected sheets to the caller
         /// </summary>
-        public Utils.Settings Execute()
+        public duHastNet.UI.PDFDWGExporterSelectionUI.Utils.ExportSelection Execute()
         {
 
             //create the settings view model
@@ -84,8 +100,23 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
 
             mainWindow.ShowDialog();
 
-            // return the settings object
-            return mainWindow.Settings;
+            var exportSelection = new Utils.ExportSelection();
+
+            // return the selected sheets...
+            List<int> sheetIdsSelected = new List<int>();
+
+            foreach (var sheet in this._exportSheetsDataModel.RevitSheets)
+            {
+                if (sheet.IsSelected)
+                {
+                    sheetIdsSelected.Add(int.Parse(sheet.RevitElementId.Value));
+                }
+            }
+
+            exportSelection.SheetIdsToExport = sheetIdsSelected;
+            exportSelection.ExportDirectoryPath = _exportSheetsDataModel.Settings.ExportFolderPath;
+            exportSelection.ExportModus = _exportSheetsDataModel.Settings.ExportModus;
+            return exportSelection;
         }
 
         /// <summary>

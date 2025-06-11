@@ -25,18 +25,36 @@
 using duHastNet.UI.CustomControls;
 using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 {
-    public class DocumentSelectionViewModel : ViewModelBase
+    public class DocumentSelectionViewModel : ViewModelBase, INotifyDataErrorInfo
     {
         /// <summary>
         /// Global message view model for displaying messages to the user
         /// </summary>
         public duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel GlobalMessageViewModel { get; }
+
+        /// <summary>
+        /// errors view model used for data validation ( export directory )
+        /// </summary>
+        private readonly duHastNet.Utils.WPF.ViewModels.ErrorsViewModel _errorsViewModel;
+
+        //property to check if there are any errors
+        public bool HasErrors => _errorsViewModel.HasErrors;
+
+        // event handler for errors changed
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged
+        {
+            add { _errorsViewModel.ErrorsChanged += value; }
+            remove { _errorsViewModel.ErrorsChanged -= value; }
+        }
 
         /// <summary>
         /// message store for storing messages
@@ -82,6 +100,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                 // Unsubscribe from the event to prevent memory leaks
                 GlobalMessageViewModel.Dispose();
             }
+
+            //unsubscribe from errors changed event
+            _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
 
             base.OnClosing();
         }
@@ -299,8 +320,38 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                 {
                     _selectedSheetsExportFilePath = value;
 
-                    //save in settings
-                    _sheetsDataModel.Settings.ExportFolderPath = value;
+
+                    _errorsViewModel.ClearErrors(nameof(ExportSheetsFilePath));
+
+                    // check if the file path is valid, if not add an error
+                    if (string.IsNullOrEmpty(value))
+                    {
+                        // set the data path to invalid
+                        ExportDirectoryPathValid = false;
+                        // this will trigger data validation
+                        // from the eventhandler ErrorsViewModel_ErrorsChanged
+                        _errorsViewModel.AddError(nameof(ExportSheetsFilePath), "Export path path cannot be empty");
+                    }
+                    else if (!System.IO.Directory.Exists(value))
+                    {
+                        // set the data path to invalid
+                        ExportDirectoryPathValid = false;
+                        // this will trigger data validation
+                        // from the eventhandler ErrorsViewModel_ErrorsChanged
+                        _errorsViewModel.AddError(nameof(ExportSheetsFilePath), "Export path does not exist");
+                    }
+                    else
+                    {
+                        // set the data path to valid
+                        ExportDirectoryPathValid = true;
+                        // this will trigger data validation
+                        // from the eventhandler ErrorsViewModel_ErrorsChanged
+                        _errorsViewModel.ClearErrors(nameof(ExportSheetsFilePath));
+
+                        //save in settings
+                        _sheetsDataModel.Settings.ExportFolderPath = value;
+                    }
+
 
                     OnPropertyChanged(nameof(ExportSheetsFilePath));
                 }
@@ -313,6 +364,16 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// <param name="window"></param>
         private void SaveSettingsAndClose(object window)
         {
+
+
+            //update the column ids in settings.
+            // clear lisr first
+            _sheetsDataModel.Settings.ColumnIds.Clear();
+            foreach (var columnId in ViewSelectionDataGridViewModel.ColumnDefinitions)
+            {
+                _sheetsDataModel.Settings.ColumnIds.Add(columnId.PropertyName);
+            }
+
             //save settings to file is done in the main window close event
             duHastNet.UI.PDFDWGExporterSelectionUI.Utils.SettingsUtils.SaveSettings(
                 settings: _sheetsDataModel.Settings,
@@ -359,6 +420,42 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
         #endregion button underlying functions
 
+
+        #region data validation
+
+        private bool _exportDirectoryPathValid;
+        public bool ExportDirectoryPathValid
+        {
+            get => _exportDirectoryPathValid;
+            set
+            {
+                _exportDirectoryPathValid = value;
+                // call ui update
+                OnPropertyChanged(nameof(ExportDirectoryPathValid));
+            }
+        }
+
+        /// <summary>
+        /// Data validation for text input fields
+        /// </summary>
+        /// <param name="propertyName">The name of the property of which to get any errors, if they exist, for.</param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public IEnumerable GetErrors(string propertyName)
+        {
+            return _errorsViewModel.GetErrors(propertyName);
+        }
+
+
+        private void ErrorsViewModel_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
+        {
+            // The ErrorsChanged event will be automatically raised through the interface
+            OnPropertyChanged(nameof(HasErrors));
+            OnPropertyChanged(nameof(ExportDirectoryPathValid));
+        }
+
+        #endregion data validation
+
         /// <summary>
         /// Constructor for the SettingsViewModel class.
         /// </summary>
@@ -373,10 +470,17 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
             //store the export data model
             _sheetsDataModel = sheetDataModel;
-            //store the global message view model
-            GlobalMessageViewModel = globalMessageViewModel;
+
             //store the message store
             _messageStore = messageStore;
+
+            //store the global message view model
+            GlobalMessageViewModel = globalMessageViewModel;
+
+            //initialize the errors view model
+            _errorsViewModel = new duHastNet.Utils.WPF.ViewModels.ErrorsViewModel();
+            //subscribe to errors changed event
+            _errorsViewModel.ErrorsChanged += ErrorsViewModel_ErrorsChanged;
 
             //load settings first
             LoadSettings();

@@ -11,6 +11,39 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
+        <!-- a style for the text box if it contains a validation error-->
+        <Style TargetType="TextBox">
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <AdornedElementPlaceholder/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <StackPanel>
+                            <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="3">
+                                <ScrollViewer x:Name="PART_ContentHost"/>
+                            </Border>
+                            <ItemsControl Margin="0 1 0 0" FontSize="12" ItemsSource="{TemplateBinding Validation.Errors}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding ErrorContent}" Foreground="Red"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <!--converters-->
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
@@ -48,13 +81,30 @@
             <utilsViews:GlobalMessageBanner DataContext="{Binding GlobalMessageViewModel}"/>
         </Grid>
         <!-- Print set selection -->
-        <Grid Grid.Row="2">
-            <!-- document type selection ComboBox -->
-            <ComboBox
-                Margin="5 5 5 5" 
-                ItemsSource="{Binding PrintSetNamesDefaultList}"
-                SelectedValue="{Binding Path=SelectedPrintSet,Mode=TwoWay}"/>
-        </Grid>
+        <Border Grid.Row="2" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <!-- header row -->
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock 
+                    Grid.Column="0" 
+                    Grid.Row="0" 
+                    Margin="5 5 5 5"
+                    VerticalAlignment="Center" 
+                    HorizontalAlignment="Center"
+                    Text="Print Set"/>
+                <!-- document type selection ComboBox -->
+                <ComboBox Grid.Row="0" Grid.Column="1"
+                    Margin="5 5 5 5" 
+                    ItemsSource="{Binding PrintSetNamesDefaultList}"
+                    SelectedValue="{Binding Path=SelectedPrintSet,Mode=TwoWay}"/>
+            </Grid>
+        </Border>
         <!-- Sheet selection -->
         <Grid Grid.Row="3">
             <!-- grid view -->
@@ -69,40 +119,46 @@
             
         </Grid>
         <!--Export path -->
-        <Grid Grid.Row="4">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Row="0"
+        <Border Grid.Row="4" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0"
                  Grid.Column="0"
                  Margin="0 10 5 10"
-                 Padding="0 0 5 0"
+                 Padding="5 0 5 0"
                  Text="Export Path:" />
-            <TextBox
-                 x:Name="ExportFilePathTextBox"
-                 Grid.Row="0"
-                 Grid.Column="1"
-                 Margin="5 10 5 10"
-                 Text="{Binding ExportSheetsFilePath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-            <Button 
+                <TextBox
+                    x:Name="ExportFilePathTextBox"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="5 10 5 10"
+                    Text="{Binding ExportSheetsFilePath, 
+                           Mode=TwoWay,
+                           UpdateSourceTrigger=PropertyChanged,
+                           ValidatesOnNotifyDataErrors=True,
+                           NotifyOnValidationError=True}"/>
+                <Button 
                  Grid.Row="0" 
                  Grid.Column="2" 
                  Padding="20 0 20 0"
                  Margin="5 10 5 10" 
                  Content="Browse"
                  Click="Export_OnClick"/>
-        </Grid>
+            </Grid>
+        </Border>
         <!--export format selector -->
         <Border Grid.Row="5" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
             <customControls:ThreeWaySwitch Width="Auto" 
                 Height="Auto"
                 Margin="10 2 10 2"
-                LabelLeft="PDF" LabelCenter="DWG" LabelRight="PDF and DWG" DisplayName="Mode"
+                LabelLeft="PDF" LabelCenter="DWG" LabelRight="PDF and DWG" DisplayName="Export Mode"
                 Value="{Binding ExportTypes, Mode=TwoWay}"/>
         </Border>
         

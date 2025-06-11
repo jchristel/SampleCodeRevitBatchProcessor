@@ -41,7 +41,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
             this.SheetsDataModel = sheetDataModel;
 
-            // NOW manually call this since it was skipped during base constructor
+            // manually call this since it was skipped during base constructor
             InitializeAvailableColumns();
 
             // Initialize column defaults first
@@ -206,7 +206,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
         #region Private Helper Methods
 
-
         private void InitializeColumnDefaults()
         {
             //initialise with default sheet properties and default values
@@ -225,6 +224,72 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             {
                 var item = sampleSheet.Properties[i];
                 _columnDefaults[item.Name.Replace(" ", "")] = vm => item.Value;
+            }
+        }
+
+        /// <summary>
+        /// Override to restore actual sheet data instead of defaults when adding columns
+        /// </summary>
+        protected override void RestoreOrSetDefaultColumnData(string propertyName, AvailableColumnDefinition availableColumn)
+        {
+            if (_removedColumnData.ContainsKey(propertyName))
+            {
+                // Use the base implementation for restored data
+                base.RestoreOrSetDefaultColumnData(propertyName, availableColumn);
+            }
+            else
+            {
+                // For new columns, populate with actual sheet data instead of defaults
+                RestoreActualSheetData(propertyName, availableColumn);
+            }
+        }
+
+        /// <summary>
+        /// Populate column with actual data from sheets instead of defaults
+        /// </summary>
+        private void RestoreActualSheetData(string propertyName, AvailableColumnDefinition availableColumn)
+        {
+            // For all rows, set the actual data from the corresponding sheet
+            for (int i = 0; i < Data.Count && i < SheetsDataModel.RevitSheets.Count; i++)
+            {
+                var sheet = SheetsDataModel.RevitSheets[i];
+                var rowData = Data[i];
+
+                // Set the value based on the property name
+                if (propertyName == Constants.ColumnHeaderExport.Replace(" ", ""))
+                {
+                    rowData[propertyName] = sheet.IsSelected;
+                }
+                else if (propertyName == Constants.ColumnHeaderPDFPreviewName.Replace(" ", ""))
+                {
+                    rowData[propertyName] = sheet.PDFPreviewName ?? "";
+                }
+                else if (propertyName == Constants.ColumnHeaderDWGPreviewName.Replace(" ", ""))
+                {
+                    rowData[propertyName] = sheet.DWGPreviewName ?? "";
+                }
+                else if (propertyName == Constants.ColumnHeaderSheetNumber.Replace(" ", ""))
+                {
+                    rowData[propertyName] = sheet.SheetNumber.Value ?? "";
+                }
+                else if (propertyName == Constants.ColumnHeaderSheetName.Replace(" ", ""))
+                {
+                    rowData[propertyName] = sheet.SheetName.Value ?? "";
+                }
+                else
+                {
+                    // Handle custom properties
+                    var property = sheet.Properties.FirstOrDefault(p => p.Name.Replace(" ", "") == propertyName);
+                    if (property != null)
+                    {
+                        rowData[propertyName] = property.Value ?? "";
+                    }
+                    else
+                    {
+                        // Fallback to default value
+                        rowData[propertyName] = GetDefaultValueForColumn(availableColumn);
+                    }
+                }
             }
         }
 

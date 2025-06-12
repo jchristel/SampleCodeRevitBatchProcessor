@@ -65,7 +65,9 @@ def build_family_name_from_descriptor(description):
     # split the description into parts
     parts = description.split(':')
     if len(parts) < 2:
-        raise ValueError("Description must contain a major category followed by a colon.")
+        # just a major category in the descriptor
+        return description.title().strip().replace(' ', '')
+        #raise ValueError("Description must contain a major category followed by a colon. {}".format(description))
     
     # get the major category and clean it up
     major_category = parts[0].title().strip().replace(' ', '')
@@ -84,16 +86,18 @@ def build_family_name_from_descriptor(description):
             for word in part.split(" "):
                 # check if part is all upper case idf not capitalize it
                 if not word.isupper():
-                    print("word '{}' is not all upper case, capitalizing it.".format(word))
+                    #print("word '{}' is not all upper case, capitalizing it.".format(word))
                     word = word.title()  # Capitalize the first letter of each word and strip leading/trailing spaces
                 else:
-                    print("Word '{}' is all upper case, keeping it as is.".format(word))
+                    #print("Word '{}' is all upper case, keeping it as is.".format(word))
+                    pass
                 words.append(word)
 
 
             description_parts.append("".join(words))
     except Exception as e:
         print("Error processing description parts: {}".format(e))
+        return None
            
     # join the major category and description parts with an underscore
     family_name = major_category + '_' + '_'.join(description_parts)

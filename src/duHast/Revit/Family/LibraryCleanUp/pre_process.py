@@ -95,14 +95,26 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
         # do some logging to user
         print("Creating directives for {} families.".format(len(family_data)))
 
-        # built copy file directives / swap file directives
-        directives_result = create_directives(family_data, output_path,  code_descriptor_path)
+        directives_result = None
+        try:
+            # built copy file directives / swap file directives
+            directives_result = create_directives(family_data, output_path,  code_descriptor_path)
+        except Exception as e:
+            return_value.update_sep(
+                False,
+                "Failed to create directives with exception: {}".format(e),
+            )
+            print("Failed to create directives with exception: {}".format(e))
+            return return_value
 
-        if directives_result.status is False:
+        if directives_result is None:
+            return return_value
+        elif directives_result and directives_result.status is False:
             return_value.update_sep(
                 False,
                 "Failed to create directives",
             )
+            print("Failed to create directives: \n{}".format(directives_result.message))
             return return_value
         else:
             return_value.append_message(
@@ -137,6 +149,7 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
         # execute copy directives
         copy_result = execute_copy_directives_for_library_families(copy_directives)
         if copy_result.status is False:
+            print("Failed to execute copy directives: {}".format(copy_result.message))
             return_value.update_sep(
                 False,
                 "Failed to execute copy directives",
@@ -164,4 +177,6 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
             "Failed to get family data with exception: {}".format(e),
         )
         print("Failed to get family data with exception: {}".format(e))
+    
+    print("Finished!")
     return return_value

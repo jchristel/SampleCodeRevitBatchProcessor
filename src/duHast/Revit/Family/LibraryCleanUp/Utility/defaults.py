@@ -36,3 +36,28 @@ SWAP_DIRECTIVE_FILE_NAME = "{} {}.csv".format(SWAP_DIRECTIVE_FILE_NAME_PREFIX, g
 MAINTAIN_TYPES_BY_FAMILY_FILE_NAME_PREFIX = "maintain_types_by_family"
 # file name of maintain family types by family directives
 MAINTAIN_TYPES_BY_FAMILY_FILE_NAME = "{} {}.csv".format(MAINTAIN_TYPES_BY_FAMILY_FILE_NAME_PREFIX, get_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD))
+
+# file name prefix depending on the family category
+CATEGORY_FILE_NAME_PREFIX_MAPPER = {
+    "Audio Visual Devices": "AVD",
+    "Casework": "CSW",
+    "Data Devices": "DAT",
+    "Electrical Equipment": "ELE",
+    "Electrical Fixtures": "ELF",
+    "Fire Alarm Devices": "FIR",
+    "Furniture": "FRN",
+    "Furniture Systems": "FRS",
+    "Generic Models": "GEN",
+    "Lighting Devices": "LGD",
+    "Lighting Fixtures": "LGF",
+    "Mechanical Equipment": "MEC",
+    "Medical Equipment": "MEF",
+    "Nurse Call Devices": "NRS",
+    "Plumbing Fixtures": "PLM",
+    "railings": "RLG",
+    "Security Devices": "SEC",
+    "Specialty Equipment": "SPC",
+    "Sprinklers": "SPR",
+    "Telephone Devices": "TEL",
+    "Windows": "WDW",
+}

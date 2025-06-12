@@ -64,7 +64,6 @@ def in_process_family(doc, library_path):
         # read maintain types from file
         read_maintain_result = read_maintain_types(library_path)
 
-       
         # check if the read operation was successful
         if not read_maintain_result.status:
             return_value.update_sep(False, "Failed to read maintain types: {}".format(read_maintain_result.message))

@@ -33,6 +33,9 @@ from duHast.Revit.Common.transaction import in_transaction
 
 from Autodesk.Revit.DB import Transaction
 
+# is the default type name in a family when a catalogue file is in use and not types should exist in the family itself
+DEFAULT_CATALOGUE_REFERENCE_FAMILY_TYPE = "Refer To Catalog File"
+
 def create_family_type(doc, type_name):
     """
     Creates a new family type in the family document.

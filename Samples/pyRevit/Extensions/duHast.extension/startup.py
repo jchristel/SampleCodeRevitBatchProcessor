@@ -32,6 +32,24 @@ import traceback
 # set up a debug flag 
 DEBUG = False
 
+# get the revit version to load the correct assemblies
+REVIT_VERSION = None
+try:
+    # get the ui application provided by pyRevit
+    uiapp = __revit__
+
+    # get the application from the ui application
+    app = uiapp.Application
+
+    # get the version number from the application
+    REVIT_VERSION = app.VersionNumber
+
+    # print the version number if debug is enabled
+    if DEBUG:
+        print("Running Revit: {REVIT_VERSION}".format(REVIT_VERSION=REVIT_VERSION))
+except Exception as e:
+    print("Exception: {e}".format(e=e))
+
 # do not load these, since they are the external command and dont need to be loaded
 ignore_dlls = [
 ]

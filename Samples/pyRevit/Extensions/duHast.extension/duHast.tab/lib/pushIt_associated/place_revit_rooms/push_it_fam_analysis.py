@@ -24,9 +24,7 @@ from System.Linq import Enumerable
 
 from duHast.Utilities.Objects.result import Result
 
-from duHast.Revit.Common.Geometry.curve_loops import  get_curve_loop_centroid
-
-from Autodesk.Revit.DB import ElementId,GeometryElement,GeometryInstance, Options,Solid, ViewDetailLevel, XYZ
+from Autodesk.Revit.DB import ElementId,GeometryElement,GeometryInstance, Options,Solid, ViewDetailLevel
 
 
 

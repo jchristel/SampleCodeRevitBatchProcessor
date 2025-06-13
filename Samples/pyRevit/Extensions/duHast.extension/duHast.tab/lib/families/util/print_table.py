@@ -20,21 +20,20 @@
 #
 #
 
+
+
 from Autodesk.Revit.DB import Element, ElementId
 
-def print_result_table(output, data, header, table_title):
+def print_result_table (output, data, header,table_title,  max_row_number = 100):
 
     # pad data rows to match header by appending empty strings
     # to end of individual rows
-
-    # set a max row value to display
-    max_row_number = 100
 
     # safety check
     if len(header) == 0:
         print("Header is empty. Cannot print table")
         return
-
+    
     rows = []
     #print("Data contains {} rows.".format(len(data)))
     for row in data:
@@ -42,37 +41,23 @@ def print_result_table(output, data, header, table_title):
             # pad row with empty strings
             row = row + [""] * (len(header) - len(row))
         rows.append(row)
-
-    if len(rows) > max_row_number:
-        print(
-            "Table has too many rows to display. Printing only first {} rows".format(
-                max_row_number
-            )
-        )
+    
+    if (len(rows) > max_row_number):
+        print("Table has too many rows to display. Printing only first {} rows".format(max_row_number))
         rows = rows[:max_row_number]
-
-    # print( "Printing table with {} rows and {} columns".format(len(rows), len(header)))
-
-    # return
+    
+    #print( "Printing table with {} rows and {} columns".format(len(rows), len(header)))
+    
+    #return
     output.print_table(
-        table_data=rows,
+        table_data = rows,
         title=table_title,
         columns=header,
-        last_line_style="color:red;",
+        last_line_style='color:red;',
     )
 
 
 def get_table_data_from_swap_result(doc, result_list):
-    """
-    Extracts data from the result list of the swap family instances function
-    and returns a list of host families and host groups that could not be swapped
-    because they host other instances
-
-    :param doc: Revit Document
-    :param result_list: list of tuples containing swap result data
-    :return: a tuple containing two lists
-    """
-
     # the result lit is made up of tuples containing three entries
 
     # 1. the id's of family instances swapped out

@@ -48,8 +48,6 @@ def apply_transform_to_uv(uv_point, rotation_matrix, translation_vector):
     return UV(transformed_u, transformed_v)
 
 
-
-
 def create_room_from_push_it_instance(doc, family_instance, levels_ascending, rotation, translation):
     """
     Create a room in the Revit document.
@@ -87,7 +85,6 @@ def create_room_from_push_it_instance(doc, family_instance, levels_ascending, ro
                 action_return_value.update_sep (False,"failed to modify room: {}".format(e))
                 print(e)
             return action_return_value
-
 
 
         # get the nearest level based on the Z value of the family instance location point

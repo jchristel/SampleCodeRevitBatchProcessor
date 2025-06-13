@@ -4,6 +4,7 @@ layout:
   - SwapWidthAndDepth
   - Stats
   - PlaceRevitRooms
+  - Area By Room
 
 # bundle tooltip
 tooltip: Hassell

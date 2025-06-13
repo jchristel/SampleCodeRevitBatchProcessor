@@ -34,6 +34,7 @@ from duHast.Revit.Family.family_parameter_utils import set_family_parameter_valu
 
 from duHast.Utilities.files_io import file_exist
 from duHast.Utilities.files_csv import read_csv_file, write_report_data_as_csv
+from duHast.Utilities.Objects.file_encoding_bom import BOMValue
 
 
 # if a default family type is created, these parameters will be reset to their default values
@@ -100,14 +101,18 @@ def update_type_catalogue_file(doc,  maintain_types_list):
             # check if the family name matches
             if row[0] in maintain_types_list:
                 type_rows_to_maintain.append(row)
-        
+
+         # remove BOM from header row if it exists
+        header_row[0] = "" 
 
         # write data back to file
         write_result = write_report_data_as_csv(
-            encoding=None,
             file_name= catalogue_file_name,
+            encoding="utf-16-le",
+            bom=BOMValue.UTF_16_LITTLE_ENDIAN,
             header = header_row, # keep the header row from the read result
             data = type_rows_to_maintain,
+            quoting= QUOTE_MINIMAL,  # use minimal quoting for CSV
         )
     
         return_value.update(write_result)

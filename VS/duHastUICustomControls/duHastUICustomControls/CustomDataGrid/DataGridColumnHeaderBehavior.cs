@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace duHastNet.UI.CustomControls.CustomDataGrid
 {
@@ -1535,6 +1536,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
 
         /// <summary>
         /// Populates the "Add Column" submenu with available columns that can be added to the DataGrid.
+        /// Limits to maximum 10 visible items with scrolling for larger lists.
         /// </summary>
         /// <param name="addSubmenu">The submenu to populate with available columns.</param>
         /// <param name="viewModel">The ViewModel containing the AvailableColumnsToAdd property.</param>
@@ -1546,7 +1548,12 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             var availableColumnsProperty = viewModel?.GetType().GetProperty("AvailableColumnsToAdd");
             if (availableColumnsProperty?.GetValue(viewModel) is IEnumerable availableColumns)
             {
-                foreach (var column in availableColumns)
+                var columnList = availableColumns.Cast<object>()
+                    .OrderBy(column => column.GetType().GetProperty("DisplayName")?.GetValue(column)?.ToString() ?? "")
+                    .ToList();
+
+                // Add all columns as normal menu items
+                foreach (var column in columnList)
                 {
                     var propertyName = column.GetType().GetProperty("PropertyName")?.GetValue(column)?.ToString();
                     var displayName = column.GetType().GetProperty("DisplayName")?.GetValue(column)?.ToString();
@@ -1559,6 +1566,19 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                         addSubmenu.Items.Add(menuItem);
                     }
                 }
+
+                // If more than 10 items, set MaxHeight to force scrolling
+                if (columnList.Count > 10)
+                {
+                    // Set MaxHeight to show approximately 10 items (each item is roughly 25-30px)
+                    addSubmenu.MaxHeight = 280;
+
+                    // Apply scrolling template when the submenu opens
+                    addSubmenu.SubmenuOpened += (s, e) =>
+                    {
+                        ApplyScrollTemplate(addSubmenu);
+                    };
+                }
             }
 
             // Show message if no columns available
@@ -1568,6 +1588,171 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 addSubmenu.Items.Add(noItemsMessage);
             }
         }
+
+        /// <summary>
+        /// Creates a normal submenu without scrolling for 10 or fewer items.
+        /// </summary>
+        /// <param name="addSubmenu">The submenu to populate.</param>
+        /// <param name="columnList">The list of available columns.</param>
+        /// <param name="viewModel">The ViewModel containing commands.</param>
+        private static void CreateNormalSubmenu(MenuItem addSubmenu, List<object> columnList, object viewModel)
+        {
+            foreach (var column in columnList)
+            {
+                var propertyName = column.GetType().GetProperty("PropertyName")?.GetValue(column)?.ToString();
+                var displayName = column.GetType().GetProperty("DisplayName")?.GetValue(column)?.ToString();
+
+                if (!string.IsNullOrEmpty(propertyName))
+                {
+                    var menuItem = new MenuItem { Header = displayName };
+                    menuItem.Command = GetCommandFromViewModel(viewModel, "AddSelectedColumnCommand");
+                    menuItem.CommandParameter = propertyName;
+                    addSubmenu.Items.Add(menuItem);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Creates a scrollable submenu container for more than 10 items.
+        /// </summary>
+        /// <param name="addSubmenu">The submenu to populate.</param>
+        /// <param name="columnList">The list of available columns.</param>
+        /// <param name="viewModel">The ViewModel containing commands.</param>
+        private static void CreateScrollableSubmenu(MenuItem addSubmenu, List<object> columnList, object viewModel)
+        {
+            // Create a single MenuItem that contains a UserControl with scrolling
+            var scrollableMenuItem = new MenuItem();
+
+            // Create the scrollable content
+            var scrollViewer = new ScrollViewer
+            {
+                MaxHeight = 300, // Approximately 10 items at ~30px each
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled
+            };
+
+            var stackPanel = new StackPanel();
+
+            foreach (var column in columnList)
+            {
+                var propertyName = column.GetType().GetProperty("PropertyName")?.GetValue(column)?.ToString();
+                var displayName = column.GetType().GetProperty("DisplayName")?.GetValue(column)?.ToString();
+
+                if (!string.IsNullOrEmpty(propertyName))
+                {
+                    // Create a button that looks like a menu item
+                    var button = new Button
+                    {
+                        Content = displayName,
+                        HorizontalAlignment = HorizontalAlignment.Stretch,
+                        HorizontalContentAlignment = HorizontalAlignment.Left,
+                        Padding = new Thickness(10, 5, 10, 5),
+                        Margin = new Thickness(0),
+                        BorderThickness = new Thickness(0),
+                        Background = Brushes.Transparent,
+                        Command = GetCommandFromViewModel(viewModel, "AddSelectedColumnCommand"),
+                        CommandParameter = propertyName
+                    };
+
+                    // Add hover effects
+                    button.MouseEnter += (s, e) => button.Background = SystemColors.HighlightBrush;
+                    button.MouseLeave += (s, e) => button.Background = Brushes.Transparent;
+
+                    // Close the context menu when clicked
+                    button.Click += (s, e) =>
+                    {
+                        // Find and close the context menu
+                        var contextMenu = FindParentContextMenu(button);
+                        if (contextMenu != null)
+                        {
+                            contextMenu.IsOpen = false;
+                        }
+                    };
+
+                    stackPanel.Children.Add(button);
+                }
+            }
+
+            scrollViewer.Content = stackPanel;
+            scrollableMenuItem.Header = scrollViewer;
+
+            // Disable the menu item selection behavior since we're using buttons inside
+            scrollableMenuItem.IsEnabled = true;
+            scrollableMenuItem.StaysOpenOnClick = true;
+
+            addSubmenu.Items.Add(scrollableMenuItem);
+        }
+
+
+        /// <summary>
+        /// Applies a scroll template to a MenuItem when it has too many items.
+        /// </summary>
+        /// <param name="menuItem">The MenuItem to apply scrolling to.</param>
+        private static void ApplyScrollTemplate(MenuItem menuItem)
+        {
+            // This will automatically enable scrolling when MaxHeight is exceeded
+            // WPF's MenuItem control has built-in support for scrolling when MaxHeight is set
+
+            // Find the popup and set scrolling properties
+            menuItem.Loaded += (s, e) =>
+            {
+                var popup = FindVisualChild<System.Windows.Controls.Primitives.Popup>(menuItem);
+                if (popup != null)
+                {
+                    popup.Loaded += (ps, pe) =>
+                    {
+                        var scrollViewer = FindVisualChild<ScrollViewer>(popup.Child);
+                        if (scrollViewer != null)
+                        {
+                            scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+                            scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+                        }
+                    };
+                }
+            };
+        }
+
+        /// <summary>
+        /// Helper method to find a visual child of a specific type.
+        /// </summary>
+        /// <typeparam name="T">The type of child to find.</typeparam>
+        /// <param name="parent">The parent element to search in.</param>
+        /// <returns>The first child of the specified type, or null if not found.</returns>
+        private static T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
+        {
+            if (parent == null) return null;
+
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+                if (child is T foundChild)
+                    return foundChild;
+
+                var descendant = FindVisualChild<T>(child);
+                if (descendant != null)
+                    return descendant;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Finds the parent ContextMenu of a given element.
+        /// </summary>
+        /// <param name="element">The element to search from.</param>
+        /// <returns>The parent ContextMenu, or null if not found.</returns>
+        private static ContextMenu FindParentContextMenu(DependencyObject element)
+        {
+            var parent = VisualTreeHelper.GetParent(element);
+            while (parent != null)
+            {
+                if (parent is ContextMenu contextMenu)
+                    return contextMenu;
+                parent = VisualTreeHelper.GetParent(parent);
+            }
+            return null;
+        }
+
 
         /// <summary>
         /// Retrieves a property value from an object, handling both DynamicRowData and regular objects.

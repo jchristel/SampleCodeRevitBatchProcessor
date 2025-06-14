@@ -21,7 +21,11 @@ namespace duHastNet.UI.ThreeWaySwitchTest.ViewModels
             {
                 new AvailableColumnDefinition("Id", "ID", typeof(int), "Identity"),
                 new AvailableColumnDefinition("Name", "Name", typeof(string), "Personal"),
+                new AvailableColumnDefinition("Sure Name", "SureName", typeof(string), "Personal"),
+                new AvailableColumnDefinition("Middle Name", "MiddleName", typeof(string), "Personal"),
                 new AvailableColumnDefinition("Age", "Age", typeof(int), "Personal"),
+                new AvailableColumnDefinition("Linked In", "LinkedIn", typeof(string), "Contact"),
+                new AvailableColumnDefinition("Instagram", "Instagram", typeof(string), "Contact"),
                 new AvailableColumnDefinition("Email", "Email", typeof(string), "Contact"),
                 new AvailableColumnDefinition("IsActive", "Active", typeof(bool), "Status"),
                 new AvailableColumnDefinition("PhoneNumber", "Phone", typeof(string), "Contact"),
@@ -53,8 +57,12 @@ namespace duHastNet.UI.ThreeWaySwitchTest.ViewModels
             var newRow = new DynamicRowData();
             newRow["Id"] = Data.Count + 1;
             newRow["Name"] = "New Person";
+            newRow["SureName"] = "sure";
+            newRow["MiddleName"] = "middle";
             newRow["Age"] = 0;
             newRow["Email"] = "new@example.com";
+            newRow["Instagram"] = "insta";
+            newRow["LinkedIn"] = "insta";
             newRow["IsActive"] = false;
             return newRow;
         }
@@ -67,10 +75,18 @@ namespace duHastNet.UI.ThreeWaySwitchTest.ViewModels
                     return Data.Count + 1;
                 case "Name":
                     return "New Person";
+                case "SureName":
+                    return "sure name";
+                case "MiddleName":
+                    return "middle";
                 case "Age":
                     return 25;
                 case "Email":
                     return "person@example.com";
+                case "LinkedIn":
+                    return "linked In";
+                case "Instagram":
+                    return "Instagram";
                 case "IsActive":
                     return false;
                 case "PhoneNumber":

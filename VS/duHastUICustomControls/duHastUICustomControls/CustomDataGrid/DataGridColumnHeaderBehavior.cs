@@ -458,7 +458,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
         #region Filtering
 
         /// <summary>
-        /// Checks if a column has an active filter applied (text, boolean, or numeric).
+        /// Checks if a column has an active filter applied (text, boolean, numeric, or DateTime).
         /// </summary>
         /// <param name="dataGrid">The DataGrid to check for filters.</param>
         /// <param name="propertyName">The property name of the column to check.</param>
@@ -479,13 +479,18 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             var numericOperationKey = $"NumericFilter_Operation_{propertyName}";
             var hasNumericFilter = dataGrid.Resources.Contains(numericOperationKey);
 
-            return hasTextFilter || hasBooleanFilter || hasNumericFilter;
+            // Check for DateTime filter
+            var dateTimeOperationKey = $"DateTimeFilter_Operation_{propertyName}";
+            var hasDateTimeFilter = dataGrid.Resources.Contains(dateTimeOperationKey);
+
+            return hasTextFilter || hasBooleanFilter || hasNumericFilter || hasDateTimeFilter;
         }
 
 
         /// <summary>
         /// Populates the filter submenu with options appropriate for the column's data type.
-        /// Boolean columns get checkbox options, numeric columns get numeric operations, other columns get text input options.
+        /// Boolean columns get checkbox options, numeric columns get numeric operations, 
+        /// DateTime columns get date operations, other columns get text input options.
         /// </summary>
         /// <param name="filterSubmenu">The filter submenu to populate.</param>
         /// <param name="dataGrid">The DataGrid containing the column.</param>
@@ -499,6 +504,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             var columnType = GetColumnDataType(dataGrid, propertyName);
             var isBooleanColumn = columnType == typeof(bool) || columnType == typeof(bool?);
             var isNumericColumn = IsNumericType(columnType);
+            var isDateTimeColumn = IsDateTimeType(columnType);
 
             // Clear filter option
             var clearFilterItem = new MenuItem { Header = "Clear Filter" };
@@ -520,6 +526,13 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 var filterByNumericItem = new MenuItem { Header = "Filter by Number..." };
                 filterByNumericItem.Click += (s, e) => ShowFilterNumericDialog(dataGrid, propertyName);
                 filterSubmenu.Items.Add(filterByNumericItem);
+            }
+            else if (isDateTimeColumn)
+            {
+                // DateTime-specific filter options
+                var filterByDateTimeItem = new MenuItem { Header = "Filter by Date..." };
+                filterByDateTimeItem.Click += (s, e) => ShowFilterDateTimeDialog(dataGrid, propertyName);
+                filterSubmenu.Items.Add(filterByDateTimeItem);
             }
             else
             {
@@ -545,7 +558,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
 
 
         /// <summary>
-        /// Determines if a Type represents a numeric data type supported by the dynamic data grid.
+        /// Determines if a Type represents a data type supported by the dynamic data grid.
         /// Based on the supported types: String, Int32, Double, Boolean, DateTime
         /// </summary>
         /// <param name="type">The Type to check.</param>
@@ -560,13 +573,31 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 type = Nullable.GetUnderlyingType(type);
             }
 
-            // Only Int32 and Double are numeric in available column Definitions supported types
+            // Only Int32 and Double are numeric in your supported types
             return type == typeof(int) || type == typeof(double);
         }
 
+        /// <summary>
+        /// Determines if a Type represents a DateTime data type.
+        /// </summary>
+        /// <param name="type">The Type to check.</param>
+        /// <returns>True if the type is DateTime, false otherwise.</returns>
+        private static bool IsDateTimeType(Type type)
+        {
+            if (type == null) return false;
 
+            // Handle nullable types
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                type = Nullable.GetUnderlyingType(type);
+            }
+
+            return type == typeof(DateTime);
+        }
+
+        /// <summary>
         /// Removes all filter information for a specific column and refreshes the display.
-        /// Handles text, boolean, and numeric filters.
+        /// Handles text, boolean, numeric, and DateTime filters.
         /// </summary>
         /// <param name="dataGrid">The DataGrid to clear the filter from.</param>
         /// <param name="propertyName">The property name of the column to clear the filter for.</param>
@@ -585,14 +616,24 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             dataGrid.Resources.Remove(showFalseKey);
 
             // Clear numeric filters
-            var operationKey = $"NumericFilter_Operation_{propertyName}";
-            var valueKey = $"NumericFilter_Value_{propertyName}";
-            var fromValueKey = $"NumericFilter_FromValue_{propertyName}";
-            var toValueKey = $"NumericFilter_ToValue_{propertyName}";
-            dataGrid.Resources.Remove(operationKey);
-            dataGrid.Resources.Remove(valueKey);
-            dataGrid.Resources.Remove(fromValueKey);
-            dataGrid.Resources.Remove(toValueKey);
+            var numericOperationKey = $"NumericFilter_Operation_{propertyName}";
+            var numericValueKey = $"NumericFilter_Value_{propertyName}";
+            var numericFromValueKey = $"NumericFilter_FromValue_{propertyName}";
+            var numericToValueKey = $"NumericFilter_ToValue_{propertyName}";
+            dataGrid.Resources.Remove(numericOperationKey);
+            dataGrid.Resources.Remove(numericValueKey);
+            dataGrid.Resources.Remove(numericFromValueKey);
+            dataGrid.Resources.Remove(numericToValueKey);
+
+            // Clear DateTime filters
+            var dateTimeOperationKey = $"DateTimeFilter_Operation_{propertyName}";
+            var dateTimeDateKey = $"DateTimeFilter_Date_{propertyName}";
+            var dateTimeFromDateKey = $"DateTimeFilter_FromDate_{propertyName}";
+            var dateTimeToDateKey = $"DateTimeFilter_ToDate_{propertyName}";
+            dataGrid.Resources.Remove(dateTimeOperationKey);
+            dataGrid.Resources.Remove(dateTimeDateKey);
+            dataGrid.Resources.Remove(dateTimeFromDateKey);
+            dataGrid.Resources.Remove(dateTimeToDateKey);
 
             // Update filter icon for this column
             var column = dataGrid.Columns.FirstOrDefault(c => GetColumnPropertyName(c) == propertyName);
@@ -603,7 +644,8 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
 
             // Apply remaining filters
             var hasAnyFilters = dataGrid.Resources.Keys.OfType<string>()
-                .Any(k => k.StartsWith("TextFilter_") || k.StartsWith("BooleanFilter_") || k.StartsWith("NumericFilter_"));
+                .Any(k => k.StartsWith("TextFilter_") || k.StartsWith("BooleanFilter_") ||
+                          k.StartsWith("NumericFilter_") || k.StartsWith("DateTimeFilter_"));
 
             if (!hasAnyFilters)
             {
@@ -838,6 +880,13 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 return numericFilter;
             }
 
+            // Check for DateTime filter
+            var dateTimeFilter = GetCurrentDateTimeFilterText(dataGrid, propertyName);
+            if (!string.IsNullOrEmpty(dateTimeFilter))
+            {
+                return dateTimeFilter;
+            }
+
             // Check for boolean filter
             var (showTrue, showFalse) = GetCurrentBooleanFilter(dataGrid, propertyName);
             if (showTrue.HasValue || showFalse.HasValue)
@@ -855,8 +904,9 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             return null;
         }
 
+        /// <summary>
         /// Applies all active column filters to the DataGrid's collection view.
-        /// Handles text, boolean, and numeric filters.
+        /// Handles text, boolean, numeric, and DateTime filters.
         /// </summary>
         /// <param name="dataGrid">The DataGrid to apply filters to.</param>
         private static void ApplyAllColumnFilters(DataGrid dataGrid)
@@ -934,6 +984,17 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 {
                     var propertyName = resourceKey.Substring("NumericFilter_Operation_".Length);
                     if (!PassesNumericFilter(item, dataGrid, propertyName))
+                    {
+                        return false;
+                    }
+                }
+
+                // Check all active DateTime filters
+                foreach (var resourceKey in dataGrid.Resources.Keys.OfType<string>()
+                    .Where(k => k.StartsWith("DateTimeFilter_Operation_")))
+                {
+                    var propertyName = resourceKey.Substring("DateTimeFilter_Operation_".Length);
+                    if (!PassesDateTimeFilter(item, dataGrid, propertyName))
                     {
                         return false;
                     }
@@ -1220,6 +1281,220 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                         return $">= {fromValue.Value}";
                     else if (toValue.HasValue)
                         return $"<= {toValue.Value}";
+                    return null;
+                default:
+                    return null;
+            }
+        }
+
+        #endregion
+
+        #region DateTime Filtering Support
+
+        /// <summary>
+        /// Displays a dialog for filtering DateTime columns with various comparison operations.
+        /// </summary>
+        /// <param name="dataGrid">The DataGrid containing the column to filter.</param>
+        /// <param name="propertyName">The property name of the DateTime column to filter.</param>
+        private static void ShowFilterDateTimeDialog(DataGrid dataGrid, string propertyName)
+        {
+            // Get current DateTime filter state
+            var (operation, date, fromDate, toDate) = GetCurrentDateTimeFilter(dataGrid, propertyName);
+
+            var dialog = new FilterDateTimeDialog(propertyName, operation, date, fromDate, toDate)
+            {
+                Owner = Window.GetWindow(dataGrid)
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                if (dialog.FilterCleared)
+                {
+                    ClearColumnFilter(dataGrid, propertyName);
+                }
+                else
+                {
+                    ApplyDateTimeFilter(dataGrid, propertyName, dialog.Operation, dialog.Date, dialog.FromDate, dialog.ToDate);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the current DateTime filter state for a column.
+        /// </summary>
+        /// <param name="dataGrid">The DataGrid to check.</param>
+        /// <param name="propertyName">The property name of the column.</param>
+        /// <returns>A tuple containing the current filter operation and values.</returns>
+        private static (DateTimeFilterOperation? operation, DateTime? date, DateTime? fromDate, DateTime? toDate) GetCurrentDateTimeFilter(DataGrid dataGrid, string propertyName)
+        {
+            var operationKey = $"DateTimeFilter_Operation_{propertyName}";
+            var dateKey = $"DateTimeFilter_Date_{propertyName}";
+            var fromDateKey = $"DateTimeFilter_FromDate_{propertyName}";
+            var toDateKey = $"DateTimeFilter_ToDate_{propertyName}";
+
+            DateTimeFilterOperation? operation = null;
+            if (dataGrid.Resources.Contains(operationKey))
+            {
+                if (Enum.TryParse<DateTimeFilterOperation>((string)dataGrid.Resources[operationKey], out var op))
+                {
+                    operation = op;
+                }
+            }
+
+            DateTime? date = dataGrid.Resources.Contains(dateKey) ? (DateTime?)dataGrid.Resources[dateKey] : null;
+            DateTime? fromDate = dataGrid.Resources.Contains(fromDateKey) ? (DateTime?)dataGrid.Resources[fromDateKey] : null;
+            DateTime? toDate = dataGrid.Resources.Contains(toDateKey) ? (DateTime?)dataGrid.Resources[toDateKey] : null;
+
+            return (operation, date, fromDate, toDate);
+        }
+
+        /// <summary>
+        /// Applies a DateTime filter to a column and refreshes the DataGrid.
+        /// </summary>
+        /// <param name="dataGrid">The DataGrid to apply the filter to.</param>
+        /// <param name="propertyName">The property name of the DateTime column.</param>
+        /// <param name="operation">The comparison operation to use.</param>
+        /// <param name="date">The date for single-date operations.</param>
+        /// <param name="fromDate">The from date for range operations.</param>
+        /// <param name="toDate">The to date for range operations.</param>
+        private static void ApplyDateTimeFilter(DataGrid dataGrid, string propertyName, DateTimeFilterOperation operation, DateTime? date, DateTime? fromDate, DateTime? toDate)
+        {
+            SetColumnDateTimeFilter(dataGrid, propertyName, operation, date, fromDate, toDate);
+            ApplyAllColumnFilters(dataGrid);
+
+            // Update filter icon for this column
+            var column = dataGrid.Columns.FirstOrDefault(c => GetColumnPropertyName(c) == propertyName);
+            if (column != null)
+            {
+                UpdateFilterIcon(dataGrid, column, propertyName);
+            }
+        }
+
+        /// <summary>
+        /// Stores DateTime filter information for a column in the DataGrid's resource collection.
+        /// </summary>
+        /// <param name="dataGrid">The DataGrid to store the filter in.</param>
+        /// <param name="propertyName">The property name of the column.</param>
+        /// <param name="operation">The comparison operation.</param>
+        /// <param name="date">The date for single-date operations.</param>
+        /// <param name="fromDate">The from date for range operations.</param>
+        /// <param name="toDate">The to date for range operations.</param>
+        private static void SetColumnDateTimeFilter(DataGrid dataGrid, string propertyName, DateTimeFilterOperation operation, DateTime? date, DateTime? fromDate, DateTime? toDate)
+        {
+            var operationKey = $"DateTimeFilter_Operation_{propertyName}";
+            var dateKey = $"DateTimeFilter_Date_{propertyName}";
+            var fromDateKey = $"DateTimeFilter_FromDate_{propertyName}";
+            var toDateKey = $"DateTimeFilter_ToDate_{propertyName}";
+
+            // Remove existing DateTime filters
+            dataGrid.Resources.Remove(operationKey);
+            dataGrid.Resources.Remove(dateKey);
+            dataGrid.Resources.Remove(fromDateKey);
+            dataGrid.Resources.Remove(toDateKey);
+
+            // Add new filter
+            dataGrid.Resources[operationKey] = operation.ToString();
+
+            if (operation == DateTimeFilterOperation.Between)
+            {
+                if (fromDate.HasValue)
+                    dataGrid.Resources[fromDateKey] = fromDate.Value;
+                if (toDate.HasValue)
+                    dataGrid.Resources[toDateKey] = toDate.Value;
+            }
+            else if (date.HasValue)
+            {
+                dataGrid.Resources[dateKey] = date.Value;
+            }
+        }
+
+        /// <summary>
+        /// Tests whether an item passes a DateTime filter.
+        /// </summary>
+        /// <param name="item">The item to test.</param>
+        /// <param name="dataGrid">The DataGrid containing filter settings.</param>
+        /// <param name="propertyName">The property name of the DateTime column.</param>
+        /// <returns>True if the item passes the filter, false otherwise.</returns>
+        private static bool PassesDateTimeFilter(object item, DataGrid dataGrid, string propertyName)
+        {
+            var (operation, date, fromDate, toDate) = GetCurrentDateTimeFilter(dataGrid, propertyName);
+
+            // If no DateTime filter is set, show all
+            if (!operation.HasValue)
+                return true;
+
+            var itemValue = GetItemValue(item, propertyName);
+            if (!IsDateTimeValue(itemValue, out DateTime dateTimeValue))
+                return false; // Non-DateTime values don't pass DateTime filters
+
+            switch (operation.Value)
+            {
+                case DateTimeFilterOperation.On:
+                    return date.HasValue && dateTimeValue.Date == date.Value.Date;
+                case DateTimeFilterOperation.Before:
+                    return date.HasValue && dateTimeValue.Date < date.Value.Date;
+                case DateTimeFilterOperation.After:
+                    return date.HasValue && dateTimeValue.Date > date.Value.Date;
+                case DateTimeFilterOperation.Between:
+                    bool withinFrom = !fromDate.HasValue || dateTimeValue.Date >= fromDate.Value.Date;
+                    bool withinTo = !toDate.HasValue || dateTimeValue.Date <= toDate.Value.Date;
+                    return withinFrom && withinTo;
+                default:
+                    return true;
+            }
+        }
+
+        /// <summary>
+        /// Checks if a value is a DateTime and converts it.
+        /// </summary>
+        /// <param name="value">The value to check.</param>
+        /// <param name="dateTimeValue">The converted DateTime value.</param>
+        /// <returns>True if the value is a DateTime, false otherwise.</returns>
+        private static bool IsDateTimeValue(object value, out DateTime dateTimeValue)
+        {
+            dateTimeValue = default;
+
+            if (value == null)
+                return false;
+
+            if (value is DateTime dt)
+            {
+                dateTimeValue = dt;
+                return true;
+            }
+
+            // Try to parse string representation
+            return DateTime.TryParse(value.ToString(), out dateTimeValue);
+        }
+
+        /// <summary>
+        /// Gets a description of the current DateTime filter for display.
+        /// </summary>
+        /// <param name="dataGrid">The DataGrid to get the filter from.</param>
+        /// <param name="propertyName">The property name of the column.</param>
+        /// <returns>A human-readable description of the current filter, or null if no filter is applied.</returns>
+        private static string GetCurrentDateTimeFilterText(DataGrid dataGrid, string propertyName)
+        {
+            var (operation, date, fromDate, toDate) = GetCurrentDateTimeFilter(dataGrid, propertyName);
+
+            if (!operation.HasValue)
+                return null;
+
+            switch (operation.Value)
+            {
+                case DateTimeFilterOperation.On:
+                    return date.HasValue ? $"On {date.Value:yyyy-MM-dd}" : null;
+                case DateTimeFilterOperation.Before:
+                    return date.HasValue ? $"Before {date.Value:yyyy-MM-dd}" : null;
+                case DateTimeFilterOperation.After:
+                    return date.HasValue ? $"After {date.Value:yyyy-MM-dd}" : null;
+                case DateTimeFilterOperation.Between:
+                    if (fromDate.HasValue && toDate.HasValue)
+                        return $"{fromDate.Value:yyyy-MM-dd} to {toDate.Value:yyyy-MM-dd}";
+                    else if (fromDate.HasValue)
+                        return $"From {fromDate.Value:yyyy-MM-dd}";
+                    else if (toDate.HasValue)
+                        return $"To {toDate.Value:yyyy-MM-dd}";
                     return null;
                 default:
                     return null;

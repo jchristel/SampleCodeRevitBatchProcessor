@@ -458,7 +458,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
         #region Filtering
 
         /// <summary>
-        /// Checks if a column has an active filter applied (text or boolean).
+        /// Checks if a column has an active filter applied (text, boolean, or numeric).
         /// </summary>
         /// <param name="dataGrid">The DataGrid to check for filters.</param>
         /// <param name="propertyName">The property name of the column to check.</param>
@@ -475,13 +475,17 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             var showFalseKey = $"BooleanFilter_ShowFalse_{propertyName}";
             var hasBooleanFilter = dataGrid.Resources.Contains(showTrueKey) || dataGrid.Resources.Contains(showFalseKey);
 
-            return hasTextFilter || hasBooleanFilter;
+            // Check for numeric filter
+            var numericOperationKey = $"NumericFilter_Operation_{propertyName}";
+            var hasNumericFilter = dataGrid.Resources.Contains(numericOperationKey);
+
+            return hasTextFilter || hasBooleanFilter || hasNumericFilter;
         }
 
 
         /// <summary>
         /// Populates the filter submenu with options appropriate for the column's data type.
-        /// Boolean columns get checkbox options, other columns get text input options.
+        /// Boolean columns get checkbox options, numeric columns get numeric operations, other columns get text input options.
         /// </summary>
         /// <param name="filterSubmenu">The filter submenu to populate.</param>
         /// <param name="dataGrid">The DataGrid containing the column.</param>
@@ -491,9 +495,10 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             // Clear existing items
             filterSubmenu.Items.Clear();
 
-            // Check if this is a boolean column
+            // Check column data type
             var columnType = GetColumnDataType(dataGrid, propertyName);
             var isBooleanColumn = columnType == typeof(bool) || columnType == typeof(bool?);
+            var isNumericColumn = IsNumericType(columnType);
 
             // Clear filter option
             var clearFilterItem = new MenuItem { Header = "Clear Filter" };
@@ -508,6 +513,13 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 var filterByBooleanItem = new MenuItem { Header = "Filter by Value..." };
                 filterByBooleanItem.Click += (s, e) => ShowFilterBooleanDialog(dataGrid, propertyName);
                 filterSubmenu.Items.Add(filterByBooleanItem);
+            }
+            else if (isNumericColumn)
+            {
+                // Numeric-specific filter options
+                var filterByNumericItem = new MenuItem { Header = "Filter by Number..." };
+                filterByNumericItem.Click += (s, e) => ShowFilterNumericDialog(dataGrid, propertyName);
+                filterSubmenu.Items.Add(filterByNumericItem);
             }
             else
             {
@@ -530,6 +542,86 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 filterSubmenu.Items.Add(currentFilterItem);
             }
         }
+
+
+        /// <summary>
+        /// Determines if a Type represents a numeric data type supported by the dynamic data grid.
+        /// Based on the supported types: String, Int32, Double, Boolean, DateTime
+        /// </summary>
+        /// <param name="type">The Type to check.</param>
+        /// <returns>True if the type is numeric (Int32 or Double), false otherwise.</returns>
+        private static bool IsNumericType(Type type)
+        {
+            if (type == null) return false;
+
+            // Handle nullable types
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                type = Nullable.GetUnderlyingType(type);
+            }
+
+            // Only Int32 and Double are numeric in available column Definitions supported types
+            return type == typeof(int) || type == typeof(double);
+        }
+
+
+        /// Removes all filter information for a specific column and refreshes the display.
+        /// Handles text, boolean, and numeric filters.
+        /// </summary>
+        /// <param name="dataGrid">The DataGrid to clear the filter from.</param>
+        /// <param name="propertyName">The property name of the column to clear the filter for.</param>
+        private static void ClearColumnFilter(DataGrid dataGrid, string propertyName)
+        {
+            // Clear text filters
+            var textFilterKey = $"TextFilter_{propertyName}";
+            var logicKey = $"TextFilterLogic_{propertyName}";
+            dataGrid.Resources.Remove(textFilterKey);
+            dataGrid.Resources.Remove(logicKey);
+
+            // Clear boolean filters
+            var showTrueKey = $"BooleanFilter_ShowTrue_{propertyName}";
+            var showFalseKey = $"BooleanFilter_ShowFalse_{propertyName}";
+            dataGrid.Resources.Remove(showTrueKey);
+            dataGrid.Resources.Remove(showFalseKey);
+
+            // Clear numeric filters
+            var operationKey = $"NumericFilter_Operation_{propertyName}";
+            var valueKey = $"NumericFilter_Value_{propertyName}";
+            var fromValueKey = $"NumericFilter_FromValue_{propertyName}";
+            var toValueKey = $"NumericFilter_ToValue_{propertyName}";
+            dataGrid.Resources.Remove(operationKey);
+            dataGrid.Resources.Remove(valueKey);
+            dataGrid.Resources.Remove(fromValueKey);
+            dataGrid.Resources.Remove(toValueKey);
+
+            // Update filter icon for this column
+            var column = dataGrid.Columns.FirstOrDefault(c => GetColumnPropertyName(c) == propertyName);
+            if (column != null)
+            {
+                UpdateFilterIcon(dataGrid, column, propertyName);
+            }
+
+            // Apply remaining filters
+            var hasAnyFilters = dataGrid.Resources.Keys.OfType<string>()
+                .Any(k => k.StartsWith("TextFilter_") || k.StartsWith("BooleanFilter_") || k.StartsWith("NumericFilter_"));
+
+            if (!hasAnyFilters)
+            {
+                var collectionView = System.Windows.Data.CollectionViewSource.GetDefaultView(dataGrid.ItemsSource);
+                if (collectionView != null)
+                {
+                    collectionView.Filter = null;
+                    collectionView.Refresh();
+                }
+            }
+            else
+            {
+                ApplyAllColumnFilters(dataGrid);
+            }
+        }
+
+
+        #region boolean filter 
 
         /// <summary>
         /// Displays a dialog for filtering boolean columns with checkbox options.
@@ -626,6 +718,38 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
 
 
         /// <summary>
+        /// Tests whether an item passes a boolean filter.
+        /// </summary>
+        /// <param name="item">The item to test.</param>
+        /// <param name="dataGrid">The DataGrid containing filter settings.</param>
+        /// <param name="propertyName">The property name of the boolean column.</param>
+        /// <returns>True if the item passes the filter, false otherwise.</returns>
+        private static bool PassesBooleanFilter(object item, DataGrid dataGrid, string propertyName)
+        {
+            var (showTrue, showFalse) = GetCurrentBooleanFilter(dataGrid, propertyName);
+
+            // If no boolean filter is set, show all
+            if (!showTrue.HasValue && !showFalse.HasValue)
+                return true;
+
+            var itemValue = GetItemValue(item, propertyName);
+            if (itemValue is bool boolValue)
+            {
+                if (boolValue && showTrue == true) return true;
+                if (!boolValue && showFalse == true) return true;
+                return false;
+            }
+
+            // Handle nullable bools or non-bool values
+            return true;
+        }
+
+
+        #endregion boolean filter
+
+        #region text filter
+
+        /// <summary>
         /// Displays a dialog for entering filter text and logic (AND/OR) for a specific column.
         /// </summary>
         /// <param name="dataGrid">The DataGrid containing the column to filter.</param>
@@ -693,20 +817,46 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
         }
 
         /// <summary>
-        /// Retrieves the current filter text for a specific column.
+        /// Retrieves the current filter text for a specific column, supporting all filter types.
         /// </summary>
         /// <param name="dataGrid">The DataGrid to get the filter from.</param>
         /// <param name="propertyName">The property name of the column.</param>
         /// <returns>The current filter text, or null if no filter is applied.</returns>
         private static string GetCurrentFilterText(DataGrid dataGrid, string propertyName)
         {
-            var filterKey = $"TextFilter_{propertyName}";
-            return dataGrid.Resources.Contains(filterKey) ? (string)dataGrid.Resources[filterKey] : null;
+            // Check for text filter first
+            var textFilterKey = $"TextFilter_{propertyName}";
+            if (dataGrid.Resources.Contains(textFilterKey))
+            {
+                return (string)dataGrid.Resources[textFilterKey];
+            }
+
+            // Check for numeric filter
+            var numericFilter = GetCurrentNumericFilterText(dataGrid, propertyName);
+            if (!string.IsNullOrEmpty(numericFilter))
+            {
+                return numericFilter;
+            }
+
+            // Check for boolean filter
+            var (showTrue, showFalse) = GetCurrentBooleanFilter(dataGrid, propertyName);
+            if (showTrue.HasValue || showFalse.HasValue)
+            {
+                if (showTrue == true && showFalse == true)
+                    return "Show All";
+                else if (showTrue == true)
+                    return "Show True";
+                else if (showFalse == true)
+                    return "Show False";
+                else
+                    return "Show None";
+            }
+
+            return null;
         }
 
-        /// <summary>
-        /// Applies all active column filters to the DataGrid's collection view, hiding rows that don't match any filter.
-        /// Handles both text and boolean filters.
+        /// Applies all active column filters to the DataGrid's collection view.
+        /// Handles text, boolean, and numeric filters.
         /// </summary>
         /// <param name="dataGrid">The DataGrid to apply filters to.</param>
         private static void ApplyAllColumnFilters(DataGrid dataGrid)
@@ -721,13 +871,11 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             {
                 dataGrid.CommitEdit();
 
-                // Also commit at the row level if needed
                 if (dataGrid.CurrentItem != null)
                 {
                     dataGrid.CommitEdit(DataGridEditingUnit.Row, true);
                 }
 
-                // Cast to IEditableCollectionView to access edit methods
                 if (collectionView is IEditableCollectionView editableView)
                 {
                     if (editableView.IsEditingItem)
@@ -744,7 +892,6 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error committing edits: {ex.Message}");
-                // Continue with filtering even if commit fails
             }
 
             collectionView.Filter = item =>
@@ -781,6 +928,17 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                     }
                 }
 
+                // Check all active numeric filters
+                foreach (var resourceKey in dataGrid.Resources.Keys.OfType<string>()
+                    .Where(k => k.StartsWith("NumericFilter_Operation_")))
+                {
+                    var propertyName = resourceKey.Substring("NumericFilter_Operation_".Length);
+                    if (!PassesNumericFilter(item, dataGrid, propertyName))
+                    {
+                        return false;
+                    }
+                }
+
                 return true;
             };
 
@@ -796,81 +954,6 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                     System.Diagnostics.Debug.WriteLine($"Error refreshing collection view: {ex.Message}");
                 }
             }), System.Windows.Threading.DispatcherPriority.Background);
-        }
-
-
-
-        /// <summary>
-        /// Tests whether an item passes a boolean filter.
-        /// </summary>
-        /// <param name="item">The item to test.</param>
-        /// <param name="dataGrid">The DataGrid containing filter settings.</param>
-        /// <param name="propertyName">The property name of the boolean column.</param>
-        /// <returns>True if the item passes the filter, false otherwise.</returns>
-        private static bool PassesBooleanFilter(object item, DataGrid dataGrid, string propertyName)
-        {
-            var (showTrue, showFalse) = GetCurrentBooleanFilter(dataGrid, propertyName);
-
-            // If no boolean filter is set, show all
-            if (!showTrue.HasValue && !showFalse.HasValue)
-                return true;
-
-            var itemValue = GetItemValue(item, propertyName);
-            if (itemValue is bool boolValue)
-            {
-                if (boolValue && showTrue == true) return true;
-                if (!boolValue && showFalse == true) return true;
-                return false;
-            }
-
-            // Handle nullable bools or non-bool values
-            return true;
-        }
-
-        /// <summary>
-        /// Removes all filter information for a specific column and refreshes the display.
-        /// Handles both text and boolean filters.
-        /// </summary>
-        /// <param name="dataGrid">The DataGrid to clear the filter from.</param>
-        /// <param name="propertyName">The property name of the column to clear the filter for.</param>
-        private static void ClearColumnFilter(DataGrid dataGrid, string propertyName)
-        {
-            // Clear text filters
-            var textFilterKey = $"TextFilter_{propertyName}";
-            var logicKey = $"TextFilterLogic_{propertyName}";
-            dataGrid.Resources.Remove(textFilterKey);
-            dataGrid.Resources.Remove(logicKey);
-
-            // Clear boolean filters
-            var showTrueKey = $"BooleanFilter_ShowTrue_{propertyName}";
-            var showFalseKey = $"BooleanFilter_ShowFalse_{propertyName}";
-            dataGrid.Resources.Remove(showTrueKey);
-            dataGrid.Resources.Remove(showFalseKey);
-
-            // Update filter icon for this column
-            var column = dataGrid.Columns.FirstOrDefault(c => GetColumnPropertyName(c) == propertyName);
-            if (column != null)
-            {
-                UpdateFilterIcon(dataGrid, column, propertyName);
-            }
-
-            // Apply remaining filters
-            var hasAnyFilters = dataGrid.Resources.Keys.OfType<string>()
-                .Any(k => k.StartsWith("TextFilter_") || k.StartsWith("BooleanFilter_"));
-
-            if (!hasAnyFilters)
-            {
-                var collectionView = System.Windows.Data.CollectionViewSource.GetDefaultView(dataGrid.ItemsSource);
-                if (collectionView != null)
-                {
-                    collectionView.Filter = null;
-                    collectionView.Refresh();
-                }
-            }
-            else
-            {
-                ApplyAllColumnFilters(dataGrid);
-            }
         }
 
         /// <summary>
@@ -900,6 +983,250 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                     itemValue.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0);
             }
         }
+        #endregion text filter
+
+        #region Numeric Filtering Support
+
+        /// <summary>
+        /// Displays a dialog for filtering numeric columns with various comparison operations.
+        /// </summary>
+        /// <param name="dataGrid">The DataGrid containing the column to filter.</param>
+        /// <param name="propertyName">The property name of the numeric column to filter.</param>
+        private static void ShowFilterNumericDialog(DataGrid dataGrid, string propertyName)
+        {
+            // Get current numeric filter state
+            var (operation, value, fromValue, toValue) = GetCurrentNumericFilter(dataGrid, propertyName);
+
+            var dialog = new FilterNumericDialog(propertyName, operation, value, fromValue, toValue)
+            {
+                Owner = Window.GetWindow(dataGrid)
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                if (dialog.FilterCleared)
+                {
+                    ClearColumnFilter(dataGrid, propertyName);
+                }
+                else
+                {
+                    ApplyNumericFilter(dataGrid, propertyName, dialog.Operation, dialog.Value, dialog.FromValue, dialog.ToValue);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the current numeric filter state for a column.
+        /// </summary>
+        /// <param name="dataGrid">The DataGrid to check.</param>
+        /// <param name="propertyName">The property name of the column.</param>
+        /// <returns>A tuple containing the current filter operation and values.</returns>
+        private static (NumericFilterOperation? operation, double? value, double? fromValue, double? toValue) GetCurrentNumericFilter(DataGrid dataGrid, string propertyName)
+        {
+            var operationKey = $"NumericFilter_Operation_{propertyName}";
+            var valueKey = $"NumericFilter_Value_{propertyName}";
+            var fromValueKey = $"NumericFilter_FromValue_{propertyName}";
+            var toValueKey = $"NumericFilter_ToValue_{propertyName}";
+
+            NumericFilterOperation? operation = null;
+            if (dataGrid.Resources.Contains(operationKey))
+            {
+                if (Enum.TryParse<NumericFilterOperation>((string)dataGrid.Resources[operationKey], out var op))
+                {
+                    operation = op;
+                }
+            }
+
+            double? value = dataGrid.Resources.Contains(valueKey) ? (double?)dataGrid.Resources[valueKey] : null;
+            double? fromValue = dataGrid.Resources.Contains(fromValueKey) ? (double?)dataGrid.Resources[fromValueKey] : null;
+            double? toValue = dataGrid.Resources.Contains(toValueKey) ? (double?)dataGrid.Resources[toValueKey] : null;
+
+            return (operation, value, fromValue, toValue);
+        }
+
+        /// <summary>
+        /// Applies a numeric filter to a column and refreshes the DataGrid.
+        /// </summary>
+        /// <param name="dataGrid">The DataGrid to apply the filter to.</param>
+        /// <param name="propertyName">The property name of the numeric column.</param>
+        /// <param name="operation">The comparison operation to use.</param>
+        /// <param name="value">The value for single-value operations.</param>
+        /// <param name="fromValue">The from value for range operations.</param>
+        /// <param name="toValue">The to value for range operations.</param>
+        private static void ApplyNumericFilter(DataGrid dataGrid, string propertyName, NumericFilterOperation operation, double? value, double? fromValue, double? toValue)
+        {
+            SetColumnNumericFilter(dataGrid, propertyName, operation, value, fromValue, toValue);
+            ApplyAllColumnFilters(dataGrid);
+
+            // Update filter icon for this column
+            var column = dataGrid.Columns.FirstOrDefault(c => GetColumnPropertyName(c) == propertyName);
+            if (column != null)
+            {
+                UpdateFilterIcon(dataGrid, column, propertyName);
+            }
+        }
+
+        /// <summary>
+        /// Stores numeric filter information for a column in the DataGrid's resource collection.
+        /// </summary>
+        /// <param name="dataGrid">The DataGrid to store the filter in.</param>
+        /// <param name="propertyName">The property name of the column.</param>
+        /// <param name="operation">The comparison operation.</param>
+        /// <param name="value">The value for single-value operations.</param>
+        /// <param name="fromValue">The from value for range operations.</param>
+        /// <param name="toValue">The to value for range operations.</param>
+        private static void SetColumnNumericFilter(DataGrid dataGrid, string propertyName, NumericFilterOperation operation, double? value, double? fromValue, double? toValue)
+        {
+            var operationKey = $"NumericFilter_Operation_{propertyName}";
+            var valueKey = $"NumericFilter_Value_{propertyName}";
+            var fromValueKey = $"NumericFilter_FromValue_{propertyName}";
+            var toValueKey = $"NumericFilter_ToValue_{propertyName}";
+
+            // Remove existing numeric filters
+            dataGrid.Resources.Remove(operationKey);
+            dataGrid.Resources.Remove(valueKey);
+            dataGrid.Resources.Remove(fromValueKey);
+            dataGrid.Resources.Remove(toValueKey);
+
+            // Add new filter
+            dataGrid.Resources[operationKey] = operation.ToString();
+
+            if (operation == NumericFilterOperation.Range)
+            {
+                if (fromValue.HasValue)
+                    dataGrid.Resources[fromValueKey] = fromValue.Value;
+                if (toValue.HasValue)
+                    dataGrid.Resources[toValueKey] = toValue.Value;
+            }
+            else if (value.HasValue)
+            {
+                dataGrid.Resources[valueKey] = value.Value;
+            }
+        }
+
+        /// <summary>
+        /// Tests whether an item passes a numeric filter.
+        /// </summary>
+        /// <param name="item">The item to test.</param>
+        /// <param name="dataGrid">The DataGrid containing filter settings.</param>
+        /// <param name="propertyName">The property name of the numeric column.</param>
+        /// <returns>True if the item passes the filter, false otherwise.</returns>
+        private static bool PassesNumericFilter(object item, DataGrid dataGrid, string propertyName)
+        {
+            var (operation, value, fromValue, toValue) = GetCurrentNumericFilter(dataGrid, propertyName);
+
+            // If no numeric filter is set, show all
+            if (!operation.HasValue)
+                return true;
+
+            var itemValue = GetItemValue(item, propertyName);
+            if (!IsNumericValue(itemValue, out double numericValue))
+                return false; // Non-numeric values don't pass numeric filters
+
+            switch (operation.Value)
+            {
+                case NumericFilterOperation.Equal:
+                    return value.HasValue && Math.Abs(numericValue - value.Value) < double.Epsilon;
+                case NumericFilterOperation.GreaterThan:
+                    return value.HasValue && numericValue > value.Value;
+                case NumericFilterOperation.GreaterThanOrEqual:
+                    return value.HasValue && numericValue >= value.Value;
+                case NumericFilterOperation.LessThan:
+                    return value.HasValue && numericValue < value.Value;
+                case NumericFilterOperation.LessThanOrEqual:
+                    return value.HasValue && numericValue <= value.Value;
+                case NumericFilterOperation.Range:
+                    bool withinFrom = !fromValue.HasValue || numericValue >= fromValue.Value;
+                    bool withinTo = !toValue.HasValue || numericValue <= toValue.Value;
+                    return withinFrom && withinTo;
+                default:
+                    return true;
+            }
+        }
+
+        /// <summary>
+        /// Checks if a value is numeric and converts it to double.
+        /// </summary>
+        /// <param name="value">The value to check.</param>
+        /// <param name="numericValue">The converted numeric value.</param>
+        /// <returns>True if the value is numeric, false otherwise.</returns>
+        private static bool IsNumericValue(object value, out double numericValue)
+        {
+            numericValue = 0;
+
+            if (value == null)
+                return false;
+
+            // Handle different numeric types
+            if (value is double d)
+            {
+                numericValue = d;
+                return true;
+            }
+            if (value is float f)
+            {
+                numericValue = f;
+                return true;
+            }
+            if (value is decimal dec)
+            {
+                numericValue = (double)dec;
+                return true;
+            }
+            if (value is int i)
+            {
+                numericValue = i;
+                return true;
+            }
+            if (value is long l)
+            {
+                numericValue = l;
+                return true;
+            }
+
+            // Try to parse string representation
+            return double.TryParse(value.ToString(), out numericValue);
+        }
+
+        /// <summary>
+        /// Gets a description of the current numeric filter for display.
+        /// </summary>
+        /// <param name="dataGrid">The DataGrid to get the filter from.</param>
+        /// <param name="propertyName">The property name of the column.</param>
+        /// <returns>A human-readable description of the current filter, or null if no filter is applied.</returns>
+        private static string GetCurrentNumericFilterText(DataGrid dataGrid, string propertyName)
+        {
+            var (operation, value, fromValue, toValue) = GetCurrentNumericFilter(dataGrid, propertyName);
+
+            if (!operation.HasValue)
+                return null;
+
+            switch (operation.Value)
+            {
+                case NumericFilterOperation.Equal:
+                    return value.HasValue ? $"= {value.Value}" : null;
+                case NumericFilterOperation.GreaterThan:
+                    return value.HasValue ? $"> {value.Value}" : null;
+                case NumericFilterOperation.GreaterThanOrEqual:
+                    return value.HasValue ? $">= {value.Value}" : null;
+                case NumericFilterOperation.LessThan:
+                    return value.HasValue ? $"< {value.Value}" : null;
+                case NumericFilterOperation.LessThanOrEqual:
+                    return value.HasValue ? $"<= {value.Value}" : null;
+                case NumericFilterOperation.Range:
+                    if (fromValue.HasValue && toValue.HasValue)
+                        return $"{fromValue.Value} - {toValue.Value}";
+                    else if (fromValue.HasValue)
+                        return $">= {fromValue.Value}";
+                    else if (toValue.HasValue)
+                        return $"<= {toValue.Value}";
+                    return null;
+                default:
+                    return null;
+            }
+        }
+
+        #endregion
 
         #endregion
 

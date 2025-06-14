@@ -75,6 +75,9 @@
     <Compile Include="CustomDataGrid\FilterBooleanDialog.xaml.cs">
       <DependentUpon>FilterBooleanDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomDataGrid\FilterNumericDialog.xaml.cs">
+      <DependentUpon>FilterNumericDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CustomDataGrid\FilterTextDialog.xaml.cs">
       <DependentUpon>FilterTextDialog.xaml</DependentUpon>
     </Compile>
@@ -84,6 +87,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CustomDataGrid\FilterBooleanDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomDataGrid\FilterNumericDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

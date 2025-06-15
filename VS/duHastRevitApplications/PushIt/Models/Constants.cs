@@ -21,28 +21,20 @@
 //
 //
 
+
+using System.Collections.Generic;
+
 namespace duHastNet.PushIt.Models
 {
-    public class CategoryDataModel
+    public class Constants
     {
-        string _name;
-
-        public string Name
+        public static readonly Dictionary<string, string> ColumnCategoriesInfo = new Dictionary<string, string>
         {
-            get =>_name; 
-            set => _name = value;
-        }
+            {ColumnHeaderCategoriesIsEnabled.Replace(" ", ""), ColumnHeaderCategoriesIsEnabled },
+            {ColumnHeaderCategoriesCategoryName.Replace(" ", ""), ColumnHeaderCategoriesCategoryName },
+        };
 
-        private bool _enabled;
-        public bool Enabled
-        {
-            get => _enabled;
-            set => _enabled = value;
-        }
-
-        public CategoryDataModel(string name, bool isEnabled = false)
-        {
-            _name = name;
-        }
+        public const string ColumnHeaderCategoriesIsEnabled = "Is Enabled";
+        public const string ColumnHeaderCategoriesCategoryName = "Category Name";
     }
 }

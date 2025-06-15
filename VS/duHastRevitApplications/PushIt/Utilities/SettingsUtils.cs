@@ -45,7 +45,8 @@ namespace duHastNet.PushIt.Utilities
                     //initialize settings default
                     Models.Settings settingsDefault = new Models.Settings();
                     settingsDefault.DataPath = string.Empty;
-                    settingsDefault.SupportedCategories = new List<string> { "Walls" };
+                    //enable walls by default
+                    settingsDefault.SupportedCategories = new List<Models.CategoryDataModel> { new Models.CategoryDataModel(name:"Walls", isEnabled:true) };
                     return settingsDefault;
                 }
 

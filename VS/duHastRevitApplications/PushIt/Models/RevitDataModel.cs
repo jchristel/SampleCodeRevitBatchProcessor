@@ -36,7 +36,21 @@ namespace duHastNet.PushIt.Models
 
         private Utils.Logging.SimpleLogger _logger;
 
-        public Settings Settings { get => _settings; set => _settings = value; }
+        public Settings Settings 
+        {
+            get => _settings;
+            set
+            {
+                _settings = value;
+
+                // update supported catgeories from settings
+                this.ClearCategories();
+                foreach (var cat in Settings.SupportedCategories)
+                {
+                    AddCategory(cat);
+                }
+            }
+        }
 
         //event handlers for property changed
         public event PropertyChangedEventHandler PropertyChanged;
@@ -140,11 +154,20 @@ namespace duHastNet.PushIt.Models
             _categoriesContainer.ClearCategories();
         }
 
-        public void LoadCategoryData(List<Models.CategoryDataModel> revitCategories)
+        /// <summary>
+        /// Adds categories to the categories container only if they not already exists
+        /// Used to add supported categories to the container. Container may already contain enabled categories
+        /// </summary>
+        /// <param name="revitCategories"></param>
+        public void LoadSupportedCategoryData(List<Models.CategoryDataModel> revitCategories)
         {
             foreach (Models.CategoryDataModel category in revitCategories)
             {
-                AddCategory(category);
+                //only add this category if not already in categories list
+                if (!_categoriesContainer.CategoryExists(category))
+                {
+                    AddCategory(category);
+                }
             }
         }
 

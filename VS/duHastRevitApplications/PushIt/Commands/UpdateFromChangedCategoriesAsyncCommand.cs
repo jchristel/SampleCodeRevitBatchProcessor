@@ -90,7 +90,7 @@ namespace duHastNet.PushIt.Commands
                                 foreach (string categoryName in supportedCategoryNamesFromViewModel)
                                 {
                                     // if a category name is not in the list of supported categories, we need to update
-                                    if (!_revitDataModel.Settings.SupportedCategories.Contains(categoryName))
+                                    if (!_revitDataModel.Settings.SupportedCategories.Exists(x=>x.Name==categoryName))
                                     {
                                         needUpdate = true;
                                         break;
@@ -105,7 +105,10 @@ namespace duHastNet.PushIt.Commands
                             }
 
                             //update the categories in the settings
-                            _revitDataModel.Settings.SupportedCategories = supportedCategoryNamesFromViewModel;
+                            _revitDataModel.Settings.SupportedCategories.Clear();
+                            
+                            
+                            //= supportedCategoryNamesFromViewModel;
 
                             //add new rooms to the data model first
                             UpdateRoomDataModelWithNewRooms actionUpdate = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(_revitDataModel, _roomsSelectionViewModel);

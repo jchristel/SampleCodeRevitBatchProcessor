@@ -33,6 +33,6 @@ namespace duHastNet.PushIt.Models
         public string DataPath { get; set; }
 
         // list of supported Revit categories
-        public List<string> SupportedCategories { get; set; }
+        public List<Models.CategoryDataModel> SupportedCategories { get; set; }
     }
 }

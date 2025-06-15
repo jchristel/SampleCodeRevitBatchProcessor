@@ -161,6 +161,7 @@
     <Compile Include="Main.cs" />
     <Compile Include="Models\CategoryDataModel.cs" />
     <Compile Include="Models\CategoryDataModelContainer.cs" />
+    <Compile Include="Models\Constants.cs" />
     <Compile Include="Models\RevitDataModel.cs" />
     <Compile Include="Models\RoomBase.cs" />
     <Compile Include="Models\RoomDataProperty.cs" />
@@ -196,6 +197,7 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\RoomsSelectionViewModel.cs" />
     <Compile Include="ViewModels\SupportedCategoryViewModel.cs" />
+    <Compile Include="ViewModels\SupportedCatgeoriesDataGridViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>

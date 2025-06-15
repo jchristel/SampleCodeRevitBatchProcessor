@@ -78,14 +78,16 @@ namespace duHastNet.PushIt
 
             // load settings from file
             Models.Settings settings = SettingsUtils.LoadSettings();
+            //  settings in data model, this will automatically add enables categories to the category container in the 
+            // data model
             _revitDataModel.Settings = settings;
 
             //load room data into model
             _revitDataModel.LoadRoomsData();
 
-            //get supported categories and load into the data model
+            //get all supported categories and load into the data model ( a supported category is not an enabled category!)
             List<Models.CategoryDataModel> supportedCategories = Utilities.Revit.RevitCategoryObjectsConverter.ConvertToRevitCategoryObjects(doc);
-            _revitDataModel.LoadCategoryData(supportedCategories);
+            _revitDataModel.LoadSupportedCategoryData(supportedCategories);
 
             //set up the navigation store
             _navigationStore.CurrentViewModel = CreateRoomsSelectionViewModel();

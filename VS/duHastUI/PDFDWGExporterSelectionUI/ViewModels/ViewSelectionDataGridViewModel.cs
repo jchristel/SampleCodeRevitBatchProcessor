@@ -362,7 +362,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         }
 
         /// <summary>
-        /// Define which columns should be read-only by default ( just the expor5t check box column!!! )
+        /// Define which columns should be read-only by default ( just the export check box column!!! )
         /// </summary>
         protected override bool GetDefaultReadOnlyForColumn(string propertyName)
         {
@@ -423,7 +423,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
         /// <summary>
         /// Sets up a property changed event handler to automatically sync data
-        /// Call this in your constructor after initializing the data
+        /// Call this from constructor after initializing the data
         /// </summary>
         private void SetupDataSynchronization()
         {

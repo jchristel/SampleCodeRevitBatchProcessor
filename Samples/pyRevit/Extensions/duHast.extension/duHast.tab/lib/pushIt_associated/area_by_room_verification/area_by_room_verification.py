@@ -39,7 +39,7 @@ from pushIt_associated.utilities import (
 from pushIt_associated.place_revit_rooms.push_it_fam_analysis import get_push_it_families_centroid
 from pushIt_associated.place_revit_rooms.create_rooms import create_rooms_from_push_it_instances
 from pushIt_associated.place_revit_rooms.debug import draw_bounding_box_and_centroid, draw_bounding_box_and_centroid_linked_model
-
+from pushIt_associated.area_by_room_verification.update_pushit_rooms import  update_push_it_instances_from_rooms
 
 
 def push_it_area_by_room_verification_entry(doc, uiapp,output, forms):
@@ -124,20 +124,22 @@ def push_it_area_by_room_verification_entry(doc, uiapp,output, forms):
     # not all rooms will return a centroid....
     updated_fams_result = get_push_it_families_centroid(push_it_elements_model,selected_rooms)
 
+    print("Updated family instances: {} of {} ".format(len(updated_fams_result.result), len(selected_rooms)))
+
     # get rotation and translation of the coordinate system
     # this is the translation and rotation of the coordinate system of the pushIt model
     translation, rotation = get_coordinate_system_translation_and_rotation(push_it_elements_model)
 
     # place the rooms in the current model and transfer the parameter data
-    create_and_update_result = Result()
+    create_and_update_result =  update_push_it_instances_from_rooms(doc, updated_fams_result.result, rotation=rotation, translation=translation)
     
     # check if any errors occurred during the creation of the rooms
-    if(  create_and_update_result.status is False):
+    if( create_and_update_result.status is False):
         message = "Room creation failed: {}".format( create_and_update_result.message)
         return_value.update_sep(False, message)
-        print_error(message)
+        #print_error(message)
         return return_value
     
-    print("Created: {} rooms".format(len( create_and_update_result.result)))
+    print("Successfully updated push it rooms")
 
     print("finished!")

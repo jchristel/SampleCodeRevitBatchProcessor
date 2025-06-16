@@ -434,7 +434,7 @@ def get_family_instance_properties(family_instance, parameter_data, unique_id_pa
                     # check if the unique id parameter value is empty, if so reject this family instance
                     if instance_parameter_guid == unique_id_parameter_guid:
                         if instance_parameter_value == "None" or instance_parameter_value == "":
-                            raise ValueError("Unique Id Parameter value is None or empty")
+                            raise ValueError("Unique Id Parameter value is None or empty for family instance: {}".format(family_instance.Id.IntegerValue))
                    
                     # check if the parameter is in the parameter data
                     if parameter_guid == instance_parameter_guid:
@@ -448,13 +448,13 @@ def get_family_instance_properties(family_instance, parameter_data, unique_id_pa
                         # add the property to the list
                         family_instance_properties.append(family_instance_property)
                         break
-    except Exception:
+    except Exception as e:
         return None
             
     return family_instance_properties
 
 
-def convert_family_instances_to_storage(doc, family_instances, parameter_data, unique_id_parameter_guid, forms):
+def convert_family_instances_to_storage(doc, family_instances, parameter_data, unique_id_parameter_guid, forms, get_family_instance_data = True):
     """
     Convert family instances to storage.
     :param doc: The Revit document
@@ -500,16 +500,18 @@ def convert_family_instances_to_storage(doc, family_instances, parameter_data, u
             design_set_option_info = get_design_set_option_info(doc, fi)
             converted_family_instance.set_design_set_option_info_value(design_set_option_info)
             
-            # get the family instance properties
-            family_instance_properties = get_family_instance_properties(fi, parameter_data, unique_id_parameter_guid)
+            if (get_family_instance_data):
+
+                # get the family instance properties
+                family_instance_properties = get_family_instance_properties(fi, parameter_data, unique_id_parameter_guid)
             
-            if family_instance_properties is None:
-                # ignore this family instance since the unique id parameter value is empty
-                counter += 1
-                continue
+                if family_instance_properties is None:
+                    # ignore this family instance since the unique id parameter value is empty
+                    counter += 1
+                    continue
             
-            for family_instance_property in family_instance_properties:
-                converted_family_instance.add_property(family_instance_property)
+                for family_instance_property in family_instance_properties:
+                    converted_family_instance.add_property(family_instance_property)
 
             # add the family instance to the list
             converted_family_instances.append(converted_family_instance)

@@ -31,6 +31,8 @@ from duHast.Revit.Common.Objects.FailureHandlingConfiguration import (
     FailureHandlingConfig,
 )
 
+from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
+
 from Autodesk.Revit.DB import UV, XYZ
 
 def apply_transform_to_uv(uv_point, rotation_matrix, translation_vector):
@@ -86,9 +88,8 @@ def create_room_from_push_it_instance(doc, family_instance, levels_ascending, ro
                 print(e)
             return action_return_value
 
-
-        # get the nearest level based on the Z value of the family instance location point
-        placement_level = get_nearest_lowest_level(family_instance.location_point[2], levels_ascending, [])[0]
+        # get the nearest level based on the Z value, converted to mm since that is what the function requires, of the family instance location point 
+        placement_level = get_nearest_lowest_level(convert_imperial_feet_to_metric_mm(family_instance.location_point[2]), levels_ascending, [])[0]
 
         # set the placement point
         # use the location point if there is no centroid

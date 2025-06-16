@@ -21,28 +21,44 @@
 //
 //
 
+
+using System.Collections.Generic;
+
 namespace duHastNet.PushIt.Models
 {
-    public class CategoryDataModel
+    public class ParameterDataModelContainer
     {
-        string _name;
+        public List<Models.RoomDataProperty> _parameters;
 
-        public string Name
+        public void AddParameter(Models.RoomDataProperty parameter)
         {
-            get => _name;
-            set => _name = value;
+            //check if rooms are conflicting by id value
+            foreach (var existingParameter in _parameters)
+            {
+
+                if (existingParameter.Name == parameter.Name)
+                {
+                    // throw an exception
+                    throw new Exceptions.ParameterConflictException(
+                        existingParameter, parameter);
+                }
+            }
+            _parameters.Add(parameter);
         }
 
-        private bool _enabled;
-        public bool Enabled
+        public List<Models.RoomDataProperty> GetAllParameters()
         {
-            get => _enabled;
-            set => _enabled = value;
+            return _parameters;
         }
 
-        public CategoryDataModel(string name, bool isEnabled = false)
+        public void ClearParameters()
         {
-            _name = name;
+            _parameters = new List<Models.RoomDataProperty>();
+        }
+
+        public ParameterDataModelContainer()
+        {
+            _parameters = new List<Models.RoomDataProperty>();
         }
     }
 }

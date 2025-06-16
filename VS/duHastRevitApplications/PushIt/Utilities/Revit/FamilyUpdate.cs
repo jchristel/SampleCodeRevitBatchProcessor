@@ -22,7 +22,6 @@
 //
 
 using Autodesk.Revit.DB;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -44,10 +43,10 @@ namespace duHastNet.PushIt.Utilities.Revit
         /// is already set and does need to be changed. Especially when that room is a split room.)</param>
         /// <returns></returns>
         public static bool UpdateProperties(
-            Document doc, 
-            FamilyInstance familyInstance, 
-            Models.RoomDataModel roomData, 
-            duHastNet.PushIt.Utilities.PushMode pushMode, 
+            Document doc,
+            FamilyInstance familyInstance,
+            Models.RoomDataModel roomData,
+            duHastNet.PushIt.Utilities.PushMode pushMode,
             Action<string, Utils.WPF.Stores.MessageTypes> AddMessage,
             bool updateId = true)
         {
@@ -120,7 +119,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                     else
                     {
                         // get the current value of the property
-                        string currentValue = duHastNet.RevitUtils.Parameters.ParaUtils.GetParameterValueByName( familyInstance, property.Name );
+                        string currentValue = duHastNet.RevitUtils.Parameters.ParaUtils.GetParameterValueByName(familyInstance, property.Name);
 
                         if (currentValue != property.Value)
                         {

@@ -156,12 +156,14 @@
     <Compile Include="Commands\WipeStaleDataRevitAsyncCommand.cs" />
     <Compile Include="Converters\CountConverter.cs" />
     <Compile Include="Converters\EnumToBooleanConverter.cs" />
+    <Compile Include="Exceptions\ParameterConflictException.cs" />
     <Compile Include="Exceptions\CategoryConflictException.cs" />
     <Compile Include="Exceptions\RoomConflictException.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Models\CategoryDataModel.cs" />
     <Compile Include="Models\CategoryDataModelContainer.cs" />
     <Compile Include="Models\Constants.cs" />
+    <Compile Include="Models\ParameterDataModelContainer.cs" />
     <Compile Include="Models\RevitDataModel.cs" />
     <Compile Include="Models\RoomBase.cs" />
     <Compile Include="Models\RoomDataProperty.cs" />

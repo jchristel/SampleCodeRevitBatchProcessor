@@ -81,9 +81,9 @@ namespace duHastNet.PushIt.Commands
                             //get the selected Element from Revit
                             Element selectedElement = doc.GetElement(selectedElementIds.First());
                             // check if the selected element is of a supported category (or has category to start with)
-                            if (selectedElement.Category == null || !_revitDataModel.Settings.SupportedCategories.Contains(selectedElement.Category.Name))
+                            if (selectedElement.Category == null || !_revitDataModel.Settings.EnabledCategoryNames.Contains(selectedElement.Category.Name))
                             {
-                                string supportedCategories = string.Join(", ", _revitDataModel.Settings.SupportedCategories);
+                                string supportedCategories = string.Join(", ", _revitDataModel.Settings.EnabledCategoryNames);
                                 return ($"The selected element is not of a supported category. Supported categories are: {supportedCategories}.", Utils.WPF.Stores.MessageTypes.Error);
                             }
 

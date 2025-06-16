@@ -44,7 +44,7 @@ namespace duHastNet.PushIt.RevitActions
                 WipeData(
                    doc,
                    RevitModel._roomsContainer.GetAllRooms(),
-                   RevitModel.Settings.SupportedCategories
+                   RevitModel.Settings.EnabledCategoryNames
                 );
             }
             catch (System.Exception ex)

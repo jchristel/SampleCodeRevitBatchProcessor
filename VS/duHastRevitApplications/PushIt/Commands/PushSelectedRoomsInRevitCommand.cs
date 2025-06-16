@@ -24,11 +24,7 @@
 using duHastNet.Utils.WPF.Stores;
 using Revit.Async;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHastNet.PushIt.Commands
 {
@@ -78,8 +74,8 @@ namespace duHastNet.PushIt.Commands
 
                             // return the messages to the caller
                             return ("", MessageTypes.Information);
-                             //   $"{messageActionUpdate}\n{messageAction}\n{messageActionSave}",
-                              //  Utilities.MessageActionTypesUtils.CombineMessageActionType(new List<MessageTypes> { messageActionTypeUpdate, messageActionType, messageActionTypeSafe })
+                            //   $"{messageActionUpdate}\n{messageAction}\n{messageActionSave}",
+                            //  Utilities.MessageActionTypesUtils.CombineMessageActionType(new List<MessageTypes> { messageActionTypeUpdate, messageActionType, messageActionTypeSafe })
                             //);
                         }
                         catch (Exception ex)

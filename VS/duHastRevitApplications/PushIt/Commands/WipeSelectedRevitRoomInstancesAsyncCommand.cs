@@ -53,9 +53,9 @@ namespace duHastNet.PushIt.Commands
                             {
                                 Element selectedElement = doc.GetElement(elementId);
                                 // check if the selected element is of a supported category (or has category to start with)
-                                if (selectedElement.Category == null || !_revitDataModel.Settings.SupportedCategories.Contains(selectedElement.Category.Name))
+                                if (selectedElement.Category == null || !_revitDataModel.Settings.EnabledCategoryNames.Contains(selectedElement.Category.Name))
                                 {
-                                    string supportedCategories = string.Join(", ", _revitDataModel.Settings.SupportedCategories);
+                                    string supportedCategories = string.Join(", ", _revitDataModel.Settings.EnabledCategoryNames);
                                     return_message = return_message + ($"\nThe selected element {elementId.IntegerValue} is not of a supported category. Supported categories are: {supportedCategories}.", Utils.WPF.Stores.MessageTypes.Error);
                                 }
                                 else

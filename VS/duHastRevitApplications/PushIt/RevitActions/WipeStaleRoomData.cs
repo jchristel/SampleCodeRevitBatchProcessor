@@ -43,7 +43,7 @@ namespace duHastNet.PushIt.RevitActions
                 WipeData(
                     doc,
                     RevitModel._roomsContainer.GetAllRoomsCombined(), //include SoA and new rooms
-                    RevitModel.Settings.SupportedCategories
+                    RevitModel.Settings.EnabledCategoryNames
                  );
             }
             catch (System.Exception ex)

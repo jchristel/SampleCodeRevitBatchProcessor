@@ -32,7 +32,8 @@ namespace duHastNet.PushIt.Models
         // path to the data file containing the schedule of accommodations
         public string DataPath { get; set; }
 
-        // list of supported Revit categories
-        public List<Models.CategoryDataModel> SupportedCategories { get; set; }
+        // list of enabled Revit categories names only
+        // these are not all the categories pushit supports...just the one enabled
+        public List<string> EnabledCategoryNames { get; set; }
     }
 }

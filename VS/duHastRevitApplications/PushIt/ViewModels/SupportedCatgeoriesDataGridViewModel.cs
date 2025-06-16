@@ -36,7 +36,7 @@ namespace duHastNet.PushIt.ViewModels
     {
 
         private Models.RevitDataModel RevitDataModel { get; set; }
-       
+
 
         /// <summary>
         /// Dictionary containing custom default values for specific columns
@@ -93,7 +93,7 @@ namespace duHastNet.PushIt.ViewModels
         {
             Data.Clear();
 
-            if (RevitDataModel?.GetAllCategories() == null || RevitDataModel?.GetAllCategories().Count==0) return;
+            if (RevitDataModel?.GetAllCategories() == null || RevitDataModel?.GetAllCategories().Count == 0) return;
 
             foreach (var availableCategory in RevitDataModel.GetAllCategories())
             {
@@ -120,7 +120,7 @@ namespace duHastNet.PushIt.ViewModels
             // Set the standard column values
             rowData[Models.Constants.ColumnHeaderCategoriesIsEnabled.Replace(" ", "")] = availableCategory.Enabled;
             rowData[Models.Constants.ColumnHeaderCategoriesCategoryName.Replace(" ", "")] = availableCategory.Name ?? "";
-            
+
             return rowData;
         }
 
@@ -203,7 +203,7 @@ namespace duHastNet.PushIt.ViewModels
         {
 
             //there are only 2 columns to display and they are always visible
-            foreach (KeyValuePair<string,string> columnName in Models.Constants.ColumnCategoriesInfo)
+            foreach (KeyValuePair<string, string> columnName in Models.Constants.ColumnCategoriesInfo)
             {
                 AddSelectedColumn(columnName.Key);
             }

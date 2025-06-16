@@ -21,28 +21,33 @@
 //
 //
 
-namespace duHastNet.PushIt.Models
+using duHastNet.PushIt.Models;
+using System;
+
+namespace duHastNet.PushIt.Exceptions
 {
-    public class CategoryDataModel
+    public class ParameterConflictException : Exception
     {
-        string _name;
+        public RoomDataProperty ExistingParameter { get; }
+        public RoomDataProperty IncomingParameter { get; }
 
-        public string Name
+        public ParameterConflictException(RoomDataProperty existingParameter, RoomDataProperty incomingParameter)
         {
-            get => _name;
-            set => _name = value;
+            ExistingParameter = existingParameter;
+            IncomingParameter = incomingParameter;
         }
 
-        private bool _enabled;
-        public bool Enabled
+        public ParameterConflictException(string message, RoomDataProperty existingParameter, RoomDataProperty incomingParameter) : base(message)
         {
-            get => _enabled;
-            set => _enabled = value;
+            ExistingParameter = existingParameter;
+            IncomingParameter = incomingParameter;
         }
 
-        public CategoryDataModel(string name, bool isEnabled = false)
+        public ParameterConflictException(string message, Exception innerException, RoomDataProperty existingParameter, RoomDataProperty incomingParameter) : base(message, innerException)
         {
-            _name = name;
+            ExistingParameter = existingParameter;
+            IncomingParameter = incomingParameter;
         }
     }
 }
+

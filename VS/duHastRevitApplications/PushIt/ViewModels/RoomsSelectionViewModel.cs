@@ -750,7 +750,7 @@ namespace duHastNet.PushIt.ViewModels
             foreach (Models.CategoryDataModel category in _revitDataModel.GetAllCategories())
             {
                 {
-                    bool isUsed = _revitDataModel.Settings.SupportedCategories.Contains(category.Name);
+                    bool isUsed = _revitDataModel.Settings.EnabledCategoryNames.Contains(category.Name);
                     ViewModels.SupportedCategoryViewModel categoryViewModel = new SupportedCategoryViewModel(category, isUsed);
                     _supportedCategories.Add(categoryViewModel);
                 }

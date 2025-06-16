@@ -35,7 +35,7 @@ namespace duHastNet.PushIt.Models
             //check if rooms are conflicting by id value
             foreach (var existingCategory in _categories)
             {
-               
+
                 if (existingCategory.Name == category.Name)
                 {
                     // throw an exception

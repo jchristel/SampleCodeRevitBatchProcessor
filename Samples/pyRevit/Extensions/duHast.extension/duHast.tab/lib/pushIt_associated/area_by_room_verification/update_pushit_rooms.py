@@ -165,9 +165,11 @@ def update_push_it_instance(doc, push_it_family_instance,room):
         
         room_perimeter = convert_imperial_feet_to_metric_mm(room.Perimeter)/1000 # convert perimeter to meters
 
-        # assume fixed 60mmm for half wall thickness for now
-        #half_wall_thickness = 60.0/1000 # convert to meters
-        half_wall_thickness  = get_parameter_value_by_name(doc.GetElement(ElementId(push_it_family_instance.revit_element_id_integer_value)).Symbol , "HSL_WALL_THICKNESS", getter_double_as_double_converted_to_metric)/2
+        #get the wall thickness parameter value from the push it family instance
+        half_wall_thickness_parameter_value = get_parameter_value_by_name(doc.GetElement(ElementId(push_it_family_instance.revit_element_id_integer_value)).Symbol , "HSL_WALL_THICKNESS", getter_double_as_double_converted_to_metric)
+
+        # make sure there is a fallback if no parameter is set
+        half_wall_thickness = half_wall_thickness_parameter_value/2 if half_wall_thickness_parameter_value is not None else 0.06 # default to 60mm if not set
 
         print("Half wall thickness from element: {}".format(half_wall_thickness))
 

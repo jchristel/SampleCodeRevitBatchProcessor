@@ -104,7 +104,7 @@ def create_room_from_push_it_instance_and_update(doc, family_instance, levels_as
         placement_point = UV(family_instance.location_point[0], family_instance.location_point[1]) if family_instance.centroid is None else UV(family_instance.centroid[0], family_instance.centroid[1])
 
         # apply the rotation and translation to the placement point ( works on shared coordinate projects only)
-        transformed_placement_uv = apply_transform_to_uv(uv_point=placement_point, rotation_matrix=rotation, translation_vector=translation)
+        #transformed_placement_uv = apply_transform_to_uv(uv_point=placement_point, rotation_matrix=rotation, translation_vector=translation)
        
         # define failure handling for the transaction ( roll back on any warnings or errors )
         failure_handling_settings = FailureHandlingConfig(

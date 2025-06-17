@@ -21,9 +21,7 @@
 #
 
 
-from duHast.Utilities.Objects.timer import Timer
 from duHast.Utilities.Objects.result import Result
-from duHast.UI.Objects.ProgressBase import ProgressBase
 from duHast.Utilities.files_xml import get_all_xml_files_from_directories
 
 from duHast.Revit.Family.family_types_get_data_from_xml import get_family_type_data_from_library

@@ -107,8 +107,8 @@ def get_copy_directives(files):
     """
     Reads list of rename directives from files.
 
-    :param filePath: Fully qualified file path to copy and rename directives file.
-    :type filePath: str
+    :param filePath: List of fully qualified file path to copy and rename directives file.
+    :type filePath: [str]
     :return: List of copy and rename directives.
     :rtype: [copy_and_rename_directive]
     """

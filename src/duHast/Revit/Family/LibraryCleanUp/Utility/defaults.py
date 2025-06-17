@@ -23,19 +23,30 @@
 
 
 from duHast.Utilities.date_stamps import FILE_DATE_STAMP_YYYY_MM_DD, get_date_stamp
+from duHast.Revit.Family.Data.Objects.family_directive_copy import FamilyDirectiveCopy
+from duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type import FamilyDirectiveSwap
 
 # the parameter containing the grouping code in each family
 GROUPING_CODE_PARAMETER_NAME = "HSL_AHFG_CODE"
 
-# prefix for the file name of swap directives
-SWAP_DIRECTIVE_FILE_NAME_PREFIX = "SwapDirective"
 # file name of swap directives
-SWAP_DIRECTIVE_FILE_NAME = "{} {}.csv".format(SWAP_DIRECTIVE_FILE_NAME_PREFIX, get_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD))
+SWAP_DIRECTIVE_FILE_NAME = "{} {}{}".format(
+    FamilyDirectiveSwap.SWAP_DIRECTIVE_FILE_NAME_PREFIX, 
+    get_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD),
+    FamilyDirectiveSwap.SWAP_DIRECTIVE_FILE_EXTENSION
+)
 
 # prefix for the file name of maintain family types by family directives
 MAINTAIN_TYPES_BY_FAMILY_FILE_NAME_PREFIX = "maintain_types_by_family"
 # file name of maintain family types by family directives
 MAINTAIN_TYPES_BY_FAMILY_FILE_NAME = "{} {}.csv".format(MAINTAIN_TYPES_BY_FAMILY_FILE_NAME_PREFIX, get_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD))
+
+# file name for copy directive
+COPY_DIRECTIVE_FILE_NAME = "{} {}{}".format(
+    FamilyDirectiveCopy.COPY_DIRECTIVE_FILE_NAME_PREFIX, 
+    get_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD), 
+    FamilyDirectiveCopy.COPY_DIRECTIVE_FILE_EXTENSION
+)
 
 # file name prefix depending on the family category
 CATEGORY_FILE_NAME_PREFIX_MAPPER = {

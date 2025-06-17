@@ -1,0 +1,146 @@
+# License:
+#
+#
+# Revit Batch Processor Sample Code
+#
+# BSD License
+# Copyright 2025, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+#
+#
+#
+import os
+
+from duHast.Utilities.Objects.result import Result
+from duHast.Utilities.files_io import copy_file, file_move, get_file_name_without_ext
+
+from duHast.Revit.Family.Utility.family_copy_directive_utils import get_copy_directives
+
+from duHast.Revit.Family.Data.Objects.family_directive_copy import FamilyDirectiveCopy
+from duHast.Utilities.files_get import get_files_single_directory
+
+# post process tasks
+# - move original families into back up directory
+# - copy updated families into library directory
+
+
+def move_files(files, destination_directory):
+    """
+    Moves files to the specified destination directory.
+
+    :param files: List of file paths to be moved.
+    :param destination_directory: Directory where the files will be moved.
+    """
+    overall_move_flag = True
+    for file in files:
+        file_name =  get_file_name_without_ext(file)
+        destination_file = os.path.join(destination_directory, file_name + file[:4])
+        move_flag = file_move(file, destination_file)
+        overall_move_flag = overall_move_flag and move_flag
+    
+    return overall_move_flag
+
+
+def move_original_families_to_backup_directory(family_copy_directive_directory, backupPath):
+    """
+    Moves original families from the library path to the backup path.
+
+    
+    :param backupPath: Path to the backup directory where families will be moved.
+    """
+
+    return_value = Result()
+
+    try:
+        if not os.path.exists(backupPath):
+            os.makedirs(backupPath)
+            return_value.append_message("Backup directory created: {}".format(backupPath))
+    except Exception as e:
+        return_value.update_sep(False, "Failed to create backup directory: {}".format(str(e)))
+        return return_value
+        
+    # read copy directives
+    files = get_files_single_directory(
+        family_copy_directive_directory,  
+        FamilyDirectiveCopy.COPY_DIRECTIVE_FILE_NAME_PREFIX, 
+        "", 
+        FamilyDirectiveCopy.COPY_DIRECTIVE_FILE_EXTENSION
+    )
+        
+    if len(files) == 0:
+        return_value.update_sep(False, "No copy directives found in directory: {}".format(family_copy_directive_directory))
+        return return_value
+
+    # get copy directives
+    copy_directives = get_copy_directives(files)
+    if copy_directives is None or len(copy_directives) == 0:
+        return_value.update_sep(False, "Failed to get copy directives from files: {}".format(files))
+        return return_value
+    
+    # build list of unique source files
+    files_to_copy = []
+
+    for copy_directive in copy_directives:
+        if copy_directive.source_file_path not in files_to_copy:
+            files_to_copy.append(copy_directive.source_file_path)
+    
+    # attempt to move files to backup directory
+    try:
+
+        move_flag_rfa = move_files(files_to_copy, backupPath)
+        if not move_flag_rfa:
+            return_value.update_sep(False, "Failed to move original families to backup directory: {}".format(backupPath))
+        else:
+            return_value.update_sep(True, "Moved original families to backup directory: {}".format(backupPath))
+
+
+    except Exception as e:
+        return_value.update_sep(False, "Failed to move original families to backup directory: {}".format(e))
+        return return_value
+    
+    return return_value
+
+
+def copy_new_families_to_library(output_path, library_path):
+    """
+    Copies new families from the output path to the library path.
+    :param output_path: Path where new families are located.
+    :type output_path: str
+    :param library_path: Path to the library where families will be copied.
+    :type library_path: str
+
+    :return: Result object indicating success or failure of the operation.
+    :rtype: Result
+    """
+
+    return_value = Result()
+
+    try:
+        # get all rfa and text files
+        files = get_files_single_directory(output_path, "", ".rfa")
+        files += get_files_single_directory(output_path, "", ".txt")
+        if len(files) == 0:
+            return_value.update_sep(False, "No new families found in output directory: {}".format(output_path))
+            return return_value
+        
+        # copy files to library path
+        move_flag = move_files(files, library_path)
+        if not move_flag:
+            return_value.update_sep(False, "Failed to copy new families to library: {}".format(library_path))
+            return return_value
+        else:
+            return_value.update_sep(True, "Copied new families to library: {}".format(library_path))
+        return return_value
+    except Exception as e:
+        return_value.update_sep(False, "Failed to copy new families to library: {}".format(str(e)))
+        return return_value

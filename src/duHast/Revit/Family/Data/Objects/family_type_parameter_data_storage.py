@@ -331,4 +331,3 @@ class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
 
         # return the catalogue file header row entry for this parameter
         return "{}##{}##{}".format(self.name, type_name_revised_for_file, unit_names_for_catalogue_file)
-       

@@ -40,6 +40,14 @@ def clean_up_family_name (fam_name):
     # replace any spaces with "_"
     fam_name = fam_name.replace(' ', '_')
 
+    # remove illegal filename characters
+    illegal_chars = ['\\', '/', ':', '*', '?', '"', '<', '>', '|']
+    for char in illegal_chars:
+        fam_name = fam_name.replace(char, '')
+    
+    # remove ampersand (&) and replace it with "and"
+    fam_name = fam_name.replace('&', 'And')
+
     return fam_name
 
 def build_family_name_from_descriptor(description):

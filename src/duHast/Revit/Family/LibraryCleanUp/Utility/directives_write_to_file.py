@@ -27,8 +27,9 @@ from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.files_csv import write_report_data_as_csv
 
 from duHast.Revit.Family.Utility.family_swap_instances_by_type_utils import write_swap_directives_to_file
+from duHast.Revit.Family.Utility.family_copy_directive_utils import write_copy_directives_to_file
 
-from duHast.Revit.Family.LibraryCleanUp.Utility.defaults import SWAP_DIRECTIVE_FILE_NAME, MAINTAIN_TYPES_BY_FAMILY_FILE_NAME
+from duHast.Revit.Family.LibraryCleanUp.Utility.defaults import SWAP_DIRECTIVE_FILE_NAME, COPY_DIRECTIVE_FILE_NAME,  MAINTAIN_TYPES_BY_FAMILY_FILE_NAME
 
 
 def write_maintain_list(maintain_file_list, output_directory):
@@ -104,7 +105,44 @@ def write_swap_directives(swap_directives, output_directory):
     return return_value
 
 
-def write_directives_to_file(swap_directives, maintain_file_list, output_directory):
+def write_copy_directives(copy_directives, output_directory):
+    """
+    Writes copy directives to a specified file.
+
+    :param copy_directives: List of copy directives to write.
+    :type swap_directives: list
+    :param output_directory: Directory where the file will be written.
+    :type output_directory: str
+
+    :return: Result object indicating success or failure.
+    :rtype: Result
+    """
+
+    return_value = Result()
+
+    try:
+        # build the file path for the swap directives
+        file_path = os.path.join(output_directory, COPY_DIRECTIVE_FILE_NAME)
+
+        print("Writing copy directives to file: {}".format(file_path))
+
+        # write the swap directives to the file
+        return_value = write_copy_directives_to_file(
+            swap_directives=copy_directives,
+            file_path=file_path
+        )
+
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "Failed to write swap directives with exception: {}".format(e),
+        )
+    
+    return return_value
+
+
+
+def write_directives_to_file(swap_directives, maintain_file_list, copy_directives, output_directory):
     """
     Writes directives to a specified file.
 
@@ -126,6 +164,9 @@ def write_directives_to_file(swap_directives, maintain_file_list, output_directo
         result_swap = write_swap_directives(swap_directives, output_directory)
         return_value.update(result_swap)
 
+        # write copy directives to file
+        result_copy = write_copy_directives(copy_directives=copy_directives, output_directory=output_directory)
+        return_value.update(result_copy)
 
     except Exception as e:
         return_value.update_sep(

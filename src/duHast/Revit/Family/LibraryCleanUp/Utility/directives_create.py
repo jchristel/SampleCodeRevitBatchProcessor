@@ -139,6 +139,9 @@ def create_copy_directives(family_storage_data, unique_group_codes, output_direc
         # build family name from the group code description
         fam_name_part = build_family_name_from_descriptor(group_code_description)
 
+        # remove illegal file name characters from the family name part
+        fam_name_part = clean_up_family_name(fam_name_part)
+
         # set a default indicating that category does not exist in the mapper
         category_prefix = "WTF"
         # get the category prefix

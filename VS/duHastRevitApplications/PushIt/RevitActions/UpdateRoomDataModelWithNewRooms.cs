@@ -48,8 +48,8 @@ namespace duHastNet.PushIt.RevitActions
                 // get all new rooms from the model
                 _roomsData = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
                     doc: doc,
-                    roomsDataModel: RevitModel.GetAllRooms(),
-                    supportedCategoryNames: RevitModel.Settings.EnabledCategoryNames,
+                    revitDataModel: RevitModel,
+                    supportedCategoryNames: RevitModel.GetEnabledCategoryNames(),
                     AddMessage: RoomsSelectionViewModel.AddMessage);
 
                 //check if any rooms where found in the model, if not get out

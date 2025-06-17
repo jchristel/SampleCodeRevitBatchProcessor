@@ -346,13 +346,13 @@ namespace duHastNet.PushIt.Utilities.Revit
         {
 
             //update all room data properties
-            Models.RoomDataProperty Id = new Models.RoomDataProperty(sampleRoom.Id.Name, sampleRoom.Id.ParameterGUID, sampleRoom.Id.ParameterName, "", sampleRoom.Id.ShowInUI, sampleRoom.Id.IsReadOnly);
+            Models.RoomDataProperty Id = new Models.RoomDataProperty(sampleRoom.Id.Name, sampleRoom.Id.ParameterGUID, sampleRoom.Id.ParameterName, "", sampleRoom.Id.ShowInUI, sampleRoom.Id.IsReadOnly, true);
 
             List<Models.RoomDataProperty> otherProperties = new List<Models.RoomDataProperty>();
 
             foreach (var property in sampleRoom.Properties)
             {
-                Models.RoomDataProperty newProperty = new Models.RoomDataProperty(property.Name, property.ParameterGUID, property.ParameterName, "", property.ShowInUI, property.IsReadOnly);
+                Models.RoomDataProperty newProperty = new Models.RoomDataProperty(property.Name, property.ParameterGUID, property.ParameterName, "", property.ShowInUI, property.IsReadOnly, false);
                 otherProperties.Add(newProperty);
             }
 

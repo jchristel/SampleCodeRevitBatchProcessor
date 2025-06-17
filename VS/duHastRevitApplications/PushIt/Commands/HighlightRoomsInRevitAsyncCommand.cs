@@ -58,6 +58,18 @@ namespace duHastNet.PushIt.Commands
                             {
                                 return ("No room selected in the user interface to highlight in Revit.", Utils.WPF.Stores.MessageTypes.Error);
                             }
+                            // update parameter data in the data model
+                            VerifyParametersInModel actionVerify = new VerifyParametersInModel(_revitDataModel);
+                            (string messageActionVerify, Utils.WPF.Stores.MessageTypes messageActionTypeVerify) = actionVerify.Execute(doc);
+
+                            //write messages to log...
+                            _revitDataModel.LogMessages(actionVerify.GetLogMessagesAndLogTypes());
+
+                            //only proceed if all parameters are verified
+                            if (messageActionTypeVerify == MessageTypes.Error)
+                            {
+                                return (messageActionVerify, messageActionTypeVerify);
+                            }
 
                             // Execute the action to highlight the selected room in the Revit model
                             HighlightRoomsInRevit action = new HighlightRoomsInRevit(

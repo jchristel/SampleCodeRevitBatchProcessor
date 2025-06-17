@@ -48,7 +48,7 @@ namespace duHastNet.PushIt.RevitActions
                 //extract current model data from the element selected
                 var modelDataPrevious = Utilities.Revit.RevitRoomObjectsConverter.ConvertSingleFamilyToRevitRoom(
                     familyInstance: _pushTarget as Autodesk.Revit.DB.FamilyInstance,
-                    sampleModelRoom: _roomToPush,
+                    parametersRequired:RevitModel.GetAllParameters(),
                     sharedParameterIdsByGUIDs: sharedParameterIdsByGUIDs
                 );
 
@@ -74,7 +74,7 @@ namespace duHastNet.PushIt.RevitActions
                 // get updated model data from the element selected
                 var modelDataUpdated = Utilities.Revit.RevitRoomObjectsConverter.ConvertSingleFamilyToRevitRoom(
                     familyInstance: _pushTarget as Autodesk.Revit.DB.FamilyInstance,
-                    sampleModelRoom: _roomToPush,
+                    parametersRequired: RevitModel.GetAllParameters(),
                     sharedParameterIdsByGUIDs: sharedParameterIdsByGUIDs
                 );
 

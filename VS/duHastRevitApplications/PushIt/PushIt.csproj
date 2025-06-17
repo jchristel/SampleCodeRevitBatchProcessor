@@ -178,6 +178,7 @@
     <Compile Include="RevitActions\RefreshRoomDataWithRevitData.cs" />
     <Compile Include="RevitActions\RevitActionBase.cs" />
     <Compile Include="RevitActions\UpdateRoomDataModelWithNewRooms.cs" />
+    <Compile Include="RevitActions\VerifyParametersInModel.cs" />
     <Compile Include="RevitActions\WipeSelectedRevitRoomsData.cs" />
     <Compile Include="RevitActions\WipeStaleRoomData.cs" />
     <Compile Include="Utilities\ConvertRevitRoomObjectToDataModelRoomObject.cs" />
@@ -193,7 +194,7 @@
     <Compile Include="Utilities\Revit\FamilyUpdate.cs" />
     <Compile Include="Utilities\Revit\RevitCategoryObjectsConverter.cs" />
     <Compile Include="Utilities\Revit\RevitRoomObjectsConverter.cs" />
-    <Compile Include="Utilities\Revit\SharedParameters.cs" />
+    <Compile Include="Utilities\Revit\SharedParameters_deprecated.cs" />
     <Compile Include="Utilities\SettingsUtils.cs" />
     <Compile Include="Utilities\UpdateRoomDataModelWithRoomsRevitModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />

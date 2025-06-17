@@ -32,15 +32,18 @@ namespace duHastNet.PushIt.Utilities.Revit
 
         public static Models.RoomRevit ConvertSingleFamilyToRevitRoom(
             FamilyInstance familyInstance,
-            Models.RoomDataModel sampleModelRoom,
+            List<Models.RoomDataProperty> parametersRequired,
             Dictionary<string, ElementId> sharedParameterIdsByGUIDs
             )
         {
             // get the parameters of the family instance
             IList<Parameter> parameters = familyInstance.GetOrderedParameters();
 
+            //ther definetly should be one....
+            var idParameter = parametersRequired.Find(x=>x.IsUniqueId==true);
+
             // get the id value
-            string id_value = duHastNet.RevitUtils.Parameters.SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[sampleModelRoom.Id.ParameterGUID]);
+            string id_value = duHastNet.RevitUtils.Parameters.SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[idParameter.ParameterGUID]);
 
             // ignore fam instance if id is null or empt
             if (id_value == null || id_value == "")
@@ -50,18 +53,25 @@ namespace duHastNet.PushIt.Utilities.Revit
 
             // setup the id property
             Models.RoomDataProperty IdProperty = new Models.RoomDataProperty(
-                name: sampleModelRoom.Id.ParameterName,
+                name: idParameter.ParameterName,
                 value: id_value,
-                parameterGUID: sampleModelRoom.Id.ParameterGUID,
-                parameterName: sampleModelRoom.Id.ParameterName,
-                showInUI: sampleModelRoom.Id.ShowInUI,
-                isReadOnly: sampleModelRoom.Id.IsReadOnly);
+                parameterGUID: idParameter.ParameterGUID,
+                parameterName: idParameter.ParameterName,
+                showInUI: idParameter.ShowInUI,
+                isReadOnly: idParameter.IsReadOnly,
+                isUniqueId: true);
 
             // get the other properties and store in list
             List<Models.RoomDataProperty> properties = new List<Models.RoomDataProperty>();
 
-            foreach (Models.RoomDataProperty property in sampleModelRoom.Properties)
+            foreach (Models.RoomDataProperty property in parametersRequired)
             {
+                // ignore the id value
+                if (property.IsUniqueId)
+                {
+                    continue;
+                }
+
                 string value = "";
                 //check if property is retrieved from shared parameter
                 if (property.ParameterGUID != "")
@@ -99,7 +109,8 @@ namespace duHastNet.PushIt.Utilities.Revit
                     parameterName: property.ParameterName,
                     value: value,
                     showInUI: property.ShowInUI,
-                    isReadOnly: property.IsReadOnly);
+                    isReadOnly: property.IsReadOnly, 
+                    isUniqueId: false);
 
                 // add to the list of properties
                 properties.Add(roomDataProperty);
@@ -119,9 +130,11 @@ namespace duHastNet.PushIt.Utilities.Revit
 
             return revitRoom;
         }
+
+
         public static List<duHastNet.PushIt.Models.RoomRevit> ConvertFamiliesToRevitRooms(
             List<FamilyInstance> familyInstances,
-            Models.RoomDataModel sampleModelRoom,
+            List<Models.RoomDataProperty>parametersRequired,
             Action<string, Utils.WPF.Stores.MessageTypes> AddMessage)
         {
             // create a list of revit rooms
@@ -135,7 +148,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                 try
                 {
                     // create a new revit room
-                    Models.RoomRevit revitRoom = ConvertSingleFamilyToRevitRoom(familyInstance, sampleModelRoom, sharedParameterIdsByGUIDs);
+                    Models.RoomRevit revitRoom = ConvertSingleFamilyToRevitRoom(familyInstance, parametersRequired, sharedParameterIdsByGUIDs);
 
                     // ignore if revit room is null
                     if (revitRoom == null)

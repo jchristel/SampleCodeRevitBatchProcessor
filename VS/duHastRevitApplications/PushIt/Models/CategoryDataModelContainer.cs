@@ -62,6 +62,36 @@ namespace duHastNet.PushIt.Models
             return _categories;
         }
 
+        public List<Models.CategoryDataModel> GetAllEnabledCategories()
+        {
+            List<Models.CategoryDataModel> enabled = new List<Models.CategoryDataModel>();
+            foreach (var category in _categories)
+            {
+                if (category.Enabled)
+                {
+                    enabled.Add(category);
+                }
+            }
+            return enabled;
+        }
+
+
+        public List<string> GetEnabledCategoryNames()
+        {
+            List<string> categoryNames = new List<string>();
+            foreach (var category in _categories)
+            {
+                if (category.Enabled)
+                {
+                    categoryNames.Add(category.Name);
+                }
+            }
+
+            return categoryNames;
+        }
+
+
+
         public void ClearCategories()
         {
             _categories = new List<Models.CategoryDataModel>();

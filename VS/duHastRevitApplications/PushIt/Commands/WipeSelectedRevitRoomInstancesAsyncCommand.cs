@@ -53,9 +53,9 @@ namespace duHastNet.PushIt.Commands
                             {
                                 Element selectedElement = doc.GetElement(elementId);
                                 // check if the selected element is of a supported category (or has category to start with)
-                                if (selectedElement.Category == null || !_revitDataModel.Settings.EnabledCategoryNames.Contains(selectedElement.Category.Name))
+                                if (selectedElement.Category == null || !_revitDataModel.GetEnabledCategoryNames().Contains(selectedElement.Category.Name))
                                 {
-                                    string supportedCategories = string.Join(", ", _revitDataModel.Settings.EnabledCategoryNames);
+                                    string supportedCategories = string.Join(", ", _revitDataModel.GetEnabledCategoryNames());
                                     return_message = return_message + ($"\nThe selected element {elementId.IntegerValue} is not of a supported category. Supported categories are: {supportedCategories}.", Utils.WPF.Stores.MessageTypes.Error);
                                 }
                                 else
@@ -80,6 +80,19 @@ namespace duHastNet.PushIt.Commands
                             else
                             {
                                 wipeCounter = validElements.Count;
+                            }
+
+                            // update parameter data in the data model
+                            VerifyParametersInModel actionVerify = new VerifyParametersInModel(_revitDataModel);
+                            (string messageActionVerify, Utils.WPF.Stores.MessageTypes messageActionTypeVerify) = actionVerify.Execute(doc);
+
+                            //write messages to log...
+                            _revitDataModel.LogMessages(actionVerify.GetLogMessagesAndLogTypes());
+
+                            //only proceed if all parameters are verified
+                            if (messageActionTypeVerify == MessageTypes.Error)
+                            {
+                                return (messageActionVerify, messageActionTypeVerify);
                             }
 
                             //add new rooms to the data model first

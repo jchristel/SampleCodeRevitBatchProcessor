@@ -64,6 +64,25 @@ namespace duHastNet.PushIt.Commands
                             // reload data from the file path
                             _revitDataModel.LoadRoomsData();
 
+                            //clear parmeter data
+                            _revitDataModel.ClearParameters();
+
+                            //load parmeter data
+                            _revitDataModel.LoadParameterData();
+
+                            //check all parameters still exist before reading data
+                            VerifyParametersInModel actionVerify = new VerifyParametersInModel(_revitDataModel);
+                            (string messageActionVerify, Utils.WPF.Stores.MessageTypes messageActionTypeVerify) = actionVerify.Execute(doc);
+
+                            //write messages to log...
+                            _revitDataModel.LogMessages(actionVerify.GetLogMessagesAndLogTypes());
+
+                            //only proceed if all parameters are verified
+                            if (messageActionTypeVerify == MessageTypes.Error)
+                            {
+                                return (messageActionVerify, messageActionTypeVerify);
+                            }
+
                             //add new rooms to the data model first
                             UpdateRoomDataModelWithNewRooms actionUpdate = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(_revitDataModel, _roomsSelectionViewModel);
                             (string messageActionUpdate, Utils.WPF.Stores.MessageTypes messageActionTypeUpdate) = actionUpdate.Execute(doc);

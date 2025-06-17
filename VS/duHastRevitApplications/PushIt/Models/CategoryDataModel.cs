@@ -43,6 +43,7 @@ namespace duHastNet.PushIt.Models
         public CategoryDataModel(string name, bool isEnabled = false)
         {
             _name = name;
+            _enabled = isEnabled;
         }
     }
 }

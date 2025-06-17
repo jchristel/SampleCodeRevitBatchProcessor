@@ -53,6 +53,13 @@ namespace duHastNet.PushIt.Utilities
                 //read the settings file
                 string jsonString = File.ReadAllText(settingsFilePath);
                 Models.Settings settings = JsonConvert.DeserializeObject<Models.Settings>(jsonString);
+
+                // safety  fall back for now make sure at least wall category is set
+                if (settings.EnabledCategoryNames.Count == 0)
+                {
+                    settings.EnabledCategoryNames = new List<string> { "Walls" };
+                }
+
                 return settings;
             }
             catch (Exception ex)

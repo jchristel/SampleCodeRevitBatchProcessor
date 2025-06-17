@@ -17,7 +17,8 @@
                 parameterName: revitRoom.Id.ParameterName,
                 value: revitRoom.Id.Value,
                 showInUI: revitRoom.Id.ShowInUI,
-                isReadOnly: revitRoom.Id.IsReadOnly);
+                isReadOnly: revitRoom.Id.IsReadOnly,
+                isUniqueId:  true);
 
             roomDataModel.Id = id;
 
@@ -30,7 +31,8 @@
                     parameterName: property.ParameterName,
                     value: property.Value,
                     showInUI: property.ShowInUI,
-                    isReadOnly: property.IsReadOnly);
+                    isReadOnly: property.IsReadOnly,
+                    isUniqueId: false);
 
                 roomDataModel.Properties.Add(roomDataProperty);
 

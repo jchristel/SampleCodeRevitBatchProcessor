@@ -35,5 +35,10 @@ namespace duHastNet.PushIt.Models
         // list of enabled Revit categories names only
         // these are not all the categories pushit supports...just the one enabled
         public List<string> EnabledCategoryNames { get; set; }
+
+        public Settings() {
+            EnabledCategoryNames = new List<string>();
+        }
+
     }
 }

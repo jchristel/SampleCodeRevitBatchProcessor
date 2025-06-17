@@ -83,7 +83,7 @@ namespace duHastNet.PushIt.Commands
                             bool needUpdate = false;
 
                             // if the count of the categories is different, we need to update
-                            if (enabledCategoryNamesFromDataModel.Count != _revitDataModel.Settings.EnabledCategoryNames.Count)
+                            if (enabledCategoryNamesFromDataModel.Count != _revitDataModel.GetAllCategories().Count)
                             {
                                 needUpdate = true;
                             }
@@ -93,7 +93,7 @@ namespace duHastNet.PushIt.Commands
                                 foreach (string categoryName in enabledCategoryNamesFromDataModel)
                                 {
                                     // if a category name is not in the list of supported categories, we need to update
-                                    if (!_revitDataModel.Settings.EnabledCategoryNames.Contains(categoryName))
+                                    if (!_revitDataModel.GetEnabledCategoryNames().Contains(categoryName))
                                     {
                                         needUpdate = true;
                                         break;
@@ -107,12 +107,22 @@ namespace duHastNet.PushIt.Commands
                                 return ("No changes in category selection detected.", Utils.WPF.Stores.MessageTypes.Information);
                             }
 
-                            // TODO:: update parameter data in the data model
-
-
-
-                            //update the categories in the settings
+                            // update the categories in the settings
+                            // the actual categories objects should be updated by the category selection view model
                             _revitDataModel.Settings.EnabledCategoryNames = enabledCategoryNamesFromDataModel;
+
+                            // update parameter data in the data model
+                            VerifyParametersInModel actionVerify = new VerifyParametersInModel(_revitDataModel);
+                            (string messageActionVerify, Utils.WPF.Stores.MessageTypes messageActionTypeVerify) = actionVerify.Execute(doc);
+
+                            //write messages to log...
+                            _revitDataModel.LogMessages(actionVerify.GetLogMessagesAndLogTypes());
+
+                            //only proceed if all parameters are verified
+                            if (messageActionTypeVerify == MessageTypes.Error)
+                            {
+                                return (messageActionVerify, messageActionTypeVerify);
+                            }
 
                             //add new rooms to the data model first
                             UpdateRoomDataModelWithNewRooms actionUpdate = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(_revitDataModel, _roomsSelectionViewModel);

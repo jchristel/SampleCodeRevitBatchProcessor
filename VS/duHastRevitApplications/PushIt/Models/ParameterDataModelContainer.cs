@@ -51,10 +51,12 @@ namespace duHastNet.PushIt.Models
             return _parameters;
         }
 
+
         public void ClearParameters()
         {
             _parameters = new List<Models.RoomDataProperty>();
         }
+
 
         public ParameterDataModelContainer()
         {

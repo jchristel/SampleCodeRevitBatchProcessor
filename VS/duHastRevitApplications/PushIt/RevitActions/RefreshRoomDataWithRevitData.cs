@@ -44,14 +44,14 @@ namespace duHastNet.PushIt.RevitActions
                 List<Models.RoomDataModel> updatedSoARooms = RefreshRoomData(
                     doc,
                     RevitModel._roomsContainer.GetAllRooms(), // returns SoA rooms only
-                    RevitModel.Settings.EnabledCategoryNames
+                    RevitModel.GetEnabledCategoryNames()
                  );
 
                 // refresh the rooms data model with the new rooms from the revit model
                 List<Models.RoomDataModel> updatedNewRooms = RefreshRoomData(
                     doc,
                     RevitModel._roomsContainer.GetAllNewRooms(), // returns new rooms only
-                    RevitModel.Settings.EnabledCategoryNames
+                    RevitModel.GetEnabledCategoryNames()
                 );
 
                 // do not remove any new room with 0 placed revit rooms in case the new room is placed in a non primary design option...
@@ -115,7 +115,7 @@ namespace duHastNet.PushIt.RevitActions
             {
                 _roomsData = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
                     doc: doc,
-                    roomsDataModel: roomsDataModel,
+                    revitDataModel: RevitModel,
                     supportedCategoryNames: supportedCategoryName,
                     AddMessage: AddMessage);
             }

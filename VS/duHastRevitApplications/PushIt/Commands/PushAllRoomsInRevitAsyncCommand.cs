@@ -26,6 +26,7 @@ using duHastNet.PushIt.RevitActions;
 using duHastNet.Utils.WPF.Stores;
 using Revit.Async;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace duHastNet.PushIt.Commands
@@ -52,6 +53,19 @@ namespace duHastNet.PushIt.Commands
 
                         try
                         {
+                            //check all parameters still exist before pushing data
+                            VerifyParametersInModel actionVerify = new VerifyParametersInModel(_revitDataModel);
+                            (string messageActionVerify, Utils.WPF.Stores.MessageTypes messageActionTypeVerify) = actionVerify.Execute(doc);
+
+                            //write messages to log...
+                            _revitDataModel.LogMessages(actionVerify.GetLogMessagesAndLogTypes());
+
+                            //only proceed if all parameters are verified
+                            if (messageActionTypeVerify == MessageTypes.Error)
+                            {
+                                return (messageActionVerify, messageActionTypeVerify);
+                            }
+
                             // Execute the action to update all rooms in the Revit model
                             PushAllRoomDataToRevit action = new PushAllRoomDataToRevit(_revitDataModel);
                             (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
@@ -59,7 +73,7 @@ namespace duHastNet.PushIt.Commands
                             //write messages to log...
                             _revitDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
 
-                            // return status message for UI
+                            // return the message to the caller
                             return (messageAction, messageActionType);
                         }
                         catch (Exception ex)

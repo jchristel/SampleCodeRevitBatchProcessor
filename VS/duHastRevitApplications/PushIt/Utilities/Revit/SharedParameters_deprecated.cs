@@ -26,7 +26,7 @@ using System.Collections.Generic;
 
 namespace duHastNet.PushIt.Utilities.Revit
 {
-    public static class SharedParameters
+    public static class SharedParameters_deprecated
     {
         public static bool CheckBindingsList(List<string> bindings, List<string> supportedCategoryNames)
         {

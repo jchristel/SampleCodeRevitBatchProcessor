@@ -43,7 +43,7 @@ namespace duHastNet.PushIt.RevitActions
                 WipeData(
                     doc,
                     RevitModel._roomsContainer.GetAllRoomsCombined(), //include SoA and new rooms
-                    RevitModel.Settings.EnabledCategoryNames
+                    RevitModel.GetEnabledCategoryNames()
                  );
             }
             catch (System.Exception ex)
@@ -71,7 +71,7 @@ namespace duHastNet.PushIt.RevitActions
                 // get the revit rooms
                 _roomsData = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
                     doc: doc,
-                    roomsDataModel: roomsDataModel,
+                    revitDataModel: RevitModel,
                     supportedCategoryNames: supportedCategoryName,
                     AddMessage: AddMessage
                 );

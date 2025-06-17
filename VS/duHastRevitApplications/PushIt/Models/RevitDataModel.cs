@@ -188,10 +188,21 @@ namespace duHastNet.PushIt.Models
             return _categoriesContainer.GetAllCategories();
         }
 
+        public List<Models.CategoryDataModel> GetAllEnabledCategories()
+        {
+            return _categoriesContainer.GetAllEnabledCategories();
+        }
+
         public void ClearCategories()
         {
             _categoriesContainer.ClearCategories();
         }
+
+        public List<string> GetEnabledCategoryNames()
+        {
+            return _categoriesContainer.GetEnabledCategoryNames();
+        }
+
 
         #endregion
 

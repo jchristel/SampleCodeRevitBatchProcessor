@@ -261,8 +261,8 @@ namespace duHastNet.PushIt.RevitActions
             // get the revit rooms
             List<duHastNet.PushIt.Models.RoomRevit> revitRooms = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
                 doc: doc,
-                roomsDataModel: roomsDataModel,
-                supportedCategoryNames: RevitModel.Settings.EnabledCategoryNames,
+                revitDataModel: RevitModel,
+                supportedCategoryNames: RevitModel.GetEnabledCategoryNames(),
                 AddMessage: AddMessage
             );
 

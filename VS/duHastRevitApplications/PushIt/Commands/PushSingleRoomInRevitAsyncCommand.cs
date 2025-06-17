@@ -81,10 +81,23 @@ namespace duHastNet.PushIt.Commands
                             //get the selected Element from Revit
                             Element selectedElement = doc.GetElement(selectedElementIds.First());
                             // check if the selected element is of a supported category (or has category to start with)
-                            if (selectedElement.Category == null || !_revitDataModel.Settings.EnabledCategoryNames.Contains(selectedElement.Category.Name))
+                            if (selectedElement.Category == null || !_revitDataModel.GetEnabledCategoryNames().Contains(selectedElement.Category.Name))
                             {
-                                string supportedCategories = string.Join(", ", _revitDataModel.Settings.EnabledCategoryNames);
-                                return ($"The selected element is not of a supported category. Supported categories are: {supportedCategories}.", Utils.WPF.Stores.MessageTypes.Error);
+                                string supportedCategories = string.Join(", ", _revitDataModel.GetEnabledCategoryNames());
+                                return ($"The selected element is not of a supported category. Supported categories are: [{supportedCategories}].", Utils.WPF.Stores.MessageTypes.Error);
+                            }
+
+                            //check all parameters still exist before pushing data
+                            VerifyParametersInModel actionVerify = new VerifyParametersInModel(_revitDataModel);
+                            (string messageActionVerify, Utils.WPF.Stores.MessageTypes messageActionTypeVerify) = actionVerify.Execute(doc);
+
+                            //write messages to log...
+                            _revitDataModel.LogMessages(actionVerify.GetLogMessagesAndLogTypes());
+
+                            //only proceed if all parameters are verified
+                            if (messageActionTypeVerify == MessageTypes.Error)
+                            {
+                                return (messageActionVerify, messageActionTypeVerify);
                             }
 
                             // Execute the action to push a single room to the Revit model
@@ -100,8 +113,9 @@ namespace duHastNet.PushIt.Commands
                             //write messages to log...
                             _revitDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
 
-                            // return status message for UI
+                            // return the message to the caller
                             return (messageAction, messageActionType);
+
                         }
                         catch (Exception ex)
                         {

@@ -230,3 +230,48 @@ def execute_copy_directives(copy_directives):
         )
     
     return return_value
+
+
+def write_copy_directives_to_file(copy_directives, file_path):
+    """
+    Writes copy directives to a specified file in CSV format.
+
+    :param swap_directives: List of swap directives to write to file.
+    :type swap_directives: list of FamilyDirectiveSwap
+    :param file_path: Fully qualified file path where the directives will be written.
+    :type file_path: str
+    :return: Result object indicating success or failure of the write operation.
+    :rtype: Result
+    """
+    
+    return_value = res.Result()
+
+
+    # loop over directives and convert them to a list of lists
+    copy_directives_list = []
+    try:
+        for directive in copy_directives:
+
+            copy_directives_list.append([
+                directive.name,
+                directive.source_file_path,
+                directive.category,
+                directive.new_name,
+                directive.target_directory,
+            ])
+
+        # write the directives to the file
+        return_value = fileCSV.write_report_data_as_csv(
+            file_name=file_path,
+            header = [],
+            data=copy_directives_list,
+            quoting=fileCSV.csv.QUOTE_MINIMAL,
+        )
+
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "Failed to write copy directives with exception: {}".format(e),
+        )
+    
+    return return_value

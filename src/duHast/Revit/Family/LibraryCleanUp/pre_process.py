@@ -131,7 +131,7 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
             len(copy_directives), len(type_maintain_list), len(swap_directives)))
 
         # write swap directives and type maintain lists to file
-        write_directives_result = write_directives_to_file (swap_directives, type_maintain_list,output_path)
+        write_directives_result = write_directives_to_file (swap_directives, type_maintain_list,copy_directives, output_path)
         if write_directives_result.status is False:
             return_value.update_sep(
                 False,

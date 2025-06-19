@@ -22,7 +22,7 @@
 import os
 
 from duHast.Utilities.Objects.result import Result
-from duHast.Utilities.files_io import copy_file, file_move, get_file_name_without_ext
+from duHast.Utilities.files_io import file_move, get_file_name_without_ext
 
 from duHast.Revit.Family.Utility.family_copy_directive_utils import get_copy_directives
 
@@ -44,8 +44,10 @@ def move_files(files, destination_directory):
     overall_move_flag = True
     for file in files:
         file_name =  get_file_name_without_ext(file)
-        destination_file = os.path.join(destination_directory, file_name + file[:4])
+        destination_file = os.path.join(destination_directory, file_name + file[-4:])  # keep the original file extension
         move_flag = file_move(file, destination_file)
+
+        print("Moving file: {} to {} with result: {}".format(file, destination_file,  move_flag))
         overall_move_flag = overall_move_flag and move_flag
     
     return overall_move_flag
@@ -127,14 +129,15 @@ def copy_new_families_to_library(output_path, library_path):
 
     try:
         # get all rfa and text files
-        files = get_files_single_directory(output_path, "", ".rfa")
-        files += get_files_single_directory(output_path, "", ".txt")
+        files = get_files_single_directory(output_path, "", "",".rfa")
+        files += get_files_single_directory(output_path, "", "",".txt")
         if len(files) == 0:
             return_value.update_sep(False, "No new families found in output directory: {}".format(output_path))
             return return_value
-        
+
         # copy files to library path
         move_flag = move_files(files, library_path)
+        
         if not move_flag:
             return_value.update_sep(False, "Failed to copy new families to library: {}".format(library_path))
             return return_value
@@ -144,3 +147,63 @@ def copy_new_families_to_library(output_path, library_path):
     except Exception as e:
         return_value.update_sep(False, "Failed to copy new families to library: {}".format(str(e)))
         return return_value
+    
+
+def post_process_family(output_path, library_path, backup_directory_path):
+    """
+    Post-process function to handle the final steps after family processing.
+
+    This function copies new families to the library and moves original families to a backup directory.
+
+    :param output_path: Path where new families are located.
+    :type output_path: str
+    :param library_path: Path to the library where new families will be copied to.
+    :type library_path: str
+    :param backup_directory_path: Path to the backup directory where original families will be moved.
+    :type backup_directory_path: str
+
+    :return: Result object indicating the success or failure of the post-processing step.
+    :rtype: Result
+    """
+
+    return_value = Result()
+    try:
+        copy_result = copy_new_families_to_library(output_path, library_path)
+        if copy_result.status is False:
+            return_value.update_sep(
+                False,
+                "Failed to copy new families to library: {}".format(copy_result.message),
+            )
+            print("Failed to copy new families to library: {}".format(copy_result.message))
+        else:
+            return_value.append_message(
+                "Successfully copied new families to library: {}".format(library_path)
+            )
+            print("Successfully copied new families to library: {}".format(library_path))
+        
+        print("b")
+        backup_result = move_original_families_to_backup_directory(
+            output_path, backup_directory_path
+        )
+
+        if backup_result.status is False:
+            return_value.update_sep(
+                False,
+                "Failed to move original families to backup directory: {}".format(backup_result.message),
+            )
+            print("Failed to move original families to backup directory: {}".format(backup_result.message))
+        else:
+            return_value.append_message(
+                "Successfully moved original families to backup directory: {}".format(backup_directory_path)
+            )
+            print("Successfully moved original families to backup directory: {}".format(backup_directory_path))
+
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "Failed to complete post process: {}".format(e),
+        )
+        print("Failed to complete post process: {}".format(e))
+    
+    print("Finished!")
+    return return_value

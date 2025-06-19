@@ -128,7 +128,7 @@ def write_copy_directives(copy_directives, output_directory):
 
         # write the swap directives to the file
         return_value = write_copy_directives_to_file(
-            swap_directives=copy_directives,
+            copy_directives=copy_directives,
             file_path=file_path
         )
 
@@ -166,6 +166,7 @@ def write_directives_to_file(swap_directives, maintain_file_list, copy_directive
 
         # write copy directives to file
         result_copy = write_copy_directives(copy_directives=copy_directives, output_directory=output_directory)
+        print(result_copy)
         return_value.update(result_copy)
 
     except Exception as e:

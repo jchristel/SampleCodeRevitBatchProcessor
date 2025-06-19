@@ -140,6 +140,12 @@ namespace duHastNet.PushIt.Utilities.Revit
             // create a list of revit rooms
             List<Models.RoomRevit> revitRooms = new List<duHastNet.PushIt.Models.RoomRevit>();
 
+            // check if any family instances are in the model
+            if (familyInstances == null || familyInstances.Count == 0)
+            {
+                return revitRooms;
+            }
+
             // get shared parameter ids by GUID
             Dictionary<string, ElementId> sharedParameterIdsByGUIDs = duHastNet.RevitUtils.Parameters.SharedParaUtils.GetSharedParameterIdsByGUID(familyInstances[0].Document);
 

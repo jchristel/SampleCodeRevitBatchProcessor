@@ -53,6 +53,11 @@ namespace duHastNet.PushIt.ViewModels
         // the global message view model
         public Utils.WPF.ViewModels.GlobalMessageViewModel GlobalMessageViewModel { get; }
 
+        /// <summary>
+        /// View model managing the supported categories data grid.
+        /// </summary>
+        public duHastNet.PushIt.ViewModels.SupportedCatgeoriesDataGridViewModel SupportedCategoriesDataGridViewModel { get; }
+
         // data table containing push it data
         private DataTable _dt;
         // default view of the data table
@@ -929,6 +934,9 @@ namespace duHastNet.PushIt.ViewModels
 
             //store the global message view model
             GlobalMessageViewModel = globalMessageViewModel;
+
+            // supported categories data grid view model
+            SupportedCategoriesDataGridViewModel = new SupportedCatgeoriesDataGridViewModel(revitDataModel: revitDataModel);
 
             // supported categories collection
             _supportedCategories = new ObservableCollection<SupportedCategoryViewModel>();

@@ -9,6 +9,7 @@
              xmlns:pushItConverter ="clr-namespace:duHastNet.PushIt.Converters"
              xmlns:spinner="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinner"
              xmlns:customControls="clr-namespace:duHastNet.UI.CustomControls;assembly=duHastUICustomControls"
+             xmlns:dynamicDataGrid="clr-namespace:duHastNet.UI.CustomControls.CustomDataGrid;assembly=duHastUICustomControls"
              mc:Ignorable="d" 
              d:DesignHeight="650" d:DesignWidth="800">
     <UserControl.Resources>
@@ -283,39 +284,16 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <ScrollViewer   Grid.Row="0" Margin="5" HorizontalScrollBarVisibility="Auto">
-                                    <ListView 
-                                        ItemsSource="{Binding SupportedCategories}" 
-                                        Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}"
-                                        Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}">
-                                        <ListView.View>
-                                            <GridView>
-                                                <!-- select to reload column -->
-                                                <GridViewColumn>
-                                                    <GridViewColumnHeader Content="Select" />
-                                                    <GridViewColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <CheckBox 
-                                                                    Padding="0 0 20 0" 
-                                                                    IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"/>
-                                                        </DataTemplate>
-                                                    </GridViewColumn.CellTemplate>
-                                                </GridViewColumn>
-                                                <!-- category name column -->
-                                                <GridViewColumn>
-                                                    <GridViewColumnHeader Content="Category Name"/>
-                                                    <GridViewColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <TextBlock 
-                                                                    Padding="0 0 20 0" 
-                                                                    Text="{Binding CategoryName}"/>
-                                                        </DataTemplate>
-                                                    </GridViewColumn.CellTemplate>
-                                                </GridViewColumn>
-                                            </GridView>
-                                        </ListView.View>
-                                    </ListView>
-                                </ScrollViewer>
+
+                                <!-- grid view -->
+                                <dynamicDataGrid:DynamicDataGrid  x:Name="dataGridSupportedCategories" 
+                                    Grid.Row="0"
+                                    DataContext="{Binding  SupportedCategoriesDataGridViewModel}"
+                                    ItemsSource="{Binding Data}"
+                                    ColumnDefinitions="{Binding ColumnDefinitions}"
+                                    SelectionMode="Extended"
+                                    dynamicDataGrid:DataGridColumnHeaderBehavior.EnableColumnManagement="False"
+                                    dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="True"/>
                                 <Button 
                                      Grid.Row="1" 
                                      Grid.Column="2" 

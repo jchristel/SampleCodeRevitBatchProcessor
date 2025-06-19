@@ -105,7 +105,7 @@ def get_copy_directives(directory_path):
 
 def get_copy_directives(files):
     """
-    Reads list of rename directives from files.
+    Reads list of copy directives from files.
 
     :param filePath: List of fully qualified file path to copy and rename directives file.
     :type filePath: [str]
@@ -126,30 +126,15 @@ def get_copy_directives(files):
         # read rows in tuples ignoring the header row
         for i in range(0, len(rows)):
             data = None
-            if len(rows[i]) == 4:
+            if len(rows[i]) == 5:
                 data = FamilyDirectiveCopy(
                     name=rows[i][
                         FamilyDirectiveCopy. COPY_DIRECTIVE_LIST_INDEX_CURRENT_FAMILY_NAME
                     ],
-                    category=rows[i][
+                    source_file_path=rows[i][
                         FamilyDirectiveCopy.COPY_DIRECTIVE_INDEX_FAMILY_FILE_PATH
                     ],
-                    file_path=rows[i][
-                        FamilyDirectiveCopy.COPY_DIRECTIVE_INDEX_CATEGORY
-                    ],
-                    new_name=rows[i][
-                        FamilyDirectiveCopy.COPY_DIRECTIVE_LIST_INDEX_NEW_FAMILY_NAME
-                    ],
-                )
-            elif len(rows[i]) == 5:
-                data = FamilyDirectiveCopy(
-                    name=rows[i][
-                        FamilyDirectiveCopy. COPY_DIRECTIVE_LIST_INDEX_CURRENT_FAMILY_NAME
-                    ],
                     category=rows[i][
-                        FamilyDirectiveCopy.COPY_DIRECTIVE_INDEX_FAMILY_FILE_PATH
-                    ],
-                    file_path=rows[i][
                         FamilyDirectiveCopy.COPY_DIRECTIVE_INDEX_CATEGORY
                     ],
                     new_name=rows[i][

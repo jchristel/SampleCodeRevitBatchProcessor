@@ -28,11 +28,9 @@ using duHastNet.Utils.WPF.Commands;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace duHastNet.PushIt.ViewModels
@@ -65,11 +63,6 @@ namespace duHastNet.PushIt.ViewModels
 
         private string _activeDesignSetName = duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME;
         private string _activeDesignOptionName = duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME;
-
-        //observable collection of supported categories in Revit to push data into
-        private readonly ObservableCollection<SupportedCategoryViewModel> _supportedCategories;
-        //default view of the supported categories collection
-        private ICollectionView _supportedCategoriesView;
 
         //command to raise an event to refresh the gui
         private readonly Commands.RefreshUIFromRevitModelAsyncCommand _raiseRefreshGUICommand;
@@ -330,9 +323,7 @@ namespace duHastNet.PushIt.ViewModels
 
         }
 
-        //binding in xaml property to the default view of the supported categories collection
-        public ICollectionView SupportedCategories => _supportedCategoriesView;
-
+        
         //binding to show selected index
         private int _selectedIndex;
 
@@ -619,7 +610,6 @@ namespace duHastNet.PushIt.ViewModels
             }
 
 
-
             // Add the rows to the data table
             foreach (var roomModelInstance in _revitDataModel.GetAllRooms())
             {
@@ -742,26 +732,6 @@ namespace duHastNet.PushIt.ViewModels
             OnPropertyChanged(nameof(ColumnNameDefaultList));
 
             return true;
-        }
-
-
-        /// <summary>
-        /// Update available and supported categories collection in UI from revit data model.
-        /// </summary>
-        public void UpdateCategories()
-        {
-            //loop over categories supported as per data model and categories used in settings and add to the supported categories collection
-            _supportedCategories.Clear();
-            foreach (Models.CategoryDataModel category in _revitDataModel.GetAllCategories())
-            {
-                {
-                    bool isUsed = _revitDataModel.Settings.EnabledCategoryNames.Contains(category.Name);
-                    ViewModels.SupportedCategoryViewModel categoryViewModel = new SupportedCategoryViewModel(category, isUsed);
-                    _supportedCategories.Add(categoryViewModel);
-                }
-            }
-            _supportedCategoriesView.Refresh();
-            OnPropertyChanged(nameof(SupportedCategories));
         }
 
 
@@ -938,18 +908,11 @@ namespace duHastNet.PushIt.ViewModels
             // supported categories data grid view model
             SupportedCategoriesDataGridViewModel = new SupportedCatgeoriesDataGridViewModel(revitDataModel: revitDataModel);
 
-            // supported categories collection
-            _supportedCategories = new ObservableCollection<SupportedCategoryViewModel>();
-            _supportedCategoriesView = CollectionViewSource.GetDefaultView(_supportedCategories);
-
             //initialize column order
             _columnOrder = new List<string>();
 
             //set the data file path
             DataFilePath = _revitDataModel.Settings.DataPath;
-
-            //update supported categories from settings
-            UpdateCategories();
 
             //subscribe to underlying model changes
             _revitDataModel.PropertyChanged += Model_PropertyChanged;

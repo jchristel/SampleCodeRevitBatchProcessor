@@ -32,7 +32,7 @@ using System.Linq;
 
 namespace duHastNet.PushIt.ViewModels
 {
-    internal class RoomsDataGridViewModel : BaseDynamicGridViewModel<DynamicRowData>
+    public class RoomsDataGridViewModel : BaseDynamicGridViewModel<DynamicRowData>
     {
 
         private Models.RevitDataModel RevitDataModel { get; set; }
@@ -148,6 +148,49 @@ namespace duHastNet.PushIt.ViewModels
             return rowData;
         }
 
+        #region event handlers
+
+        /// <summary>
+        /// used to catch property changed events from the underlying model in order to update the ui
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // check which property changed in the underlying model
+            switch (e.PropertyName)
+            {
+                case  duHastNet.PushIt.Utilities.PropertyChangedEventNames.DATA_MODEL_ROOMS_UPDATED:
+                    //update rooms in the view model
+                    LoadDataFromRevitDataModel();
+                    break;
+
+                // Add more cases for other properties as needed
+
+                default:
+                    // Handle changes for properties not explicitly handled
+                    break;
+            }
+        }
+
+
+        /// <summary>
+        /// Custom closing logic for RoomsSelectionViewModel
+        /// Disposes all external events from the event manager
+        /// </summary>
+        //public override void OnClosing()
+        //{
+        //    // Custom closing logic for RoomsSelectionViewModel
+        //    //_eventManager.DisposeEvents();
+
+        //    //unbsubscribe from underlying model changes
+        //    RevitDataModel.PropertyChanged -= Model_PropertyChanged;
+
+            
+        //    base.OnClosing();
+        //}
+
+        #endregion event handlers
 
         #region Private Helper Methods
 
@@ -225,6 +268,8 @@ namespace duHastNet.PushIt.ViewModels
             // Populate the grid with data from the sheets model
             LoadDataFromRevitDataModel();
 
+            //subscribe to underlying model changes
+            RevitDataModel.PropertyChanged += Model_PropertyChanged;
 
         }
     }

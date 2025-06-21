@@ -56,6 +56,12 @@ namespace duHastNet.PushIt.ViewModels
         /// </summary>
         public duHastNet.PushIt.ViewModels.SupportedCatgeoriesDataGridViewModel SupportedCategoriesDataGridViewModel { get; }
 
+        /// <summary>
+        /// View model managing push it data grid
+        /// </summary>
+        public duHastNet.PushIt.ViewModels.RoomsDataGridViewModel RoomsDataGridViewModel { get; }
+
+
         // data table containing push it data
         private DataTable _dt;
         // default view of the data table
@@ -907,6 +913,9 @@ namespace duHastNet.PushIt.ViewModels
 
             // supported categories data grid view model
             SupportedCategoriesDataGridViewModel = new SupportedCatgeoriesDataGridViewModel(revitDataModel: revitDataModel);
+
+            //push it data grid view model
+            RoomsDataGridViewModel  = new RoomsDataGridViewModel(revitDataModel: revitDataModel);
 
             //initialize column order
             _columnOrder = new List<string>();

@@ -23,7 +23,7 @@
 
 namespace duHastNet.PushIt.ViewModels
 {
-    public class SupportedCategoryViewModel
+    public class SupportedCategoryViewModel_deprecated
     {
 
         Models.CategoryDataModel _category;
@@ -35,7 +35,7 @@ namespace duHastNet.PushIt.ViewModels
             get => _isSelected;
             set => _isSelected = value;
         }
-        public SupportedCategoryViewModel(Models.CategoryDataModel category, bool isSelected)
+        public SupportedCategoryViewModel_deprecated(Models.CategoryDataModel category, bool isSelected)
         {
             _category = category;
             _isSelected = isSelected;

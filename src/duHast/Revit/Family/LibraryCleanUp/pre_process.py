@@ -62,12 +62,23 @@ def get_family_data_from_file(libraryPath):
         return family_data_result.result
     
 
-def pre_process(library_path, output_path, task_list_directory_path, code_descriptor_path):
+def pre_process(library_path, output_path, task_list_directory_path, code_descriptor_path, output):
     """
     Pre-process function to prepare for the family type data extraction.
     
     This function is a placeholder for any pre-processing steps that may be needed before extracting family type data from the library.
-    
+
+    :param library_path: Path to the library containing family files to be renamed.
+    :type library_path: str
+    :param output_path: Path where the directives will be written and changed family files will be copied to.
+    :type output_path: str
+    :param task_list_directory_path: Path where the task lists for RBP will be written.
+    :type task_list_directory_path: str
+    :param code_descriptor_path: Path to the code descriptor file. (AUSHFG)
+    :type code_descriptor_path: str
+
+    :param output: Output object to write messages to.
+
     :return: Result object indicating the success or failure of the pre-processing step.
     :rtype: Result
     """
@@ -75,11 +86,11 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
     try:
         
         # do some logging to user
-        print("Processing family data from library path: {}".format(library_path))
+        output("Processing family data from library path: {}".format(library_path))
 
         # get type data from library as [:class:`.FamilyTypeDataStorageManager`]
         family_data = get_family_data_from_file(library_path)
-        print("Families {} loaded from library path.".format(len(family_data)))
+        output("Families {} loaded from library path.".format(len(family_data)))
 
         # check if anything came back
         if family_data is None:
@@ -91,7 +102,7 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
             )
             
         # do some logging to user
-        print("Creating directives for {} families.".format(len(family_data)))
+        output("Creating directives for {} families.".format(len(family_data)))
 
         directives_result = None
         try:
@@ -102,7 +113,7 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
                 False,
                 "Failed to create directives with exception: {}".format(e),
             )
-            print("Failed to create directives with exception: {}".format(e))
+            output("Failed to create directives with exception: {}".format(e))
             return return_value
 
         if directives_result is None:
@@ -112,7 +123,7 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
                 False,
                 "Failed to create directives",
             )
-            print("Failed to create directives: \n{}".format(directives_result.message))
+            output("Failed to create directives: \n{}".format(directives_result.message))
             return return_value
         else:
             return_value.append_message(
@@ -125,7 +136,7 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
         swap_directives = directives_result.result[2]
 
         # do some logging to user
-        print("Created {} copy directives, {} type maintain directives and {} swap directives.".format(
+        output("Created {} copy directives, {} type maintain directives and {} swap directives.".format(
             len(copy_directives), len(type_maintain_list), len(swap_directives)))
 
         # write swap directives and type maintain lists to file
@@ -142,12 +153,12 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
                     len(swap_directives), len(type_maintain_list))
             )
         
-        print("Wrote swap directives and type maintain directives to file.")
+        output("Wrote swap directives and type maintain directives to file.")
 
         # execute copy directives
         copy_result = execute_copy_directives_for_library_families(copy_directives)
         if copy_result.status is False:
-            print("Failed to execute copy directives: {}".format(copy_result.message))
+            output("Failed to execute copy directives: {}".format(copy_result.message))
             return_value.update_sep(
                 False,
                 "Failed to execute copy directives",
@@ -158,15 +169,15 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
                 "Executed {} copy directives.".format(len(copy_directives))
             )
 
-        print("Executed copy directives.")
+        output("Executed copy directives.")
 
         # write task list to file
         write_task_lists_result = write_task_lists(
-            family_directory= library_path, 
+            family_directory=output_path, 
             task_list_directory = task_list_directory_path, 
-            number_of_task_lists=3)
+            number_of_task_lists=1)
         
-        print(write_task_lists_result)
+        output(write_task_lists_result)
 
         return return_value
     except Exception as e:
@@ -174,7 +185,7 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
             False,
             "Failed to get family data with exception: {}".format(e),
         )
-        print("Failed to get family data with exception: {}".format(e))
+        output("Failed to get family data with exception: {}".format(e))
     
-    print("Finished!")
+    output("Finished!")
     return return_value

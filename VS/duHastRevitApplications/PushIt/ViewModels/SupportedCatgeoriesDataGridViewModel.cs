@@ -99,7 +99,7 @@ namespace duHastNet.PushIt.ViewModels
             {
                 try
                 {
-                    var rowData = CreateRowFromSheet(availableCategory);
+                    var rowData = CreateRowFromCategory(availableCategory);
                     Data.Add(rowData);
                 }
                 catch (Exception ex)
@@ -113,7 +113,7 @@ namespace duHastNet.PushIt.ViewModels
         /// <summary>
         /// Convert a category object to a ViewDataViewModel for the grid
         /// </summary>
-        private DynamicRowData CreateRowFromSheet(Models.CategoryDataModel availableCategory)
+        private DynamicRowData CreateRowFromCategory(Models.CategoryDataModel availableCategory)
         {
             var rowData = new DynamicRowData();
 

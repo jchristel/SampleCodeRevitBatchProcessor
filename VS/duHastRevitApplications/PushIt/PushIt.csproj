@@ -198,6 +198,7 @@
     <Compile Include="Utilities\SettingsUtils.cs" />
     <Compile Include="Utilities\UpdateRoomDataModelWithRoomsRevitModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\RoomsDataGridViewModel.cs" />
     <Compile Include="ViewModels\RoomsSelectionViewModel.cs" />
     <Compile Include="ViewModels\SupportedCategoryViewModel.cs" />
     <Compile Include="ViewModels\SupportedCatgeoriesDataGridViewModel.cs" />

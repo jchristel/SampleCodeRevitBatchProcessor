@@ -145,7 +145,7 @@ namespace duHastNet.PushIt.Commands
 
                             // return the message to the caller
                             return (
-                                $"{messageActionTypeUpdate}\n{messageAction}",
+                                $"{messageActionUpdate}\n{messageAction}",
                                 Utilities.MessageActionTypesUtils.CombineMessageActionType(new List<MessageTypes> { messageActionTypeUpdate, messageActionType })
                             );
 

@@ -39,7 +39,7 @@ namespace duHastNet.PushIt.Utilities.Revit
             // get the parameters of the family instance
             IList<Parameter> parameters = familyInstance.GetOrderedParameters();
 
-            //ther definetly should be one....
+            //their definetly should be one....
             var idParameter = parametersRequired.Find(x=>x.IsUniqueId==true);
 
             // get the id value

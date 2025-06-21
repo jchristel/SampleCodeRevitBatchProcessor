@@ -272,7 +272,7 @@
                             Grid.Row="0" 
                             Grid.Column="3" 
                             Padding="20 0 20 0"
-                            Margin="5 10 0 10" 
+                            Margin="5 10 5 10" 
                             Content="Load"
                             Command="{Binding ReloadDataCommand}" 
                             CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
@@ -285,20 +285,22 @@
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
-                                <!-- grid view -->
-                                <dynamicDataGrid:DynamicDataGrid  x:Name="dataGridSupportedCategories" 
+                                <!-- dynamic grid view of supported categories -->
+                                <dynamicDataGrid:DynamicDataGrid  
+                                    x:Name="dataGridSupportedCategories" 
                                     Grid.Row="0"
                                     DataContext="{Binding  SupportedCategoriesDataGridViewModel}"
                                     ItemsSource="{Binding Data}"
                                     ColumnDefinitions="{Binding ColumnDefinitions}"
                                     SelectionMode="Extended"
+                                    Margin="5 10 5 10" 
                                     dynamicDataGrid:DataGridColumnHeaderBehavior.EnableColumnManagement="False"
                                     dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="True"/>
                                 <Button 
                                      Grid.Row="1" 
                                      Grid.Column="2" 
                                      Padding="20 0 20 0"
-                                     Margin="5 10 0 10" 
+                                     Margin="5 10 5 10" 
                                      Content="Apply"
                                     Command="{Binding UpdateFromChangedCategoriesCommand}" 
                                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>     

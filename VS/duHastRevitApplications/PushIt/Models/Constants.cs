@@ -36,5 +36,17 @@ namespace duHastNet.PushIt.Models
 
         public const string ColumnHeaderCategoriesIsEnabled = "Is Enabled";
         public const string ColumnHeaderCategoriesCategoryName = "Category Name";
+
+
+        public const string ColumnHeaderRoomId = "Id";
+        public const string ColumnHeaderRoomCount = "Count";
+        public const string ColumnHeaderRoomSplit = "Split";
+
+        public static readonly Dictionary<string, string> ColumnRoomsInfo = new Dictionary<string, string>
+        {
+            {ColumnHeaderRoomId.Replace(" ",""), ColumnHeaderRoomId},
+            {ColumnHeaderRoomCount.Replace(" ",""), ColumnHeaderRoomCount},
+            {ColumnHeaderRoomSplit.Replace(" ",""), ColumnHeaderRoomSplit},
+        };
     }
 }

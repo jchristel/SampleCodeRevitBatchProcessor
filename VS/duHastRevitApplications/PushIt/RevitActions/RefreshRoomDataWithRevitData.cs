@@ -122,10 +122,14 @@ namespace duHastNet.PushIt.RevitActions
 
 
             //if the update failed return the rooms data model unchanged
-            if (_roomsData == null || _roomsData.Count == 0)
+            if (_roomsData == null )
             {
                 return roomsDataModel;
             }
+
+            //Note:
+            //if there are no mock rooms of the defined categories in the model any more or never where ( _roomsData count is 0 )
+            //the list of matching rooms in revit will be cleared from the room in the data model in the function call below
 
             // get the documents current design set and option
             (string designSetName, string designOptionName) = Utilities.Revit.DesignSetAndOptionUtils.GetActiveDesignSetAndOptionName(doc);

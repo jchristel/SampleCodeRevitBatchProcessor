@@ -122,13 +122,10 @@ namespace duHastNet.PushIt.Commands
             {
                 return false;
             }
-            else if (!_roomsDataGridViewModel.IsMatchingRevitRoomsEmpty)
+            //check if no room but and no split room is associated with this entry
+            else if (_roomsDataGridViewModel.IsMatchingRevitRoomsEmpty && _roomsDataGridViewModel.IsMatchingSplitRoomsEmpty)
             {
-                return true;
-            }
-            else if (!_roomsDataGridViewModel.IsMatchingSplitRoomsEmpty)
-            {
-                return true;
+                return false;
             }
 
             return base.CanExecute(parameter);
@@ -138,6 +135,7 @@ namespace duHastNet.PushIt.Commands
         {
             // check if the property that changed is the one that we are interested in
             if (e.PropertyName == nameof(ViewModels.RoomsDataGridViewModel.IsMatchingRevitRoomsEmpty) ||
+                e.PropertyName == nameof(ViewModels.RoomsDataGridViewModel.IsMatchingSplitRoomsEmpty) ||
                 e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish))
             {
                 OnCanExecutedChanged();

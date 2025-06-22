@@ -101,11 +101,11 @@
             DataContext="{Binding  RoomsDataGridViewModel}"
             ItemsSource="{Binding Data}"
             ColumnDefinitions="{Binding ColumnDefinitions}"
-            SelectionMode="Extended"
+            SelectionMode="Single"
+            SelectedItem="{Binding SelectedItem}"
             Margin="5 10 5 10"
-            SelectedIndex="{Binding SelectedIndex}"
             dynamicDataGrid:DataGridColumnHeaderBehavior.EnableColumnManagement="True"
-            dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="True"
+            dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="False"
             IsEnabled="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource InverseBooleanConverter}}"/>
         
         <!-- button row content -->

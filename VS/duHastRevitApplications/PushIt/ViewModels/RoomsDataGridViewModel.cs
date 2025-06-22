@@ -57,81 +57,84 @@ namespace duHastNet.PushIt.ViewModels
 
         #region selected room
 
-        //binding to show selected index
-        private int _selectedIndex;
-
-        public int SelectedIndex
+        protected override void OnSelectionChanged()
         {
-            get => _selectedIndex;
-            set
+            base.OnSelectionChanged();
+
+            if (HasSelection)
             {
-                if (_selectedIndex != value)
+                //get the selected row item
+                var selectedRow = SelectedItem;
+                var roomId = selectedRow[Models.Constants.ColumnHeaderRoomId.Replace(" ", "")].ToString();
+                SelectedRoom = RevitDataModel.GetAllRooms().FirstOrDefault(r => r.Id.Value == roomId);
+                
+                //check matching revit rooms
+                if (SelectedRoom != null)
                 {
-                    _selectedIndex = value;
-                    OnPropertyChanged(nameof(SelectedIndex));
-                    OnPropertyChanged(nameof(SelectedRoom));
-                    OnPropertyChanged(nameof(IsMatchingRevitRoomsEmpty));
+                    IsMatchingRevitRoomsEmpty = SelectedRoom.MatchingRevitRooms.Count == 0;
+                    IsMatchingSplitRoomsEmpty = SelectedRoom.MatchingSplitRevitRooms.Count == 0;
+                }
+                else
+                {
+                    IsMatchingRevitRoomsEmpty = true;
+                    IsMatchingSplitRoomsEmpty = true;
                 }
             }
+            else
+            {
+                SelectedRoom = null;
+                IsMatchingRevitRoomsEmpty = true;
+                IsMatchingSplitRoomsEmpty = true;
+            }
         }
+
+        //field to store the selected room from the revit data model
+        private Models.RoomDataModel _selectedRoom;
 
         //property to get the selected room from the revit data model
         public Models.RoomDataModel SelectedRoom
         {
-            get
+            set
             {
-                // check if a default view exists
-                if (Data == null)
-                {
-                    return null;
-                }
-
-                // check if the selected index is within the bounds of the rooms collection
-                if (_selectedIndex >= 0 && _selectedIndex < Data.Count)
-                {
-                    var selectedRow = Data[_selectedIndex];
-                    var roomId = selectedRow["Id"].ToString();
-                    return RevitDataModel.GetAllRooms().FirstOrDefault(r => r.Id.Value == roomId);
-                }
-                // return null if the selected index is out of bounds
-                return null;
+                _selectedRoom = value;
+                OnPropertyChanged(nameof(SelectedRoom));
             }
+
+            get => _selectedRoom;
         }
 
+        //field to store if the selected room has any matching Revit rooms
+        bool _isMatchingRevitRoomsEmpty;
+        
         //property to check if the selected room has any matching Revit rooms
         //used to determine if the button to push the selected room to Revit should be enabled
         public bool IsMatchingRevitRoomsEmpty
         {
-            get
+            set
             {
-                var selectedRoom = SelectedRoom;
-                if (selectedRoom != null && SelectedIndex >= 0)
-                {
-                    return selectedRoom.MatchingRevitRooms.Count == 0;
-                }
-                // if no room is selected, return false to avoid pushing null or stale data
-                else if (SelectedIndex < 0)
-                {
-                    return false;
-                }
-                return true;
+                _isMatchingRevitRoomsEmpty = value;
+                OnPropertyChanged(nameof(IsMatchingRevitRoomsEmpty));
             }
+            get => _isMatchingRevitRoomsEmpty;
+            
         }
+
+        //field to store if the selected room has no matching split rooms
+        bool _isMatchingSplitRoomsEmpty;
 
         /// <summary>
         /// property returning true if either no room is selected or the selected room has no matching split rooms
         /// </summary>
         public bool IsMatchingSplitRoomsEmpty
         {
-            get
+            set
             {
-                var selectedRoom = SelectedRoom;
-                if (selectedRoom != null && SelectedIndex >= 0)
-                {
-                    return SelectedRoom.MatchingSplitRevitRooms.Count == 0;
-                }
-                return true;
+                _isMatchingSplitRoomsEmpty = value;
+                OnPropertyChanged(nameof(IsMatchingSplitRoomsEmpty));
             }
+
+            get => _isMatchingSplitRoomsEmpty;
+           
         }
 
         #endregion selected room

@@ -232,7 +232,7 @@ namespace duHastNet.PushIt.ViewModels
             foreach (var property in roomEntry.Properties)
             {
                 // add all other property values
-                rowData[property.Name]= property.Value;
+                rowData[property.Name.Replace(" ", "")] = property.Value;
             }
 
             return rowData;
@@ -307,6 +307,64 @@ namespace duHastNet.PushIt.ViewModels
             }
         }
 
+        /// <summary>
+        /// Override to restore actual room data instead of defaults when adding columns
+        /// </summary>
+        protected override void RestoreOrSetDefaultColumnData(string propertyName, AvailableColumnDefinition availableColumn)
+        {
+            if (_removedColumnData.ContainsKey(propertyName))
+            {
+                // Use the base implementation for restored data
+                base.RestoreOrSetDefaultColumnData(propertyName, availableColumn);
+            }
+            else
+            {
+                // For new columns, populate with actual room data instead of defaults
+                RestoreActualRoomData(propertyName, availableColumn);
+            }
+        }
+
+        /// <summary>
+        /// Populate column with actual data from rooms instead of defaults
+        /// </summary>
+        private void RestoreActualRoomData(string propertyName, AvailableColumnDefinition availableColumn)
+        {
+            var rooms = RevitDataModel.GetAllRooms();
+            // For all rows, set the actual data from the corresponding room
+            for (int i = 0; i < Data.Count && i < rooms.Count; i++)
+            {
+                var room = rooms[i];
+                var rowData = Data[i];
+
+                // Set the value based on the property name
+                if (propertyName == Constants.ColumnHeaderRoomId.Replace(" ", ""))
+                {
+                    rowData[propertyName] = room.Id.Value;
+                }
+                else if (propertyName == Constants.ColumnHeaderRoomCount.Replace(" ", ""))
+                {
+                    rowData[propertyName] = room.MatchingRevitRooms.Count;
+                }
+                else if (propertyName == Constants.ColumnHeaderRoomSplit.Replace(" ", ""))
+                {
+                    rowData[propertyName] = room.MatchingSplitRevitRooms.Count;
+                }
+                else
+                {
+                    // Handle custom properties
+                    var property = room.Properties.FirstOrDefault(p => p.Name.Replace(" ", "") == propertyName);
+                    if (property != null)
+                    {
+                        rowData[propertyName] = property.Value ?? "";
+                    }
+                    else
+                    {
+                        // Fallback to default value
+                        rowData[propertyName] = GetDefaultValueForColumn(availableColumn);
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Get default value for a specific column in the catgeories context

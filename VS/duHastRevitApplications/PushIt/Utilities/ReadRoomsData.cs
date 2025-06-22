@@ -71,7 +71,7 @@ namespace duHastNet.PushIt.Utilities
             var properties = new List<RoomDataProperty>();
             for (int i = 0; i < headerRows[0].Count; i++)
             {
-                bool isId = false ? i == 0 : true;
+                bool isId = true ? i == 0 : false;
                 var property = new RoomDataProperty(
                     name: headerRows[0][i],
                     parameterGUID: headerRows[1][i],

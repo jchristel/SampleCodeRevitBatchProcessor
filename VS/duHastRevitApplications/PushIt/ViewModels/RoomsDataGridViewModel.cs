@@ -51,6 +51,95 @@ namespace duHastNet.PushIt.ViewModels
             get => _columnDefaults;
         }
 
+
+        #region user interaction
+
+
+        #region selected room
+
+        //binding to show selected index
+        private int _selectedIndex;
+
+        public int SelectedIndex
+        {
+            get => _selectedIndex;
+            set
+            {
+                if (_selectedIndex != value)
+                {
+                    _selectedIndex = value;
+                    OnPropertyChanged(nameof(SelectedIndex));
+                    OnPropertyChanged(nameof(SelectedRoom));
+                    OnPropertyChanged(nameof(IsMatchingRevitRoomsEmpty));
+                }
+            }
+        }
+
+        //property to get the selected room from the revit data model
+        public Models.RoomDataModel SelectedRoom
+        {
+            get
+            {
+                // check if a default view exists
+                if (Data == null)
+                {
+                    return null;
+                }
+
+                // check if the selected index is within the bounds of the rooms collection
+                if (_selectedIndex >= 0 && _selectedIndex < Data.Count)
+                {
+                    var selectedRow = Data[_selectedIndex];
+                    var roomId = selectedRow["Id"].ToString();
+                    return RevitDataModel.GetAllRooms().FirstOrDefault(r => r.Id.Value == roomId);
+                }
+                // return null if the selected index is out of bounds
+                return null;
+            }
+        }
+
+        //property to check if the selected room has any matching Revit rooms
+        //used to determine if the button to push the selected room to Revit should be enabled
+        public bool IsMatchingRevitRoomsEmpty
+        {
+            get
+            {
+                var selectedRoom = SelectedRoom;
+                if (selectedRoom != null && SelectedIndex >= 0)
+                {
+                    return selectedRoom.MatchingRevitRooms.Count == 0;
+                }
+                // if no room is selected, return false to avoid pushing null or stale data
+                else if (SelectedIndex < 0)
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// property returning true if either no room is selected or the selected room has no matching split rooms
+        /// </summary>
+        public bool IsMatchingSplitRoomsEmpty
+        {
+            get
+            {
+                var selectedRoom = SelectedRoom;
+                if (selectedRoom != null && SelectedIndex >= 0)
+                {
+                    return SelectedRoom.MatchingSplitRevitRooms.Count == 0;
+                }
+                return true;
+            }
+        }
+
+        #endregion selected room
+
+        #endregion user interaction
+
+        #region data loading
+
         /// <summary>
         /// Define what columns are available for the revit categories grid
         /// </summary>
@@ -126,6 +215,7 @@ namespace duHastNet.PushIt.ViewModels
             }
         }
 
+
         /// <summary>
         /// Convert a room data object to a dynamic row for the grid
         /// </summary>
@@ -147,6 +237,8 @@ namespace duHastNet.PushIt.ViewModels
 
             return rowData;
         }
+
+        #endregion data loading
 
         #region event handlers
 
@@ -178,17 +270,13 @@ namespace duHastNet.PushIt.ViewModels
         /// Custom closing logic for RoomsSelectionViewModel
         /// Disposes all external events from the event manager
         /// </summary>
-        //public override void OnClosing()
-        //{
-        //    // Custom closing logic for RoomsSelectionViewModel
-        //    //_eventManager.DisposeEvents();
+        public override void OnClosing()
+        {
+            //unbsubscribe from underlying model changes
+            RevitDataModel.PropertyChanged -= Model_PropertyChanged;
 
-        //    //unbsubscribe from underlying model changes
-        //    RevitDataModel.PropertyChanged -= Model_PropertyChanged;
-
-            
-        //    base.OnClosing();
-        //}
+            base.OnClosing();
+        }
 
         #endregion event handlers
 

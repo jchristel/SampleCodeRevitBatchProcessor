@@ -129,36 +129,19 @@
             </Expander>
         </Border>
         <!-- grid view -->
-        <DataGrid Grid.Row="3" x:Name="dataGrid" 
-                            ItemsSource="{Binding DataView}"
-                            EnableRowVirtualization="True" 
-                            EnableColumnVirtualization="True" 
-                            VirtualizingPanel.IsVirtualizing="True" 
-                            VirtualizingPanel.VirtualizationMode="Recycling"
-                            AutoGenerateColumns="True" 
-                            IsReadOnly="True"
-                            CanUserSortColumns="True"
-                            SelectionMode="Single" 
-                            SelectedIndex="{Binding SelectedIndex}"
-                            ColumnWidth="*"
-                            RowHeight="23"
-                            HorizontalAlignment="Stretch"
-                            ColumnReordered="RoomsDataGrid_ColumnReordered"
-                            IsEnabled="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource InverseBooleanConverter}}">
-            <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
-                    <Setter Property="Background" Value="Red" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Count}" Value="1">
-                            <Setter Property="Background" Value="LightGray"></Setter>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Count}" Value="0">
-                            <Setter Property="Background" Value="White"></Setter>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.RowStyle>
-        </DataGrid>
+        <!-- dynamic grid view of supported categories -->
+        <dynamicDataGrid:DynamicDataGrid  
+            x:Name="dataGrid" 
+            Grid.Row="3"
+            DataContext="{Binding  RoomsDataGridViewModel}"
+            ItemsSource="{Binding Data}"
+            ColumnDefinitions="{Binding ColumnDefinitions}"
+            SelectionMode="Extended"
+            Margin="5 10 5 10"
+            SelectedIndex="{Binding SelectedIndex}"
+            dynamicDataGrid:DataGridColumnHeaderBehavior.EnableColumnManagement="True"
+            dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="True"
+            IsEnabled="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource InverseBooleanConverter}}"/>
         <!-- button row content -->
         <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>

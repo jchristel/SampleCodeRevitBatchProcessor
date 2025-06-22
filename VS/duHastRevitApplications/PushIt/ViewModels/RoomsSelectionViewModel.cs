@@ -471,30 +471,30 @@ namespace duHastNet.PushIt.ViewModels
 
         #region column order
 
-        //property to store the column order
-        private IEnumerable<string> _columnOrder;
+        ////property to store the column order
+        //private IEnumerable<string> _columnOrder;
 
-        //property to expose the column order
-        public IEnumerable<string> ColumnOrder
-        {
-            get => _columnOrder;
-            set
-            {
-                _columnOrder = value;
-            }
-        }
+        ////property to expose the column order
+        //public IEnumerable<string> ColumnOrder
+        //{
+        //    get => _columnOrder;
+        //    set
+        //    {
+        //        _columnOrder = value;
+        //    }
+        //}
 
-        /// <summary>
-        /// Relay command target for column order changed event
-        /// </summary>
-        private void OnColumnOrderChanged(object parameter)
-        {
-            if (parameter is Tuple<IEnumerable<string>, DataView> data && data.Item2 is DataView dataView)
-            {
-                // update the column order
-                ColumnOrder = data.Item1;
-            }
-        }
+        ///// <summary>
+        ///// Relay command target for column order changed event
+        ///// </summary>
+        //private void OnColumnOrderChanged(object parameter)
+        //{
+        //    if (parameter is Tuple<IEnumerable<string>, DataView> data && data.Item2 is DataView dataView)
+        //    {
+        //        // update the column order
+        //        ColumnOrder = data.Item1;
+        //    }
+        //}
 
         #endregion column order
 
@@ -502,243 +502,243 @@ namespace duHastNet.PushIt.ViewModels
         /// Update the rooms in the view model by creating a data table from the rooms in the data model, 
         /// updating the default view of the data table, and updating the column filter list.
         /// </summary>
-        private void UpdateRooms()
-        {
-            //create a data table from the rooms in the data model
-            DataTable dt = CreateRoomsDataTable();
-            if (dt == null)
-            {
-                return;
-            }
+        //private void UpdateRooms()
+        //{
+        //    //create a data table from the rooms in the data model
+        //    DataTable dt = CreateRoomsDataTable();
+        //    if (dt == null)
+        //    {
+        //        return;
+        //    }
 
-            //store the data table
-            _dt = dt;
+        //    //store the data table
+        //    _dt = dt;
 
-            // create a data view from the data table
-            // this will trigger an onproperty chaanged event
-            DataView = new DataView(dt);
+        //    // create a data view from the data table
+        //    // this will trigger an onproperty chaanged event
+        //    DataView = new DataView(dt);
 
-            // update the column filter list
-            bool resetFilterValue = CreateColumnFilterItems();
+        //    // update the column filter list
+        //    bool resetFilterValue = CreateColumnFilterItems();
 
-            // reset the column filter value?
-            if (resetFilterValue) { FilterValue = ""; }
-            else
-            {
-                //reapply the filter
-                OnPropertyChanged(nameof(FilterValue));
-            }
-        }
+        //    // reset the column filter value?
+        //    if (resetFilterValue) { FilterValue = ""; }
+        //    else
+        //    {
+        //        //reapply the filter
+        //        OnPropertyChanged(nameof(FilterValue));
+        //    }
+        //}
 
 
         /// <summary>
         /// Creates the data table displayed in the ui
         /// </summary>
         /// <returns></returns>
-        public DataTable CreateRoomsDataTable()
-        {
-            // Check if there are any rooms
-            if (_revitDataModel.GetAllRooms().Count == 0)
-            {
-                return null;
-            }
+        //public DataTable CreateRoomsDataTable()
+        //{
+        //    // Check if there are any rooms
+        //    if (_revitDataModel.GetAllRooms().Count == 0)
+        //    {
+        //        return null;
+        //    }
 
-            // Set up the data table
-            DataTable dataTable = new DataTable();
+        //    // Set up the data table
+        //    DataTable dataTable = new DataTable();
 
-            // Check if the column order is not null and has any elements
-            // if so add columns to the data table in the order specified by the column order
-            if (ColumnOrder != null && ColumnOrder.Any())
-            {
-                // Add columns to the data table in the order specified by the column order
-                foreach (var column in ColumnOrder)
-                {
-                    //check for default columns
-                    if (column == columNameCount)
-                    {
-                        dataTable.Columns.Add(columNameCount);
-                        continue;
-                    }
-                    else if (column == columNameId)
-                    {
-                        dataTable.Columns.Add(columNameId);
-                        continue;
-                    }
-                    else if (column == columNameCountSplit)
-                    {
-                        dataTable.Columns.Add(columNameCountSplit);
-                        continue;
-                    }
-                    else
-                    {
-                        // Add a column per property
-                        foreach (var roomModelInstance in _revitDataModel.GetAllRooms())
-                        {
-                            // Add a column per property
-                            foreach (var prop in roomModelInstance.Properties)
-                            {
-                                // check if the column is meant to be displayed in the ui
-                                if (prop.ShowInUI && prop.Name == column)
-                                {
-                                    dataTable.Columns.Add(prop.Name);
-                                    break;
-                                }
-                            }
-                            // Get out of the loop
-                            break;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                //othrwise add columns in default order
-                //add the default id column
-                dataTable.Columns.Add(columNameId);
+        //    // Check if the column order is not null and has any elements
+        //    // if so add columns to the data table in the order specified by the column order
+        //    if (ColumnOrder != null && ColumnOrder.Any())
+        //    {
+        //        // Add columns to the data table in the order specified by the column order
+        //        foreach (var column in ColumnOrder)
+        //        {
+        //            //check for default columns
+        //            if (column == columNameCount)
+        //            {
+        //                dataTable.Columns.Add(columNameCount);
+        //                continue;
+        //            }
+        //            else if (column == columNameId)
+        //            {
+        //                dataTable.Columns.Add(columNameId);
+        //                continue;
+        //            }
+        //            else if (column == columNameCountSplit)
+        //            {
+        //                dataTable.Columns.Add(columNameCountSplit);
+        //                continue;
+        //            }
+        //            else
+        //            {
+        //                // Add a column per property
+        //                foreach (var roomModelInstance in _revitDataModel.GetAllRooms())
+        //                {
+        //                    // Add a column per property
+        //                    foreach (var prop in roomModelInstance.Properties)
+        //                    {
+        //                        // check if the column is meant to be displayed in the ui
+        //                        if (prop.ShowInUI && prop.Name == column)
+        //                        {
+        //                            dataTable.Columns.Add(prop.Name);
+        //                            break;
+        //                        }
+        //                    }
+        //                    // Get out of the loop
+        //                    break;
+        //                }
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        //othrwise add columns in default order
+        //        //add the default id column
+        //        dataTable.Columns.Add(columNameId);
 
-                // Add columns to the data table
-                foreach (var roomModelInstance in _revitDataModel.GetAllRooms())
-                {
-                    // Add a column per property
-                    foreach (var prop in roomModelInstance.Properties)
-                    {
-                        // check if the column is meant to be displayed in the ui
-                        if (prop.ShowInUI) { dataTable.Columns.Add(prop.Name); }
-                    }
-                    // Get out of the loop
-                    break;
-                }
+        //        // Add columns to the data table
+        //        foreach (var roomModelInstance in _revitDataModel.GetAllRooms())
+        //        {
+        //            // Add a column per property
+        //            foreach (var prop in roomModelInstance.Properties)
+        //            {
+        //                // check if the column is meant to be displayed in the ui
+        //                if (prop.ShowInUI) { dataTable.Columns.Add(prop.Name); }
+        //            }
+        //            // Get out of the loop
+        //            break;
+        //        }
 
-                // Add the count column
-                dataTable.Columns.Add(columNameCount);
-                // Add the count split column
-                dataTable.Columns.Add(columNameCountSplit);
-            }
+        //        // Add the count column
+        //        dataTable.Columns.Add(columNameCount);
+        //        // Add the count split column
+        //        dataTable.Columns.Add(columNameCountSplit);
+        //    }
 
 
-            // Add the rows to the data table
-            foreach (var roomModelInstance in _revitDataModel.GetAllRooms())
-            {
-                // Add a row per room
-                DataRow row = dataTable.NewRow();
+        //    // Add the rows to the data table
+        //    foreach (var roomModelInstance in _revitDataModel.GetAllRooms())
+        //    {
+        //        // Add a row per room
+        //        DataRow row = dataTable.NewRow();
 
-                //add properties to the row in order specified by the column order
-                if (ColumnOrder != null && ColumnOrder.Any())
-                {
-                    // Add columns to the data table in the order specified by the column order
-                    foreach (var column in ColumnOrder)
-                    {
-                        if (column == columNameCount)
-                        {
-                            row[columNameCount] = roomModelInstance.MatchingRevitRooms.Count;
-                            continue;
-                        }
-                        else if (column == columNameCountSplit)
-                        {
-                            row[columNameCountSplit] = roomModelInstance.MatchingSplitRevitRooms.Count;
-                            continue;
-                        }
-                        else if (column == columNameId)
-                        {
-                            row[columNameId] = roomModelInstance.Id.Value;
-                            continue;
-                        }
-                        else
-                        {
-                            // Add the property values
-                            foreach (var prop in roomModelInstance.Properties)
-                            {
-                                // check if the column is meant to be displayed in the ui
-                                if (prop.ShowInUI && prop.Name == column)
-                                {
-                                    row[prop.Name] = !string.IsNullOrEmpty(prop.Value) ? prop.Value : "";
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    // Add the row to the data table
-                    dataTable.Rows.Add(row);
-                }
-                else
-                {
-                    //add data to the row in default order
-                    // add the id value
-                    row[columNameId] = roomModelInstance.Id.Value;
+        //        //add properties to the row in order specified by the column order
+        //        if (ColumnOrder != null && ColumnOrder.Any())
+        //        {
+        //            // Add columns to the data table in the order specified by the column order
+        //            foreach (var column in ColumnOrder)
+        //            {
+        //                if (column == columNameCount)
+        //                {
+        //                    row[columNameCount] = roomModelInstance.MatchingRevitRooms.Count;
+        //                    continue;
+        //                }
+        //                else if (column == columNameCountSplit)
+        //                {
+        //                    row[columNameCountSplit] = roomModelInstance.MatchingSplitRevitRooms.Count;
+        //                    continue;
+        //                }
+        //                else if (column == columNameId)
+        //                {
+        //                    row[columNameId] = roomModelInstance.Id.Value;
+        //                    continue;
+        //                }
+        //                else
+        //                {
+        //                    // Add the property values
+        //                    foreach (var prop in roomModelInstance.Properties)
+        //                    {
+        //                        // check if the column is meant to be displayed in the ui
+        //                        if (prop.ShowInUI && prop.Name == column)
+        //                        {
+        //                            row[prop.Name] = !string.IsNullOrEmpty(prop.Value) ? prop.Value : "";
+        //                            break;
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //            // Add the row to the data table
+        //            dataTable.Rows.Add(row);
+        //        }
+        //        else
+        //        {
+        //            //add data to the row in default order
+        //            // add the id value
+        //            row[columNameId] = roomModelInstance.Id.Value;
 
-                    // add the property values
-                    foreach (var prop in roomModelInstance.Properties)
-                    {
-                        // check if the column is meant to be displayed in the ui
-                        if (prop.ShowInUI) { row[prop.Name] = !string.IsNullOrEmpty(prop.Value) ? prop.Value : ""; }
-                    }
-                    row["Count"] = roomModelInstance.MatchingRevitRooms.Count;
-                    row["Count Split"] = roomModelInstance.MatchingSplitRevitRooms.Count;
-                    // Add the row to the data table
-                    dataTable.Rows.Add(row);
-                }
-            }
+        //            // add the property values
+        //            foreach (var prop in roomModelInstance.Properties)
+        //            {
+        //                // check if the column is meant to be displayed in the ui
+        //                if (prop.ShowInUI) { row[prop.Name] = !string.IsNullOrEmpty(prop.Value) ? prop.Value : ""; }
+        //            }
+        //            row["Count"] = roomModelInstance.MatchingRevitRooms.Count;
+        //            row["Count Split"] = roomModelInstance.MatchingSplitRevitRooms.Count;
+        //            // Add the row to the data table
+        //            dataTable.Rows.Add(row);
+        //        }
+        //    }
 
-            return dataTable;
-        }
+        //    return dataTable;
+        //}
 
 
         /// <summary>
         /// populates the column filter items list the user can chpoose to filter by in the UI
         /// </summary>
         /// <returns>true if column filter list changed, otherwise false.</returns>
-        public bool CreateColumnFilterItems()
-        {
-            // Check if the data table is null
-            if (_dt == null)
-            {
-                return false;
-            }
+        //public bool CreateColumnFilterItems()
+        //{
+        //    // Check if the data table is null
+        //    if (_dt == null)
+        //    {
+        //        return false;
+        //    }
 
-            // Get the columns from the data table
-            var columns = _dt.Columns;
+        //    // Get the columns from the data table
+        //    var columns = _dt.Columns;
 
-            bool filterListNeedsUpdating = false;
+        //    bool filterListNeedsUpdating = false;
 
-            if (_columnNameDefaultList.Count == columns.Count)
-            {
-                //identical length ... make sure its the same values in both lists
-                //only update the filter list if new list is different to existing values
-                foreach (DataColumn column in columns)
-                {
-                    if (!_columnNameDefaultList.Contains(column.ColumnName))
-                    {
-                        filterListNeedsUpdating = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                // got different length...needs updating
-                filterListNeedsUpdating = true;
-            }
+        //    if (_columnNameDefaultList.Count == columns.Count)
+        //    {
+        //        //identical length ... make sure its the same values in both lists
+        //        //only update the filter list if new list is different to existing values
+        //        foreach (DataColumn column in columns)
+        //        {
+        //            if (!_columnNameDefaultList.Contains(column.ColumnName))
+        //            {
+        //                filterListNeedsUpdating = true;
+        //                break;
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        // got different length...needs updating
+        //        filterListNeedsUpdating = true;
+        //    }
 
-            // if the list does not need updating get out
-            if (!filterListNeedsUpdating)
-            {
-                return false;
-            }
+        //    // if the list does not need updating get out
+        //    if (!filterListNeedsUpdating)
+        //    {
+        //        return false;
+        //    }
 
-            // Clear the old entries
-            _columnNameDefaultList.Clear();
+        //    // Clear the old entries
+        //    _columnNameDefaultList.Clear();
 
-            // Add the column names to the column filter items
-            foreach (DataColumn column in columns)
-            {
-                _columnNameDefaultList.Add(column.ColumnName);
-            }
+        //    // Add the column names to the column filter items
+        //    foreach (DataColumn column in columns)
+        //    {
+        //        _columnNameDefaultList.Add(column.ColumnName);
+        //    }
 
-            // Notify UI of changes
-            OnPropertyChanged(nameof(ColumnNameDefaultList));
+        //    // Notify UI of changes
+        //    OnPropertyChanged(nameof(ColumnNameDefaultList));
 
-            return true;
-        }
+        //    return true;
+        //}
 
 
         /// <summary>
@@ -746,59 +746,59 @@ namespace duHastNet.PushIt.ViewModels
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="propertyChangedArgs"></param>
-        private void FilterRoomData(object sender, PropertyChangedEventArgs propertyChangedArgs)
-        {
-            try
-            {
-                // Check if either the selected column filter value or the selected column filter item has changed
-                if (propertyChangedArgs.PropertyName == nameof(SelectedColumnFilterItem) ||
-                    propertyChangedArgs.PropertyName == nameof(FilterValue))
-                {
-                    // Check if the data view is null, if so get out of the function since there is nothing to filter
-                    if (DataView == null)
-                    {
-                        return;
-                    }
+        //private void FilterRoomData(object sender, PropertyChangedEventArgs propertyChangedArgs)
+        //{
+        //    try
+        //    {
+        //        // Check if either the selected column filter value or the selected column filter item has changed
+        //        if (propertyChangedArgs.PropertyName == nameof(SelectedColumnFilterItem) ||
+        //            propertyChangedArgs.PropertyName == nameof(FilterValue))
+        //        {
+        //            // Check if the data view is null, if so get out of the function since there is nothing to filter
+        //            if (DataView == null)
+        //            {
+        //                return;
+        //            }
 
-                    // Check if the filter value is empty
-                    if (string.IsNullOrEmpty(SelectedColumnFilterItem))
-                    {
-                        // Clear the filter on the data view
-                        DataView.RowFilter = string.Empty;
-                        return;
-                    }
+        //            // Check if the filter value is empty
+        //            if (string.IsNullOrEmpty(SelectedColumnFilterItem))
+        //            {
+        //                // Clear the filter on the data view
+        //                DataView.RowFilter = string.Empty;
+        //                return;
+        //            }
 
-                    // Check if the column name contains a space, if so add square brackets to the column name
-                    string columnName = SelectedColumnFilterItem;
-                    if (SelectedColumnFilterItem.Contains(" "))
-                    {
-                        columnName = $"[{SelectedColumnFilterItem}]";
-                    }
+        //            // Check if the column name contains a space, if so add square brackets to the column name
+        //            string columnName = SelectedColumnFilterItem;
+        //            if (SelectedColumnFilterItem.Contains(" "))
+        //            {
+        //                columnName = $"[{SelectedColumnFilterItem}]";
+        //            }
 
-                    // Create the filter value for the data view
-                    // Check if the column value contains the filter value
-                    string filterValue = $"{columnName} LIKE '%{FilterValue}%'";
+        //            // Create the filter value for the data view
+        //            // Check if the column value contains the filter value
+        //            string filterValue = $"{columnName} LIKE '%{FilterValue}%'";
 
-                    // Filter the data view
-                    try
-                    {
-                        // Set the filter on the data view
-                        DataView.RowFilter = filterValue;
-                        // Let the UI know that the data view has changed to force a refresh
-                        OnPropertyChanged(nameof(DataView));
-                    }
-                    catch (Exception e)
-                    {
-                        AddMessage($"Failed to apply filter to data: {e.Message}", Utils.WPF.Stores.MessageTypes.Error);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                AddMessage($"Failed to filter data: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
-            }
-            return;
-        }
+        //            // Filter the data view
+        //            try
+        //            {
+        //                // Set the filter on the data view
+        //                DataView.RowFilter = filterValue;
+        //                // Let the UI know that the data view has changed to force a refresh
+        //                OnPropertyChanged(nameof(DataView));
+        //            }
+        //            catch (Exception e)
+        //            {
+        //                AddMessage($"Failed to apply filter to data: {e.Message}", Utils.WPF.Stores.MessageTypes.Error);
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        AddMessage($"Failed to filter data: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+        //    }
+        //    return;
+        //}
 
 
         /// <summary>
@@ -806,23 +806,23 @@ namespace duHastNet.PushIt.ViewModels
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // check which property changed in the underlying model
-            switch (e.PropertyName)
-            {
-                case PropertyChangedEventNames.DATA_MODEL_ROOMS_UPDATED:
-                    //update rooms in the view model
-                    UpdateRooms();
-                    break;
+        //private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        //{
+        //    // check which property changed in the underlying model
+        //    switch (e.PropertyName)
+        //    {
+        //        case PropertyChangedEventNames.DATA_MODEL_ROOMS_UPDATED:
+        //            //update rooms in the view model
+        //            UpdateRooms();
+        //            break;
 
-                // Add more cases for other properties as needed
+        //        // Add more cases for other properties as needed
 
-                default:
-                    // Handle changes for properties not explicitly handled
-                    break;
-            }
-        }
+        //        default:
+        //            // Handle changes for properties not explicitly handled
+        //            break;
+        //    }
+        //}
 
 
         /// <summary>
@@ -856,7 +856,7 @@ namespace duHastNet.PushIt.ViewModels
             //_eventManager.DisposeEvents();
 
             //unbsubscribe from underlying model changes
-            _revitDataModel.PropertyChanged -= Model_PropertyChanged;
+            //_revitDataModel.PropertyChanged -= Model_PropertyChanged;
 
             //unsubscribe from errors changed event
             _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
@@ -918,16 +918,16 @@ namespace duHastNet.PushIt.ViewModels
             RoomsDataGridViewModel  = new RoomsDataGridViewModel(revitDataModel: revitDataModel);
 
             //initialize column order
-            _columnOrder = new List<string>();
+            //_columnOrder = new List<string>();
 
             //set the data file path
             DataFilePath = _revitDataModel.Settings.DataPath;
 
             //subscribe to underlying model changes
-            _revitDataModel.PropertyChanged += Model_PropertyChanged;
+            //_revitDataModel.PropertyChanged += Model_PropertyChanged;
 
             //subscribe to property changed event to allow update of the data table filters
-            this.PropertyChanged += FilterRoomData;
+            //this.PropertyChanged += FilterRoomData;
 
             // set up commands
             // refresh gui with data from model
@@ -965,7 +965,7 @@ namespace duHastNet.PushIt.ViewModels
                 revitDataModel: _revitDataModel
             );
             // create the column order changed command
-            ColumnOrderChangedCommand = new RelayCommand(OnColumnOrderChanged);
+            //ColumnOrderChangedCommand = new RelayCommand(OnColumnOrderChanged);
             //wipe selected rooms in revit
             _wipeSelectedRoomDataCommand = new Commands.WipeSelectedRevitRoomInstancesAsyncCommand(
                 roomsSelectionViewModel: this,

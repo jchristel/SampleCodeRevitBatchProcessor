@@ -59,7 +59,7 @@ namespace duHastNet.PushIt.Commands
                             _revitDataModel.ClearAllRooms();
 
                             // reset the column order in the view model in case it was changed
-                            _roomsSelectionViewModel.ColumnOrder = new List<string>();
+                            //_roomsSelectionViewModel.ColumnOrder = new List<string>();
 
                             // reload data from the file path
                             _revitDataModel.LoadRoomsData();

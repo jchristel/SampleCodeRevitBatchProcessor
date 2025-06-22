@@ -42,12 +42,6 @@ namespace duHastNet.PushIt.ViewModels
         private readonly Models.RevitDataModel _revitDataModel;
         private readonly Utils.WPF.ViewModels.ErrorsViewModel _errorsViewModel;
 
-
-        // default column names for the data table
-        public static readonly string columNameId = "Id";
-        public static readonly string columNameCount = "Count";
-        public static readonly string columNameCountSplit = "Count Split";
-
         // the global message view model
         public Utils.WPF.ViewModels.GlobalMessageViewModel GlobalMessageViewModel { get; }
 
@@ -309,6 +303,7 @@ namespace duHastNet.PushIt.ViewModels
                 OnPropertyChanged(nameof(SaveFilePath));
             }
         }
+        
         #endregion user selection
 
         #region Commands
@@ -356,9 +351,21 @@ namespace duHastNet.PushIt.ViewModels
         { 
             //unsubscribe from errors changed event
             _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
+           
+            //update the column ids in settings.
+            // clear list first
+            _revitDataModel.Settings.ColumnIds.Clear();
+            // add current list
+            foreach (var columnId in RoomsDataGridViewModel.ColumnDefinitions)
+            {
+                _revitDataModel.Settings.ColumnIds.Add(columnId.PropertyName);
+            }
+
+            // close any child view models
+            base.OnClosing();
+
             GlobalMessageViewModel.Dispose();
 
-            base.OnClosing();
         }
 
 
@@ -402,17 +409,21 @@ namespace duHastNet.PushIt.ViewModels
 
             //initialize the errors view model
             _errorsViewModel = new Utils.WPF.ViewModels.ErrorsViewModel();
+            
             //subscribe to errors changed event
             _errorsViewModel.ErrorsChanged += ErrorsViewModel_ErrorsChanged;
 
             //store the global message view model
             GlobalMessageViewModel = globalMessageViewModel;
+            RegisterChild(GlobalMessageViewModel); // Register as child
 
             // supported categories data grid view model
             SupportedCategoriesDataGridViewModel = new SupportedCatgeoriesDataGridViewModel(revitDataModel: revitDataModel);
+            RegisterChild(SupportedCategoriesDataGridViewModel);
 
             //push it data grid view model
             RoomsDataGridViewModel  = new RoomsDataGridViewModel(revitDataModel: revitDataModel);
+            RegisterChild(RoomsDataGridViewModel);
 
             //set the data file path
             DataFilePath = _revitDataModel.Settings.DataPath;

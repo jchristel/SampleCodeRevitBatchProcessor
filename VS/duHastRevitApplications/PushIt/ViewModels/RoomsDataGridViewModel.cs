@@ -51,6 +51,14 @@ namespace duHastNet.PushIt.ViewModels
             get => _columnDefaults;
         }
 
+        /// <summary>
+        /// maps column ids to display names
+        /// </summary>
+        private Dictionary<string, string> _columnIdToParameterNameLookUp;
+        public Dictionary<string, string> ColumnIdToParameterNameLookUp
+        {
+            get => _columnIdToParameterNameLookUp;
+        }
 
         #region user interaction
 
@@ -175,6 +183,9 @@ namespace duHastNet.PushIt.ViewModels
                     new AvailableColumnDefinition(property.Name.Replace(" ", ""), property.Name, typeof(string))
                     );
             }
+
+            // Pre-compute the parameter name to column id lookup dictionary
+            _columnIdToParameterNameLookUp = RevitDataModel._parameterDataContainer.GetAllParameters().ToDictionary(name => name.Name.Replace(" ", ""), name => name.Name);
 
             // Set up initial columns that should be visible by default
             SetupDefaultColumns();
@@ -391,14 +402,54 @@ namespace duHastNet.PushIt.ViewModels
         /// </summary>
         private void SetupDefaultColumns()
         {
-            //there are only 2 columns to display and they are always visible
-            foreach (KeyValuePair<string, string> columnName in Models.Constants.ColumnRoomsInfo)
+
+            var defaultColumns = new List<string>();
+
+            //check if any column id ( property name without space) is mentioned in the settings object
+            //if there are columns stored in settings retrieved from file
+            if (RevitDataModel.Settings.ColumnIds != null &&
+                RevitDataModel.Settings.ColumnIds.Count > 0)
             {
-                AddSelectedColumn(columnName.Key);
+                foreach (string columnId in RevitDataModel.Settings.ColumnIds)
+                {
+                    var columNameByParameter = FindColumnNameById(columnId);
+                    //check if column id has a match in parameters available
+                    if (columNameByParameter != null)
+                    {
+                        // add the id not the display value!
+                        defaultColumns.Add(columnId);
+                    }
+                    else
+                    {
+                        var columnNameDefault = Constants.ColumnRoomsInfo.TryGetValue(columnId, out string displayName) ? displayName : null;
+                        if (columnNameDefault != null)
+                        {
+                            // add the id not the display value!
+                            defaultColumns.Add(columnId);
+                        }
+                    }
+                }
             }
+            else
+            {
+                //add reserved names first
+                foreach (KeyValuePair<string, string> entry in Constants.ColumnRoomsInfo)
+                {
+                    defaultColumns.Add(entry.Key);
+                }
+            }
+
+            foreach (var columnName in defaultColumns)
+            {
+                AddSelectedColumn(columnName);
+            }
+            
         }
 
-        
+        public string FindColumnNameById(string id)
+        {
+            return _columnIdToParameterNameLookUp.TryGetValue(id, out string displayName) ? displayName : null;
+        }
         #endregion
 
         public RoomsDataGridViewModel(Models.RevitDataModel revitDataModel)

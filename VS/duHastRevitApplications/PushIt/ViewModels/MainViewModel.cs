@@ -42,8 +42,12 @@ namespace duHastNet.PushIt.ViewModels
 
         public override void OnClosing()
         {
+            // Notify the navigation store to close current view model
+            _navigationStore.NotifyClosing();
+
             // Custom closing logic for RoomsSelectionViewModel
             _navigationStore.CurrentViewModelChanged -= OnCurrentViewModelChanged;
+
             base.OnClosing();
         }
     }

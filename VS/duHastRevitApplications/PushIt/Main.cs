@@ -104,11 +104,11 @@ namespace duHastNet.PushIt
 
         }
 
-        private ViewModels.RoomsSelectionViewModel CreateRoomsSelectionViewModel()
+        private ViewModels.RoomsMainViewModel CreateRoomsSelectionViewModel()
         {
             duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel _globa = new duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);
 
-            return new ViewModels.RoomsSelectionViewModel(
+            return new ViewModels.RoomsMainViewModel(
                 _revitDataModel,
                 _navigationStore,
                 _messageStore,

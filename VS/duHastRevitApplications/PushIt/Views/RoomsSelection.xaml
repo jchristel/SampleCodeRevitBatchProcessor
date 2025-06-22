@@ -68,8 +68,7 @@
             <RowDefinition Height="auto"/>
             <!-- message banner -->
             <RowDefinition Height="auto"/>
-            <!-- filter -->
-            <RowDefinition Height="auto"/>
+            
             <!-- data -->
             <RowDefinition Height="*"/>
             <!-- refresh / model status -->
@@ -94,45 +93,11 @@
         <Grid Grid.Row="1">
             <utilsViews:GlobalMessageBanner DataContext="{Binding GlobalMessageViewModel}"/>
         </Grid>
-        <!-- filter -->
-        <Border Grid.Row="2" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
-            <Expander Header="Filters" Margin="5 5 5 5">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Row="0"
-                        Grid.Column="0"
-                        Margin="0 5 5 5"
-                        Text="Select Column" />
-                    <ComboBox Grid.Row="1"
-                        Grid.Column="0"
-                        Margin="0 5 5 5" 
-                        ItemsSource="{Binding ColumnNameDefaultList}"
-                        SelectedValue="{Binding Path=SelectedColumnFilterItem,Mode=TwoWay}"/>
-                    <TextBlock Grid.Row="0"
-                        Grid.Column="1"
-                        Margin="5 5 0 5"
-                        Text="Filter:" />
-                    <!-- filter value -->
-                    <TextBox
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Margin="5 5 0 5"
-                        Text="{Binding FilterValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                </Grid>
-            </Expander>
-        </Border>
-        <!-- grid view -->
-        <!-- dynamic grid view of supported categories -->
+        
+        <!-- dynamic grid view of room data -->
         <dynamicDataGrid:DynamicDataGrid  
             x:Name="dataGrid" 
-            Grid.Row="3"
+            Grid.Row="2"
             DataContext="{Binding  RoomsDataGridViewModel}"
             ItemsSource="{Binding Data}"
             ColumnDefinitions="{Binding ColumnDefinitions}"
@@ -142,8 +107,9 @@
             dynamicDataGrid:DataGridColumnHeaderBehavior.EnableColumnManagement="True"
             dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="True"
             IsEnabled="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource InverseBooleanConverter}}"/>
+        
         <!-- button row content -->
-        <Grid Grid.Row="4">
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -179,7 +145,7 @@
             </TextBlock>
         </Grid>
         <!-- admin model data expander -->
-        <Border Grid.Row="5" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
+        <Border Grid.Row="4" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
             <Expander  Header="Data Admin" Margin="5 5 5 5">
                 <StackPanel>
                     <Grid>
@@ -294,7 +260,7 @@
             </Expander>
         </Border>
         <!-- push it button row content -->
-        <Grid Grid.Row="6">
+        <Grid Grid.Row="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="70"/>

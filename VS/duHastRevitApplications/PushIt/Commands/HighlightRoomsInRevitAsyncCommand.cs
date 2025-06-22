@@ -23,6 +23,7 @@
 
 
 using duHastNet.PushIt.RevitActions;
+using duHastNet.PushIt.ViewModels;
 using duHastNet.Utils.WPF.Stores;
 using Revit.Async;
 using System;
@@ -32,8 +33,10 @@ namespace duHastNet.PushIt.Commands
 {
     public class HighlightRoomsInRevitAsyncCommand : Utils.WPF.Commands.CommandBase
     {
+        
+        private readonly ViewModels.RoomsMainViewModel _roomsMainViewModel;
+        private readonly ViewModels.RoomsDataGridViewModel _roomsDataGridViewModel;
 
-        private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
         //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitDataModel _revitDataModel;
 
@@ -41,7 +44,7 @@ namespace duHastNet.PushIt.Commands
         public override async void Execute(object parameter)
         {
             //deactivate the ui
-            _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = true;
+            _roomsMainViewModel.IsWaitingForRevitCommandToFinish = true;
 
             try
             {
@@ -54,7 +57,7 @@ namespace duHastNet.PushIt.Commands
                         try
                         {
                             //check if there is a room to highlight
-                            if (_roomsSelectionViewModel.SelectedRoom == null)
+                            if (_roomsDataGridViewModel.SelectedRoom == null)
                             {
                                 return ("No room selected in the user interface to highlight in Revit.", Utils.WPF.Stores.MessageTypes.Error);
                             }
@@ -74,7 +77,7 @@ namespace duHastNet.PushIt.Commands
                             // Execute the action to highlight the selected room in the Revit model
                             HighlightRoomsInRevit action = new HighlightRoomsInRevit(
                                 revitModel: _revitDataModel,
-                                roomToPush: _roomsSelectionViewModel.SelectedRoom,
+                                roomToPush: _roomsDataGridViewModel.SelectedRoom,
                                 uiDoc: app.ActiveUIDocument
                             );
                             (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
@@ -92,31 +95,38 @@ namespace duHastNet.PushIt.Commands
                     });
 
                 //pop message to user
-                _roomsSelectionViewModel.AddMessage(message, messageType);
+                _roomsMainViewModel.AddMessage(message, messageType);
             }
             catch (Exception ex)
             {
-                _roomsSelectionViewModel.AddMessage(ex.Message, MessageTypes.Error);
+                _roomsMainViewModel.AddMessage(ex.Message, MessageTypes.Error);
             }
             finally
             {
                 //activate the ui
-                _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = false;
+                _roomsMainViewModel.IsWaitingForRevitCommandToFinish = false;
             }
         }
 
         public override bool CanExecute(object parameter)
         {
-            // check if IsWaitingForRevitCommandToFinish is true
-            if (_roomsSelectionViewModel.IsWaitingForRevitCommandToFinish)
+
+            // if any view model is null return false
+            if (_roomsDataGridViewModel ==  null || _roomsMainViewModel == null)
             {
                 return false;
             }
-            else if (!_roomsSelectionViewModel.IsMatchingRevitRoomsEmpty)
+
+            // check if IsWaitingForRevitCommandToFinish is true
+            if (_roomsMainViewModel.IsWaitingForRevitCommandToFinish)
+            {
+                return false;
+            }
+            else if (!_roomsDataGridViewModel.IsMatchingRevitRoomsEmpty)
             {
                 return true;
             }
-            else if (!_roomsSelectionViewModel.IsMatchingSplitRoomsEmpty)
+            else if (!_roomsDataGridViewModel.IsMatchingSplitRoomsEmpty)
             {
                 return true;
             }
@@ -127,21 +137,25 @@ namespace duHastNet.PushIt.Commands
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // check if the property that changed is the one that we are interested in
-            if (e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.IsMatchingRevitRoomsEmpty) ||
-                e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.IsWaitingForRevitCommandToFinish))
+            if (e.PropertyName == nameof(ViewModels.RoomsDataGridViewModel.IsMatchingRevitRoomsEmpty) ||
+                e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish))
             {
                 OnCanExecutedChanged();
             }
         }
 
         public HighlightRoomsInRevitAsyncCommand(
-            ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
+            ViewModels.RoomsMainViewModel roomsMainViewModel,
+            ViewModels.RoomsDataGridViewModel roomsDataGridViewModel,
             Models.RevitDataModel revitDataModel
             )
         {
             _revitDataModel = revitDataModel;
-            _roomsSelectionViewModel = roomsSelectionViewModel;
-            _roomsSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _roomsMainViewModel = roomsMainViewModel;
+            _roomsDataGridViewModel = roomsDataGridViewModel;
+
+            _roomsMainViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _roomsDataGridViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
     }
 }

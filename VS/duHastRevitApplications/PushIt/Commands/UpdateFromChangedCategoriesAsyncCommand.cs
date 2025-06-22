@@ -35,14 +35,14 @@ namespace duHastNet.PushIt.Commands
     public class UpdateFromChangedCategoriesAsyncCommand : Utils.WPF.Commands.CommandBase
     {
 
-        private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
+        private readonly ViewModels.RoomsMainViewModel _roomsMainViewModel;
         //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitDataModel _revitDataModel;
 
         public override async void Execute(object parameter)
         {
             //deactivate the ui
-            _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = true;
+            _roomsMainViewModel.IsWaitingForRevitCommandToFinish = true;
 
             try
             {
@@ -125,7 +125,11 @@ namespace duHastNet.PushIt.Commands
                             }
 
                             //add new rooms to the data model first
-                            UpdateRoomDataModelWithNewRooms actionUpdate = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(_revitDataModel, _roomsSelectionViewModel);
+                            UpdateRoomDataModelWithNewRooms actionUpdate = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(
+                                _revitDataModel, 
+                                _roomsMainViewModel
+                            );
+
                             (string messageActionUpdate, Utils.WPF.Stores.MessageTypes messageActionTypeUpdate) = actionUpdate.Execute(doc);
 
                             //write messages to log...
@@ -134,7 +138,7 @@ namespace duHastNet.PushIt.Commands
                             // Execute the action to refresh the room data with the Revit data
                             RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(
                                 revitModel: _revitDataModel,
-                                roomsSelectionViewModel: _roomsSelectionViewModel,
+                                roomsMainViewModel: _roomsMainViewModel,
                                 revitMockRooms: actionUpdate.CurrentMockRoomsData //re-use mock room data to speed things up
                             );
 
@@ -163,16 +167,16 @@ namespace duHastNet.PushIt.Commands
                 }
 
                 //pop message to user
-                _roomsSelectionViewModel.AddMessage(message, messageType);
+                _roomsMainViewModel.AddMessage(message, messageType);
             }
             catch (Exception ex)
             {
-                _roomsSelectionViewModel.AddMessage(ex.Message, MessageTypes.Error);
+                _roomsMainViewModel.AddMessage(ex.Message, MessageTypes.Error);
             }
             finally
             {
                 //activate the ui
-                _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = false;
+                _roomsMainViewModel.IsWaitingForRevitCommandToFinish = false;
             }
         }
 
@@ -184,7 +188,7 @@ namespace duHastNet.PushIt.Commands
         public override bool CanExecute(object parameter)
         {
             // check if IsWaitingForRevitCommandToFinish is true
-            if (_roomsSelectionViewModel.IsWaitingForRevitCommandToFinish)
+            if (_roomsMainViewModel.IsWaitingForRevitCommandToFinish)
             {
                 return false;
             }
@@ -194,20 +198,20 @@ namespace duHastNet.PushIt.Commands
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // check if the property that changed is the one that we are interested in
-            if (e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.IsWaitingForRevitCommandToFinish))
+            if (e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish))
             {
                 OnCanExecutedChanged();
             }
         }
 
         public UpdateFromChangedCategoriesAsyncCommand(
-           ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
+           ViewModels.RoomsMainViewModel roomsMainViewModel,
            Models.RevitDataModel revitDataModel
            )
         {
             _revitDataModel = revitDataModel;
-            _roomsSelectionViewModel = roomsSelectionViewModel;
-            _roomsSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _roomsMainViewModel = roomsMainViewModel;
+            _roomsMainViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
     }
 }

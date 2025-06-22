@@ -30,8 +30,8 @@ namespace duHastNet.PushIt.RevitActions
 {
     public class VerifyParametersInModel: RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
     {
-        private ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
-        public ViewModels.RoomsSelectionViewModel RoomsSelectionViewModel => _roomsSelectionViewModel;
+        private ViewModels.RoomsMainViewModel _roomsSelectionViewModel;
+        public ViewModels.RoomsMainViewModel RoomsSelectionViewModel => _roomsSelectionViewModel;
 
         public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Autodesk.Revit.DB.Document doc)
         {

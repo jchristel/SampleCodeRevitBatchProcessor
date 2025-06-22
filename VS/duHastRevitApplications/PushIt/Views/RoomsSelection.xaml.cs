@@ -64,31 +64,6 @@ namespace duHastNet.PushIt.Views
         }
 
         /// <summary>
-        /// keep track of columns re-ordered by user
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void RoomsDataGrid_ColumnReordered(object sender, EventArgs e)
-        {
-            // check the view model
-            if (DataContext is ViewModels.RoomsSelectionViewModel vm)
-            {
-
-                var dataGrid = sender as DataGrid;
-                if (dataGrid != null && dataGrid.ItemsSource is DataView dataView)
-                {
-                    var reorderedColumns = dataGrid.Columns
-                                                   .OrderBy(c => c.DisplayIndex)
-                                                   .Select(c => c.Header.ToString())
-                                                   .ToList();
-
-                    // Pass the new column order and the DataView to the ViewModel
-                    vm.ColumnOrderChangedCommand.Execute(new Tuple<IEnumerable<string>, DataView>(reorderedColumns, dataView));
-                }
-            }
-        }
-
-        /// <summary>
         /// used to store dave file path when saving push it room data to disk
         /// </summary>
         /// <param name="sender"></param>

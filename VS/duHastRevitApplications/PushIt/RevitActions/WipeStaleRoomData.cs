@@ -30,7 +30,7 @@ namespace duHastNet.PushIt.RevitActions
 {
     public class WipeStaleRoomData : RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
     {
-        private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
+        private readonly ViewModels.RoomsMainViewModel _roomsMainViewModel;
         private int _wipeCounter = 0;
 
         //current set or push it mock rooms
@@ -189,11 +189,11 @@ namespace duHastNet.PushIt.RevitActions
 
         public WipeStaleRoomData(
             Models.RevitDataModel revitModel,
-            ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
+            ViewModels.RoomsMainViewModel roomsMainViewModel,
             List<RoomRevit> roomsData = null)
         {
             RevitModel = revitModel;
-            _roomsSelectionViewModel = roomsSelectionViewModel;
+            _roomsMainViewModel = roomsMainViewModel;
             _roomsData = roomsData;
         }
     }

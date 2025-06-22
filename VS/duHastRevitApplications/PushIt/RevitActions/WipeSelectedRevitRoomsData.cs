@@ -31,9 +31,9 @@ namespace duHastNet.PushIt.RevitActions
     public class WipeSelectedRevitRoomsData : RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
     {
         private readonly List<FamilyInstance> _pushTargets;
-        private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
+        private readonly ViewModels.RoomsMainViewModel _roomsMainViewModel;
 
-        public ViewModels.RoomsSelectionViewModel RoomsSelectionViewModel => _roomsSelectionViewModel;
+        public ViewModels.RoomsMainViewModel RoomsSelectionViewModel => _roomsMainViewModel;
 
 
         public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
@@ -134,11 +134,11 @@ namespace duHastNet.PushIt.RevitActions
         }
 
 
-        public WipeSelectedRevitRoomsData(RevitDataModel revitModel, List<FamilyInstance> pushTargets, ViewModels.RoomsSelectionViewModel roomsSelectionViewModel)
+        public WipeSelectedRevitRoomsData(RevitDataModel revitModel, List<FamilyInstance> pushTargets, ViewModels.RoomsMainViewModel roomsMainViewModel)
         {
             RevitModel = revitModel;
             _pushTargets = pushTargets;
-            _roomsSelectionViewModel = roomsSelectionViewModel;
+            _roomsMainViewModel = roomsMainViewModel;
         }
     }
 }

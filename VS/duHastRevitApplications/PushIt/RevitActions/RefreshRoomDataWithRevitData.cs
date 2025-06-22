@@ -30,8 +30,8 @@ namespace duHastNet.PushIt.RevitActions
     public class RefreshRoomDataWithRevitData : RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
     {
 
-        private ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
-        public ViewModels.RoomsSelectionViewModel RoomsSelectionViewModel => _roomsSelectionViewModel;
+        private ViewModels.RoomsMainViewModel _roomsMainViewModel;
+        public ViewModels.RoomsMainViewModel RoomsMainViewModel => _roomsMainViewModel;
 
         //current set or push it mock rooms
         private List<RoomRevit> _roomsData;
@@ -135,8 +135,8 @@ namespace duHastNet.PushIt.RevitActions
             (string designSetName, string designOptionName) = Utilities.Revit.DesignSetAndOptionUtils.GetActiveDesignSetAndOptionName(doc);
 
             // update the ui with the current design set and option
-            _roomsSelectionViewModel.ActiveDesignOptionName = designOptionName;
-            _roomsSelectionViewModel.ActiveDesignSetName = designSetName;
+            _roomsMainViewModel.ActiveDesignOptionName = designOptionName;
+            _roomsMainViewModel.ActiveDesignSetName = designSetName;
 
             // update rooms data model with revit rooms
             roomsDataModel = Utilities.UpdateRoomDataModelWithRoomsRevitModelUtils.UpdateRoomDataModelWithRoomsRevitModel(
@@ -151,11 +151,11 @@ namespace duHastNet.PushIt.RevitActions
 
         public RefreshRoomDataWithRevitData(
             RevitDataModel revitModel,
-            ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
+            ViewModels.RoomsMainViewModel roomsMainViewModel,
             List<Models.RoomRevit> revitMockRooms = null)
         {
             RevitModel = revitModel;
-            _roomsSelectionViewModel = roomsSelectionViewModel;
+            _roomsMainViewModel = roomsMainViewModel;
             _roomsData = revitMockRooms;
         }
     }

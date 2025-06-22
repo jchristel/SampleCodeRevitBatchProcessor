@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace duHastNet.Utils.WPF.ViewModels
 {
-    public abstract class BaseDynamicGridViewModel<TData> : INotifyPropertyChanged
+    public abstract class BaseDynamicGridViewModel<TData> : INotifyPropertyChanged, duHastNet.Utils.WPF.Interfaces.ICloseable
         where TData : DynamicRowData, new()
     {
         private ObservableCollection<DynamicColumnDefinition> _columnDefinitions;
@@ -362,6 +362,15 @@ namespace duHastNet.Utils.WPF.ViewModels
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
+
+        #region ICloseable
+
+        public virtual void OnClosing()
+        {
+            // Override this method in derived classes to perform clean-up operations
         }
 
         #endregion

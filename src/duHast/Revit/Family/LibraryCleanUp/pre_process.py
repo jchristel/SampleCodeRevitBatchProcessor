@@ -27,7 +27,7 @@ from duHast.Utilities.files_xml import get_all_xml_files_from_directories
 from duHast.Revit.Family.family_types_get_data_from_xml import get_family_type_data_from_library
 
 from duHast.Revit.Family.LibraryCleanUp.Utility.directives_create import create_directives
-from duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file import write_directives_to_file
+from duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file import write_directives_to_file, write_families_with_missing_group_codes
 from duHast.Revit.Family.LibraryCleanUp.Utility.directives_execute import execute_copy_directives_for_library_families
 from duHast.Revit.Family.LibraryCleanUp.Utility.write_task_lists import write_task_lists
 
@@ -90,6 +90,11 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
 
         # get type data from library as [:class:`.FamilyTypeDataStorageManager`]
         family_data = get_family_data_from_file(library_path)
+        if (family_data is None):
+            return_value.update_sep(False, "No family data found in the specified library path.")
+            output("No family data found in the specified library path.")
+            return return_value
+        
         output("Families {} loaded from library path.".format(len(family_data)))
 
         # check if anything came back
@@ -135,9 +140,18 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
         type_maintain_list = directives_result.result[1]
         swap_directives = directives_result.result[2]
 
+        # get families with missing group codes if any
+        families_with_missing_group_codes = directives_result.result[3] if len(directives_result.result) > 3 else None
+       
         # do some logging to user
-        output("Created {} copy directives, {} type maintain directives and {} swap directives.".format(
+        output("Created {} copy directives, {} type maintain directives and {} swap directives. ".format(
             len(copy_directives), len(type_maintain_list), len(swap_directives)))
+        
+        if families_with_missing_group_codes is not None:
+            output("Found {} families with missing group codes.".format(len(families_with_missing_group_codes)))
+            return_value.append_message(
+                "Found {} families with missing group codes.".format(len(families_with_missing_group_codes))
+            )
 
         # write swap directives and type maintain lists to file
         write_directives_result = write_directives_to_file (swap_directives, type_maintain_list,copy_directives, output_path)
@@ -154,6 +168,23 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
             )
         
         output("Wrote swap directives and type maintain directives to file.")
+
+        # write missing group codes to file if any
+        if families_with_missing_group_codes is not None and len(families_with_missing_group_codes) > 0:
+            output("Writing families with missing group codes to file.")
+            write_missing_result = write_families_with_missing_group_codes(families_with_missing_group_codes, output_path)
+            if write_missing_result.status is False:
+                return_value.update_sep(
+                    False,
+                    "Failed to write families with missing group codes to file",
+                )
+                output("Failed to write families with missing group codes to file: {}".format(write_missing_result.message))
+                return return_value
+            
+            return_value.append_message(
+                "Wrote {} families with missing group codes to file.".format(len(families_with_missing_group_codes))
+            )
+            output("Wrote families with missing group codes to file.")
 
         # execute copy directives
         copy_result = execute_copy_directives_for_library_families(copy_directives)

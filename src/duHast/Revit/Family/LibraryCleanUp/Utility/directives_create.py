@@ -297,7 +297,11 @@ def create_directives(family_storage_data_list, output_directory, code_descripto
 
         - result.status: Directive creation status will be returned in result.status. False if an exception occurred, otherwise True.
         - result.message will be a log of conversion steps.
-        - result.result will be [tbc]
+        - result.result will be a list containing the following items:
+            - A list of :class:`.FamilyDirectiveCopy` directives for copying families.
+            - A list of lists containing family type names to be maintained in the new family.
+            - A list of :class:`.FamilyDirectiveSwap` directives for swapping family instances of types.
+            - A list of family storage instances that had missing group codes in the code description mapping.
 
         On exception
 
@@ -318,6 +322,8 @@ def create_directives(family_storage_data_list, output_directory, code_descripto
         overall_copy_directives = []
         overall_swap_directives = []
         overall_type_keep_lists = []
+
+        families_with_missing_group_codes = []
 
         print("loading code description mapping from file: {}".format(code_descriptor_path))
         # load code  to descriptor mapper
@@ -346,6 +352,7 @@ def create_directives(family_storage_data_list, output_directory, code_descripto
                     return_value.append_message(
                         "No unique group codes found in family storage data. {}".format(family_data_storage_instance.family_name),
                     )
+                    families_with_missing_group_codes.append(family_data_storage_instance)
                     continue
             except Exception as e:
                 return_value.append_message(
@@ -427,10 +434,11 @@ def create_directives(family_storage_data_list, output_directory, code_descripto
 
             overall_swap_directives = overall_swap_directives + swap_directives
 
-        # return the overall copy directives, keep lists, swap directives
+        # return the overall copy directives, keep lists, swap directives, and list of instances with missing group codes
         return_value.result.append(overall_copy_directives)
         return_value.result.append(overall_type_keep_lists)
         return_value.result.append(overall_swap_directives)
+        return_value.result.append(families_with_missing_group_codes)
             
     except Exception as e:
         print(e)

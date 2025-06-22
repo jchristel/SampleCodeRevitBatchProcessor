@@ -29,7 +29,7 @@ from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Revit.Family.Utility.family_swap_instances_by_type_utils import write_swap_directives_to_file
 from duHast.Revit.Family.Utility.family_copy_directive_utils import write_copy_directives_to_file
 
-from duHast.Revit.Family.LibraryCleanUp.Utility.defaults import SWAP_DIRECTIVE_FILE_NAME, COPY_DIRECTIVE_FILE_NAME,  MAINTAIN_TYPES_BY_FAMILY_FILE_NAME
+from duHast.Revit.Family.LibraryCleanUp.Utility.defaults import SWAP_DIRECTIVE_FILE_NAME, COPY_DIRECTIVE_FILE_NAME,  MAINTAIN_TYPES_BY_FAMILY_FILE_NAME, FAMILIES_WITH_MISSING_GROUP_CODES_FILE_NAME
 
 
 def write_maintain_list(maintain_file_list, output_directory):
@@ -175,4 +175,43 @@ def write_directives_to_file(swap_directives, maintain_file_list, copy_directive
             "Failed to write directives with exception: {}".format(e),
         )
     
+    return return_value
+
+
+def write_families_with_missing_group_codes (family_instances, output_directory):
+    """
+    Writes a list of families with missing group codes to a specified file.
+
+    :param family_instances: List of family instances with missing group codes.
+    :type family_instances: [FamilyTypeDataStorage]
+    :param output_directory: Directory where the file will be written.
+    :type output_directory: str
+    :return: Result object indicating success or failure.
+    :rtype: Result
+    """
+    return_value = Result()
+
+    try:
+        # build the file path for the maintain directives
+        file_path = os.path.join(output_directory, FAMILIES_WITH_MISSING_GROUP_CODES_FILE_NAME)
+
+        data = []
+        for family_instance in family_instances:
+            data.append ([
+                family_instance.family_name,
+            ])
+
+        # write the list to the file
+        return_value = write_report_data_as_csv(
+            file_name=file_path,
+            header=[],  # No header needed for maintain directives
+            data= data, 
+            quoting= csv.QUOTE_MINIMAL,)
+
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "Failed to write list of families with missing group codes with exception: {}".format(e),
+        )
+        
     return return_value

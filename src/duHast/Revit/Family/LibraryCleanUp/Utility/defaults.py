@@ -48,6 +48,9 @@ COPY_DIRECTIVE_FILE_NAME = "{} {}{}".format(
     FamilyDirectiveCopy.COPY_DIRECTIVE_FILE_EXTENSION
 )
 
+# file name for families with missing group codes
+FAMILIES_WITH_MISSING_GROUP_CODES_FILE_NAME = "missing_group_codes {}.csv".format(get_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD))
+
 # file name prefix depending on the family category
 CATEGORY_FILE_NAME_PREFIX_MAPPER = {
     "Audio Visual Devices": "AVD",

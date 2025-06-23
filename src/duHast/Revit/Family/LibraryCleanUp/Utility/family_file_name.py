@@ -110,4 +110,7 @@ def build_family_name_from_descriptor(description):
     # join the major category and description parts with an underscore
     family_name = major_category + '_' + '_'.join(description_parts)
 
+    # remove any duplicate underscores
+    family_name = family_name.replace('__', '_')
+
     return family_name

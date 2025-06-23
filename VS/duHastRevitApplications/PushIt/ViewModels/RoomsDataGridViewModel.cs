@@ -396,6 +396,13 @@ namespace duHastNet.PushIt.ViewModels
             return GetDefaultValue(columnDef.DataType);
         }
 
+        /// <summary>
+        /// Define which columns should be read-only by default ( all of them! )
+        /// </summary>
+        protected override bool GetDefaultReadOnlyForColumn(string propertyName)
+        {
+            return true; // Everything is locked
+        }
 
         /// <summary>
         /// Set up the default columns that should be visible when the grid loads

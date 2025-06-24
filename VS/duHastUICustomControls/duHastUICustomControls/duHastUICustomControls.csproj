@@ -71,7 +71,14 @@
   <ItemGroup>
     <Compile Include="Converters\StringContainsConverter.cs" />
     <Compile Include="CustomDataGrid\AvailableColumnDefinition.cs" />
+    <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.BooleanFiltering.cs" />
+    <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.BulkSelection.cs" />
+    <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.ContextMenus.cs" />
     <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.cs" />
+    <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.DateTimeFiltering.cs" />
+    <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.NumericFiltering.cs" />
+    <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.TextFiltering.cs" />
+    <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.Utilities.cs" />
     <Compile Include="CustomDataGrid\FilterBooleanDialog.xaml.cs">
       <DependentUpon>FilterBooleanDialog.xaml</DependentUpon>
     </Compile>
@@ -139,6 +146,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.UtilityFiltering.cs" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

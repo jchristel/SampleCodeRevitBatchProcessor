@@ -49,7 +49,6 @@ def get_code_to_use(full_code, group_code, code_to_descriptor_map):
     if code_description is None:
         # try to get the group code description from the group code
         code_description = code_to_descriptor_map.get(group_code, None)
-        code_to_use = group_code
         if code_description is None:
             # if the group code is not in the mapping, raise an error
             raise ValueError("Grouping code '{}' and full code: {} not found in code description mapping.".format(group_code, full_code))

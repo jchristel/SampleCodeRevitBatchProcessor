@@ -27,7 +27,7 @@ from duHast.Utilities.files_xml import get_all_xml_files_from_directories
 from duHast.Revit.Family.family_types_get_data_from_xml import get_family_type_data_from_library
 
 from duHast.Revit.Family.LibraryCleanUp.Utility.directives_create import create_directives
-from duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file import write_directives_to_file, write_families_with_missing_group_codes
+from duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file import write_directives_to_file, write_families_with_missing_group_codes, write_duplicate_directives_to_file
 from duHast.Revit.Family.LibraryCleanUp.Utility.directives_execute import execute_copy_directives_for_library_families
 from duHast.Revit.Family.LibraryCleanUp.Utility.write_task_lists import write_task_lists
 
@@ -96,15 +96,6 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
             return return_value
         
         output("Families {} loaded from library path.".format(len(family_data)))
-
-        # check if anything came back
-        if family_data is None:
-            return_value.update_sep (False, "No family data found in the specified library path.")
-            return return_value
-        else:
-            return_value.append_message(
-                "Found {} families in library path.".format(len(family_data))
-            )
             
         # do some logging to user
         output("Creating directives for {} families.".format(len(family_data)))
@@ -112,7 +103,7 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
         directives_result = None
         try:
             # built copy file directives / swap file directives
-            directives_result = create_directives(family_data, output_path,  code_descriptor_path)
+            directives_result = create_directives(family_data, output_path,  code_descriptor_path, output)
         except Exception as e:
             return_value.update_sep(
                 False,
@@ -129,6 +120,24 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
                 "Failed to create directives",
             )
             output("Failed to create directives: \n{}".format(directives_result.message))
+            # write any duplicates to file (if this is what went wrong)
+
+            if directives_result.result is not None and len(directives_result.result) == 1:
+                # write duplicate directives to file
+                write_duplicate_directives_result = write_duplicate_directives_to_file(directives_result.result[0], output_path)
+                if write_duplicate_directives_result.status is False:
+                    return_value.update_sep(
+                        False,
+                        "Failed to write duplicate directives to file",
+                    )
+                    output("Failed to write duplicate directives to file: {}".format(write_duplicate_directives_result.message))
+                    return return_value
+                else:
+                    return_value.append_message(
+                        "Wrote {} duplicate directives to file.".format(len(directives_result.result))
+                    )
+                    output( "Wrote {} duplicate directives to file.".format(len(directives_result.result)))
+
             return return_value
         else:
             return_value.append_message(
@@ -206,7 +215,7 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
         write_task_lists_result = write_task_lists(
             family_directory=output_path, 
             task_list_directory = task_list_directory_path, 
-            number_of_task_lists=1)
+            number_of_task_lists=3)
         
         output(write_task_lists_result)
 

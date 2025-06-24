@@ -80,10 +80,11 @@ def load_group_code_description(file_path):
             if len(row) < 2:
                 continue
             code = row[0]
-            description = row[1]
+            family_code = row[1]
+            description = row[2]
             
             # add to map
-            code_description_map[code] = description
+            code_description_map[code] = (family_code, description)
     
     except Exception as e:
         print("Error loading grouping codes from file {}: {}".format(file_path, e))

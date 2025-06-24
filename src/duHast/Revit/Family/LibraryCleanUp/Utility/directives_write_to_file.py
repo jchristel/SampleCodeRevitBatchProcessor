@@ -29,7 +29,15 @@ from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Revit.Family.Utility.family_swap_instances_by_type_utils import write_swap_directives_to_file
 from duHast.Revit.Family.Utility.family_copy_directive_utils import write_copy_directives_to_file
 
-from duHast.Revit.Family.LibraryCleanUp.Utility.defaults import SWAP_DIRECTIVE_FILE_NAME, COPY_DIRECTIVE_FILE_NAME,  MAINTAIN_TYPES_BY_FAMILY_FILE_NAME, FAMILIES_WITH_MISSING_GROUP_CODES_FILE_NAME
+from duHast.Revit.Family.Data.Objects.family_directive_copy import FamilyDirectiveCopy
+
+from duHast.Revit.Family.LibraryCleanUp.Utility.defaults import (
+    SWAP_DIRECTIVE_FILE_NAME,
+    DUPLICATE_COPY_DIRECTIVE_FILE_NAME,
+    COPY_DIRECTIVE_FILE_NAME,  
+    MAINTAIN_TYPES_BY_FAMILY_FILE_NAME, 
+    FAMILIES_WITH_MISSING_GROUP_CODES_FILE_NAME
+)
 
 
 def write_maintain_list(maintain_file_list, output_directory):
@@ -121,12 +129,22 @@ def write_copy_directives(copy_directives, output_directory):
     return_value = Result()
 
     try:
-        # build the file path for the swap directives
+
+
+        # make sure theses are copy directives
+        if not all(isinstance(directive, FamilyDirectiveCopy) for directive in copy_directives):
+            return_value.update_sep(
+                False,
+                "All directives must be of type FamilyDirectiveCopy.",
+            )
+            return return_value
+
+        # build the file path for the copy directives
         file_path = os.path.join(output_directory, COPY_DIRECTIVE_FILE_NAME)
 
         print("Writing copy directives to file: {}".format(file_path))
 
-        # write the swap directives to the file
+        # write the duplicate copy directives to the file
         return_value = write_copy_directives_to_file(
             copy_directives=copy_directives,
             file_path=file_path
@@ -136,6 +154,50 @@ def write_copy_directives(copy_directives, output_directory):
         return_value.update_sep(
             False,
             "Failed to write swap directives with exception: {}".format(e),
+        )
+    
+    return return_value
+
+def write_duplicate_directives_to_file(copy_directives, output_directory):
+    """
+    Writes duplicate directives to a specified file.
+
+    :param copy_directives: List of duplicate directives to write.
+    :type copy_directives: list
+    :param output_directory: Directory where the file will be written.
+    :type output_directory: str
+
+    :return: Result object indicating success or failure.
+    :rtype: Result
+    """
+
+    return_value = Result()
+
+    try:
+
+        # make sure theses are copy directives
+        if not all(isinstance(directive, FamilyDirectiveCopy) for directive in copy_directives):
+            return_value.update_sep(
+                False,
+                "All directives must be of type FamilyDirectiveCopy.",
+            )
+            return return_value
+        
+        # build the file path for the duplicate copy directives
+        file_path = os.path.join(output_directory, DUPLICATE_COPY_DIRECTIVE_FILE_NAME)
+
+        print("Writing duplicate directives to file: {}".format(file_path))
+
+        # write the duplicate copy directives to the file
+        return_value = write_copy_directives_to_file(
+            copy_directives=copy_directives,
+            file_path=file_path
+        )
+
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "Failed to write duplicate directives with exception: {}".format(e),
         )
     
     return return_value

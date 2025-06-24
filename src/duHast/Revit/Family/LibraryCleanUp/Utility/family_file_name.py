@@ -50,7 +50,7 @@ def clean_up_family_name (fam_name):
 
     return fam_name
 
-def build_family_name_from_descriptor(description):
+def build_family_name_from_descriptor(description, code_to_use, output):
     """
     Builds a family name from the given description by cleaning it up.
 
@@ -71,7 +71,13 @@ def build_family_name_from_descriptor(description):
         return None
     
     # split the description into parts
-    parts = description.split(':')
+
+    output ("...Building family name from description: {}".format(description))
+
+    parts = description[1].split(':')
+
+    output("...Parts after splitting by colon: {}".format(parts))
+
     if len(parts) < 2:
         # just a major category in the descriptor
         return description.title().strip().replace(' ', '')
@@ -104,7 +110,7 @@ def build_family_name_from_descriptor(description):
 
             description_parts.append("".join(words))
     except Exception as e:
-        print("Error processing description parts: {}".format(e))
+        output("...Error processing description parts: {}".format(e))
         return None
            
     # join the major category and description parts with an underscore
@@ -112,5 +118,16 @@ def build_family_name_from_descriptor(description):
 
     # remove any duplicate underscores
     family_name = family_name.replace('__', '_')
-
+    # remove illegal characters from the family name
+    family_name = clean_up_family_name (family_name)
+   
+    # add the code to the family name
+    # check if family end on underscore
+    if family_name.endswith('_'):
+        # just append the code
+        family_name = "{}{}".format(family_name, code_to_use)
+    else:
+        # add an underscore before the code
+        family_name = "{}_{}".format(family_name, code_to_use)
+    
     return family_name

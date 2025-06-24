@@ -107,22 +107,20 @@ def in_process_family(doc, library_path, output):
         if( len(load_result.result) == 0):
             return_value.update_sep(True, "No families needing swapping in file")
             output("No families needing swapping in file")
-            return return_value
+            #return return_value
+        else:
+            # swap away
+            swap_result = swap_family_instances_of_types(doc, library_path, progress_callback=None)
 
-        # set up a call back for progressbar
-        #progress_callback = ProgressPyRevit(form=pb)
+            # print logs
+            output("Swapped families with status: {}".format(swap_result.status))
 
-        # swap away
-        swap_result = swap_family_instances_of_types(doc, library_path, progress_callback=None)
-
-        # print logs
-        output("Swapped families with status: {}".format(swap_result.status))
-
-        # check what came back
-        if not swap_result.status:
-            return_value.update_sep(False, "Failed to swap families: {}".format(swap_result.message))
-            output("Failed to swap families: {}".format(swap_result.message))
-            return return_value
+            # check what came back
+            if not swap_result.status:
+                return_value.update_sep(False, "Failed to swap families: {}".format(swap_result.message))
+                output("Failed to swap families: {}".format(swap_result.message))
+                return return_value
+       
         
         # if we get here... do a purge unused and than save that family document
         purge_action_result = purge_unused_e_transmit(doc)
@@ -143,6 +141,7 @@ def in_process_family(doc, library_path, output):
         save_result = save_as_family(
             doc=doc,
             target_directory_path=library_path,
+            current_full_file_name= doc.PathName,
             name_data=[[file_name_without_ext, file_name_without_ext]],
             file_extension= ".rfa",
             compact_file=True)

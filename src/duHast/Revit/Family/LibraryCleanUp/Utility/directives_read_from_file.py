@@ -46,12 +46,12 @@ def read_maintain_types (directory_path):
         # build the file path for the maintain directives
         file_path = files[0]  # assuming we take the first file found
 
-        print("Reading maintain directives to file: {}".format(file_path))
+        return_value.append_message("Reading maintain directives to file: {}".format(file_path))
 
         # write the maintain directives to the file
         csv_file_result = read_csv_file(file_path=file_path)
 
-        return csv_file_result
+        return_value.update(csv_file_result)
         
     except Exception as e:
         return_value.update_sep(

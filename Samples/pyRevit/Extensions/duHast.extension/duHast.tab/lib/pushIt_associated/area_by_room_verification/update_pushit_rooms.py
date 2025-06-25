@@ -21,26 +21,29 @@
 #
 
 
+
+from duHast.Revit.DetailItems.curve_create import draw_2D_lines_on_bounding_box, draw_2D_lines_on_bounding_box_and_separate_point
+
+
 from duHast.Utilities.Objects.result import Result
+from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm, convert_imperial_square_feet_to_metric_square_metre
 from duHast.Revit.Levels.levels import   get_nearest_lowest_level, get_levels_list_ascending
 from duHast.Revit.Rooms.rooms_create import create_room
 from duHast.Revit.Common.parameter_set_utils import set_parameter_value_simple, set_parameter_value_by_name
 from duHast.Revit.Common.parameter_get_utils import get_parameter_value_by_name, getter_double_as_double_converted_to_metric
 from duHast.Revit.Common.transaction import in_transaction_with_failure_handling
 from duHast.Revit.Common.delete import delete_by_element_ids
-
 from duHast.Revit.Common.Objects.FailureHandlingConfiguration import (
     FailureHandlingConfig,
 )
 
-from Autodesk.Revit.DB import ElementId, UV, XYZ
-
-from duHast.pyRevit.console_output import print_header, print_error
-
-from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm, convert_imperial_square_feet_to_metric_square_metre
+from duHast.pyRevit.console_output import print_error
 
 
+from Autodesk.Revit.DB import ElementId, Solid, UV, XYZ
 
+
+DEBUG = True
 
 def apply_transform_to_uv(uv_point, rotation_matrix, translation_vector):
     # Convert UV point to XYZ point (assuming Z = 0)
@@ -75,8 +78,6 @@ def create_room_from_push_it_instance_and_update(doc, family_instance, levels_as
     return_value = Result()
 
     try:
-
-
         # define the action to update room properties
         def modify_action(room):
             action_return_value = Result()
@@ -89,6 +90,7 @@ def create_room_from_push_it_instance_and_update(doc, family_instance, levels_as
                             if para.GUID.ToString() == prop.parameter_guid:
                                 set_result = set_parameter_value_simple(para, prop.parameter_value)
                                 action_return_value.append_message("...updated room property: [{}] to {} with status: {}".format(prop.parameter_name, prop.parameter_value, set_result.status))
+                                print("...updated room property: [{}] to {} with status: {}".format(prop.parameter_name, prop.parameter_value, set_result.status))
                                 break
 
             except Exception as e:
@@ -99,13 +101,24 @@ def create_room_from_push_it_instance_and_update(doc, family_instance, levels_as
         # get the nearest level based on the Z value of the family instance location point
         placement_level = get_nearest_lowest_level(convert_imperial_feet_to_metric_mm(family_instance.location_point[2]), levels_ascending, [])[0]
 
+        if DEBUG:
+            print("Placement level: {}".format(placement_level.Name))
+
         # set the placement point
         # use the location point if there is no centroid
         placement_point = UV(family_instance.location_point[0], family_instance.location_point[1]) if family_instance.centroid is None else UV(family_instance.centroid[0], family_instance.centroid[1])
 
+        if DEBUG:
+            print("Placement point: {}".format(placement_point))
+         
         # apply the rotation and translation to the placement point ( works on shared coordinate projects only)
-        #transformed_placement_uv = apply_transform_to_uv(uv_point=placement_point, rotation_matrix=rotation, translation_vector=translation)
+        transformed_placement_uv = apply_transform_to_uv(uv_point=placement_point, rotation_matrix=rotation, translation_vector=translation)
        
+        if DEBUG:
+            print ("Transformed placement point: {}".format(transformed_placement_uv))
+            print("Rotation matrix: {}".format(rotation))
+            print("Translation vector: {}".format(translation))
+
         # define failure handling for the transaction ( roll back on any warnings or errors )
         failure_handling_settings = FailureHandlingConfig(
             roll_back_on_warning=False,
@@ -140,6 +153,9 @@ def create_room_from_push_it_instance_and_update(doc, family_instance, levels_as
               transaction_manager = transaction_manager
         )
 
+        if DEBUG:
+            print("Room creation result: {}".format(room_result.status))
+
         # update the return value
         return_value.update(room_result)
 
@@ -156,6 +172,8 @@ def update_push_it_instance(doc, push_it_family_instance,room):
 
         # get the created room instance area
         room_area = convert_imperial_square_feet_to_metric_square_metre(room.Area)
+        if DEBUG:
+            print("Room area: {}".format(room_area))
 
         # if room is not bound for whatever reason, return an error message
         if room_area == 0.0:
@@ -164,15 +182,17 @@ def update_push_it_instance(doc, push_it_family_instance,room):
             return return_value
         
         room_perimeter = convert_imperial_feet_to_metric_mm(room.Perimeter)/1000 # convert perimeter to meters
+        if DEBUG:
+            print("Room perimeter: {}".format(room_perimeter))
 
         #get the wall thickness parameter value from the push it family instance
         half_wall_thickness_parameter_value = get_parameter_value_by_name(doc.GetElement(ElementId(push_it_family_instance.revit_element_id_integer_value)).Symbol , "HSL_WALL_THICKNESS", getter_double_as_double_converted_to_metric)
 
         # make sure there is a fallback if no parameter is set
-        # make sure retrieved value is converted to meters...
-        half_wall_thickness = half_wall_thickness_parameter_value/2/1000 if half_wall_thickness_parameter_value is not None else 0.06 # default to 60mm if not set
+        half_wall_thickness = half_wall_thickness_parameter_value/2 /1000 if half_wall_thickness_parameter_value is not None else 0.06 # default to 60mm if not set
 
-        print("Half wall thickness from element: {}".format(half_wall_thickness))
+        if DEBUG:
+            print("Half wall thickness from element: {}".format(half_wall_thickness))
 
         calculated_area = (room_perimeter * half_wall_thickness) + room_area
         print("Calculated area: {}".format(calculated_area))
@@ -235,8 +255,6 @@ def update_push_it_instance(doc, push_it_family_instance,room):
         return_value.update_sep (False,"failed to update push it mock room: {}".format(e))
         print_error(e)
     return return_value
-
-
 
 
 def update_push_it_instances_from_rooms(doc, family_instances, rotation, translation):

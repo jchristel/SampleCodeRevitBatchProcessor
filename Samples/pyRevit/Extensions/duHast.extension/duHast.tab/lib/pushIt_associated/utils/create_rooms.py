@@ -22,7 +22,7 @@
 
 
 from duHast.Utilities.Objects.result import Result
-from duHast.Revit.Levels.levels import  get_nearest_lowest_level, get_levels_list_ascending
+from duHast.Revit.Levels.levels import  get_nearest_lowest_level
 from duHast.Revit.Rooms.rooms_create import create_room
 from duHast.Revit.Common.parameter_set_utils import set_parameter_value_simple
 from duHast.Revit.Common.transaction import in_transaction_with_failure_handling
@@ -33,11 +33,20 @@ from duHast.Revit.Common.Objects.FailureHandlingConfiguration import (
 
 from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
-from Autodesk.Revit.DB import UV, XYZ
+from Autodesk.Revit.DB import UV
 
 def apply_transform_to_uv(uv_point, rotation_matrix, translation_vector):
-    # Convert UV point to XYZ point (assuming Z = 0)
-    xyz_point = XYZ(uv_point.U, uv_point.V, 0)
+    """
+    Apply rotation and translation to a UV point.
+    :param uv_point: The UV point to transform
+    :type uv_point: Autodesk.Revit.DB.UV
+    :param rotation_matrix: The rotation matrix to apply
+    :type rotation_matrix: list
+    :param translation_vector: The translation vector to apply
+    :type translation_vector: list
+    :return: The transformed UV point
+    :rtype: Autodesk.Revit.DB.UV
+    """
     
     # Apply rotation (no rotation in this case)
     rotated_u = uv_point.U + rotation_matrix[0]
@@ -127,7 +136,7 @@ def create_room_from_push_it_instance(doc, family_instance, levels_ascending, ro
         room_result = create_room (
             doc, 
             level=placement_level, 
-            location_point = placement_point,
+            location_point = transformed_placement_uv,
               modify_action = modify_action, 
               transaction_manager = transaction_manager
         )
@@ -138,38 +147,4 @@ def create_room_from_push_it_instance(doc, family_instance, levels_ascending, ro
     except Exception as e:
         return_value.update_sep (False,"failed to create room: {}".format(e))
         print(e)
-    return return_value
-
-
-def create_rooms_from_push_it_instances(doc, family_instances, rotation, translation):
-    """
-    Create rooms in the Revit document from pushIt family instances.
-
-    :param doc: The Revit document
-    :type doc: Autodesk.Revit.DB.Document
-    :param family_instances: The family instances to create the rooms from
-    :type family_instances: list
-    :param rotation: The rotation to apply to the family instances based on the source model
-    :type rotation: List float
-    :param translation: The translation to apply to the family instances based on the source model
-    :type translation: List float
-
-    :return: Result class instance.
-    :rtype: Result
-    """
-
-    return_value = Result()
-
-    try:
-        # get all levels in the file
-        levels_ascending = get_levels_list_ascending(doc)  
-        # create rooms in the Revit document
-        for family_instance in family_instances:
-            room_result =  create_room_from_push_it_instance(doc, family_instance, levels_ascending, rotation, translation)
-            return_value.update(room_result)
-              
-    except Exception as e:
-        return_value.update_sep (False,"failed to create rooms: {}".format(e))
-        print(e)
-       
     return return_value

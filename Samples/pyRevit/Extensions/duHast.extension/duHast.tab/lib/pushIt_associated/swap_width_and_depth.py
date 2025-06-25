@@ -26,7 +26,7 @@ from duHast.Utilities.Objects.result import Result
 from duHast.Revit.UI.custom_selection_user import get_user_selection
 from duHast.Revit.Common.parameter_get_utils import get_parameter_value_by_name
 from duHast.Revit.Common.parameter_set_utils import set_parameter_value_by_name
-from duHast.Revit.Family.family_instance_translate import rotate_around_origin, RADIAN_ANGLE_90DEGREES,  get_family_location_point, move_from_point_to_point
+from duHast.Revit.Family.family_instance_translate import rotate_around_origin, RADIAN_ANGLE_90DEGREES
 from duHast.Revit.Common.transaction import in_transaction
 from duHast.pyRevit.console_output import print_header
 

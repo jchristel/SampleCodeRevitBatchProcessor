@@ -41,7 +41,7 @@ class PushItFamilyInstance(Base):
         self.properties = []
         self.location_point = None
         self.centroid = None
-
+        self.placement_level_name = None
         self.design_set_option_info = None
 
 
@@ -97,6 +97,13 @@ class PushItFamilyInstance(Base):
         """
 
         key = ""
+        level_name = ""
+
+        if (self.placement_level_name is not None ):
+            level_name = self.placement_level_name
+            if level_name != "":
+                level_name = " on Level: {}".format(level_name)
+
 
         if key_id_property_guid is not None:
             for property in self.properties:
@@ -112,8 +119,9 @@ class PushItFamilyInstance(Base):
 
             key_options = DesignSetPropertyNames.combine_set_and_option_name(set_name=self.design_set_option_info[DesignSetPropertyNames.DESIGN_SET_NAME], option_name=self.design_set_option_info[DesignSetPropertyNames.DESIGN_OPTION_NAME])
 
-            return "{} ({}  [{}])".format(
+            return "{} {} ({}  [{}])".format(
                 key,
+                level_name,
                 key_options,
                 self.revit_element_id_integer_value,
                 )

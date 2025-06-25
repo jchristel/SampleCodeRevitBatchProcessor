@@ -31,7 +31,6 @@ from duHast.Utilities.date_stamps import get_file_date_stamp, FILE_DATE_STAMP_YY
 
 from duHast.Revit.Common.file_io import  save_as_family,  open_family
 
-from pushIt_associated.get_a_room import settings
 from pushIt_associated.get_a_room.nested_family_utils import create_new_extrusion_from_outlines, add_2D_outline, test_offset_curve_loop
 
 from Autodesk.Revit.DB import CurveLoop

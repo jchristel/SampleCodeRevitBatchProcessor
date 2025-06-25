@@ -24,12 +24,12 @@ import clr
 import os
 
 from duHast.Utilities.Objects.result import Result
-from Autodesk.Revit.DB import Element, FamilyInstance, FilteredElementCollector, WorksharingUtils
 
 
 from duHast.Utilities.files_json import read_json_data_from_file
 from duHast.Utilities.files_csv import read_csv_file
 from duHast.Utilities.utility import get_local_app_data_path
+from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
 from duHast.Revit.Categories.categories_model import get_category_by_names, get_builtInCategory_from_category
 from duHast.Revit.Common.design_set_options import get_design_set_option_info
@@ -37,11 +37,11 @@ from duHast.Revit.Common.Objects.design_set_property_names import DesignSetPrope
 from duHast.Revit.Family.family_utils import get_family_instances_of_built_in_category
 from duHast.Revit.SharedParameters.shared_parameters import get_all_shared_parameters
 from duHast.Revit.Common.parameter_get_utils import get_parameter_value
+from duHast.Revit.Levels.levels import get_levels_list_ascending, get_nearest_level_absolute
 
 from pushIt_associated.push_it_family_instance import PushItFamilyInstance
 from pushIt_associated.push_it_family_property import PushItFamilyProperty
 
-from families.util.print_table import print_result_table
 
 # family name prefix to identify the elements to be processed
 PUSH_IT_COMMAND_NAME = "WLL"
@@ -70,21 +70,21 @@ def get_data_path_and_supported_categories():
     dic = read_result.result[0]
 
     data_path = None
-    supported_categories = None
+    enabled_category_names = None
     # check if the dictionary has the field we are after
     if "DataPath" in dic:
         data_path = dic["DataPath"]
     else:
         print("DataPath not found in settings file")
-        return None
+        return None ,None
     
-    if "SupportedCategories" in dic:
-        supported_categories = dic["SupportedCategories"]  
+    if "EnabledCategoryNames" in dic:
+        enabled_category_names = dic["EnabledCategoryNames"]  
     else:
-        print("SupportedCategories not found in settings file")
-        return None
+        print("EnabledCategoryNames not found in settings file")
+        return None,None
     
-    return data_path, supported_categories
+    return data_path, enabled_category_names
 
 
 def get_unique_id_parameter_from_data_file(data_path):
@@ -473,6 +473,7 @@ def convert_family_instances_to_storage(doc, family_instances, parameter_data, u
     # convert family instances to storage
     converted_family_instances = []
 
+    levels_ascending = get_levels_list_ascending(doc)
 
     # set up a progress bar since this can take a moment
     counter = 1
@@ -495,6 +496,16 @@ def convert_family_instances_to_storage(doc, family_instances, parameter_data, u
 
             # get the family instance location point
             converted_family_instance.set_location_point(fi.Location.Point.X, fi.Location.Point.Y, fi.Location.Point.Z)
+
+            # get the level name based on the placement Z coordinate
+            # this is a more universal approach to getting the level name since different revit categories report levels differently
+            # this also displays the level name as per the host model, not necessary as per the model where the push it instances are placed (if different)
+            placement_level_and_offset = get_nearest_level_absolute(
+                z=convert_imperial_feet_to_metric_mm(fi.Location.Point.Z),
+                levels=levels_ascending, 
+                ignore_level_names=[]
+            )
+            converted_family_instance.placement_level_name = placement_level_and_offset[0].Name
 
             # store design set and option info
             design_set_option_info = get_design_set_option_info(doc, fi)

@@ -204,7 +204,7 @@ def write_duplicate_directives_to_file(copy_directives, output_directory):
 
 
 
-def write_directives_to_file(swap_directives, maintain_file_list, copy_directives, output_directory):
+def write_directives_to_file(swap_directives, copy_directives, output_directory):
     """
     Writes directives to a specified file.
 
@@ -215,13 +215,6 @@ def write_directives_to_file(swap_directives, maintain_file_list, copy_directive
     return_value = Result()
 
     try:
-        
-        # write maintain directives to file
-        result_maintain = write_maintain_list(maintain_file_list, output_directory)
-       
-        # update the return value with the maintain result
-        return_value.update(result_maintain)
-
         # write swap directives to file
         result_swap = write_swap_directives(swap_directives, output_directory)
         return_value.update(result_swap)

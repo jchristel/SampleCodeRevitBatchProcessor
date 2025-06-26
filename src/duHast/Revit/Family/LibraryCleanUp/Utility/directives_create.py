@@ -28,7 +28,7 @@ from duHast.Utilities.Objects.result import Result
 
 from duHast.Revit.Family.LibraryCleanUp.Utility.defaults import GROUPING_CODE_PARAMETER_NAME, CATEGORY_FILE_NAME_PREFIX_MAPPER
 from duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code import clean_code, convert_to_file_name_code, load_group_code_description
-from duHast.Revit.Family.LibraryCleanUp.Utility.family_file_name import clean_up_family_name, build_family_name_from_descriptor
+from duHast.Revit.Family.LibraryCleanUp.Utility.family_file_name import build_family_name_from_descriptor
 
 
 from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import FamilyTypeDataStorageManager
@@ -224,38 +224,6 @@ def create_copy_directives(family_storage_data, unique_group_codes, output_direc
     return copy_directives
 
 
-def verify_copy_directives_are_unique(copy_directives):
-
-    """
-    Verify that the copy directives are unique based on their new names.
-
-    :param copy_directives: A list of copy directives to verify.
-    :type copy_directives: list[:class:`.FamilyDirectiveCopy`]
-    
-    :return: True if all copy directives are unique, False otherwise.
-    :rtype: bool
-    """
-    
-    seen_names = set()
-    duplicate_directive_new_names = []
-    duplicate_directives = []
-
-    # find all duplicate new names
-    for directive in copy_directives:
-        if directive.new_name in seen_names:
-            duplicate_directive_new_names.append(directive.new_name)
-            continue
-        seen_names.add(directive.new_name)
-    
-    # get all directive with duplicate new names
-    for directive in copy_directives:
-        if directive.new_name in duplicate_directive_new_names:
-            duplicate_directives.append(directive)
-
-
-    return duplicate_directives
-
-
 def create_type_maintained_lists(family_storage_data, unique_group_codes, copy_directives, code_to_descriptor_map):
 
     """
@@ -414,7 +382,6 @@ def create_directives(family_storage_data_list, output_directory, code_descripto
         overall_copy_directives = []
         overall_swap_directives = []
         overall_type_keep_lists = []
-
         families_with_missing_group_codes = []
 
         output("loading code description mapping from file: {}".format(code_descriptor_path))
@@ -440,6 +407,7 @@ def create_directives(family_storage_data_list, output_directory, code_descripto
             # wrap into try catch since this may raise an exception if the family storage data is not valid or does not contain types
             try:
                 # get the unique group codes from the family storage data
+                # this function will raise an exception if the family storage data is not valid or does not contain types
                 unique_group_codes_in_family = get_unique_group_codes_from_family(family_data_storage_instance)
 
                 # if no codes found move on to the next family
@@ -454,6 +422,7 @@ def create_directives(family_storage_data_list, output_directory, code_descripto
                     "Failed to get unique group codes from family storage data for family {}: {}. Skipping...".format(family_data_storage_instance.family_name, e),
                 )
                 output("Failed to get unique group codes from family storage data for family {}: {}. Skipping...".format(family_data_storage_instance.family_name, e))
+                families_with_missing_group_codes.append(family_data_storage_instance)
                 # skip to next family
                 continue
 
@@ -543,29 +512,13 @@ def create_directives(family_storage_data_list, output_directory, code_descripto
 
             overall_swap_directives = overall_swap_directives + swap_directives
 
-
-        # sanity check copy directives: are there multiple family directives for the same new family name?
-        duplicate_directives = verify_copy_directives_are_unique(overall_copy_directives)
-
-        if len(duplicate_directives) > 0:
-            return_value.update_sep(
-                False,
-                "Duplicate copy directives found for new family names: {}".format(
-                    ",\n".join(["{} {} ".format(d.name,d.new_name) for d in duplicate_directives])
-                ),
-            )
-            output("Duplicate copy directives found for new family names: {}".format(
-                ",\n".join(["{} {} ".format(d.name,d.new_name) for d in duplicate_directives])
-            ))
-            return_value.result =[duplicate_directives]
-            return return_value
-
         # return the overall copy directives, keep lists, swap directives, and list of instances with missing group codes
+        return_value.result = []    
         return_value.result.append(overall_copy_directives)
         return_value.result.append(overall_type_keep_lists)
         return_value.result.append(overall_swap_directives)
         return_value.result.append(families_with_missing_group_codes)
-            
+        
     except Exception as e:
         output(e)
         return_value.update_sep(

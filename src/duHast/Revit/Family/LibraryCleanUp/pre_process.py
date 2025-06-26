@@ -27,8 +27,9 @@ from duHast.Utilities.files_xml import get_all_xml_files_from_directories
 from duHast.Revit.Family.family_types_get_data_from_xml import get_family_type_data_from_library
 
 from duHast.Revit.Family.LibraryCleanUp.Utility.directives_create import create_directives
-from duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file import write_directives_to_file, write_families_with_missing_group_codes, write_duplicate_directives_to_file
+from duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file import write_directives_to_file
 from duHast.Revit.Family.LibraryCleanUp.Utility.directives_execute import execute_copy_directives_for_library_families
+from duHast.Revit.Family.LibraryCleanUp.Utility.directives_checks import  check_directives
 from duHast.Revit.Family.LibraryCleanUp.Utility.write_task_lists import write_task_lists
 
 def get_family_data_from_file(libraryPath):
@@ -120,24 +121,6 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
                 "Failed to create directives",
             )
             output("Failed to create directives: \n{}".format(directives_result.message))
-            # write any duplicates to file (if this is what went wrong)
-
-            if directives_result.result is not None and len(directives_result.result) == 1:
-                # write duplicate directives to file
-                write_duplicate_directives_result = write_duplicate_directives_to_file(directives_result.result[0], output_path)
-                if write_duplicate_directives_result.status is False:
-                    return_value.update_sep(
-                        False,
-                        "Failed to write duplicate directives to file",
-                    )
-                    output("Failed to write duplicate directives to file: {}".format(write_duplicate_directives_result.message))
-                    return return_value
-                else:
-                    return_value.append_message(
-                        "Wrote {} duplicate directives to file.".format(len(directives_result.result))
-                    )
-                    output( "Wrote {} duplicate directives to file.".format(len(directives_result.result)))
-
             return return_value
         else:
             return_value.append_message(
@@ -148,22 +131,29 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
         copy_directives = directives_result.result[0]
         type_maintain_list = directives_result.result[1]
         swap_directives = directives_result.result[2]
+        # check if fams with missing group codes were found
+        families_with_missing_codes = None if len(directives_result.result) < 4 else directives_result.result[3]
 
-        # get families with missing group codes if any
-        families_with_missing_group_codes = directives_result.result[3] if len(directives_result.result) > 3 else None
-       
+        # sanity check directives
+        check_result = check_directives(output_path, copy_directives, families_with_missing_codes)
+        if check_result.status is False:
+            return_value.update_sep(
+                False,
+                "Directives failed sanity check: {}".format(check_result.message),
+            )
+            output("Directives failed sanity check: {}".format(check_result.message))
+            return return_value
+        else:
+            return_value.append_message(
+                "Checked directives successfully."
+            )
+
         # do some logging to user
         output("Created {} copy directives, {} type maintain directives and {} swap directives. ".format(
             len(copy_directives), len(type_maintain_list), len(swap_directives)))
         
-        if families_with_missing_group_codes is not None:
-            output("Found {} families with missing group codes.".format(len(families_with_missing_group_codes)))
-            return_value.append_message(
-                "Found {} families with missing group codes.".format(len(families_with_missing_group_codes))
-            )
-
-        # write swap directives and type maintain lists to file
-        write_directives_result = write_directives_to_file (swap_directives, type_maintain_list,copy_directives, output_path)
+        # write directives to file
+        write_directives_result = write_directives_to_file (swap_directives, copy_directives, output_path)
         if write_directives_result.status is False:
             return_value.update_sep(
                 False,
@@ -176,24 +166,7 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
                     len(swap_directives), len(type_maintain_list))
             )
         
-        output("Wrote swap directives and type maintain directives to file.")
-
-        # write missing group codes to file if any
-        if families_with_missing_group_codes is not None and len(families_with_missing_group_codes) > 0:
-            output("Writing families with missing group codes to file.")
-            write_missing_result = write_families_with_missing_group_codes(families_with_missing_group_codes, output_path)
-            if write_missing_result.status is False:
-                return_value.update_sep(
-                    False,
-                    "Failed to write families with missing group codes to file",
-                )
-                output("Failed to write families with missing group codes to file: {}".format(write_missing_result.message))
-                return return_value
-            
-            return_value.append_message(
-                "Wrote {} families with missing group codes to file.".format(len(families_with_missing_group_codes))
-            )
-            output("Wrote families with missing group codes to file.")
+        output("Wrote directives to file.")
 
         # execute copy directives
         copy_result = execute_copy_directives_for_library_families(copy_directives)

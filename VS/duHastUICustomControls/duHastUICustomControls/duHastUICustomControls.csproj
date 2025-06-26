@@ -71,11 +71,13 @@
   <ItemGroup>
     <Compile Include="Converters\StringContainsConverter.cs" />
     <Compile Include="CustomDataGrid\AvailableColumnDefinition.cs" />
+    <Compile Include="CustomDataGrid\AvailableColumnDefinitions.ColumnUITypes.cs" />
     <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.BooleanFiltering.cs" />
     <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.BulkSelection.cs" />
     <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.ContextMenus.cs" />
     <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.cs" />
     <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.DateTimeFiltering.cs" />
+    <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.ListBoxFiltering.cs" />
     <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.NumericFiltering.cs" />
     <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.TextFiltering.cs" />
     <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.Utilities.cs" />
@@ -84,6 +86,9 @@
     </Compile>
     <Compile Include="CustomDataGrid\FilterDateTimeDialog.xaml.cs">
       <DependentUpon>FilterDateTimeDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomDataGrid\FilterDropDownDialog.xaml.cs">
+      <DependentUpon>FilterDropDownDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomDataGrid\FilterNumericDialog.xaml.cs">
       <DependentUpon>FilterNumericDialog.xaml</DependentUpon>
@@ -101,6 +106,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CustomDataGrid\FilterDateTimeDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomDataGrid\FilterDropDownDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

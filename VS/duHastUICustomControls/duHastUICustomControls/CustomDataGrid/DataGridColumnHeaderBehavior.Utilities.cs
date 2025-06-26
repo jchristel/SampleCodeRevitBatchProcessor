@@ -145,7 +145,8 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                     key.StartsWith("TextFilterLogic_") ||
                     key.StartsWith("BooleanFilter_") ||
                     key.StartsWith("NumericFilter_") ||
-                    key.StartsWith("DateTimeFilter_"))
+                    key.StartsWith("DateTimeFilter_") ||
+                    key.StartsWith("DropDownFilter_"))
                 {
                     filterKeys.Add(key);
                 }
@@ -202,7 +203,8 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 key.StartsWith("BooleanFilter_ShowTrue_") ||
                 key.StartsWith("BooleanFilter_ShowFalse_") ||
                 key.StartsWith("NumericFilter_Operation_") ||
-                key.StartsWith("DateTimeFilter_Operation_"));
+                key.StartsWith("DateTimeFilter_Operation_") ||
+                key.StartsWith("DropDownFilter_SelectedValue_"));
         }
 
         #endregion

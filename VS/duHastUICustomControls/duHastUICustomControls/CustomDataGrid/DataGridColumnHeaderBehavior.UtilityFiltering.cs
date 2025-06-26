@@ -99,23 +99,28 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             clearFilterItem.Click += (s, e) =>
             {
                 ClearColumnFilter(dataGrid, propertyName);
-                // Force refresh of this submenu after clearing
                 PopulateFilterSubmenu(filterSubmenu, dataGrid, propertyName);
             };
 
-            // Enable only if there's actually a filter to clear
             clearFilterItem.IsEnabled = !string.IsNullOrEmpty(currentFilterDisplay);
 
             filterSubmenu.Items.Add(clearFilterItem);
             filterSubmenu.Items.Add(new Separator());
 
-            // Check column data type for type-specific filter options
+            // Check column data type and UI type for filter options
             var columnType = GetColumnDataType(dataGrid, propertyName);
             var isBooleanColumn = columnType == typeof(bool) || columnType == typeof(bool?);
             var isNumericColumn = IsNumericType(columnType);
             var isDateTimeColumn = IsDateTimeType(columnType);
+            var isDropDownColumn = IsDropDownColumn(dataGrid, propertyName); // NEW
 
-            if (isBooleanColumn)
+            if (isDropDownColumn) // NEW: DropDown filter option
+            {
+                var filterByDropDownItem = new MenuItem { Header = "Filter by List Value..." };
+                filterByDropDownItem.Click += (s, e) => ShowFilterDropDownDialog(dataGrid, propertyName);
+                filterSubmenu.Items.Add(filterByDropDownItem);
+            }
+            else if (isBooleanColumn)
             {
                 var filterByBooleanItem = new MenuItem { Header = "Filter by Value..." };
                 filterByBooleanItem.Click += (s, e) => ShowFilterBooleanDialog(dataGrid, propertyName);
@@ -193,6 +198,12 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             dataGrid.Resources.Remove(textFilterKey);
             dataGrid.Resources.Remove(logicKey);
 
+            // Clear dropdown filters
+            var dropDownSelectedValueKey = $"DropDownFilter_SelectedValue_{propertyName}";
+            var dropDownSearchTextKey = $"DropDownFilter_SearchText_{propertyName}";
+            dataGrid.Resources.Remove(dropDownSelectedValueKey);
+            dataGrid.Resources.Remove(dropDownSearchTextKey);
+
             // Clear boolean filters
             var showTrueKey = $"BooleanFilter_ShowTrue_{propertyName}";
             var showFalseKey = $"BooleanFilter_ShowFalse_{propertyName}";
@@ -229,7 +240,8 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             // Apply remaining filters
             var hasAnyFilters = dataGrid.Resources.Keys.OfType<string>()
                 .Any(k => k.StartsWith("TextFilter_") || k.StartsWith("BooleanFilter_") ||
-                          k.StartsWith("NumericFilter_") || k.StartsWith("DateTimeFilter_"));
+                          k.StartsWith("NumericFilter_") || k.StartsWith("DateTimeFilter_") ||
+                          k.StartsWith("DropDownFilter_")); 
 
             if (!hasAnyFilters)
             {
@@ -289,6 +301,17 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             collectionView.Filter = item =>
             {
                 if (item == null) return false;
+
+                // Check all active dropdown filters
+                foreach (var resourceKey in dataGrid.Resources.Keys.OfType<string>()
+                    .Where(k => k.StartsWith("DropDownFilter_SelectedValue_")))
+                {
+                    var propertyName = resourceKey.Substring("DropDownFilter_SelectedValue_".Length);
+                    if (!PassesDropDownFilter(item, dataGrid, propertyName))
+                    {
+                        return false;
+                    }
+                }
 
                 // Check all active text filters
                 foreach (var resourceKey in dataGrid.Resources.Keys.OfType<string>()
@@ -395,7 +418,15 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             if (dataGrid?.Resources == null || string.IsNullOrEmpty(propertyName))
                 return null;
 
-            // Check for text filter first
+            
+            // Check for dropdown filter first (NEW)
+            var dropDownFilter = GetCurrentDropDownFilterText(dataGrid, propertyName);
+            if (!string.IsNullOrEmpty(dropDownFilter))
+            {
+                return dropDownFilter;
+            }
+
+            // Check for text filter
             var textFilterKey = $"TextFilter_{propertyName}";
             if (dataGrid.Resources.Contains(textFilterKey))
             {
@@ -406,7 +437,6 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                     var useAndLogic = dataGrid.Resources.Contains(logicKey) && (bool)dataGrid.Resources[logicKey];
                     var logicDisplay = useAndLogic ? " (AND)" : " (OR)";
 
-                    // Only show logic if there are multiple terms
                     var hasMultipleTerms = filterText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Length > 1;
                     return hasMultipleTerms ? $"Text: \"{filterText}\"{logicDisplay}" : $"Text: \"{filterText}\"";
                 }

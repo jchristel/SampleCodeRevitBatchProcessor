@@ -1,0 +1,116 @@
+﻿<Window x:Class="duHastNet.UI.CustomControls.CustomDataGrid.FilterDropDownDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Filter by List Value"
+        Width="400" Height="350"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False">
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Column Name -->
+        <TextBlock Grid.Row="0" 
+                   Text="{Binding ColumnDisplayText, StringFormat='Filter column: {0}'}"
+                   FontWeight="Bold" 
+                   Margin="0,0,0,15"/>
+
+        <!-- Instructions -->
+        <TextBlock Grid.Row="1" 
+                   TextWrapping="Wrap"
+                   Margin="0,0,0,10"
+                   Foreground="DarkBlue">
+            <Run Text="1. Select a value from the list below"/>
+            <LineBreak/>
+            <Run Text="2. Optionally enter text to search within the selected value"/>
+            <LineBreak/>
+            <Run Text="3. Items with no selection will be hidden"/>
+        </TextBlock>
+
+        <!-- Available Values List -->
+        <GroupBox Grid.Row="2" 
+                  Header="Available Values" 
+                  Margin="0,0,0,15">
+            <ListBox x:Name="ValuesListBox"
+                     ItemsSource="{Binding AvailableValues}"
+                     SelectedItem="{Binding SelectedValue}"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" 
+                                   Padding="5,2"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </GroupBox>
+
+        <!-- Search Text -->
+        <GroupBox Grid.Row="3" 
+                  Header="Search within selected value (optional)" 
+                  Margin="0,0,0,15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox x:Name="SearchTextBox"
+                         Grid.Column="0"
+                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                         IsEnabled="{Binding HasSelectedValue}"
+                         VerticalAlignment="Center"
+                         Padding="5,3"/>
+
+                <Button Grid.Column="1"
+                        Content="Clear"
+                        Click="ClearSearchText_Click"
+                        Margin="5,0,0,0"
+                        Padding="10,3"
+                        IsEnabled="{Binding HasSearchText}"/>
+            </Grid>
+        </GroupBox>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="4" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right">
+
+            <Button Content="Clear Filter" 
+                    Click="ClearFilter_Click"
+                    Margin="0,0,10,0"
+                    Padding="15,5"
+                    Background="LightCoral"
+                    Foreground="White"/>
+
+            <Button Content="Cancel" 
+                    IsCancel="True" 
+                    Margin="0,0,10,0"
+                    Padding="15,5"/>
+
+            <Button Content="Apply Filter" 
+                    IsDefault="True" 
+                    Click="ApplyFilter_Click"
+                    Padding="15,5"
+                    Background="DarkGreen"
+                    Foreground="White"
+                    IsEnabled="{Binding HasSelectedValue}"/>
+        </StackPanel>
+
+        <!-- Status -->
+        <TextBlock Grid.Row="5" 
+                   Text="{Binding StatusText}"
+                   Margin="0,10,0,0"
+                   FontStyle="Italic"
+                   Foreground="Gray"
+                   HorizontalAlignment="Center"/>
+    </Grid>
+</Window>

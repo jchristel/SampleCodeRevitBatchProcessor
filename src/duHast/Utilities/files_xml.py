@@ -125,7 +125,11 @@ def get_xml_element_value(path, tag_name, default=None, value_type=str):
         raise ValueError("Tag name cannot be None or empty.")
     tree = ET.parse(path)
     root = tree.getroot()
-    element = root.find(tag_name)
+    element = None
+    for elem in root.iter():
+        if elem.tag == tag_name:
+            element = elem
+
     if element is not None and element.text is not None:
         try:
             return value_type(element.text.strip())

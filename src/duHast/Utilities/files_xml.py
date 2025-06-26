@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Helper functions relating to xml files. 
+Helper functions relating to xml files.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -29,8 +29,10 @@ Helper functions relating to xml files.
 
 
 import clr
+
 clr.AddReference("System.Xml")
 from System.Xml import XmlDocument
+import xml.etree.ElementTree as ET
 
 from duHast.Utilities.files_base_read import read_non_column_based_text_file
 from duHast.Utilities.Objects.result import Result
@@ -55,7 +57,7 @@ def read_xml_file(file_path):
         - result.message will contain exception message.
     :rtype: :class:`.Result`
     """
-    
+
     return_value = Result()
 
     read_result = read_non_column_based_text_file(file_path)
@@ -63,7 +65,7 @@ def read_xml_file(file_path):
 
     if read_result.status is False:
         return return_value
-    
+
     try:
         # Load the XML content
         doc_xml = XmlDocument()
@@ -71,8 +73,8 @@ def read_xml_file(file_path):
         return_value.result = doc_xml
 
     except Exception as e:
-        return_value.update_sep(False, "Error while reading the XML file: {}" .format(e))
-    
+        return_value.update_sep(False, "Error while reading the XML file: {}".format(e))
+
     return return_value
 
 
@@ -100,7 +102,7 @@ def get_all_xml_files_from_directories(process_directories):
 
     :param process_directories: list of directories to search for xml files
     :type process_directories: list
-    
+
     :return: list of xml files found
     :rtype: [:class:`FileItem`]
     """
@@ -114,3 +116,23 @@ def get_all_xml_files_from_directories(process_directories):
     except Exception as e:
         raise Exception("Failed to gather xml files with exception: {}".format(e))
     return files_found
+
+
+def get_xml_element_value(path, tag_name, default=None, value_type=str):
+    if not path:
+        raise ValueError("Path to XML file cannot be None or empty.")
+    if not tag_name:
+        raise ValueError("Tag name cannot be None or empty.")
+    tree = ET.parse(path)
+    root = tree.getroot()
+    element = None
+    for elem in root.iter():
+        if elem.tag == tag_name:
+            element = elem
+
+    if element is not None and element.text is not None:
+        try:
+            return value_type(element.text.strip())
+        except ValueError:
+            return default
+    return default

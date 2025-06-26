@@ -95,7 +95,8 @@ def place_revit_rooms_entry(doc, uiapp,output, forms):
         doc, 
         get_data_result.result, 
         rotation=rotation, 
-        translation=translation
+        translation=translation,
+        forms=forms
     )
     
     # check if any errors occurred during the creation of the rooms

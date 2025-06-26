@@ -485,7 +485,7 @@ def convert_family_instances_to_storage(doc, family_instances, parameter_data, u
         # get the family instance from the family instance
         for fi in family_instances:
 
-             # increase the progress bar
+            # increase the progress bar
             pb.update_progress(counter, max_value=len(family_instances))
             
             # set up the family instance

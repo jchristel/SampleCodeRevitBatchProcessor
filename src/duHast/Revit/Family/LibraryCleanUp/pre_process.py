@@ -27,7 +27,7 @@ from duHast.Utilities.files_xml import get_all_xml_files_from_directories
 from duHast.Revit.Family.family_types_get_data_from_xml import get_family_type_data_from_library
 
 from duHast.Revit.Family.LibraryCleanUp.Utility.directives_create import create_directives
-from duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file import write_directives_to_file
+from duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file import write_directives_to_file, write_maintain_list
 from duHast.Revit.Family.LibraryCleanUp.Utility.directives_execute import execute_copy_directives_for_library_families
 from duHast.Revit.Family.LibraryCleanUp.Utility.directives_checks import  check_directives
 from duHast.Revit.Family.LibraryCleanUp.Utility.write_task_lists import write_task_lists
@@ -167,6 +167,22 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
             )
         
         output("Wrote directives to file.")
+
+        # write type maintain list to file
+        write_maintain_result = write_maintain_list(type_maintain_list, output_path)
+        if write_maintain_result.status is False:
+            return_value.update_sep(
+                False,
+                "Failed to write type maintain list to file",
+            )
+            output("Failed to write type maintain list to file: {}".format(write_maintain_result.message))
+            return return_value
+        else:
+            return_value.append_message(
+                "Wrote {} type maintain directives to file.".format(len(type_maintain_list))
+            )
+
+        output("Wrote maintain list to file.")
 
         # execute copy directives
         copy_result = execute_copy_directives_for_library_families(copy_directives)

@@ -14,5 +14,6 @@ setup(
     long_description_content_type='text/markdown',
     include_package_data=True,
     package_data={"duHast": ["lib/*.dll"]},
-    has_ext_modules=lambda : True,
+    #has_ext_modules=lambda: True,
+    python_requires='>=3.4',
 )

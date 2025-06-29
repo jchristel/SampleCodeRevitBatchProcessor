@@ -1,2 +1,2 @@
 global-exclude .DS_Store
-recursive-include duHast/lib *.dll
+recursive-include src/duHast/lib *.dll

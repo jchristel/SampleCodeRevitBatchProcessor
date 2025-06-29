@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Family.Data.Objects package &#8212; Sample Code Revit Batch Processor 1.1.15 documentation</title>
+    <title>duHast.Revit.Family.Data.Objects package &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.15 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Family.Data package" href="duHast.Revit.Family.Data.html" />
     <link rel="next" title="duHast.Revit.Family.Geometry package" href="duHast.Revit.Family.Geometry.html" />
     <link rel="prev" title="duHast.Revit.Family.Data package" href="duHast.Revit.Family.Data.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.15 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Family.Data.Objects package</h1></div>
@@ -887,6 +887,11 @@ all other storage properties will be wiped to avoid mismatches!</p>
 <span class="sig-name descname"><span class="pre">EXCEPTION_EMPTY_SWAP_DIRECTIVE_FILES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Empty</span> <span class="pre">swap</span> <span class="pre">directive</span> <span class="pre">file!'</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type.FamilyDirectiveSwap.EXCEPTION_EMPTY_SWAP_DIRECTIVE_FILES" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type.FamilyDirectiveSwap.SWAP_DIRECTIVE_HEADER_ROW">
+<span class="sig-name descname"><span class="pre">SWAP_DIRECTIVE_HEADER_ROW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Source</span> <span class="pre">Family</span> <span class="pre">Name',</span> <span class="pre">'Source</span> <span class="pre">Family</span> <span class="pre">Category</span> <span class="pre">Name',</span> <span class="pre">'Source</span> <span class="pre">Family</span> <span class="pre">Type</span> <span class="pre">Name',</span> <span class="pre">'Target</span> <span class="pre">Family</span> <span class="pre">Name',</span> <span class="pre">'Target</span> <span class="pre">Family</span> <span class="pre">Type</span> <span class="pre">Name']</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type.FamilyDirectiveSwap.SWAP_DIRECTIVE_HEADER_ROW" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>
@@ -1159,6 +1164,20 @@ Assumes that the objects are equal in terms of family name, family type name, ro
 <dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager.family_category">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">family_category</span></span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager.family_category" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager.family_file_path">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">family_file_path</span></span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager.family_file_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the family file path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the family file path</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager.family_has_types">

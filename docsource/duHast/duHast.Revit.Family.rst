@@ -9,6 +9,7 @@ Subpackages
 
    duHast.Revit.Family.Data
    duHast.Revit.Family.Geometry
+   duHast.Revit.Family.LibraryCleanUp
    duHast.Revit.Family.Reporting
    duHast.Revit.Family.Utility
 

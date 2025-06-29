@@ -4,6 +4,14 @@ duHast.Revit.Family.Utility package
 Submodules
 ----------
 
+duHast.Revit.Family.Utility.family\_copy\_directive\_utils module
+-----------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Utility.family_copy_directive_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Family.Utility.family\_swap\_instances\_by\_type\_utils module
 ---------------------------------------------------------------------------
 

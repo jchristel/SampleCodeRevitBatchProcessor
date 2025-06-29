@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Family.Utility package &#8212; Sample Code Revit Batch Processor 1.1.15 documentation</title>
+    <title>duHast.Revit.Family.Utility package &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.15 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Family package" href="duHast.Revit.Family.html" />
     <link rel="next" title="duHast.Revit.Floors package" href="duHast.Revit.Floors.html" />
     <link rel="prev" title="duHast.Revit.Family.Reporting.Objects package" href="duHast.Revit.Family.Reporting.Objects.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.15 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Family.Utility package</h1></div>
@@ -94,6 +94,78 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
+<section id="module-duHast.Revit.Family.Utility.family_copy_directive_utils">
+<span id="duhast-revit-family-utility-family-copy-directive-utils-module"></span><h2>duHast.Revit.Family.Utility.family_copy_directive_utils module<a class="headerlink" href="#module-duHast.Revit.Family.Utility.family_copy_directive_utils" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-to-read-copy-directives-file-s-and-return-them-to-the-caller">
+<h3>Helper functions to read copy  directives file(s) and return them to the caller<a class="headerlink" href="#helper-functions-to-read-copy-directives-file-s-and-return-them-to-the-caller" title="Permalink to this heading">¶</a></h3>
+<p>These helper function expect a text file in csv format with 5 columns:</p>
+<ul class="simple">
+<li><p>CURRENT_FAMILY_NAME = 0</p></li>
+<li><p>FAMILY_FILE_PATH = 1</p></li>
+<li><p>CATEGORY = 2</p></li>
+<li><p>NEW_FAMILY_NAME = 3</p></li>
+<li><p>NEW_DIRECTORY = 4</p></li>
+</ul>
+<p>Note:</p>
+<ul class="simple">
+<li><p>There is no header row in the file, so all rows are treated as data rows.</p></li>
+</ul>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.family_copy_directive_utils.get_copy_directives">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.family_copy_directive_utils.</span></span><span class="sig-name descname"><span class="pre">get_copy_directives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.family_copy_directive_utils.get_copy_directives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads list of copy directives from files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filePath</strong> (<em>[</em><em>str</em><em>]</em>) – List of fully qualified file path to copy and rename directives file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of copy and rename directives.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[copy_and_rename_directive]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.family_copy_directive_utils.execute_copy_directives">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.family_copy_directive_utils.</span></span><span class="sig-name descname"><span class="pre">execute_copy_directives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">copy_directives</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.family_copy_directive_utils.execute_copy_directives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes copy directives.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>copy_directives</strong> (<em>[</em><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy" title="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy"><em>FamilyDirectiveCopy</em></a><em>]</em>) – List of copy directives to execute.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object with status and messages.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.family_copy_directive_utils.write_copy_directives_to_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.family_copy_directive_utils.</span></span><span class="sig-name descname"><span class="pre">write_copy_directives_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">copy_directives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.family_copy_directive_utils.write_copy_directives_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes copy directives to a specified file in CSV format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>swap_directives</strong> (<em>list</em><em> of </em><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type.FamilyDirectiveSwap" title="duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type.FamilyDirectiveSwap"><em>FamilyDirectiveSwap</em></a>) – List of swap directives to write to file.</p></li>
+<li><p><strong>file_path</strong> (<em>str</em>) – Fully qualified file path where the directives will be written.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object indicating success or failure of the write operation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Family.Utility.family_swap_instances_by_type_utils">
 <span id="duhast-revit-family-utility-family-swap-instances-by-type-utils-module"></span><h2>duHast.Revit.Family.Utility.family_swap_instances_by_type_utils module<a class="headerlink" href="#module-duHast.Revit.Family.Utility.family_swap_instances_by_type_utils" title="Permalink to this heading">¶</a></h2>
 <section id="helper-functions-to-read-swap-instances-by-type-directives-file-s-and-return-them-as-a-tuple-to-the-caller">
@@ -136,6 +208,26 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.family_swap_instances_by_type_utils.write_swap_directives_to_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.family_swap_instances_by_type_utils.</span></span><span class="sig-name descname"><span class="pre">write_swap_directives_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">swap_directives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.family_swap_instances_by_type_utils.write_swap_directives_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes swap directives to a specified file in CSV format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>swap_directives</strong> (<em>list</em><em> of </em><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type.FamilyDirectiveSwap" title="duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type.FamilyDirectiveSwap"><em>FamilyDirectiveSwap</em></a>) – List of swap directives to write to file.</p></li>
+<li><p><strong>file_path</strong> (<em>str</em>) – Fully qualified file path where the directives will be written.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object indicating success or failure of the write operation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
 </dd>
 </dl>
 </dd></dl>

@@ -1,0 +1,45 @@
+duHast.Revit.Family.LibraryCleanUp package
+==========================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.Revit.Family.LibraryCleanUp.Utility
+
+Submodules
+----------
+
+duHast.Revit.Family.LibraryCleanUp.in\_process module
+-----------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.LibraryCleanUp.in_process
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.LibraryCleanUp.post\_process module
+-------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.LibraryCleanUp.post_process
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.LibraryCleanUp.pre\_process module
+------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.LibraryCleanUp.pre_process
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.Family.LibraryCleanUp
+   :members:
+   :undoc-members:
+   :show-inheritance:

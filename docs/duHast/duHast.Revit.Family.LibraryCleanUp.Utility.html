@@ -1,0 +1,654 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>duHast.Revit.Family.LibraryCleanUp.Utility package &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../index.html" />
+    <link rel="up" title="duHast.Revit.Family.LibraryCleanUp package" href="duHast.Revit.Family.LibraryCleanUp.html" />
+    <link rel="next" title="duHast.Revit.Family.Reporting package" href="duHast.Revit.Family.Reporting.html" />
+    <link rel="prev" title="duHast.Revit.Family.LibraryCleanUp package" href="duHast.Revit.Family.LibraryCleanUp.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Family.LibraryCleanUp.Utility package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Family.Reporting.html" title="duHast.Revit.Family.Reporting package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Family.LibraryCleanUp.html" title="duHast.Revit.Family.LibraryCleanUp package" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">duHast</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.html">duHast.pyRevit package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Revit.Family.LibraryCleanUp.Utility.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-revit-family-librarycleanup-utility-package">
+<h1>duHast.Revit.Family.LibraryCleanUp.Utility package<a class="headerlink" href="#duhast-revit-family-librarycleanup-utility-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Family.LibraryCleanUp.Utility.defaults">
+<span id="duhast-revit-family-librarycleanup-utility-defaults-module"></span><h2>duHast.Revit.Family.LibraryCleanUp.Utility.defaults module<a class="headerlink" href="#module-duHast.Revit.Family.LibraryCleanUp.Utility.defaults" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute">
+<span id="duhast-revit-family-librarycleanup-utility-directive-maintain-types-execute-module"></span><h2>duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute module<a class="headerlink" href="#module-duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute.update_type_catalogue_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute.</span></span><span class="sig-name descname"><span class="pre">update_type_catalogue_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maintain_types_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute.update_type_catalogue_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the type catalogue file for a family document by removing types that are not in the maintain list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Autodesk.Revit.DB.Document</span></code>) – The family document to process.</p></li>
+<li><p><strong>maintain_types_list</strong> (<em>list</em><em> of </em><em>nested lists</em><em>, </em><em>each containing two strings:</em><em> [</em><em>family_name</em><em>, </em><em>type_name</em><em>]</em>) – A list of types to maintain, where each entry is a tuple (family_name, type_name).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object containing the status and messages.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">duHast.Utilities.Objects.result.Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute.get_names_of_types_to_keep">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute.</span></span><span class="sig-name descname"><span class="pre">get_names_of_types_to_keep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maintain_types_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute.get_names_of_types_to_keep" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute.create_default_type">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute.</span></span><span class="sig-name descname"><span class="pre">create_default_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types_to_delete</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute.create_default_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a default family type in the family document if a catalogue file is in use…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Autodesk.Revit.DB.Document</span></code>) – The family document to process.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object containing the status and messages.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">duHast.Utilities.Objects.result.Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute.delete_non_conforming_types">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute.</span></span><span class="sig-name descname"><span class="pre">delete_non_conforming_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maintain_types_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute.delete_non_conforming_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete non-conforming types in a family document based on a list of types to maintain.</p>
+<p>Note</p>
+<p>Types reported might only live in a type catalogue file. In that case the family may only contain a place holder type with name “Refer To Catalog File” or similar.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Autodesk.Revit.DB.Document</span></code>) – The family document to process.</p></li>
+<li><p><strong>maintain_types_list</strong> (<em>list</em><em> of </em><em>nested lists</em><em>, </em><em>each containing two strings:</em><em> [</em><em>family_name</em><em>, </em><em>type_name</em><em>]</em>) – A list of types to maintain, where each entry is a tuple (family_name, type_name).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object containing the status and messages.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">duHast.Utilities.Objects.result.Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.LibraryCleanUp.Utility.directives_checks">
+<span id="duhast-revit-family-librarycleanup-utility-directives-checks-module"></span><h2>duHast.Revit.Family.LibraryCleanUp.Utility.directives_checks module<a class="headerlink" href="#module-duHast.Revit.Family.LibraryCleanUp.Utility.directives_checks" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directives_checks.verify_copy_directives_are_unique">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directives_checks.</span></span><span class="sig-name descname"><span class="pre">verify_copy_directives_are_unique</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">copy_directives</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directives_checks.verify_copy_directives_are_unique" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verify that the copy directives are unique based on their new names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>copy_directives</strong> (list[<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy" title="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyDirectiveCopy</span></code></a>]) – A list of copy directives to verify.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if all copy directives are unique, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directives_checks.check_directives">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directives_checks.</span></span><span class="sig-name descname"><span class="pre">check_directives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy_directives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">families_with__missing_group_codes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directives_checks.check_directives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the copy directives for duplicates and missing group codes.
+:param output_path: The path where the output files will be written.
+:type output_path: str
+:param copy_directives: A list of copy directives to check.
+:type copy_directives: list[<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy" title="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyDirectiveCopy</span></code></a>]
+:param families_with__missing_group_codes: A list of families with missing group codes.
+:type families_with__missing_group_codes: list[<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager" title="duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyTypeDataStorageManager</span></code></a>]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A Result object containing the status and messages of the checks.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.LibraryCleanUp.Utility.directives_create">
+<span id="duhast-revit-family-librarycleanup-utility-directives-create-module"></span><h2>duHast.Revit.Family.LibraryCleanUp.Utility.directives_create module<a class="headerlink" href="#module-duHast.Revit.Family.LibraryCleanUp.Utility.directives_create" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.get_code_to_use">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.</span></span><span class="sig-name descname"><span class="pre">get_code_to_use</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code_to_descriptor_map</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.get_code_to_use" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.get_unique_group_codes_from_family">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.</span></span><span class="sig-name descname"><span class="pre">get_unique_group_codes_from_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_storage_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.get_unique_group_codes_from_family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get unique group codes from the family storage data.</p>
+<p>will return a dictioanry where key is the full code and value is the group code without any sub codes.
+ITSE-002.01 will return {‘ITSE-002.01’: ‘ITSE-002’}
+ITSE-001 will return {‘ITSE-001’: ‘ITSE-001’}</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>family_storage_data</strong> (<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager" title="duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyTypeDataStorageManager</span></code></a>) – The family storage data from which to get the unique group codes.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary of unique  codes and their cleaned versions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>{str:str}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.create_copy_directive_catalogue_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.</span></span><span class="sig-name descname"><span class="pre">create_copy_directive_catalogue_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.create_copy_directive_catalogue_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a copy directive for the catalogue file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the catalogue file.</p></li>
+<li><p><strong>category</strong> (<em>str</em>) – The category of the family.</p></li>
+<li><p><strong>source_file_path</strong> (<em>str</em>) – The path to the source catalogue file.</p></li>
+<li><p><strong>target_directory</strong> (<em>str</em>) – The directory where the catalogue file will be copied to.</p></li>
+<li><p><strong>new_name</strong> (<em>str</em>) – The new name for the catalogue file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A copy directive for the catalogue file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy" title="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyDirectiveCopy</span></code></a> or None if the source file does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.create_copy_directives">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.</span></span><span class="sig-name descname"><span class="pre">create_copy_directives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_storage_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_group_codes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code_to_descriptor_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.create_copy_directives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create copy directives for each unique group code in the family storage data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>family_storage_data</strong> (<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager" title="duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyTypeDataStorageManager</span></code></a>) – The family storage data from which to create copy directives. (takes the family name, category and file path from this data)</p></li>
+<li><p><strong>unique_group_codes</strong> (<em>dictionary {str:str}</em>) – A dictionary where key is the full code and value is the group code without any sub codes.</p></li>
+<li><p><strong>output_directory</strong> (<em>str</em>) – The directory where the copied families will be saved.</p></li>
+<li><p><strong>code_to_descriptor_map</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>(</em><em>str</em><em>, </em><em>str</em><em>)</em><em>]</em>) – A mapping of grouping codes to their descriptions.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of copy directives.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy" title="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyDirectiveCopy</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.create_type_maintained_lists">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.</span></span><span class="sig-name descname"><span class="pre">create_type_maintained_lists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_storage_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_group_codes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy_directives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code_to_descriptor_map</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.create_type_maintained_lists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create lists of family types to be maintained in the new family based on unique group codes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>family_storage_data</strong> (<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager" title="duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyTypeDataStorageManager</span></code></a>) – The family storage data from which to create type maintained lists.</p></li>
+<li><p><strong>unique_group_codes</strong> (<em>dictionary {str:str}</em>) – A dictionary where key is the full code and value is the group code without any sub codes.</p></li>
+<li><p><strong>copy_directives</strong> (list[<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy" title="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyDirectiveCopy</span></code></a>]) – A list of copy directives to be used for creating type maintained lists.</p></li>
+<li><p><strong>code_to_descriptor_map</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>(</em><em>str</em><em>, </em><em>str</em><em>)</em><em>]</em>) – A mapping of grouping codes to their descriptions.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of nested type maintained lists with two entries each: new family name, family type name to be maintained. ( a family with multiple times to be maintained will have multiple entries in the list )</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[ list[str] ]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.create_swap_directives">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.</span></span><span class="sig-name descname"><span class="pre">create_swap_directives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_storage_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_group_codes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy_directives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code_to_descriptor_map</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.create_swap_directives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create swap directives for each unique group code in the family storage data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>family_storage_data</strong> (<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager" title="duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyTypeDataStorageManager</span></code></a>) – The family storage data from which to create swap directives.</p></li>
+<li><p><strong>unique_group_codes</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – A list of unique group codes to create swap directives for.</p></li>
+<li><p><strong>copy_directives</strong> (list[<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy" title="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyDirectiveCopy</span></code></a>]) – A list of copy directives to be used for creating swap directives.</p></li>
+<li><p><strong>code_to_descriptor_map</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>(</em><em>str</em><em>, </em><em>str</em><em>)</em><em>]</em>) – A mapping of grouping codes to their descriptions.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of swap directives.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type.FamilyDirectiveSwap" title="duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type.FamilyDirectiveSwap"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyDirectiveSwap</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.create_directives">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.</span></span><span class="sig-name descname"><span class="pre">create_directives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_storage_data_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code_descriptor_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.create_directives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create directives based on family storage data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>family_storage_data</strong> (a list of <a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager" title="duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyTypeDataStorageManager</span></code></a>) – The family storage data from which to create directives.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: Directive creation status will be returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will be a log of conversion steps.</p></li>
+<li><dl class="simple">
+<dt>result.result will be a list containing the following items:</dt><dd><ul>
+<li><p>A list of <a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy" title="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyDirectiveCopy</span></code></a> directives for copying families.</p></li>
+<li><p>A list of lists containing family type names to be maintained in the new family.</p></li>
+<li><p>A list of <a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type.FamilyDirectiveSwap" title="duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type.FamilyDirectiveSwap"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyDirectiveSwap</span></code></a> directives for swapping family instances of types.</p></li>
+<li><p>A list of family storage instances that had missing group codes in the code description mapping.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>Reload.status (bool) will be False</p></li>
+<li><p>Reload.message will contain the exception message</p></li>
+<li><p>Reload.result will be an empty list</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.LibraryCleanUp.Utility.directives_execute">
+<span id="duhast-revit-family-librarycleanup-utility-directives-execute-module"></span><h2>duHast.Revit.Family.LibraryCleanUp.Utility.directives_execute module<a class="headerlink" href="#module-duHast.Revit.Family.LibraryCleanUp.Utility.directives_execute" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directives_execute.execute_copy_directives_for_library_families">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directives_execute.</span></span><span class="sig-name descname"><span class="pre">execute_copy_directives_for_library_families</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">copy_directives</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directives_execute.execute_copy_directives_for_library_families" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes the copy directives for library families.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>copy_directives</strong> (<em>list</em>) – List of copy directives to execute.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object containing the status and messages.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.LibraryCleanUp.Utility.directives_read_from_file">
+<span id="duhast-revit-family-librarycleanup-utility-directives-read-from-file-module"></span><h2>duHast.Revit.Family.LibraryCleanUp.Utility.directives_read_from_file module<a class="headerlink" href="#module-duHast.Revit.Family.LibraryCleanUp.Utility.directives_read_from_file" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directives_read_from_file.read_maintain_types">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directives_read_from_file.</span></span><span class="sig-name descname"><span class="pre">read_maintain_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directives_read_from_file.read_maintain_types" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file">
+<span id="duhast-revit-family-librarycleanup-utility-directives-write-to-file-module"></span><h2>duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file module<a class="headerlink" href="#module-duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.write_maintain_list">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.</span></span><span class="sig-name descname"><span class="pre">write_maintain_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maintain_file_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_directory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.write_maintain_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes a list of maintain directives to a specified file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>maintain_file_list</strong> (<em>list</em>) – List of maintain directives to write.</p></li>
+<li><p><strong>output_directory</strong> (<em>str</em>) – Directory where the file will be written.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object indicating success or failure.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.write_swap_directives">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.</span></span><span class="sig-name descname"><span class="pre">write_swap_directives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">swap_directives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_directory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.write_swap_directives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes swap directives to a specified file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>swap_directives</strong> (<em>list</em>) – List of swap directives to write.</p></li>
+<li><p><strong>output_directory</strong> (<em>str</em>) – Directory where the file will be written.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object indicating success or failure.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.write_copy_directives">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.</span></span><span class="sig-name descname"><span class="pre">write_copy_directives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">copy_directives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_directory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.write_copy_directives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes copy directives to a specified file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>copy_directives</strong> – List of copy directives to write.</p></li>
+<li><p><strong>output_directory</strong> (<em>str</em>) – Directory where the file will be written.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object indicating success or failure.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.write_duplicate_directives_to_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.</span></span><span class="sig-name descname"><span class="pre">write_duplicate_directives_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">copy_directives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_directory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.write_duplicate_directives_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes duplicate directives to a specified file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>copy_directives</strong> (<em>list</em>) – List of duplicate directives to write.</p></li>
+<li><p><strong>output_directory</strong> (<em>str</em>) – Directory where the file will be written.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object indicating success or failure.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.write_directives_to_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.</span></span><span class="sig-name descname"><span class="pre">write_directives_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">swap_directives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy_directives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_directory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.write_directives_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes directives to a specified file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Result object indicating success or failure.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.write_families_with_missing_group_codes">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.</span></span><span class="sig-name descname"><span class="pre">write_families_with_missing_group_codes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_directory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.write_families_with_missing_group_codes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes a list of families with missing group codes to a specified file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>family_instances</strong> (<em>[</em><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_type_data_storage.FamilyTypeDataStorage" title="duHast.Revit.Family.Data.Objects.family_type_data_storage.FamilyTypeDataStorage"><em>FamilyTypeDataStorage</em></a><em>]</em>) – List of family instances with missing group codes.</p></li>
+<li><p><strong>output_directory</strong> (<em>str</em>) – Directory where the file will be written.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object indicating success or failure.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.LibraryCleanUp.Utility.family_file_name">
+<span id="duhast-revit-family-librarycleanup-utility-family-file-name-module"></span><h2>duHast.Revit.Family.LibraryCleanUp.Utility.family_file_name module<a class="headerlink" href="#module-duHast.Revit.Family.LibraryCleanUp.Utility.family_file_name" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.family_file_name.clean_up_family_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.family_file_name.</span></span><span class="sig-name descname"><span class="pre">clean_up_family_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fam_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.family_file_name.clean_up_family_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cleans up the family name by removing  any dashes and spaces, replacing them with underscores.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fam_name</strong> (<em>str</em>) – The family name to clean up.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The cleaned up family name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.family_file_name.build_family_name_from_descriptor">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.family_file_name.</span></span><span class="sig-name descname"><span class="pre">build_family_name_from_descriptor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code_to_use</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.family_file_name.build_family_name_from_descriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds a family name from the given description by cleaning it up.</p>
+<p>Description is in format</p>
+<p>MAJOR CATEGORY: description part, description part, description part</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>description</strong> (<em>str</em>) – The description to build the family name from.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The cleaned up family name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.LibraryCleanUp.Utility.family_load">
+<span id="duhast-revit-family-librarycleanup-utility-family-load-module"></span><h2>duHast.Revit.Family.LibraryCleanUp.Utility.family_load module<a class="headerlink" href="#module-duHast.Revit.Family.LibraryCleanUp.Utility.family_load" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.family_load.get_families_to_be_loaded_for_swapping">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.family_load.</span></span><span class="sig-name descname"><span class="pre">get_families_to_be_loaded_for_swapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swap_directives</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.family_load.get_families_to_be_loaded_for_swapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads families to be swapped into the document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document.</p></li>
+<li><p><strong>swap_directives</strong> (<em>list</em><em> of </em><em>dict</em>) – The swap directives containing family names and paths.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of loaded family symbols.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.FamilySymbol</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.family_load.load_families_required_for_swapping">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.family_load.</span></span><span class="sig-name descname"><span class="pre">load_families_required_for_swapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swap_directives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">library_directory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.family_load.load_families_required_for_swapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads families required for swapping into the document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document.</p></li>
+<li><p><strong>swap_directives</strong> (<em>list</em><em> of </em><em>dict</em>) – The swap directives containing family names and paths.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of loaded family symbols.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.FamilySymbol</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code">
+<span id="duhast-revit-family-librarycleanup-utility-grouping-code-module"></span><h2>duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code module<a class="headerlink" href="#module-duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code.clean_code">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code.</span></span><span class="sig-name descname"><span class="pre">clean_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code.clean_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cleans the grouping code by removing any sub codes after a dot.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code.convert_to_file_name_code">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code.</span></span><span class="sig-name descname"><span class="pre">convert_to_file_name_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code.convert_to_file_name_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the grouping code to a file name safe format.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code.load_group_code_description">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code.</span></span><span class="sig-name descname"><span class="pre">load_group_code_description</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code.load_group_code_description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the grouping code and description from a CSV file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> – The path to the CSV file containing the grouping codes and descriptions.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary mapping cleaned grouping codes to their descriptions.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.LibraryCleanUp.Utility.write_task_lists">
+<span id="duhast-revit-family-librarycleanup-utility-write-task-lists-module"></span><h2>duHast.Revit.Family.LibraryCleanUp.Utility.write_task_lists module<a class="headerlink" href="#module-duHast.Revit.Family.LibraryCleanUp.Utility.write_task_lists" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.write_task_lists.write_task_lists">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.write_task_lists.</span></span><span class="sig-name descname"><span class="pre">write_task_lists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_list_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_task_lists</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.write_task_lists.write_task_lists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.LibraryCleanUp.Utility">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Family.LibraryCleanUp.Utility" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="modules.html" accesskey="U">duHast</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.html" >duHast package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.html" >duHast.Revit package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.Family.html" >duHast.Revit.Family package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.Family.LibraryCleanUp.html" >duHast.Revit.Family.LibraryCleanUp package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                duHast.Revit.Family.LibraryCleanUp.Utility package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

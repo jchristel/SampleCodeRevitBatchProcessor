@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Ceilings package &#8212; Sample Code Revit Batch Processor 1.1.15 documentation</title>
+    <title>duHast.Revit.Ceilings package &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.15 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.Ceilings.Export package" href="duHast.Revit.Ceilings.Export.html" />
     <link rel="prev" title="duHast.Revit.Categories.Utility package" href="duHast.Revit.Categories.Utility.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.15 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Ceilings package</h1></div>
@@ -326,10 +326,21 @@ It will therefore not return any in place family types.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Result object containing the created ceiling and any messages.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Ceiling creation status (bool) returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>Result.message property contains id of ceiling created.</p></li>
+<li><p>Result.result will contain the created ceiling element if successful, otherwise an empty list.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>.status (bool) will be False.</p></li>
+<li><p>.message will contain the exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">duHast.Utilities.Objects.result.Result</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>

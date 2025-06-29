@@ -1,0 +1,358 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>duHast.Revit.Family.LibraryCleanUp package &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../index.html" />
+    <link rel="up" title="duHast.Revit.Family package" href="duHast.Revit.Family.html" />
+    <link rel="next" title="duHast.Revit.Family.LibraryCleanUp.Utility package" href="duHast.Revit.Family.LibraryCleanUp.Utility.html" />
+    <link rel="prev" title="duHast.Revit.Family.Geometry package" href="duHast.Revit.Family.Geometry.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Family.LibraryCleanUp package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Family.LibraryCleanUp.Utility.html" title="duHast.Revit.Family.LibraryCleanUp.Utility package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Family.Geometry.html" title="duHast.Revit.Family.Geometry package" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">duHast</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.html">duHast.pyRevit package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Revit.Family.LibraryCleanUp.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-revit-family-librarycleanup-package">
+<h1>duHast.Revit.Family.LibraryCleanUp package<a class="headerlink" href="#duhast-revit-family-librarycleanup-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html">duHast.Revit.Family.LibraryCleanUp.Utility package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#module-duHast.Revit.Family.LibraryCleanUp.Utility.defaults">duHast.Revit.Family.LibraryCleanUp.Utility.defaults module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#module-duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute">duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute.update_type_catalogue_file"><code class="docutils literal notranslate"><span class="pre">update_type_catalogue_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute.get_names_of_types_to_keep"><code class="docutils literal notranslate"><span class="pre">get_names_of_types_to_keep()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute.create_default_type"><code class="docutils literal notranslate"><span class="pre">create_default_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute.delete_non_conforming_types"><code class="docutils literal notranslate"><span class="pre">delete_non_conforming_types()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#module-duHast.Revit.Family.LibraryCleanUp.Utility.directives_checks">duHast.Revit.Family.LibraryCleanUp.Utility.directives_checks module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directives_checks.verify_copy_directives_are_unique"><code class="docutils literal notranslate"><span class="pre">verify_copy_directives_are_unique()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directives_checks.check_directives"><code class="docutils literal notranslate"><span class="pre">check_directives()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#module-duHast.Revit.Family.LibraryCleanUp.Utility.directives_create">duHast.Revit.Family.LibraryCleanUp.Utility.directives_create module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.get_code_to_use"><code class="docutils literal notranslate"><span class="pre">get_code_to_use()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.get_unique_group_codes_from_family"><code class="docutils literal notranslate"><span class="pre">get_unique_group_codes_from_family()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.create_copy_directive_catalogue_file"><code class="docutils literal notranslate"><span class="pre">create_copy_directive_catalogue_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.create_copy_directives"><code class="docutils literal notranslate"><span class="pre">create_copy_directives()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.create_type_maintained_lists"><code class="docutils literal notranslate"><span class="pre">create_type_maintained_lists()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.create_swap_directives"><code class="docutils literal notranslate"><span class="pre">create_swap_directives()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.create_directives"><code class="docutils literal notranslate"><span class="pre">create_directives()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#module-duHast.Revit.Family.LibraryCleanUp.Utility.directives_execute">duHast.Revit.Family.LibraryCleanUp.Utility.directives_execute module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directives_execute.execute_copy_directives_for_library_families"><code class="docutils literal notranslate"><span class="pre">execute_copy_directives_for_library_families()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#module-duHast.Revit.Family.LibraryCleanUp.Utility.directives_read_from_file">duHast.Revit.Family.LibraryCleanUp.Utility.directives_read_from_file module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directives_read_from_file.read_maintain_types"><code class="docutils literal notranslate"><span class="pre">read_maintain_types()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#module-duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file">duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.write_maintain_list"><code class="docutils literal notranslate"><span class="pre">write_maintain_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.write_swap_directives"><code class="docutils literal notranslate"><span class="pre">write_swap_directives()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.write_copy_directives"><code class="docutils literal notranslate"><span class="pre">write_copy_directives()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.write_duplicate_directives_to_file"><code class="docutils literal notranslate"><span class="pre">write_duplicate_directives_to_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.write_directives_to_file"><code class="docutils literal notranslate"><span class="pre">write_directives_to_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file.write_families_with_missing_group_codes"><code class="docutils literal notranslate"><span class="pre">write_families_with_missing_group_codes()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#module-duHast.Revit.Family.LibraryCleanUp.Utility.family_file_name">duHast.Revit.Family.LibraryCleanUp.Utility.family_file_name module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.family_file_name.clean_up_family_name"><code class="docutils literal notranslate"><span class="pre">clean_up_family_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.family_file_name.build_family_name_from_descriptor"><code class="docutils literal notranslate"><span class="pre">build_family_name_from_descriptor()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#module-duHast.Revit.Family.LibraryCleanUp.Utility.family_load">duHast.Revit.Family.LibraryCleanUp.Utility.family_load module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.family_load.get_families_to_be_loaded_for_swapping"><code class="docutils literal notranslate"><span class="pre">get_families_to_be_loaded_for_swapping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.family_load.load_families_required_for_swapping"><code class="docutils literal notranslate"><span class="pre">load_families_required_for_swapping()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#module-duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code">duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code.clean_code"><code class="docutils literal notranslate"><span class="pre">clean_code()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code.convert_to_file_name_code"><code class="docutils literal notranslate"><span class="pre">convert_to_file_name_code()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code.load_group_code_description"><code class="docutils literal notranslate"><span class="pre">load_group_code_description()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#module-duHast.Revit.Family.LibraryCleanUp.Utility.write_task_lists">duHast.Revit.Family.LibraryCleanUp.Utility.write_task_lists module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#duHast.Revit.Family.LibraryCleanUp.Utility.write_task_lists.write_task_lists"><code class="docutils literal notranslate"><span class="pre">write_task_lists()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.Utility.html#module-duHast.Revit.Family.LibraryCleanUp.Utility">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Family.LibraryCleanUp.in_process">
+<span id="duhast-revit-family-librarycleanup-in-process-module"></span><h2>duHast.Revit.Family.LibraryCleanUp.in_process module<a class="headerlink" href="#module-duHast.Revit.Family.LibraryCleanUp.in_process" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.in_process.in_process_family">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.in_process.</span></span><span class="sig-name descname"><span class="pre">in_process_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">library_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.in_process.in_process_family" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.LibraryCleanUp.post_process">
+<span id="duhast-revit-family-librarycleanup-post-process-module"></span><h2>duHast.Revit.Family.LibraryCleanUp.post_process module<a class="headerlink" href="#module-duHast.Revit.Family.LibraryCleanUp.post_process" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.post_process.move_files">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.post_process.</span></span><span class="sig-name descname"><span class="pre">move_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.post_process.move_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves files to the specified destination directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>files</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of file paths to be moved.</p></li>
+<li><p><strong>destination_directory</strong> (<em>str</em>) – Directory where the files will be moved.</p></li>
+<li><p><strong>output</strong> (<em>function</em>) – Output function to log messages.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if all files were moved successfully, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.post_process.get_part_atom_files_from_families">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.post_process.</span></span><span class="sig-name descname"><span class="pre">get_part_atom_files_from_families</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.post_process.get_part_atom_files_from_families" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets part atom files from the specified family file path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> – list of Path to the family files.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of part atom files.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.post_process.move_original_families_to_backup_directory">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.post_process.</span></span><span class="sig-name descname"><span class="pre">move_original_families_to_backup_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_copy_directive_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backupPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.post_process.move_original_families_to_backup_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves original families from the library path to the backup path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>family_copy_directive_directory</strong> (<em>str</em>) – Directory containing family copy directives.</p></li>
+<li><p><strong>backupPath</strong> (<em>str</em>) – Path to the backup directory where families will be moved.</p></li>
+<li><p><strong>output</strong> (<em>function</em>) – Output function to log messages.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object indicating success or failure of the operation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.post_process.copy_new_families_to_library">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.post_process.</span></span><span class="sig-name descname"><span class="pre">copy_new_families_to_library</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">library_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.post_process.copy_new_families_to_library" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copies new families from the output path to the library path.
+:param output_path: Path where new families are located.
+:type output_path: str
+:param library_path: Path to the library where families will be copied.
+:type library_path: str
+:param output: Output function to log messages.
+:type output: function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Result object indicating success or failure of the operation.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.post_process.post_process_family">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.post_process.</span></span><span class="sig-name descname"><span class="pre">post_process_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">library_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup_directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.post_process.post_process_family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post-process function to handle the final steps after family processing.</p>
+<p>This function copies new families to the library and moves original families to a backup directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_path</strong> (<em>str</em>) – Path where new families are located.</p></li>
+<li><p><strong>library_path</strong> (<em>str</em>) – Path to the library where new families will be copied to.</p></li>
+<li><p><strong>backup_directory_path</strong> (<em>str</em>) – Path to the backup directory where original families will be moved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object indicating the success or failure of the post-processing step.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.LibraryCleanUp.pre_process">
+<span id="duhast-revit-family-librarycleanup-pre-process-module"></span><h2>duHast.Revit.Family.LibraryCleanUp.pre_process module<a class="headerlink" href="#module-duHast.Revit.Family.LibraryCleanUp.pre_process" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.pre_process.get_family_data_from_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.pre_process.</span></span><span class="sig-name descname"><span class="pre">get_family_data_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">libraryPath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.pre_process.get_family_data_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts family type data from XML files in the specified library path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: XML conversion status will be returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain which xml file was read and converted into family type data.</p></li>
+<li><p>result.result will be [<code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyTypeDataStorageManager</span></code>]</p></li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>Reload.status (bool) will be False</p></li>
+<li><p>Reload.message will contain the exception message</p></li>
+<li><p>Reload.result will be an empty list</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.pre_process.pre_process">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.pre_process.</span></span><span class="sig-name descname"><span class="pre">pre_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">library_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_list_directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code_descriptor_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.pre_process.pre_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pre-process function to prepare for the family type data extraction.</p>
+<p>This function is a placeholder for any pre-processing steps that may be needed before extracting family type data from the library.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>library_path</strong> (<em>str</em>) – Path to the library containing family files to be renamed.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em>) – Path where the directives will be written and changed family files will be copied to.</p></li>
+<li><p><strong>task_list_directory_path</strong> (<em>str</em>) – Path where the task lists for RBP will be written.</p></li>
+<li><p><strong>code_descriptor_path</strong> (<em>str</em>) – Path to the code descriptor file. (AUSHFG)</p></li>
+<li><p><strong>output</strong> – Output object to write messages to.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object indicating the success or failure of the pre-processing step.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.LibraryCleanUp">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Family.LibraryCleanUp" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="modules.html" accesskey="U">duHast</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.html" >duHast package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.html" >duHast.Revit package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.Family.html" >duHast.Revit.Family package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                duHast.Revit.Family.LibraryCleanUp package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

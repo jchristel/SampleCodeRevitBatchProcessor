@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Common.Geometry package &#8212; Sample Code Revit Batch Processor 1.1.15 documentation</title>
+    <title>duHast.Revit.Common.Geometry package &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.15 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Common package" href="duHast.Revit.Common.html" />
     <link rel="next" title="duHast.Revit.Common.Objects package" href="duHast.Revit.Common.Objects.html" />
     <link rel="prev" title="duHast.Revit.Common package" href="duHast.Revit.Common.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.15 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Common.Geometry package</h1></div>
@@ -243,6 +243,26 @@ line_two (object): The second line to compare.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.Curve</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.curve.splice_adjacent_lines">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.curve.</span></span><span class="sig-name descname"><span class="pre">splice_adjacent_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curve_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve_2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.curve.splice_adjacent_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Splices two adjacent lines if they share an endpoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>curve_1</strong> (<em>Autodesk.Revit.DB.Line</em>) – The first line to splice.</p></li>
+<li><p><strong>curve_2</strong> (<em>Autodesk.Revit.DB.Line</em>) – The second line to splice.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new line that combines the two lines if they are adjacent, otherwise None.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.Line</p>
 </dd>
 </dl>
 </dd></dl>

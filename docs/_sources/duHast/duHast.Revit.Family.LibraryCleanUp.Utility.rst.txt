@@ -1,0 +1,101 @@
+duHast.Revit.Family.LibraryCleanUp.Utility package
+==================================================
+
+Submodules
+----------
+
+duHast.Revit.Family.LibraryCleanUp.Utility.defaults module
+----------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.LibraryCleanUp.Utility.defaults
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.LibraryCleanUp.Utility.directive\_maintain\_types\_execute module
+-------------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.LibraryCleanUp.Utility.directives\_checks module
+--------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.LibraryCleanUp.Utility.directives_checks
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.LibraryCleanUp.Utility.directives\_create module
+--------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.LibraryCleanUp.Utility.directives_create
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.LibraryCleanUp.Utility.directives\_execute module
+---------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.LibraryCleanUp.Utility.directives_execute
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.LibraryCleanUp.Utility.directives\_read\_from\_file module
+------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.LibraryCleanUp.Utility.directives_read_from_file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.LibraryCleanUp.Utility.directives\_write\_to\_file module
+-----------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.LibraryCleanUp.Utility.family\_file\_name module
+--------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.LibraryCleanUp.Utility.family_file_name
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.LibraryCleanUp.Utility.family\_load module
+--------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.LibraryCleanUp.Utility.family_load
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.LibraryCleanUp.Utility.grouping\_code module
+----------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.LibraryCleanUp.Utility.grouping_code
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.LibraryCleanUp.Utility.write\_task\_lists module
+--------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.LibraryCleanUp.Utility.write_task_lists
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.Family.LibraryCleanUp.Utility
+   :members:
+   :undoc-members:
+   :show-inheritance:

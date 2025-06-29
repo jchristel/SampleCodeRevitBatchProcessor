@@ -45,6 +45,15 @@ class FamilyDirectiveSwap(FamilyDirectiveBase):
     EXCEPTION_NO_SWAP_DIRECTIVE_FILES = "Swap directive file does not exist."
     EXCEPTION_EMPTY_SWAP_DIRECTIVE_FILES = "Empty swap directive file!"
 
+    # header row for the swap directive file
+    SWAP_DIRECTIVE_HEADER_ROW = [
+        "Source Family Name",
+        "Source Family Category Name",
+        "Source Family Type Name",
+        "Target Family Name",
+        "Target Family Type Name",
+    ]
+
     def __init__(
         self, name, category, source_type_name, target_family_name, target_family_type_name
     ):

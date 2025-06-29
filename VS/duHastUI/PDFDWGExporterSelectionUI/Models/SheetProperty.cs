@@ -21,12 +21,6 @@
 //
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 {
     public class SheetProperty
@@ -54,7 +48,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
             set { _value = value; }
         }
 
-        public  SheetProperty(string name, string value)
+        public SheetProperty(string name, string value)
         {
             _name = name;
             _value = value;

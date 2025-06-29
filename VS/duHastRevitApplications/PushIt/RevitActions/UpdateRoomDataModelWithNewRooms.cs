@@ -31,8 +31,8 @@ namespace duHastNet.PushIt.RevitActions
     public class UpdateRoomDataModelWithNewRooms : RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
     {
 
-        private ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
-        public ViewModels.RoomsSelectionViewModel RoomsSelectionViewModel => _roomsSelectionViewModel;
+        private ViewModels.RoomsMainViewModel _roomsMainViewModel;
+        public ViewModels.RoomsMainViewModel RoomsMainViewModel => _roomsMainViewModel;
 
         //current set or push it mock rooms
         private List<RoomRevit> _roomsData;
@@ -48,9 +48,9 @@ namespace duHastNet.PushIt.RevitActions
                 // get all new rooms from the model
                 _roomsData = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
                     doc: doc,
-                    roomsDataModel: RevitModel.GetAllRooms(),
-                    supportedCategoryNames: RevitModel.Settings.SupportedCategories,
-                    AddMessage: RoomsSelectionViewModel.AddMessage);
+                    revitDataModel: RevitModel,
+                    supportedCategoryNames: RevitModel.GetEnabledCategoryNames(),
+                    AddMessage: RoomsMainViewModel.AddMessage);
 
                 //check if any rooms where found in the model, if not get out
                 if (_roomsData == null || _roomsData.Count == 0)
@@ -107,10 +107,10 @@ namespace duHastNet.PushIt.RevitActions
             return GetReturnValue("Created new rooms from Revit.");
         }
 
-        public UpdateRoomDataModelWithNewRooms(RevitDataModel revitModel, ViewModels.RoomsSelectionViewModel roomsSelectionViewModel)
+        public UpdateRoomDataModelWithNewRooms(RevitDataModel revitModel, ViewModels.RoomsMainViewModel roomsMainViewModel)
         {
             RevitModel = revitModel;
-            _roomsSelectionViewModel = roomsSelectionViewModel;
+            _roomsMainViewModel = roomsMainViewModel;
         }
     }
 }

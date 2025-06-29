@@ -32,11 +32,25 @@ namespace duHastNet.PushIt.Models
     {
         public Models.RoomsDataModelContainer _roomsContainer;
         public Models.CategoryDataModelContainer _categoriesContainer;
+        public Models.ParameterDataModelContainer _parameterDataContainer;
         private Models.Settings _settings;
 
         private Utils.Logging.SimpleLogger _logger;
 
-        public Settings Settings { get => _settings; set => _settings = value; }
+        public Settings Settings
+        {
+            get => _settings;
+            set
+            {
+                _settings = value;
+
+                //load category data
+                LoadCategoryDataFromSettings();
+
+                //read out all parameters and their data
+                LoadParameterData();
+            }
+        }
 
         //event handlers for property changed
         public event PropertyChangedEventHandler PropertyChanged;
@@ -51,6 +65,8 @@ namespace duHastNet.PushIt.Models
         {
             OnPropertyChanged(name);
         }
+
+        #region rooms
 
         public void AddRoom(Models.RoomDataModel room)
         {
@@ -123,7 +139,44 @@ namespace duHastNet.PushIt.Models
                 AddRoom(room);
             }
         }
+        #endregion 
 
+        #region categories
+
+        /// <summary>
+        /// Adds categories to the categories container only if they not already exists
+        /// Used to add supported categories to the container. Container may already contain enabled categories
+        /// </summary>
+        /// <param name="revitCategories"></param>
+        public void LoadSupportedCategoryData(List<Models.CategoryDataModel> revitCategories)
+        {
+            foreach (Models.CategoryDataModel category in revitCategories)
+            {
+                //only add this category if not already in categories by its name
+                if (!_categoriesContainer.CategoryExists(category))
+                {
+                    AddCategory(category);
+                }
+            }
+        }
+
+        public void LoadCategoryDataFromSettings()
+        {
+            //check if we got settings
+            if (Settings == null) return;
+
+            //check if we got enabled category names
+            if (Settings.EnabledCategoryNames == null) return;
+
+            // update supported catgeories from settings
+            ClearCategories();
+
+            foreach (var cat in Settings.EnabledCategoryNames)
+            {
+                // all categories in settings are enabled categories
+                AddCategory(new Models.CategoryDataModel(cat, true));
+            }
+        }
 
         public void AddCategory(Models.CategoryDataModel category)
         {
@@ -135,18 +188,65 @@ namespace duHastNet.PushIt.Models
             return _categoriesContainer.GetAllCategories();
         }
 
+        public List<Models.CategoryDataModel> GetAllEnabledCategories()
+        {
+            return _categoriesContainer.GetAllEnabledCategories();
+        }
+
         public void ClearCategories()
         {
             _categoriesContainer.ClearCategories();
         }
 
-        public void LoadCategoryData(List<Models.CategoryDataModel> revitCategories)
+        public List<string> GetEnabledCategoryNames()
         {
-            foreach (Models.CategoryDataModel category in revitCategories)
+            return _categoriesContainer.GetEnabledCategoryNames();
+        }
+
+
+        #endregion
+
+        #region parameters
+
+        public void LoadParameterData()
+        {
+            //check if there is a settings object
+            if (_settings == null) return;
+
+            //check if data file path is valid
+            if (_settings.DataPath == null) return;
+
+            //load parameter data
+            var parameters = Utilities.ReadRoomsData.GetRoomsDataHeaderRows(_settings.DataPath);
+
+            //check if valid data came back
+            if (parameters == null) return;
+
+            //clear parameters before adding them again
+            ClearParameters();
+
+            foreach (var parameter in parameters)
             {
-                AddCategory(category);
+                AddParameter(parameter);
             }
         }
+
+        public void AddParameter(Models.RoomDataProperty parameter)
+        {
+            _parameterDataContainer.AddParameter(parameter);
+        }
+
+        public List<Models.RoomDataProperty> GetAllParameters()
+        {
+            return _parameterDataContainer.GetAllParameters();
+        }
+
+        public void ClearParameters()
+        {
+            _parameterDataContainer.ClearParameters();
+        }
+
+        #endregion
 
         public void InitialiseLogger(string filePath)
         {
@@ -168,6 +268,7 @@ namespace duHastNet.PushIt.Models
         {
             _roomsContainer = new Models.RoomsDataModelContainer();
             _categoriesContainer = new Models.CategoryDataModelContainer();
+            _parameterDataContainer = new ParameterDataModelContainer();
         }
     }
 }

@@ -32,7 +32,25 @@ namespace duHastNet.PushIt.Models
         // path to the data file containing the schedule of accommodations
         public string DataPath { get; set; }
 
-        // list of supported Revit categories
-        public List<string> SupportedCategories { get; set; }
+        // list of enabled Revit categories names only
+        // these are not all the categories pushit supports...just the one enabled
+        public List<string> EnabledCategoryNames { get; set; }
+
+        /// <summary>
+        /// field containing all the column ids (room properties) to be displayed
+        /// and id is the same as the property name but without any spaces!
+        /// </summary>
+        private List<string> _columnIds;
+
+        public List<string> ColumnIds
+        {
+            get => _columnIds;
+        }
+
+        public Settings() {
+            EnabledCategoryNames = new List<string>();
+            _columnIds = new List<string>();
+            DataPath = string.Empty;
+        }
     }
 }

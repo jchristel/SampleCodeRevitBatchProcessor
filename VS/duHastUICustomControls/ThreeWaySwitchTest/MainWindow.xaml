@@ -4,14 +4,44 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ThreeWaySwitchTest"
-        xmlns:custom="clr-namespace:duHastNet.UI.CustomControls;assembly=duHastUICustomControls"
+        xmlns:custom="clr-namespace:duHastNet.UI.CustomControls.CustomDataGrid;assembly=duHastUICustomControls"
+        xmlns:tws ="clr-namespace:duHastNet.UI.CustomControls;assembly=duHastUICustomControls"
+        xmlns:vms ="clr-namespace:duHastNet.UI.ThreeWaySwitchTest.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.DataContext>
+        <vms:DynamicDataGridViewModel />
+    </Window.DataContext>
+
     <Grid>
-        <custom:ThreeWaySwitch 
+        <Grid.RowDefinitions>
+            <!-- three way switch -->
+            <RowDefinition Height="auto"/>
+            <!-- custom data grid -->
+            <RowDefinition Height="auto"/>
+            <!-- column management -->
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <tws:ThreeWaySwitch 
+            Grid.Row="0"
             Width="Auto" 
             Height="Auto"
             Margin="10 2 10 2"
             LabelLeft="Push It" LabelCenter="Split It" LabelRight="New Room" DisplayName="Mode" />
+
+        <!-- Dynamic DataGrid -->
+        <custom:DynamicDataGrid Grid.Row="1"
+                               ColumnDefinitions="{Binding ColumnDefinitions}"
+                               ItemsSource="{Binding Data}"
+                               CanUserDeleteRows="True"
+                               GridLinesVisibility="All"
+                               HeadersVisibility="Column"
+                               SelectionMode="Extended"
+                               Background="White"
+                               AlternatingRowBackground="LightGray"
+                               custom:DataGridColumnHeaderBehavior.EnableColumnManagement="True"
+                               custom:DataGridColumnHeaderBehavior.EnableBulkSelection="True"/>
+
     </Grid>
 </Window>

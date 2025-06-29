@@ -34,7 +34,7 @@ namespace duHastNet.PushIt.Commands
 {
     public class WipeStaleDataRevitAsyncCommand : Utils.WPF.Commands.CommandBase
     {
-        private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
+        private readonly ViewModels.RoomsMainViewModel _roomsMainViewModel;
         //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitDataModel _revitDataModel;
 
@@ -42,7 +42,7 @@ namespace duHastNet.PushIt.Commands
         public override async void Execute(object parameter)
         {
             //deactivate the ui
-            _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = true;
+            _roomsMainViewModel.IsWaitingForRevitCommandToFinish = true;
 
             try
             {
@@ -54,8 +54,24 @@ namespace duHastNet.PushIt.Commands
                         Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
                         try
                         {
+                            // update parameter data in the data model
+                            VerifyParametersInModel actionVerify = new VerifyParametersInModel(_revitDataModel);
+                            (string messageActionVerify, Utils.WPF.Stores.MessageTypes messageActionTypeVerify) = actionVerify.Execute(doc);
+
+                            //write messages to log...
+                            _revitDataModel.LogMessages(actionVerify.GetLogMessagesAndLogTypes());
+
+                            //only proceed if all parameters are verified
+                            if (messageActionTypeVerify == MessageTypes.Error)
+                            {
+                                return (messageActionVerify, messageActionTypeVerify);
+                            }
+
                             //need to add any new rooms to the data model first...
-                            UpdateRoomDataModelWithNewRooms actionUpdate = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(_revitDataModel, _roomsSelectionViewModel);
+                            UpdateRoomDataModelWithNewRooms actionUpdate = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(
+                                _revitDataModel, 
+                                _roomsMainViewModel
+                            );
                             (string messageActionUpdate, Utils.WPF.Stores.MessageTypes messageActionTypeUpdate) = actionUpdate.Execute(doc);
 
                             //write messages to log...
@@ -64,7 +80,7 @@ namespace duHastNet.PushIt.Commands
                             // Execute the action to wipe stale room data from the Revit model
                             WipeStaleRoomData action = new WipeStaleRoomData(
                                 revitModel: _revitDataModel,
-                                roomsSelectionViewModel: _roomsSelectionViewModel,
+                                roomsMainViewModel: _roomsMainViewModel,
                                 roomsData: actionUpdate.CurrentMockRoomsData // pass the updated rooms from the previous action
                             );
                             (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
@@ -86,18 +102,18 @@ namespace duHastNet.PushIt.Commands
                     });
 
                 //pop message to user
-                _roomsSelectionViewModel.AddMessage(message, messageType);
+                _roomsMainViewModel.AddMessage(message, messageType);
 
                 //no need to refresh the UI
             }
             catch (Exception ex)
             {
-                _roomsSelectionViewModel.AddMessage(ex.Message, MessageTypes.Error);
+                _roomsMainViewModel.AddMessage(ex.Message, MessageTypes.Error);
             }
             finally
             {
                 //activate the ui
-                _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = false;
+                _roomsMainViewModel.IsWaitingForRevitCommandToFinish = false;
             }
         }
 
@@ -109,7 +125,7 @@ namespace duHastNet.PushIt.Commands
         public override bool CanExecute(object parameter)
         {
             // check if IsWaitingForRevitCommandToFinish is true
-            if (_roomsSelectionViewModel.IsWaitingForRevitCommandToFinish)
+            if (_roomsMainViewModel.IsWaitingForRevitCommandToFinish)
             {
                 return false;
             }
@@ -119,20 +135,20 @@ namespace duHastNet.PushIt.Commands
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // check if the property that changed is the one that we are interested in
-            if (e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.IsWaitingForRevitCommandToFinish))
+            if (e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish))
             {
                 OnCanExecutedChanged();
             }
         }
 
         public WipeStaleDataRevitAsyncCommand(
-           ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
+           ViewModels.RoomsMainViewModel roomsSelectionViewModel,
            Models.RevitDataModel revitDataModel
            )
         {
             _revitDataModel = revitDataModel;
-            _roomsSelectionViewModel = roomsSelectionViewModel;
-            _roomsSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _roomsMainViewModel = roomsSelectionViewModel;
+            _roomsMainViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
 
     }

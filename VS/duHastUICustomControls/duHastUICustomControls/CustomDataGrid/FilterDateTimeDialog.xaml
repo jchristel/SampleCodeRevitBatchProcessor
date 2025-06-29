@@ -1,0 +1,84 @@
+﻿<Window x:Class="duHastNet.UI.CustomControls.CustomDataGrid.FilterDateTimeDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Filter Date" Height="300" Width="400"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Operation Selection -->
+        <StackPanel Grid.Row="0">
+            <Label Content="Filter Operation:" FontWeight="Bold"/>
+            <ComboBox x:Name="OperationComboBox" SelectionChanged="OperationComboBox_SelectionChanged">
+                <ComboBoxItem Content="On" Tag="On"/>
+                <ComboBoxItem Content="Before" Tag="Before"/>
+                <ComboBoxItem Content="After" Tag="After"/>
+                <ComboBoxItem Content="Between" Tag="Between"/>
+            </ComboBox>
+        </StackPanel>
+
+        <!-- Single Date Panel -->
+        <StackPanel x:Name="SingleDatePanel" Grid.Row="2">
+            <Label x:Name="DateLabel" Content="Date:" FontWeight="Bold"/>
+            <DatePicker x:Name="DatePicker" 
+                       SelectedDateChanged="DatePicker_SelectedDateChanged"/>
+        </StackPanel>
+
+        <!-- Date Range Panel -->
+        <StackPanel x:Name="DateRangePanel" Grid.Row="2" Visibility="Collapsed">
+            <Label Content="Date Range:" FontWeight="Bold"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Content="From:" VerticalAlignment="Center"/>
+                <DatePicker x:Name="FromDatePicker" Grid.Row="0" Grid.Column="2"
+                           SelectedDateChanged="DateRangePicker_SelectedDateChanged"/>
+
+                <Label Grid.Row="2" Grid.Column="0" Content="To:" VerticalAlignment="Center"/>
+                <DatePicker x:Name="ToDatePicker" Grid.Row="2" Grid.Column="2"
+                           SelectedDateChanged="DateRangePicker_SelectedDateChanged"/>
+            </Grid>
+        </StackPanel>
+
+        <!-- Current Filter Display -->
+        <Border Grid.Row="4" Background="#F0F0F0" BorderBrush="#D0D0D0" BorderThickness="1" 
+                CornerRadius="3" Padding="10">
+            <TextBlock x:Name="CurrentFilterText" 
+                      FontStyle="Italic" 
+                      Foreground="#666666"
+                      TextWrapping="Wrap"/>
+        </Border>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="ApplyButton" Content="Apply" Width="80" Height="30" Margin="0,0,10,0"
+                    Click="ApplyButton_Click" IsDefault="True"/>
+            <Button x:Name="ClearButton" Content="Clear Filter" Width="80" Height="30" Margin="0,0,10,0"
+                    Click="ClearButton_Click"/>
+            <Button x:Name="CancelButton" Content="Cancel" Width="80" Height="30"
+                    Click="CancelButton_Click" IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

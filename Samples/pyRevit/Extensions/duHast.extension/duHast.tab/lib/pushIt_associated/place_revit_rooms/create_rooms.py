@@ -24,12 +24,14 @@
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Levels.levels import  get_nearest_lowest_level, get_levels_list_ascending
 from duHast.Revit.Rooms.rooms_create import create_room
-from duHast.Revit.Common.parameter_set_utils import set_parameter_value_simple
+from duHast.Revit.Common.parameter_set_utils import set_parameter_value_simple, set_builtin_parameter_without_transaction_wrapper_by_name
 from duHast.Revit.Common.transaction import in_transaction_with_failure_handling
-
 from duHast.Revit.Common.Objects.FailureHandlingConfiguration import (
     FailureHandlingConfig,
 )
+from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
+
+from pushIt_associated.utils.settings import push_it_shared_parameter_to_build_in_parameter_mapper
 
 from Autodesk.Revit.DB import UV, XYZ
 
@@ -46,8 +48,6 @@ def apply_transform_to_uv(uv_point, rotation_matrix, translation_vector):
     transformed_v = rotated_v + translation_vector[2][1]  # translation[2][1] should be 0
     
     return UV(transformed_u, transformed_v)
-
-
 
 
 def create_room_from_push_it_instance(doc, family_instance, levels_ascending, rotation, translation):
@@ -69,29 +69,36 @@ def create_room_from_push_it_instance(doc, family_instance, levels_ascending, ro
 
     try:
 
-
         # define the action to update room properties
         def modify_action(room):
             action_return_value = Result()
             try:
+
+                # match up shared parameters
                 paras_room = room.GetOrderedParameters()
                 for prop in family_instance.properties:
                     for para in paras_room:
                        if para.IsShared :
                             if para.GUID.ToString() == prop.parameter_guid:
                                 set_result = set_parameter_value_simple(para, prop.parameter_value)
-                                action_return_value.append_message("...updated room property: [{}] to {} with status: {}".format(prop.parameter_name, prop.parameter_value, set_result.status))
+                                action_return_value.update(set_result)
                                 break
+                
+                # match up shared parameters to build in parameters
+                for key, value in push_it_shared_parameter_to_build_in_parameter_mapper.items():
+                    for prop in family_instance.properties:
+                        if prop.parameter_name == key:
+                            set_result = set_builtin_parameter_without_transaction_wrapper_by_name( room,value,prop.parameter_value)
+                            action_return_value.update(set_result)
+                            break
 
             except Exception as e:
                 action_return_value.update_sep (False,"failed to modify room: {}".format(e))
                 print(e)
             return action_return_value
 
-
-
-        # get the nearest level based on the Z value of the family instance location point
-        placement_level = get_nearest_lowest_level(family_instance.location_point[2], levels_ascending, [])[0]
+        # get the nearest level based on the Z value, converted to mm since that is what the function requires, of the family instance location point 
+        placement_level = get_nearest_lowest_level(convert_imperial_feet_to_metric_mm(family_instance.location_point[2]), levels_ascending, [])[0]
 
         # set the placement point
         # use the location point if there is no centroid
@@ -129,7 +136,7 @@ def create_room_from_push_it_instance(doc, family_instance, levels_ascending, ro
         room_result = create_room (
             doc, 
             level=placement_level, 
-            location_point = transformed_placement_uv,
+            location_point = placement_point,
               modify_action = modify_action, 
               transaction_manager = transaction_manager
         )
@@ -143,7 +150,7 @@ def create_room_from_push_it_instance(doc, family_instance, levels_ascending, ro
     return return_value
 
 
-def create_rooms_from_push_it_instances(doc, family_instances, rotation, translation):
+def create_rooms_from_push_it_instances(doc, family_instances, rotation, translation, forms):
     """
     Create rooms in the Revit document from pushIt family instances.
 
@@ -165,11 +172,29 @@ def create_rooms_from_push_it_instances(doc, family_instances, rotation, transla
     try:
         # get all levels in the file
         levels_ascending = get_levels_list_ascending(doc)  
-        # create rooms in the Revit document
-        for family_instance in family_instances:
-            room_result =  create_room_from_push_it_instance(doc, family_instance, levels_ascending, rotation, translation)
-            return_value.update(room_result)
-              
+
+        # set up a progress bar since this can take a moment
+        counter = 1
+        # set up a pyRevit progress bar
+        with forms.ProgressBar(
+            title="Creating rooms: {value} of {max_value}", cancellable=True
+        ) as pb:
+            # create rooms in the Revit document
+            for family_instance in family_instances:
+                # increase the progress bar
+                pb.update_progress(counter, max_value=len(family_instances))
+
+                room_result =  create_room_from_push_it_instance(doc, family_instance, levels_ascending, rotation, translation)
+                return_value.update(room_result)
+
+                counter += 1
+
+                # check for cancel
+                if pb.cancelled:
+                    return_value.update_sep(False, "User cancelled.")
+                    print("User cancelled.")
+                    break
+                
     except Exception as e:
         return_value.update_sep (False,"failed to create rooms: {}".format(e))
         print(e)

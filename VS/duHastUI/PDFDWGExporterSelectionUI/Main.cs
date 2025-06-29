@@ -24,11 +24,7 @@
 using duHastNet.UI.PDFDWGExporterSelectionUI.Models;
 using duHastNet.UI.PDFDWGExporterSelectionUI.Views;
 using duHastNet.Utils.WPF.Stores;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI
 {
@@ -42,13 +38,29 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
 
 
         public Main(
-            List<RevitSheet>sheetsInModel, 
-            List<RevitPrintSet>printSetsInModel,
+            List<RevitSheet> sheetsInModel,
+            List<RevitPrintSet> printSetsInModel,
             string currentPDFExportString,
             string currentDWGExportString,
             List<string> parameterNames)
 
         {
+
+            // do some sanity checking before proceeding:
+            // do we have any sheets?
+            if (sheetsInModel == null || sheetsInModel.Count == 0)
+            { throw new System.Exception("No sheets supplied."); }
+
+            // any sheet parameters?
+            if (parameterNames == null || parameterNames.Count == 0)
+            { throw new System.Exception("No sheet parameters supplied"); }
+
+            // any export strings?
+            if (string.IsNullOrEmpty(currentDWGExportString) && string.IsNullOrEmpty(currentPDFExportString))
+            {
+                throw new System.Exception("Neither a pdf export setting nor a dwg export setting was supplied.");
+            }
+
             //set up stores
             _navigationStore = new NavigationStore();
             _messageStore = new MessageStore();
@@ -56,22 +68,22 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
             //set up a setting object
             //load settings from file is done in the view model
             _settings = new Utils.Settings();
-         
+
             //set up the export data model
             _exportSheetsDataModel = new Models.SheetsDataModel(
-                settings:_settings,
+                settings: _settings,
                 revitSheets: sheetsInModel,
                 revitPrintSets: printSetsInModel,
-                currentPDFExportString:currentPDFExportString,
+                currentPDFExportString: currentPDFExportString,
                 currentDWGExportString: currentDWGExportString,
-                parameterNames:parameterNames);
+                parameterNames: parameterNames);
         }
 
 
         /// <summary>
         /// Function which will display the document selection window and return the selected sheets to the caller
         /// </summary>
-        public Utils.Settings Execute()
+        public duHastNet.UI.PDFDWGExporterSelectionUI.Utils.ExportSelection Execute()
         {
 
             //create the settings view model
@@ -88,8 +100,23 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
 
             mainWindow.ShowDialog();
 
-            // return the settings object
-            return mainWindow.Settings;
+            var exportSelection = new Utils.ExportSelection();
+
+            // return the selected sheets...
+            List<int> sheetIdsSelected = new List<int>();
+
+            foreach (var sheet in this._exportSheetsDataModel.RevitSheets)
+            {
+                if (sheet.IsSelected)
+                {
+                    sheetIdsSelected.Add(int.Parse(sheet.RevitElementId.Value));
+                }
+            }
+
+            exportSelection.SheetIdsToExport = sheetIdsSelected;
+            exportSelection.ExportDirectoryPath = _exportSheetsDataModel.Settings.ExportFolderPath;
+            exportSelection.ExportModus = _exportSheetsDataModel.Settings.ExportModus;
+            return exportSelection;
         }
 
         /// <summary>

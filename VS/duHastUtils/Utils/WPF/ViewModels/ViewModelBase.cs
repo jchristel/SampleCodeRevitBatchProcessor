@@ -22,6 +22,8 @@
 //
 
 
+using duHastNet.Utils.WPF.Interfaces;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 
@@ -42,9 +44,26 @@ namespace duHastNet.Utils.WPF.ViewModels
             OnPropertyChanged(name);
         }
 
+
+        /// <summary>
+        /// list of nested view models
+        /// </summary>
+        protected List<ICloseable> _childViewModels = new List<ICloseable>();
+
+        protected void RegisterChild(ICloseable child)
+        {
+            _childViewModels.Add(child);
+        }
         public virtual void OnClosing()
         {
             // Override this method in derived classes to perform clean-up operations
+
+            // Close all children first
+            foreach (var child in _childViewModels)
+            {
+                child.OnClosing();
+            }
+            _childViewModels.Clear();
         }
 
         public virtual void Dispose()

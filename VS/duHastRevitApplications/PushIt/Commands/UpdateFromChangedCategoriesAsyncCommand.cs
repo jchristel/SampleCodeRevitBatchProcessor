@@ -24,7 +24,6 @@
 
 using duHastNet.PushIt.RevitActions;
 using duHastNet.PushIt.Utilities;
-using duHastNet.PushIt.ViewModels;
 using duHastNet.Utils.WPF.Stores;
 using Revit.Async;
 using System;
@@ -36,14 +35,14 @@ namespace duHastNet.PushIt.Commands
     public class UpdateFromChangedCategoriesAsyncCommand : Utils.WPF.Commands.CommandBase
     {
 
-        private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
+        private readonly ViewModels.RoomsMainViewModel _roomsMainViewModel;
         //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitDataModel _revitDataModel;
 
         public override async void Execute(object parameter)
         {
             //deactivate the ui
-            _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = true;
+            _roomsMainViewModel.IsWaitingForRevitCommandToFinish = true;
 
             try
             {
@@ -57,21 +56,25 @@ namespace duHastNet.PushIt.Commands
                         {
                             // before invoking the action, check if the category selection is changed in compared to the settings stored in the data model
                             // if so, update the data model and invoke the action
-                            //otherwise pop message to user that no changes were made
+                            // otherwise pop message to user that no changes were made
 
-                            // get the current category selection from the view model
-                            List<string> supportedCategoryNamesFromViewModel = new List<string>();
-                            var selectedCategories = _roomsSelectionViewModel.SupportedCategories;
-                            foreach (SupportedCategoryViewModel category in selectedCategories)
+
+                            //this list is automatically updated by the view model managing the categorie
+                            var allAvailableCategories = _revitDataModel.GetAllCategories();
+
+                            // get the current category selection from the data model
+                            List<string> enabledCategoryNamesFromDataModel = new List<string>();
+
+                            foreach (var category in allAvailableCategories)
                             {
-                                if (category.IsSelected)
+                                if (category.Enabled)
                                 {
-                                    supportedCategoryNamesFromViewModel.Add(category.CategoryName);
+                                    enabledCategoryNamesFromDataModel.Add(category.Name);
                                 }
                             }
 
                             //check if any categories are selected
-                            if (supportedCategoryNamesFromViewModel.Count == 0)
+                            if (enabledCategoryNamesFromDataModel.Count == 0)
                             {
                                 return ("Please select at least one category to proceed.", Utils.WPF.Stores.MessageTypes.Error);
                             }
@@ -80,17 +83,17 @@ namespace duHastNet.PushIt.Commands
                             bool needUpdate = false;
 
                             // if the count of the categories is different, we need to update
-                            if (supportedCategoryNamesFromViewModel.Count != _revitDataModel.Settings.SupportedCategories.Count)
+                            if (enabledCategoryNamesFromDataModel.Count != _revitDataModel.GetAllCategories().Count)
                             {
                                 needUpdate = true;
                             }
                             else
                             {
                                 // if the count is the same, check if the category names are the same
-                                foreach (string categoryName in supportedCategoryNamesFromViewModel)
+                                foreach (string categoryName in enabledCategoryNamesFromDataModel)
                                 {
                                     // if a category name is not in the list of supported categories, we need to update
-                                    if (!_revitDataModel.Settings.SupportedCategories.Contains(categoryName))
+                                    if (!_revitDataModel.GetEnabledCategoryNames().Contains(categoryName))
                                     {
                                         needUpdate = true;
                                         break;
@@ -104,11 +107,29 @@ namespace duHastNet.PushIt.Commands
                                 return ("No changes in category selection detected.", Utils.WPF.Stores.MessageTypes.Information);
                             }
 
-                            //update the categories in the settings
-                            _revitDataModel.Settings.SupportedCategories = supportedCategoryNamesFromViewModel;
+                            // update the categories in the settings
+                            // the actual categories objects should be updated by the category selection view model
+                            _revitDataModel.Settings.EnabledCategoryNames = enabledCategoryNamesFromDataModel;
+
+                            // update parameter data in the data model
+                            VerifyParametersInModel actionVerify = new VerifyParametersInModel(_revitDataModel);
+                            (string messageActionVerify, Utils.WPF.Stores.MessageTypes messageActionTypeVerify) = actionVerify.Execute(doc);
+
+                            //write messages to log...
+                            _revitDataModel.LogMessages(actionVerify.GetLogMessagesAndLogTypes());
+
+                            //only proceed if all parameters are verified
+                            if (messageActionTypeVerify == MessageTypes.Error)
+                            {
+                                return (messageActionVerify, messageActionTypeVerify);
+                            }
 
                             //add new rooms to the data model first
-                            UpdateRoomDataModelWithNewRooms actionUpdate = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(_revitDataModel, _roomsSelectionViewModel);
+                            UpdateRoomDataModelWithNewRooms actionUpdate = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(
+                                _revitDataModel, 
+                                _roomsMainViewModel
+                            );
+
                             (string messageActionUpdate, Utils.WPF.Stores.MessageTypes messageActionTypeUpdate) = actionUpdate.Execute(doc);
 
                             //write messages to log...
@@ -117,7 +138,7 @@ namespace duHastNet.PushIt.Commands
                             // Execute the action to refresh the room data with the Revit data
                             RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(
                                 revitModel: _revitDataModel,
-                                roomsSelectionViewModel: _roomsSelectionViewModel,
+                                roomsMainViewModel: _roomsMainViewModel,
                                 revitMockRooms: actionUpdate.CurrentMockRoomsData //re-use mock room data to speed things up
                             );
 
@@ -128,7 +149,7 @@ namespace duHastNet.PushIt.Commands
 
                             // return the message to the caller
                             return (
-                                $"{messageActionTypeUpdate}\n{messageAction}",
+                                $"{messageActionUpdate}\n{messageAction}",
                                 Utilities.MessageActionTypesUtils.CombineMessageActionType(new List<MessageTypes> { messageActionTypeUpdate, messageActionType })
                             );
 
@@ -146,16 +167,16 @@ namespace duHastNet.PushIt.Commands
                 }
 
                 //pop message to user
-                _roomsSelectionViewModel.AddMessage(message, messageType);
+                _roomsMainViewModel.AddMessage(message, messageType);
             }
             catch (Exception ex)
             {
-                _roomsSelectionViewModel.AddMessage(ex.Message, MessageTypes.Error);
+                _roomsMainViewModel.AddMessage(ex.Message, MessageTypes.Error);
             }
             finally
             {
                 //activate the ui
-                _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = false;
+                _roomsMainViewModel.IsWaitingForRevitCommandToFinish = false;
             }
         }
 
@@ -167,7 +188,7 @@ namespace duHastNet.PushIt.Commands
         public override bool CanExecute(object parameter)
         {
             // check if IsWaitingForRevitCommandToFinish is true
-            if (_roomsSelectionViewModel.IsWaitingForRevitCommandToFinish)
+            if (_roomsMainViewModel.IsWaitingForRevitCommandToFinish)
             {
                 return false;
             }
@@ -177,20 +198,20 @@ namespace duHastNet.PushIt.Commands
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // check if the property that changed is the one that we are interested in
-            if (e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.IsWaitingForRevitCommandToFinish))
+            if (e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish))
             {
                 OnCanExecutedChanged();
             }
         }
 
         public UpdateFromChangedCategoriesAsyncCommand(
-           ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
+           ViewModels.RoomsMainViewModel roomsMainViewModel,
            Models.RevitDataModel revitDataModel
            )
         {
             _revitDataModel = revitDataModel;
-            _roomsSelectionViewModel = roomsSelectionViewModel;
-            _roomsSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _roomsMainViewModel = roomsMainViewModel;
+            _roomsMainViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
     }
 }

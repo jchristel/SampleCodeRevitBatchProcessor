@@ -43,9 +43,9 @@ namespace duHastNet.UI.PDFDWGExporterUI
         /// <param name="dwgExportSchemes">List of DWG export schemes from the model</param>
         /// 
         public Main(
-            string currentPDFExportString, 
-            string currentDWGExportString, 
-            List<string> parameterNames, 
+            string currentPDFExportString,
+            string currentDWGExportString,
+            List<string> parameterNames,
             List<string> dwgExportSchemes,
             string selectedDWGExportScheme)
         {

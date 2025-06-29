@@ -266,14 +266,25 @@ namespace duHastNet.PushIt.Models
                 foreach (var property in revitRoom.Properties)
                 {
                     // add the property to the new room
-                    properties.Add(new Models.RoomDataProperty(name: property.Name, parameterGUID: property.ParameterGUID,
-                        parameterName: property.ParameterName, value: property.Value, showInUI: property.ShowInUI,
-                        isReadOnly: property.IsReadOnly));
+                    properties.Add(new Models.RoomDataProperty(
+                        name: property.Name, 
+                        parameterGUID: property.ParameterGUID,
+                        parameterName: property.ParameterName, 
+                        value: property.Value, 
+                        showInUI: property.ShowInUI,
+                        isReadOnly: property.IsReadOnly,
+                        isUniqueId: property.IsUniqueId)
+                    );
                 }
 
-                Models.RoomDataProperty idProperty = new Models.RoomDataProperty(name: revitRoom.Id.Name, parameterGUID: revitRoom.Id.ParameterGUID,
-                    parameterName: revitRoom.Id.ParameterName, value: revitRoom.Id.Value, showInUI: revitRoom.Id.ShowInUI,
-                    isReadOnly: revitRoom.Id.IsReadOnly);
+                Models.RoomDataProperty idProperty = new Models.RoomDataProperty(
+                    name: revitRoom.Id.Name, 
+                    parameterGUID: revitRoom.Id.ParameterGUID,
+                    parameterName: revitRoom.Id.ParameterName, 
+                    value: revitRoom.Id.Value, 
+                    showInUI: revitRoom.Id.ShowInUI,
+                    isReadOnly: revitRoom.Id.IsReadOnly, 
+                    isUniqueId: true); //unique id
 
                 // add the placed room to the data model
                 Models.RoomDataModel newRoom = new Models.RoomDataModel(

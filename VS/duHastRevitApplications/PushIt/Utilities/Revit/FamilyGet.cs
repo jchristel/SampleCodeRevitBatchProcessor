@@ -7,32 +7,24 @@ namespace duHastNet.PushIt.Utilities.Revit
     public static class FamilyGet
     {
 
+        /// <summary>
+        /// Get families from the model and converts them to RoomRevit instances.
+        /// 
+        /// This assumes all parameters to be read exist in the model.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="roomsDataModel"></param>
+        /// <param name="supportedCategoryNames"></param>
+        /// <param name="AddMessage"></param>
+        /// <returns></returns>
         public static List<duHastNet.PushIt.Models.RoomRevit> GetAllSupportedFamilies(
             Document doc,
-            List<Models.RoomDataModel> roomsDataModel,
+            Models.RevitDataModel revitDataModel,
             List<string> supportedCategoryNames,
             Action<string, Utils.WPF.Stores.MessageTypes> AddMessage
             )
         {
-            string refreshMessage = "";
-            // check if all shared parameters exist and are bound to the correct categories
-            bool parameterCheck = Utilities.Revit.SharedParameters.SharedParametersCheck(
-                doc,
-                roomsDataModel,
-                supportedCategoryNames,
-                out refreshMessage);
-
-            // if not get out
-            if (!parameterCheck)
-            {
-                AddMessage(refreshMessage, Utils.WPF.Stores.MessageTypes.Error);
-                return null;
-            }
-            else
-            {
-                AddMessage("Successfully checked shared parameter mapping in file.", Utils.WPF.Stores.MessageTypes.Log);
-            }
-
+            
             // get supported categories
             List<Category> categories = duHastNet.RevitUtils.Categories.CategoryUtils.GetMainCategoriesByName(doc, supportedCategoryNames);
             if (categories.Count == 0)
@@ -66,7 +58,7 @@ namespace duHastNet.PushIt.Utilities.Revit
             // convert family instances to revit rooms
             List<duHastNet.PushIt.Models.RoomRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(
                 familyInstances,
-                roomsDataModel[0],
+                revitDataModel.GetAllParameters(),
                 AddMessage
             );
 

@@ -269,7 +269,7 @@ namespace duHastNet.PushIt.Models
             // initialize the list of matching split rooms
             _matchingSplitRevitRooms = new List<RoomRevit>();
             //initialise the ID value
-            Id = new RoomDataProperty("Id", string.Empty, string.Empty, string.Empty, false, false);
+            Id = new RoomDataProperty("Id", string.Empty, string.Empty, string.Empty, false, false, true);
         }
 
         public RoomDataModel(RoomDataProperty id, List<RoomDataProperty> otherProperties)

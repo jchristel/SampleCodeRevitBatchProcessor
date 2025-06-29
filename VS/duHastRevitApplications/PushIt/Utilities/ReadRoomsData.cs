@@ -71,13 +71,15 @@ namespace duHastNet.PushIt.Utilities
             var properties = new List<RoomDataProperty>();
             for (int i = 0; i < headerRows[0].Count; i++)
             {
+                bool isId = true ? i == 0 : false;
                 var property = new RoomDataProperty(
                     name: headerRows[0][i],
                     parameterGUID: headerRows[1][i],
                     parameterName: "",
                     value: "empty",
                     showInUI: bool.Parse(headerRows[3][i].ToLower()),
-                    isReadOnly: bool.Parse(headerRows[2][i].ToLower())
+                    isReadOnly: bool.Parse(headerRows[2][i].ToLower()),
+                    isUniqueId:isId
                 );
                 properties.Add(property);
             }
@@ -146,7 +148,8 @@ namespace duHastNet.PushIt.Utilities
                                 parameterName: "",
                                 value: csv.GetField(i),
                                 showInUI: bool.Parse(header4[i].ToLower()),
-                                isReadOnly: bool.Parse(header3[i].ToLower())
+                                isReadOnly: bool.Parse(header3[i].ToLower()),
+                                isUniqueId: false
                             );
                             properties.Add(property);
                         }
@@ -159,7 +162,8 @@ namespace duHastNet.PushIt.Utilities
                                 parameterName: "",
                                 value: csv.GetField(0),
                                 showInUI: bool.Parse(header4[0].ToLower()),
-                                isReadOnly: bool.Parse(header3[0].ToLower())
+                                isReadOnly: bool.Parse(header3[0].ToLower()),
+                                isUniqueId: true
                              ),
                             otherProperties: properties);
 

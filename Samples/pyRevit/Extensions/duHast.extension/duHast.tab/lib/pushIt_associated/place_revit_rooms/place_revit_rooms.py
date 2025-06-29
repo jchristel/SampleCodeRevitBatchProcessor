@@ -25,26 +25,13 @@ from duHast.Utilities.Objects.result import Result
 from duHast.pyRevit.console_output import print_header, print_error
 from duHast.Revit.Common.Geometry.geometry import get_coordinate_system_translation_and_rotation
 
-
-from pushIt_associated.place_revit_rooms.user_selection import get_model_selection, get_push_it_room_selection
-
-from pushIt_associated.utilities import (
-    get_unique_id_parameter_from_data_file,
-    get_parameters_and_guids_from_data_file,
-    get_data_path_and_supported_categories, 
-    get_family_instances_of_supported_categories,
-    convert_family_instances_to_storage,
-)
-
-from pushIt_associated.place_revit_rooms.push_it_fam_analysis import get_push_it_families_centroid
+from pushIt_associated.place_revit_rooms.user_selection import get_model_selection
+from pushIt_associated.utils.get_push_it_room_data_by_selection import get_push_it_rooms_data
 from pushIt_associated.place_revit_rooms.create_rooms import create_rooms_from_push_it_instances
-from pushIt_associated.place_revit_rooms.debug import draw_bounding_box_and_centroid, draw_bounding_box_and_centroid_linked_model
-
 
 # debug flag
 DEBUG = False
 
-from Autodesk.Revit.DB import Transform, FilteredElementCollector, RevitLinkInstance
 
 def place_revit_rooms_entry(doc, uiapp,output, forms):
     """
@@ -85,63 +72,14 @@ def place_revit_rooms_entry(doc, uiapp,output, forms):
 
     print("Selected model: {}".format(push_it_elements_model.Title))
 
-    # read the settings file to get categories such as supported walls, doors, windows, etc. and the data path
-    data_path, supported_category_names = get_data_path_and_supported_categories()
-    if data_path is None or supported_category_names is None:
-        message = "Invalid data path or supported categories"
+    # get push it data
+    get_data_result = get_push_it_rooms_data(push_it_elements_model, forms)
+    # check we got data
+    if( get_data_result.status is False):
+        message = "PushIt data retrieval failed: {}".format(get_data_result.message)
         return_value.update_sep(False, message)
         print_error(message)
         return return_value
-
-    # read the current SoA file and get the parameter guids for value transfers
-    parameter_data = get_parameters_and_guids_from_data_file(data_path)
-    #print("Parameter data: ", parameter_data)
-
-    # get the unique id parameter from the data file
-    unique_id_parameter_name, unique_id_parameter_guid = get_unique_id_parameter_from_data_file(data_path)
-    
-    # get the rooms from the pushIt model ( including parameter data )
-    revit_family_instances_result = get_family_instances_of_supported_categories(push_it_elements_model,  supported_category_names)
-
-    if revit_family_instances_result.status is False:
-        message = "No family instances found in the selected model."
-        return_value.update_sep(False, message)
-        print_error(message)
-        return return_value
-
-    # convert revit family instances to storage so it can be displayed in the UI
-    converted_fam_instances_result = convert_family_instances_to_storage(push_it_elements_model, revit_family_instances_result.result,parameter_data,  unique_id_parameter_guid, forms)
-    if converted_fam_instances_result.status is False:
-        message = "Family instances conversion failed: {}".format(converted_fam_instances_result.message)
-        return_value.update_sep(False, message)
-        print_error(message)
-        return return_value
-
-    converted_fam_instances = converted_fam_instances_result.result
-    print("Converted family instances: {} of {} ".format(len(converted_fam_instances), len((revit_family_instances_result.result))))
-    
-    # get the user to choose which rooms to place
-    selected_rooms = get_push_it_room_selection(push_it_elements_model, converted_fam_instances,  unique_id_parameter_guid, forms)
-    if selected_rooms is None or len(selected_rooms) == 0:
-        message = "No rooms selected."
-        return_value.update_sep(False, message)
-        print_error("{} \nExiting".format(message))
-        
-        return return_value
-    
-    # give some user feedback
-    print("Selected rooms to place: {} ".format(len(selected_rooms)))
-    
-    # analyze the rooms selected to place ( can I get the centroid of the room family from a link? )
-    # not all rooms will return a centroid....
-    updated_fams_result = get_push_it_families_centroid(push_it_elements_model,selected_rooms)
-
-    print("Updated the location point of : {} rooms".format(len(updated_fams_result.result)))
-    if(DEBUG):
-        print("updated fams: ", updated_fams_result.message)
-        #draw_bounding_box_and_centroid(doc, updated_fams_result.result)
-        draw_bounding_box_and_centroid_linked_model(doc, push_it_elements_model, updated_fams_result.result)
-    
 
     # get rotation and translation of the coordinate system
     # this is the translation and rotation of the coordinate system of the pushIt model
@@ -151,25 +89,15 @@ def place_revit_rooms_entry(doc, uiapp,output, forms):
         print("Translation: ", translation)
         print("Rotation: ", rotation)
 
-        # def has_linked_model_moved(doc):
-            
-        #     link_instance = FilteredElementCollector(doc).OfClass(RevitLinkInstance).FirstElement()
-        #     # Get the transformation matrix of the linked model
-        #     transform = link_instance.GetTransform()
-            
-        #     # Define the identity matrix
-        #     identity_transform = Transform.Identity
-            
-        #     # Compare the transformation matrix to the identity matrix
-        #     if not transform.IsAlmostEqualTo(identity_transform):
-        #         return True
-        #     return False
-
-        # print("Linked model has moved: ", has_linked_model_moved(push_it_elements_model))
-
 
     # place the rooms in the current model and transfer the parameter data
-    create_result = create_rooms_from_push_it_instances(doc, updated_fams_result.result, rotation=rotation, translation=translation)
+    create_result = create_rooms_from_push_it_instances(
+        doc, 
+        get_data_result.result, 
+        rotation=rotation, 
+        translation=translation,
+        forms=forms
+    )
     
     # check if any errors occurred during the creation of the rooms
     if( create_result.status is False):

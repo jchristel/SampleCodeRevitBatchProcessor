@@ -12,7 +12,7 @@
             FontSize="14">
     <Grid>
         <Grid.Resources>
-            <DataTemplate DataType="{x:Type vms:RoomsSelectionViewModel}">
+            <DataTemplate DataType="{x:Type vms:RoomsMainViewModel}">
                 <views:RoomsSelection/>
             </DataTemplate>
         </Grid.Resources>

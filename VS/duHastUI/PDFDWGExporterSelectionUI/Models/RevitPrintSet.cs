@@ -21,11 +21,7 @@
 //
 //
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 {
@@ -36,8 +32,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
         /// </summary>
         string _name;
 
-        public string Name {
-            get => _name; 
+        public string Name
+        {
+            get => _name;
             set => _name = value;
         }
 
@@ -60,7 +57,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
         public void AddRevitSheet(RevitSheet revitSheet)
         {
             //check if id allready in use
-            if(!RevitSheets.Exists(x=> x.RevitElementId.Value == revitSheet.RevitElementId.Value))
+            if (!RevitSheets.Exists(x => x.RevitElementId.Value == revitSheet.RevitElementId.Value))
             {
                 _revitSheets.Add(revitSheet);
             }
@@ -73,7 +70,8 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
             }
         }
 
-        public RevitPrintSet(string name) {
+        public RevitPrintSet(string name)
+        {
             _name = name;
             _revitSheets = new List<RevitSheet>();
         }

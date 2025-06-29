@@ -940,8 +940,8 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
                     if (settingsDictionary != null)
                     {
                         //check if required keys are present
-                        if (!settingsDictionary.ContainsKey(_documentTypePDFName) || 
-                            !settingsDictionary.ContainsKey(_documentTypeDWGName )||
+                        if (!settingsDictionary.ContainsKey(_documentTypePDFName) ||
+                            !settingsDictionary.ContainsKey(_documentTypeDWGName) ||
                             !settingsDictionary.ContainsKey(_dwgExportSchemeNameProperty))
                         {
                             //add message to user

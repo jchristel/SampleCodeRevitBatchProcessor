@@ -45,13 +45,21 @@ namespace duHastNet.PushIt.Utilities
                     //initialize settings default
                     Models.Settings settingsDefault = new Models.Settings();
                     settingsDefault.DataPath = string.Empty;
-                    settingsDefault.SupportedCategories = new List<string> { "Walls" };
+                    //enable walls by default
+                    settingsDefault.EnabledCategoryNames = new List<string> { "Walls" };
                     return settingsDefault;
                 }
 
                 //read the settings file
                 string jsonString = File.ReadAllText(settingsFilePath);
                 Models.Settings settings = JsonConvert.DeserializeObject<Models.Settings>(jsonString);
+
+                // safety  fall back for now make sure at least wall category is set
+                if (settings.EnabledCategoryNames.Count == 0)
+                {
+                    settings.EnabledCategoryNames = new List<string> { "Walls" };
+                }
+
                 return settings;
             }
             catch (Exception ex)

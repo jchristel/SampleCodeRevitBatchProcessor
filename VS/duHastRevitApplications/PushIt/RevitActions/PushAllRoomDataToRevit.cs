@@ -22,7 +22,6 @@
 //
 
 using Autodesk.Revit.DB;
-using Autodesk.Revit.DB.Architecture;
 using duHastNet.PushIt.Models;
 using System.Collections.Generic;
 
@@ -77,7 +76,7 @@ namespace duHastNet.PushIt.RevitActions
                             Utils.WPF.Stores.MessageTypes.Log
                         );
                     }
-                    
+
                 }
                 else if (Utilities.PushModeUtils.IsNewRoomMode(revitRoomInstance.Id.Value))
                 {
@@ -90,7 +89,7 @@ namespace duHastNet.PushIt.RevitActions
 
                     if (roomsDataModel.Exists(x => x.Id.Value == idValue))
                     {
-                      
+
                         // get the data model of the original room
                         var originalRoom = roomsDataModel.Find(x => x.Id.Value == idValue);
 
@@ -262,8 +261,8 @@ namespace duHastNet.PushIt.RevitActions
             // get the revit rooms
             List<duHastNet.PushIt.Models.RoomRevit> revitRooms = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
                 doc: doc,
-                roomsDataModel: roomsDataModel,
-                supportedCategoryNames: RevitModel.Settings.SupportedCategories,
+                revitDataModel: RevitModel,
+                supportedCategoryNames: RevitModel.GetEnabledCategoryNames(),
                 AddMessage: AddMessage
             );
 

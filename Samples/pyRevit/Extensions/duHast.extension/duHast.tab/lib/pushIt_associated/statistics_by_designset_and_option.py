@@ -24,7 +24,7 @@
 from duHast.Utilities.Objects.result import Result
 
 from families.util.print_table import print_result_table
-from pushIt_associated.utilities import (
+from pushIt_associated.utils.utilities import (
     get_unique_id_parameter_from_data_file, 
     get_data_path_and_supported_categories, 
     get_family_instances_of_supported_categories,

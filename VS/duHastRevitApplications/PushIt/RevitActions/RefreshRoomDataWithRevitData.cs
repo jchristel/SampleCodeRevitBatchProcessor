@@ -30,8 +30,8 @@ namespace duHastNet.PushIt.RevitActions
     public class RefreshRoomDataWithRevitData : RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
     {
 
-        private ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
-        public ViewModels.RoomsSelectionViewModel RoomsSelectionViewModel => _roomsSelectionViewModel;
+        private ViewModels.RoomsMainViewModel _roomsMainViewModel;
+        public ViewModels.RoomsMainViewModel RoomsMainViewModel => _roomsMainViewModel;
 
         //current set or push it mock rooms
         private List<RoomRevit> _roomsData;
@@ -44,14 +44,14 @@ namespace duHastNet.PushIt.RevitActions
                 List<Models.RoomDataModel> updatedSoARooms = RefreshRoomData(
                     doc,
                     RevitModel._roomsContainer.GetAllRooms(), // returns SoA rooms only
-                    RevitModel.Settings.SupportedCategories
+                    RevitModel.GetEnabledCategoryNames()
                  );
 
                 // refresh the rooms data model with the new rooms from the revit model
                 List<Models.RoomDataModel> updatedNewRooms = RefreshRoomData(
                     doc,
                     RevitModel._roomsContainer.GetAllNewRooms(), // returns new rooms only
-                    RevitModel.Settings.SupportedCategories
+                    RevitModel.GetEnabledCategoryNames()
                 );
 
                 // do not remove any new room with 0 placed revit rooms in case the new room is placed in a non primary design option...
@@ -115,24 +115,28 @@ namespace duHastNet.PushIt.RevitActions
             {
                 _roomsData = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
                     doc: doc,
-                    roomsDataModel: roomsDataModel,
+                    revitDataModel: RevitModel,
                     supportedCategoryNames: supportedCategoryName,
                     AddMessage: AddMessage);
             }
 
 
             //if the update failed return the rooms data model unchanged
-            if (_roomsData == null || _roomsData.Count == 0)
+            if (_roomsData == null )
             {
                 return roomsDataModel;
             }
+
+            //Note:
+            //if there are no mock rooms of the defined categories in the model any more or never where ( _roomsData count is 0 )
+            //the list of matching rooms in revit will be cleared from the room in the data model in the function call below
 
             // get the documents current design set and option
             (string designSetName, string designOptionName) = Utilities.Revit.DesignSetAndOptionUtils.GetActiveDesignSetAndOptionName(doc);
 
             // update the ui with the current design set and option
-            _roomsSelectionViewModel.ActiveDesignOptionName = designOptionName;
-            _roomsSelectionViewModel.ActiveDesignSetName = designSetName;
+            _roomsMainViewModel.ActiveDesignOptionName = designOptionName;
+            _roomsMainViewModel.ActiveDesignSetName = designSetName;
 
             // update rooms data model with revit rooms
             roomsDataModel = Utilities.UpdateRoomDataModelWithRoomsRevitModelUtils.UpdateRoomDataModelWithRoomsRevitModel(
@@ -147,11 +151,11 @@ namespace duHastNet.PushIt.RevitActions
 
         public RefreshRoomDataWithRevitData(
             RevitDataModel revitModel,
-            ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
+            ViewModels.RoomsMainViewModel roomsMainViewModel,
             List<Models.RoomRevit> revitMockRooms = null)
         {
             RevitModel = revitModel;
-            _roomsSelectionViewModel = roomsSelectionViewModel;
+            _roomsMainViewModel = roomsMainViewModel;
             _roomsData = revitMockRooms;
         }
     }

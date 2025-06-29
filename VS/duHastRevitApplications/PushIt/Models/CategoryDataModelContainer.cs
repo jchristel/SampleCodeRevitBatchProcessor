@@ -35,6 +35,7 @@ namespace duHastNet.PushIt.Models
             //check if rooms are conflicting by id value
             foreach (var existingCategory in _categories)
             {
+
                 if (existingCategory.Name == category.Name)
                 {
                     // throw an exception
@@ -45,10 +46,51 @@ namespace duHastNet.PushIt.Models
             _categories.Add(category);
         }
 
+        public bool CategoryExists(Models.CategoryDataModel category)
+        {
+            foreach (var existingCategory in _categories)
+            {
+                if (existingCategory.Name == category.Name)
+                { return true; }
+            }
+
+            return false;
+        }
+
         public List<Models.CategoryDataModel> GetAllCategories()
         {
             return _categories;
         }
+
+        public List<Models.CategoryDataModel> GetAllEnabledCategories()
+        {
+            List<Models.CategoryDataModel> enabled = new List<Models.CategoryDataModel>();
+            foreach (var category in _categories)
+            {
+                if (category.Enabled)
+                {
+                    enabled.Add(category);
+                }
+            }
+            return enabled;
+        }
+
+
+        public List<string> GetEnabledCategoryNames()
+        {
+            List<string> categoryNames = new List<string>();
+            foreach (var category in _categories)
+            {
+                if (category.Enabled)
+                {
+                    categoryNames.Add(category.Name);
+                }
+            }
+
+            return categoryNames;
+        }
+
+
 
         public void ClearCategories()
         {

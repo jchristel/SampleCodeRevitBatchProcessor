@@ -326,21 +326,21 @@ def _swap_loaded_family_instances(doc, swap_directives, families, progress_callb
     :return:
         Result class instance.
 
-        - result.status. True if all families where renamed successfully, otherwise False.
-        - result.message will contain each rename messages in format 'Renamed family from :' +current Name + ' to ' + newName.
+        - result.status. True if all families where swapped successfully, otherwise False.
+        - result.message will contain each rename messages in format 'Swapped family from :' +current Name + ' to ' + newName.
         - result.result empty list
 
         On exception:
 
         - result.status (bool) will be False.
-        - result.message will contain an exception message in format: 'Failed to rename family from :' + currentName + ' to ' + newName
+        - result.message will contain an exception message in format: 'Failed to swap family from :' + currentName + ' to ' + newName
         - result.result will be empty
 
     :rtype: :class:`.Result`
     """
 
     return_value = res.Result()
-    return_value.status = False
+    #return_value.status = False
 
     # progress call back
     callback_counter = 1
@@ -356,8 +356,8 @@ def _swap_loaded_family_instances(doc, swap_directives, families, progress_callb
         
         # check if family is loaded
         if family_key not in families:
-            return_value.update_sep(
-                False, "Family not found: {}".format(family_key)
+            return_value.append_message(
+                "Family has no swap directive: {}".format(family_key)
             )
             callback_counter = callback_counter + 1
             continue
@@ -367,10 +367,11 @@ def _swap_loaded_family_instances(doc, swap_directives, families, progress_callb
 
         # instances in model to be swapped
         instances_result = _get_fam_instances(doc, family, swap_directive)
-        return_value.update(instances_result)
         
         # get instances to swap from returned tuple at index 0
         instances = instances_result.result[0][0]
+
+        return_value.append_message("Found {} instances to swap out for family: {}".format(len(instances), family_key))
 
         if len(instances) == 0:
             # nothing to swap found move on
@@ -379,16 +380,19 @@ def _swap_loaded_family_instances(doc, swap_directives, families, progress_callb
 
         # get the target type
         target_result = get_target_type(doc, families, swap_directive)
-        return_value.update(target_result)
+        
         if not target_result.status:
+            # update return value with target result
+            return_value.append_message("Family has no target type for: {}".format(swap_directive.target_family_type_name))
             callback_counter = callback_counter + 1
             # no target type found
             continue
 
         # get the target type to swap to
         target_type = target_result.result[0]
+        return_value.append_message("Target type to swap to: {}".format(Element.Name.GetValue(target_type)))
 
-        # set up an action swapping out instancea
+        # set up an action swapping out instance
         def action():
             action_return_value = res.Result()
             try:

@@ -9,6 +9,7 @@
              xmlns:pushItConverter ="clr-namespace:duHastNet.PushIt.Converters"
              xmlns:spinner="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinner"
              xmlns:customControls="clr-namespace:duHastNet.UI.CustomControls;assembly=duHastUICustomControls"
+             xmlns:dynamicDataGrid="clr-namespace:duHastNet.UI.CustomControls.CustomDataGrid;assembly=duHastUICustomControls"
              mc:Ignorable="d" 
              d:DesignHeight="650" d:DesignWidth="800">
     <UserControl.Resources>
@@ -67,8 +68,7 @@
             <RowDefinition Height="auto"/>
             <!-- message banner -->
             <RowDefinition Height="auto"/>
-            <!-- filter -->
-            <RowDefinition Height="auto"/>
+            
             <!-- data -->
             <RowDefinition Height="*"/>
             <!-- refresh / model status -->
@@ -93,73 +93,43 @@
         <Grid Grid.Row="1">
             <utilsViews:GlobalMessageBanner DataContext="{Binding GlobalMessageViewModel}"/>
         </Grid>
-        <!-- filter -->
-        <Border Grid.Row="2" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
-            <Expander Header="Filters" Margin="5 5 5 5">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Row="0"
-                        Grid.Column="0"
-                        Margin="0 5 5 5"
-                        Text="Select Column" />
-                    <ComboBox Grid.Row="1"
-                        Grid.Column="0"
-                        Margin="0 5 5 5" 
-                        ItemsSource="{Binding ColumnNameDefaultList}"
-                        SelectedValue="{Binding Path=SelectedColumnFilterItem,Mode=TwoWay}"/>
-                    <TextBlock Grid.Row="0"
-                        Grid.Column="1"
-                        Margin="5 5 0 5"
-                        Text="Filter:" />
-                    <!-- filter value -->
-                    <TextBox
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Margin="5 5 0 5"
-                        Text="{Binding FilterValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                </Grid>
-            </Expander>
-        </Border>
-        <!-- grid view -->
-        <DataGrid Grid.Row="3" x:Name="dataGrid" 
-                            ItemsSource="{Binding DataView}"
-                            EnableRowVirtualization="True" 
-                            EnableColumnVirtualization="True" 
-                            VirtualizingPanel.IsVirtualizing="True" 
-                            VirtualizingPanel.VirtualizationMode="Recycling"
-                            AutoGenerateColumns="True" 
-                            IsReadOnly="True"
-                            CanUserSortColumns="True"
-                            SelectionMode="Single" 
-                            SelectedIndex="{Binding SelectedIndex}"
-                            ColumnWidth="*"
-                            RowHeight="23"
-                            HorizontalAlignment="Stretch"
-                            ColumnReordered="RoomsDataGrid_ColumnReordered"
-                            IsEnabled="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource InverseBooleanConverter}}">
-            <DataGrid.RowStyle>
+        
+        <!-- dynamic grid view of room data -->
+        <dynamicDataGrid:DynamicDataGrid  
+            x:Name="dataGrid" 
+            Grid.Row="2"
+            DataContext="{Binding  RoomsDataGridViewModel}"
+            ItemsSource="{Binding Data}"
+            ColumnDefinitions="{Binding ColumnDefinitions}"
+            SelectionMode="Single"
+            SelectedItem="{Binding SelectedItem}"
+            Margin="5 10 5 10"
+            dynamicDataGrid:DataGridColumnHeaderBehavior.EnableColumnManagement="True"
+            dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="False"
+            IsEnabled="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource InverseBooleanConverter}}">
+
+            <!-- Add Row Style for conditional formatting -->
+            <dynamicDataGrid:DynamicDataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
+                    <!-- Default background -->
                     <Setter Property="Background" Value="Red" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Count}" Value="1">
-                            <Setter Property="Background" Value="LightGray"></Setter>
+                        
+                        <!-- Color rows based on a "Count" column -->
+                        <DataTrigger Binding="{Binding Values[Count]}" Value="0">
+                            <Setter Property="Background" Value="White"/>
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding Count}" Value="0">
-                            <Setter Property="Background" Value="White"></Setter>
+                        <DataTrigger Binding="{Binding Values[Count]}" Value="1">
+                            <Setter Property="Background" Value="LightGray"/>
                         </DataTrigger>
+
                     </Style.Triggers>
                 </Style>
-            </DataGrid.RowStyle>
-        </DataGrid>
+            </dynamicDataGrid:DynamicDataGrid.RowStyle>
+        </dynamicDataGrid:DynamicDataGrid>
+
         <!-- button row content -->
-        <Grid Grid.Row="4">
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -195,7 +165,7 @@
             </TextBlock>
         </Grid>
         <!-- admin model data expander -->
-        <Border Grid.Row="5" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
+        <Border Grid.Row="4" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
             <Expander  Header="Data Admin" Margin="5 5 5 5">
                 <StackPanel>
                     <Grid>
@@ -271,7 +241,7 @@
                             Grid.Row="0" 
                             Grid.Column="3" 
                             Padding="20 0 20 0"
-                            Margin="5 10 0 10" 
+                            Margin="5 10 5 10" 
                             Content="Load"
                             Command="{Binding ReloadDataCommand}" 
                             CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
@@ -283,44 +253,23 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <ScrollViewer   Grid.Row="0" Margin="5" HorizontalScrollBarVisibility="Auto">
-                                    <ListView 
-                                        ItemsSource="{Binding SupportedCategories}" 
-                                        Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}"
-                                        Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}">
-                                        <ListView.View>
-                                            <GridView>
-                                                <!-- select to reload column -->
-                                                <GridViewColumn>
-                                                    <GridViewColumnHeader Content="Select" />
-                                                    <GridViewColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <CheckBox 
-                                                                    Padding="0 0 20 0" 
-                                                                    IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"/>
-                                                        </DataTemplate>
-                                                    </GridViewColumn.CellTemplate>
-                                                </GridViewColumn>
-                                                <!-- category name column -->
-                                                <GridViewColumn>
-                                                    <GridViewColumnHeader Content="Category Name"/>
-                                                    <GridViewColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <TextBlock 
-                                                                    Padding="0 0 20 0" 
-                                                                    Text="{Binding CategoryName}"/>
-                                                        </DataTemplate>
-                                                    </GridViewColumn.CellTemplate>
-                                                </GridViewColumn>
-                                            </GridView>
-                                        </ListView.View>
-                                    </ListView>
-                                </ScrollViewer>
+
+                                <!-- dynamic grid view of supported categories -->
+                                <dynamicDataGrid:DynamicDataGrid  
+                                    x:Name="dataGridSupportedCategories" 
+                                    Grid.Row="0"
+                                    DataContext="{Binding  SupportedCategoriesDataGridViewModel}"
+                                    ItemsSource="{Binding Data}"
+                                    ColumnDefinitions="{Binding ColumnDefinitions}"
+                                    SelectionMode="Extended"
+                                    Margin="5 10 5 10" 
+                                    dynamicDataGrid:DataGridColumnHeaderBehavior.EnableColumnManagement="False"
+                                    dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="True"/>
                                 <Button 
                                      Grid.Row="1" 
                                      Grid.Column="2" 
                                      Padding="20 0 20 0"
-                                     Margin="5 10 0 10" 
+                                     Margin="5 10 5 10" 
                                      Content="Apply"
                                     Command="{Binding UpdateFromChangedCategoriesCommand}" 
                                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>     
@@ -331,7 +280,7 @@
             </Expander>
         </Border>
         <!-- push it button row content -->
-        <Grid Grid.Row="6">
+        <Grid Grid.Row="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="70"/>

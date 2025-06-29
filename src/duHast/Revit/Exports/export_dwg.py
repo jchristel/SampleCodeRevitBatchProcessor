@@ -44,7 +44,7 @@ def set_dwg_export_option():
 
     dwg_export_options.FileVersion = ACADVersion.R2010
     dwg_export_options.HideReferencePlane = True
-    dwg_export_options.HideScopeBoxe = True
+    dwg_export_options.HideScopeBox = True
     dwg_export_options.HideUnreferenceViewTags	= True
     dwg_export_options.MergedViews = True
 
@@ -138,7 +138,7 @@ def export_sheet_to_dwg (doc, view_sheet, sheet_name_string, output_directory, d
                 return return_value
         else:
             # Set the naming rule if provided
-            dwg_export_option = set_dwg_export_option(dwg_export_option_name)
+            dwg_export_option = set_dwg_export_option()
     
         # convert to .net list
         sheets = List[ElementId]()

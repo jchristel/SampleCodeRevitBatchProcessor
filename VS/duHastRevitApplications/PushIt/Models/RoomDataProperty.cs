@@ -33,6 +33,7 @@ namespace duHastNet.PushIt.Models
         private string _value;
         private bool _showInUI;
         private bool _isReadOnly;
+        private bool _isUniqueId;
 
         public string Value { get => _value; set => _value = value; }
         public string Name { get => _name; }
@@ -41,8 +42,10 @@ namespace duHastNet.PushIt.Models
         public bool ShowInUI { get => _showInUI; }
         public bool IsReadOnly { get => _isReadOnly; }
 
+        public bool IsUniqueId { get => _isUniqueId; }
 
-        public RoomDataProperty(string name, string parameterGUID, string parameterName, string value, bool showInUI, bool isReadOnly)
+
+        public RoomDataProperty(string name, string parameterGUID, string parameterName, string value, bool showInUI, bool isReadOnly, bool isUniqueId)
         {
             _name = name;
             _parameterGUID = parameterGUID;
@@ -50,6 +53,7 @@ namespace duHastNet.PushIt.Models
             _value = value;
             _showInUI = showInUI;
             _isReadOnly = isReadOnly;
+            _isUniqueId = isUniqueId;
         }
 
     }

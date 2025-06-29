@@ -22,6 +22,7 @@
 //
 
 
+using duHastNet.Utils.WPF.Interfaces;
 using System;
 
 namespace duHastNet.Utils.WPF.Stores
@@ -44,6 +45,17 @@ namespace duHastNet.Utils.WPF.Stores
         private void OnCurrentViewModelChanged()
         {
             CurrentViewModelChanged?.Invoke();
+        }
+
+        /// <summary>
+        /// notify all nested view nodels of closing event
+        /// </summary>
+        public void NotifyClosing()
+        {
+            if (_currentViewModel is ICloseable closeable)
+            {
+                closeable.OnClosing();
+            }
         }
     }
 }

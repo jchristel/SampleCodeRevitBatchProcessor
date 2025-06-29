@@ -21,37 +21,35 @@
 //
 //
 
+using duHastNet.PushIt.ViewModels;
 using duHastNet.Utils.WPF.Stores;
 using Revit.Async;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHastNet.PushIt.Commands
 {
     public class PushSelectedRoomsInRevitCommand : Utils.WPF.Commands.CommandBase
     {
-        private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
+        private readonly ViewModels.RoomsMainViewModel _roomsMainViewModel;
+        private readonly ViewModels.RoomsDataGridViewModel _roomsDataGridViewModel;
         //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitDataModel _revitDataModel;
 
         public override bool CanExecute(object parameter)
         {
             // check if IsWaitingForRevitCommandToFinish is true
-            if (_roomsSelectionViewModel.IsWaitingForRevitCommandToFinish)
+            if (_roomsMainViewModel.IsWaitingForRevitCommandToFinish)
             {
                 return false;
             }
-            return _roomsSelectionViewModel.DataFilePathValid && base.CanExecute(parameter);
+            return _roomsMainViewModel.DataFilePathValid && base.CanExecute(parameter);
         }
 
         public override async void Execute(object parameter)
         {
             //deactivate the ui
-            _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = true;
+            _roomsMainViewModel.IsWaitingForRevitCommandToFinish = true;
 
             try
             {
@@ -78,8 +76,8 @@ namespace duHastNet.PushIt.Commands
 
                             // return the messages to the caller
                             return ("", MessageTypes.Information);
-                             //   $"{messageActionUpdate}\n{messageAction}\n{messageActionSave}",
-                              //  Utilities.MessageActionTypesUtils.CombineMessageActionType(new List<MessageTypes> { messageActionTypeUpdate, messageActionType, messageActionTypeSafe })
+                            //   $"{messageActionUpdate}\n{messageAction}\n{messageActionSave}",
+                            //  Utilities.MessageActionTypesUtils.CombineMessageActionType(new List<MessageTypes> { messageActionTypeUpdate, messageActionType, messageActionTypeSafe })
                             //);
                         }
                         catch (Exception ex)
@@ -95,36 +93,40 @@ namespace duHastNet.PushIt.Commands
                 }
 
                 //pop message to user
-                _roomsSelectionViewModel.AddMessage(message, messageType);
+                _roomsMainViewModel.AddMessage(message, messageType);
             }
             catch (Exception ex)
             {
-                _roomsSelectionViewModel.AddMessage(ex.Message, MessageTypes.Error);
+                _roomsMainViewModel.AddMessage(ex.Message, MessageTypes.Error);
             }
             finally
             {
                 //activate the ui
-                _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = false;
+                _roomsMainViewModel.IsWaitingForRevitCommandToFinish = false;
             }
         }
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // check if the property that changed is the one that we are interested in
-            if (e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.IsWaitingForRevitCommandToFinish))
+            if (e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish))
             {
                 OnCanExecutedChanged();
             }
         }
 
         public PushSelectedRoomsInRevitCommand(
-            ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
+            ViewModels.RoomsMainViewModel roomsMainViewModel,
+            ViewModels.RoomsDataGridViewModel roomsDataGridViewModel,
             Models.RevitDataModel revitDataModel
             )
         {
             _revitDataModel = revitDataModel;
-            _roomsSelectionViewModel = roomsSelectionViewModel;
-            _roomsSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _roomsMainViewModel = roomsMainViewModel;
+            _roomsDataGridViewModel = roomsDataGridViewModel;
+
+            _roomsMainViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _roomsDataGridViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
     }
 }

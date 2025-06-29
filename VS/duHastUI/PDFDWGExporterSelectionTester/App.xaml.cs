@@ -1,13 +1,6 @@
-﻿using duHastNet.UI.PDFDWGExporterSelectionUI;
-using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Xml;
-using Newtonsoft.Json;
 
 namespace PDFDWGExporterSelectionTester
 {
@@ -25,10 +18,31 @@ namespace PDFDWGExporterSelectionTester
                 new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitSheet("890", "third sheet", "123002")
             };
 
+
+
+            var printSet_One = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 1");
+            printSet_One.AddRevitSheet(sheets[0]);
+            printSet_One.AddRevitSheet(sheets[2]);
+
+
+            var printSetTwo = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 2");
+            printSetTwo.AddRevitSheet(sheets[0]);
+            printSetTwo.AddRevitSheet(sheets[1]);
+
+            var printSetThree = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 3");
+
+            var printSetFour = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 4");
+            printSetFour.AddRevitSheet(sheets[0]);
+            printSetFour.AddRevitSheet(sheets[1]);
+            printSetFour.AddRevitSheet(sheets[2]);
+
+
             List<duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet> printSets = new List<duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet>
             {
-                new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 1"),
-                new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 2")
+                printSet_One,
+                printSetTwo,
+                printSetThree,
+                printSetFour
             };
 
 
@@ -56,8 +70,8 @@ namespace PDFDWGExporterSelectionTester
             var main = new duHastNet.UI.PDFDWGExporterSelectionUI.Main(
                 sheetsInModel: sheets,
                 printSetsInModel: printSets,
-                currentPDFExportString:jsonPDF,
-                currentDWGExportString:jsonDWG,
+                currentPDFExportString: jsonPDF,
+                currentDWGExportString: jsonDWG,
                 parameterNames: new List<string> { "Sheet Number", "Sheet Name", "Parameter4" });
 
             var settings = main.Execute();

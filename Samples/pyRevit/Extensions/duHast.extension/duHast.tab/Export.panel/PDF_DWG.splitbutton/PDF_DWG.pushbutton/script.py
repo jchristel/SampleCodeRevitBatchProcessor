@@ -13,6 +13,6 @@ output = script.get_output()
 doc = revit.doc
 
 # export sheets to pdf and dwg files
-from export.export_pdf_dwg import export_pdf_dwg_entry
+from export.export_pdf_dwg_v2 import export_pdf_dwg_entry
 
 export_pdf_dwg_entry(doc=doc, output=output, forms=forms)

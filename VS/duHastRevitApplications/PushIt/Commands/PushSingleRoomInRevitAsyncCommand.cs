@@ -38,14 +38,16 @@ namespace duHastNet.PushIt.Commands
 {
     public class PushSingleRoomInRevitAsyncCommand : Utils.WPF.Commands.CommandBase
     {
-        private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
+        private readonly ViewModels.RoomsMainViewModel _roomsMainViewModel;
+        private readonly ViewModels.RoomsDataGridViewModel _roomsDataGridViewModel;
+
         //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitDataModel _revitDataModel;
 
         public override async void Execute(object parameter)
         {
             //deactivate the ui
-            _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = true;
+            _roomsMainViewModel.IsWaitingForRevitCommandToFinish = true;
 
             try
             {
@@ -58,7 +60,7 @@ namespace duHastNet.PushIt.Commands
                         try
                         {
                             //check if there is a room to push
-                            if (_roomsSelectionViewModel.SelectedRoom == null)
+                            if (_roomsDataGridViewModel.SelectedRoom == null)
                             {
                                 return ("No room selected in the user interface to push to Revit.", Utils.WPF.Stores.MessageTypes.Error);
                             }
@@ -81,18 +83,31 @@ namespace duHastNet.PushIt.Commands
                             //get the selected Element from Revit
                             Element selectedElement = doc.GetElement(selectedElementIds.First());
                             // check if the selected element is of a supported category (or has category to start with)
-                            if (selectedElement.Category == null || !_revitDataModel.Settings.SupportedCategories.Contains(selectedElement.Category.Name))
+                            if (selectedElement.Category == null || !_revitDataModel.GetEnabledCategoryNames().Contains(selectedElement.Category.Name))
                             {
-                                string supportedCategories = string.Join(", ", _revitDataModel.Settings.SupportedCategories);
-                                return ($"The selected element is not of a supported category. Supported categories are: {supportedCategories}.", Utils.WPF.Stores.MessageTypes.Error);
+                                string supportedCategories = string.Join(", ", _revitDataModel.GetEnabledCategoryNames());
+                                return ($"The selected element is not of a supported category. Supported categories are: [{supportedCategories}].", Utils.WPF.Stores.MessageTypes.Error);
+                            }
+
+                            //check all parameters still exist before pushing data
+                            VerifyParametersInModel actionVerify = new VerifyParametersInModel(_revitDataModel);
+                            (string messageActionVerify, Utils.WPF.Stores.MessageTypes messageActionTypeVerify) = actionVerify.Execute(doc);
+
+                            //write messages to log...
+                            _revitDataModel.LogMessages(actionVerify.GetLogMessagesAndLogTypes());
+
+                            //only proceed if all parameters are verified
+                            if (messageActionTypeVerify == MessageTypes.Error)
+                            {
+                                return (messageActionVerify, messageActionTypeVerify);
                             }
 
                             // Execute the action to push a single room to the Revit model
                             PushSingleRoomDataToRevit action = new PushSingleRoomDataToRevit(
                                 revitModel: _revitDataModel,
-                                roomToPush: _roomsSelectionViewModel.SelectedRoom,
+                                roomToPush: _roomsDataGridViewModel.SelectedRoom,
                                 pushTarget: selectedElement,
-                                roomsSelectionViewModel: _roomsSelectionViewModel
+                                roomsMainViewModel: _roomsMainViewModel
                             );
 
                             (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
@@ -100,8 +115,9 @@ namespace duHastNet.PushIt.Commands
                             //write messages to log...
                             _revitDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
 
-                            // return status message for UI
+                            // return the message to the caller
                             return (messageAction, messageActionType);
+
                         }
                         catch (Exception ex)
                         {
@@ -116,46 +132,46 @@ namespace duHastNet.PushIt.Commands
                 }
 
                 //pop message to user
-                _roomsSelectionViewModel.AddMessage(message, messageType);
+                _roomsMainViewModel.AddMessage(message, messageType);
             }
             catch (Exception ex)
             {
-                _roomsSelectionViewModel.AddMessage(ex.Message, MessageTypes.Error);
+                _roomsMainViewModel.AddMessage(ex.Message, MessageTypes.Error);
             }
             finally
             {
                 //activate the ui
-                _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = false;
+                _roomsMainViewModel.IsWaitingForRevitCommandToFinish = false;
             }
         }
 
         public override bool CanExecute(object parameter)
         {
             // check if IsWaitingForRevitCommandToFinish is true
-            if (_roomsSelectionViewModel.IsWaitingForRevitCommandToFinish)
+            if (_roomsMainViewModel.IsWaitingForRevitCommandToFinish)
             {
                 return false;
             }
-            else if (_roomsSelectionViewModel.SelectedRoom == null)
+            else if (_roomsDataGridViewModel.SelectedRoom == null)
             {
                 return false;
             }
             // if push mode is split and a room has been pushed already allow split mode
             //dont allow split mode on a new room
-            else if (_roomsSelectionViewModel.PushOperationMode == PushMode.Split &&
-                !_roomsSelectionViewModel.IsMatchingRevitRoomsEmpty &&
-                !Utilities.PushModeUtils.IsNewRoomMode(_roomsSelectionViewModel.SelectedRoom.Id.Value))
+            else if (_roomsMainViewModel.PushOperationMode == PushMode.Split &&
+                !_roomsDataGridViewModel.IsMatchingRevitRoomsEmpty &&
+                !Utilities.PushModeUtils.IsNewRoomMode(_roomsDataGridViewModel.SelectedRoom.Id.Value))
             {
                 return true;
             }
             // if push mode is new allow push mode
-            else if (_roomsSelectionViewModel.PushOperationMode == PushMode.New)
+            else if (_roomsMainViewModel.PushOperationMode == PushMode.New)
             {
                 return true;
             }
             //if standard push mode check if a room is selected
-            else if (_roomsSelectionViewModel.PushOperationMode == PushMode.Push &&
-                _roomsSelectionViewModel.IsMatchingRevitRoomsEmpty)
+            else if (_roomsMainViewModel.PushOperationMode == PushMode.Push &&
+                _roomsDataGridViewModel.IsMatchingRevitRoomsEmpty)
             {
                 return base.CanExecute(parameter);
             }
@@ -163,30 +179,31 @@ namespace duHastNet.PushIt.Commands
             {
                 return false;
             }
-            // check if IsMatchingRevitRoomsEmpty is true and call the base CanExecute method
-            // 
-            //return _roomsSelectionViewModel.IsMatchingRevitRoomsEmpty && base.CanExecute(parameter);
+            
         }
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // check if the property that changed is the one that we are interested in
-            if (e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.IsMatchingRevitRoomsEmpty) ||
-                e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.IsWaitingForRevitCommandToFinish) ||
-                e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.PushOperationMode))
+            if (e.PropertyName == nameof(ViewModels.RoomsDataGridViewModel.IsMatchingRevitRoomsEmpty) ||
+                e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish) ||
+                e.PropertyName == nameof(ViewModels.RoomsMainViewModel.PushOperationMode))
             {
                 OnCanExecutedChanged();
             }
         }
 
         public PushSingleRoomInRevitAsyncCommand(
-            ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
+            ViewModels.RoomsMainViewModel roomsMainViewModel,
+            ViewModels.RoomsDataGridViewModel roomsDataGridViewModel,
             Models.RevitDataModel revitDataModel
             )
         {
             _revitDataModel = revitDataModel;
-            _roomsSelectionViewModel = roomsSelectionViewModel;
-            _roomsSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _roomsMainViewModel = roomsMainViewModel;
+            _roomsDataGridViewModel = roomsDataGridViewModel;
+            _roomsMainViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _roomsDataGridViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
     }
 }

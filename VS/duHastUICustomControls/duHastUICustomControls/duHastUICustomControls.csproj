@@ -61,16 +61,74 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="Utils.23.0.0.3">
+      <HintPath>..\..\_References\duHast\Utils.23.0.0.3.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\StringContainsConverter.cs" />
+    <Compile Include="CustomDataGrid\AvailableColumnDefinition.cs" />
+    <Compile Include="CustomDataGrid\AvailableColumnDefinitions.ColumnUITypes.cs" />
+    <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.BooleanFiltering.cs" />
+    <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.BulkSelection.cs" />
+    <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.ContextMenus.cs" />
+    <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.cs" />
+    <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.DateTimeFiltering.cs" />
+    <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.ListBoxFiltering.cs" />
+    <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.NumericFiltering.cs" />
+    <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.TextFiltering.cs" />
+    <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.Utilities.cs" />
+    <Compile Include="CustomDataGrid\FilterBooleanDialog.xaml.cs">
+      <DependentUpon>FilterBooleanDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomDataGrid\FilterDateTimeDialog.xaml.cs">
+      <DependentUpon>FilterDateTimeDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomDataGrid\FilterDropDownDialog.xaml.cs">
+      <DependentUpon>FilterDropDownDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomDataGrid\FilterNumericDialog.xaml.cs">
+      <DependentUpon>FilterNumericDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomDataGrid\FilterTextDialog.xaml.cs">
+      <DependentUpon>FilterTextDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\BaseDynamicGridViewModel.cs" />
+    <Page Include="CustomDataGrid\DynamicDataGridStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomDataGrid\FilterBooleanDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomDataGrid\FilterDateTimeDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomDataGrid\FilterDropDownDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomDataGrid\FilterNumericDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomDataGrid\FilterTextDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Converters\SwitchStateToValueConverter.cs" />
+    <Compile Include="CustomDataGrid\DynamicColumnDefinition.cs" />
+    <Compile Include="CustomDataGrid\DynamicDataGrid.cs" />
+    <Compile Include="CustomDataGrid\DynamicRowData.cs" />
     <Compile Include="ThreeWaySwitch\ThreeWaySwitch.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -97,6 +155,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.UtilityFiltering.cs" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -35,7 +35,6 @@ from duHast.Revit.Common.parameter_set_utils import set_builtin_parameter_withou
 from duHast.Revit.SharedParameters.shared_parameters import get_all_shared_parameters
 
 from pushIt_associated.get_a_room import settings
-from pushIt_associated.get_a_room.utilities import get_filled_region_area
 
 from Autodesk.Revit.DB import BuiltInCategory, BuiltInParameter, Element
 

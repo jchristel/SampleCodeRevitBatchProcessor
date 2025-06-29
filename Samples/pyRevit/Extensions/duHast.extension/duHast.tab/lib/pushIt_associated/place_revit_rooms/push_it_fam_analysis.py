@@ -24,9 +24,7 @@ from System.Linq import Enumerable
 
 from duHast.Utilities.Objects.result import Result
 
-from duHast.Revit.Common.Geometry.curve_loops import  get_curve_loop_centroid
-
-from Autodesk.Revit.DB import ElementId,GeometryElement,GeometryInstance, Options,Solid, ViewDetailLevel, XYZ
+from Autodesk.Revit.DB import ElementId,GeometryElement,GeometryInstance, Options,Solid, ViewDetailLevel
 
 
 
@@ -78,26 +76,40 @@ def  process_geo_element(geom_el):
 
     centroids = []
     
-    for nested_geom_el in geom_el:
-        if isinstance(nested_geom_el, Solid):
-            centroids.extend(get_centroid_from_solid(nested_geom_el))
-        elif isinstance(nested_geom_el, GeometryInstance):
-            centroids.extend(process_geo_instance(nested_geom_el))
-        elif isinstance(geom_el, GeometryElement):
-            centroids.extend(process_geo_element(nested_geom_el))
-        else:
-            pass
+    # this can be an enumerator but also just a basic geometry primitive (curve)
+    if hasattr(geom_el, "GetEnumerator"):
+
+        # if it has an enumerator, we can iterate over it
+        enumerator = geom_el.GetEnumerator()
+
+        while enumerator.MoveNext():
+
+            nested_geom_el = enumerator.Current
+        
+            if isinstance(nested_geom_el, Solid):
+                centroids.extend(get_centroid_from_solid(nested_geom_el))
+            elif isinstance(nested_geom_el, GeometryInstance):
+                centroids.extend(process_geo_instance(nested_geom_el))
+            elif isinstance(geom_el, GeometryElement):
+                centroids.extend(process_geo_element(nested_geom_el))
+            else:
+                pass
+    elif isinstance(geom_el, Solid):
+        centroids.extend(get_centroid_from_solid(geom_el))
+    else:
+        pass
+        # anything else gets ignored
 
     return centroids
 
 
 def get_family_centroid(doc, family_instance):
     """
-    Get the centroid of a family instance in Revit.
+    Get the centroid of a family instance in Revit based on family geometry. If that fails, it will use the insertion point of the family instance.
     
     :param doc: The Revit document
     :type doc: Autodesk.Revit.DB.Document
-    :param family_instance: The family instance
+    :param family_instance: The push it family instance
     :type family_instance: Autodesk.Revit.DB.FamilyInstance
     :return: The centroid of the family instance
     :rtype: Autodesk.Revit.DB.XYZ
@@ -119,16 +131,22 @@ def get_family_centroid(doc, family_instance):
         # set up the centroid container
         centroids = []
 
+        return_value.append_message("Processing geometry elements: {} {}".format(geom_element, type(geom_element)))
+
         for geom_el in geom_element:
             # if solid process directly
             if isinstance(geom_el, Solid):
+                return_value.append_message("Processing a solid")
                 centroids.extend(get_centroid_from_solid(geom_el))
             # if geometry instance process recursively
             elif isinstance(geom_el, GeometryInstance):
+                return_value.append_message("Processing geometry instance")
                 centroids.extend(process_geo_instance( geom_el))
             elif isinstance(geom_el, GeometryElement):
+                return_value.append_message("Processing geometry element")
                 centroids.extend(process_geo_element(geom_el))
             else:
+                return_value.append_message("ignoring geometry element of type: {}".format(type(geom_el)))
                 pass
                
 
@@ -140,6 +158,9 @@ def get_family_centroid(doc, family_instance):
             family_instance.set_centroid(x,y,z)
         elif len(centroids) == 1:
             family_instance.set_centroid(centroids[0].X, centroids[0].Y, centroids[0].Z)
+        else:
+            # ok no centroids found...go with insertion point
+            family_instance.set_centroid(revit_family_instance.Location.Point.X, revit_family_instance.Location.Point.Y, revit_family_instance.Location.Point.Z)
         
         return_value.result=[family_instance]
 
@@ -186,5 +207,5 @@ def get_push_it_families_centroid(doc, push_it_families):
 
     except Exception as e:
         return_value.update_sep(False, "Failed to get centroids of pushIt families: {}".format(e))
-    
+
     return return_value

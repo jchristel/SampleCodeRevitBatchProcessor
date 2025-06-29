@@ -28,6 +28,11 @@ from duHast.Revit.Common.parameter_get_utils import get_parameter_value_by_name
 from duHast.Revit.Common.parameter_set_utils import set_parameter_value_by_name
 from duHast.Revit.Family.family_instance_translate import rotate_around_origin, RADIAN_ANGLE_90DEGREES
 from duHast.Revit.Common.transaction import in_transaction
+from duHast.pyRevit.console_output import print_header
+
+from Autodesk.Revit.DB import Element
+
+
 
 # parameter pairs to swap values for
 PARAMETER_VALUE_SWAP_MAPPING = [["HSL_WIDTH", "HSL_DEPTH"]]
@@ -56,10 +61,12 @@ def swap_element_parameter_values(elem, parameter_value_swap_mapping):
 
     # read the elements instance parameters to be swapped
     for param_pair in parameter_value_swap_mapping:
+
         # get the parameter values
         param1_value = get_parameter_value_by_name(elem, param_pair[0])
         param2_value = get_parameter_value_by_name(elem, param_pair[1])
 
+        print_header("{} ({})".format(Element.Name.GetValue(elem), elem.Id.IntegerValue))
         # if the value does not exist on the selected element its None
         if param1_value is None or param2_value is None:
             print("One of the parameters [{}, {}] does not exist on the selected element. Ignoring pairing".format(param_pair[0], param_pair[1]))
@@ -80,15 +87,16 @@ def swap_element_parameter_values(elem, parameter_value_swap_mapping):
                 print("Failed to swap values for element: {} - {} and {} - {}".format(param_pair[0], param1_value, param_pair[1], param2_value))
                 print("Failed to set parameter values: {} and {}".format(set_result1.message, set_result2.message))
 
-
             # rotate the element by 90 degrees
             if set_result1.status == True and set_result2.status == True:
                 rotate_result = rotate_around_origin(elem, RADIAN_ANGLE_90DEGREES, in_transaction)
+
+                # give user some feedback
                 if rotate_result.status == True:
                     print("Rotated element by 90 degrees")
                 elif rotate_result.status == False:
                     print("Failed to rotate element by 90 degrees: {}".format(rotate_result.message))
-
+                
         except Exception as e:
             print("Failed to swap values for element: {} - {} and {} - {}".format(param_pair[0], param1_value, param_pair[1], param2_value))
             print("Exception: {}".format(e))
@@ -97,7 +105,10 @@ def swap_element_parameter_values(elem, parameter_value_swap_mapping):
 
 def swap_width_and_depth_entry(doc,  uiapp, output, forms):
     """
-    Reports on families in a library location based on xml part atom exports.
+    Swaps a set of parameters on a set of selected elements. The parameters are swapped in pairs.\
+    The elements are rotated by 90 degrees after the swap. ( assuming we are swapping width and depth of a wall or column )
+
+    Note: For this to work the elements must have its origin defined using reference planes...and the origin must be at the center of the element.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -144,7 +155,7 @@ def swap_width_and_depth_entry(doc,  uiapp, output, forms):
     ) as pb:
         
         for mock_room_elem in mock_rooms_selected:
-            pb.update_progress(len( mock_rooms_selected), len(mock_rooms_selected))
+            pb.update_progress(counter, len(mock_rooms_selected))
             
             swap_element_parameter_values(mock_room_elem, PARAMETER_VALUE_SWAP_MAPPING)
             

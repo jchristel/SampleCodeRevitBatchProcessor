@@ -22,7 +22,6 @@
 //
 
 using System.Collections.Generic;
-using System.Windows.Forms;
 
 namespace duHastNet.PushIt.Models
 {
@@ -155,7 +154,7 @@ namespace duHastNet.PushIt.Models
         public RoomBase()
         {
             //initialise the ID value
-            Id = new RoomDataProperty("Id", string.Empty, string.Empty, string.Empty, false, false);
+            Id = new RoomDataProperty("Id", string.Empty, string.Empty, string.Empty, false, false, true);
 
         }
     }

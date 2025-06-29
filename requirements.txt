@@ -1,7 +1,7 @@
 astroid==2.1.0
 black==22.3.0
 build==1.1.1
-certifi==2021.10.8
+certifi==2024.7.4
 charset-normalizer==2.0.12
 click==8.1.2
 colorama==0.4.4

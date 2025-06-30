@@ -25,6 +25,7 @@ from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.files_io import file_exist
 from duHast.Revit.Family.family_utils import get_all_loadable_family_ids_through_types
 from duHast.Revit.Family import family_utils as rFamUtil
+from duHast.UI.Objects.ProgressBase import ProgressBase
 
 
 
@@ -77,7 +78,7 @@ def get_families_to_be_loaded_for_swapping(doc, swap_directives):
     return return_value
 
 
-def load_families_required_for_swapping(doc, swap_directives, library_directory):
+def load_families_required_for_swapping(doc, swap_directives, library_directory, progress_callback=None):
     """
     Loads families required for swapping into the document.
 
@@ -85,6 +86,11 @@ def load_families_required_for_swapping(doc, swap_directives, library_directory)
     :type doc: Autodesk.Revit.DB.Document
     :param swap_directives: The swap directives containing family names and paths.
     :type swap_directives: list of dict
+    :param library_directory: The directory where family files are located.
+    :type library_directory: str
+    :param progress_callback: Optional progress callback for UI updates.
+    :type progress_callback: ProgressBase or None
+
     :return: List of loaded family symbols.
     :rtype: list of Autodesk.Revit.DB.FamilySymbol
     """
@@ -92,6 +98,15 @@ def load_families_required_for_swapping(doc, swap_directives, library_directory)
     return_value = Result()
 
     try:
+
+        # check callback class
+        if progress_callback and isinstance(progress_callback, ProgressBase) == False:
+            raise TypeError(
+                "progress_callback needs to be inherited from ProgressBase. Got : {} instead.".format(
+                    type(progress_callback)
+                )
+            )
+    
         # get families to be loaded for swapping
         family_load_required_result = get_families_to_be_loaded_for_swapping(doc, swap_directives)
 
@@ -111,8 +126,18 @@ def load_families_required_for_swapping(doc, swap_directives, library_directory)
             )
             return return_value
         
+        # progress call back
+        callback_counter = 1
+
+        # get the max progress value
+        loop_max = len(family_load_required_result.result)
+
         # load the required families
         for family_name in family_load_required_result.result:
+
+            # update progress
+            if progress_callback != None:
+                progress_callback.update(callback_counter, loop_max)
             
             # build the family load path
             family_load_path = os.path.join(library_directory, family_name + ".rfa")
@@ -138,6 +163,15 @@ def load_families_required_for_swapping(doc, swap_directives, library_directory)
             
             return_value.append_message("Successfully loaded family: {}".format(family_name))
             return_value.result.append(result_load.result[0])
+        
+            # update progress
+            callback_counter = callback_counter + 1
+
+            # check for progress cancel
+            if progress_callback != None:
+                if progress_callback.is_cancelled():
+                    return_value.append_message("User cancelled!")
+                    break
         
     except Exception as e:
         return_value.update_sep(

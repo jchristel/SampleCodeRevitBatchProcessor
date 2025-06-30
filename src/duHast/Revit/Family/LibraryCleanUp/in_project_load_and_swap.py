@@ -19,7 +19,6 @@
 #
 #
 #
-import os
 
 from duHast.Utilities.Objects.result import Result
 
@@ -80,7 +79,7 @@ def load_families(doc, directive_directory,  library_path, output, forms):
             else:
                 return_value.append_message("Families successfully loaded for swapping: {}".format(len(load_result.result)))
             
-            output("Families loaded for swapping: {} with status: {}".format(len(load_result.result, load_result.status)))
+            output("Families loaded for swapping: {} with status: {}".format(len(load_result.result), load_result.status))
 
             if( len(load_result.result) == 0):
                 return_value.update_sep(True, "No families needing swapping in file")
@@ -133,6 +132,7 @@ def swap_families(doc, directive_directory, output,forms):
 
     return return_value
 
+
 def in_process_project(doc, library_path, directive_directory, output, forms):
     """
     Process the Revit document to load families and swap instances based on directives.
@@ -157,29 +157,21 @@ def in_process_project(doc, library_path, directive_directory, output, forms):
         load_result = load_families(doc, directive_directory, library_path, output, forms)
         return_value.update(load_result)
 
-        # set up a pyrevit progress bar
-        with forms.ProgressBar(
-            title="Swapping family instances: {value} of {max_value}", cancellable=True
-            ) as pb:
+        # get out if the user cancelled
+        if load_result.message.endswith("User cancelled!"):
+            return return_value
 
-            # set up a call back for pyRevit progressbar
-            progress_callback = ProgressPyRevit(form=pb)
-        
-            # swap away
-            swap_result = swap_family_instances_of_types(doc, directive_directory, progress_callback=progress_callback)
+        # swap families
+        swap_result = swap_families(doc, directive_directory, output,forms)
+        return_value.update(swap_result)
 
-            # print logs
-            output("Swapped families with status: {}".format(swap_result.status))
+        # get out if the user cancelled
+        if swap_result.message.endswith("User cancelled!"):
+            return return_value
 
-            # check what came back
-            if not swap_result.status:
-                return_value.update_sep(False, "Failed to swap families: {}".format(swap_result.message))
-                output("Failed to swap families: {}".format(swap_result.message))
-                return return_value
-       
+        # sync
         output("Syncing project file.")
-
-        # save the family document
+        # save the project
         save_result = sync_file(
             doc=doc,
             compact_central_file=True)

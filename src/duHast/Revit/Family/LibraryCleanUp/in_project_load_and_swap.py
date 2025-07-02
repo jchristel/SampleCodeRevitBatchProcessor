@@ -126,6 +126,7 @@ def swap_families(doc, directive_directory, output,forms):
                 return_value.update_sep(False, "Failed to swap families: {}".format(swap_result.message))
                 output("Failed to swap families: {}".format(swap_result.message))
                 return return_value
+            return_value.append_message(swap_result.message)
     except Exception as e:
         return_value.update_sep(False, "An error occurred: {}".format(str(e)))
         output("An error occurred: {}".format(str(e)))

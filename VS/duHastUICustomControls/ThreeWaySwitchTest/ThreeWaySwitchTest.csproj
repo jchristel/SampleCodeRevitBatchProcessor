@@ -55,6 +55,9 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="duHastUICustomControls.25.0.0.1">
+      <HintPath>..\..\_References\duHast\duHastUICustomControls.25.0.0.1.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -66,8 +69,8 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Utils.23.0.0.3">
-      <HintPath>..\..\_References\duHast\Utils.23.0.0.3.dll</HintPath>
+    <Reference Include="Utils.25.0.0.1">
+      <HintPath>..\..\_References\duHast\Utils.25.0.0.1.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -117,12 +120,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\duHastUICustomControls\duHastUICustomControls.csproj">
-      <Project>{7fd6b9f8-d82a-4ca4-9b0b-a7a7244a5c1f}</Project>
-      <Name>duHastUICustomControls</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

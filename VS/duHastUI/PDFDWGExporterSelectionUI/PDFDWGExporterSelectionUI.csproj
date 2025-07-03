@@ -49,9 +49,8 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="duHastUICustomControls, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\_References\duHast\duHastUICustomControls.dll</HintPath>
+    <Reference Include="duHastUICustomControls.25.0.0.1">
+      <HintPath>..\..\_References\duHast\duHastUICustomControls.25.0.0.1.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -65,9 +64,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="Utils.23.0.0.3">
-      <HintPath>..\..\_References\duHast\Utils.23.0.0.3.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Utils.25.0.0.1">
+      <HintPath>..\..\_References\duHast\Utils.25.0.0.1.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>

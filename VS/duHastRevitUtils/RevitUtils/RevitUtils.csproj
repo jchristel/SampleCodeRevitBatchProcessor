@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>duHastNet.RevitUtils</RootNamespace>
-    <AssemblyName>RevitUtils.23.0.0.3</AssemblyName>
+    <AssemblyName>RevitUtils.25.0.0.1</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -69,9 +69,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="Utils.23.0.0.3, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\_References\duHast\Utils.23.0.0.3.dll</HintPath>
+    <Reference Include="Utils.25.0.0.1">
+      <HintPath>..\..\_References\duHast\Utils.25.0.0.1.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

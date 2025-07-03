@@ -152,7 +152,7 @@ def create_copy_directives(family_storage_data, unique_group_codes, output_direc
     unique_new_file_name_list = []  # to keep track of unique new file names
 
     for full_code, group_code in unique_group_codes.items():
-        output("...Processing full code: {} and group code: {}".format(full_code, group_code))
+        #output("...Processing full code: {} and group code: {}".format(full_code, group_code))
         
         # get the code to use to identify the family in the copy directive
         code_to_use, code_description = get_code_to_use(full_code, group_code, code_to_descriptor_map)
@@ -160,7 +160,7 @@ def create_copy_directives(family_storage_data, unique_group_codes, output_direc
         # build family name from the group code and description
         fam_name_part = build_family_name_from_descriptor(code_description, code_to_use, output=output)
 
-        output("...Family name part for group code {}: {} derived from: {}".format( code_to_use, fam_name_part, code_description))
+        #output("...Family name part for group code {}: {} derived from: {}".format( code_to_use, fam_name_part, code_description))
 
 
         # set a default indicating that category does not exist in the mapper
@@ -194,7 +194,7 @@ def create_copy_directives(family_storage_data, unique_group_codes, output_direc
             new_name = new_file_name_revit,
         )
 
-        output("...Created copy directive, new name: {}".format(copy_directive.new_name))
+        #output("...Created copy directive, new name: {}".format(copy_directive.new_name))
         
         # add to over all list
         copy_directives.append(copy_directive)
@@ -216,7 +216,7 @@ def create_copy_directives(family_storage_data, unique_group_codes, output_direc
         
         # check if the catalogue file copy directive is not None ( there is no catalogue file for this family )
         if copy_directive_catalogue_file is not None:
-            output("...Created copy directive, new name: {}".format(copy_directive_catalogue_file.new_name))
+            #output("...Created copy directive, new name: {}".format(copy_directive_catalogue_file.new_name))
             # add to the copy directives list
             copy_directives.append(copy_directive_catalogue_file)
 
@@ -248,6 +248,8 @@ def create_type_maintained_lists(family_storage_data, unique_group_codes, copy_d
 
     type_keep_lists = []
 
+    type_keep_list_unique = []
+
     for full_code, group_code in unique_group_codes.items():
 
         # get the code to use to identify the family in the copy directive
@@ -275,8 +277,11 @@ def create_type_maintained_lists(family_storage_data, unique_group_codes, copy_d
                 # check if we have a grouping code parameter and if it matches the group code 
                 if grouping_code_parameter :
                     if clean_code(grouping_code_parameter.value) == group_code or clean_code(grouping_code_parameter.value) == full_code:
-                        type_keep_lists.append([copy_directive.new_name, family_type_storage.family_type_name])
-
+                        key = "{}{}".format(copy_directive.new_name, family_type_storage.family_type_name)
+                        # make sure we only add unique type keep lists
+                        if key not in type_keep_list_unique:
+                            type_keep_lists.append([copy_directive.new_name, family_type_storage.family_type_name])
+                            type_keep_list_unique.append(key)  # add the key to the set of unique type keep lists
 
         else:
             print("Le impossibele: No copy directive found for group code: {}".format(group_code_in_file_name))
@@ -287,14 +292,14 @@ def create_type_maintained_lists(family_storage_data, unique_group_codes, copy_d
     return type_keep_lists
 
 
-def create_swap_directives(family_storage_data, unique_group_codes, copy_directives, code_to_descriptor_map):
+def create_swap_directives(family_storage_data, unique_group_codes, copy_directives, code_to_descriptor_map, output=None):
     """
     Create swap directives for each unique group code in the family storage data.
 
     :param family_storage_data: The family storage data from which to create swap directives.
     :type family_storage_data: :class:`.FamilyTypeDataStorageManager`
-    :param unique_group_codes: A list of unique group codes to create swap directives for.
-    :type unique_group_codes: list[str]
+    :param unique_group_codes: A dictionary of full code to group code mappings.(i.e ITSE-002.01: ITSE-002 or ITSE-001: ITSE-001)
+    :type unique_group_codes: {str:str}
     :param copy_directives: A list of copy directives to be used for creating swap directives.
     :type copy_directives: list[:class:`.FamilyDirectiveCopy`]
     :param code_to_descriptor_map: A mapping of grouping codes to their descriptions.
@@ -309,6 +314,7 @@ def create_swap_directives(family_storage_data, unique_group_codes, copy_directi
     # build swap directive from old family name , new family name nad same family type name
 
     swap_directives = []
+    swap_directives_unique = set()  # to keep track of unique swap directives
 
     for full_code, group_code in unique_group_codes.items():
 
@@ -328,14 +334,26 @@ def create_swap_directives(family_storage_data, unique_group_codes, copy_directi
                 
                 if grouping_code_parameter:
                     if clean_code(grouping_code_parameter.value) == group_code or clean_code(grouping_code_parameter.value) == full_code:
-                        swap_directive = FamilyDirectiveSwap(
-                            name = family_storage_data.family_name,
-                            category= family_storage_data.family_category,
-                            source_type_name= family_type_storage.family_type_name,
-                            target_family_name = copy_directive.new_name[:-4]   , # remove the '.rfa' !!
-                            target_family_type_name = family_type_storage.family_type_name
-                        )
-                        swap_directives.append(swap_directive)
+                        # check by family name, category and family type name if the swap directive is unique
+                        key = "{}{}{}".format(family_storage_data.family_name, family_storage_data.family_category, family_type_storage.family_type_name)
+                        if key not in swap_directives_unique:
+                            swap_directive = FamilyDirectiveSwap(
+                                name = family_storage_data.family_name,
+                                category= family_storage_data.family_category,
+                                source_type_name= family_type_storage.family_type_name,
+                                target_family_name = copy_directive.new_name[:-4]   , # remove the '.rfa' !!
+                                target_family_type_name = family_type_storage.family_type_name
+                            )
+                            swap_directives.append(swap_directive)
+                            swap_directives_unique.add(key)  # add the key to the set of unique swap directives
+                            if output is not None:
+                                #output("Created swap directive for family'{}'.".format(key))
+                                pass
+                        else:
+                            if output is not None:
+                                #output("Swap directive for family type '{}' already exists, skipping...".format(key))
+                                pass
+                            #print("Swap directive for family type '{}' already exists, skipping...".format(family_type_storage.family_type_name))
         else:
             print("Le impossibele: No copy directive found for group code: {}".format(group_code_in_file_name))
             for cp in copy_directives:
@@ -376,7 +394,7 @@ def create_directives(family_storage_data_list, output_directory, code_descripto
     try:
        # analyse each family:
        # set up a copy directive for each unique group code
-       # set up a sap directive for each family type from old family to new family
+       # set up a swap directive for each family type from old family to new family
        # create a list of types to keep per new family ( text file with same name as the new family name )
 
         overall_copy_directives = []
@@ -402,7 +420,7 @@ def create_directives(family_storage_data_list, output_directory, code_descripto
 
             return_value.append_message("Processing family storage data for family: {}".format(family_data_storage_instance.family_name))
             output("Processing family storage data for family: {}".format(family_data_storage_instance.family_name))
-            unique_group_codes_in_family = []
+            unique_group_codes_in_family = {}
             
             # wrap into try catch since this may raise an exception if the family storage data is not valid or does not contain types
             try:
@@ -497,7 +515,8 @@ def create_directives(family_storage_data_list, output_directory, code_descripto
                     family_data_storage_instance, 
                     unique_group_codes_in_family, 
                     copy_directives, 
-                    code_to_descriptor_map
+                    code_to_descriptor_map,
+                    output=output,
                 )
             except Exception as e:
                 return_value.append_message(

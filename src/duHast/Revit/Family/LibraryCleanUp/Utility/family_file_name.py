@@ -72,11 +72,11 @@ def build_family_name_from_descriptor(description, code_to_use, output):
     
     # split the description into parts
 
-    output ("...Building family name from description: {}".format(description))
+    #output ("...Building family name from description: {}".format(description))
 
     parts = description[1].split(':')
 
-    output("...Parts after splitting by colon: {}".format(parts))
+    #output("...Parts after splitting by colon: {}".format(parts))
 
     if len(parts) < 2:
         # just a major category in the descriptor

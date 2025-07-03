@@ -460,7 +460,7 @@ def swap_family_instances_of_types(doc, directory_path, progress_callback=None):
     swap_directives_result = rFamSwapUtils.get_swap_directives(directory_path)
     # check if anything came back
     if swap_directives_result.status:
-        # upfate return value
+        # update return value
         return_value.update(swap_directives_result)
         swap_directives = swap_directives_result.result
 

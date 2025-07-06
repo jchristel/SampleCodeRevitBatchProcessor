@@ -39,7 +39,7 @@ DEBUG = True
 
 
 
-def in_package_family(doc, library_path, output):
+def in_package_family(doc, library_path, output_directory, output):
     """
     
     """
@@ -110,13 +110,13 @@ def in_package_family(doc, library_path, output):
 
         file_name_without_ext = get_file_name_without_ext(doc.PathName)
         
-        revit_fam_file_path = os.path.join(library_path, file_name_without_ext + ".rfa")
+        revit_fam_file_path = os.path.join( output_directory, file_name_without_ext + ".rfa")
         output("Saving family to: {}".format(revit_fam_file_path))
 
         # save the family document
         save_result = save_as_family(
             doc=doc,
-            target_directory_path=library_path,
+            target_directory_path= output_directory,
             current_full_file_name= doc.PathName,
             name_data=[[file_name_without_ext, file_name_without_ext]],
             file_extension= ".rfa",

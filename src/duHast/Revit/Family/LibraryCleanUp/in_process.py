@@ -25,6 +25,7 @@ from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.files_io import get_file_name_without_ext
 
 from duHast.Revit.Family.Utility.family_swap_instances_by_type_utils import get_swap_directives
+from duHast.Revit.Family.family_parameter_utils import set_parameter_formula
 from duHast.Revit.Family.family_swap_instances_of_types import swap_family_instances_of_types
 from duHast.Revit.Family.LibraryCleanUp.Utility.directives_read_from_file import read_maintain_types
 from duHast.Revit.Family.LibraryCleanUp.Utility.directive_maintain_types_execute import delete_non_conforming_types
@@ -35,10 +36,87 @@ from duHast.Revit.Common.file_io import save_as_family
 
 from duHast.Revit.RBP.Objects.ProgressRBPConsole import ProgressRBPConsole
 from duHast.pyRevit.Objects.ProgressPyRevit import ProgressPyRevit
+from duHast.Revit.SharedParameters.Objects.shared_parameter_data import ParameterModel
 
+from duHast.Revit.SharedParameters.shared_parameter_add import (
+    load_shared_parameter_file, 
+    add_shared_parameter_to_family,
+)
+from duHast.Revit.SharedParameters.shared_parameters_tuple import PARAMETER_DATA
 
 DEBUG = True
 
+from Autodesk.Revit.DB import BuiltInParameterGroup
+
+
+# shared parameters to add to family
+parameters = [
+    ParameterModel(
+        name = "HSL_REVIEW_STATUS",
+        group = "7_Health",
+        is_type_parameter = True,
+        para_type = "Text",
+        visiblity = True,
+        property_group = "PG_IDENTITY_DATA",
+        shared_parameter_file_path = r"\\proj01\SYD\016713-61A-P\2_Work\2-1_Models\2_Revit\3_Resources\8_SharedParameters\HSL_SharedParameters_Albury.txt"
+    ),
+]
+
+parameter_to_formula = {
+    "HSL_REVIEW_STATUS":'"REVIEW_FINALISED"'
+}
+
+def assign_formula_to_shared_parameter(doc, output):
+    # get the family manager
+    manager = doc.FamilyManager
+
+    # get all family parameters
+    family_parameters = manager.GetParameters()
+
+    # loop through all family parameters
+    for family_parameter in family_parameters:
+       fam_parameter_name = family_parameter.Definition.Name
+       if fam_parameter_name in parameter_to_formula:
+           set_result = set_parameter_formula(doc, manager, family_parameter, parameter_to_formula[fam_parameter_name])
+           output(set_result.message)
+
+
+
+def add_shared_parameters_to_family(doc, output):
+
+    
+    return_value = Result()
+    for para_model in parameters:
+       
+        # load the definition file
+        shared_parameter_file = load_shared_parameter_file(doc, para_model.shared_parameter_file_path)
+
+        # skip to the next parameter if the shared parameter file is not found
+        if shared_parameter_file is None:
+            print("Shared parameter file not found: {}".format(para_model.shared_parameter_file_path))
+            continue
+
+        # get the family manager
+        manager = doc.FamilyManager
+
+        # Use reflection to get the enum value
+        parameter_group = getattr(BuiltInParameterGroup, para_model.property_group, None)
+        if parameter_group is None:
+            print("Parameter group not found: {}".format(para_model.property_group))
+            continue
+
+        parameter_tuple = PARAMETER_DATA(para_model.name, not(para_model.is_type_parameter) ,parameter_group)
+
+        # add the shared parameter to the family
+        add_result = add_shared_parameter_to_family(para=parameter_tuple, mgr = manager, doc=doc, def_file=shared_parameter_file)
+
+        if add_result.status:
+            return_value.append_message("Parameter added successfully: {}".format(para_model.name))
+        else:
+            return_value.update_sep(False, "Parameter not added: {} \n...{}".format(para_model.name, add_result.message))
+    
+
+    output(return_value.message)
 
 
 def in_process_family(doc, library_path, output):
@@ -60,6 +138,11 @@ def in_process_family(doc, library_path, output):
         if not doc.IsFamilyDocument:
             return_value.update_sep(False, "The document is not a family document.")
             return return_value
+
+        # add qa parameter
+        add_shared_parameters_to_family(doc, output)
+        # assign value to qa parameter
+        assign_formula_to_shared_parameter(doc, output)
 
         # read maintain types from file
         read_maintain_result = read_maintain_types(library_path)

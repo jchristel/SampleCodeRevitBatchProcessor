@@ -39,10 +39,9 @@ namespace duHastNet.UI.PDFDWGExporterUI.Views
 
         private void Export_OnClick(object sender, EventArgs e)
         {
-            var dialog = new System.Windows.Forms.SaveFileDialog();
+            var dialog = new Microsoft.Win32.SaveFileDialog();
             dialog.Filter = "json Files (*.json)|*.json";
-            var dialogResult = dialog.ShowDialog();
-            if (dialogResult == System.Windows.Forms.DialogResult.OK)
+            if (dialog.ShowDialog() == true)
             {
                 ExportFilePathTextBox.Text = dialog.FileName;
 
@@ -56,10 +55,9 @@ namespace duHastNet.UI.PDFDWGExporterUI.Views
 
         private void Import_OnClick(object sender, EventArgs e)
         {
-            var dialog = new System.Windows.Forms.OpenFileDialog();
+            var dialog = new Microsoft.Win32.OpenFileDialog();
             dialog.Filter = "json Files (*.json)|*.json|All Files (*.*)|*.*";
-            var dialogResult = dialog.ShowDialog();
-            if (dialogResult == System.Windows.Forms.DialogResult.OK)
+            if (dialog.ShowDialog() == true)
             {
                 ImportFilePathTextBox.Text = dialog.FileName;
 

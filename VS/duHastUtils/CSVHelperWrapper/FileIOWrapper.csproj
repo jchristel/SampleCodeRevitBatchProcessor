@@ -5,8 +5,10 @@
     <AssemblyName>FileIOWrapper.25.0.0.1</AssemblyName>
     <OutputType>Library</OutputType>
     <Platforms>AnyCPU;x64</Platforms>
-    <!-- Separate output path to avoid conflicts -->
-    <OutputPath>bin\FileIO\$(Configuration)\</OutputPath>
+    <!-- Match your build script's expected path -->
+    <OutputPath>bin\x64\$(Configuration)\</OutputPath>
+    <!-- Disable automatic framework folder -->
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)' == 'x64'">

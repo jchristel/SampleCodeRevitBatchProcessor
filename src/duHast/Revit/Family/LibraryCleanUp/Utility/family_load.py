@@ -24,16 +24,20 @@ import os
 from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.files_io import file_exist
 from duHast.Revit.Family.family_utils import get_all_loadable_family_ids_through_types
+from duHast.Revit.Family.family_functions import get_name_and_category_to_family_dict, get_symbol_names_of_family
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import NESTING_SEPARATOR
 from duHast.Revit.Family import family_utils as rFamUtil
 from duHast.UI.Objects.ProgressBase import ProgressBase
 
 
 
-from Autodesk.Revit.DB import Document, Element, FamilySymbol
+from Autodesk.Revit.DB import Element
 
 def get_families_to_be_loaded_for_swapping(doc, swap_directives):
     """
-    Loads families to be swapped into the document.
+    Identifies all families required to be loaded into a project for swapping based on the provided swap directives.
+
+    Will check if target family already exists in the project and if so discard it from the list of families to be loaded.
 
     :param doc: The Revit document.
     :type doc: Autodesk.Revit.DB.Document
@@ -46,8 +50,10 @@ def get_families_to_be_loaded_for_swapping(doc, swap_directives):
     return_value = Result()
 
     try:
-       # get all loaded families:
+        # get all loaded families:
         family_ids = get_all_loadable_family_ids_through_types(doc)
+        # get family name and category dictionary
+        family_name_and_category_dict = get_name_and_category_to_family_dict(doc)
 
         if len(family_ids) > 0:
             return_value.append_message(
@@ -57,22 +63,53 @@ def get_families_to_be_loaded_for_swapping(doc, swap_directives):
             for fam_id in family_ids:
                 fam = doc.GetElement(fam_id)
                 fam_name = Element.Name.GetValue(fam)
-                for swap_directive in swap_directives:
-                    if swap_directive.name == fam_name and fam.FamilyCategory.Name == swap_directive.category:
-                        return_value.append_message(
-                            "Family {}  requires loading.".format(swap_directive.target_family_name)
-                        )
-                        # only add if not there already
-                        if(swap_directive.target_family_name not in return_value.result):
-                            # add family name to result list
-                            return_value.result.append(swap_directive.target_family_name)
-                        
+                # get the types in the model
+                symbol_names = get_symbol_names_of_family(fam)
 
-        
+                for symbol_name in symbol_names:
+                    # symbol has match?
+                    symbol_has_match=False
+                    # loop over swap directives and try to find a match for the family name and category and type name
+                    for swap_directive in swap_directives:
+                        if swap_directive.name == fam_name and fam.FamilyCategory.Name == swap_directive.category and swap_directive.source_type_name == symbol_name:
+                            # set flag that we found a match
+                            symbol_has_match = True
+                        
+                            # check if target family already exists in the project
+                            target_fam_key = "{}{}{}".format(
+                                swap_directive.target_family_name, NESTING_SEPARATOR, swap_directive.category
+                            )
+
+                            # check if the target family is already loaded
+                            if target_fam_key in family_name_and_category_dict:
+                                # family already loaded, skip it only if target type is present, otherwise assume a reload is required
+                                # get all type names for this family
+                                
+                                # check if the target family symbol is present in the family
+                                if  swap_directive.target_family_type_name in symbol_names:
+                                    # family symbol already loaded, skip it
+                                    continue
+                                
+                            return_value.append_message(
+                                "...Family {} and type {} needs swapping to family {} and type {}.".format(swap_directive.name,  swap_directive.source_type_name, swap_directive.target_family_name, swap_directive.target_family_type_name)
+                            )
+
+                            # only add if not there already
+                            if(swap_directive.target_family_name not in return_value.result):
+                                # add family name to result list
+                                return_value.result.append(swap_directive.target_family_name)
+                            
+                            break  # break out of the loop since we found a match
+                    
+                    if symbol_has_match == False:
+                        return_value.append_message(
+                            "{},{},{}, not found in swap directives.".format(fam_name, fam.FamilyCategory.Name, symbol_name)
+                        )
+                        
     except Exception as e:
         return_value.update_sep(
             False,
-            "Failed to load families: {}".format(e),
+            "Failed to build load families list: {}".format(e),
         )
     
     return return_value
@@ -109,6 +146,9 @@ def load_families_required_for_swapping(doc, swap_directives, library_directory,
     
         # get families to be loaded for swapping
         family_load_required_result = get_families_to_be_loaded_for_swapping(doc, swap_directives)
+
+        # DEBUG
+        print(family_load_required_result.message)
 
         # check if the family load required result is valid
         if family_load_required_result.status == False:

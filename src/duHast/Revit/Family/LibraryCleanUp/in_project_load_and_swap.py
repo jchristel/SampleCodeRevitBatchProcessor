@@ -171,13 +171,13 @@ def in_process_project(doc, library_path, directive_directory, output, forms):
             return return_value
 
         # sync
-        output("Syncing project file.")
+        #output("Syncing project file.")
         # save the project
-        save_result = sync_file(
-            doc=doc,
-            compact_central_file=True)
+        #save_result = sync_file(
+        #     doc=doc,
+        #     compact_central_file=True)
         
-        output("Save result: {}".format(save_result.status))
+        # output("Save result: {}".format(save_result.status))
 
     except Exception as e:
         return_value.update_sep(False, "An error occurred: {}".format(str(e)))

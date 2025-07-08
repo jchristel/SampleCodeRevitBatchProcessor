@@ -80,7 +80,8 @@ def build_family_name_from_descriptor(description, code_to_use, output):
 
     if len(parts) < 2:
         # just a major category in the descriptor
-        return description.title().strip().replace(' ', '')
+        fam_name = ("{}_".format(description[1].title().strip().replace(' ', '')))
+        return "{}{}".format(fam_name, code_to_use)
         #raise ValueError("Description must contain a major category followed by a colon. {}".format(description))
     
     # get the major category and clean it up
@@ -121,6 +122,8 @@ def build_family_name_from_descriptor(description, code_to_use, output):
     # remove illegal characters from the family name
     family_name = clean_up_family_name (family_name)
    
+
+    #output("...Family name after processing description: {}".format(family_name))
     # add the code to the family name
     # check if family end on underscore
     if family_name.endswith('_'):
@@ -130,4 +133,5 @@ def build_family_name_from_descriptor(description, code_to_use, output):
         # add an underscore before the code
         family_name = "{}_{}".format(family_name, code_to_use)
     
+    output("...Family name after processing description and code {} added: {}".format(code_to_use, family_name))
     return family_name

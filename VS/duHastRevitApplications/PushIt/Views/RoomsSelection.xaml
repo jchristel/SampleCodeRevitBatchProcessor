@@ -7,7 +7,6 @@
              xmlns:utilsViews ="clr-namespace:duHastNet.Utils.WPF.Views;assembly=Utils.25.0.0.1"
              xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.25.0.0.1"
              xmlns:pushItConverter ="clr-namespace:duHastNet.PushIt.Converters"
-             xmlns:spinner="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinner"
              xmlns:customControls="clr-namespace:duHastNet.UI.CustomControls;assembly=duHastUICustomControls.25.0.0.1"
              xmlns:dynamicDataGrid="clr-namespace:duHastNet.UI.CustomControls.CustomDataGrid;assembly=duHastUICustomControls.25.0.0.1"
              mc:Ignorable="d" 

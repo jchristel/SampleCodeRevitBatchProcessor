@@ -177,7 +177,7 @@ def load_families_required_for_swapping(doc, swap_directives, library_directory,
         family_load_required_result = get_families_to_be_loaded_for_swapping(doc, swap_directives)
 
         # DEBUG
-        print(family_load_required_result.message)
+        #print(family_load_required_result.message)
 
         # check if the family load required result is valid
         if family_load_required_result.status == False:

@@ -21,12 +21,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CsvHelper" Version="33.0.1" />
+    <PackageReference Include="CsvHelper" Version="33.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Revit.Async" Version="2.1.1" />
-    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
-    <PackageReference Include="System.Reflection.Metadata" Version="1.6.0" />
-    <PackageReference Include="System.Threading.Channels" Version="8.0.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="9.0.6" />
+    <PackageReference Include="System.Reflection.Metadata" Version="9.0.6" />
+    <PackageReference Include="System.Threading.Channels" Version="9.0.6" />
   </ItemGroup>
 
   <ItemGroup>

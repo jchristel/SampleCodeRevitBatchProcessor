@@ -67,17 +67,23 @@ def in_package_family(doc, library_path, output_directory, output):
             output("Failed to read swap directives: {}".format(swap_directives_result.message))
             return return_value
         
+        output("Swap directives loaded successfully. Found {} directives.".format(len(swap_directives_result.result)))
         swap_directives = swap_directives_result.result
 
+        #output("Loading families required for swapping...")
+        #output("Swap directives: {}".format(swap_directives))
+        #output("Library path: {}".format(library_path))
         # load families required for swapping
-        load_result = load_families_required_for_swapping(doc,  swap_directives, library_path)
+        load_result = load_families_required_for_swapping(doc, swap_directives, library_path)
+        
 
         if not load_result.status:
             return_value.update_sep(False, "Failed to load families required for swapping: {}".format(load_result.message))
             output("Failed to load families required for swapping: {}".format(load_result.message))
             return return_value
         
-        output("Families successfully loaded for swapping: {}".format(len(load_result.result)))
+        #output("Families successfully loaded for swapping: {}".format(len(load_result.result)))
+        #output("Families loaded: {}".format([fam.Name for fam in load_result.result]))
 
         # swap out families if necessary
         if( len(load_result.result) == 0):

@@ -64,14 +64,21 @@ def get_families_to_be_loaded_for_swapping(doc, swap_directives):
                 fam = doc.GetElement(fam_id)
                 fam_name = Element.Name.GetValue(fam)
                 # get the types in the model
-                symbol_names = get_symbol_names_of_family(fam)
-
-                for symbol_name in symbol_names:
+                source_family_symbol_names = get_symbol_names_of_family(fam)
+                # return_value.append_message(
+                #     "Family: {}, Category: {}".format(
+                #         fam_name, fam.FamilyCategory.Name
+                #     )
+                # )
+                for source_family_symbol_name in source_family_symbol_names:
+                    #return_value.append_message("...Checking symbol: {}".format(source_family_symbol_name))
                     # symbol has match?
                     symbol_has_match=False
                     # loop over swap directives and try to find a match for the family name and category and type name
                     for swap_directive in swap_directives:
-                        if swap_directive.name == fam_name and fam.FamilyCategory.Name == swap_directive.category and swap_directive.source_type_name == symbol_name:
+                        #return_value.append_message("......Checking swap directive: {}".format(swap_directive.name, swap_directive.category, swap_directive.source_type_name))
+                        if swap_directive.name == fam_name and fam.FamilyCategory.Name == swap_directive.category and swap_directive.source_type_name == source_family_symbol_name:
+                            #return_value.append_message(".........Found match")
                             # set flag that we found a match
                             symbol_has_match = True
                         
@@ -84,27 +91,49 @@ def get_families_to_be_loaded_for_swapping(doc, swap_directives):
                             if target_fam_key in family_name_and_category_dict:
                                 # family already loaded, skip it only if target type is present, otherwise assume a reload is required
                                 # get all type names for this family
+                                #return_value.append_message(".........Family {} is loaded, checking symbol.".format(swap_directive.target_family_name))
+                                
+                                # get the target family symbol names
+                                target_family = family_name_and_category_dict[target_fam_key]
+                                # get the symbol names of the target family
+                                target_family_symbol_names = get_symbol_names_of_family(target_family)
                                 
                                 # check if the target family symbol is present in the family
-                                if  swap_directive.target_family_type_name in symbol_names:
+                                if  swap_directive.target_family_type_name in  target_family_symbol_names:
+                                    return_value.append_message(".........Family {} and type {} already loaded, skipping.".format(swap_directive.target_family_name, swap_directive.target_family_type_name))
                                     # family symbol already loaded, skip it
                                     continue
+                                else:
+                                    pass
+                                    #return_value.append_message(".........Type {} not loaded".format(swap_directive.target_family_type_name))
+                            else:
+                                pass
+                                # family not loaded, we need to load it
+                                #return_value.append_message(".........Family {} not loaded, marked for loading.".format(swap_directive.target_family_name))
                                 
-                            return_value.append_message(
-                                "...Family {} and type {} needs swapping to family {} and type {}.".format(swap_directive.name,  swap_directive.source_type_name, swap_directive.target_family_name, swap_directive.target_family_type_name)
-                            )
+                            # return_value.append_message(
+                            #     "...Family {} and type {} needs swapping to family {} and type {}.".format(swap_directive.name,  swap_directive.source_type_name, swap_directive.target_family_name, swap_directive.target_family_type_name)
+                            # )
 
                             # only add if not there already
                             if(swap_directive.target_family_name not in return_value.result):
                                 # add family name to result list
                                 return_value.result.append(swap_directive.target_family_name)
+                                return_value.append_message(
+                                    "...Family {} added to load list.".format(swap_directive.target_family_name)
+                                )
+                            else:
+                                return_value.append_message(
+                                    "...Family {} already in load list, skipping.".format(swap_directive.target_family_name)
+                                )
                             
                             break  # break out of the loop since we found a match
                     
                     if symbol_has_match == False:
-                        return_value.append_message(
-                            "{},{},{}, not found in swap directives.".format(fam_name, fam.FamilyCategory.Name, symbol_name)
-                        )
+                        pass
+                        # return_value.append_message(
+                        #     "{},{},{}, not found in swap directives.".format(fam_name, fam.FamilyCategory.Name, symbol_name)
+                        # )
                         
     except Exception as e:
         return_value.update_sep(

@@ -152,7 +152,7 @@ def create_copy_directives(family_storage_data, unique_group_codes, output_direc
     unique_new_file_name_list = []  # to keep track of unique new file names
 
     for full_code, group_code in unique_group_codes.items():
-        #output("...Processing full code: {} and group code: {}".format(full_code, group_code))
+        output("...Processing full code: {} and group code: {}".format(full_code, group_code))
         
         # get the code to use to identify the family in the copy directive
         code_to_use, code_description = get_code_to_use(full_code, group_code, code_to_descriptor_map)
@@ -160,7 +160,7 @@ def create_copy_directives(family_storage_data, unique_group_codes, output_direc
         # build family name from the group code and description
         fam_name_part = build_family_name_from_descriptor(code_description, code_to_use, output=output)
 
-        #output("...Family name part for group code {}: {} derived from: {}".format( code_to_use, fam_name_part, code_description))
+        output("...Family name part for group code {}: {} derived from: {}".format( code_to_use, fam_name_part, code_description))
 
 
         # set a default indicating that category does not exist in the mapper
@@ -183,7 +183,7 @@ def create_copy_directives(family_storage_data, unique_group_codes, output_direc
         # add the new file name to the list of unique new file names
         unique_new_file_name_list.append(new_file_name_revit)
 
-        #print("Creating copy directive for group code: {} with new file name: {}".format(each_group_code, new_file_name))
+        output("Creating copy directive for group code: {} with new file name: {}".format(code_to_use, new_file_name_revit))
         # create a copy directive for each unique group code
         #name, category, source_file_path, target_directory, new_name
         copy_directive = FamilyDirectiveCopy(

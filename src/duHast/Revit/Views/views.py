@@ -173,6 +173,24 @@ def get_views_in_model(doc, filter):
     return views
 
 
+def get_views_in_model_not_template(doc):
+    """
+    Gets all views in a model which are not templates and not driven by a template.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: list of views
+    :rtype: list of Autodesk.Revit.DB.View
+    """
+
+    def filter_not_template(view):
+        return view.IsTemplate == False
+
+    return get_views_in_model(doc=doc, filter=filter_not_template)
+
+
+
 def get_views_not_on_sheet(doc):
     """
     Gets all views not placed on a sheet. (Excludes schedules)

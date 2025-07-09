@@ -28,7 +28,7 @@ Revit fill patterns helper functions.
 
 from Autodesk.Revit.DB import ElementId, FilteredElementCollector, FillPatternElement
 
-from duHast.Revit.DetailItems.detail_items import (
+from duHast.Revit.DetailItems.filled_regions import (
     get_all_filled_region_type_ids_available,
 )
 

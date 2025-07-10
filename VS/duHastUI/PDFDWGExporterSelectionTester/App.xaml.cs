@@ -20,18 +20,18 @@ namespace PDFDWGExporterSelectionTester
 
 
 
-            var printSet_One = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 1");
+            var printSet_One = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 1", false);
             printSet_One.AddRevitSheet(sheets[0]);
             printSet_One.AddRevitSheet(sheets[2]);
 
 
-            var printSetTwo = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 2");
+            var printSetTwo = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 2", false);
             printSetTwo.AddRevitSheet(sheets[0]);
             printSetTwo.AddRevitSheet(sheets[1]);
 
-            var printSetThree = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 3");
+            var printSetThree = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 3", false);
 
-            var printSetFour = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 4");
+            var printSetFour = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 4", false);
             printSetFour.AddRevitSheet(sheets[0]);
             printSetFour.AddRevitSheet(sheets[1]);
             printSetFour.AddRevitSheet(sheets[2]);

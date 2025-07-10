@@ -17,8 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PDFDWGExporterUI\PDFDWGExporterUI.csproj" />
-    <Compile Include="Models\RevitDataBase.cs" />
-    <Compile Include="Models\RevitSchedule.cs" />
   </ItemGroup>
 
   <ItemGroup>

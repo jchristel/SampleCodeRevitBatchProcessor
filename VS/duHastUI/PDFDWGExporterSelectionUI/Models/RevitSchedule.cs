@@ -23,23 +23,11 @@
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 {
-    public class RevitPrintSet : RevitDataBase
+    public class RevitSchedule : RevitDataBase
     {
-        
-        /// <summary>
-        /// Flag if true the print set if exists requires an update in revit, or if it does not exist in the model, needs creating
-        /// </summary>
-        private bool _requiresUpdate;
-        public bool RequiresUpdate
-        {
-            get => _requiresUpdate;
-            set => _requiresUpdate = value;
-        }
-
-        public RevitPrintSet(string name, bool requiresUpdate)
+        public RevitSchedule(string name)
         {
             Name = name;
-            RequiresUpdate = requiresUpdate;
         }
     }
 }

@@ -21,25 +21,58 @@
 //
 //
 
+using System.Collections.Generic;
+
+
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 {
-    public class RevitPrintSet : RevitDataBase
+    public class RevitDataBase
     {
-        
         /// <summary>
-        /// Flag if true the print set if exists requires an update in revit, or if it does not exist in the model, needs creating
+        /// the revit print set name
         /// </summary>
-        private bool _requiresUpdate;
-        public bool RequiresUpdate
+        string _name;
+
+        public string Name
         {
-            get => _requiresUpdate;
-            set => _requiresUpdate = value;
+            get => _name;
+            set => _name = value;
         }
 
-        public RevitPrintSet(string name, bool requiresUpdate)
+        /// <summary>
+        /// a lsit off Revit sheet ids belonging to this print set
+        /// </summary>
+        private List<RevitSheet> _revitSheets;
+
+        public List<RevitSheet> RevitSheets
         {
-            Name = name;
-            RequiresUpdate = requiresUpdate;
+            get => _revitSheets;
+        }
+
+        /// <summary>
+        /// adds an revit sheet to the print set
+        /// </summary>
+        /// <param name="revitSheet"></param>
+        /// <exception cref="Exceptions.SheetConflictException"></exception>
+        public void AddRevitSheet(RevitSheet revitSheet)
+        {
+            //check if id allready in use
+            if (!RevitSheets.Exists(x => x.RevitElementId.Value == revitSheet.RevitElementId.Value))
+            {
+                _revitSheets.Add(revitSheet);
+            }
+            else
+            {
+                // get the existing sheet
+                var existingSheet = RevitSheets.Find(x => x.RevitElementId.Value == revitSheet.RevitElementId.Value);
+                //pop an exception
+                throw new Exceptions.SheetConflictException(existingSheet, revitSheet);
+            }
+        }
+
+        public RevitDataBase()
+        {
+            _revitSheets = new List<RevitSheet>();
         }
     }
 }

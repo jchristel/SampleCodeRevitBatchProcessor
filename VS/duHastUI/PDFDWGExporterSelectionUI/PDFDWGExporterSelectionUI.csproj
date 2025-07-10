@@ -22,11 +22,11 @@
   <ItemGroup>
     <Reference Include="Utils.25.0.0.1">
       <HintPath>..\\..\\_References\\duHast\\Utils.25.0.0.1.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="duHastUICustomControls.25.0.0.1">
       <HintPath>..\\..\\_References\\duHast\\duHastUICustomControls.25.0.0.1.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
 </Project>

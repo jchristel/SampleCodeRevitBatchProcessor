@@ -5,11 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ThreeWaySwitchTest"
         xmlns:custom="clr-namespace:duHastNet.UI.CustomControls.CustomDataGrid;assembly=duHastUICustomControls.25.0.0.1"
-        xmlns:tws ="clr-namespace:duHastNet.UI.CustomControls;assembly=duHastUICustomControls.25.0.0.1"
-        xmlns:vms ="clr-namespace:duHastNet.UI.ThreeWaySwitchTest.ViewModels"
+        xmlns:tws="clr-namespace:duHastNet.UI.CustomControls;assembly=duHastUICustomControls.25.0.0.1"
+        xmlns:vms="clr-namespace:duHastNet.UI.ThreeWaySwitchTest.ViewModels"
+        xmlns:converters="clr-namespace:duHastNet.UI.CustomControls.Converters;assembly=duHastUICustomControls.25.0.0.1"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/duHastUICustomControls.25.0.0.1;component/ThreeWaySwitch/ThreeWaySwitchStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -20,26 +28,11 @@
             <!-- column management -->
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-
         <tws:ThreeWaySwitch 
             Grid.Row="0"
             Width="Auto" 
             Height="Auto"
             Margin="10 2 10 2"
             LabelLeft="Push It" LabelCenter="Split It" LabelRight="New Room" DisplayName="Mode" />
-
-        <!-- Dynamic DataGrid -->
-        <custom:DynamicDataGrid Grid.Row="1"
-                               ColumnDefinitions="{Binding ColumnDefinitions}"
-                               ItemsSource="{Binding Data}"
-                               CanUserDeleteRows="True"
-                               GridLinesVisibility="All"
-                               HeadersVisibility="Column"
-                               SelectionMode="Extended"
-                               Background="White"
-                               AlternatingRowBackground="LightGray"
-                               custom:DataGridColumnHeaderBehavior.EnableColumnManagement="True"
-                               custom:DataGridColumnHeaderBehavior.EnableBulkSelection="True"/>
-
     </Grid>
 </Window>

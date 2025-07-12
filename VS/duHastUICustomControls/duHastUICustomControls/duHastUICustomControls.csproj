@@ -10,7 +10,23 @@
     <OutputPath>bin\x64\$(Configuration)\</OutputPath>
     <!-- Disable automatic framework folder -->
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    
+    <!-- Assembly metadata (optional - customize as needed) -->
+    <AssemblyVersion>25.0.0.1</AssemblyVersion>
+    <FileVersion>25.0.0.1</FileVersion>
+    <AssemblyTitle>duHast UI Custom Controls</AssemblyTitle>
+    <Product>duHast</Product>
+    <Company>Your Company</Company>
   </PropertyGroup>
+
+  <ItemGroup>
+  <AssemblyAttribute Include="System.Windows.ThemeInfoAttribute">
+    <_Parameter1>System.Windows.ResourceDictionaryLocation.None</_Parameter1>
+    <_Parameter1_IsLiteral>true</_Parameter1_IsLiteral>
+    <_Parameter2>System.Windows.ResourceDictionaryLocation.SourceAssembly</_Parameter2>
+    <_Parameter2_IsLiteral>true</_Parameter2_IsLiteral>
+  </AssemblyAttribute>
+</ItemGroup>
 
   <PropertyGroup Condition="'$(Platform)' == 'x64'">
     <PlatformTarget>x64</PlatformTarget>
@@ -20,15 +36,7 @@
   <ItemGroup>
     <Reference Include="Utils.25.0.0.1">
       <HintPath>..\\..\\_References\\duHast\\Utils.25.0.0.1.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Themes\Generic.xaml">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Page>
-    <Page Update="ThreeWaySwitch\ThreeWaySwitchStyle.xaml">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Page>
   </ItemGroup>
 </Project>

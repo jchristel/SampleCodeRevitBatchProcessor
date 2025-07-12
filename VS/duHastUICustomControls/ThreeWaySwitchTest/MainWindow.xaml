@@ -4,14 +4,6 @@
         xmlns:tws="clr-namespace:duHastNet.UI.CustomControls;assembly=duHastUICustomControls.25.0.0.1"
         Title="MainWindow" Height="450" Width="800">
 
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/duHastUICustomControls.25.0.0.1;component/ThreeWaySwitch/ThreeWaySwitchStyle.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
-
     <Grid>
         <tws:ThreeWaySwitch 
             LabelLeft="Push It" 

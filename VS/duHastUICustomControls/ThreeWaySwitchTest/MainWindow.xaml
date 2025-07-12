@@ -9,9 +9,7 @@
         xmlns:vms ="clr-namespace:duHastNet.UI.ThreeWaySwitchTest.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Window.DataContext>
-        <vms:DynamicDataGridViewModel />
-    </Window.DataContext>
+    
 
     <Grid>
         <Grid.RowDefinitions>

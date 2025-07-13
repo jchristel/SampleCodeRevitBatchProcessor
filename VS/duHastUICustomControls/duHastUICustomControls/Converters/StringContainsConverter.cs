@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace duHastNet.Utils.WPF.Converters
+namespace duHastNet.UI.CustomControls.Converters
 {
     public class StringContainsConverter : IValueConverter
     {

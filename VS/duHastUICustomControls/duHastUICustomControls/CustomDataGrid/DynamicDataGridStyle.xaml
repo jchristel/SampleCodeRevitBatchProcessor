@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:duHastNet.UI.CustomControls.CustomDataGrid"
-                    xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters">
+                    xmlns:converters="clr-namespace:duHastNet.UI.CustomControls.Converters">
 
 
     <!-- Add the converter as a resource -->

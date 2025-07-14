@@ -1,0 +1,11 @@
+{
+  "name": "duHast-2025",
+  "version": "1.0.0", 
+  "description": "duHast extension for Revit 2025 and later",
+  "author": "Jan Christel",
+  "min_revit_ver": 2025,
+  "engines": {
+    "2025": { "clean": true },
+    "2026": { "clean": true }
+  }
+}

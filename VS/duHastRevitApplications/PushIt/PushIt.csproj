@@ -8,7 +8,6 @@
     <AssemblyName>PushIt</AssemblyName>
     <OutputType>Library</OutputType>
     <Platforms>AnyCPU;x64</Platforms>
-    <OutputPath>bin\x64\$(Configuration)\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <!-- Handle Revit API version conflicts -->
     <MSBuildWarningsAsMessages>MSB3277</MSBuildWarningsAsMessages>
@@ -18,12 +17,17 @@
 
   <PropertyGroup Condition="'$(Platform)' == 'x64'">
     <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CsvHelper" Version="33.1.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Revit.Async" Version="2.1.1" />
+    <PackageReference Include="CsvHelper" Version="33.1.0"/>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+    <PackageReference Include="Revit.Async" Version="2.1.1"/>
     <PackageReference Include="System.Collections.Immutable" Version="9.0.6" />
     <PackageReference Include="System.Reflection.Metadata" Version="9.0.6" />
     <PackageReference Include="System.Threading.Channels" Version="9.0.6" />

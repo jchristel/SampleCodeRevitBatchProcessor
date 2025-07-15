@@ -1,3 +1,18 @@
+# Function to get current Git branch
+function Get-CurrentBranch {
+    try {
+        $branch = git rev-parse --abbrev-ref HEAD
+        if ($LASTEXITCODE -eq 0) {
+            return $branch.Trim()
+        } else {
+            Write-Host "Error: Unable to determine Git branch. Make sure you're in a Git repository." -ForegroundColor Red
+            exit 1
+        }
+    } catch {
+        Write-Host "Error: Git command failed. Make sure Git is installed and accessible." -ForegroundColor Red
+        exit 1
+    }
+}
 
 # Function to determine pyRevit extension name based on branch
 function Get-PyRevitExtensionName {

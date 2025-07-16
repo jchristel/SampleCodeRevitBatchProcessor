@@ -22,7 +22,7 @@ And:
 
 
 
-##  Process
+##  Process swapping families based on single library
 
 1. Run script to generate family type data report using part atom exports per family
 2. Combine type data report per family into a single report
@@ -40,3 +40,12 @@ And:
 11. Reload families to project files
 11. swap families in project files (pyRevit) using swap directives
 
+
+
+##  Process swapping families based on two libraries
+
+1. Define parameter name in each library containing the key by which to match families by
+2. Read family reports from Library A and B, where A is the library containing the target families and B is the library containing the source families to be swapped out
+3. loop over all families in B and try to find a match in A based on key parameter.
+    3.1. check if match based on key, is of the same revit category, if so create swap directive
+4. write all swap directives to file

@@ -448,24 +448,27 @@ def create_directives(family_storage_data_list, output_directory, code_descripto
             output("Found {} unique group codes in family storage data for family: {}".format(len(unique_group_codes_in_family), family_data_storage_instance.family_name))
             found_all_group_codes = True
             
+            missing_group_codes = {}
             # check all group codes exist in descriptor mapper
             for code_full, group_code in unique_group_codes_in_family.items():
                 if code_full not in code_to_descriptor_map and group_code not in code_to_descriptor_map:
                     return_value.append_message(
                         "Full code '{}' and group code: {} not found in code description mapping.".format(code_full,group_code),
                     )
-                    output("Full code '{}' and group code: {} not found in code description mapping.".format(group_code,group_code))
+                    output("......Full code '{}' and group code: {} not found in code description mapping.".format(group_code,group_code))
                     found_all_group_codes = False
-                    break
+                    missing_group_codes[code_full] = group_code # add the full code and group code to the list of codes
+                    #break
 
             if not found_all_group_codes:
-                return_value.append_message(
-                    "Skipping family {} due to missing group codes in descriptor mapping.".format(family_data_storage_instance.family_name),
-                )
-                output("Skipping family {} due to missing group codes in descriptor mapping.".format(family_data_storage_instance.family_name))
-                # skip to next family
-                continue
-
+                # remove the missing codes from the unique group codes in family
+                for code_full, group_code in missing_group_codes.items():
+                    unique_group_codes_in_family.pop(code_full, None)  # remove the full code from the dictionary
+                    return_value.append_message(
+                        "......Full code '{}' and group code: {} removed due to missing mapping mapping.".format(code_full,group_code),
+                    )
+                    output("......Full code '{}' and group code: {} removed due to missing mapping mapping.".format(code_full,group_code))
+                
             copy_directives = []
             try:
                 # create directives for each unique group code

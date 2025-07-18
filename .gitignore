@@ -611,7 +611,7 @@ FodyWeavers.xsd
 !Samples/pyRevit/Extensions/duHast-2025.extension/duHast.tab/lib
 !Samples/pyRevit/Extensions/duHast-2025.extension/duHast.tab/PushIt.panel/bin
 !Samples/pyRevit/Extensions/duHast-2025.extension/duHast.tab/Families.panel/bin
-!Samples/pyRevit/Extensions/duHast-2025.extension/bin
+!Samples/pyRevit/Extensions/duHast-2025.extension/duHast.tab/bin
 /test/adHoc
 
 # include lib folder

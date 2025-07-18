@@ -1,8 +1,8 @@
 
 
 # lib directory
-$sourceFolderLib="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\src"
-$destinationFolderLib_one="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\pyRevit\Extensions\main.lib"
+$sourceFolderLib="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\src"
+$destinationFolderLib_one="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\Samples\pyRevit\Extensions\duHast-2025.extension\lib"
 
 
 

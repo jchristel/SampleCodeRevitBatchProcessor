@@ -73,10 +73,10 @@ function Get-BuildType($basePath, $config) {
 }
 
 # Define base paths for PushIt and AtTheLibrary
-$pushItBasePath = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastRevitApplications\PushIt"
-$atTheLibraryBasePath = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastRevitApplications\AtTheLibrary"
-$uiPDFDWGExporterBasePath = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastUI\PDFDWGExporterUI"
-$uiPDFDWGExporterSelectionBasePath = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastUI\PDFDWGExporterSelectionUI"
+$pushItBasePath = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastRevitApplications\PushIt"
+$atTheLibraryBasePath = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastRevitApplications\AtTheLibrary"
+$uiPDFDWGExporterBasePath = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastUI\PDFDWGExporterUI"
+$uiPDFDWGExporterSelectionBasePath = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastUI\PDFDWGExporterSelectionUI"
 
 # Determine correct build paths using user-selected configuration
 $pushItBuildPath = Get-BuildType $pushItBasePath $buildConfig
@@ -86,7 +86,7 @@ $uiPDFDWGExporterSelectionBuildPath = Get-BuildType $uiPDFDWGExporterSelectionBa
 
 # Define source and destination paths for PushIt (using dynamic extension name)
 $sourceFilePushIt = "$pushItBuildPath\PushIt.dll"
-$destinationFilePushIt = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\pyRevit\Extensions\$pyRevitExtensionName\duHast.tab\PushIt.panel\bin\PushIt.dll"
+$destinationFilePushIt = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\Samples\pyRevit\Extensions\$pyRevitExtensionName\duHast.tab\PushIt.panel\bin\PushIt.dll"
 
 # Copy PushIt DLL
 Copy-Item -Path $sourceFilePushIt -Destination $destinationFilePushIt -Force
@@ -94,7 +94,7 @@ Write-Output "File copied successfully from $sourceFilePushIt to $destinationFil
 
 # Define source and destination paths for AtTheLibrary (using dynamic extension name)
 $sourceFileAtTheLibrary = "$atTheLibraryBuildPath\AtTheLibrary.dll"
-$destinationAtTheLibrary = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\pyRevit\Extensions\$pyRevitExtensionName\duHast.tab\Families.panel\bin\AtTheLibrary.dll"
+$destinationAtTheLibrary = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\Samples\pyRevit\Extensions\$pyRevitExtensionName\duHast.tab\Families.panel\bin\AtTheLibrary.dll"
 
 # Copy AtTheLibrary DLL
 Copy-Item -Path $sourceFileAtTheLibrary -Destination $destinationAtTheLibrary -Force
@@ -102,7 +102,7 @@ Write-Output "File copied successfully from $sourceFileAtTheLibrary to $destinat
 
 # copy Revit Async DLL to reference folder from where it will get copied to other locations
 $sourceFileRevitAsync = "$pushItBuildPath\Revit.Async.dll"
-$destinationFileRevitAsync = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\_References\duHast\Revit.Async.dll"
+$destinationFileRevitAsync = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\_References\duHast\Revit.Async.dll"
 
 # Copy Revit Async DLL
 Copy-Item -Path $sourceFileRevitAsync -Destination $destinationFileRevitAsync -Force
@@ -110,22 +110,22 @@ Write-Output "File copied successfully from $sourceFileRevitAsync to $destinatio
 
 # copy UI dlls
 $sourceFileUI = "$uiPDFDWGExporterBuildPath\PDFDWGExporterUI.dll"
-$destinationFileUI = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\_References\duHast\PDFDWGExporterUI.dll"
+$destinationFileUI = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\_References\duHast\PDFDWGExporterUI.dll"
 
 Copy-Item -Path $sourceFileUI -Destination $destinationFileUI -Force
 Write-Output "File copied successfully from $sourceFileUI to $destinationFileUI"
 
 # copy UI dlls
 $sourceFileUISelection = "$uiPDFDWGExporterSelectionBuildPath\PDFDWGExporterSelectionUI.dll"
-$destinationFileUISelection = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\_References\duHast\PDFDWGExporterSelectionUI.dll"
+$destinationFileUISelection = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\_References\duHast\PDFDWGExporterSelectionUI.dll"
 
 Copy-Item -Path $sourceFileUISelection -Destination $destinationFileUISelection -Force
 Write-Output "File copied successfully from $sourceFileUISelection to $destinationFileUISelection"
 
 # lib directory
-$sourceFolderLib="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\_References\duHast"
-$destinationFolderLib_one="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\pyRevit\Extensions\$pyRevitExtensionName\bin"
-$destinationFolderLib_two="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\src\duHast\lib"
+$sourceFolderLib="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\_References\duHast"
+$destinationFolderLib_one="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\Samples\pyRevit\Extensions\$pyRevitExtensionName\bin"
+$destinationFolderLib_two="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\src\duHast\lib"
 
 # Function to clean and copy files
 function CleanAndCopy($source, $destination) {

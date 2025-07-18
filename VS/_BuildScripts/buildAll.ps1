@@ -1,14 +1,14 @@
 # Define paths
-$solution1 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastUtils\duHastUtils.sln"
-$solution2 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastRevitUtils\duHastRevitUtils.sln"
-$solution3 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastRevitApplications\duHastRevitApplications.sln"
-$solution4 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastApplications\duHastApplications.sln"
-$solution5 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastUI\duHastUI.sln"
-$solution6 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastUICustomControls\duHastUICustomControls.sln"
+$solution1 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastUtils\duHastUtils.sln"
+$solution2 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastRevitUtils\duHastRevitUtils.sln"
+$solution3 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastRevitApplications\duHastRevitApplications.sln"
+$solution4 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastApplications.sln"
+$solution5 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastUI\duHastUI.sln"
+$solution6 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastUICustomControls\duHastUICustomControls.sln"
 
-$commonDir = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\_References\duHast"
+$commonDir = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\_References\duHast"
 
-$targetDirSolution5 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\src\duHast\lib"
+$targetDirSolution5 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\src\duHast\lib"
 
 # Ask user for build configuration (Release or Debug)
 $buildConfig = Read-Host "Enter build configuration (Release/Debug)"

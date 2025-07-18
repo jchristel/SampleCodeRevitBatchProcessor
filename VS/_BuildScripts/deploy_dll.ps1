@@ -124,7 +124,7 @@ Write-Output "File copied successfully from $sourceFileUISelection to $destinati
 
 # lib directory
 $sourceFolderLib="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\_References\duHast"
-$destinationFolderLib_one="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\Samples\pyRevit\Extensions\$pyRevitExtensionName\bin"
+$destinationFolderLib_one="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\Samples\pyRevit\Extensions\$pyRevitExtensionName\duHast.tab\bin"
 $destinationFolderLib_two="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\src\duHast\lib"
 
 # Function to clean and copy files

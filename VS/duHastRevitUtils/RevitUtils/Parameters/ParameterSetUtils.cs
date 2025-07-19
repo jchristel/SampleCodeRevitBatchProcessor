@@ -56,15 +56,15 @@ namespace duHastNet.RevitUtils.Parameters
             }
             else if (parameter.StorageType == StorageType.Integer)
             {
-                int intValue = 0;
-                if (int.TryParse(value, out intValue))
+                if (int.TryParse(value, out int intValue))
                 {
                     parameter.Set(intValue);
                 }
             }
             else
             {
-                ElementId elementIdValue = new ElementId(int.Parse(value));
+                // simplified new constructor taking a 64bit integer (long)
+                ElementId elementIdValue = new(long.Parse(value));
                 parameter.Set(elementIdValue);
             }
             return true;

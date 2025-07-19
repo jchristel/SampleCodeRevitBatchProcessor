@@ -36,7 +36,8 @@ namespace duHastNet.RevitUtils.Categories
         /// <returns>A list of built in categories. An empty list of no matchin categories where found.</returns>
         public static List<BuiltInCategory> GetBuiltInCategoriesByName(List<string> categoryNames)
         {
-            List<BuiltInCategory> builtInCategories = new List<BuiltInCategory>();
+            //new list initialise symantics
+            List<BuiltInCategory> builtInCategories = [];
             foreach (string categoryName in categoryNames)
             {
                 BuiltInCategory builtInCategory = (BuiltInCategory)Enum.Parse(typeof(BuiltInCategory), categoryName);
@@ -52,7 +53,8 @@ namespace duHastNet.RevitUtils.Categories
         /// <returns>A list containing all main categories.</returns>
         public static List<Category>GetMainCategoriesInModel(Document doc)
         {
-            List<Category> categories = new List<Category>();
+            //new list initialise symantics
+            List<Category> categories = [];
             Autodesk.Revit.DB.Categories categoriesInModel = doc.Settings.Categories;
             foreach (Category category in categoriesInModel)
             {
@@ -69,7 +71,8 @@ namespace duHastNet.RevitUtils.Categories
         /// <returns>A list of categories. An empty list if no matching categories were found.</returns>
         public static List<Category> GetMainCategoriesByName(Document doc, List<string> categoryNames)
         {
-            List<Category> categories = new List<Category>();
+            //new list initialise symantics
+            List<Category> categories = [];
             // get all categories from the model
             Autodesk.Revit.DB.Categories categoriesInModel = doc.Settings.Categories;
             
@@ -95,10 +98,11 @@ namespace duHastNet.RevitUtils.Categories
         /// <returns>A list of built in categoreis.</returns>
         public static List<BuiltInCategory> GetBuiltInCategoriesFromCategories(List<Category> categories)
         {
-            List<BuiltInCategory> builtInCategories = new List<BuiltInCategory>();
+            //new list initialise symantics
+            List<BuiltInCategory> builtInCategories = [];
             foreach (Category category in categories)
             {
-                BuiltInCategory builtInCategory = (BuiltInCategory)category.Id.IntegerValue;
+                BuiltInCategory builtInCategory = (BuiltInCategory)category.Id.Value;
                 builtInCategories.Add(builtInCategory);
             }
             return builtInCategories;

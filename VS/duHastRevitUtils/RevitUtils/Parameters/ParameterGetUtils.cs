@@ -84,55 +84,23 @@ namespace duHastNet.RevitUtils.Parameters
             object parameterValue = null;
             try
             {
-                // Extract parameter value depending on its storage type
-                if (para.StorageType == StorageType.Double)
+                // get the parameter getter function depending on storage type
+                if (parameterValueGetters.TryGetValue(para.StorageType, out var getter))
                 {
-                    if (parameterValueGetters.ContainsKey(StorageType.Double))
-                    {
-                        parameterValue = parameterValueGetters[StorageType.Double](para);
-                    }
-                    else
-                    {
-                        throw new ArgumentException("No parameter value getter for storage type Double provided");
-                    }
-                }
-                else if (para.StorageType == StorageType.Integer)
-                {
-                    if (parameterValueGetters.ContainsKey(StorageType.Integer))
-                    {
-                        parameterValue = parameterValueGetters[StorageType.Integer](para);
-                    }
-                    else
-                    {
-                        throw new ArgumentException("No parameter value getter for storage type Integer provided");
-                    }
-                }
-                else if (para.StorageType == StorageType.String)
-                {
-                    if (parameterValueGetters.ContainsKey(StorageType.String))
-                    {
-                        parameterValue = parameterValueGetters[StorageType.String](para);
-                    }
-                    else
-                    {
-                        throw new ArgumentException("No parameter value getter for storage type String provided");
-                    }
-                }
-                else if (para.StorageType == StorageType.ElementId)
-                {
-                    if (parameterValueGetters.ContainsKey(StorageType.ElementId))
-                    {
-                        parameterValue = parameterValueGetters[StorageType.ElementId](para);
-                    }
-                    else
-                    {
-                        throw new ArgumentException("No parameter value getter for storage type ElementId provided");
-                    }
+                    // get the parameter value using the getter function
+                    parameterValue = getter(para);
                 }
                 else
                 {
-                    // This should be invalid storage type only
-                    parameterValue = parameterValueGetters[StorageType.None](para);
+                    // Handle the fallback case or throw exception
+                    if (para.StorageType == StorageType.None)
+                    {
+                        parameterValue = parameterValueGetters[StorageType.None](para);
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"No parameter value getter for storage type {para.StorageType} provided");
+                    }
                 }
             }
             catch (Exception e)
@@ -157,7 +125,7 @@ namespace duHastNet.RevitUtils.Parameters
         /// <returns></returns>
         private static double? ProcessDoubleValueFromString(string paraValueAsStringgWithUnits, List<string>Units, double conversionFactor)
         {
-            double? parameterValue = null;
+            double? parameterValue;
             //separate the value from the units
             string[] valueAndUnits = paraValueAsStringgWithUnits.Split(' ');
             // check if the value has units
@@ -206,21 +174,21 @@ namespace duHastNet.RevitUtils.Parameters
                     //get the value as a string with units
                     string paraValueAsStringgWithUnits = para.AsValueString();
                     //convert the value to metric if required
-                    parameterValue = ProcessDoubleValueFromString(paraValueAsStringgWithUnits, new List<string> { "mm", "cm", "dm", "m" }, 304.8);
+                    parameterValue = ProcessDoubleValueFromString(paraValueAsStringgWithUnits, [ "mm", "cm", "dm", "m" ], 304.8);
                 }
                 else if (dataType == SpecTypeId.Area)
                 {
                     //get the value as a string with units
                     string paraValueAsStringgWithUnits = para.AsValueString();
                     //convert the value to metric if required
-                    parameterValue = ProcessDoubleValueFromString(paraValueAsStringgWithUnits, new List<string> { "mm²", "cm²", "m²","hectare"}, 0.092903);
+                    parameterValue = ProcessDoubleValueFromString(paraValueAsStringgWithUnits, ["mm²", "cm²", "m²","hectare"], 0.092903);
                 }
                 else if (dataType == SpecTypeId.Volume)
                 {
                     //get the value as a string with units
                     string paraValueAsStringgWithUnits = para.AsValueString();
                     //convert the value to metric if required
-                    parameterValue = ProcessDoubleValueFromString(paraValueAsStringgWithUnits, new List<string> { "mm³", "cm³", "m³", "L" }, 0.02831685);
+                    parameterValue = ProcessDoubleValueFromString(paraValueAsStringgWithUnits, [ "mm³", "cm³", "m³", "L" ], 0.02831685);
                 }
                 else
                 {
@@ -321,15 +289,15 @@ namespace duHastNet.RevitUtils.Parameters
         /// Returns a parameter value of type element id as an integer.
         /// </summary>
         /// <param name="para">The parameter.</param>
-        /// <returns>Integer value. If value is empty it will return null.</returns>
+        /// <returns>long (64bit) value. If value is empty it will return null.</returns>
         public static object GetterElementIdAsElementInt(Parameter para)
         {
-            int? parameterValue = null;
+            long? parameterValue = null;
             if (para.StorageType == StorageType.ElementId)
             {
                 if (para.AsElementId() != null)
                 {
-                    parameterValue = para.AsElementId().IntegerValue;
+                    parameterValue = para.AsElementId().Value;
                 }
             }
             return parameterValue;

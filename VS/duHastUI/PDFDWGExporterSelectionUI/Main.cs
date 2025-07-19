@@ -31,10 +31,10 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
     public class Main
     {
 
-        duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
-        duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
-        Models.SheetsDataModel _exportSheetsDataModel;
-        Utils.Settings _settings;
+        readonly duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
+        readonly duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
+        readonly Models.SheetsDataModel _exportSheetsDataModel;
+        readonly Utils.Settings _settings;
 
 
         public Main(
@@ -93,7 +93,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
             _navigationStore.CurrentViewModel = settingsViewModel;
 
             //show the main window
-            MainWindow mainWindow = new MainWindow(_settings)
+            MainWindow mainWindow = new(_settings)
             {
                 DataContext = new ViewModels.MainWindowViewModel(_navigationStore)
             };
@@ -103,7 +103,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
             var exportSelection = new Utils.ExportSelection();
 
             // return the selected sheets...
-            List<int> sheetIdsSelected = new List<int>();
+            List<int> sheetIdsSelected = [];
 
             foreach (var sheet in this._exportSheetsDataModel.RevitSheets)
             {
@@ -125,7 +125,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
         /// <returns></returns>
         private ViewModels.DocumentSelectionViewModel CreateDocumentSelectionViewModel()
         {
-            duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel _globalMessageViewModel = new duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);
+            duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel _globalMessageViewModel = new(_messageStore);
 
             return new ViewModels.DocumentSelectionViewModel(
                 _exportSheetsDataModel,

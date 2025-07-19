@@ -23,36 +23,17 @@
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 {
-    public class SheetProperty
+    public class SheetProperty(string name, string value)
     {
-
-        private string _name;
-        private string _value;
-
-
         /// <summary>
         /// The property name
         /// </summary>
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
+        public string Name { get; set; } = name;
 
         /// <summary>
         /// The property value
         /// </summary>
-        public string Value
-        {
-            get { return _value; }
-            set { _value = value; }
-        }
-
-        public SheetProperty(string name, string value)
-        {
-            _name = name;
-            _value = value;
-        }
+        public string Value { get; set; } = value;
     }
 }
 

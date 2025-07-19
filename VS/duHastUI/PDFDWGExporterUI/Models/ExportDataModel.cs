@@ -69,8 +69,8 @@ namespace duHastNet.UI.PDFDWGExporterUI.Models
             // Initialize the settings object
             _settings = new Utils.Settings();
 
-            ParameterNames = new List<string>();
-            DWGExportSchemeNames = new List<string>();
+            ParameterNames = [];
+            DWGExportSchemeNames = [];
         }
     }
 }

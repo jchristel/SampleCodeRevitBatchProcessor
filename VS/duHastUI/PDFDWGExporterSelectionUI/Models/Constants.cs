@@ -38,7 +38,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 
         #region column names data grid view
 
-        public static readonly Dictionary<string, string> ColumnInfo = new Dictionary<string, string>
+        public static readonly Dictionary<string, string> ColumnInfo = new()
         {
             {ColumnHeaderExport.Replace(" ", ""), ColumnHeaderExport },
             {ColumnHeaderPDFPreviewName.Replace(" ", ""), ColumnHeaderPDFPreviewName },

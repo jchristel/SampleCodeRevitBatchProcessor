@@ -29,10 +29,10 @@ namespace duHastNet.UI.PDFDWGExporterUI
 {
     public class Main
     {
-        duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
-        duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
-        Models.ExportDataModel _exportDataModel;
-        Utils.Settings _settings;
+        readonly duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
+        private readonly duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
+        readonly Models.ExportDataModel _exportDataModel;
+        readonly Utils.Settings _settings;
 
         /// <summary>
         /// Constructor for the Main class.
@@ -61,10 +61,11 @@ namespace duHastNet.UI.PDFDWGExporterUI
             );
 
             //set up the export data model
-            _exportDataModel = new Models.ExportDataModel();
-
-            //set the settings object to the data model
-            _exportDataModel.Settings = _settings;
+            _exportDataModel = new Models.ExportDataModel
+            {
+                //set the settings object to the data model
+                Settings = _settings
+            };
 
             // add the parameter names to the data model
             foreach (var parameterName in parameterNames)
@@ -92,7 +93,7 @@ namespace duHastNet.UI.PDFDWGExporterUI
             _navigationStore.CurrentViewModel = settingsViewModel;
 
             //show the main window
-            MainWindow mainWindow = new MainWindow(_settings)
+            MainWindow mainWindow = new(_settings)
             {
                 DataContext = new ViewModels.MainWindowViewModel(_navigationStore)
             };
@@ -109,7 +110,7 @@ namespace duHastNet.UI.PDFDWGExporterUI
         /// <returns></returns>
         private ViewModels.SettingsViewModel CreateSettingsViewModel()
         {
-            duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel _globalMessageViewModel = new duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);
+            duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel _globalMessageViewModel = new(_messageStore);
 
             return new ViewModels.SettingsViewModel(
                 _exportDataModel,

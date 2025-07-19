@@ -72,7 +72,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 
         public RevitDataBase()
         {
-            _revitSheets = new List<RevitSheet>();
+            _revitSheets = [];
         }
     }
 }

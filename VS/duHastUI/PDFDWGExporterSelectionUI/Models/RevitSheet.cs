@@ -25,69 +25,42 @@ using System.Collections.Generic;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 {
-    public class RevitSheet
+    public class RevitSheet(string sheetNumber, string sheetName, string revitElementId)
     {
-
         /// <summary>
         /// add a is selected for export property
         /// </summary>
-        private bool _isSelected = false;
-        public bool IsSelected
-        {
-            get { return _isSelected; }
-            set { _isSelected = value; }
-        }
+        public bool IsSelected { get; set; } = false;
 
         /// <summary>
         /// The revit sheet name property
         /// </summary>
-        private SheetProperty _sheetName;
-        public SheetProperty SheetName
-        {
-            get => _sheetName;
-            set => _sheetName = value;
-        }
+        public SheetProperty SheetName { get; set; } = new(Models.Constants.PropertyNameSheetName, sheetName);
 
         /// <summary>
         /// the revit sheet number property
         /// </summary>
-        private SheetProperty _sheetNumber;
-        public SheetProperty SheetNumber
-        {
-            get => _sheetNumber;
-            set => _sheetNumber = value;
-        }
-
+        public SheetProperty SheetNumber { get; set; } = new(Models.Constants.PropertyValueSheetNumber, sheetNumber);
 
         /// <summary>
         /// The revit element id of this sheet
         /// </summary>
-        private SheetProperty _revitElementId;
-        public SheetProperty RevitElementId
-        {
-            get => _revitElementId;
-            set => _revitElementId = value;
-        }
+        public SheetProperty RevitElementId { get; set; } = new(Models.Constants.PropertyValueSheetRevitId, revitElementId);
 
         /// <summary>
         /// All other sheet properties
         /// </summary>
-        private List<SheetProperty> _properties;
-        public List<SheetProperty> Properties
-        {
-            get => _properties;
-        }
-
+        public List<SheetProperty> Properties { get; } = [];
 
         public void AddSheetProperty(SheetProperty sheetProperty)
         {
             // add a new sheet property but only if not already exists
             if (sheetProperty != null)
             {
-                //check if property allready exists
+                //check if property already exists
                 if (!Properties.Exists(x => x.Name == sheetProperty.Name))
                 {
-                    _properties.Add(sheetProperty);
+                    Properties.Add(sheetProperty);
                 }
                 else
                 {
@@ -102,30 +75,11 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
         /// <summary>
         /// pdf file name preview
         /// </summary>
-        private string _pdfPreviewName;
-        public string PDFPreviewName
-        {
-            get { return _pdfPreviewName; }
-            set { _pdfPreviewName = value; }
-        }
+        public string PDFPreviewName { get; set; }
 
         /// <summary>
         /// dwg preview name
         /// </summary>
-        private string _dwgPreviewName;
-        public string DWGPreviewName
-        {
-            get { return _dwgPreviewName; }
-            set { _dwgPreviewName = value; }
-        }
-
-        public RevitSheet(string sheetNumber, string sheetName, string revitElementId)
-        {
-            _sheetName = new SheetProperty(name: Models.Constants.PropertyNameSheetName, value: sheetName);
-            _sheetNumber = new SheetProperty(name: Models.Constants.PropertyValueSheetNumber, value: sheetNumber);
-            _revitElementId = new SheetProperty(name: Models.Constants.PropertyValueSheetRevitId, value: revitElementId);
-
-            _properties = new List<SheetProperty>();
-        }
+        public string DWGPreviewName { get; set; }
     }
 }

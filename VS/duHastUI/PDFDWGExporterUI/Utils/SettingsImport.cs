@@ -12,7 +12,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.Utils
             )
         {
 
-            Dictionary<string, string> settings = new Dictionary<string, string>();
+            Dictionary<string, string> settings = [];
 
             try
             {

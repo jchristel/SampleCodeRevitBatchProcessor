@@ -29,7 +29,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
     public static class SettingsUtils
     {
         public static string settingsDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "duHast");
-        private static string settingsFilePath = Path.Combine(settingsDirectory, "pdf_dwg_exporter_settings.json");
+        private static readonly string settingsFilePath = Path.Combine(settingsDirectory, "pdf_dwg_exporter_settings.json");
 
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
             try
             {
                 //set up settings loader util
-                duHastNet.Utils.Settings.SettingsUtils settingsLoader = new duHastNet.Utils.Settings.SettingsUtils(settingsFilePath);
+                duHastNet.Utils.Settings.SettingsUtils settingsLoader = new(settingsFilePath);
 
                 //load settings
                 Utils.Settings settings = settingsLoader.LoadSettings<Utils.Settings>();
@@ -93,7 +93,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
             try
             {
                 //set up settings util
-                duHastNet.Utils.Settings.SettingsUtils settingsSaver = new duHastNet.Utils.Settings.SettingsUtils(settingsFilePath);
+                duHastNet.Utils.Settings.SettingsUtils settingsSaver = new(settingsFilePath);
 
                 //attempt to save settings
                 bool saveFlag = settingsSaver.SaveSettings<Utils.Settings>(settings);
@@ -118,11 +118,8 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
                     }
                     else
                     {
-                        if (AddMessage != null)
-                        {
-                            //not to sure what went wrong...pop message
-                            AddMessage("Failed to save settings with unknown error.", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
-                        }
+                        //not to sure what went wrong...pop message
+                        AddMessage?.Invoke("Failed to save settings with unknown error.", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
                     }
                 }
             }

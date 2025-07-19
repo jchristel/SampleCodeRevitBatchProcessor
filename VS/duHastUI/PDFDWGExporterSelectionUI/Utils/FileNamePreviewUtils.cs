@@ -31,7 +31,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
         public static string GetFileName(Models.RevitSheet sheet, ObservableCollection<duHastNet.UI.PDFDWGExporterUI.Utils.DocumentSetting> settings)
         {
 
-            StringBuilder pdfFileName = new StringBuilder();
+            StringBuilder pdfFileName = new();
 
             foreach (var setting in settings)
             {

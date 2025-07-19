@@ -80,7 +80,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
             if (settings == null)
             {
                 //reset to default
-                _columnIds = new List<string>();
+                _columnIds = [];
                 _printSet = Models.Constants.DefaultPrintSetName;
                 _exportFolderPath = string.Empty;
                 _exportModus = Models.Constants.ExportModusPDF;
@@ -89,7 +89,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
             else
             {
                 //deep copy of the column names
-                _columnIds = new List<string>(settings.ColumnIds);
+                _columnIds = [.. settings.ColumnIds];
                 _printSet = settings.Printset;
                 _exportFolderPath = settings.ExportFolderPath;
                 _exportModus = settings.ExportModus;
@@ -104,7 +104,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
         public Settings()
         {
             // set default values
-            _columnIds = new List<string>();
+            _columnIds = [];
             _printSet = Models.Constants.DefaultPrintSetName;
             _exportFolderPath = string.Empty;
             _exportModus = Models.Constants.ExportModusPDF;

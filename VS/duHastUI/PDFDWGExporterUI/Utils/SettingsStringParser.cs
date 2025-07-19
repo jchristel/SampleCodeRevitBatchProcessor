@@ -41,7 +41,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.Utils
             List<DocumentSetting> deserializedSettings = JsonConvert.DeserializeObject<List<DocumentSetting>>(settingsString);
 
             // Create a new ObservableCollection to hold the valid settings
-            ObservableCollection<DocumentSetting> settings = new ObservableCollection<DocumentSetting>();
+            ObservableCollection<DocumentSetting> settings = [];
 
             // Check if the settings are valid (e.g., if the parameters are available)
             foreach (DocumentSetting setting in deserializedSettings)
@@ -80,7 +80,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.Utils
             List<DocumentSetting> deserializedSettings = JsonConvert.DeserializeObject<List<DocumentSetting>>(settingsString);
 
             // Create a new ObservableCollection to hold the valid settings
-            ObservableCollection<DocumentSetting> settings = new ObservableCollection<DocumentSetting>();
+            ObservableCollection<DocumentSetting> settings = [];
 
             // Check if the settings are valid (e.g., if the parameters are available)
             foreach (DocumentSetting setting in deserializedSettings)

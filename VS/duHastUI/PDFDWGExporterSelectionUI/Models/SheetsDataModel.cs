@@ -39,7 +39,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
         /// <summary>
         /// contains the Revit sheets in the model
         /// </summary>
-        private List<Models.RevitSheet> _revitSheets;
+        private readonly List<Models.RevitSheet> _revitSheets;
         public List<Models.RevitSheet> RevitSheets
         {
             get => _revitSheets;
@@ -57,19 +57,19 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
         /// <summary>
         /// json formatted string representing pdf name settings
         /// </summary>
-        private string _currentPDFExportString;
+        private readonly string _currentPDFExportString;
         public string CurrentPDFExportString { get => _currentPDFExportString; }
 
         /// <summary>
         /// jso formatted string representing dwg name settings
         /// </summary>
-        private string _currentDWGExportString;
+        private readonly string _currentDWGExportString;
         public string CurrentDWGExportString { get => _currentDWGExportString; }
 
         /// <summary>
         /// available sheet parameters
         /// </summary>
-        private List<string> _parameterNames;
+        private readonly List<string> _parameterNames;
         public List<string> ParameterNames { get => _parameterNames; }
 
         /// <summary>

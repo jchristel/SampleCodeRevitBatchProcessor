@@ -1,6 +1,5 @@
 ﻿using duHastNet.UI.CustomControls.CustomDataGrid;
 using duHastNet.UI.PDFDWGExporterSelectionUI.Models;
-using duHastNet.Utils.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,7 +8,7 @@ using System.Linq;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 {
-    public class ViewSelectionDataGridViewModel : BaseDynamicGridViewModel<DynamicRowData>
+    public class ViewSelectionDataGridViewModel : duHastNet.UI.CustomControls.ViewModels.BaseDynamicGridViewModel<DynamicRowData>
     {
 
         //field storing the sheets data model
@@ -65,16 +64,16 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             if (this.SheetsDataModel == null) return;
 
             //initialise available columns with default sheet properties
-            AvailableColumns = new ObservableCollection<AvailableColumnDefinition> { 
+            AvailableColumns = [ 
             
                 // Basic sheet Info
-                new AvailableColumnDefinition(Constants.ColumnHeaderExport.Replace(" ", ""), Constants.ColumnHeaderExport, typeof(bool)),
-                new AvailableColumnDefinition(Constants.ColumnHeaderPDFPreviewName.Replace(" ", ""), Constants.ColumnHeaderPDFPreviewName, typeof(string)),
-                new AvailableColumnDefinition(Constants.ColumnHeaderDWGPreviewName.Replace(" ", ""), Constants.ColumnHeaderDWGPreviewName, typeof(string)),
-                new AvailableColumnDefinition(Constants.ColumnHeaderSheetNumber.Replace(" ", ""), Constants.ColumnHeaderSheetNumber, typeof(string)),
-                new AvailableColumnDefinition(Constants.ColumnHeaderSheetName.Replace(" ", ""), Constants.ColumnHeaderSheetName, typeof(string)),
+                new(Constants.ColumnHeaderExport.Replace(" ", ""), Constants.ColumnHeaderExport, typeof(bool)),
+                new(Constants.ColumnHeaderPDFPreviewName.Replace(" ", ""), Constants.ColumnHeaderPDFPreviewName, typeof(string)),
+                new(Constants.ColumnHeaderDWGPreviewName.Replace(" ", ""), Constants.ColumnHeaderDWGPreviewName, typeof(string)),
+                new(Constants.ColumnHeaderSheetNumber.Replace(" ", ""), Constants.ColumnHeaderSheetNumber, typeof(string)),
+                new(Constants.ColumnHeaderSheetName.Replace(" ", ""), Constants.ColumnHeaderSheetName, typeof(string)),
 
-            };
+            ];
 
             //add any other custom properties
             var sampleSheet = SheetsDataModel.RevitSheets.First();
@@ -133,7 +132,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// <summary>
         /// Convert a sheet object to a ViewDataViewModel for the grid
         /// </summary>
-        private DynamicRowData CreateRowFromSheet(Models.RevitSheet sheet)
+        private static DynamicRowData CreateRowFromSheet(Models.RevitSheet sheet)
         {
             var rowData = new DynamicRowData();
 
@@ -407,9 +406,8 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                 var sheet = SheetsDataModel.RevitSheets[i];
 
                 // Sync the export/selection status
-                if (gridRow.Values.ContainsKey(exportColumnId))
+                if (gridRow.Values.TryGetValue(exportColumnId, out object gridValue))
                 {
-                    var gridValue = gridRow.Values[exportColumnId];
                     if (gridValue is bool isSelected)
                     {
                         sheet.IsSelected = isSelected;
@@ -477,7 +475,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                     var exportColumnId = Constants.ColumnHeaderExport.Replace(" ", "");
                     if (e.PropertyName == exportColumnId || e.PropertyName == "Values")
                     {
-                        if (row.Values.ContainsKey(exportColumnId) && row.Values[exportColumnId] is bool isSelected)
+                        if (row.Values.TryGetValue(exportColumnId, out object value) && value is bool isSelected)
                         {
                             sheet.IsSelected = isSelected;
                         }

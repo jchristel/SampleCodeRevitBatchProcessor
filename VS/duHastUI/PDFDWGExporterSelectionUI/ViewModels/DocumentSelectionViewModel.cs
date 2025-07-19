@@ -95,11 +95,8 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         public override void OnClosing()
         {
 
-            if (GlobalMessageViewModel != null)
-            {
-                // Unsubscribe from the event to prevent memory leaks
-                GlobalMessageViewModel.Dispose();
-            }
+            // Unsubscribe from the event to prevent memory leaks
+            GlobalMessageViewModel?.Dispose();
 
             //unsubscribe from errors changed event
             _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
@@ -112,7 +109,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         #region print set filter
 
         // Field to return a default list of print set  names
-        private readonly List<string> _printSetNamesDefaultList = new List<string>();
+        private readonly List<string> _printSetNamesDefaultList = [];
 
         // Property to expose the default list of document type names
         public List<string> PrintSetNamesDefaultList => _printSetNamesDefaultList;
@@ -412,10 +409,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             OnPropertyChanged(nameof(ExportDirectoryPathValid));
 
             // Trigger the command to re-evaluate its CanExecute state
-            if (_saveAndCloseCommand != null)
-            {
-                _saveAndCloseCommand.RaiseCanExecuteChanged();
-            }
+            _saveAndCloseCommand?.RaiseCanExecuteChanged();
         }
 
         #endregion data validation
@@ -456,7 +450,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             //only if there are no errors
             _saveAndCloseCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
                 SaveSettingsAndClose,
-                (object parameter) => !HasErrors // Only enabled when there are no errors
+                parameter => !HasErrors // Only enabled when there are no errors
             );
 
             //set the export file path from settings:

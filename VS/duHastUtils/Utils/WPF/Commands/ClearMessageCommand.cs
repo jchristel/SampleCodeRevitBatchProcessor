@@ -23,9 +23,11 @@
 
 namespace duHastNet.Utils.WPF.Commands
 {
-    public class ClearMessageCommand : CommandBase
+    // Option 1: Use primary constructor (what IDE0290 suggests)
+    public class ClearMessageCommand(Stores.MessageStore messageStore) : CommandBase
     {
-        private readonly Stores.MessageStore _messageStore;
+        private readonly Stores.MessageStore _messageStore = messageStore;
+
         public override bool CanExecute(object parameter)
         {
             return true;
@@ -39,11 +41,6 @@ namespace duHastNet.Utils.WPF.Commands
         public void RaiseCanExecuteChanged()
         {
             OnCanExecutedChanged();
-        }
-
-        public ClearMessageCommand(Stores.MessageStore messageStore)
-        {
-            _messageStore = messageStore;
         }
     }
 }

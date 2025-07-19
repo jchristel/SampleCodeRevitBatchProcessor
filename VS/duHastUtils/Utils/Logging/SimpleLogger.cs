@@ -33,15 +33,10 @@ using System.Threading.Tasks;
 
 namespace duHastNet.Utils.Logging
 {
-    public class SimpleLogger
+    public class SimpleLogger(string filePath)
     {
-        private readonly string _filePath;
-        private readonly List<string> _errorMessages = new List<string>(); // Stores exception messages
-
-        public SimpleLogger(string filePath)
-        {
-            _filePath = filePath;
-        }
+        private readonly string _filePath = filePath;
+        private readonly List<string> _errorMessages = []; // Stores exception messages
 
         public IReadOnlyList<string> ErrorMessages => _errorMessages.AsReadOnly(); // Expose errors safely
 
@@ -57,14 +52,12 @@ namespace duHastNet.Utils.Logging
                     Timestamp = DateTime.Now
                 });
             }
-
             StreamWriter writer = null;
             CsvWriter csv = null;
             try
             {
                 writer = new StreamWriter(_filePath, true);
                 csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture));
-
                 // Write records in custom order
                 foreach (var record in records)
                 {
@@ -72,7 +65,6 @@ namespace duHastNet.Utils.Logging
                     csv.WriteField(record.Type);
                     csv.WriteField(record.Message);
                 }
-
             }
             catch (Exception ex)
             {
@@ -97,21 +89,17 @@ namespace duHastNet.Utils.Logging
                     Timestamp = DateTime.Now
                 });
             }
-
             try
             {
-                using (StreamWriter writer = new StreamWriter(_filePath, true))
-                using (CsvWriter csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture)))
+                using StreamWriter writer = new(_filePath, true);
+                using CsvWriter csv = new(writer, new CsvConfiguration(CultureInfo.InvariantCulture));
+                // Write records field-by-field in the desired order
+                foreach (var record in records)
                 {
-                    // Write records field-by-field in the desired order
-                    foreach (var record in records)
-                    {
-                        csv.WriteField(record.Timestamp);
-                        csv.WriteField(record.Type);
-                        csv.WriteField(record.Message);
-                        await csv.NextRecordAsync();
-                    }
-
+                    csv.WriteField(record.Timestamp);
+                    csv.WriteField(record.Type);
+                    csv.WriteField(record.Message);
+                    await csv.NextRecordAsync();
                 }
             }
             catch (Exception ex)

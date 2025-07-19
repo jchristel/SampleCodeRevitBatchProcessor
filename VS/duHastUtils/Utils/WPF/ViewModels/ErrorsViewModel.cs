@@ -32,9 +32,9 @@ namespace duHastNet.Utils.WPF.ViewModels
     public class ErrorsViewModel : INotifyDataErrorInfo
     {
         //data validation
-        public bool HasErrors => _errors.Any();
+        public bool HasErrors => _errors.Count != 0;
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
-        private readonly Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
+        private readonly Dictionary<string, List<string>> _errors = [];
 
         /// <summary>
         /// Data validation
@@ -55,13 +55,13 @@ namespace duHastNet.Utils.WPF.ViewModels
         public void AddError(string propertyName, string errorMessage)
         {
             // make sure the property name is in the dictionary
-            if (!_errors.ContainsKey(propertyName))
+            if (!_errors.TryGetValue(propertyName, out List<string> value))
             {
-                _errors.Add(propertyName, new List<string>());
+                value = [];
+                _errors.Add(propertyName, value);
             }
 
-            // add error message to the property
-            _errors[propertyName].Add(errorMessage);
+            value.Add(errorMessage);
             // notify ui of error change
             OnErrorsChanged(propertyName);
         }
@@ -72,10 +72,8 @@ namespace duHastNet.Utils.WPF.ViewModels
         /// <param name="propertyName"></param>
         public void ClearErrors(string propertyName)
         {
-            // check if property has errors and remove them
-            if (_errors.ContainsKey(propertyName))
-                //only call OnErrorsChanged if there are errors to remove
-                if (_errors.Remove(propertyName)) { OnErrorsChanged(propertyName); }
+            //only call OnErrorsChanged if there are errors to remove
+            if (_errors.Remove(propertyName)) { OnErrorsChanged(propertyName); }
         }
 
         private void OnErrorsChanged(string propertyName)

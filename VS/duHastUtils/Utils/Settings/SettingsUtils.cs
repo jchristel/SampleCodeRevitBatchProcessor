@@ -32,6 +32,7 @@ namespace duHastNet.Utils.Settings
     {
 
         private string _settingsFilePath = string.Empty;
+        public string SettingsFilePath { get => _settingsFilePath; set => _settingsFilePath = value; }
 
         /// <summary>
         /// Function loading settings

@@ -12,15 +12,12 @@ namespace duHastNet.Utils.Hash
         /// </summary>
         public static string ComputeShortSHA256Hash(params string[] values)
         {
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                string combined = string.Concat(values);
-                byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(combined));
-                string base64Hash = Convert.ToBase64String(hashBytes);
+            string combined = string.Concat(values);
+            byte[] hashBytes = SHA256.HashData(Encoding.UTF8.GetBytes(combined));
+            string base64Hash = Convert.ToBase64String(hashBytes);
 
-                // make it url safe
-                return base64Hash.TrimEnd('=').Replace('+', '-').Replace('/', '_');
-            }
+            // make it url safe
+            return base64Hash.TrimEnd('=').Replace('+', '-').Replace('/', '_');
         }
     }
 }

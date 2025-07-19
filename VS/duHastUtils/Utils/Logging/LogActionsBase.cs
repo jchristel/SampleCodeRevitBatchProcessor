@@ -35,17 +35,17 @@ namespace duHastNet.Utils.Logging
 
         public List<string> GetErrorMessages()
         {
-            return Messages.Where(m => m.Item2 == Utils.WPF.Stores.MessageTypes.Error).Select(m => m.Item1).ToList();
+            return [.. Messages.Where(m => m.Item2 == Utils.WPF.Stores.MessageTypes.Error).Select(m => m.Item1)];
         }
 
         public List<string> GetInformationMessages()
         {
-            return Messages.Where(m => m.Item2 == Utils.WPF.Stores.MessageTypes.Information).Select(m => m.Item1).ToList();
+            return [.. Messages.Where(m => m.Item2 == Utils.WPF.Stores.MessageTypes.Information).Select(m => m.Item1)];
         }
 
         public List<string> GetLogMessages()
         {
-            return Messages.Where(m => m.Item2 == Utils.WPF.Stores.MessageTypes.Log).Select(m => m.Item1).ToList();
+            return [.. Messages.Where(m => m.Item2 == Utils.WPF.Stores.MessageTypes.Log).Select(m => m.Item1)];
         }
 
         public List<(string, Utils.WPF.Stores.MessageTypes)> GetLogMessagesAndLogTypes()
@@ -65,7 +65,7 @@ namespace duHastNet.Utils.Logging
 
         public LogActionsBase()
         {
-            Messages = new List<(string, Utils.WPF.Stores.MessageTypes)>();
+            Messages = [];
         }
     }
 }

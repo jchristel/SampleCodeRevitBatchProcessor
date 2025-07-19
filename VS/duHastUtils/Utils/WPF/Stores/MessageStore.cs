@@ -64,9 +64,9 @@ namespace duHastNet.Utils.WPF.Stores
         {
 
             //allow a maximum of 10 rows in the message. Check for new line characters
-            if (message.Contains("\n"))
+            if (message.Contains('\n'))
             {
-                string[] lines = message.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] lines = message.Split(['\n'], StringSplitOptions.RemoveEmptyEntries);
                 if (lines.Length > 10)
                 {
                     message = string.Join("\n", lines, 0, 10);

@@ -48,7 +48,7 @@ namespace duHastNet.Utils.WPF.ViewModels
         /// <summary>
         /// list of nested view models
         /// </summary>
-        protected List<ICloseable> _childViewModels = new List<ICloseable>();
+        protected List<ICloseable> _childViewModels = [];
 
         protected void RegisterChild(ICloseable child)
         {

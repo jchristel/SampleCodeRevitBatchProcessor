@@ -87,7 +87,7 @@ namespace duHastNet.PushIt.RevitActions
 
 
             //build a list of family instances that contain stale data ( stale data is a family instance where the room id is not in the rooms data model)
-            List<FamilyInstance> staleFamilyInstances = new List<FamilyInstance>();
+            List<FamilyInstance> staleFamilyInstances = [];
             foreach (var revitRoomInstance in _roomsData)
             {
                 string revitRoomInstanceId = revitRoomInstance.Id.Value;
@@ -110,7 +110,7 @@ namespace duHastNet.PushIt.RevitActions
             bool overallWipeSuccess = true;
 
             //attempt to wipe the stale data in bundles of 20 family instances to speed up the process
-            List<FamilyInstance> familyInstancesToWipe = new List<FamilyInstance>();
+            List<FamilyInstance> familyInstancesToWipe = [];
             foreach (var staleFamilyInstance in staleFamilyInstances)
             {
                 //fill the task bucket
@@ -158,7 +158,7 @@ namespace duHastNet.PushIt.RevitActions
                     // at least one will fail...but the rest will succeed
                     bool wipeSuccessSingle = Utilities.Revit.FamilyUpdate.WipeMultipleFamilyInstances(
                         doc: doc,
-                        familyInstances: new List<FamilyInstance> { familyInstance },
+                        familyInstances: [familyInstance],
                         sampleRoom: sampleRoom,
                         AddMessage: AddMessage
                     );
@@ -166,7 +166,7 @@ namespace duHastNet.PushIt.RevitActions
                     if (!wipeSuccessSingle)
                     {
                         // log error
-                        AddMessage($"Error wiping family instance: {familyInstance.Id.IntegerValue}", Utils.WPF.Stores.MessageTypes.Error);
+                        AddMessage($"Error wiping family instance: {familyInstance.Id.Value}", Utils.WPF.Stores.MessageTypes.Error);
                     }
                     else
                     {

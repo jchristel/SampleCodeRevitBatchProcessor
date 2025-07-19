@@ -102,13 +102,13 @@ namespace duHastNet.PushIt.Models
             _roomsContainer.ClearRooms();
         }
 
-        public void RemovePlacedRevitRoom(int revitElementId)
+        public void RemovePlacedRevitRoom(long revitElementId)
         {
             _roomsContainer.RemovePlacedRevitRoom(revitElementId);
         }
 
 
-        public void RemovePlacedNewRevitRoom(string roomId, int revitElementId)
+        public void RemovePlacedNewRevitRoom(string roomId, long revitElementId)
         {
             _roomsContainer.RemoveNewPlacedRevitRoom(
                roomId: roomId,

@@ -69,7 +69,7 @@ namespace duHastNet.PushIt.Commands
                             UIDocument uidoc = app.ActiveUIDocument;
 
                             // get the selected element ids
-                            List<ElementId> selectedElementIds = uidoc.Selection.GetElementIds().ToList();
+                            List<ElementId> selectedElementIds = [.. uidoc.Selection.GetElementIds()];
                             // check quantity of selected elements
                             if (selectedElementIds.Count == 0)
                             {
@@ -90,7 +90,7 @@ namespace duHastNet.PushIt.Commands
                             }
 
                             //check all parameters still exist before pushing data
-                            VerifyParametersInModel actionVerify = new VerifyParametersInModel(_revitDataModel);
+                            VerifyParametersInModel actionVerify = new(_revitDataModel);
                             (string messageActionVerify, Utils.WPF.Stores.MessageTypes messageActionTypeVerify) = actionVerify.Execute(doc);
 
                             //write messages to log...
@@ -103,7 +103,7 @@ namespace duHastNet.PushIt.Commands
                             }
 
                             // Execute the action to push a single room to the Revit model
-                            PushSingleRoomDataToRevit action = new PushSingleRoomDataToRevit(
+                            PushSingleRoomDataToRevit action = new(
                                 revitModel: _revitDataModel,
                                 roomToPush: _roomsDataGridViewModel.SelectedRoom,
                                 pushTarget: selectedElement,

@@ -39,7 +39,7 @@ namespace duHastNet.PushIt.Utilities
         /// </summary>
         public static List<RoomDataProperty> GetRoomsDataHeaderRows(string filePath, int headerRowsCount = 4)
         {
-            List<List<string>> headerRows = new List<List<string>>();
+            List<List<string>> headerRows = [];
 
             //check if valid path
             if (!File.Exists(filePath))
@@ -52,13 +52,13 @@ namespace duHastNet.PushIt.Utilities
             }
 
             //read data from comma separated file
-            using (StreamReader sr = new StreamReader(filePath))
+            using (StreamReader sr = new(filePath))
             {
                 for (int i = 0; i < headerRowsCount; i++)
                 {
                     // Read the header row
                     var headerRow = sr.ReadLine().Split(',');
-                    headerRows.Add(new List<string>(headerRow));
+                    headerRows.Add([.. headerRow]);
                 }
             }
 
@@ -71,7 +71,7 @@ namespace duHastNet.PushIt.Utilities
             var properties = new List<RoomDataProperty>();
             for (int i = 0; i < headerRows[0].Count; i++)
             {
-                bool isId = true ? i == 0 : false;
+                bool isId = true && i == 0;
                 var property = new RoomDataProperty(
                     name: headerRows[0][i],
                     parameterGUID: headerRows[1][i],
@@ -93,7 +93,7 @@ namespace duHastNet.PushIt.Utilities
         {
             //Console.WriteLine("Reading Rooms Data from file: " + filePath);
             // read data from comma separated file
-            List<Models.RoomDataModel> roomsData = new List<Models.RoomDataModel>();
+            List<Models.RoomDataModel> roomsData = [];
 
             //check if valid path
             if (!File.Exists(filePath))
@@ -110,7 +110,7 @@ namespace duHastNet.PushIt.Utilities
                 HasHeaderRecord = true
             };
 
-            using (StreamReader sr = new StreamReader(filePath))
+            using (StreamReader sr = new(filePath))
             {
                 //Read the first 4 lines as headers
                 var header1 = sr.ReadLine().Split(','); //name row
@@ -122,53 +122,51 @@ namespace duHastNet.PushIt.Utilities
                 sr.BaseStream.Seek(0, SeekOrigin.Begin);
                 sr.DiscardBufferedData();
 
-                using (var csv = new CsvReader(sr, config))
+                using var csv = new CsvReader(sr, config);
+                csv.Read();
+                csv.ReadHeader();
+                // Read the first row as header not required in the moment
+                //string id = csv.GetField(0);
+
+                // Skip the specified number of rows (minus 1 since one row is already read)
+                for (int i = 0; i < rowsToSkip - 1; i++)
                 {
                     csv.Read();
-                    csv.ReadHeader();
-                    // Read the first row as header not required in the moment
-                    //string id = csv.GetField(0);
+                }
 
-                    // Skip the specified number of rows (minus 1 since one row is already read)
-                    for (int i = 0; i < rowsToSkip - 1; i++)
+                // read the rest of the file
+                while (csv.Read())
+                {
+                    // read the data to the right of the first column into property objects
+                    var properties = new List<RoomDataProperty>();
+                    for (int i = 1; i < csv.HeaderRecord.Length; i++)
                     {
-                        csv.Read();
+                        var property = new RoomDataProperty(
+                            name: header1[i],
+                            parameterGUID: header2[i],
+                            parameterName: "",
+                            value: csv.GetField(i),
+                            showInUI: bool.Parse(header4[i].ToLower()),
+                            isReadOnly: bool.Parse(header3[i].ToLower()),
+                            isUniqueId: false
+                        );
+                        properties.Add(property);
                     }
 
-                    // read the rest of the file
-                    while (csv.Read())
-                    {
-                        // read the data to the right of the first column into property objects
-                        var properties = new List<RoomDataProperty>();
-                        for (int i = 1; i < csv.HeaderRecord.Length; i++)
-                        {
-                            var property = new RoomDataProperty(
-                                name: header1[i],
-                                parameterGUID: header2[i],
-                                parameterName: "",
-                                value: csv.GetField(i),
-                                showInUI: bool.Parse(header4[i].ToLower()),
-                                isReadOnly: bool.Parse(header3[i].ToLower()),
-                                isUniqueId: false
-                            );
-                            properties.Add(property);
-                        }
+                    // create a new RoomDataModel object
+                    var record = new RoomDataModel(
+                         id: new RoomDataProperty(
+                            name: header1[0],
+                            parameterGUID: header2[0],
+                            parameterName: "",
+                            value: csv.GetField(0),
+                            showInUI: bool.Parse(header4[0].ToLower()),
+                            isReadOnly: bool.Parse(header3[0].ToLower()),
+                            isUniqueId: true
+                         ),
+                        otherProperties: properties);
 
-                        // create a new RoomDataModel object
-                        var record = new RoomDataModel(
-                             id: new RoomDataProperty(
-                                name: header1[0],
-                                parameterGUID: header2[0],
-                                parameterName: "",
-                                value: csv.GetField(0),
-                                showInUI: bool.Parse(header4[0].ToLower()),
-                                isReadOnly: bool.Parse(header3[0].ToLower()),
-                                isUniqueId: true
-                             ),
-                            otherProperties: properties);
-
-                        roomsData.Add(record);
-                    }
+                    roomsData.Add(record);
                 }
             }
 

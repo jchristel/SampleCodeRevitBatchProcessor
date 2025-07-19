@@ -55,7 +55,7 @@ namespace duHastNet.PushIt.Commands
                         try
                         {
                             //check all parameters still exist before pushing data
-                            VerifyParametersInModel actionVerify = new VerifyParametersInModel(_revitDataModel);
+                            VerifyParametersInModel actionVerify = new(_revitDataModel);
                             (string messageActionVerify, Utils.WPF.Stores.MessageTypes messageActionTypeVerify) = actionVerify.Execute(doc);
 
                             //write messages to log...
@@ -68,7 +68,7 @@ namespace duHastNet.PushIt.Commands
                             }
 
                             // Execute the action to update all rooms in the Revit model
-                            PushAllRoomDataToRevit action = new PushAllRoomDataToRevit(_revitDataModel);
+                            PushAllRoomDataToRevit action = new(_revitDataModel);
                             (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
 
                             //write messages to log...

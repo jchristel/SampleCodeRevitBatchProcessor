@@ -64,7 +64,7 @@ namespace duHastNet.PushIt.Commands
                         {
 
                             //add new rooms to the data model first
-                            UpdateRoomDataModelWithNewRooms actionUpdate = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(
+                            UpdateRoomDataModelWithNewRooms actionUpdate = new(
                                 _revitDataModel, 
                                 _roomsMainViewModel
                             );
@@ -74,7 +74,7 @@ namespace duHastNet.PushIt.Commands
                             _revitDataModel.LogMessages(actionUpdate.GetLogMessagesAndLogTypes());
 
                             // Execute the action to refresh the room data with the Revit data
-                            RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(
+                            RefreshRoomDataWithRevitData action = new(
                                 revitModel: _revitDataModel,
                                 roomsMainViewModel: _roomsMainViewModel,
                                 revitMockRooms: actionUpdate.CurrentMockRoomsData //re-use mock room data to speed things up
@@ -108,14 +108,14 @@ namespace duHastNet.PushIt.Commands
                             //write the data to the file, start with the header rows
                             writer.WriteToTextFile(
                                 filePath: _roomsMainViewModel.SaveFilePath,
-                                header: new List<string>(), //write empty header since this supports single line headers only
+                                header: [], //write empty header since this supports single line headers only
                                 data: headerRows
                             );
 
                             //check if any probs
                             if (writer.GetErrorHistory().Count > 0)
                             {
-                                List<(string, Utils.WPF.Stores.MessageTypes)> errorsToLog = new List<(string, Utils.WPF.Stores.MessageTypes)>();
+                                List<(string, Utils.WPF.Stores.MessageTypes)> errorsToLog = [];
                                 foreach (var error in writer.GetErrorHistory())
                                 {
                                     errorsToLog.Add((error, Utils.WPF.Stores.MessageTypes.Error));
@@ -129,7 +129,7 @@ namespace duHastNet.PushIt.Commands
                             //write the data to the file
                             writer.WriteToTextFile(
                                 filePath: _roomsMainViewModel.SaveFilePath,
-                                header: new List<string>(), //write empty header since this supports single line headers only
+                                header: [], //write empty header since this supports single line headers only
                                 data: roomData,
                                 writeType: "a"
                             );
@@ -137,7 +137,7 @@ namespace duHastNet.PushIt.Commands
                             //check if any probs
                             if (writer.GetErrorHistory().Count > 0)
                             {
-                                List<(string, Utils.WPF.Stores.MessageTypes)> errorsToLog = new List<(string, Utils.WPF.Stores.MessageTypes)>();
+                                List<(string, Utils.WPF.Stores.MessageTypes)> errorsToLog = [];
                                 foreach (var error in writer.GetErrorHistory())
                                 {
                                     errorsToLog.Add((error, Utils.WPF.Stores.MessageTypes.Error));
@@ -155,7 +155,7 @@ namespace duHastNet.PushIt.Commands
                             // return the messages to the caller
                             return (
                                 $"{messageActionUpdate}\n{messageAction}\n{messageActionSave}",
-                                Utilities.MessageActionTypesUtils.CombineMessageActionType(new List<MessageTypes> { messageActionTypeUpdate, messageActionType, messageActionTypeSafe })
+                                Utilities.MessageActionTypesUtils.CombineMessageActionType([messageActionTypeUpdate, messageActionType, messageActionTypeSafe])
                             );
                         }
                         catch (Exception ex)
@@ -189,11 +189,11 @@ namespace duHastNet.PushIt.Commands
         private List<List<string>> BuildHeaderRows(List<Models.RoomDataProperty> properties)
         {
             //build header rows
-            List<List<string>> headerRows = new List<List<string>>();
-            List<string> headerRow0 = new List<string>();
-            List<string> headerRow1 = new List<string>();
-            List<string> headerRow2 = new List<string>();
-            List<string> headerRow3 = new List<string>();
+            List<List<string>> headerRows = [];
+            List<string> headerRow0 = [];
+            List<string> headerRow1 = [];
+            List<string> headerRow2 = [];
+            List<string> headerRow3 = [];
 
             foreach (var property in properties)
             {
@@ -236,7 +236,7 @@ namespace duHastNet.PushIt.Commands
             int countSplit = 0)
         {
             // get the property values for the room
-            List<string> dataRow = new List<string>();
+            List<string> dataRow = [];
 
             // get the properties from the data model
             foreach (var property in properties)
@@ -271,7 +271,7 @@ namespace duHastNet.PushIt.Commands
         )
         {
             //build data rows
-            List<List<string>> dataRows = new List<List<string>>();
+            List<List<string>> dataRows = [];
 
             //loop over each room and get its report data
             foreach (Models.RoomDataModel room in rooms)

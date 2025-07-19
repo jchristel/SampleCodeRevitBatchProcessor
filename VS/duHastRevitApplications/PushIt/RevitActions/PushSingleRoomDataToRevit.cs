@@ -63,12 +63,12 @@ namespace duHastNet.PushIt.RevitActions
                 if (!updateFamily)
                 {
                     // log error
-                    AddMessage($"Failed to update family instance(s): {_pushTarget.Id.IntegerValue}", Utils.WPF.Stores.MessageTypes.Error);
+                    AddMessage($"Failed to update family instance(s): {_pushTarget.Id.Value}", Utils.WPF.Stores.MessageTypes.Error);
                 }
                 else
                 {
                     // log success
-                    AddMessage($"Updated family instance(s): {_pushTarget.Id.IntegerValue}", Utils.WPF.Stores.MessageTypes.Information);
+                    AddMessage($"Updated family instance(s): {_pushTarget.Id.Value}", Utils.WPF.Stores.MessageTypes.Information);
                 }
 
                 // get updated model data from the element selected

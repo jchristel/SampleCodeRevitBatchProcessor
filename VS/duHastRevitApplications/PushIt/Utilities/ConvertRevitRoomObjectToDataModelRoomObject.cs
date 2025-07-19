@@ -7,11 +7,11 @@
             Models.RoomRevit revitRoom)
         {
             // create a new room data model object
-            Models.RoomDataModel roomDataModel = new Models.RoomDataModel();
+            Models.RoomDataModel roomDataModel = new();
 
             // set the properties of the room data model object
             // start with the id
-            Models.RoomDataProperty id = new Models.RoomDataProperty(
+            Models.RoomDataProperty id = new(
                 name: revitRoom.Id.Name,
                 parameterGUID: revitRoom.Id.ParameterGUID,
                 parameterName: revitRoom.Id.ParameterName,
@@ -25,7 +25,7 @@
             //convert all other properties
             foreach (var property in revitRoom.Properties)
             {
-                Models.RoomDataProperty roomDataProperty = new Models.RoomDataProperty(
+                Models.RoomDataProperty roomDataProperty = new(
                     name: property.Name,
                     parameterGUID: property.ParameterGUID,
                     parameterName: property.ParameterName,

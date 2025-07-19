@@ -71,7 +71,7 @@ namespace duHastNet.PushIt.Commands
                             _revitDataModel.LoadParameterData();
 
                             //check all parameters still exist before reading data
-                            VerifyParametersInModel actionVerify = new VerifyParametersInModel(_revitDataModel);
+                            VerifyParametersInModel actionVerify = new(_revitDataModel);
                             (string messageActionVerify, Utils.WPF.Stores.MessageTypes messageActionTypeVerify) = actionVerify.Execute(doc);
 
                             //write messages to log...
@@ -84,7 +84,7 @@ namespace duHastNet.PushIt.Commands
                             }
 
                             //add new rooms to the data model first
-                            UpdateRoomDataModelWithNewRooms actionUpdate = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(
+                            UpdateRoomDataModelWithNewRooms actionUpdate = new(
                                 _revitDataModel, 
                                 _roomsMainViewModel
                             );
@@ -95,7 +95,7 @@ namespace duHastNet.PushIt.Commands
                             _revitDataModel.LogMessages(actionUpdate.GetLogMessagesAndLogTypes());
 
                             // Execute the action to refresh the room data with the Revit data
-                            RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(
+                            RefreshRoomDataWithRevitData action = new(
                                 revitModel: _revitDataModel,
                                 roomsMainViewModel: _roomsMainViewModel,
                                 revitMockRooms: actionUpdate.CurrentMockRoomsData //re-use mock room data to speed things up
@@ -109,7 +109,7 @@ namespace duHastNet.PushIt.Commands
                             // return the message to the caller
                             return (
                                 $"{messageActionTypeUpdate}\n{messageAction}",
-                                Utilities.MessageActionTypesUtils.CombineMessageActionType(new List<MessageTypes> { messageActionTypeUpdate, messageActionType })
+                                Utilities.MessageActionTypesUtils.CombineMessageActionType([messageActionTypeUpdate, messageActionType])
                             );
                         }
                         catch (Exception ex)

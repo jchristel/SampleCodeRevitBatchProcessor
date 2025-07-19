@@ -32,7 +32,7 @@ using System.Linq;
 
 namespace duHastNet.PushIt.ViewModels
 {
-    public class RoomsDataGridViewModel : BaseDynamicGridViewModel<DynamicRowData>
+    public class RoomsDataGridViewModel : duHastNet.UI.CustomControls.ViewModels.BaseDynamicGridViewModel<DynamicRowData>
     {
 
         private Models.RevitDataModel RevitDataModel { get; set; }
@@ -161,14 +161,14 @@ namespace duHastNet.PushIt.ViewModels
             if (this.RevitDataModel == null) return;
 
             //initialise available columns with default room properties
-            AvailableColumns = new ObservableCollection<AvailableColumnDefinition> { 
+            AvailableColumns = [ 
             
                 // Basic revit category Info
-                new AvailableColumnDefinition(Models.Constants.ColumnHeaderRoomId.Replace(" ", "") , Models.Constants.ColumnHeaderRoomId, typeof(string)),
-                new AvailableColumnDefinition(Models.Constants.ColumnHeaderRoomCount.Replace(" ", "") , Models.Constants.ColumnHeaderRoomCount, typeof(int)),
-                new AvailableColumnDefinition(Models.Constants.ColumnHeaderRoomSplit.Replace(" ",""), Models.Constants.ColumnHeaderRoomSplit, typeof(int)),
+                new(Models.Constants.ColumnHeaderRoomId.Replace(" ", "") , Models.Constants.ColumnHeaderRoomId, typeof(string)),
+                new(Models.Constants.ColumnHeaderRoomCount.Replace(" ", "") , Models.Constants.ColumnHeaderRoomCount, typeof(int)),
+                new(Models.Constants.ColumnHeaderRoomSplit.Replace(" ",""), Models.Constants.ColumnHeaderRoomSplit, typeof(int)),
 
-            };
+            ];
 
             // add any other properties
             foreach (var property in RevitDataModel.GetAllParameters())

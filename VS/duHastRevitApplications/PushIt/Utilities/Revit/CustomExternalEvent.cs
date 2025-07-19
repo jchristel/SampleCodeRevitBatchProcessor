@@ -27,9 +27,9 @@ using System;
 
 namespace duHastNet.PushIt.Utilities.Revit
 {
-    public class CustomExternalEvent : IExternalEventHandler
+    public class CustomExternalEvent(Action<UIApplication> executeAtEventRaised) : IExternalEventHandler
     {
-        private readonly Action<UIApplication> _executeAtEventRaised;
+        private readonly Action<UIApplication> _executeAtEventRaised = executeAtEventRaised;
 
         public void Execute(UIApplication uiapp)
         {
@@ -46,11 +46,6 @@ namespace duHastNet.PushIt.Utilities.Revit
         public string GetName()
         {
             return $"Function executed {_executeAtEventRaised.Method.Name}";
-        }
-
-        public CustomExternalEvent(Action<UIApplication> executeAtEventRaised)
-        {
-            _executeAtEventRaised = executeAtEventRaised;
         }
     }
 }

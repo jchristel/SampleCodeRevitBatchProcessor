@@ -23,27 +23,9 @@
 
 namespace duHastNet.PushIt.Models
 {
-    public class CategoryDataModel
+    public class CategoryDataModel(string name, bool isEnabled = false)
     {
-        string _name;
-
-        public string Name
-        {
-            get => _name;
-            set => _name = value;
-        }
-
-        private bool _enabled;
-        public bool Enabled
-        {
-            get => _enabled;
-            set => _enabled = value;
-        }
-
-        public CategoryDataModel(string name, bool isEnabled = false)
-        {
-            _name = name;
-            _enabled = isEnabled;
-        }
+        public string Name { get; set; } = name;
+        public bool Enabled { get; set; } = isEnabled;
     }
 }

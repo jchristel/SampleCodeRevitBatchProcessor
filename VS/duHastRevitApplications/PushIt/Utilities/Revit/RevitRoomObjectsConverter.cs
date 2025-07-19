@@ -52,7 +52,7 @@ namespace duHastNet.PushIt.Utilities.Revit
             }
 
             // setup the id property
-            Models.RoomDataProperty IdProperty = new Models.RoomDataProperty(
+            Models.RoomDataProperty IdProperty = new(
                 name: idParameter.ParameterName,
                 value: id_value,
                 parameterGUID: idParameter.ParameterGUID,
@@ -62,7 +62,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                 isUniqueId: true);
 
             // get the other properties and store in list
-            List<Models.RoomDataProperty> properties = new List<Models.RoomDataProperty>();
+            List<Models.RoomDataProperty> properties = [];
 
             foreach (Models.RoomDataProperty property in parametersRequired)
             {
@@ -97,13 +97,10 @@ namespace duHastNet.PushIt.Utilities.Revit
                 }
 
                 // check if value is null (parameter does not exist on element)
-                if (value == null)
-                {
-                    value = $"Failed to retrieve value for property: {property.Name} with GUID: [{property.ParameterGUID}] or name: [{property.ParameterName}]";
-                }
+                value ??= $"Failed to retrieve value for property: {property.Name} with GUID: [{property.ParameterGUID}] or name: [{property.ParameterName}]";
 
                 // create a new room data property
-                Models.RoomDataProperty roomDataProperty = new Models.RoomDataProperty(
+                Models.RoomDataProperty roomDataProperty = new(
                     name: property.Name,
                     parameterGUID: property.ParameterGUID,
                     parameterName: property.ParameterName,
@@ -120,13 +117,13 @@ namespace duHastNet.PushIt.Utilities.Revit
             var designSetAndOptionData = duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionsUtils.GetDesignSetOptionInfo(familyInstance.Document, familyInstance);
 
             // create a new revit room
-            Models.RoomRevit revitRoom = new Models.RoomRevit(
+            Models.RoomRevit revitRoom = new(
                 id: IdProperty,
                 properties: properties,
                 designSet: designSetAndOptionData[duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.DESIGN_SET_NAME].ToString(),
                 designOption: designSetAndOptionData[duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.DESIGN_OPTION_NAME].ToString(),
                 designOptionIsPrimary: (bool)designSetAndOptionData[duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.DESIGN_OPTION_IS_PRIMARY],
-                familyInstance.Id.IntegerValue);
+                familyInstance.Id.Value);
 
             return revitRoom;
         }
@@ -138,7 +135,7 @@ namespace duHastNet.PushIt.Utilities.Revit
             Action<string, Utils.WPF.Stores.MessageTypes> AddMessage)
         {
             // create a list of revit rooms
-            List<Models.RoomRevit> revitRooms = new List<duHastNet.PushIt.Models.RoomRevit>();
+            List<Models.RoomRevit> revitRooms = [];
 
             // check if any family instances are in the model
             if (familyInstances == null || familyInstances.Count == 0)

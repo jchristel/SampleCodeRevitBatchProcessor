@@ -43,10 +43,12 @@ namespace duHastNet.PushIt.Utilities
                 if (!File.Exists(settingsFilePath))
                 {
                     //initialize settings default
-                    Models.Settings settingsDefault = new Models.Settings();
-                    settingsDefault.DataPath = string.Empty;
-                    //enable walls by default
-                    settingsDefault.EnabledCategoryNames = new List<string> { "Walls" };
+                    Models.Settings settingsDefault = new()
+                    {
+                        DataPath = string.Empty,
+                        //enable walls by default
+                        EnabledCategoryNames = ["Walls"]
+                    };
                     return settingsDefault;
                 }
 
@@ -57,7 +59,7 @@ namespace duHastNet.PushIt.Utilities
                 // safety  fall back for now make sure at least wall category is set
                 if (settings.EnabledCategoryNames.Count == 0)
                 {
-                    settings.EnabledCategoryNames = new List<string> { "Walls" };
+                    settings.EnabledCategoryNames = ["Walls"];
                 }
 
                 return settings;

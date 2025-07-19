@@ -31,7 +31,7 @@ namespace duHastNet.PushIt.RevitActions
     public class UpdateRoomDataModelWithNewRooms : RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
     {
 
-        private ViewModels.RoomsMainViewModel _roomsMainViewModel;
+        private readonly ViewModels.RoomsMainViewModel _roomsMainViewModel;
         public ViewModels.RoomsMainViewModel RoomsMainViewModel => _roomsMainViewModel;
 
         //current set or push it mock rooms
@@ -59,7 +59,7 @@ namespace duHastNet.PushIt.RevitActions
                 }
 
                 // set up a dictionary to hold the new rooms by their id...in case there are multiple rooms with the same id
-                Dictionary<string, List<duHastNet.PushIt.Models.RoomRevit>> newRoomsInModel = new Dictionary<string, List<RoomRevit>>();
+                Dictionary<string, List<duHastNet.PushIt.Models.RoomRevit>> newRoomsInModel = [];
 
                 //check which rooms are marked as new and add them to the data model
                 foreach (var room in _roomsData)
@@ -67,13 +67,14 @@ namespace duHastNet.PushIt.RevitActions
                     // check if the room is marked as new
                     if (duHastNet.PushIt.Utilities.PushModeUtils.IsNewRoomMode(room.Id.Value))
                     {
-                        if (!newRoomsInModel.ContainsKey(room.Id.Value))
+                        if (!newRoomsInModel.TryGetValue(room.Id.Value, out List<RoomRevit> value))
                         {
+                            value = [];
                             // add the room to the data model
-                            newRoomsInModel.Add(room.Id.Value, new List<RoomRevit>());
+                            newRoomsInModel.Add(room.Id.Value, value);
                         }
-                        // add the room to the data model
-                        newRoomsInModel[room.Id.Value].Add(room);
+
+                        value.Add(room);
                     }
                 }
 

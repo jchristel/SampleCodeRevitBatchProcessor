@@ -30,7 +30,7 @@ namespace duHastNet.PushIt.RevitActions
     public class RefreshRoomDataWithRevitData : RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
     {
 
-        private ViewModels.RoomsMainViewModel _roomsMainViewModel;
+        private readonly ViewModels.RoomsMainViewModel _roomsMainViewModel;
         public ViewModels.RoomsMainViewModel RoomsMainViewModel => _roomsMainViewModel;
 
         //current set or push it mock rooms
@@ -111,14 +111,11 @@ namespace duHastNet.PushIt.RevitActions
         {
 
             // check if we already have the current set of revit rooms
-            if (_roomsData == null)
-            {
-                _roomsData = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
+            _roomsData ??= Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
                     doc: doc,
                     revitDataModel: RevitModel,
                     supportedCategoryNames: supportedCategoryName,
                     AddMessage: AddMessage);
-            }
 
 
             //if the update failed return the rooms data model unchanged

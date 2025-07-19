@@ -36,7 +36,7 @@ namespace duHastNet.PushIt.Models
         /// <summary>
         /// Any other properties
         /// </summary>
-        private List<RoomDataProperty> _properties = new List<RoomDataProperty>();
+        private List<RoomDataProperty> _properties = [];
 
         /// <summary>
         /// room properties list

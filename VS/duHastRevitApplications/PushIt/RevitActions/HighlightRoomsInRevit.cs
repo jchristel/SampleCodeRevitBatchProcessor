@@ -36,7 +36,7 @@ namespace duHastNet.PushIt.RevitActions
 
         public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
         {
-            List<ElementId> elementIds = new List<ElementId>();
+            List<ElementId> elementIds = [];
 
             try
             {

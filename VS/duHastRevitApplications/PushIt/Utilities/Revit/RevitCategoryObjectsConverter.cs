@@ -28,24 +28,24 @@ namespace duHastNet.PushIt.Utilities.Revit
 {
     public static class RevitCategoryObjectsConverter
     {
-        public static List<string> SupportedRevitCategories = new List<string>
-        {
+        public static List<string> SupportedRevitCategories =
+        [
             "Ceilings",
             "Columns",
             "Mass",
             "Walls",
-        };
+        ];
 
         public static List<Models.CategoryDataModel> ConvertToRevitCategoryObjects(Document doc)
         {
-            List<Models.CategoryDataModel> revitCategoryObjects = new List<Models.CategoryDataModel>();
+            List<Models.CategoryDataModel> revitCategoryObjects = [];
             List<Category> revitCategories = duHastNet.RevitUtils.Categories.CategoryUtils.GetMainCategoriesInModel(doc);
 
             foreach (var revitCategory in revitCategories)
             {
                 if (SupportedRevitCategories.Contains(revitCategory.Name))
                 {
-                    Models.CategoryDataModel categoryDataModel = new Models.CategoryDataModel(revitCategory.Name);
+                    Models.CategoryDataModel categoryDataModel = new(revitCategory.Name);
                     revitCategoryObjects.Add(categoryDataModel);
                 }
             }

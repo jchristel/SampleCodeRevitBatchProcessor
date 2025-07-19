@@ -73,7 +73,7 @@ namespace duHastNet.PushIt.RevitActions
                 AddMessage
             );
 
-            List<FamilyInstance> staleFamilyInstances = new List<FamilyInstance>();
+            List<FamilyInstance> staleFamilyInstances = [];
 
             foreach (var revitRoomInstance in revitRooms)
             {
@@ -105,7 +105,7 @@ namespace duHastNet.PushIt.RevitActions
                     // at least one will fail...but the rest will succeed
                     bool wipeSuccessSingle = Utilities.Revit.FamilyUpdate.WipeMultipleFamilyInstances(
                         doc: doc,
-                        familyInstances: new List<FamilyInstance> { familyInstance },
+                        familyInstances: [familyInstance],
                         sampleRoom: sampleRoom,
                         AddMessage: AddMessage
                     );
@@ -113,7 +113,7 @@ namespace duHastNet.PushIt.RevitActions
                     if (!wipeSuccessSingle)
                     {
                         // log error
-                        AddMessage($"Error wiping family instance: {familyInstance.Id.IntegerValue}", Utils.WPF.Stores.MessageTypes.Error);
+                        AddMessage($"Error wiping family instance: {familyInstance.Id.Value}", Utils.WPF.Stores.MessageTypes.Error);
                     }
                     else
                     {

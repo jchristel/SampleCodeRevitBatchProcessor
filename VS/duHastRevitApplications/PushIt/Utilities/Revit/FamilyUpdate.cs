@@ -68,7 +68,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                     }
                     else if (pushMode == PushMode.New)
                     {
-                        room_id = PushModeUtils.GetNewModeIdValue(idValue: room_id);
+                        room_id = PushModeUtils.GetNewModeIdValue();
                     }
 
                     // set the room id parameter
@@ -157,7 +157,7 @@ namespace duHastNet.PushIt.Utilities.Revit
         {
 
             // set up an action to run inside a Revit transaction
-            Func<bool> actionInTranny = () =>
+            bool actionInTranny()
             {
                 try
                 {
@@ -170,7 +170,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                     AddMessage($"Error updating family instance [{familyInstance.Id}] with room data [{roomData.Id.Value}]: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
                     return false;
                 }
-            };
+            }
 
             bool transactionFlag = duHastNet.RevitUtils.Transactions.TransactionUtils.InTransaction(
                 doc, $"Pushing room {roomData.Id.Value}", actionInTranny);
@@ -197,14 +197,14 @@ namespace duHastNet.PushIt.Utilities.Revit
             // create a transaction with central option
             // instructing Revit not to wait for the lock
             // this is done to avoid deadlocks when multiple users are trying to work on the same elements
-            TransactWithCentralOptions transactWithCentralOptions = new TransactWithCentralOptions();
-            duHastNet.RevitUtils.Transactions.TransactionCallBack transactionCallBack = new duHastNet.RevitUtils.Transactions.TransactionCallBack(shouldWaitForLock: false);
+            TransactWithCentralOptions transactWithCentralOptions = new();
+            duHastNet.RevitUtils.Transactions.TransactionCallBack transactionCallBack = new(shouldWaitForLock: false);
             transactWithCentralOptions.SetLockCallback(transactionCallBack);
 
             //attempt to check out all elements
             ISet<ElementId> successfullyCheckedOutIds = WorksharingUtils.CheckoutElements(doc, processElementIds, transactWithCentralOptions);
 
-            StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new();
             //collect all room ids that were not checked out successfully
             foreach (var id in processElementIds)
             {
@@ -212,7 +212,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                 {
                     // get the room id from the family instance
                     string roomId = roomIdByFamilyInstanceIdMapper[id];
-                    stringBuilder.Append($"\nFailed to check out family instance [{id.IntegerValue}]. Skipping update for room [{roomId}].");
+                    stringBuilder.Append($"\nFailed to check out family instance [{id.Value}]. Skipping update for room [{roomId}].");
                 }
             }
 
@@ -246,16 +246,16 @@ namespace duHastNet.PushIt.Utilities.Revit
             bool updateId)
         {
             // set up an action to run inside a Revit transaction
-            Func<bool> actionInTranny = () =>
+            bool actionInTranny()
             {
                 // keep track of the overall success of the wipe operation
                 bool overallUpdateSuccess = true;
 
                 // create a hash set to store the element ids of the family instances
-                HashSet<ElementId> processElementIds = new HashSet<ElementId>();
+                HashSet<ElementId> processElementIds = [];
 
                 //create a set recording the family instance id to room id mapping
-                Dictionary<ElementId, string> familyInstancesByRoomId = new Dictionary<ElementId, string>(); // room id -> family instance ids
+                Dictionary<ElementId, string> familyInstancesByRoomId = []; // room id -> family instance ids
 
                 //build list of all family instance ids to check out
                 foreach (var (roomData, familyInstances) in familyData.Values)
@@ -324,7 +324,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                 }
                 // if all updates are successful return true
                 return overallUpdateSuccess;
-            };
+            }
 
             // run the action in a transaction
             bool transactionFlag = duHastNet.RevitUtils.Transactions.TransactionUtils.InTransaction(
@@ -346,21 +346,21 @@ namespace duHastNet.PushIt.Utilities.Revit
         {
 
             //update all room data properties
-            Models.RoomDataProperty Id = new Models.RoomDataProperty(sampleRoom.Id.Name, sampleRoom.Id.ParameterGUID, sampleRoom.Id.ParameterName, "", sampleRoom.Id.ShowInUI, sampleRoom.Id.IsReadOnly, true);
+            Models.RoomDataProperty Id = new(sampleRoom.Id.Name, sampleRoom.Id.ParameterGUID, sampleRoom.Id.ParameterName, "", sampleRoom.Id.ShowInUI, sampleRoom.Id.IsReadOnly, true);
 
-            List<Models.RoomDataProperty> otherProperties = new List<Models.RoomDataProperty>();
+            List<Models.RoomDataProperty> otherProperties = [];
 
             foreach (var property in sampleRoom.Properties)
             {
-                Models.RoomDataProperty newProperty = new Models.RoomDataProperty(property.Name, property.ParameterGUID, property.ParameterName, "", property.ShowInUI, property.IsReadOnly, false);
+                Models.RoomDataProperty newProperty = new(property.Name, property.ParameterGUID, property.ParameterName, "", property.ShowInUI, property.IsReadOnly, false);
                 otherProperties.Add(newProperty);
             }
 
             // setup an empty room data model
-            Models.RoomDataModel emptyRoom = new Models.RoomDataModel(Id, otherProperties);
+            Models.RoomDataModel emptyRoom = new(Id, otherProperties);
 
             // set up an action to run inside a Revit transaction
-            Func<bool> actionInTranny = () =>
+            bool actionInTranny()
             {
                 //run this outside of a try catch so the transaction can be rolled back if update fails
                 // loop over instances and update with blank room data
@@ -377,7 +377,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                 }
                 // if all updates are successful return true
                 return true;
-            };
+            }
 
             // run the action in a transaction
             bool transactionFlag = duHastNet.RevitUtils.Transactions.TransactionUtils.InTransaction(

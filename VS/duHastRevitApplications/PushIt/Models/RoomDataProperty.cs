@@ -25,15 +25,15 @@
 
 namespace duHastNet.PushIt.Models
 {
-    public class RoomDataProperty : Utilities.IRoomProperty
+    public class RoomDataProperty(string name, string parameterGUID, string parameterName, string value, bool showInUI, bool isReadOnly, bool isUniqueId) : Utilities.IRoomProperty
     {
-        private string _name;
-        private string _parameterGUID;
-        private string _parameterName;
-        private string _value;
-        private bool _showInUI;
-        private bool _isReadOnly;
-        private bool _isUniqueId;
+        private readonly string _name = name;
+        private readonly string _parameterGUID = parameterGUID;
+        private readonly string _parameterName = parameterName;
+        private string _value = value;
+        private readonly bool _showInUI = showInUI;
+        private readonly bool _isReadOnly = isReadOnly;
+        private readonly bool _isUniqueId = isUniqueId;
 
         public string Value { get => _value; set => _value = value; }
         public string Name { get => _name; }
@@ -41,20 +41,6 @@ namespace duHastNet.PushIt.Models
         public string ParameterName { get => _parameterName; }
         public bool ShowInUI { get => _showInUI; }
         public bool IsReadOnly { get => _isReadOnly; }
-
         public bool IsUniqueId { get => _isUniqueId; }
-
-
-        public RoomDataProperty(string name, string parameterGUID, string parameterName, string value, bool showInUI, bool isReadOnly, bool isUniqueId)
-        {
-            _name = name;
-            _parameterGUID = parameterGUID;
-            _parameterName = parameterName;
-            _value = value;
-            _showInUI = showInUI;
-            _isReadOnly = isReadOnly;
-            _isUniqueId = isUniqueId;
-        }
-
     }
 }

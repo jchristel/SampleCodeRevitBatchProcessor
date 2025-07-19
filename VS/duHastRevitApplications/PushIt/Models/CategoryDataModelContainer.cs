@@ -64,7 +64,7 @@ namespace duHastNet.PushIt.Models
 
         public List<Models.CategoryDataModel> GetAllEnabledCategories()
         {
-            List<Models.CategoryDataModel> enabled = new List<Models.CategoryDataModel>();
+            List<Models.CategoryDataModel> enabled = [];
             foreach (var category in _categories)
             {
                 if (category.Enabled)
@@ -78,7 +78,7 @@ namespace duHastNet.PushIt.Models
 
         public List<string> GetEnabledCategoryNames()
         {
-            List<string> categoryNames = new List<string>();
+            List<string> categoryNames = [];
             foreach (var category in _categories)
             {
                 if (category.Enabled)
@@ -94,12 +94,12 @@ namespace duHastNet.PushIt.Models
 
         public void ClearCategories()
         {
-            _categories = new List<Models.CategoryDataModel>();
+            _categories = [];
         }
 
         public CategoryDataModelContainer()
         {
-            _categories = new List<Models.CategoryDataModel>();
+            _categories = [];
         }
     }
 }

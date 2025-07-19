@@ -42,7 +42,7 @@ namespace duHastNet.PushIt.RevitActions
         {
             // build a dictioanry of family instances that contain valid data ( valid data is a family instance where the room id has a match in the rooms data model)
             // the dictionary key is the room id and the value is a tuple of the room data model and a list of revit family instances
-            Dictionary<string, (RoomDataModel, List<FamilyInstance>)> currentFamilyInstances = new Dictionary<string, (RoomDataModel, List<FamilyInstance>)>();
+            Dictionary<string, (RoomDataModel, List<FamilyInstance>)> currentFamilyInstances = [];
 
             foreach (var revitRoomInstance in revitRooms)
             {
@@ -55,16 +55,15 @@ namespace duHastNet.PushIt.RevitActions
                     // compare the two and if different update
                     if (!room.IsEqualInPropertNameAndValue(revitRoomInstance))
                     {
-                        if (currentFamilyInstances.ContainsKey(revitRoomInstance.Id.Value))
+                        if (currentFamilyInstances.TryGetValue(revitRoomInstance.Id.Value, out (RoomDataModel, List<FamilyInstance>) value))
                         {
-                            //add to existing key
-                            currentFamilyInstances[revitRoomInstance.Id.Value].Item2.Add(doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance);
+                            value.Item2.Add(doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance);
                         }
                         else
                         {
                             currentFamilyInstances[revitRoomInstance.Id.Value] = (
                                 roomsDataModel.Find(x => x.Id.Value == revitRoomInstance.Id.Value),
-                                new List<FamilyInstance> { doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance }
+                                [doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance]
                             );
                         }
                     }
@@ -97,16 +96,15 @@ namespace duHastNet.PushIt.RevitActions
                         if (!originalRoom.IsEqualInPropertNameAndValue(revitRoomInstance))
                         {
                             // add the split room to the family instances
-                            if (currentFamilyInstances.ContainsKey(idValue))
+                            if (currentFamilyInstances.TryGetValue(idValue, out (RoomDataModel, List<FamilyInstance>) value))
                             {
-                                //add to existing key
-                                currentFamilyInstances[idValue].Item2.Add(doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance);
+                                value.Item2.Add(doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance);
                             }
                             else
                             {
                                 currentFamilyInstances[idValue] = (
                                     roomsDataModel.Find(x => x.Id.Value == idValue),
-                                    new List<FamilyInstance> { doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance }
+                                    [doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance]
                                 );
                             }
                         }
@@ -136,7 +134,7 @@ namespace duHastNet.PushIt.RevitActions
         public (bool, int) UpdateFamiliesInBucket(int updateCounter, int taskBucketFamilyInstancesCounter, Dictionary<string, (RoomDataModel, List<FamilyInstance>)> updateFamilyInstances, Document doc)
         {
             //update the overall counter when then task bucket is full
-            updateCounter = updateCounter + taskBucketFamilyInstancesCounter;
+            updateCounter += taskBucketFamilyInstancesCounter;
 
             // update the family instances
             bool updateFamily = Utilities.Revit.FamilyUpdate.UpdateMultipleFamilyInstances(
@@ -174,7 +172,7 @@ namespace duHastNet.PushIt.RevitActions
             int taskBucketFamilyInstancesCounter = 0;
 
             //attempt to update room data in bundles of bucket size number of family instances to speed up the process
-            Dictionary<string, (RoomDataModel, List<FamilyInstance>)> updateFamilyInstances = new Dictionary<string, (RoomDataModel, List<FamilyInstance>)>();
+            Dictionary<string, (RoomDataModel, List<FamilyInstance>)> updateFamilyInstances = [];
 
             // loop through the family instances and add them to the task bucket
             foreach (var currentFamilyInstance in currentFamilyInstances)
@@ -183,7 +181,7 @@ namespace duHastNet.PushIt.RevitActions
                 updateFamilyInstances.Add(currentFamilyInstance.Key, currentFamilyInstance.Value);
 
                 //update the running count of number of family instances per room id
-                taskBucketFamilyInstancesCounter = taskBucketFamilyInstancesCounter + currentFamilyInstance.Value.Item2.Count;
+                taskBucketFamilyInstancesCounter += currentFamilyInstance.Value.Item2.Count;
 
                 // check if max number of family instances to update for the task bucket has been reached
                 if (taskBucketFamilyInstancesCounter >= bucketSize)
@@ -233,7 +231,7 @@ namespace duHastNet.PushIt.RevitActions
             foreach (var currentFamilyInstance in currentFamilyInstances)
             {
                 //update the running count of number of family instances per room id
-                taskBucketFamilyInstancesCounter = taskBucketFamilyInstancesCounter + currentFamilyInstance.Value.Item2.Count;
+                taskBucketFamilyInstancesCounter += currentFamilyInstance.Value.Item2.Count;
             }
 
             // return the bucket size for a given number of buckets

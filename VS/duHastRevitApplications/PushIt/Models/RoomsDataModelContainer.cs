@@ -101,7 +101,7 @@ namespace duHastNet.PushIt.Models
         /// </summary>
         public List<Models.RoomDataModel> GetAllRoomsCombined()
         {
-            return _rooms.Concat(_newRooms).ToList();
+            return [.. _rooms, .. _newRooms];
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace duHastNet.PushIt.Models
         /// </summary>
         public void ClearRooms()
         {
-            _rooms = new List<Models.RoomDataModel>();
+            _rooms = [];
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace duHastNet.PushIt.Models
         /// </summary>
         public void ClearNewRooms()
         {
-            _newRooms = new List<Models.RoomDataModel>();
+            _newRooms = [];
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace duHastNet.PushIt.Models
         /// <summary>
         /// Removes the placed room from the list of rooms from the Schedule Of Accomodation
         /// </summary>
-        public void RemovePlacedRevitRoom(int revitElementId)
+        public void RemovePlacedRevitRoom(long revitElementId)
         {
             foreach (var room in _rooms)
             {
@@ -167,7 +167,7 @@ namespace duHastNet.PushIt.Models
         /// </summary>
         /// <param name="propertyComparison">All write properties and their values in a string</param>
         /// <param name="revitElemntId">The element Id of the family representing this room</param>
-        public void RemoveNewPlacedRevitRoom(string roomId, int revitElementId)
+        public void RemoveNewPlacedRevitRoom(string roomId, long revitElementId)
         {
             //flag indicating whether the new room has no matching Revit room after removing the placed room
             bool removeRoomFromDataModel = false;
@@ -261,7 +261,7 @@ namespace duHastNet.PushIt.Models
             if (!roomFound)
             {
 
-                List<Models.RoomDataProperty> properties = new List<Models.RoomDataProperty>();
+                List<Models.RoomDataProperty> properties = [];
                 //get the properties
                 foreach (var property in revitRoom.Properties)
                 {
@@ -277,7 +277,7 @@ namespace duHastNet.PushIt.Models
                     );
                 }
 
-                Models.RoomDataProperty idProperty = new Models.RoomDataProperty(
+                Models.RoomDataProperty idProperty = new(
                     name: revitRoom.Id.Name, 
                     parameterGUID: revitRoom.Id.ParameterGUID,
                     parameterName: revitRoom.Id.ParameterName, 
@@ -287,7 +287,7 @@ namespace duHastNet.PushIt.Models
                     isUniqueId: true); //unique id
 
                 // add the placed room to the data model
-                Models.RoomDataModel newRoom = new Models.RoomDataModel(
+                Models.RoomDataModel newRoom = new(
                     id: idProperty,
                     otherProperties: properties);
 
@@ -303,8 +303,8 @@ namespace duHastNet.PushIt.Models
 
         public RoomsDataModelContainer()
         {
-            _rooms = new List<Models.RoomDataModel>();
-            _newRooms = new List<Models.RoomDataModel>();
+            _rooms = [];
+            _newRooms = [];
         }
     }
 }

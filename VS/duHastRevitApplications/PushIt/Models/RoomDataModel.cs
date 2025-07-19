@@ -87,7 +87,7 @@ namespace duHastNet.PushIt.Models
         /// </summary>
         public List<string> GetUniquePropertyValueFromEachMatchingRevitRoom(string propertyName)
         {
-            List<string> values = new List<string>();
+            List<string> values = [];
             foreach (Models.RoomRevit revitRoom in MatchingRevitRooms)
             {
                 Models.RoomDataProperty property = revitRoom.Properties.Find(x => x.Name == propertyName);
@@ -105,7 +105,7 @@ namespace duHastNet.PushIt.Models
         /// </summary>
         public List<string> GetUniquePropertyValueFromEachMatchingSplitRevitRoom(string propertyName)
         {
-            List<string> values = new List<string>();
+            List<string> values = [];
             foreach (Models.RoomRevit revitRoom in MatchingSplitRevitRooms)
             {
                 Models.RoomDataProperty property = revitRoom.Properties.Find(x => x.Name == propertyName);
@@ -125,7 +125,7 @@ namespace duHastNet.PushIt.Models
         {
             List<string> valuesMatchingRooms = GetUniquePropertyValueFromEachMatchingRevitRoom(propertyName);
             List<string> valuesMatchingSplitRooms = GetUniquePropertyValueFromEachMatchingSplitRevitRoom(propertyName);
-            List<string> values = new List<string>();
+            List<string> values = [];
 
             // add the values from the matching rooms
             foreach (string value in valuesMatchingRooms)
@@ -265,9 +265,9 @@ namespace duHastNet.PushIt.Models
         public RoomDataModel()
         {
             // initialize the list of matching rooms
-            _matchingRevitRooms = new List<RoomRevit>();
+            _matchingRevitRooms = [];
             // initialize the list of matching split rooms
-            _matchingSplitRevitRooms = new List<RoomRevit>();
+            _matchingSplitRevitRooms = [];
             //initialise the ID value
             Id = new RoomDataProperty("Id", string.Empty, string.Empty, string.Empty, false, false, true);
         }
@@ -279,10 +279,10 @@ namespace duHastNet.PushIt.Models
             Properties = otherProperties;
 
             // initialize the list of matching rooms
-            _matchingRevitRooms = new List<RoomRevit>();
+            _matchingRevitRooms = [];
 
             // initialize the list of matching split rooms
-            _matchingSplitRevitRooms = new List<RoomRevit>();
+            _matchingSplitRevitRooms = [];
         }
     }
 }

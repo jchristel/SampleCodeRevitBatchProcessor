@@ -79,14 +79,16 @@ namespace duHastNet.PushIt.Utilities
         )
         {
             // build a dictionary of room revit id to store all rooms with the same id
-            Dictionary<string, List<Models.RoomRevit>> roomsRevitById = new Dictionary<string, List<Models.RoomRevit>>();
+            Dictionary<string, List<Models.RoomRevit>> roomsRevitById = [];
             foreach (Models.RoomRevit revitRoom in roomsRevit)
             {
-                if (!roomsRevitById.ContainsKey(revitRoom.Id.Value))
+                if (!roomsRevitById.TryGetValue(revitRoom.Id.Value, out List<Models.RoomRevit> value))
                 {
-                    roomsRevitById[revitRoom.Id.Value] = new List<Models.RoomRevit>();
+                    value = [];
+                    roomsRevitById[revitRoom.Id.Value] = value;
                 }
-                roomsRevitById[revitRoom.Id.Value].Add(revitRoom);
+
+                value.Add(revitRoom);
             }
 
             // loop over all rooms in the data model and check if they exist in the revit model
@@ -104,11 +106,11 @@ namespace duHastNet.PushIt.Utilities
                 }
 
                 // check if the room id exists in the revit model
-                if (roomsRevitById.ContainsKey(roomDataModel.Id.Value))
+                if (roomsRevitById.TryGetValue(roomDataModel.Id.Value, out List<Models.RoomRevit> matchingRooms))
                 {
                     // iterate over all rooms with the same id and check if they match the active design set and design option
                     // if they do, add them to the list of matching rooms in the data model
-                    foreach (Models.RoomRevit revitRoom in roomsRevitById[roomDataModel.Id.Value])
+                    foreach (Models.RoomRevit revitRoom in matchingRooms)
                     {
                         if (AddRoom(
                             revitRoom: revitRoom,
@@ -129,10 +131,10 @@ namespace duHastNet.PushIt.Utilities
 
                 //check if there is an entry for the split room id in the dictionary
                 // if not, continue
-                if (roomsRevitById.ContainsKey(splitRoomId))
+                if (roomsRevitById.TryGetValue(splitRoomId, out List<Models.RoomRevit> value))
                 {
                     // check if the room id exists in the revit model as a split room
-                    foreach (Models.RoomRevit revitRoom in roomsRevitById[splitRoomId])
+                    foreach (Models.RoomRevit revitRoom in value)
                     {
                         if (AddRoom(
                             revitRoom: revitRoom,

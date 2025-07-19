@@ -39,7 +39,7 @@ namespace duHastNet.PushIt.Commands
                             UIDocument uidoc = app.ActiveUIDocument;
 
                             // get the selected element ids
-                            List<ElementId> selectedElementIds = uidoc.Selection.GetElementIds().ToList();
+                            List<ElementId> selectedElementIds = [.. uidoc.Selection.GetElementIds()];
                             // check quantity of selected elements
                             if (selectedElementIds.Count == 0)
                             {
@@ -47,7 +47,7 @@ namespace duHastNet.PushIt.Commands
                             }
 
                             // filter selected elements by supported categories
-                            List<FamilyInstance> validElements = new List<FamilyInstance>();
+                            List<FamilyInstance> validElements = [];
                             string return_message = "";
                             foreach (ElementId elementId in selectedElementIds)
                             {
@@ -56,7 +56,7 @@ namespace duHastNet.PushIt.Commands
                                 if (selectedElement.Category == null || !_revitDataModel.GetEnabledCategoryNames().Contains(selectedElement.Category.Name))
                                 {
                                     string supportedCategories = string.Join(", ", _revitDataModel.GetEnabledCategoryNames());
-                                    return_message = return_message + ($"\nThe selected element {elementId.IntegerValue} is not of a supported category. Supported categories are: {supportedCategories}.", Utils.WPF.Stores.MessageTypes.Error);
+                                    return_message += ($"\nThe selected element {elementId.Value} is not of a supported category. Supported categories are: {supportedCategories}.", Utils.WPF.Stores.MessageTypes.Error);
                                 }
                                 else
                                 {
@@ -67,7 +67,7 @@ namespace duHastNet.PushIt.Commands
                                     }
                                     catch (Exception ex)
                                     {
-                                        return_message = return_message + ($"\nAn exception occurred while converting the selected element {elementId.IntegerValue} to a family instance: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+                                        return_message += ($"\nAn exception occurred while converting the selected element {elementId.Value} to a family instance: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
                                     }
                                 }
                             }
@@ -83,7 +83,7 @@ namespace duHastNet.PushIt.Commands
                             }
 
                             // update parameter data in the data model
-                            VerifyParametersInModel actionVerify = new VerifyParametersInModel(_revitDataModel);
+                            VerifyParametersInModel actionVerify = new(_revitDataModel);
                             (string messageActionVerify, Utils.WPF.Stores.MessageTypes messageActionTypeVerify) = actionVerify.Execute(doc);
 
                             //write messages to log...
@@ -103,7 +103,7 @@ namespace duHastNet.PushIt.Commands
                             //_revitDataModel.LogMessages(actionUpdate.GetLogMessagesAndLogTypes());
 
                             // Execute the action to wipe selected rooms in the Revit model
-                            WipeSelectedRevitRoomsData actionWipe = new WipeSelectedRevitRoomsData(
+                            WipeSelectedRevitRoomsData actionWipe = new(
                                 revitModel: _revitDataModel,
                                 pushTargets: validElements,
                                 roomsMainViewModel: _roomsMainViewModel
@@ -116,14 +116,14 @@ namespace duHastNet.PushIt.Commands
 
                             //update the room data model again ( this time to check whether a new room was wiped and therefore needs to be removed from the data model)
                             //add new rooms to the data model first
-                            UpdateRoomDataModelWithNewRooms actionUpdateTwo = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(_revitDataModel, _roomsMainViewModel);
+                            UpdateRoomDataModelWithNewRooms actionUpdateTwo = new(_revitDataModel, _roomsMainViewModel);
                             (string messageActionUpdateTwo, Utils.WPF.Stores.MessageTypes messageActionTypeUpdateTwo) = actionUpdateTwo.Execute(doc);
 
                             //write messages to log...
                             _revitDataModel.LogMessages(actionUpdateTwo.GetLogMessagesAndLogTypes());
 
                             // refresh the rooms data model with the rooms from the revit model
-                            RefreshRoomDataWithRevitData refreshRoomDataWithRevitData = new RefreshRoomDataWithRevitData(
+                            RefreshRoomDataWithRevitData refreshRoomDataWithRevitData = new(
                                 revitModel: _revitDataModel,
                                 roomsMainViewModel: _roomsMainViewModel,
                                 revitMockRooms: actionUpdateTwo.CurrentMockRoomsData //re-use mock room data to speed thhings up
@@ -140,7 +140,7 @@ namespace duHastNet.PushIt.Commands
                             return (
                                 $"{messageActionWipe}\n{messageActionUpdateTwo}\n{messageActionRefresh}",
                                 Utilities.MessageActionTypesUtils.CombineMessageActionType(
-                                    new List<MessageTypes> { messageActionTypeWipe, messageActionTypeUpdateTwo, messageActionTypeRefresh }
+                                    [messageActionTypeWipe, messageActionTypeUpdateTwo, messageActionTypeRefresh]
                                 )
                             );
                         }

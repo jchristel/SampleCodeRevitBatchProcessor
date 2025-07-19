@@ -28,7 +28,7 @@ namespace duHastNet.PushIt.Models
 {
     public class Constants
     {
-        public static readonly Dictionary<string, string> ColumnCategoriesInfo = new Dictionary<string, string>
+        public static readonly Dictionary<string, string> ColumnCategoriesInfo = new()
         {
             {ColumnHeaderCategoriesIsEnabled.Replace(" ", ""), ColumnHeaderCategoriesIsEnabled },
             {ColumnHeaderCategoriesCategoryName.Replace(" ", ""), ColumnHeaderCategoriesCategoryName },
@@ -42,7 +42,7 @@ namespace duHastNet.PushIt.Models
         public const string ColumnHeaderRoomCount = "Count";
         public const string ColumnHeaderRoomSplit = "Split";
 
-        public static readonly Dictionary<string, string> ColumnRoomsInfo = new Dictionary<string, string>
+        public static readonly Dictionary<string, string> ColumnRoomsInfo = new()
         {
             {ColumnHeaderRoomId.Replace(" ",""), ColumnHeaderRoomId},
             {ColumnHeaderRoomCount.Replace(" ",""), ColumnHeaderRoomCount},

@@ -62,7 +62,7 @@ namespace duHastNet.PushIt.Commands
                                 return ("No room selected in the user interface to highlight in Revit.", Utils.WPF.Stores.MessageTypes.Error);
                             }
                             // update parameter data in the data model
-                            VerifyParametersInModel actionVerify = new VerifyParametersInModel(_revitDataModel);
+                            VerifyParametersInModel actionVerify = new(_revitDataModel);
                             (string messageActionVerify, Utils.WPF.Stores.MessageTypes messageActionTypeVerify) = actionVerify.Execute(doc);
 
                             //write messages to log...
@@ -75,7 +75,7 @@ namespace duHastNet.PushIt.Commands
                             }
 
                             // Execute the action to highlight the selected room in the Revit model
-                            HighlightRoomsInRevit action = new HighlightRoomsInRevit(
+                            HighlightRoomsInRevit action = new(
                                 revitModel: _revitDataModel,
                                 roomToPush: _roomsDataGridViewModel.SelectedRoom,
                                 uiDoc: app.ActiveUIDocument

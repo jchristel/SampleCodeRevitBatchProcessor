@@ -27,18 +27,15 @@ namespace duHastNet.PushIt.Models
 {
     public class RoomRevit : RoomBase
     {
-        Models.RoomDataProperty _id;
-        List<Models.RoomDataProperty> _properties;
-
         string _designSet;
         string _designOption;
         bool _designOptionIsPrimary;
-        int _revitElementId;
+        long _revitElementId;
 
         public string DesignSet { get => _designSet; set => _designSet = value; }
         public string DesignOption { get => _designOption; set => _designOption = value; }
         public bool DesignOptionIsPrimary { get => _designOptionIsPrimary; set => _designOptionIsPrimary = value; }
-        public int RevitElementId { get => _revitElementId; set => _revitElementId = value; }
+        public long RevitElementId { get => _revitElementId; set => _revitElementId = value; }
 
         public string GetWritePropertiesAsString()
         {
@@ -62,7 +59,7 @@ namespace duHastNet.PushIt.Models
 
         public RoomRevit() { }
 
-        public RoomRevit(Models.RoomDataProperty id, List<Models.RoomDataProperty> properties, string designSet, string designOption, bool designOptionIsPrimary, int revitElementId)
+        public RoomRevit(Models.RoomDataProperty id, List<Models.RoomDataProperty> properties, string designSet, string designOption, bool designOptionIsPrimary, long revitElementId)
         {
             // set the id and other properties
             Id = id;

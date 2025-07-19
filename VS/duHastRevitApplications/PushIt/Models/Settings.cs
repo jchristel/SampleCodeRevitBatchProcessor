@@ -40,7 +40,7 @@ namespace duHastNet.PushIt.Models
         /// field containing all the column ids (room properties) to be displayed
         /// and id is the same as the property name but without any spaces!
         /// </summary>
-        private List<string> _columnIds;
+        private readonly List<string> _columnIds;
 
         public List<string> ColumnIds
         {
@@ -48,8 +48,8 @@ namespace duHastNet.PushIt.Models
         }
 
         public Settings() {
-            EnabledCategoryNames = new List<string>();
-            _columnIds = new List<string>();
+            EnabledCategoryNames = [];
+            _columnIds = [];
             DataPath = string.Empty;
         }
     }

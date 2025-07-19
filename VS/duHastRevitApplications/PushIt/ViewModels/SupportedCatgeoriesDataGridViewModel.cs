@@ -32,7 +32,7 @@ using System.Linq;
 
 namespace duHastNet.PushIt.ViewModels
 {
-    public class SupportedCatgeoriesDataGridViewModel : BaseDynamicGridViewModel<DynamicRowData>
+    public class SupportedCatgeoriesDataGridViewModel : duHastNet.UI.CustomControls.ViewModels.BaseDynamicGridViewModel<DynamicRowData>
     {
 
         private Models.RevitDataModel RevitDataModel { get; set; }
@@ -62,13 +62,13 @@ namespace duHastNet.PushIt.ViewModels
             if (this.RevitDataModel == null) return;
 
             //initialise available columns with default category properties
-            AvailableColumns = new ObservableCollection<AvailableColumnDefinition> { 
+            AvailableColumns = [ 
             
                 // Basic revit category Info
-                new AvailableColumnDefinition(Models.Constants.ColumnHeaderCategoriesIsEnabled.Replace(" ", "") , Models.Constants.ColumnHeaderCategoriesIsEnabled, typeof(bool)),
-                new AvailableColumnDefinition(Models.Constants.ColumnHeaderCategoriesCategoryName.Replace(" ", "") , Models.Constants.ColumnHeaderCategoriesCategoryName, typeof(string))
+                new(Models.Constants.ColumnHeaderCategoriesIsEnabled.Replace(" ", "") , Models.Constants.ColumnHeaderCategoriesIsEnabled, typeof(bool)),
+                new(Models.Constants.ColumnHeaderCategoriesCategoryName.Replace(" ", "") , Models.Constants.ColumnHeaderCategoriesCategoryName, typeof(string))
 
-            };
+            ];
 
             // Set up initial columns that should be visible by default
             SetupDefaultColumns();
@@ -150,7 +150,7 @@ namespace duHastNet.PushIt.ViewModels
             else
             {
                 // For new columns, populate with actual category data instead of defaults
-                RestoreActualRevitCategoryData(propertyName, availableColumn);
+                RestoreActualRevitCategoryData(propertyName);
             }
         }
 
@@ -158,7 +158,7 @@ namespace duHastNet.PushIt.ViewModels
         /// <summary>
         /// Populate column with actual data from categories instead of defaults
         /// </summary>
-        private void RestoreActualRevitCategoryData(string propertyName, AvailableColumnDefinition availableColumn)
+        private void RestoreActualRevitCategoryData(string propertyName)
         {
             var supportedCategories = RevitDataModel.GetAllCategories();
 
@@ -253,9 +253,8 @@ namespace duHastNet.PushIt.ViewModels
                 var supportedCategory = supportedCategories[i];
 
                 // Sync the export/selection status
-                if (gridRow.Values.ContainsKey(enabledColumnId))
+                if (gridRow.Values.TryGetValue(enabledColumnId, out object gridValue))
                 {
-                    var gridValue = gridRow.Values[enabledColumnId];
                     if (gridValue is bool isSelected)
                     {
                         supportedCategory.Enabled = isSelected;
@@ -320,7 +319,7 @@ namespace duHastNet.PushIt.ViewModels
                     var enabledColumnId = Models.Constants.ColumnHeaderCategoriesIsEnabled.Replace(" ", "");
                     if (e.PropertyName == enabledColumnId || e.PropertyName == "Values")
                     {
-                        if (row.Values.ContainsKey(enabledColumnId) && row.Values[enabledColumnId] is bool isSelected)
+                        if (row.Values.TryGetValue(enabledColumnId, out object value) && value is bool isSelected)
                         {
                             supportedCategory.Enabled = isSelected;
                         }

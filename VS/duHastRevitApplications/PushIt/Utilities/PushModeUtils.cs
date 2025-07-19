@@ -26,23 +26,19 @@ namespace duHastNet.PushIt.Utilities
 {
     public class PushModeUtils
     {
-        private static string SplitIDentifier = "SPLIT";
-        private static string NewIDentifier = "NEW";
-        private static string PushIDentifier = "PUSH";
-        private static string Separator = "::";
+        private static readonly string SplitIDentifier = "SPLIT";
+        private static readonly string NewIDentifier = "NEW";
+        private static readonly string PushIDentifier = "PUSH";
+        private static readonly string Separator = "::";
         public static string GetPushModeString(PushMode pushOperationMode)
         {
-            switch (pushOperationMode)
+            return pushOperationMode switch
             {
-                case PushMode.Push:
-                    return PushIDentifier;
-                case PushMode.Split:
-                    return SplitIDentifier;
-                case PushMode.New:
-                    return NewIDentifier;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(pushOperationMode), pushOperationMode, null);
-            }
+                PushMode.Push => PushIDentifier,
+                PushMode.Split => SplitIDentifier,
+                PushMode.New => NewIDentifier,
+                _ => throw new ArgumentOutOfRangeException(nameof(pushOperationMode), pushOperationMode, null),
+            };
         }
 
 
@@ -96,11 +92,11 @@ namespace duHastNet.PushIt.Utilities
             }
             else
             {
-                return idValue.Split(new string[] { Separator }, StringSplitOptions.None)[0];
+                return idValue.Split([Separator], StringSplitOptions.None)[0];
             }
         }
 
-        public static string GetNewModeIdValue(string idValue)
+        public static string GetNewModeIdValue()
         {
             DateTime now = DateTime.Now;
             string timestamp = now.ToString("yyyy-MM-dd HH:mm:ss.fff");

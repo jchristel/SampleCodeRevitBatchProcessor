@@ -74,7 +74,7 @@ namespace duHastNet.UI.CustomControls
             set => SetValue(ValueProperty, value);
         }
 
-        public static readonly DependencyProperty ValueProperty =
+        public static DependencyProperty ValueProperty =
             DependencyProperty.Register(
                 nameof(Value),
                 typeof(SwitchState),
@@ -82,16 +82,16 @@ namespace duHastNet.UI.CustomControls
                 new FrameworkPropertyMetadata(SwitchState.Centre, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
 
-        public static readonly DependencyProperty LabelLeftProperty =
+        public static DependencyProperty LabelLeftProperty =
             DependencyProperty.Register(nameof(LabelLeft), typeof(string), typeof(ThreeWaySwitch), new PropertyMetadata("Left"));
 
-        public static readonly DependencyProperty LabelCenterProperty =
+        public static DependencyProperty LabelCenterProperty =
             DependencyProperty.Register(nameof(LabelCenter), typeof(string), typeof(ThreeWaySwitch), new PropertyMetadata("Centre"));
 
-        public static readonly DependencyProperty LabelRightProperty =
+        public static DependencyProperty LabelRightProperty =
             DependencyProperty.Register(nameof(LabelRight), typeof(string), typeof(ThreeWaySwitch), new PropertyMetadata("Right"));
 
-        public static readonly DependencyProperty DisplayNameProperty =
+        public static DependencyProperty DisplayNameProperty =
             DependencyProperty.Register(nameof(DisplayName), typeof(string), typeof(ThreeWaySwitch), new PropertyMetadata("Switch"));
 
         public string LabelLeft

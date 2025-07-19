@@ -9,21 +9,21 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
 {
     public class DynamicDataGrid : DataGrid
     {
-        public static readonly DependencyProperty ColumnDefinitionsProperty =
+        public static DependencyProperty ColumnDefinitionsProperty =
             DependencyProperty.Register(
                 nameof(ColumnDefinitions),
                 typeof(ObservableCollection<DynamicColumnDefinition>),
                 typeof(DynamicDataGrid),
                 new PropertyMetadata(null, OnColumnDefinitionsChanged));
 
-        public static readonly DependencyProperty ReadOnlyColumnStyleProperty =
+        public static DependencyProperty ReadOnlyColumnStyleProperty =
             DependencyProperty.Register(
                 nameof(ReadOnlyColumnStyle),
                 typeof(Style),
                 typeof(DynamicDataGrid),
                 new PropertyMetadata(null));
 
-        public static readonly DependencyProperty ReadOnlyHeaderStyleProperty =
+        public static DependencyProperty ReadOnlyHeaderStyleProperty =
             DependencyProperty.Register(
                 nameof(ReadOnlyHeaderStyle),
                 typeof(Style),

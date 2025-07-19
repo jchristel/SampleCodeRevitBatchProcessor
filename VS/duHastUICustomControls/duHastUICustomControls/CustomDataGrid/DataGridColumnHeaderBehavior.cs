@@ -38,7 +38,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
         /// <summary>
         /// Dependency property for enabling column management features (context menus, filtering, etc.)
         /// </summary>
-        public static readonly DependencyProperty EnableColumnManagementProperty =
+        public static DependencyProperty EnableColumnManagementProperty =
             DependencyProperty.RegisterAttached(
                 "EnableColumnManagement",
                 typeof(bool),
@@ -48,7 +48,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
         /// <summary>
         /// Dependency property for enabling bulk selection operations on rows
         /// </summary>
-        public static readonly DependencyProperty EnableBulkSelectionProperty =
+        public static DependencyProperty EnableBulkSelectionProperty =
         DependencyProperty.RegisterAttached(
                 "EnableBulkSelection",
                 typeof(bool),
@@ -58,7 +58,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
         /// <summary>
         /// Dependency property for specifying which column contains the checkboxes for bulk selection
         /// </summary>
-        public static readonly DependencyProperty BulkSelectionColumnProperty =
+        public static DependencyProperty BulkSelectionColumnProperty =
             DependencyProperty.RegisterAttached(
                 "BulkSelectionColumn",
                 typeof(string),

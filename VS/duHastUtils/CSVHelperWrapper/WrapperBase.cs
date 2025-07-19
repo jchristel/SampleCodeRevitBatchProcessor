@@ -33,13 +33,13 @@ namespace duHastNet.FileIOWrapper
     public class WrapperBase
     {
         // Stores a list of error messages
-        public List<string> ErrorHistory { get; private set; } = new List<string>();
+        public List<string> ErrorHistory { get; private set; } = [];
 
         // Method to retrieve all stored errors
         public List<string> GetErrorHistory()
         {
             // Return a copy to avoid direct modification
-            return new List<string>(ErrorHistory);
+            return [.. ErrorHistory];
         }
 
         // Method to clear errors if needed

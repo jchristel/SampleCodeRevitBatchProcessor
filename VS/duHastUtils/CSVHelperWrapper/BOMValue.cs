@@ -29,10 +29,10 @@ namespace duHastNet.FileIOWrapper
     /// </summary>
     public class BOMValue
     {
-        public static readonly byte[] UTF_8 = { 0xEF, 0xBB, 0xBF };
-        public static readonly byte[] UTF_16_LITTLE_ENDIAN = { 0xFF, 0xFE };
-        public static readonly byte[] UTF_16_BIG_ENDIAN = { 0xFE, 0xFF };
-        public static readonly byte[] UTF_32_LITTLE_ENDIAN = { 0xFF, 0xFE, 0x00, 0x00 };
-        public static readonly byte[] UTF_32_BIG_ENDIAN = { 0x00, 0x00, 0xFE, 0xFF };
+        public static readonly byte[] UTF_8 = [0xEF, 0xBB, 0xBF];
+        public static readonly byte[] UTF_16_LITTLE_ENDIAN = [0xFF, 0xFE];
+        public static readonly byte[] UTF_16_BIG_ENDIAN = [0xFE, 0xFF];
+        public static readonly byte[] UTF_32_LITTLE_ENDIAN = [0xFF, 0xFE, 0x00, 0x00];
+        public static readonly byte[] UTF_32_BIG_ENDIAN = [0x00, 0x00, 0xFE, 0xFF];
     }
 }

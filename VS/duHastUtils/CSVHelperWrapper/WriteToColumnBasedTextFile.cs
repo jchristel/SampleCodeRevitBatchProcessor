@@ -28,6 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace duHastNet.FileIOWrapper
@@ -50,64 +51,72 @@ namespace duHastNet.FileIOWrapper
             try
             {
                 var append = writeType == "a";
-                var encoding = bom != null && bom == BOMValue.UTF_16_LITTLE_ENDIAN ? Encoding.Unicode :
-                               bom != null && bom == BOMValue.UTF_16_BIG_ENDIAN ? Encoding.BigEndianUnicode :
-                               bom != null && bom == BOMValue.UTF_32_LITTLE_ENDIAN ? Encoding.UTF32 :
-                               bom != null && bom == BOMValue.UTF_32_BIG_ENDIAN ? Encoding.UTF32 :
-                               Encoding.UTF8;
+                var encoding = GetEncodingFromBom(bom);
 
-                using (var writer = new FileStream(filePath, append ? FileMode.Append : FileMode.Create, FileAccess.Write))
+                using var writer = new FileStream(filePath, append ? FileMode.Append : FileMode.Create, FileAccess.Write);
+
+                // Write BOM only if not appending
+                if (!append && bom != null)
                 {
-                    // Write BOM only if not appending
-                    if (!append && bom != null)
+                    writer.Write(bom, 0, bom.Length);
+                }
+
+                using var streamWriter = new StreamWriter(writer, encoding);
+
+                var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+                {
+                    Delimiter = delimiter
+                };
+
+                using var csv = new CsvWriter(streamWriter, config);
+
+                // Write header if provided
+                if (!append && header != null && header.Count > 0)
+                {
+                    foreach (var field in header)
                     {
-                        writer.Write(bom, 0, bom.Length);
+                        csv.WriteField(field);
                     }
+                    csv.NextRecord();
+                }
 
-                    using (var streamWriter = new StreamWriter(writer, encoding))
+                // Write data rows if there are any
+                if (data != null && data.Count > 0)
+                {
+                    foreach (var row in data)
                     {
-                        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+                        foreach (var field in row)
                         {
-                            Delimiter = delimiter
-                        };
-
-                        using (var csv = new CsvWriter(streamWriter, config))
-                        {
-                            // Write header if provided
-                            if (!append && header != null && header.Count > 0)
-                            {
-                                foreach (var field in header)
-                                {
-                                    csv.WriteField(field);
-                                }
-                                csv.NextRecord();
-                            }
-
-                            // Write data rows if there are any
-                            if (data != null && data.Count > 0)
-                            {
-                                foreach (var row in data)
-                                {
-                                    foreach (var field in row)
-                                    {
-                                        csv.WriteField(field);
-                                    }
-                                    csv.NextRecord();
-                                }
-                            }
+                            csv.WriteField(field);
                         }
+                        csv.NextRecord();
                     }
                 }
-                // Success
+
                 return true;
             }
             catch (Exception ex)
             {
                 ErrorHistory.Add($"Error at {DateTime.Now}: {ex.Message}");
-
-                // Failure
                 return false;
             }
+        }
+
+        // Extract the encoding logic into a separate method for better readability
+        private static Encoding GetEncodingFromBom(byte[] bom)
+        {
+            if (bom == null) return Encoding.UTF8;
+
+            if (bom.SequenceEqual(BOMValue.UTF_16_LITTLE_ENDIAN))
+                return Encoding.Unicode;
+            if (bom.SequenceEqual(BOMValue.UTF_16_BIG_ENDIAN))
+                return Encoding.BigEndianUnicode;
+            if (bom.SequenceEqual(BOMValue.UTF_32_LITTLE_ENDIAN))
+                return Encoding.UTF32;
+            if (bom.SequenceEqual(BOMValue.UTF_32_BIG_ENDIAN))
+                return new UTF32Encoding(true, true); // Big-endian UTF-32
+
+            return Encoding.UTF8;
         }
     }
 }

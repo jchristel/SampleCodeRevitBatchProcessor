@@ -70,23 +70,21 @@ namespace duHastNet.FileIOWrapper
 
             try
             {
-                using (var reader = new StreamReader(filePath))
-                using (var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
+                using var reader = new StreamReader(filePath);
+                using var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
                 {
                     Delimiter = delimiter
-                }))
+                });
+                int currentRow = 0;
+                while (csv.Read() && currentRow < rowCount)
                 {
-                    int currentRow = 0;
-                    while (csv.Read() && currentRow < rowCount)
+                    var row = new List<string>();
+                    for (int i = 0; i < csv.Parser.Count; i++)
                     {
-                        var row = new List<string>();
-                        for (int i = 0; i < csv.Parser.Count; i++)
-                        {
-                            row.Add(csv.GetField(i));
-                        }
-                        records.Add(row);
-                        currentRow++;
+                        row.Add(csv.GetField(i));
                     }
+                    records.Add(row);
+                    currentRow++;
                 }
             }
             catch (Exception ex)
@@ -94,7 +92,7 @@ namespace duHastNet.FileIOWrapper
                 ErrorHistory.Add($"Error reading file: {ex.Message}");
 
                 //if an error occured while reading the file, return an empty list
-                return new List<List<string>>();
+                return [];
             }
 
             return records;

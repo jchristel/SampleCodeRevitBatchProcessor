@@ -41,13 +41,11 @@ namespace duHastNet.FileIOWrapper
 
             try
             {
-                using (var reader = new StreamReader(filePath))
+                using var reader = new StreamReader(filePath);
+                string line;
+                while ((line = reader.ReadLine()) != null)
                 {
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        lines.Add(line);
-                    }
+                    lines.Add(line);
                 }
             }
             catch (Exception ex)
@@ -55,7 +53,7 @@ namespace duHastNet.FileIOWrapper
                 ErrorHistory.Add($"Error reading file: {ex.Message}");
 
                 //if an error occurred while reading the file, return an empty list
-                return new List<string>();
+                return [];
             }
 
             return lines;

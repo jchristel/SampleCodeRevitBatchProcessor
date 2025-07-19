@@ -109,7 +109,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         #region print set filter
 
         // Field to return a default list of print set  names
-        private readonly List<string> _printSetNamesDefaultList = [];
+        private List<string> _printSetNamesDefaultList = [];
 
         // Property to expose the default list of document type names
         public List<string> PrintSetNamesDefaultList => _printSetNamesDefaultList;

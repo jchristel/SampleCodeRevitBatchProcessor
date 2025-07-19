@@ -75,7 +75,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
         /// <summary>
         /// Contains the settings data tables for the different document types
         /// </summary>
-        private readonly Dictionary<string, DataTable> _documentSettingsTables;
+        private Dictionary<string, DataTable> _documentSettingsTables;
 
         /// <summary>
         ///  default view of the data table containing document settings
@@ -85,7 +85,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
         /// <summary>
         /// Dictionary containing the document naming settings per document type
         /// </summary>
-        private readonly Dictionary<string, ObservableCollection<Utils.DocumentSetting>> _documentSettingsDictionary;
+        private Dictionary<string, ObservableCollection<Utils.DocumentSetting>> _documentSettingsDictionary;
 
         /// <summary>
         /// Command to add a parameter to the document name table
@@ -123,7 +123,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
         /// <summary>
         /// single column name for available property table
         /// </summary>
-        private readonly string _columnNameAvailableProperties = "Sheet properties";
+        private string _columnNameAvailableProperties = "Sheet properties";
 
         /// <summary>
         /// column names for document naming table
@@ -160,7 +160,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
         private readonly string _documentTypeDWGName = "DWG";
 
         // Field to return a default list of document type names
-        private readonly List<string> _documentTypeNameDefaultList = [];
+        private List<string> _documentTypeNameDefaultList = [];
 
         // Property to expose the default list of document type names
         public List<string> DocumentTypeNameDefaultList => _documentTypeNameDefaultList;
@@ -191,7 +191,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
         #region dwg export scheme name
 
         /// json Field to return the selected export scheme name
-        private readonly string _dwgExportSchemeNameProperty = "DWGExportSchemeName";
+        private string _dwgExportSchemeNameProperty = "DWGExportSchemeName";
 
         // Field to return a list of dwg export scheme names
         private readonly List<string> _dwgExportSchemeNameList = [];

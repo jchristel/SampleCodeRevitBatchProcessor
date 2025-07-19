@@ -124,9 +124,12 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             contextMenu.Items.Add(separator1);
 
             // Remove Column menu item - disable if it's the last column
-            var removeItem = new MenuItem { Header = "Remove Column" };
-            removeItem.Command = GetCommandFromViewModel(viewModel, "RemoveColumnCommand");
-            removeItem.CommandParameter = propertyName;
+            var removeItem = new MenuItem
+            {
+                Header = "Remove Column",
+                Command = GetCommandFromViewModel(viewModel, "RemoveColumnCommand"),
+                CommandParameter = propertyName
+            };
 
             // Check if this is the last visible column
             if (dataGrid.Columns.Count <= 1)
@@ -159,16 +162,13 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                         // Use helper to load resource dictionary
                         var resourceDict = LoadResourceDictionary();
 
-                        var contextMenuStyle = resourceDict["ColumnHeaderContextMenuStyle"] as Style;
-                        var menuItemStyle = resourceDict["ColumnHeaderMenuItemStyle"] as Style;
-                        var separatorStyle = resourceDict["ColumnHeaderSeparatorStyle"] as Style;
 
-                        if (contextMenuStyle != null)
+                        if (resourceDict["ColumnHeaderContextMenuStyle"] is Style contextMenuStyle)
                         {
                             contextMenu.Style = contextMenuStyle;
                         }
 
-                        if (menuItemStyle != null)
+                        if (resourceDict["ColumnHeaderMenuItemStyle"] is Style menuItemStyle)
                         {
                             filterSubmenu.Style = menuItemStyle;
                             clearAllFiltersItem.Style = menuItemStyle; // NEW: Apply style to new item
@@ -180,7 +180,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                             ApplyStyleToSubItems(addSubmenu, menuItemStyle);
                         }
 
-                        if (separatorStyle != null)
+                        if (resourceDict["ColumnHeaderSeparatorStyle"] is Style separatorStyle)
                         {
                             separator1.Style = separatorStyle;
                             separator2.Style = separatorStyle;
@@ -236,9 +236,12 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
 
                     if (!string.IsNullOrEmpty(propertyName))
                     {
-                        var menuItem = new MenuItem { Header = displayName };
-                        menuItem.Command = GetCommandFromViewModel(viewModel, "AddSelectedColumnCommand");
-                        menuItem.CommandParameter = propertyName;
+                        var menuItem = new MenuItem
+                        {
+                            Header = displayName,
+                            Command = GetCommandFromViewModel(viewModel, "AddSelectedColumnCommand"),
+                            CommandParameter = propertyName
+                        };
                         addSubmenu.Items.Add(menuItem);
                     }
                 }
@@ -308,9 +311,8 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             try
             {
                 var resourceDict = LoadResourceDictionary();
-                var filterableStyle = resourceDict["FilterableColumnHeaderStyle"] as Style;
 
-                if (filterableStyle != null)
+                if (resourceDict["FilterableColumnHeaderStyle"] is Style filterableStyle)
                 {
                     style.BasedOn = filterableStyle;
                 }

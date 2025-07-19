@@ -24,56 +24,36 @@ using System.Collections.Generic;
 
 namespace duHastNet.UI.CustomControls.CustomDataGrid
 {
-    public class AvailableColumnDefinition
+    public class AvailableColumnDefinition(
+    string propertyName,
+    string displayName,
+    Type dataType,
+    string category = "General",
+    string description = "",
+    ColumnUIType uiType = ColumnUIType.Standard,
+    List<object> dropDownValues = null)
     {
-        public string PropertyName { get; set; }
-        public string DisplayName { get; set; }
-        public Type DataType { get; set; }
-        public string Category { get; set; }
-        public string Description { get; set; }
-
-        public ColumnUIType UIType { get; set; }
-        public List<object> DropDownValues { get; set; }
-
-
-        public AvailableColumnDefinition(
-            string propertyName, 
-            string displayName, 
-            Type dataType, 
-            string category = "General", 
-            string description = "",
-            ColumnUIType uiType = ColumnUIType.Standard, 
-            List<object> dropDownValues = null)
-        {
-            PropertyName = propertyName;
-            DisplayName = displayName;
-            DataType = dataType;
-            Category = category;
-            Description = description;
-
-            UIType = uiType;
-            DropDownValues = dropDownValues ?? new List<object>();
-        }
+        public string PropertyName { get; set; } = propertyName;
+        public string DisplayName { get; set; } = displayName;
+        public Type DataType { get; set; } = dataType;
+        public string Category { get; set; } = category;
+        public string Description { get; set; } = description;
+        public ColumnUIType UIType { get; set; } = uiType;
+        public List<object> DropDownValues { get; set; } = dropDownValues ?? [];
 
         public string TypeDisplayName
         {
             get
             {
-                switch (DataType.Name)
+                return DataType.Name switch
                 {
-                    case "String":
-                        return "Text";
-                    case "Int32":
-                        return "Number";
-                    case "Double":
-                        return "Decimal";
-                    case "Boolean":
-                        return "Yes/No";
-                    case "DateTime":
-                        return "Date";
-                    default:
-                        return DataType.Name;
-                }
+                    "String" => "Text",
+                    "Int32" => "Number",
+                    "Double" => "Decimal",
+                    "Boolean" => "Yes/No",
+                    "DateTime" => "Date",
+                    _ => DataType.Name,
+                };
             }
         }
     }

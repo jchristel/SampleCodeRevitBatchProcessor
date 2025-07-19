@@ -1,5 +1,5 @@
 ﻿using duHastNet.UI.CustomControls.CustomDataGrid;
-using duHastNet.Utils.WPF.ViewModels;
+using duHastNet.UI.CustomControls.ViewModels;
 using System;
 using System.Linq;
 

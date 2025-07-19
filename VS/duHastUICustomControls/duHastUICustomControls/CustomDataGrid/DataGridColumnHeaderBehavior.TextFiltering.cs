@@ -96,17 +96,17 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
         {
             if (string.IsNullOrWhiteSpace(filterText)) return true;
 
-            var filterTerms = filterText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var filterTerms = filterText.Split([' '], StringSplitOptions.RemoveEmptyEntries);
 
             if (useAndLogic)
             {
                 return filterTerms.All(term =>
-                    itemValue.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0);
+                    itemValue.Contains(term, StringComparison.OrdinalIgnoreCase));
             }
             else
             {
                 return filterTerms.Any(term =>
-                    itemValue.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0);
+                    itemValue.Contains(term, StringComparison.OrdinalIgnoreCase));
             }
         }
 

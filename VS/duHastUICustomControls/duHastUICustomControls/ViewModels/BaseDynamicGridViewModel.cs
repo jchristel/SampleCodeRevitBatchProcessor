@@ -1,6 +1,5 @@
-﻿
-using duHastNet.Utils.WPF.Commands;
-using global::duHastNet.UI.CustomControls.CustomDataGrid;
+﻿using duHastNet.Utils.WPF.Commands;
+using duHastNet.UI.CustomControls.CustomDataGrid;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,9 +8,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
-namespace duHastNet.Utils.WPF.ViewModels
+namespace duHastNet.UI.CustomControls.ViewModels
 {
-    public abstract class BaseDynamicGridViewModel<TData> : INotifyPropertyChanged, duHastNet.Utils.WPF.Interfaces.ICloseable
+    public abstract class BaseDynamicGridViewModel<TData> : INotifyPropertyChanged, Utils.WPF.Interfaces.ICloseable
         where TData : DynamicRowData, new()
     {
         private ObservableCollection<DynamicColumnDefinition> _columnDefinitions;
@@ -19,7 +18,7 @@ namespace duHastNet.Utils.WPF.ViewModels
         private ObservableCollection<AvailableColumnDefinition> _availableColumns;
 
         // field to store removed column data
-        protected Dictionary<string, Dictionary<int, object>> _removedColumnData = new Dictionary<string, Dictionary<int, object>>();
+        protected Dictionary<string, Dictionary<int, object>> _removedColumnData = [];
 
         #region Properties
 
@@ -69,23 +68,23 @@ namespace duHastNet.Utils.WPF.ViewModels
         #region Computed Properties
 
         public IEnumerable<AvailableColumnDefinition> AvailableColumnsToAdd =>
-            AvailableColumns?.Where(ac => !ColumnDefinitions.Any(c => c.PropertyName == ac.PropertyName)) ?? Enumerable.Empty<AvailableColumnDefinition>();
+            AvailableColumns?.Where(ac => !ColumnDefinitions.Any(c => c.PropertyName == ac.PropertyName)) ?? [];
 
         public IEnumerable<IGrouping<string, AvailableColumnDefinition>> AvailableColumnsByCategory =>
             AvailableColumnsToAdd.GroupBy(c => c.Category);
 
-        public IEnumerable<string> ColumnNames => ColumnDefinitions?.Select(c => c.PropertyName) ?? Enumerable.Empty<string>();
+        public IEnumerable<string> ColumnNames => ColumnDefinitions?.Select(c => c.PropertyName) ?? [];
 
         public IEnumerable<string> EditableColumnNames =>
-            ColumnDefinitions?.Where(c => !c.IsReadOnly).Select(c => c.PropertyName) ?? Enumerable.Empty<string>();
+            ColumnDefinitions?.Where(c => !c.IsReadOnly).Select(c => c.PropertyName) ?? [];
 
         #endregion
 
         protected BaseDynamicGridViewModel()
         {
             // Initialize collections
-            ColumnDefinitions = new ObservableCollection<DynamicColumnDefinition>();
-            Data = new ObservableCollection<TData>();
+            ColumnDefinitions = [];
+            Data = [];
 
             // Initialize commands
             AddRowCommand = new RelayCommand(_ => AddRow());
@@ -105,7 +104,7 @@ namespace duHastNet.Utils.WPF.ViewModels
             ClearSelectionCommand = new RelayCommand(_ => ClearSelection(), _ => HasSelection);
 
             // Initialize selected items collection
-            SelectedItems = new ObservableCollection<TData>();
+            SelectedItems = [];
         }
 
         #region Abstract Methods - Must be implemented by derived classes
@@ -224,10 +223,7 @@ namespace duHastNet.Utils.WPF.ViewModels
                 // Remove data from all rows
                 foreach (var row in Data)
                 {
-                    if (row.Values.ContainsKey(propertyName))
-                    {
-                        row.Values.Remove(propertyName);
-                    }
+                    row.Values.Remove(propertyName);
                 }
 
                 OnPropertyChanged(nameof(AvailableColumnsToAdd));
@@ -240,9 +236,9 @@ namespace duHastNet.Utils.WPF.ViewModels
 
             for (int i = 0; i < Data.Count; i++)
             {
-                if (Data[i].Values.ContainsKey(propertyName))
+                if (Data[i].Values.TryGetValue(propertyName, out object value))
                 {
-                    columnData[i] = Data[i].Values[propertyName];
+                    columnData[i] = value;
                 }
             }
 
@@ -252,16 +248,13 @@ namespace duHastNet.Utils.WPF.ViewModels
         // protected virtual so it can be overriden in inehrited class!!
         protected virtual void RestoreOrSetDefaultColumnData(string propertyName, AvailableColumnDefinition availableColumn)
         {
-            if (_removedColumnData.ContainsKey(propertyName))
+            if (_removedColumnData.TryGetValue(propertyName, out Dictionary<int, object> storedData))
             {
-                // Restore original data
-                var storedData = _removedColumnData[propertyName];
-
                 for (int i = 0; i < Data.Count; i++)
                 {
-                    if (storedData.ContainsKey(i))
+                    if (storedData.TryGetValue(i, out object value))
                     {
-                        Data[i][propertyName] = storedData[i];
+                        Data[i][propertyName] = value;
                     }
                     else
                     {
@@ -409,7 +402,7 @@ namespace duHastNet.Utils.WPF.ViewModels
         /// </summary>
         public ObservableCollection<TData> SelectedItems
         {
-            get => _selectedItems ?? (_selectedItems = new ObservableCollection<TData>());
+            get => _selectedItems ??= [];
             set
             {
                 if (_selectedItems != null)
@@ -434,7 +427,7 @@ namespace duHastNet.Utils.WPF.ViewModels
         /// <summary>
         /// Whether any items are currently selected
         /// </summary>
-        public bool HasSelection => SelectedItem != null || (SelectedItems?.Count > 0);
+        public bool HasSelection => SelectedItem != null || SelectedItems?.Count > 0;
 
         /// <summary>
         /// Number of selected items
@@ -490,10 +483,10 @@ namespace duHastNet.Utils.WPF.ViewModels
             }
             else if (SelectedItem != null)
             {
-                return new[] { SelectedItem };
+                return [SelectedItem];
             }
 
-            return Enumerable.Empty<TData>();
+            return [];
         }
 
         /// <summary>

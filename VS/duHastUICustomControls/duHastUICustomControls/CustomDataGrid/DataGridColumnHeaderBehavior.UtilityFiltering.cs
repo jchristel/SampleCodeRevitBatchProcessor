@@ -306,7 +306,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 foreach (var resourceKey in dataGrid.Resources.Keys.OfType<string>()
                     .Where(k => k.StartsWith("DropDownFilter_SelectedValue_")))
                 {
-                    var propertyName = resourceKey.Substring("DropDownFilter_SelectedValue_".Length);
+                    var propertyName = resourceKey["DropDownFilter_SelectedValue_".Length..];
                     if (!PassesDropDownFilter(item, dataGrid, propertyName))
                     {
                         return false;
@@ -317,7 +317,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 foreach (var resourceKey in dataGrid.Resources.Keys.OfType<string>()
                     .Where(k => k.StartsWith("TextFilter_")))
                 {
-                    var propertyName = resourceKey.Substring("TextFilter_".Length);
+                    var propertyName = resourceKey["TextFilter_".Length..];
                     var filterText = (string)dataGrid.Resources[resourceKey];
                     var logicKey = $"TextFilterLogic_{propertyName}";
                     var useAndLogic = dataGrid.Resources.Contains(logicKey) && (bool)dataGrid.Resources[logicKey];
@@ -336,7 +336,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 foreach (var resourceKey in dataGrid.Resources.Keys.OfType<string>()
                     .Where(k => k.StartsWith("BooleanFilter_ShowTrue_")))
                 {
-                    var propertyName = resourceKey.Substring("BooleanFilter_ShowTrue_".Length);
+                    var propertyName = resourceKey["BooleanFilter_ShowTrue_".Length..];
                     if (!PassesBooleanFilter(item, dataGrid, propertyName))
                     {
                         return false;
@@ -347,7 +347,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 foreach (var resourceKey in dataGrid.Resources.Keys.OfType<string>()
                     .Where(k => k.StartsWith("NumericFilter_Operation_")))
                 {
-                    var propertyName = resourceKey.Substring("NumericFilter_Operation_".Length);
+                    var propertyName = resourceKey["NumericFilter_Operation_".Length..];
                     if (!PassesNumericFilter(item, dataGrid, propertyName))
                     {
                         return false;
@@ -358,7 +358,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 foreach (var resourceKey in dataGrid.Resources.Keys.OfType<string>()
                     .Where(k => k.StartsWith("DateTimeFilter_Operation_")))
                 {
-                    var propertyName = resourceKey.Substring("DateTimeFilter_Operation_".Length);
+                    var propertyName = resourceKey["DateTimeFilter_Operation_".Length..];
                     if (!PassesDateTimeFilter(item, dataGrid, propertyName))
                     {
                         return false;
@@ -437,7 +437,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                     var useAndLogic = dataGrid.Resources.Contains(logicKey) && (bool)dataGrid.Resources[logicKey];
                     var logicDisplay = useAndLogic ? " (AND)" : " (OR)";
 
-                    var hasMultipleTerms = filterText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Length > 1;
+                    var hasMultipleTerms = filterText.Split([' '], StringSplitOptions.RemoveEmptyEntries).Length > 1;
                     return hasMultipleTerms ? $"Text: \"{filterText}\"{logicDisplay}" : $"Text: \"{filterText}\"";
                 }
             }

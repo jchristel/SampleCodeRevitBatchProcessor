@@ -128,11 +128,8 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                             // Use helper to load resource dictionary
                             var resourceDict = LoadResourceDictionary();
 
-                            var contextMenuStyle = resourceDict["BulkSelectionContextMenuStyle"] as Style;
-                            var menuItemStyle = resourceDict["BulkOperationMenuItemStyle"] as Style;
-                            var separatorStyle = resourceDict["BulkOperationSeparatorStyle"] as Style;
 
-                            if (contextMenuStyle != null)
+                            if (resourceDict["BulkSelectionContextMenuStyle"] is Style contextMenuStyle)
                             {
                                 contextMenu.Style = contextMenuStyle;
                             }
@@ -141,7 +138,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                                 System.Diagnostics.Debug.WriteLine("❌ BulkSelectionContextMenuStyle not found in resource dictionary");
                             }
 
-                            if (menuItemStyle != null)
+                            if (resourceDict["BulkOperationMenuItemStyle"] is Style menuItemStyle)
                             {
                                 checkSelectedItem.Style = menuItemStyle;
                                 uncheckSelectedItem.Style = menuItemStyle;
@@ -151,7 +148,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                                 uncheckAllItem.Style = menuItemStyle;
                             }
 
-                            if (separatorStyle != null)
+                            if (resourceDict["BulkOperationSeparatorStyle"] is Style separatorStyle)
                             {
                                 separator1.Style = separatorStyle;
                             }
@@ -304,7 +301,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
         private static IEnumerable<object> GetVisibleItems(DataGrid dataGrid)
         {
             var collectionView = System.Windows.Data.CollectionViewSource.GetDefaultView(dataGrid.ItemsSource);
-            return collectionView?.Cast<object>() ?? dataGrid.ItemsSource?.Cast<object>() ?? Enumerable.Empty<object>();
+            return collectionView?.Cast<object>() ?? dataGrid.ItemsSource?.Cast<object>() ?? [];
         }
 
         /// <summary>
@@ -321,15 +318,14 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             // Handle DynamicRowData
             if (item.GetType().GetProperty("Values") != null)
             {
-                var valuesDict = item.GetType().GetProperty("Values").GetValue(item) as System.Collections.IDictionary;
-                if (valuesDict != null)
+                if (item.GetType().GetProperty("Values").GetValue(item) is System.Collections.IDictionary valuesDict)
                 {
                     // Use the indexer property instead of direct dictionary access
                     // This ensures PropertyChanged events are fired
-                    var indexerProperty = item.GetType().GetProperty("Item", new[] { typeof(string) });
+                    var indexerProperty = item.GetType().GetProperty("Item", [typeof(string)]);
                     if (indexerProperty != null)
                     {
-                        indexerProperty.SetValue(item, value, new object[] { propertyName });
+                        indexerProperty.SetValue(item, value, [propertyName]);
                     }
                     else
                     {
@@ -369,12 +365,12 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 var onPropertyChangedMethod = item.GetType().GetMethod("OnPropertyChanged",
                     System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public,
                     null,
-                    new[] { typeof(string) },
+                    [typeof(string)],
                     null);
 
                 if (onPropertyChangedMethod != null)
                 {
-                    onPropertyChangedMethod.Invoke(item, new object[] { propertyName });
+                    onPropertyChangedMethod.Invoke(item, [propertyName]);
                 }
                 else
                 {
@@ -382,14 +378,11 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                     var parameterlessMethod = item.GetType().GetMethod("OnPropertyChanged",
                         System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public,
                         null,
-                        new Type[0],
+                        [],
                         null);
 
-                    if (parameterlessMethod != null)
-                    {
-                        // This won't work perfectly since we can't pass the property name, but it's worth a try
-                        parameterlessMethod.Invoke(item, new object[0]);
-                    }
+                    // This won't work perfectly since we can't pass the property name, but it's worth a try
+                    parameterlessMethod?.Invoke(item, []);
                 }
             }
             catch (Exception ex)
@@ -411,10 +404,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 {
                     // Try to find and call SyncGridDataToUnderlyingModel method
                     var syncMethod = viewModel.GetType().GetMethod("SyncGridDataToUnderlyingModel");
-                    if (syncMethod != null)
-                    {
-                        syncMethod.Invoke(viewModel, null);
-                    }
+                    syncMethod?.Invoke(viewModel, null);
                 }
             }
             catch (Exception ex)

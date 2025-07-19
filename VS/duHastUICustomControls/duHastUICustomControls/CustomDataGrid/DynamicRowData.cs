@@ -6,7 +6,14 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
 {
     public class DynamicRowData : INotifyPropertyChanged
     {
-        private Dictionary<string, object> _values = new Dictionary<string, object>();
+        private Dictionary<string, object> _values = [];
+        public Dictionary<string, object> Values
+        {
+            get
+            {
+                return _values;
+            }
+        }
 
         public object this[string propertyName]
         {
@@ -21,8 +28,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             }
         }
 
-        public Dictionary<string, object> Values => _values;
-
+        
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

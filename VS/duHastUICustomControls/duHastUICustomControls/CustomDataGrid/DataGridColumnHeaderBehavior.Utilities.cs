@@ -98,8 +98,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             // Handle DynamicRowData
             if (item.GetType().GetProperty("Values") != null)
             {
-                var valuesDict = item.GetType().GetProperty("Values").GetValue(item) as System.Collections.IDictionary;
-                if (valuesDict != null && valuesDict.Contains(propertyName))
+                if (item.GetType().GetProperty("Values").GetValue(item) is System.Collections.IDictionary valuesDict && valuesDict.Contains(propertyName))
                 {
                     return valuesDict[propertyName];
                 }

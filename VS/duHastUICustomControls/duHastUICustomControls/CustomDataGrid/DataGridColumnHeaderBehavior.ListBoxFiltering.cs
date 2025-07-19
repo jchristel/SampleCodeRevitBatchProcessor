@@ -157,7 +157,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             if (!string.IsNullOrWhiteSpace(searchText))
             {
                 var valueAsString = selectedValue?.ToString() ?? "";
-                return valueAsString.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0;
+                return valueAsString.Contains(searchText, StringComparison.OrdinalIgnoreCase);
             }
 
             // No search text, just matching the selected value is enough
@@ -205,11 +205,11 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 var columnDef = availableColumns.FirstOrDefault(c => c.PropertyName == propertyName);
                 if (columnDef != null && columnDef.UIType == ColumnUIType.DropDown)
                 {
-                    return columnDef.DropDownValues ?? new List<object>();
+                    return columnDef.DropDownValues ?? [];
                 }
             }
 
-            return new List<object>();
+            return [];
         }
 
         /// <summary>
@@ -314,15 +314,14 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             // Handle DynamicRowData (same logic as SetItemCheckboxValue)
             if (item.GetType().GetProperty("Values") != null)
             {
-                var valuesDict = item.GetType().GetProperty("Values").GetValue(item) as System.Collections.IDictionary;
-                if (valuesDict != null)
+                if (item.GetType().GetProperty("Values").GetValue(item) is System.Collections.IDictionary valuesDict)
                 {
                     // Use the indexer property instead of direct dictionary access
                     // This ensures PropertyChanged events are fired
-                    var indexerProperty = item.GetType().GetProperty("Item", new[] { typeof(string) });
+                    var indexerProperty = item.GetType().GetProperty("Item", [typeof(string)]);
                     if (indexerProperty != null)
                     {
-                        indexerProperty.SetValue(item, value, new object[] { propertyName });
+                        indexerProperty.SetValue(item, value, [propertyName]);
                     }
                     else
                     {

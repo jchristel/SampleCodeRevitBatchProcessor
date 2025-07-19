@@ -20,7 +20,7 @@ namespace duHastNet.UI.CustomControls.Converters
                 return false;
 
             var comparison = IgnoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
-            return stringValue.IndexOf(searchText, comparison) >= 0;
+            return stringValue.Contains(searchText, comparison);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

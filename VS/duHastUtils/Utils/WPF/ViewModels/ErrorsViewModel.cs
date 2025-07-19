@@ -34,7 +34,7 @@ namespace duHastNet.Utils.WPF.ViewModels
         //data validation
         public bool HasErrors => _errors.Count != 0;
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
-        private readonly Dictionary<string, List<string>> _errors = [];
+        private Dictionary<string, List<string>> _errors = [];
 
         /// <summary>
         /// Data validation

@@ -36,7 +36,7 @@ namespace duHastNet.Utils.Logging
     public class SimpleLogger(string filePath)
     {
         private readonly string _filePath = filePath;
-        private readonly List<string> _errorMessages = []; // Stores exception messages
+        private List<string> _errorMessages = []; // Stores exception messages
 
         public IReadOnlyList<string> ErrorMessages => _errorMessages.AsReadOnly(); // Expose errors safely
 

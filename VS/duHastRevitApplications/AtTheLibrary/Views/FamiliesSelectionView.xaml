@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:duHastNet.AtTheLibrary.Views"
              xmlns:utilsViews ="clr-namespace:duHastNet.Utils.WPF.Views;assembly=Utils.25.0.0.1"
              xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.25.0.0.1"
+             xmlns:dynamicDataGrid="clr-namespace:duHastNet.UI.CustomControls.CustomDataGrid;assembly=duHastUICustomControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -86,71 +87,40 @@
         <Grid Grid.Row="1">
             <utilsViews:GlobalMessageBanner DataContext="{Binding GlobalMessageViewModel}"/>
         </Grid>
-        <!-- filter -->
-        <Border Grid.Row="2" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
-            <Expander Header="Filters" Margin="5 5 5 5">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Row="0"
-                Grid.Column="0"
-                Margin="0 5 5 5"
-                Text="Select Column" />
-                    <ComboBox Grid.Row="1"
-                Grid.Column="0"
-                Margin="0 5 5 5" 
-                ItemsSource="{Binding ColumnNameDefaultList}"
-                SelectedValue="{Binding Path=SelectedColumnFilterItem,Mode=TwoWay}"/>
-                    <TextBlock Grid.Row="0"
-                Grid.Column="1"
-                Margin="5 5 0 5"
-                Text="Filter:" />
-                    <!-- filter value -->
-                    <TextBox
-                Grid.Row="1"
-                Grid.Column="1"
-                Margin="5 5 0 5"
-                Text="{Binding FilterValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                </Grid>
-            </Expander>
-        </Border>
-        <!-- grid view -->
-        <DataGrid Grid.Row="3" x:Name="dataGrid" 
-                    ItemsSource="{Binding DataView}"
-                    EnableRowVirtualization="True" 
-                    EnableColumnVirtualization="True" 
-                    VirtualizingPanel.IsVirtualizing="True" 
-                    VirtualizingPanel.VirtualizationMode="Recycling"
-                    AutoGenerateColumns="True" 
-                    IsReadOnly="True"
-                    CanUserSortColumns="True"
-                    SelectionMode="Single" 
-                    SelectedIndex="{Binding SelectedIndex}"
-                    ColumnWidth="*"
-                    RowHeight="23"
-                    HorizontalAlignment="Stretch"
-                    ColumnReordered="RoomsDataGrid_ColumnReordered"
-                    IsEnabled="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource InverseBooleanConverter}}">
-            <DataGrid.RowStyle>
+
+        <!-- dynamic grid view of room data -->
+        <dynamicDataGrid:DynamicDataGrid  
+            x:Name="dataGrid" 
+            Grid.Row="2"
+            DataContext="{Binding  FamiliesDataGridViewModel}"
+            ItemsSource="{Binding Data}"
+            ColumnDefinitions="{Binding ColumnDefinitions}"
+            SelectionMode="Single"
+            SelectedItem="{Binding SelectedItem}"
+            Margin="5 10 5 10"
+            dynamicDataGrid:DataGridColumnHeaderBehavior.EnableColumnManagement="True"
+            dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="False"
+            IsEnabled="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource InverseBooleanConverter}}">
+
+            <!-- Add Row Style for conditional formatting -->
+            <dynamicDataGrid:DynamicDataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
+                    <!-- Default background -->
                     <Setter Property="Background" Value="Red" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Count}" Value="1">
-                            <Setter Property="Background" Value="LightGray"></Setter>
+
+                        <!-- Color rows based on a "Count" column -->
+                        <DataTrigger Binding="{Binding Values[Count]}" Value="0">
+                            <Setter Property="Background" Value="White"/>
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding Count}" Value="0">
-                            <Setter Property="Background" Value="White"></Setter>
+                        <DataTrigger Binding="{Binding Values[Count]}" Value="1">
+                            <Setter Property="Background" Value="LightGray"/>
                         </DataTrigger>
+
                     </Style.Triggers>
                 </Style>
-            </DataGrid.RowStyle>
-        </DataGrid>
+            </dynamicDataGrid:DynamicDataGrid.RowStyle>
+        </dynamicDataGrid:DynamicDataGrid>
         <!-- button row content -->
         <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>

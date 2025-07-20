@@ -22,18 +22,16 @@
 //
 
 using duHastNet.UI.CustomControls.CustomDataGrid;
-using duHastNet.Utils.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace duHastNet.AtTheLibrary.ViewModels
 {
-    public class FamiliesDataGridViewModel: BaseDynamicGridViewModel<DynamicRowData>
+    public class FamiliesDataGridViewModel: duHastNet.UI.CustomControls.ViewModels.BaseDynamicGridViewModel<DynamicRowData>
     {
         private Models.RevitFamiliesDataModel RevitDataModel { get; set; }
        

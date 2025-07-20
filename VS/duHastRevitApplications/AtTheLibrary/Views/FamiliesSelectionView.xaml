@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:duHastNet.AtTheLibrary.Views"
              xmlns:utilsViews ="clr-namespace:duHastNet.Utils.WPF.Views;assembly=Utils.25.0.0.1"
              xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.25.0.0.1"
-             xmlns:dynamicDataGrid="clr-namespace:duHastNet.UI.CustomControls.CustomDataGrid;assembly=duHastUICustomControls"
+             xmlns:dynamicDataGrid="clr-namespace:duHastNet.UI.CustomControls.CustomDataGrid;assembly=duHastUICustomControls.25.0.0.1"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>

@@ -33,5 +33,23 @@ namespace duHastNet.AtTheLibrary.Models
 
         // list of supported Revit type parameter names
         public List<string> SupportedTypeParameterNames { get; set; }
+
+        /// <summary>
+        /// field containing all the column ids (room properties) to be displayed
+        /// and id is the same as the property name but without any spaces!
+        /// </summary>
+        private List<string> _columnIds;
+
+        public List<string> ColumnIds
+        {
+            get => _columnIds;
+        }
+
+        public Settings()
+        {
+            SupportedTypeParameterNames = new List<string>();
+            _columnIds = new List<string>();
+            DataPath = string.Empty;
+        }
     }
 }

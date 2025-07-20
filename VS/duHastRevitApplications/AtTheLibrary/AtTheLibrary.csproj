@@ -52,6 +52,9 @@
     <Reference Include="CsvHelper, Version=33.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\packages\CsvHelper.33.0.1\lib\net48\CsvHelper.dll</HintPath>
     </Reference>
+    <Reference Include="duHastUICustomControls">
+      <HintPath>..\..\..\..\SampleCodeRevitBatchProcessor\VS\_References\duHast\duHastUICustomControls.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
@@ -117,7 +120,9 @@
     <Compile Include="Commands\RefreshUIFromRevitModelAsyncCommand.cs" />
     <Compile Include="Commands\ReloadDataFromFileAsyncCommand.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Models\Constants.cs" />
     <Compile Include="Models\FamiliesDataModelContainer.cs" />
+    <Compile Include="Models\FamiliesParameterDataModelContainer.cs" />
     <Compile Include="Models\FamilyRevit.cs" />
     <Compile Include="Models\FamilyDataModel.cs" />
     <Compile Include="Models\FamilyDataProperty.cs" />
@@ -131,6 +136,7 @@
     <Compile Include="Utilities\ReadFamilyData.cs" />
     <Compile Include="Utilities\Revit\RevitFamilyObjectsConverter.cs" />
     <Compile Include="Utilities\SettingsUtils.cs" />
+    <Compile Include="ViewModels\FamiliesDataGridViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\FamiliesSelectionViewModel.cs" />
     <Compile Include="Views\FamiliesSelectionView.xaml.cs">

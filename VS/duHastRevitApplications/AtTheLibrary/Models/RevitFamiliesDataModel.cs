@@ -30,11 +30,17 @@ namespace duHastNet.AtTheLibrary.Models
     public class RevitFamiliesDataModel : duHastNet.Utils.WPF.Models.DataModelBase, INotifyPropertyChanged
     {
         private Models.Settings _settings;
+
         public Settings Settings { get => _settings; set => _settings = value; }
 
         private Utils.Logging.SimpleLogger _logger;
 
+        //contains all families read from file
         public Models.FamiliesDataModelContainer _familiesContainer;
+
+        //contains all uniques parameter names from all families
+        public Models.FamiliesParameterDataModelContainer _parameterDataContainer;
+        public Models.FamiliesParameterDataModelContainer ParameterDataContainer { get => _parameterDataContainer; set => _parameterDataContainer = value; }
 
         //event handlers for property changed
         public event PropertyChangedEventHandler PropertyChanged;
@@ -73,12 +79,45 @@ namespace duHastNet.AtTheLibrary.Models
             // TODO: if no families return (need to pop message to user...)
             if (families == null) return false;
 
+            // clear all families before loading again
+            ClearFamilies();
+
+            //clear parameters before adding them again
+            ClearParameters();
+
+            // add families and parameter to respective containers
             foreach (Models.FamilyDataModel family in families)
             {
                 AddFamily(family);
+
+                //load parameter data
+                var paraNames = family.GetAllProperties();
+                if (paraNames.Count > 0)
+                {
+                    foreach (var para in paraNames)
+                    {
+                        AddParameter(para);
+                    }
+                }
             }
 
             return true;
+        }
+
+        public void AddParameter(Models.FamilyDataProperty parameter)
+        {
+            _parameterDataContainer.AddParameter(parameter);
+        }
+
+
+        public void ClearParameters()
+        {
+            _parameterDataContainer.ClearParameters();
+        }
+
+        public List<string> GetAllParameters()
+        {
+            return _parameterDataContainer.GetAllParameters();
         }
 
         public void InitialiseLogger(string filePath)

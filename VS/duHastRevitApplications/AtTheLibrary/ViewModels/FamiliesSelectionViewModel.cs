@@ -43,6 +43,12 @@ namespace duHastNet.AtTheLibrary.ViewModels
 
         public Utils.WPF.ViewModels.GlobalMessageViewModel GlobalMessageViewModel { get; }
 
+
+        /// <summary>
+        /// View model managing push it data grid
+        /// </summary>
+        public ViewModels.FamiliesDataGridViewModel FamiliesDataGridViewModel { get; }
+
         // data table containing push it data
         private DataTable _dt;
         // default view of the data table
@@ -695,14 +701,22 @@ namespace duHastNet.AtTheLibrary.ViewModels
         /// </summary>
         public override void OnClosing()
         {
-            // Custom closing logic for RoomsSelectionViewModel
-            //_eventManager.DisposeEvents();
 
             //unbsubscribe from underlying model changes
             _revitDataModel.PropertyChanged -= Model_PropertyChanged;
 
             //unsubscribe from errors changed event
             _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
+
+            //update the column ids in settings.
+            // clear list first
+            _revitDataModel.Settings.ColumnIds.Clear();
+            // add current list
+            foreach (var columnId in FamiliesDataGridViewModel.ColumnDefinitions)
+            {
+                _revitDataModel.Settings.ColumnIds.Add(columnId.PropertyName);
+            }
+
             GlobalMessageViewModel.Dispose();
 
             base.OnClosing();
@@ -753,6 +767,11 @@ namespace duHastNet.AtTheLibrary.ViewModels
 
             //store the global message view model
             GlobalMessageViewModel = globalMessageViewModel;
+            RegisterChild(GlobalMessageViewModel); // Register as child
+
+            //push it data grid view model
+            FamiliesDataGridViewModel = new FamiliesDataGridViewModel(revitDataModel: revitDataModel);
+            RegisterChild(FamiliesDataGridViewModel);
 
             //initialize column order
             _columnOrder = new List<string>();

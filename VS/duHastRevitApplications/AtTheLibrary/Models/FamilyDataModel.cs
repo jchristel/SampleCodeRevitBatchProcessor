@@ -32,6 +32,15 @@ namespace duHastNet.AtTheLibrary.Models
             _properties.Add(property);
         }
 
+        /// <summary>
+        /// returns all properties from the family
+        /// </summary>
+        /// <returns></returns>
+        public List<FamilyDataProperty> GetAllProperties()
+        {
+            return _properties;
+        }
+
         public void AddMatchingFamily(FamilyRevit family)
         {
             _matchingRevitFamilies.Add(family);

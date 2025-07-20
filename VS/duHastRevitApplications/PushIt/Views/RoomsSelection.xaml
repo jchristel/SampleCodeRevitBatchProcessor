@@ -68,7 +68,6 @@
             <RowDefinition Height="auto"/>
             <!-- message banner -->
             <RowDefinition Height="auto"/>
-            
             <!-- data -->
             <RowDefinition Height="*"/>
             <!-- refresh / model status -->

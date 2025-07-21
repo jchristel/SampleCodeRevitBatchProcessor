@@ -151,7 +151,7 @@ namespace duHastNet.AtTheLibrary.Utilities
                             currentFamilyData.AddProperty(property);
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         return null;
                     }

@@ -43,7 +43,7 @@ Note:
 from duHast.Utilities import files_csv as fileCSV, files_get as fileGet
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type import FamilyDirectiveSwap
-
+from duHast.Utilities.files_io import file_exist
 
 
 
@@ -174,10 +174,21 @@ def write_swap_directives_to_file(swap_directives, file_path):
                 directive.target_family_type_name
             ])
 
+        # set default write mode and header
+        write_mode = "w"
+        header = FamilyDirectiveSwap.SWAP_DIRECTIVE_HEADER_ROW
+
+        # check whether file exists and set write mode and header accordingly
+        if file_exist(file_path):
+            # file does not exist, so write mode is 'w'
+            write_mode = "a"
+            header =[]
+        
         # write the directives to the file
         return_value = fileCSV.write_report_data_as_csv(
             file_name=file_path,
-            header = FamilyDirectiveSwap.SWAP_DIRECTIVE_HEADER_ROW,
+            header = header,
+            write_type=write_mode,
             data=swap_directives_list,
             quoting=fileCSV.csv.QUOTE_MINIMAL,
         )

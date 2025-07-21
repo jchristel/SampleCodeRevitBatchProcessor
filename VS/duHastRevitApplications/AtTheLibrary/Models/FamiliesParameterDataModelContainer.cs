@@ -48,7 +48,7 @@ namespace duHastNet.AtTheLibrary.Models
 
         public void ClearParameters()
         {
-            _parameterNames = new List<string>();
+            _parameterNames.Clear();
         }
 
         public FamiliesParameterDataModelContainer()

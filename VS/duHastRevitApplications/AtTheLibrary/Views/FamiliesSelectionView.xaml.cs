@@ -41,8 +41,10 @@ namespace duHastNet.AtTheLibrary.Views
 
         private void PickFile_OnClick(object sender, EventArgs e)
         {
-            var dialog = new System.Windows.Forms.OpenFileDialog();
-            dialog.Filter = "csv Files (*.csv)|*.csv|All Files (*.*)|*.*";
+            var dialog = new System.Windows.Forms.OpenFileDialog
+            {
+                Filter = "csv Files (*.csv)|*.csv|All Files (*.*)|*.*"
+            };
             var dialogResult = dialog.ShowDialog();
             if (dialogResult == System.Windows.Forms.DialogResult.OK)
             {
@@ -55,26 +57,5 @@ namespace duHastNet.AtTheLibrary.Views
                   .UpdateSource();
             }
         }
-
-        private void RoomsDataGrid_ColumnReordered(object sender, EventArgs e)
-        {
-            // check the view model
-            if (DataContext is ViewModels.FamiliesSelectionViewModel vm)
-            {
-
-                var dataGrid = sender as DataGrid;
-                if (dataGrid != null && dataGrid.ItemsSource is DataView dataView)
-                {
-                    var reorderedColumns = dataGrid.Columns
-                                                   .OrderBy(c => c.DisplayIndex)
-                                                   .Select(c => c.Header.ToString())
-                                                   .ToList();
-
-                    // Pass the new column order and the DataView to the ViewModel
-                    vm.ColumnOrderChangedCommand.Execute(new Tuple<IEnumerable<string>, DataView>(reorderedColumns, dataView));
-                }
-            }
-        }
-
     }
 }

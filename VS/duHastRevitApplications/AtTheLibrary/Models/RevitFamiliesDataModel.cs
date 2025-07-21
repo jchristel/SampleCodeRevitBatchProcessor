@@ -138,6 +138,7 @@ namespace duHastNet.AtTheLibrary.Models
         public RevitFamiliesDataModel()
         {
             _familiesContainer = new Models.FamiliesDataModelContainer();
+            _parameterDataContainer = new FamiliesParameterDataModelContainer();
             _settings = new Models.Settings();
         }
     }

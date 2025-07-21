@@ -31,8 +31,8 @@ namespace duHastNet.AtTheLibrary.RevitActions
     public class LoadFamilyAction : RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
     {
 
-        private ViewModels.FamiliesSelectionViewModel _familiesSelectionViewModel;
-        public ViewModels.FamiliesSelectionViewModel FamiliesSelectionViewModel => _familiesSelectionViewModel;
+        private ViewModels.FamiliesDataGridViewModel _familiesDataGridViewModel;
+        public ViewModels.FamiliesDataGridViewModel FamiliesDataGridViewModel => _familiesDataGridViewModel;
 
         public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
         {
@@ -40,7 +40,7 @@ namespace duHastNet.AtTheLibrary.RevitActions
             try
             {
                 //family to load
-                var fam = _familiesSelectionViewModel.SelectedFamily;
+                var fam = _familiesDataGridViewModel.SelectedFamily;
 
                 // log the action
                 AddMessage($"Loading family {fam.FamilyName} and type {fam.FamilyTypeName} into Revit", Utils.WPF.Stores.MessageTypes.Log);
@@ -80,11 +80,11 @@ namespace duHastNet.AtTheLibrary.RevitActions
 
         public LoadFamilyAction(
             RevitFamiliesDataModel revitModel,
-            ViewModels.FamiliesSelectionViewModel familiesSelectionViewModel
+            ViewModels.FamiliesDataGridViewModel familiesSelectionViewModel
            )
         {
             RevitModel = revitModel;
-            _familiesSelectionViewModel = familiesSelectionViewModel;
+            _familiesDataGridViewModel = familiesSelectionViewModel;
         }
     }
 }

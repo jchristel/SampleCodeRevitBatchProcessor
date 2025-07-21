@@ -35,6 +35,7 @@ namespace duHastNet.AtTheLibrary.Commands
     {
 
         private readonly ViewModels.FamiliesSelectionViewModel _familiesSelectionViewModel;
+        private readonly ViewModels.FamiliesDataGridViewModel _familiesDataGridViewModel;
         //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitFamiliesDataModel _revitFamiliesDataModel;
 
@@ -55,7 +56,7 @@ namespace duHastNet.AtTheLibrary.Commands
                         try
                         {
                             // Execute the action to refresh the room data with the Revit data
-                            LoadFamilyAction action = new LoadFamilyAction(_revitFamiliesDataModel, _familiesSelectionViewModel);
+                            LoadFamilyAction action = new LoadFamilyAction(_revitFamiliesDataModel, _familiesDataGridViewModel);
                             (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
 
                             //TODO write messages to log...
@@ -117,12 +118,15 @@ namespace duHastNet.AtTheLibrary.Commands
 
         public LoadFamilyAsyncCommand(
            ViewModels.FamiliesSelectionViewModel familiesSelectionViewModel,
+           ViewModels.FamiliesDataGridViewModel familiesDataGridViewModel,
            Models.RevitFamiliesDataModel revitFamiliesDataModel
            )
         {
             _revitFamiliesDataModel = revitFamiliesDataModel;
             _familiesSelectionViewModel = familiesSelectionViewModel;
             _familiesSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _familiesDataGridViewModel = familiesDataGridViewModel;
+            _familiesDataGridViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
     }
 }

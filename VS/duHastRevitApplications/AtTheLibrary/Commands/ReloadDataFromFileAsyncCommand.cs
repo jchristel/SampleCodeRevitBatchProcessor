@@ -34,6 +34,7 @@ namespace duHastNet.AtTheLibrary.Commands
     {
 
         private readonly ViewModels.FamiliesSelectionViewModel _familiesSelectionViewModel;
+        //private readonly ViewModels.FamiliesDataGridViewModel _familiesDataGridViewModel;
         //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitFamiliesDataModel _revitFamiliesDataModel;
 
@@ -55,9 +56,6 @@ namespace duHastNet.AtTheLibrary.Commands
                         {
                             //clear out all rooms from the data model
                             _revitFamiliesDataModel.ClearFamilies();
-
-                            // reset the column order in the view model in case it was changed
-                            _familiesSelectionViewModel.ColumnOrder = new List<string>();
 
                             // reload data from the file path
                             bool loadFlag = _revitFamiliesDataModel.LoadFamiliesData();
@@ -129,12 +127,16 @@ namespace duHastNet.AtTheLibrary.Commands
 
         public ReloadDataFromFileAsyncCommand(
             ViewModels.FamiliesSelectionViewModel roomsSelectionViewModel,
+            //ViewModels.FamiliesDataGridViewModel familiesDataGridViewModel,
             Models.RevitFamiliesDataModel revitDataModel
             )
         {
             _revitFamiliesDataModel = revitDataModel;
+            //_familiesDataGridViewModel = familiesDataGridViewModel;
             _familiesSelectionViewModel = roomsSelectionViewModel;
             _familiesSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            //_familiesDataGridViewModel.PropertyChanged += OnViewModelPropertyChanged;
+
         }
 
     }

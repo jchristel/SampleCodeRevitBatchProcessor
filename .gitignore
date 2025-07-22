@@ -609,7 +609,7 @@ FodyWeavers.xsd
 # Include the specific .lib folders and bin folders
 #extension wide bin and lib folders
 !Samples/pyRevit/Extensions/bin
-!Samples/pyRevit/Extensions/lib
+!Samples/pyRevit/Extensions/lib/place extension libs here.txt
 
 # tab wide library folders
 !Samples/pyRevit/Extensions/duHast-202?.extension/duHast.tab/lib

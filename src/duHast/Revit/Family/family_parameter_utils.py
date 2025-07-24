@@ -444,3 +444,27 @@ def get_family_type_parameters(doc):
         return None
 
     return type_parameters
+
+
+
+def get_all_parameters_where_parameter_is_in_formula(doc, target_parameter):
+    
+
+    """
+    Get all parameters where the target parameter is used in a formula.
+    
+    Args:
+        doc: The Revit document.
+        target_parameter: The parameter to check in formulas.
+        
+    Returns:
+        A list of parameters that use the target parameter in their formulas.
+    """
+    
+    parameters = []
+    
+    for param in doc.FamilyManager.Parameters:
+        if param.IsFormula and target_parameter.Name in param.GetFormula():
+            parameters.append(param)
+    
+    return parameters

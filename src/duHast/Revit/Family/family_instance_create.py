@@ -191,3 +191,67 @@ def place_a_family_instance_in_basic_wall(
     transaction = Transaction(doc, "Placing Family")
     return_value = transaction_manager(transaction, action)
     return return_value
+
+
+def create_instance_in_family_in_view(doc, location_point, family_symbol, view, transaction_manager=in_transaction,modify_action=None):
+    """
+    Create a family instance in a specific view within a family document.
+
+    :param doc: The Revit document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param family_symbol: The family symbol to create an instance of.
+    :type family_symbol: Autodesk.Revit.DB.FamilySymbol
+    :param view: The view in which to create the instance.
+    :type view: Autodesk.Revit.DB.View
+    :param location_point: The location point for the instance.
+    :type location_point: Autodesk.Revit.DB.XYZ
+    :param modify_action: An action to run after the family instance is placed to modify its properties.
+    :type modify_action: function
+
+    :return: A result object indicating success or failure.
+    """
+    
+    return_value = res.Result()
+
+    # make sure this is a family document
+    if not doc.IsFamilyDocument:
+        return_value.update_sep(False, "Document is not a family document.")
+        return return_value
+
+
+    def action():
+        action_return_value = res.Result()
+        try:
+            # Ensure the family symbol is active
+            if not family_symbol.IsActive:
+                family_symbol.Activate()
+                doc.Regenerate()
+
+
+            # get the item factory
+            item_factory = doc.FamilyCreate
+
+            fam_instance_created = item_factory.NewFamilyInstance(location_point,family_symbol,view)
+
+            action_return_value.append_message("Family placed successfully.")
+            action_return_value.result.append(element)
+
+            # if a modify action is provided, run it
+            if modify_action:
+                modify_result = modify_action(element)
+                if isinstance(modify_result, res.Result):
+                    action_return_value.update(modify_result)
+            else:
+                action_return_value.append_message(
+                    "No modify action provided, skipping."
+                )
+
+        except Exception as e:
+            action_return_value.update_sep(
+                False, "Failed to place family instance: {}".format(e)
+            )
+        return action_return_value
+    
+    transaction = Transaction(doc, "Placing Family")
+    return_value = transaction_manager(transaction, action)
+    return return_value

@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="duHastNet.AtTheLibrary.Views.ParametersSelectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:duHastNet.AtTheLibrary.Views"
+             xmlns:utilsViews ="clr-namespace:duHastNet.Utils.WPF.Views;assembly=Utils.23.0.0.3"
+             xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.23.0.0.3"
+             xmlns:dynamicDataGrid="clr-namespace:duHastNet.UI.CustomControls.CustomDataGrid;assembly=duHastUICustomControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <!--boolean converters-->
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+    <Grid Margin="10 10 10 10">
+        <!-- Add your UI elements here -->
+        <Grid.RowDefinitions>
+            <!-- header row -->
+            <RowDefinition Height="auto"/>
+            <!-- message banner -->
+            <RowDefinition Height="auto"/>
+            <!-- data -->
+            <RowDefinition Height="*"/>
+            <!-- refresh / apply buttons -->
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <!-- header row content -->
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <!-- header row -->
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="At the library" FontSize="24"/>
+        </Grid>
+        <!-- message banner -->
+        <Grid Grid.Row="1">
+            <utilsViews:GlobalMessageBanner DataContext="{Binding GlobalMessageViewModel}"/>
+        </Grid>
+
+        <!-- dynamic grid view of room data -->
+        <dynamicDataGrid:DynamicDataGrid  
+            x:Name="dataGrid" 
+            Grid.Row="2"
+            DataContext="{Binding  ParametersDataGridViewModel}"
+            ItemsSource="{Binding Data}"
+            ColumnDefinitions="{Binding ColumnDefinitions}"
+            SelectionMode="Extended"
+            Margin="5 10 5 10"
+            dynamicDataGrid:DataGridColumnHeaderBehavior.EnableColumnManagement="False"
+            dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="False"
+            IsEnabled="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource InverseBooleanConverter}}">
+
+        </dynamicDataGrid:DynamicDataGrid>
+        <!-- button row content -->
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0"
+                Margin="0 5 5 5" 
+                Content="Apply"
+                Command="{Binding SelectFamilies}" 
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+            <Button Grid.Column="1"
+                Margin="0 5 5 5" 
+                Content="Cancel"
+                Command="{Binding LoadFamilyCommand}"
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+        </Grid>
+    </Grid>
+</UserControl>

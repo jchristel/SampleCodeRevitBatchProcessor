@@ -117,12 +117,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\LoadFamilyAsyncCommand.cs" />
+    <Compile Include="Commands\NavigateCommand.cs" />
     <Compile Include="Commands\RefreshUIFromRevitModelAsyncCommand.cs" />
     <Compile Include="Commands\ReloadDataFromFileAsyncCommand.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Models\Constants.cs" />
     <Compile Include="Models\FamiliesDataModelContainer.cs" />
     <Compile Include="Models\FamiliesParameterDataModelContainer.cs" />
+    <Compile Include="Models\ParameterDataProperty.cs" />
     <Compile Include="Models\FamilyRevit.cs" />
     <Compile Include="Models\FamilyDataModel.cs" />
     <Compile Include="Models\FamilyDataProperty.cs" />
@@ -136,9 +138,14 @@
     <Compile Include="Utilities\ReadFamilyData.cs" />
     <Compile Include="Utilities\Revit\RevitFamilyObjectsConverter.cs" />
     <Compile Include="Utilities\SettingsUtils.cs" />
+    <Compile Include="ViewModels\ParametersDataGridViewModel.cs" />
     <Compile Include="ViewModels\FamiliesDataGridViewModel.cs" />
+    <Compile Include="ViewModels\ParametersSelectionViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\FamiliesSelectionViewModel.cs" />
+    <Compile Include="Views\ParametersSelectionView.xaml.cs">
+      <DependentUpon>ParametersSelectionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FamiliesSelectionView.xaml.cs">
       <DependentUpon>FamiliesSelectionView.xaml</DependentUpon>
     </Compile>
@@ -151,6 +158,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\ParametersSelectionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\FamiliesSelectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

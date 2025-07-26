@@ -103,6 +103,10 @@ namespace duHastNet.AtTheLibrary
         }
 
 
+        /// <summary>
+        /// creates a default families selection view model
+        /// </summary>
+        /// <returns></returns>
         private ViewModels.FamiliesSelectionViewModel CreateFamiliesSelectionViewModel()
         {
             duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel _globa = new duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);
@@ -111,8 +115,26 @@ namespace duHastNet.AtTheLibrary
                 _revitDataModel,
                 _navigationStore,
                 _messageStore,
-                _globa);
+                _globa,
+                CreateParametersSelectionViewModel);
         }
+
+
+        /// <summary>
+        /// Creates a parameters selection view model
+        /// </summary>
+        /// <returns></returns>
+        private ViewModels.ParametersSelectionViewModel CreateParametersSelectionViewModel()
+        {
+            duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel _globa = new duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);
+            return new ViewModels.ParametersSelectionViewModel(
+                _revitDataModel,
+                _navigationStore,
+                _messageStore,
+                _globa,
+                CreateFamiliesSelectionViewModel);
+        }
+
 
         //assembly resolver static method
         /// <summary>

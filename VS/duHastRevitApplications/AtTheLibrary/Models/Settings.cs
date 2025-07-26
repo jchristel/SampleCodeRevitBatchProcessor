@@ -31,8 +31,11 @@ namespace duHastNet.AtTheLibrary.Models
         // path to the data file containing the family in library data
         public string DataPath { get; set; }
 
-        // list of supported Revit type parameter names
+        // list of supported Revit type parameter names ( this is a list of pre-selected parameters which can be shown in the UI )
         public List<string> SupportedTypeParameterNames { get; set; }
+
+        // list of shown Revit type parameter names ( this is a list of parameters are actually shown in the main ui )
+        public List<string> ShownTypeParameterNames { get; set; }
 
         /// <summary>
         /// field containing all the column ids (room properties) to be displayed
@@ -48,6 +51,7 @@ namespace duHastNet.AtTheLibrary.Models
         public Settings()
         {
             SupportedTypeParameterNames = new List<string>();
+            ShownTypeParameterNames = new List<string>();
             _columnIds = new List<string>();
             DataPath = string.Empty;
         }

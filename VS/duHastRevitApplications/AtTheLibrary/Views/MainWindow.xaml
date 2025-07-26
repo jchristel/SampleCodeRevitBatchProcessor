@@ -15,6 +15,9 @@
             <DataTemplate DataType="{x:Type vms:FamiliesSelectionViewModel}">
                 <views:FamiliesSelectionView/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type vms:ParametersSelectionViewModel}">
+                <views:ParametersSelectionView/>
+            </DataTemplate>
         </Grid.Resources>
         <ContentControl Content="{Binding CurrentViewModel}"/>
     </Grid>

@@ -25,7 +25,6 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
-using System.Data;
 using System.Windows.Input;
 
 namespace duHastNet.AtTheLibrary.ViewModels
@@ -52,6 +51,8 @@ namespace duHastNet.AtTheLibrary.ViewModels
         private readonly Commands.ReloadDataFromFileAsyncCommand _raiseReloadDataCommand;
         //command to load family from file path
         private readonly Commands.LoadFamilyAsyncCommand _loadFamilyCommand;
+        //command to navigate to parameters selction view model
+        private readonly Commands.NavigateCommand _navigateCommand;
 
         //property to check if there are any errors
         public bool HasErrors => _errorsViewModel.HasErrors;
@@ -140,6 +141,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
         public ICommand RefreshGUICommand { get { return _raiseRefreshGUICommand; } }
         public ICommand ReloadDataCommand { get { return _raiseReloadDataCommand; } }
         public ICommand LoadFamilyCommand { get { return _loadFamilyCommand; } }
+        public ICommand SelectParameters { get { return _navigateCommand; } }
 
         #endregion Commands
 
@@ -218,7 +220,8 @@ namespace duHastNet.AtTheLibrary.ViewModels
             Models.RevitFamiliesDataModel revitDataModel,
             Utils.WPF.Stores.NavigationStore navigationStore,
             Utils.WPF.Stores.MessageStore messageStore,
-            Utils.WPF.ViewModels.GlobalMessageViewModel globalMessageViewModel)
+            Utils.WPF.ViewModels.GlobalMessageViewModel globalMessageViewModel,
+            Func<ViewModels.ParametersSelectionViewModel> createViewModel)
         {
             //store services
             _navigationStore = navigationStore;
@@ -256,8 +259,14 @@ namespace duHastNet.AtTheLibrary.ViewModels
             // load family from file path
             _loadFamilyCommand = new Commands.LoadFamilyAsyncCommand(
                 familiesSelectionViewModel: this,
-                familiesDataGridViewModel:FamiliesDataGridViewModel,
+                familiesDataGridViewModel: FamiliesDataGridViewModel,
                 revitFamiliesDataModel: _revitDataModel
+            );
+
+            // navigate to parameter selection view model
+            _navigateCommand = new Commands.NavigateCommand(
+                navigationStore: navigationStore,
+                createViewModel: createViewModel
             );
 
             //update rooms data with data from revit through an external event

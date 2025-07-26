@@ -34,7 +34,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
     public class FamiliesDataGridViewModel: duHastNet.UI.CustomControls.ViewModels.BaseDynamicGridViewModel<DynamicRowData>
     {
         private Models.RevitFamiliesDataModel RevitDataModel { get; set; }
-       
+
 
         /// <summary>
         /// Dictionary containing custom default values for specific columns
@@ -149,7 +149,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
             };
 
             // add any other properties
-            foreach (var property in RevitDataModel.GetAllParameters())
+            foreach (var property in RevitDataModel.GetAllParameterNames())
             {
                 // skip the unique id property
                 //if (property.IsUniqueId)
@@ -163,7 +163,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
             }
 
             // Pre-compute the parameter name to column id lookup dictionary
-            _columnIdToParameterNameLookUp = RevitDataModel.GetAllParameters().ToDictionary(name => name.Replace(" ", ""), name => name);
+            _columnIdToParameterNameLookUp = RevitDataModel.GetAllParameterNames().ToDictionary(name => name.Replace(" ", ""), name => name);
 
             // Set up initial columns that should be visible by default
             SetupDefaultColumns();
@@ -284,7 +284,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
             };
 
             // add any other properties
-            foreach (var property in RevitDataModel.GetAllParameters())
+            foreach (var property in RevitDataModel.GetAllParameterNames())
             {
                 //// skip the unique id property
                 //if (property.IsUniqueId)

@@ -74,7 +74,7 @@ namespace duHastNet.AtTheLibrary.Models
         public bool LoadFamiliesData()
         {
             // add rooms to RevitDataModel
-            List<Models.FamilyDataModel> families = Utilities.ReadFamilyData.GetFamiliesData(filePath: Settings.DataPath, supportedParameterNames: Settings.SupportedTypeParameterNames);
+            List<Models.FamilyDataModel> families = Utilities.ReadFamilyData.GetFamiliesData(filePath: Settings.DataPath, supportedParameterNames: Settings.ShownTypeParameterNames);
 
             // TODO: if no families return (need to pop message to user...)
             if (families == null) return false;
@@ -96,7 +96,10 @@ namespace duHastNet.AtTheLibrary.Models
                 {
                     foreach (var para in paraNames)
                     {
-                        AddParameter(para);
+                        AddParameter(
+                            para,
+                            Settings.SupportedTypeParameterNames
+                        );
                     }
                 }
             }
@@ -104,20 +107,29 @@ namespace duHastNet.AtTheLibrary.Models
             return true;
         }
 
-        public void AddParameter(Models.FamilyDataProperty parameter)
+        /// <summary>
+        /// adds a family parameter to the data model
+        /// is required for column add and remove operations and column pre selection
+        /// </summary>
+        /// <param name="parameter"></param>
+        public void AddParameter(Models.FamilyDataProperty parameter, List<string> supportedParameterNames)
         {
-            _parameterDataContainer.AddParameter(parameter);
+            _parameterDataContainer.AddParameter(parameter, supportedParameterNames);
         }
-
 
         public void ClearParameters()
         {
             _parameterDataContainer.ClearParameters();
         }
 
-        public List<string> GetAllParameters()
+        public List<string> GetAllParameterNames()
         {
-            return _parameterDataContainer.GetAllParameters();
+            return _parameterDataContainer.GetAllParameterNames();
+        }
+
+        public List<Models.ParameterDataProperty> GetAllParameterProperties()
+        {
+            return _parameterDataContainer.GetParameterDataProperties();
         }
 
         public void InitialiseLogger(string filePath)

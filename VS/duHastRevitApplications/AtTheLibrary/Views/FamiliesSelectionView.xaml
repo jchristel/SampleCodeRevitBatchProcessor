@@ -42,15 +42,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style TargetType="DataGrid">
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="2"/>
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding IsFilterApplied}" Value="True">
-                    <Setter Property="BorderBrush" Value="Red"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
         <!--boolean converters-->
         <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
@@ -197,49 +188,15 @@
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <ScrollViewer   Grid.Row="0" Margin="5" HorizontalScrollBarVisibility="Auto">
-                                    <ListView 
-                                        ItemsSource="{Binding SupportedCategories}" 
-                                        Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}"
-                                        Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}">
-                                        <ListView.View>
-                                            <GridView>
-                                                <!-- select to reload column -->
-                                                <GridViewColumn>
-                                                    <GridViewColumnHeader Content="Select" />
-                                                    <GridViewColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <CheckBox 
-                                                            Padding="0 0 20 0" 
-                                                            IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"/>
-                                                        </DataTemplate>
-                                                    </GridViewColumn.CellTemplate>
-                                                </GridViewColumn>
-                                                <!-- category name column -->
-                                                <GridViewColumn>
-                                                    <GridViewColumnHeader Content="Parameter Name"/>
-                                                    <GridViewColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <TextBlock 
-                                                            Padding="0 0 20 0" 
-                                                            Text="{Binding CategoryName}"/>
-                                                        </DataTemplate>
-                                                    </GridViewColumn.CellTemplate>
-                                                </GridViewColumn>
-                                            </GridView>
-                                        </ListView.View>
-                                    </ListView>
-                                </ScrollViewer>
                                 <Button 
                                      Grid.Row="1" 
                                      Grid.Column="2" 
                                      Padding="20 0 20 0"
                                      Margin="5 10 0 10" 
-                                     Content="Apply"
-                                        Command="{Binding UpdateFromChangedCategoriesCommand}" 
-                                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                                     Content="Filter Available Parameters"
+                                     Command="{Binding SelectParameters}" 
+                                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
                                 />
                             </Grid>
                         </Expander>

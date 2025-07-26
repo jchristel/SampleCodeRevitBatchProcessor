@@ -24,36 +24,60 @@
 // a class containing all unique parameter names from all families
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace duHastNet.AtTheLibrary.Models
 {
     public class FamiliesParameterDataModelContainer
     {
         public List<string> _parameterNames;
-        
-        public void AddParameter(Models.FamilyDataProperty parameter)
+        public List<ParameterDataProperty> _parameterProperties;
+
+        public void AddParameter(Models.FamilyDataProperty parameter, List<string> supportedParameterNames)
         {
             if (!_parameterNames.Contains(parameter.Name))
             {
-
                 _parameterNames.Add(parameter.Name);
+
+                // convert family data property to parameter data property for UI
+                var parameterDataProperty = new Models.ParameterDataProperty(
+                    name: parameter.Name,
+                    showInUI: supportedParameterNames.Contains(parameter.Name),
+                    occurenceCount: 0);
+
+                _parameterProperties.Add(parameterDataProperty);
+            }
+            else
+            {
+                // increase the occurrence count of the parameter
+                var para = _parameterProperties.FirstOrDefault(p => p.Name == parameter.Name);
+                if (para != null)
+                {
+                    para.OccurenceCount++;
+                }
             }
         }
 
-        public List<string> GetAllParameters()
+        public List<string> GetAllParameterNames()
         {
             return _parameterNames;
         }
 
+        public List<Models.ParameterDataProperty> GetParameterDataProperties()
+        {
+            return _parameterProperties;
+        }
 
         public void ClearParameters()
         {
+            _parameterProperties.Clear();
             _parameterNames.Clear();
         }
 
         public FamiliesParameterDataModelContainer()
         {
             _parameterNames = new List<string>();
+            _parameterProperties = new List<ParameterDataProperty>();
         }
     }
 }

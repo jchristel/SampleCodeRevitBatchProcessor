@@ -28,16 +28,42 @@ namespace duHastNet.AtTheLibrary.Models
         private string _name;
         private int _occurenceCount;
         private bool _showInUI;
-
+        private bool _enabledInUI;
+        
+        /// <summary>
+        /// the parameter name
+        /// </summary>
         public string Name { get => _name; }
-        public int OccurenceCount { get => _occurenceCount; set => _occurenceCount = value; }
-        public bool ShowInUI { get => _showInUI; }
 
-        public ParameterDataProperty(string name, bool showInUI, int occurenceCount)
+
+        /// <summary>
+        /// count on how often this parameter occurs in the entire report (number of families)
+        /// </summary>
+        public int OccurenceCount { get => _occurenceCount; set => _occurenceCount = value; }
+
+
+        /// <summary>
+        /// flag indicating as to whether this parameter is visible as a column in the UI
+        /// </summary>
+        public bool ShowInUI { 
+            get => _showInUI; 
+            set => _showInUI = value;
+        }
+
+        /// <summary>
+        /// flag indicating as to whether this parameter can be added as a column to the UI
+        /// </summary>
+        public bool EnabledInUI { 
+            get => _enabledInUI;
+            set => _enabledInUI = value;
+        }
+
+        public ParameterDataProperty(string name, int occurenceCount, bool shownInUI, bool enabledInUI)
         {
             _name = name;
             _occurenceCount = occurenceCount;
-            _showInUI = showInUI;
+            _showInUI = shownInUI;
+            _enabledInUI = enabledInUI;
         }
     }
 }

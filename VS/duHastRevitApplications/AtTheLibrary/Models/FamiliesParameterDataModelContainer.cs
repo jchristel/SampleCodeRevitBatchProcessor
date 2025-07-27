@@ -33,7 +33,14 @@ namespace duHastNet.AtTheLibrary.Models
         public List<string> _parameterNames;
         public List<ParameterDataProperty> _parameterProperties;
 
-        public void AddParameter(Models.FamilyDataProperty parameter, List<string> supportedParameterNames)
+
+        /// <summary>
+        /// Converts a parameter from a family data property to a parameter data property and adds the parameter name and data property to internal lists
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <param name="enabledParameterNames"></param>
+        /// <param name="shownParameterNames"></param>
+        public void AddParameter(Models.FamilyDataProperty parameter, List<string> enabledParameterNames, List<string>shownParameterNames)
         {
             if (!_parameterNames.Contains(parameter.Name))
             {
@@ -42,8 +49,10 @@ namespace duHastNet.AtTheLibrary.Models
                 // convert family data property to parameter data property for UI
                 var parameterDataProperty = new Models.ParameterDataProperty(
                     name: parameter.Name,
-                    showInUI: supportedParameterNames.Contains(parameter.Name),
-                    occurenceCount: 0);
+                    occurenceCount: 0,
+                    shownInUI: shownParameterNames.Contains(parameter.Name),
+                    enabledInUI:enabledParameterNames.Contains(parameter.Name)
+                 );
 
                 _parameterProperties.Add(parameterDataProperty);
             }
@@ -58,22 +67,77 @@ namespace duHastNet.AtTheLibrary.Models
             }
         }
 
-        public List<string> GetAllParameterNames()
-        {
-            return _parameterNames;
-        }
 
-        public List<Models.ParameterDataProperty> GetParameterDataProperties()
-        {
-            return _parameterProperties;
-        }
-
+        /// <summary>
+        /// clears parameter names and property lists
+        /// </summary>
         public void ClearParameters()
         {
             _parameterProperties.Clear();
             _parameterNames.Clear();
         }
 
+
+        /// <summary>
+        /// loops over all parameter properties and makes sure that if a parameter is not enabled for the UI
+        /// its shown in UI property is also set to false
+        /// </summary>
+        public void VerifyEnabledVsShownInUI()
+        {
+            foreach (var parameter in _parameterProperties)
+            {
+                if (!parameter.EnabledInUI) {parameter.ShowInUI = false;}
+            }
+        }
+
+
+        /// <summary>
+        /// returns all parameter names of parameters which are enabled for the UI
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetAllEnabledParameterNames()
+        {
+            var enabledParameterNames = _parameterProperties
+                    .Where(p => p.EnabledInUI)
+                    .Select(p => p.Name)
+                    .ToList();
+            return enabledParameterNames;
+        }
+
+
+        /// <summary>
+        /// returns all parameter names of parameters visible in the UI
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetAllShownParameterNames()
+        {
+            var shownParameterNames = _parameterProperties
+                   .Where(p => p.ShowInUI)
+                   .Select(p => p.Name)
+                   .ToList();
+            return shownParameterNames;
+        }
+
+
+        /// <summary>
+        /// Returns a list of unique parameter names which occured in all families.
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetAllParameterNames()
+        {
+            return _parameterNames;
+        }
+
+        /// <summary>
+        /// Returns a list of unique parameter data properties from all families.
+        /// </summary>
+        /// <returns></returns>
+        public List<Models.ParameterDataProperty> GetParameterDataProperties()
+        {
+            return _parameterProperties;
+        }
+
+        
         public FamiliesParameterDataModelContainer()
         {
             _parameterNames = new List<string>();

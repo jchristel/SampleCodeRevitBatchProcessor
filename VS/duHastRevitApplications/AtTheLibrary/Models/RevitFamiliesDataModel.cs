@@ -71,10 +71,17 @@ namespace duHastNet.AtTheLibrary.Models
             _familiesContainer.ClearFamilies();
         }
 
+
+        /// <summary>
+        /// reds family data from file into the data model
+        /// </summary>
+        /// <returns></returns>
         public bool LoadFamiliesData()
         {
             // add rooms to RevitDataModel
-            List<Models.FamilyDataModel> families = Utilities.ReadFamilyData.GetFamiliesData(filePath: Settings.DataPath, supportedParameterNames: Settings.ShownTypeParameterNames);
+            List<Models.FamilyDataModel> families = Utilities.ReadFamilyData.GetFamiliesData(
+                filePath: Settings.DataPath
+                );
 
             // TODO: if no families return (need to pop message to user...)
             if (families == null) return false;
@@ -96,10 +103,7 @@ namespace duHastNet.AtTheLibrary.Models
                 {
                     foreach (var para in paraNames)
                     {
-                        AddParameter(
-                            para,
-                            Settings.SupportedTypeParameterNames
-                        );
+                        AddParameter(para);
                     }
                 }
             }
@@ -111,10 +115,13 @@ namespace duHastNet.AtTheLibrary.Models
         /// adds a family parameter to the data model
         /// is required for column add and remove operations and column pre selection
         /// </summary>
-        /// <param name="parameter"></param>
-        public void AddParameter(Models.FamilyDataProperty parameter, List<string> supportedParameterNames)
+        /// <param name="parameter">The parameter to be added</param>
+        public void AddParameter(Models.FamilyDataProperty parameter)
         {
-            _parameterDataContainer.AddParameter(parameter, supportedParameterNames);
+            _parameterDataContainer.AddParameter(
+                parameter, 
+                Settings.EnabledTypeParameterNames,
+                Settings.ShownTypeParameterNames);
         }
 
         public void ClearParameters()
@@ -125,6 +132,16 @@ namespace duHastNet.AtTheLibrary.Models
         public List<string> GetAllParameterNames()
         {
             return _parameterDataContainer.GetAllParameterNames();
+        }
+
+        public List<string> GetAllEnabeledParameterNames()
+        {
+            return _parameterDataContainer.GetAllEnabledParameterNames();
+        }
+
+        public List<string> GetAllShownParameterNames()
+        {
+            return _parameterDataContainer.GetAllShownParameterNames();
         }
 
         public List<Models.ParameterDataProperty> GetAllParameterProperties()

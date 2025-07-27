@@ -81,6 +81,7 @@
     <Compile Include="DesignSetAndOptions\DesignSetAndOptionsUtils.cs" />
     <Compile Include="Families\FamilyLoad.cs" />
     <Compile Include="Families\FamilyLoadOption.cs" />
+    <Compile Include="Families\FamilyOpenInUI.cs" />
     <Compile Include="Families\FamilyUtils.cs" />
     <Compile Include="Parameters\ParameterGetUtils.cs" />
     <Compile Include="Parameters\ParameterSetUtils.cs" />

@@ -31,14 +31,14 @@ namespace duHastNet.AtTheLibrary.Models
         // path to the data file containing the family in library data
         public string DataPath { get; set; }
 
-        // list of supported Revit type parameter names ( this is a list of pre-selected parameters which can be shown in the UI )
-        public List<string> SupportedTypeParameterNames { get; set; }
+        // list of enabled Revit type parameter names ( this is a list of pre-selected parameters which can be shown in the UI )
+        public List<string> EnabledTypeParameterNames { get; set; }
 
         // list of shown Revit type parameter names ( this is a list of parameters are actually shown in the main ui )
         public List<string> ShownTypeParameterNames { get; set; }
 
         /// <summary>
-        /// field containing all the column ids (room properties) to be displayed
+        /// field containing all the column ids (room properties) to be displayed in the ui at start up
         /// and id is the same as the property name but without any spaces!
         /// </summary>
         private List<string> _columnIds;
@@ -50,7 +50,7 @@ namespace duHastNet.AtTheLibrary.Models
 
         public Settings()
         {
-            SupportedTypeParameterNames = new List<string>();
+            EnabledTypeParameterNames = new List<string>();
             ShownTypeParameterNames = new List<string>();
             _columnIds = new List<string>();
             DataPath = string.Empty;

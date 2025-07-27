@@ -184,22 +184,20 @@
                             CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
                     </Grid>
                     <Border CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
-                        <Expander  Header="Settings" Margin="5 5 5 5">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Button 
-                                     Grid.Row="1" 
-                                     Grid.Column="2" 
-                                     Padding="20 0 20 0"
-                                     Margin="5 10 0 10" 
-                                     Content="Filter Available Parameters"
-                                     Command="{Binding SelectParameters}" 
-                                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
-                                />
-                            </Grid>
-                        </Expander>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Button 
+                                    Grid.Row="1" 
+                                    Grid.Column="2" 
+                                    Padding="20 0 20 0"
+                                    Margin="5 10 5 10" 
+                                    Content="Filter Available Parameters"
+                                    Command="{Binding SelectParameters}" 
+                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                            />
+                        </Grid>
                     </Border>
                 </StackPanel>
             </Expander>

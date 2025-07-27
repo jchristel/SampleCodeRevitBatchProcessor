@@ -26,6 +26,7 @@ using duHastNet.Utils.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 
 namespace duHastNet.AtTheLibrary.ViewModels
@@ -157,7 +158,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
             var rowData = new DynamicRowData();
 
             // Set the standard column values
-            rowData[Models.Constants.ColumnHeaderParameterIsSelected.Replace(" ", "")] = parameterEntry.ShowInUI;
+            rowData[Models.Constants.ColumnHeaderParameterIsSelected.Replace(" ", "")] = parameterEntry.EnabledInUI;
             rowData[Models.Constants.ColumnHeaderParameterName.Replace(" ", "")] = parameterEntry.Name;
             rowData[Models.Constants.ColumnHeaderParameterOccurenceCount.Replace(" ", "")] = parameterEntry.OccurenceCount;
 
@@ -169,11 +170,11 @@ namespace duHastNet.AtTheLibrary.ViewModels
         #region event handlers
 
         /// <summary>
-        /// Custom closing logic for RoomsSelectionViewModel
+        /// Custom closing logic for ParameterSelectionViewModel
         /// Disposes all external events from the event manager
         /// </summary>
         public override void OnClosing()
-        {
+        { 
             base.OnClosing();
         }
 
@@ -225,7 +226,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
                 // Set the value based on the property name
                 if (propertyName == Models.Constants.ColumnHeaderParameterIsSelected.Replace(" ", ""))
                 {
-                    rowData[propertyName] = parameter.ShowInUI;
+                    rowData[propertyName] = parameter.EnabledInUI;
                 }
                 else if (propertyName == Models.Constants.ColumnHeaderParameterName.Replace(" ", ""))
                 {
@@ -297,6 +298,106 @@ namespace duHastNet.AtTheLibrary.ViewModels
         }
 
 
+        /// <summary>
+        /// Synchronizes changes from the grid data back to the underlying SheetsDataModel
+        /// Call this method after bulk operations or when you need to ensure data consistency
+        /// </summary>
+        public void SyncGridDataToUnderlyingModel()
+        {
+            if (RevitDataModel?.GetAllParameterProperties() == null || Data == null) return;
+
+            var parameterDataProperties = RevitDataModel.GetAllParameterProperties();
+
+            var enabledColumnId = Models.Constants.ColumnHeaderParameterIsSelected.Replace(" ", "");
+
+            for (int i = 0; i < Data.Count && i < parameterDataProperties.Count; i++)
+            {
+                var gridRow = Data[i];
+                var parameter = parameterDataProperties[i];
+
+                // Sync the export/selection status
+                if (gridRow.Values.ContainsKey(enabledColumnId))
+                {
+                    var gridValue = gridRow.Values[enabledColumnId];
+                    if (gridValue is bool isSelected)
+                    {
+                        parameter.EnabledInUI = isSelected;
+                    }
+                }
+
+                // Sync other editable properties if needed
+                // Add more sync logic here for other properties that can be edited
+            }
+        }
+
+
+        /// <summary>
+        /// Sets up a property changed event handler to automatically sync data
+        /// Call this from constructor after initializing the data
+        /// </summary>
+        private void SetupDataSynchronization()
+        {
+            // Monitor changes to the Data collection
+            if (Data != null)
+            {
+                foreach (var row in Data)
+                {
+                    if (row is INotifyPropertyChanged notifyRow)
+                    {
+                        notifyRow.PropertyChanged += OnGridRowPropertyChanged;
+                    }
+                }
+
+                // Also monitor when new rows are added
+                Data.CollectionChanged += (s, e) =>
+                {
+                    if (e.NewItems != null)
+                    {
+                        foreach (var newItem in e.NewItems.OfType<INotifyPropertyChanged>())
+                        {
+                            newItem.PropertyChanged += OnGridRowPropertyChanged;
+                        }
+                    }
+
+                    if (e.OldItems != null)
+                    {
+                        foreach (var oldItem in e.OldItems.OfType<INotifyPropertyChanged>())
+                        {
+                            oldItem.PropertyChanged -= OnGridRowPropertyChanged;
+                        }
+                    }
+                };
+            }
+        }
+
+        /// <summary>
+        /// Handles property changes in grid rows and syncs to underlying model
+        /// </summary>
+        private void OnGridRowPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (sender is DynamicRowData row && e.PropertyName != null)
+            {
+                // Find the index of this row
+                var index = Data.IndexOf(row);
+                if (index >= 0 && index < RevitDataModel.GetAllParameterProperties().Count)
+                {
+                    var parameterDataProperty = RevitDataModel.GetAllParameterProperties()[index];
+
+                    // Sync specific properties
+                    var exportColumnId = Models.Constants.ColumnHeaderParameterIsSelected.Replace(" ", "");
+                    if (e.PropertyName == exportColumnId || e.PropertyName == "Values")
+                    {
+                        if (row.Values.ContainsKey(exportColumnId) && row.Values[exportColumnId] is bool isSelected)
+                        {
+                            parameterDataProperty.EnabledInUI = isSelected;
+                        }
+                    }
+
+                    // Add other property syncing as needed
+                }
+            }
+        }
+
         #endregion event handlers
 
 
@@ -315,6 +416,9 @@ namespace duHastNet.AtTheLibrary.ViewModels
 
             // Populate the grid with data from the sheets model
             LoadDataFromRevitDataModel();
+
+            // Set up automatic data synchronization
+            SetupDataSynchronization();
         }
     }
 }

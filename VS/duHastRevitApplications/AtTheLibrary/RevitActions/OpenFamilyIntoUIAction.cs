@@ -21,18 +21,23 @@
 //
 //
 
+
 using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
 using duHastNet.AtTheLibrary.Models;
 using System;
 
-
 namespace duHastNet.AtTheLibrary.RevitActions
 {
-    public class LoadFamilyAction : RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
+    public class OpenFamilyIntoUIAction : RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
     {
+        private readonly ViewModels.FamiliesDataGridViewModel _familiesDataGridViewModel;
+        public ViewModels.FamiliesDataGridViewModel FamiliesDataGridViewModel
+        {
+            get { return _familiesDataGridViewModel; }
+        }
 
-        private ViewModels.FamiliesDataGridViewModel _familiesDataGridViewModel;
-        public ViewModels.FamiliesDataGridViewModel FamiliesDataGridViewModel => _familiesDataGridViewModel;
+        private readonly UIApplication _uiApplication;
 
         public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
         {
@@ -43,48 +48,51 @@ namespace duHastNet.AtTheLibrary.RevitActions
                 var fam = _familiesDataGridViewModel.SelectedFamily;
 
                 // log the action
-                AddMessage($"Loading family {fam.FamilyName} and type {fam.FamilyTypeName} into Revit", Utils.WPF.Stores.MessageTypes.Log);
+                AddMessage($"Opening family {fam.FamilyName} into Revit", Utils.WPF.Stores.MessageTypes.Log);
 
-                // attempt to reload family
                 try
                 {
-                    var familyLoader = new duHastNet.RevitUtils.Families.FamilyLoad();
-                    bool loadResult = familyLoader.LoadFamilyType(doc, fam.FamilyFilePath.Value, fam.FamilyTypeName.Value, true);
+                    var familyOpener = new duHastNet.RevitUtils.Families.FamilyOpenInUI();
+                    bool loadResult = familyOpener.OpenFamilyIntoUI(_uiApplication, fam.FamilyFilePath.Value);
 
-                    if (familyLoader.GetErrorMessages().Count > 0)
+                    if (familyOpener.GetErrorMessages().Count > 0)
                     {
                         //log the error
-                        AddMessage($"Error loading family {fam.FamilyName.Value} and type {fam.FamilyTypeName.Value} into Revit: \n{string.Join("\n", familyLoader.GetErrorMessages())}", Utils.WPF.Stores.MessageTypes.Error);
+                        AddMessage($"Error opening family {fam.FamilyName.Value} into Revit: \n{string.Join("\n", familyOpener.GetErrorMessages())}", Utils.WPF.Stores.MessageTypes.Error);
                     }
                     else
                     {
                         //log the success
-                        AddMessage($"Loaded family {fam.FamilyName} and type {fam.FamilyTypeName} into Revit", Utils.WPF.Stores.MessageTypes.Information);
+                        AddMessage($"Opened family {fam.FamilyName} into Revit", Utils.WPF.Stores.MessageTypes.Information);
                     }
                 }
                 catch (Exception ex)
                 {
                     //log the exception
-                    AddMessage($"Loading family into Revit: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+                    AddMessage($"Opening family into Revit: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
                 }
             }
             catch (Exception ex)
             {
                 //log the exception
-                AddMessage($"Loading family into Revit: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+                AddMessage($"Error opening family into Revit: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
             }
 
             // build the return message depending on error count
-            return GetReturnValue("Loaded family into Revit");
+            return GetReturnValue("Opened family into Revit");
         }
 
-        public LoadFamilyAction(
+        public OpenFamilyIntoUIAction(
             RevitFamiliesDataModel revitModel,
-            ViewModels.FamiliesDataGridViewModel familiesSelectionViewModel
-           )
+            ViewModels.FamiliesDataGridViewModel familiesSelectionViewModel,
+            UIApplication uiApp
+            )
         {
-            RevitModel = revitModel;
-            _familiesDataGridViewModel = familiesSelectionViewModel;
+            {
+                RevitModel = revitModel;
+                _familiesDataGridViewModel = familiesSelectionViewModel;
+                _uiApplication = uiApp;
+            }
         }
     }
 }

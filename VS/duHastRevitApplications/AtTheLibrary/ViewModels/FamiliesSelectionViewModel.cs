@@ -22,6 +22,7 @@
 //
 
 
+using duHastNet.AtTheLibrary.Commands;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -51,6 +52,8 @@ namespace duHastNet.AtTheLibrary.ViewModels
         private readonly Commands.ReloadDataFromFileAsyncCommand _raiseReloadDataCommand;
         //command to load family from file path
         private readonly Commands.LoadFamilyAsyncCommand _loadFamilyCommand;
+        //command to open family into revit
+        private readonly Commands.OpenFamilyIntoUIAsyncCommand _openFamilyCommand;
         //command to navigate to parameters selction view model
         private readonly Commands.NavigateCommand _navigateCommand;
 
@@ -142,6 +145,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
         public ICommand ReloadDataCommand { get { return _raiseReloadDataCommand; } }
         public ICommand LoadFamilyCommand { get { return _loadFamilyCommand; } }
         public ICommand SelectParameters { get { return _navigateCommand; } }
+        public ICommand OpenFamilyIntoUICommand { get { return _openFamilyCommand; } }
 
         #endregion Commands
 
@@ -277,6 +281,12 @@ namespace duHastNet.AtTheLibrary.ViewModels
                 familiesDataGridViewModel: FamiliesDataGridViewModel,
                 revitFamiliesDataModel: _revitDataModel
             );
+
+            //open family into UI command
+            _openFamilyCommand = new OpenFamilyIntoUIAsyncCommand(
+                familiesSelectionViewModel: this,
+                familiesDataGridViewModel: FamiliesDataGridViewModel,
+                revitFamiliesDataModel: _revitDataModel);
 
             // navigate to parameter selection view model
             _navigateCommand = new Commands.NavigateCommand(

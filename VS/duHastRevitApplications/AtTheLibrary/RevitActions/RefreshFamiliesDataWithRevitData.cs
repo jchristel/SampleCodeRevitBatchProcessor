@@ -50,7 +50,7 @@ namespace duHastNet.AtTheLibrary.RevitActions
                 List<Models.FamilyDataModel> updatedFamilies = RefreshFamiliesData(
                     doc,
                     RevitModel.GetAllFamilies(),
-                    RevitModel.Settings.SupportedTypeParameterNames
+                    RevitModel.Settings.EnabledTypeParameterNames
                  );
 
                 // clear all rooms in the data model

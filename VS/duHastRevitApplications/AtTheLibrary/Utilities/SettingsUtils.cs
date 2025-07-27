@@ -75,7 +75,7 @@ namespace duHastNet.AtTheLibrary.Utilities
                     catch (Exception ex)
                     {
                         System.Windows.Forms.MessageBox.Show(
-                            $"failed to save settings with exception {ex.Message}",
+                            $"Failed to save settings with exception {ex.Message}",
                             "Exception at save",
                             System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                         return;
@@ -92,7 +92,7 @@ namespace duHastNet.AtTheLibrary.Utilities
             {
                 // Handle exceptions (e.g., file write errors)
                 System.Windows.Forms.MessageBox.Show(
-                            $"failed to save settings with exception {ex.Message}",
+                            $"Failed to save settings with exception {ex.Message}",
                             "Exception at save",
                             System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }

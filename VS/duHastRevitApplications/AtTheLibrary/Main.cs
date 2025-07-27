@@ -70,11 +70,6 @@ namespace duHastNet.AtTheLibrary
             // load settings from file
             Models.Settings settings = Utilities.SettingsUtils.LoadSettings();
 
-            // debug for now
-            // set the settings
-            if (settings.SupportedTypeParameterNames == null || settings.SupportedTypeParameterNames.Count == 0)
-                settings.SupportedTypeParameterNames = new List<string> { "HSL_AHFG_CODE", "HSL_AHFG_DESCRIPTION", "HSL_BUDGET_GROUP" };
-
             //store settings in data model
             _revitDataModel.Settings = settings;
 

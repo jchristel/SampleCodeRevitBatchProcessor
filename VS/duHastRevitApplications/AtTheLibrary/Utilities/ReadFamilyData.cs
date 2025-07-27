@@ -1,4 +1,28 @@
-﻿using CsvHelper;
+﻿//
+//License:
+//
+//
+// Revit Batch Processor Sample Code
+//
+// BSD License
+// Copyright 2025, Jan Christel
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+// - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+// - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+// - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+//
+// This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+// In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+// or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+//
+//
+//
+
+
+using CsvHelper;
 using CsvHelper.Configuration;
 using System;
 using System.Collections.Generic;
@@ -10,22 +34,22 @@ namespace duHastNet.AtTheLibrary.Utilities
 {
     public static class ReadFamilyData
     {
-        public static List<Models.FamilyDataModel> GetFamiliesData(string filePath, int rowsToSkip = 1, List<string> supportedParameterNames = null)
+        /// <summary>
+        /// Reads family data from a report file created from XML files using duHast pyRevit extension
+        /// </summary>
+        /// <param name="filePath">the location of the report file as fully qualified file path</param>
+        /// <param name="rowsToSkip">number of header rows to skip when reading the file data</param>
+        /// <returns></returns>
+        public static List<Models.FamilyDataModel> GetFamiliesData(string filePath, int rowsToSkip = 1)
         {
             // read data from comma separated file
             List<Models.FamilyDataModel> familiesData = new List<Models.FamilyDataModel>();
-
-            // check if supportedParameterNames is null and if so make it an empty list for the code to work
-            if (supportedParameterNames == null)
-            {
-                supportedParameterNames = new List<string>();
-            }
 
             //check if valid path
             if (!File.Exists(filePath))
             {
                 System.Windows.Forms.MessageBox.Show(
-                            $"Invalid data file path: {filePath}",
+                            $"Family report file does not exist at path: {filePath}",
                             "Attention",
                             System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                 return null;
@@ -88,7 +112,10 @@ namespace duHastNet.AtTheLibrary.Utilities
                             currentFamilyIdentifyer = csv.GetField(1) + "::" + csv.GetField(2) + "::" + csv.GetField(3);
 
                             // read the row and create a new family data property object
-                            var property = new Models.FamilyDataProperty(name: csv.GetField(6), showInUI: supportedParameterNames.Contains(csv.GetField(6)), value: csv.GetField(10));
+                            var property = new Models.FamilyDataProperty(
+                                name: csv.GetField(6), 
+                                value: csv.GetField(10)
+                            );
 
                             // check if the family has changed, if not no action required
                             if (currentFamilyIdentifyer != previousFamilyIdentifyer)
@@ -117,27 +144,22 @@ namespace duHastNet.AtTheLibrary.Utilities
                                     currentFamilyData = new Models.FamilyDataModel(
                                     id: new Models.FamilyDataProperty(
                                             name: nameof(Models.FamilyDataModel.Id),
-                                            showInUI: true,
                                             value: hashValue
                                         ),
                                     familyFilePath: new Models.FamilyDataProperty(
                                             name: nameof(Models.FamilyDataModel.FamilyFilePath),
-                                            showInUI: true,
                                             value: csv.GetField(0)
                                         ),
                                     familyName: new Models.FamilyDataProperty(
                                             name: nameof(Models.FamilyDataModel.FamilyName),
-                                            showInUI: true,
                                             value: csv.GetField(1)
                                         ),
                                     familyCategory: new Models.FamilyDataProperty(
                                             name: nameof(Models.FamilyDataModel.FamilyCategory),
-                                            showInUI: true,
                                             value: csv.GetField(2)
                                         ),
                                     familyTypeName: new Models.FamilyDataProperty(
                                             name: nameof(Models.FamilyDataModel.FamilyTypeName),
-                                            showInUI: true,
                                             value: csv.GetField(3)
                                         ),
                                     otherProperties: null);

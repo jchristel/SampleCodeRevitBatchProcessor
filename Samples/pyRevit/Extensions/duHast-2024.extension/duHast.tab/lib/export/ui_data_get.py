@@ -93,6 +93,7 @@ def get_ui_print_set_data(doc, sheets):
         # create a RevitPrintSet object with the set data
         revit_print_set = RevitPrintSet(
             name=set.Name,
+            requiresUpdate=False,
         )
 
         # iterate over the sheets in the set and add them to the RevitPrintSet object

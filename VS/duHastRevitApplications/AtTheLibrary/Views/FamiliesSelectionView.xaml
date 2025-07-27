@@ -130,7 +130,8 @@
             <Button Grid.Column="2"
                 Margin="0 5 5 5" 
                 Content="Edit family"
-                />
+                Command="{Binding OpenFamilyIntoUICommand}"
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
         </Grid>
         <!-- admin model data expander -->
         <Border Grid.Row="4" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">

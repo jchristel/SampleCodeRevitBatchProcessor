@@ -185,6 +185,21 @@ namespace duHastNet.AtTheLibrary.ViewModels
                 _revitDataModel.Settings.ColumnIds.Add(columnId.PropertyName);
             }
 
+            //clear the enabled column list
+            _revitDataModel.Settings.EnabledTypeParameterNames.Clear();
+            foreach (var enabledParameter in _revitDataModel.GetAllEnabeledParameterNames())
+            {
+                _revitDataModel.Settings.EnabledTypeParameterNames.Add(enabledParameter);
+            }
+
+            // clear the shown in UI column list ( this appears to be a duplicate to the column ID list?)
+            _revitDataModel.Settings.ShownTypeParameterNames.Clear();
+            foreach (var shownParameter in _revitDataModel.GetAllShownParameterNames())
+            {
+                _revitDataModel.Settings.ShownTypeParameterNames.Add(shownParameter);
+            }
+
+
             GlobalMessageViewModel.Dispose();
 
             base.OnClosing();
@@ -265,7 +280,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
 
             // navigate to parameter selection view model
             _navigateCommand = new Commands.NavigateCommand(
-                navigationStore: navigationStore,
+                navigationStore: _navigationStore,
                 createViewModel: createViewModel
             );
 

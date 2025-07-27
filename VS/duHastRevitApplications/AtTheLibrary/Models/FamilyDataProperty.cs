@@ -27,17 +27,19 @@ namespace duHastNet.AtTheLibrary.Models
     {
         private string _name;
         private string _value;
-        private bool _showInUI;
-
+        
+        /// <summary>
+        /// the parameter name
+        /// </summary>
         public string Name { get => _name; }
-        public string Value { get => _value; set => _value = value; }
-        public bool ShowInUI { get => _showInUI; }
 
-        public FamilyDataProperty(string name, bool showInUI, string value)
+        //the parameter value
+        public string Value { get => _value; set => _value = value; }
+
+        public FamilyDataProperty(string name, string value)
         {
             _name = name;
             _value = value;
-            _showInUI = showInUI;
         }
     }
 }

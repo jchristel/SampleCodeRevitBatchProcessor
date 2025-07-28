@@ -21,14 +21,27 @@
 //
 //
 
-namespace duHastNet.UI.FamilyReloaderUI.Utils
+namespace duHastNet.UI.FamilyReloaderUI.Models
 {
     public class Settings
     {
+        private string _targetDirectory;
+        public string TargetDirectory
+        {
+            get => _targetDirectory;
+            set => _targetDirectory = value;
+        }
+
+        private bool _includeSubdirectories;
+        public bool IncludeSubdirectories
+        {
+            get => _includeSubdirectories;
+            set => _includeSubdirectories = value;
+        }
 
         public Settings()
         {
-
+            _includeSubdirectories = false;
         }
     }
 }

@@ -45,7 +45,7 @@ namespace duHastNet.UI.FamilyReloaderUI.Utils
                 return families;
             }
 
-
+            return families;
         }
     }
 }

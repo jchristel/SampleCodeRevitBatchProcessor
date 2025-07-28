@@ -56,8 +56,8 @@
             ColumnDefinitions="{Binding ColumnDefinitions}"
             SelectionMode="Extended"
             Margin="5 10 5 10"
-            dynamicDataGrid:DataGridColumnHeaderBehavior.EnableColumnManagement="False"
-            dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="False">
+            dynamicDataGrid:DataGridColumnHeaderBehavior.EnableColumnManagement="True"
+            dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="True">
 
         </dynamicDataGrid:DynamicDataGrid>
         <!-- button row content -->

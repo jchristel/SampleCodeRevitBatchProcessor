@@ -27,6 +27,7 @@ This module contains a number of helper functions relating to Revit view schedul
 #
 
 from Autodesk.Revit.DB import (
+    BuiltInCategory,
     FilteredElementCollector,
     FilteredElementCollector, 
     ScheduleSheetInstance,
@@ -113,3 +114,75 @@ def get_schedules(doc):
         if not schedule.IsTitleblockRevisionSchedule:
             schedules_filtered.append(schedule)
     return schedules_filtered
+
+
+def get_schedules_by_built_in_category (doc, built_in_category):
+    """
+    Get all schedules in the current document by built-in category.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param built_in_category: Built-in category to filter schedules by.
+    :type built_in_category: Autodesk.Revit.DB.BuiltInCategory
+
+    :return: List of schedules in the current document filtered by built-in category.
+    :rtype: list[Autodesk.Revit.DB.ViewSchedule]
+    """
+    
+    schedules_filtered = []
+    
+    # get all schedules in the model
+    schedules_in_model = get_schedules(doc)
+
+    # get the category from the built-in category
+    cat = Category.GetCategory(doc, built_in_category)
+
+    # filter schedules by category
+    for schedule in schedules:
+	 	if schedule.Definition.CategoryId == cat.Id:
+            schedules_filtered.append(schedule)
+    
+    return schedules_filtered
+
+
+def get_all_multi_category_schedules(doc):
+    """
+    Get all multi-category schedules in the current document.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of multi-category schedules in the current document.
+    :rtype: list[Autodesk.Revit.DB.ViewSchedule]
+    """
+    
+    multi_category_schedules = []
+    
+    # get all schedules in the model
+    schedules_in_model = get_schedules(doc)
+
+    # filter for multi-category schedules (invalid category element id)
+    for schedule in schedules_in_model:
+        if schedule.Definition.CategoryId == ElementId.InvalidElementId:
+            multi_category_schedules.append(schedule)
+    
+    return multi_category_schedules
+
+
+def get_all_sheet_schedules(doc):
+    """
+    Get all schedules that are placed on sheets in the current document.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of schedules that are placed on sheets.
+    :rtype: list[Autodesk.Revit.DB.ViewSchedule]
+    """
+    
+    sheet_schedules = get_schedules_by_built_in_category (
+        doc=doc, 
+        built_in_category=BuiltInCategory.OST_Sheets
+    )
+    
+    return sheet_schedules

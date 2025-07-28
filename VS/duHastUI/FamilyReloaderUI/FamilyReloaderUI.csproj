@@ -7,7 +7,7 @@
     <ProjectGuid>{6CECE7D5-E2EB-4A41-8466-A7AB5B8AE46F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FamilyReloaderUI</RootNamespace>
+    <RootNamespace>duHastNet.UI.FamilyReloaderUI</RootNamespace>
     <AssemblyName>FamilyReloaderUI</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

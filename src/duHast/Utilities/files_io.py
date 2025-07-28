@@ -384,8 +384,11 @@ def is_back_up_file(file_path):
     if len(chunks) > 2:
         last_chunk = chunks[len(chunks) - 2]
         try:
-            converted_num = int(last_chunk)
-            is_backup = True
+            if len(last_chunk) == 4:
+                converted_num = int(last_chunk)
+                is_backup = True
+            else:
+                is_backup = False
         except Exception:
             pass
     return is_backup

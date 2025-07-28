@@ -118,6 +118,7 @@
   <ItemGroup>
     <Compile Include="Commands\LoadFamilyAsyncCommand.cs" />
     <Compile Include="Commands\NavigateCommand.cs" />
+    <Compile Include="Commands\OpenFamilyIntoUIAsyncCommand.cs" />
     <Compile Include="Commands\RefreshUIFromRevitModelAsyncCommand.cs" />
     <Compile Include="Commands\ReloadDataFromFileAsyncCommand.cs" />
     <Compile Include="Main.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RevitActions\LoadFamilyAction.cs" />
+    <Compile Include="RevitActions\OpenFamilyIntoUIAction.cs" />
     <Compile Include="RevitActions\RefreshFamiliesDataWithRevitData.cs" />
     <Compile Include="RevitActions\RevitActionBase.cs" />
     <Compile Include="Utilities\PropertyChangedEventNames.cs" />

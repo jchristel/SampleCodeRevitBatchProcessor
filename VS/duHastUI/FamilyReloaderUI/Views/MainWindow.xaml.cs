@@ -34,9 +34,9 @@ namespace duHastNet.UI.FamilyReloaderUI.Views
         /// <summary>
         /// settings object to created by the UI
         /// </summary>
-        Utils.Settings _settings;
+        Models.Settings _settings;
 
-        public Utils.Settings Settings
+        public Models.Settings Settings
         {
             get { return _settings; }
         }
@@ -44,7 +44,7 @@ namespace duHastNet.UI.FamilyReloaderUI.Views
         /// <summary>
         /// Class constructor
         /// </summary>
-        public MainWindow(Utils.Settings settings)
+        public MainWindow(Models.Settings settings)
         {
             InitializeComponent();
             _settings = settings;

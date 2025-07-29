@@ -139,7 +139,7 @@ def get_schedules_by_built_in_category (doc, built_in_category):
 
     # filter schedules by category
     for schedule in schedules:
-	 	if schedule.Definition.CategoryId == cat.Id:
+        if schedule.Definition.CategoryId == cat.Id:
             schedules_filtered.append(schedule)
     
     return schedules_filtered

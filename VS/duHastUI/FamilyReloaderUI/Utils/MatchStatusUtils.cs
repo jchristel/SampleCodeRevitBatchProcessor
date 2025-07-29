@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,16 +37,76 @@ namespace duHastNet.UI.FamilyReloaderUI.Utils
     {
         public static List<Models.RevitFamily> UpdateMatchStatus(List<Models.RevitFamily> families, Models.Settings settings)
         {
-            // check if there is a target directory
-            if (settings.TargetDirectory == null || 
-                settings.TargetDirectory == string.Empty||
-                !File.Exists(settings.TargetDirectory)
-                )
+
+            try
+            {
+                // check if there is a target directory
+                if (settings.TargetDirectory == null ||
+                    settings.TargetDirectory == string.Empty ||
+                    !File.Exists(settings.TargetDirectory)
+                    )
+                {
+                    return families;
+                }
+
+                // get all families from directory
+                List<string> familiesFound = duHastNet.Utils.FilesIO.FilesGet.GetFiles(
+                    settings.TargetDirectory,
+                    "*.rfa",
+                    settings.IncludeSubdirectories
+                 );
+
+                // check if any families where actually found
+                if (familiesFound.Count == 0) { return families; }
+
+                ///build a dictionary where key is the file name without extension and the value is a list of file paths
+                Dictionary<string, List<string>> familyLookup = new Dictionary<string, List<string>>();
+                foreach (var f in familiesFound)
+                {
+                    var fileName = Path.GetFileNameWithoutExtension(f);
+                    if (familyLookup.TryGetValue(fileName, out List<string> existingPaths))
+                    {
+                        // Key exists, add to existing list
+                        existingPaths.Add(f);
+                    }
+                    else
+                    {
+                        // Key doesn't exist, create new list
+                        familyLookup[fileName] = new List<string> { f };
+                    }
+                }
+
+                //loop over families and check for matches
+                for (int i = 0; i < families.Count; i++)
+                {
+                    if (familyLookup.TryGetValue(families[i].FamilyName, out List<string> matchingFamilies))
+                    {
+                        // Found matches
+                        if (matchingFamilies.Count == 1)
+                        {
+                            // no match found
+                            families[i].MatchStatus = MatchStatus.SingleMatch;
+                            families[i].FamilyFilePath = matchingFamilies[0];
+                        }
+                        else
+                        {
+                            families[i].MatchStatus = MatchStatus.MultipleMatches;
+                            families[i].FamilyFilePath = string.Empty;
+                        }
+                    }
+                    else
+                    {
+                        // no match found
+                        families[i].MatchStatus = MatchStatus.NoMatch;
+                        families[i].FamilyFilePath = string.Empty;
+                    }
+                }
+                return families;
+            }
+            catch (Exception)
             {
                 return families;
             }
-
-            return families;
         }
     }
 }

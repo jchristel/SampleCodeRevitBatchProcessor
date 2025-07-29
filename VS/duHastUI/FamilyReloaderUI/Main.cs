@@ -30,6 +30,70 @@ namespace duHastNet.UI.FamilyReloaderUI
         duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
         duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
 
+        Models.FamiliesDataModel _familiesDataModel;
+        Models.Settings _settings;
 
+        public Main(List<Models.RevitFamily> revitFamilies)
+        {
+            // do some sanity checking before proceeding:
+            // do we have any families?
+            if (revitFamilies == null || revitFamilies.Count == 0)
+            { throw new System.Exception("No families supplied."); }
+
+            //set up stores
+            _navigationStore = new NavigationStore();
+            _messageStore = new MessageStore();
+
+            //set up a setting object
+            //load settings from file is done in the view model
+            _settings = new Models.Settings();
+
+            //set up the families data model
+            _familiesDataModel = new Models.FamiliesDataModel(
+                revitFamilies: revitFamilies,
+                settings: _settings
+            );
+        }
+
+        // <summary>
+        /// Function which will display the families reload selection window and return the selected families to the caller
+        /// </summary>
+        public duHastNet.UI.FamilyReloaderUI.Utils.ReloadSelection Execute()
+        {
+            //create the settings view model
+            var settingsViewModel = CreateFamiliesSelectionViewModel();
+
+            //set the current view model to the settings view model
+            _navigationStore.CurrentViewModel = settingsViewModel;
+
+            //show the main window
+            Views.MainWindow mainWindow = new Views.MainWindow(_settings)
+            {
+                DataContext = new ViewModels.MainWindowViewModel(_navigationStore)
+            };
+
+            mainWindow.ShowDialog();
+
+
+            var reloadSelection = new Utils.ReloadSelection();
+
+            return reloadSelection;
+        }
+
+
+        /// <summary>
+        /// Creates the document selection view model.
+        /// </summary>
+        /// <returns></returns>
+        private ViewModels.FamiliesSelectionViewModel CreateFamiliesSelectionViewModel()
+        {
+            duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel _globalMessageViewModel = new duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);
+
+            return new ViewModels.FamiliesSelectionViewModel(
+                _familiesDataModel,
+                //_navigationStore,
+                _globalMessageViewModel,
+                _messageStore);
+        }
     }
 }

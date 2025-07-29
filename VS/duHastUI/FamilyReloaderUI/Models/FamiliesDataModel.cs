@@ -58,29 +58,19 @@ namespace duHastNet.UI.FamilyReloaderUI.Models
 
 
         /// <summary>
-        /// loads settings or if none exist, returns default settings
-        /// </summary>
-        private void LoadSettings()
-        {
-            _settings = Utils.SettingsUtils.LoadSettings();
-        }
-
-
-        /// <summary>
         /// Constructor for the sheets data model
         /// </summary>
         public FamiliesDataModel(
-            List<Models.RevitFamily> revitFamilies
+            List<Models.RevitFamily> revitFamilies,
+            Models.Settings settings
             )
         {
-            // Initialize the settings object
-            LoadSettings();
-
+            //store settings object
+            _settings = settings;
+            
             // store families
             _revitFamilies = revitFamilies;
 
-            //find matches for family in given folder
-            UpdateFamilyMatchStatus();
         }
     }
 }

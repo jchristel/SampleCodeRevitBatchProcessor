@@ -26,6 +26,7 @@ Revit file operations utility functions.
 #
 #
 
+import os
 
 from Autodesk.Revit.DB import (
     RelinquishOptions,
@@ -151,6 +152,13 @@ def save_as_family(
     """
 
     return_value = res.Result()
+
+    # add.rfa before getting the name from the file name since it may otherwise drop part of the name:
+    # ie."myfamily.part1" would become "myfamily" without the extension:
+    # this is not what we want.
+    if current_full_file_name.endswith(file_extension) == False:
+        current_full_file_name += file_extension
+
     revit_file_name = fileIO.get_file_name_without_ext(current_full_file_name)
     new_file_name = ""
     match = False
@@ -162,11 +170,13 @@ def save_as_family(
                 revit_file_name, new_name
             ))
             # save file under new name
-            new_file_name = target_directory_path + "\\" + new_name + file_extension
+            new_file_name = os.path.join(target_directory_path ,new_name)
+            if (new_file_name.endswith(file_extension)==False):
+                new_file_name += file_extension
             break
     if match == False:
         # save under same file name
-        new_file_name = target_directory_path + "\\" + revit_file_name + file_extension
+        new_file_name = os.path.join(target_directory_path, revit_file_name)
         return_value.append_message("Found no file name match for: {}".format(
             current_full_file_name
         ))

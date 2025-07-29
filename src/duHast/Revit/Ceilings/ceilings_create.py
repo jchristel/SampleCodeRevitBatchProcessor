@@ -30,7 +30,7 @@ from Autodesk.Revit.DB import BuiltInParameter, Ceiling,ElementId, Transaction
 
 
 
-def create_ceiling( doc, level_id, outline, elevation, ceiling_type_id, transaction_manager=in_transaction):
+def create_ceiling( doc, level_id, outline, elevation, ceiling_type_id, phase_created = None, transaction_manager=in_transaction):
     """
     Creates a ceiling in the given document at the specified level and elevation.
 
@@ -80,6 +80,11 @@ def create_ceiling( doc, level_id, outline, elevation, ceiling_type_id, transact
             param = ceiling.get_Parameter(BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM)
             param.Set(convert_mm_to_imperial_feet(elevation))
 
+            # set the phase created if there is one provided
+            if phase_created:
+                # set the phase created if there is one provided
+                ceiling.get_Parameter(BuiltInParameter.PHASE_CREATED).Set(phase_created.Id)
+           
             # add the ceiling element to the return object
             action_return_value.result.append(ceiling)
             action_return_value.append_message("created ceiling: {}".format(ceiling.Id))

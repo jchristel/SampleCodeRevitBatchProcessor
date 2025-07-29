@@ -80,7 +80,9 @@
     <Compile Include="Utils\MatchStatus.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Utils\MatchStatusUtils.cs" />
+    <Compile Include="Utils\ReloadSelection.cs" />
     <Compile Include="Utils\SettingsUtils.cs" />
+    <Compile Include="ViewModels\FamiliesSelectionViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

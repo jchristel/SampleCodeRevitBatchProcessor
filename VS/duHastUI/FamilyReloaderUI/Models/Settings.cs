@@ -21,10 +21,24 @@
 //
 //
 
+using System.Collections.Generic;
+
 namespace duHastNet.UI.FamilyReloaderUI.Models
 {
     public class Settings
     {
+
+        /// <summary>
+        /// field containing all the column ids (sheet properties) to be displayed
+        /// and id is the same as the parameter name but without any spaces!
+        /// </summary>
+        private List<string> _columnIds;
+
+        public List<string> ColumnIds
+        {
+            get => _columnIds;
+        }
+
         private string _targetDirectory;
         public string TargetDirectory
         {
@@ -37,6 +51,30 @@ namespace duHastNet.UI.FamilyReloaderUI.Models
         {
             get => _includeSubdirectories;
             set => _includeSubdirectories = value;
+        }
+
+        /// <summary>
+        /// updates this settings object from another one. If null is past in this will be reset to default values
+        /// </summary>
+        /// <param name="settings"></param>
+        public void UpdateSettingsFromSettings(Settings settings)
+        {
+            if (settings == null)
+            {
+                //reset to default
+                _columnIds = new List<string>();
+                _targetDirectory = string.Empty;
+                _includeSubdirectories = false;
+                return;
+            }
+            else
+            {
+                //deep copy of the column names
+                _columnIds = new List<string>(settings.ColumnIds);
+                _targetDirectory = settings.TargetDirectory;
+                _includeSubdirectories = settings.IncludeSubdirectories;
+                return;
+            }
         }
 
         public Settings()

@@ -33,30 +33,48 @@ namespace duHastNet.UI.FamilyReloaderUI.Utils
         private static string settingsFilePath = Path.Combine(settingsDirectory, "Reloader_settings.json");
 
         // Load settings from the settings file
-        public static Models.Settings LoadSettings()
+        public static Models.Settings LoadSettings(Action<string, duHastNet.Utils.WPF.Stores.MessageTypes> AddMessage)
         {
             try
             {
 
-                // return a default settings object if the settings file does not exist
-                if (!File.Exists(settingsFilePath))
+                //set up settings loader util
+                duHastNet.Utils.Settings.SettingsUtils settingsLoader = new duHastNet.Utils.Settings.SettingsUtils(settingsFilePath);
+
+                //load settings
+                Models.Settings settings = settingsLoader.LoadSettings<Models.Settings>();
+
+                //check if anything went wrong during settings load
+                if (settingsLoader.GetErrorMessages() != null && settingsLoader.GetErrorMessages().Count > 0)
                 {
-                    //initialize settings default
-                    Models.Settings settingsDefault = new Models.Settings();
-                    settingsDefault.TargetDirectory = string.Empty;
-                    return settingsDefault;
+                    foreach (string message in settingsLoader.GetErrorMessages())
+                    {
+                        if (AddMessage != null)
+                        {
+                            AddMessage(message, duHastNet.Utils.WPF.Stores.MessageTypes.Error);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Error loading settings: {message}");
+                        }
+                    }
                 }
 
-                //read the settings file
-                string jsonString = File.ReadAllText(settingsFilePath);
-                Models.Settings settings = JsonConvert.DeserializeObject<Models.Settings>(jsonString);
+                //return settings
                 return settings;
             }
             catch (Exception ex)
             {
-                // Handle exceptions (e.g., file not found, JSON deserialization errors)
-                Console.WriteLine($"Error loading settings: {ex.Message}");
-                return null;
+                if (AddMessage != null)
+                {
+                    AddMessage($"failed to load settings with exception {ex.Message}", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
+                }
+                else
+                {
+                    // Handle exceptions (e.g., file not found, JSON deserialization errors)
+                    Console.WriteLine($"Error loading settings: {ex.Message}");
+                }
+                return new Models.Settings();
             }
         }
 

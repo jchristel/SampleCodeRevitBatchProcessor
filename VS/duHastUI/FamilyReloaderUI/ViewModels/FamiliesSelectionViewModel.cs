@@ -71,7 +71,7 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
         /// <summary>
         /// View model managing the view selection data grid.
         /// </summary>
-        //public duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels.ViewSelectionDataGridViewModel ViewSelectionDataGridViewModel { get; }
+        public duHastNet.UI.FamilyReloaderUI.ViewModels.FamiliesSelectionDataGridViewModel FamiliesSelectionDataGridViewModel { get; }
 
 
         /// <summary>
@@ -85,10 +85,6 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
         /// </summary>
         private readonly duHastNet.Utils.WPF.Commands.RelayCommand _saveAndCloseCommand;
         public ICommand SaveAndCloseCommand { get { return _saveAndCloseCommand; } }
-
-
-
-
 
 
         /// <summary>
@@ -176,6 +172,10 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
 
             //load settings first
             LoadSettings();
+
+            //initialise the families grid view model
+            FamiliesSelectionDataGridViewModel = new FamiliesSelectionDataGridViewModel(
+               _familiesDataModel);
         }
     }
 }

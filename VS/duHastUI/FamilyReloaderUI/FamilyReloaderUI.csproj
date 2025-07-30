@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
+    <Compile Include="Models\Constants.cs" />
     <Compile Include="Models\RevitFamily.cs" />
     <Compile Include="Models\FamiliesDataModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -84,11 +85,17 @@
     <Compile Include="Utils\SettingsUtils.cs" />
     <Compile Include="ViewModels\FamiliesSelectionViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\FamiliesSelectionDataGridViewModel.cs" />
+    <Compile Include="Views\FamiliesSelectionView.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\FamiliesSelectionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -86,7 +86,7 @@
                 x:Name="dataGrid" 
                 Grid.Row="0"
                 Margin="5 10 5 10"
-                DataContext="{Binding  ViewSelectionDataGridViewModel}"
+                DataContext="{Binding  FamiliesSelectionDataGridViewModel}"
                 ItemsSource="{Binding Data}"
                 ColumnDefinitions="{Binding ColumnDefinitions}"
                 SelectionMode="Extended"
@@ -115,7 +115,7 @@
                     Grid.Row="0"
                     Grid.Column="1"
                     Margin="5 10 5 10"
-                    Text="{Binding ExportSheetsFilePath, 
+                    Text="{Binding LibraryFilePath, 
                            Mode=TwoWay,
                            UpdateSourceTrigger=PropertyChanged,
                            ValidatesOnNotifyDataErrors=True,

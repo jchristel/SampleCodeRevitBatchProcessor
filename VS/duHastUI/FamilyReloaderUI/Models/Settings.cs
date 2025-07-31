@@ -80,6 +80,7 @@ namespace duHastNet.UI.FamilyReloaderUI.Models
         public Settings()
         {
             _includeSubdirectories = false;
+            _columnIds = new List<string>();
         }
     }
 }

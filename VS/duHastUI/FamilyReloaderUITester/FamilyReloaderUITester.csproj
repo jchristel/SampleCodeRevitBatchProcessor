@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>duHastNet.UI.FamilyReloaderUITester</RootNamespace>
+	  <AssemblyName>FamilyReloaderUITester</AssemblyName>
+	  <Platforms>AnyCPU;x64</Platforms>
+	  <OutputPath>bin\x64\$(Configuration)\</OutputPath>
+	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+	<PropertyGroup Condition="'$(Platform)' == 'x64'">
+		<PlatformTarget>x64</PlatformTarget>
+	</PropertyGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\FamilyReloaderUI\FamilyReloaderUI.csproj" />
+  </ItemGroup>
+
+</Project>

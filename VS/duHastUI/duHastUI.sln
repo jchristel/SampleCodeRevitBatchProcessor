@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDFDWGExporterSelectionTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyReloaderUI", "FamilyReloaderUI\FamilyReloaderUI.csproj", "{AD82FBA0-4FB0-485E-8FF2-060C4700108F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyReloaderUITester", "FamilyReloaderUITester\FamilyReloaderUITester.csproj", "{480AD1AE-E357-4D3F-910F-953C48833BF9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,14 @@ Global
 		{AD82FBA0-4FB0-485E-8FF2-060C4700108F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AD82FBA0-4FB0-485E-8FF2-060C4700108F}.Release|x64.ActiveCfg = Release|Any CPU
 		{AD82FBA0-4FB0-485E-8FF2-060C4700108F}.Release|x64.Build.0 = Release|Any CPU
+		{480AD1AE-E357-4D3F-910F-953C48833BF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{480AD1AE-E357-4D3F-910F-953C48833BF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{480AD1AE-E357-4D3F-910F-953C48833BF9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{480AD1AE-E357-4D3F-910F-953C48833BF9}.Debug|x64.Build.0 = Debug|Any CPU
+		{480AD1AE-E357-4D3F-910F-953C48833BF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{480AD1AE-E357-4D3F-910F-953C48833BF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{480AD1AE-E357-4D3F-910F-953C48833BF9}.Release|x64.ActiveCfg = Release|Any CPU
+		{480AD1AE-E357-4D3F-910F-953C48833BF9}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

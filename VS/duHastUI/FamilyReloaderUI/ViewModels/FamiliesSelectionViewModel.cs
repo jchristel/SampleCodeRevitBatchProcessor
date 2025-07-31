@@ -111,7 +111,60 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
             _familiesDataModel.Settings.UpdateSettingsFromSettings(settings);
         }
 
+        /// <summary>
+        /// The file path for the exports to be saved to
+        /// </summary>
+        private string _selectedLibraryFilePath;
 
+        /// <summary>
+        /// property handling file path changes
+        /// </summary>
+        public string LibraryFilePath
+        {
+            get => _selectedLibraryFilePath;
+            set
+            {
+                if (_selectedLibraryFilePath != value)
+                {
+                    _selectedLibraryFilePath = value;
+
+
+                    _errorsViewModel.ClearErrors(nameof(LibraryFilePath));
+
+                    // check if the file path is valid, if not add an error
+                    if (string.IsNullOrEmpty(value))
+                    {
+                        // set the data path to invalid
+                        LibraryDirectoryPathValid = false;
+                        // this will trigger data validation
+                        // from the eventhandler ErrorsViewModel_ErrorsChanged
+                        _errorsViewModel.AddError(nameof(LibraryFilePath), "Library path path cannot be empty");
+                    }
+                    else if (!System.IO.Directory.Exists(value))
+                    {
+                        // set the data path to invalid
+                        LibraryDirectoryPathValid = false;
+                        // this will trigger data validation
+                        // from the eventhandler ErrorsViewModel_ErrorsChanged
+                        _errorsViewModel.AddError(nameof(LibraryFilePath), "Library path does not exist");
+                    }
+                    else
+                    {
+                        // set the data path to valid
+                        LibraryDirectoryPathValid = true;
+                        // this will trigger data validation
+                        // from the eventhandler ErrorsViewModel_ErrorsChanged
+                        _errorsViewModel.ClearErrors(nameof(LibraryFilePath));
+
+                        //save in settings
+                        _familiesDataModel.Settings.TargetDirectory = value;
+                    }
+
+
+                    OnPropertyChanged(nameof(LibraryFilePath));
+                }
+            }
+        }
         #region data validation
 
         private bool _libraryDirectoryPathValid;

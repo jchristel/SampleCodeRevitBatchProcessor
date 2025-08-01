@@ -28,6 +28,7 @@ This module contains a number of helper functions relating to Revit view schedul
 
 from Autodesk.Revit.DB import (
     BuiltInCategory,
+    Category,
     FilteredElementCollector,
     FilteredElementCollector, 
     ScheduleSheetInstance,
@@ -138,7 +139,7 @@ def get_schedules_by_built_in_category (doc, built_in_category):
     cat = Category.GetCategory(doc, built_in_category)
 
     # filter schedules by category
-    for schedule in schedules:
+    for schedule in schedules_in_model:
         if schedule.Definition.CategoryId == cat.Id:
             schedules_filtered.append(schedule)
     

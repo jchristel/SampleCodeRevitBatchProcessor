@@ -26,6 +26,9 @@ This module contains a number of helper functions relating to fields in Revit vi
 #
 #
 
+from Autodesk.Revit.DB import SectionType
+
+
 def get_field_names_from_schedule(schedule):
     """
     Get a list of all field names from a Revit schedule.
@@ -65,7 +68,7 @@ def get_field_names_to_parameters(schedule):
     """
 
     # create a dictionary to hold field names and their corresponding parameter IDs
-    field_name_to_id
+    field_names_to_id = {}
 
     # get the schedule definition
     schedule_definition = schedule.Definition
@@ -82,4 +85,58 @@ def get_field_names_to_parameters(schedule):
         # add the field name and parameter ID to the dictionary
         field_names_to_id[field_name]= parameter_id
     
-    return field_name_to_id
+    return field_names_to_id
+
+
+def get_field_values_from_schedule_by_parameter_id(schedule, parameter_id=None):
+    """
+    Get a list of all field values from a Revit schedule based on the parameter id.
+    
+    :param schedule: The Revit schedule object from which to extract field values.
+    :type schedule: Autodesk.Revit.DB.ViewSchedule
+    
+    :return: A list of field values in the schedule.
+    :rtype: list of str
+    """
+
+     # get the schedule definition
+    schedule_definition = schedule.Definition
+
+    # get the number of fields in the schedule
+    num_fields = schedule_definition.GetFieldCount()
+    
+    # ordered field list:
+    sorted_field_ids = schedule_definition.GetFieldOrder()
+
+    # get the column index
+    column_index = -1
+
+    for field_id in sorted_field_ids:
+       if field_id == parameter_id:
+            column_index = sorted_field_ids.index(field_id)
+            break
+
+    if column_index == -1:
+        raise ValueError("The specified parameter ID is not found in the schedule fields.")
+
+    # get the table data
+    table = schedule.GetTableData()
+
+    # get the body table data
+    table_body = table.GetSectionData(SectionType.Body)
+  
+    # get the number of rows in the body table 
+    num_rows = table_body.NumberOfRows
+
+    # create a list to hold the field values
+    field_values = []
+
+    for row in range(num_rows):
+        # get the cell text for the specified row and column
+        # get cell text expects the row number first, followed by the column number
+        cell_text = table_body.GetCellText(row, column_index)
+        
+        # append the cell text to the field values list
+        field_values.append(cell_text)
+    
+    return field_values

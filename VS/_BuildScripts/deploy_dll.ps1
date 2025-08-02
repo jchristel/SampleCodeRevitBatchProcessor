@@ -129,12 +129,14 @@ $pushItBasePath = "$basePath\VS\duHastRevitApplications\PushIt"
 $atTheLibraryBasePath = "$basePath\VS\duHastRevitApplications\AtTheLibrary"
 $uiPDFDWGExporterBasePath = "$basePath\VS\duHastUI\PDFDWGExporterUI"
 $uiPDFDWGExporterSelectionBasePath = "$basePath\VS\duHastUI\PDFDWGExporterSelectionUI"
+$uiFamilyReloaderBasePath = "$basePath\VS\duHastUI\FamilyReloaderUI"
 
 # Determine correct build paths using user-selected configuration
 $pushItBuildPath = Get-BuildType $pushItBasePath $buildConfig
 $atTheLibraryBuildPath = Get-BuildType $atTheLibraryBasePath $buildConfig
 $uiPDFDWGExporterBuildPath = Get-BuildType $uiPDFDWGExporterBasePath $buildConfig
 $uiPDFDWGExporterSelectionBuildPath = Get-BuildType $uiPDFDWGExporterSelectionBasePath $buildConfig
+$uiFamilyReloaderBuildPath = Get-BuildType $uiFamilyReloaderBasePath $buildConfig
 
 # Define source and destination paths for PushIt (using dynamic extension name)
 $sourceFilePushIt = "$pushItBuildPath\PushIt.dll"
@@ -173,6 +175,13 @@ $destinationFileUISelection = "$basePath\VS\_References\duHast\PDFDWGExporterSel
 
 Copy-Item -Path $sourceFileUISelection -Destination $destinationFileUISelection -Force
 Write-Output "File copied successfully from $sourceFileUISelection to $destinationFileUISelection"
+
+# copy reloader UI dlls
+$sourceFileFamilyReloaderUI = "$uiFamilyReloaderBuildPath\FamilyReloaderUI.dll"
+$destinationFileFamilyReloaderUI = "$basePath\VS\_References\duHast\FamilyReloaderUI.dll"
+# Copy Family Reloader UI DLL
+Copy-Item -Path $sourceFileFamilyReloaderUI -Destination $destinationFileFamilyReloaderUI -Force
+Write-Output "File copied successfully from $sourceFileFamilyReloaderUI to $destinationFileFamilyReloaderUI"
 
 # lib directory
 $sourceFolderLib="$basePath\VS\_References\duHast"

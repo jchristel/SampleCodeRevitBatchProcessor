@@ -47,6 +47,10 @@ namespace duHastNet.UI.FamilyReloaderUI.Views
         public MainWindow(Models.Settings settings)
         {
             InitializeComponent();
+
+            //subscribe to closing event
+            this.Closing += MainWindow_Closing;
+            
             _settings = settings;
         }
 
@@ -55,6 +59,7 @@ namespace duHastNet.UI.FamilyReloaderUI.Views
         /// </summary>  
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            // notify view models of closing
             if (DataContext is duHastNet.Utils.WPF.Interfaces.ICloseable closeable)
             {
                 closeable.OnClosing();

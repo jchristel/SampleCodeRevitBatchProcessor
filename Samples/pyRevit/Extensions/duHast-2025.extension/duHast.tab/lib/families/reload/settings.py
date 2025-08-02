@@ -67,10 +67,6 @@ DU_HAST_SETTINGS_DIRECTORY = os.path.join(
 # settings file name
 APP_SETTINGS_FILE_NAME = os.path.join(DU_HAST_SETTINGS_DIRECTORY, "reloader.json")
 
-# PRINT out all sys.path entries
-print("sys.path:")
-for path in sys.path:
-    print(" - {}".format(path))
 
 
 def get_settings():

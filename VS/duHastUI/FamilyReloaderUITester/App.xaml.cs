@@ -19,14 +19,16 @@ namespace FamilyReloaderUITester
             List<duHastNet.UI.FamilyReloaderUI.Models.RevitFamily> families = new List<duHastNet.UI.FamilyReloaderUI.Models.RevitFamily>
             {
                 new duHastNet.UI.FamilyReloaderUI.Models.RevitFamily("family One", "Casework",false),
-                new duHastNet.UI.FamilyReloaderUI.Models.RevitFamily("family two" ,"joinery", true),
-                new duHastNet.UI.FamilyReloaderUI.Models.RevitFamily("family three", "Generic Model", false)
+                new duHastNet.UI.FamilyReloaderUI.Models.RevitFamily("Furniture_2022" ,"Furniture", true),
+                new duHastNet.UI.FamilyReloaderUI.Models.RevitFamily("UnitTests_m", "Generic Model", false),
+                new duHastNet.UI.FamilyReloaderUI.Models.RevitFamily("Sample_Family_Five","specailty", false),
             };
 
             duHastNet.UI.FamilyReloaderUI.Main main = new duHastNet.UI.FamilyReloaderUI.Main(
                 revitFamilies: families
             );
-            var settings = main.Execute();
+            var famsToReload = main.Execute();
+            Console.WriteLine($"families to reload: {famsToReload.FamiliesToReload.Count}");
         }
         
     }

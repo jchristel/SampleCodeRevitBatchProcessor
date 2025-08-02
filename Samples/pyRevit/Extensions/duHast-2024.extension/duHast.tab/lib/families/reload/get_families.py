@@ -124,12 +124,12 @@ def get_families_in_model_net(doc):
             #string familyName, string familyCategory,  bool isShared, int revitElementId
             # build new data entry
             family_container = RevitFamilyNet(
-                revitElementId=FamilyID(revit_family.Id.IntegerValue),
+                revitElementId=revit_family.Id.IntegerValue,
                 familyName=revit_family_name,
                 familyCategory=revit_family.FamilyCategory.Name,
                 isShared=is_shared_from_family(revit_family),
             )
 
-            family_data.append(family_container)
+            family_data.Add(family_container)
 
     return family_data

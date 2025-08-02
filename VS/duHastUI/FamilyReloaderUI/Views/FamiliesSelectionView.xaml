@@ -104,6 +104,8 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Row="0"
                  Grid.Column="0"
@@ -120,13 +122,29 @@
                            UpdateSourceTrigger=PropertyChanged,
                            ValidatesOnNotifyDataErrors=True,
                            NotifyOnValidationError=True}"/>
+
+                <CheckBox 
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Content="Incl Sub Directories"
+                    Padding="10 0 10 0"
+                    Margin="5 10 5 10" 
+                    IsChecked="{Binding IncludeSubDirectoriesInSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Button 
-                 Grid.Row="0" 
-                 Grid.Column="2" 
-                 Padding="20 0 20 0"
-                 Margin="5 10 5 10" 
-                 Content="Browse"
-                 Click="Browse_OnClick"/>
+                     Grid.Row="0" 
+                     Grid.Column="3" 
+                     Padding="20 0 20 0"
+                     Margin="5 10 5 10" 
+                     Content="Browse"
+                     Click="Browse_OnClick"/>
+                <Button 
+                     Grid.Row="0" 
+                     Grid.Column="4" 
+                     Padding="20 0 20 0"
+                     Margin="5 10 5 10" 
+                     Content="Update"
+                     Command="{Binding UpdateCommand}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
             </Grid>
         </Border>
         <!--export format selector -->
@@ -143,12 +161,22 @@
                     Grid.Row="0"
                     Grid.Column="0"
                     GroupName="ImportType"
-                    Content="Import All Types On Reload"/>
+                    Content="Import All Types On Reload"
+                    IsChecked="{Binding LoadAllFamilyTypes, 
+                           Mode=TwoWay,
+                           UpdateSourceTrigger=PropertyChanged,
+                           ValidatesOnNotifyDataErrors=True,
+                           NotifyOnValidationError=True}"/>
                 <RadioButton
                     Grid.Row="0"
                     Grid.Column="1"
                     GroupName="ImportType"
-                    Content="Reload Existing Types Only"/>
+                    Content="Reload Existing Types Only"
+                    IsChecked="{Binding UpdateExistingTypesOnly, 
+                       Mode=TwoWay,
+                       UpdateSourceTrigger=PropertyChanged,
+                       ValidatesOnNotifyDataErrors=True,
+                       NotifyOnValidationError=True}"/>
             </Grid>
         </Border>
         

@@ -98,13 +98,24 @@ namespace duHastNet.UI.FamilyReloaderUI.Models
             set => _familyFilelastUpdated = value;
         }
 
+        /// <summary>
+        /// The revit element id of this sheet
+        /// </summary>
+        private int _revitElementId;
+        public int RevitElementId
+        {
+            get => _revitElementId;
+            set => _revitElementId = value;
+        }
+
 
         //default constructor
-        public RevitFamily(string familyName, string familyCategory,  bool isShared)
+        public RevitFamily(string familyName, string familyCategory,  bool isShared, int revitElementId)
         {
             _familyName = familyName;
             _familyCategory = familyCategory;
             _isShared = isShared;
+            _revitElementId = revitElementId;
 
             // set no match as the default value
             _matchStatus = Utils.MatchStatus.NoMatch;

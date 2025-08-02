@@ -21,36 +21,38 @@
 //
 //
 
+using System.Collections.Generic;
 
-using duHastNet.Utils.WPF.ViewModels;
-
-namespace duHastNet.UI.FamilyReloaderUI.ViewModels
+namespace duHastNet.UI.FamilyReloaderUI.Models
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class Constants
     {
-        private readonly duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
-        public duHastNet.Utils.WPF.ViewModels.ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
 
-        public MainWindowViewModel(duHastNet.Utils.WPF.Stores.NavigationStore navigationStore)
+        #region sheet property names
+
+        //public const string PropertyNameSheetName = "Sheet Name";
+        //public const string PropertyValueSheetNumber = "Sheet Number";
+        //public const string PropertyValueSheetRevitId = "SheetRevitId";
+
+        #endregion
+
+        #region column names data grid view
+
+        public static readonly Dictionary<string, string> ColumnInfo = new Dictionary<string, string>
         {
-            _navigationStore = navigationStore;
-            _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
-        }
+            {ColumnHeaderReload.Replace(" ", ""), ColumnHeaderReload },
+            {ColumnHeaderFamilyName.Replace(" ", ""), ColumnHeaderFamilyName },
+            {ColumnHeaderFamilyCategory.Replace(" ", "") , ColumnHeaderFamilyCategory },
+            {ColumnHeaderIsSharedFamily.Replace(" ", "") , ColumnHeaderIsSharedFamily },
+            
+        };
 
-        private void OnCurrentViewModelChanged()
-        {
-            OnPropertyChanged(nameof(CurrentViewModel));
-        }
 
-        public override void OnClosing()
-        {
-            // Notify the navigation store to close current view model
-            _navigationStore.NotifyClosing();
+        public const string ColumnHeaderReload = "Reload";
+        public const string ColumnHeaderFamilyName = "Family Name";
+        public const string ColumnHeaderFamilyCategory = "Family Category";
+        public const string ColumnHeaderIsSharedFamily = "IsShared";
 
-            // Custom closing logic for RoomsSelectionViewModel
-            _navigationStore.CurrentViewModelChanged -= OnCurrentViewModelChanged;
-
-            base.OnClosing();
-        }
+        #endregion
     }
 }

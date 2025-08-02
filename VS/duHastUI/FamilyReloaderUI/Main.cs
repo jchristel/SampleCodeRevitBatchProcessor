@@ -17,10 +17,8 @@
 //
 
 using System;
+using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using duHastNet.Utils.WPF.Stores;
 
 namespace duHastNet.UI.FamilyReloaderUI
@@ -53,6 +51,12 @@ namespace duHastNet.UI.FamilyReloaderUI
                 revitFamilies: revitFamilies,
                 settings: _settings
             );
+
+            // build a file path for the log file using the settings directory and the current date
+            string logFilePath = Path.Combine(Utils.SettingsUtils.settingsDirectory, "log_familyReloader_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt");
+            // set up the logger
+            _familiesDataModel.InitialiseLogger(logFilePath);
+
         }
 
         // <summary>
@@ -74,8 +78,20 @@ namespace duHastNet.UI.FamilyReloaderUI
 
             mainWindow.ShowDialog();
 
+            //store settings
+            Utils.SettingsUtils.SaveSettings(_familiesDataModel.Settings);
 
+            // get families to reload
+            var familiesToRelaod = _familiesDataModel.GetFamiliesToReload();
             var reloadSelection = new Utils.ReloadSelection();
+           
+            if (familiesToRelaod != null)
+            {
+                foreach (var family in familiesToRelaod)
+                {
+                    reloadSelection.AddFamily(family);
+                }
+            }
 
             return reloadSelection;
         }

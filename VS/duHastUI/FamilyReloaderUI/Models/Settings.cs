@@ -21,13 +21,15 @@
 //
 //
 
+using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace duHastNet.UI.FamilyReloaderUI.Models
 {
     public class Settings
     {
-
         /// <summary>
         /// field containing all the column ids (sheet properties) to be displayed
         /// and id is the same as the parameter name but without any spaces!
@@ -51,6 +53,14 @@ namespace duHastNet.UI.FamilyReloaderUI.Models
         {
             get => _includeSubdirectories;
             set => _includeSubdirectories = value;
+        }
+
+
+        private bool _loadAllFamilyTypesOnReload = false;
+        public bool LoadAllFamilyTypesOnReload
+        {
+            get => _loadAllFamilyTypesOnReload;
+            set => _loadAllFamilyTypesOnReload = value;
         }
 
         /// <summary>

@@ -22,6 +22,8 @@
 //
 
 
+using System;
+
 namespace duHastNet.UI.FamilyReloaderUI.Models
 {
     public class RevitFamily
@@ -84,6 +86,16 @@ namespace duHastNet.UI.FamilyReloaderUI.Models
         {
             get => _familyFilePath;
             set => _familyFilePath = value;
+        }
+
+        /// <summary>
+        /// nullable in case there are multiple matches
+        /// </summary>
+        private DateTime? _familyFilelastUpdated;
+        public DateTime? FamilyFileLastUpdated
+        {
+            get => _familyFilelastUpdated;
+            set => _familyFilelastUpdated = value;
         }
 
 

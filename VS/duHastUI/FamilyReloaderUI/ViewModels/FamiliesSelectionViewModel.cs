@@ -22,16 +22,13 @@
 //
 
 
-using duHastNet.Utils.WPF.Stores;
+
 using duHastNet.Utils.WPF.ViewModels;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Windows;
 using System.Windows.Input;
 
 namespace duHastNet.UI.FamilyReloaderUI.ViewModels
@@ -84,7 +81,14 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
         /// command to save the settings and close the window
         /// </summary>
         private readonly duHastNet.Utils.WPF.Commands.RelayCommand _saveAndCloseCommand;
+
+        /// <summary>
+        /// command to refresh match status of families in UI
+        /// </summary>
+        private readonly Commands.RefreshFamilyFileMatchDataCommand _updateCommand;
+
         public ICommand SaveAndCloseCommand { get { return _saveAndCloseCommand; } }
+        public ICommand UpdateCommand { get { return _updateCommand; } }
 
 
 
@@ -160,11 +164,98 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
                         _familiesDataModel.Settings.TargetDirectory = value;
                     }
 
-
                     OnPropertyChanged(nameof(LibraryFilePath));
                 }
             }
         }
+
+        /// <summary>
+        /// if true only existing types will be rleoaded
+        /// </summary>
+        private bool _updateExistingTypesOnly;
+        public bool UpdateExistingTypesOnly
+        {
+            get => _updateExistingTypesOnly;
+            set
+            {
+                _updateExistingTypesOnly = value;
+            }
+        }
+
+        /// <summary>
+        /// if true all family types will be loaded into the project
+        /// </summary>
+        private bool _loadAllFamilyTypes;
+        public bool LoadAllFamilyTypes
+        {
+            get => _loadAllFamilyTypes;
+            set
+            {
+                _loadAllFamilyTypes = value;
+                //store in settings
+                _familiesDataModel.Settings.LoadAllFamilyTypesOnReload = value;
+            }
+        }
+
+        /// <summary>
+        /// property indicating as to whether any subdirectories are to be included in search for matching family
+        /// </summary>
+        private bool _includeSudDirectoriesInSearch;
+        public bool IncludeSubDirectoriesInSearch
+        {
+            get => _includeSudDirectoriesInSearch;
+            set
+            {
+                _includeSudDirectoriesInSearch = value;
+                _familiesDataModel.Settings.IncludeSubdirectories = value;
+                RaisePropertyChanged(nameof(IncludeSubDirectoriesInSearch));
+
+                //refresh the view model data if command is available
+                if (UpdateCommand != null)
+                {
+                    UpdateCommand.Execute(null);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Custom closing logic for RoomsSelectionViewModel
+        /// Disposes all external events from the event manager
+        /// </summary>
+        public override void OnClosing()
+        {
+            //unsubscribe from errors changed event
+            _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
+
+            //update the column ids in settings.
+            // clear list first
+            _familiesDataModel.Settings.ColumnIds.Clear();
+            // add current list
+            foreach (var columnId in FamiliesSelectionDataGridViewModel.ColumnDefinitions)
+            {
+                _familiesDataModel.Settings.ColumnIds.Add(columnId.PropertyName);
+            }
+
+            // close any child view models
+            base.OnClosing();
+
+            GlobalMessageViewModel.Dispose();
+
+        }
+
+        /// <summary>
+        /// closes the window
+        /// </summary>
+        /// <param name="window"></param>
+        private void SaveSettingsAndClose(object window)
+        {
+            if (window is Window w)
+            {
+                w.Close(); // Closes the window
+            }
+        }
+
         #region data validation
 
         private bool _libraryDirectoryPathValid;
@@ -229,6 +320,30 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
 
             //load settings first
             LoadSettings();
+            //set the data file path
+            LibraryFilePath = _familiesDataModel.Settings.TargetDirectory;
+
+            //update load method readio buttons
+            UpdateExistingTypesOnly = !_familiesDataModel.Settings.LoadAllFamilyTypesOnReload;
+            LoadAllFamilyTypes = _familiesDataModel.Settings.LoadAllFamilyTypesOnReload;
+
+            //update the include sub dirs in seach checkbox
+            IncludeSubDirectoriesInSearch = _familiesDataModel.Settings.IncludeSubdirectories;
+
+
+            //commands
+            //refresh family match status
+            _updateCommand = new Commands.RefreshFamilyFileMatchDataCommand(this,  _familiesDataModel);
+
+            //save and exit
+            //only if there are no errors
+            _saveAndCloseCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
+                SaveSettingsAndClose,
+                (object parameter) => !HasErrors // Only enabled when there are no errors
+            );
+
+            //refresh the view model data
+            UpdateCommand.Execute(null);
         }
     }
 }

@@ -118,7 +118,7 @@ def reloaded_families_entry(doc, output, forms):
     # set up a status tracker
     return_value = Result()
 
-    # get alll families in file
+    # get all families in file
     families = get_families_in_model(doc=doc, library_path=None)
 
     print_header("Starting UI...")

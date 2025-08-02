@@ -45,6 +45,6 @@ output = script.get_output()
 doc = revit.doc
 
 # reload families
-from families.reload.reloader import reloaded_families_entry
+from families.reload.reloader_v2 import reloaded_families_entry
 
 reloaded_families_entry(doc=doc, output=output, forms=forms)

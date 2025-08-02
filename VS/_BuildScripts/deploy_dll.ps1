@@ -185,7 +185,7 @@ Write-Output "File copied successfully from $sourceFileFamilyReloaderUI to $dest
 
 # lib directory
 $sourceFolderLib="$basePath\VS\_References\duHast"
-$destinationFolderLib_one="$basePath\Samples\pyRevit\Extensions\bin"
+$destinationFolderLib_one="$basePath\Samples\pyRevit\Extensions\$pyRevitExtensionName\bin"
 $destinationFolderLib_two="$basePath\src\duHast\lib"
 
 # Function to clean and copy files

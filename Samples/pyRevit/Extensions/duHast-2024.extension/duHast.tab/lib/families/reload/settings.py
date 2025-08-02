@@ -21,6 +21,7 @@
 #
 
 import os
+import sys
 from duHast.Utilities.files_io import get_directory_path_from_file_path, file_exist
 from duHast.Utilities.directory_io import create_target_directory
 from duHast.Utilities.directory_io import get_parent_directory
@@ -65,6 +66,11 @@ DU_HAST_SETTINGS_DIRECTORY = os.path.join(
 )
 # settings file name
 APP_SETTINGS_FILE_NAME = os.path.join(DU_HAST_SETTINGS_DIRECTORY, "reloader.json")
+
+# PRINT out all sys.path entries
+print("sys.path:")
+for path in sys.path:
+    print(" - {}".format(path))
 
 
 def get_settings():

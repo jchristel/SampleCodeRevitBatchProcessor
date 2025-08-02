@@ -24,14 +24,18 @@ import clr
 
 clr.AddReference("System.Core")
 from System import Linq
-
 clr.ImportExtensions(Linq)
+from System.Collections.Generic import List
 
 # import Autodesk
 from Autodesk.Revit.DB import BuiltInCategory
 
 from duHast.Revit.Family.family_functions import get_name_to_family_dict
 from duHast.Revit.Family.family_utils import is_shared_from_family
+
+from duHast.pyRevit.net_dll_loader import load_net_dll_path
+
+
 
 from Models.RevitFamily import RevitFamily
 
@@ -76,6 +80,54 @@ def get_families_in_model(doc, library_path=None):
                 family_category=revit_family.FamilyCategory.Name,
                 is_shared=is_shared_from_family(revit_family),
                 match_status=MatchStatusNames.MATCH_OK.value,
+            )
+
+            family_data.append(family_container)
+
+    return family_data
+
+
+def get_families_in_model_net(doc):
+    """
+    Get all families in a model and discard any family that occurs more than once
+
+    :param doc: the revit document
+    :type doc: Autodesk.Revit.DB.Document
+    :param library_path: the directory to search for families
+    :type library_path: str
+
+    :return: a list of unique RevitFamily objects
+    :rtype: [:class:`.RevitFamily`]
+    """
+
+    # import RevitFamily class namespace
+    from duHastNet.UI.FamilyReloaderUI.Models import RevitFamily as RevitFamilyNet
+    
+    # build a list of RevitFamily objects
+    family_data = List[RevitFamilyNet]()
+    
+    # get all families in file
+    families = get_name_to_family_dict(doc)
+
+    # exclude mullions
+    cat_mullion = get_category_from_builtInCategory(
+        doc, BuiltInCategory.OST_CurtainWallMullions
+    )
+    # print("mullion_cat",cat_mullion, cat_mullion.Name)
+
+    for revit_family_name, revit_family in families.items():
+        # check if in place or mullion
+        if (
+            revit_family.IsInPlace == False
+            and revit_family.FamilyCategory.Name != cat_mullion.Name
+        ):
+            #string familyName, string familyCategory,  bool isShared, int revitElementId
+            # build new data entry
+            family_container = RevitFamilyNet(
+                revitElementId=FamilyID(revit_family.Id.IntegerValue),
+                familyName=revit_family_name,
+                familyCategory=revit_family.FamilyCategory.Name,
+                isShared=is_shared_from_family(revit_family),
             )
 
             family_data.append(family_container)

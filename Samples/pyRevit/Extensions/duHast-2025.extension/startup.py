@@ -64,7 +64,10 @@ startup_file_path = __file__
 startup_directory = System.IO.Path.GetDirectoryName(startup_file_path)
 
 # build the full path to the bin directory\
-bin_directory = System.IO.Path.Combine(os.path.dirname(startup_directory), bin_directory_within_extension)
+bin_directory = System.IO.Path.Combine(startup_directory, bin_directory_within_extension)
+
+if DEBUG:
+    print("Bin directory: {bin_directory}".format(bin_directory=bin_directory))
 
 # get all dlls in the bin directory
 dlls_to_load  = System.IO.Directory.GetFiles(bin_directory, "*.dll")

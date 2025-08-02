@@ -23,7 +23,9 @@
 
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace duHastNet.UI.FamilyReloaderUI.Models
 {
@@ -35,6 +37,7 @@ namespace duHastNet.UI.FamilyReloaderUI.Models
         private Models.Settings _settings;
         public Models.Settings Settings { get => _settings; set => _settings = value; }
 
+        private duHastNet.Utils.Logging.SimpleLogger _logger;
 
         /// <summary>
         /// contains the Revit sheets in the model
@@ -43,19 +46,64 @@ namespace duHastNet.UI.FamilyReloaderUI.Models
         public List<Models.RevitFamily> RevitFamilies
         {
             get => _revitFamilies;
-            set => _revitFamilies = value;
+            set 
+            { 
+                _revitFamilies = value;
+                //RaisePropertyChanged(nameof(RevitFamilies));
+            }
         }
 
-        
+        //event handlers for property changed
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void RaisePropertyChanged(string name)
+        {
+            OnPropertyChanged(name);
+        }
+
+
+        /// <summary>
+        /// returns selected families where the match status is single
+        /// </summary>
+        /// <returns></returns>
+        public List<Models.RevitFamily> GetFamiliesToReload()
+        {
+            // Find people who are over 25 AND live in New York
+            var result = RevitFamilies.Where(p => p.IsSelected == true && p.MatchStatus == Utils.MatchStatus.SingleMatch).ToList();
+            return result;
+        }
+
         /// <summary>
         /// finds the match status for each family in given directory structure
         /// </summary>
-        private void UpdateFamilyMatchStatus()
+        public void UpdateFamilyMatchStatus()
         {
             // update the match status of each family
             RevitFamilies = Utils.MatchStatusUtils.UpdateMatchStatus(_revitFamilies, _settings);
         }
 
+        /// <summary>
+        /// called from main
+        /// </summary>
+        /// <param name="filePath"></param>
+        public void InitialiseLogger(string filePath)
+        {
+            _logger = new duHastNet.Utils.Logging.SimpleLogger(filePath);
+        }
+
+        public void LogMessages(List<(string, duHastNet.Utils.WPF.Stores.MessageTypes)> messages)
+        {
+            if (_logger == null)
+            {
+                return;
+            }
+
+            _logger.LogMessagesFireAndForget(messages);
+        }
 
         /// <summary>
         /// Constructor for the sheets data model

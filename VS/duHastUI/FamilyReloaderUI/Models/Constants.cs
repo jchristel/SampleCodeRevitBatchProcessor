@@ -27,6 +27,8 @@ namespace duHastNet.UI.FamilyReloaderUI.Models
 {
     public class Constants
     {
+        // default name for families in model change
+        public const string DATA_MODEL_FAMILIES_UPDATED = "model families updated";
 
         #region sheet property names
 
@@ -44,7 +46,8 @@ namespace duHastNet.UI.FamilyReloaderUI.Models
             {ColumnHeaderFamilyName.Replace(" ", ""), ColumnHeaderFamilyName },
             {ColumnHeaderFamilyCategory.Replace(" ", "") , ColumnHeaderFamilyCategory },
             {ColumnHeaderIsSharedFamily.Replace(" ", "") , ColumnHeaderIsSharedFamily },
-            
+            {ColumnHeaderMatchStatus.Replace(" ", "") , ColumnHeaderMatchStatus },
+            {ColumnHeaderFamilyLastUpdated.Replace(" ", "") , ColumnHeaderFamilyLastUpdated },
         };
 
 
@@ -52,6 +55,8 @@ namespace duHastNet.UI.FamilyReloaderUI.Models
         public const string ColumnHeaderFamilyName = "Family Name";
         public const string ColumnHeaderFamilyCategory = "Family Category";
         public const string ColumnHeaderIsSharedFamily = "IsShared";
+        public const string ColumnHeaderMatchStatus = "Match Status";
+        public const string ColumnHeaderFamilyLastUpdated = "Family Last Updated";
 
         #endregion
     }

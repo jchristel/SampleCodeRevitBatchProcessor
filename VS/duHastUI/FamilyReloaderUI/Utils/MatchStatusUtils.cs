@@ -24,11 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 using System.IO;
 
 namespace duHastNet.UI.FamilyReloaderUI.Utils
@@ -43,7 +38,7 @@ namespace duHastNet.UI.FamilyReloaderUI.Utils
                 // check if there is a target directory
                 if (settings.TargetDirectory == null ||
                     settings.TargetDirectory == string.Empty ||
-                    !File.Exists(settings.TargetDirectory)
+                    !Directory.Exists(settings.TargetDirectory)
                     )
                 {
                     return families;
@@ -84,14 +79,19 @@ namespace duHastNet.UI.FamilyReloaderUI.Utils
                         // Found matches
                         if (matchingFamilies.Count == 1)
                         {
-                            // no match found
+                            // one exact match found
                             families[i].MatchStatus = MatchStatus.SingleMatch;
                             families[i].FamilyFilePath = matchingFamilies[0];
+
+                            // get the date either from the family file or a type catalogue file
+                            families[i].FamilyFileLastUpdated = GetFileDate(matchingFamilies[0]);
                         }
                         else
                         {
+                            // more than 1 match found
                             families[i].MatchStatus = MatchStatus.MultipleMatches;
                             families[i].FamilyFilePath = string.Empty;
+                            families[i].FamilyFileLastUpdated = null;
                         }
                     }
                     else
@@ -99,13 +99,36 @@ namespace duHastNet.UI.FamilyReloaderUI.Utils
                         // no match found
                         families[i].MatchStatus = MatchStatus.NoMatch;
                         families[i].FamilyFilePath = string.Empty;
+                        families[i].FamilyFileLastUpdated = null;
                     }
                 }
                 return families;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return families;
+            }
+        }
+
+
+        public static DateTime GetFileDate(string revitFamilyFilePath)
+        {
+            //get revit file date
+            DateTime revitFamilyFileLastModified = File.GetLastWriteTime(revitFamilyFilePath);
+
+            //check if there is a catalogue file
+            string catalogueFilePath = Path.ChangeExtension(revitFamilyFilePath, ".txt");
+            if (File.Exists(catalogueFilePath))
+            {
+                //if there is a catalogue file check which one was most recent modified
+                DateTime catalogueFileLastModified = File.GetLastWriteTime(catalogueFilePath);
+                DateTime mostRecent = revitFamilyFileLastModified > catalogueFileLastModified ? revitFamilyFileLastModified : catalogueFileLastModified;
+                return mostRecent;
+            }
+            else
+            {
+                return revitFamilyFileLastModified;
             }
         }
     }

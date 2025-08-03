@@ -33,6 +33,7 @@ namespace duHastNet.AtTheLibrary.Models
         public const string ColumnHeaderFamilyName = "Family Name";
         public const string ColumnHeaderFamilyCategory = "Family Category";
         public const string ColumnHeaderFamilyTypeName = "Family Type Name";
+        public const string ColumnHeaderTypeCatalogueFile = "Has Type Catalogue File";
 
 
         public static readonly Dictionary<string, string> ColumnFamiliesInfo = new Dictionary<string, string>
@@ -42,6 +43,7 @@ namespace duHastNet.AtTheLibrary.Models
             {ColumnHeaderFamilyName.Replace(" ",""), ColumnHeaderFamilyName},
             {ColumnHeaderFamilyCategory.Replace(" ",""), ColumnHeaderFamilyCategory},
             {ColumnHeaderFamilyTypeName.Replace(" ",""), ColumnHeaderFamilyTypeName},
+            {ColumnHeaderTypeCatalogueFile.Replace(" ",""), ColumnHeaderTypeCatalogueFile},
         };
 
         // column headers in paramter selection data grid

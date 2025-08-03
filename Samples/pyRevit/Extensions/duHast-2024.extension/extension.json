@@ -1,12 +1,13 @@
 {
+  "builtin": "False",
+  "type": "extension",
+  "rocket_mode_compatible": "False",
   "name": "duHast-2024",
   "version": "1.0.0", 
   "description": "duHast extension for Revit 2023 and 2024",
   "author": "Jan Christel",
   "min_revit_ver": 2023,
   "max_revit_ver": 2024,
-  "engines": {
-    "2023": { "clean": true },
-    "2024": { "clean": true }
-  }
+  "dependencies": []
 }
+    

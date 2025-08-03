@@ -135,7 +135,7 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
             {
                 try
                 {
-                    var rowData = CreateRowFromSheet(family);
+                    var rowData = CreateRowFromFamily(family);
                     Data.Add(rowData);
                 }
                 catch (Exception ex)
@@ -149,7 +149,7 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
         /// <summary>
         /// Convert a sheet object to a ViewDataViewModel for the grid
         /// </summary>
-        private DynamicRowData CreateRowFromSheet(Models.RevitFamily family)
+        private DynamicRowData CreateRowFromFamily(Models.RevitFamily family)
         {
             var rowData = new DynamicRowData();
 

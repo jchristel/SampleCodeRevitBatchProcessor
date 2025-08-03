@@ -51,6 +51,9 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FileIOWrapper">
+      <HintPath>..\..\_References\duHast\FileIOWrapper.dll</HintPath>
+    </Reference>
     <Reference Include="RevitAPI, Version=24.3.10.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\_References\Autodesk\RevitAPI.dll</HintPath>
@@ -83,6 +86,7 @@
     <Compile Include="Families\FamilyLoadOption.cs" />
     <Compile Include="Families\FamilyOpenInUI.cs" />
     <Compile Include="Families\FamilyUtils.cs" />
+    <Compile Include="Families\TypeCatalogueFileReader.cs" />
     <Compile Include="Parameters\ParameterGetUtils.cs" />
     <Compile Include="Parameters\ParameterSetUtils.cs" />
     <Compile Include="Parameters\ParaUtils.cs" />

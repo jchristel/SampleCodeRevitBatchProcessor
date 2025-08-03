@@ -28,7 +28,7 @@ namespace FamilyReloaderUITester
                 revitFamilies: families
             );
             var famsToReload = main.Execute();
-            Console.WriteLine($"families to reload: {famsToReload.FamiliesToReload.Count}");
+            //Console.WriteLine($"families to reload: {famsToReload.FamiliesToReload.Count}");
         }
         
     }

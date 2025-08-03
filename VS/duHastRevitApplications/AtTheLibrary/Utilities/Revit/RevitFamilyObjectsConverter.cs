@@ -34,16 +34,20 @@ namespace duHastNet.AtTheLibrary.Utilities.Revit
                 Models.FamilyRevit familyRevit = new Models.FamilyRevit(
                     id: new Models.FamilyDataProperty(
                         name: nameof(Models.FamilyRevit.Id),
-                        value: famId),
+                        value: famId,
+                        storageTypeString:"string"),
                     familyName: new Models.FamilyDataProperty(
                         name: nameof(Models.FamilyRevit.FamilyName),
-                        value: family.Name),
+                        value: family.Name,
+                        storageTypeString:"string"),
                     familyCategory: new Models.FamilyDataProperty(
                         name: nameof(Models.FamilyRevit.FamilyCategory),
-                        value: family.FamilyCategory.Name),
+                        value: family.FamilyCategory.Name,
+                        storageTypeString:"string"),
                     familyTypeName: new Models.FamilyDataProperty(
                         name: nameof(Models.FamilyRevit.FamilyTypeName),
-                        value: familyType.Name)
+                        value: familyType.Name,
+                        storageTypeString: "string")
                     );
 
                 familiesRevit.Add(familyRevit);

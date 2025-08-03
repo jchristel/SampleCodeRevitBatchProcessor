@@ -36,6 +36,7 @@ namespace duHastNet.AtTheLibrary.Models
         public FamilyDataProperty FamilyName { get; private set; }
         public FamilyDataProperty FamilyCategory { get; private set; }
         public FamilyDataProperty FamilyTypeName { get; private set; }
+        public bool HasTypeCatalogueFile { get; set; }
 
         /// <summary>
         /// Any other data model properties
@@ -75,6 +76,7 @@ namespace duHastNet.AtTheLibrary.Models
             FamilyDataProperty familyName,
             FamilyDataProperty familyCategory,
             FamilyDataProperty familyTypeName,
+            bool hasTypeCatalogueFile,
             List<FamilyDataProperty> otherProperties)
         {
             // set the id and other properties
@@ -83,6 +85,7 @@ namespace duHastNet.AtTheLibrary.Models
             FamilyName = familyName;
             FamilyCategory = familyCategory;
             FamilyTypeName = familyTypeName;
+            HasTypeCatalogueFile = hasTypeCatalogueFile;
 
             if (otherProperties != null)
             {

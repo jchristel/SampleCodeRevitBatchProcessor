@@ -113,7 +113,8 @@ namespace duHastNet.AtTheLibrary.Utilities
                         // read the row and create a new family data property object
                             var property = new Models.FamilyDataProperty(
                                 name: csv.GetField(6), 
-                                value: csv.GetField(10)
+                                value: csv.GetField(10),
+                                storageTypeString:csv.GetField(8)
                             );
 
                         // check if the family has changed, if not no action required
@@ -138,29 +139,38 @@ namespace duHastNet.AtTheLibrary.Utilities
                             }
                             else
                             {
+                                    //  check if the family has a type catalogue file
+                                    bool hasTypeCatalogueFile = HasTypeCatalogueFile(csv.GetField(0));
+                                    
                                 // family is not in the list
                                 // create a new family data object
                                 currentFamilyData = new Models.FamilyDataModel(
                                 id: new Models.FamilyDataProperty(
                                         name: nameof(Models.FamilyDataModel.Id),
-                                        value: hashValue
+                                            value: hashValue,
+                                            storageTypeString:"String"
                                     ),
                                 familyFilePath: new Models.FamilyDataProperty(
                                         name: nameof(Models.FamilyDataModel.FamilyFilePath),
-                                        value: csv.GetField(0)
+                                            value: csv.GetField(0),
+                                            storageTypeString: "String"
                                     ),
                                 familyName: new Models.FamilyDataProperty(
                                         name: nameof(Models.FamilyDataModel.FamilyName),
-                                        value: csv.GetField(1)
+                                            value: csv.GetField(1),
+                                            storageTypeString: "String"
                                     ),
                                 familyCategory: new Models.FamilyDataProperty(
                                         name: nameof(Models.FamilyDataModel.FamilyCategory),
-                                        value: csv.GetField(2)
+                                            value: csv.GetField(2),
+                                            storageTypeString: "String"
                                     ),
                                 familyTypeName: new Models.FamilyDataProperty(
                                         name: nameof(Models.FamilyDataModel.FamilyTypeName),
-                                        value: csv.GetField(3)
+                                            value: csv.GetField(3),
+                                            storageTypeString: "String"
                                     ),
+                                    hasTypeCatalogueFile: hasTypeCatalogueFile,
                                 otherProperties: null);
                             }
 
@@ -179,6 +189,27 @@ namespace duHastNet.AtTheLibrary.Utilities
             }
             // return list of RoomsDataModel
             return familiesData;
+        }
+
+        /// <summary>
+        /// check whether a family has a type cata logue file
+        /// </summary>
+        /// <param name="familyFilePath"></param>
+        /// <returns></returns>
+        public static bool HasTypeCatalogueFile (string familyFilePath)
+        {
+            try
+            {
+                //check if there is a catalogue file
+                string catalogueFilePath = Path.ChangeExtension(familyFilePath, ".txt");
+
+                return File.Exists(catalogueFilePath);
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
         }
     }
 }

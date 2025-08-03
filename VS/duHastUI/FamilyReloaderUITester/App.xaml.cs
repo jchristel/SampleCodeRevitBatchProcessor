@@ -14,9 +14,9 @@ namespace FamilyReloaderUITester
         {
             List<duHastNet.UI.FamilyReloaderUI.Models.RevitFamily> families = new List<duHastNet.UI.FamilyReloaderUI.Models.RevitFamily>
             {
-                new duHastNet.UI.FamilyReloaderUI.Models.RevitFamily("family One", "Casework",false),
-                new duHastNet.UI.FamilyReloaderUI.Models.RevitFamily("family two" ,"joinery", true),
-                new duHastNet.UI.FamilyReloaderUI.Models.RevitFamily("family three", "Generic Model", false)
+                new duHastNet.UI.FamilyReloaderUI.Models.RevitFamily("family One", "Casework",false,1),
+                new duHastNet.UI.FamilyReloaderUI.Models.RevitFamily("family two" ,"joinery", true,2),
+                new duHastNet.UI.FamilyReloaderUI.Models.RevitFamily("family three", "Generic Model", false,3)
             };
 
             duHastNet.UI.FamilyReloaderUI.Main main = new duHastNet.UI.FamilyReloaderUI.Main(

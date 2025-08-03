@@ -21,40 +21,38 @@
 //
 //
 
-using System.Collections.Generic;
 
-namespace duHastNet.UI.FamilyReloaderUI.Models
+using System;
+using System.Windows.Controls;
+
+namespace duHastNet.UI.FamilyReloaderUI.Views
 {
-    public class Constants
+    /// <summary>
+    /// Interaction logic for FamiliesSelectionView.xaml
+    /// </summary>
+    public partial class FamiliesSelectionView : UserControl
     {
-        // default name for families in model change
-        public const string DATA_MODEL_FAMILIES_UPDATED = "model families updated";
-
-        #region sheet property names
-
-        //public const string PropertyNameSheetName = "Sheet Name";
-        //public const string PropertyValueSheetNumber = "Sheet Number";
-        //public const string PropertyValueSheetRevitId = "SheetRevitId";
-
-        #endregion
-
-        #region column names data grid view
-
-        public static readonly Dictionary<string, string> ColumnInfo = new Dictionary<string, string>
+        public FamiliesSelectionView()
         {
-            {ColumnHeaderReload.Replace(" ", ""), ColumnHeaderReload },
-            {ColumnHeaderFamilyName.Replace(" ", ""), ColumnHeaderFamilyName },
-            {ColumnHeaderFamilyCategory.Replace(" ", "") , ColumnHeaderFamilyCategory },
-            {ColumnHeaderIsSharedFamily.Replace(" ", "") , ColumnHeaderIsSharedFamily },
-            
-        };
+            InitializeComponent();
+        }
 
+        private void Browse_OnClick(object sender, EventArgs e)
+        {
+            var dialog = new System.Windows.Forms.FolderBrowserDialog();
+            dialog.Description = "Browse to library folder";
+            var dialogResult = dialog.ShowDialog();
+            if (dialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                LibraryFilePathTextBox.Text = dialog.SelectedPath;
 
-        public const string ColumnHeaderReload = "Reload";
-        public const string ColumnHeaderFamilyName = "Family Name";
-        public const string ColumnHeaderFamilyCategory = "Family Category";
-        public const string ColumnHeaderIsSharedFamily = "IsShared";
+                // Since setting the property explicitly bypasses the data binding, 
+                // we must explicitly update it by calling BindingExpression.UpdateSource()
+                this.LibraryFilePathTextBox
+                  .GetBindingExpression(TextBox.TextProperty)
+                  .UpdateSource();
+            }
+        }
 
-        #endregion
     }
 }

@@ -31,7 +31,7 @@ using System.Linq;
 
 namespace duHastNet.AtTheLibrary.ViewModels
 {
-    public class ParametersDataGridViewModel : BaseDynamicGridViewModel<DynamicRowData>
+    public class ParametersDataGridViewModel : duHastNet.UI.CustomControls.ViewModels.BaseDynamicGridViewModel<DynamicRowData>
     {
         private Models.RevitFamiliesDataModel RevitDataModel { get; set; }
 

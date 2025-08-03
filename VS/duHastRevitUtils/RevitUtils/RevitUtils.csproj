@@ -35,5 +35,9 @@
       <HintPath>..\\..\\_References\\duHast\\Utils.25.0.0.1.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="FileIOWrapper.25.0.0.1">
+      <HintPath>..\\..\\_References\\duHast\\FileIOWrapper.25.0.0.1.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
 </Project>

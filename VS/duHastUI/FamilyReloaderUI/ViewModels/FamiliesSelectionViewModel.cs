@@ -68,7 +68,7 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
         /// <summary>
         /// View model managing the view selection data grid.
         /// </summary>
-        //public duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels.ViewSelectionDataGridViewModel ViewSelectionDataGridViewModel { get; }
+        public duHastNet.UI.FamilyReloaderUI.ViewModels.FamiliesSelectionDataGridViewModel FamiliesSelectionDataGridViewModel { get; }
 
 
         /// <summary>

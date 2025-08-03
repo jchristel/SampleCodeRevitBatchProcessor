@@ -69,6 +69,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CellEditor\BaseCellEditorViewModel.cs" />
     <Compile Include="Converters\StringContainsConverter.cs" />
     <Compile Include="CustomDataGrid\AvailableColumnDefinition.cs" />
     <Compile Include="CustomDataGrid\AvailableColumnDefinitions.ColumnUITypes.cs" />

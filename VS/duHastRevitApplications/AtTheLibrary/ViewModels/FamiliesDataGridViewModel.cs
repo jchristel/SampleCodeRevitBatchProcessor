@@ -146,6 +146,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
                 new AvailableColumnDefinition(Models.Constants.ColumnHeaderFamilyName.Replace(" ",""), Models.Constants.ColumnHeaderFamilyName, typeof(string)),
                 new AvailableColumnDefinition(Models.Constants.ColumnHeaderFamilyTypeName.Replace(" ",""), Models.Constants.ColumnHeaderFamilyTypeName, typeof(string)),
                 new AvailableColumnDefinition(Models.Constants.ColumnHeaderFamilyCategory.Replace(" ",""), Models.Constants.ColumnHeaderFamilyCategory, typeof(string)),
+                new AvailableColumnDefinition(Models.Constants.ColumnHeaderTypeCatalogueFile.Replace(" ",""), Models.Constants.ColumnHeaderTypeCatalogueFile, typeof(bool)),
             };
 
             // add any other properties
@@ -218,7 +219,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
             rowData[Models.Constants.ColumnHeaderFamilyName.Replace(" ", "")] = familyEntry.FamilyName.Value;
             rowData[Models.Constants.ColumnHeaderFamilyTypeName.Replace(" ", "")] = familyEntry.FamilyTypeName.Value;
             rowData[Models.Constants.ColumnHeaderFamilyCategory.Replace(" ", "")] = familyEntry.FamilyCategory.Value;
-
+            rowData[Models.Constants.ColumnHeaderTypeCatalogueFile.Replace(" ", "")] = familyEntry.HasTypeCatalogueFile;
 
             foreach (var property in familyEntry.Properties)
             {
@@ -281,6 +282,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
                 {Models.Constants.ColumnHeaderFamilyName.Replace(" ",""), vm => "-"},
                 {Models.Constants.ColumnHeaderFamilyTypeName.Replace(" ",""), vm => "-"},
                 {Models.Constants.ColumnHeaderFamilyCategory.Replace(" ",""), vm => "-"},
+                {Models.Constants.ColumnHeaderTypeCatalogueFile.Replace(" ",""), vm=> false},
             };
 
             // add any other enabled properties
@@ -348,6 +350,10 @@ namespace duHastNet.AtTheLibrary.ViewModels
                 else if (propertyName == Models.Constants.ColumnHeaderFamilyCategory.Replace(" ", ""))
                 {
                     rowData[propertyName] = family.FamilyCategory.Value;
+                }
+                else if(propertyName == Models.Constants.ColumnHeaderTypeCatalogueFile.Replace(" ",""))
+                {
+                    rowData[propertyName] = family.HasTypeCatalogueFile;
                 }
                 else
                 {

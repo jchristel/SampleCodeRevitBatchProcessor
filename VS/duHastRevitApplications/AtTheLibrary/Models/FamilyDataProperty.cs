@@ -21,25 +21,53 @@
 //
 //
 
+using System;
+
 namespace duHastNet.AtTheLibrary.Models
 {
     public class FamilyDataProperty
     {
-        private string _name;
+        private readonly string _name;
         private string _value;
-        
+        private readonly Type _storageType;
+
         /// <summary>
         /// the parameter name
         /// </summary>
         public string Name { get => _name; }
 
-        //the parameter value
-        public string Value { get => _value; set => _value = value; }
+        public Type StorageType { get => _storageType; }
 
-        public FamilyDataProperty(string name, string value)
+        // the parameter value
+        public string Value { get => _value; set => _value = value; } // Fixed syntax
+
+        private Type GetTypeFromString(string typeString)
+        {
+            if (string.IsNullOrEmpty(typeString))
+                return typeof(string);
+
+            switch (typeString.ToLower())
+            {
+                case "string":
+                    return typeof(string);
+                case "int":
+                    return typeof(int);
+                case "double":
+                    return typeof(double);
+                case "bool":
+                    return typeof(bool);
+                case "datetime":
+                    return typeof(DateTime);
+                default:
+                    return Type.GetType(typeString) ?? typeof(string);
+            }
+        }
+
+        public FamilyDataProperty(string name, string value, string storageTypeString)
         {
             _name = name;
             _value = value;
+            _storageType = GetTypeFromString(storageTypeString);
         }
     }
 }

@@ -93,6 +93,9 @@ namespace duHastNet.UI.FamilyReloaderUI
                 }
             }
 
+            // determine whether all types have to be reloaded
+            reloadSelection.LoadAllFamilyTypesOnReload = _familiesDataModel.Settings.LoadAllFamilyTypesOnReload;
+
             return reloadSelection;
         }
 

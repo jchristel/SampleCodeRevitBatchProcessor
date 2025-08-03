@@ -140,11 +140,16 @@
     <Compile Include="Utilities\ReadFamilyData.cs" />
     <Compile Include="Utilities\Revit\RevitFamilyObjectsConverter.cs" />
     <Compile Include="Utilities\SettingsUtils.cs" />
+    <Compile Include="Utilities\Revit\TypeCatalogueFileUtils.cs" />
+    <Compile Include="ViewModels\TypeCatalogueViewModel.cs" />
     <Compile Include="ViewModels\ParametersDataGridViewModel.cs" />
     <Compile Include="ViewModels\FamiliesDataGridViewModel.cs" />
     <Compile Include="ViewModels\ParametersSelectionViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\FamiliesSelectionViewModel.cs" />
+    <Compile Include="Views\TypeCatalogueFileEditorView.xaml.cs">
+      <DependentUpon>TypeCatalogueFileEditorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ParametersSelectionView.xaml.cs">
       <DependentUpon>ParametersSelectionView.xaml</DependentUpon>
     </Compile>
@@ -160,6 +165,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\TypeCatalogueFileEditorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\ParametersSelectionView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

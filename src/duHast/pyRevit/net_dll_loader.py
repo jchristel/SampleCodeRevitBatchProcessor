@@ -59,12 +59,16 @@ def load_net_dll_path(dlls_to_load):
         return_value.append_message("Parent directory: {}".format(parent_directory))
 
         # get all the lib paths from the sys.path
-        lib_paths = [path for path in sys.path if path.endswith(".lib")]
+        lib_paths = [path for path in sys.path if path.endswith("lib")]
 
         if not lib_paths or len(lib_paths) == 0:
             return_value.update_sep(
                 False, "No lib paths found in sys.path."
             )
+
+            for p in sys.path:
+                return_value.append_message("sys.path entry: {}".format(p))
+
             return return_value
         else:
             for p in lib_paths:

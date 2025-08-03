@@ -20,17 +20,68 @@
 #
 #
 
-import os
-import settings
-
 from duHast.Utilities.Objects.result import Result
+from duHast.Revit.Family.family_reload_single import reload_family
 
 from duHast.pyRevit.console_output import print_header, print_error
 from duHast.pyRevit.net_dll_loader import load_net_dll_path
 
 from families.reload.get_families import get_families_in_model_net
 
+
+from Autodesk.Revit.DB import ElementId
+
 DEBUG = False
+
+
+
+def reload_families(doc, families, forms):
+    """
+    Reloads families in the Revit model.
+    
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param families: List of families to reload.
+    :type families: list of Family objects
+    :param forms: pyRevit forms module.
+    :type forms: pyRevit forms module
+    :return: Result class instance.
+        - `result` (bool): True if families were reloaded successfully, otherwise False.
+        - `message` (str): details about the reloading process.
+    :rtype: :class:`.Result`
+    """
+    
+    return_value = Result()
+
+    fam_counter = 0
+    # set up a pyRevit progress bar
+    with forms.ProgressBar(
+        title="Reloading families: {value} of {max_value}", cancellable=True
+    ) as pb:
+        try:
+            for fam in families:
+                # reload_family(doc, family, family_file_path):
+                revit_family = doc.GetElement(ElementId(fam.RevitElementId))
+                reload_result = reload_family(
+                    doc=doc, 
+                    family=revit_family, 
+                    family_file_path=fam.FamilyFilePath
+                )
+                return_value.update(reload_result)
+
+                # check for cancel
+                if pb.cancelled:
+                    return_value.update_sep(False, "User cancelled.")
+                    # get out of loop
+                    break
+
+                fam_counter = fam_counter + 1
+                pb.update_progress(fam_counter, len(families))
+
+        except Exception as e:
+            print(e)
+    return return_value
+
 
 def reloaded_families_entry(doc, output, forms):
     """
@@ -73,7 +124,7 @@ def reloaded_families_entry(doc, output, forms):
             return_value.update_sep(True, "No families found in the model.")
             return return_value
         
-        # import the UI class from the PDFDWGExporterUI namespace
+        # import the UI class from the FamilyReloaderUI namespace
         from duHastNet.UI.FamilyReloaderUI import Main
        
         # create an instance of the Main class
@@ -82,7 +133,25 @@ def reloaded_families_entry(doc, output, forms):
         # show the output window
         families_reload = main.Execute()
         
-        print(families_reload)
+        #check what came back from the UI
+        if not families_reload or not families_reload.FamiliesToReload or families_reload.FamiliesToReload.Count == 0:
+            print("No families to reload selected.")
+            return_value.append_message("No families to reload selected.")
+            return return_value
+        
+        
+        # reload the families
+        print("Will {} reload families").format(families_reload.FamiliesToReload.Count)
+        
+        reloader_result = reload_families(
+            doc=doc, families=families_reload.FamiliesToReload, forms=forms
+        )
+        return_value.update(reloader_result)
+        print(reloader_result.message)
+        
+
+        print("Finished.")
+        return return_value
 
     
     except Exception as e:
@@ -92,3 +161,4 @@ def reloaded_families_entry(doc, output, forms):
             False, "Failed to reload families with exception: {}".format(e)
         )
         print(message)
+        return return_value

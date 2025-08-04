@@ -69,7 +69,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CellEditor\BaseCellEditorViewModel.cs" />
+    <Compile Include="CellEditor\CellEditor.cs" />
     <Compile Include="Converters\StringContainsConverter.cs" />
     <Compile Include="CustomDataGrid\AvailableColumnDefinition.cs" />
     <Compile Include="CustomDataGrid\AvailableColumnDefinitions.ColumnUITypes.cs" />
@@ -98,6 +98,7 @@
       <DependentUpon>FilterTextDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\BaseDynamicGridViewModel.cs" />
+    <Compile Include="ViewModels\CellEditorViewModel.cs" />
     <Page Include="CustomDataGrid\DynamicDataGridStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

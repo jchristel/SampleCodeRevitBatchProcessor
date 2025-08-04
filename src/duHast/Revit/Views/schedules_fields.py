@@ -91,6 +91,7 @@ def get_field_names_to_parameters(schedule):
 def get_field_values_from_schedule_by_parameter_id(schedule, parameter_id=None):
     """
     Get a list of all field values from a Revit schedule based on the parameter id.
+
     
     :param schedule: The Revit schedule object from which to extract field values.
     :type schedule: Autodesk.Revit.DB.ViewSchedule
@@ -111,9 +112,28 @@ def get_field_values_from_schedule_by_parameter_id(schedule, parameter_id=None):
     # get the column index
     column_index = -1
 
-    for field_id in sorted_field_ids:
-       if field_id == parameter_id:
-            column_index = sorted_field_ids.index(field_id)
+    # loop through the fields in order of appearance in schedule to find the column index for the specified parameter ID
+    for i in range(num_fields):
+        field_id = sorted_field_ids[i]
+        # print("Field ID: {field_id}, Parameter ID: {parameter_id}".format(
+        #     field_id=field_id,
+        #     parameter_id=parameter_id
+        # ))
+
+        field_by_field_id = schedule_definition.GetField(field_id)
+        #print("field by field ID",field_by_field_id.GetName())
+
+        field_index = schedule_definition.GetField(i)
+        #print("field by index",field_index.GetName())
+
+        if field_by_field_id.ParameterId == parameter_id and field_by_field_id.IsHidden == False:
+            column_index = i
+
+            # print("Found column index: {column_index} for parameter ID: {parameter_id} for schedule {schedule_name}".format(
+            #     column_index=column_index,
+            #     parameter_id=parameter_id,
+            #     schedule_name=schedule.Name
+            # ))
             break
 
     if column_index == -1:
@@ -135,8 +155,13 @@ def get_field_values_from_schedule_by_parameter_id(schedule, parameter_id=None):
         # get the cell text for the specified row and column
         # get cell text expects the row number first, followed by the column number
         cell_text = table_body.GetCellText(row, column_index)
-        
+        print("Row: {row}, Column: {column_index}, Cell Text: {cell_text}".format(
+            row=row,
+            column_index=column_index,
+            cell_text=cell_text
+        ))
         # append the cell text to the field values list
         field_values.append(cell_text)
     
+    print (field_values)
     return field_values

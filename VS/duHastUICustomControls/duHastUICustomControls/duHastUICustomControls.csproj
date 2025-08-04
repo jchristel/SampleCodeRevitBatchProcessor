@@ -70,6 +70,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CellEditor\CellEditor.cs" />
+    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\InverseBooleanConverter.cs" />
+    <Compile Include="Converters\NullToBooleanConverter.cs" />
     <Compile Include="Converters\StringContainsConverter.cs" />
     <Compile Include="CustomDataGrid\AvailableColumnDefinition.cs" />
     <Compile Include="CustomDataGrid\AvailableColumnDefinitions.ColumnUITypes.cs" />
@@ -99,6 +102,10 @@
     </Compile>
     <Compile Include="ViewModels\BaseDynamicGridViewModel.cs" />
     <Compile Include="ViewModels\CellEditorViewModel.cs" />
+    <Page Include="CellEditor\CellEditorStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CustomDataGrid\DynamicDataGridStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

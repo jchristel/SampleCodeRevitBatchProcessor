@@ -220,8 +220,6 @@ def read_excel_file(file_path, excel_tab_name=None):
                 False, "Failed to read Excel file. Error: {}".format(e)
             )
 
-        wb.Close(False)
-        excel.Quit()
         return_value.update_sep(True, "Successfully read Excel file.")
         return_value.result = used_data
     except Exception as e:
@@ -269,7 +267,7 @@ def read_excel_file_fast(file_path, excel_tab_name=None):
         if data_result.status is False:
             raise ValueError(data_result.message)
         data = data_result.result
-        
+
         return_value.append_message(
             "Successfully read temp csv file. Number of rows read: {}".format(len(data))
         )

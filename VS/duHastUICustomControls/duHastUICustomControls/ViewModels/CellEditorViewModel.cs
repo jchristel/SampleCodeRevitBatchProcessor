@@ -1,5 +1,4 @@
-﻿
-//
+﻿//
 //License:
 //
 //
@@ -20,26 +19,35 @@
 // or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 //
 
-
 using duHastNet.UI.CustomControls.CustomDataGrid;
 using duHastNet.Utils.WPF.ViewModels;
+using duHastNet.Utils.WPF.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
 
 namespace duHastNet.UI.CustomControls.ViewModels
 {
-    // Add the missing enum if it's not defined elsewhere
-    public enum ColumnUIType
-    {
-        Standard,
-        DropDown,
-        DatePicker,
-        CheckBox
-    }
-
     public class CellEditorViewModel : BaseDynamicGridViewModel<CellEditorRowData>
     {
+        #region Additional Commands
+        public ICommand DuplicateRowCommand { get; }
+        #endregion
+
+        public CellEditorViewModel()
+        {
+            // Initialize the duplicate row command
+            DuplicateRowCommand = new RelayCommand(param => DuplicateRowFromParameter(param));
+        }
+
+        private void DuplicateRowFromParameter(object parameter)
+        {
+            if (parameter is CellEditorRowData row)
+            {
+                DuplicateRow(row);
+            }
+        }
         public void LoadData(List<string> headers, List<List<object>> dataRows)
         {
             // Clear existing data
@@ -238,12 +246,5 @@ namespace duHastNet.UI.CustomControls.ViewModels
         }
 
         #endregion
-    }
-
-    public class CellEditorRowData : DynamicRowData
-    {
-        public CellEditorRowData() : base()
-        {
-        }
     }
 }

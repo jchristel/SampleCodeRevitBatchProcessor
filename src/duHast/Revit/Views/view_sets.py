@@ -205,6 +205,9 @@ def update_view_set(view_set, sheets, views, clear_existing=True, transaction_ma
     if not isinstance(view_set, ViewSheetSet):
         raise ValueError("view_set needs to be of type:  ViewSheetSet.  Got instead: {}".format(type(view_set)))
     
+    # set up a return object
+    return_value = Result()
+
     # get the ids of what is currently in the view set
     existing_sheets, existing_views = get_sheets_and_views_from_view_set(view_set)
 
@@ -261,5 +264,75 @@ def update_view_set(view_set, sheets, views, clear_existing=True, transaction_ma
     return return_value
 
 
+def get_view_set_by_name(doc, view_set_name):
+    """
+    Retrieves a view set by its name from the Revit document.
+
+    :param doc: The Revit document to search for the view set.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view_set_name: The name of the view set to retrieve.
+    :type view_set_name: str
+
+    :return: The ViewSheetSet object if found, otherwise None.
+    :rtype: Autodesk.Revit.DB.ViewSheetSet or None
+    """
+
+    # get all view sets in the document
+    view_sets = get_view_sets(doc)
+
+    # iterate through the view sets and return the one with the matching name
+    for view_set in view_sets:
+        if view_set.Name == view_set_name:
+            return view_set
+    
+    return None
+
 def create_new_view_set(doc, view_set_name, sheets, views, transaction_manager = in_transaction):
-    pass
+    
+    # set up a return object
+    return_value = Result()
+
+    # check view set with given name already exists?
+    # if it does, return an error
+    # otherwise duplicate the current set, rename it , clear it and update it with the given sheets and views
+    existing_view_set = get_view_set_by_name(doc, view_set_name)
+
+    if existing_view_set:
+        return_value.update_sep(False, "View set with name '{}' already exists.".format(view_set_name))
+        return return_value
+    
+    # Access the PrintManager
+    print_manager = doc.PrintManager
+
+    # Set the PrintRange to Select — this is required!
+    print_manager.PrintRange = PrintRange.Select
+
+    # Now you can access the ViewSheetSetting
+    view_sheet_setting = print_manager.ViewSheetSetting
+
+
+    # set up an action to be executed in a transaction
+    def action():
+        action_return_value = Result()
+        
+        try:
+            # create a new view set by saving the current view set with the given name
+            new_view_set = ViewSheetSet.SaveAs(view_set_name)
+
+            # check if the new view set is None
+            if not isinstance(new_view_set, ViewSheetSet):
+                raise ValueError("Failed to create new view set. Got instead: {}".format(type(new_view_set)))
+            
+            new_view_set.
+            # update the view set with the given sheets and views
+            update_view_set(new_view_set, sheets, views, clear_existing=True, transaction_manager=None)
+
+            action_return_value.append_message("Successfully created new view set: {}".format(new_view_set))
+
+        except Exception as e:
+            action_return_value.update_sep(
+                False,
+                "Failed to create new view set: {} with error: {}".format(view_set_name, e),
+            )
+        
+        return action_return_value

@@ -70,6 +70,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CellEditor\CellEditor.cs" />
+    <Compile Include="CellEditor\CellEditorRowData.cs" />
+    <Compile Include="CellEditor\ColumnUIType.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\NullToBooleanConverter.cs" />
@@ -165,6 +167,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <Compile Include="CustomDataGrid\DataGridColumnHeaderBehavior.UtilityFiltering.cs" />
+    <None Include="CellEditor\Readme.md" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

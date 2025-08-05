@@ -19,6 +19,7 @@
 // or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 //
 
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -259,7 +260,7 @@ namespace duHastNet.UI.CustomControls
 
         private void OnDuplicateRowClick(object sender, RoutedEventArgs e)
         {
-            if (_dataGrid?.SelectedItem is ViewModels.CellEditorRowData selectedRow)
+            if (_dataGrid?.SelectedItem is CellEditorRowData selectedRow)
             {
                 _viewModel.DuplicateRow(selectedRow);
                 RaiseDataChangedEvent();
@@ -268,7 +269,7 @@ namespace duHastNet.UI.CustomControls
 
         private void OnDeleteRowClick(object sender, RoutedEventArgs e)
         {
-            if (_dataGrid?.SelectedItem is ViewModels.CellEditorRowData selectedRow)
+            if (_dataGrid?.SelectedItem is CellEditorRowData selectedRow)
             {
                 _viewModel.RemoveRow(selectedRow);
                 RaiseDataChangedEvent();
@@ -334,7 +335,7 @@ namespace duHastNet.UI.CustomControls
                 .ToList();
 
             // Get the current view (which may be sorted)
-            var currentView = _dataGrid.Items.Cast<ViewModels.CellEditorRowData>().ToList();
+            var currentView = _dataGrid.Items.Cast<CellEditorRowData>().ToList();
 
             // Build data rows in current display order
             var dataRows = new List<List<object>>();

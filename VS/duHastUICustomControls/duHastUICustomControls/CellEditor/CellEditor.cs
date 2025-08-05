@@ -260,7 +260,7 @@ namespace duHastNet.UI.CustomControls
 
         private void OnDuplicateRowClick(object sender, RoutedEventArgs e)
         {
-            if (_dataGrid?.SelectedItem is ViewModels.CellEditorRowData selectedRow)
+            if (_dataGrid?.SelectedItem is CellEditorRowData selectedRow)
             {
                 _viewModel.DuplicateRow(selectedRow);
                 RaiseDataChangedEvent();
@@ -269,7 +269,7 @@ namespace duHastNet.UI.CustomControls
 
         private void OnDeleteRowClick(object sender, RoutedEventArgs e)
         {
-            if (_dataGrid?.SelectedItem is ViewModels.CellEditorRowData selectedRow)
+            if (_dataGrid?.SelectedItem is CellEditorRowData selectedRow)
             {
                 _viewModel.RemoveRow(selectedRow);
                 RaiseDataChangedEvent();
@@ -335,7 +335,7 @@ namespace duHastNet.UI.CustomControls
                 .ToList();
 
             // Get the current view (which may be sorted)
-            var currentView = _dataGrid.Items.Cast<ViewModels.CellEditorRowData>().ToList();
+            var currentView = _dataGrid.Items.Cast<CellEditorRowData>().ToList();
 
             // Build data rows in current display order
             var dataRows = new List<List<object>>();

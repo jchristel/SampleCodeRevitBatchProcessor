@@ -18,7 +18,6 @@
 // In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 // or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 //
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -265,6 +264,8 @@ namespace duHastNet.UI.CustomControls
             {
                 _dataGrid.CellEditEnding += OnCellEditEnding;
                 _dataGrid.Sorting += OnDataGridSorting;
+                _dataGrid.ColumnDisplayIndexChanged += OnColumnDisplayIndexChanged;
+                _dataGrid.ColumnReordered += OnColumnReordered;
             }
         }
 
@@ -283,6 +284,8 @@ namespace duHastNet.UI.CustomControls
             {
                 _dataGrid.CellEditEnding -= OnCellEditEnding;
                 _dataGrid.Sorting -= OnDataGridSorting;
+                _dataGrid.ColumnDisplayIndexChanged -= OnColumnDisplayIndexChanged;
+                _dataGrid.ColumnReordered -= OnColumnReordered;
             }
         }
 
@@ -352,6 +355,18 @@ namespace duHastNet.UI.CustomControls
             Dispatcher.BeginInvoke(new Action(() => RaiseDataChangedEvent()));
         }
 
+        private void OnColumnDisplayIndexChanged(object sender, DataGridColumnEventArgs e)
+        {
+            // Column order changed - raise data changed event
+            Dispatcher.BeginInvoke(new Action(() => RaiseDataChangedEvent()));
+        }
+
+        private void OnColumnReordered(object sender, DataGridColumnEventArgs e)
+        {
+            // Column was reordered - raise data changed event
+            Dispatcher.BeginInvoke(new Action(() => RaiseDataChangedEvent()));
+        }
+
         #endregion
 
         #region Data Management
@@ -362,6 +377,15 @@ namespace duHastNet.UI.CustomControls
 
             _viewModel.LoadData(HeaderRow, DataRows ?? new List<List<object>>());
             UpdateColumnReadOnlyStates();
+
+            // Refresh the DataGrid bindings if it's already set up
+            if (_dataGrid != null && _dataGrid.DataContext == _viewModel)
+            {
+                // The bindings should automatically refresh due to INotifyPropertyChanged
+                // But we can force a refresh if needed
+                _dataGrid.GetBindingExpression(DynamicDataGrid.ColumnDefinitionsProperty)?.UpdateTarget();
+                _dataGrid.GetBindingExpression(DynamicDataGrid.ItemsSourceProperty)?.UpdateTarget();
+            }
         }
 
         private void UpdateColumnReadOnlyStates()
@@ -392,11 +416,22 @@ namespace duHastNet.UI.CustomControls
             if (_viewModel?.ColumnDefinitions == null || _dataGrid == null)
                 return (new List<string>(), new List<List<object>>());
 
-            // Get current column order from the actual DataGrid
-            var currentColumns = _dataGrid.Columns
-                .Where(c => c.Header != null)
-                .Select(c => c.Header.ToString())
-                .ToList();
+            // Get current column order from the actual DataGrid by matching with ColumnDefinitions
+            var currentColumns = new List<string>();
+            var propertyNames = new List<string>();
+
+            foreach (var column in _dataGrid.Columns)
+            {
+                // Find the corresponding column definition by matching the header
+                var columnDef = _viewModel.ColumnDefinitions
+                    .FirstOrDefault(cd => cd.DisplayName == column.Header?.ToString());
+
+                if (columnDef != null)
+                {
+                    currentColumns.Add(columnDef.DisplayName);
+                    propertyNames.Add(columnDef.PropertyName);
+                }
+            }
 
             // Get the current view (which may be sorted)
             var currentView = _dataGrid.Items.Cast<CellEditorRowData>().ToList();
@@ -406,15 +441,11 @@ namespace duHastNet.UI.CustomControls
             foreach (var row in currentView)
             {
                 var dataRow = new List<object>();
-                foreach (var columnHeader in currentColumns)
+                foreach (var propertyName in propertyNames)
                 {
-                    // Find the property name for this header
-                    var columnDef = _viewModel.ColumnDefinitions
-                        .FirstOrDefault(cd => cd.DisplayName == columnHeader);
-
-                    if (columnDef != null && row.Values.ContainsKey(columnDef.PropertyName))
+                    if (row.Values.ContainsKey(propertyName))
                     {
-                        dataRow.Add(row.Values[columnDef.PropertyName]);
+                        dataRow.Add(row.Values[propertyName]);
                     }
                     else
                     {
@@ -460,6 +491,69 @@ namespace duHastNet.UI.CustomControls
         {
             HeaderRow = headerRow;
             DataRows = dataRows;
+        }
+
+        /// <summary>
+        /// Gets all available columns (including those not currently displayed)
+        /// </summary>
+        public List<string> GetAvailableColumns()
+        {
+            return _viewModel?.AvailableColumns?.Select(ac => ac.DisplayName).ToList() ?? new List<string>();
+        }
+
+        /// <summary>
+        /// Gets currently displayed column names
+        /// </summary>
+        public List<string> GetCurrentColumns()
+        {
+            return _viewModel?.ColumnDefinitions?.Select(cd => cd.DisplayName).ToList() ?? new List<string>();
+        }
+
+        /// <summary>
+        /// Gets columns that are available to add (not currently displayed)
+        /// </summary>
+        public List<string> GetColumnsAvailableToAdd()
+        {
+            if (_viewModel?.AvailableColumns == null || _viewModel?.ColumnDefinitions == null)
+                return new List<string>();
+
+            var currentColumns = _viewModel.ColumnDefinitions.Select(cd => cd.DisplayName).ToHashSet();
+            return _viewModel.AvailableColumns
+                .Where(ac => !currentColumns.Contains(ac.DisplayName))
+                .Select(ac => ac.DisplayName)
+                .ToList();
+        }
+
+        /// <summary>
+        /// Adds a column that was previously removed
+        /// </summary>
+        public void AddColumn(string columnDisplayName)
+        {
+            _viewModel?.AddSelectedColumn(columnDisplayName);
+        }
+
+        /// <summary>
+        /// Removes a column from display (data is preserved for later restoration)
+        /// </summary>
+        public void RemoveColumn(string columnDisplayName)
+        {
+            // Find the column definition to get the property name
+            var columnDef = _viewModel?.ColumnDefinitions?
+                .FirstOrDefault(cd => cd.DisplayName == columnDisplayName);
+
+            if (columnDef != null)
+            {
+                _viewModel?.RemoveColumn(columnDef.PropertyName);
+            }
+        }
+
+        /// <summary>
+        /// Clears all data while preserving column structure
+        /// </summary>
+        public void ClearData()
+        {
+            _viewModel?.ClearData();
+            RaiseDataChangedEvent();
         }
 
         #endregion

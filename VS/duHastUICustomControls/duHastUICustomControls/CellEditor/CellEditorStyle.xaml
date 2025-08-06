@@ -90,6 +90,7 @@
                             <!-- DataGrid -->
                             <dg:DynamicDataGrid x:Name="PART_DataGrid"
                                               Grid.Row="1"
+                                              dg:DataGridColumnHeaderBehavior.EnableColumnManagement="True"
                                               CanUserReorderColumns="True"
                                               CanUserSortColumns="True"
                                               CanUserResizeColumns="True"

@@ -52,8 +52,9 @@ namespace duHastNet.UI.CustomControls.CellEditorTest
                 OnPropertyChanged();
             }
         }
-
         #endregion
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -66,7 +67,6 @@ namespace duHastNet.UI.CustomControls.CellEditorTest
             ReadOnlyColumns = new List<string>();
 
         }
-
         #region Event Handlers
 
         private void LoadSampleData_Click(object sender, RoutedEventArgs e)
@@ -111,6 +111,33 @@ namespace duHastNet.UI.CustomControls.CellEditorTest
         private void CellEditorControl_DataChanged(object sender, RoutedEventArgs e)
         {
             OutputTextBox.Text += $"\n[{DateTime.Now:HH:mm:ss}] Data changed event fired!";
+        }
+
+        private void ShowAvailableColumns_Click(object sender, RoutedEventArgs e)
+        {
+            var availableColumns = CellEditorControl.GetAvailableColumns();
+            var currentColumns = CellEditorControl.GetCurrentColumns();
+            var columnsToAdd = CellEditorControl.GetColumnsAvailableToAdd();
+
+            var sb = new StringBuilder();
+            sb.AppendLine("=== Column Information ===");
+            sb.AppendLine($"All Available Columns: {string.Join(", ", availableColumns)}");
+            sb.AppendLine($"Currently Displayed: {string.Join(", ", currentColumns)}");
+            sb.AppendLine($"Available to Add: {string.Join(", ", columnsToAdd)}");
+
+            OutputTextBox.Text = sb.ToString();
+        }
+
+        private void RemoveDepartmentColumn_Click(object sender, RoutedEventArgs e)
+        {
+            CellEditorControl.RemoveColumn("Department");
+            OutputTextBox.Text = "Department column removed (data preserved)";
+        }
+
+        private void AddDepartmentColumn_Click(object sender, RoutedEventArgs e)
+        {
+            CellEditorControl.AddColumn("Department");
+            OutputTextBox.Text = "Department column added back";
         }
 
         #endregion

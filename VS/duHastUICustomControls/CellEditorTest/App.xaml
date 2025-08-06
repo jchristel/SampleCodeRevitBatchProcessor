@@ -1,7 +1,7 @@
-﻿<Application x:Class="CellEditorTest.App"
+﻿<Application x:Class="duHastNet.UI.CustomControls.CellEditorTest.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:CellEditorTest"
+             xmlns:local="clr-namespace:duHastNet.UI.CustomControls.CellEditorTest"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

@@ -1,12 +1,54 @@
-﻿<Window x:Class="CellEditorTest.MainWindow"
+﻿<Window x:Class="duHastNet.UI.CustomControls.CellEditorTest.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CellEditorTest"
+        xmlns:local="clr-namespace:duHastNet.UI.CustomControls.CellEditorTest"
+        xmlns:custom="clr-namespace:duHastNet.UI.CustomControls;assembly=duHastUICustomControls"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+    
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title -->
+        <TextBlock Grid.Row="0" Text="Cell Editor Control Example" 
+                   FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+
+        <!-- Cell Editor Control -->
+        <custom:CellEditor x:Name="CellEditorControl"
+                         Grid.Row="1"
+                         HeaderRow="{Binding HeaderRow}"
+                         DataRows="{Binding DataRows}"
+                         ReadOnlyColumns="{Binding ReadOnlyColumns}"
+                         AllowAddRow="True"
+                         AllowDuplicateRow="True"
+                         AllowDeleteRow="True"
+                         DataChanged="CellEditorControl_DataChanged"
+                         BorderBrush="Gray"
+                         BorderThickness="1"/>
+
+        <!-- Control Buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,10,0,10">
+            <Button Content="Load Sample Data" Click="LoadSampleData_Click" Margin="0,0,10,0" Padding="10,5"/>
+            <Button Content="Get Current Data" Click="GetCurrentData_Click" Margin="0,0,10,0" Padding="10,5"/>
+            <Button Content="Get Original Data" Click="GetOriginalData_Click" Margin="0,0,10,0" Padding="10,5"/>
+            <Button Content="Clear Data" Click="ClearData_Click" Margin="0,0,10,0" Padding="10,5"/>
+        </StackPanel>
+
+        <!-- Output TextBox -->
+        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto">
+            <TextBox x:Name="OutputTextBox" 
+                     IsReadOnly="True" 
+                     Background="LightGray"
+                     FontFamily="Consolas"
+                     Text="Output will appear here..."/>
+        </ScrollViewer>
+
     </Grid>
 </Window>

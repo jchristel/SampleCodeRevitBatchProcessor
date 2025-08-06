@@ -90,8 +90,6 @@
                             <!-- DataGrid -->
                             <dg:DynamicDataGrid x:Name="PART_DataGrid"
                                               Grid.Row="1"
-                                              ColumnDefinitions="{Binding ColumnDefinitions}"
-                                              ItemsSource="{Binding Data}"
                                               CanUserReorderColumns="True"
                                               CanUserSortColumns="True"
                                               CanUserResizeColumns="True"
@@ -103,16 +101,9 @@
                                 <!-- Context Menu for right-click operations -->
                                 <dg:DynamicDataGrid.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Header="Add Row" 
-                                                  Command="{Binding AddRowCommand}"
-                                                  Visibility="{Binding RelativeSource={RelativeSource AncestorType=local:CellEditor}, Path=AllowAddRow, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}"/>
-                                        <MenuItem Header="Duplicate Row" 
-                                                  Command="{Binding RelativeSource={RelativeSource AncestorType=local:CellEditor}, Path=DataContext.DuplicateRowCommand}"
-                                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=dg:DynamicDataGrid}, Path=SelectedItem}"
-                                                  Visibility="{Binding RelativeSource={RelativeSource AncestorType=local:CellEditor}, Path=AllowDuplicateRow, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}"/>
-                                        <MenuItem Header="Delete Row" 
-                                                  Command="{Binding DeleteSelectedCommand}"
-                                                  Visibility="{Binding RelativeSource={RelativeSource AncestorType=local:CellEditor}, Path=AllowDeleteRow, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}"/>
+                                        <MenuItem x:Name="PART_AddRowMenuItem" Header="Add Row"/>
+                                        <MenuItem x:Name="PART_DuplicateRowMenuItem" Header="Duplicate Row"/>
+                                        <MenuItem x:Name="PART_DeleteRowMenuItem" Header="Delete Row"/>
                                     </ContextMenu>
                                 </dg:DynamicDataGrid.ContextMenu>
                             </dg:DynamicDataGrid>

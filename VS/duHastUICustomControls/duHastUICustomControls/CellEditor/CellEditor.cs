@@ -19,7 +19,6 @@
 // or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 //
 
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -163,7 +162,7 @@ namespace duHastNet.UI.CustomControls
         public CellEditor()
         {
             _viewModel = new ViewModels.CellEditorViewModel();
-            DataContext = _viewModel;
+            // Don't set DataContext here - let it inherit from parent
         }
 
         public override void OnApplyTemplate()
@@ -179,11 +178,76 @@ namespace duHastNet.UI.CustomControls
             _duplicateRowButton = GetTemplateChild("PART_DuplicateRowButton") as Button;
             _deleteRowButton = GetTemplateChild("PART_DeleteRowButton") as Button;
 
+            // Set up DataGrid bindings programmatically
+            if (_dataGrid != null)
+            {
+                // Set the DataGrid's DataContext to our ViewModel
+                _dataGrid.DataContext = _viewModel;
+
+                // Create bindings
+                var columnDefBinding = new Binding("ColumnDefinitions") { Source = _viewModel };
+                var itemsSourceBinding = new Binding("Data") { Source = _viewModel };
+
+                _dataGrid.SetBinding(DynamicDataGrid.ColumnDefinitionsProperty, columnDefBinding);
+                _dataGrid.SetBinding(DynamicDataGrid.ItemsSourceProperty, itemsSourceBinding);
+
+                // Set up context menu
+                SetupContextMenu();
+            }
+
             // Hook up new event handlers
             HookEventHandlers();
 
             // Update the data grid with current data
             UpdateDataGrid();
+        }
+
+        private void SetupContextMenu()
+        {
+            if (_dataGrid?.ContextMenu == null) return;
+
+            // Get menu items by name
+            var addRowMenuItem = _dataGrid.ContextMenu.FindName("PART_AddRowMenuItem") as MenuItem;
+            var duplicateRowMenuItem = _dataGrid.ContextMenu.FindName("PART_DuplicateRowMenuItem") as MenuItem;
+            var deleteRowMenuItem = _dataGrid.ContextMenu.FindName("PART_DeleteRowMenuItem") as MenuItem;
+
+            // Set up Add Row menu item
+            if (addRowMenuItem != null)
+            {
+                addRowMenuItem.Command = _viewModel.AddRowCommand;
+                var addRowVisibilityBinding = new Binding("AllowAddRow")
+                {
+                    Source = this,
+                    Converter = new Converters.BooleanToVisibilityConverter()
+                };
+                addRowMenuItem.SetBinding(MenuItem.VisibilityProperty, addRowVisibilityBinding);
+            }
+
+            // Set up Duplicate Row menu item
+            if (duplicateRowMenuItem != null)
+            {
+                duplicateRowMenuItem.Command = _viewModel.DuplicateRowCommand;
+                var selectedItemBinding = new Binding("SelectedItem") { Source = _dataGrid };
+                duplicateRowMenuItem.SetBinding(MenuItem.CommandParameterProperty, selectedItemBinding);
+                var duplicateRowVisibilityBinding = new Binding("AllowDuplicateRow")
+                {
+                    Source = this,
+                    Converter = new Converters.BooleanToVisibilityConverter()
+                };
+                duplicateRowMenuItem.SetBinding(MenuItem.VisibilityProperty, duplicateRowVisibilityBinding);
+            }
+
+            // Set up Delete Row menu item
+            if (deleteRowMenuItem != null)
+            {
+                deleteRowMenuItem.Command = _viewModel.DeleteSelectedCommand;
+                var deleteRowVisibilityBinding = new Binding("AllowDeleteRow")
+                {
+                    Source = this,
+                    Converter = new Converters.BooleanToVisibilityConverter()
+                };
+                deleteRowMenuItem.SetBinding(MenuItem.VisibilityProperty, deleteRowVisibilityBinding);
+            }
         }
 
         private void HookEventHandlers()

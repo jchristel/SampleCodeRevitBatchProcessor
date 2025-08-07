@@ -18,6 +18,7 @@
 // In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 // or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 //
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -38,6 +39,12 @@ namespace duHastNet.UI.CustomControls
     {
         #region Template Parts
         private DynamicDataGrid _dataGrid;
+
+        //public DynamicDataGrid DataGrid
+        //{
+        //    get { return _dataGrid; }
+        //}
+
         private Button _addRowButton;
         private Button _duplicateRowButton;
         private Button _deleteRowButton;
@@ -408,6 +415,45 @@ namespace duHastNet.UI.CustomControls
         #region Public Methods
 
         /// <summary>
+        /// Gets debug information about the current column order - for troubleshooting
+        /// </summary>
+        /// <returns>Debug information as a string</returns>
+        public string GetColumnOrderDebugInfo()
+        {
+            if (_dataGrid == null)
+                return "DataGrid is null";
+
+            var debugInfo = new System.Text.StringBuilder();
+            debugInfo.AppendLine("=== DEBUG COLUMN ORDER ===");
+            debugInfo.AppendLine($"Total columns: {_dataGrid.Columns.Count}");
+
+            var orderedColumns = _dataGrid.Columns.OrderBy(c => c.DisplayIndex).ToList();
+
+            foreach (var column in orderedColumns)
+            {
+                var binding = (column as DataGridBoundColumn)?.Binding as Binding;
+                debugInfo.AppendLine($"DisplayIndex: {column.DisplayIndex}, Header: {column.Header}, Binding: {binding?.Path?.Path}");
+            }
+
+            if (_viewModel?.ColumnDefinitions != null)
+            {
+                debugInfo.AppendLine("\n=== COLUMN DEFINITIONS ===");
+                for (int i = 0; i < _viewModel.ColumnDefinitions.Count; i++)
+                {
+                    var colDef = _viewModel.ColumnDefinitions[i];
+                    debugInfo.AppendLine($"[{i}] PropertyName: {colDef.PropertyName}, DisplayName: {colDef.DisplayName}");
+                }
+            }
+
+            debugInfo.AppendLine("\n=== CURRENT vs ORDERED COMPARISON ===");
+            debugInfo.AppendLine("Current order (storage): " + string.Join(", ", _dataGrid.Columns.Select(c => c.Header)));
+            debugInfo.AppendLine("Display order (visual):  " + string.Join(", ", _dataGrid.Columns.OrderBy(c => c.DisplayIndex).Select(c => c.Header)));
+
+            return debugInfo.ToString();
+        }
+
+
+        /// <summary>
         /// Gets the current data as it appears in the grid (respecting current column order, sorting, etc.)
         /// </summary>
         /// <returns>Tuple containing header row and data rows as they currently appear</returns>
@@ -420,7 +466,9 @@ namespace duHastNet.UI.CustomControls
             var currentColumns = new List<string>();
             var propertyNames = new List<string>();
 
-            foreach (var column in _dataGrid.Columns)
+            var orderedColumns = _dataGrid.Columns.OrderBy(c => c.DisplayIndex).ToList();
+
+            foreach (var column in orderedColumns)
             {
                 // Find the corresponding column definition by matching the header
                 var columnDef = _viewModel.ColumnDefinitions

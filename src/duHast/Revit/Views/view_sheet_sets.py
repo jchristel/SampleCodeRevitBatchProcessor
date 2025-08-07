@@ -264,7 +264,11 @@ def update_view_sheet_set(doc, view_sheet_set, view_sheet_setting, sheets, views
     # check if the view_sheet_setting is None
     if view_sheet_setting is None and save_after_update:
         view_sheet_setting = get_current_view_sheet_settings_element(doc)
-    
+
+    # make sure the current view sheet set is set to the view_sheet_setting
+    if save_after_update:
+        view_sheet_setting.CurrentViewSheetSet = view_sheet_set
+
     # set up an action to be executed in a transaction
     def action():
         action_return_value = Result()
@@ -307,8 +311,6 @@ def update_view_sheet_set(doc, view_sheet_set, view_sheet_setting, sheets, views
             
             if save_after_update:
                 try:
-                    # save the set
-                    view_sheet_setting.CurrentViewSheetSet = view_sheet_set
                     # this can throw an exception if the set is unchanged...
                     save_flag = view_sheet_setting.Save()
                 except Exception as ex:

@@ -179,7 +179,31 @@ def get_view_ids_from_view_sheet_set(view_sheet_set):
     return view_ids
 
 
-def update_view_sheet_set(doc, view_sheet_set, sheets, views, clear_existing=True, transaction_manager = in_transaction):
+def get_current_view_sheet_settings_element(doc):
+    """
+    Retrieves the current ViewSheetSetting element from the Revit document.
+
+    :param doc: The Revit document from which to retrieve the ViewSheetSetting.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: The ViewSheetSetting element if found, otherwise None.
+    :rtype: Autodesk.Revit.DB.ViewSheetSetting or None
+    """
+
+    # Access the PrintManager
+    print_manager = doc.PrintManager
+
+    # Set the PrintRange to Select - this is required!
+    print_manager.PrintRange = PrintRange.Select
+
+    # Now you can access the ViewSheetSetting
+    view_sheet_setting = print_manager.ViewSheetSetting
+
+    return view_sheet_setting
+
+
+
+
+def update_view_sheet_set(doc, view_sheet_set, view_sheet_setting, sheets, views, clear_existing=True, transaction_manager = in_transaction, save_after_update=True):
     """
     Updates the view set with the given sheets and views.
 
@@ -212,6 +236,13 @@ def update_view_sheet_set(doc, view_sheet_set, sheets, views, clear_existing=Tru
     # get the ids of what is currently in the view set
     existing_sheets, existing_views = get_sheets_and_views_from_view_sheet_set(view_sheet_set)
 
+    # store the name
+    view_sheet_set_name = view_sheet_set.Name
+
+    # check if the view_sheet_setting is None
+    if view_sheet_setting is None and save_after_update:
+        view_sheet_setting = get_current_view_sheet_settings_element(doc)
+    
     # set up an action to be executed in a transaction
     def action():
         action_return_value = Result()
@@ -248,8 +279,24 @@ def update_view_sheet_set(doc, view_sheet_set, sheets, views, clear_existing=Tru
             # assign the view set to the view sheet set
             # not sure as to whether this is the correct way to do this
             view_sheet_set.Views = empty_set
+
+            # save the view sheet set
+            save_flag = True
             
-            action_return_value.append_message("Successfully updated view set: {}".format(view_sheet_set))
+            if save_after_update:
+                try:
+                    # save the set
+                    view_sheet_setting.CurrentViewSheetSet = view_sheet_set
+                    # this can throw an exception if the set is unchanged...
+                    save_flag = view_sheet_setting.Save()
+                except Exception as ex:
+                    action_return_value.append_message("Failed to save the updated view sheet set: {} with error: {}".format(view_sheet_set_name, ex))
+
+            # update the action return value with the result of the save operation
+            action_return_value.append_message("Updated view set: {} with status: {}".format(view_sheet_set_name, save_flag))
+
+            # return the newly created view set
+            action_return_value.result.append(view_sheet_set)
 
         except Exception as e:
             action_return_value.update_sep(
@@ -332,15 +379,15 @@ def create_new_view_sheet_set(doc, view_sheet_set_name, sheets, views, transacti
     if existing_view_sheet_set:
         return_value.update_sep(False, "View set with name '{}' already exists.".format(view_sheet_set_name))
         return return_value
-    
-    # Access the PrintManager
-    print_manager = doc.PrintManager
-
-    # Set the PrintRange to Select - this is required!
-    print_manager.PrintRange = PrintRange.Select
 
     # Now you can access the ViewSheetSetting
-    view_sheet_setting = print_manager.ViewSheetSetting
+    view_sheet_setting = get_current_view_sheet_settings_element(doc)
+
+    # check if the view_sheet_setting is None
+    if not view_sheet_setting:
+        return_value.update_sep(False, "Failed to get current ViewSheetSetting element.")
+        return return_value
+
 
     # set up an action to be executed in a transaction
     def action():
@@ -359,9 +406,33 @@ def create_new_view_sheet_set(doc, view_sheet_set_name, sheets, views, transacti
             new_view_sheet_set = view_sheet_setting.CurrentViewSheetSet
             
             # update the view set with the given sheets and views
-            update_view_sheet_set(doc, new_view_sheet_set, sheets, views, clear_existing=True, transaction_manager=None)
+            update_status = update_view_sheet_set(
+                doc, 
+                new_view_sheet_set,
+                view_sheet_setting,
+                sheets, 
+                views, 
+                clear_existing=True, 
+                transaction_manager=None, 
+                save_after_update=False
+            )
 
-            action_return_value.append_message("Successfully created new view set: {}".format(new_view_sheet_set))
+            # check if successful update
+            if not update_status.status:
+                action_return_value.update_sep(False, "Failed to update new view set: {} with error: {}".format(view_sheet_set_name, update_status.message))
+                return action_return_value
+
+            save_flag = True
+
+            try:
+                # save the set
+                # this can throw an exception if the set is unchanged...
+                save_flag = view_sheet_setting.Save()
+            except Exception as ex:
+                action_return_value.append_message("Failed to save newly created view sheet set: {} with error: {} ".format(view_sheet_set_name, ex))
+
+            # update the action return value with the result of the save operation
+            action_return_value.append_message("Created new view set: {} with status: {}".format(view_sheet_set_name, save_flag))
 
             # return the newly created view set
             action_return_value.result.append(new_view_sheet_set)

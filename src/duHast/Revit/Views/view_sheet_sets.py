@@ -246,6 +246,7 @@ def update_view_sheet_set(doc, view_sheet_set, sheets, views, clear_existing=Tru
                    empty_set.Insert(view)
         
             # assign the view set to the view sheet set
+            # not sure as to whether this is the correct way to do this
             view_sheet_set.Views = empty_set
             
             action_return_value.append_message("Successfully updated view set: {}".format(view_sheet_set))

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
-
-
-using System.Runtime.CompilerServices;
+using System.Windows.Controls;
+using System.Windows.Data;
 
 
 namespace duHastNet.UI.CustomControls.CellEditorTest
@@ -91,7 +91,20 @@ namespace duHastNet.UI.CustomControls.CellEditorTest
 
         private void GetCurrentData_Click(object sender, RoutedEventArgs e)
         {
+            // Debug: Show what we're detecting
+            //var dataGrid = CellEditorControl.DataGrid; // You might need to expose this
+
+            //OutputTextBox.Text = "=== DEBUG COLUMN ORDER ===\n";
+
+            //foreach (var column in dataGrid.Columns.OrderBy(c => c.DisplayIndex))
+            //{
+            //    var binding = (column as DataGridBoundColumn)?.Binding as Binding;
+            //    OutputTextBox.Text += $"DisplayIndex: {column.DisplayIndex}, Header: {column.Header}, Binding: {binding?.Path?.Path}\n";
+            //}
+
             var (headers, data) = CellEditorControl.GetCurrentData();
+            OutputTextBox.Text += $"\nReturned Headers: {string.Join(", ", headers)}\n";
+
             DisplayData("Current Data (as displayed in grid)", headers, data);
         }
 
@@ -106,6 +119,12 @@ namespace duHastNet.UI.CustomControls.CellEditorTest
             HeaderRow = new List<string>();
             DataRows = new List<List<object>>();
             OutputTextBox.Text = "Data cleared!";
+        }
+
+        private void DebugColumnOrder_Click(object sender, RoutedEventArgs e)
+        {
+            var debugInfo = CellEditorControl.GetColumnOrderDebugInfo();
+            OutputTextBox.Text = debugInfo;
         }
 
         private void CellEditorControl_DataChanged(object sender, RoutedEventArgs e)

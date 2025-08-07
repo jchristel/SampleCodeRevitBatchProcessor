@@ -179,6 +179,30 @@ def get_view_ids_from_view_sheet_set(view_sheet_set):
     return view_ids
 
 
+def get_view_sheet_set_by_name(doc, view_sheet_set_name):
+    """
+    Retrieves a view set by its name from the Revit document.
+
+    :param doc: The Revit document to search for the view set.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view_sheet_set_name: The name of the view set to retrieve.
+    :type view_sheet_set_name: str
+
+    :return: The ViewSheetSet object if found, otherwise None.
+    :rtype: Autodesk.Revit.DB.ViewSheetSet or None
+    """
+
+    # get all view sets in the document
+    view_sheet_sets = get_view_sheet_sets(doc)
+
+    # iterate through the view sets and return the one with the matching name
+    for view_sheet_set in view_sheet_sets:
+        if view_sheet_set.Name == view_sheet_set_name:
+            return view_sheet_set
+    
+    return None
+
+
 def get_current_view_sheet_settings_element(doc):
     """
     Retrieves the current ViewSheetSetting element from the Revit document.
@@ -199,8 +223,6 @@ def get_current_view_sheet_settings_element(doc):
     view_sheet_setting = print_manager.ViewSheetSetting
 
     return view_sheet_setting
-
-
 
 
 def update_view_sheet_set(doc, view_sheet_set, view_sheet_setting, sheets, views, clear_existing=True, transaction_manager = in_transaction, save_after_update=True):
@@ -316,29 +338,6 @@ def update_view_sheet_set(doc, view_sheet_set, view_sheet_setting, sheets, views
    
     return return_value
 
-
-def get_view_sheet_set_by_name(doc, view_sheet_set_name):
-    """
-    Retrieves a view set by its name from the Revit document.
-
-    :param doc: The Revit document to search for the view set.
-    :type doc: Autodesk.Revit.DB.Document
-    :param view_sheet_set_name: The name of the view set to retrieve.
-    :type view_sheet_set_name: str
-
-    :return: The ViewSheetSet object if found, otherwise None.
-    :rtype: Autodesk.Revit.DB.ViewSheetSet or None
-    """
-
-    # get all view sets in the document
-    view_sheet_sets = get_view_sheet_sets(doc)
-
-    # iterate through the view sets and return the one with the matching name
-    for view_sheet_set in view_sheet_sets:
-        if view_sheet_set.Name == view_sheet_set_name:
-            return view_sheet_set
-    
-    return None
 
 
 def create_new_view_sheet_set(doc, view_sheet_set_name, sheets, views, transaction_manager = in_transaction):

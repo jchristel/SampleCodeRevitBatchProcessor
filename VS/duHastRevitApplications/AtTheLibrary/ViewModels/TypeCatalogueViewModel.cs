@@ -82,7 +82,6 @@ namespace duHastNet.AtTheLibrary.ViewModels
             {
                 return;
             }
-
         }
     }
 }

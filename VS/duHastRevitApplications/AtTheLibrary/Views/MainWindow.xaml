@@ -18,6 +18,9 @@
             <DataTemplate DataType="{x:Type vms:ParametersSelectionViewModel}">
                 <views:ParametersSelectionView/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type vms:TypeCatalogueViewModel}">
+                <views:TypeCatalogueFileEditorView/>
+            </DataTemplate>
         </Grid.Resources>
         <ContentControl Content="{Binding CurrentViewModel}"/>
     </Grid>

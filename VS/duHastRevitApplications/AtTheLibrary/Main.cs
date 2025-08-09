@@ -111,7 +111,9 @@ namespace duHastNet.AtTheLibrary
                 _navigationStore,
                 _messageStore,
                 _globa,
-                CreateParametersSelectionViewModel);
+                CreateParametersSelectionViewModel,
+                CreateTypeCatalogueEditorViewModel
+            );
         }
 
 
@@ -127,6 +129,22 @@ namespace duHastNet.AtTheLibrary
                 _navigationStore,
                 _messageStore,
                 _globa,
+                CreateFamiliesSelectionViewModel);
+        }
+
+
+        /// <summary>
+        /// Creates a type Catalogue editor view model
+        /// </summary>
+        /// <returns></returns>
+        private ViewModels.TypeCatalogueViewModel CreateTypeCatalogueEditorViewModel()
+        {
+            duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel _globa = new duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);
+            return new ViewModels.TypeCatalogueViewModel(
+                revitDataModel: _revitDataModel,
+                navigationStore: _navigationStore,
+                messageStore: _messageStore,
+                globalMessageViewModel: _globa,
                 CreateFamiliesSelectionViewModel);
         }
 

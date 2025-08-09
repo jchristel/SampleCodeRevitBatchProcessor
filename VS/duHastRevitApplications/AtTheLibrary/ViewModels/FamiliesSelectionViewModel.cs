@@ -240,7 +240,8 @@ namespace duHastNet.AtTheLibrary.ViewModels
             Utils.WPF.Stores.NavigationStore navigationStore,
             Utils.WPF.Stores.MessageStore messageStore,
             Utils.WPF.ViewModels.GlobalMessageViewModel globalMessageViewModel,
-            Func<ViewModels.ParametersSelectionViewModel> createViewModel)
+            Func<ViewModels.ParametersSelectionViewModel> createParameterSelectionViewModel,
+            Func<ViewModels.TypeCatalogueViewModel> createTypeCatalogueViewModel)
         {
             //store services
             _navigationStore = navigationStore;
@@ -291,8 +292,10 @@ namespace duHastNet.AtTheLibrary.ViewModels
             // navigate to parameter selection view model
             _navigateCommand = new Commands.NavigateCommand(
                 navigationStore: _navigationStore,
-                createViewModel: createViewModel
+                createViewModel: createParameterSelectionViewModel
             );
+
+            //TODO navigate to type editor view model command!
 
             //update rooms data with data from revit through an external event
             RefreshGUICommand.Execute(null);

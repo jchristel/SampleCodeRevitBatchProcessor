@@ -65,23 +65,24 @@ namespace duHastNet.AtTheLibrary.ViewModels
         private List<List<string>> _catalogueFileDataOriginal;
 
 
-
-        public TypeCatalogueViewModel(Models.RevitFamiliesDataModel revitDataModel, Models.FamilyDataModel selectedFamily, ViewModels.FamiliesSelectionViewModel familiesSelectionViewModel)
+        public TypeCatalogueViewModel(Models.RevitFamiliesDataModel revitDataModel, Utils.WPF.Stores.NavigationStore navigationStore,
+            Utils.WPF.Stores.MessageStore messageStore,
+            Utils.WPF.ViewModels.GlobalMessageViewModel globalMessageViewModel,
+            Func<ViewModels.FamiliesSelectionViewModel> createViewModel
+            )
         {
-            // Base constructor will call InitializeAvailableColumns()
-            // and set up all the commands
 
             this.RevitDataModel = revitDataModel;
-            this.SelectedFamily = selectedFamily;
+            //this.SelectedFamily = selectedFamily;
 
             // read catalogue file
-            (_catalogueFileHeadersOriginal, _catalogueFileDataOriginal) = Utilities.Revit.TypeCatalogueFileUtils.GetCatalogueFileData(selectedFamily.FamilyFilePath.Value , familiesSelectionViewModel);
+            //(_catalogueFileHeadersOriginal, _catalogueFileDataOriginal) = Utilities.Revit.TypeCatalogueFileUtils.GetCatalogueFileData(selectedFamily.FamilyFilePath.Value , familiesSelectionViewModel);
 
             //check for null values indicating falure to read
-            if (_catalogueFileDataOriginal == null || _catalogueFileHeadersOriginal == null)
-            {
-                return;
-            }
+            //if (_catalogueFileDataOriginal == null || _catalogueFileHeadersOriginal == null)
+            //{
+            //    return;
+            //}
         }
     }
 }

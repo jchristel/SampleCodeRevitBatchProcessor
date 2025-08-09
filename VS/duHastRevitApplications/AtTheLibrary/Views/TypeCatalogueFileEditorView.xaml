@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:duHastNet.AtTheLibrary.Views"
              xmlns:utilsViews ="clr-namespace:duHastNet.Utils.WPF.Views;assembly=Utils.25.0.0.1"
-             xmlns:dynamicDataGrid="clr-namespace:duHastNet.UI.CustomControls.CustomDataGrid;assembly=duHastUICustomControls.25.0.0.1"
+             xmlns:celleditor="clr-namespace:duHastNet.UI.CustomControls;assembly=duHastUICustomControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -19,8 +19,6 @@
             <RowDefinition Height="auto"/>
             <!-- data -->
             <RowDefinition Height="*"/>
-            <!-- add remove rows -->
-            <RowDefinition Height="auto"/>
             <!-- safe and cancel -->
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
@@ -40,34 +38,22 @@
             <utilsViews:GlobalMessageBanner DataContext="{Binding GlobalMessageViewModel}"/>
         </Grid>
 
-        <!-- dynamic grid view of room data -->
-        <dynamicDataGrid:DynamicDataGrid  
-            x:Name="dataGrid" 
-            Grid.Row="2"
-            DataContext="{Binding  FamiliesDataGridViewModel}"
-            ItemsSource="{Binding Data}"
-            ColumnDefinitions="{Binding ColumnDefinitions}"
-            SelectionMode="Single"
-            SelectedItem="{Binding SelectedItem}"
-            Margin="5 10 5 10"
-            dynamicDataGrid:DataGridColumnHeaderBehavior.EnableColumnManagement="True"
-            dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="False">
-        </dynamicDataGrid:DynamicDataGrid>
-        <!-- button row content -->
-        <Grid Grid.Row="3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0"
-                Margin="0 5 5 5" 
-                Content="Duplicate Row"/>
-            <Button Grid.Column="1"
-                Margin="0 5 5 5" 
-                Content="Delete Row"/>
-        </Grid>
+        <!-- dynamic cell editor to show type data -->
+        <celleditor:CellEditor
+            x:Name="CellEditorControl"
+            Grid.Row="1"
+            HeaderRow="{Binding HeaderRow}"
+            DataRows="{Binding DataRows}"
+            ReadOnlyColumns="{Binding ReadOnlyColumns}"
+            AllowAddRow="True"
+            AllowDuplicateRow="True"
+            AllowDeleteRow="True"
+            DataChanged="CellEditorControl_DataChanged"
+            BorderBrush="Gray"
+            BorderThickness="1"/>
+        
         <!-- cancel and save buttons -->
-        <Grid Grid.Row="4">
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>

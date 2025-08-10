@@ -35,7 +35,7 @@ namespace duHastNet.AtTheLibrary.Utilities.Revit
         /// <param name="filePath"></param>
         /// <param name="typeCatalogueViewModel"></param>
         /// <returns></returns>
-        public static (List<string>, List<List<string>>) GetCatalogueFileData(string filePath, ViewModels.TypeCatalogueViewModel typeCatalogueViewModel)
+        public static (List<string>, List<string>, List<List<string>>) GetCatalogueFileData(string filePath, ViewModels.TypeCatalogueViewModel typeCatalogueViewModel)
         {
             duHastNet.RevitUtils.Families.TypeCatalogueFileReader reader = new RevitUtils.Families.TypeCatalogueFileReader();
             try
@@ -53,16 +53,16 @@ namespace duHastNet.AtTheLibrary.Utilities.Revit
                     {
                         typeCatalogueViewModel.AddMessage(message, Utils.WPF.Stores.MessageTypes.Error);
                     }
-                    return (null, null);
+                    return (null, null, null);
                 }
 
                 // return header and data rows
-                return (reader.FormattedHeaderRow, reader.DataRows);
+                return (reader.FormattedHeaderRow, reader.UnformattedHeaderRow, reader.DataRows);
             }
             catch (Exception ex)
             {
                 typeCatalogueViewModel.AddMessage(ex.Message, Utils.WPF.Stores.MessageTypes.Error);
-                return (null, null);
+                return (null, null, null);
             }
         }
     }

@@ -73,54 +73,62 @@ namespace duHastNet.AtTheLibrary.Commands
         /// <param name="parameter"></param>
         public override void Execute(object parameter)
         {
-            // Get the CellEditor from the parameter
-            if (parameter is CellEditor cellEditor)
+            try
             {
-                // Get the current data as displayed in the grid
-                var (headers, dataRows) = cellEditor.GetCurrentData();
-
-                // Get data from the view model and do some sanity checking
-                var selectedFamily = _typeDataViewModel.SelectedFamily;
-
-                if (selectedFamily == null)
+                // Get the CellEditor from the parameter
+                if (parameter is CellEditor cellEditor)
                 {
-                    TypeDataViewModel.AddMessage("No family selected", MessageTypes.Error);
-                    return;
+                    // Get the current data as displayed in the grid
+                    var (headers, dataRows) = cellEditor.GetCurrentData();
+
+                    // Get data from the view model and do some sanity checking
+                    var selectedFamily = _typeDataViewModel.SelectedFamily;
+
+                    if (selectedFamily == null)
+                    {
+                        TypeDataViewModel.AddMessage("No family selected", MessageTypes.Error);
+                        return;
+                    }
+
+                    // Validate the data
+                    if (headers == null || headers.Count == 0)
+                    {
+                        // Handle error - no column headers
+                        TypeDataViewModel.AddMessage("No header row", MessageTypes.Error);
+                    }
+
+                    if (dataRows == null || dataRows.Count == 0)
+                    {
+                        // Handle error - no data rows
+                        TypeDataViewModel.AddMessage("No type data provided. Catalogue file needs to contain at least 1 row.", MessageTypes.Error);
+                        return;
+                    }
+
+                    //do some sanity checking:
+                    if (!CheckTableData(headers, dataRows)) { return; }
+
+                    //convert data to string so it can be written to file
+                    List<List<string>> convertedTableData = ConvertTableData(headers, dataRows);
+                    if (convertedTableData == null) { return; }
+
+                    // make sure headers contain the original unit data, as well as wiping the first header since type name is usually empty
+                    List<string> convertedHeader = ConvertHeaderRow(headers, TypeDataViewModel.CatalogueFileHeadersOriginalUnformatted);
+
+                    // Process and save the data
+                    SaveDataToTextFile(selectedFamily.FamilyFilePath.Value, convertedHeader, convertedTableData);
+                }
+                else
+                {
+                    //nothing to do here
                 }
 
-                // Validate the data
-                if (headers == null || headers.Count == 0)
-                {
-                    // Handle error - no column headers
-                    TypeDataViewModel.AddMessage("No header row", MessageTypes.Error);
-                }
-
-                if (dataRows == null || dataRows.Count == 0)
-                {
-                    // Handle error - no data rows
-                    TypeDataViewModel.AddMessage("No type data provided. Catalogue file needs to contain at least 1 row.", MessageTypes.Error);
-                    return;
-                }
-
-                //do some sanity checking:
-                if (!CheckTableData(headers, dataRows)) { return; }
-
-                //convert data to string so it can be written to file
-                List<List<string>> convertedTableData = ConvertTableData(headers, dataRows);
-                if (convertedTableData == null){ return; }
-
-                // make sure headers contain the original unit data, as well as wiping the first header since type name is usually empty
-                List<string> convertedHeader = ConvertHeaderRow(headers, TypeDataViewModel.CatalogueFileHeadersOriginalUnformatted);
-
-                // Process and save the data
-                SaveDataToTextFile(selectedFamily.FamilyFilePath.Value, convertedHeader, convertedTableData);
+                return;
             }
-            else
+            catch (Exception ex)
             {
-                //nothing to do here
+                // Handle save errors
+                TypeDataViewModel.AddMessage($"Failed to save type catalogue text file with error (in execute) {ex}", MessageTypes.Error);
             }
-
-            return;
         }
 
         /// <summary>
@@ -334,6 +342,12 @@ namespace duHastNet.AtTheLibrary.Commands
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="currentHeader"></param>
+        /// <param name="oldHeader"></param>
+        /// <returns></returns>
         private List<string> ConvertHeaderRow(List<string> currentHeader, List<string> oldHeader)
         {
             //build a dictioanry containing the formatted header to the unformatted header
@@ -348,22 +362,22 @@ namespace duHastNet.AtTheLibrary.Commands
             List<string> convertedHeader = new List<string> { "" };
 
             //skip the first entry since already added as empty value      
-            for (int i = 1; i<= currentHeader.Count; i++)
+            for (int i = 1; i< currentHeader.Count; i++)
             {
-                    string oldEntryRetrieved;
-                    if (headerMapping.TryGetValue(currentHeader[i], out oldEntryRetrieved))
-                    {
-                        // Key was found, use the retrieved value
-                        convertedHeader.Add(oldEntryRetrieved);
-                    }
-                    else
-                    {
-                        //this should not happen!!
-                        TypeDataViewModel.AddMessage($"Failed to find header with unit data for header: {currentHeader[i]}", MessageTypes.Error);
-                        // Key not found, use original header 
-                        convertedHeader.Add(currentHeader[i]);
-                    }
+                string oldEntryRetrieved;
+                if (headerMapping.TryGetValue(currentHeader[i], out oldEntryRetrieved))
+                {
+                    // Key was found, use the retrieved value
+                    convertedHeader.Add(oldEntryRetrieved);
                 }
+                else
+                {
+                    //this should not happen!!
+                    TypeDataViewModel.AddMessage($"Failed to find header with unit data for header: {currentHeader[i]}", MessageTypes.Error);
+                    // Key not found, use original header 
+                    convertedHeader.Add(currentHeader[i]);
+                }
+            }
 
             return convertedHeader;
         }

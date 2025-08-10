@@ -33,9 +33,9 @@ namespace duHastNet.AtTheLibrary.Utilities.Revit
         /// Returns the formatted header row and data rows from the type catalogue file
         /// </summary>
         /// <param name="filePath"></param>
-        /// <param name="familiesSelectionViewModel"></param>
+        /// <param name="typeCatalogueViewModel"></param>
         /// <returns></returns>
-        public static (List<string>, List<List<string>>) GetCatalogueFileData(string filePath, ViewModels.FamiliesSelectionViewModel familiesSelectionViewModel)
+        public static (List<string>, List<List<string>>) GetCatalogueFileData(string filePath, ViewModels.TypeCatalogueViewModel typeCatalogueViewModel)
         {
             duHastNet.RevitUtils.Families.TypeCatalogueFileReader reader = new RevitUtils.Families.TypeCatalogueFileReader();
             try
@@ -51,7 +51,7 @@ namespace duHastNet.AtTheLibrary.Utilities.Revit
                 {
                     foreach (var message in reader.GetErrorMessages())
                     {
-                        familiesSelectionViewModel.AddMessage(message, Utils.WPF.Stores.MessageTypes.Error);
+                        typeCatalogueViewModel.AddMessage(message, Utils.WPF.Stores.MessageTypes.Error);
                     }
                     return (null, null);
                 }
@@ -61,7 +61,7 @@ namespace duHastNet.AtTheLibrary.Utilities.Revit
             }
             catch (Exception ex)
             {
-                familiesSelectionViewModel.AddMessage(ex.Message, Utils.WPF.Stores.MessageTypes.Error);
+                typeCatalogueViewModel.AddMessage(ex.Message, Utils.WPF.Stores.MessageTypes.Error);
                 return (null, null);
             }
         }

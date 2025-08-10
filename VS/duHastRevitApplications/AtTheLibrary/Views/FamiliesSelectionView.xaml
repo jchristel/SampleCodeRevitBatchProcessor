@@ -116,6 +116,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0"
                 Margin="0 5 5 5" 
@@ -128,6 +129,11 @@
                 Command="{Binding LoadFamilyCommand}"
                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
             <Button Grid.Column="2"
+                Margin="0 5 5 5" 
+                Content="Edit Type Catalogue"
+                Command="{Binding EditTypeCatalogueFileCommand}"
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+            <Button Grid.Column="3"
                 Margin="0 5 5 5" 
                 Content="Edit family"
                 Command="{Binding OpenFamilyIntoUICommand}"

@@ -112,7 +112,7 @@ namespace duHastNet.AtTheLibrary
                 _messageStore,
                 _globa,
                 CreateParametersSelectionViewModel,
-                CreateTypeCatalogueEditorViewModel
+                (familyData) => CreateTypeCatalogueEditorViewModel(familyData)
             );
         }
 
@@ -137,7 +137,7 @@ namespace duHastNet.AtTheLibrary
         /// Creates a type Catalogue editor view model
         /// </summary>
         /// <returns></returns>
-        private ViewModels.TypeCatalogueViewModel CreateTypeCatalogueEditorViewModel()
+        private ViewModels.TypeCatalogueViewModel CreateTypeCatalogueEditorViewModel(Models.FamilyDataModel familySelected)
         {
             duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel _globa = new duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);
             return new ViewModels.TypeCatalogueViewModel(
@@ -145,7 +145,8 @@ namespace duHastNet.AtTheLibrary
                 navigationStore: _navigationStore,
                 messageStore: _messageStore,
                 globalMessageViewModel: _globa,
-                CreateFamiliesSelectionViewModel);
+                CreateFamiliesSelectionViewModel,
+                selectedFamily: familySelected);
         }
 
 

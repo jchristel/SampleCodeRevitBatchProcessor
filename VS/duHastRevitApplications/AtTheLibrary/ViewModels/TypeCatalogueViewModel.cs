@@ -53,15 +53,34 @@ namespace duHastNet.AtTheLibrary.ViewModels
         public Models.FamilyDataModel SelectedFamily { get; set; }
 
         /// <summary>
-        /// As read from type catalogue file
+        /// As read from type catalogue file but with unit data removed
         /// </summary>
         private List<string> _catalogueFileHeadersOriginal;
+
+        //make these accessible
+        public List<string> CatalogueFileHeadersOriginal
+        {
+            get => _catalogueFileHeadersOriginal;
+        }
+
+        /// <summary>
+        /// As read from type catalogue file
+        /// </summary>
+        private List<string> _catalogueFileHeadersOriginalUnformatted;
+
+        //make these accessible
+        public List<string> CatalogueFileHeadersOriginalUnformatted
+        {
+            get => _catalogueFileHeadersOriginalUnformatted;
+        }
+
         private List<List<string>> _catalogueFileDataOriginal;
 
         #region data Properties
 
         private List<string> _headerRow;
         private List<List<object>> _dataRows;
+        private List<string> _readOnlyColumns;
 
         /// <summary>
         /// contains the header row
@@ -86,6 +105,19 @@ namespace duHastNet.AtTheLibrary.ViewModels
             {
                 _dataRows = value;
                 OnPropertyChanged(nameof(DataRows));
+            }
+        }
+
+        /// <summary>
+        /// contains read only columns ( which there are none in this case )
+        /// </summary>
+        public List<string> ReadOnlyColumns
+        {
+            get => _readOnlyColumns;
+            set
+            {
+                _readOnlyColumns = value;
+                OnPropertyChanged(nameof(ReadOnlyColumns));
             }
         }
 
@@ -143,8 +175,8 @@ namespace duHastNet.AtTheLibrary.ViewModels
         /// </summary>
         private void LoadData()
         {
-            // read catalogue file
-            (_catalogueFileHeadersOriginal, _catalogueFileDataOriginal) = Utilities.Revit.TypeCatalogueFileUtils.GetCatalogueFileData(SelectedFamily.FamilyFilePath.Value, this);
+            // read catalogue file and get header data ( formatted and unformatted ) and row data
+            (_catalogueFileHeadersOriginal, _catalogueFileHeadersOriginalUnformatted, _catalogueFileDataOriginal) = Utilities.Revit.TypeCatalogueFileUtils.GetCatalogueFileData(SelectedFamily.FamilyFilePath.Value, this);
 
             //check for null values indicating falure to read
             if (_catalogueFileDataOriginal == null || _catalogueFileHeadersOriginal == null)
@@ -182,6 +214,9 @@ namespace duHastNet.AtTheLibrary.ViewModels
 
             //update data rows
             DataRows = dataRows;
+
+            //no read only columns
+            ReadOnlyColumns = new List<string> ();
         }
 
         #endregion

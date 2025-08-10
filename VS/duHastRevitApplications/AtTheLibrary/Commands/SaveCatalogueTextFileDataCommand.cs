@@ -21,7 +21,6 @@
 //
 //
 
-
 using duHastNet.UI.CustomControls;
 using duHastNet.Utils.WPF.Stores;
 using System;
@@ -110,8 +109,11 @@ namespace duHastNet.AtTheLibrary.Commands
                 List<List<string>> convertedTableData = ConvertTableData(headers, dataRows);
                 if (convertedTableData == null){ return; }
 
+                // make sure headers contain the original unit data, as well as wiping the first header since type name is usually empty
+                List<string> convertedHeader = ConvertHeaderRow(headers, TypeDataViewModel.CatalogueFileHeadersOriginalUnformatted);
+
                 // Process and save the data
-                SaveDataToTextFile(selectedFamily.FamilyFilePath.Value, headers, convertedTableData);
+                SaveDataToTextFile(selectedFamily.FamilyFilePath.Value, convertedHeader, convertedTableData);
             }
             else
             {
@@ -121,6 +123,12 @@ namespace duHastNet.AtTheLibrary.Commands
             return;
         }
 
+        /// <summary>
+        /// Saves the catalogue data to a text file ( old file is over written 0
+        /// </summary>
+        /// <param name="selectedFamilyFilePath"></param>
+        /// <param name="headers"></param>
+        /// <param name="dataRows"></param>
         private void SaveDataToTextFile(string selectedFamilyFilePath, List<string> headers, List<List<string>> dataRows)
         {
             try
@@ -325,6 +333,42 @@ namespace duHastNet.AtTheLibrary.Commands
             }
         }
 
+
+        private List<string> ConvertHeaderRow(List<string> currentHeader, List<string> oldHeader)
+        {
+            //build a dictioanry containing the formatted header to the unformatted header
+            Dictionary<string, string> headerMapping = new Dictionary<string, string>();
+
+            foreach (string oldEntry in oldHeader)
+            {
+                string formattedHeaderEntry = duHastNet.RevitUtils.Families.TypeCatalogueFileReader.GetParameterNameFromHeaderEntry(oldEntry);
+                headerMapping[formattedHeaderEntry] = oldEntry;
+            }
+
+            List<string> convertedHeader = new List<string> { "" };
+
+            //skip the first entry since already added as empty value      
+            for (int i = 1; i<= currentHeader.Count; i++)
+            {
+                    string oldEntryRetrieved;
+                    if (headerMapping.TryGetValue(currentHeader[i], out oldEntryRetrieved))
+                    {
+                        // Key was found, use the retrieved value
+                        convertedHeader.Add(oldEntryRetrieved);
+                    }
+                    else
+                    {
+                        //this should not happen!!
+                        TypeDataViewModel.AddMessage($"Failed to find header with unit data for header: {currentHeader[i]}", MessageTypes.Error);
+                        // Key not found, use original header 
+                        convertedHeader.Add(currentHeader[i]);
+                    }
+                }
+
+            return convertedHeader;
+        }
+
+
         /// <summary>
         /// Converts a single cell value to string based on the target storage type
         /// </summary>
@@ -408,6 +452,7 @@ namespace duHastNet.AtTheLibrary.Commands
                 return value?.ToString()?.Trim() ?? "";
             }
         }
+
 
         public SaveCatalogueTextFileDataCommand(
            ViewModels.TypeCatalogueViewModel typeDataViewModel,

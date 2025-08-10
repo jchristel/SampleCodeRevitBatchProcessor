@@ -51,7 +51,7 @@
             BorderBrush="Gray"
             BorderThickness="1"/>
         
-        <!-- cancel and save buttons -->
+        <!-- close and save buttons -->
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -59,7 +59,7 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0"
                 Margin="0 5 5 5" 
-                Content="Cancel"
+                Content="Close"
                 Command="{Binding SelectFamiliesCommand}" 
                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
             <Button Grid.Column="1"

@@ -92,6 +92,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataConversion\TypeConverter.cs" />
     <Compile Include="FilesIO\FilesGet.cs" />
     <Compile Include="Hash\ComputeHashUtils.cs" />
     <Compile Include="Logging\LogActionsBase.cs" />

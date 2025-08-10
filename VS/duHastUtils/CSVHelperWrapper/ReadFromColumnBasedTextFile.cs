@@ -73,6 +73,7 @@ namespace duHastNet.FileIOWrapper
                 using (var reader = new StreamReader(filePath))
                 using (var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
                 {
+                    BadDataFound = null, // Don't throw on bad data
                     Delimiter = delimiter
                 }))
                 {

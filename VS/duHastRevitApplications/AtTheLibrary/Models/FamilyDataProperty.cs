@@ -52,9 +52,35 @@ namespace duHastNet.AtTheLibrary.Models
                     return typeof(string);
                 case "int":
                     return typeof(int);
+                case "number":
+                    return typeof(int);
                 case "double":
                     return typeof(double);
+                case "length":
+                    return typeof(double);
+                case "currency":
+                    return typeof(double);
+                case "distance":
+                    return typeof(double);
+                case "angle":
+                    return typeof(double);
+                case "rotation angle":
+                    return typeof(double);
+                case "time":
+                    return typeof(double);
+                case "cost per area":
+                    return typeof(double);
+                case "slope":
+                    return typeof(double);
+                case "speed":
+                    return typeof(double);
+                case "area":
+                    return typeof(double);
+                case "volume":
+                    return typeof(double);
                 case "bool":
+                    return typeof(bool);
+                case "yes/no":
                     return typeof(bool);
                 case "datetime":
                     return typeof(DateTime);

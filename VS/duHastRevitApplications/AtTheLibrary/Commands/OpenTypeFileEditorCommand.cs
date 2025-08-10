@@ -21,27 +21,63 @@
 //
 //
 
+
 using System;
+using System.ComponentModel;
 
 namespace duHastNet.AtTheLibrary.Commands
 {
-    public class NavigateCommand : Utils.WPF.Commands.CommandBase
+    public class OpenTypeFileEditorCommand : Utils.WPF.Commands.CommandBase
     {
         private readonly duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
-        private readonly Func<Utils.WPF.ViewModels.ViewModelBase> _createViewModel;
+        private readonly Func<Models.FamilyDataModel, Utils.WPF.ViewModels.ViewModelBase> _createViewModel;
+        private readonly ViewModels.FamiliesDataGridViewModel _familyDataGridViewModel;
 
-        public NavigateCommand(
+        public OpenTypeFileEditorCommand(
             duHastNet.Utils.WPF.Stores.NavigationStore navigationStore,
-            Func<Utils.WPF.ViewModels.ViewModelBase> createViewModel
+            Func<Models.FamilyDataModel, Utils.WPF.ViewModels.ViewModelBase> createViewModel,
+            ViewModels.FamiliesDataGridViewModel familiesDataGridViewModel
         )
         {
             _navigationStore = navigationStore;
             _createViewModel = createViewModel;
+            _familyDataGridViewModel = familiesDataGridViewModel;
+
+            // Subscribe to property changes to update CanExecute
+            _familyDataGridViewModel.PropertyChanged += OnViewModelPropertyChanged;
+        }
+
+        /// <summary>
+        /// this command is always available
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        public override bool CanExecute(object parameter)
+        {
+            // check if there is a family selected
+            if (_familyDataGridViewModel.SelectedFamily==null)
+            {
+                return false;
+            }
+            else if( !_familyDataGridViewModel.SelectedFamily.HasTypeCatalogueFile)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // check if the property that changed is the one that we are interested in
+            if (e.PropertyName == nameof(ViewModels.FamiliesDataGridViewModel.SelectedFamily))
+            {
+                OnCanExecutedChanged();
+            }
         }
 
         public override void Execute(object parameter)
         {
-            _navigationStore.CurrentViewModel = _createViewModel();
+            _navigationStore.CurrentViewModel = _createViewModel(_familyDataGridViewModel.SelectedFamily);
         }
     }
 }

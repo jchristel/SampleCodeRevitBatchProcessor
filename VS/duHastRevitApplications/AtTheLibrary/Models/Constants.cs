@@ -57,5 +57,9 @@ namespace duHastNet.AtTheLibrary.Models
             {ColumnHeaderParameterName.Replace(" ",""), ColumnHeaderParameterName},
             {ColumnHeaderParameterOccurenceCount.Replace(" ",""), ColumnHeaderParameterOccurenceCount},
         };
+
+
+        //column header in type catalogue editor
+        public const string ColumnHeaderTypeCatalogueFamilyTypeName = "Family Type Name";
     }
 }

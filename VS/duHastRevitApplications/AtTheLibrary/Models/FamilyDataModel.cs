@@ -22,6 +22,7 @@
 //
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace duHastNet.AtTheLibrary.Models
 {
@@ -63,6 +64,16 @@ namespace duHastNet.AtTheLibrary.Models
         public List<FamilyDataProperty> GetAllProperties()
         {
             return _properties;
+        }
+
+        /// <summary>
+        /// return the property by its name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public FamilyDataProperty GetPropertyByName( string name)
+        {
+            return _properties.Where(x=> x.Name == name).FirstOrDefault();
         }
 
         public void AddMatchingFamily(FamilyRevit family)

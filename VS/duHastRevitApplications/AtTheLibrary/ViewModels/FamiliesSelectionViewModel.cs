@@ -56,6 +56,8 @@ namespace duHastNet.AtTheLibrary.ViewModels
         private readonly Commands.OpenFamilyIntoUIAsyncCommand _openFamilyCommand;
         //command to navigate to parameters selction view model
         private readonly Commands.NavigateCommand _navigateCommand;
+        //command to navigate to catalogue file editor view model
+        private readonly Commands.OpenTypeFileEditorCommand _navigateEditTypeCatalogueFileCommand;
 
         //property to check if there are any errors
         public bool HasErrors => _errorsViewModel.HasErrors;
@@ -136,8 +138,6 @@ namespace duHastNet.AtTheLibrary.ViewModels
 
         #endregion settings
 
-
-
         #region Commands
 
         //commands
@@ -146,6 +146,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
         public ICommand LoadFamilyCommand { get { return _loadFamilyCommand; } }
         public ICommand SelectParameters { get { return _navigateCommand; } }
         public ICommand OpenFamilyIntoUICommand { get { return _openFamilyCommand; } }
+        public ICommand EditTypeCatalogueFileCommand { get { return _navigateEditTypeCatalogueFileCommand; } }
 
         #endregion Commands
 
@@ -169,6 +170,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
         {
             base.Dispose();
         }
+
 
         /// <summary>
         /// Custom closing logic for RoomsSelectionViewModel
@@ -209,6 +211,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
             base.OnClosing();
         }
 
+
         /// <summary>
         /// Data validation for text input fields
         /// </summary>
@@ -228,6 +231,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
             OnPropertyChanged(nameof(DataFilePathValid));
         }
 
+
         /// <summary>
         /// The rooms selection view model class constructor.
         /// </summary>
@@ -241,7 +245,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
             Utils.WPF.Stores.MessageStore messageStore,
             Utils.WPF.ViewModels.GlobalMessageViewModel globalMessageViewModel,
             Func<ViewModels.ParametersSelectionViewModel> createParameterSelectionViewModel,
-            Func<ViewModels.TypeCatalogueViewModel> createTypeCatalogueViewModel)
+            Func<Models.FamilyDataModel, ViewModels.TypeCatalogueViewModel> createTypeCatalogueViewModel)
         {
             //store services
             _navigationStore = navigationStore;
@@ -295,7 +299,11 @@ namespace duHastNet.AtTheLibrary.ViewModels
                 createViewModel: createParameterSelectionViewModel
             );
 
-            //TODO navigate to type editor view model command!
+            //navigate to type editor view model command!
+            _navigateEditTypeCatalogueFileCommand = new OpenTypeFileEditorCommand(
+                navigationStore: _navigationStore,
+                createViewModel: (familyData) => createTypeCatalogueViewModel(familyData),
+                familiesDataGridViewModel: FamiliesDataGridViewModel);
 
             //update rooms data with data from revit through an external event
             RefreshGUICommand.Execute(null);

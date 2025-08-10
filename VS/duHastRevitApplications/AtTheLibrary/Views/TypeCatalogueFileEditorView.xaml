@@ -41,14 +41,13 @@
         <!-- dynamic cell editor to show type data -->
         <celleditor:CellEditor
             x:Name="CellEditorControl"
-            Grid.Row="1"
+            Grid.Row="2"
             HeaderRow="{Binding HeaderRow}"
             DataRows="{Binding DataRows}"
             ReadOnlyColumns="{Binding ReadOnlyColumns}"
             AllowAddRow="True"
             AllowDuplicateRow="True"
             AllowDeleteRow="True"
-            DataChanged="CellEditorControl_DataChanged"
             BorderBrush="Gray"
             BorderThickness="1"/>
         
@@ -60,10 +59,14 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0"
                 Margin="0 5 5 5" 
-                Content="Cancel"/>
+                Content="Cancel"
+                Command="{Binding SelectFamiliesCommand}" 
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
             <Button Grid.Column="1"
                 Margin="0 5 5 5" 
-                Content="Save"/>
+                Content="Save"
+                Command="{Binding SaveCatalogueTextFileDataCommand}"
+                CommandParameter="{Binding ElementName=CellEditorControl}"/>
         </Grid>
     </Grid>
 </UserControl>

@@ -109,8 +109,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
         //field to store if the selected room has any matching Revit rooms
         bool _isMatchingRevitFamiliesEmpty;
 
-        //property to check if the selected room has any matching Revit rooms
-        //used to determine if the button to push the selected room to Revit should be enabled
+        //property to check if the selected family has any families placed in the project file
         public bool IsMatchingRevitFamiliesEmpty
         {
             set

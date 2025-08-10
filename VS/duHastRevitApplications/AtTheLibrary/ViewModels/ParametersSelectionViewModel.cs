@@ -41,10 +41,6 @@ namespace duHastNet.AtTheLibrary.ViewModels
         /// </summary>
         public ViewModels.ParametersDataGridViewModel ParametersDataGridViewModel { get; }
 
-        //command to raise an event to refresh the gui
-        private readonly Commands.RefreshUIFromRevitModelAsyncCommand _raiseRefreshGUICommand;
-        //command to raise an event to reload data from file path
-        private readonly Commands.ReloadDataFromFileAsyncCommand _raiseReloadDataCommand;
         //command to navigate back to families selection view model
         private readonly Commands.NavigateCommand _navigateCommand;
 
@@ -64,8 +60,6 @@ namespace duHastNet.AtTheLibrary.ViewModels
         #region Commands
 
         //commands
-        public ICommand RefreshGUICommand { get { return _raiseRefreshGUICommand; } }
-        public ICommand ReloadDataCommand { get { return _raiseReloadDataCommand; } }
         // switch to families selection view model
         public ICommand SelectFamilies { get { return _navigateCommand; } }
 
@@ -141,28 +135,11 @@ namespace duHastNet.AtTheLibrary.ViewModels
             ParametersDataGridViewModel = new ParametersDataGridViewModel(revitDataModel: revitDataModel);
             RegisterChild(ParametersDataGridViewModel);
 
-
-            // set up commands
-            // refresh gui with data from model
-            //_raiseRefreshGUICommand = new Commands.RefreshUIFromRevitModelAsyncCommand(
-            //   familiesSelectionViewModel: this,
-            //   revitFamiliesDataModel: _revitDataModel);
-
-            //load data from file path
-            //_raiseReloadDataCommand = new Commands.ReloadDataFromFileAsyncCommand(
-            //    roomsSelectionViewModel: this,
-            //    revitDataModel: _revitDataModel
-            //);
-
             //view model switch to families selection view model
             _navigateCommand = new Commands.NavigateCommand(
                 navigationStore: _navigationStore,
                 createViewModel: createViewModel
             );
-
-
-            //update rooms data with data from revit through an external event
-            //RefreshGUICommand.Execute(null);
         }
     }
 }

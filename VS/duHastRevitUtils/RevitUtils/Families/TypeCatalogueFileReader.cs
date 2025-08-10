@@ -95,6 +95,8 @@ namespace duHastNet.RevitUtils.Families
                 //store unformatted header row
                 UnformattedHeaderRow = data[0];
 
+                _dataRows = new List<List<string>>();
+
                 //store data rows
                 for (int i = 1; i < data.Count; i++)
                 {

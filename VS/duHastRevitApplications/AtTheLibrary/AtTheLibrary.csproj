@@ -55,6 +55,9 @@
     <Reference Include="duHastUICustomControls">
       <HintPath>..\..\_References\duHast\duHastUICustomControls.dll</HintPath>
     </Reference>
+    <Reference Include="FileIOWrapper">
+      <HintPath>..\..\_References\duHast\FileIOWrapper.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
@@ -119,8 +122,10 @@
     <Compile Include="Commands\LoadFamilyAsyncCommand.cs" />
     <Compile Include="Commands\NavigateCommand.cs" />
     <Compile Include="Commands\OpenFamilyIntoUIAsyncCommand.cs" />
+    <Compile Include="Commands\OpenTypeFileEditorCommand.cs" />
     <Compile Include="Commands\RefreshUIFromRevitModelAsyncCommand.cs" />
     <Compile Include="Commands\ReloadDataFromFileAsyncCommand.cs" />
+    <Compile Include="Commands\SaveCatalogueTextFileDataCommand.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Models\Constants.cs" />
     <Compile Include="Models\FamiliesDataModelContainer.cs" />

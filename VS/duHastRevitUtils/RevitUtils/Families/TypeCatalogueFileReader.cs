@@ -22,6 +22,7 @@
 //
 
 
+using Autodesk.Revit.DB.ExtensibleStorage;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -115,32 +116,47 @@ namespace duHastNet.RevitUtils.Families
             }
         }
 
+
+        /// <summary>
+        /// removes all unit data from all entries in the header row
+        /// </summary>
+        /// <param name="headerRow"></param>
+        /// <returns></returns>
         public List<string> GetParameterNamesFromHeaderRow(List<string> headerRow)
         {
             List<string> parameterNames = new List<string>();
             foreach (var entry in headerRow)
             {
-                // get the first occurence of ## of [
-                int firstIndexUnitSeparator = entry.IndexOf(UnitSeparator);
-                int firstIndexElementIdSeparator = entry.IndexOf(ElementIdSeparator);
-
-                int nameEndIndex = firstIndexUnitSeparator;
-                if (firstIndexElementIdSeparator != -1 && firstIndexElementIdSeparator<firstIndexUnitSeparator)
-                {
-                    nameEndIndex = firstIndexElementIdSeparator;
-                }
-
-                //If no separators found, use the entire string ( first column value is usually empty)
-                if (nameEndIndex == -1)
-                {
-                    parameterNames.Add(entry);
-                }
-                else
-                {
-                    parameterNames.Add(entry.Substring(0, nameEndIndex));
-                }
+                parameterNames.Add(GetParameterNameFromHeaderEntry(entry));
             }
             return parameterNames;
         }
+
+
+        /// <summary>
+        /// removes all unit data from a header row entry
+        /// </summary>
+        /// <param name="headerEntry"></param>
+        /// <returns></returns>
+       public static string GetParameterNameFromHeaderEntry(string headerEntry)
+       {
+            int firstIndexUnitSeparator = headerEntry.IndexOf(UnitSeparator);
+            int firstIndexElementIdSeparator = headerEntry.IndexOf(ElementIdSeparator);
+
+            int nameEndIndex = firstIndexUnitSeparator;
+            if (firstIndexElementIdSeparator != -1 && firstIndexElementIdSeparator < firstIndexUnitSeparator)
+            {
+                nameEndIndex = firstIndexElementIdSeparator;
+            }
+
+            if (nameEndIndex == -1)
+            {
+                return headerEntry;
+            }
+            else
+            {
+                return headerEntry.Substring(0, nameEndIndex);
+            }
+       }
     }
 }

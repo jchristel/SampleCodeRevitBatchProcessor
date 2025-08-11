@@ -55,6 +55,8 @@
             <RowDefinition Height="Auto"/>
             <!-- print set selector -->
             <RowDefinition Height="auto"/>
+            <!-- schedule set selector -->
+            <RowDefinition Height="auto"/>
             <!-- data -->
             <RowDefinition Height="*"/>
             <!-- export path -->
@@ -84,7 +86,67 @@
         <Border Grid.Row="2" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
             <Grid>
                 <Grid.RowDefinitions>
-                    <!-- header row -->
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <!-- print set selection-->
+                <Grid Grid.Row="0" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock 
+                        Grid.Column="0" 
+                        Grid.Row="0" 
+                        Margin="5 5 5 5"
+                        VerticalAlignment="Center" 
+                        HorizontalAlignment="Center"
+                        Text="Print Set"/>
+                                        <!-- document type selection ComboBox -->
+                    <ComboBox Grid.Row="0" Grid.Column="1"
+                        Margin="5 5 5 5" 
+                        ItemsSource="{Binding PrintSetNamesDefaultList}"
+                        SelectedValue="{Binding Path=SelectedPrintSet,Mode=TwoWay}"/>
+                </Grid>
+                <Grid Grid.Row="1" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button 
+                         Grid.Row="0" 
+                         Grid.Column="0" 
+                         Padding="5 0 5 0"
+                         Margin="5 5 5 5" 
+                         Content="Update"/>
+                    <Button 
+                         Grid.Row="0" 
+                         Grid.Column="1" 
+                         Padding="5 0 5 0"
+                         Margin="5 5 5 5" 
+                         Content="Duplicate"/>
+                    <Button 
+                         Grid.Row="0" 
+                         Grid.Column="2" 
+                         Padding="5 0 5 0"
+                         Margin="5 5 5 5" 
+                         Content="Delete"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+
+        <Border Grid.Row="3" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -97,7 +159,7 @@
                     Margin="5 5 5 5"
                     VerticalAlignment="Center" 
                     HorizontalAlignment="Center"
-                    Text="Print Set"/>
+                    Text="Schedule"/>
                 <!-- document type selection ComboBox -->
                 <ComboBox Grid.Row="0" Grid.Column="1"
                     Margin="5 5 5 5" 
@@ -105,8 +167,9 @@
                     SelectedValue="{Binding Path=SelectedPrintSet,Mode=TwoWay}"/>
             </Grid>
         </Border>
+
         <!-- Sheet selection -->
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="4">
             <!-- grid view -->
             <dynamicDataGrid:DynamicDataGrid  x:Name="dataGrid" 
                 Grid.Row="0"
@@ -119,7 +182,7 @@
             
         </Grid>
         <!--Export path -->
-        <Border Grid.Row="4" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+        <Border Grid.Row="5" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -145,16 +208,16 @@
                            ValidatesOnNotifyDataErrors=True,
                            NotifyOnValidationError=True}"/>
                 <Button 
-                 Grid.Row="0" 
-                 Grid.Column="2" 
-                 Padding="20 0 20 0"
-                 Margin="5 10 5 10" 
-                 Content="Browse"
-                 Click="Export_OnClick"/>
+                     Grid.Row="0" 
+                     Grid.Column="2" 
+                     Padding="20 0 20 0"
+                     Margin="5 10 5 10" 
+                     Content="Browse"
+                     Click="Export_OnClick"/>
             </Grid>
         </Border>
         <!--export format selector -->
-        <Border Grid.Row="5" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+        <Border Grid.Row="6" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
             <customControls:ThreeWaySwitch Width="Auto" 
                 Height="Auto"
                 Margin="10 2 10 2"
@@ -163,7 +226,7 @@
         </Border>
         
         <!-- export row content -->
-        <Border Grid.Row="6" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+        <Border Grid.Row="7" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
             <Grid Margin="5 2 5 2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

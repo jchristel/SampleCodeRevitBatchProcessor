@@ -26,8 +26,56 @@ This module contains a number of helper functions relating to fields in Revit vi
 #
 #
 
-from Autodesk.Revit.DB import SectionType
+from Autodesk.Revit.DB import ElementId, SectionType
 
+
+def schedule_contains_field_by_parameter_id(schedule, parameter_id, ignore_hidden_field=False):
+    """
+    Checks if the given schedule contains a specific field identified by the parameter Id.
+
+    :param schedule: The schedule to check.
+    :type schedule: Autodesk.Revit.DB.ViewSchedule
+    :param parameter_id: The parameter Id of the field to check for.
+    :type parameter_id: Autodesk.Revit.DB.ElementId
+    :param ignore_hidden_field: If True, a hidden field returns false.
+    :type ignore_hidden_field: bool, optional
+    
+    :return: True if the schedule contains the sheet number field, False otherwise.
+    :rtype: bool
+    """
+
+    # get the field names in the schedule
+    field_names = get_field_names_to_parameters(schedule)
+
+    # check if the field is in the field parameter ids
+    for field_names,field_parameter_id in field_names.items():
+        if field_parameter_id == parameter_id:
+            # field found, return True
+            if ignore_hidden_field is True and field_parameter_id.IsHidden:
+                # if the field is hidden, return false
+                return False
+            # return True 
+            return True
+    
+    # field not found, return False
+    return False
+
+
+def schedule_contains_sheet_number_field(schedule, ignore_hidden_field=False):
+    """
+    Checks if the given schedule contains the sheet number field.
+
+    :param schedule: The schedule to check.
+    :type schedule: Autodesk.Revit.DB.ViewSchedule
+    :param ignore_hidden_field: If True, a hidden sheet number field returns false.
+    :type ignore_hidden_field: bool, optional
+
+    :return: True if the schedule contains the sheet number field, False otherwise.
+    :rtype: bool
+    """
+
+    return schedule_contains_field_by_parameter_id(schedule, ElementId(-1007401), ignore_hidden_field=ignore_hidden_field)
+   
 
 def get_field_names_from_schedule(schedule):
     """

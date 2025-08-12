@@ -1,7 +1,7 @@
 """
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to Revit view schedules of category sheet export to file. 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 #
 # License:
@@ -29,9 +29,35 @@ This module contains a number of helper functions relating to Revit view schedul
 import os
 
 from duHast.Revit.Views.schedules import  get_all_sheet_schedules
+from duHast.Revit.Views.scchedules_fields import schedule_contains_sheet_number_field
 from duHast.Revit.Views.schedules_export import export_schedule_to_file
+
 from duHast.Utilities.Objects.result import Result
-from duHast.Utilities.directory_io import directory_exists
+from duHast.Utilities.directory_io import directory_exists, create_temp_directory, directory_delete
+from duHast.Utilities.files_get import get_files_single_directory
+from duHast.Utilities.files_io import get_file_name_without_ext
+from duHast.Utilities.file_base_read_net import read_from_delimited_text_file
+
+
+def filter_schedules_by_sheet_number_field(schedules):
+    """
+    Filters the given schedules to only those that contain a visible sheet number field.
+    
+    :param schedules: The list of schedules to filter.
+    :type schedules: list[Autodesk.Revit.DB.ViewSchedule]
+
+    :return: A list of schedules that contain the sheet number field.
+    :rtype: list[Autodesk.Revit.DB.ViewSchedule]
+    """
+
+    filtered_schedules = []
+
+    for schedule in schedules:
+        # check if the schedule contains the sheet number field
+        if schedule_contains_sheet_number_field(schedule = schedule, ignore_hidden_field=True):
+            filtered_schedules.append(schedule)
+    
+    return filtered_schedules
 
 
 def export_all_sheet_schedules_to_file( directory_path, export_if_number_is_hidden = False):
@@ -67,7 +93,7 @@ def export_all_sheet_schedules_to_file( directory_path, export_if_number_is_hidd
         # check if schedules need to be filtered ( export only if sheet number field is not hidden)
         if export_if_number_is_hidden is False:
             # filter schedules to only those that have the sheet number field visible
-            pass
+            all_schedules = filter_schedules_by_sheet_number_field(all_schedules)
 
         # iterate through all schedules and export them to file
         for schedule in all_schedules:
@@ -84,4 +110,77 @@ def export_all_sheet_schedules_to_file( directory_path, export_if_number_is_hidd
     
     except Exception as e:
         return_value.update_sep(False, "Failed to export schedules to file: {e}".format(e=e))
+        return return_value
+
+
+def export_all_sheet_schedules_and_read_data_back(export_if_number_is_hidden=False):
+    """
+    Exports all sheet schedules to file and reads the data back into a dictionary.
+
+    :param export_if_number_is_hidden: Whether to export schedules even if the number is hidden.
+    :type export_if_number_is_hidden: bool, optional
+
+    :return: Result object containing success status, messages, and data.
+    :rtype: duHast.Utilities.Objects.result.Result
+    """
+
+    return_value = Result()
+
+    try:
+        # set up a temporary directory to export the schedules to
+        directory_path = create_temp_directory()
+        
+        # export all sheet schedules to file
+        export_result = export_all_sheet_schedules_to_file(directory_path, export_if_number_is_hidden=export_if_number_is_hidden)
+        
+        return_value.update(export_result)
+
+        if return_value.success is False:
+            return return_value
+
+        # get all files in temp directory
+        if directory_exists(directory_path) is False:
+            return_value.update_sep(False, "Temporary directory does not exist: {directory_path}".format(directory_path=directory_path))
+            return return_value
+        
+        # get all files in the directory with the specified filters
+        files_found = get_files_single_directory(directory_path, file_prefix="", file_suffix="", file_extension=".csv")
+
+        # check if any files were found
+        if len(files_found) == 0:
+            return_value.update_sep(False, "No files found in temporary directory: {directory_path}".format(directory_path=directory_path))
+            
+            # delete the temp directory
+            delete_flag = directory_delete(directory_path)
+            return_value.append_message("Deleted temporary directory: {directory_path} with status {flag}".format(directory_path=directory_path, flag=delete_flag))
+
+            return return_value
+        
+        # read the data back into a dictionary
+        data = {}
+
+        for file_path in files_found:
+            # attempt to read the file
+            file_data_result = read_from_delimited_text_file(file_path)
+
+            # check if the file was read successfully
+            if file_data_result.status is False:
+                return_value.update_sep(False, "Failed to read data from file: {file_path}".format(file_path=file_path))
+                continue
+
+            else:
+                # log the success message
+                return_value.append_message("Successfully read data from file: {file_path}".format(file_path=file_path))
+                # store the data in the dictionary with the file name as the key
+                file_name = get_file_name_without_ext(file_path)
+                data[file_name] = file_data_result.result
+
+        # delete the temporary directory
+        delete_flag = directory_delete(directory_path)
+        return_value.append_message("Deleted temporary directory: {directory_path} with status {flag}".format(directory_path=directory_path, flag=delete_flag))
+
+        return return_value
+    
+    except Exception as e:
+        return_value.update_sep(False, "Failed to export and read data back: {e}".format(e=e))
         return return_value

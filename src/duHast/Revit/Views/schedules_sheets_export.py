@@ -29,7 +29,7 @@ This module contains a number of helper functions relating to Revit view schedul
 import os
 
 from duHast.Revit.Views.schedules import  get_all_sheet_schedules
-from duHast.Revit.Views.scchedules_fields import schedule_contains_sheet_number_field
+from duHast.Revit.Views.schedules_fields import schedule_contains_sheet_number_field
 from duHast.Revit.Views.schedules_export import export_schedule_to_file
 
 from duHast.Utilities.Objects.result import Result
@@ -131,11 +131,11 @@ def export_all_sheet_schedules_and_read_data_back(doc, export_if_number_is_hidde
         directory_path = create_temp_directory()
         
         # export all sheet schedules to file
-        export_result = export_all_sheet_schedules_to_file(directory_path, export_if_number_is_hidden=export_if_number_is_hidden)
+        export_result = export_all_sheet_schedules_to_file(doc=doc, directory_path=directory_path, export_if_number_is_hidden=export_if_number_is_hidden)
         
         return_value.update(export_result)
 
-        if return_value.success is False:
+        if return_value.status is False:
             return return_value
 
         # get all files in temp directory
@@ -179,6 +179,8 @@ def export_all_sheet_schedules_and_read_data_back(doc, export_if_number_is_hidde
         delete_flag = directory_delete(directory_path)
         return_value.append_message("Deleted temporary directory: {directory_path} with status {flag}".format(directory_path=directory_path, flag=delete_flag))
 
+        # return the data read
+        return_value.result.append(data)
         return return_value
     
     except Exception as e:

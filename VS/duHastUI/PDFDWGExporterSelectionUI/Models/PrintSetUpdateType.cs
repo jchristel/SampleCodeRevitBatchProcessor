@@ -23,23 +23,11 @@
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 {
-    public class RevitPrintSet : RevitDataBase
+    public enum PrintSetUpdateType
     {
-        
-        /// <summary>
-        /// Enum indicating whether and how a printset needs to be updated
-        /// </summary>
-        private PrintSetUpdateType _updateAction;
-        public PrintSetUpdateType UpdateAction
-        {
-            get => _updateAction;
-            set => _updateAction = value;
-        }
-
-        public RevitPrintSet(string name, PrintSetUpdateType updateAction=PrintSetUpdateType.None)
-        {
-            Name = name;
-            UpdateAction = updateAction;
-        }
+        None = 0,
+        Delete = 1,
+        Update =2,
+        New = 3,
     }
 }

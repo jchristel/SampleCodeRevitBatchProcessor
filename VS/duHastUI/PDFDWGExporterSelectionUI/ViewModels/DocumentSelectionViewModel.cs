@@ -114,7 +114,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         // Field to return a default list of print set  names
         private readonly List<string> _printSetNamesDefaultList = new List<string>();
 
-        // Property to expose the default list of document type names
+        // Property to expose the default list of print sets
         public List<string> PrintSetNamesDefaultList => _printSetNamesDefaultList;
 
         // field to store the selected Revit print set
@@ -167,7 +167,68 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             }
         }
 
+
         #endregion print set filter
+
+        #region schedule filter
+
+        // Field to return a default list of print set  names
+        private readonly List<string> _sheetScheduleNamesDefaultList = new List<string>();
+
+        // Property to expose the default list of print sets
+        public List<string> SheetScheduleNamesDefaultList => _sheetScheduleNamesDefaultList;
+
+        // field to store the selected schedule set
+        private string _selectedScheduleSet;
+        public string SelectedScheduleSet
+        {
+            get => _selectedScheduleSet;
+            set
+            {
+                _selectedScheduleSet = value;
+
+                //store print set in settings
+                _sheetsDataModel.Settings.Schedule = value;
+
+                // Update the data grid selection
+                ViewSelectionDataGridViewModel.UpdateSheetSelectionBySchedule(value);
+
+                //update UI
+                OnPropertyChanged(nameof(SelectedScheduleSet));
+            }
+        }
+
+        /// <summary>
+        /// set the schedule at the end of the GUI ini phase
+        /// </summary>
+        private void SetSheetSetScheduleFilterFromSettings()
+        {
+            //set the filter to the value stored in settings
+            //check if valid value
+            if (_sheetsDataModel.Settings.Schedule == null)
+            {
+                AddMessage($"No valid schedule set in settings. Defaulting to {Models.Constants.DefaultPrintSetName}", messageType: MessageTypes.Error);
+                SelectedScheduleSet = Models.Constants.DefaultPrintSetName;
+                //update the print set in settings
+                _sheetsDataModel.Settings.Schedule = Models.Constants.DefaultPrintSetName;
+            }
+            //check if print set still exists in model
+            else if (_sheetScheduleNamesDefaultList.Contains(_sheetsDataModel.Settings.Schedule))
+            {
+                //set the print set and mark sheets belonging to it
+                SelectedScheduleSet = _sheetsDataModel.Settings.Schedule;
+            }
+            else
+            {
+                //print set no longer exists in the model...go with default option
+                AddMessage($"Sheet schedule in settings no longer exists in file. Defaulting to {Models.Constants.DefaultPrintSetName}", messageType: MessageTypes.Error);
+                SelectedScheduleSet = Models.Constants.DefaultPrintSetName;
+                //update the print set in settings
+                _sheetsDataModel.Settings.Schedule = Models.Constants.DefaultPrintSetName;
+            }
+        }
+
+        #endregion schedule filter
 
 
         /// <summary>
@@ -204,6 +265,32 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
             // trigger the property changed event
             OnPropertyChanged(nameof(PrintSetNamesDefaultList));
+        }
+
+
+        /// <summary>
+        /// update the default schedules list with the default value and any schedules in the data model
+        /// </summary>
+        private void PopulateAvailableSchedules()
+        {
+            //clear just ion case
+            _sheetScheduleNamesDefaultList.Clear();
+
+            //populate the available filters list with print set names
+            //add the default (None)
+            _sheetScheduleNamesDefaultList.Add(Models.Constants.DefaultPrintSetName);
+
+            // add from model
+            if (_sheetsDataModel.Schedules != null && _sheetsDataModel.Schedules.Count > 0)
+            {
+                foreach (Models.RevitSchedule rSchedule in _sheetsDataModel.Schedules)
+                {
+                    _sheetScheduleNamesDefaultList.Add(rSchedule.Name);
+                }
+            }
+
+            // trigger the property changed event
+            OnPropertyChanged(nameof(SheetScheduleNamesDefaultList));
         }
 
         #region export types
@@ -322,8 +409,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// <param name="window"></param>
         private void SaveSettingsAndClose(object window)
         {
-
-
             //update the column ids in settings.
             // clear lisr first
             _sheetsDataModel.Settings.ColumnIds.Clear();
@@ -468,9 +553,16 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             //populate the available print set list from the model
             PopulateAvailablePrintSets();
 
+            //populate available schedule names from the model
+            PopulateAvailableSchedules();
+
             //set the filter to display sheets selected depending on print exports set
             //this will be trigger a view change to show the selected data table, hence last thing in the constructor
             SetPrintSetFilterFromSettings();
+
+            //set the filter to select sheets from schedule ( in theory only one, print set or schedule ) should have a 
+            //selection 
+            SetSheetSetScheduleFilterFromSettings();
 
         }
     }

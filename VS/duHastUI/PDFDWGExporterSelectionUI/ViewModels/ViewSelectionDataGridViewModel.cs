@@ -208,6 +208,14 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             RefreshData();
         }
 
+        /// <summary>
+        /// method updating sheet selection check box depending on print set
+        /// </summary>
+        public void UpdateSheetSelectionBySchedule( string scheduleName)
+        {
+
+        }
+
         #region Private Helper Methods
 
         private void InitializeColumnDefaults()

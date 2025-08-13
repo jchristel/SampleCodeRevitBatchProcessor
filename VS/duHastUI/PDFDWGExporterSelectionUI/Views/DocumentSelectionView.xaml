@@ -105,7 +105,7 @@
                         VerticalAlignment="Center" 
                         HorizontalAlignment="Center"
                         Text="Print Set"/>
-                                        <!-- document type selection ComboBox -->
+                    <!-- print set selection ComboBox -->
                     <ComboBox Grid.Row="0" Grid.Column="1"
                         Margin="5 5 5 5" 
                         ItemsSource="{Binding PrintSetNamesDefaultList}"
@@ -160,11 +160,11 @@
                     VerticalAlignment="Center" 
                     HorizontalAlignment="Center"
                     Text="Schedule"/>
-                <!-- document type selection ComboBox -->
+                <!-- schedule selection box -->
                 <ComboBox Grid.Row="0" Grid.Column="1"
                     Margin="5 5 5 5" 
-                    ItemsSource="{Binding PrintSetNamesDefaultList}"
-                    SelectedValue="{Binding Path=SelectedPrintSet,Mode=TwoWay}"/>
+                    ItemsSource="{Binding SheetScheduleNamesDefaultList}"
+                    SelectedValue="{Binding Path=SelectedScheduleSet,Mode=TwoWay}"/>
             </Grid>
         </Border>
 

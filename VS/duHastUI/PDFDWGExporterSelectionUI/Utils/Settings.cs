@@ -51,6 +51,18 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
         }
 
         /// <summary>
+        /// the schedule selected by the user
+        /// </summary>
+        private string _schedule;
+
+        public string Schedule
+        {
+            get => _schedule;
+            set => _schedule = value;
+        }
+
+
+        /// <summary>
         /// the folder to which sheets are going to be exported
         /// </summary>
         private string _exportFolderPath;
@@ -82,6 +94,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
                 //reset to default
                 _columnIds = new List<string>();
                 _printSet = Models.Constants.DefaultPrintSetName;
+                _schedule = Models.Constants.DefaultPrintSetName;
                 _exportFolderPath = string.Empty;
                 _exportModus = Models.Constants.ExportModusPDF;
                 return;
@@ -91,6 +104,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
                 //deep copy of the column names
                 _columnIds = new List<string>(settings.ColumnIds);
                 _printSet = settings.Printset;
+                _schedule = settings.Schedule;
                 _exportFolderPath = settings.ExportFolderPath;
                 _exportModus = settings.ExportModus;
                 return;
@@ -106,6 +120,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
             // set default values
             _columnIds = new List<string>();
             _printSet = Models.Constants.DefaultPrintSetName;
+            _schedule = Models.Constants.DefaultPrintSetName;
             _exportFolderPath = string.Empty;
             _exportModus = Models.Constants.ExportModusPDF;
         }

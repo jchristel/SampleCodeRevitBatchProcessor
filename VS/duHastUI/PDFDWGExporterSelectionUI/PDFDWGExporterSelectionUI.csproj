@@ -76,6 +76,7 @@
     <Compile Include="Exceptions\PropertyConflictException.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Models\Constants.cs" />
+    <Compile Include="Models\PrintSetUpdateType.cs" />
     <Compile Include="Models\RevitDataBase.cs" />
     <Compile Include="Models\RevitSchedule.cs" />
     <Compile Include="Models\RevitPrintSet.cs" />

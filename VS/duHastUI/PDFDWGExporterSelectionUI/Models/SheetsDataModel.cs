@@ -55,6 +55,15 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
         }
 
         /// <summary>
+        /// schedules from the revit model
+        /// </summary>
+        private List<Models.RevitSchedule> _schedules;
+        public List<Models.RevitSchedule> Schedules
+        {
+            get => _schedules;
+        }
+
+        /// <summary>
         /// json formatted string representing pdf name settings
         /// </summary>
         private readonly string _currentPDFExportString;
@@ -118,6 +127,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
             Utils.Settings settings,
             List<RevitSheet> revitSheets,
             List<RevitPrintSet> revitPrintSets,
+            List<RevitSchedule> revitSchedules,
             string currentPDFExportString,
             string currentDWGExportString,
             List<string> parameterNames
@@ -131,6 +141,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 
             //initialise print sets
             _printSets = revitPrintSets;
+
+            //initialise schedules
+            _schedules = revitSchedules;
 
             //initialise exporter file name settings
             _currentPDFExportString = currentPDFExportString;

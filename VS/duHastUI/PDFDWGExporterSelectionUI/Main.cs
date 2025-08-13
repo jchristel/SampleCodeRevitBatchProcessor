@@ -40,6 +40,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
         public Main(
             List<RevitSheet> sheetsInModel,
             List<RevitPrintSet> printSetsInModel,
+            List<RevitSchedule> schedulesInModel,
             string currentPDFExportString,
             string currentDWGExportString,
             List<string> parameterNames)
@@ -74,6 +75,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
                 settings: _settings,
                 revitSheets: sheetsInModel,
                 revitPrintSets: printSetsInModel,
+                revitSchedules: schedulesInModel,
                 currentPDFExportString: currentPDFExportString,
                 currentDWGExportString: currentDWGExportString,
                 parameterNames: parameterNames);

@@ -60,7 +60,7 @@ def filter_schedules_by_sheet_number_field(schedules):
     return filtered_schedules
 
 
-def export_all_sheet_schedules_to_file( directory_path, export_if_number_is_hidden = False):
+def export_all_sheet_schedules_to_file( doc, directory_path, export_if_number_is_hidden = False):
     """
     Exports all schedules that are placed on sheets to file.
     
@@ -113,7 +113,7 @@ def export_all_sheet_schedules_to_file( directory_path, export_if_number_is_hidd
         return return_value
 
 
-def export_all_sheet_schedules_and_read_data_back(export_if_number_is_hidden=False):
+def export_all_sheet_schedules_and_read_data_back(doc, export_if_number_is_hidden=False):
     """
     Exports all sheet schedules to file and reads the data back into a dictionary.
 

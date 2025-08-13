@@ -20,18 +20,18 @@ namespace PDFDWGExporterSelectionTester
 
 
 
-            var printSet_One = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 1", false);
+            var printSet_One = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 1");
             printSet_One.AddRevitSheet(sheets[0]);
             printSet_One.AddRevitSheet(sheets[2]);
 
 
-            var printSetTwo = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 2", false);
+            var printSetTwo = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 2");
             printSetTwo.AddRevitSheet(sheets[0]);
             printSetTwo.AddRevitSheet(sheets[1]);
 
-            var printSetThree = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 3", false);
+            var printSetThree = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 3");
 
-            var printSetFour = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 4", false);
+            var printSetFour = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitPrintSet("set 4");
             printSetFour.AddRevitSheet(sheets[0]);
             printSetFour.AddRevitSheet(sheets[1]);
             printSetFour.AddRevitSheet(sheets[2]);
@@ -70,6 +70,7 @@ namespace PDFDWGExporterSelectionTester
             var main = new duHastNet.UI.PDFDWGExporterSelectionUI.Main(
                 sheetsInModel: sheets,
                 printSetsInModel: printSets,
+                schedulesInModel: null,
                 currentPDFExportString: jsonPDF,
                 currentDWGExportString: jsonDWG,
                 parameterNames: new List<string> { "Sheet Number", "Sheet Name", "Parameter4" });

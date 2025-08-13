@@ -78,7 +78,7 @@ def export_pdf_dwg_entry(doc, output, forms):
         # get the output directory from the schema
         settings_getter_result = get_name_settings_from_schema(doc=doc)
         if settings_getter_result.status is False:
-            message = "Failed to get settings: {}".format(settings_getter_result.message)
+            message = "It looks like there are export settings stored in this file. Run set up first.\n... {}".format(settings_getter_result.message)
             return_value.update_sep(False, message)
             print_error(message)
             return return_value
@@ -108,6 +108,7 @@ def export_pdf_dwg_entry(doc, output, forms):
         main = Main(
             sheetsInModel=ui_data[0], 
             printSetsInModel=ui_data[1],
+            schedulesInModel = None,
             currentPDFExportString = rename_settings.pdf_settings,
             currentDWGExportString = rename_settings.dwg_settings,
             parameterNames=parameter_names,

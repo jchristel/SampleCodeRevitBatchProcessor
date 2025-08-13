@@ -44,19 +44,24 @@ def schedule_contains_field_by_parameter_id(schedule, parameter_id, ignore_hidde
     :rtype: bool
     """
 
-    # get the field names in the schedule
-    field_names = get_field_names_to_parameters(schedule)
+    # get the schedule definition
+    schedule_definition = schedule.Definition
 
-    # check if the field is in the field parameter ids
-    for field_names,field_parameter_id in field_names.items():
-        if field_parameter_id == parameter_id:
-            # field found, return True
-            if ignore_hidden_field is True and field_parameter_id.IsHidden:
+    # get the number of fields in the schedule
+    num_fields = schedule_definition.GetFieldCount()
+
+    # loop through the fields and get their names
+    for i in range(num_fields):
+        field = schedule_definition.GetField(i)
+        field_id = field.ParameterId
+        # check if the field id matches the parameter id
+        if field_id == parameter_id:
+            if ignore_hidden_field is True and field.IsHidden:
                 # if the field is hidden, return false
                 return False
             # return True 
             return True
-    
+       
     # field not found, return False
     return False
 

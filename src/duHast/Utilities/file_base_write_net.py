@@ -39,7 +39,7 @@ from duHast.Utilities.Objects.file_encoding_bom import BOMValue as bom_value
 # the dll is located in the libs folder of the extension, which is one level up from the current file's directory
 current_directory = os.path.dirname(__file__)
 parent_directory = os.path.dirname(current_directory)
-dll_path = os.path.join(parent_directory, "libs", "FileIOWrapper.dll")
+dll_path = os.path.join(parent_directory, "lib", "FileIOWrapper.dll")
 clr.AddReference(dll_path)
 
 # import the WriteToFile class from the CSVHelperWrapper namespace

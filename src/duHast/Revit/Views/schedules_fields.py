@@ -28,6 +28,8 @@ This module contains a number of helper functions relating to fields in Revit vi
 
 from Autodesk.Revit.DB import ElementId, SectionType
 
+# the sheet number parameter id
+SHEET_NUMBER_PARAMETER_ID = ElementId(-1007401)
 
 def schedule_contains_field_by_parameter_id(schedule, parameter_id, ignore_hidden_field=False):
     """
@@ -79,7 +81,7 @@ def schedule_contains_sheet_number_field(schedule, ignore_hidden_field=False):
     :rtype: bool
     """
 
-    return schedule_contains_field_by_parameter_id(schedule, ElementId(-1007401), ignore_hidden_field=ignore_hidden_field)
+    return schedule_contains_field_by_parameter_id(schedule, SHEET_NUMBER_PARAMETER_ID, ignore_hidden_field=ignore_hidden_field)
    
 
 def get_field_names_from_schedule(schedule):
@@ -141,6 +143,66 @@ def get_field_names_to_parameters(schedule):
     return field_names_to_id
 
 
+def get_field_column_index_from_schedule_by_parameter_id(schedule, parameter_id):
+    """
+    Returns the index of a field in a Revit schedule based on the parameter ID.
+
+    If the field is hidden or not found will return -1.
+
+    Takes into account if other fields are hidden or not, so the index is based on visible fields only.
+
+    :param schedule: The Revit schedule object from which to extract the field index.
+    :type schedule: Autodesk.Revit.DB.ViewSchedule
+    :param parameter_id: The parameter ID of the field to find.
+    :type parameter_id: Autodesk.Revit.DB.ElementId
+
+    :return: The index of the field in the schedule, or -1 if not found or hidden.
+    :rtype: int 
+    """
+
+
+    # get the schedule definition
+    schedule_definition = schedule.Definition
+
+    # get the number of fields in the schedule
+    num_fields = schedule_definition.GetFieldCount()
+    
+    # ordered field list:
+    sorted_field_ids = schedule_definition.GetFieldOrder()
+
+    # get the column index
+    column_index = 0
+
+    # if the parameter ID is not provided, return -1
+    field_found = False
+
+    # loop through the fields in order of appearance in schedule to find the column index for the specified parameter ID
+    for i in range(num_fields):
+        field_id = sorted_field_ids[i]
+
+        # get the field
+        field_by_field_id = schedule_definition.GetField(field_id)
+
+        # check if the field is hidden
+        if field_by_field_id.IsHidden:
+            # if the field is hidden, skip it
+            continue
+
+        # check if the field parameter ID matches the specified parameter ID
+        if field_by_field_id.ParameterId == parameter_id:
+            field_found = True
+            break
+
+        # increase the column index if the field is not hidden
+        column_index += 1
+    
+    # if the field was found, return the column index
+    if not field_found:
+        column_index = -1
+
+    return column_index
+
+
 def get_field_values_from_schedule_by_parameter_id(schedule, parameter_id=None):
     """
     Get a list of all field values from a Revit schedule based on the parameter id.
@@ -153,7 +215,7 @@ def get_field_values_from_schedule_by_parameter_id(schedule, parameter_id=None):
     :rtype: list of str
     """
 
-     # get the schedule definition
+    # get the schedule definition
     schedule_definition = schedule.Definition
 
     # get the number of fields in the schedule

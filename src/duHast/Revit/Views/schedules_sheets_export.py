@@ -29,7 +29,7 @@ This module contains a number of helper functions relating to Revit view schedul
 import os
 
 from duHast.Revit.Views.schedules import  get_all_sheet_schedules
-from duHast.Revit.Views.schedules_fields import schedule_contains_sheet_number_field
+from duHast.Revit.Views.schedules_fields import schedule_contains_sheet_number_field, get_field_column_index_from_schedule_by_parameter_id, SHEET_NUMBER_PARAMETER_ID 
 from duHast.Revit.Views.schedules_export import export_schedule_to_file
 
 from duHast.Utilities.Objects.result import Result
@@ -185,4 +185,39 @@ def export_all_sheet_schedules_and_read_data_back(doc, export_if_number_is_hidde
     
     except Exception as e:
         return_value.update_sep(False, "Failed to export and read data back: {e}".format(e=e))
+        return return_value
+
+
+def get_sheet_number_index_to_schedule_mapper(doc):
+    """
+    Creates a mapping of sheet number column index to their corresponding schedules in the document.
+
+    :param doc: The Revit document containing the schedules.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A dictionary mapping sheet numbers to their corresponding schedules.
+    :rtype: dict[str, Autodesk.Revit.DB.ViewSchedule]
+    """
+
+    return_value = Result()
+
+    try:
+        # get all sheet schedules in doc
+        all_schedules = get_all_sheet_schedules(doc)
+
+        # filter schedules to only those that have the sheet number field visible
+        all_schedules = filter_schedules_by_sheet_number_field(all_schedules)
+
+        # create a mapping of sheet numbers to schedules
+        sheet_number_to_schedule_map = {}
+
+        for schedule in all_schedules:
+           column_index = get_field_column_index_from_schedule_by_parameter_id(schedule, SHEET_NUMBER_PARAMETER_ID )
+           sheet_number_to_schedule_map[schedule.Name] = column_index
+        
+        return_value.result.append(sheet_number_to_schedule_map)
+        return return_value
+    
+    except Exception as e:
+        return_value.update_sep(False, "Failed to create sheet number column index to schedule mapper: {e}".format(e=e))
         return return_value

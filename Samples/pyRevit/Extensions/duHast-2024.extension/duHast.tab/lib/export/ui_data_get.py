@@ -28,7 +28,7 @@ from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Views.sheets import get_all_sheets
 from duHast.Revit.Views.schedules import  get_all_sheet_schedules
 from duHast.Revit.Views.schedules_fields import get_field_names_to_parameters, get_field_values_from_schedule_by_parameter_id
-from duHast.Revit.Views.schedules_sheets_export import  export_all_sheet_schedules_and_read_data_back
+from duHast.Revit.Views.schedules_sheets_export import  export_all_sheet_schedules_and_read_data_back, get_sheet_number_index_to_schedule_mapper
 from duHast.pyRevit.console_output import  print_error
 
 
@@ -96,54 +96,73 @@ def get_ui_schedule_data (doc, sheets):
     from duHastNet.UI.PDFDWGExporterSelectionUI.Models import RevitSchedule
     from duHastNet.UI.PDFDWGExporterSelectionUI.Models import RevitSheet
 
-    # create a .net list to hold the schedule objects
-    schedule_data = List[RevitSchedule]()
-
+    
+    sheet_schedules = {}
 
     # export all sheet schedules and read the data back
     schedule_export_result = export_all_sheet_schedules_and_read_data_back(doc)
     print("Exported all sheet schedules with status: {}".format(schedule_export_result.status))
     print("Message: {}".format(schedule_export_result.message))
-    print("Result: {}".format(schedule_export_result.result))
+    #print("Result: {}".format(schedule_export_result.result))
 
 
     if schedule_export_result.status:
         
         # if the export was successful, get the data from the result
-        schedule_data = schedule_export_result.result
-        print("Found {} schedules in the model.".format(len(schedule_data)))
+        sheet_schedules = schedule_export_result.result[0]
+        print("Found {} schedules in the model.".format(len(sheet_schedules)))
     else:
         # if the export failed, print the error message and return an empty list
         print_error("Error exporting sheet schedules: {}".format(schedule_export_result.message))
-        return schedule_data
+        # return an empty list
+        return List[RevitSchedule]()
+
+    # get a dictionary listing each schedule and the index of the sheet number field in the schedule
+    column_index_mapper_result = get_sheet_number_index_to_schedule_mapper(doc)
+    #print("Column index mapper result: {}".format(column_index_mapper_result))
 
 
-    # get all sheet schedules in the model'
-    sheet_schedules = get_all_sheet_schedules(doc)
+    column_index_mapper = column_index_mapper_result.result[0]
+    #print("Column index mapper: {}".format(column_index_mapper))
 
-    print( "Found {} sheet schedules in the model.".format(sheet_schedules.Count))
-    for schedule in sheet_schedules:
+    # create a .net list to hold the schedule objects
+    schedule_data = List[RevitSchedule]()
+
+
+    for schedule_name, schedule_rows in sheet_schedules.items():
+        #print("\n\nProcessing schedule: {}".format(schedule_name))
         
         # check if the schedule contains the sheet number field
-        if not schedule_contains_sheet_number_field(schedule):
+        if not schedule_name in column_index_mapper:
+            # skip this schedule if it does not contain the sheet number field
+            #print("Skipping schedule '{}' as it does not contain the sheet number field.".format(schedule_name))
             continue
 
-        # get all sheet numbers listed in schedule
-        sheet_numbers_in_schedule = get_sheet_numbers_in_schedule(schedule)
-        if len(sheet_numbers_in_schedule) == 0:
-            # no sheet numbers found in the schedule, skip this schedule
-            continue
-
+        # set up a list to hold the sheet numbers found in the schedule
         sheets_in_schedule = List[RevitSheet]() 
-
-        for number_found in sheet_numbers_in_schedule:
+        # get the sheet number from schedule data and try to find a matching sheet in the sheets list
+        for row in schedule_rows:
+            #print("Processing row: {}".format(row))
+            sheet_number = row[column_index_mapper[schedule_name]]
+            if sheet_number is None or sheet_number == "":
+                # skip this row if the sheet number is empty
+                #print("Skipping row in schedule '{}' with empty sheet number.".format(schedule_name))
+                continue
+            
             for sheet in sheets:
-                if sheet.SheetNumber == number_found:
+                # check if the sheet number matches the sheet number in the schedule
+                #print("trying to find match for sheet number: {} vs {}".format(sheet.SheetNumber.Value, sheet_number))
+                if sheet.SheetNumber.Value == sheet_number:
+                    # found a match, add the sheet to the list of sheets in the schedule
+                    #print("Found matching sheet '{}' with number '{}' in schedule '{}'.".format(sheet.SheetName.Value, sheet_number, schedule_name))
                     sheets_in_schedule.Add(sheet)
+                    break  # break out of the inner loop if a match is found
+
+        #print ("Found matching sheets: {}".format(sheets_in_schedule.Count))
 
         # populate a RevitSchedule object with the schedule data
         revit_sheet_schedule =  RevitSchedule(
-            name=schedule.Name,
+            name=schedule_name,
         )
 
         # iterate over the sheets in the set and add them to the RevitPrintSet object
@@ -153,6 +172,7 @@ def get_ui_schedule_data (doc, sheets):
         # add the RevitPrintSet object to the list of print sets
         schedule_data.Add(revit_sheet_schedule)
 
+    #print("data:",schedule_data)
     # currently no schedule data is available, so return an empty list
     return schedule_data
 
@@ -304,9 +324,8 @@ def get_ui_data(doc):
 
     # get schedule data
     schedule_ui_data = get_ui_schedule_data(doc, sheet_ui_data)
-    print ("Schedule UI Data: {}".format(schedule_ui_data))
 
     # return data as a tuple
-    ui_data = (sheet_ui_data,print_set_ui_data)
+    ui_data = (sheet_ui_data, print_set_ui_data, schedule_ui_data)
 
     return ui_data

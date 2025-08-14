@@ -108,7 +108,7 @@ def export_pdf_dwg_entry(doc, output, forms):
         main = Main(
             sheetsInModel=ui_data[0], 
             printSetsInModel=ui_data[1],
-            schedulesInModel = None,
+            schedulesInModel = ui_data[2],
             currentPDFExportString = rename_settings.pdf_settings,
             currentDWGExportString = rename_settings.dwg_settings,
             parameterNames=parameter_names,

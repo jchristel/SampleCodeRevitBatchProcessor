@@ -98,7 +98,7 @@ def export_all_sheet_schedules_to_file( doc, directory_path, export_if_number_is
         # iterate through all schedules and export them to file
         for schedule in all_schedules:
             # get the file name from the schedule name
-            file_name = schedule.Name.replace(" ", "_") + ".csv"
+            file_name = schedule.Name + ".csv"
             file_path = os.path.join(directory_path, file_name)
             
             # export the schedule to file

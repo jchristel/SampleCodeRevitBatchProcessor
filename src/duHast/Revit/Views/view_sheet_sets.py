@@ -489,3 +489,80 @@ def create_new_view_sheet_set(doc, view_sheet_set_name, sheets, views, transacti
         return_value = transaction_manager(transaction, action)
    
     return return_value
+
+
+def delete_view_sheet_set_by_name(doc, view_sheet_set_name, transaction_manager = in_transaction):
+    """
+    Deletes a view sheet set by its name from the Revit document.
+
+    :param doc: The Revit document from which to delete the view sheet set.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view_sheet_set_name: The name of the view sheet set to delete.
+    :type view_sheet_set_name: str
+    :param transaction_manager: The transaction manager to use for the operation. If none is provided, the action will be executed assuming there is an open transaction already set up by the caller.
+    :type transaction_manager: function
+
+    :return: A Result object indicating the success or failure of the operation. Messages are quite detailed to allow for debugging and understanding what is happening in the function.
+    :rtype: duHast.Utilities.Objects.result.Result
+    """
+
+    # set up a return object
+    return_value = Result()
+
+    # check if the view_sheet_set_name is a string
+    if not isinstance(view_sheet_set_name, str):
+        return_value.update_sep(False, "view_sheet_set_name needs to be of type: str. Got instead: {}".format(type(view_sheet_set_name)))
+        return return_value
+
+    if view_sheet_set_name == "":
+        return_value.update_sep(False, "view_sheet_set_name cannot be an empty string.")
+        return return_value
+
+    view_sheet_setting = get_current_view_sheet_settings_element(doc)
+
+    # check view set with given name already exists?
+    # if it does, return an error
+    # otherwise duplicate the current set, rename it , clear it and update it with the given sheets and views
+    existing_view_sheet_set = get_view_sheet_set_by_name(doc, view_sheet_set_name)
+
+    # check if the view sheet set exists
+    if not existing_view_sheet_set:
+        return_value.update_sep(False, "View set with name '{}' does not exist.".format(view_sheet_set_name))
+        return return_value
+
+    # make sure the we got the settings, otherwise we cant update
+    if view_sheet_setting:
+        return_value.append_message("Setting current view sheet set to: {}".format(view_sheet_set_name))
+    else:
+        return_value.update_sep(False, "Failed to get current ViewSheetSetting element.")
+        return return_value
+    
+    # set up an action to be executed in a transaction
+    def action():
+        action_return_value = Result()
+        
+        try:
+            # set the current view sheet set to the one we want to delete
+            view_sheet_setting.CurrentViewSheetSet = existing_view_sheet_set
+            # attempt to delete the view sheet set
+            view_sheet_setting.Delete()
+
+            action_return_value.append_message("Deleted view sheet set: {}".format(view_sheet_set_name))
+
+        except Exception as e:
+            action_return_value.update_sep(
+                False,
+                "Failed to delete view set: {} with error: {}".format(view_sheet_set_name, e),
+            )
+        
+        return action_return_value
+
+    # check if a transaction manager is provided
+    if not transaction_manager:
+        # if no transaction manager is provided, run the action assuming there is an open transaction already set up by the caller
+        return_value = action()
+    else:
+        transaction = Transaction(doc, "Deleting view set: {}".format(view_sheet_set_name))
+        return_value = transaction_manager(transaction, action)
+   
+    return return_value

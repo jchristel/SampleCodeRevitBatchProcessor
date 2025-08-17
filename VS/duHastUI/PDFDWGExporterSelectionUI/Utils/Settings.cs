@@ -82,14 +82,25 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
             set => _exportModus = value;
         }
 
+        private Dictionary<string, string> _navigationStates;
+
+        // <summary>
+        /// Stores the serialized DataGrid state (columns, filters, sorting, etc.)
+        /// This allows the grid layout to be preserved between sessions
+        /// </summary>
+        public Dictionary<string, string> NavigationStates
+        {
+            get => _navigationStates;
+            set => _navigationStates = value;
+        }
 
         /// <summary>
         /// updates this settings object from another one. If null is past in this will be reset to default values
         /// </summary>
-        /// <param name="settings"></param>
-        public void UpdateSettingsFromSettings(Settings settings)
+        /// <param name="otherSettings"></param>
+        public void UpdateSettingsFromSettings(Settings otherSettings)
         {
-            if (settings == null)
+            if (otherSettings == null)
             {
                 //reset to default
                 _columnIds = new List<string>();
@@ -97,16 +108,18 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
                 _schedule = Models.Constants.DefaultPrintSetName;
                 _exportFolderPath = string.Empty;
                 _exportModus = Models.Constants.ExportModusPDF;
+                _navigationStates = new Dictionary<string,string>();
                 return;
             }
             else
             {
                 //deep copy of the column names
-                _columnIds = new List<string>(settings.ColumnIds);
-                _printSet = settings.Printset;
-                _schedule = settings.Schedule;
-                _exportFolderPath = settings.ExportFolderPath;
-                _exportModus = settings.ExportModus;
+                _columnIds = new List<string>(otherSettings.ColumnIds);
+                _printSet = otherSettings.Printset;
+                _schedule = otherSettings.Schedule;
+                _exportFolderPath = otherSettings.ExportFolderPath;
+                _exportModus = otherSettings.ExportModus;
+                _navigationStates = new Dictionary<string, string>(otherSettings.NavigationStates);
                 return;
             }
         }
@@ -123,6 +136,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
             _schedule = Models.Constants.DefaultPrintSetName;
             _exportFolderPath = string.Empty;
             _exportModus = Models.Constants.ExportModusPDF;
+            _navigationStates = new Dictionary<string, string>();
         }
     }
 }

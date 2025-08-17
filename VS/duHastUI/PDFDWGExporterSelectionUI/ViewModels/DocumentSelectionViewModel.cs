@@ -30,6 +30,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
@@ -60,6 +61,11 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// message store for storing messages
         /// </summary>
         private readonly duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
+
+        /// <summary>
+        /// store the navigation store for the application
+        /// </summary>
+        private readonly duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
 
         /// <summary>
         /// View model managing the view selection data grid.
@@ -407,24 +413,48 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// updates the settings in the export data model and closes the window
         /// </summary>
         /// <param name="window"></param>
-        private void SaveSettingsAndClose(object window)
+        /// <summary>
+        /// Simplified SaveAndCloseCommand - no need to manually save grid state
+        /// </summary>
+        private void SaveSettingsAndClose(object parameter)
         {
-            //update the column ids in settings.
-            // clear lisr first
-            _sheetsDataModel.Settings.ColumnIds.Clear();
-            foreach (var columnId in ViewSelectionDataGridViewModel.ColumnDefinitions)
+            try
             {
-                _sheetsDataModel.Settings.ColumnIds.Add(columnId.PropertyName);
+                // Update the column ids in settings (existing logic)
+                if (ViewSelectionDataGridViewModel?.ColumnDefinitions != null)
+                {
+                    _sheetsDataModel.Settings.ColumnIds.Clear();
+                    foreach (var columnId in ViewSelectionDataGridViewModel.ColumnDefinitions)
+                    {
+                        _sheetsDataModel.Settings.ColumnIds.Add(columnId.PropertyName);
+                    }
+                }
+
+                // Save settings to file (this will include NavigationStore's serialized states)
+                var navigationStatesForSettings = _navigationStore.GetStatesForSettings();
+                _sheetsDataModel.Settings.NavigationStates = navigationStatesForSettings;
+
+                duHastNet.UI.PDFDWGExporterSelectionUI.Utils.SettingsUtils.SaveSettings(
+                    settings: _sheetsDataModel.Settings,
+                    AddMessage: AddMessage);
+
+                // Close the window
+                if (parameter is Window window)
+                {
+                    window.Close();
+                }
+                else if (parameter is DependencyObject obj)
+                {
+                    Window.GetWindow(obj)?.Close();
+                }
+                else
+                {
+                    Application.Current.MainWindow?.Close();
+                }
             }
-
-            //save settings to file is done in the main window close event
-            duHastNet.UI.PDFDWGExporterSelectionUI.Utils.SettingsUtils.SaveSettings(
-                settings: _sheetsDataModel.Settings,
-                AddMessage: AddMessage);
-
-            if (window is Window w)
+            catch (Exception ex)
             {
-                w.Close(); // Closes the window
+                AddMessage($"Error saving settings: {ex.Message}", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
             }
         }
 
@@ -435,6 +465,12 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
             //cant simply replace the settings object in the data model...since it is used else where....need to update instead
             _sheetsDataModel.Settings.UpdateSettingsFromSettings(settings);
+
+            // Load NavigationStore states if they exist
+            if (settings.NavigationStates != null)
+            {
+                _navigationStore.LoadStatesFromSettings(settings.NavigationStates);
+            }
         }
 
 
@@ -512,6 +548,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// <param name="messageStore"></param>
         public DocumentSelectionViewModel(
             Models.SheetsDataModel sheetDataModel,
+            duHastNet.Utils.WPF.Stores.NavigationStore navigationStore,
             duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel globalMessageViewModel,
             duHastNet.Utils.WPF.Stores.MessageStore messageStore
             )
@@ -519,6 +556,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
             //store the export data model
             _sheetsDataModel = sheetDataModel;
+
+            //store the navigation store
+            _navigationStore = navigationStore;
 
             //store the message store
             _messageStore = messageStore;

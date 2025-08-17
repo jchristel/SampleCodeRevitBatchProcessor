@@ -22,8 +22,7 @@
 //
 //
 
-using duHastNet.UI.CustomControls.CustomDataGrid;
-using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -37,7 +36,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid.GridState
     /// <summary>
     /// Handles serialization and deserialization of DataGrid state to/from DataGridState objects
     /// </summary>
-    public static class GridStateSerializer
+    public static partial class GridStateSerializer
     {
         #region Capture State from DataGrid
 

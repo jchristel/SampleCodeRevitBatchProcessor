@@ -6,7 +6,6 @@
 //
 // BSD License
 // Copyright 2025, Jan Christel
-// Written by Claude
 // All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -22,26 +21,31 @@
 //
 //
 
+using duHastNet.Utils.WPF.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Linq;
 
 namespace duHastNet.UI.CustomControls.CustomDataGrid.GridState
 {
     /// <summary>
-    /// Represents the complete state of a DataGrid that can be saved and restored
+    /// Represents the state of a DataGrid that can be saved and restored.
+    /// Simplified to work with NavigationStore's single-state-per-grid pattern.
     /// </summary>
-    public class DataGridState
+    public class DataGridState : IGridState
     {
+        #region IGridState Implementation
+
         /// <summary>
-        /// Unique identifier for this grid state (e.g., ViewModel name + grid identifier)
+        /// Unique identifier for this grid state
         /// </summary>
         public string GridId { get; set; }
 
         /// <summary>
-        /// Human-readable name for this state
+        /// State name (always "Default" for simplified management)
         /// </summary>
-        public string StateName { get; set; }
+        public string StateName { get; set; } = "Default";
 
         /// <summary>
         /// When this state was created
@@ -59,6 +63,15 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid.GridState
         public string Version { get; set; } = "1.0";
 
         /// <summary>
+        /// Additional metadata for grid-specific information
+        /// </summary>
+        public Dictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
+
+        #endregion
+
+        #region Grid-Specific State Properties
+
+        /// <summary>
         /// Information about each column's state
         /// </summary>
         public List<ColumnState> Columns { get; set; } = new List<ColumnState>();
@@ -73,199 +86,291 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid.GridState
         /// </summary>
         public List<FilterState> Filters { get; set; } = new List<FilterState>();
 
-        /// <summary>
-        /// Additional metadata that can be used by specific implementations
-        /// </summary>
-        public Dictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
+        #endregion
+
+        #region Constructor
 
         public DataGridState()
         {
             CreatedDate = DateTime.Now;
             LastModified = DateTime.Now;
         }
-    }
 
-    /// <summary>
-    /// Represents the state of a single column
-    /// </summary>
-    public class ColumnState
-    {
-        /// <summary>
-        /// Property name that identifies this column
-        /// </summary>
-        public string PropertyName { get; set; }
+        #endregion
+
+        #region IGridState Implementation Methods
 
         /// <summary>
-        /// Display name of the column
+        /// Gets a summary of the state for display purposes
         /// </summary>
-        public string DisplayName { get; set; }
-
-        /// <summary>
-        /// Whether this column is currently visible
-        /// </summary>
-        public bool IsVisible { get; set; } = true;
-
-        /// <summary>
-        /// Display order of the column (0-based)
-        /// </summary>
-        public int DisplayIndex { get; set; }
-
-        /// <summary>
-        /// Width of the column
-        /// </summary>
-        public double Width { get; set; }
-
-        /// <summary>
-        /// Whether this column is read-only
-        /// </summary>
-        public bool IsReadOnly { get; set; }
-
-        /// <summary>
-        /// Data type of the column for restoration purposes
-        /// </summary>
-        public string DataTypeName { get; set; }
-    }
-
-    /// <summary>
-    /// Represents the sorting state of the grid
-    /// </summary>
-    public class SortState
-    {
-        /// <summary>
-        /// Property name of the column being sorted
-        /// </summary>
-        public string PropertyName { get; set; }
-
-        /// <summary>
-        /// Direction of the sort
-        /// </summary>
-        public ListSortDirection Direction { get; set; }
-
-        /// <summary>
-        /// Index for multi-column sorting (future enhancement)
-        /// </summary>
-        public int SortIndex { get; set; } = 0;
-    }
-
-    /// <summary>
-    /// Represents a filter applied to a column
-    /// </summary>
-    public class FilterState
-    {
-        /// <summary>
-        /// Property name of the filtered column
-        /// </summary>
-        public string PropertyName { get; set; }
-
-        /// <summary>
-        /// Type of filter (Text, Boolean, Numeric, DateTime, DropDown)
-        /// </summary>
-        public FilterType FilterType { get; set; }
-
-        /// <summary>
-        /// Filter values stored as key-value pairs to handle different filter types
-        /// </summary>
-        public Dictionary<string, object> FilterValues { get; set; } = new Dictionary<string, object>();
-
-        /// <summary>
-        /// Human-readable description of the filter for display purposes
-        /// </summary>
-        public string Description { get; set; }
-    }
-
-    /// <summary>
-    /// Types of filters supported by the grid
-    /// </summary>
-    public enum FilterType
-    {
-        Text,
-        Boolean,
-        Numeric,
-        DateTime,
-        DropDown
-    }
-
-    /// <summary>
-    /// Options for saving and loading grid states
-    /// </summary>
-    public class GridStateOptions
-    {
-        /// <summary>
-        /// Default location for saving grid states
-        /// </summary>
-        public string DefaultSaveLocation { get; set; }
-
-        /// <summary>
-        /// Whether to automatically save state when grid is modified
-        /// </summary>
-        public bool AutoSave { get; set; } = false;
-
-        /// <summary>
-        /// Delay in milliseconds before auto-saving after a change
-        /// </summary>
-        public int AutoSaveDelay { get; set; } = 2000;
-
-        /// <summary>
-        /// Whether to include filter states when saving
-        /// </summary>
-        public bool IncludeFilters { get; set; } = true;
-
-        /// <summary>
-        /// Whether to include sorting state when saving
-        /// </summary>
-        public bool IncludeSorting { get; set; } = true;
-
-        /// <summary>
-        /// Whether to include column visibility when saving
-        /// </summary>
-        public bool IncludeVisibility { get; set; } = true;
-
-        /// <summary>
-        /// Whether to include column order when saving
-        /// </summary>
-        public bool IncludeColumnOrder { get; set; } = true;
-
-        /// <summary>
-        /// Whether to include column widths when saving
-        /// </summary>
-        public bool IncludeColumnWidths { get; set; } = true;
-
-        /// <summary>
-        /// Maximum number of states to keep per grid
-        /// </summary>
-        public int MaxStatesPerGrid { get; set; } = 10;
-
-        /// <summary>
-        /// File extension for state files
-        /// </summary>
-        public string FileExtension { get; set; } = ".gridstate";
-    }
-
-    /// <summary>
-    /// Event arguments for grid state events
-    /// </summary>
-    public class GridStateEventArgs : EventArgs
-    {
-        public string GridId { get; set; }
-        public string StateName { get; set; }
-        public DataGridState State { get; set; }
-        public Exception Exception { get; set; }
-        public bool Success { get; set; }
-
-        public GridStateEventArgs(string gridId, string stateName, DataGridState state = null)
+        /// <returns>Human-readable summary of the state</returns>
+        public string GetSummary()
         {
-            GridId = gridId;
-            StateName = stateName;
-            State = state;
-            Success = true;
+            var summary = new List<string>();
+
+            if (Columns?.Count > 0)
+            {
+                var visibleColumns = Columns.Count(c => c.IsVisible);
+                summary.Add($"{visibleColumns}/{Columns.Count} columns");
+            }
+
+            if (Sorting != null)
+            {
+                summary.Add($"Sorted by {Sorting.PropertyName}");
+            }
+
+            if (Filters?.Count > 0)
+            {
+                summary.Add($"{Filters.Count} filter(s)");
+            }
+
+            return summary.Count > 0 ? string.Join(", ", summary) : "No configuration";
         }
 
-        public GridStateEventArgs(string gridId, string stateName, Exception exception)
+        /// <summary>
+        /// Creates a deep copy of this state
+        /// </summary>
+        /// <returns>A new instance that is a copy of this state</returns>
+        public IGridState Clone()
         {
-            GridId = gridId;
-            StateName = stateName;
-            Exception = exception;
-            Success = false;
+            return new DataGridState
+            {
+                GridId = GridId,
+                StateName = StateName,
+                CreatedDate = DateTime.Now,
+                LastModified = DateTime.Now,
+                Version = Version,
+                Columns = Columns?.Select(c => new ColumnState
+                {
+                    PropertyName = c.PropertyName,
+                    DisplayName = c.DisplayName,
+                    IsVisible = c.IsVisible,
+                    DisplayIndex = c.DisplayIndex,
+                    Width = c.Width,
+                    IsReadOnly = c.IsReadOnly,
+                    DataTypeName = c.DataTypeName
+                }).ToList() ?? new List<ColumnState>(),
+                Sorting = Sorting != null ? new SortState
+                {
+                    PropertyName = Sorting.PropertyName,
+                    Direction = Sorting.Direction,
+                    SortIndex = Sorting.SortIndex
+                } : null,
+                Filters = Filters?.Select(f => new FilterState
+                {
+                    PropertyName = f.PropertyName,
+                    FilterType = f.FilterType,
+                    FilterValues = new Dictionary<string, object>(f.FilterValues),
+                    Description = f.Description
+                }).ToList() ?? new List<FilterState>(),
+                Metadata = new Dictionary<string, object>(Metadata)
+            };
         }
+
+        /// <summary>
+        /// Serializes this state to a string for persistence
+        /// </summary>
+        /// <returns>Serialized string representation</returns>
+        public string Serialize()
+        {
+            try
+            {
+                var settings = new JsonSerializerSettings
+                {
+                    DateFormatHandling = DateFormatHandling.IsoDateFormat,
+                    NullValueHandling = NullValueHandling.Ignore,
+                    DefaultValueHandling = DefaultValueHandling.Ignore
+                };
+
+                return JsonConvert.SerializeObject(this, Formatting.None, settings);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error serializing DataGridState: {ex.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes state from a string
+        /// </summary>
+        /// <param name="serializedState">Serialized state string</param>
+        /// <returns>True if deserialization was successful</returns>
+        public bool Deserialize(string serializedState)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(serializedState))
+                    return false;
+
+                var settings = new JsonSerializerSettings
+                {
+                    DateFormatHandling = DateFormatHandling.IsoDateFormat,
+                    NullValueHandling = NullValueHandling.Ignore,
+                    MissingMemberHandling = MissingMemberHandling.Ignore,
+                    Error = (sender, args) =>
+                    {
+                        System.Diagnostics.Debug.WriteLine($"JSON deserialization error: {args.ErrorContext.Error.Message}");
+                        args.ErrorContext.Handled = true;
+                    }
+                };
+
+                var deserialized = JsonConvert.DeserializeObject<DataGridState>(serializedState, settings);
+                if (deserialized != null)
+                {
+                    // Copy properties from deserialized object
+                    GridId = deserialized.GridId;
+                    StateName = deserialized.StateName ?? "Default";
+                    CreatedDate = deserialized.CreatedDate;
+                    LastModified = deserialized.LastModified;
+                    Version = deserialized.Version ?? "1.0";
+                    Columns = deserialized.Columns ?? new List<ColumnState>();
+                    Sorting = deserialized.Sorting;
+                    Filters = deserialized.Filters ?? new List<FilterState>();
+                    Metadata = deserialized.Metadata ?? new Dictionary<string, object>();
+                    return true;
+                }
+            }
+            catch (JsonException jsonEx)
+            {
+                System.Diagnostics.Debug.WriteLine($"JSON error deserializing DataGridState: {jsonEx.Message}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error deserializing DataGridState: {ex.Message}");
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Validates that this state is internally consistent
+        /// </summary>
+        /// <returns>List of validation errors, empty if valid</returns>
+        public List<string> Validate()
+        {
+            var issues = new List<string>();
+
+            if (string.IsNullOrEmpty(GridId))
+                issues.Add("GridId is required");
+
+            if (string.IsNullOrEmpty(Version))
+                issues.Add("Version is required");
+
+            // Check for duplicate column display indices
+            if (Columns?.Count > 0)
+            {
+                var visibleColumns = Columns.Where(c => c.IsVisible).ToList();
+                if (visibleColumns.Count > 0)
+                {
+                    var displayIndices = visibleColumns.Select(c => c.DisplayIndex).ToList();
+                    var duplicateIndices = displayIndices.GroupBy(i => i)
+                        .Where(g => g.Count() > 1)
+                        .Select(g => g.Key)
+                        .ToList();
+
+                    if (duplicateIndices.Count > 0)
+                    {
+                        issues.Add($"Duplicate display indices found: {string.Join(", ", duplicateIndices)}");
+                    }
+
+                    // Check for missing display indices (should be consecutive starting from 0)
+                    var expectedIndices = Enumerable.Range(0, visibleColumns.Count).ToHashSet();
+                    var actualIndices = displayIndices.ToHashSet();
+                    var missingIndices = expectedIndices.Except(actualIndices).ToList();
+
+                    if (missingIndices.Count > 0)
+                    {
+                        issues.Add($"Missing display indices: {string.Join(", ", missingIndices)}");
+                    }
+                }
+
+                // Check for columns with missing property names
+                var columnsWithoutPropertyName = Columns.Where(c => string.IsNullOrEmpty(c.PropertyName)).ToList();
+                if (columnsWithoutPropertyName.Count > 0)
+                {
+                    issues.Add($"{columnsWithoutPropertyName.Count} column(s) missing PropertyName");
+                }
+
+                // Check for columns with invalid widths
+                var columnsWithInvalidWidth = Columns.Where(c => c.Width < 0).ToList();
+                if (columnsWithInvalidWidth.Count > 0)
+                {
+                    issues.Add($"{columnsWithInvalidWidth.Count} column(s) have invalid width");
+                }
+            }
+
+            // Validate sorting
+            if (Sorting != null && string.IsNullOrEmpty(Sorting.PropertyName))
+            {
+                issues.Add("Sorting property name cannot be empty");
+            }
+
+            // Validate filters
+            if (Filters?.Count > 0)
+            {
+                for (int i = 0; i < Filters.Count; i++)
+                {
+                    var filter = Filters[i];
+                    if (string.IsNullOrEmpty(filter.PropertyName))
+                    {
+                        issues.Add($"Filter {i}: PropertyName is required");
+                    }
+                    if (filter.FilterValues == null)
+                    {
+                        issues.Add($"Filter {i}: FilterValues cannot be null");
+                    }
+                }
+            }
+
+            return issues;
+        }
+
+        #endregion
+
+        #region Utility Properties
+
+        /// <summary>
+        /// Checks if this state has any filters applied
+        /// </summary>
+        public bool HasFilters => Filters?.Count > 0;
+
+        /// <summary>
+        /// Checks if this state has sorting applied
+        /// </summary>
+        public bool HasSorting => Sorting != null;
+
+        /// <summary>
+        /// Gets the names of all filtered columns
+        /// </summary>
+        public List<string> GetFilteredColumnNames()
+        {
+            return Filters?.Select(f => f.PropertyName).ToList() ?? new List<string>();
+        }
+
+        /// <summary>
+        /// Gets the names of all visible columns in display order
+        /// </summary>
+        public List<string> GetVisibleColumnNames()
+        {
+            return Columns?
+                .Where(c => c.IsVisible)
+                .OrderBy(c => c.DisplayIndex)
+                .Select(c => c.DisplayName)
+                .ToList() ?? new List<string>();
+        }
+
+        /// <summary>
+        /// Gets the names of all hidden columns
+        /// </summary>
+        public List<string> GetHiddenColumnNames()
+        {
+            return Columns?
+                .Where(c => !c.IsVisible)
+                .Select(c => c.DisplayName)
+                .ToList() ?? new List<string>();
+        }
+
+        #endregion
     }
 }

@@ -105,13 +105,29 @@
     <Compile Include="CustomDataGrid\FilterTextDialog.xaml.cs">
       <DependentUpon>FilterTextDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomDataGrid\GridState\ColumnState.cs" />
     <Compile Include="CustomDataGrid\GridState\DataGridState.cs" />
-    <Compile Include="CustomDataGrid\GridState\GridStateBehavior.cs" />
-    <Compile Include="CustomDataGrid\GridState\GridStateContext.cs" />
+    <Compile Include="CustomDataGrid\GridState\DataGridStateExtensions.cs" />
+    <Compile Include="CustomDataGrid\GridState\FilterState.cs" />
+    <Compile Include="CustomDataGrid\GridState\FilterStateApply.cs" />
+    <Compile Include="CustomDataGrid\GridState\FilterStateCapture.cs" />
+    <Compile Include="CustomDataGrid\GridState\FilterType.cs" />
+    <Compile Include="CustomDataGrid\GridState\GridStateApply.cs" />
+    <Compile Include="CustomDataGrid\GridState\GridStateCapture.cs" />
     <Compile Include="CustomDataGrid\GridState\GridStateExtensions.cs" />
-    <Compile Include="CustomDataGrid\GridState\GridStateManager.cs" />
+    <Compile Include="CustomDataGrid\GridState\GridStateHelpers.cs" />
+    <Compile Include="CustomDataGrid\GridState\GridStateOptions.cs" />
     <Compile Include="CustomDataGrid\GridState\GridStateSerializer.cs" />
+    <Compile Include="CustomDataGrid\GridState\GridStateSerializer.Validation.cs" />
+    <Compile Include="CustomDataGrid\GridState\GridStateValidationResult.cs" />
+    <Compile Include="CustomDataGrid\GridState\SortState.cs" />
+    <Compile Include="ViewModels\BaseDynamicGridViewModel.ColumnManagement.cs" />
+    <Compile Include="ViewModels\BaseDynamicGridViewModel.Commands.cs" />
     <Compile Include="ViewModels\BaseDynamicGridViewModel.cs" />
+    <Compile Include="ViewModels\BaseDynamicGridViewModel.Properties.cs" />
+    <Compile Include="ViewModels\BaseDynamicGridViewModel.RowManagement.cs" />
+    <Compile Include="ViewModels\BaseDynamicGridViewModel.Selection.cs" />
+    <Compile Include="ViewModels\BaseDynamicGridViewModel.StateSupport.cs" />
     <Compile Include="ViewModels\CellEditorViewModel.cs" />
     <Page Include="CellEditor\CellEditorStyle.xaml">
       <SubType>Designer</SubType>

@@ -171,14 +171,17 @@
         <!-- Sheet selection -->
         <Grid Grid.Row="4">
             <!-- grid view -->
-            <dynamicDataGrid:DynamicDataGrid  x:Name="dataGrid" 
+            <dynamicDataGrid:DynamicDataGrid  
+                x:Name="dataGrid" 
                 Grid.Row="0"
                 DataContext="{Binding  ViewSelectionDataGridViewModel}"
                 ItemsSource="{Binding Data}"
                 ColumnDefinitions="{Binding ColumnDefinitions}"
                 SelectionMode="Extended"
                 dynamicDataGrid:DataGridColumnHeaderBehavior.EnableColumnManagement="True"
-                dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="True"/>
+                dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="True"
+                Loaded="ViewSelectionGrid_Loaded"
+                />
             
         </Grid>
         <!--Export path -->
@@ -238,8 +241,9 @@
                      Margin="2 5 2 5" 
                      Content = "{Binding  ExportButtonText}"
                      Command="{Binding SaveAndCloseCommand}"
-                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
-                     FontSize="24"/>
+                     FontSize="24">
+
+                </Button>
             </Grid>
         </Border>
     </Grid>

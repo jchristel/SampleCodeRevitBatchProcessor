@@ -131,7 +131,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
 
             return new ViewModels.DocumentSelectionViewModel(
                 _exportSheetsDataModel,
-                //_navigationStore,
+                _navigationStore,
                 _globalMessageViewModel,
                 _messageStore);
         }

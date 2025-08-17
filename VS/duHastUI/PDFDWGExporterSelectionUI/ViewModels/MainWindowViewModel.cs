@@ -22,6 +22,7 @@
 //
 
 
+using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
@@ -44,8 +45,12 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
         public override void OnClosing()
         {
+            // NavigationStore will automatically save state when notified of closing
+            _navigationStore.NotifyClosing();
+            
             // Custom closing logic for RoomsSelectionViewModel
             _navigationStore.CurrentViewModelChanged -= OnCurrentViewModelChanged;
+            
             base.OnClosing();
         }
     }

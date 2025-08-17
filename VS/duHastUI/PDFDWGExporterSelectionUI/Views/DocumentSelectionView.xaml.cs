@@ -22,7 +22,9 @@
 //
 
 
+using duHastNet.UI.CustomControls.CustomDataGrid;
 using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Views
@@ -51,6 +53,15 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Views
                 this.ExportFilePathTextBox
                   .GetBindingExpression(TextBox.TextProperty)
                   .UpdateSource();
+            }
+        }
+
+        private void ViewSelectionGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (sender is DynamicDataGrid grid &&
+                DataContext is ViewModels.DocumentSelectionViewModel mainViewModel)
+            {
+                mainViewModel.ViewSelectionDataGridViewModel.AssociateWithDataGrid(grid);
             }
         }
 

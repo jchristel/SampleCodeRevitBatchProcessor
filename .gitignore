@@ -1,8 +1,4 @@
 
-#duHast repo
-_LogMarker/*
-_Output/*
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -603,8 +599,9 @@ FodyWeavers.xsd
 /.idea
 .vscode/settings.json
 
-
-# inlcude pyRevit sample directory
+#duHast repo
+_LogMarker/*
+_Output/*
 
 # Include the specific .lib folders and bin folders
 #extension wide bin and lib folders
@@ -621,3 +618,10 @@ FodyWeavers.xsd
 
 # include lib folder within duHast library
 !src/duHast/lib
+
+# the chain data output:
+# Ignore everything under _00_ReportFamilyData_Users
+Samples/Flows/TheChain/_00_ReportFamilyData_Users/*
+
+# But do NOT ignore the _default directory
+!Samples/Flows/TheChain/_00_ReportFamilyData_Users/_default/

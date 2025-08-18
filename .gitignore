@@ -621,7 +621,7 @@ _Output/*
 
 # the chain data output:
 # Ignore everything under _00_ReportFamilyData_Users
-Samples/Flows/TheChain/_00_ReportFamilyData_Users/*
+Samples/Flows/TheChain/_00_ReportFamilyData/_Users/*
 
 # But do NOT ignore the _default directory
-!Samples/Flows/TheChain/_00_ReportFamilyData_Users/_default/
+!Samples/Flows/TheChain/_00_ReportFamilyData/_Users/_default/

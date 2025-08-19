@@ -45,13 +45,77 @@ Initial data reporting (harvesting)
 
 Elements
 ^^^^^^^^^
+TO DO
+
+needs to include:
+
+- family and family type name of element tagged: in order for it to be linked to ffe tag.
+- room id and name: in order for it to be linked to room
+- insertion point / rotation of Elements
+- bounding box
+- Revit design set data
+- host model information (Name)
+- Revit phasing data
+
+
+Doors
+^^^^^^^^^
+Doors are exported in a separate report. The report contains all door instance and type properties, as well as the door location in the model.
+
+Currently the following door properties are exported:
+
+- bounding box
+- Revit design set data
+- door type properties
+- door instance properties
+- door level name and id
+- host model information (Name)
+- Revit phasing data
+
+
+Refer to duHast.Revit.Doors.Export.to_data_door.get_all_door_data(doc) for the initial export of door data. This will return a list of DataDoor() objects.
+
+
+Ceilings
+^^^^^^^^^
+Ceilings are exported in a separate report. The report contains all ceiling instance and type properties, as well as the ceiling location in the model.
+
+Currently the following ceiling properties are exported:
+- bounding box
+- Revit design set data
+- ceiling type properties
+- ceiling instance properties
+- ceiling level name and id
+- host model information (Name)
+- Revit phasing data
+
+
+Refer to duHast.Revit.Ceilings.Export.to_data_ceiling.get_all_ceiling_data(doc) for the initial export of ceiling data. This will return a list of DataCeiling() objects.
+
+
+Rooms
+^^^^^^^
+
+Rooms are exported as a separate report.
+
+Currently the following room properties are exported:
+
+- 2D room boundary polygon
+- Revit design set data
+- all room instance properties (There are no room type properties in Revit)
+- host model information (Name)
+- Revit phasing data
+- room level name and level id
+- TODO : add room id
+
+Refer to duHast.Revit.Rooms.Export.to_data_room.get_all_room_data() for the initial export of room data. This will return a list of DataRoom() objects.
 
 
 
 Sheets
 ^^^^^^^
 
-Sheets and all their properties are exported in one report. That will require extra post processing steps to sort sheets and items into templates.
+Sheets and all their properties are exported in one report. That will require extra post processing steps to sort sheets and items into templates (blue prints).
 
 Properties are exported by view port and associated view:
 
@@ -67,9 +131,21 @@ Properties are exported by view port and associated view:
 | schedule        | location on sheet, bounding box     | number of rows in schedule, is schedule split (0 no, > 0 yes, and number of columns ) |
 +-----------------+-------------------------------------+---------------------------------------------------------------------------------------+
 
+For sheet export functionality refer to:
+duHast.Revit.Views.Export.sheets_to_data.get_all_sheet_data this return a list of DataSheet() objects.
 
-Setting up Templates
---------------------
+
+
+TODO: separate report for ffe tags:
+
+- tag insertion point
+- tag leader / elbow data
+- family and family type name of element tagged
+- insertions point / rotation of element tagged
+
+
+Setting up Templates (Blueprints) for room layout sheets
+----------------------------------------------------------
 
 The end goal is to have sheet templates per room size, where the size is sorted into bands of 1sqm increments. That is further refined by bands 
 of room proportions ( band step size to be confirmed) and last but not least by bands of items in rooms (step size is 5)

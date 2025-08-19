@@ -473,9 +473,10 @@ over_all_status_.status = False
 
 # actions to be executed per family
 family_actions = [
-    purge_unused,  # purge first :)
-    purge_unused_others,  # purge other things
-    update_reference_status,  # fix up ref planes
+    #purge_unused,  # purge first :)
+    #purge_unused_others,  # purge other things
+    #update_reference_status,  # fix up ref planes
+    rParameterDefaultActions.delete_unwanted_shared_parameters,
 ]
 
 # debug test

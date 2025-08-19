@@ -160,6 +160,7 @@ def delete_shared_parameters(doc, parameter_guids):
                 one_got_deleted = True
             return_value.update(delete_status)
         return_value.update_sep(one_got_deleted, "Finished deleting parameters!")
+        return_value.result.append(delete_guids)
     else:
         return_value.update_sep(True, "No matching shared parameters in file!")
 

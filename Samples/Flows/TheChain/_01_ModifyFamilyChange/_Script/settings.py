@@ -67,7 +67,7 @@ ROOT_SCRIPT_DIRECTORY_USER = os.path.join(
 DEBUG_REVIT_FILE_NAME = r"C:\temp\Test_Files.rvt"
 
 # revit files library location
-REVIT_LIBRARY_PATH = r"C:\Users\chrjx\Documents\github\debug_modules\the_chain\sample_files"
+REVIT_LIBRARY_PATH = r"C:\Users\chrjx\Documents\RHL\NewFamilies"
 REVIT_LIBRARY_INCLUDE_SUB_DIRS_IN_SEARCH = True
 FILE_EXTENSION_OF_FILES_TO_PROCESS = ".rfa"
 

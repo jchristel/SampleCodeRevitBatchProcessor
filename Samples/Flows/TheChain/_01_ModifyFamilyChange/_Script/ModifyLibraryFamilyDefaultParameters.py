@@ -316,11 +316,23 @@ def delete_unwanted_shared_parameters(doc):
             ),
         )
         return return_value
+    
     # go ahead and delete...
     if len(guid_s_to_delete) > 0:
         result_delete = delete_shared_parameters(doc, guid_s_to_delete)
-        return_value.update(result_delete)
+        
+        # check if any matching parameters where found in the file
+        if result_delete.status and len(result_delete.result) > 0:
+            return_value.append_message(
+                "Deleted {} shared parameters.".format(len(result_delete.result))
+            )
+        elif result_delete.status and len(result_delete.result) == 0:
+            # no matching shared parameters found
+            return_value.update_sep(False,
+                "No matching shared parameters found in file."
+            )
     else:
+        # no guids found in shared parameter csv file
         return_value.update_sep(
             False,
             "No valid GUID's found in guid data file: {}".format(

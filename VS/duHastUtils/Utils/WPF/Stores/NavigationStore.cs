@@ -1,75 +1,36 @@
-﻿//
-//License:
-//
-//
-// Revit Batch Processor Sample Code
-//
-// BSD License
-// Copyright 2025, Jan Christel
-// All rights reserved.
-
-// Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-// - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-// - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-// - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
-//
-// This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
-// In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
-// or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
-//
-//
-//
-
-using duHastNet.Utils.WPF.Interfaces;
+﻿using duHastNet.Utils.WPF.Interfaces;
 using duHastNet.Utils.WPF.States;
 using System;
+using System.Collections.Generic;
 
 namespace duHastNet.Utils.WPF.Stores
 {
     /// <summary>
-    /// Manages navigation between ViewModels with simple state persistence (one state per ViewModel)
+    /// Simplified state repository - stores and retrieves ViewModel states without automatic coordination
+    /// Also provides basic navigation functionality
     /// </summary>
-    public partial class NavigationStore
+    public class NavigationStore
     {
-        #region Core Navigation Fields
+        #region Private Fields
 
+        private readonly StateManager _stateManager;
+        private readonly object _stateLock = new object();
         private ViewModels.ViewModelBase _currentViewModel;
 
         #endregion
 
-        #region State Management Fields (shared with partial class)
-
-        // These fields are used by both core navigation and state management
-        internal readonly StateManager _stateManager;
-        internal readonly object _stateLock = new object();
-
-        #endregion
-
-        #region Core Navigation Properties
+        #region Navigation Properties
 
         /// <summary>
-        /// Gets or sets the current ViewModel, automatically handling state save/load
+        /// Gets or sets the current ViewModel (for navigation)
         /// </summary>
         public ViewModels.ViewModelBase CurrentViewModel
         {
             get => _currentViewModel;
             set
             {
-                // Save state of outgoing ViewModel before switching
-                if (_currentViewModel != null)
-                {
-                    SaveCurrentViewModelState();
-                }
-
                 _currentViewModel = value;
                 OnCurrentViewModelChanged();
-
-                // Load state for incoming ViewModel after switching
-                if (_currentViewModel != null)
-                {
-                    LoadCurrentViewModelState();
-                }
             }
         }
 
@@ -78,12 +39,12 @@ namespace duHastNet.Utils.WPF.Stores
         #region Events
 
         /// <summary>
-        /// Fired when the current ViewModel changes
+        /// Fired when the current ViewModel changes (for navigation)
         /// </summary>
         public event Action CurrentViewModelChanged;
 
         /// <summary>
-        /// Fired when state operations occur
+        /// Fired when state operations occur (optional for debugging/logging)
         /// </summary>
         public event EventHandler<GridStateEventArgs> StateOperationCompleted;
 
@@ -92,7 +53,7 @@ namespace duHastNet.Utils.WPF.Stores
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of NavigationStore with simple state management
+        /// Initializes a new instance of NavigationStore as a simple state repository
         /// </summary>
         /// <param name="stateManager">Optional state manager. If null, a default one will be created.</param>
         public NavigationStore(StateManager stateManager = null)
@@ -102,23 +63,171 @@ namespace duHastNet.Utils.WPF.Stores
 
         #endregion
 
-        #region Core Navigation Methods
+        #region Core State Management Methods
 
         /// <summary>
-        /// Raises the CurrentViewModelChanged event
+        /// Saves state for a specific ViewModel
         /// </summary>
-        private void OnCurrentViewModelChanged()
+        /// <param name="viewModel">The ViewModel requesting the save</param>
+        /// <param name="state">The state to save</param>
+        public void SaveViewModelState(IGridStateSupport viewModel, IGridState state)
         {
-            CurrentViewModelChanged?.Invoke();
+            if (viewModel == null || state == null)
+                return;
+
+            try
+            {
+                var stateKey = viewModel.GetGridStateId();
+                if (string.IsNullOrEmpty(stateKey))
+                {
+                    System.Diagnostics.Debug.WriteLine($"Cannot save state: ViewModel {viewModel.GetType().Name} returned empty state key");
+                    return;
+                }
+
+                // Ensure state has proper metadata
+                state.GridId = stateKey;
+                state.StateName = "Default";
+                state.LastModified = DateTime.Now;
+
+                // Save to state manager
+                _stateManager.SaveState(stateKey, state);
+
+                System.Diagnostics.Debug.WriteLine($"Saved state for ViewModel: {viewModel.GetType().Name} with key: {stateKey}");
+
+                // Raise success event
+                OnStateOperationCompleted(new GridStateEventArgs(state.GridId, state.StateName, state));
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error saving state for {viewModel.GetType().Name}: {ex.Message}");
+
+                // Raise error event
+                OnStateOperationCompleted(new GridStateEventArgs(
+                    viewModel.GetGridStateId() ?? "Unknown",
+                    "Default",
+                    ex));
+            }
         }
 
         /// <summary>
-        /// Notify all nested view models of closing event and save final state
+        /// Loads state for a specific ViewModel
+        /// </summary>
+        /// <param name="viewModel">The ViewModel requesting the load</param>
+        /// <returns>The saved state, or null if not found</returns>
+        public IGridState LoadViewModelState(IGridStateSupport viewModel)
+        {
+            if (viewModel == null)
+                return null;
+
+            var stateKey = viewModel.GetGridStateId();
+            return LoadViewModelState(stateKey);
+        }
+
+        /// <summary>
+        /// Loads state by state key
+        /// </summary>
+        /// <param name="stateKey">The state key to load</param>
+        /// <returns>The saved state, or null if not found</returns>
+        public IGridState LoadViewModelState(string stateKey)
+        {
+            if (string.IsNullOrEmpty(stateKey))
+                return null;
+
+            try
+            {
+                var state = _stateManager.LoadState(stateKey);
+
+                if (state != null)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Loaded state for key: {stateKey}");
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"No saved state found for key: {stateKey}");
+                }
+
+                return state;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error loading state for key {stateKey}: {ex.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Checks if a state exists for the specified ViewModel
+        /// </summary>
+        /// <param name="viewModel">The ViewModel to check</param>
+        /// <returns>True if a state exists</returns>
+        public bool HasViewModelState(IGridStateSupport viewModel)
+        {
+            if (viewModel == null)
+                return false;
+
+            var stateKey = viewModel.GetGridStateId();
+            return HasViewModelState(stateKey);
+        }
+
+        /// <summary>
+        /// Checks if a state exists for the specified state key
+        /// </summary>
+        /// <param name="stateKey">The state key to check</param>
+        /// <returns>True if a state exists</returns>
+        public bool HasViewModelState(string stateKey)
+        {
+            if (string.IsNullOrEmpty(stateKey))
+                return false;
+
+            return _stateManager.StateExists(stateKey);
+        }
+
+        /// <summary>
+        /// Clears state for a specific ViewModel
+        /// </summary>
+        /// <param name="viewModel">The ViewModel whose state should be cleared</param>
+        public void ClearViewModelState(IGridStateSupport viewModel)
+        {
+            if (viewModel == null)
+                return;
+
+            var stateKey = viewModel.GetGridStateId();
+            ClearViewModelState(stateKey);
+        }
+
+        /// <summary>
+        /// Clears state for a specific state key
+        /// </summary>
+        /// <param name="stateKey">The state key to clear</param>
+        public void ClearViewModelState(string stateKey)
+        {
+            if (string.IsNullOrEmpty(stateKey))
+                return;
+
+            _stateManager.ClearState(stateKey);
+            System.Diagnostics.Debug.WriteLine($"Cleared state for key: {stateKey}");
+        }
+
+        /// <summary>
+        /// Clears all saved states
+        /// </summary>
+        public void ClearAllStates()
+        {
+            _stateManager.ClearAllStates();
+            System.Diagnostics.Debug.WriteLine("Cleared all saved states");
+        }
+
+        #endregion
+
+        #region Navigation Methods
+
+        /// <summary>
+        /// Notify the current ViewModel that the application/window is closing
         /// </summary>
         public void NotifyClosing()
         {
-            // Save current state before closing
-            SaveCurrentViewModelState();
+            // In DocumentSelectionViewModel.OnClosing()
+            System.Diagnostics.Debug.WriteLine("Navigation Store.NotifyClosing() called");
 
             if (_currentViewModel is ICloseable closeable)
             {
@@ -126,86 +235,135 @@ namespace duHastNet.Utils.WPF.Stores
             }
         }
 
-        /// <summary>
-        /// Gets a unique key for the current ViewModel's state
-        /// </summary>
-        internal string GetCurrentViewModelKey()
-        {
-            if (_currentViewModel == null)
-                return null;
+        #endregion
 
-            // If ViewModel supports state management, use its custom ID
-            if (_currentViewModel is IGridStateSupport gridStateSupport)
+        #region Settings Integration
+
+        /// <summary>
+        /// Loads states from application settings
+        /// Called during application startup
+        /// </summary>
+        /// <param name="gridStatesFromSettings">Serialized states from settings</param>
+        public void LoadStatesFromSettings(Dictionary<string, string> gridStatesFromSettings)
+        {
+            if (gridStatesFromSettings == null)
+                return;
+
+            var statesToLoad = new Dictionary<string, IGridState>();
+
+            foreach (var kvp in gridStatesFromSettings)
             {
-                var customId = gridStateSupport.GetGridStateId();
-                if (!string.IsNullOrEmpty(customId))
-                    return customId;
+                try
+                {
+                    if (!string.IsNullOrEmpty(kvp.Value))
+                    {
+                        var state = new States.GridState();
+                        if (state.Deserialize(kvp.Value))
+                        {
+                            statesToLoad[kvp.Key] = state;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error loading state for {kvp.Key}: {ex.Message}");
+                }
             }
 
-            // Fall back to type name
-            return _currentViewModel.GetType().Name;
+            if (statesToLoad.Count > 0)
+            {
+                _stateManager.LoadStatesFromExternal(statesToLoad);
+                System.Diagnostics.Debug.WriteLine($"Loaded {statesToLoad.Count} states from settings");
+            }
         }
 
         /// <summary>
-        /// Forces a save of the current ViewModel's state
+        /// Gets states formatted for saving to application settings
+        /// Called during application shutdown
         /// </summary>
-        public void ForceSaveCurrentState()
+        /// <returns>Dictionary of serialized states for settings</returns>
+        public Dictionary<string, string> GetStatesForSettings()
         {
-            SaveCurrentViewModelState();
+            var settingsData = new Dictionary<string, string>();
+            var allStates = _stateManager.GetAllStates();
+
+            foreach (var kvp in allStates)
+            {
+                try
+                {
+                    var serialized = kvp.Value?.Serialize();
+                    if (!string.IsNullOrEmpty(serialized))
+                    {
+                        settingsData[kvp.Key] = serialized;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error serializing state for {kvp.Key}: {ex.Message}");
+                }
+            }
+
+            System.Diagnostics.Debug.WriteLine($"Prepared {settingsData.Count} states for settings");
+            return settingsData;
         }
 
         #endregion
 
-        #region Navigation Helper Methods
+        #region Utility and Debug Methods
 
         /// <summary>
-        /// Navigates to a new ViewModel instance
+        /// Gets the number of stored states
         /// </summary>
-        /// <typeparam name="T">Type of ViewModel to navigate to</typeparam>
-        /// <param name="viewModelFactory">Factory function to create the ViewModel</param>
-        public void NavigateTo<T>(Func<T> viewModelFactory) where T : ViewModels.ViewModelBase
+        public int StoredStateCount
         {
-            if (viewModelFactory == null)
-                throw new ArgumentNullException(nameof(viewModelFactory));
-
-            CurrentViewModel = viewModelFactory();
+            get
+            {
+                lock (_stateLock)
+                {
+                    return _stateManager.GetAllStates().Count;
+                }
+            }
         }
 
         /// <summary>
-        /// Navigates directly to a ViewModel instance
+        /// Gets all saved states (for debugging/inspection)
         /// </summary>
-        /// <param name="viewModel">The ViewModel to navigate to</param>
-        public void NavigateTo(ViewModels.ViewModelBase viewModel)
+        /// <returns>Dictionary of all saved states</returns>
+        public Dictionary<string, IGridState> GetAllStates()
         {
-            CurrentViewModel = viewModel;
+            return _stateManager.GetAllStates();
         }
 
         /// <summary>
-        /// Checks if the navigation store currently has a ViewModel
+        /// Gets debug information about stored states
         /// </summary>
-        public bool HasCurrentViewModel => _currentViewModel != null;
-
-        /// <summary>
-        /// Gets the type of the current ViewModel (for debugging/logging)
-        /// </summary>
-        public Type CurrentViewModelType => _currentViewModel?.GetType();
-
-        /// <summary>
-        /// Clears the current ViewModel (navigates to null)
-        /// </summary>
-        public void ClearNavigation()
+        /// <returns>Debug information string</returns>
+        public string GetDebugInfo()
         {
-            CurrentViewModel = null;
-        }
+            var info = new System.Text.StringBuilder();
+            info.AppendLine("=== NAVIGATION STORE DEBUG ===");
+            info.AppendLine($"Stored States: {StoredStateCount}");
 
-        /// <summary>
-        /// Checks if the current ViewModel supports state management
-        /// </summary>
-        public bool CurrentViewModelSupportsState => _currentViewModel is IGridStateSupport;
+            var allStates = _stateManager.GetAllStates();
+            foreach (var kvp in allStates)
+            {
+                info.AppendLine($"  - {kvp.Key}: {kvp.Value?.GetSummary() ?? "null"}");
+            }
+
+            return info.ToString();
+        }
 
         #endregion
 
-        #region State Event Helpers
+        #region Event Helpers
+
+        /// <summary>
+        /// Raises the CurrentViewModelChanged event
+        /// </summary>
+        protected virtual void OnCurrentViewModelChanged()
+        {
+            CurrentViewModelChanged?.Invoke();
+        }
 
         /// <summary>
         /// Raises the StateOperationCompleted event
@@ -217,79 +375,5 @@ namespace duHastNet.Utils.WPF.Stores
         }
 
         #endregion
-
-        #region Debug Information
-
-        /// <summary>
-        /// Gets debug information about the current navigation state
-        /// </summary>
-        /// <returns>Debug information string</returns>
-        public string GetNavigationDebugInfo()
-        {
-            var info = new System.Text.StringBuilder();
-            info.AppendLine("=== NAVIGATION STORE DEBUG ===");
-            info.AppendLine($"Current ViewModel: {_currentViewModel?.GetType().Name ?? "None"}");
-            info.AppendLine($"Has ViewModel: {HasCurrentViewModel}");
-            info.AppendLine($"Supports State: {CurrentViewModelSupportsState}");
-
-            if (_currentViewModel != null)
-            {
-                info.AppendLine($"ViewModel Type: {CurrentViewModelType.FullName}");
-                info.AppendLine($"State Key: {GetCurrentViewModelKey()}");
-
-                if (_currentViewModel is IGridStateSupport stateSupport)
-                {
-                    info.AppendLine($"State Management Enabled: {stateSupport.StateManagementEnabled}");
-                    info.AppendLine($"Grid State ID: {stateSupport.GetGridStateId()}");
-                }
-            }
-
-            return info.ToString();
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Saves the current ViewModel's grid state (if it supports state management)
-        /// </summary>
-        private void SaveCurrentViewModelState()
-        {
-            try
-            {
-                var key = GetCurrentViewModelKey();
-                if (string.IsNullOrEmpty(key))
-                    return;
-
-                // Check if current ViewModel supports state management using the interface
-                if (_currentViewModel is IGridStateSupport gridStateSupport &&
-                    gridStateSupport.StateManagementEnabled)
-                {
-                    var state = gridStateSupport.CreateStateFromViewModel();
-                    if (state != null)
-                    {
-                        state.StateName = "Default";
-                        state.LastModified = DateTime.Now;
-
-                        // Use the existing SaveViewModelState method
-                        SaveViewModelState(key, state);
-
-                        // Raise success event
-                        OnStateOperationCompleted(new GridStateEventArgs(state.GridId, state.StateName, state));
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error saving ViewModel state: {ex.Message}");
-
-                // Raise error event
-                var errorArgs = new GridStateEventArgs(GetCurrentViewModelKey() ?? "Unknown", "Default")
-                {
-                    Exception = ex,
-                    Success = false
-                };
-                OnStateOperationCompleted(errorArgs);
-            }
-        }
     }
 }

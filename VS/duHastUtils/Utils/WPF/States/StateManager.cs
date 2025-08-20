@@ -2,7 +2,6 @@
 using duHastNet.Utils.WPF.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace duHastNet.Utils.WPF.Stores
 {
@@ -16,12 +15,12 @@ namespace duHastNet.Utils.WPF.Stores
             _stateCache = new Dictionary<string, IGridState>();
         }
 
-        public Task<bool> SaveState(string gridId, IGridState state)
+        public bool SaveState(string gridId, IGridState state)
         {
             try
             {
                 if (string.IsNullOrEmpty(gridId) || state == null)
-                    return Task.FromResult(false);
+                    return false;
 
                 state.GridId = gridId;
                 state.StateName = "Default";
@@ -32,23 +31,23 @@ namespace duHastNet.Utils.WPF.Stores
                     _stateCache[gridId] = state;
                 }
 
-                return Task.FromResult(true);
+                return true;
             }
             catch
             {
-                return Task.FromResult(false);
+                return false;
             }
         }
 
-        public Task<IGridState> LoadState(string gridId)
+        public IGridState LoadState(string gridId)
         {
             if (string.IsNullOrEmpty(gridId))
-                return Task.FromResult<IGridState>(null);
+                return null;
 
             lock (_lockObject)
             {
                 _stateCache.TryGetValue(gridId, out var state);
-                return Task.FromResult(state);
+                return state;
             }
         }
 

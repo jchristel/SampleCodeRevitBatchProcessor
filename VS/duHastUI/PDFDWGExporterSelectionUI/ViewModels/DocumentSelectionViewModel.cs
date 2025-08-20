@@ -100,6 +100,8 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// </summary>
         public override void OnClosing()
         {
+            // In DocumentSelectionViewModel.OnClosing()
+            System.Diagnostics.Debug.WriteLine("DocumentSelectionViewModel.OnClosing() called");
 
             // Unsubscribe from the event to prevent memory leaks
             GlobalMessageViewModel?.Dispose();
@@ -427,8 +429,20 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                     }
                 }
 
-                // Save settings to file (this will include NavigationStore's serialized states)
+                // FORCE save current grid state before getting states for settings
+                if (ViewSelectionDataGridViewModel != null)
+                {
+                    var currentState = ViewSelectionDataGridViewModel.CreateStateFromViewModel();
+                    if (currentState != null)
+                    {
+                        _navigationStore.SaveViewModelState(ViewSelectionDataGridViewModel, currentState);
+                        System.Diagnostics.Debug.WriteLine("Forced save of grid state before closing");
+                    }
+                }
+
+                // Get the states from NavigationStore
                 var navigationStatesForSettings = _navigationStore.GetStatesForSettings();
+                // Update the settings with the navigation states
                 _sheetsDataModel.Settings.NavigationStates = navigationStatesForSettings;
 
                 duHastNet.UI.PDFDWGExporterSelectionUI.Utils.SettingsUtils.SaveSettings(
@@ -535,6 +549,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
         #endregion data validation
 
+
         /// <summary>
         /// Constructor for the SettingsViewModel class.
         /// </summary>
@@ -568,8 +583,17 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             //load settings first
             LoadSettings();
 
+            //load the data grid states from settings
+            _navigationStore.LoadStatesFromSettings(_sheetsDataModel.Settings.NavigationStates);
+
             //set up the views data model
-            ViewSelectionDataGridViewModel = new ViewSelectionDataGridViewModel(_sheetsDataModel);
+            ViewSelectionDataGridViewModel = new ViewSelectionDataGridViewModel(
+                _sheetsDataModel,
+                _navigationStore // Pass the navigation store to the ViewSelectionDataGridViewModel for state management
+             );
+
+            // Register the child so it gets cleaned up properly
+            RegisterChild(ViewSelectionDataGridViewModel);
 
             //save and exit
             //only if there are no errors
@@ -597,7 +621,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             //set the filter to select sheets from schedule ( in theory only one, print set or schedule ) should have a 
             //selection 
             SetSheetSetScheduleFilterFromSettings();
-
         }
     }
 }

@@ -117,7 +117,6 @@
     <Compile Include="WPF\Stores\MessageTpesUtils.cs" />
     <Compile Include="WPF\Stores\MessageTypes.cs" />
     <Compile Include="WPF\Stores\NavigationStore.cs" />
-    <Compile Include="WPF\Stores\NavigationStore.StateManagement.cs" />
     <Compile Include="WPF\ViewModels\ErrorsViewModel.cs" />
     <Compile Include="WPF\ViewModels\GlobalMessageViewModel.cs" />
     <Compile Include="WPF\ViewModels\ViewModelBase.cs" />

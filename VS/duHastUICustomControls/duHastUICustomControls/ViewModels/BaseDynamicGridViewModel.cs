@@ -1,7 +1,8 @@
-﻿
-using duHastNet.Utils.WPF.Commands;
+﻿using duHastNet.Utils.WPF.Commands;
 using duHastNet.Utils.WPF.Interfaces;
-using global::duHastNet.UI.CustomControls.CustomDataGrid;
+using duHastNet.Utils.WPF.Stores;
+using duHastNet.UI.CustomControls.CustomDataGrid;
+using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,12 +13,23 @@ using System.Windows.Input;
 
 namespace duHastNet.Utils.WPF.ViewModels
 {
-    public abstract partial class BaseDynamicGridViewModel<TData> : INotifyPropertyChanged, duHastNet.Utils.WPF.Interfaces.ICloseable, IGridStateSupport
+    public abstract partial class BaseDynamicGridViewModel<TData> : INotifyPropertyChanged, ICloseable, IGridStateSupport
     where TData : DynamicRowData, new()
     {
-        
-        protected BaseDynamicGridViewModel()
+        #region Private Fields for State Management
+
+        private NavigationStore _navigationStore;
+        private DynamicDataGrid _associatedDataGrid;
+        private string _gridStateId;
+        private bool _stateManagementEnabled = true;
+        protected IGridState _pendingStateToApply;
+
+        #endregion
+
+        protected BaseDynamicGridViewModel(NavigationStore navigationStore = null)
         {
+            _navigationStore = navigationStore;
+
             // Initialize collections
             ColumnDefinitions = new ObservableCollection<DynamicColumnDefinition>();
             Data = new ObservableCollection<TData>();
@@ -41,6 +53,9 @@ namespace duHastNet.Utils.WPF.ViewModels
 
             // Initialize selected items collection
             SelectedItems = new ObservableCollection<TData>();
+
+            // Load saved state after everything is initialized
+            LoadSavedStateIfExists();
         }
 
         #region Abstract Methods - Must be implemented by derived classes
@@ -65,12 +80,10 @@ namespace duHastNet.Utils.WPF.ViewModels
         #region Virtual Methods - Can be overridden by derived classes
 
         /// <summary>
-        /// Determine if a column should be read-only by default. Needs to be overriden in application view model if colum,n locking is required!
+        /// Determine if a column should be read-only by default
         /// </summary>
         protected virtual bool GetDefaultReadOnlyForColumn(string propertyName)
         {
-            // Base implementation - no columns locked by default
-            // Each application can override to define its own locking rules
             return false;
         }
 
@@ -79,16 +92,10 @@ namespace duHastNet.Utils.WPF.ViewModels
         /// </summary>
         protected virtual double GetDefaultWidthForType(Type dataType)
         {
-            if (dataType == typeof(bool))
-                return 80;
-            if (dataType == typeof(int))
-                return 80;
-            if (dataType == typeof(double))
-                return 100;
-            if (dataType == typeof(DateTime))
-                return 120;
-
-            // string and others
+            if (dataType == typeof(bool)) return 80;
+            if (dataType == typeof(int)) return 80;
+            if (dataType == typeof(double)) return 100;
+            if (dataType == typeof(DateTime)) return 120;
             return 150;
         }
 
@@ -102,12 +109,10 @@ namespace duHastNet.Utils.WPF.ViewModels
             if (dataType == typeof(double)) return 0.0;
             if (dataType == typeof(bool)) return false;
             if (dataType == typeof(DateTime)) return DateTime.Now;
-
             return dataType.IsValueType ? Activator.CreateInstance(dataType) : null;
         }
 
         #endregion
-
 
         #region INotifyPropertyChanged
 
@@ -124,14 +129,32 @@ namespace duHastNet.Utils.WPF.ViewModels
 
         public virtual void OnClosing()
         {
-            // Perform state management cleanup
-            PerformStateManagementCleanup();
+            // In DocumentSelectionViewModel.OnClosing()
+            System.Diagnostics.Debug.WriteLine("GridViewModel.OnClosing() called");
 
-            // Override this method in derived classes to perform clean-up operations
+            // Save current state before closing
+            if (_navigationStore != null && StateManagementEnabled)
+            {
+                try
+                {
+                    var currentState = CreateStateFromViewModel();
+                    if (currentState != null)
+                    {
+                        _navigationStore.SaveViewModelState(this, currentState);
+                        System.Diagnostics.Debug.WriteLine($"Saved state for {GetGridStateId()} on closing");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error saving state on closing: {ex.Message}");
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine($"No NavigationStore available for {GetGridStateId()} on closing");
+            }
         }
 
         #endregion
-
     }
 }
-

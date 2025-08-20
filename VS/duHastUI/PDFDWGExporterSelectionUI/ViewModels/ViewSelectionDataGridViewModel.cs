@@ -1,6 +1,7 @@
 ﻿using duHastNet.UI.CustomControls.CustomDataGrid;
 using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
 using duHastNet.UI.PDFDWGExporterSelectionUI.Models;
+using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -34,26 +35,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         public Dictionary<string, string> ColumnIdToParameterNameLookUp
         {
             get => _columnIdToParameterNameLookUp;
-        }
-
-        public ViewSelectionDataGridViewModel(duHastNet.UI.PDFDWGExporterSelectionUI.Models.SheetsDataModel sheetDataModel)
-        {
-            // Base constructor will call InitializeAvailableColumns()
-            // and set up all the commands
-
-            this.SheetsDataModel = sheetDataModel;
-
-            // manually call this since it was skipped during base constructor
-            InitializeAvailableColumns();
-
-            // Initialize column defaults first
-            InitializeColumnDefaults();
-
-            // Populate the grid with data from the sheets model
-            LoadDataFromSheetsModel();
-
-            // Set up automatic data synchronization
-            SetupDataSynchronization();
         }
 
 
@@ -498,5 +479,45 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             }
         }
         #endregion
+
+        public override void AssociateWithDataGrid(DynamicDataGrid dataGrid)
+        {
+            System.Diagnostics.Debug.WriteLine($"AssociateWithDataGrid called. Grid is: {(dataGrid == null ? "null" : "not null")}");
+            System.Diagnostics.Debug.WriteLine($"Pending state to apply: {(_pendingStateToApply == null ? "null" : "exists")}");
+
+            base.AssociateWithDataGrid(dataGrid);
+        }
+
+        /// <summary>
+        /// Class constructor
+        /// </summary>
+        /// <param name="sheetDataModel"></param>
+        /// <param name="navigationStore"></param>
+        public ViewSelectionDataGridViewModel(
+            SheetsDataModel sheetDataModel,
+            NavigationStore navigationStore)
+            : base(navigationStore)  // Pass NavigationStore to base to allow state saving
+        {
+            System.Diagnostics.Debug.WriteLine("ViewSelectionDataGridViewModel constructor starting");
+            // Base constructor will call InitializeAvailableColumns()
+            // and set up all the commands
+
+            this.SheetsDataModel = sheetDataModel;
+
+            // manually call this since it was skipped during base constructor
+            InitializeAvailableColumns();
+
+            // Initialize column defaults first
+            InitializeColumnDefaults();
+
+            // Populate the grid with data from the sheets model
+            LoadDataFromSheetsModel();
+
+            // Set up automatic data synchronization
+            SetupDataSynchronization();
+
+            // State automatically loaded by base constructor
+            System.Diagnostics.Debug.WriteLine("ViewSelectionDataGridViewModel constructor completed");
+        }
     }
 }

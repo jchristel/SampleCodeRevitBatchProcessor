@@ -45,9 +45,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
         public override void OnClosing()
         {
-            // NavigationStore will automatically save state when notified of closing
+            // Notify the navigation store to close current view model
             _navigationStore.NotifyClosing();
-            
+
             // Custom closing logic for RoomsSelectionViewModel
             _navigationStore.CurrentViewModelChanged -= OnCurrentViewModelChanged;
             

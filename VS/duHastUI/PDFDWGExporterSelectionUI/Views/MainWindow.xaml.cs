@@ -22,6 +22,7 @@
 //
 
 
+using duHastNet.Utils.WPF.Stores;
 using System.Windows;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Views
@@ -55,13 +56,18 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Views
         /// </summary>  
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            // In your main window closing event or wherever you call it
+            System.Diagnostics.Debug.WriteLine("About to call NavigationStore.NotifyClosing()");
+            //_navigationStore.NotifyClosing();
+            System.Diagnostics.Debug.WriteLine("NavigationStore.NotifyClosing() completed");
+
             if (DataContext is duHastNet.Utils.WPF.Interfaces.ICloseable closeable)
             {
                 closeable.OnClosing();
             }
 
-            // may need to do something with settings here??
-            Utils.SettingsUtils.SaveSettings(settings: _settings, AddMessage: null);
+            // may need to do something with settings here
+            //settings should only be saved when user has clicked the export button otherwise we might end up with settings changes that are not intended
         }
     }
 }

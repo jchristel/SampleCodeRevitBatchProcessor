@@ -1,0 +1,10 @@
+layout:
+  - Collectors
+
+# bundle tooltip
+tooltip: spatial data
+
+
+# bundle author
+author: 
+  - Jan Christel

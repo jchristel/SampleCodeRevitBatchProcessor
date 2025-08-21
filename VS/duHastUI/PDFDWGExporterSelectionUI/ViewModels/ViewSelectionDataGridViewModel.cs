@@ -492,11 +492,10 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// Class constructor
         /// </summary>
         /// <param name="sheetDataModel"></param>
-        /// <param name="navigationStore"></param>
         public ViewSelectionDataGridViewModel(
             SheetsDataModel sheetDataModel,
-            NavigationStore navigationStore)
-            : base(navigationStore)  // Pass NavigationStore to base to allow state saving
+            StateStore stateStore)
+            : base(stateStore)  // Pass StateStore to base to allow state saving
         {
             System.Diagnostics.Debug.WriteLine("ViewSelectionDataGridViewModel constructor starting");
             // Base constructor will call InitializeAvailableColumns()

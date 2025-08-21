@@ -31,10 +31,11 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
     public class Main
     {
 
-        readonly duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
-        readonly duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
-        readonly Models.SheetsDataModel _exportSheetsDataModel;
-        readonly Utils.Settings _settings;
+        duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
+        duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
+        duHastNet.Utils.WPF.Stores.StateStore _stateStore;
+        Models.SheetsDataModel _exportSheetsDataModel;
+        Utils.Settings _settings;
 
 
         public Main(
@@ -64,6 +65,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
 
             //set up stores
             _navigationStore = new NavigationStore();
+            _stateStore = new StateStore();
             _messageStore = new MessageStore();
 
             //set up a setting object
@@ -132,6 +134,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
             return new ViewModels.DocumentSelectionViewModel(
                 _exportSheetsDataModel,
                 _navigationStore,
+                _stateStore,
                 _globalMessageViewModel,
                 _messageStore);
         }

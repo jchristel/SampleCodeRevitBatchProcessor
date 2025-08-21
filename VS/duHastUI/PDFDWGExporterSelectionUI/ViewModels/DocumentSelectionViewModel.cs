@@ -25,6 +25,7 @@
 using duHastNet.UI.CustomControls;
 using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
+using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -66,6 +67,11 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// store the navigation store for the application
         /// </summary>
         private readonly duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
+
+        /// <summary>
+        /// store the state store for the application
+        /// </summary>
+        private readonly duHastNet.Utils.WPF.Stores.StateStore _stateStore;
 
         /// <summary>
         /// View model managing the view selection data grid.
@@ -409,11 +415,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         }
 
         /// <summary>
-        /// updates the settings in the export data model and closes the window
-        /// </summary>
-        /// <param name="window"></param>
-        /// <summary>
-        /// Simplified SaveAndCloseCommand - no need to manually save grid state
+        /// Updates the settings and closes the window - Forces state save before closing
         /// </summary>
         private void SaveSettingsAndClose(object parameter)
         {
@@ -429,22 +431,32 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                     }
                 }
 
-                // FORCE save current grid state before getting states for settings
-                if (ViewSelectionDataGridViewModel != null)
+                // FORCE save current grid state to StateStore before getting states for settings
+                if (ViewSelectionDataGridViewModel != null && _stateStore != null)
                 {
-                    var currentState = ViewSelectionDataGridViewModel.CreateStateFromViewModel();
-                    if (currentState != null)
+                    try
                     {
-                        _navigationStore.SaveViewModelState(ViewSelectionDataGridViewModel, currentState);
-                        System.Diagnostics.Debug.WriteLine("Forced save of grid state before closing");
+                        var currentState = ViewSelectionDataGridViewModel.CreateStateFromViewModel();
+                        if (currentState != null)
+                        {
+                            _stateStore.SaveState(ViewSelectionDataGridViewModel, currentState);
+                            System.Diagnostics.Debug.WriteLine($"Forced save of grid state for {ViewSelectionDataGridViewModel.GetGridStateId()} before closing");
+                        }
+                    }
+                    catch (Exception stateEx)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Error forcing state save: {stateEx.Message}");
+                        AddMessage($"Warning: Could not save grid state: {stateEx.Message}", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
                     }
                 }
 
-                // Get the states from NavigationStore
-                var navigationStatesForSettings = _navigationStore.GetStatesForSettings();
-                // Update the settings with the navigation states
-                _sheetsDataModel.Settings.NavigationStates = navigationStatesForSettings;
+                // Get states from StateStore for settings persistence
+                var statesForSettings = _stateStore.GetStatesForSettings();
 
+                // Update the settings with the grid states
+                _sheetsDataModel.Settings.NavigationStates = statesForSettings;
+
+                // Save the application settings
                 duHastNet.UI.PDFDWGExporterSelectionUI.Utils.SettingsUtils.SaveSettings(
                     settings: _sheetsDataModel.Settings,
                     AddMessage: AddMessage);
@@ -477,10 +489,12 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             //cant simply replace the settings object in the data model...since it is used else where....need to update instead
             _sheetsDataModel.Settings.UpdateSettingsFromSettings(settings);
 
-            // Load NavigationStore states if they exist
-            if (settings.NavigationStates != null)
+            // Load StateStore states if they exist
+            if (settings.NavigationStates != null && settings.NavigationStates.Count > 0)
             {
-                _navigationStore.LoadStatesFromSettings(settings.NavigationStates);
+                // Create a factory for DataGridState instances
+                _stateStore.LoadStatesFromSettings(settings.NavigationStates, () => new DataGridState());
+                System.Diagnostics.Debug.WriteLine($"Loaded {settings.NavigationStates.Count} states from settings into StateStore");
             }
         }
 
@@ -551,13 +565,17 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
 
         /// <summary>
-        /// Constructor for the SettingsViewModel class.
+        /// Constructor for the DocumentSelectionViewModel class.
         /// </summary>
-        /// <param name="globalMessageViewModel"></param>
-        /// <param name="messageStore"></param>
+        /// <param name="sheetDataModel">The sheet data model</param>
+        /// <param name="navigationStore">Navigation store for ViewModel management</param>
+        /// <param name="stateStore">State store for grid state persistence</param>
+        /// <param name="globalMessageViewModel">Global message view model</param>
+        /// <param name="messageStore">Message store</param>
         public DocumentSelectionViewModel(
             Models.SheetsDataModel sheetDataModel,
             duHastNet.Utils.WPF.Stores.NavigationStore navigationStore,
+            duHastNet.Utils.WPF.Stores.StateStore stateStore,
             duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel globalMessageViewModel,
             duHastNet.Utils.WPF.Stores.MessageStore messageStore
             )
@@ -568,6 +586,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
             //store the navigation store
             _navigationStore = navigationStore;
+
+            //store the state store
+            _stateStore = stateStore;
 
             //store the message store
             _messageStore = messageStore;
@@ -583,13 +604,10 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             //load settings first
             LoadSettings();
 
-            //load the data grid states from settings
-            _navigationStore.LoadStatesFromSettings(_sheetsDataModel.Settings.NavigationStates);
-
-            //set up the views data model
+            //set up the views data model - now pass StateStore instead of NavigationStore
             ViewSelectionDataGridViewModel = new ViewSelectionDataGridViewModel(
                 _sheetsDataModel,
-                _navigationStore // Pass the navigation store to the ViewSelectionDataGridViewModel for state management
+                _stateStore        // Pass StateStore for state management
              );
 
             // Register the child so it gets cleaned up properly

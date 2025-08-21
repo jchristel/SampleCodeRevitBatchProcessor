@@ -147,10 +147,10 @@ TODO: separate report for ffe tags:
 Setting up Templates (Blueprints) for room layout sheets
 ----------------------------------------------------------
 
-The end goal is to have sheet templates per room size, where the size is sorted into bands of 1sqm increments. That is further refined by bands 
+The end goal is to have sheet templates per room size, where the size is sorted into bands of .25sqm increments. That is further refined by bands 
 of room proportions ( band step size to be confirmed) and last but not least by bands of items in rooms (step size is 5)
 
-The room size is taking from the area Reports.
+The room size is taking from the room reports which include the room area.
 The room proportions are calculated using the room bounding box length in X / length in Y. The assumption here is that rooms are axis parallel and view ports are not rotated on sheet.
 The number of items in room is derived from the number of entries in the schedule.
 
@@ -172,8 +172,51 @@ That sorted data will then need to be culled in order to arrive at:
 
 Impact on code structure:
 
-Data classes used to export all data may not be suitable to represent templates. Data classes for export are for instance missing a unique identifier tying rooms and 
+Data classes used to export all data are not suitable to represent templates. Data classes for export are for instance missing a unique identifier tying rooms and 
 sheets together. They also contain a lot of data exported from the Revit model in their instance and type properties which may not be required in the templates.
 
+Separate blueprint name space contains classes to represent templates for rooms and sheets. These classes will be used to generate the templates and store them in a graph database.
 Consider an inheritance architecture where i.e. element export data class and element type class inherit from a element base class.
 
+
+Blueprints - Sheets
+====================
+
+These blueprints are used to generate room layout sheets based on the size  and proportion of the room and the number of items in the room.
+
+Properties required for sheet blueprint:
+
+- room properties:
+    - room size in sqm
+    - room proportion (length in X / length in Y)
+    - number of items in room
+
+- sheet properties:
+    - number of sheets
+    - sheet view ports
+        - view type
+        - for section it also needs to include:
+            - view index on elevation marker
+        - view port location on sheet
+        - view port bounding box
+        
+
+That requires that room data and sheet data exported can be linked together. Assume that a specific parameter on the sheet contains a link to the room.
+
+Process to generate a sheet blueprints:
+
+1. Get all room data from the graph database
+2. Get all sheet data from the graph database
+3. For each room, get all sheets that are linked to the room
+4. Discard room if there are no sheets linked to it
+5. Sort rooms into bands by size, proportion and number of items (dictionary where key is area banded in 0.5sqm steps and values are two dictionaries where the first key is the proportion banded in 0.1 steps and the second key is the number of items banded in 5 steps):
+    - room size: round to nearest 0.5sqm
+    - room proportion: round to nearest 0.1
+    - number of items: round to nearest 5
+6. For each band, sort and cull data:
+    - cull duplicate or similar room in terms of size and proportion number of items in room:
+        - room size: round X, Y and Z to nearest 0.25m 
+        - room proportion: round to nearest 0.1
+        - number of items: round to nearest 5
+
+7. For each band, and their values generate a sheet blueprint

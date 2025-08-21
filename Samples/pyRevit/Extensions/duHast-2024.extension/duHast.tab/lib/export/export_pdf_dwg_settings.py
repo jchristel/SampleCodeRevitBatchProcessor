@@ -37,7 +37,7 @@ from duHast.pyRevit.console_output import print_header, print_error
 
 from export import settings
 
-DEBUG = False
+DEBUG = True
 
 
 from Autodesk.Revit.DB import  BaseExportOptions

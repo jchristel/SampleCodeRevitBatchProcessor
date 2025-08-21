@@ -18,7 +18,7 @@ namespace duHastNet.Utils.WPF.ViewModels
     {
         #region Private Fields for State Management
 
-        private NavigationStore _navigationStore;
+        private StateStore _stateStore;
         private DynamicDataGrid _associatedDataGrid;
         private string _gridStateId;
         private bool _stateManagementEnabled = true;
@@ -26,9 +26,9 @@ namespace duHastNet.Utils.WPF.ViewModels
 
         #endregion
 
-        protected BaseDynamicGridViewModel(NavigationStore navigationStore = null)
+        protected BaseDynamicGridViewModel(StateStore stateStore = null)
         {
-            _navigationStore = navigationStore;
+            _stateStore = stateStore;
 
             // Initialize collections
             ColumnDefinitions = [];
@@ -133,14 +133,14 @@ namespace duHastNet.Utils.WPF.ViewModels
             System.Diagnostics.Debug.WriteLine("GridViewModel.OnClosing() called");
 
             // Save current state before closing
-            if (_navigationStore != null && StateManagementEnabled)
+            if (_stateStore != null && StateManagementEnabled)
             {
                 try
                 {
                     var currentState = CreateStateFromViewModel();
                     if (currentState != null)
                     {
-                        _navigationStore.SaveViewModelState(this, currentState);
+                        _stateStore.SaveState(this, currentState);
                         System.Diagnostics.Debug.WriteLine($"Saved state for {GetGridStateId()} on closing");
                     }
                 }

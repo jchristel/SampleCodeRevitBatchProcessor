@@ -1,29 +1,7 @@
-﻿//
-//License:
-//
-//
-// Revit Batch Processor Sample Code
-//
-// BSD License
-// Copyright 2025, Jan Christel
-// All rights reserved.
-
-// Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-// - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-// - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-// - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
-//
-// This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
-// In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
-// or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
-//
-//
-//
-
-using duHastNet.UI.CustomControls.CustomDataGrid;
+﻿using duHastNet.UI.CustomControls.CustomDataGrid;
 using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
 using duHastNet.Utils.WPF.Interfaces;
+using duHastNet.Utils.WPF.Stores;
 using System;
 using System.Collections.Generic;
 
@@ -31,16 +9,18 @@ namespace duHastNet.Utils.WPF.ViewModels
 {
     /// <summary>
     /// State support functionality for BaseDynamicGridViewModel.
-    /// Implements IGridStateSupport for automatic state management via NavigationStore.
+    /// Implements IGridStateSupport for state management via StateStore.
     /// </summary>
     public abstract partial class BaseDynamicGridViewModel<TData>
         where TData : DynamicRowData, new()
     {
+        
 
-        #region State Management (Simplified)
+        #region IGridStateSupport Implementation
 
         /// <summary>
-        /// Gets whether state management is enabled for this ViewModel
+        /// Gets whether state management is enabled for this ViewModel.
+        /// Override in derived classes to disable state management for specific grids.
         /// </summary>
         public virtual bool StateManagementEnabled
         {
@@ -53,7 +33,8 @@ namespace duHastNet.Utils.WPF.ViewModels
         }
 
         /// <summary>
-        /// Gets a unique identifier for this ViewModel's grid state
+        /// Gets a unique identifier for this ViewModel's grid state.
+        /// Override in derived classes to provide application-specific identifiers.
         /// </summary>
         public virtual string GetGridStateId()
         {
@@ -71,11 +52,62 @@ namespace duHastNet.Utils.WPF.ViewModels
         }
 
         /// <summary>
-        /// Associates this ViewModel with a DynamicDataGrid - required for state management
+        /// Creates a state object representing the current state of the ViewModel's grid.
+        /// Uses GridStateSerializer to capture the complete DynamicDataGrid state.
         /// </summary>
+        /// <returns>Current grid state, or null if state cannot be captured.</returns>
+        public virtual IGridState CreateStateFromViewModel()
+        {
+            if (!StateManagementEnabled || _associatedDataGrid == null)
+            {
+                System.Diagnostics.Debug.WriteLine("State capture skipped: State management disabled or no associated grid");
+                return null;
+            }
+
+            try
+            {
+                var gridId = GetGridStateId();
+                if (string.IsNullOrEmpty(gridId))
+                {
+                    System.Diagnostics.Debug.WriteLine("State capture failed: No grid state ID available");
+                    return null;
+                }
+
+                var state = GridStateSerializer.CaptureState(_associatedDataGrid, gridId);
+                AddViewModelMetadata(state);
+
+                System.Diagnostics.Debug.WriteLine($"Successfully captured state for grid '{gridId}'");
+                return state;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error capturing state: {ex.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Applies a saved state to the ViewModel's grid.
+        /// Uses GridStateSerializer to restore the complete DynamicDataGrid state.
+        /// </summary>
+        /// <param name="state">The state to apply.</param>
+        /// <returns>True if state was successfully applied.</returns>
+        public virtual bool ApplyStateToViewModel(IGridState state)
+        {
+            return ApplyState(state);
+        }
+
+        #endregion
+
+        #region Grid Association
+
+        /// <summary>
+        /// Associates this ViewModel with a specific DynamicDataGrid instance.
+        /// This is required for state management to work properly.
+        /// </summary>
+        /// <param name="dataGrid">The DynamicDataGrid to associate with this ViewModel.</param>
         public virtual void AssociateWithDataGrid(DynamicDataGrid dataGrid)
         {
-
             if (_associatedDataGrid == dataGrid)
                 return;
 
@@ -86,29 +118,55 @@ namespace duHastNet.Utils.WPF.ViewModels
                 System.Diagnostics.Debug.WriteLine($"Associated ViewModel {GetType().Name} with DynamicDataGrid");
                 ApplyPendingStateIfExists();
             }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine($"Disassociated ViewModel {GetType().Name} from DynamicDataGrid");
+            }
         }
+
+        /// <summary>
+        /// Gets the currently associated DynamicDataGrid, if any.
+        /// </summary>
+        public DynamicDataGrid AssociatedDataGrid => _associatedDataGrid;
+
+        /// <summary>
+        /// Gets whether this ViewModel is currently associated with a DynamicDataGrid.
+        /// </summary>
+        public bool HasAssociatedDataGrid => _associatedDataGrid != null;
+
+        #endregion
+
+        #region State Management Implementation
 
         /// <summary>
         /// Load saved state when ViewModel is ready
         /// </summary>
         private void LoadSavedStateIfExists()
         {
-            if (_navigationStore == null || !StateManagementEnabled)
+            System.Diagnostics.Debug.WriteLine($"LoadSavedStateIfExists called for {GetGridStateId()}");
+
+            if (_stateStore == null || !StateManagementEnabled)
+            {
+                System.Diagnostics.Debug.WriteLine("StateStore is null or state management disabled");
                 return;
+            }
 
             try
             {
-                var savedState = _navigationStore.LoadViewModelState(GetGridStateId());
+                var savedState = _stateStore.LoadState(GetGridStateId());
+                System.Diagnostics.Debug.WriteLine($"Loaded state: {(savedState == null ? "null" : "found")}");
+
                 if (savedState != null)
                 {
                     if (_associatedDataGrid != null)
                     {
+                        System.Diagnostics.Debug.WriteLine("Grid already associated, applying state immediately");
                         ApplyState(savedState);
                     }
                     else
                     {
                         _pendingStateToApply = savedState;
-                        System.Diagnostics.Debug.WriteLine($"Stored pending state for {GetGridStateId()}");
+                        System.Diagnostics.Debug.WriteLine($"Grid not ready, stored pending state for {GetGridStateId()}");
                     }
                 }
             }
@@ -123,10 +181,13 @@ namespace duHastNet.Utils.WPF.ViewModels
         /// </summary>
         private void ApplyPendingStateIfExists()
         {
+            System.Diagnostics.Debug.WriteLine($"ApplyPendingStateIfExists called. Pending state: {(_pendingStateToApply == null ? "null" : "exists")}");
+
             if (_pendingStateToApply != null)
             {
                 try
                 {
+                    System.Diagnostics.Debug.WriteLine("Applying pending state...");
                     ApplyState(_pendingStateToApply);
                     _pendingStateToApply = null;
                     System.Diagnostics.Debug.WriteLine($"Applied pending state for {GetGridStateId()}");
@@ -139,40 +200,12 @@ namespace duHastNet.Utils.WPF.ViewModels
         }
 
         /// <summary>
-        /// Creates current grid state
-        /// </summary>
-        public virtual IGridState CreateStateFromViewModel()
-        {
-            if (!StateManagementEnabled || _associatedDataGrid == null)
-                return null;
-
-            try
-            {
-                var gridId = GetGridStateId();
-                var state = GridStateSerializer.CaptureState(_associatedDataGrid, gridId);
-                AddViewModelMetadata(state);
-                return state;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error creating state: {ex.Message}");
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Applies state to the grid
-        /// </summary>
-        public virtual bool ApplyStateToViewModel(IGridState state)
-        {
-            return ApplyState(state);
-        }
-
-        /// <summary>
         /// Direct state application method
         /// </summary>
         private bool ApplyState(IGridState state)
         {
+            System.Diagnostics.Debug.WriteLine($"ApplyState called for {GetGridStateId()}");
+
             if (!StateManagementEnabled || _associatedDataGrid == null || state == null)
             {
                 System.Diagnostics.Debug.WriteLine("ApplyState: Preconditions failed");
@@ -205,7 +238,7 @@ namespace duHastNet.Utils.WPF.ViewModels
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error applying state: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"ApplyState: Exception: {ex.Message}");
                 return false;
             }
         }
@@ -224,7 +257,6 @@ namespace duHastNet.Utils.WPF.ViewModels
             }
 
             System.Diagnostics.Debug.WriteLine("ConvertToDataGridState: Converting from generic state");
-
             var newState = new DataGridState
             {
                 GridId = state.GridId,
@@ -243,15 +275,47 @@ namespace duHastNet.Utils.WPF.ViewModels
                 var deserializeSuccess = newState.Deserialize(serializedData);
                 System.Diagnostics.Debug.WriteLine($"ConvertToDataGridState: Deserialize success: {deserializeSuccess}");
                 System.Diagnostics.Debug.WriteLine($"ConvertToDataGridState: After deserialize - Columns: {newState.Columns?.Count ?? 0}, Filters: {newState.Filters?.Count ?? 0}");
-                // Deserialize the serialized data into the new state
             }
 
             return newState;
         }
 
+        #endregion
+
+        #region Customization Points
+
         /// <summary>
-        /// Adds ViewModel metadata to state
+        /// Sets a custom grid state identifier.
+        /// Use this to override the default ID generation logic.
         /// </summary>
+        /// <param name="gridStateId">Custom grid state identifier.</param>
+        protected virtual void SetGridStateId(string gridStateId)
+        {
+            _gridStateId = gridStateId;
+        }
+
+        /// <summary>
+        /// Gets the options to use when applying state to the grid.
+        /// Override in derived classes to customize which aspects of state are restored.
+        /// </summary>
+        /// <returns>GridStateOptions specifying what to include in state restoration.</returns>
+        protected virtual GridStateOptions GetStateApplicationOptions()
+        {
+            return new GridStateOptions
+            {
+                IncludeFilters = true,
+                IncludeSorting = true,
+                IncludeVisibility = true,
+                IncludeColumnOrder = true,
+                IncludeColumnWidths = true
+            };
+        }
+
+        /// <summary>
+        /// Adds ViewModel-specific metadata to the grid state before it's saved.
+        /// Override in derived classes to include additional state information.
+        /// </summary>
+        /// <param name="state">The DataGridState to add metadata to.</param>
         protected virtual void AddViewModelMetadata(DataGridState state)
         {
             if (state?.Metadata == null)
@@ -266,14 +330,22 @@ namespace duHastNet.Utils.WPF.ViewModels
         }
 
         /// <summary>
-        /// Called after state is applied - override for custom behavior
+        /// Called after state has been successfully applied to the grid.
+        /// Override in derived classes to perform post-application tasks.
         /// </summary>
+        /// <param name="appliedState">The state that was applied.</param>
         protected virtual void OnStateApplied(DataGridState appliedState)
         {
-            // Override in derived classes for custom post-application logic
+            // Base implementation does nothing
+            // Override in derived classes for custom behavior
+
+            // Example of what derived classes might do:
+            // - Refresh calculated properties
+            // - Update UI bindings
+            // - Trigger data validation
+            // - Log state application for auditing
         }
 
         #endregion
-
     }
 }

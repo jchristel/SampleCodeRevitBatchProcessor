@@ -22,10 +22,12 @@
 //
 
 
+using duHastNet.UI.CustomControls.CustomDataGrid;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 
 
@@ -84,6 +86,20 @@ namespace duHastNet.PushIt.Views
                 this.SaveAsPathTextBox
                   .GetBindingExpression(TextBox.TextProperty)
                   .UpdateSource();
+            }
+        }
+
+        /// <summary>
+        /// register the data grid with the view model when the grid is loaded.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RoomSelectionGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (sender is DynamicDataGrid grid &&
+                DataContext is ViewModels.RoomsMainViewModel mainViewModel)
+            {
+                mainViewModel.RoomsDataGridViewModel.AssociateWithDataGrid(grid);
             }
         }
     }

@@ -43,6 +43,7 @@ namespace duHastNet.PushIt
         Models.RevitDataModel _revitDataModel;
         duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
         duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
+        duHastNet.Utils.WPF.Stores.StateStore _stateStore;
 
         static Main()
         {
@@ -60,6 +61,7 @@ namespace duHastNet.PushIt
             //set up stores
             _navigationStore = new duHastNet.Utils.WPF.Stores.NavigationStore();
             _messageStore = new duHastNet.Utils.WPF.Stores.MessageStore();
+            _stateStore = new duHastNet.Utils.WPF.Stores.StateStore();
 
             // set up th revit data model
             _revitDataModel = new Models.RevitDataModel();
@@ -104,6 +106,9 @@ namespace duHastNet.PushIt
 
         }
 
+        /// <summary>
+        /// create the RoomsSelectionViewModel
+        /// </summary>
         private ViewModels.RoomsMainViewModel CreateRoomsSelectionViewModel()
         {
             duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel _globa = new duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);

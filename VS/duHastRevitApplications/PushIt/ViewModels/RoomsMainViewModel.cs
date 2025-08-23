@@ -24,7 +24,9 @@
 
 using duHastNet.PushIt.Utilities;
 using duHastNet.UI.CustomControls;
+using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
 using duHastNet.Utils.WPF.Commands;
+using duHastNet.Utils.WPF.Stores;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -38,6 +40,7 @@ namespace duHastNet.PushIt.ViewModels
     public class RoomsMainViewModel : Utils.WPF.ViewModels.ViewModelBase, INotifyDataErrorInfo
     {
         private readonly Utils.WPF.Stores.NavigationStore _navigationStore;
+        private readonly Utils.WPF.Stores.StateStore _stateStore;
         private readonly Utils.WPF.Stores.MessageStore _messageStore;
         private readonly Models.RevitDataModel _revitDataModel;
         private readonly Utils.WPF.ViewModels.ErrorsViewModel _errorsViewModel;
@@ -346,6 +349,7 @@ namespace duHastNet.PushIt.ViewModels
         /// <summary>
         /// Custom closing logic for RoomsSelectionViewModel
         /// Disposes all external events from the event manager
+        /// save grid states to settings
         /// </summary>
         public override void OnClosing()
         { 
@@ -361,11 +365,36 @@ namespace duHastNet.PushIt.ViewModels
                 _revitDataModel.Settings.ColumnIds.Add(columnId.PropertyName);
             }
 
+            //save states
+            // FORCE save current grid state to StateStore before getting states for settings
+            if (RoomsDataGridViewModel != null && _stateStore != null)
+            {
+                try
+                {
+                    var currentState = RoomsDataGridViewModel.CreateStateFromViewModel();
+                    if (currentState != null)
+                    {
+                        _stateStore.SaveState(RoomsDataGridViewModel, currentState);
+                        System.Diagnostics.Debug.WriteLine($"Forced save of grid state for {RoomsDataGridViewModel.GetGridStateId()} before closing");
+                    }
+                }
+                catch (Exception stateEx)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error forcing state save: {stateEx.Message}");
+                    AddMessage($"Warning: Could not save grid state: {stateEx.Message}", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
+                }
+            }
+
+            // Get states from StateStore for settings persistence
+            var statesForSettings = _stateStore.GetStatesForSettings();
+
+            // Update the settings with the grid states
+            _revitDataModel.Settings.NavigationStates = statesForSettings;
+
             // close any child view models
             base.OnClosing();
 
             GlobalMessageViewModel.Dispose();
-
         }
 
 
@@ -388,6 +417,20 @@ namespace duHastNet.PushIt.ViewModels
             OnPropertyChanged(nameof(DataFilePathValid));
         }
 
+        /// <summary>
+        /// loads any existing states from settings into the state store
+        /// </summary>
+        private void ApplyStateFromSettings()
+        {
+            // Load StateStore states if they exist
+            if (_revitDataModel.Settings.NavigationStates != null && _revitDataModel.Settings.NavigationStates.Count > 0)
+            {
+                // Create a factory for DataGridState instances
+                _stateStore.LoadStatesFromSettings(_revitDataModel.Settings.NavigationStates, () => new DataGridState());
+                System.Diagnostics.Debug.WriteLine($"Loaded {_revitDataModel.Settings.NavigationStates.Count} states from settings into StateStore");
+            }
+        }
+
 
         /// <summary>
         /// The rooms selection view model class constructor.
@@ -399,6 +442,7 @@ namespace duHastNet.PushIt.ViewModels
         public RoomsMainViewModel(
             Models.RevitDataModel revitDataModel,
             Utils.WPF.Stores.NavigationStore navigationStore,
+            Utils.WPF.Stores.StateStore stateStore,
             Utils.WPF.Stores.MessageStore messageStore,
             Utils.WPF.ViewModels.GlobalMessageViewModel globalMessageViewModel)
         {
@@ -406,6 +450,7 @@ namespace duHastNet.PushIt.ViewModels
             _navigationStore = navigationStore;
             _messageStore = messageStore;
             _revitDataModel = revitDataModel;
+            _stateStore = stateStore;
 
             //initialize the errors view model
             _errorsViewModel = new Utils.WPF.ViewModels.ErrorsViewModel();
@@ -417,12 +462,24 @@ namespace duHastNet.PushIt.ViewModels
             GlobalMessageViewModel = globalMessageViewModel;
             RegisterChild(GlobalMessageViewModel); // Register as child
 
+
+            //load settings first
+            ApplyStateFromSettings();
+
+
             // supported categories data grid view model
-            SupportedCategoriesDataGridViewModel = new SupportedCatgeoriesDataGridViewModel(revitDataModel: revitDataModel);
+            SupportedCategoriesDataGridViewModel = new SupportedCatgeoriesDataGridViewModel(
+                revitDataModel: revitDataModel);
+
+            // register as child view model to ensure disposal
             RegisterChild(SupportedCategoriesDataGridViewModel);
 
             //push it data grid view model
-            RoomsDataGridViewModel  = new RoomsDataGridViewModel(revitDataModel: revitDataModel);
+            RoomsDataGridViewModel  = new RoomsDataGridViewModel(
+                revitDataModel: revitDataModel,
+                stateStore:stateStore);
+
+            // register as child view model to ensure disposal
             RegisterChild(RoomsDataGridViewModel);
 
             //set the data file path

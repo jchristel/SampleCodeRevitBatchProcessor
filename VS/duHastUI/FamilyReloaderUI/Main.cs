@@ -27,6 +27,7 @@ namespace duHastNet.UI.FamilyReloaderUI
     {
         duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
         duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
+        duHastNet.Utils.WPF.Stores.StateStore _stateStore;
 
         Models.FamiliesDataModel _familiesDataModel;
         Models.Settings _settings;
@@ -40,6 +41,7 @@ namespace duHastNet.UI.FamilyReloaderUI
 
             //set up stores
             _navigationStore = new NavigationStore();
+            _stateStore = new StateStore();
             _messageStore = new MessageStore();
 
             //set up a setting object
@@ -78,9 +80,7 @@ namespace duHastNet.UI.FamilyReloaderUI
 
             mainWindow.ShowDialog();
 
-            //store settings
-            Utils.SettingsUtils.SaveSettings(_familiesDataModel.Settings);
-
+            
             // get families to reload
             var familiesToRelaod = _familiesDataModel.GetFamiliesToReload();
             var reloadSelection = new Utils.ReloadSelection();
@@ -110,7 +110,8 @@ namespace duHastNet.UI.FamilyReloaderUI
 
             return new ViewModels.FamiliesSelectionViewModel(
                 _familiesDataModel,
-                //_navigationStore,
+                _navigationStore,
+                _stateStore,
                 _globalMessageViewModel,
                 _messageStore);
         }

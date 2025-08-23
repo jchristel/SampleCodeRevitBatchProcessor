@@ -63,26 +63,41 @@ namespace duHastNet.UI.FamilyReloaderUI.Models
             set => _loadAllFamilyTypesOnReload = value;
         }
 
+
+        private Dictionary<string, string> _navigationStates;
+
+        // <summary>
+        /// Stores the serialized DataGrid state (columns, filters, sorting, etc.)
+        /// This allows the grid layout to be preserved between sessions
+        /// </summary>
+        public Dictionary<string, string> NavigationStates
+        {
+            get => _navigationStates;
+            set => _navigationStates = value;
+        }
+
         /// <summary>
         /// updates this settings object from another one. If null is past in this will be reset to default values
         /// </summary>
-        /// <param name="settings"></param>
-        public void UpdateSettingsFromSettings(Settings settings)
+        /// <param name="otherSettings"></param>
+        public void UpdateSettingsFromSettings(Settings otherSettings)
         {
-            if (settings == null)
+            if (otherSettings == null)
             {
                 //reset to default
                 _columnIds = new List<string>();
                 _targetDirectory = string.Empty;
                 _includeSubdirectories = false;
+                _navigationStates = new Dictionary<string, string>();
                 return;
             }
             else
             {
                 //deep copy of the column names
-                _columnIds = new List<string>(settings.ColumnIds);
-                _targetDirectory = settings.TargetDirectory;
-                _includeSubdirectories = settings.IncludeSubdirectories;
+                _columnIds = new List<string>(otherSettings.ColumnIds);
+                _targetDirectory = otherSettings.TargetDirectory;
+                _includeSubdirectories = otherSettings.IncludeSubdirectories;
+                _navigationStates = new Dictionary<string, string>(otherSettings.NavigationStates);
                 return;
             }
         }
@@ -91,6 +106,7 @@ namespace duHastNet.UI.FamilyReloaderUI.Models
         {
             _includeSubdirectories = false;
             _columnIds = new List<string>();
+            _navigationStates = new Dictionary<string, string>();
         }
     }
 }

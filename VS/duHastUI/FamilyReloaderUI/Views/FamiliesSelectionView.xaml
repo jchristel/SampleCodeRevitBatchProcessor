@@ -91,7 +91,9 @@
                 ColumnDefinitions="{Binding ColumnDefinitions}"
                 SelectionMode="Extended"
                 dynamicDataGrid:DataGridColumnHeaderBehavior.EnableColumnManagement="True"
-                dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="True"/>
+                dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="True"
+                Loaded="FamilySelectionGrid_Loaded"
+                />
             
         </Grid>
         <!--Export path -->

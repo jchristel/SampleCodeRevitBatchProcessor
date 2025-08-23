@@ -23,6 +23,7 @@
 
 
 
+using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
 using System;
 using System.Collections;
@@ -58,12 +59,20 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
             remove { _errorsViewModel.ErrorsChanged -= value; }
         }
 
-
         /// <summary>
         /// message store for storing messages
         /// </summary>
         private readonly duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
 
+        /// <summary>
+        /// store the navigation store for the application
+        /// </summary>
+        private readonly duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
+
+        /// <summary>
+        /// store the state store for the application
+        /// </summary>
+        private readonly duHastNet.Utils.WPF.Stores.StateStore _stateStore;
 
         /// <summary>
         /// View model managing the view selection data grid.
@@ -228,14 +237,7 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
             //unsubscribe from errors changed event
             _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
 
-            //update the column ids in settings.
-            // clear list first
-            _familiesDataModel.Settings.ColumnIds.Clear();
-            // add current list
-            foreach (var columnId in FamiliesSelectionDataGridViewModel.ColumnDefinitions)
-            {
-                _familiesDataModel.Settings.ColumnIds.Add(columnId.PropertyName);
-            }
+            
 
             // close any child view models
             base.OnClosing();
@@ -250,9 +252,55 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
         /// <param name="window"></param>
         private void SaveSettingsAndClose(object window)
         {
+            //update the column ids in settings.
+            // clear list first
+            _familiesDataModel.Settings.ColumnIds.Clear();
+            // add current list
+            foreach (var columnId in FamiliesSelectionDataGridViewModel.ColumnDefinitions)
+            {
+                _familiesDataModel.Settings.ColumnIds.Add(columnId.PropertyName);
+            }
+
+            // FORCE save current grid state to StateStore before getting states for settings
+            if (FamiliesSelectionDataGridViewModel != null && _stateStore != null)
+            {
+                try
+                {
+                    var currentState = FamiliesSelectionDataGridViewModel.CreateStateFromViewModel();
+                    if (currentState != null)
+                    {
+                        _stateStore.SaveState(FamiliesSelectionDataGridViewModel, currentState);
+                        System.Diagnostics.Debug.WriteLine($"Forced save of grid state for {FamiliesSelectionDataGridViewModel.GetGridStateId()} before closing");
+                    }
+                }
+                catch (Exception stateEx)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error forcing state save: {stateEx.Message}");
+                    AddMessage($"Warning: Could not save grid state: {stateEx.Message}", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
+                }
+            }
+
+
+            // Get states from StateStore for settings persistence
+            var statesForSettings = _stateStore.GetStatesForSettings();
+
+            // Update the settings with the grid states
+            _familiesDataModel.Settings.NavigationStates = statesForSettings;
+
+            //store settings
+            Utils.SettingsUtils.SaveSettings(_familiesDataModel.Settings);
+
             if (window is Window w)
             {
                 w.Close(); // Closes the window
+            }
+            else if (window is DependencyObject obj)
+            {
+                Window.GetWindow(obj)?.Close();
+            }
+            else
+            {
+                Application.Current.MainWindow?.Close();
             }
         }
 
@@ -299,6 +347,8 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
 
         public FamiliesSelectionViewModel(
             Models.FamiliesDataModel familiesDataModel,
+            duHastNet.Utils.WPF.Stores.NavigationStore navigationStore,
+            duHastNet.Utils.WPF.Stores.StateStore stateStore,
             duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel globalMessageViewModel,
             duHastNet.Utils.WPF.Stores.MessageStore messageStore
             )
@@ -306,6 +356,12 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
 
             //store the export data model
             _familiesDataModel = familiesDataModel;
+
+            //store the navigation store
+            _navigationStore = navigationStore;
+
+            //store the state store
+            _stateStore = stateStore;
 
             //store the message store
             _messageStore = messageStore;
@@ -320,6 +376,7 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
 
             //load settings first
             LoadSettings();
+
             //set the data file path
             LibraryFilePath = _familiesDataModel.Settings.TargetDirectory;
 
@@ -330,6 +387,13 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
             //update the include sub dirs in seach checkbox
             IncludeSubDirectoriesInSearch = _familiesDataModel.Settings.IncludeSubdirectories;
 
+            //initialise the families grid view model
+            FamiliesSelectionDataGridViewModel = new FamiliesSelectionDataGridViewModel(
+               _familiesDataModel,
+               _stateStore);
+
+            // Register the child so it gets cleaned up properly
+            RegisterChild(FamiliesSelectionDataGridViewModel);
 
             //commands
             //refresh family match status

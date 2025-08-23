@@ -24,6 +24,7 @@
 
 using duHastNet.UI.CustomControls.CustomDataGrid;
 using duHastNet.UI.FamilyReloaderUI.Models;
+using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -58,7 +59,18 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
             get => _columnIdToParameterNameLookUp;
         }
 
-        public FamiliesSelectionDataGridViewModel(duHastNet.UI.FamilyReloaderUI.Models.FamiliesDataModel familiesDataModel)
+        public override void AssociateWithDataGrid(DynamicDataGrid dataGrid)
+        {
+            System.Diagnostics.Debug.WriteLine($"AssociateWithDataGrid called. Grid is: {(dataGrid == null ? "null" : "not null")}");
+            System.Diagnostics.Debug.WriteLine($"Pending state to apply: {(_pendingStateToApply == null ? "null" : "exists")}");
+
+            base.AssociateWithDataGrid(dataGrid);
+        }
+
+        public FamiliesSelectionDataGridViewModel(
+            duHastNet.UI.FamilyReloaderUI.Models.FamiliesDataModel familiesDataModel,
+            StateStore stateStore)
+            : base(stateStore)  // Pass StateStore to base to allow state saving
         {
             // Base constructor will call InitializeAvailableColumns()
             // and set up all the commands

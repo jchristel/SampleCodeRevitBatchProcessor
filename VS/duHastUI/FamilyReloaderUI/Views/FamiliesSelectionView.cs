@@ -22,7 +22,9 @@
 //
 
 
+using duHastNet.UI.CustomControls.CustomDataGrid;
 using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace duHastNet.UI.FamilyReloaderUI.Views
@@ -51,6 +53,15 @@ namespace duHastNet.UI.FamilyReloaderUI.Views
                 this.LibraryFilePathTextBox
                   .GetBindingExpression(TextBox.TextProperty)
                   .UpdateSource();
+            }
+        }
+
+        private void FamilySelectionGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (sender is DynamicDataGrid grid &&
+                DataContext is ViewModels.FamiliesSelectionViewModel mainViewModel)
+            {
+                mainViewModel.FamiliesSelectionDataGridViewModel.AssociateWithDataGrid(grid);
             }
         }
 

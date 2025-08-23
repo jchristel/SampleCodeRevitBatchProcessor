@@ -23,6 +23,7 @@
 
 
 
+using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
 using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
 using System;
@@ -122,6 +123,14 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
 
             //cant simply replace the settings object in the data model...since it is used else where....need to update instead
             _familiesDataModel.Settings.UpdateSettingsFromSettings(settings);
+
+            // Load StateStore states if they exist
+            if (settings.NavigationStates != null && settings.NavigationStates.Count > 0)
+            {
+                // Create a factory for DataGridState instances
+                _stateStore.LoadStatesFromSettings(settings.NavigationStates, () => new DataGridState());
+                System.Diagnostics.Debug.WriteLine($"Loaded {settings.NavigationStates.Count} states from settings into StateStore");
+            }
         }
 
         /// <summary>

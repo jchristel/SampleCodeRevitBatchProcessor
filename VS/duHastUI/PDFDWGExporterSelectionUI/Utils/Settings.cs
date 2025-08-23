@@ -82,6 +82,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
             set => _exportModus = value;
         }
 
+        /// <summary>
+        /// states of the navigation controls (e.g. DataGrid) in the UI
+        /// </summary>
         private Dictionary<string, string> _navigationStates;
 
         // <summary>

@@ -22,6 +22,8 @@
 //
 
 using duHastNet.UI.CustomControls.CustomDataGrid;
+using duHastNet.Utils.WPF.Stores;
+using duHastNet.Utils.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -31,7 +33,7 @@ using System.Linq;
 
 namespace duHastNet.AtTheLibrary.ViewModels
 {
-    public class FamiliesDataGridViewModel: duHastNet.UI.CustomControls.ViewModels.BaseDynamicGridViewModel<DynamicRowData>
+    public class FamiliesDataGridViewModel : BaseDynamicGridViewModel<DynamicRowData>
     {
         private Models.RevitFamiliesDataModel RevitDataModel { get; set; }
 
@@ -454,7 +456,9 @@ namespace duHastNet.AtTheLibrary.ViewModels
         #endregion event handlers
 
 
-        public FamiliesDataGridViewModel(Models.RevitFamiliesDataModel revitDataModel)
+        public FamiliesDataGridViewModel(Models.RevitFamiliesDataModel revitDataModel,
+            StateStore stateStore)
+            : base(stateStore)  // Pass StateStore to base to allow state saving))
         {
             // Base constructor will call InitializeAvailableColumns()
             // and set up all the commands

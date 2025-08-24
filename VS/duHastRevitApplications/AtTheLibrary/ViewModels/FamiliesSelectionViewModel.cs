@@ -355,8 +355,10 @@ namespace duHastNet.AtTheLibrary.ViewModels
             //navigate to type editor view model command!
             _navigateEditTypeCatalogueFileCommand = new OpenTypeFileEditorCommand(
                 navigationStore: _navigationStore,
+                stateStore: _stateStore,
                 createViewModel: (familyData) => createTypeCatalogueViewModel(familyData),
-                familiesDataGridViewModel: FamiliesDataGridViewModel);
+                familiesDataGridViewModel: FamiliesDataGridViewModel,
+                revitFamiliesDataModel: _revitDataModel);
 
             //update rooms data with data from revit through an external event
             RefreshGUICommand.Execute(null);

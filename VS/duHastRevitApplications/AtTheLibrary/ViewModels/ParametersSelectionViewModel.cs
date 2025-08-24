@@ -117,6 +117,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
         public ParametersSelectionViewModel(
             Models.RevitFamiliesDataModel revitDataModel,
             Utils.WPF.Stores.NavigationStore navigationStore,
+            Utils.WPF.Stores.StateStore stateStore,
             Utils.WPF.Stores.MessageStore messageStore,
             Utils.WPF.ViewModels.GlobalMessageViewModel globalMessageViewModel,
             Func<ViewModels.FamiliesSelectionViewModel> createViewModel

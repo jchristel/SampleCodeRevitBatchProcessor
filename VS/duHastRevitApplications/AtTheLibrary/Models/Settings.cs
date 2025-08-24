@@ -48,12 +48,28 @@ namespace duHastNet.AtTheLibrary.Models
             get => _columnIds;
         }
 
+        /// <summary>
+        /// states of the navigation controls (e.g. DataGrid) in the UI
+        /// </summary>
+        private Dictionary<string, string> _navigationStates;
+
+        // <summary>
+        /// Stores the serialized DataGrid state (columns, filters, sorting, etc.)
+        /// This allows the grid layout to be preserved between sessions
+        /// </summary>
+        public Dictionary<string, string> NavigationStates
+        {
+            get => _navigationStates;
+            set => _navigationStates = value;
+        }
+
         public Settings()
         {
             EnabledTypeParameterNames = new List<string>();
             ShownTypeParameterNames = new List<string>();
             _columnIds = new List<string>();
             DataPath = string.Empty;
+            _navigationStates = new Dictionary<string, string>();
         }
     }
 }

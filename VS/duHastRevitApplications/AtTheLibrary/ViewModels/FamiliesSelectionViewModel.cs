@@ -23,6 +23,7 @@
 
 
 using duHastNet.AtTheLibrary.Commands;
+using duHastNet.Utils.WPF.Stores;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -33,6 +34,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
     public class FamiliesSelectionViewModel : Utils.WPF.ViewModels.ViewModelBase, INotifyDataErrorInfo
     {
         private readonly Utils.WPF.Stores.NavigationStore _navigationStore;
+        private readonly Utils.WPF.Stores.StateStore _stateStore;
         private readonly Utils.WPF.Stores.MessageStore _messageStore;
         private readonly Models.RevitFamiliesDataModel _revitDataModel;
         private readonly Utils.WPF.ViewModels.ErrorsViewModel _errorsViewModel;
@@ -206,6 +208,33 @@ namespace duHastNet.AtTheLibrary.ViewModels
             }
 
 
+            //save the varries states to settings
+            // FORCE save current grid state to StateStore before getting states for settings
+            if (FamiliesDataGridViewModel != null && _stateStore != null)
+            {
+                try
+                {
+                    var currentState = FamiliesDataGridViewModel.CreateStateFromViewModel();
+                    if (currentState != null)
+                    {
+                        _stateStore.SaveState(FamiliesDataGridViewModel, currentState);
+                        System.Diagnostics.Debug.WriteLine($"Forced save of grid state for {FamiliesDataGridViewModel.GetGridStateId()} before closing");
+                    }
+                }
+                catch (Exception stateEx)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error forcing state save: {stateEx.Message}");
+                    AddMessage($"Warning: Could not save grid state: {stateEx.Message}", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
+                }
+            }
+
+            //TODO save parameter selection view model state ( currently this is past in as a func so not available here )
+
+
+            // Get states from StateStore for settings persistence
+            var statesForSettings = _stateStore.GetStatesForSettings();
+            _revitDataModel.Settings.NavigationStates = statesForSettings;
+
             GlobalMessageViewModel.Dispose();
 
             base.OnClosing();
@@ -242,6 +271,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
         public FamiliesSelectionViewModel(
             Models.RevitFamiliesDataModel revitDataModel,
             Utils.WPF.Stores.NavigationStore navigationStore,
+            Utils.WPF.Stores.StateStore stateStore,
             Utils.WPF.Stores.MessageStore messageStore,
             Utils.WPF.ViewModels.GlobalMessageViewModel globalMessageViewModel,
             Func<ViewModels.ParametersSelectionViewModel> createParameterSelectionViewModel,
@@ -249,6 +279,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
         {
             //store services
             _navigationStore = navigationStore;
+            _stateStore = stateStore;
             _messageStore = messageStore;
             _revitDataModel = revitDataModel;
 

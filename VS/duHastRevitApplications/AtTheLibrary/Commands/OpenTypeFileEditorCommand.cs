@@ -22,6 +22,7 @@
 //
 
 
+using duHastNet.AtTheLibrary.ViewModels;
 using System;
 using System.ComponentModel;
 
@@ -32,20 +33,9 @@ namespace duHastNet.AtTheLibrary.Commands
         private readonly duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
         private readonly Func<Models.FamilyDataModel, Utils.WPF.ViewModels.ViewModelBase> _createViewModel;
         private readonly ViewModels.FamiliesDataGridViewModel _familyDataGridViewModel;
-
-        public OpenTypeFileEditorCommand(
-            duHastNet.Utils.WPF.Stores.NavigationStore navigationStore,
-            Func<Models.FamilyDataModel, Utils.WPF.ViewModels.ViewModelBase> createViewModel,
-            ViewModels.FamiliesDataGridViewModel familiesDataGridViewModel
-        )
-        {
-            _navigationStore = navigationStore;
-            _createViewModel = createViewModel;
-            _familyDataGridViewModel = familiesDataGridViewModel;
-
-            // Subscribe to property changes to update CanExecute
-            _familyDataGridViewModel.PropertyChanged += OnViewModelPropertyChanged;
-        }
+        private readonly duHastNet.Utils.WPF.Stores.StateStore _stateStore;
+        private readonly Models.RevitFamiliesDataModel _revitFamiliesDataModel;
+        
 
         /// <summary>
         /// this command is always available
@@ -77,7 +67,46 @@ namespace duHastNet.AtTheLibrary.Commands
 
         public override void Execute(object parameter)
         {
+            //save the state
+            try
+            {
+                var currentState = _familyDataGridViewModel.CreateStateFromViewModel();
+                if (currentState != null)
+                {
+                    _stateStore.SaveState(_familyDataGridViewModel, currentState);
+                    System.Diagnostics.Debug.WriteLine($"Forced save of grid state for {_familyDataGridViewModel.GetGridStateId()} before closing");
+                }
+            }
+            catch (Exception stateEx)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error forcing state save: {stateEx.Message}");
+                //_familyDataGridViewModel.AddMessage($"Warning: Could not save grid state: {stateEx.Message}", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
+            }
+
+            // Get states from StateStore for settings persistence
+            var statesForSettings = _stateStore.GetStatesForSettings();
+            _revitFamiliesDataModel.Settings.NavigationStates = statesForSettings;
+
+            //navigate
             _navigationStore.CurrentViewModel = _createViewModel(_familyDataGridViewModel.SelectedFamily);
+        }
+
+        public OpenTypeFileEditorCommand(
+            duHastNet.Utils.WPF.Stores.NavigationStore navigationStore,
+            duHastNet.Utils.WPF.Stores.StateStore stateStore,
+            Func<Models.FamilyDataModel, Utils.WPF.ViewModels.ViewModelBase> createViewModel,
+            ViewModels.FamiliesDataGridViewModel familiesDataGridViewModel,
+            Models.RevitFamiliesDataModel revitFamiliesDataModel
+        )
+        {
+            _navigationStore = navigationStore;
+            _stateStore = stateStore;
+            _createViewModel = createViewModel;
+            _familyDataGridViewModel = familiesDataGridViewModel;
+            _revitFamiliesDataModel = revitFamiliesDataModel;
+
+            // Subscribe to property changes to update CanExecute
+            _familyDataGridViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
     }
 }

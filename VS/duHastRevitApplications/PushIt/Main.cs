@@ -116,6 +116,7 @@ namespace duHastNet.PushIt
             return new ViewModels.RoomsMainViewModel(
                 _revitDataModel,
                 _navigationStore,
+                _stateStore,
                 _messageStore,
                 _globa);
         }

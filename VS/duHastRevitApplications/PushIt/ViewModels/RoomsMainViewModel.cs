@@ -462,10 +462,8 @@ namespace duHastNet.PushIt.ViewModels
             GlobalMessageViewModel = globalMessageViewModel;
             RegisterChild(GlobalMessageViewModel); // Register as child
 
-
             //load settings first
             ApplyStateFromSettings();
-
 
             // supported categories data grid view model
             SupportedCategoriesDataGridViewModel = new SupportedCatgeoriesDataGridViewModel(

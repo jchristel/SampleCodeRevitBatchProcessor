@@ -43,17 +43,9 @@ from Autodesk.Revit.DB import (
 FAM_NAME_TYPE_NAME_CATEGORY_SEPARATOR = " {} ".format(NESTING_SEPARATOR)
 
 def family_types_getter(doc):
-    """
-    Get all family types of families not in place. This function is used to get the source family types for the swap operation.
-
-    :param doc: Revit Document
-    :type doc: Document
-
-    :return: List[FamilySymbol]
-    """
 
     try:
-        # get all family tyres of families not in place
+        # get all family typres of fasmilies not in place
         col = FilteredElementCollector(doc).OfClass(FamilySymbol)
 
         # filter out types with no placed instances
@@ -69,19 +61,8 @@ def family_types_getter(doc):
     
 
 def family_types_getter_target(doc, category_name_filter):
-    """
-    Get all family types of families not in place. This function is used to get the target family types for the swap operation.
-
-    :param doc: Revit Document
-    :type doc: Document
-    :param category_name_filter: Category name to filter the family types by
-    :type category_name_filter: str
-
-    :return: List[FamilySymbol]
-    """
-
     try:
-        # get all family types of families not in place
+        # get all family typres of fasmilies not in place
         col = FilteredElementCollector(doc).OfClass(FamilySymbol)
 
         # filter out types by category name only
@@ -97,15 +78,6 @@ def family_types_getter_target(doc, category_name_filter):
 
 
 def ui_data_builder(element):
-    """
-    Build the UI data for the family type selection dialog. This function is used to build the UI data for the family type selection dialog.
-
-    :param element: FamilySymbol
-    :type element: FamilySymbol
-
-    :return: str
-    """
-
     # element is a family type, UI to contain the family name , family type and category
     # in format "Family Name::Family Type :Category"
     try:
@@ -118,19 +90,8 @@ def ui_data_builder(element):
         )
     except Exception as e:
         return "Unknown {}".format(e)
-
-
+    
 def get_target_category_name(doc, selection_id):
-    """
-    Get the category name of the selected family type. This function is used to get the category name of the selected family type.
-
-    :param doc: Revit Document
-    :type doc: Document
-    :param selection_id: Element ID of the selected family type
-    :type selection_id: ElementId
-
-    :return: str
-    """
 
     fam_type = doc.GetElement(selection_id)
     return fam_type.Category.Name
@@ -181,7 +142,7 @@ def swap_instances_by_user_selection_entry(doc, output, forms):
         # separate the category name from the selection
         target_category_name = get_target_category_name(doc, selection_source_type_id[0])
 
-        # set up wrapper function to get the target family type filtered by category
+        # set up warpper function to get the target family type filtered by category
         def getter_target_type (doc) :
             return family_types_getter_target(doc,  target_category_name)
 

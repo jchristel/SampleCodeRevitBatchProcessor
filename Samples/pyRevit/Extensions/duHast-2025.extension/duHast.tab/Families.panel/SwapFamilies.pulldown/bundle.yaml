@@ -1,9 +1,11 @@
 layout:
-  - SwapByDirectives
-  - SwapByUserSelection
+  - Swap By Directives
+  - Swap By User Selection List
+  - Swap By User Selection Pick
 
 # bundle tooltip
-tooltip: Swappy de swap swap.
+tooltip: | 
+  Swaps family instances based on directives or user selection.
 
 # bundle author
 author: 

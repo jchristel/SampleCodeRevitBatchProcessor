@@ -24,12 +24,10 @@
 from duHast.Revit.Family.family_swap_instances_of_types import swap_family_instances_of_types
 from duHast.pyRevit.Objects.ProgressPyRevit import ProgressPyRevit
 from duHast.Utilities.Objects.result import Result
-
-from Autodesk.Revit.DB import ElementId
-
-from families.util.print_table import print_result_table,  get_table_data_from_swap_result
+from families.util.print_table import print_result_table, get_table_data_from_swap_result
 
 
+            
 def swap_instances_by_directives_entry(doc, output, forms):
     """
     Swaps instnaces of types based on directives. This function is the entry point for the pyRevit command.
@@ -47,6 +45,7 @@ def swap_instances_by_directives_entry(doc, output, forms):
     # set up a status tracker
     return_value = Result()
     
+    # set up a table data ( for print out)
     table_data = None
     try:
 
@@ -54,7 +53,7 @@ def swap_instances_by_directives_entry(doc, output, forms):
         swap_directive_path = None
         swap_directive_path = forms.pick_folder("Select the folder containing the swap directives")
 
-        # check if anything was selected
+        # check if anyhting was selected
         if swap_directive_path is None:
             return_value.update_sep(False, "No folder selected")
             print("No folder containing swap directive selected. Exiting!")
@@ -85,7 +84,7 @@ def swap_instances_by_directives_entry(doc, output, forms):
         )
 
     # print swap log
-    #print(return_value.message)
+    print(return_value.message)
 
     # print tables
     if table_data is not None and len(table_data[0]) >0:

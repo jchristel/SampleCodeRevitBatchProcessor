@@ -66,6 +66,7 @@ namespace duHastNet.PushIt.Models
             EnabledCategoryNames = [];
             _columnIds = [];
             DataPath = string.Empty;
+            _navigationStates = new Dictionary<string, string>();
         }
     }
 }

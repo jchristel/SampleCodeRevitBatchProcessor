@@ -104,7 +104,8 @@
             Margin="5 10 5 10"
             dynamicDataGrid:DataGridColumnHeaderBehavior.EnableColumnManagement="True"
             dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="False"
-            IsEnabled="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource InverseBooleanConverter}}">
+            IsEnabled="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource InverseBooleanConverter}}"
+            Loaded="RoomSelectionGrid_Loaded">
 
             <!-- Add Row Style for conditional formatting -->
             <dynamicDataGrid:DynamicDataGrid.RowStyle>

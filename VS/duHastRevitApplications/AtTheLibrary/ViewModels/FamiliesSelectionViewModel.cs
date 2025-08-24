@@ -23,6 +23,7 @@
 
 
 using duHastNet.AtTheLibrary.Commands;
+using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
 using duHastNet.Utils.WPF.Stores;
 using System;
 using System.Collections;
@@ -262,6 +263,21 @@ namespace duHastNet.AtTheLibrary.ViewModels
 
 
         /// <summary>
+        /// loads any existing states from settings into the state store
+        /// </summary>
+        private void ApplyStateFromSettings()
+        {
+            // Load StateStore states if they exist
+            if (_revitDataModel.Settings.NavigationStates != null && _revitDataModel.Settings.NavigationStates.Count > 0)
+            {
+                // Create a factory for DataGridState instances
+                _stateStore.LoadStatesFromSettings(_revitDataModel.Settings.NavigationStates, () => new DataGridState());
+                System.Diagnostics.Debug.WriteLine($"Loaded {_revitDataModel.Settings.NavigationStates.Count} states from settings into StateStore");
+            }
+        }
+
+
+        /// <summary>
         /// The rooms selection view model class constructor.
         /// </summary>
         /// <param name="revitDataModel">The underlying revit data model</param>
@@ -292,8 +308,14 @@ namespace duHastNet.AtTheLibrary.ViewModels
             GlobalMessageViewModel = globalMessageViewModel;
             RegisterChild(GlobalMessageViewModel); // Register as child
 
+            //load settings first
+            ApplyStateFromSettings();
+
             //push it data grid view model
-            FamiliesDataGridViewModel = new FamiliesDataGridViewModel(revitDataModel: revitDataModel);
+            FamiliesDataGridViewModel = new FamiliesDataGridViewModel(
+                revitDataModel: revitDataModel,
+                stateStore: stateStore);
+
             RegisterChild(FamiliesDataGridViewModel);
 
             //set the data file path

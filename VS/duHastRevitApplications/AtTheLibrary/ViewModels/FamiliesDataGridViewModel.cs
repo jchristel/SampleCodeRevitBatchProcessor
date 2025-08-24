@@ -22,6 +22,7 @@
 //
 
 using duHastNet.UI.CustomControls.CustomDataGrid;
+using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -454,7 +455,9 @@ namespace duHastNet.AtTheLibrary.ViewModels
         #endregion event handlers
 
 
-        public FamiliesDataGridViewModel(Models.RevitFamiliesDataModel revitDataModel)
+        public FamiliesDataGridViewModel(Models.RevitFamiliesDataModel revitDataModel,
+            StateStore stateStore)
+            : base(stateStore)  // Pass StateStore to base to allow state saving))
         {
             // Base constructor will call InitializeAvailableColumns()
             // and set up all the commands

@@ -21,10 +21,12 @@
 //
 //
 
+using duHastNet.UI.CustomControls.CustomDataGrid;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace duHastNet.AtTheLibrary.Views
@@ -55,6 +57,20 @@ namespace duHastNet.AtTheLibrary.Views
                 this.FilePathTextBox
                   .GetBindingExpression(TextBox.TextProperty)
                   .UpdateSource();
+            }
+        }
+
+        /// <summary>
+        /// register the data grid with the view model when the grid is loaded.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FamilySelectionGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (sender is DynamicDataGrid grid &&
+                DataContext is ViewModels.FamiliesSelectionViewModel mainViewModel)
+            {
+                mainViewModel.FamiliesDataGridViewModel.AssociateWithDataGrid(grid);
             }
         }
     }

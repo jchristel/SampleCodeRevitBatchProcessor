@@ -40,6 +40,7 @@ namespace duHastNet.AtTheLibrary
         Models.RevitFamiliesDataModel _revitDataModel;
         duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
         duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
+        duHastNet.Utils.WPF.Stores.StateStore _stateStore;
 
         static Main()
         {
@@ -55,6 +56,7 @@ namespace duHastNet.AtTheLibrary
             //set up stores
             _navigationStore = new duHastNet.Utils.WPF.Stores.NavigationStore();
             _messageStore = new duHastNet.Utils.WPF.Stores.MessageStore();
+            _stateStore = new duHastNet.Utils.WPF.Stores.StateStore();
 
             // set up th revit data model
             _revitDataModel = new Models.RevitFamiliesDataModel();
@@ -109,6 +111,7 @@ namespace duHastNet.AtTheLibrary
             return new ViewModels.FamiliesSelectionViewModel(
                 _revitDataModel,
                 _navigationStore,
+                _stateStore,
                 _messageStore,
                 _globa,
                 CreateParametersSelectionViewModel,
@@ -127,6 +130,7 @@ namespace duHastNet.AtTheLibrary
             return new ViewModels.ParametersSelectionViewModel(
                 _revitDataModel,
                 _navigationStore,
+                _stateStore,
                 _messageStore,
                 _globa,
                 CreateFamiliesSelectionViewModel);

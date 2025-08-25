@@ -120,7 +120,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\LoadFamilyAsyncCommand.cs" />
+    <Compile Include="Commands\LeaveParameterSelectionCommand.cs" />
     <Compile Include="Commands\NavigateCommand.cs" />
+    <Compile Include="Commands\OpenAvailableParametersCommand.cs" />
     <Compile Include="Commands\OpenFamilyIntoUIAsyncCommand.cs" />
     <Compile Include="Commands\OpenTypeFileEditorCommand.cs" />
     <Compile Include="Commands\RefreshUIFromRevitModelAsyncCommand.cs" />

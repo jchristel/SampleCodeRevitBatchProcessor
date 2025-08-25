@@ -22,6 +22,8 @@
 //
 
 
+using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
+using duHastNet.Utils.WPF.Stores;
 using System;
 using System.Windows.Input;
 
@@ -30,6 +32,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
     public class ParametersSelectionViewModel : Utils.WPF.ViewModels.ViewModelBase
     {
         private readonly Utils.WPF.Stores.NavigationStore _navigationStore;
+        private readonly Utils.WPF.Stores.StateStore _stateStore;
         private readonly Utils.WPF.Stores.MessageStore _messageStore;
         private readonly Models.RevitFamiliesDataModel _revitDataModel;
         private readonly Utils.WPF.ViewModels.ErrorsViewModel _errorsViewModel;
@@ -42,7 +45,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
         public ViewModels.ParametersDataGridViewModel ParametersDataGridViewModel { get; }
 
         //command to navigate back to families selection view model
-        private readonly Commands.NavigateCommand _navigateCommand;
+        private readonly Commands.LeaveParameterSelectionCommand _navigateCommand;
 
 
         // flag indicating whether the view model is waiting for a Revit command to finish
@@ -86,8 +89,9 @@ namespace duHastNet.AtTheLibrary.ViewModels
         }
 
         /// <summary>
-        /// Custom closing logic for RoomsSelectionViewModel
+        /// Custom closing logic for ParametersSelectionViewModel
         /// Disposes all external events from the event manager
+        /// save the state of the data grid view model
         /// </summary>
         public override void OnClosing()
         {
@@ -101,11 +105,49 @@ namespace duHastNet.AtTheLibrary.ViewModels
                 _revitDataModel.Settings.ColumnIds.Add(columnId.PropertyName);
             }
 
+
+            //save the state of the data grid view model
+            if (ParametersDataGridViewModel != null && _stateStore != null)
+            {
+                //save the state
+                try
+                {
+                    var currentState = ParametersDataGridViewModel.CreateStateFromViewModel();
+                    if (currentState != null)
+                    {
+                        _stateStore.SaveState(ParametersDataGridViewModel, currentState);
+                        System.Diagnostics.Debug.WriteLine($"Forced save of grid state for {ParametersDataGridViewModel.GetGridStateId()} before closing");
+                    }
+                }
+                catch (Exception stateEx)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error forcing state save: {stateEx.Message}");
+                    //_familyDataGridViewModel.AddMessage($"Warning: Could not save grid state: {stateEx.Message}", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
+                }
+            }
+
+            // Get states from StateStore for settings persistence
+            var statesForSettings = _stateStore.GetStatesForSettings();
+            _revitDataModel.Settings.NavigationStates = statesForSettings;
+
             GlobalMessageViewModel.Dispose();
 
             base.OnClosing();
         }
 
+        /// <summary>
+        /// loads any existing states from settings into the state store
+        /// </summary>
+        private void ApplyStateFromSettings()
+        {
+            // Load StateStore states if they exist
+            if (_revitDataModel.Settings.NavigationStates != null && _revitDataModel.Settings.NavigationStates.Count > 0)
+            {
+                // Create a factory for DataGridState instances
+                _stateStore.LoadStatesFromSettings(_revitDataModel.Settings.NavigationStates, () => new DataGridState());
+                System.Diagnostics.Debug.WriteLine($"Loaded {_revitDataModel.Settings.NavigationStates.Count} states from settings into StateStore");
+            }
+        }
 
         /// <summary>
         /// The rooms selection view model class constructor.
@@ -125,6 +167,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
         {
             //store services
             _navigationStore = navigationStore;
+            _stateStore = stateStore;
             _messageStore = messageStore;
             _revitDataModel = revitDataModel;
 
@@ -132,14 +175,20 @@ namespace duHastNet.AtTheLibrary.ViewModels
             GlobalMessageViewModel = globalMessageViewModel;
             RegisterChild(GlobalMessageViewModel); // Register as child
 
+            //load settings first
+            ApplyStateFromSettings();
+
             //push it data grid view model
             ParametersDataGridViewModel = new ParametersDataGridViewModel(revitDataModel: revitDataModel);
             RegisterChild(ParametersDataGridViewModel);
 
             //view model switch to families selection view model
-            _navigateCommand = new Commands.NavigateCommand(
+            _navigateCommand = new Commands.LeaveParameterSelectionCommand(
                 navigationStore: _navigationStore,
-                createViewModel: createViewModel
+                stateStore: _stateStore,
+                createViewModel: createViewModel,
+                parametersDataGridViewModel: ParametersDataGridViewModel,
+                revitFamiliesDataModel: revitDataModel
             );
         }
     }

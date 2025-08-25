@@ -58,7 +58,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
         //command to open family into revit
         private readonly Commands.OpenFamilyIntoUIAsyncCommand _openFamilyCommand;
         //command to navigate to parameters selction view model
-        private readonly Commands.NavigateCommand _navigateCommand;
+        private readonly Commands.OpenAvailableParametersCommand _navigateCommand;
         //command to navigate to catalogue file editor view model
         private readonly Commands.OpenTypeFileEditorCommand _navigateEditTypeCatalogueFileCommand;
 
@@ -347,9 +347,12 @@ namespace duHastNet.AtTheLibrary.ViewModels
                 revitFamiliesDataModel: _revitDataModel);
 
             // navigate to parameter selection view model
-            _navigateCommand = new Commands.NavigateCommand(
+            _navigateCommand = new Commands.OpenAvailableParametersCommand(
                 navigationStore: _navigationStore,
-                createViewModel: createParameterSelectionViewModel
+                stateStore: _stateStore,
+                createViewModel: createParameterSelectionViewModel,
+                familiesDataGridViewModel: FamiliesDataGridViewModel,
+                revitFamiliesDataModel: _revitDataModel
             );
 
             //navigate to type editor view model command!

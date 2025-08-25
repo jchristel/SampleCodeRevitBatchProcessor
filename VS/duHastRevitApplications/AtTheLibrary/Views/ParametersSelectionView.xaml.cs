@@ -21,6 +21,8 @@
 //
 //
 
+using duHastNet.UI.CustomControls.CustomDataGrid;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace duHastNet.AtTheLibrary.Views
@@ -33,6 +35,20 @@ namespace duHastNet.AtTheLibrary.Views
         public ParametersSelectionView()
         {
             InitializeComponent();
+        }
+
+        /// <summary>
+        /// register the data grid with the view model when the grid is loaded.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ParameterSelectionGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (sender is DynamicDataGrid grid &&
+                DataContext is ViewModels.ParametersSelectionViewModel mainViewModel)
+            {
+                mainViewModel.ParametersDataGridViewModel.AssociateWithDataGrid(grid);
+            }
         }
     }
 }

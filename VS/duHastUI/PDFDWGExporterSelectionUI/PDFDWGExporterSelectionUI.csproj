@@ -29,4 +29,6 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
+    <Compile Include="Commands\PrintSetDeleteCommand.cs" />
+    <Compile Include="Utils\PropertyChangedEventNames.cs" />
 </Project>

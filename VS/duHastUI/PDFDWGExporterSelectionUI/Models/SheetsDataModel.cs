@@ -24,10 +24,11 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
 {
-    public class SheetsDataModel : duHastNet.Utils.WPF.Models.DataModelBase
+    public class SheetsDataModel : duHastNet.Utils.WPF.Models.DataModelBase, INotifyPropertyChanged
     {
         /// <summary>
         /// contains the user settings for the UI
@@ -119,6 +120,23 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
             }
         }
 
+
+        #region property changed event
+
+        //event handlers for property changed
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void RaisePropertyChanged(string name)
+        {
+            OnPropertyChanged(name);
+        }
+
+        #endregion
 
         /// <summary>
         /// Constructor for the sheets data model

@@ -137,7 +137,9 @@
                          Grid.Column="2" 
                          Padding="5 0 5 0"
                          Margin="5 5 5 5" 
-                         Content="Delete"/>
+                         Content="Delete"
+                        Command="{Binding PrintSetDeleteCommand}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
                 </Grid>
             </Grid>
         </Border>
@@ -241,8 +243,8 @@
                      Margin="2 5 2 5" 
                      Content = "{Binding  ExportButtonText}"
                      Command="{Binding SaveAndCloseCommand}"
+                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
                      FontSize="24">
-
                 </Button>
             </Grid>
         </Border>

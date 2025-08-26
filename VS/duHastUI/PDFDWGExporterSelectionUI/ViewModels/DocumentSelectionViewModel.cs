@@ -23,12 +23,13 @@
 
 
 using duHastNet.UI.CustomControls;
+using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
 using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
-using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Documents;
@@ -96,7 +97,11 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// command to save the settings and close the window
         /// </summary>
         private readonly duHastNet.Utils.WPF.Commands.RelayCommand _saveAndCloseCommand;
+
+        private readonly Commands.PrintSetDeleteCommand _printSetDeleteCommand;
+
         public ICommand SaveAndCloseCommand { get { return _saveAndCloseCommand; } }
+        public ICommand PrintSetDeleteCommand { get { return _printSetDeleteCommand; } }
 
 
         #region event handlers
@@ -117,6 +122,8 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
             //unsubscribe from errors changed event
             _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
+            //unsubscribe from model property changed event
+            _sheetsDataModel.PropertyChanged -= Model_PropertyChanged;
 
             base.OnClosing();
         }
@@ -126,10 +133,17 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         #region print set filter
 
         // Field to return a default list of print set  names
-        private readonly List<string> _printSetNamesDefaultList = new List<string>();
+        private ObservableCollection<string> _printSetNamesDefaultList = new ObservableCollection<string>();
 
         // Property to expose the default list of print sets
-        public List<string> PrintSetNamesDefaultList => _printSetNamesDefaultList;
+        public ObservableCollection<string> PrintSetNamesDefaultList {
+            get => _printSetNamesDefaultList;
+            set { 
+                _printSetNamesDefaultList = value;
+                OnPropertyChanged(nameof(PrintSetNamesDefaultList));
+            }
+        }
+        
 
         // field to store the selected Revit print set
         private string _selectedPrintSet;
@@ -257,6 +271,30 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
 
         /// <summary>
+        /// used to catch property changed events from the underlying model in order to update the ui
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // check which property changed in the underlying model
+            switch (e.PropertyName)
+            {
+                case Utils.PropertyChangedEventNames.DATA_MODEL_PRINTSETS_UPDATED:
+                    //update rooms in the view model
+                    PopulateAvailablePrintSets();
+                    break;
+
+                // Add more cases for other properties as needed
+
+                default:
+                    // Handle changes for properties not explicitly handled
+                    break;
+            }
+        }
+
+
+        /// <summary>
         /// updates the default print set list with default value and any print sets in the sheet data model
         /// </summary>
         private void PopulateAvailablePrintSets()
@@ -273,7 +311,11 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             {
                 foreach (Models.RevitPrintSet pSet in _sheetsDataModel.PrintSets)
                 {
-                    _printSetNamesDefaultList.Add(pSet.Name);
+                    //only add if not marked for deletion
+                    if (pSet.UpdateAction != Models.PrintSetUpdateType.Delete)
+                    {
+                        _printSetNamesDefaultList.Add(pSet.Name);
+                    }
                 }
             }
 
@@ -626,6 +668,12 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                 (object parameter) => !HasErrors // Only enabled when there are no errors
             );
 
+            //command to delete a print set
+            _printSetDeleteCommand = new Commands.PrintSetDeleteCommand(
+                this,
+                _sheetsDataModel
+                );
+
             //set the export file path from settings:
             ExportSheetsFilePath = _sheetsDataModel.Settings.ExportFolderPath;
 
@@ -645,6 +693,10 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             //set the filter to select sheets from schedule ( in theory only one, print set or schedule ) should have a 
             //selection 
             SetSheetSetScheduleFilterFromSettings();
+
+            // subscribe to underlying model changes
+            // required to update the print set list if changes occur
+            _sheetsDataModel.PropertyChanged += Model_PropertyChanged;
         }
     }
 }

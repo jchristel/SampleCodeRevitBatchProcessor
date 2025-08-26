@@ -47,7 +47,7 @@ namespace duHastNet.UI.FamilyReloaderUI.Commands
         }
 
         /// <summary>
-        /// this command is always available
+        /// this command is available if there are no errors in the view model
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>

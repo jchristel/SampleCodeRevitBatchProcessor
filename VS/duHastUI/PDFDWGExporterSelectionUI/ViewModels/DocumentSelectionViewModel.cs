@@ -100,8 +100,11 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
         private readonly Commands.PrintSetDeleteCommand _printSetDeleteCommand;
 
+        private readonly Commands.PrintSetUpdateCommand _printSetUpdateCommand;
+
         public ICommand SaveAndCloseCommand { get { return _saveAndCloseCommand; } }
         public ICommand PrintSetDeleteCommand { get { return _printSetDeleteCommand; } }
+        public ICommand PrintSetUpdateCommand { get { return _printSetUpdateCommand; } }
 
 
         #region event handlers
@@ -670,6 +673,12 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
             //command to delete a print set
             _printSetDeleteCommand = new Commands.PrintSetDeleteCommand(
+                this,
+                _sheetsDataModel
+                );
+
+            //command to update a print set
+            _printSetUpdateCommand = new Commands.PrintSetUpdateCommand(
                 this,
                 _sheetsDataModel
                 );

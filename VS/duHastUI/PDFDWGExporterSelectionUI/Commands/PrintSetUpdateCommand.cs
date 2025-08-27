@@ -23,11 +23,12 @@
 
 using duHastNet.UI.PDFDWGExporterSelectionUI.Models;
 using System.ComponentModel;
+using System.Windows.Markup;
 
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Commands
 {
-    public class PrintSetDeleteCommand : duHastNet.Utils.WPF.Commands.CommandBase
+    public class PrintSetUpdateCommand : duHastNet.Utils.WPF.Commands.CommandBase
     {
         private readonly ViewModels.DocumentSelectionViewModel _documentSelectionViewModel;
         private readonly Models.SheetsDataModel _revitSheetsDataModel;
@@ -42,32 +43,42 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Commands
             try
             {
                 // set the status of the print set to be deleted
-                string printSetToDelete = _documentSelectionViewModel.SelectedPrintSet;
+                string printSetToUpdate = _documentSelectionViewModel.SelectedPrintSet;
 
                 foreach (var printSet in _revitSheetsDataModel.PrintSets)
                 {
-                    if (printSet.Name == printSetToDelete)
+                    if (printSet.Name == printSetToUpdate)
                     {
-                        printSet.UpdateAction = PrintSetUpdateType.Delete;
-                        break;
+                        // mark the print set for update
+                        printSet.UpdateAction = PrintSetUpdateType.Update;
+
+                        //wipe all sheets from the print set
+                        printSet.RevitSheets.Clear();
+
+                        //add the slected sheets to the print set
+                        for (int i = 0; i < _revitSheetsDataModel.RevitSheets.Count; i++)
+                        {
+                            if (_revitSheetsDataModel.RevitSheets[i].IsSelected)
+                            {
+                                printSet.RevitSheets.Add(_revitSheetsDataModel.RevitSheets[i]);
+                            }
+                        }
                     }
                 }
 
                 // raise event to notify the view model that the model has been updated
                 _revitSheetsDataModel.RaisePropertyChanged(Utils.PropertyChangedEventNames.DATA_MODEL_PRINTSETS_UPDATED);
 
-                _documentSelectionViewModel.SelectedPrintSet = Constants.DefaultPrintSetName;
-
                 // inform user
                 _documentSelectionViewModel.AddMessage(
-                    $"Print set '{printSetToDelete}' marked for deletion. Save settings to apply.",
+                    $"Print set '{printSetToUpdate}' marked for update. Save settings to apply.",
                     duHastNet.Utils.WPF.Stores.MessageTypes.Information
                 );
             }
             catch (System.Exception ex)
             {
                 _documentSelectionViewModel.AddMessage(
-                    $"Error during print set deletion: {ex.Message}",
+                    $"Error during print set update: {ex.Message}",
                     duHastNet.Utils.WPF.Stores.MessageTypes.Error
                 );
             }
@@ -101,7 +112,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Commands
         }
 
 
-        public PrintSetDeleteCommand(
+        public PrintSetUpdateCommand(
             ViewModels.DocumentSelectionViewModel documentSelectionViewModel,
             Models.SheetsDataModel revitSheetsDataModel)
         {

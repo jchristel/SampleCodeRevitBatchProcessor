@@ -34,7 +34,12 @@ This helper function expect a folder containing rename directive files. For form
 # import clr
 # import System
 
+from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Family.Utility import family_rename_types_utils as rFamRenameUtils
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults  import NESTING_SEPARATOR
+from duHast.Revit.Common import transaction as rTran
+
+from Autodesk.Revit.DB import Element, Transaction
 
 
 def _rename_loaded_family_types(doc, rename_directives, families, progress_callback=None):
@@ -64,7 +69,7 @@ def _rename_loaded_family_types(doc, rename_directives, families, progress_callb
     :rtype: :class:`.Result`
     """
 
-    return_value = res.Result()
+    return_value = Result()
     return_value.status = False
     rename_match_counter = 0
 
@@ -93,12 +98,12 @@ def _rename_loaded_family_types(doc, rename_directives, families, progress_callb
             # get the type to rename
             for fam_type_id in family.GetFamilySymbolIds():
                 family_type = doc.GetElement(fam_type_id)
-                if family_type.Name == rename_directive.old_type_name:
+                if Element.Name.GetValue(family_type)== rename_directive.old_type_name:
                     # flag that a match was found
                     found_type_name_match = True
                     # rename this family type
                     def action():
-                        action_return_value = res.Result()
+                        action_return_value = Result()
                         try:
                             # rename the type
                             family_type.Name = rename_directive.new_type_name
@@ -170,18 +175,6 @@ def _rename_loaded_family_types(doc, rename_directives, families, progress_callb
     return return_value
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 def rename_loaded_family_types(doc, directory_path):
     """
     Entry point for this module. Will read rename directives files in given directory and attempt to rename
@@ -207,7 +200,7 @@ def rename_loaded_family_types(doc, directory_path):
     :rtype: :class:`.Result`
     """
 
-    return_value = res.Result()
+    return_value = Result()
     # get directives from folder
     rename_directives_result = rFamRenameUtils.get_rename_directives(directory_path)
     # check if anything came back

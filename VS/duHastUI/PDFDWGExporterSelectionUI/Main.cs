@@ -37,6 +37,11 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
         Models.SheetsDataModel _exportSheetsDataModel;
         Utils.Settings _settings;
 
+        /// <summary>
+        /// contains the print sets which were updated during the UI run
+        /// </summary>
+        List<RevitPrintSet> _printSetsUpdated;
+        public List<RevitPrintSet> PrintSetsUpdated { get => _printSetsUpdated; }
 
         public Main(
             List<RevitSheet> sheetsInModel,
@@ -104,6 +109,11 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
 
             mainWindow.ShowDialog();
 
+
+            //store updated print sets
+            _printSetsUpdated = _exportSheetsDataModel.PrintSets;
+
+            // gather up the selection and return to caller
             var exportSelection = new Utils.ExportSelection();
 
             // return the selected sheets...

@@ -46,6 +46,19 @@ namespace PDFDWGExporterSelectionTester
             };
 
 
+            var scheduleOne = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitSchedule("schedule 1");
+            scheduleOne.AddRevitSheet(sheets[0]);
+            scheduleOne.AddRevitSheet(sheets[1]);
+            var scheduleTwo = new duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitSchedule("schedule 2");
+            scheduleTwo.AddRevitSheet(sheets[2]);
+            List<duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitSchedule> schedules = new List<duHastNet.UI.PDFDWGExporterSelectionUI.Models.RevitSchedule>
+            {
+                scheduleOne,
+                scheduleTwo
+            };
+
+
+
             var settingsPDF = new List<duHastNet.UI.PDFDWGExporterUI.Utils.DocumentSetting>
             {
                 new duHastNet.UI.PDFDWGExporterUI.Utils.DocumentSetting("", "", "_", "Sheet Number"),
@@ -70,7 +83,7 @@ namespace PDFDWGExporterSelectionTester
             var main = new duHastNet.UI.PDFDWGExporterSelectionUI.Main(
                 sheetsInModel: sheets,
                 printSetsInModel: printSets,
-                schedulesInModel: null,
+                schedulesInModel: schedules,
                 currentPDFExportString: jsonPDF,
                 currentDWGExportString: jsonDWG,
                 parameterNames: new List<string> { "Sheet Number", "Sheet Name", "Parameter4" });

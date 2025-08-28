@@ -196,7 +196,42 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// </summary>
         public void UpdateSheetSelectionBySchedule( string scheduleName)
         {
+            if (string.IsNullOrEmpty(scheduleName) || Data == null) return;
 
+            var exportColumnId = Constants.ColumnHeaderExport.Replace(" ", "");
+
+            // Check if <None> was selected
+            if (scheduleName == Models.Constants.DefaultPrintSetName)
+            {
+                // Set all sheets to not selected in BOTH the grid and underlying data
+                for (int i = 0; i < Data.Count && i < SheetsDataModel.RevitSheets.Count; i++)
+                {
+                    // Update grid
+                    Data[i][exportColumnId] = false;
+
+                    // Update underlying sheet data (if your sheet has an IsSelected property)
+                    SheetsDataModel.RevitSheets[i].IsSelected = false; // Adjust property name as needed
+                }
+            }
+            else
+            {
+                // Get the schedule by name
+                var schedule = SheetsDataModel.Schedules.Find(x => x.Name == scheduleName);
+                if (schedule != null)
+                {
+                    // Check if sheet is in set
+                    for (int i = 0; i < Data.Count && i < SheetsDataModel.RevitSheets.Count; i++)
+                    {
+                        var sheet = SheetsDataModel.RevitSheets[i];
+                        bool shouldBeSelected = schedule.RevitSheets.Contains(sheet);
+                        // Update both grid and underlying data
+                        Data[i][exportColumnId] = shouldBeSelected;
+                        sheet.IsSelected = shouldBeSelected; // Adjust property name as needed
+                    }
+                }
+            }
+
+            RefreshData();
         }
 
         #region Private Helper Methods

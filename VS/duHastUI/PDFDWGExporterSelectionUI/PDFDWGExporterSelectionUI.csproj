@@ -95,11 +95,18 @@
     <Compile Include="ViewModels\DocumentSelectionViewModel.cs" />
     <Compile Include="ViewModels\ViewDataViewModel.cs" />
     <Compile Include="ViewModels\ViewSelectionDataGridViewModel.cs" />
+    <Compile Include="Views\PrintSetNameDialog.xaml.cs">
+      <DependentUpon>PrintSetNameDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DocumentSelectionView.xaml.cs" />
     <Compile Include="Views\MainWindow.xaml.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Page Include="Views\PrintSetNameDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\DocumentSelectionView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

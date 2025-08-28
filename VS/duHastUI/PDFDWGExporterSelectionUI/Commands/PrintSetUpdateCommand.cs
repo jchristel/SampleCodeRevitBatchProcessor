@@ -55,7 +55,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Commands
                         //wipe all sheets from the print set
                         printSet.RevitSheets.Clear();
 
-                        //add the slected sheets to the print set
+                        //add the selected sheets to the print set
                         for (int i = 0; i < _revitSheetsDataModel.RevitSheets.Count; i++)
                         {
                             if (_revitSheetsDataModel.RevitSheets[i].IsSelected)

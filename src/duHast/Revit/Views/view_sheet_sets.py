@@ -247,7 +247,7 @@ def update_view_sheet_set(doc, view_sheet_set, view_sheet_setting, sheets, views
     :rtype: duHast.Utilities.Objects.result.Result
     """
 
-     # set up a return object
+    # set up a return object
     return_value = Result()
 
     # check if the view_sheet_set is None
@@ -375,6 +375,78 @@ def update_view_sheet_set(doc, view_sheet_set, view_sheet_setting, sheets, views
     return return_value
 
 
+def update_view_sheet_set_by_name(doc, view_sheet_set_name, sheets, views, clear_existing=True, transaction_manager = in_transaction):
+    """
+    Updates a view set with the given name, sheets, and views in the Revit document.
+
+    :param doc: The Revit document in which to update the view set.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view_sheet_set_name: The name of the view set to update.
+    :type view_sheet_set_name: str
+    :param sheets: A list of sheets to include in the view set.
+    :type sheets: list
+    :param views: A list of views to include in the view set.
+    :type views: list
+    :param clear_existing: Whether to clear existing sheets or views before adding new ones.
+    :type clear_existing: bool
+    :param transaction_manager: The transaction manager to use for the operation. If none is provided, the action will be executed assuming there is an open transaction already set up by the caller.
+    :type transaction_manager: function
+
+    :return: A Result object indicating the success or failure of the operation. Messages are quite detailed to allow for debugging and understanding what is happening in the function.
+    :rtype: duHast.Utilities.Objects.result.Result
+    """
+
+    # set up a return object
+    return_value = Result()
+
+    try:
+
+        # check if the view_sheet_set_name is a string
+        if not isinstance(view_sheet_set_name, str):
+            return_value.update_sep(False, "view_sheet_set_name needs to be of type: str. Got instead: {}".format(type(view_sheet_set_name)))
+            return return_value
+
+        if view_sheet_set_name == "":
+            return_value.update_sep(False, "view_sheet_set_name cannot be an empty string.")
+            return return_value
+
+        # check view set with given name already exists?
+        # if it does, return an error
+        # otherwise duplicate the current set, rename it , clear it and update it with the given sheets and views
+        existing_view_sheet_set = get_view_sheet_set_by_name(doc, view_sheet_set_name)
+
+        # check if the view sheet set exists
+        if existing_view_sheet_set:
+            return_value.update_sep(False, "View set with name '{}' already exists.".format(view_sheet_set_name))
+            return return_value
+
+        # Now you can access the ViewSheetSetting
+        view_sheet_setting = get_current_view_sheet_settings_element(doc)
+
+        # check if the view_sheet_setting is None
+        if not view_sheet_setting:
+            return_value.update_sep(False, "Failed to get current ViewSheetSetting element.")
+            return return_value
+        
+        # update the view set with the given sheets and views
+        return_value = update_view_sheet_set(
+            doc=doc, 
+            view_sheet_set= existing_view_sheet_set, 
+            view_sheet_setting=view_sheet_setting, 
+            sheets=sheets, 
+            views= views, 
+            clear_existing=True, 
+            transaction_manager = in_transaction, 
+            save_after_update=True
+        )
+
+    except Exception as e:
+        return_value.update_sep(False, "Failed to update view set with name: {} with error: {}".format(view_sheet_set_name, e))
+
+
+    return return_value
+
+
 def create_new_view_sheet_set(doc, view_sheet_set_name, sheets, views, transaction_manager = in_transaction):
     """
     Creates a new view set with the given name, sheets, and views in the Revit document.
@@ -393,6 +465,7 @@ def create_new_view_sheet_set(doc, view_sheet_set_name, sheets, views, transacti
     :return: A Result object indicating the success or failure of the operation. Messages are quite detailed to allow for debugging and understanding what is happening in the function.
     :rtype: duHast.Utilities.Objects.result.Result
     """
+    
     # set up a return object
     return_value = Result()
 

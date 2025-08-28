@@ -162,7 +162,7 @@ def export_pdf_dwg_entry(doc, output, forms):
             print("...export result: {}".format(export_result.status))
 
         # update print sets in model
-        update_print_set_result = update_print_sets_from_ui(doc, main.printSetsInModel)
+        update_print_set_result = update_print_sets_from_ui(doc, main.PrintSetsUpdated)
         return_value.update(update_print_set_result)
 
         if DEBUG:

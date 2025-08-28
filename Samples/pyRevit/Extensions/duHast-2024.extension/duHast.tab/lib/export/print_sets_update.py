@@ -25,6 +25,7 @@
 from duHast.Utilities.Objects.result import Result
 from duHast.pyRevit.console_output import print_header, print_error
 from duHast.Revit.Views.view_sheet_sets import delete_view_sheet_set_by_name, create_new_view_sheet_set,update_view_sheet_set
+from duHast.pyRevit.net_dll_loader import load_net_dll_path
 
 from Autodesk.Revit.DB import ElementId
 
@@ -78,7 +79,7 @@ def delete_print_sets(doc, print_sets):
             # delete the set
             delete_result = delete_view_sheet_set_by_name(doc, print_set_name)
             # give user feedback
-            print(delete_result.Message)
+            print(delete_result.message)
             # log result
             return_value.update(delete_result)
 
@@ -120,7 +121,7 @@ def create_print_sets(doc, print_sets):
             # check if successful
             if not sheets_result.status:
                 return_value.update(sheets_result)
-                print_error(sheets_result.Message)
+                print_error(sheets_result.message)
                 continue
 
             if len(sheets_result.result) == 0:
@@ -138,7 +139,7 @@ def create_print_sets(doc, print_sets):
             )
 
             # give user feedback
-            print(create_result.Message)
+            print(create_result.message)
             # log result
             return_value.update(create_result)
         
@@ -179,6 +180,19 @@ def update_print_sets_from_ui(doc, printSets=None):
     # set up a status tracker
     return_value = Result()
     try:
+
+        # load .net interface dlls
+        set_dll_path_result = load_net_dll_path([ "PDFDWGExporterSelectionUI.dll"]) #"Utils.23.0.0.3.dll",
+
+        # check if the dlls were loaded successfully
+        if not set_dll_path_result.status:
+            print_error(set_dll_path_result.message)
+            return_value.update_sep(False, set_dll_path_result.message)
+            return return_value
+
+        # import the UI class from the PDFDWGExporterUI namespace
+        from duHastNet.UI.PDFDWGExporterSelectionUI.Models import PrintSetUpdateType
+
         # get the sheets sets from the settings object and check for any sets to update
         print_header("Updating print sets from UI")
 
@@ -196,11 +210,12 @@ def update_print_sets_from_ui(doc, printSets=None):
         print_set_create = []
 
         for print_set in printSets:
-            if print_set.UpdateAction == 1:
+            # sort print set actions
+            if print_set.UpdateAction == PrintSetUpdateType.Delete:
                 print_set_delete.append(print_set)
-            elif print_set.UpdateAction == 2:
+            elif print_set.UpdateAction == PrintSetUpdateType.Update:
                 print_set_update.append(print_set)
-            elif print_set.UpdateAction == 3:
+            elif print_set.UpdateAction == PrintSetUpdateType.New:
                 print_set_create.append(print_set)
         
         if len(print_set_delete) > 0:

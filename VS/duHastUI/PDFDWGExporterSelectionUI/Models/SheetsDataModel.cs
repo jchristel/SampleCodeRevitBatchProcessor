@@ -97,6 +97,44 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Models
         public ObservableCollection<PDFDWGExporterUI.Utils.DocumentSetting> DWGSettings
         { get => _dwgSettings; }
 
+
+        public List<string> GetAllPrintSetNames()
+        {
+            List<string> printSetNames = new List<string>();
+
+            if (PrintSets == null)
+            {
+                return printSetNames;
+            }
+
+            foreach (var printSet in PrintSets)
+            {
+                printSetNames.Add(printSet.Name);
+            }
+
+            return printSetNames;
+        }
+
+        public Models.RevitPrintSet GetPrintSetByName(string name)
+        {
+            if (PrintSets == null)
+            {
+                return null;
+            }
+
+            foreach (var printSet in PrintSets)
+            {
+                if (printSet.Name == name)
+                {
+                    return printSet;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// adds the preview names for pdf and dwg export to each sheet
+        /// </summary>
         private void AddPreviewNames()
         {
             // get the pdf name settings

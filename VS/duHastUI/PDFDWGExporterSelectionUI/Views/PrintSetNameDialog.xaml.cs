@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Collections.Generic;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Views
 {
@@ -6,12 +7,12 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Views
     {
         public string PrintsetName { get; private set; }
      
-        public PrintSetNameDialog(string propertyName, string currentFilter = "")
+        public PrintSetNameDialog(string defaulPrintSetName, List<string> allCurrentSets)
         {
             InitializeComponent();
 
-            Title = $"Filter {propertyName}";
-            PrintSetTextBox.Text = currentFilter;
+            Title = $"New print set {defaulPrintSetName}";
+            PrintSetTextBox.Text = defaulPrintSetName;
 
             // Focus and select the text
             Loaded += (s, e) =>

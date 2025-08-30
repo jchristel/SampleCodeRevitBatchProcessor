@@ -51,7 +51,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Commands
                 //get all print set names
                 var allPrintSetNames = _revitSheetsDataModel.GetAllPrintSetNames();
 
-                //show a dialog to enter the new name
+                //show the MVVM dialog
                 var inputDialog = new Views.PrintSetNameDialog(defaultNewPrintSetName, allPrintSetNames);
                 if (inputDialog.ShowDialog() != true)
                 {
@@ -59,8 +59,8 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Commands
                     return;
                 }
 
-                //get the new name
-                string newPrintSetName = inputDialog.PrintsetName;
+                //get the new name from the dialog
+                string newPrintSetName = inputDialog.PrintSetName;
 
                 //create the new print set
                 Models.RevitPrintSet newPrintSet = new Models.RevitPrintSet(

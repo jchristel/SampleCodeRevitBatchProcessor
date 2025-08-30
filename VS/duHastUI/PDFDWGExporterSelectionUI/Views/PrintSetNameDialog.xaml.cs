@@ -1,50 +1,35 @@
-﻿using System.Windows;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Windows;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Views
 {
     public partial class PrintSetNameDialog : Window
     {
-        public string PrintsetName { get; private set; }
-     
-        public PrintSetNameDialog(string defaulPrintSetName, List<string> allCurrentSets)
+        public PrintSetNameDialog(string defaultPrintSetName, IEnumerable<string> allCurrentSets)
         {
             InitializeComponent();
 
-            Title = $"New print set {defaulPrintSetName}";
-            PrintSetTextBox.Text = defaulPrintSetName;
+            var viewModel = new ViewModels.PrintSetNameDialogViewModel(defaultPrintSetName, allCurrentSets);
+            DataContext = viewModel;
 
-            // Focus and select the text
+            // Subscribe to DialogResult changes to close the window
+            viewModel.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(ViewModels.PrintSetNameDialogViewModel.DialogResult))
+                {
+                    this.DialogResult = viewModel.DialogResult;
+                }
+            };
+
+            // Focus and select text when loaded
             Loaded += (s, e) =>
             {
                 PrintSetTextBox.Focus();
                 PrintSetTextBox.SelectAll();
             };
-
-            // Handle Enter key in textbox
-            PrintSetTextBox.KeyDown += (s, e) =>
-            {
-                if (e.Key == System.Windows.Input.Key.Enter)
-                {
-                    CreateSetName();
-                }
-            };
         }
 
-        private void CreateButton_Click(object sender, RoutedEventArgs e)
-        {
-            CreateSetName();
-        }
-
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
-        {
-            DialogResult = false;
-        }
-
-        private void CreateSetName()
-        {
-            PrintsetName = PrintSetTextBox.Text?.Trim() ?? "";
-            DialogResult = true;
-        }
+        public string PrintSetName =>
+            (DataContext as ViewModels.PrintSetNameDialogViewModel)?.PrintSetName?.Trim() ?? string.Empty;
     }
 }

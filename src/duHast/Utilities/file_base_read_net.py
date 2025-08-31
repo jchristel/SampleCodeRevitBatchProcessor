@@ -31,12 +31,13 @@ import clr
 import os
 
 from duHast.Utilities.Objects.result import Result
+from duHast.Revit.NetSupport.dll_names import FILE_WRAPPER 
 
 # load the wrapper dll from the libs folder
 # the dll is located in the libs folder of the extension, which is one level up from the current file's directory
 current_directory = os.path.dirname(__file__)
 parent_directory = os.path.dirname(current_directory)
-dll_path = os.path.join(parent_directory, "lib", "FileIOWrapper.dll")
+dll_path = os.path.join(parent_directory, "lib", FILE_WRAPPER)
 clr.AddReference(dll_path)
 
 # import the ReadFromFile class from the CSVHelperWrapper namespace

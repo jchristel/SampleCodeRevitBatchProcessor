@@ -41,6 +41,35 @@
             <Setter Property="Padding" Value="8,4"/>
             <Setter Property="BorderBrush" Value="#CCCCCC"/>
             <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <DockPanel>
+                            <!-- Error adorner content docked to bottom -->
+                            <Border Background="#FFE6E6" 
+                                    BorderBrush="#F44336" 
+                                    BorderThickness="1" 
+                                    CornerRadius="3"
+                                    Margin="0,2,0,0"
+                                    DockPanel.Dock="Bottom">
+                                <ItemsControl ItemsSource="{Binding}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding ErrorContent}" 
+                                                       Foreground="#F44336" 
+                                                       FontSize="12" 
+                                                       Margin="6,4"
+                                                       TextWrapping="Wrap"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                            <!-- The adorned element (TextBox) -->
+                            <AdornedElementPlaceholder/>
+                        </DockPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
             <Style.Triggers>
                 <Trigger Property="IsFocused" Value="True">
                     <Setter Property="BorderBrush" Value="#2196F3"/>
@@ -79,7 +108,7 @@
         <!-- Text input with validation -->
         <TextBox x:Name="PrintSetTextBox"
                  Grid.Row="1"
-                 Text="{Binding PrintSetName, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
+                 Text="{Binding PrintSetName, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, NotifyOnValidationError=True}"
                  Style="{StaticResource DialogTextBoxStyle}"
                  Height="32"
                  Margin="0,0,0,8">
@@ -88,17 +117,7 @@
             </TextBox.InputBindings>
         </TextBox>
 
-        <!-- Error display -->
-        <ItemsControl Grid.Row="2" 
-                      ItemsSource="{Binding Path=(Validation.Errors), RelativeSource={RelativeSource AncestorType=TextBox}}"
-                      Margin="0,0,0,8">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding ErrorContent}" 
-                               Style="{StaticResource ErrorTextStyle}"/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <!-- No separate error display needed - errors shown as adorner -->
 
         <!-- Spacer -->
         <Rectangle Grid.Row="3" Fill="Transparent"/>

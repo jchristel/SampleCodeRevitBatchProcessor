@@ -25,8 +25,7 @@ from duHast.Utilities.Objects.result import Result
 from duHast.pyRevit.console_output import print_header, print_error
 from duHast.Revit.ExtensibleSchemas.extensible_schemas import does_schema_exist
 from duHast.pyRevit.net_dll_loader import load_net_dll_path
-from duHast.Revit.Exports.export_pdf import export_sheet_to_pdf
-from duHast.Revit.Exports.export_dwg import export_sheet_to_dwg
+from duHast.Revit.NetSupport.dll_names import PDF_AND_DWG_EXPORTER_SELECTION_UI
 
 
 from export.utility import get_sheet_parameter_names
@@ -59,7 +58,7 @@ def export_pdf_dwg_entry(doc, output, forms):
 
     try:
         # load .net interface dlls
-        set_dll_path_result = load_net_dll_path([ "PDFDWGExporterSelectionUI.dll"]) #"Utils.23.0.0.3.dll",
+        set_dll_path_result = load_net_dll_path([ PDF_AND_DWG_EXPORTER_SELECTION_UI]) #"Utils.23.0.0.3.dll",
 
         # check if the dlls were loaded successfully
         if not set_dll_path_result.status:

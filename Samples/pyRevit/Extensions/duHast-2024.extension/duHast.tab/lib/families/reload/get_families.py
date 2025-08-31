@@ -31,7 +31,7 @@ from duHast.Revit.Family.family_functions import get_name_to_family_dict
 from duHast.Revit.Family.family_utils import is_shared_from_family
 from duHast.Revit.Categories.categories_model import get_category_from_builtInCategory
 
-from duHast.pyRevit.net_dll_loader import load_net_dll_path
+#from duHast.pyRevit.net_dll_loader import load_net_dll_path
 
 
 # import Autodesk

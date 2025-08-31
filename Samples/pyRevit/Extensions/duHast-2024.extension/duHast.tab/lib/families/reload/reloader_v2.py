@@ -25,6 +25,7 @@ from duHast.Revit.Family.family_reload_single import reload_family
 
 from duHast.pyRevit.console_output import print_header, print_error
 from duHast.pyRevit.net_dll_loader import load_net_dll_path
+from duHast.Revit.NetSupport.dll_names import FAMILY_RELOADER_UI
 
 from families.reload.get_families import get_families_in_model_net
 
@@ -107,7 +108,7 @@ def reloaded_families_entry(doc, output, forms):
         
         print_header("Reloading families in the model...")
         # load .net interface dlls
-        set_dll_path_result = load_net_dll_path(["FamilyReloaderUI.dll"])
+        set_dll_path_result = load_net_dll_path([FAMILY_RELOADER_UI])
 
         # check if the dlls were loaded successfully
         if not set_dll_path_result.status:

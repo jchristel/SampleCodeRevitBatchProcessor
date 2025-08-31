@@ -30,6 +30,7 @@ from duHast.Utilities.Objects.result import Result
 from duHast.Revit.ExtensibleSchemas.extensible_schemas_create import verify_schema_data_storage_based
 from duHast.Revit.ExtensibleSchemas.data_storage import update_entity_on_data_storage
 from duHast.Revit.Views.sheets import get_all_sheets
+from duHast.Revit.NetSupport.dll_names import PDF_AND_DWG_EXPORTER_SETTINGS_UI
 
 from duHast.pyRevit.net_dll_loader import load_net_dll_path
 from duHast.pyRevit.console_output import print_header, print_error
@@ -137,7 +138,7 @@ def settings_export_pdf_dwg_entry(doc, output, forms):
     return_value = Result()
 
     try:
-        set_dll_path_result = load_net_dll_path([ "PDFDWGExporterUI.dll"]) #"Utils.23.0.0.3.dll",
+        set_dll_path_result = load_net_dll_path([PDF_AND_DWG_EXPORTER_SETTINGS_UI]) #"Utils.23.0.0.3.dll",
 
         if not set_dll_path_result.status:
             print_error(set_dll_path_result.message)

@@ -6,7 +6,7 @@ param(
     [string]$NewVersion,
     [string]$OldVersion,
     [switch]$WhatIf,
-    [switch]$StartFromSolution = 1, # Which solution to start from (1-6)
+    [int]$StartFromSolution = 1, # Which solution to start from (1-6)
     [string]$BuildConfig = "Release"
 )
 
@@ -389,7 +389,7 @@ function Invoke-CascadingVersionUpdate {
             Write-Host "`n3. No DLL copying needed for this solution" -ForegroundColor Gray
         }
         
-        Write-Host "✓ Step $stepNumber completed" -ForegroundColor Green
+        Write-Host "step $stepNumber completed" -ForegroundColor Green
     }
     
     return $true
@@ -514,13 +514,13 @@ if ($WhatIf) {
 
 # Confirm before proceeding
 Write-Host "`nThis will:" -ForegroundColor Yellow
-Write-Host "- Update each solution's version references in dependency order" -ForegroundColor Yellow
+Write-Host "- Update each solutions version references in dependency order" -ForegroundColor Yellow
 Write-Host "- Build each solution after updating its references" -ForegroundColor Yellow  
 Write-Host "- Copy built DLLs to reference directories" -ForegroundColor Yellow
 Write-Host "- Update pyRevit YAML files at the end" -ForegroundColor Yellow
 
 $confirmation = Read-Host "`nProceed with cascading version update? (y/N)"
-if ($confirmation -ne 'y' -and $confirmation -ne 'Y') {
+if ($confirmation -ne "y" -and $confirmation -ne "Y") {
     Write-Host "Operation cancelled." -ForegroundColor Red
     exit 0
 }

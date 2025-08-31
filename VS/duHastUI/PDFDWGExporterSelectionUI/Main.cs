@@ -110,8 +110,15 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI
             mainWindow.ShowDialog();
 
 
-            //store updated print sets
-            _printSetsUpdated = _exportSheetsDataModel.PrintSets;
+            //store print sets where the user changed something
+            _printSetsUpdated = new List<RevitPrintSet>();
+            foreach (var ps in _exportSheetsDataModel.PrintSets)
+            {
+                if (ps.UpdateAction != PrintSetUpdateType.None)
+                {
+                    _printSetsUpdated.Add(ps);
+                }
+            }
 
             // gather up the selection and return to caller
             var exportSelection = new Utils.ExportSelection();

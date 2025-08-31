@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>duHastNet.Utils</RootNamespace>
-    <AssemblyName>Utils.23.0.0.3</AssemblyName>
+    <AssemblyName>Utils.23.0.0.4</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

@@ -1,3 +1,7 @@
+
+# version number for all dlls
+$dllVersion=".23.0.0.4"
+
 # Function to determine base path from script location
 function Get-BasePathFromLocation {
     # Get the directory where this script is located
@@ -139,16 +143,16 @@ $uiPDFDWGExporterSelectionBuildPath = Get-BuildType $uiPDFDWGExporterSelectionBa
 $uiFamilyReloaderBuildPath = Get-BuildType $uiFamilyReloaderBasePath $buildConfig
 
 # Define source and destination paths for PushIt (using dynamic extension name)
-$sourceFilePushIt = "$pushItBuildPath\PushIt.dll"
-$destinationFilePushIt = "$basePath\Samples\pyRevit\Extensions\$pyRevitExtensionName\duHast.tab\PushIt.panel\bin\PushIt.dll"
+$sourceFilePushIt = "$pushItBuildPath\PushIt$dllVersion.dll"
+$destinationFilePushIt = "$basePath\Samples\pyRevit\Extensions\$pyRevitExtensionName\duHast.tab\PushIt.panel\bin\PushIt$dllVersion.dll"
 
 # Copy PushIt DLL
 Copy-Item -Path $sourceFilePushIt -Destination $destinationFilePushIt -Force
 Write-Output "File copied successfully from $sourceFilePushIt to $destinationFilePushIt"
 
 # Define source and destination paths for AtTheLibrary (using dynamic extension name)
-$sourceFileAtTheLibrary = "$atTheLibraryBuildPath\AtTheLibrary.dll"
-$destinationAtTheLibrary = "$basePath\Samples\pyRevit\Extensions\$pyRevitExtensionName\duHast.tab\Families.panel\bin\AtTheLibrary.dll"
+$sourceFileAtTheLibrary = "$atTheLibraryBuildPath\AtTheLibrary$dllVersion.dll"
+$destinationAtTheLibrary = "$basePath\Samples\pyRevit\Extensions\$pyRevitExtensionName\duHast.tab\Families.panel\bin\AtTheLibrary$dllVersion.dll"
 
 # Copy AtTheLibrary DLL
 Copy-Item -Path $sourceFileAtTheLibrary -Destination $destinationAtTheLibrary -Force
@@ -163,22 +167,22 @@ Copy-Item -Path $sourceFileRevitAsync -Destination $destinationFileRevitAsync -F
 Write-Output "File copied successfully from $sourceFileRevitAsync to $destinationFileRevitAsync"
 
 # copy UI dlls
-$sourceFileUI = "$uiPDFDWGExporterBuildPath\PDFDWGExporterUI.dll"
-$destinationFileUI = "$basePath\VS\_References\duHast\PDFDWGExporterUI.dll"
+$sourceFileUI = "$uiPDFDWGExporterBuildPath\PDFDWGExporterUI$dllVersion.dll"
+$destinationFileUI = "$basePath\VS\_References\duHast\PDFDWGExporterUI$dllVersion.dll"
 
 Copy-Item -Path $sourceFileUI -Destination $destinationFileUI -Force
 Write-Output "File copied successfully from $sourceFileUI to $destinationFileUI"
 
 # copy UI dlls
-$sourceFileUISelection = "$uiPDFDWGExporterSelectionBuildPath\PDFDWGExporterSelectionUI.dll"
-$destinationFileUISelection = "$basePath\VS\_References\duHast\PDFDWGExporterSelectionUI.dll"
+$sourceFileUISelection = "$uiPDFDWGExporterSelectionBuildPath\PDFDWGExporterSelectionUI$dllVersion.dll"
+$destinationFileUISelection = "$basePath\VS\_References\duHast\PDFDWGExporterSelectionUI$dllVersion.dll"
 
 Copy-Item -Path $sourceFileUISelection -Destination $destinationFileUISelection -Force
 Write-Output "File copied successfully from $sourceFileUISelection to $destinationFileUISelection"
 
 # copy reloader UI dlls
-$sourceFileFamilyReloaderUI = "$uiFamilyReloaderBuildPath\FamilyReloaderUI.dll"
-$destinationFileFamilyReloaderUI = "$basePath\VS\_References\duHast\FamilyReloaderUI.dll"
+$sourceFileFamilyReloaderUI = "$uiFamilyReloaderBuildPath\FamilyReloaderUI$dllVersion.dll"
+$destinationFileFamilyReloaderUI = "$basePath\VS\_References\duHast\FamilyReloaderUI$dllVersion.dll"
 # Copy Family Reloader UI DLL
 Copy-Item -Path $sourceFileFamilyReloaderUI -Destination $destinationFileFamilyReloaderUI -Force
 Write-Output "File copied successfully from $sourceFileFamilyReloaderUI to $destinationFileFamilyReloaderUI"

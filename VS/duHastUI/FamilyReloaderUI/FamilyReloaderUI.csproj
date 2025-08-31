@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>duHastNet.UI.FamilyReloaderUI</RootNamespace>
-    <AssemblyName>FamilyReloaderUI</AssemblyName>
+    <AssemblyName>FamilyReloaderUI.23.0.0.4</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -49,8 +49,8 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="duHastUICustomControls">
-      <HintPath>..\..\_References\duHast\duHastUICustomControls.dll</HintPath>
+    <Reference Include="duHastUICustomControls.23.0.0.4">
+      <HintPath>..\..\_References\duHast\duHastUICustomControls.23.0.0.4.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -67,8 +67,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="Utils.23.0.0.3">
-      <HintPath>..\..\_References\duHast\Utils.23.0.0.3.dll</HintPath>
+    <Reference Include="Utils.23.0.0.4">
+      <HintPath>..\..\_References\duHast\Utils.23.0.0.4.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>

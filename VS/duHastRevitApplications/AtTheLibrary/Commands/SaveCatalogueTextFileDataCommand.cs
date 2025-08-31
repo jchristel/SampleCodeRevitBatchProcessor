@@ -139,7 +139,7 @@ namespace duHastNet.AtTheLibrary.Commands
                     : Path.ChangeExtension(selectedFamilyFilePath, ".txt");
 
                 //save data
-                duHastNet.FileIOWrapper.WriteToColumnBasedTextFile csvWriter = new FileIOWrapper.WriteToColumnBasedTextFile();
+                duHastNet.FileIOWrapper.WriteToColumnBasedTextFile csvWriter = new();
                 csvWriter.WriteToTextFile(
                     filePath: catalogueFilePath,
                     header: headers,
@@ -214,7 +214,7 @@ namespace duHastNet.AtTheLibrary.Commands
                     }
                 }
 
-                if (rowsWithEmptyTypeNames.Any())
+                if (rowsWithEmptyTypeNames.Count != 0)
                 {
                     var rowNumbers = string.Join(", ", rowsWithEmptyTypeNames);
                     TypeDataViewModel.AddMessage($"Type name is missing or empty in row(s): {rowNumbers}", MessageTypes.Error);
@@ -235,7 +235,7 @@ namespace duHastNet.AtTheLibrary.Commands
                     .Where(g => g.Count() > 1)
                     .ToList();
 
-                if (duplicateGroups.Any())
+                if (duplicateGroups.Count != 0)
                 {
                     var duplicateMessages = duplicateGroups.Select(group =>
                     {
@@ -266,7 +266,7 @@ namespace duHastNet.AtTheLibrary.Commands
         /// <returns></returns>
         private List<List<string>> ConvertTableData(List<string> header, List<List<object>> tableData)
         {
-            List<List<string>> convertedData = new List<List<string>>();
+            List<List<string>> convertedData = [];
             try
             {
                 //assume column 0 index is always a string
@@ -337,7 +337,7 @@ namespace duHastNet.AtTheLibrary.Commands
         private List<string> ConvertHeaderRow(List<string> currentHeader, List<string> oldHeader)
         {
             //build a dictioanry containing the formatted header to the unformatted header
-            Dictionary<string, string> headerMapping = new Dictionary<string, string>();
+            Dictionary<string, string> headerMapping = [];
 
             foreach (string oldEntry in oldHeader)
             {
@@ -345,25 +345,24 @@ namespace duHastNet.AtTheLibrary.Commands
                 headerMapping[formattedHeaderEntry] = oldEntry;
             }
 
-            List<string> convertedHeader = new List<string> { "" };
+            List<string> convertedHeader = [""];
 
             //skip the first entry since already added as empty value      
             for (int i = 1; i<= currentHeader.Count; i++)
             {
-                    string oldEntryRetrieved;
-                    if (headerMapping.TryGetValue(currentHeader[i], out oldEntryRetrieved))
-                    {
-                        // Key was found, use the retrieved value
-                        convertedHeader.Add(oldEntryRetrieved);
-                    }
-                    else
-                    {
-                        //this should not happen!!
-                        TypeDataViewModel.AddMessage($"Failed to find header with unit data for header: {currentHeader[i]}", MessageTypes.Error);
-                        // Key not found, use original header 
-                        convertedHeader.Add(currentHeader[i]);
-                    }
+                if (headerMapping.TryGetValue(currentHeader[i], out string oldEntryRetrieved))
+                {
+                    // Key was found, use the retrieved value
+                    convertedHeader.Add(oldEntryRetrieved);
                 }
+                else
+                {
+                    //this should not happen!!
+                    TypeDataViewModel.AddMessage($"Failed to find header with unit data for header: {currentHeader[i]}", MessageTypes.Error);
+                    // Key not found, use original header 
+                    convertedHeader.Add(currentHeader[i]);
+                }
+            }
 
             return convertedHeader;
         }

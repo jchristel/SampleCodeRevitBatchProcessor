@@ -33,7 +33,7 @@ from duHast.Revit.Common.transaction import in_transaction
 from Autodesk.Revit.DB import Transaction
 
 
-from Autodesk.Revit.DB import FilteredElementCollector, PrintRange, ViewSheet, ViewSheetSet, ViewSet
+from Autodesk.Revit.DB import Element, FilteredElementCollector, PrintRange, ViewSheet, ViewSheetSet, ViewSet
 
 
 def get_view_sheet_sets(doc):
@@ -291,7 +291,7 @@ def update_view_sheet_set(doc, view_sheet_set, view_sheet_setting, sheets, views
                     action_return_value.append_message("adding existing sheets back to the view set")
                     # add existing sheets back to the view set
                     for sheet in existing_sheets:
-                        action_return_value.append_message("Adding existing sheet: {}".format(sheet.Name))
+                        action_return_value.append_message("Adding existing sheet: {}".format(Element.Name.GetValue(sheet)))
                         empty_set.Insert(sheet)
                 else:
                     action_return_value.append_message("Not adding existing sheets back to the view set, as clear_existing is set to True")
@@ -300,7 +300,7 @@ def update_view_sheet_set(doc, view_sheet_set, view_sheet_setting, sheets, views
                 action_return_value.append_message("Adding sheets past in to the view set")
                 # if sheets are passed in, add them to the view set
                 for sheet in sheets:
-                    action_return_value.append_message("Adding sheet: {}".format(sheet.Name))
+                    action_return_value.append_message("Adding sheet: {}".format(Element.Name.GetValue(sheet)))
                     empty_set.Insert(sheet)
             
             # check if we have any views past in
@@ -311,27 +311,27 @@ def update_view_sheet_set(doc, view_sheet_set, view_sheet_setting, sheets, views
                     action_return_value.append_message("Adding existing views back to the view set")
                     # add existing views back to the view set
                     for view in existing_views:
-                        action_return_value.append_message("Adding existing view: {}".format(view.Name))
+                        action_return_value.append_message("Adding existing view: {}".format(Element.Name.GetValue(view)))
                         empty_set.Insert(view)
             else:
                 action_return_value.append_message("Adding views past in to the view set")
                 # if views are passed in, add them to the view set
                 for view in views:
-                    action_return_value.append_message("Adding view: {}".format(view.Name))
+                    action_return_value.append_message("Adding view: {}".format(Element.Name.GetValue(view)))
                     empty_set.Insert(view)
         
             # assign the view set to the view sheet set
             action_return_value.append_message("Assigning the view set to the view sheet set: {}".format(view_sheet_set_name))
-            for element in empty_set:
-                action_return_value.append_message("Element in view set: {}".format(element.Name))
+            #for element in empty_set:
+            #    action_return_value.append_message("Element in view set: {}".format(Element.Name.GetValue(element)))
             
             # need to update the CurrentViewSheetSet views directly via the settings
             # otherwise update does not stick!
             view_sheet_setting.CurrentViewSheetSet.Views = empty_set
 
             # print the current view sheet set
-            for sheet in view_sheet_setting.CurrentViewSheetSet.Views:
-                action_return_value.append_message("Sheet in current view sheet set: {}".format(sheet.Name))
+            #for sheet in view_sheet_setting.CurrentViewSheetSet.Views:
+            #    action_return_value.append_message("Sheet in current view sheet set: {}".format(Element.Name.GetValue(sheet)))
 
             # save the view sheet set
             save_flag = True
@@ -341,8 +341,8 @@ def update_view_sheet_set(doc, view_sheet_set, view_sheet_setting, sheets, views
                     
                     # print the current view sheet set
                     action_return_value.append_message("Current view sheet set: {}".format(view_sheet_setting.CurrentViewSheetSet.Name))
-                    for sheet in view_sheet_setting.CurrentViewSheetSet.OrderedViewList:
-                        action_return_value.append_message("Sheet in current view sheet set: {}".format(sheet.Name))
+                    #for sheet in view_sheet_setting.CurrentViewSheetSet.OrderedViewList:
+                    #    action_return_value.append_message("Sheet in current view sheet set: {}".format(Element.Name.GetValue(sheet)))
 
 
                     # this can throw an exception if the set is unchanged...

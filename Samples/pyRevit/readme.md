@@ -7,35 +7,35 @@ A comprehensive collection of Revit automation tools built with pyRevit, designe
 ### 🏗️ Family and Library Management
 Tools for managing Revit families, libraries, and catalogue files.
 
-- **[Compare Library Reports](compare_library_reports.md)** - Compare reports across different family libraries to identify differences and duplicates
-- **[Report Families in Library XML](report_families_library_xml.md)** - Generate comprehensive CSV reports from XML part atom exports
-- **[Create Part Atom Library](create_part_atom_library.md)** - Create XML part atom exports for family files in library locations
-- **[Bulk Load Families](bulk_load_families.md)** - Load multiple families into the current document with batch selection
-- **[Clean Up Catalogue File](clean_catalogue_file.md)** - Clean and organize family catalogue files by removing redundant parameters
+- **[Compare Library Reports](Extensions/duHast-2024.extension/doc/compare_library_reports.md)** - Compare reports across different family libraries to identify differences and duplicates
+- **[Report Families in Library XML](Extensions/duHast-2024.extension/doc/report_families_library_xml.md)** - Generate comprehensive CSV reports from XML part atom exports
+- **[Create Part Atom Library](Extensions/duHast-2024.extension/doc/create_part_atom_library.md)** - Create XML part atom exports for family files in library locations
+- **[Bulk Load Families](Extensions/duHast-2024.extension/doc/bulk_load_families.md)** - Load multiple families into the current document with batch selection
+- **[Clean Up Catalogue File](Extensions/duHast-2024.extension/doc/clean_catalogue_file.md)** - Clean and organize family catalogue files by removing redundant parameters
 
 ### 📄 Export and Documentation
 Advanced export tools for creating PDFs, DWGs, and documentation.
 
-- **[Export PDF/DWG v2](export_pdf_dwg.md)** - Advanced sheet export tool with comprehensive configuration options
-- **[Export PDF/DWG Settings](export_pdf_dwg_settings.md)** - Configure export parameters, naming schemes, and file organization
+- **[Export PDF/DWG v2](Extensions/duHast-2024.extension/doc/export_pdf_dwg.md)** - Advanced sheet export tool with comprehensive configuration options
+- **[Export PDF/DWG Settings](Extensions/duHast-2024.extension/doc/export_pdf_dwg_settings.md)** - Configure export parameters, naming schemes, and file organization
 
 ### 👁️ View Management
 Tools for managing views, templates, and display settings.
 
-- **[Purge Views](purge_views.md)** - Remove unused views to improve model performance and reduce file size
-- **[Propagate Grids](propagate_grids.md)** - Copy grid visibility settings from active view to multiple target views
-- **[View Template Overrides I/O](view_template_overrides_io.md)** - Import/export view template override settings via JSON files
+- **[Purge Views](Extensions/duHast-2024.extension/doc/purge_views.md)** - Remove unused views to improve model performance and reduce file size
+- **[Propagate Grids](Extensions/duHast-2024.extension/doc/propagate_grids.md)** - Copy grid visibility settings from active view to multiple target views
+- **[View Template Overrides I/O](Extensions/duHast-2024.extension/doc/view_template_overrides_io.md)** - Import/export view template override settings via JSON files
 
 ### 📏 Level Management
 Control level annotation display and visibility.
 
-- **[Switch Level Headers On (Start)](switch_level_headers_start.md)** - Show level bubble headers at the start (0 end) of levels
-- **[Switch Level Headers On (End)](switch_level_headers_end.md)** - Show level bubble headers at the end (1 end) of levels
+- **[Switch Level Headers On (Start)](Extensions/duHast-2024.extension/doc/switch_level_headers_start.md)** - Show level bubble headers at the start (0 end) of levels
+- **[Switch Level Headers On (End)](Extensions/duHast-2024.extension/doc/switch_level_headers_end.md)** - Show level bubble headers at the end (1 end) of levels
 
 ### ⚠️ Warning Resolution
 Automated tools for resolving common Revit warnings and model issues.
 
-- **[Solve Room Tag Warnings](solve_room_tag_warnings.md)** - Automatically fix room tags that are outside their associated rooms
+- **[Solve Room Tag Warnings](Extensions/duHast-2024.extension/doc/solve_room_tag_warnings.md)** - Automatically fix room tags that are outside their associated rooms
 - **Solve Room Separation Line Warnings** - Resolve overlapping room separation line warnings (long/short options)
 - **Solve Area Separation Line Warnings** - Fix overlapping area separation line warnings (long/short options)
 
@@ -93,3 +93,9 @@ Each tool includes comprehensive documentation covering:
 - Input/output specifications
 - Error handling and troubleshooting
 - Best practices and workflows
+
+## 🤝 Contributing
+This library is designed for professional BIM workflows and includes extensive error handling, progress tracking, and user feedback mechanisms.
+
+## 📞 Support
+Refer to individual tool documentation for specific usage guidance and troubleshooting information.

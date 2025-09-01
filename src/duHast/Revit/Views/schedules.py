@@ -78,6 +78,7 @@ def get_schedules_not_on_sheets(doc):
             schedules_not_on_sheets.append(schedule)
     return schedules_not_on_sheets
 
+
 def get_schedule_instance_on_sheet(doc, sheet):
     """
     Returns a list containing all schedule sheet instances on a sheet.
@@ -92,9 +93,15 @@ def get_schedule_instance_on_sheet(doc, sheet):
 
     schedule_instances_on_sheet = []
     col = FilteredElementCollector(doc).OfClass(ScheduleSheetInstance)
-    # Filter the instances where the OwnerViewId matches the specified sheet_id
-    schedule_instances_on_sheet = [instance for instance in col if instance.OwnerViewId == sheet.Id]
 
+    # Filter the instances where the OwnerViewId matches the specified sheet_id
+    for schedule_sheet_instance in col:
+        if schedule_sheet_instance.OwnerViewId == sheet.Id:
+            # rule oout revision schedules...
+            schedule = doc.GetElement(schedule_sheet_instance.ScheduleId)
+            if not schedule.IsTitleblockRevisionSchedule:
+                schedule_instances_on_sheet.append(schedule_sheet_instance)
+    
     return schedule_instances_on_sheet
 
 

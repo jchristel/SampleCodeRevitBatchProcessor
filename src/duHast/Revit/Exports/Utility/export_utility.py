@@ -72,10 +72,14 @@ def replace_illegal_characters_from_dwg_file_name(current_file_name):
     """
     
     # Define the illegal characters
-    illegal_characters = ['<', '>', ':', '"', '/', '\\', '|', '?', '*', '.']
+   
+    illegal_characters = {
+        ".":"-",
+        "/":"-",
+    }
     
-    # Replace each illegal character with an empty string
-    for char in illegal_characters:
-        current_file_name = current_file_name.replace(char, '_')
+    # Replace each illegal character with the designated replacement string
+    for char, replacement in illegal_characters.items():
+        current_file_name = current_file_name.replace(char,  replacement)
     
     return current_file_name

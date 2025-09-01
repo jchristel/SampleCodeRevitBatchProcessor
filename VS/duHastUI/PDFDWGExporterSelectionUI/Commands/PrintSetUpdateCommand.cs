@@ -71,7 +71,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Commands
 
                 // inform user
                 _documentSelectionViewModel.AddMessage(
-                    $"Print set '{printSetToUpdate}' marked for update. Save settings to apply.",
+                    $"Print set '{printSetToUpdate}' marked for update.",
                     duHastNet.Utils.WPF.Stores.MessageTypes.Information
                 );
             }

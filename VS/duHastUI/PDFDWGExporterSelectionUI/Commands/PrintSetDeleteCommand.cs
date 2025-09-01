@@ -60,7 +60,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Commands
 
                 // inform user
                 _documentSelectionViewModel.AddMessage(
-                    $"Print set '{printSetToDelete}' marked for deletion. Save settings to apply.",
+                    $"Print set '{printSetToDelete}' marked for deletion.",
                     duHastNet.Utils.WPF.Stores.MessageTypes.Information
                 );
             }

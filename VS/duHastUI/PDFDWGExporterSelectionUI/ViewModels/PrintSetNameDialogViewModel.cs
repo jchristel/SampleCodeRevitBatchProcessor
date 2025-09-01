@@ -128,38 +128,46 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
                 return;
             }
-            else
+            
+            // Check if name already exists
+            if (_existingNames.Contains(name))
             {
-                // Check if name already exists
-                if (_existingNames.Contains(name))
-                {
-                    // Add error
-                    _errorsViewModel.AddError(nameof(PrintSetName), "A print set with this name already exists.");
+                // Add error
+                _errorsViewModel.AddError(nameof(PrintSetName), "A print set with this name already exists.");
 
-                    // set the print set name to invalid
-                    PrintSetNameValid = false;
+                // set the print set name to invalid
+                PrintSetNameValid = false;
 
-                    return;
-                }
-
-                // Check length (optional)
-                if (name.Length > 100)
-                {
-                    // Add error
-                    _errorsViewModel.AddError(nameof(PrintSetName), "Print set name is too long (maximum 100 characters).");
-
-                    // set the print set name to invalid
-                    PrintSetNameValid = false;
-
-                    return;
-                }
-
-                //ok all good
-                PrintSetNameValid = true;
-                // this will trigger data validation
-                // from the eventhandler ErrorsViewModel_ErrorsChanged
-                _errorsViewModel.ClearErrors(nameof(PrintSetName));
+                return;
             }
+
+            // Check length (optional)
+            if (name.Length > 100)
+            {
+                // Add error
+                _errorsViewModel.AddError(nameof(PrintSetName), "Print set name is too long (maximum 100 characters).");
+
+                // set the print set name to invalid
+                PrintSetNameValid = false;
+
+                return;
+            }
+
+            if(name.IndexOfAny(System.IO.Path.GetInvalidFileNameChars()) >= 0)
+            {
+                // Add error
+                _errorsViewModel.AddError(nameof(PrintSetName), "Print set name contains invalid characters.");
+                // set the print set name to invalid
+                PrintSetNameValid = false;
+                return;
+            }
+
+            //ok all good
+            PrintSetNameValid = true;
+            // this will trigger data validation
+            // from the eventhandler ErrorsViewModel_ErrorsChanged
+            _errorsViewModel.ClearErrors(nameof(PrintSetName));
+            
         }
 
         #endregion

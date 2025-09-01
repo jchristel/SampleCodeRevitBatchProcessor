@@ -123,8 +123,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
         private static ResourceDictionary LoadResourceDictionary()
         {
             var resourceDict = new ResourceDictionary();
-            var assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-            resourceDict.Source = new Uri($"pack://application:,,,/{assemblyName};component/CustomDataGrid/DynamicDataGridStyle.xaml", UriKind.Absolute);
+            resourceDict.Source = ResourceUriHelper.DynamicDataGridStyle;
             return resourceDict;
         }
 

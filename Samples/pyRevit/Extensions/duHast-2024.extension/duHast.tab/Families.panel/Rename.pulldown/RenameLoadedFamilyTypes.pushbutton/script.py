@@ -6,9 +6,9 @@ Usage:
 - create a csv file with the following columns:
    
     - Current family name: with out the file extension
+    - old family type name
     - File path	: fully qualified file path to the family file. ( can be left blank when renaming families within a project )
     - Family category: the Revit category of the family.
-    - old family type name
     - new family type name
 
     Note:
@@ -32,9 +32,7 @@ doc = revit.doc
 # rename loaded family types
 
 # import from library
-#from families.rename.rename_loaded_familes import rename_loaded_families
+from families.rename.rename_loaded_types import rename_loaded_family_types_entry
 
 # rename loaded families!
-#rename_loaded_families(doc=doc, output=output, forms=forms)
-
-print("Oh, hi there!")
+rename_loaded_family_types_entry(doc=doc, output=output, forms=forms)

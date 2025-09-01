@@ -24,8 +24,13 @@
 
 from duHast.Utilities.Objects.result import Result
 from duHast.pyRevit.console_output import print_header, print_error
-from duHast.Revit.Views.view_sheet_sets import delete_view_sheet_set_by_name, create_new_view_sheet_set,update_view_sheet_set
+from duHast.Revit.Views.view_sheet_sets import (
+    delete_view_sheet_set_by_name, 
+    create_new_view_sheet_set,update_view_sheet_set,
+    update_view_sheet_set_by_name
+)
 from duHast.pyRevit.net_dll_loader import load_net_dll_path
+from duHast.Revit.NetSupport.dll_names import PDF_AND_DWG_EXPORTER_SELECTION_UI
 
 from Autodesk.Revit.DB import ElementId
 
@@ -43,7 +48,6 @@ def get_sheets_from_print_set(doc, print_set):
     return_value = Result()
     try:
         for sheet_data in print_set.RevitSheets:
-            return_value.append_data(sheet_data)
             revit_sheet = doc.GetElement(ElementId(int(sheet_data.RevitElementId.Value)))
             return_value.result.append(revit_sheet)
 
@@ -56,7 +60,6 @@ def get_sheets_from_print_set(doc, print_set):
         print_error(message)
 
     return return_value
-
 
 
 def delete_print_sets(doc, print_sets):
@@ -154,10 +157,61 @@ def create_print_sets(doc, print_sets):
 
 
 def update_print_sets(doc, print_sets):
+    """
+    Update print sets in the document.
+    Note: There is a chance of edge case where a user created a new print set and then tries to update it in the same run.
+
+    :param doc: The document containing print sets to update.
+    :param printSets: A list of print sets to update.
+
+    :return: Result object indicating success or failure.
+    :rtype: Result
+    """
+
     # set up a status tracker
     return_value = Result()
     try:
-        pass
+        for print_set in print_sets:
+            # get the set name
+            print_set_name = print_set.Name
+
+            # get sheet elements
+            revit_sheets_result =  get_sheets_from_print_set(doc, print_set)
+            
+            # check if successful
+            if not revit_sheets_result.status:
+                return_value.update(revit_sheets_result)
+                print_error(revit_sheets_result.message)
+
+                # edge case??
+                # add to return value so it can be created
+                return_value.result.append(print_set)
+                continue
+
+            # get the sheets
+            revit_sheets = revit_sheets_result.result
+
+            # check if any sheets
+            if len(revit_sheets) == 0:
+                message = "No sheets found for print set '{}'.".format(print_set_name)
+                return_value.update_sep(False, message)
+                print_error(message)
+                continue
+
+            # update the set
+            update_result = update_view_sheet_set_by_name(
+                doc=doc, 
+                view_sheet_set_name=print_set_name, 
+                sheets = revit_sheets, 
+                views= None,
+                clear_existing=True
+            )
+
+            # give user feedback
+            print(update_result.message)
+            # log result
+            return_value.update(update_result)
+
     except Exception as e:
         # handle any exceptions that occur during the update process
         message = "An error occurred while updating print sets: {}".format(e)
@@ -182,7 +236,7 @@ def update_print_sets_from_ui(doc, printSets=None):
     try:
 
         # load .net interface dlls
-        set_dll_path_result = load_net_dll_path([ "PDFDWGExporterSelectionUI.dll"]) #"Utils.23.0.0.3.dll",
+        set_dll_path_result = load_net_dll_path([PDF_AND_DWG_EXPORTER_SELECTION_UI]) #"Utils.23.0.0.3.dll",
 
         # check if the dlls were loaded successfully
         if not set_dll_path_result.status:
@@ -231,7 +285,17 @@ def update_print_sets_from_ui(doc, printSets=None):
         if len(print_set_update) > 0:
             print_header("Updating print sets")
             update_result = update_print_sets(doc, print_set_update)
-            return_value.update(update_result)
+
+            # check if there are edge cases where a set could not be updated because it did not exist
+            if len(return_value.result) > 0:
+                print_header("identified edge cases")
+                print("Will create {} print sets that could not be updated.".format(len(return_value.result)))
+                for print_set in return_value.result:
+                    print("...{}".format(print_set.Name))
+                    print_set_create.append(print_set)
+
+            # update separately to loose any edge cases
+            return_value.update_sep(update_result.status, update_result.message)
         else:
             print("No print sets to update.")
             return_value.append_message(

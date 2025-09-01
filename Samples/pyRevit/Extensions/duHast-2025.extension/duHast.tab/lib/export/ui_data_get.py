@@ -167,7 +167,12 @@ def get_ui_schedule_data (doc, sheets):
 
         # iterate over the sheets in the set and add them to the RevitPrintSet object
         for sheet in sheets_in_schedule:
-            revit_sheet_schedule.AddRevitSheet(sheet)
+            # so it looks like the same sheet can be in schedule more than once, which will throw an exception
+            # this may happen if a sheet with the same number exists in multiple project files and the schedule is a linked file schedule
+            try:
+                revit_sheet_schedule.AddRevitSheet(sheet)
+            except Exception as e:
+                print_error("Error adding sheet '{}' to schedule '{}': {}".format(sheet.SheetName.Value, schedule_name, e))
 
         # add the RevitPrintSet object to the list of print sets
         schedule_data.Add(revit_sheet_schedule)

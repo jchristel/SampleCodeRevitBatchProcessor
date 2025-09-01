@@ -27,7 +27,6 @@ from duHast.Revit.ExtensibleSchemas.extensible_schemas import does_schema_exist
 from duHast.pyRevit.net_dll_loader import load_net_dll_path
 from duHast.Revit.NetSupport.dll_names import PDF_AND_DWG_EXPORTER_SELECTION_UI
 
-
 from export.utility import get_sheet_parameter_names
 from export import settings
 from export.settings_utils import get_name_settings_from_schema
@@ -58,7 +57,7 @@ def export_pdf_dwg_entry(doc, output, forms):
 
     try:
         # load .net interface dlls
-        set_dll_path_result = load_net_dll_path([ PDF_AND_DWG_EXPORTER_SELECTION_UI]) #"Utils.23.0.0.3.dll",
+        set_dll_path_result = load_net_dll_path([PDF_AND_DWG_EXPORTER_SELECTION_UI]) #"Utils.23.0.0.3.dll",
 
         # check if the dlls were loaded successfully
         if not set_dll_path_result.status:
@@ -119,6 +118,16 @@ def export_pdf_dwg_entry(doc, output, forms):
         selection_settings = main.Execute()
         if DEBUG:
             print("...export settings: \n...{}".format(selection_settings))
+        
+
+        # check for updated print sets first
+        # update print sets in model
+        update_print_set_result = update_print_sets_from_ui(doc, main.PrintSetsUpdated)
+        return_value.update(update_print_set_result)
+
+        if DEBUG:
+            print("...update print sets result: {}".format(update_print_set_result.status))
+
 
         print_header("Exporting sheets to PDF and DWG files")
         
@@ -159,13 +168,6 @@ def export_pdf_dwg_entry(doc, output, forms):
 
         if DEBUG:
             print("...export result: {}".format(export_result.status))
-
-        # update print sets in model
-        update_print_set_result = update_print_sets_from_ui(doc, main.PrintSetsUpdated)
-        return_value.update(update_print_set_result)
-
-        if DEBUG:
-            print("...update print sets result: {}".format(update_print_set_result.status))
 
     except Exception as e:
         # handle any exceptions that occur during the export process

@@ -62,6 +62,7 @@ class DataViewElevation(DataViewBase):
         # set default values
         self.bounding_box = DataGeometryBoundingBox2()
         self.tags = []
+        self.marker_index = None  # index of the view on the elevation marker
 
         json_var = None
         # check if any data was past in with constructor!
@@ -86,6 +87,8 @@ class DataViewElevation(DataViewBase):
                     json_var.get(DataPropertyNames.BOUNDING_BOX, None)
                 )
 
+                self.marker_index = json_var.get(DataPropertyNames.MARKER_INDEX, None)
+
                 # get any tags
                 tags = json_var.get(DataPropertyNames.TAGS, [])
                 for tag in tags:
@@ -109,7 +112,7 @@ class DataViewElevation(DataViewBase):
         """
         if not isinstance(other, DataViewElevation):
             return NotImplemented
-        return self.bounding_box == other.bounding_box and sorted(
+        return self.bounding_box == other.bounding_box and self.marker_index == other.marker_index and  sorted(
             self.tags, key=lambda data_tag: data_tag.leader_element_reference_id
         ) == sorted(
             other.tags, key=lambda data_tag: data_tag.leader_element_reference_id
@@ -119,5 +122,5 @@ class DataViewElevation(DataViewBase):
         return not self.__eq__(other)
     
     def __hash__(self):
-        return hash((self.bounding_box, self.tags))
+        return hash((self.bounding_box, self.marker_index, self.tags))
 

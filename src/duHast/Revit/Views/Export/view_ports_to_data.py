@@ -42,6 +42,7 @@ from duHast.Data.Objects.Collectors.Properties.data_schedule_segement import Dat
 from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
 from duHast.Revit.Common.Geometry.points import convert_XYZ_to_point2
+from duHast.Revit.Views.elevation import get_view_index_on_marker
 
 from Autodesk.Revit.DB import SectionType, ViewType
 
@@ -110,8 +111,7 @@ def _get_plan_view(view):
     # get any tags in the view
     return data_instance
 
-
-def _get_elevation_view(view):
+def _get_elevation_view(doc, view):
     """
     Converts data from a Revit elevation view to a data elevation view instance
 
@@ -129,8 +129,9 @@ def _get_elevation_view(view):
     if bb_min_2d and bb_max_2d:
         data_instance.bounding_box.update(bb_min_2d, bb_max_2d)
 
-    # orientation (which edge of the bounding box is this elevation facing?)
-    # get any tags in the view
+    marker = get_view_index_on_marker(doc, view)
+    # store the index
+    data_instance .marker_index = marker
 
     return data_instance
 
@@ -195,7 +196,7 @@ def _get_schedule_view(view):
     return data_instance
 
 
-def _get_view_data(view):
+def _get_view_data(doc, view):
     """
     Set up view data instance depending ov view type
 
@@ -214,7 +215,7 @@ def _get_view_data(view):
         view_data_instance = _get_plan_view(view=view)
     elif view.ViewType == ViewType.Elevation:
         # elevation
-        view_data_instance = _get_elevation_view(view=view)
+        view_data_instance = _get_elevation_view(doc=doc, view=view)
     elif view.ViewType == ViewType.ThreeD:
         # 3D
         view_data_instance = _get_three_d_view(view=view)
@@ -264,7 +265,7 @@ def convert_revit_viewport_to_data_instance(doc, revit_view_port):
 
     # set the view
     revit_view = doc.GetElement(revit_view_port.ViewId)
-    view_data = _get_view_data(view=revit_view)
+    view_data = _get_view_data(doc=doc, view=revit_view)
     view_port_data.view = view_data
 
     return view_port_data

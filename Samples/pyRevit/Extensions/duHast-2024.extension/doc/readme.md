@@ -16,7 +16,7 @@ Tools for managing Revit families, libraries, and catalogue files.
 ### 📄 Export and Documentation
 Advanced export tools for creating PDFs, DWGs, and documentation.
 
-- **[Export PDF/DWG v2](export_pdf_dwg_v2.md)** - Advanced sheet export tool with comprehensive configuration options
+- **[Export PDF/DWG v2](export_pdf_dwg.md)** - Advanced sheet export tool with comprehensive configuration options
 - **[Export PDF/DWG Settings](export_pdf_dwg_settings.md)** - Configure export parameters, naming schemes, and file organization
 
 ### 👁️ View Management

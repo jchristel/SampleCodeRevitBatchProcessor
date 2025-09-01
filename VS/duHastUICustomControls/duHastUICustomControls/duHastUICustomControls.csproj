@@ -121,6 +121,7 @@
     <Compile Include="CustomDataGrid\GridState\GridStateSerializer.Validation.cs" />
     <Compile Include="CustomDataGrid\GridState\GridStateValidationResult.cs" />
     <Compile Include="CustomDataGrid\GridState\SortState.cs" />
+    <Compile Include="ResourceUriHelper.cs" />
     <Compile Include="ViewModels\BaseDynamicGridViewModel.ColumnManagement.cs" />
     <Compile Include="ViewModels\BaseDynamicGridViewModel.Commands.cs" />
     <Compile Include="ViewModels\BaseDynamicGridViewModel.cs" />

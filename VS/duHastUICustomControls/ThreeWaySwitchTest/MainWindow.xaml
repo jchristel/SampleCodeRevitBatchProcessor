@@ -4,8 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ThreeWaySwitchTest"
-        xmlns:custom="clr-namespace:duHastNet.UI.CustomControls.CustomDataGrid;assembly=duHastUICustomControls"
-        xmlns:tws ="clr-namespace:duHastNet.UI.CustomControls;assembly=duHastUICustomControls"
+        xmlns:custom="clr-namespace:duHastNet.UI.CustomControls.CustomDataGrid;assembly=duHastUICustomControls.23.0.0.4"
+        xmlns:tws ="clr-namespace:duHastNet.UI.CustomControls;assembly=duHastUICustomControls.23.0.0.4"
         xmlns:vms ="clr-namespace:duHastNet.UI.ThreeWaySwitchTest.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">

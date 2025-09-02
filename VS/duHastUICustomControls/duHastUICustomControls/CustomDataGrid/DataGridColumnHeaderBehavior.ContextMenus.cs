@@ -137,9 +137,30 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
 
             contextMenu.Items.Add(removeItem);
 
+
             // Separator
             var separator2 = new Separator();
             contextMenu.Items.Add(separator2);
+
+            // Resize Column submenu
+            var resizeSubmenu = new MenuItem { Header = "Resize Column" };
+
+            // Auto-fit to content
+            var autoFitItem = new MenuItem { Header = "Auto-fit to Content" };
+            autoFitItem.Click += (s, e) => AutoFitColumnToContent(dataGrid, column);
+            resizeSubmenu.Items.Add(autoFitItem);
+
+            // Auto-fit to header
+            var autoFitHeaderItem = new MenuItem { Header = "Auto-fit to Header" };
+            autoFitHeaderItem.Click += (s, e) => AutoFitColumnToHeader(dataGrid, column);
+            resizeSubmenu.Items.Add(autoFitHeaderItem);
+
+            contextMenu.Items.Add(resizeSubmenu);
+
+
+            // Separator
+            var separator3 = new Separator();
+            contextMenu.Items.Add(separator3);
 
             // Add available columns submenu
             var addSubmenu = new MenuItem { Header = "Add Column" };
@@ -171,12 +192,14 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                         if (menuItemStyle != null)
                         {
                             filterSubmenu.Style = menuItemStyle;
-                            clearAllFiltersItem.Style = menuItemStyle; // NEW: Apply style to new item
+                            clearAllFiltersItem.Style = menuItemStyle;
+                            resizeSubmenu.Style = menuItemStyle;
                             removeItem.Style = menuItemStyle;
                             addSubmenu.Style = menuItemStyle;
 
                             // Apply to submenu items as well
                             ApplyStyleToSubItems(filterSubmenu, menuItemStyle);
+                            ApplyStyleToSubItems(resizeSubmenu, menuItemStyle);
                             ApplyStyleToSubItems(addSubmenu, menuItemStyle);
                         }
 
@@ -184,6 +207,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                         {
                             separator1.Style = separatorStyle;
                             separator2.Style = separatorStyle;
+                            separator3.Style = separatorStyle;
                         }
                     }
                     catch (Exception ex)
@@ -196,6 +220,64 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
             return contextMenu;
         }
 
+
+        // <summary>
+        /// Auto-fits a column width to its content.
+        /// </summary>
+        private static void AutoFitColumnToContent(DataGrid dataGrid, DataGridColumn column)
+        {
+            if (column == null) return;
+
+            try
+            {
+                // Force the column to auto-size to content
+                column.Width = DataGridLength.Auto;
+
+                // Force layout update to calculate the auto width
+                dataGrid.UpdateLayout();
+
+                // Capture the auto-calculated width and set it as fixed
+                var autoWidth = column.ActualWidth;
+                if (autoWidth > 0)
+                {
+                    column.Width = new DataGridLength(autoWidth);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error auto-fitting column to content: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Auto-fits a column width to its header text.
+        /// </summary>
+        private static void AutoFitColumnToHeader(DataGrid dataGrid, DataGridColumn column)
+        {
+            if (column == null) return;
+
+            try
+            {
+                // Force the column to auto-size to header
+                column.Width = DataGridLength.SizeToHeader;
+
+                // Force layout update to calculate the auto width
+                dataGrid.UpdateLayout();
+
+                // Capture the auto-calculated width and set it as fixed
+                var autoWidth = column.ActualWidth;
+                if (autoWidth > 0)
+                {
+                    column.Width = new DataGridLength(autoWidth);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error auto-fitting column to header: {ex.Message}");
+            }
+        }
+
+        
         /// <summary>
         /// Recursively applies a style to all menu items within a parent menu item, including nested submenus.
         /// </summary>

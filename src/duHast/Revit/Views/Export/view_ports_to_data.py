@@ -134,7 +134,7 @@ def _get_elevation_view(doc, view):
     data_instance.marker_index = marker
 
     # orientation (eye point and view direction)
-    data_instance.view_orientation = convert_XYZ_to_point3(view.ViewDirection)
+    data_instance.view_direction = convert_XYZ_to_point3(view.ViewDirection)
 
     return data_instance
 

@@ -41,6 +41,7 @@ from duHast.Data.Objects.Collectors.Properties.Geometry.geometry_bounding_box_2 
     DataGeometryBoundingBox2,
 )
 
+from duHast.Geometry.point_3 import Point3
 
 class DataViewThreeD(DataViewBase):
 
@@ -59,6 +60,11 @@ class DataViewThreeD(DataViewBase):
 
         # set default values
         self.bounding_box = DataGeometryBoundingBox2()
+
+        # additional properties for 3d views
+        self.eye_position = None
+        self.forward_direction = None
+        self.up_direction = None
 
         json_var = None
         # check if any data was past in with constructor!
@@ -83,6 +89,19 @@ class DataViewThreeD(DataViewBase):
                     json_var.get(DataPropertyNames.BOUNDING_BOX, None)
                 )
 
+                self.eye_position = Point3(
+                    j=json_var.get(DataPropertyNames.EYE_POSITION, None)
+                )
+
+                self.forward_direction = Point3(
+                    j=json_var.get(DataPropertyNames.FORWARD_DIRECTION, None)
+                )
+
+                self.up_direction = Point3(
+                    j=json_var.get(DataPropertyNames.UP_DIRECTION, None)
+                )
+
+
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
@@ -100,10 +119,13 @@ class DataViewThreeD(DataViewBase):
         """
         if not isinstance(other, DataViewThreeD):
             return NotImplemented
-        return self.bounding_box == other.bounding_box
+        return self.bounding_box == other.bounding_box and \
+                self.eye_position == other.eye_position and \
+                self.forward_direction == other.forward_direction and \
+                self.up_direction == other.up_direction
 
     def __ne__(self, other):
         return not self.__eq__(other)
     
     def __hash__(self):
-        return hash(self.bounding_box)
+        return hash(self.bounding_box, self.eye_position, self.forward_direction, self.up_direction)

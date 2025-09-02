@@ -41,6 +41,8 @@ from duHast.Data.Objects.Collectors.Properties.Geometry.geometry_bounding_box_2 
     DataGeometryBoundingBox2,
 )
 
+from duHast.Geometry.point_3 import Point3
+
 
 class DataViewElevation(DataViewBase):
 
@@ -63,6 +65,7 @@ class DataViewElevation(DataViewBase):
         self.bounding_box = DataGeometryBoundingBox2()
         self.tags = []
         self.marker_index = None  # index of the view on the elevation marker
+        self.view_direction = None  # direction the view is looking at
 
         json_var = None
         # check if any data was past in with constructor!
@@ -89,6 +92,10 @@ class DataViewElevation(DataViewBase):
 
                 self.marker_index = json_var.get(DataPropertyNames.MARKER_INDEX, None)
 
+                self.view_direction = Point3(
+                    j=json_var.get(DataPropertyNames.VIEW_DIRECTION, None)
+                )
+
                 # get any tags
                 tags = json_var.get(DataPropertyNames.TAGS, [])
                 for tag in tags:
@@ -112,7 +119,7 @@ class DataViewElevation(DataViewBase):
         """
         if not isinstance(other, DataViewElevation):
             return NotImplemented
-        return self.bounding_box == other.bounding_box and self.marker_index == other.marker_index and  sorted(
+        return self.bounding_box == other.bounding_box and self.marker_index == other.marker_index and self.view_direction == other.view_direction and  sorted(
             self.tags, key=lambda data_tag: data_tag.leader_element_reference_id
         ) == sorted(
             other.tags, key=lambda data_tag: data_tag.leader_element_reference_id
@@ -122,5 +129,5 @@ class DataViewElevation(DataViewBase):
         return not self.__eq__(other)
     
     def __hash__(self):
-        return hash((self.bounding_box, self.marker_index, self.tags))
+        return hash((self.bounding_box, self.marker_index, self.view_direction, self.tags))
 

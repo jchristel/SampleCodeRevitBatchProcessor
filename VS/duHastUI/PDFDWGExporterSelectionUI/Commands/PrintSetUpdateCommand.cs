@@ -69,6 +69,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Commands
                 // raise event to notify the view model that the model has been updated
                 _revitSheetsDataModel.RaisePropertyChanged(Utils.PropertyChangedEventNames.DATA_MODEL_PRINTSETS_UPDATED);
 
+                // reset selected print set in view model to force UI update
+                _documentSelectionViewModel.SelectedPrintSet = printSetToUpdate;
+                
                 // inform user
                 _documentSelectionViewModel.AddMessage(
                     $"Print set '{printSetToUpdate}' marked for update.",

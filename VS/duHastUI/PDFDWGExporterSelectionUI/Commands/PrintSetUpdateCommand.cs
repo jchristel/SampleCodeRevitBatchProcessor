@@ -121,8 +121,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Commands
         {
             _documentSelectionViewModel = documentSelectionViewModel;
             _revitSheetsDataModel = revitSheetsDataModel;
-
-
             _documentSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
     }

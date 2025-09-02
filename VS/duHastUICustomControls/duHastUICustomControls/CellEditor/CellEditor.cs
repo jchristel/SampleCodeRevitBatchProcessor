@@ -19,6 +19,7 @@
 // or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 //
 
+using duHastNet.UI.CustomControls.CustomDataGrid;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,7 +28,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using duHastNet.UI.CustomControls.CustomDataGrid;
+using System.Windows.Media;
 
 namespace duHastNet.UI.CustomControls
 {
@@ -358,8 +359,54 @@ namespace duHastNet.UI.CustomControls
 
         private void OnDataGridSorting(object sender, DataGridSortingEventArgs e)
         {
-            // Let the default sorting happen, then raise data changed event
-            Dispatcher.BeginInvoke(new Action(() => RaiseDataChangedEvent()));
+            // Capture current column widths to prevent unexpected growth
+            var columnWidths = _dataGrid.Columns.ToDictionary(
+                col => col,
+                col => col.ActualWidth
+            );
+
+            // Capture current horizontal scroll position
+            var scrollViewer = GetScrollViewer(_dataGrid);
+            var horizontalOffset = scrollViewer?.HorizontalOffset ?? 0;
+
+            // Let the default sorting happen, then restore positions and raise data changed event
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                // Restore column widths to prevent unexpected growth
+                foreach (var kvp in columnWidths)
+                {
+                    if (kvp.Value > 0)
+                    {
+                        kvp.Key.Width = new DataGridLength(kvp.Value);
+                    }
+                }
+
+                // Restore horizontal scroll position
+                if (scrollViewer != null)
+                {
+                    scrollViewer.ScrollToHorizontalOffset(horizontalOffset);
+                }
+
+                RaiseDataChangedEvent();
+            }));
+        }
+
+        private ScrollViewer GetScrollViewer(DataGrid dataGrid)
+        {
+            if (dataGrid == null) return null;
+
+            try
+            {
+                // Navigate the visual tree to find the ScrollViewer
+                var border = VisualTreeHelper.GetChild(dataGrid, 0) as Decorator;
+                var scrollViewer = border?.Child as ScrollViewer;
+                return scrollViewer;
+            }
+            catch
+            {
+                // If visual tree navigation fails, use the existing helper method
+                return DataGridColumnHeaderBehavior.FindVisualChild<ScrollViewer>(dataGrid);
+            }
         }
 
         private void OnColumnDisplayIndexChanged(object sender, DataGridColumnEventArgs e)

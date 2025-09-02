@@ -68,7 +68,7 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
         /// <typeparam name="T">The type of child to find.</typeparam>
         /// <param name="parent">The parent element to search in.</param>
         /// <returns>The first child of the specified type, or null if not found.</returns>
-        private static T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
+        public static T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
         {
             if (parent == null) return null;
 

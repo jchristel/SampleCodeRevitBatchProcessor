@@ -41,7 +41,7 @@ from duHast.Data.Objects.Collectors.Properties.data_schedule_segement import Dat
 
 from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
-from duHast.Revit.Common.Geometry.points import convert_XYZ_to_point2
+from duHast.Revit.Common.Geometry.points import convert_XYZ_to_point2,convert_XYZ_to_point3
 from duHast.Revit.Views.elevation import get_view_index_on_marker
 
 from Autodesk.Revit.DB import SectionType, ViewType
@@ -155,6 +155,11 @@ def _get_three_d_view(view):
         data_instance.bounding_box.update(bb_min_2d, bb_max_2d)
 
     # orientation (eye point and view direction)
+    view_orientation = view.GetOrientation()
+    data_instance.eye_position = convert_XYZ_to_point3(view_orientation.EyePosition)
+    data_instance.forward_direction = convert_XYZ_to_point3(view_orientation.ForwardDirection)
+    data_instance.up_direction = convert_XYZ_to_point3(view_orientation.UpDirection)
+
     return data_instance
 
 

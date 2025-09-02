@@ -168,6 +168,7 @@ def export_sheet_to_dwg (doc, view_sheet, sheet_name_string, output_directory, d
             exported_file_name = view_sheet.SheetNumber + " - " + view_sheet.Name
 
             # remove the invalid characters from the file name
+            # this is the name Revit uses to export the file (Revit replaces characters that are 'not allowed' in file names with dashes)
             exported_file_name = replace_illegal_characters_from_dwg_file_name(exported_file_name)
             
             # find the file
@@ -229,7 +230,8 @@ def export_sheet_to_dwg (doc, view_sheet, sheet_name_string, output_directory, d
             sheet_name_new_joined = "".join(sheet_name_new)
 
             # remove the invalid characters from the file name
-            sheet_name_new_joined = replace_illegal_characters_from_dwg_file_name(sheet_name_new_joined)
+            # but keep the full stop if any to match the doc number / name in Revit
+            sheet_name_new_joined = replace_illegal_characters_from_dwg_file_name(sheet_name_new_joined, replace_full_stop=False)
 
             # built the new file name
             new_file_name = os.path.join(output_directory , sheet_name_new_joined + ".dwg")

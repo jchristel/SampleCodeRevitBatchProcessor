@@ -60,9 +60,9 @@ def get_naming_chunks(sheet_name_string):
     return [chunk.strip() for chunk in sheet_name_string.split("*") if chunk.strip()]
 
 
-def replace_illegal_characters_from_dwg_file_name(current_file_name):
+def replace_illegal_characters_from_dwg_file_name(current_file_name, replace_full_stop=True):
     """
-    replaces illegal characters with underscores in the given string.
+    replaces illegal characters with dashes in the given string.
     
     :param string: The string to replace characters in.
     :type string: str
@@ -80,6 +80,9 @@ def replace_illegal_characters_from_dwg_file_name(current_file_name):
     
     # Replace each illegal character with the designated replacement string
     for char, replacement in illegal_characters.items():
+        # only replace full stop if indicated
+        if char == "." and not replace_full_stop:
+            continue
         current_file_name = current_file_name.replace(char,  replacement)
     
     return current_file_name

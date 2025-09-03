@@ -393,6 +393,7 @@ def update_view_sheet_set_by_name(doc, view_sheet_set_name, sheets, views, clear
     :type transaction_manager: function
 
     :return: A Result object indicating the success or failure of the operation. Messages are quite detailed to allow for debugging and understanding what is happening in the function.
+                if the view set does not exist, the result will contain the name of the view set that was not found. ( that is the only time the result will contain as single string)
     :rtype: duHast.Utilities.Objects.result.Result
     """
 
@@ -411,13 +412,13 @@ def update_view_sheet_set_by_name(doc, view_sheet_set_name, sheets, views, clear
             return return_value
 
         # check view set with given name already exists?
-        # if it does, return an error
-        # otherwise duplicate the current set, rename it , clear it and update it with the given sheets and views
+        # if it does not, return an error
         existing_view_sheet_set = get_view_sheet_set_by_name(doc, view_sheet_set_name)
 
         # check if the view sheet set exists
-        if existing_view_sheet_set:
-            return_value.update_sep(False, "View set with name '{}' already exists.".format(view_sheet_set_name))
+        if not existing_view_sheet_set:
+            return_value.update_sep(False, "View set with name '{}' does not exist.".format(view_sheet_set_name))
+            return_value.result.append(view_sheet_set_name)
             return return_value
 
         # Now you can access the ViewSheetSetting

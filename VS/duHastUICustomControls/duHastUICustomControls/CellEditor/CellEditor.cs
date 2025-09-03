@@ -411,8 +411,23 @@ namespace duHastNet.UI.CustomControls
 
         private void OnColumnDisplayIndexChanged(object sender, DataGridColumnEventArgs e)
         {
-            // Column order changed - raise data changed event
-            Dispatcher.BeginInvoke(new Action(() => RaiseDataChangedEvent()));
+            // Only raise data changed event for actual reordering, not width changes
+            // Check if this is a real display index change vs just a width change
+            if (IsActualColumnReorder(e.Column))
+            {
+                Dispatcher.BeginInvoke(new Action(() => RaiseDataChangedEvent()));
+            }
+        }
+        private bool IsActualColumnReorder(DataGridColumn changedColumn)
+        {
+            if (_dataGrid?.Columns == null || changedColumn == null) return false;
+
+            // Simple heuristic: if any other column's DisplayIndex changed, it's likely a reorder
+            // For a pure width change, only the resized column should be affected
+            var currentIndices = _dataGrid.Columns.Select(c => c.DisplayIndex).OrderBy(x => x).ToList();
+            var expectedIndices = Enumerable.Range(0, _dataGrid.Columns.Count).ToList();
+
+            return !currentIndices.SequenceEqual(expectedIndices);
         }
 
         private void OnColumnReordered(object sender, DataGridColumnEventArgs e)

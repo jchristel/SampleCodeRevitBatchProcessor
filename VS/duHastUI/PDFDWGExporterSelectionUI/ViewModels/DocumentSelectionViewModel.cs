@@ -173,32 +173,14 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
         /// <summary>
         /// set the print set at the end of the GUI ini phase
+        /// just setting it to None to avoid filtering issues
         /// </summary>
         private void SetPrintSetFilterFromSettings()
         {
-            //set the filter to the value stored in settings
-            //check if valid value
-            if (_sheetsDataModel.Settings.Printset == null)
-            {
-                AddMessage($"No valid print set in settings. Defaulting to {Models.Constants.DefaultPrintSetName}", messageType: MessageTypes.Error);
-                SelectedPrintSet = Models.Constants.DefaultPrintSetName;
-                //update the print set in settings
-                _sheetsDataModel.Settings.Printset = Models.Constants.DefaultPrintSetName;
-            }
-            //check if print set still exists in model
-            else if (_printSetNamesDefaultList.Contains(_sheetsDataModel.Settings.Printset))
-            {
-                //set the print set and mark sheets belonging to it
-                SelectedPrintSet = _sheetsDataModel.Settings.Printset;
-            }
-            else
-            {
-                //print set no longer exists in the model...go with default option
-                AddMessage($"Print set in settings no longer exists in file. Defaulting to {Models.Constants.DefaultPrintSetName}", messageType: MessageTypes.Error);
-                SelectedPrintSet = Models.Constants.DefaultPrintSetName;
-                //update the print set in settings
-                _sheetsDataModel.Settings.Printset = Models.Constants.DefaultPrintSetName;
-            }
+            SelectedPrintSet = Models.Constants.DefaultPrintSetName;
+            //update the print set in settings
+            _sheetsDataModel.Settings.Printset = Models.Constants.DefaultPrintSetName;
+
         }
 
 
@@ -234,32 +216,13 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
         /// <summary>
         /// set the schedule at the end of the GUI ini phase
+        /// just setting it to None to avoid filtering issues
         /// </summary>
         private void SetSheetSetScheduleFilterFromSettings()
         {
-            //set the filter to the value stored in settings
-            //check if valid value
-            if (_sheetsDataModel.Settings.Schedule == null)
-            {
-                AddMessage($"No valid schedule set in settings. Defaulting to {Models.Constants.DefaultPrintSetName}", messageType: MessageTypes.Error);
-                SelectedScheduleSet = Models.Constants.DefaultPrintSetName;
-                //update the print set in settings
-                _sheetsDataModel.Settings.Schedule = Models.Constants.DefaultPrintSetName;
-            }
-            //check if print set still exists in model
-            else if (_sheetScheduleNamesDefaultList.Contains(_sheetsDataModel.Settings.Schedule))
-            {
-                //set the print set and mark sheets belonging to it
-                SelectedScheduleSet = _sheetsDataModel.Settings.Schedule;
-            }
-            else
-            {
-                //print set no longer exists in the model...go with default option
-                AddMessage($"Sheet schedule in settings no longer exists in file. Defaulting to {Models.Constants.DefaultPrintSetName}", messageType: MessageTypes.Error);
-                SelectedScheduleSet = Models.Constants.DefaultPrintSetName;
-                //update the print set in settings
-                _sheetsDataModel.Settings.Schedule = Models.Constants.DefaultPrintSetName;
-            }
+            SelectedScheduleSet = Models.Constants.DefaultPrintSetName;
+            //update the print set in settings
+            _sheetsDataModel.Settings.Schedule = Models.Constants.DefaultPrintSetName;
         }
 
         #endregion schedule filter

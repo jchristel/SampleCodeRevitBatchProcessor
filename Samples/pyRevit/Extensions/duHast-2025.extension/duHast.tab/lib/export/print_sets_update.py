@@ -48,6 +48,7 @@ def get_sheets_from_print_set(doc, print_set):
     return_value = Result()
     try:
         for sheet_data in print_set.RevitSheets:
+            #return_value.result.append(sheet_data)
             revit_sheet = doc.GetElement(ElementId(int(sheet_data.RevitElementId.Value)))
             return_value.result.append(revit_sheet)
 
@@ -178,16 +179,6 @@ def update_print_sets(doc, print_sets):
             # get sheet elements
             revit_sheets_result =  get_sheets_from_print_set(doc, print_set)
             
-            # check if successful
-            if not revit_sheets_result.status:
-                return_value.update(revit_sheets_result)
-                print_error(revit_sheets_result.message)
-
-                # edge case??
-                # add to return value so it can be created
-                return_value.result.append(print_set)
-                continue
-
             # get the sheets
             revit_sheets = revit_sheets_result.result
 
@@ -207,11 +198,25 @@ def update_print_sets(doc, print_sets):
                 clear_existing=True
             )
 
-            # give user feedback
-            print(update_result.message)
-            # log result
-            return_value.update(update_result)
-
+            # check what came back
+            if not update_result.status and len(update_result.result)>0:
+                # edge case??
+                # would have returned a name only if the set did not exist
+                if isinstance(update_result.result[0],str) and update_result.result[0] == print_set_name:
+                    message = "Print set '{}' does not exist and cannot be updated. Will create it instead.".format(print_set_name)
+                    print(message)
+                    update_result.append_message(message)
+                    return_value.result.append(print_set)
+            # check if successful
+            elif update_result.status:
+                message = "Print set '{}' updated successfully.".format(print_set_name)
+                print (message)
+                update_result.append_message(message)
+            else:
+                message = "Failed to update print set '{}'.".format(print_set_name)
+                print_error(message)
+                update_result.update_sep(False, message)
+            
     except Exception as e:
         # handle any exceptions that occur during the update process
         message = "An error occurred while updating print sets: {}".format(e)
@@ -226,9 +231,13 @@ def update_print_sets_from_ui(doc, printSets=None):
     """
     Update print sets from the UI.
     
-   
-    
     :param doc: The document containing print sets to update.
+    :parm type doc: Autodesk.Revit.DB.Document
+    :param printSets: A list of print sets to update.
+    :type printSets: list
+
+    :return: Result object indicating success or failure.
+    :rtype: Result
     """
 
     # set up a status tracker
@@ -272,8 +281,9 @@ def update_print_sets_from_ui(doc, printSets=None):
             elif print_set.UpdateAction == PrintSetUpdateType.New:
                 print_set_create.append(print_set)
         
+        print_header("Deleting print sets")
+
         if len(print_set_delete) > 0:
-            print_header("Deleting print sets")
             delete_result = delete_print_sets(doc, print_set_delete)
             return_value.update(delete_result)
         else:
@@ -282,15 +292,15 @@ def update_print_sets_from_ui(doc, printSets=None):
                  "No print sets to delete."
             )
         
-        if len(print_set_update) > 0:
-            print_header("Updating print sets")
-            update_result = update_print_sets(doc, print_set_update)
+        print_header("Updating print sets")
 
+        if len(print_set_update) > 0:
+            update_result = update_print_sets(doc, print_set_update)
             # check if there are edge cases where a set could not be updated because it did not exist
-            if len(return_value.result) > 0:
-                print_header("identified edge cases")
-                print("Will create {} print sets that could not be updated.".format(len(return_value.result)))
-                for print_set in return_value.result:
+            if len(update_result.result) > 0:
+                print_header("Identified edge cases")
+                print("Will create {} print sets that could not be updated.".format(len(update_result.result)))
+                for print_set in update_result.result:
                     print("...{}".format(print_set.Name))
                     print_set_create.append(print_set)
 
@@ -302,8 +312,8 @@ def update_print_sets_from_ui(doc, printSets=None):
                  "No print sets to update."
             )
         
+        print_header("Creating print sets")
         if len(print_set_create) > 0:
-            print_header("Creating print sets")
             create_result = create_print_sets(doc, print_set_create)
             return_value.update(create_result)
         else:
@@ -312,7 +322,6 @@ def update_print_sets_from_ui(doc, printSets=None):
                  "No print sets to create."
             )
 
-
     except Exception as e:
         # handle any exceptions that occur during the update process
         message = "An error occurred while updating print sets: {}".format(e)
@@ -320,6 +329,5 @@ def update_print_sets_from_ui(doc, printSets=None):
             False, message
         )
         print_error(message)
-
 
     return return_value

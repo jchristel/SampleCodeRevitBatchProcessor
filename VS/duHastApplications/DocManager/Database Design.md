@@ -113,27 +113,34 @@ Document "A-101" revision history:
 3. March 15, 2024 - Revision "3" - "For Construction"
 4. March 15, 2024 - Revision "4" - "For Permit Submission"
 
-## Implementation Considerations
+## SQLite Implementation Strategy
 
-### Data Integrity
-- Foreign key constraints ensure document-revision relationships
-- Indexes optimize common queries (by document number, by revision date)
-- Data types accommodate international character sets
+### NuGet Package Usage
 
-### Performance Optimization
-- Composite indexes for document lookup patterns
-- Appropriate field sizing to minimize storage overhead
-- Query optimization for revision history reports
+**sqlite-net-pcl**: Primary ORM for basic operations
+- Entity mapping with attributes
+- Simple CRUD operations
+- Type-safe queries with LINQ
+- Automatic table creation from C# classes
 
-### Scalability
-- Auto-increment primary keys support unlimited growth
-- File-based approach scales with project count
-- Index strategy supports large document volumes per project
+**sqlite-pcl-raw**: Advanced operations and performance
+- Custom SQL execution
+- Index creation and management
+- Schema modifications (ALTER TABLE)
+- Complex queries and aggregations
+- Direct SQLite API access when needed
 
-### Maintenance
-- Soft delete capability can be added via Status field
-- Audit trails can be implemented through additional tracking fields
-- Archive strategies can move old revisions to separate tables
+### Database File Management
+- **File Location**: Each project maintains its own `.sqlite` database file
+- **Naming Convention**: `{ProjectName}_{ProjectId}.sqlite`
+- **Portability**: Database files can be copied/shared between systems
+- **Backup Strategy**: Simple file-level backup and restore
+
+### Connection Management
+- **Foreign Key Support**: Must be explicitly enabled in SQLite connection
+- **WAL Mode**: Consider enabling for better concurrent access
+- **Connection Pooling**: Single connection per project database
+- **Transaction Management**: Use for batch operations and data integrity
 
 ## Future Extensions
 

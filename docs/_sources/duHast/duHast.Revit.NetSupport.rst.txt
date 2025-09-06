@@ -1,0 +1,21 @@
+duHast.Revit.NetSupport package
+===============================
+
+Submodules
+----------
+
+duHast.Revit.NetSupport.dll\_names module
+-----------------------------------------
+
+.. automodule:: duHast.Revit.NetSupport.dll_names
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.NetSupport
+   :members:
+   :undoc-members:
+   :show-inheritance:

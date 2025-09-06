@@ -33,6 +33,14 @@ duHast.Revit.Views.element\_overrides module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Views.elevation module
+-----------------------------------
+
+.. automodule:: duHast.Revit.Views.elevation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Views.elevation\_view\_create module
 -------------------------------------------------
 
@@ -89,10 +97,34 @@ duHast.Revit.Views.schedules\_element\_filters module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Views.schedules\_export module
+-------------------------------------------
+
+.. automodule:: duHast.Revit.Views.schedules_export
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Views.schedules\_fields module
+-------------------------------------------
+
+.. automodule:: duHast.Revit.Views.schedules_fields
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Views.schedules\_revision\_filter module
 -----------------------------------------------------
 
 .. automodule:: duHast.Revit.Views.schedules_revision_filter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Views.schedules\_sheets\_export module
+---------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.schedules_sheets_export
    :members:
    :undoc-members:
    :show-inheritance:
@@ -117,6 +149,14 @@ duHast.Revit.Views.templates module
 -----------------------------------
 
 .. automodule:: duHast.Revit.Views.templates
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Views.view\_sheet\_sets module
+-------------------------------------------
+
+.. automodule:: duHast.Revit.Views.view_sheet_sets
    :members:
    :undoc-members:
    :show-inheritance:

@@ -68,7 +68,15 @@ jobs:
         TAG_NUM: ${{ github.event.release.tag_name }}
         PACKAGE_NAME: ${{ needs.determine-package.outputs.package_name }}
       run: |
+        echo "Original tag: ${{ github.event.release.tag_name }}"
+        echo "Package name: ${{ needs.determine-package.outputs.package_name }}"
+        echo "Before update - pyproject.toml version:"
+        grep 'version = ' pyproject.toml || echo "No version found"
         python .github/workflows/update_package_config.py
+        echo "After update - pyproject.toml version:"
+        grep 'version = ' pyproject.toml || echo "No version found"
+        echo "After update - setup.cfg version:"
+        grep 'version = ' setup.cfg || echo "No version found"
 
     - name: Install dependencies
       run: |

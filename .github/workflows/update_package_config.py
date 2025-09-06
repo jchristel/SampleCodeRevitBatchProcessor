@@ -122,9 +122,9 @@ def update_package_config():
         with open(pyproject_file, "r") as fr:
             content = fr.read()
         
-        # Update package name in project section
+        # Update package name in project section (supports any package name)
         content = re.sub(
-            r'name = "\w+"',
+            r'name = "[^"]+"',
             f'name = "{package_name}"',
             content,
         )

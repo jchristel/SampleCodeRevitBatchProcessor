@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Family package &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <title>duHast.Revit.Family package &#8212; Sample Code Revit Batch Processor 1.1.17-test documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.17-test documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.Family.Data package" href="duHast.Revit.Family.Data.html" />
     <link rel="prev" title="duHast.Revit.ExtensibleSchemas package" href="duHast.Revit.ExtensibleSchemas.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.17-test documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Family package</h1></div>
@@ -110,6 +110,7 @@
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#module-duHast.Revit.Family.Data.Objects.family_directive_base">duHast.Revit.Family.Data.Objects.family_directive_base module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#module-duHast.Revit.Family.Data.Objects.family_directive_copy">duHast.Revit.Family.Data.Objects.family_directive_copy module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#module-duHast.Revit.Family.Data.Objects.family_directive_rename">duHast.Revit.Family.Data.Objects.family_directive_rename module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#module-duHast.Revit.Family.Data.Objects.family_directive_rename_type">duHast.Revit.Family.Data.Objects.family_directive_rename_type module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#module-duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type">duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#module-duHast.Revit.Family.Data.Objects.family_type_data">duHast.Revit.Family.Data.Objects.family_type_data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#module-duHast.Revit.Family.Data.Objects.family_type_data_processor">duHast.Revit.Family.Data.Objects.family_type_data_processor module</a></li>
@@ -370,8 +371,27 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.html#module-duHast.Revit.Family.LibraryCleanUp.in_package_family">duHast.Revit.Family.LibraryCleanUp.in_package_family module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.html#duHast.Revit.Family.LibraryCleanUp.in_package_family.in_package_family"><code class="docutils literal notranslate"><span class="pre">in_package_family()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.html#module-duHast.Revit.Family.LibraryCleanUp.in_process">duHast.Revit.Family.LibraryCleanUp.in_process module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.html#duHast.Revit.Family.LibraryCleanUp.in_process.assign_formula_to_shared_parameter"><code class="docutils literal notranslate"><span class="pre">assign_formula_to_shared_parameter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.html#duHast.Revit.Family.LibraryCleanUp.in_process.add_shared_parameters_to_family"><code class="docutils literal notranslate"><span class="pre">add_shared_parameters_to_family()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.html#duHast.Revit.Family.LibraryCleanUp.in_process.in_process_family"><code class="docutils literal notranslate"><span class="pre">in_process_family()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.html#module-duHast.Revit.Family.LibraryCleanUp.in_project_load_and_swap">duHast.Revit.Family.LibraryCleanUp.in_project_load_and_swap module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.html#duHast.Revit.Family.LibraryCleanUp.in_project_load_and_swap.load_families"><code class="docutils literal notranslate"><span class="pre">load_families()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.html#duHast.Revit.Family.LibraryCleanUp.in_project_load_and_swap.swap_families"><code class="docutils literal notranslate"><span class="pre">swap_families()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.html#duHast.Revit.Family.LibraryCleanUp.in_project_load_and_swap.in_process_project"><code class="docutils literal notranslate"><span class="pre">in_process_project()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.html#module-duHast.Revit.Family.LibraryCleanUp.map_libraries_by_key">duHast.Revit.Family.LibraryCleanUp.map_libraries_by_key module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.html#duHast.Revit.Family.LibraryCleanUp.map_libraries_by_key.get_family_data_from_file"><code class="docutils literal notranslate"><span class="pre">get_family_data_from_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.html#duHast.Revit.Family.LibraryCleanUp.map_libraries_by_key.find_matches_by_key"><code class="docutils literal notranslate"><span class="pre">find_matches_by_key()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.html#duHast.Revit.Family.LibraryCleanUp.map_libraries_by_key.map_libraries_by_keys"><code class="docutils literal notranslate"><span class="pre">map_libraries_by_keys()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.html#duHast.Revit.Family.LibraryCleanUp.map_libraries_by_key.convert_mapping_to_swap_directives"><code class="docutils literal notranslate"><span class="pre">convert_mapping_to_swap_directives()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.LibraryCleanUp.html#module-duHast.Revit.Family.LibraryCleanUp.post_process">duHast.Revit.Family.LibraryCleanUp.post_process module</a><ul>
@@ -447,6 +467,11 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Utility.html#duHast.Revit.Family.Utility.family_copy_directive_utils.get_copy_directives"><code class="docutils literal notranslate"><span class="pre">get_copy_directives()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Utility.html#duHast.Revit.Family.Utility.family_copy_directive_utils.execute_copy_directives"><code class="docutils literal notranslate"><span class="pre">execute_copy_directives()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Utility.html#duHast.Revit.Family.Utility.family_copy_directive_utils.write_copy_directives_to_file"><code class="docutils literal notranslate"><span class="pre">write_copy_directives_to_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.Utility.html#module-duHast.Revit.Family.Utility.family_rename_types_utils">duHast.Revit.Family.Utility.family_rename_types_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Utility.html#helper-functions-to-read-rename-directives-file-s-and-return-them-as-a-tuple-to-the-caller">Helper functions to read rename directives file(s) and return them as a tuple to the caller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Utility.html#duHast.Revit.Family.Utility.family_rename_types_utils.get_rename_directives"><code class="docutils literal notranslate"><span class="pre">get_rename_directives()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.Utility.html#module-duHast.Revit.Family.Utility.family_swap_instances_by_type_utils">duHast.Revit.Family.Utility.family_swap_instances_by_type_utils module</a><ul>
@@ -597,6 +622,31 @@
 </dd></dl>
 
 </section>
+<section id="module-duHast.Revit.Family.family_force_update">
+<span id="duhast-revit-family-family-force-update-module"></span><h2>duHast.Revit.Family.family_force_update module<a class="headerlink" href="#module-duHast.Revit.Family.family_force_update" title="Permalink to this heading">¶</a></h2>
+<section id="revit-families-helper-functions-forcing-revit-to-recognize-changes-in-families-and-reload-it">
+<h3>Revit families helper functions forcing revit to recognize changes in families and reload it<a class="headerlink" href="#revit-families-helper-functions-forcing-revit-to-recognize-changes-in-families-and-reload-it" title="Permalink to this heading">¶</a></h3>
+<p>This is achieved by creating a dummy type, saving the file, deleting the dummy type and saving the file again</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_force_update.force_family_update_on_reload">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_force_update.</span></span><span class="sig-name descname"><span class="pre">force_family_update_on_reload</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_force_update.force_family_update_on_reload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Forces revit to recognise a change in the family and do a full reload.
+This is achieved by creating a dummy type, saving the file, deleting the dummy type and saving the file again.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Document</em>) – Revit Document</p></li>
+<li><p><strong>output</strong> (<em>Output</em>) – pyRevit output</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Family.family_functions">
 <span id="duhast-revit-family-family-functions-module"></span><h2>duHast.Revit.Family.family_functions module<a class="headerlink" href="#module-duHast.Revit.Family.family_functions" title="Permalink to this heading">¶</a></h2>
 <section id="this-module-contains-a-number-of-helper-functions-relating-to-family-elements">
@@ -736,6 +786,116 @@ Use the modify_action parameter to provide a function that modifies the family i
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">duHast.Utilities.Objects.result.Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_instance_create.create_instance_in_family_in_view">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_instance_create.</span></span><span class="sig-name descname"><span class="pre">create_instance_in_family_in_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modify_action=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_instance_create.create_instance_in_family_in_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a family instance in a specific view within a family document.</p>
+<p>matches FamilyPlacementType.ViewBased</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document.</p></li>
+<li><p><strong>family_symbol</strong> (<em>Autodesk.Revit.DB.FamilySymbol</em>) – The family symbol to create an instance of.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which to create the instance.</p></li>
+<li><p><strong>location_point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The location point for the instance.</p></li>
+<li><p><strong>modify_action</strong> (<em>function</em>) – An action to run after the family instance is placed to modify its properties.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A result object indicating success or failure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_instance_create.create_instance_in_family_on_level">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_instance_create.</span></span><span class="sig-name descname"><span class="pre">create_instance_in_family_on_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">structural_type=Autodesk.Revit.DB.Structure.StructuralType.NonStructural</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modify_action=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_instance_create.create_instance_in_family_on_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a family instance in a specific level within a family document.</p>
+<p>matches FamilyPlacementType.OneLevelBased</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document.</p></li>
+<li><p><strong>family_symbol</strong> (<em>Autodesk.Revit.DB.FamilySymbol</em>) – The family symbol to create an instance of.</p></li>
+<li><p><strong>level</strong> (<em>Autodesk.Revit.DB.Level</em>) – The level on which to create the instance.</p></li>
+<li><p><strong>structural_type</strong> (<em>Autodesk.Revit.DB.StructuralType</em>) – The structural type of the family instance. Defaults to StructuralType.NonStructural.</p></li>
+<li><p><strong>location_point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The location point for the instance.</p></li>
+<li><p><strong>modify_action</strong> (<em>function</em>) – An action to run after the family instance is placed to modify its properties.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A result object indicating success or failure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_instance_create.get_direction_from_rotation">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_instance_create.</span></span><span class="sig-name descname"><span class="pre">get_direction_from_rotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle_degrees</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_instance_create.get_direction_from_rotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a rotation angle (in degrees) into a direction vector (XYZ)
+for use in NewFamilyInstance on a horizontal level / plane.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>angle_degrees</strong> (<em>float</em>) – The rotation angle in degrees.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An XYZ direction vector corresponding to the rotation angle.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.XYZ</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_instance_create.create_instance_in_family_on_level_using_reference">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_instance_create.</span></span><span class="sig-name descname"><span class="pre">create_instance_in_family_on_level_using_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle_in_degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modify_action=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_instance_create.create_instance_in_family_on_level_using_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a family instance in a specific level within a family document using the levels reference as placement plane.</p>
+<p>matches FamilyPlacementType.WorkPlaneBased</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document.</p></li>
+<li><p><strong>location_point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The location point for the instance.</p></li>
+<li><p><strong>family_symbol</strong> (<em>Autodesk.Revit.DB.FamilySymbol</em>) – The family symbol to create an instance of.</p></li>
+<li><p><strong>level</strong> (<em>Autodesk.Revit.DB.Level</em>) – The level on which to create the instance.</p></li>
+<li><p><strong>rotation_angle_in_degree</strong> (<em>float</em>) – The rotation angle in degrees for the instance placement.</p></li>
+<li><p><strong>transaction_manager</strong> (<em>function</em>) – The transaction manager to use.</p></li>
+<li><p><strong>modify_action</strong> (<em>function</em>) – An action to run after the family instance is placed to modify its properties.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A result object indicating success or failure.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">duHast.Utilities.Objects.result.Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_instance_create.create_instance_in_family_on_reference">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_instance_create.</span></span><span class="sig-name descname"><span class="pre">create_instance_in_family_on_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_direction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modify_action=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_instance_create.create_instance_in_family_on_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a family instance in a specific level within a family document.</p>
+<p>matches FamilyPlacementType.OneLevelBased</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document.</p></li>
+<li><p><strong>location_point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The location point for the instance.</p></li>
+<li><p><strong>family_symbol</strong> (<em>Autodesk.Revit.DB.FamilySymbol</em>) – The family symbol to create an instance of.</p></li>
+<li><p><strong>reference</strong> (<em>Autodesk.Revit.DB.Reference</em>) – The reference plane to place the family instance on.</p></li>
+<li><p><strong>reference_direction</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The direction vector for the instance placement.</p></li>
+<li><p><strong>transaction_manager</strong> (<em>function</em>) – The transaction manager to use.</p></li>
+<li><p><strong>modify_action</strong> (<em>function</em>) – An action to run after the family instance is placed to modify its properties.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A result object indicating success or failure.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1044,6 +1204,19 @@ if an exception occurred or the document is not a family document, None is retur
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_parameter_utils.get_all_parameters_where_parameter_is_in_formula">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_parameter_utils.</span></span><span class="sig-name descname"><span class="pre">get_all_parameters_where_parameter_is_in_formula</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_parameter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_parameter_utils.get_all_parameters_where_parameter_is_in_formula" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all parameters where the target parameter is used in a formula.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>doc: The Revit document.
+target_parameter: The parameter to check in formulas.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A list of parameters that use the target parameter in their formulas.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Revit.Family.family_reference_elements">
 <span id="duhast-revit-family-family-reference-elements-module"></span><h2>duHast.Revit.Family.family_reference_elements module<a class="headerlink" href="#module-duHast.Revit.Family.family_reference_elements" title="Permalink to this heading">¶</a></h2>
@@ -1303,6 +1476,44 @@ family files and any associated catalogue files accordingly.</p>
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_rename_loaded_families.</span></span><span class="sig-name descname"><span class="pre">rename_loaded_families</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_rename_loaded_families.rename_loaded_families" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry point for this module. Will read rename directives files in given directory and attempt to rename
 loaded families accordingly.</p>
+<p>Note: for rename directive file structure refer to module family_rename_files_utils</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>directory_path</strong> (<em>str</em>) – Fully qualified directory path to where rename directive files are located.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if a single families was renamed successfully, otherwise False.</p></li>
+<li><p>result.message will contain each rename messages in format ‘Renamed family from :’ +current Name + ‘ to ‘ + newName.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain an exception message in format: ‘Failed to rename family from :’ + currentName + ‘ to ‘ + newName</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.family_rename_loaded_types">
+<span id="duhast-revit-family-family-rename-loaded-types-module"></span><h2>duHast.Revit.Family.family_rename_loaded_types module<a class="headerlink" href="#module-duHast.Revit.Family.family_rename_loaded_types" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-to-rename-family-loaded-family-types-in-a-project-file-or-family-file">
+<h3>Helper functions to rename family loaded family types in a project file or family file.<a class="headerlink" href="#helper-functions-to-rename-family-loaded-family-types-in-a-project-file-or-family-file" title="Permalink to this heading">¶</a></h3>
+<p>This helper function expect a folder containing rename directive files. For format of those files refer to module family_rename_files_utils.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_rename_loaded_types.rename_loaded_family_types">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_rename_loaded_types.</span></span><span class="sig-name descname"><span class="pre">rename_loaded_family_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_rename_loaded_types.rename_loaded_family_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entry point for this module. Will read rename directives files in given directory and attempt to rename
+loaded family types accordingly.</p>
 <p>Note: for rename directive file structure refer to module family_rename_files_utils</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

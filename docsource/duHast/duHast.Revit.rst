@@ -29,6 +29,7 @@ Subpackages
    duHast.Revit.MEP_Systems
    duHast.Revit.Materials
    duHast.Revit.ModelHealth
+   duHast.Revit.NetSupport
    duHast.Revit.Purge
    duHast.Revit.RBP
    duHast.Revit.Railings

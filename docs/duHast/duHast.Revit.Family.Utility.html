@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Family.Utility package &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <title>duHast.Revit.Family.Utility package &#8212; Sample Code Revit Batch Processor 1.1.17-test documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.17-test documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Family package" href="duHast.Revit.Family.html" />
     <link rel="next" title="duHast.Revit.Floors package" href="duHast.Revit.Floors.html" />
     <link rel="prev" title="duHast.Revit.Family.Reporting.Objects package" href="duHast.Revit.Family.Reporting.Objects.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.17-test documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Family.Utility package</h1></div>
@@ -161,6 +161,52 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.Utility.family_rename_types_utils">
+<span id="duhast-revit-family-utility-family-rename-types-utils-module"></span><h2>duHast.Revit.Family.Utility.family_rename_types_utils module<a class="headerlink" href="#module-duHast.Revit.Family.Utility.family_rename_types_utils" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-to-read-rename-directives-file-s-and-return-them-as-a-tuple-to-the-caller">
+<h3>Helper functions to read rename directives file(s) and return them as a tuple to the caller<a class="headerlink" href="#helper-functions-to-read-rename-directives-file-s-and-return-them-as-a-tuple-to-the-caller" title="Permalink to this heading">¶</a></h3>
+<p>These helper function expect a text file in csv format with 4 columns:</p>
+<ul class="simple">
+<li><p>Current family name: with out the file extension</p></li>
+<li><p>File path     : fully qualified file path to the family file.</p></li>
+<li><p>Family category: the Revit category of the family.</p></li>
+<li><p>New family name: the new family name without the file extension.</p></li>
+</ul>
+<p>Note:</p>
+<ul class="simple">
+<li><p>First row is treated as a header row and its content is ignored.</p></li>
+</ul>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.family_rename_types_utils.get_rename_directives">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.family_rename_types_utils.</span></span><span class="sig-name descname"><span class="pre">get_rename_directives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.family_rename_types_utils.get_rename_directives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves file rename  directives from a given folder location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>directory_path</strong> (<em>str</em>) – Fully qualified folder path to folder containing directives.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if rename directives where found and loaded successfully, otherwise False.</p></li>
+<li><p>result.message will contain number of directives found in format:’Found rename directives: ‘ + number</p></li>
+<li><p>result.result list of directives</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain an exception message.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>

@@ -12,10 +12,34 @@ Subpackages
 Submodules
 ----------
 
+duHast.Revit.Family.LibraryCleanUp.in\_package\_family module
+-------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.LibraryCleanUp.in_package_family
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Family.LibraryCleanUp.in\_process module
 -----------------------------------------------------
 
 .. automodule:: duHast.Revit.Family.LibraryCleanUp.in_process
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.LibraryCleanUp.in\_project\_load\_and\_swap module
+----------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.LibraryCleanUp.in_project_load_and_swap
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.LibraryCleanUp.map\_libraries\_by\_key module
+-----------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.LibraryCleanUp.map_libraries_by_key
    :members:
    :undoc-members:
    :show-inheritance:

@@ -176,20 +176,20 @@ jobs:
       with:
         repository-url: https://test.pypi.org/legacy/
 
-  # publish-to-pypi:
-  #   name: Publish to PyPI
-  #   needs: [determine-package, publish-to-testpypi]
-  #   runs-on: ubuntu-latest
-  #   environment:
-  #     name: ${{ needs.determine-package.outputs.environment_name }}
-  #     url: https://pypi.org/p/${{ needs.determine-package.outputs.package_name }}
+  publish-to-pypi:
+    name: Publish to PyPI
+    needs: [determine-package, publish-to-testpypi]
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ needs.determine-package.outputs.environment_name }}
+      url: https://pypi.org/p/${{ needs.determine-package.outputs.package_name }}
 
-  #   steps:
-  #   - name: Download all the dists
-  #     uses: actions/download-artifact@v4
-  #     with:
-  #       name: python-package-distributions
-  #       path: dist/
-        
-  #   - name: Publish package distributions to PyPI
-  #     uses: pypa/gh-action-pypi-publish@release/v1
+    steps:
+      - name: Download all the dists
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

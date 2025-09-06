@@ -63,12 +63,48 @@ jobs:
       with:
         python-version: '3.9'
 
-    - name: Update package configuration
+    - name: Update version (find and replace)
       env:
         TAG_NUM: ${{ github.event.release.tag_name }}
         PACKAGE_NAME: ${{ needs.determine-package.outputs.package_name }}
+      shell: bash
       run: |
-        python .github/workflows/update_package_config.py
+        # Extract version number (remove 'v' or 'V' prefix)
+        VERSION=$(echo "$TAG_NUM" | sed 's/^[vV]//')
+        echo "Setting version to: $VERSION"
+        echo "Setting package name to: $PACKAGE_NAME"
+        
+        echo "=== UPDATING pyproject.toml ==="
+        # Find and replace version = line
+        sed -i "/^version = /c\version = \"$VERSION\"" pyproject.toml
+        echo "Updated: version = \"$VERSION\""
+        
+        # Find and replace current_version = line  
+        sed -i "/^current_version = /c\current_version = \"$VERSION\"" pyproject.toml
+        echo "Updated: current_version = \"$VERSION\""
+        
+        # Find and replace name = line
+        sed -i "/^name = /c\name = \"$PACKAGE_NAME\"" pyproject.toml
+        echo "Updated: name = \"$PACKAGE_NAME\""
+        
+        echo "=== UPDATING setup.cfg ==="
+        # Find and replace version = line in setup.cfg
+        sed -i "/^version = /c\version = $VERSION" setup.cfg
+        echo "Updated: version = $VERSION"
+        
+        # Find and replace name = line in setup.cfg
+        sed -i "/^name = /c\name = $PACKAGE_NAME" setup.cfg
+        echo "Updated: name = $PACKAGE_NAME"
+        
+        echo "=== VERIFICATION ==="
+        echo "pyproject.toml version lines:"
+        grep "^version = " pyproject.toml
+        grep "^current_version = " pyproject.toml
+        grep "^name = " pyproject.toml
+        echo ""
+        echo "setup.cfg lines:"
+        grep "^version = " setup.cfg
+        grep "^name = " setup.cfg
 
     - name: Install dependencies
       run: |

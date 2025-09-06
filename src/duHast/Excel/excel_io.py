@@ -41,6 +41,7 @@ from duHast.Utilities.files_io import (
     get_file_name_without_ext,
 )
 from duHast.Utilities.files_csv import read_csv_file
+from duHast.Utilities.benchmarking import add_measure_time
 
 
 def get_excel_tab_names(file_path):
@@ -152,6 +153,7 @@ def save_excel_file_as_csv(file_path_excel, file_path_csv, tab_name=None):
     return return_value
 
 
+@add_measure_time
 def read_excel_file(file_path, excel_tab_name=None):
     """
     Reads the content of an Excel file into a 2D array.
@@ -170,27 +172,40 @@ def read_excel_file(file_path, excel_tab_name=None):
     excel = None
     wb = None
     try:
-        excel = Excel.ApplicationClass()
-        excel.Visible = False
-        excel.DisplayAlerts = False
-        # refer to this website for arg docs:https://learn.microsoft.com/en-us/office/vba/api/Excel.Workbooks.Open
-        wb = excel.Workbooks.Open(
-            file_path,  # excel doc file path
-            0,  # update links ( 0 No )
-            True,  # read only
-            5,  # format delimeter ( 5 = nothing )
-            "",  # password to open  a file (not required)
-            "",  # password to write to a write protected  file (not required)
-            True,  # ignore read only recommended (False = don't ignore, True = ignore)
-            Excel.XlPlatform.xlWindows,  # file origin (xlWindows = Microsoft Windows)
-            "\t",  # delimiter (tab) optional
-            False,  # editable (False = read only, True = editable)
-            False,  # notify (False = don't notify, True = notify)
-            0,  # converter (0 = don't convert, 1 = convert)
-            False,  # add to MRU (False = don't add, True = add)
-            True,  # local (False = don't local, True = local)
-            False,  # corrupt load (False = don't load, True = load)
-        )
+
+        @add_measure_time
+        def init_excel():
+            excel = Excel.ApplicationClass()
+            excel.Visible = False
+            excel.DisplayAlerts = False
+            return excel
+
+        excel = init_excel()
+
+        @add_measure_time
+        def open_workbook():
+            # refer to this website for arg docs:https://learn.microsoft.com/en-us/office/vba/api/Excel.Workbooks.Open
+            wb = excel.Workbooks.Open(
+                file_path,  # excel doc file path
+                0,  # update links ( 0 No )
+                True,  # read only
+                5,  # format delimeter ( 5 = nothing )
+                "",  # password to open  a file (not required)
+                "",  # password to write to a write protected  file (not required)
+                True,  # ignore read only recommended (False = don't ignore, True = ignore)
+                Excel.XlPlatform.xlWindows,  # file origin (xlWindows = Microsoft Windows)
+                "\t",  # delimiter (tab) optional
+                False,  # editable (False = read only, True = editable)
+                False,  # notify (False = don't notify, True = notify)
+                0,  # converter (0 = don't convert, 1 = convert)
+                False,  # add to MRU (False = don't add, True = add)
+                True,  # local (False = don't local, True = local)
+                False,  # corrupt load (False = don't load, True = load)
+            )
+            return wb
+
+        wb = open_workbook()
+
         if excel_tab_name:
             ws = wb.Worksheets[excel_tab_name]
         else:
@@ -204,26 +219,66 @@ def read_excel_file(file_path, excel_tab_name=None):
         # read the data into a 2D array
         used_data = []
 
-        try:
-            for row in range(1, rows_count + 1):
-                row_data = []
-                for col in range(1, cols_count + 1):
-                    # get the cell value, just in case it's empty or contains a formula with an error wrap in try/except
-                    try:
-                        cell_value = used_range.Cells[row, col].Value2
-                    except Exception as e:
-                        cell_value = None
-                    row_data.append(cell_value)
-                used_data.append(row_data)
-        except Exception as e:
-            return_value.update_sep(
-                False, "Failed to read Excel file. Error: {}".format(e)
-            )
+        @add_measure_time
+        def iterate_through_cells():
+            try:
+                # Read the entire range at once - much faster than cell by cell
+                range_values = used_range.Value2
 
-        wb.Close(False)
-        excel.Quit()
+                if range_values is None:
+                    # Empty range - fill with None values
+                    for _ in range(rows_count):
+                        used_data.append([None] * cols_count)
+                elif rows_count == 1 and cols_count == 1:
+                    # Single cell case - Value2 returns a single value
+                    used_data.append([range_values])
+                elif rows_count == 1:
+                    # Single row case - convert to list
+                    if hasattr(range_values, "__iter__"):
+                        row_data = [val for val in range_values]
+                    else:
+                        row_data = [range_values]
+                    used_data.append(row_data)
+                elif cols_count == 1:
+                    # Single column case - each value becomes a single-item list
+                    if hasattr(range_values, "__iter__"):
+                        for val in range_values:
+                            used_data.append([val])
+                    else:
+                        used_data.append([range_values])
+                else:
+                    # Multi-row, multi-column case
+                    # Convert COM array to Python list using list comprehension
+                    for row in range_values:
+                        if hasattr(row, "__iter__"):
+                            used_data.append([val for val in row])
+                        else:
+                            used_data.append(row)
+
+            except Exception as e:
+                return_value.update_sep(
+                    False, "Failed to read Excel file. Error: {}".format(e)
+                )
+
+        iterate_through_cells()
+
+        @add_measure_time
+        def pair_values(in_list):
+            """
+            Break up the list into chunks based on the column count from Excel.
+            Each chunk will contain cols_count elements.
+            """
+            paired = []
+            for i in range(0, len(in_list), cols_count):
+                chunk = in_list[i : i + cols_count]
+                # Pad with None if the chunk is shorter than expected
+                while len(chunk) < cols_count:
+                    chunk.append(None)
+                paired.append(chunk)
+            return paired
+
         return_value.update_sep(True, "Successfully read Excel file.")
-        return_value.result = used_data
+        return_value.result = pair_values(used_data)
     except Exception as e:
         return_value.update_sep(False, "Failed to read Excel file. Error: {}".format(e))
     finally:

@@ -1,0 +1,159 @@
+name: Build Documentation and Publish Package
+
+on:
+  release:
+    types: 
+      - published
+
+permissions:
+  contents: write  # For pushing documentation changes
+  id-token: write  # For PyPI trusted publishing
+
+jobs:
+  determine-package:
+    runs-on: ubuntu-latest
+    outputs:
+      package_name: ${{ steps.branch-check.outputs.package_name }}
+      branch_name: ${{ steps.branch-check.outputs.branch_name }}
+      environment_name: ${{ steps.branch-check.outputs.environment_name }}
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+    
+    - name: Determine package details from branch
+      id: branch-check
+      run: |
+        # Get the branch that the release was created from
+        BRANCH_NAME=$(git branch -r --contains ${{ github.event.release.tag_name }} | grep -v HEAD | head -1 | sed 's/.*\///')
+        echo "Release created from branch: $BRANCH_NAME"
+        
+        # Determine package name and environment based on branch
+        if [[ "$BRANCH_NAME" == "net48DuHast" ]]; then
+          PACKAGE_NAME="duhast"
+          ENV_NAME="pypi-duhast"
+        elif [[ "$BRANCH_NAME" == "net8DuHast" ]]; then
+          PACKAGE_NAME="duHast8"
+          ENV_NAME="pypi-duhast8"
+        else
+          echo "Error: Release not from a supported branch ($BRANCH_NAME)"
+          exit 1
+        fi
+        
+        echo "package_name=$PACKAGE_NAME" >> $GITHUB_OUTPUT
+        echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+        echo "environment_name=$ENV_NAME" >> $GITHUB_OUTPUT
+        echo "Will publish package: $PACKAGE_NAME from branch: $BRANCH_NAME"
+
+  update-version-and-docs:
+    needs: determine-package
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN}}
+        ref: ${{ needs.determine-package.outputs.branch_name }}
+        fetch-depth: 0
+
+    - name: Setup Python environment
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.9'
+
+    - name: Update package configuration
+      env:
+        TAG_NUM: ${{ github.event.release.tag_name }}
+        PACKAGE_NAME: ${{ needs.determine-package.outputs.package_name }}
+      run: |
+        python .github/workflows/update_package_config.py
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install Sphinx==7.0.1
+        pip install sphinx-adc-theme==0.1.7
+
+    - name: Create .rst files
+      run: |
+        sphinx-apidoc -f -o docsource/duHast src/duHast/
+        
+    - name: Convert to html
+      run: |
+        sphinx-build -b html docsource/ docs/
+
+    - name: Commit updated files back to branch
+      run: |
+        git config --global user.name 'Github Action'
+        git config --global user.email 'action@github.com'
+        git add .
+        git diff --staged --quiet || (git commit -m "Update version to ${{ github.event.release.tag_name }} and rebuild docs" && git push)
+
+  build:
+    name: Build distribution
+    needs: [determine-package, update-version-and-docs]
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ needs.determine-package.outputs.branch_name }}
+        
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.9"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build setuptools
+
+    - name: Build a binary wheel and a source tarball
+      run: python3 -m build
+
+    - name: Store the distribution packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist/
+
+  publish-to-testpypi:
+    name: Publish to TestPyPI
+    needs: [determine-package, build]
+    runs-on: ubuntu-latest
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/${{ needs.determine-package.outputs.package_name }}
+
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist/
+
+    - name: Publish distribution to TestPyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
+
+  # publish-to-pypi:
+  #   name: Publish to PyPI
+  #   needs: [determine-package, publish-to-testpypi]
+  #   runs-on: ubuntu-latest
+  #   environment:
+  #     name: ${{ needs.determine-package.outputs.environment_name }}
+  #     url: https://pypi.org/p/${{ needs.determine-package.outputs.package_name }}
+
+  #   steps:
+  #   - name: Download all the dists
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: python-package-distributions
+  #       path: dist/
+        
+  #   - name: Publish package distributions to PyPI
+  #     uses: pypa/gh-action-pypi-publish@release/v1

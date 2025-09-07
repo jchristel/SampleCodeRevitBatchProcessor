@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 
 namespace duHastNet.UI.CustomControls
 {
     public static class ResourceUriHelper
     {
         // Assembly info - change this one place when versioning
-        private const string ASSEMBLY_NAME = "duHastUICustomControls.23.0.0.4";
+        private const string ASSEMBLY_NAME = "duHastUICustomControls.23.0.0.5";
 
         // Base URI pattern
         private static string GetPackUri(string resourcePath)

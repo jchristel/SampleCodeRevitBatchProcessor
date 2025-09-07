@@ -1,11 +1,11 @@
-﻿<UserControl x:Class="duHastNet.UI.PDFDWGExporterUI.Views.SettingsView"
+<UserControl x:Class="duHastNet.UI.PDFDWGExporterUI.Views.SettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:duHastNet.UI.PDFDWGExporterUI.Views"
-             xmlns:utilsViews="clr-namespace:duHastNet.Utils.WPF.Views;assembly=Utils.23.0.0.4"
-             xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.23.0.0.4"
+             xmlns:utilsViews="clr-namespace:duHastNet.Utils.WPF.Views;assembly=Utils.23.0.0.5"
+             xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.23.0.0.5"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>

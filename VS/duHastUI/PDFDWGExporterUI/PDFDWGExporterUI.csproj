@@ -7,7 +7,7 @@
     <ProjectGuid>{E3D8A25E-62CA-4E17-A2EE-CB43B92A31B6}</ProjectGuid>
     <OutputType>library</OutputType>
     <RootNamespace>duHastNet.UI.PDFDWGExporterUI</RootNamespace>
-    <AssemblyName>PDFDWGExporterUI.23.0.0.4</AssemblyName>
+    <AssemblyName>PDFDWGExporterUI.23.0.0.5</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -65,8 +65,8 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Utils.23.0.0.4">
-      <HintPath>..\..\_References\duHast\Utils.23.0.0.4.dll</HintPath>
+    <Reference Include="Utils.23.0.0.5">
+      <HintPath>..\..\_References\duHast\Utils.23.0.0.5.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />

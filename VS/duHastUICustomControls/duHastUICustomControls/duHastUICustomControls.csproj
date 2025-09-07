@@ -7,7 +7,7 @@
     <ProjectGuid>{7FD6B9F8-D82A-4CA4-9B0B-A7A7244A5C1F}</ProjectGuid>
     <OutputType>library</OutputType>
     <RootNamespace>duHastNet.UI.CustomControls</RootNamespace>
-    <AssemblyName>duHastUICustomControls.23.0.0.4</AssemblyName>
+    <AssemblyName>duHastUICustomControls.23.0.0.5</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -64,8 +64,8 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Utils.23.0.0.4">
-      <HintPath>..\..\_References\duHast\Utils.23.0.0.4.dll</HintPath>
+    <Reference Include="Utils.23.0.0.5">
+      <HintPath>..\..\_References\duHast\Utils.23.0.0.5.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />

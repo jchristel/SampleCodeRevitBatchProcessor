@@ -377,8 +377,8 @@ def _modify_room_lines_graphics(
         # get the lines in the active design option only (if none is active go for main model only)
         # set a default key ( main model only)
         key = DesignSetPropertyNames.combine_set_and_option_name(
-            set_name=DesignSetPropertyNames.DESIGN_SET_DEFAULT_NAME.value,
-            option_name=DesignSetPropertyNames.DESIGN_OPTION_DEFAULT_NAME.value,
+            set_name=DesignSetPropertyNames.DESIGN_SET_DEFAULT_NAME,
+            option_name=DesignSetPropertyNames.DESIGN_OPTION_DEFAULT_NAME,
         )
 
         # check if a design option is active and the key need changing

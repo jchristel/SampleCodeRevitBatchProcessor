@@ -152,7 +152,7 @@ class RoomSeparationLinesPurgeModifier(ModifierBase):
         for id in deleted:
             try:
                 if id not in self.model_lines:
-                    self.debug_log.append("...in rooms deleted modifier: non model line found: id: {} type:{}".format(id, type(doc.GetElement(id))))
+                    self.debug_log.append("...in rooms deleted modifier: non model line found: id: {} type:{}".format(id, type(doc.GetElement(id)))))
                     filtered_ids.append(id)
             except Exception as e:
                 self.debug_log.append("in deleted modifier: element not found: {} for : {}".format(e, id))

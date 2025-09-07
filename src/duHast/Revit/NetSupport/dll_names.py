@@ -27,25 +27,27 @@ This is required since the dll's used have a version number in their file name.
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
-#
+# 
+
+version = ".23.0.0.5"
 
 # family reloader ui
-FAMILY_RELOADER_UI = "FamilyReloaderUI.23.0.0.4.dll"
+FAMILY_RELOADER_UI = "FamilyReloaderUI{}.dll".format(version)
 
 # pdf and dwg exporter selection ui
-PDF_AND_DWG_EXPORTER_SELECTION_UI = "PDFDWGExporterSelectionUI.23.0.0.4.dll"
+PDF_AND_DWG_EXPORTER_SELECTION_UI = "PDFDWGExporterSelectionUI{}.dll".format(version)
 
 # pdf and dwg exporter settings ui
-PDF_AND_DWG_EXPORTER_SETTINGS_UI = "PDFDWGExporterUI.23.0.0.4.dll"
+PDF_AND_DWG_EXPORTER_SETTINGS_UI = "PDFDWGExporterUI{}.dll".format(version)
 
 # .net revit utility classes
-REVIT_UTILS= 'RevitUtils.23.0.0.4.dll'
+REVIT_UTILS= 'RevitUtils{}.dll'.format(version)
 
 # .net custom controls
-WPF_CUSTOM_CONTROLS = "duHastUICustomControls.23.0.0.4.dll"
+WPF_CUSTOM_CONTROLS = "duHastUICustomControls{}.dll".format(version)
 
 # .net wrapper class  of csv helper
-FILE_WRAPPER = "FileIOWrapper.23.0.0.4.dll"
+FILE_WRAPPER = "FileIOWrapper{}.dll".format(version)
 
 # .net utility classes
-UTILITY = "Utils.23.0.0.4"
+UTILITY = "Utils{}.dll".format(version)

@@ -66,6 +66,7 @@ class RoomSeparationLinesPurgeModifier(ModifierBase):
 
         self.debug_log = []
 
+
     def  modify_modified(self, doc, modified):
         """
         Base implementation override to modify the modified element count.
@@ -92,6 +93,11 @@ class RoomSeparationLinesPurgeModifier(ModifierBase):
         # remove any other modellines from modified list
         # check if room is in modified list and if so if it has an area???
         filtered_ids = []
+
+        self.debug_log.append(
+            "...in rooms modified modifier: modified ids count: {}".format(len(modified))
+        )
+
         for id in modified:
             element = doc.GetElement(id)
             if type(element) is Room:
@@ -104,11 +110,16 @@ class RoomSeparationLinesPurgeModifier(ModifierBase):
             
             else:
                 # all the other elements:
-                # ModelLines and other elements can be ignoerd
+                # ModelLines and other elements can be ignored
+                self.debug_log.append("...in rooms modified modifier: other element found: {}".format(type(element)))
                 pass
-            
+        
+        self.debug_log.append(
+            "...in rooms modified modifier: filtered ids count: {}".format(len(filtered_ids))
+        )
         return filtered_ids
     
+
     def  modify_deleted(self, doc, deleted):
         """
         Base implementation override to modify the deleted element count.
@@ -141,9 +152,12 @@ class RoomSeparationLinesPurgeModifier(ModifierBase):
         for id in deleted:
             try:
                 if id not in self.model_lines:
+                    self.debug_log.append("...in rooms deleted modifier: non model line found: id: {} type:{}".format(id, type(doc.GetElement(id)))))
                     filtered_ids.append(id)
             except Exception as e:
+                self.debug_log.append("in deleted modifier: element not found: {} for : {}".format(e, id))
                 print("in deleted modifier: element not found: {} for : {}".format(e, id))
         
+        self.debug_log.append("...in rooms deleted modifier: filtered ids count: {}".format(len(filtered_ids)))
         return filtered_ids
         

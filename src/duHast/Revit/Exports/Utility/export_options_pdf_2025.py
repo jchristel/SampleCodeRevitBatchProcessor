@@ -25,7 +25,7 @@
 from Autodesk.Revit.DB import  ColorDepthType, ExportPaperFormat, PDFExportOptions, PDFExportQualityType
 
 
-def set_pdf_export_option_2024(
+def set_pdf_export_option_2025(
         naming_rule, 
         always_use_raster = False, 
         color_depth = ColorDepthType.Color,

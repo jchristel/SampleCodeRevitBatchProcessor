@@ -38,30 +38,9 @@ from duHast.Revit.Exports.export import build_export_file_name_from_view
 from duHast.Revit.Exports.Utility.ifc_export_coordinates import IFCCoords
 from duHast.Revit.Exports.Utility.ifc_export_space_boundaries import IFCSpaceBoundaries
 
-from duHast.Revit.Exports.Utility.export_ifc_config_2019 import (
-    ifc_get_third_party_export_config_by_model_2019,
-    ifc_get_third_party_export_config_by_view_2019,
-)
-from duHast.Revit.Exports.Utility.export_ifc_config_2020 import (
-    ifc_get_third_party_export_config_by_model_2020,
-    ifc_get_third_party_export_config_by_view_2020,
-)
-from duHast.Revit.Exports.Utility.export_ifc_config_2021 import (
-    ifc_get_third_party_export_config_by_model_2021,
-    ifc_get_third_party_export_config_by_view_2021,
-)
-from duHast.Revit.Exports.Utility.export_ifc_config_2022 import (
-    ifc_get_third_party_export_config_by_model_2022,
-    ifc_get_third_party_export_config_by_view_2022,
-)
-from duHast.Revit.Exports.Utility.export_ifc_config_2023 import (
-    ifc_get_third_party_export_config_by_model_2023,
-    ifc_get_third_party_export_config_by_view_2023,
-)
-
-from duHast.Revit.Exports.Utility.export_ifc_config_2024 import (
-    ifc_get_third_party_export_config_by_model_2024,
-    ifc_get_third_party_export_config_by_view_2024,
+from duHast.Revit.Exports.Utility.export_ifc_config_2025 import (
+    ifc_get_third_party_export_config_by_model_2025,
+    ifc_get_third_party_export_config_by_view_2025,
 )
 
 
@@ -395,7 +374,7 @@ def ifc_get_third_party_export_config_by_model(doc, ifc_version, ifc_settings=No
             ifc_version=ifc_version, ifc_settings=ifc_settings
         )
     elif revit_version == 2024:
-        ifc_config = ifc_get_third_party_export_config_by_model_2024(
+        ifc_config = ifc_get_third_party_export_config_by_model_2025(
             ifc_version=ifc_version, ifc_settings=ifc_settings
         )
     else:
@@ -444,7 +423,7 @@ def ifc_get_third_party_export_config_by_view(doc, ifc_version, ifc_settings=Non
             ifc_version=ifc_version, ifc_settings=ifc_settings
         )
     elif revit_version == 2024:
-        ifc_config = ifc_get_third_party_export_config_by_view_2024(
+        ifc_config = ifc_get_third_party_export_config_by_view_2025(
             ifc_version=ifc_version, ifc_settings=ifc_settings
         )
     else:

@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains a number of helper functions to get the IFCExportConfig in revit versions 2023 of Revit.
+This module contains a number of helper functions to get the IFCExportConfig in revit versions 2024 of Revit.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -11,7 +11,7 @@ This module contains a number of helper functions to get the IFCExportConfig in 
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2024, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -33,14 +33,14 @@ import sys
 
 from Autodesk.Revit.DB import ElementId, IFCVersion
 
-# -------------------------------------------- IFC EXPORT Revit 2023 -------------------------------------
-# need to check for new features in revit 2022
+# -------------------------------------------- IFC EXPORT Revit 2024 -------------------------------------
+# TODO: need to check for new features in revit 2024
 
 
 # ifcVersion        which ifc version (2x3 etc...)
-def ifc_get_third_party_export_config_by_view_2023(ifc_version, ifc_settings):
+def ifc_get_third_party_export_config_by_view_2025(ifc_version, ifc_settings):
     """
-    Function returning an IFC export configuration for Revit 2023 using the open source third party IFC exporter plug in supported by AutoDesk
+    Function returning an IFC export configuration for Revit 2024 using the open source third party IFC exporter plug in supported by AutoDesk
 
     This configuration allows export by view. If ifc_version is None, IFCVersion.Default will be used.
 
@@ -51,7 +51,7 @@ def ifc_get_third_party_export_config_by_view_2023(ifc_version, ifc_settings):
     """
 
     # load version specific assemblies
-    ifc_third_party_folder_path_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2023.bundle\Contents\2023\IFCExporterUIOverride.dll"
+    ifc_third_party_folder_path_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2025\IFCExporterUIOverride.dll"
 
     clr.AddReferenceToFileAndPath(ifc_third_party_folder_path_)
 
@@ -63,11 +63,11 @@ def ifc_get_third_party_export_config_by_view_2023(ifc_version, ifc_settings):
     ifc_export_config = IFCExportConfiguration.CreateDefaultConfiguration()
 
     if ifc_settings == None:
-        ifc_export_config = _setup_config_default_values_2023(
+        ifc_export_config = _setup_config_default_values_2025(
             ifc_export_config, ifc_version, True
         )
     else:
-        ifc_export_config = _setup_config_from_settings_2023(
+        ifc_export_config = _setup_config_from_settings_2025(
             ifc_export_config, ifc_settings
         )
 
@@ -75,9 +75,9 @@ def ifc_get_third_party_export_config_by_view_2023(ifc_version, ifc_settings):
 
 
 # ifcVersion        which ifc version (2x3 etc...)
-def ifc_get_third_party_export_config_by_model_2023(ifc_version, ifc_settings):
+def ifc_get_third_party_export_config_by_model_2025(ifc_version, ifc_settings):
     """
-    Function returning an IFC export configuration for Revit 2023 using the open source third party IFC exporter plug in supported by AutoDesk
+    Function returning an IFC export configuration for Revit 2024 using the open source third party IFC exporter plug in supported by AutoDesk
 
     This configuration allows export the entire model. If ifc_version is None, IFCVersion.Default will be used.
 
@@ -88,8 +88,8 @@ def ifc_get_third_party_export_config_by_model_2023(ifc_version, ifc_settings):
     """
 
     # load version specific assemblies
-    ifc_third_party_folder_path_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2023.bundle\Contents\2023\IFCExporterUIOverride.dll"
-    ifc_third_party_folder_path_enums_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2023.bundle\Contents\2023\Revit.IFC.Common.dll"
+    ifc_third_party_folder_path_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2025\IFCExporterUIOverride.dll"
+    ifc_third_party_folder_path_enums_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2025\Revit.IFC.Common.dll"
     clr.AddReferenceToFileAndPath(ifc_third_party_folder_path_)
     clr.AddReferenceToFileAndPath(ifc_third_party_folder_path_enums_)
 
@@ -101,20 +101,20 @@ def ifc_get_third_party_export_config_by_model_2023(ifc_version, ifc_settings):
     # set up configuration
     ifc_export_config = IFCExportConfiguration.CreateDefaultConfiguration()
     if ifc_settings == None:
-        ifc_export_config = _setup_config_default_values_2023(
+        ifc_export_config = _setup_config_default_values_2025(
             ifc_export_config, ifc_version, False
         )
     else:
-        ifc_export_config = _setup_config_from_settings_2023(
+        ifc_export_config = _setup_config_from_settings_2025(
             ifc_export_config, ifc_settings
         )
 
     return ifc_export_config
 
 
-def _setup_config_from_settings_2023(ifc_export_config, ifc_settings):
+def _setup_config_from_settings_2025(ifc_export_config, ifc_settings):
     """
-    Sets up an ifc config object for Revit 2023 based on settings passt in.
+    Sets up an ifc config object for Revit 2024 based on settings passt in.
 
     :param ifc_export_config: An ifc export config object
     :type ifc_export_config: BIM.IFC.Export.UI.IFCExportConfiguration
@@ -125,9 +125,16 @@ def _setup_config_from_settings_2023(ifc_export_config, ifc_settings):
     :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
     """
 
-    ifc_third_party_folder_path_enums_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2023.bundle\Contents\2023\Revit.IFC.Common.dll"
+    ifc_third_party_folder_path_enums_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2025\Revit.IFC.Common.dll"
+    # new in Revit 2024
+    ifc_export_links_enum_path = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2025\Revit.IFC.Export.dll"
+
     clr.AddReferenceToFileAndPath(ifc_third_party_folder_path_enums_)
+    clr.AddReferenceToFileAndPath(ifc_export_links_enum_path)
     from Revit.IFC.Common.Enums import SiteTransformBasis
+
+    # from Revit 2024
+    from Revit.IFC.Export.Utility import LinkedFileExportAs
 
     ifc_export_config.Name = ifc_settings.name
     # set up IFC version
@@ -156,7 +163,13 @@ def _setup_config_from_settings_2023(ifc_export_config, ifc_settings):
 
     ifc_export_config.SpaceBoundaries = ifc_settings.space_boundaries
     ifc_export_config.ActivePhaseId = ifc_settings.active_phase_id
-    ifc_export_config.ActiveViewId = ifc_settings.active_view_id
+
+    # revit 2024 ifc wants an element id for the active view
+    view_id = ifc_settings.active_view_id
+    if isinstance(ifc_settings.active_view_id, int):
+        view_id = ElementId(ifc_settings.active_view_id)
+    ifc_export_config.ActiveViewId = view_id
+
     ifc_export_config.ExportBaseQuantities = ifc_settings.export_base_quantities
     ifc_export_config.SplitWallsAndColumns = ifc_settings.split_walls_and_columns
     ifc_export_config.VisibleElementsOfCurrentView = (
@@ -185,7 +198,20 @@ def _setup_config_from_settings_2023(ifc_export_config, ifc_settings):
     ifc_export_config.ExportUserDefinedPsetsFileName = (
         ifc_settings.export_user_defined_psets_file_name
     )
-    ifc_export_config.ExportLinkedFiles = ifc_settings.export_linked_files
+
+    # new in Revit 2024, appears to drive how linked files are exported...can be one big file!
+    # enum options are:
+    #   - DontExport,
+    #   - ExportAsSeparate,
+    #   - ExportSameProject,
+    #   - ExportSameSite
+
+    export_linked_files = LinkedFileExportAs.DontExport
+    if ifc_settings.export_linked_files:
+        export_linked_files = LinkedFileExportAs.ExportAsSeparate
+
+    ifc_export_config.ExportLinkedFiles = export_linked_files
+
     ifc_export_config.IncludeSiteElevation = ifc_settings.include_site_elevation
     ifc_export_config.UseActiveViewGeometry = ifc_settings.use_active_view_geometry
     ifc_export_config.ExportSpecificSchedules = ifc_settings.export_specific_schedules
@@ -229,9 +255,9 @@ def _setup_config_from_settings_2023(ifc_export_config, ifc_settings):
     return ifc_export_config
 
 
-def _setup_config_default_values_2023(ifc_export_config, ifc_version, export_by_view):
+def _setup_config_default_values_2025(ifc_export_config, ifc_version, export_by_view):
     """
-    Sets up an default ifc config object for Revit 2023.
+    Sets up an default ifc config object for Revit 2024.
 
     :param ifc_export_config: An ifc export config
     :type ifc_export_config: BIM.IFC.Export.UI.IFCExportConfiguration
@@ -243,6 +269,11 @@ def _setup_config_default_values_2023(ifc_export_config, ifc_version, export_by_
     :return: An ifc export config
     :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
     """
+
+    # new in Revit 2024
+    ifc_export_links_enum_path = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2025\Revit.IFC.Export.dll"
+    clr.AddReferenceToFileAndPath(ifc_export_links_enum_path)
+    from Revit.IFC.Export.Utility import LinkedFileExportAs
 
     ifc_export_config.Name = "DefaultIFCByModelSetup"
 
@@ -268,7 +299,17 @@ def _setup_config_default_values_2023(ifc_export_config, ifc_version, export_by_
     ifc_export_config.ExportSchedulesAsPsets = False
     ifc_export_config.ExportUserDefinedPsets = False
     ifc_export_config.ExportUserDefinedPsetsFileName = ""
-    ifc_export_config.ExportLinkedFiles = False
+
+    # new in Revit 2024, appears to drive how linked files are exported...can be one big file!
+    # enum options are:
+    #   - DontExport,
+    #   - ExportAsSeparate,
+    #   - ExportSameProject,
+    #   - ExportSameSite
+
+    export_linked_files = LinkedFileExportAs.DontExport
+    ifc_export_config.ExportLinkedFiles = export_linked_files
+
     ifc_export_config.IncludeSiteElevation = True
     ifc_export_config.UseActiveViewGeometry = False  # by model
     ifc_export_config.ExportSpecificSchedules = False

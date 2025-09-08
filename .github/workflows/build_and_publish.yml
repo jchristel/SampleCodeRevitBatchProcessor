@@ -74,37 +74,77 @@ jobs:
         echo "Setting version to: $VERSION"
         echo "Setting package name to: $PACKAGE_NAME"
         
-        echo "=== UPDATING pyproject.toml ==="
-        # Find and replace version = line
-        sed -i "/^version = /c\version = \"$VERSION\"" pyproject.toml
-        echo "Updated: version = \"$VERSION\""
+        echo "=== BEFORE UPDATE ==="
+        echo "pyproject.toml relevant lines:"
+        grep -n "^name = \|^version = \|^current_version = " pyproject.toml || echo "No matches found"
+        echo "setup.cfg relevant lines:"
+        grep -n "^name = \|^version = " setup.cfg || echo "No matches found"
         
-        # Find and replace current_version = line  
-        sed -i "/^current_version = /c\current_version = \"$VERSION\"" pyproject.toml
-        echo "Updated: current_version = \"$VERSION\""
+        # Use Python for reliable text replacement
+        python3 << 'EOF'
+import os
+import re
+
+VERSION = os.environ['TAG_NUM'].lstrip('vV')
+PACKAGE_NAME = os.environ['PACKAGE_NAME']
+
+print(f"Python: Updating to version: {VERSION}")
+print(f"Python: Updating to package: {PACKAGE_NAME}")
+
+# Update pyproject.toml
+print("Updating pyproject.toml...")
+with open('pyproject.toml', 'r') as f:
+    lines = f.readlines()
+
+new_lines = []
+for i, line in enumerate(lines):
+    if line.startswith('name = '):
+        new_line = f'name = "{PACKAGE_NAME}"\n'
+        print(f"Line {i+1}: {line.strip()} -> {new_line.strip()}")
+        new_lines.append(new_line)
+    elif line.startswith('version = '):
+        new_line = f'version = "{VERSION}"\n'
+        print(f"Line {i+1}: {line.strip()} -> {new_line.strip()}")
+        new_lines.append(new_line)
+    elif line.startswith('current_version = '):
+        new_line = f'current_version = "{VERSION}"\n'
+        print(f"Line {i+1}: {line.strip()} -> {new_line.strip()}")
+        new_lines.append(new_line)
+    else:
+        new_lines.append(line)
+
+with open('pyproject.toml', 'w') as f:
+    f.writelines(new_lines)
+
+# Update setup.cfg
+print("Updating setup.cfg...")
+with open('setup.cfg', 'r') as f:
+    lines = f.readlines()
+
+new_lines = []
+for i, line in enumerate(lines):
+    if line.startswith('name = '):
+        new_line = f'name = {PACKAGE_NAME}\n'
+        print(f"Line {i+1}: {line.strip()} -> {new_line.strip()}")
+        new_lines.append(new_line)
+    elif line.startswith('version = '):
+        new_line = f'version = {VERSION}\n'
+        print(f"Line {i+1}: {line.strip()} -> {new_line.strip()}")
+        new_lines.append(new_line)
+    else:
+        new_lines.append(line)
+
+with open('setup.cfg', 'w') as f:
+    f.writelines(new_lines)
+
+print("Python script completed successfully")
+EOF
         
-        # Find and replace name = line
-        sed -i "/^name = /c\name = \"$PACKAGE_NAME\"" pyproject.toml
-        echo "Updated: name = \"$PACKAGE_NAME\""
-        
-        echo "=== UPDATING setup.cfg ==="
-        # Find and replace version = line in setup.cfg
-        sed -i "/^version = /c\version = $VERSION" setup.cfg
-        echo "Updated: version = $VERSION"
-        
-        # Find and replace name = line in setup.cfg
-        sed -i "/^name = /c\name = $PACKAGE_NAME" setup.cfg
-        echo "Updated: name = $PACKAGE_NAME"
-        
-        echo "=== VERIFICATION ==="
-        echo "pyproject.toml version lines:"
-        grep "^version = " pyproject.toml
-        grep "^current_version = " pyproject.toml
-        grep "^name = " pyproject.toml
-        echo ""
-        echo "setup.cfg lines:"
-        grep "^version = " setup.cfg
-        grep "^name = " setup.cfg
+        echo "=== AFTER UPDATE ==="
+        echo "pyproject.toml relevant lines:"
+        grep -n "^name = \|^version = \|^current_version = " pyproject.toml || echo "No matches found"
+        echo "setup.cfg relevant lines:"
+        grep -n "^name = \|^version = " setup.cfg || echo "No matches found"
 
     - name: Install dependencies
       run: |

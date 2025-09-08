@@ -460,15 +460,6 @@ PURGE_ACTIONS.append(
 )
 PURGE_ACTIONS.append(
     pA.PurgeAction(
-        "Purge Unused Building Pad Types",
-        rBuildingPadPurge.get_unused_non_in_place_building_pad_type_ids_to_purge,
-        "Building Pad Type(s)",
-        "Building Pad Type(s)",
-        rBuildP.get_all_building_pad_type_ids_in_model_by_class,
-    )
-)
-PURGE_ACTIONS.append(
-    pA.PurgeAction(
         "Purge Unused Railing Types",
         rRailPurge.get_unused_non_in_place_railing_type_ids_to_purge,
         "Railing Type(s)",

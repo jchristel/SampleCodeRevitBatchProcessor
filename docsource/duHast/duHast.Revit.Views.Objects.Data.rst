@@ -44,6 +44,30 @@ duHast.Revit.Views.Objects.Data.override\_projection module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Views.Objects.Data.view\_filter module
+---------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.Objects.Data.view_filter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Views.Objects.Data.view\_filter\_logic\_container module
+---------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.Objects.Data.view_filter_logic_container
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Views.Objects.Data.view\_filter\_rule module
+---------------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.Objects.Data.view_filter_rule
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

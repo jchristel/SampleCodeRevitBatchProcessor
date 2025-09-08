@@ -92,6 +92,14 @@ duHast.Revit.Family.Data.Objects.family\_directive\_rename module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Family.Data.Objects.family\_directive\_rename\_type module
+-----------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.Objects.family_directive_rename_type
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Family.Data.Objects.family\_directive\_swap\_instances\_of\_type module
 ------------------------------------------------------------------------------------
 

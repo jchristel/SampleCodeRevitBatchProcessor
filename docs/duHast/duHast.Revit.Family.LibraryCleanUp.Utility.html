@@ -300,13 +300,13 @@ ITSE-001 will return {‘ITSE-001’: ‘ITSE-001’}</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.create_swap_directives">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.</span></span><span class="sig-name descname"><span class="pre">create_swap_directives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_storage_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_group_codes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy_directives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code_to_descriptor_map</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.create_swap_directives" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.</span></span><span class="sig-name descname"><span class="pre">create_swap_directives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_storage_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_group_codes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy_directives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code_to_descriptor_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.directives_create.create_swap_directives" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create swap directives for each unique group code in the family storage data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>family_storage_data</strong> (<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager" title="duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyTypeDataStorageManager</span></code></a>) – The family storage data from which to create swap directives.</p></li>
-<li><p><strong>unique_group_codes</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – A list of unique group codes to create swap directives for.</p></li>
+<li><p><strong>unique_group_codes</strong> (<em>{str:str}</em>) – A dictionary of full code to group code mappings.(i.e ITSE-002.01: ITSE-002 or ITSE-001: ITSE-001)</p></li>
 <li><p><strong>copy_directives</strong> (list[<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy" title="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyDirectiveCopy</span></code></a>]) – A list of copy directives to be used for creating swap directives.</p></li>
 <li><p><strong>code_to_descriptor_map</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>(</em><em>str</em><em>, </em><em>str</em><em>)</em><em>]</em>) – A mapping of grouping codes to their descriptions.</p></li>
 </ul>
@@ -548,7 +548,8 @@ ITSE-001 will return {‘ITSE-001’: ‘ITSE-001’}</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.family_load.get_families_to_be_loaded_for_swapping">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.family_load.</span></span><span class="sig-name descname"><span class="pre">get_families_to_be_loaded_for_swapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swap_directives</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.family_load.get_families_to_be_loaded_for_swapping" title="Permalink to this definition">¶</a></dt>
-<dd><p>Loads families to be swapped into the document.</p>
+<dd><p>Identifies all families required to be loaded into a project for swapping based on the provided swap directives.</p>
+<p>Will check if target family already exists in the project and if so discard it from the list of families to be loaded.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -567,13 +568,15 @@ ITSE-001 will return {‘ITSE-001’: ‘ITSE-001’}</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.Utility.family_load.load_families_required_for_swapping">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.family_load.</span></span><span class="sig-name descname"><span class="pre">load_families_required_for_swapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swap_directives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">library_directory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.family_load.load_families_required_for_swapping" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.Utility.family_load.</span></span><span class="sig-name descname"><span class="pre">load_families_required_for_swapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swap_directives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">library_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.Utility.family_load.load_families_required_for_swapping" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads families required for swapping into the document.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document.</p></li>
 <li><p><strong>swap_directives</strong> (<em>list</em><em> of </em><em>dict</em>) – The swap directives containing family names and paths.</p></li>
+<li><p><strong>library_directory</strong> (<em>str</em>) – The directory where family files are located.</p></li>
+<li><p><strong>progress_callback</strong> (<a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.ProgressBase.ProgressBase" title="duHast.UI.Objects.ProgressBase.ProgressBase"><em>ProgressBase</em></a><em> or </em><em>None</em>) – Optional progress callback for UI updates.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

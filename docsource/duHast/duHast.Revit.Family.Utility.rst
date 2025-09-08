@@ -12,6 +12,14 @@ duHast.Revit.Family.Utility.family\_copy\_directive\_utils module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Family.Utility.family\_rename\_types\_utils module
+---------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Utility.family_rename_types_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Family.Utility.family\_swap\_instances\_by\_type\_utils module
 ---------------------------------------------------------------------------
 

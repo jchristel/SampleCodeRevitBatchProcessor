@@ -246,6 +246,70 @@
 </dd></dl>
 
 </section>
+<section id="module-duHast.Revit.Views.Objects.Data.view_filter">
+<span id="duhast-revit-views-objects-data-view-filter-module"></span><h2>duHast.Revit.Views.Objects.Data.view_filter module<a class="headerlink" href="#module-duHast.Revit.Views.Objects.Data.view_filter" title="Permalink to this heading">¶</a></h2>
+<section id="a-base-class-used-to-store-view-filters">
+<h3>A base class used to store view filters.<a class="headerlink" href="#a-base-class-used-to-store-view-filters" title="Permalink to this heading">¶</a></h3>
+<p>Stores view filters ( ParameterFilterElement in Revit)</p>
+<dl>
+<dt>ParameterFilterElement contains: </dt><dd><ul class="simple">
+<li><p>ElementFilters ( a base class for filters)</p></li>
+</ul>
+<dl>
+<dt>those in turn contain ElementLogicalFilter ( a base class for ) logical filters There are two types:</dt><dd><ul class="simple">
+<li><p>LogicalAndFilter</p></li>
+<li><p>LogicalOrFilter</p></li>
+</ul>
+<dl class="simple">
+<dt>and those in turn contain ElementParameterFilter ( a base class for parameter filters)</dt><dd><ul class="simple">
+<li><p>most often in view filters we seem to use ElementParameterFilter which consists of list of  FilterRule</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Objects.Data.view_filter.ViewFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Objects.Data.view_filter.</span></span><span class="sig-name descname"><span class="pre">ViewFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'view</span> <span class="pre">filter'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Objects.Data.view_filter.ViewFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Class constructor.</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.Objects.Data.view_filter_logic_container">
+<span id="duhast-revit-views-objects-data-view-filter-logic-container-module"></span><h2>duHast.Revit.Views.Objects.Data.view_filter_logic_container module<a class="headerlink" href="#module-duHast.Revit.Views.Objects.Data.view_filter_logic_container" title="Permalink to this heading">¶</a></h2>
+<section id="a-container-class-used-to-group-elementparameterfilters">
+<h3>A container class used to group ElementParameterFilters.<a class="headerlink" href="#a-container-class-used-to-group-elementparameterfilters" title="Permalink to this heading">¶</a></h3>
+<p>Stores view filters rules</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Objects.Data.view_filter_logic_container.ViewFilterLogicContainer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Objects.Data.view_filter_logic_container.</span></span><span class="sig-name descname"><span class="pre">ViewFilterLogicContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'view</span> <span class="pre">filter</span> <span class="pre">logic</span> <span class="pre">container'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Objects.Data.view_filter_logic_container.ViewFilterLogicContainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Class constructor.</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.Objects.Data.view_filter_rule">
+<span id="duhast-revit-views-objects-data-view-filter-rule-module"></span><h2>duHast.Revit.Views.Objects.Data.view_filter_rule module<a class="headerlink" href="#module-duHast.Revit.Views.Objects.Data.view_filter_rule" title="Permalink to this heading">¶</a></h2>
+<section id="a-base-class-used-to-store-view-filter-rules">
+<h3>A base class used to store view filter rules.<a class="headerlink" href="#a-base-class-used-to-store-view-filter-rules" title="Permalink to this heading">¶</a></h3>
+<p>Stores view filters rules</p>
+<p>The paraemeter id
+the Evaluation type
+the rule value</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Objects.Data.view_filter_rule.ViewFilterRule">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Objects.Data.view_filter_rule.</span></span><span class="sig-name descname"><span class="pre">ViewFilterRule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'view</span> <span class="pre">filter</span> <span class="pre">rule'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Objects.Data.view_filter_rule.ViewFilterRule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Class constructor.</p>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Views.Objects.Data">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Views.Objects.Data" title="Permalink to this heading">¶</a></h2>
 </section>

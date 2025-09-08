@@ -59,7 +59,9 @@ class ViewFilter(base.Base):
         super(ViewFilter, self).__init__(**kwargs)
 
         self.data_type = data_type
+        self.category_ids = []  # list of category ids the filter applies to
         self.logic_container = None  # should just be one
+        self.name = ""
        
 
         # check if any data was past in with constructor!

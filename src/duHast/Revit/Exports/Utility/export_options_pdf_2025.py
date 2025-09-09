@@ -33,12 +33,14 @@ def set_pdf_export_option_2025(
         paper_format =  ExportPaperFormat.Default,
         export_quality = PDFExportQualityType.DPI600,
         hide_crop_boundaries = True,
+        hide_reference_planes = True, 
         hide_scope_boxes = True,
         hide_unreferenced_view_tags = True,
         mask_coincident_lines = True,
         replace_halftone_with_thin_lines = False,
         stop_on_error = False,
         view_links_in_blue = False,
+        export_in_background = False, # new in revit 2025
         ):
     """
     Sets the PDF export options for the Revit document.
@@ -67,11 +69,13 @@ def set_pdf_export_option_2025(
     pdf_export_option.ExportQuality = export_quality
 
     pdf_export_option.HideCropBoundaries = hide_crop_boundaries
+    pdf_export_option.HideReferencePlanes = hide_reference_planes # new in revit 2025
     pdf_export_option.HideScopeBoxes = hide_scope_boxes
     pdf_export_option.HideUnreferencedViewTags = hide_unreferenced_view_tags
     pdf_export_option.MaskCoincidentLines = mask_coincident_lines
     pdf_export_option.ReplaceHalftoneWithThinLines = replace_halftone_with_thin_lines
     pdf_export_option.StopOnError = stop_on_error
     pdf_export_option.ViewLinksInBlue = view_links_in_blue
+    pdf_export_option.ExportInBackground = export_in_background # new in revit 2025
 
     return pdf_export_option

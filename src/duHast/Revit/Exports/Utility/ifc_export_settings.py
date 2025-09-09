@@ -199,6 +199,10 @@ class IFCSettings(base.Base):
         else:
             raise Exception("Unsupported IFC version:" + ifc_version)
 
+        # check the file type:
+        self.ifc_file_type = "Ifc"  # currently only this is supported
+        # Ifc, IfcXML, IfcZIP, IfcXMLZIP:
+               
         self.space_boundaries = space_boundaries
         self.active_phase_id = active_phase_id
         self.active_view_id = active_view_id

@@ -177,6 +177,12 @@ def _setup_config_from_settings_2025(ifc_export_config, ifc_settings):
     else:
         ifc_export_config.IFCVersion = IFCVersion.Default
 
+    # ifc file type property
+    if ifc_settings.ifc_file_type == "Ifc":
+        ifc_export_config.IFCFileFormat = System.Enum.Parse(
+            ifc_export_config.IFCFileFormat.GetType(), "Ifc"
+        )
+
     ifc_export_config.SpaceBoundaries = ifc_settings.space_boundaries
     ifc_export_config.ActivePhaseId = ifc_settings.active_phase_id
 

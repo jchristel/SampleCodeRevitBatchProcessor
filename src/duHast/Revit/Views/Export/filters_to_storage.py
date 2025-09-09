@@ -11,7 +11,7 @@ This module contains a number of helper functions relating to Revit view filters
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2024, Jan Christel
+# Copyright 2025, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -52,189 +52,326 @@ DEBUG = False
 # Inverse rules are essentially wrappers around standard rules inversing that outcome
 
 
-def analyze_rule(doc, rule,  is_inversed, nesting_level,):
+def analyze_rule(doc, rule,  is_inversed, nesting_level, debug = False):
+    """
+    
+    Analyze a single rule and return a view filter rule object.
+    
+    :param doc: The Revit document.
+    :type doc: Document
+    :param rule: The rule to analyze.
+    :type rule: FilterRule
+    :param is_inversed: Whether the rule is inversed.
+    :type is_inversed: bool
+    :param nesting_level: The nesting level of the rule.
+    :type nesting_level: int
+    :param debug: Whether to print debug information.
+    :type debug: bool
+
+    :return: A result object containing the view filter rule. If an error occurs, the result object will indicate failure and contain an error message.
+    :rtype: :class:`.Result`
+    """
+
+    return_value = Result()
+    try
+        view_filter_rule = ViewFilterRule()
+
+        # can be numeric or a string rule
+        # get the parameter to be checked
+        if debug:
+            return_value.append_message ("{} rule parameter id: {}".format("..." * nesting_level, rule.GetRuleParameter().IntegerValue))
+        
+        # parameter id
+        view_filter_rule.parameter_id = rule.GetRuleParameter().IntegerValue
+
+        # get the evaluation type (ends with, starts with, equals, greater than, etc)
+        if debug:
+            return_value.append_message ("{} rule evaluator: {}".format("..." * nesting_level, rule.GetEvaluator().GetType().Name))
+        
+        view_filter_rule.evaluation_type = rule.GetEvaluator().GetType().Name
+
+        # get the rule value
+        if isinstance(rule, FilterNumericValueRule):
+            if debug:
+                return_value.append_message ("{} rule value: {}".format("..." * nesting_level, rule.RuleValue))
+            view_filter_rule.rule_value=rule.RuleValue
+        elif isinstance(rule, FilterStringRule):
+            if debug:
+                return_value.append_message ("{} rule value: {}".format("..." * nesting_level, rule.RuleString))
+            view_filter_rule.rule_value=rule.RuleString
+        
+        # is the rule inversed
+        if debug:
+            return_value.append_message ("{} is inversed: {}".format("..." * nesting_level, is_inversed))
+        
+        view_filter_rule.is_inversed = is_inversed
+
+        if debug:
+            return_value.append_message ("{} rule complete: {}".format("..." * nesting_level, view_filter_rule))
+        
+        return_value.result.append(view_filter_rule)
+        return return_value
+    except Exception as e:
+        return_value.update_sep(False, "Failed to analyze rule. Error: {}".format(e))
+        return return_value
+
     
 
-    view_filter_rule = ViewFilterRule()
+def analyze_element_parameter_filter(doc, element_parameter_filter, nesting_level, debug = False):
+    """
+    Analyze an element parameter filter and return a list of view filter rules.
 
-    # can be numeric or a string rule
-    # get the parameter to be checked
-    if DEBUG:
-        print ("{} rule parameter id: {}".format("..." * nesting_level, rule.GetRuleParameter().IntegerValue))
-    view_filter_rule.parameter_id = rule.GetRuleParameter().IntegerValue
+    :param doc: The Revit document.
+    :type doc: Document
+    :param element_parameter_filter: The element parameter filter to analyze.
+    :type element_parameter_filter: ElementParameterFilter
+    :param nesting_level: The nesting level of the filter.
+    :type nesting_level: int
+    :param debug: Whether to print debug information.
+    :type debug: bool
 
-    # get the evaluation type (ends with, starts with, equals, greater than, etc)
-    if DEBUG:
-        print ("{} rule evaluator: {}".format("..." * nesting_level, type(rule.GetEvaluator())))
-    view_filter_rule.evaluation_type = rule.GetEvaluator().GetType().Name
+    :return: A result object containing a list of view filter rules. If an error occurs, the result object will indicate failure and contain an error message.
+    :rtype: :class:`.Result`
+    """
 
-    # get the rule value
-    if isinstance(rule, FilterNumericValueRule):
-        if DEBUG:
-            print ("{} rule value: {}".format("..." * nesting_level, rule.RuleValue))
-        view_filter_rule.rule_value=rule.RuleValue
-    elif isinstance(rule, FilterStringRule):
-        if DEBUG:
-            print ("{} rule value: {}".format("..." * nesting_level, rule.RuleString))
-        view_filter_rule.rule_value=rule.RuleString
-    
-    # is the rule inversed
-    if DEBUG:
-        print ("{} is inversed: {}".format("..." * nesting_level, is_inversed))
-    
-    view_filter_rule.is_inversed = is_inversed
+    return_value = Result()
 
-    if DEBUG:
-        print ("{} rule complete: {}".format("..." * nesting_level, view_filter_rule))
-    return view_filter_rule
+    try:
+        rules = element_parameter_filter.GetRules()
+        if debug:
+            return_value.append_message ("{} rules: {}".format("..." * nesting_level, rules.Count))
+        
+        # set up a list to hold the rules
+        rules_analysed = []
 
-    
-
-
-
-def analyze_element_parameter_filter(doc, element_parameter_filter, nesting_level):
-
-    rules = element_parameter_filter.GetRules()
-    if DEBUG:
-        print ("{} rules: {}".format("..." * nesting_level, rules.Count))
-    
-    # set up a list to hold the rules
-    rules_analysed = []
-
-    # go over all rules
-    for rule in rules:
-        if DEBUG:
-            print ("{} rule type: {}".format("..." * nesting_level, type(rule)))
-       
-        # check if the rule is an inverse rule
-        if isinstance(rule, FilterInverseRule):
-            if DEBUG:
-                print ("{} is inverse rule...unwrap".format("..." * nesting_level))
-            rule_nested = rule.GetInnerRule()
-            rule_analysed = analyze_rule(doc, rule_nested, True, nesting_level+1)
-            
-            # add generated rule to list
-            rules_analysed.append(rule_analysed)
-        else:
-            rule_analysed = analyze_rule(doc, rule, False, nesting_level+1)
-            
-            # add generated rule to list
-            rules_analysed.append(rule_analysed)
-    
-    return rules_analysed
-       
-
-
-def analyze_logical_filter(doc, logical_filter, nesting_level=0):
-    
-    logical_container = ViewFilterLogicContainer()
-
-    # get the filters in the logical filter
-    # should always be a list of element parameter filters or nested logical filters
-    filters = logical_filter.GetFilters()
-
-    if DEBUG:
-        print ("{} Logical filter contains the following filters:".format("..." * nesting_level))
-        print ("{} {} ".format("..." * nesting_level, type(filters)))
-
-    # set up a comparing type
-    filter_list_type = List[ElementFilter]
-
-    # should always be a list of element parameter filters or nested logical filters
-    if isinstance(filters, filter_list_type):
-        for filter in filters:
-            # check the type of filter
-            if isinstance(filter, ElementParameterFilter):
-                if DEBUG:
-                    print ( "{} is element parameter filter".format("..." * nesting_level))
-                rules = analyze_element_parameter_filter(doc, filter, nesting_level + 1)
+        # go over all rules
+        for rule in rules:
+            if debug:
+                return_value.append_message ("{} rule type: {}".format("..." * nesting_level, type(rule)))
+        
+            # check if the rule is an inverse rule
+            if isinstance(rule, FilterInverseRule):
+                if debug:
+                    return_value.append_message ("{} is inverse rule...unwrap".format("..." * nesting_level))
                 
-                # check what came back
-                if len(rules) > 0:
-                    if DEBUG:
-                        print("{} adding {} rules to logical container".format("..." * nesting_level, len(rules)))
-                    # add rules to the logical container
-                    logical_container.view_filter_rules = logical_container.view_filter_rules + rules
+                # get the nested rule
+                rule_nested = rule.GetInnerRule()
 
-            elif isinstance(filter, LogicalAndFilter) or isinstance(filter_elements, LogicalOrFilter):
-                if DEBUG:
-                    print ( "{} is logical and filter...recursive call".format("..." * nesting_level))
-                nested_container = analyze_logical_filter(doc,filter, nesting_level + 1)
+                # analyze the inverse rule
+                rule_analysed_result = analyze_rule(doc, rule_nested, True, nesting_level+1, debug)
+
+                # check if successful
+                if not rule_analysed_result.status:
+                    return_value.update_sep(False, "Failed to analyze element parameter filter inverse rule. Error: {}".format(rule_analysed_result.message))
+                    continue
                 
-                # check what came back
-                if  nested_container:
-                    # add nested container to the logical container
-                    logical_container.logic_containers.append(nested_container)
-                    
-                
-    else:
-        if DEBUG:
-            # not sure what this...
-            print("{} Currently not supported: {}".format("..." * nesting_level, type(filters)))
-        return none
-    
-    if DEBUG:
-        print ("{} logical filter complete: {}".format("..." * nesting_level, logical_container))
-    return logical_container
-
-
-
-
-def analyze_filters(doc, filters, forms):
-
-
-    analysed_filters = []
-
-    max_value = len(filters.ToElements())
-    counter = 1
-
-    # set up a pyrevit progress bar
-    with forms.ProgressBar(
-        title="Exporting view filters: {value} of {max_value}", cancellable=True
-    ) as pb:
-
-        # loop over view filters in the model
-        for filter in filters:
-            
-            # update progress bar
-            pb.update_progress(counter, max_value)
-
-            view_filter = ViewFilter()
-            
-            if DEBUG:
-                # get the filter name
-                print("filter name: {}".format(Element.Name.GetValue(filter)))
-            view_filter.name = Element.Name.GetValue(filter)
-
-            # getting the revit category ids the filter is applied to
-            filter_revit_category_ids = filter.GetCategories()
-            for id in filter_revit_category_ids:
-                if DEBUG:
-                    print("...Filter Id [{}]".format(id.IntegerValue))
-                view_filter.category_ids.append(id.IntegerValue)
-            
-            # getting the filter elements
-            filter_elements = filter.GetElementFilter()
-
-            # check the type of filter, should be a logical element filter (top level)
-            if isinstance(filter_elements, LogicalAndFilter) or isinstance(filter_elements, LogicalOrFilter):
-                if DEBUG:
-                    print ( "...is logical filter")
-                container_host = analyze_logical_filter(doc, filter_elements,1)
-                if container_host:
-                    view_filter.logic_container = container_host
-                    if DEBUG:
-                        print("...updated container host to view filter")
-                    analysed_filters.append(view_filter)
+                # add generated rule to list
+                rules_analysed.append(rule_analysed_result.result[0])
             else:
-                if DEBUG:
+                # analyze the rule
+                rule_analysed_result = analyze_rule(doc, rule, False, nesting_level+1, debug)
+
+                # check if successful
+                if not rule_analysed_result.status:
+                    return_value.update_sep(False, "Failed to analyze element parameter filter rule. Error: {}".format(rule_analysed_result.message))
+                    continue
+                
+                # add generated rule to list
+                rules_analysed.append(rule_analysed_result.result[0])
+        
+
+        # return the rules
+        return_value.result.append(rules_analysed)
+        return return_value
+
+    except Exception as e:
+        return_value.update_sep(False, "Failed to analyze element parameter filter. Error: {}".format(e))
+        return return_value
+       
+
+
+def analyze_logical_filter(doc, logical_filter, nesting_level=0, debug = False):
+    """
+    Analyze a logical filter and return a view filter logic container.
+
+    :param doc: The Revit document.
+    :type doc: Document
+    :param logical_filter: The logical filter to analyze.
+    :type logical_filter: LogicalAndFilter or LogicalOrFilter
+    :param nesting_level: The nesting level of the filter.
+    :type nesting_level: int
+    :param debug: Whether to print debug information.
+    :type debug: bool
+
+    :return: A result object containing a view filter logic container. If an error occurs, the result object will indicate failure and contain an error message.
+    :rtype: :class:`.Result`
+    """
+
+    return_value = Result()
+
+    try:
+        # setup a logical container
+        logical_container = ViewFilterLogicContainer()
+
+        # get the filters in the logical filter
+        # should always be a list of element parameter filters or nested logical filters
+        filters = logical_filter.GetFilters()
+
+        if debug:
+            return_value.append_message ("{} Logical filter contains the following filters:".format("..." * nesting_level))
+            return_value.append_message ("{} {} ".format("..." * nesting_level, type(filters)))
+
+        # set up a comparing type to make sure we get a list
+        filter_list_type = List[ElementFilter]
+
+        # should always be a list of element parameter filters or nested logical filters
+        if isinstance(filters, filter_list_type):
+
+            # loop over list contents
+            for filter in filters:
+                # check the type of filter
+                if isinstance(filter, ElementParameterFilter):
+                    if debug:
+                        return_value.append_message ( "{} is element parameter filter".format("..." * nesting_level))
+                    
+                    # analyze the element parameter filter
+                    rules_result = analyze_element_parameter_filter(doc, filter, nesting_level + 1, debug)
+                    
+                    # check what came back
+                    if rules_result.status and len(rules_result.result) > 0:
+                        if debug:
+                            return_value.append_message ("{} adding {} rules to logical container".format("..." * nesting_level, len(rules_result.result)))
+                        
+                        # add rules to the logical container
+                        logical_container.view_filter_rules = logical_container.view_filter_rules + rules_result.result[0]
+                    else:
+                        # something went wrong
+                        return_value.update_sep(False, "Failed to analyze element parameter filter. Error: {}".format(rules_result.message))
+
+                elif isinstance(filter, LogicalAndFilter) or isinstance(filter_elements, LogicalOrFilter):
+                    if debug:
+                        return_value.append_message ( "{} is logical and filter...recursive call".format("..." * nesting_level))
+                    
+                    # analyse another logical conditions
+                    nested_container_result = analyze_logical_filter(doc,filter, nesting_level + 1, debug)
+                    
+                    # check what came back
+                    if  nested_container.status and len(nested_container_result.result) > 0:
+                        # add nested container to the logical container
+                        logical_container.logic_containers.append(nested_container.result[0])
+                        
+        else:
+            # not sure what this...
+            return_value.update_sep(False, "{} Currently not supported: {}".format("..." * nesting_level, type(filters)))
+            return return_value
+        
+        if debug:
+            return_value.append_message ("{} logical filter complete: {}".format("..." * nesting_level, logical_container))
+        
+        # add the container
+        return_value.result.append(logical_container)
+
+        # return to caller
+        return return_value
+
+    except Exception as e:
+        return_value.update_sep(False, "Failed to analyze logical filter. Error: {}".format(e))
+        return return_value
+
+
+
+def analyze_filters(doc, filters, forms, debug = False):
+    """
+    Analyze all view filters in the document and return a list of view filter objects.
+
+    :param doc: The Revit document.
+    :type doc: Document
+    :param filters: The view filters to analyze.
+    :type filters: FilterElementCollector
+    :param forms: The pyrevit forms module.
+    :type forms: module
+    :param debug: Whether to print debug information.
+    :type debug: bool
+
+    :return: A result object containing a list of view filter objects. If an error occurs, the result object will indicate failure and contain an error message.
+    :rtype: :class:`.Result`
+    """
+
+    return_value = Result()
+
+    try:
+
+        analysed_filters = []
+
+        max_value = len(filters.ToElements())
+        counter = 1
+
+        # set up a pyrevit progress bar
+        with forms.ProgressBar(
+            title="Exporting view filters: {value} of {max_value}", cancellable=True
+        ) as pb:
+
+            # loop over view filters in the model
+            for filter in filters:
+                
+                # update progress bar
+                pb.update_progress(counter, max_value)
+
+                view_filter = ViewFilter()
+                
+                if debug:
+                    # get the filter name
+                    return_value.append_message ("filter name: {}".format(Element.Name.GetValue(filter)))
+                
+                # store the filter name
+                view_filter.name = Element.Name.GetValue(filter)
+
+                # getting the revit category ids the filter is applied to
+                filter_revit_category_ids = filter.GetCategories()
+                
+                # add category ids to the view filter
+                for id in filter_revit_category_ids:
+                    if debug:
+                        return_value.append_message ("...Filter Id [{}]".format(id.IntegerValue))
+                    
+                    view_filter.category_ids.append(id.IntegerValue)
+                
+                # getting the filter elements
+                filter_elements = filter.GetElementFilter()
+
+                # check the type of filter, should be a logical element filter (top level)
+                if isinstance(filter_elements, LogicalAndFilter) or isinstance(filter_elements, LogicalOrFilter):
+                    if debug:
+                        return_value.append_message ( "...is logical filter")
+                    
+                    container_host_result = analyze_logical_filter(doc, filter_elements,1, debug)
+                    
+                    # check what came back
+                    if container_host_result.status and len(container_host_result.result) > 0:
+
+                        # store the container host in the view filter
+                        view_filter.logic_container = container_host_result.result[0]
+                        
+                        if debug:
+                            return_value.append_message ("...updated container host to view filter")
+                        
+                        # add the view filter to the list to be returned
+                        analysed_filters.append(view_filter)
+                else:
+
                     # not sure what this...
-                    print("    Currently not supported: {}".format(type(filter_elements)))
+                    return_value.append_message ("    Currently not supported: {}".format(type(filter_elements)))
 
-            if pb.cancelled:
-                return None
-            
-            # update progress
-            counter = counter + 1
+                if pb.cancelled:
+                    return_value.update_sep(False, "Operation cancelled by user.")
+                    return return_value
+                
+                # update progress
+                counter = counter + 1
+        
+        return_value.result.append(analysed_filters)
+        return return_value
 
-    return analysed_filters
+    except Exception as e:
+        return_value.update_sep(False, "Failed to analyze filters. Error: {}".format(e))
+        return return_value

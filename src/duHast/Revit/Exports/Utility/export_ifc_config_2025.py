@@ -31,10 +31,20 @@ import clr
 import System
 import sys
 
+from duHast.Revit.Exports.Utility.export_ifc_constants import (
+    get_enum_path, 
+    get_third_party_path,
+    get_folder_path_enums,
+)
+
 from Autodesk.Revit.DB import ElementId, IFCVersion
 
-# -------------------------------------------- IFC EXPORT Revit 2024 -------------------------------------
-# TODO: need to check for new features in revit 2024
+# used in paths to get the correct dlls
+REVIT_VERSION= "2025"
+
+
+# -------------------------------------------- IFC EXPORT Revit 2025 -------------------------------------
+# TODO: need to check for new features in revit 2025
 
 
 # ifcVersion        which ifc version (2x3 etc...)
@@ -51,7 +61,8 @@ def ifc_get_third_party_export_config_by_view_2025(ifc_version, ifc_settings):
     """
 
     # load version specific assemblies
-    ifc_third_party_folder_path_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2025\IFCExporterUIOverride.dll"
+    ifc_third_party_folder_path_ = get_third_party_path(REVIT_VERSION)
+    #r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2025\IFCExporterUIOverride.dll"
 
     clr.AddReferenceToFileAndPath(ifc_third_party_folder_path_)
 
@@ -88,8 +99,11 @@ def ifc_get_third_party_export_config_by_model_2025(ifc_version, ifc_settings):
     """
 
     # load version specific assemblies
-    ifc_third_party_folder_path_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2025\IFCExporterUIOverride.dll"
-    ifc_third_party_folder_path_enums_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2025\Revit.IFC.Common.dll"
+    ifc_third_party_folder_path_ = get_third_party_path(REVIT_VERSION)
+    ifc_third_party_folder_path_enums_ = get_folder_path_enums(REVIT_VERSION)
+    #ifc_third_party_folder_path_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2025\IFCExporterUIOverride.dll"
+    #ifc_third_party_folder_path_enums_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2025\Revit.IFC.Common.dll"
+    
     clr.AddReferenceToFileAndPath(ifc_third_party_folder_path_)
     clr.AddReferenceToFileAndPath(ifc_third_party_folder_path_enums_)
 
@@ -125,9 +139,11 @@ def _setup_config_from_settings_2025(ifc_export_config, ifc_settings):
     :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
     """
 
-    ifc_third_party_folder_path_enums_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2025\Revit.IFC.Common.dll"
+    ifc_third_party_folder_path_enums_ = get_folder_path_enums(REVIT_VERSION)
+    #r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2025\Revit.IFC.Common.dll"
     # new in Revit 2024
-    ifc_export_links_enum_path = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2025\Revit.IFC.Export.dll"
+    ifc_export_links_enum_path = get_enum_path(REVIT_VERSION)
+    #r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2025\Revit.IFC.Export.dll"
 
     clr.AddReferenceToFileAndPath(ifc_third_party_folder_path_enums_)
     clr.AddReferenceToFileAndPath(ifc_export_links_enum_path)
@@ -271,7 +287,8 @@ def _setup_config_default_values_2025(ifc_export_config, ifc_version, export_by_
     """
 
     # new in Revit 2024
-    ifc_export_links_enum_path = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2025\Revit.IFC.Export.dll"
+    ifc_export_links_enum_path = get_enum_path(REVIT_VERSION)
+    #r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2025\Revit.IFC.Export.dll"
     clr.AddReferenceToFileAndPath(ifc_export_links_enum_path)
     from Revit.IFC.Export.Utility import LinkedFileExportAs
 

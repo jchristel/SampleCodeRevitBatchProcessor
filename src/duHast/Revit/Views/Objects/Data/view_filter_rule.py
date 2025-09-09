@@ -53,6 +53,8 @@ class ViewFilterRule(base.Base):
 
         self.data_type = data_type
         self.parameter_id = -1
+        self.parameter_name = ""
+        self.parameter_guid = ""
         self.evaluation_type = ""
         self.rule_value = ""
         self.is_inversed = False
@@ -78,6 +80,9 @@ class ViewFilterRule(base.Base):
                 self.evaluation_type = j["evaluation_type"]
                 self.rule_value = j["rule_value"]
                 self.is_inversed = j["is_inversed"]
+                self.parameter_name = j["parameter_name"]
+                self.parameter_guid = j["parameter_guid"]
+
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(

@@ -36,6 +36,7 @@ from duHast.Utilities.files_io import get_file_name_without_ext
 from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.files_json import write_json_to_file
 
+from duHast.UI.Objects.ProgressBase import ProgressBase
 
 from duHast.Revit.Views.filters import get_all_filters
 from duHast.Revit.Views.Objects.Data.view_filter import ViewFilter
@@ -73,7 +74,8 @@ def analyze_rule(doc, rule,  is_inversed, nesting_level, debug = False):
     """
 
     return_value = Result()
-    try
+    try:
+
         view_filter_rule = ViewFilterRule()
 
         # can be numeric or a string rule
@@ -83,6 +85,18 @@ def analyze_rule(doc, rule,  is_inversed, nesting_level, debug = False):
         
         # parameter id
         view_filter_rule.parameter_id = rule.GetRuleParameter().IntegerValue
+
+        # parameter name
+        param = doc.GetElement(rule.GetRuleParameter())
+        if param:
+            if debug:
+                return_value.append_message ("{} rule parameter name: {}".format("..." * nesting_level, Element.Name.GetValue(param)))
+            view_filter_rule.parameter_name = Element.Name.GetValue(param)
+            # parameter guid
+            if hasattr(param, "GUID"):
+                if debug:
+                    return_value.append_message ("{} rule parameter guid: {}".format("..." * nesting_level, param.GUID.ToString()))
+                view_filter_rule.parameter_guid = param.GUID.ToString()
 
         # get the evaluation type (ends with, starts with, equals, greater than, etc)
         if debug:
@@ -280,7 +294,7 @@ def analyze_logical_filter(doc, logical_filter, nesting_level=0, debug = False):
 
 
 
-def analyze_filters(doc, filters, forms, debug = False):
+def analyze_filters(doc, filters,  progress_callback, debug = False):
     """
     Analyze all view filters in the document and return a list of view filter objects.
 
@@ -306,68 +320,67 @@ def analyze_filters(doc, filters, forms, debug = False):
         max_value = len(filters.ToElements())
         counter = 1
 
-        # set up a pyrevit progress bar
-        with forms.ProgressBar(
-            title="Exporting view filters: {value} of {max_value}", cancellable=True
-        ) as pb:
+        # loop over view filters in the model
+        for filter in filters:
+            
+            view_filter = ViewFilter()
 
-            # loop over view filters in the model
-            for filter in filters:
-                
-                # update progress bar
-                pb.update_progress(counter, max_value)
+            # store the filter name
+            view_filter.name = Element.Name.GetValue(filter)
 
-                view_filter = ViewFilter()
-                
+            if debug:
+                # get the filter name
+                return_value.append_message ("filter name: {}".format(Element.Name.GetValue(filter)))
+
+            # update progress bar
+            if progress_callback:
+                progress_callback.update(counter, max_value, view_filter.name)
+           
+            # getting the revit category ids the filter is applied to
+            filter_revit_category_ids = filter.GetCategories()
+            
+            # add category ids to the view filter
+            for id in filter_revit_category_ids:
                 if debug:
-                    # get the filter name
-                    return_value.append_message ("filter name: {}".format(Element.Name.GetValue(filter)))
+                    return_value.append_message ("...Filter Id [{}]".format(id.IntegerValue))
                 
-                # store the filter name
-                view_filter.name = Element.Name.GetValue(filter)
+                view_filter.category_ids.append(id.IntegerValue)
+            
+            # getting the filter elements
+            filter_elements = filter.GetElementFilter()
 
-                # getting the revit category ids the filter is applied to
-                filter_revit_category_ids = filter.GetCategories()
+            # check the type of filter, should be a logical element filter (top level)
+            if isinstance(filter_elements, LogicalAndFilter) or isinstance(filter_elements, LogicalOrFilter):
+                if debug:
+                    return_value.append_message ( "...is logical filter")
                 
-                # add category ids to the view filter
-                for id in filter_revit_category_ids:
+                # analyze the logical filter
+                container_host_result = analyze_logical_filter(doc, filter_elements,1, debug)
+                
+                # check what came back
+                if container_host_result.status and len(container_host_result.result) > 0:
+
+                    # store the container host in the view filter
+                    view_filter.logic_container = container_host_result.result[0]
+                    
                     if debug:
-                        return_value.append_message ("...Filter Id [{}]".format(id.IntegerValue))
+                        return_value.append_message ("...updated container host to view filter")
                     
-                    view_filter.category_ids.append(id.IntegerValue)
-                
-                # getting the filter elements
-                filter_elements = filter.GetElementFilter()
+                    # add the view filter to the list to be returned
+                    analysed_filters.append(view_filter)
+            else:
 
-                # check the type of filter, should be a logical element filter (top level)
-                if isinstance(filter_elements, LogicalAndFilter) or isinstance(filter_elements, LogicalOrFilter):
-                    if debug:
-                        return_value.append_message ( "...is logical filter")
-                    
-                    container_host_result = analyze_logical_filter(doc, filter_elements,1, debug)
-                    
-                    # check what came back
-                    if container_host_result.status and len(container_host_result.result) > 0:
+                # not sure what this...
+                return_value.append_message ("    Currently not supported: {}".format(type(filter_elements)))
 
-                        # store the container host in the view filter
-                        view_filter.logic_container = container_host_result.result[0]
-                        
-                        if debug:
-                            return_value.append_message ("...updated container host to view filter")
-                        
-                        # add the view filter to the list to be returned
-                        analysed_filters.append(view_filter)
-                else:
+            # update progress
+            counter = counter + 1
 
-                    # not sure what this...
-                    return_value.append_message ("    Currently not supported: {}".format(type(filter_elements)))
-
-                if pb.cancelled:
-                    return_value.update_sep(False, "Operation cancelled by user.")
-                    return return_value
-                
-                # update progress
-                counter = counter + 1
+            # check for user cancel
+            if progress_callback != None:
+                if progress_callback.is_cancelled():
+                    return_value.append_message("User cancelled!")
+                    break
         
         return_value.result.append(analysed_filters)
         return return_value

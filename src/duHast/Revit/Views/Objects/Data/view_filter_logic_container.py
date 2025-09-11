@@ -47,9 +47,12 @@ class ViewFilterLogicContainer(base.Base):
 
         super(ViewFilterLogicContainer, self).__init__(**kwargs)
 
+        self.data_type = data_type
         self.view_filter_rules = []
         self.logic_containers = []
-        
+
+        # print("here in ViewFilterLogicContainer init...")
+        # print("j: {}".format(j))
         # check if any data was past in with constructor!
         if j is not None:
             # check type of data that came in:
@@ -66,10 +69,15 @@ class ViewFilterLogicContainer(base.Base):
 
             # load values and throw exception if something is missing!
             try:
+                # debug print
+                # for key, value in j.items():
+                #     print("...key: {}, value: {}".format(key, value))
+
                 # get rules
                 rules = j["view_filter_rules"]
 
                 for r in rules:
+                    print("......r: {}".format(r))
                     self.view_filter_rules.append(ViewFilterRule(j=r))
 
                 # get containers
@@ -83,3 +91,60 @@ class ViewFilterLogicContainer(base.Base):
                         "OverrideByBase.data_type", e
                     )
                 )
+    
+
+    def __eq__(self, other):
+        """
+        Equality method to compare two objects of this class.
+
+        :param other: Other object to compare with.
+        :type other: ViewFilterLogicContainer
+
+        :return: True if both objects are equal, False otherwise.
+        :rtype: bool
+        """
+
+        if not isinstance(other, ViewFilterLogicContainer):
+            # don't attempt to compare against unrelated types
+            return False
+
+        if self.data_type != other.data_type:
+            return False
+
+        if len(self.view_filter_rules) != len(other.view_filter_rules):
+            return False
+        else:
+            for rule in self.view_filter_rules:
+                if rule not in other.view_filter_rules:
+                    return False
+
+        if len(self.logic_containers) != len(other.logic_containers):
+            return False
+        else:
+            for container in self.logic_containers:
+                if container not in other.logic_containers:
+                    return False
+
+        # all tests passed, must be equal
+        return True
+    
+
+    def __ne__(self, other):
+        """
+        Inequality method to compare two objects of this class.
+
+        :param other: Other object to compare with.
+        :type other: ViewFilterLogicContainer
+
+        :return: True if both objects are not equal, False otherwise.
+        :rtype: bool
+        """
+
+        return not self.__eq__(other)
+    
+    def __hash__(self):
+        """
+        Override the default hash behavior (that returns the id or the object)
+        """
+
+        return hash((tuple(self.view_filter_rules), tuple(self.logic_containers)))

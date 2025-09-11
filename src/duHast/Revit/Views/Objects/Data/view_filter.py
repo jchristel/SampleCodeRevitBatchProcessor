@@ -63,6 +63,7 @@ class ViewFilter(base.Base):
         self.logic_container = None  # should just be one
         self.name = ""
        
+        
 
         # check if any data was past in with constructor!
         if j is not None:
@@ -78,17 +79,74 @@ class ViewFilter(base.Base):
                     "Argument supplied must be of type string or type dictionary"
                 )
 
+            #print("In ViewFilter init, j: {}".format(j))
             # load values and throw exception if something is missing!
             try:
+                # debug print
+                # for key, value in j.items():
+                #     print("key: {}, value: {}".format(key, value))
+
                 # get category ids
                 self.category_ids = j["category_ids"]
 
+                # get name
+                self.name = j["name"]  
+
                 # get containers
-                self.logic_container = ViewFilterLogicContainer(j["logic_containers"])
+                self.logic_container = ViewFilterLogicContainer(j=j["logic_container"])
                
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(
-                        "OverrideByBase.data_type", e
+                        "ViewFilter", e
                     )
                 )
+
+
+    def __eq__(self, other):
+        """
+        Equality comparison
+        :param other: other object to compare with
+        :type other: ViewFilter
+
+        :return: True if equal, False if not
+        :rtype: bool
+        """
+
+        if not isinstance(other, ViewFilter):
+            # don't attempt to compare against unrelated types
+            return False
+
+        if self.category_ids != other.category_ids:
+            return False
+
+        if self.name != other.name:
+            return False
+
+        if self.logic_container != other.logic_container:
+            return False
+
+        return True
+    
+
+    def __ne__(self, other):
+        """
+        Inequality comparison
+        :param other: other object to compare with
+        :type other: ViewFilter
+
+        :return: True if not equal, False if equal
+        :rtype: bool
+        """
+
+        return not self.__eq__(other)
+
+
+    def __hash__(self):
+        """
+        Override the default hash behavior (that returns the id or the object)
+        :return: Hash value of the object
+        :rtype: int
+        """
+        
+        return hash((tuple(self.category_ids), self.name, self.logic_container))

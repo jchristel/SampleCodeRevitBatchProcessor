@@ -42,6 +42,8 @@ from duHast.Revit.Views.filters import get_all_filters
 from duHast.Revit.Views.Objects.Data.view_filter import ViewFilter
 from duHast.Revit.Views.Objects.Data.view_filter_rule import ViewFilterRule
 from duHast.Revit.Views.Objects.Data.view_filter_logic_container import ViewFilterLogicContainer
+from duHast.Revit.SharedParameters.shared_parameters import get_all_shared_parameters
+from duHast.Revit.Common.parameter_project import get_project_parameter_definitions
 
 from Autodesk.Revit.DB import Element, LogicalAndFilter, LogicalOrFilter, ElementFilter, ElementParameterFilter,  FilterNumericValueRule, FilterInverseRule, FilterStringRule
 
@@ -52,8 +54,49 @@ DEBUG = False
 # Note:
 # Inverse rules are essentially wrappers around standard rules inversing that outcome
 
+def get_project_parameters(doc):
+    """
+    Get all project parameters in the document.
 
-def analyze_rule(doc, rule,  is_inversed, nesting_level, debug = False):
+    :param doc: Current Revit document
+    :type doc: Autodesk.Revit.DB.Document
+    :return: Dictionary where key is the id of the parameter and values are a list of [name, guid]
+    :rtype: dict
+    """
+
+    # get project parameter definitions
+    definitions = get_project_parameter_definitions(doc)
+
+    # get all shared parameters
+    shared_parameters = get_all_shared_parameters(doc)
+
+
+    # build dictionary where key is the id of the parameter and values are a list of [name, guid]
+    # guid will be None for non-shared parameters
+    project_parameters = {}
+
+    # loop over definitions and find any shared parameters
+    for d in definitions:
+
+        # set default flag to not shared
+        is_shared = False
+
+        # loop over shared parameters to see if we have a match
+        for sp in shared_parameters:
+            if d.Id.IntegerValue == sp.Id.IntegerValue:
+                # this is a shared parameter
+                is_shared = True
+                project_parameters[d.Id.IntegerValue] = [d.Name, str(sp.GuidValue)]
+                break
+        
+        # this is not a shared parameter
+        if not is_shared:
+            project_parameters[d.Id.IntegerValue] = [d.Name, None]
+    
+    return project_parameters
+
+
+def analyze_rule(doc, rule,  is_inversed, project_parameters, nesting_level, debug = False):
     """
     
     Analyze a single rule and return a view filter rule object.
@@ -86,17 +129,30 @@ def analyze_rule(doc, rule,  is_inversed, nesting_level, debug = False):
         # parameter id
         view_filter_rule.parameter_id = rule.GetRuleParameter().IntegerValue
 
-        # parameter name
-        param = doc.GetElement(rule.GetRuleParameter())
-        if param:
-            if debug:
-                return_value.append_message ("{} rule parameter name: {}".format("..." * nesting_level, Element.Name.GetValue(param)))
-            view_filter_rule.parameter_name = Element.Name.GetValue(param)
-            # parameter guid
-            if hasattr(param, "GUID"):
+        # if the id is negative means its a built in parameter and we dont have to get its name and or guid
+        # check if parameter id indicates a custom parameter by checking if id value is greater than 0
+        # and whether we have any project parameters to check against
+        if view_filter_rule.parameter_id > 0 and len(project_parameters) > 0:
+            
+            if view_filter_rule.parameter_id in project_parameters:
+               
+                # assign the parameter name
+                view_filter_rule.parameter_name = project_parameters[view_filter_rule.parameter_id][0]
+                
                 if debug:
-                    return_value.append_message ("{} rule parameter guid: {}".format("..." * nesting_level, param.GUID.ToString()))
-                view_filter_rule.parameter_guid = param.GUID.ToString()
+                    return_value.append_message ("{} rule parameter name: {}".format("..." * nesting_level, view_filter_rule.parameter_name))
+                
+                if project_parameters[view_filter_rule.parameter_id][1] is not None:
+                    # assign the parameter guid
+                    view_filter_rule.parameter_guid = project_parameters[view_filter_rule.parameter_id][1]
+                    
+                    if debug:
+                        return_value.append_message ("{} rule parameter guid: {}".format("..." * nesting_level, view_filter_rule.parameter_guid))
+                else:
+                    # guid is None, leave the default value
+                    if debug:
+                        return_value.append_message ("{} rule parameter guid: None".format("..." * nesting_level))
+                    
 
         # get the evaluation type (ends with, starts with, equals, greater than, etc)
         if debug:
@@ -131,7 +187,7 @@ def analyze_rule(doc, rule,  is_inversed, nesting_level, debug = False):
 
     
 
-def analyze_element_parameter_filter(doc, element_parameter_filter, nesting_level, debug = False):
+def analyze_element_parameter_filter(doc, element_parameter_filter, project_parameters, nesting_level, debug = False):
     """
     Analyze an element parameter filter and return a list of view filter rules.
 
@@ -172,7 +228,7 @@ def analyze_element_parameter_filter(doc, element_parameter_filter, nesting_leve
                 rule_nested = rule.GetInnerRule()
 
                 # analyze the inverse rule
-                rule_analysed_result = analyze_rule(doc, rule_nested, True, nesting_level+1, debug)
+                rule_analysed_result = analyze_rule(doc, rule_nested, True, project_parameters, nesting_level+1, debug)
 
                 # check if successful
                 if not rule_analysed_result.status:
@@ -183,7 +239,7 @@ def analyze_element_parameter_filter(doc, element_parameter_filter, nesting_leve
                 rules_analysed.append(rule_analysed_result.result[0])
             else:
                 # analyze the rule
-                rule_analysed_result = analyze_rule(doc, rule, False, nesting_level+1, debug)
+                rule_analysed_result = analyze_rule(doc, rule, False, project_parameters,nesting_level+1, debug)
 
                 # check if successful
                 if not rule_analysed_result.status:
@@ -204,7 +260,7 @@ def analyze_element_parameter_filter(doc, element_parameter_filter, nesting_leve
        
 
 
-def analyze_logical_filter(doc, logical_filter, nesting_level=0, debug = False):
+def analyze_logical_filter(doc, logical_filter, project_parameters, nesting_level=0, debug = False):
     """
     Analyze a logical filter and return a view filter logic container.
 
@@ -249,7 +305,7 @@ def analyze_logical_filter(doc, logical_filter, nesting_level=0, debug = False):
                         return_value.append_message ( "{} is element parameter filter".format("..." * nesting_level))
                     
                     # analyze the element parameter filter
-                    rules_result = analyze_element_parameter_filter(doc, filter, nesting_level + 1, debug)
+                    rules_result = analyze_element_parameter_filter(doc, filter, project_parameters, nesting_level + 1, debug)
                     
                     # check what came back
                     if rules_result.status and len(rules_result.result) > 0:
@@ -267,7 +323,7 @@ def analyze_logical_filter(doc, logical_filter, nesting_level=0, debug = False):
                         return_value.append_message ( "{} is logical and filter...recursive call".format("..." * nesting_level))
                     
                     # analyse another logical conditions
-                    nested_container_result = analyze_logical_filter(doc,filter, nesting_level + 1, debug)
+                    nested_container_result = analyze_logical_filter(doc,filter, project_parameters, nesting_level + 1, debug)
                     
                     # check what came back
                     if  nested_container.status and len(nested_container_result.result) > 0:
@@ -317,6 +373,9 @@ def analyze_filters(doc, filters,  progress_callback, debug = False):
 
         analysed_filters = []
 
+        # get all project parameters in order to be able to identify any shared parameters properly when re-importing the filters
+        project_parameters = get_project_parameters(doc)
+
         max_value = len(filters.ToElements())
         counter = 1
 
@@ -355,7 +414,7 @@ def analyze_filters(doc, filters,  progress_callback, debug = False):
                     return_value.append_message ( "...is logical filter")
                 
                 # analyze the logical filter
-                container_host_result = analyze_logical_filter(doc, filter_elements,1, debug)
+                container_host_result = analyze_logical_filter(doc, filter_elements,  project_parameters,   1, debug)
                 
                 # check what came back
                 if container_host_result.status and len(container_host_result.result) > 0:

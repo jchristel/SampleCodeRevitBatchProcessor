@@ -90,18 +90,29 @@ class ViewFilterRule(base.Base):
                     )
                 )
     
-    
+
     def __eq__(self, other):
         """
-        Override the default Equals behavior
+        Override the default Equals behavior.
+
+        Will take into account that shared parameters can have different ids in different documents
+
         """
         if isinstance(other, ViewFilterRule):
-            return self.parameter_id == other.parameter_id and \
-                   self.evaluation_type == other.evaluation_type and \
-                   self.rule_value == other.rule_value and \
-                   self.is_inversed == other.is_inversed and \
-                   self.parameter_name == other.parameter_name and \
-                   self.parameter_guid == other.parameter_guid
+            # check if this is comparing a shared parameter based rule
+            if self.parameter_guid != "" and other.parameter_guid != "":
+                return self.parameter_guid == other.parameter_guid and \
+                       self.evaluation_type == other.evaluation_type and \
+                       self.rule_value == other.rule_value and \
+                       self.is_inversed == other.is_inversed and \
+                       self.parameter_name == other.parameter_name
+            else:
+                return self.parameter_id == other.parameter_id and \
+                    self.evaluation_type == other.evaluation_type and \
+                    self.rule_value == other.rule_value and \
+                    self.is_inversed == other.is_inversed and \
+                    self.parameter_name == other.parameter_name and \
+                    self.parameter_guid == other.parameter_guid
         return False
     
 

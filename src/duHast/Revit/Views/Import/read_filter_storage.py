@@ -33,7 +33,7 @@ from duHast.Revit.Views.Objects.Data.view_filter import ViewFilter
 
 from duHast.Utilities.Objects.result import Result
 
-
+DEBUG = False
 
 def read_filter_storage_from_file(file_path, node_name=""):
 
@@ -80,10 +80,13 @@ def read_filter_storage_from_file(file_path, node_name=""):
         
         # loop over all view filter storage entries and create objects
         for view_filter_entry in view_filter_storage_data:
-
+            if DEBUG:
+                print("view filter entry in json: {}\n".format(view_filter_entry))
             # attempt to create view filter storage object
             try:
                 view_filter = ViewFilter(j=view_filter_entry)
+                if DEBUG:
+                    print("Created view filter storage object: {}\n".format(view_filter))
                 return_value.result.append(view_filter)
             except Exception as e:
                 return_value.update_sep(False, "Failed to create view filter storage object from data in file for node: {}. {}".format(node_name, str(e)))

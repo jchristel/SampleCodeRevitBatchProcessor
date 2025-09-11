@@ -89,3 +89,31 @@ class ViewFilterRule(base.Base):
                         "OverrideByBase.data_type", e
                     )
                 )
+    
+    
+    def __eq__(self, other):
+        """
+        Override the default Equals behavior
+        """
+        if isinstance(other, ViewFilterRule):
+            return self.parameter_id == other.parameter_id and \
+                   self.evaluation_type == other.evaluation_type and \
+                   self.rule_value == other.rule_value and \
+                   self.is_inversed == other.is_inversed and \
+                   self.parameter_name == other.parameter_name and \
+                   self.parameter_guid == other.parameter_guid
+        return False
+    
+
+    def __ne__(self, other):
+        """
+        Define a non-equality test
+        """
+        return not self.__eq__(other)
+    
+
+    def __hash__(self):
+        """
+        Override the default hash behavior (that returns the id or the object)
+        """
+        return hash((self.parameter_id, self.evaluation_type, self.rule_value, self.is_inversed, self.parameter_name, self.parameter_guid))

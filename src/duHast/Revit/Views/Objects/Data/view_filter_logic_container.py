@@ -69,15 +69,9 @@ class ViewFilterLogicContainer(base.Base):
 
             # load values and throw exception if something is missing!
             try:
-                # debug print
-                # for key, value in j.items():
-                #     print("...key: {}, value: {}".format(key, value))
-
                 # get rules
                 rules = j["view_filter_rules"]
-
                 for r in rules:
-                    print("......r: {}".format(r))
                     self.view_filter_rules.append(ViewFilterRule(j=r))
 
                 # get containers

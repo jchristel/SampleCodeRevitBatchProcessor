@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace DocManager
+namespace DocManager.Standalone
 {
     /// <summary>
     /// Interaction logic for App.xaml

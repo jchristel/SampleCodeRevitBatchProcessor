@@ -129,6 +129,9 @@ def analyze_rule(doc, rule,  is_inversed, project_parameters, nesting_level, deb
         # parameter id
         view_filter_rule.parameter_id = rule.GetRuleParameter().IntegerValue
 
+        # safe the rule type
+        view_filter_rule.rule_type = type(rule).__name__
+
         # if the id is negative means its a built in parameter and we dont have to get its name and or guid
         # check if parameter id indicates a custom parameter by checking if id value is greater than 0
         # and whether we have any project parameters to check against

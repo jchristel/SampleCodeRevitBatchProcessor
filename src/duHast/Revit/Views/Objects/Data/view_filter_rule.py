@@ -57,6 +57,7 @@ class ViewFilterRule(base.Base):
         self.parameter_guid = ""
         self.evaluation_type = ""
         self.rule_value = ""
+        self.rule_type = ""
         self.is_inversed = False
        
         # check if any data was past in with constructor!
@@ -82,6 +83,7 @@ class ViewFilterRule(base.Base):
                 self.is_inversed = j["is_inversed"]
                 self.parameter_name = j["parameter_name"]
                 self.parameter_guid = j["parameter_guid"]
+                self.rule_type = j["rule_type"]
 
             except Exception as e:
                 raise ValueError(
@@ -102,17 +104,19 @@ class ViewFilterRule(base.Base):
             # check if this is comparing a shared parameter based rule
             if self.parameter_guid != "" and other.parameter_guid != "":
                 return self.parameter_guid == other.parameter_guid and \
-                       self.evaluation_type == other.evaluation_type and \
-                       self.rule_value == other.rule_value and \
-                       self.is_inversed == other.is_inversed and \
-                       self.parameter_name == other.parameter_name
+                    self.evaluation_type == other.evaluation_type and \
+                    self.rule_value == other.rule_value and \
+                    self.is_inversed == other.is_inversed and \
+                    self.parameter_name == other.parameter_name and \
+                    self.rule_type == other.rule_type
             else:
                 return self.parameter_id == other.parameter_id and \
                     self.evaluation_type == other.evaluation_type and \
                     self.rule_value == other.rule_value and \
                     self.is_inversed == other.is_inversed and \
                     self.parameter_name == other.parameter_name and \
-                    self.parameter_guid == other.parameter_guid
+                    self.parameter_guid == other.parameter_guid and \
+                    self.rule_type == other.rule_type
         return False
     
 

@@ -60,10 +60,12 @@ class IFCSettings(base.Base):
         self,
         name,
         ifc_version,
+        ifc_file_version,
         space_boundaries,
         active_phase_id,
         active_view_id,
         export_base_quantities,
+        export_ceiling_grids, #ifc 2025?
         split_walls_and_columns,
         visible_elements_of_current_view,
         use2_d_room_boundary_for_volume,
@@ -107,12 +109,16 @@ class IFCSettings(base.Base):
         :type name:
         :param ifcVersion: The IFCFileFormat of the configuration.
         :type ifcVersion:
+        :param ifc_file_version: the file type of the export
+        :type ifc_file_version: str: Ifc, IfcXML, IfcZIP, IfcXMLZIP
         :param spaceBoundaries: The level of space boundaries of the configuration.
         :type spaceBoundaries:
         :param activePhaseId: The phase of the document to export.
         :type activePhaseId:
         :param exportBaseQuantities: Whether or not to include base quantities for model elements in the export data. Base quantities are generated from model geometry to reflect actual physical quantity values, independent of measurement rules or methods.
         :type exportBaseQuantities:
+        :param export_ceiling_grids: exports ceiling grids
+        :type export_ceiling_grids: bool
         :param splitWallsAndColumns: Whether or not to split walls and columns by building stories.
         :type splitWallsAndColumns:
         :param visibleElementsOfCurrentView: True to export only the visible elements of the current view (based on filtering and/or element and category hiding). False to export the entire model.
@@ -199,14 +205,14 @@ class IFCSettings(base.Base):
         else:
             raise Exception("Unsupported IFC version:" + ifc_version)
 
-        # check the file type:
-        self.ifc_file_type = "Ifc"  # currently only this is supported
-        # Ifc, IfcXML, IfcZIP, IfcXMLZIP:
+        # check the file type: ifc 2025
+        self.ifc_file_type = ifc_file_version  # Ifc, IfcXML, IfcZIP, IfcXMLZIP:
                
         self.space_boundaries = space_boundaries
         self.active_phase_id = active_phase_id
         self.active_view_id = active_view_id
         self.export_base_quantities = export_base_quantities
+        self.export_ceiling_grids = export_ceiling_grids #ifc 2025?
         self.split_walls_and_columns = split_walls_and_columns
         self.visible_elements_of_current_view = visible_elements_of_current_view
         self.use2_d_room_boundary_for_volume = use2_d_room_boundary_for_volume

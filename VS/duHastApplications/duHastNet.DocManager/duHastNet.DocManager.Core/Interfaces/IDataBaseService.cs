@@ -1,9 +1,4 @@
 ﻿//
-//License:
-//
-//
-// Revit Batch Processor Sample Code
-//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -19,16 +14,15 @@
 // or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 //
 //
-//
 
 using SQLite;
 
 namespace duHastNet.DocManager.Core.Interfaces;
 
 /// <summary>
-/// Interface for database connection and management
+/// Interface for database connection and management using sqlite-net-pcl
 /// </summary>
-public interface IDatabaseService
+public interface IDatabaseService : IDisposable
 {
     /// <summary>
     /// Gets the current database connection
@@ -36,27 +30,7 @@ public interface IDatabaseService
     SQLiteAsyncConnection Connection { get; }
 
     /// <summary>
-    /// Initializes the database with the specified file path
-    /// </summary>
-    Task InitializeAsync(string databasePath);
-
-    /// <summary>
-    /// Creates all required tables (Revisions, Documents, CustomProperties)
-    /// </summary>
-    Task CreateTablesAsync();
-
-    /// <summary>
-    /// Creates additional indexes for performance
-    /// </summary>
-    Task CreateIndexesAsync();
-
-    /// <summary>
-    /// Closes the database connection
-    /// </summary>
-    Task CloseAsync();
-
-    /// <summary>
-    /// Checks if the database is initialized and connected
+    /// Gets whether the database is initialized and connected
     /// </summary>
     bool IsInitialized { get; }
 
@@ -66,22 +40,26 @@ public interface IDatabaseService
     string? DatabasePath { get; }
 
     /// <summary>
-    /// Optimizes the database (VACUUM, ANALYZE)
+    /// Initializes the database with the specified file path.
+    /// Creates directory structure if needed and establishes connection.
     /// </summary>
-    Task OptimizeDatabaseAsync();
+    /// <param name="databasePath">Path to the SQLite database file</param>
+    Task InitializeAsync(string databasePath);
 
     /// <summary>
-    /// Checks database integrity
+    /// Creates all required tables (Revisions, Documents, CustomProperties).
+    /// Uses sqlite-net-pcl attributes to automatically create tables, indexes, and constraints.
+    /// </summary>
+    Task CreateTablesAsync();
+
+    /// <summary>
+    /// Closes the database connection and cleans up resources
+    /// </summary>
+    Task CloseAsync();
+
+    /// <summary>
+    /// Performs a basic integrity check on the database.
+    /// Returns true if the database appears to be functional.
     /// </summary>
     Task<bool> CheckDatabaseIntegrityAsync();
-
-    /// <summary>
-    /// Executes a raw SQL command (for advanced operations)
-    /// </summary>
-    Task<int> ExecuteAsync(string sql, params object[] args);
-
-    /// <summary>
-    /// Executes a raw SQL query and returns results
-    /// </summary>
-    Task<List<T>> QueryAsync<T>(string sql, params object[] args) where T : new();
 }

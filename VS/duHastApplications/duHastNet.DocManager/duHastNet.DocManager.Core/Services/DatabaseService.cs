@@ -27,27 +27,42 @@ using duHastNet.DocManager.Core.Models;
 
 namespace duHastNet.DocManager.Core.Services;
 
-/// <summary>
-/// SQLite database service implementation using sqlite-net-pcl
-/// </summary>
 public class DatabaseService : IDatabaseService
 {
     private SQLiteAsyncConnection? _connection;
 
     public SQLiteAsyncConnection Connection
     {
-        get => _connection ?? throw new InvalidOperationException("Database not initialized. Call InitializeAsync first.");
+        get => _connection ?? throw new InvalidOperationException("Database not initialized.");
     }
 
     public bool IsInitialized => _connection != null;
     public string? DatabasePath { get; private set; }
 
-    public DatabaseService()
-    {
-    }
+    private bool _disposed = false;
 
     public async Task InitializeAsync(string databasePath)
     {
+        // Input validation - this should catch null before SQLite sees it
+        ArgumentNullException.ThrowIfNull(databasePath);
+
+        if (string.IsNullOrEmpty(databasePath))
+        {
+            throw new ArgumentException("Database path cannot be null or empty.", nameof(databasePath));
+        }
+
+        if (string.IsNullOrWhiteSpace(databasePath))
+        {
+            throw new ArgumentException("Database path cannot be whitespace only.", nameof(databasePath));
+        }
+
+        // Close existing connection if reinitializing
+        if (_connection != null)
+        {
+            await _connection.CloseAsync();
+            _connection = null;
+        }
+
         // Ensure directory exists
         var directory = Path.GetDirectoryName(databasePath);
         if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
@@ -55,56 +70,16 @@ public class DatabaseService : IDatabaseService
             Directory.CreateDirectory(directory);
         }
 
-        // Create connection with proper configuration
-        var connectionString = new SQLiteConnectionString(databasePath,
-            storeDateTimeAsTicks: false,    // Store as ISO8601 strings
-            openFlags: SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create,
-            key: null);
-
-        _connection = new SQLiteAsyncConnection(connectionString);
+        _connection = new SQLiteAsyncConnection(databasePath);
         DatabasePath = databasePath;
 
-        // Enable foreign keys and other pragmas
-        await _connection.ExecuteAsync("PRAGMA foreign_keys = ON");
-        await _connection.ExecuteAsync("PRAGMA journal_mode = WAL");
-        await _connection.ExecuteAsync("PRAGMA synchronous = NORMAL");
-        await _connection.ExecuteAsync("PRAGMA cache_size = 10000");
-        await _connection.ExecuteAsync("PRAGMA temp_store = MEMORY");
-
-        // Create tables and indexes
+        // Create tables
         await CreateTablesAsync();
-        await CreateIndexesAsync();
     }
 
     public async Task CreateTablesAsync()
     {
-        await Connection.CreateTableAsync<Revision>();
-        await Connection.CreateTableAsync<Document>();
-        await Connection.CreateTableAsync<CustomProperty>();
-    }
-
-    public async Task CreateIndexesAsync()
-    {
-        // Additional composite indexes for performance
-        await Connection.ExecuteAsync(@"
-            CREATE INDEX IF NOT EXISTS IX_Documents_Number_Revision 
-            ON Documents (Number, Revision)");
-
-        await Connection.ExecuteAsync(@"
-            CREATE INDEX IF NOT EXISTS IX_Documents_RevisionId_Number 
-            ON Documents (RevisionId, Number)");
-
-        await Connection.ExecuteAsync(@"
-            CREATE INDEX IF NOT EXISTS IX_Revisions_Date 
-            ON Revisions (RevisionDate)");
-
-        await Connection.ExecuteAsync(@"
-            CREATE INDEX IF NOT EXISTS IX_CustomProperties_DocumentId_PropertyName 
-            ON CustomProperties (DocumentId, PropertyName)");
-
-        await Connection.ExecuteAsync(@"
-            CREATE INDEX IF NOT EXISTS IX_CustomProperties_PropertyName_PropertyValue 
-            ON CustomProperties (PropertyName, PropertyValue)");
+        await Connection.CreateTablesAsync<Revision, Document, CustomProperty>();
     }
 
     public async Task CloseAsync()
@@ -117,38 +92,35 @@ public class DatabaseService : IDatabaseService
         }
     }
 
-    public async Task OptimizeDatabaseAsync()
-    {
-        await Connection.ExecuteAsync("VACUUM");
-        await Connection.ExecuteAsync("ANALYZE");
-    }
-
     public async Task<bool> CheckDatabaseIntegrityAsync()
     {
-        var result = await Connection.QueryAsync<IntegrityCheckResult>("PRAGMA integrity_check");
-        return result.Count == 1 && result[0].Result == "ok";
+        try
+        {
+            await Connection.QueryAsync<dynamic>("SELECT name FROM sqlite_master LIMIT 1");
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
-    /// <summary>
-    /// Helper class for PRAGMA integrity_check result
-    /// </summary>
-    private class IntegrityCheckResult
+    protected virtual void Dispose(bool disposing)
     {
-        public string Result { get; set; } = string.Empty;
-    }
-
-    public async Task<int> ExecuteAsync(string sql, params object[] args)
-    {
-        return await Connection.ExecuteAsync(sql, args);
-    }
-
-    public async Task<List<T>> QueryAsync<T>(string sql, params object[] args) where T : new()
-    {
-        return await Connection.QueryAsync<T>(sql, args);
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                // Dispose managed resources
+                CloseAsync().Wait();
+            }
+            _disposed = true;
+        }
     }
 
     public void Dispose()
     {
-        CloseAsync().Wait();
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 }

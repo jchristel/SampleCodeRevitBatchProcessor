@@ -56,6 +56,28 @@ def get_all_shared_parameters(doc):
     return collector
 
 
+def get_shared_parameter_by_guid(doc, guid):
+    """
+    Gets a shared parameter in a model by GUID.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param guid: The GUID of the shared parameter.
+    :type guid: str
+
+    :return: A shared parameter element if found, otherwise None
+    :rtype: Autodesk.Revit.DB.SharedParameterElement
+    """
+
+    para = None
+    collector = get_all_shared_parameters(doc)
+    for p in collector:
+        if str(p.GuidValue) == guid:
+            para = p
+            break
+    return para
+
+
 def get_all_shared_parameters_from_file(rvt_doc, shared_param_file_path=None):
     """
     Gets all the shared parameter definitions from a shared parameter file. Can

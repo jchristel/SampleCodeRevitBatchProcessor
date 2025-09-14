@@ -77,3 +77,26 @@ def get_project_parameter_definitions(doc):
         result.append(definition)
 
     return result
+
+
+def get_project_parameter_definition_by_name(doc,parameter_name):
+    """
+    Get a project parameter definition by name.
+    
+    :param doc: Current Revit document
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :param parameter_name: Name of the parameter to search for
+    :type parameter_name: str
+    
+    :return: Parameter definition if found, None otherwise
+    :rtype: Autodesk.Revit.DB.Definition or None
+    """
+    
+    definitions = get_project_parameter_definitions(doc)
+    
+    for definition in definitions:
+        if definition.Name == parameter_name:
+            return definition
+    
+    return None

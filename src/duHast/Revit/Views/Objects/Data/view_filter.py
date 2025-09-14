@@ -98,7 +98,7 @@ class ViewFilter(base.Base):
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(
-                        "ViewFilter", e
+                        data_type, e
                     )
                 )
 

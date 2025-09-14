@@ -88,7 +88,7 @@ class ViewFilterRule(base.Base):
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(
-                        "OverrideByBase.data_type", e
+                       data_type, e
                     )
                 )
     

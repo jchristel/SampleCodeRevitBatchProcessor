@@ -92,11 +92,18 @@ public class DatabaseService : IDatabaseService
         }
     }
 
+    
     public async Task<bool> CheckDatabaseIntegrityAsync()
     {
         try
         {
-            await Connection.QueryAsync<dynamic>("SELECT name FROM sqlite_master LIMIT 1");
+            // Use ExecuteScalarAsync instead of QueryAsync<dynamic>
+            // This just tests that we can execute a simple query on the database
+            var result = await Connection.ExecuteScalarAsync<string>(
+                "SELECT name FROM sqlite_master LIMIT 1");
+
+            // If we get here without exception, the database connection is working
+            // The result can be null if no tables exist, but that's still a valid database state
             return true;
         }
         catch

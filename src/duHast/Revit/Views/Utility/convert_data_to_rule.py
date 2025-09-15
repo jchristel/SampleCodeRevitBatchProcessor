@@ -25,6 +25,7 @@ data to revit api FilterValueRule conversion helper functions.
 #
 #
 #
+from System import Enum
 
 from duHast.Revit.Views.Objects.Data.view_filter_rule import ViewFilterRule
 from duHast.Revit.Common.parameter_project import get_project_parameter_definition_by_name
@@ -72,7 +73,7 @@ def get_rule_parameter(doc, rule_data_instance):
     if rule_data_instance.parameter_id < 0:
         # built in parameter
         try:
-            built_in_param = getattr(BuiltInParameter, rule_data_instance.parameter_name)
+            builtin_param = Enum.Parse(BuiltInParameter, rule_data_instance.parameter_name)
             return_value.result.append(built_in_param)
             return_value.append_message( "Successfully got built in parameter: {}".format(rule_data_instance.parameter_name))
 

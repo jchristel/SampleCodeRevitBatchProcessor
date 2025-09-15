@@ -3,5 +3,5 @@ tooltip: A family library
 author: "Jan Christel"
 highlight: new
 context: zero-doc
-assembly: 'AtTheLibrary'
+assembly: 'AtTheLibrary.25.0.0.1'
 command_class: 'Main'

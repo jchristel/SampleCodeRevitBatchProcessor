@@ -3,5 +3,5 @@ tooltip: A rapid layouting extension for Revit
 author: "Jan Christel"
 highlight: new
 context: zero-doc
-assembly: 'PushIt'
+assembly: 'PushIt.25.0.0.1'
 command_class: 'Main'

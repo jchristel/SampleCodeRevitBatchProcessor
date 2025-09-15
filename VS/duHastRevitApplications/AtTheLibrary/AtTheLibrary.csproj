@@ -4,14 +4,22 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>duHastNet.AtTheLibrary</RootNamespace>
-    <AssemblyName>AtTheLibrary</AssemblyName>
+    <AssemblyName>AtTheLibrary.25.0.0.1</AssemblyName>
     <OutputType>Library</OutputType>
     <Platforms>AnyCPU;x64</Platforms>
+    <!-- Match your build script's expected path -->
+    <OutputPath>bin\x64\$(Configuration)\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <!-- Handle Revit API version conflicts -->
     <MSBuildWarningsAsMessages>MSB3277</MSBuildWarningsAsMessages>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  
+    <!-- Assembly metadata (optional - customize as needed) -->
+    <AssemblyVersion>25.0.0.1</AssemblyVersion>
+    <FileVersion>25.0.0.1</FileVersion>
+    <Product>duHastNet</Product>
+    <Company>duHast</Company>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)' == 'x64'">

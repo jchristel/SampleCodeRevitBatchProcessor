@@ -4,11 +4,18 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>duHastNet.UI.PDFDWGExporterSelectionUI</RootNamespace>
-    <AssemblyName>PDFDWGExporterSelectionUI</AssemblyName>
+    <AssemblyName>PDFDWGExporterSelectionUI.25.0.0.1</AssemblyName>
     <OutputType>Library</OutputType>
     <Platforms>AnyCPU;x64</Platforms>
+    <!-- Match your build script's expected path -->
     <OutputPath>bin\x64\$(Configuration)\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <!-- Assembly metadata (optional - customize as needed) -->
+    <AssemblyVersion>25.0.0.1</AssemblyVersion>
+    <FileVersion>25.0.0.1</FileVersion>
+    <AssemblyTitle>duHast UI Custom Controls</AssemblyTitle>
+    <Product>duHast</Product>
+    <Company>Your Company</Company>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)' == 'x64'">
@@ -29,6 +36,5 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
-    <Compile Include="Commands\PrintSetDeleteCommand.cs" />
-    <Compile Include="Utils\PropertyChangedEventNames.cs" />
+    
 </Project>

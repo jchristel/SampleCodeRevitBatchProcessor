@@ -28,6 +28,8 @@ public class DatabaseServiceTests_Dispose
         {
             Directory.Delete(_testDirectory, true);
         }
+
+        _databaseService.Dispose();
     }
 
     #region Basic Dispose Tests

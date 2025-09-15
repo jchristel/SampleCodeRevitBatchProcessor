@@ -111,13 +111,13 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
                 _schedule = Models.Constants.DefaultPrintSetName;
                 _exportFolderPath = string.Empty;
                 _exportModus = Models.Constants.ExportModusPDF;
-                _navigationStates = new Dictionary<string,string>();
+                _navigationStates = [];
                 return;
             }
             else
             {
                 //deep copy of the column names
-                _columnIds = [.. settings.ColumnIds];
+                _columnIds = [.. otherSettings.ColumnIds];
                 _printSet = otherSettings.Printset;
                 _schedule = otherSettings.Schedule;
                 _exportFolderPath = otherSettings.ExportFolderPath;
@@ -139,7 +139,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Utils
             _schedule = Models.Constants.DefaultPrintSetName;
             _exportFolderPath = string.Empty;
             _exportModus = Models.Constants.ExportModusPDF;
-            _navigationStates = new Dictionary<string, string>();
+            _navigationStates = [];
         }
     }
 }

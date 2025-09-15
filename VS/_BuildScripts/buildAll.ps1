@@ -73,7 +73,7 @@ if ($currentBranch -ne "unknown") {
 $solution1 = "$basePath\VS\duHastUtils\duHastUtils.sln"
 $solution2 = "$basePath\VS\duHastRevitUtils\duHastRevitUtils.sln"
 $solution3 = "$basePath\VS\duHastRevitApplications\duHastRevitApplications.sln"
-$solution4 = "$basePath\VS\duHastApplications\duHastApplications.sln"
+$solution4 = "$basePath\VS\duHastApplications\duHastNet.DocManager\duHastNet.DocManager.sln"
 $solution5 = "$basePath\VS\duHastUI\duHastUI.sln"
 $solution6 = "$basePath\VS\duHastUICustomControls\duHastUICustomControls.sln"
 

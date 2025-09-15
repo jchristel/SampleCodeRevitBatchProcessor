@@ -29,23 +29,25 @@ This is required since the dll's used have a version number in their file name.
 #
 #
 
+DLL_VERSION = ".25.0.0.1"
+
 # family reloader ui
-FAMILY_RELOADER_UI = "FamilyReloaderUI.23.0.0.4.dll"
+FAMILY_RELOADER_UI = "FamilyReloaderUI{}.dll".format(DLL_VERSION)
 
 # pdf and dwg exporter selection ui
-PDF_AND_DWG_EXPORTER_SELECTION_UI = "PDFDWGExporterSelectionUI.23.0.0.4.dll"
+PDF_AND_DWG_EXPORTER_SELECTION_UI = "PDFDWGExporterSelectionUI{}.dll".format(DLL_VERSION)
 
 # pdf and dwg exporter settings ui
-PDF_AND_DWG_EXPORTER_SETTINGS_UI = "PDFDWGExporterUI.23.0.0.4.dll"
+PDF_AND_DWG_EXPORTER_SETTINGS_UI = "PDFDWGExporterUI{}.dll".format(DLL_VERSION)
 
 # .net revit utility classes
-REVIT_UTILS= 'RevitUtils.23.0.0.4.dll'
+REVIT_UTILS= 'RevitUtils{}.dll'.format(DLL_VERSION)
 
 # .net custom controls
-WPF_CUSTOM_CONTROLS = "duHastUICustomControls.23.0.0.4.dll"
+WPF_CUSTOM_CONTROLS = "duHastUICustomControls{}.dll".format(DLL_VERSION)
 
 # .net wrapper class  of csv helper
-FILE_WRAPPER = "FileIOWrapper.23.0.0.4.dll"
+FILE_WRAPPER = "FileIOWrapper{}.dll".format(DLL_VERSION)
 
 # .net utility classes
-UTILITY = "Utils.23.0.0.4"
+UTILITY = "Utils{}.dll".format(DLL_VERSION)

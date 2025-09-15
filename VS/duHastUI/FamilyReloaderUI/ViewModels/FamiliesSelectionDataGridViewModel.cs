@@ -34,7 +34,7 @@ using System.Linq;
 
 namespace duHastNet.UI.FamilyReloaderUI.ViewModels
 {
-    public class FamiliesSelectionDataGridViewModel : duHastNet.UI.CustomControls.ViewModels.BaseDynamicGridViewModel<DynamicRowData>
+    public class FamiliesSelectionDataGridViewModel : duHastNet.Utils.WPF.ViewModels.BaseDynamicGridViewModel<DynamicRowData>
     {
 
         //field storing the families data model
@@ -100,14 +100,14 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
             if (this.FamiliesDataModel == null) return;
 
             //initialise available columns with default sheet properties
-            AvailableColumns = new ObservableCollection<AvailableColumnDefinition> { 
+            AvailableColumns = [ 
             
                 // Basic sheet Info
-                new AvailableColumnDefinition(Constants.ColumnHeaderReload.Replace(" ", ""), Constants.ColumnHeaderReload, typeof(bool)),
-                new AvailableColumnDefinition(Constants.ColumnHeaderFamilyName.Replace(" ", ""), Constants.ColumnHeaderFamilyName, typeof(string)),
-                new AvailableColumnDefinition(Constants.ColumnHeaderFamilyCategory.Replace(" ", ""), Constants.ColumnHeaderFamilyCategory, typeof(string)),
-                new AvailableColumnDefinition(Constants.ColumnHeaderIsSharedFamily.Replace(" ", ""), Constants.ColumnHeaderIsSharedFamily, typeof(bool)),
-            };
+                new(Constants.ColumnHeaderReload.Replace(" ", ""), Constants.ColumnHeaderReload, typeof(bool)),
+                new(Constants.ColumnHeaderFamilyName.Replace(" ", ""), Constants.ColumnHeaderFamilyName, typeof(string)),
+                new(Constants.ColumnHeaderFamilyCategory.Replace(" ", ""), Constants.ColumnHeaderFamilyCategory, typeof(string)),
+                new(Constants.ColumnHeaderIsSharedFamily.Replace(" ", ""), Constants.ColumnHeaderIsSharedFamily, typeof(bool)),
+            ];
 
             // Pre-compute the parameter name to column id lookup dictionary
             _columnIdToParameterNameLookUp = Constants.ColumnInfo;

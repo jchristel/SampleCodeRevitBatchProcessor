@@ -43,6 +43,7 @@ from Autodesk.Revit.DB import  (
     FilterValueRule,
     FilterDoubleRule,
     FilterIntegerRule,
+    FilterInverseRule,
     FilterElementIdRule,
     FilterStringRule,
     ParameterValueProvider,
@@ -260,4 +261,12 @@ def convert_data_to_rule(doc, rule_data_instance):
         return_value.update_sep(False, "Failed to create rule of type: {} for rule: {}".format(rule_data_instance.rule_type, rule_data_instance.parameter_name))
         return return_value
     
+    # check if inverted rule?
+    if rule_data_instance.is_inversed:
+        rule = FilterInverseRule(rule)
+        return_value.append_message("Inverted rule as requested.")
+    
+    # return the rule
+    return_value.result.append(rule)
+
     return return_value

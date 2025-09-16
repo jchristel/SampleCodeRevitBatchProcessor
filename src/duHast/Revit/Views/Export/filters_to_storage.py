@@ -51,7 +51,8 @@ from Autodesk.Revit.DB import (
     Element, 
     LogicalAndFilter, 
     ElementFilter, 
-    ElementParameterFilter,  
+    ElementParameterFilter, 
+    FilterElementIdRule, 
     FilterNumericValueRule, 
     FilterInverseRule, 
     FilterStringRule,
@@ -197,11 +198,20 @@ def analyze_rule(doc, rule,  is_inversed, project_parameters, nesting_level, deb
         view_filter_rule.evaluation_type = rule.GetEvaluator().GetType().Name
 
         # get the rule value
-        if isinstance(rule, FilterNumericValueRule):
+        if isinstance(rule, FilterElementIdRule):
+            # check for element id rule
+            if debug:
+                return_value.append_message ("{} rule value: {}".format("..." * nesting_level, rule.RuleValue.IntegerValue))
+            view_filter_rule.rule_value=rule.RuleValue.IntegerValue
+        
+        elif isinstance(rule, FilterNumericValueRule):
+            # check for numeric rule
             if debug:
                 return_value.append_message ("{} rule value: {}".format("..." * nesting_level, rule.RuleValue))
             view_filter_rule.rule_value=rule.RuleValue
+        
         elif isinstance(rule, FilterStringRule):
+            # check for string rule
             if debug:
                 return_value.append_message ("{} rule value: {}".format("..." * nesting_level, rule.RuleString))
             view_filter_rule.rule_value=rule.RuleString

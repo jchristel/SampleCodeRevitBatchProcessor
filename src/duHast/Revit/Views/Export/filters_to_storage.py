@@ -30,6 +30,7 @@ This module contains a number of helper functions relating to Revit view filters
 import clr
 clr.AddReference('System')
 from System.Collections.Generic import List
+from System import Enum
 
 from duHast.Data.Utils.data_to_file import build_json_for_file
 from duHast.Utilities.files_io import get_file_name_without_ext
@@ -45,7 +46,18 @@ from duHast.Revit.Views.Objects.Data.view_filter_logic_container import ViewFilt
 from duHast.Revit.SharedParameters.shared_parameters import get_all_shared_parameters
 from duHast.Revit.Common.parameter_project import get_project_parameter_definitions
 
-from Autodesk.Revit.DB import Element, LogicalAndFilter, LogicalOrFilter, ElementFilter, ElementParameterFilter,  FilterNumericValueRule, FilterInverseRule, FilterStringRule
+from Autodesk.Revit.DB import (
+    BuiltInParameter, 
+    Element, 
+    LogicalAndFilter, 
+    ElementFilter, 
+    ElementParameterFilter,  
+    FilterNumericValueRule, 
+    FilterInverseRule, 
+    FilterStringRule,
+    LogicalOrFilter,  
+    ParameterValueProvider,
+)
 
 
 DEBUG = False
@@ -129,8 +141,18 @@ def analyze_rule(doc, rule,  is_inversed, project_parameters, nesting_level, deb
         # parameter id
         view_filter_rule.parameter_id = rule.GetRuleParameter().IntegerValue
 
-        # safe the rule type
+        # save the rule type
         view_filter_rule.rule_type = type(rule).__name__
+
+        # depending on the rule type there might be an epsilon value ( in the moment only for double values)
+        if hasattr(rule, "Epsilon"):
+            view_filter_rule.epsilon = rule.Epsilon
+            if debug:
+                return_value.append_message ("{} rule epsilon: {}".format("..." * nesting_level, view_filter_rule.epsilon))
+
+
+        # in the moment there is only one value provider type
+        view_filter_rule.value_provider = ParameterValueProvider.__name__
 
         # if the id is negative means its a built in parameter and we dont have to get its name and or guid
         # check if parameter id indicates a custom parameter by checking if id value is greater than 0
@@ -156,6 +178,17 @@ def analyze_rule(doc, rule,  is_inversed, project_parameters, nesting_level, deb
                     if debug:
                         return_value.append_message ("{} rule parameter guid: None".format("..." * nesting_level))
                     
+        elif view_filter_rule.parameter_id < 0:
+                # built in parameter, leave the default name and guid values
+                if debug:
+                    return_value.append_message ("{} rule parameter is built in parameter".format("..." * nesting_level))
+                
+                # get the built in parameter name
+                param = Enum.ToObject(BuiltInParameter, view_filter_rule.parameter_id)
+                view_filter_rule.parameter_name = str(param)
+        else:
+            pass
+            # should never get here but just in case
 
         # get the evaluation type (ends with, starts with, equals, greater than, etc)
         if debug:

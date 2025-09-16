@@ -29,16 +29,22 @@ data to revit api FilterValueRule conversion helper functions.
 from duHast.Revit.Views.Objects.Data.view_filter_rule import ViewFilterRule
 from duHast.Revit.Common.parameter_project import get_project_parameter_definition_by_name
 from duHast.Revit.SharedParameters.shared_parameters import get_shared_parameter_by_guid
-from duHast.Utilities.Objects.result import Result
+from duHast.Revit.Views.Utility.convert_data_to_filter_value_provider import get_value_provider_class
+from duHast.Revit.Views.Utility.convert_data_to_filter_evaluator import get_evaluator_class
 
-from Autodesk.Revit.DB import  BuiltInParameter, ElementId, FilterValueRule,ParameterValueProvider
+
+from duHast.Utilities.Objects.result import Result
 
 
 from Autodesk.Revit.DB import  (
+    BuiltInParameter,
+    ElementId, 
+    FilterValueRule,
     FilterDoubleRule,
     FilterIntegerRule,
     FilterElementIdRule,
     FilterStringRule,
+    ParameterValueProvider,
 )
 
 # dictionary containing varies rule mappings
@@ -60,6 +66,44 @@ class_mapping = {
 # - a value provider (ParameterValueProvider Class) 
 # - a rule value
 
+
+def create_filter_double_rule(evaluator, value_provider, rule_data_instance):
+    try:
+        rule = FilterDoubleRule( value_provider, evaluator, float(rule_data_instance.rule_value), float(rule_data_instance.epsilon))
+        return rule
+    except Exception:
+        pass
+    return None
+
+
+def create_filter_integer_rule(evaluator, value_provider, rule_data_instance):
+    try:
+        rule = FilterIntegerRule( value_provider, evaluator, int(rule_data_instance.rule_value))
+        return rule
+    except Exception:
+        pass
+    return None
+
+
+def create_filter_element_id_rule(evaluator, value_provider, rule_data_instance):
+    try:
+        rule = FilterElementIdRule( value_provider, evaluator, ElementId(int(rule_data_instance.rule_value)))
+        return rule
+    except Exception:
+        pass
+    return None
+
+
+def create_filter_string_rule(evaluator, value_provider, rule_data_instance):
+    
+    rule = None
+    try:
+        rule = FilterStringRule( value_provider, evaluator, rule_data_instance.rule_value)
+    except Exception:
+        pass
+    return rule
+
+
 def get_rule_parameter(doc, rule_data_instance):
     
     return_value = Result()
@@ -72,7 +116,7 @@ def get_rule_parameter(doc, rule_data_instance):
     if rule_data_instance.parameter_id < 0:
         # built in parameter
         try:
-            built_in_param = getattr(BuiltInParameter, rule_data_instance.parameter_name)
+            built_in_param = Enum.Parse(BuiltInParameter, rule_data_instance.parameter_name)
             return_value.result.append(built_in_param)
             return_value.append_message( "Successfully got built in parameter: {}".format(rule_data_instance.parameter_name))
 
@@ -112,6 +156,21 @@ def get_rule_parameter(doc, rule_data_instance):
     return return_value
 
 
+def get_rule_parameter_id(doc, rule_data_instance, parameter ):
+    
+    # decide on which parameter id to use
+    parameter_id = ElementId.InvalidElementId
+
+    if rule_data_instance.parameter_id < 0:
+        # built in parameter, use what has been stored in the rule
+        parameter_id = ElementId(rule_data_instance.parameter_id)
+    elif rule_data_instance.parameter_id > 0:
+        # use the past in parameter
+        parameter_id = parameter.Id
+    
+    return parameter_id
+
+
 
 def convert_data_to_rule(doc, rule_data_instance):
     """
@@ -138,10 +197,66 @@ def convert_data_to_rule(doc, rule_data_instance):
         return_value.update_sep(False, "Failed to get parameter for rule: {}. Error: {}".format(rule_data_instance.parameter_name, parameter_result.message))
         return return_value
 
+    # get the parameter ( or parameter definition)
+    parameter = parameter_result.result[0]
     
-    # if the id is negative it is a built in parameter id, easiest since no further checking is required
-    # if the id is positive but no guid is provided it is a project parameter, try to match by name only
-    # if the id is positive and a guid is provided it is a shared parameter, try to match by guid only
+    # decide on which parameter id to use
+    parameter_id = get_rule_parameter_id(doc, rule_data_instance, parameter)
+    #print(parameter_id)
 
+    # get the value provider class
+    value_provider_class = get_value_provider_class(rule_data_instance.value_provider)
 
+    if not value_provider_class:
+        return_value.update_sep(False, "Failed to get value provider class: {} for rule: {}".format(rule_data_instance.value_provider, rule_data_instance.parameter_name))
+        return return_value
+
+    # create the value provider
+    value_provider = value_provider_class(parameter_id)
+    #print(value_provider)
+
+    # get the evaluator class
+    evaluator_class = get_evaluator_class(rule_data_instance.evaluation_type)
+
+    if not evaluator_class:
+        return_value.update_sep(False, "Failed to get evaluator class: {} for rule: {}".format(rule_data_instance.evaluation_type, rule_data_instance.parameter_name))
+        return return_value
+    
+    # convert the rule value to the correct type
+    evaluator = evaluator_class()
+    #print(evaluator)
+
+    # init rule
+    rule = None
+    # create the rule
+    if rule_data_instance.rule_type == FilterDoubleRule.__name__:
+        # double rules need a double as rule value and an epsilon value
+
+        rule = create_filter_double_rule( evaluator, value_provider, rule_data_instance)
+        return_value.append_message("Created double rule: {} with epsilon: {}".format(rule_data_instance.rule_value, rule_data_instance.epsilon))
+    elif rule_data_instance.rule_type == FilterIntegerRule.__name__:
+        # integer rules need an integer as rule value
+
+        rule = create_filter_integer_rule(evaluator, value_provider, rule_data_instance)
+        return_value.append_message("Created integer rule: {}".format(rule_data_instance.rule_value))
+    elif rule_data_instance.rule_type == FilterElementIdRule.__name__:
+        # element id rules need an integer as rule value
+        
+        rule = create_filter_element_id_rule(evaluator, value_provider, rule_data_instance)
+        return_value.append_message("Created element id rule: {}".format(rule_data_instance.rule_value))
+    elif rule_data_instance.rule_type == FilterStringRule.__name__:
+        # string rule
+        
+        rule = create_filter_string_rule(evaluator, value_provider, rule_data_instance)
+        return_value.append_message("Created string rule: {}".format(rule_data_instance.rule_value))
+    else:
+        # uh this is bad
+        return_value.update_sep(False, "Failed to create rule. Unknown rule type: {} for rule: {}".format(rule_data_instance.rule_type, rule_data_instance.parameter_name))
+        return return_value
+
+    # check if rule was created
+    if not rule:
+        return_value.update_sep(False, "Failed to create rule of type: {} for rule: {}".format(rule_data_instance.rule_type, rule_data_instance.parameter_name))
+        return return_value
+    
     return return_value

@@ -56,9 +56,11 @@ class ViewFilterRule(base.Base):
         self.parameter_name = ""
         self.parameter_guid = ""
         self.evaluation_type = ""
+        self.value_provider = ""
         self.rule_value = ""
         self.rule_type = ""
         self.is_inversed = False
+        self.epsilon = None
        
         # check if any data was past in with constructor!
         if j is not None:
@@ -84,6 +86,8 @@ class ViewFilterRule(base.Base):
                 self.parameter_name = j["parameter_name"]
                 self.parameter_guid = j["parameter_guid"]
                 self.rule_type = j["rule_type"]
+                self.value_provider = j["value_provider"]
+                self.epsilon = j.get("epsilon", None)
 
             except Exception as e:
                 raise ValueError(
@@ -108,7 +112,9 @@ class ViewFilterRule(base.Base):
                     self.rule_value == other.rule_value and \
                     self.is_inversed == other.is_inversed and \
                     self.parameter_name == other.parameter_name and \
-                    self.rule_type == other.rule_type
+                    self.rule_type == other.rule_type and \
+                    self.value_provider == other.value_provider and \
+                    self.epsilon == other.epsilon
             else:
                 return self.parameter_id == other.parameter_id and \
                     self.evaluation_type == other.evaluation_type and \
@@ -116,7 +122,9 @@ class ViewFilterRule(base.Base):
                     self.is_inversed == other.is_inversed and \
                     self.parameter_name == other.parameter_name and \
                     self.parameter_guid == other.parameter_guid and \
-                    self.rule_type == other.rule_type
+                    self.rule_type == other.rule_type and \
+                    self.value_provider == other.value_provider and \
+                    self.epsilon == other.epsilon
         return False
     
 
@@ -131,4 +139,15 @@ class ViewFilterRule(base.Base):
         """
         Override the default hash behavior (that returns the id or the object)
         """
-        return hash((self.parameter_id, self.evaluation_type, self.rule_value, self.is_inversed, self.parameter_name, self.parameter_guid))
+        return hash((
+            self.parameter_id, 
+            self.evaluation_type, 
+            self.rule_value, 
+            self.is_inversed, 
+            self.parameter_name, 
+            self.parameter_guid,
+            self.rule_type,
+            self.value_provider,
+            self.epsilon
+            )
+        )

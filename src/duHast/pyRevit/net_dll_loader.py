@@ -52,12 +52,6 @@ def load_net_dll_path(dlls_to_load):
             )
             return return_value
 
-        # the dll is located in the libs folder of the extension, which is one level up from the current file's directory
-        current_directory = os.path.dirname(__file__)
-        return_value.append_message("Current directory: {}".format(current_directory))
-        parent_directory = os.path.dirname(current_directory)
-        return_value.append_message("Parent directory: {}".format(parent_directory))
-
         # get all the lib paths from the sys.path
         lib_paths = [path for path in sys.path if path.endswith("lib")]
 
@@ -70,55 +64,42 @@ def load_net_dll_path(dlls_to_load):
                 return_value.append_message("sys.path entry: {}".format(p))
 
             return return_value
-        else:
+       
+        return_value.append_message("Found lib paths: {}".format(lib_paths))
+        
+        # iterate over the dlls to load
+        for dll in dlls_to_load:
+            found_match = False
+            # check if the dll exists in the lib paths
             for p in lib_paths:
-                duHast_path = os.path.join(p, "duHast")
+                parent_lib_directory = os.path.dirname(p)
+                bin_directory = os.path.join(parent_lib_directory, "bin")
+                dll_path = os.path.join(bin_directory, dll)
+                
                 # check if path exists
-                if os.path.exists(duHast_path):
-                    return_value.append_message("Valid duHast path: {}".format(duHast_path))
-                    # add the library path within the duHast folder to the sys.path
-                    duHast_lib_path = os.path.join(duHast_path, "lib")
-                    
-                    # valid path check
-                    if os.path.exists(duHast_lib_path):
-                        return_value.append_message("Valid duHast//lib path: {}".format(duHast_lib_path))
-                        
-                        # load dlls
-                        for dll in dlls_to_load:
-                            # add the wrapper dll to the clr
-                            dll_path = os.path.join(duHast_lib_path,dll)
-                            
-                            # valid path check
-                            if os.path.exists( dll_path):
-                                try:
-                                    # add the dll to the clr
-                                    clr.AddReferenceToFileAndPath(dll_path)
-                                    return_value.append_message("Loaded dll: {}".format(dll_path))
-                                except Exception as e:
-                                    return_value.update_sep(
-                                        False, "Failed to load dll: {}. Error: {}".format(dll_path, e)
-                                    )
-                            else:
-                                return_value.update_sep(
-                                    False, "DLL path does not exist: {}".format(dll_path)
-                                )
-                    else:
+                if os.path.exists(dll_path):
+                    try:
+                        # add the dll to the clr
+                        clr.AddReferenceToFileAndPath(dll_path)
+                        return_value.append_message("Loaded dll: {}".format(dll_path))
+                        found_match = True
+                        break
+                    except Exception as e:
                         return_value.update_sep(
-                            False, "Path to duHast//lib does not exist: {}".format(duHast_lib_path)
+                            False, "Failed to load dll: {}. Error: {}".format(dll_path, e)
                         )
-                        return return_value
-                    break
-                else:
-                    return_value.update_sep(
-                        False, "Path to duHast does not exist in : {}".format(p)
-                    )
-        return_value.append_message( "DLL path set successfully.")
+                        
+            if not found_match:
+                return_value.update_sep(
+                    False, "DLL {} not found in any lib path.".format(dll)
+                )
     except Exception as e:
         # handle any exceptions that occur during the export process
-        message = "An error occurred while processing export settings: {}".format(e)
+        message = "An error occurred while processing attempting to load dlls: {}".format(e)
         return_value.update_sep(
             False, message
         )
+
 
 
     return return_value

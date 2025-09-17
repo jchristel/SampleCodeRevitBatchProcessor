@@ -50,6 +50,7 @@ class ViewFilterLogicContainer(base.Base):
         self.data_type = data_type
         self.view_filter_rules = []
         self.logic_containers = []
+        self.logic_container_type = ""
 
         # print("here in ViewFilterLogicContainer init...")
         # print("j: {}".format(j))
@@ -69,6 +70,9 @@ class ViewFilterLogicContainer(base.Base):
 
             # load values and throw exception if something is missing!
             try:
+                # get the container type
+                self.logic_container_type = j["logic_container_type"]
+
                 # get rules
                 rules = j["view_filter_rules"]
                 for r in rules:
@@ -100,6 +104,10 @@ class ViewFilterLogicContainer(base.Base):
 
         if not isinstance(other, ViewFilterLogicContainer):
             # don't attempt to compare against unrelated types
+            return False
+
+        # compare the logic container type
+        if self.logic_container_type != other.logic_container_type:
             return False
 
         if self.data_type != other.data_type:
@@ -141,4 +149,4 @@ class ViewFilterLogicContainer(base.Base):
         Override the default hash behavior (that returns the id or the object)
         """
 
-        return hash((tuple(self.view_filter_rules), tuple(self.logic_containers)))
+        return hash((self.logic_container_type, tuple(self.view_filter_rules), tuple(self.logic_containers)))

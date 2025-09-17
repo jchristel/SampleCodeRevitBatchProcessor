@@ -27,7 +27,7 @@ from Autodesk.Revit.DB import  Document, ElementId, TableCellCombinedParameterDa
 from duHast.Utilities.Objects import result as res
 from duHast.UI.Objects.ProgressBase import ProgressBase
 from duHast.Utilities.directory_io import directory_exists
-from duHast.Revit.Exports.Utility.export_options_pdf_2024 import set_pdf_export_option_2024
+from duHast.Revit.Exports.Utility.export_options_pdf_2025 import set_pdf_export_option_2025
 from duHast.Revit.Exports.Utility.convert_pdf_dwg_settings import convert_settings_json_string_to_settings_objects
 
 def create_naming_rule(sheet_name_string, sample_sheet):
@@ -122,7 +122,7 @@ def export_sheet_to_pdf (doc, view_sheet, sheet_name_string, output_directory):
         naming_rule = create_naming_rule(sheet_name_string, view_sheet)
 
         # Create the PDF export options
-        pdf_export_option = set_pdf_export_option_2024(naming_rule)
+        pdf_export_option = set_pdf_export_option_2025(naming_rule)
 
         sheets = List[ElementId]()
         sheets.Add(view_sheet.Id)
@@ -192,7 +192,7 @@ def export_sheets_to_pdf(doc, sheets, sheet_name_string, output_directory, callb
             naming_rule = create_naming_rule(sheet_name_string, sheets[0])
 
             # Create the PDF export options
-            pdf_export_option = set_pdf_export_option_2024(naming_rule=naming_rule)
+            pdf_export_option = set_pdf_export_option_2025(naming_rule=naming_rule)
 
             # convert to .net list
             sheets_net = List[ElementId]()

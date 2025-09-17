@@ -329,6 +329,9 @@ def analyze_logical_filter(doc, logical_filter, project_parameters, nesting_leve
         # setup a logical container
         logical_container = ViewFilterLogicContainer()
 
+        # store the type of logical container
+        logical_container.logic_container_type = type(logical_filter).__name__
+
         # get the filters in the logical filter
         # should always be a list of element parameter filters or nested logical filters
         filters = logical_filter.GetFilters()

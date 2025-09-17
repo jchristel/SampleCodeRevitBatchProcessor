@@ -41,7 +41,7 @@ from duHast.Revit.NetSupport.dll_names import FILE_WRAPPER
 current_directory = os.path.dirname(__file__)
 parent_directory = os.path.dirname(current_directory)
 dll_path = os.path.join(parent_directory, "lib", FILE_WRAPPER)
-clr.AddReference(dll_path)
+clr.AddReferenceToFileAndPath(dll_path)
 
 # import the WriteToFile class from the CSVHelperWrapper namespace
 from duHastNet.FileIOWrapper import WriteToColumnBasedTextFile

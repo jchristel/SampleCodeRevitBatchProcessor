@@ -9,6 +9,8 @@
     <OutputPath>bin\x64\$(Configuration)\</OutputPath>
     <!-- Disable automatic framework folder -->
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <!-- Copy NuGet dependencies to output -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)' == 'x64'">

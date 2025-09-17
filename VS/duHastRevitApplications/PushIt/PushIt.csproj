@@ -21,7 +21,8 @@
     <FileVersion>25.0.0.1</FileVersion>
     <Product>duHastNet</Product>
     <Company>duHast</Company>
-  
+    <!-- Copy dependencies to output -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)' == 'x64'">

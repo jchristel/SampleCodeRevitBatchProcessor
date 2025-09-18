@@ -31,7 +31,7 @@ import traceback
 
 
 # set up a debug flag 
-DEBUG = False
+DEBUG = True
 
 # get the revit version to load the correct assemblies
 REVIT_VERSION = None
@@ -104,7 +104,7 @@ for dll in dlls_to_load:
         assembly = Assembly.Load(stream.ToArray())
 
         # Ensure it's registered for other add-ins
-        System.AppDomain.CurrentDomain.Load(assembly.GetName())
+        #System.AppDomain.CurrentDomain.Load(assembly.GetName())
 
         if DEBUG:
             print("loaded successfully: {dll}".format(dll=dll_name_only))

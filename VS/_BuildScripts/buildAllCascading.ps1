@@ -71,6 +71,79 @@ function Get-CurrentDllVersion {
     return $null
 }
 
+# Enhanced function to update C# files with better pattern matching
+function Update-CSharpFiles {
+    param(
+        [string]$SolutionDir,
+        [string]$OldVersion,
+        [string]$NewVersion,
+        [switch]$WhatIf
+    )
+    
+    $changesCount = 0
+    
+    Get-ChildItem -Path $SolutionDir -Recurse -Filter "*.cs" | ForEach-Object {
+        $filePath = $_.FullName
+        $content = Get-Content $filePath -Raw -ErrorAction SilentlyContinue
+        $originalContent = $content
+        $fileChanged = $false
+        
+        if ($content) {
+            # Pattern 1: Direct version number references
+            if ($content -match $OldVersion) {
+                $content = $content -replace [regex]::Escape($OldVersion), $NewVersion
+                $fileChanged = $true
+            }
+            
+            # Pattern 2: Assembly name constants (like ResourceUriHelper)
+            # Matches patterns like: private const string ASSEMBLY_NAME = "duHastUICustomControls.23.0.0.4";
+            $assemblyNamePattern = '(private\s+const\s+string\s+\w*ASSEMBLY_NAME\w*\s*=\s*")([^"]*\.)(\d+\.\d+\.\d+\.\d+)(")'
+            if ($content -match $assemblyNamePattern) {
+                $content = $content -replace $assemblyNamePattern, "`$1`$2$NewVersion`$4"
+                $fileChanged = $true
+                Write-Host "    Found hardcoded assembly name constant in $($_.Name)" -ForegroundColor Magenta
+            }
+            
+            # Pattern 3: Pack URI strings in C# code
+            # Matches: "pack://application:,,,/AssemblyName.1.2.3.4;component/..."
+            $packUriPattern = '("pack://application:,,,/[^;/]*\.)(\d+\.\d+\.\d+\.\d+)(;[^"]*")'
+            if ($content -match $packUriPattern) {
+                $content = $content -replace $packUriPattern, "`$1$NewVersion`$3"
+                $fileChanged = $true
+                Write-Host "    Found pack URI with version in $($_.Name)" -ForegroundColor Magenta
+            }
+            
+            # Pattern 4: Assembly.Load or Assembly.LoadFrom calls with version
+            $assemblyLoadPattern = '(Assembly\.Load(?:From)?\s*\(\s*")([^"]*\.)(\d+\.\d+\.\d+\.\d+)([^"]*")'
+            if ($content -match $assemblyLoadPattern) {
+                $content = $content -replace $assemblyLoadPattern, "`$1`$2$NewVersion`$4"
+                $fileChanged = $true
+                Write-Host "    Found Assembly.Load call with version in $($_.Name)" -ForegroundColor Magenta
+            }
+            
+            # Pattern 5: String literals containing assembly names (more general)
+            # This catches other cases where assembly names might be hardcoded
+            $generalAssemblyPattern = '("(?:[^"]*\.)?duHast[^"]*\.)(\d+\.\d+\.\d+\.\d+)([^"]*")'
+            if ($content -match $generalAssemblyPattern -and $content -notmatch $assemblyNamePattern) {
+                $content = $content -replace $generalAssemblyPattern, "`$1$NewVersion`$3"
+                $fileChanged = $true
+                Write-Host "    Found general assembly reference in $($_.Name)" -ForegroundColor Magenta
+            }
+            
+            if ($fileChanged -and -not $WhatIf) {
+                Set-Content -Path $filePath -Value $content -NoNewline
+                $changesCount++
+                Write-Host "    [CS] $($_.Name)" -ForegroundColor Cyan
+            } elseif ($fileChanged) {
+                $changesCount++
+                Write-Host "    [CS] $($_.Name) (PREVIEW)" -ForegroundColor Cyan
+            }
+        }
+    }
+    
+    return $changesCount
+}
+
 # Function to update version in a specific solution
 function Update-SolutionVersion {
     param(
@@ -131,18 +204,10 @@ function Update-SolutionVersion {
         }
     }
     
-    # Update C# and AssemblyInfo files
-    Get-ChildItem -Path $solutionDir -Recurse -Filter "*.cs" | ForEach-Object {
-        $content = Get-Content $_.FullName -Raw -ErrorAction SilentlyContinue
-        if ($content -and $content -match $OldVersion) {
-            if (-not $WhatIf) {
-                $newContent = $content -replace [regex]::Escape($OldVersion), $NewVersion
-                Set-Content -Path $_.FullName -Value $newContent -NoNewline
-            }
-            Write-Host "  [CS] $($_.Name)" -ForegroundColor Cyan
-            $changesCount++
-        }
-    }
+    # Use enhanced C# file processing
+    Write-Host "  Processing C# files with enhanced pattern matching..." -ForegroundColor Yellow
+    $csharpChanges = Update-CSharpFiles -SolutionDir $solutionDir -OldVersion $OldVersion -NewVersion $NewVersion -WhatIf:$WhatIf
+    $changesCount += $csharpChanges
     
     return $changesCount
 }
@@ -363,6 +428,8 @@ function Invoke-CascadingVersionUpdate {
         
         if ($changeCount -eq 0) {
             Write-Host "   No version references to update in this solution" -ForegroundColor Gray
+        } else {
+            Write-Host "   Updated $changeCount files" -ForegroundColor Green
         }
         
         # Step 2: Build the solution
@@ -389,86 +456,15 @@ function Invoke-CascadingVersionUpdate {
             Write-Host "`n3. No DLL copying needed for this solution" -ForegroundColor Gray
         }
         
-        Write-Host "step $stepNumber completed" -ForegroundColor Green
+        Write-Host "Step $stepNumber completed" -ForegroundColor Green
     }
     
     return $true
 }
 
-# Function to update version in a specific solution (same as before)
-function Update-SolutionVersion {
-    param(
-        [string]$SolutionPath,
-        [string]$OldVersion, 
-        [string]$NewVersion,
-        [switch]$WhatIf
-    )
-    
-    $changesCount = 0
-    
-    if (-not (Test-Path $SolutionPath)) {
-        return 0
-    }
-    
-    $solutionDir = Split-Path $SolutionPath -Parent
-    
-    # Update .csproj files
-    Get-ChildItem -Path $solutionDir -Recurse -Filter "*.csproj" | ForEach-Object {
-        $content = Get-Content $_.FullName -Raw -ErrorAction SilentlyContinue
-        if ($content -and $content -match $OldVersion) {
-            if (-not $WhatIf) {
-                $newContent = $content -replace [regex]::Escape($OldVersion), $NewVersion
-                Set-Content -Path $_.FullName -Value $newContent -NoNewline
-            }
-            Write-Host "    [CSPROJ] $($_.Name)" -ForegroundColor Cyan
-            $changesCount++
-        }
-    }
-    
-    # Update App.config files
-    Get-ChildItem -Path $solutionDir -Recurse -Filter "App.config" | ForEach-Object {
-        $content = Get-Content $_.FullName -Raw -ErrorAction SilentlyContinue
-        if ($content -and $content -match $OldVersion) {
-            if (-not $WhatIf) {
-                $newContent = $content -replace [regex]::Escape($OldVersion), $NewVersion
-                Set-Content -Path $_.FullName -Value $newContent -NoNewline
-            }
-            Write-Host "    [CONFIG] $($_.Name)" -ForegroundColor Cyan
-            $changesCount++
-        }
-    }
-    
-    # Update XAML files
-    Get-ChildItem -Path $solutionDir -Recurse -Filter "*.xaml" | ForEach-Object {
-        $content = Get-Content $_.FullName -Raw -ErrorAction SilentlyContinue
-        if ($content -and $content -match $OldVersion) {
-            if (-not $WhatIf) {
-                $newContent = $content -replace [regex]::Escape($OldVersion), $NewVersion
-                Set-Content -Path $_.FullName -Value $newContent -NoNewline
-            }
-            Write-Host "    [XAML] $($_.Name)" -ForegroundColor Cyan
-            $changesCount++
-        }
-    }
-    
-    # Update C# and AssemblyInfo files
-    Get-ChildItem -Path $solutionDir -Recurse -Filter "*.cs" | ForEach-Object {
-        $content = Get-Content $_.FullName -Raw -ErrorAction SilentlyContinue
-        if ($content -and $content -match $OldVersion) {
-            if (-not $WhatIf) {
-                $newContent = $content -replace [regex]::Escape($OldVersion), $NewVersion
-                Set-Content -Path $_.FullName -Value $newContent -NoNewline
-            }
-            Write-Host "    [CS] $($_.Name)" -ForegroundColor Cyan
-            $changesCount++
-        }
-    }
-    
-    return $changesCount
-}
-
 # Main execution
-Write-Host "=== Cascading DLL Version Update Process ===" -ForegroundColor Magenta
+Write-Host "=== Enhanced Cascading DLL Version Update Process ===" -ForegroundColor Magenta
+Write-Host "Now includes detection of hardcoded assembly names in C# code!" -ForegroundColor Green
 
 # Determine base path
 $basePath = Get-BasePathFromLocation
@@ -497,6 +493,13 @@ Write-Host "  To Version: $NewVersion" -ForegroundColor Yellow
 Write-Host "  Build Config: $BuildConfig" -ForegroundColor Yellow
 Write-Host "  Starting from: Solution $StartFromSolution" -ForegroundColor Yellow
 
+# Enhanced features info
+Write-Host "`nEnhanced Features:" -ForegroundColor Cyan
+Write-Host "  ✓ Detects hardcoded assembly name constants" -ForegroundColor Green
+Write-Host "  ✓ Updates Pack URI strings with versions" -ForegroundColor Green
+Write-Host "  ✓ Finds Assembly.Load calls with versions" -ForegroundColor Green
+Write-Host "  ✓ Catches general assembly references in strings" -ForegroundColor Green
+
 # Preview the cascading process
 if ($WhatIf) {
     Write-Host "`n=== Preview Mode ===" -ForegroundColor Magenta
@@ -514,10 +517,11 @@ if ($WhatIf) {
 
 # Confirm before proceeding
 Write-Host "`nThis will:" -ForegroundColor Yellow
-Write-Host "- Update each solutions version references in dependency order" -ForegroundColor Yellow
+Write-Host "- Update each solution's version references in dependency order" -ForegroundColor Yellow
 Write-Host "- Build each solution after updating its references" -ForegroundColor Yellow  
 Write-Host "- Copy built DLLs to reference directories" -ForegroundColor Yellow
 Write-Host "- Update pyRevit YAML files at the end" -ForegroundColor Yellow
+Write-Host "- ENHANCED: Find and fix hardcoded assembly names in C# code" -ForegroundColor Green
 
 $confirmation = Read-Host "`nProceed with cascading version update? (y/N)"
 if ($confirmation -ne "y" -and $confirmation -ne "Y") {
@@ -526,7 +530,7 @@ if ($confirmation -ne "y" -and $confirmation -ne "Y") {
 }
 
 # Execute the cascading update
-Write-Host "`n=== Executing Cascading Update ===" -ForegroundColor Magenta
+Write-Host "`n=== Executing Enhanced Cascading Update ===" -ForegroundColor Magenta
 $result = Invoke-CascadingVersionUpdate -BasePath $basePath -OldVersion $OldVersion -NewVersion $NewVersion -StartFromSolution $StartFromSolution
 
 if (-not $result) {
@@ -545,9 +549,10 @@ if ($yamlChanges -eq 0) {
 # Save change history
 Save-VersionChange -OldVersion $OldVersion -NewVersion $NewVersion -BasePath $basePath
 
-Write-Host "`n=== Cascading Update Complete ===" -ForegroundColor Green
+Write-Host "`n=== Enhanced Cascading Update Complete ===" -ForegroundColor Green
 Write-Host "Successfully updated entire dependency chain from $OldVersion to $NewVersion" -ForegroundColor Green
 Write-Host "All solutions built and DLLs copied to reference directories" -ForegroundColor Green
 Write-Host "PyRevit YAML files updated" -ForegroundColor Green
+Write-Host "Hardcoded assembly names in C# code have been detected and updated" -ForegroundColor Green
 
 Read-Host "`nPress Enter to exit"

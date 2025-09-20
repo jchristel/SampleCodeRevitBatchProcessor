@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using duHastNet.DocManager.Core.Models.Result;
+using duHastNet.DocManager.Core.Models.Results;
 
 namespace duHastNet.DocManager.Core.Tests.Models;
 
@@ -24,7 +24,7 @@ public class ValidationResultTests
     public void Success_CreatesValidResult()
     {
         // Act
-        var result = ValidationResult.Success();
+        var result = ValidationResult.CreateSuccess();
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -39,7 +39,7 @@ public class ValidationResultTests
         var errorMessage = "Document number is required";
 
         // Act
-        var result = ValidationResult.Failure(errorMessage);
+        var result = ValidationResult.CreateFailure(errorMessage);
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -57,7 +57,7 @@ public class ValidationResultTests
         var error3 = "Revision is required";
 
         // Act
-        var result = ValidationResult.Failure(error1, error2, error3);
+        var result = ValidationResult.CreateFailure(error1, error2, error3);
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -72,7 +72,7 @@ public class ValidationResultTests
     public void Failure_WithNoErrors_CreatesInvalidResult()
     {
         // Act
-        var result = ValidationResult.Failure();
+        var result = ValidationResult.CreateFailure();
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -150,7 +150,7 @@ public class ValidationResultTests
     public void MixedErrorsAndWarnings_BothCollectionsPopulated()
     {
         // Arrange
-        var result = ValidationResult.Success();
+        var result = ValidationResult.CreateSuccess();
         var error = "Critical error";
         var warning = "Minor warning";
 

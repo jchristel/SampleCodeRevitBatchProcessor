@@ -63,7 +63,7 @@ def settings_database_entry(doc, output, forms):
         setup_config = DatabaseSetupConfig()
         
         # set up some hard coded test values
-        setup_config.DatabasePath = r"C:\Temp\duHast\DocManager"
+        setup_config.DatabasePath = r"C:\Temp\duHast\DocManager\TestProjectDatabase.db"
         
         # custom property names for documents
         setup_config.CustomPropertyNames = List[str]([
@@ -81,11 +81,11 @@ def settings_database_entry(doc, output, forms):
         from duHastNet.DocManager.Core.Services.Api import DocManagerApi
         api = DocManagerApi()
         
-        setup_net_result = api.SetupDatabaseAsync(setup_config)
+        setup_net_result = api.SetupDatabase(setup_config)
         print(setup_net_result)
         
         # Remember to clean up
-        api.Close()  # Or use api.Dispose()
+        api.Close()
 
     except Exception as e:
         # handle any exceptions that occur during the export process

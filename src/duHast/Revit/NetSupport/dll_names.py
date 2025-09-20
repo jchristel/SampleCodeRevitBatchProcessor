@@ -51,3 +51,6 @@ FILE_WRAPPER = "FileIOWrapper{}.dll".format(version)
 
 # .net utility classes
 UTILITY = "Utils{}.dll".format(version)
+
+# doc manager core. This is not a specific version since it is independent of revit version
+DOC_MANAGER_CORE = "duHastNet.DocManager.Core.dll"

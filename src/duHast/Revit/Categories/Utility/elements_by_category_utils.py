@@ -169,7 +169,7 @@ def get_elements_by_category(doc, cat):
     # filter elements by category ids
     for key, value in category_graphic_style_ids.items():
         # if the key is 'Cut' and the style id is -1 means there is no cut graphics style available for that family category...ignore it
-        if key == CATEGORY_GRAPHIC_STYLE_CUT and value.IntegerValue == -1:
+        if key == CATEGORY_GRAPHIC_STYLE_CUT and value.Value == -1:
             continue
         # print (key + ' ' + str(value))
         if value in dic:

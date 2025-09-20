@@ -88,8 +88,8 @@ def update_by_values(doc, colour_fill_scheme, colour_fill_scheme_data, transacti
 
 
                             # check if the fill pattern is the same
-                            if entry.FillPatternId.IntegerValue != colour_fill_scheme_entry.fill_pattern_id:
-                                action_return_value.append_message("Fill pattern is different: {} != {}".format(entry.FillPatternId.IntegerValue, colour_fill_scheme_entry.fill_pattern_id))
+                            if entry.FillPatternId.Value != colour_fill_scheme_entry.fill_pattern_id:
+                                action_return_value.append_message("Fill pattern is different: {} != {}".format(entry.FillPatternId.Value, colour_fill_scheme_entry.fill_pattern_id))
                                 # update the entry with the new fill pattern
                                 entry.FillPatternId = ElementId(colour_fill_scheme_entry.fill_pattern_id)
                                 entry_requires_update = True

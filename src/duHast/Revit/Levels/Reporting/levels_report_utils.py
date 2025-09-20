@@ -50,10 +50,10 @@ def get_level_report_data(doc, revitFilePath):
         data.append(
             [
                 revitFilePath,
-                str(p.Id.IntegerValue),
+                str(p.Id.Value),
                 util.encode_ascii(p.Name),
                 util.encode_ascii(
-                    rWork.get_workset_name_by_id(doc, p.WorksetId.IntegerValue)
+                    rWork.get_workset_name_by_id(doc, p.WorksetId.Value)
                 ),
                 str(convert_imperial_feet_to_metric_mm(p.Elevation)),
             ]

@@ -137,7 +137,7 @@ class ColourFillStorage(Base):
         elif self.storage_type == 3:
             entry_value = self.parameter_value
         elif self.storage_type == 4:
-            entry_value = str(self.parameter_value.IntegerValue)
+            entry_value = str(self.parameter_value.Value)
 
 
         return [

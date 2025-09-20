@@ -58,7 +58,7 @@ def get_warnings_report_data(doc, revit_file_name):
             failing_ids = warning.GetFailingElements()
             failing_ids_as_integer = []
             for fail_id in failing_ids:
-                failing_ids_as_integer.append(fail_id.IntegerValue)
+                failing_ids_as_integer.append(fail_id.Value)
 
             warning_stored = RevitWarning(
                 file_name=revit_file_name,

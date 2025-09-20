@@ -104,7 +104,7 @@ def populate_data_room_object(doc, revit_room):
         # get level data
         try:
             data_r.level.name = encode_utf8(Element.Name.GetValue(revit_room.Level))
-            data_r.level.id = revit_room.Level.Id.IntegerValue
+            data_r.level.id = revit_room.Level.Id.Value
         except:
             data_r.level.name = "no level"
             data_r.level.id = -1

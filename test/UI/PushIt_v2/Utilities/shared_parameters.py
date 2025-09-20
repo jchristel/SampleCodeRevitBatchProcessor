@@ -221,14 +221,14 @@ def set_shared_parameter_value_by_guid(doc, element, guid, value):
 
         return_value.append_message(
             "Set shared parameter: {} value: {} for element with id: {}.".format(
-                parameter_name, value, element.Id.IntegerValue
+                parameter_name, value, element.Id.Value
             )
         )
     except Exception as e:
         return_value.update_sep(
             False,
             "Failed to set shared parameter value for element with id: {}. Error: {}".format(
-                element.Id.IntegerValue, str(e)
+                element.Id.Value, str(e)
             ),
         )
 

@@ -115,7 +115,7 @@ def get_projection_overrides(view_override_graphic, line_patterns, fill_patterns
         name=_get_name_from_pattern_id(
             id=view_override_graphic.ProjectionLinePatternId, pattern_list=line_patterns
         ),
-        id=view_override_graphic.ProjectionLinePatternId.IntegerValue,
+        id=view_override_graphic.ProjectionLinePatternId.Value,
     )
     # store line pattern details
     line_pat.line_pattern_settings = line_pat_settings
@@ -132,7 +132,7 @@ def get_projection_overrides(view_override_graphic, line_patterns, fill_patterns
             id=view_override_graphic.SurfaceForegroundPatternId,
             pattern_list=fill_patterns,
         ),
-        id=view_override_graphic.SurfaceForegroundPatternId.IntegerValue,
+        id=view_override_graphic.SurfaceForegroundPatternId.Value,
     )
     # store foreground pattern settings details
     fore_pat.fill_pattern_setting = fore_pat_settings
@@ -149,7 +149,7 @@ def get_projection_overrides(view_override_graphic, line_patterns, fill_patterns
             id=view_override_graphic.SurfaceBackgroundPatternId,
             pattern_list=fill_patterns,
         ),
-        id=view_override_graphic.SurfaceBackgroundPatternId.IntegerValue,
+        id=view_override_graphic.SurfaceBackgroundPatternId.Value,
     )
     # store foreground pattern settings details
     back_pat.fill_pattern_setting = back_pat_settings
@@ -187,7 +187,7 @@ def get_cut_overrides(view_override_graphic, line_patterns, fill_patterns):
         name=_get_name_from_pattern_id(
             id=view_override_graphic.CutLinePatternId, pattern_list=line_patterns
         ),
-        id=view_override_graphic.CutLinePatternId.IntegerValue,
+        id=view_override_graphic.CutLinePatternId.Value,
     )
     # store line pattern details
     line_pat.line_pattern_settings = line_pat_settings
@@ -203,7 +203,7 @@ def get_cut_overrides(view_override_graphic, line_patterns, fill_patterns):
         name=_get_name_from_pattern_id(
             id=view_override_graphic.CutForegroundPatternId, pattern_list=fill_patterns
         ),
-        id=view_override_graphic.CutForegroundPatternId.IntegerValue,
+        id=view_override_graphic.CutForegroundPatternId.Value,
     )
     # store foreground pattern settings details
     fore_pat.fill_pattern_setting = fore_pat_settings
@@ -219,7 +219,7 @@ def get_cut_overrides(view_override_graphic, line_patterns, fill_patterns):
         name=_get_name_from_pattern_id(
             id=view_override_graphic.CutBackgroundPatternId, pattern_list=fill_patterns
         ),
-        id=view_override_graphic.CutBackgroundPatternId.IntegerValue,
+        id=view_override_graphic.CutBackgroundPatternId.Value,
     )
     # store foreground pattern settings details
     back_pat.fill_pattern_setting = back_pat_settings
@@ -257,7 +257,7 @@ def get_view_category_overrides(
         override = OverrideByCategory(
             main_category_name=model_cat.category_name,
             sub_category_name=model_cat.sub_category_name,
-            category_id=model_cat.id.IntegerValue,
+            category_id=model_cat.id.Value,
         )
 
         # get the overrides by category
@@ -334,7 +334,7 @@ def get_view_filter_overrides(doc, view, line_patterns, fill_patterns):
         # set up storage class
         override = OverrideByFilter(
             filter_name=Element.Name.GetValue(filter),
-            filter_id=filter_id.IntegerValue,
+            filter_id=filter_id.Value,
         )
 
         # get the overrides by filter
@@ -392,7 +392,7 @@ def get_view_settings(doc, view):
     # set up class to store view graphic settings
     view_data = ViewGraphicsSettings(
         view_name=Element.Name.GetValue(view),
-        view_id=view.Id.IntegerValue,
+        view_id=view.Id.Value,
     )
 
     # get all pattern element since they will be required in the override settings

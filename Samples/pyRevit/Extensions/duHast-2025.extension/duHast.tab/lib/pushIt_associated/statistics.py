@@ -51,7 +51,7 @@ def get_families_user_data_stats(doc, sorted_instances):
             fam_name = Element.Name.GetValue(c.Symbol.Family)
             if not fam_name in stats:
                 stats[fam_name] = []
-            stats[fam_name].append(c.Id.IntegerValue)
+            stats[fam_name].append(c.Id.Value)
 
 
             # get the user name

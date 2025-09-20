@@ -48,9 +48,9 @@ def get_grid_report_data(doc, revit_file_path):
         data.append(
             [
                 revit_file_path,
-                str(grid.Id.IntegerValue),
+                str(grid.Id.Value),
                 util.encode_ascii(grid.Name),
-                rWork.get_workset_name_by_id(doc, grid.WorksetId.IntegerValue),
+                rWork.get_workset_name_by_id(doc, grid.WorksetId.Value),
                 rGrid.get_max_extent_as_string(grid),
                 rGrid.get_min_extent_as_string(grid),
                 str(grid.IsCurved),

@@ -297,7 +297,7 @@ def get_a_room_entry(doc, uiapp,output, forms):
     # loop over the filtered regions
     for f in filtered_regions:
         
-        print_header("Processing filled region: {}".format(f.Id.IntegerValue))
+        print_header("Processing filled region: {}".format(f.Id.Value))
 
         if DEBUG :
             debug.draw_bounding_box_around_filled_region(doc, active_view, f)# get the bounding box of the filled region

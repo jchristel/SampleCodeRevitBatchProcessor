@@ -103,7 +103,7 @@ def get_workset_name_by_id(doc, id_integer):
 
     name = "unknown"
     for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
-        if p.Id.IntegerValue == id_integer:
+        if p.Id.Value == id_integer:
             name = p.Name
             break
     return name
@@ -274,7 +274,7 @@ def get_action_change_element_workset(el, default_id):
         action_return_value = res.Result()
         try:
             ws_param = el.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
-            ws_param.Set(default_id.IntegerValue)
+            ws_param.Set(default_id.Value)
             action_return_value.append_message("Changed element workset.")
         except Exception as e:
             action_return_value.update_sep(False, "Failed with exception: {}".format(e))
@@ -302,7 +302,7 @@ def is_element_on_workset_by_id(doc, el, workset_id):
     try:
         ws_param = el.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
         current_workset_name = rParaGet.get_parameter_value(ws_param)
-        compare_to_workset_name = get_workset_name_by_id(doc, workset_id.IntegerValue)
+        compare_to_workset_name = get_workset_name_by_id(doc, workset_id.Value)
         if compare_to_workset_name != current_workset_name:
             flag = False
     except Exception as e:

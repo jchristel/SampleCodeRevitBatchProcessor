@@ -59,7 +59,7 @@ def _convert_tagged_element_ids_to_int(data):
     for tag_dic in data:
         for id_entry in tag_dic:
             if type(tag_dic[id_entry]) == ElementId:
-                tag_dic[id_entry] = tag_dic[id_entry].IntegerValue
+                tag_dic[id_entry] = tag_dic[id_entry].Value
     return data
 
 
@@ -115,14 +115,14 @@ def get_tag_instances_report_data(doc, revit_file_path, custom_element_filter):
                     # base line revit data
                     row = {
                         props.HOST_FILE: revit_file_path,
-                        props.TAG_ID: tag_instance.Id.IntegerValue,
+                        props.TAG_ID: tag_instance.Id.Value,
                         props.TAG_HAS_LEADER: tag_instance.HasLeader,  # leader flag
                         props.TAG_IS_ORPHANED: tag_instance.IsOrphaned,  # is orphaned tag?
                         props.TAG_IS_MATERIAL_TAG: tag_instance.IsMaterialTag,  # is a material tag
                         props.IS_MULTICATEGORY_TAG: tag_instance.IsMulticategoryTag,  # is is multi category tag
                         props.LEADER_END_CONDITION: leader_end_condition,  # attached or free
                         props.LEADER_PROPERTIES: elbow_properties,  # elbow properties
-                        props.MULTI_REFERENCE_ANNOTATION_ID: tag_instance.MultiReferenceAnnotationId.IntegerValue,
+                        props.MULTI_REFERENCE_ANNOTATION_ID: tag_instance.MultiReferenceAnnotationId.Value,
                         props.TAG_TEXT: tag_text,  # tag text
                         props.TAGGED_ELEMENT_IDS: tagged_element_data,  # tagged element ids as integers
                         props.TAG_HEAD_LOCATION: get_point_as_doubles(

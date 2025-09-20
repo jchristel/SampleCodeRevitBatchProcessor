@@ -156,7 +156,7 @@ def get_cut_style(category, line_patterns):
             id=category.GetLinePatternId(GraphicsStyleType.Projection),
             pattern_list=line_patterns,
         ),
-        id=category.GetLinePatternId(GraphicsStyleType.Projection).IntegerValue,
+        id=category.GetLinePatternId(GraphicsStyleType.Projection).Value,
     )
     # store line pattern details
     line_cut_style.line_pattern_settings = line_pat_settings
@@ -266,7 +266,7 @@ def get_projection_style(category, line_patterns):
             id=category.GetLinePatternId(GraphicsStyleType.Projection),
             pattern_list=line_patterns,
         ),
-        id=category.GetLinePatternId(GraphicsStyleType.Projection).IntegerValue,
+        id=category.GetLinePatternId(GraphicsStyleType.Projection).Value,
     )
     # store line pattern details
     line_projection_style.line_pattern_settings = line_pat_settings
@@ -435,7 +435,7 @@ def get_category_styles(doc):
             object_style = ObjectStyle(
                 main_category_name=model_cat.category_name,
                 sub_category_name=model_cat.sub_category_name,
-                category_id=model_cat.id.IntegerValue,
+                category_id=model_cat.id.Value,
             )
 
             # get overrides for projection and cut
@@ -447,7 +447,7 @@ def get_category_styles(doc):
             # get the material id
             category_material = category.Material
             if category_material != None:
-                object_style.material_id = category.Material.Id.IntegerValue
+                object_style.material_id = category.Material.Id.Value
             else:
                 object_style.material_id = -1
 

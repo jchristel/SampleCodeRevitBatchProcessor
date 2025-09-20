@@ -75,7 +75,7 @@ def get_shared_parameter_report_data(doc, revit_file_path):
                 [
                     revit_file_path,
                     p.GuidValue.ToString(),
-                    str(p.Id.IntegerValue),
+                    str(p.Id.Value),
                     parameter_name,
                     str(parameter_bindings),
                 ]
@@ -101,7 +101,7 @@ def get_shared_parameter_report_data(doc, revit_file_path):
                 [
                     revit_file_path,
                     p.GuidValue.ToString(),
-                    str(p.Id.IntegerValue),
+                    str(p.Id.Value),
                     parameter_name,
                     ','.join(parameter_bindings),
                 ]

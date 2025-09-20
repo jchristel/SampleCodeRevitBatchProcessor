@@ -330,7 +330,7 @@ def getter_element_id_as_element_int(para):
     parameter_value = None
     if para.StorageType == rdb.StorageType.ElementId:
         if para.AsElementId() != None:
-            parameter_value = para.AsElementId().IntegerValue
+            parameter_value = para.AsElementId().Value
     return parameter_value
 
 

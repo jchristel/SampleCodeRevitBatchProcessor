@@ -120,7 +120,7 @@ def get_bounding_box_from_family_geometry(geometry_element):
                     # find solids
                     if type(element) is Solid:
                         # check if solid is valid
-                        if element.Id == ElementId.InvalidElementId.IntegerValue:
+                        if element.Id == ElementId.InvalidElementId.Value:
                             continue
                         # get the solids bounding box
                         solid_transform_bb = get_solid_bounding_box(element)

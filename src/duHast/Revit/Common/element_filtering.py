@@ -46,7 +46,7 @@ def is_element_of_built_in_category(doc, element_id, builtin_categories):
 
     match = False
     el = doc.GetElement(element_id)
-    enum_category_id = el.Category.Id.IntegerValue.ToString()
+    enum_category_id = el.Category.Id.Value.ToString()
     for bic in builtin_categories:
         if enum_category_id == bic.value__.ToString():
             match = True
@@ -69,7 +69,7 @@ def is_element_not_of_built_in_category(doc, element_id, builtin_categories):
 
     match = True
     el = doc.GetElement(element_id)
-    enum_category_id = el.Category.Id.IntegerValue.ToString()
+    enum_category_id = el.Category.Id.Value.ToString()
     for bic in builtin_categories:
         if enum_category_id == bic.value__.ToString():
             match = False

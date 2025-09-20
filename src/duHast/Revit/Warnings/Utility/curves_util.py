@@ -65,7 +65,7 @@ def get_curves_from_failure_messages(doc, failure_messages, group_id):
                     ).Name
                 ):
                     curve = sep_line.GeometryCurve
-                    group_id_curve = sep_line.GroupId.IntegerValue
+                    group_id_curve = sep_line.GroupId.Value
                     if group_id_curve != group_id:
                         are_matching_group_id = False
 

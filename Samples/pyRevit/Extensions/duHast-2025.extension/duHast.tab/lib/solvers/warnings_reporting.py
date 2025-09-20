@@ -61,7 +61,7 @@ def _print_area_line_table(
             row = [area_scheme_name, level]
             ids_str = []
             for line in lines:
-                ids_str.append(str(line.Id.IntegerValue))
+                ids_str.append(str(line.Id.Value))
             row.append(";".join(ids_str))
 
             # get associated views if any:
@@ -238,7 +238,7 @@ def _print_room_separation_lines_table(
                 row = [design_set_option, level_name, phase]
                 ids_str = []
                 for line in lines:
-                    ids_str.append(str(line.Id.IntegerValue))
+                    ids_str.append(str(line.Id.Value))
                 row.append(";".join(ids_str))
                 # only display rows with data
                 if len(ids_str) > 0:

@@ -216,12 +216,12 @@ def get_room_from_element(phase_dictionary, elem):
             # if theres a room associated with the element return it
             return (
                 el_room if el_room != None else None
-            )  #'Elem Id: {} has no room'.format(str(elem.Id.IntegerValue))
+            )  #'Elem Id: {} has no room'.format(str(elem.Id.Value))
         else:
             return None
 
     else:
-        print("Elem Id: {} has no phase".format(str(elem.Id.IntegerValue)))
+        print("Elem Id: {} has no phase".format(str(elem.Id.Value)))
         return None
 
 
@@ -248,7 +248,7 @@ def check_element_is_in_room(phase_dictionary, elem, room_to_check):
         return True if elem_room_num == exemplar_room_num else False
 
     else:
-        print("Elem Id: {} has no room".format(str(elem.Id.IntegerValue)))
+        print("Elem Id: {} has no room".format(str(elem.Id.Value)))
         return False
 
 

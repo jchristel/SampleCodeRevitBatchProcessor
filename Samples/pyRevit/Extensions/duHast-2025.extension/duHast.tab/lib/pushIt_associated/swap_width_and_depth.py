@@ -66,7 +66,7 @@ def swap_element_parameter_values(elem, parameter_value_swap_mapping):
         param1_value = get_parameter_value_by_name(elem, param_pair[0])
         param2_value = get_parameter_value_by_name(elem, param_pair[1])
 
-        print_header("{} ({})".format(Element.Name.GetValue(elem), elem.Id.IntegerValue))
+        print_header("{} ({})".format(Element.Name.GetValue(elem), elem.Id.Value))
         # if the value does not exist on the selected element its None
         if param1_value is None or param2_value is None:
             print("One of the parameters [{}, {}] does not exist on the selected element. Ignoring pairing".format(param_pair[0], param_pair[1]))

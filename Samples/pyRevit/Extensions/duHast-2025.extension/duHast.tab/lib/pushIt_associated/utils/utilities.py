@@ -434,7 +434,7 @@ def get_family_instance_properties(family_instance, parameter_data, unique_id_pa
                     # check if the unique id parameter value is empty, if so reject this family instance
                     if instance_parameter_guid == unique_id_parameter_guid:
                         if instance_parameter_value == "None" or instance_parameter_value == "":
-                            raise ValueError("Unique Id Parameter value is None or empty for family instance: {}".format(family_instance.Id.IntegerValue))
+                            raise ValueError("Unique Id Parameter value is None or empty for family instance: {}".format(family_instance.Id.Value))
                    
                     # check if the parameter is in the parameter data
                     if parameter_guid == instance_parameter_guid:
@@ -492,7 +492,7 @@ def convert_family_instances_to_storage(doc, family_instances, parameter_data, u
             converted_family_instance = PushItFamilyInstance()
 
             # get the family instance id
-            converted_family_instance.revit_element_id_integer_value = fi.Id.IntegerValue
+            converted_family_instance.revit_element_id_integer_value = fi.Id.Value
 
             # get the family instance location point
             converted_family_instance.set_location_point(fi.Location.Point.X, fi.Location.Point.Y, fi.Location.Point.Z)

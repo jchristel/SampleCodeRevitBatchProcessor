@@ -86,7 +86,7 @@ def element_ids_to_semicolon_delimited_text(element_ids):
     :return: Semicolon delimited string of ElementIds
     :rtype: str
     """
-    return str.Join("; ", [str(elementId.IntegerValue) for elementId in element_ids])
+    return str.Join("; ", [str(elementId.Value) for elementId in element_ids])
 
 
 # ----------------------------------------Legend Components -----------------------------------------------

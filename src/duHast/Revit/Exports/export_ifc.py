@@ -186,7 +186,7 @@ def setup_ifc_export_option(
 
     if export_config.UseActiveViewGeometry == True:
         if convert_view_id_to_integer:
-            export_config.ActiveViewId = view_id.IntegerValue
+            export_config.ActiveViewId = view_id.Value
         else:
             export_config.ActiveViewId = view_id
     else:

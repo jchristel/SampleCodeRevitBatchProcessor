@@ -52,7 +52,7 @@ def schedule_contains_sheet_number_field(schedule):
     # check if the sheet number field is in the field parameter ids
     for field_names,parameter_id in field_names.items():
         # SHEET_NUMBER	-1,007,401	"Sheet Number" ( revit api docs)
-        if parameter_id.IntegerValue == -1007401:
+        if parameter_id.Value == -1007401:
             # sheet number field found, return True
             return True
     
@@ -220,7 +220,7 @@ def get_ui_print_set_data(doc, sheets):
         view_ids = []
         for sheet_in_set in set.OrderedViewList:
             if (isinstance(sheet_in_set, ViewSheet)):
-                view_ids.append(sheet_in_set.Id.IntegerValue)
+                view_ids.append(sheet_in_set.Id.Value)
             
         
         # check if any sheet ids where found in the set
@@ -278,7 +278,7 @@ def get_ui_sheet_data(doc):
 
             # create a RevitSheet object with the sheet data
             revit_sheet = RevitSheet(
-                revitElementId=str(sheet.Id.IntegerValue),
+                revitElementId=str(sheet.Id.Value),
                 sheetName=sheet.Name,
                 sheetNumber=sheet.SheetNumber
             )

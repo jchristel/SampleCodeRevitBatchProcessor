@@ -178,7 +178,7 @@ def _modify_revit_link_type_data(revitLink, doc):
     # get the workset id of a link instance belonging to same type
     instance_workset_id = _get_revit_instance_data_by_name(revitLink, doc)
     instance_workset_name = rWork.get_workset_name_by_id(
-        doc, instance_workset_id.IntegerValue
+        doc, instance_workset_id.Value
     )
 
     # check if revit link type needs the workset changed?

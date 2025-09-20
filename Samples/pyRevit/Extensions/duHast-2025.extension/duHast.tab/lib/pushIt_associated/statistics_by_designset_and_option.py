@@ -56,7 +56,7 @@ def build_table_data(problematic_keys):
             # get all family instances for the design set
             fam_instance_ids = []
             for fam_instance in family_instances:
-                fam_instance_ids.append(str(fam_instance.Id.IntegerValue))
+                fam_instance_ids.append(str(fam_instance.Id.Value))
 
             # add the family instance ids to the row data as strings so they form one column
             row_data.append(",".join(fam_instance_ids))

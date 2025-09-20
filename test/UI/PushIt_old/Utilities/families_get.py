@@ -137,7 +137,7 @@ def extract_single_family_data(doc, family_instance, shared_parameter_data):
         design_option_is_primary=design_set_and_option_data[
             DesignSetPropertyNames.DESIGN_OPTION_IS_PRIMARY
         ],
-        revit_element_id=family_instance.Id.IntegerValue,
+        revit_element_id=family_instance.Id.Value,
     )
 
     return family

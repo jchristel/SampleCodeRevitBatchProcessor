@@ -115,7 +115,7 @@ def get_single_warnings_elements_by_guid(doc, guid):
     for warning in warnings:
         element_ids = warning.GetFailingElements()
         if len(element_ids) == 1:
-            all_element_ids.append(element_ids[0].IntegerValue)
+            all_element_ids.append(element_ids[0].Value)
     return all_element_ids
 
 
@@ -152,46 +152,46 @@ def get_warnings_grouped_by_relation(doc, guid):
         # initialise the first warning group
         if len(warning_grouping) == 0:
             warning_grouping[counter] = [
-                element_ids[0].IntegerValue,
-                element_ids[1].IntegerValue,
+                element_ids[0].Value,
+                element_ids[1].Value,
             ]
             continue
 
         # check if the warning relates to an existing group
         for key, value in warning_grouping.items():
             if (
-                element_ids[0].IntegerValue in value
-                and element_ids[1].IntegerValue not in value
+                element_ids[0].Value in value
+                and element_ids[1].Value not in value
             ):
-                warning_grouping[key].append(element_ids[1].IntegerValue)
-                # print("added {} to group {}".format( element_ids[1].IntegerValue, counter))
+                warning_grouping[key].append(element_ids[1].Value)
+                # print("added {} to group {}".format( element_ids[1].Value, counter))
                 match = True
                 break
             elif (
-                element_ids[1].IntegerValue in value
-                and element_ids[0].IntegerValue not in value
+                element_ids[1].Value in value
+                and element_ids[0].Value not in value
             ):
-                warning_grouping[key].append(element_ids[0].IntegerValue)
-                # print("added {} to group {}".format( element_ids[0].IntegerValue, counter))
+                warning_grouping[key].append(element_ids[0].Value)
+                # print("added {} to group {}".format( element_ids[0].Value, counter))
                 match = True
                 break
             elif (
-                element_ids[1].IntegerValue in value
-                and element_ids[0].IntegerValue in value
+                element_ids[1].Value in value
+                and element_ids[0].Value in value
             ):
-                # print("matched {} {} to group {} {}".format( element_ids[0].IntegerValue, element_ids[1].IntegerValue, counter, value))
+                # print("matched {} {} to group {} {}".format( element_ids[0].Value, element_ids[1].Value, counter, value))
                 match = True
                 break
             else:
                 pass
-                # print("no match for {} {} in {}".format(element_ids[0].IntegerValue, element_ids[1].IntegerValue, value))
+                # print("no match for {} {} in {}".format(element_ids[0].Value, element_ids[1].Value, value))
         if not match:
             counter += 1
             warning_grouping[counter] = [
-                element_ids[0].IntegerValue,
-                element_ids[1].IntegerValue,
+                element_ids[0].Value,
+                element_ids[1].Value,
             ]
-            # print("new counter group: {} to group {}, {}".format(counter, element_ids[0].IntegerValue, element_ids[1].IntegerValue,))
+            # print("new counter group: {} to group {}, {}".format(counter, element_ids[0].Value, element_ids[1].Value,))
             # new warning grouping is required
 
     sorted_warning_grouping = {}

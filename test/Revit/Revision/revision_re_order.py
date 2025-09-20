@@ -58,7 +58,7 @@ class ChangeRevOrder(revit_test.RevitTest):
 
         ids = []
         for item in my_list:
-            ids.append(item.IntegerValue)
+            ids.append(item.Value)
         return ids
 
     def test(self):

@@ -96,7 +96,7 @@ class SharedParameterData(IFamData.IFamilyData):
                 # build used by data as required to be the same as post process update
                 used_by_data = FamilySharedParameterDataStorageUsedBy(
                     family_name=self.root_path,
-                    element_id=para.Id.IntegerValue,
+                    element_id=para.Id.Value,
                 )
                 used_by_list.append(used_by_data)
 
@@ -108,7 +108,7 @@ class SharedParameterData(IFamData.IFamilyData):
                 family_file_path=saved_file_name,
                 parameter_guid=para.GuidValue.ToString(),
                 parameter_name=parameter_name,
-                parameter_id=para.Id.IntegerValue,
+                parameter_id=para.Id.Value,
                 use_counter=use_counter,
                 used_by=used_by_list,
             )

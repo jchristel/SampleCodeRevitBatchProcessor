@@ -69,7 +69,7 @@ def get_entry_value_as_string(entry):
     elif value_type[1] == 3:
         return value_type[0]
     elif value_type[1] == 4:
-        return str(value_type[0].IntegerValue)
+        return str(value_type[0].Value)
 
 
 def set_entry_value (entry, value):

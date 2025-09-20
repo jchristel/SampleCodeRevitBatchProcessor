@@ -185,7 +185,7 @@ class RevitWarningsSolverDuplicateMark(base.Base):
                                 # setup return object message
                                 message_prefix = "Updated mark on: {} [id:{}]".format(
                                     Element.Name.GetValue(element),
-                                    element.Id.IntegerValue,
+                                    element.Id.Value,
                                 )
                                 return_value.update_sep(
                                     result.status,

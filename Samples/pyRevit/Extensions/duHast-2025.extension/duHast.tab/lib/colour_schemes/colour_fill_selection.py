@@ -60,7 +60,7 @@ def colour_fill_scheme_name_builder_ui(doc, element):
         area_scheme_name = area_scheme.Name
 
     # Build the colour fill scheme name using the provided string
-    return "{} <{}> ({})".format(colour_fill_name, area_scheme_name, element.Id.IntegerValue)
+    return "{} <{}> ({})".format(colour_fill_name, area_scheme_name, element.Id.Value)
 
 
 def colour_fill_scheme_getter(doc):

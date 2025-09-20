@@ -341,10 +341,10 @@ def purge_unused_elements(
         # set up action attempting to delete an element
         def action():
             action_return_value = Result()
-            if element_id.IntegerValue < 0:
+            if element_id.Value < 0:
                 action_return_value.append_message(
                     "Element {} {} is a built-in element and cannot be deleted".format(
-                        element_id.IntegerValue, element_name
+                        element_id.Value, element_name
                     )
                 )
             else:

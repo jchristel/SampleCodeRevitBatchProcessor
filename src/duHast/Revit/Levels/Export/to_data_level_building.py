@@ -60,7 +60,7 @@ def populate_data_level_object(doc, revit_level):
     data_level_building = DataLevelBuilding()
     
     # id
-    data_level_building.id = revit_level.Id.IntegerValue
+    data_level_building.id = revit_level.Id.Value
 
     # name
     data_level_building.name = Element.Name.GetValue(revit_level)

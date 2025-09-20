@@ -104,7 +104,7 @@ def get_type_properties(doc, element):
     type_p = DataTypeProperties()
 
     # get element properties
-    type_p.id = element.GetTypeId().IntegerValue
+    type_p.id = element.GetTypeId().Value
     type_p.name = encode_utf8(Element.Name.GetValue(element))
     element_type = doc.GetElement(element.GetTypeId())
 
@@ -128,7 +128,7 @@ def get_instance_properties(element):
     instance_p = DataInstanceProperties()
 
     # get instance properties
-    instance_p.id = element.Id.IntegerValue
+    instance_p.id = element.Id.Value
     instance_properties = get_element_properties(element=element)
     instance_p.properties = instance_properties
 
@@ -154,7 +154,7 @@ def get_level_data(doc, element, built_in_parameter_def):
 
     # get level properties
     level_d.name = encode_utf8(Element.Name.GetValue(doc.GetElement(element.LevelId)))
-    level_d.id = element.LevelId.IntegerValue
+    level_d.id = element.LevelId.Value
     level_d.offset_from_level = get_built_in_parameter_value(
         element=element, built_in_parameter_def=built_in_parameter_def
     )  # offset from level

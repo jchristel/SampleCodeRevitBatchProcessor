@@ -145,7 +145,7 @@ def verify_filled_region(filled_region):
         
         # reject any filled region with a curve loop count greater than 2
         if len(filled_region_curve_loops) > 2:
-            message = "Filled region '{}' {} has more than 2 curves. Will be ignored.".format(filled_region.Name, filled_region.Id.IntegerValue)
+            message = "Filled region '{}' {} has more than 2 curves. Will be ignored.".format(filled_region.Name, filled_region.Id.Value)
             return_value.update_sep(False, message)
             return return_value
         

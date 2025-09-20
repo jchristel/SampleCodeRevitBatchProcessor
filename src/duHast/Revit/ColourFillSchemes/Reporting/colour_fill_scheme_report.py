@@ -65,7 +65,7 @@ def get_report_data_of_colour_fill_scheme(doc, colour_fill_scheme):
         entry_data.parameter_value = value_type[0]
         entry_data.storage_type = value_type[1]
 
-        entry_data.fill_pattern_id = entry.FillPatternId.IntegerValue
+        entry_data.fill_pattern_id = entry.FillPatternId.Value
         entry_data.is_in_use = entry.IsInUse
         entry_data.is_visible = entry.IsVisible
         entry_data.colour_red = entry.Color.Red

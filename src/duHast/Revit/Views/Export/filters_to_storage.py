@@ -96,15 +96,15 @@ def get_project_parameters(doc):
 
         # loop over shared parameters to see if we have a match
         for sp in shared_parameters:
-            if d.Id.IntegerValue == sp.Id.IntegerValue:
+            if d.Id.Value == sp.Id.Value:
                 # this is a shared parameter
                 is_shared = True
-                project_parameters[d.Id.IntegerValue] = [d.Name, str(sp.GuidValue)]
+                project_parameters[d.Id.Value] = [d.Name, str(sp.GuidValue)]
                 break
         
         # this is not a shared parameter
         if not is_shared:
-            project_parameters[d.Id.IntegerValue] = [d.Name, None]
+            project_parameters[d.Id.Value] = [d.Name, None]
     
     return project_parameters
 
@@ -137,10 +137,10 @@ def analyze_rule(doc, rule,  is_inversed, project_parameters, nesting_level, deb
         # can be numeric or a string rule
         # get the parameter to be checked
         if debug:
-            return_value.append_message ("{} rule parameter id: {}".format("..." * nesting_level, rule.GetRuleParameter().IntegerValue))
+            return_value.append_message ("{} rule parameter id: {}".format("..." * nesting_level, rule.GetRuleParameter().Value))
         
         # parameter id
-        view_filter_rule.parameter_id = rule.GetRuleParameter().IntegerValue
+        view_filter_rule.parameter_id = rule.GetRuleParameter().Value
 
         # save the rule type
         view_filter_rule.rule_type = type(rule).__name__
@@ -201,8 +201,8 @@ def analyze_rule(doc, rule,  is_inversed, project_parameters, nesting_level, deb
         if isinstance(rule, FilterElementIdRule):
             # check for element id rule
             if debug:
-                return_value.append_message ("{} rule value: {}".format("..." * nesting_level, rule.RuleValue.IntegerValue))
-            view_filter_rule.rule_value=rule.RuleValue.IntegerValue
+                return_value.append_message ("{} rule value: {}".format("..." * nesting_level, rule.RuleValue.Value))
+            view_filter_rule.rule_value=rule.RuleValue.Value
         
         elif isinstance(rule, FilterNumericValueRule):
             # check for numeric rule
@@ -450,9 +450,9 @@ def analyze_filters(doc, filters,  progress_callback, debug = False):
             # add category ids to the view filter
             for id in filter_revit_category_ids:
                 if debug:
-                    return_value.append_message ("...Filter Id [{}]".format(id.IntegerValue))
+                    return_value.append_message ("...Filter Id [{}]".format(id.Value))
                 
-                view_filter.category_ids.append(id.IntegerValue)
+                view_filter.category_ids.append(id.Value)
             
             # getting the filter elements
             filter_elements = filter.GetElementFilter()

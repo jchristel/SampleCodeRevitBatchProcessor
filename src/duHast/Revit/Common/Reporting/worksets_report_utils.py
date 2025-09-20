@@ -51,7 +51,7 @@ def get_workset_report_data(doc, revit_file_path):
         data.append(
             [
                 revit_file_path,
-                str(ws.Id.IntegerValue),
+                str(ws.Id.Value),
                 util.encode_ascii(ws.Name),
                 str(ws.IsVisibleByDefault),
             ]

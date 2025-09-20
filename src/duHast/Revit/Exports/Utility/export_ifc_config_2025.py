@@ -307,7 +307,7 @@ def _setup_config_default_values_2025(ifc_export_config, ifc_version, export_by_
         ifc_export_config.IFCVersion = ifc_version
 
     ifc_export_config.SpaceBoundaries = 1
-    ifc_export_config.ActivePhaseId = ElementId.InvalidElementId.IntegerValue
+    ifc_export_config.ActivePhaseId = ElementId.InvalidElementId.Value
     ifc_export_config.ExportBaseQuantities = True
     ifc_export_config.SplitWallsAndColumns = True
     ifc_export_config.VisibleElementsOfCurrentView = export_by_view  # by model

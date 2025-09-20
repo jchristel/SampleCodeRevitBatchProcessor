@@ -103,10 +103,10 @@ def copy_annotation_to_views(
         dim_ids = []
         dim_ids_int = []
         for dim in source_dims:
-            if dim.Id.IntegerValue not in dim_ids_int:
+            if dim.Id.Value not in dim_ids_int:
                 # add dim to list
                 dim_ids.append(dim.Id)
-                dim_ids_int.append(dim.Id.IntegerValue)
+                dim_ids_int.append(dim.Id.Value)
 
         # cast to .net list of Autodesk.Revit.DB.ElementId
         dim_ids = dim_ids.ToList[ElementId]()

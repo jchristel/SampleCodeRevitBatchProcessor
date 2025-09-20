@@ -78,7 +78,7 @@ class GetRoomsFromModelAction(base.Base):
                 self.rooms.Add(
                     RoomViewModel(
                         room=Room(
-                            room_id=RoomId(room_id_integer=placed_room.Id.IntegerValue),
+                            room_id=RoomId(room_id_integer=placed_room.Id.Value),
                             room_name=get_room_name(room=placed_room),
                             room_number=get_room_number(room=placed_room),
                             phase=get_room_phase(rvt_doc=doc, room=placed_room),

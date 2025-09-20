@@ -111,10 +111,10 @@ def post_processing_filled_region(doc, forms, filled_region, number_of_all_regio
         # check if the filled region action is set to always keep or always delete
         if filled_region_action is not None:
             if filled_region_action.always_delete:
-                return_value.append_message("Filled region {} will be deleted.".format(filled_region.Id.IntegerValue))
+                return_value.append_message("Filled region {} will be deleted.".format(filled_region.Id.Value))
                 user_selection = YES
             elif filled_region_action.always_keep:
-                return_value.append_message("Filled region {} will be kept.".format(filled_region.Id.IntegerValue))
+                return_value.append_message("Filled region {} will be kept.".format(filled_region.Id.Value))
                 user_selection = NO_GET_ME_OUT_OF_HERE
             else:
                 # ask the user to confirm deletion of the filled region
@@ -141,7 +141,7 @@ def post_processing_filled_region(doc, forms, filled_region, number_of_all_regio
         delete_result = delete_by_element_ids(
             doc=doc,
             ids=[filled_region.Id],
-            transaction_name = "delete filled region {}".format(filled_region.Id.IntegerValue),
+            transaction_name = "delete filled region {}".format(filled_region.Id.Value),
             element_name="Filled Region",
         )
 

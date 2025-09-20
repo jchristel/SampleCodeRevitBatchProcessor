@@ -120,8 +120,8 @@ def get_elbow_properties_2022(tag, points_as_double):
         elbow_properties = {}
         # store references to linked element or the element in same model which got tagged only
         elbow_properties[LEADER_REFERENCE] = {
-            LEADER_ELEMENT_REFERENCE_ID: tag_ref.ElementId.IntegerValue,
-            LEADER_LINKED_ELEMENT_REFERENCE_ID: tag_ref.LinkedElementId.IntegerValue,
+            LEADER_ELEMENT_REFERENCE_ID: tag_ref.ElementId.Value,
+            LEADER_LINKED_ELEMENT_REFERENCE_ID: tag_ref.LinkedElementId.Value,
         }
         try:
             if tag.HasLeaderElbow(tag_ref):

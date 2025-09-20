@@ -261,7 +261,7 @@ def get_other_custom_sub_categories(doc):
                 cat_data[main_cat.Name] = {}
             # loop over all sub categories
             for sub_cat in main_cat.SubCategories:
-                if sub_cat.Id.IntegerValue > 0:
+                if sub_cat.Id.Value > 0:
                     cat_data[main_cat.Name][sub_cat.Name] = sub_cat
     return cat_data
 

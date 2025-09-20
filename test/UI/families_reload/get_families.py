@@ -44,7 +44,7 @@ def get_families_in_model(doc,  library_path = None):
 
             # build new data entry
             family_container = RevitFamily(
-                id=FamilyID(revit_family.Id.IntegerValue),
+                id=FamilyID(revit_family.Id.Value),
                 family_name= revit_family_name,
                 family_category=revit_family.FamilyCategory.Name,
                 is_shared=is_shared_from_family(revit_family),

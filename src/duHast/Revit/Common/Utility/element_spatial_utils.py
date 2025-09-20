@@ -53,7 +53,7 @@ def get_room_element_is_in_by_element_phase_created(element, phase_dict):
         except:
             print(
                 "Element has phase created but phase not found: {}".format(
-                    element.Id.IntegerValue
+                    element.Id.Value
                 )
             )
             return None
@@ -66,5 +66,5 @@ def get_room_element_is_in_by_element_phase_created(element, phase_dict):
             return None
 
     else:
-        print("Element has no phase created: {}".format(element.Id.IntegerValue))
+        print("Element has no phase created: {}".format(element.Id.Value))
         return None

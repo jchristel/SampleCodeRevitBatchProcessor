@@ -86,14 +86,14 @@ class WarningsData(IFamData.IFamilyData):
             war_element_ids_as_integer = []
             try:
                 for el in warning.GetFailingElements():
-                    war_element_ids_as_integer.append(el.IntegerValue)
+                    war_element_ids_as_integer.append(el.Value)
             except Exception as e:
                 pass
             # other element ids
             war_other_element_ids_as_integer = []
             try:
                 for el in warning.GetAdditionalElements():
-                    war_other_element_ids_as_integer.append(el.IntegerValue)
+                    war_other_element_ids_as_integer.append(el.Value)
             except Exception as e:
                 pass
 

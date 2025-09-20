@@ -229,7 +229,7 @@ class CategoryData(IFamData.IFamilyData):
                 use_counter = use_counter + len(element_dic[key_elements])
                 # add element ids integer value in 3D, Cut, Elevation style
                 for id in element_dic[key_elements]:
-                    used_by_ids.append(id.IntegerValue)
+                    used_by_ids.append(id.Value)
 
             # build data dictionary
             storage = self._create_data(
@@ -241,7 +241,7 @@ class CategoryData(IFamData.IFamilyData):
                 used_by_ids,
                 main_cat_name,
                 subCat.Name,
-                subCat.Id.IntegerValue,
+                subCat.Id.Value,
                 cat_props,
             )
             self.add_data(storage_instance=storage)
@@ -281,7 +281,7 @@ class CategoryData(IFamData.IFamilyData):
             used_by_ids = []
             for key in element_dic:
                 for id in element_dic[key]:
-                    used_by_ids.append(id.IntegerValue)
+                    used_by_ids.append(id.Value)
 
             # build data dictionary
             storage = self._create_data(
@@ -293,7 +293,7 @@ class CategoryData(IFamData.IFamilyData):
                 used_by_ids,
                 main_cat_name,
                 sub_category.Name,
-                sub_category.Id.IntegerValue,
+                sub_category.Id.Value,
                 cat_props,
             )
             self.add_data(storage_instance=storage)

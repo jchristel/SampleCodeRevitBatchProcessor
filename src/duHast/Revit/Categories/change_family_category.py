@@ -92,7 +92,7 @@ def change_family_category(doc, new_category_name):
         # re-create custom sub categories
         for sub_cat in sub_cats:
             # only re-create custom sub categories (id greater then 0)
-            if sub_cats[sub_cat].Id.IntegerValue > 0:
+            if sub_cats[sub_cat].Id.Value > 0:
                 # create new sub categories with flag: ignore if cut graphic style is missing set to true!
                 create_cat = create_new_category_from_saved_properties(
                     doc, sub_cat, props[sub_cat], True

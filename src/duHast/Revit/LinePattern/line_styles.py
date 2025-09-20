@@ -94,5 +94,5 @@ def get_all_graphics_style_ids_by_line_style_id(doc):
     sub_cats = cat.SubCategories
     for line_style in sub_cats:
         graphic_style = line_style.GetGraphicsStyle(GraphicsStyleType.Projection)
-        return_value[line_style.Id.IntegerValue] = graphic_style.Id.IntegerValue
+        return_value[line_style.Id.Value] = graphic_style.Id.Value
     return return_value

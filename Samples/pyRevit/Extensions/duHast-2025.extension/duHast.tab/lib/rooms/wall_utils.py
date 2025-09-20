@@ -49,7 +49,7 @@ def get_wall_segments_of_room(doc, room, room_number=None, room_name=None):
         return None
     
     # create a room storage object to store the wall segments
-    rooms_data = room_storage(room_number, room.Id.IntegerValue)
+    rooms_data = room_storage(room_number, room.Id.Value)
 
     # check get wall segments of the room
     for nested_segments in segments:
@@ -69,11 +69,11 @@ def get_wall_segments_of_room(doc, room, room_number=None, room_name=None):
             # here comes the thing:
             # revit splits a wall into multiple segments if that wall is joined with another wall
             # so need to check if that id is already in the dictionary and if so, add the length to the existing length
-            if host_element.Id.IntegerValue in rooms_data.wall_id_and_length:
+            if host_element.Id.Value in rooms_data.wall_id_and_length:
                 # if wall id already exists, add the length to the existing length
-                rooms_data.wall_id_and_length[host_element.Id.IntegerValue] += curve.Length
+                rooms_data.wall_id_and_length[host_element.Id.Value] += curve.Length
             else:
-                rooms_data.wall_id_and_length[host_element.Id.IntegerValue] = curve.Length
+                rooms_data.wall_id_and_length[host_element.Id.Value] = curve.Length
  
     return rooms_data
 
@@ -287,7 +287,7 @@ def get_wall_parameter_by_id (doc, parameter_id):
 
         for p in parameters:
             # check if parameter is writable
-            if p.Id.IntegerValue == parameter_id.IntegerValue:
+            if p.Id.Value == parameter_id.Value:
                 # add parameter name to list
                 return p
 

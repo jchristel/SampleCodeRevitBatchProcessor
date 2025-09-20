@@ -97,22 +97,22 @@ class LineStylePurgeModifier(ModifierBase):
 
         # sort ids ascending
         # first id should be the line style and second (higher value) the graphics style
-        sorted_ids = sorted(deleted, key=lambda x: x.IntegerValue)
-        if sorted_ids[0].IntegerValue in self.graphic_style_id_by_line_style_id:
+        sorted_ids = sorted(deleted, key=lambda x: x.Value)
+        if sorted_ids[0].Value in self.graphic_style_id_by_line_style_id:
             self.debug_log.append(
                 "sorted_id: {} is in dictionary: {}".format(
                     sorted_ids[0], self.graphic_style_id_by_line_style_id
                 )
             )
             if (
-                sorted_ids[1].IntegerValue
-                == self.graphic_style_id_by_line_style_id[sorted_ids[0].IntegerValue]
+                sorted_ids[1].Value
+                == self.graphic_style_id_by_line_style_id[sorted_ids[0].Value]
             ):
                 self.debug_log.append(
                     "sorted_id: {} is equal to dictionary value: {}".format(
                         sorted_ids[1],
                         self.graphic_style_id_by_line_style_id[
-                            sorted_ids[0].IntegerValue
+                            sorted_ids[0].Value
                         ],
                     )
                 )
@@ -123,7 +123,7 @@ class LineStylePurgeModifier(ModifierBase):
                     "sorted_id: {} is not equal to dictionary value: {}".format(
                         sorted_ids[1],
                         self.graphic_style_id_by_line_style_id[
-                            sorted_ids[0].IntegerValue
+                            sorted_ids[0].Value
                         ],
                     )
                 )

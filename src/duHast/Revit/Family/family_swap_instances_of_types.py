@@ -140,10 +140,10 @@ def get_super_component_id(doc, instance):
     
     # get the super component id
     super_component_id = instance.SuperComponent.Id
-    if super_component_id != None and super_component_id.IntegerValue > 0:
+    if super_component_id != None and super_component_id.Value > 0:
         return_value.append_message("...Found super component id: {}".format(super_component_id))
         # get the family of the super component
-        super_fam_Id_int = super_component.Symbol.Family.Id.IntegerValue
+        super_fam_Id_int = super_component.Symbol.Family.Id.Value
         return_value.result.append(super_fam_Id_int)
     else:
         return_value.append_message("Failed to find super component for: {}".format(instance.Id))
@@ -182,7 +182,7 @@ def get_group_id(doc, instance):
     # get the group instance id
     group_id = instance.GroupId
 
-    if group_id == None or group_id.IntegerValue == -1:
+    if group_id == None or group_id.Value == -1:
         return_value.update_sep(False, "No group found for: {}".format(instance.Id))
         # return an invalid element id integer
         return_value.result.append(-1)
@@ -191,7 +191,7 @@ def get_group_id(doc, instance):
     # get the group
     group = doc.GetElement(group_id)
     # get the group type id
-    group_type_id_int = group.GroupType.Id.IntegerValue
+    group_type_id_int = group.GroupType.Id.Value
     if group_type_id_int != None and group_type_id_int > 0:
         return_value.append_message("...Found group type id: {}".format(group_type_id_int))
 

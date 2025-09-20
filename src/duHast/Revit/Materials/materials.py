@@ -69,7 +69,7 @@ def get_material_by_id(doc, id):
 
     mats = get_all_materials(doc)
     for m in mats:
-        if m.Id.IntegerValue == id.IntegerValue:
+        if m.Id.Value == id.Value:
             return m
 
 
@@ -89,7 +89,7 @@ def get_material_name_by_id(doc, id):
     name = "<By Category>"
     mats = get_all_materials(doc)
     for m in mats:
-        if m.Id.IntegerValue == id.IntegerValue:
+        if m.Id.Value == id.Value:
             m_name = rdb.Element.Name.GetValue(m)
             name = "" if m_name == None else m_name
     return name

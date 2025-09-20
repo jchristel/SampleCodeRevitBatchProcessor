@@ -127,7 +127,7 @@ class LinePatternData(IFamData.IFamilyData):
         for s_cat_name in sub_cats_other:
             for s_cat_item in sub_cats_other[s_cat_name]:
                 # only use custom categories not build in ones (id smaller then 0)
-                if sub_cats_other[s_cat_name][s_cat_item].Id.IntegerValue > 0:
+                if sub_cats_other[s_cat_name][s_cat_item].Id.Value > 0:
                     l_style = get_line_pattern_from_category(
                         sub_cats_other[s_cat_name][s_cat_item], doc
                     )
@@ -215,7 +215,7 @@ class LinePatternData(IFamData.IFamilyData):
                 pattern_names.append(
                     FamilyLinePatternDataStorageUsedBy(
                         family_name=self.root_path,
-                        element_id=pat.Id.IntegerValue,
+                        element_id=pat.Id.Value,
                     )
                 )
         return counter, pattern_names
@@ -243,7 +243,7 @@ class LinePatternData(IFamData.IFamilyData):
                 pattern_names.append(
                     FamilyLinePatternDataStorageUsedBy(
                         family_name=self.root_path,
-                        element_id=pat.Id.IntegerValue,
+                        element_id=pat.Id.Value,
                     )
                 )
         return counter, pattern_names
@@ -305,7 +305,7 @@ class LinePatternData(IFamData.IFamilyData):
                 use_counter=pattern_use_counter,
                 used_by=pattern_usage_all,
                 pattern_name=element_name,
-                pattern_id=element.Id.IntegerValue,
+                pattern_id=element.Id.Value,
             )
 
             self.add_data(storage_instance=storage)

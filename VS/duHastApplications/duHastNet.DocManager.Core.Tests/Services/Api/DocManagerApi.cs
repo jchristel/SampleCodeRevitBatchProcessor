@@ -36,6 +36,8 @@ public class DocManagerApi : IDisposable
     private IUnitOfWork? _unitOfWork;
     private bool _disposed = false;
 
+    #region Async Methods (for modern .NET usage)
+
     /// <summary>
     /// Sets up a new document database
     /// </summary>
@@ -124,24 +126,6 @@ public class DocManagerApi : IDisposable
     }
 
     /// <summary>
-    /// Checks if the current database is ready for operations
-    /// </summary>
-    /// <returns>True if database is initialized and ready</returns>
-    public bool IsDatabaseReady()
-    {
-        return _databaseService?.IsInitialized == true && _unitOfWork != null;
-    }
-
-    /// <summary>
-    /// Gets the current database path
-    /// </summary>
-    /// <returns>Database file path or null if not initialized</returns>
-    public string? GetDatabasePath()
-    {
-        return _databaseService?.DatabasePath;
-    }
-
-    /// <summary>
     /// Tests database connectivity and returns status information
     /// </summary>
     /// <returns>Setup result with database information</returns>
@@ -183,6 +167,118 @@ public class DocManagerApi : IDisposable
     }
 
     /// <summary>
+    /// Closes database connection and cleans up resources
+    /// </summary>
+    public async Task CloseAsync()
+    {
+        if (_databaseService != null)
+        {
+            await _databaseService.CloseAsync();
+            _databaseService = null;
+        }
+
+        _unitOfWork?.Dispose();
+        _unitOfWork = null;
+    }
+
+    #endregion
+
+    #region Synchronous Methods (for IronPython/PyRevit compatibility)
+
+    /// <summary>
+    /// Sets up a new document database (synchronous version for IronPython)
+    /// </summary>
+    /// <param name="config">Database setup configuration</param>
+    /// <returns>Setup result with success/failure information</returns>
+    public SetupResult SetupDatabase(DatabaseSetupConfig config)
+    {
+        try
+        {
+            return SetupDatabaseAsync(config).GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            return SetupResult.CreateFailure($"Database setup failed: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Sets up database with simple parameters (synchronous version for IronPython)
+    /// </summary>
+    /// <param name="databasePath">Path to database file</param>
+    /// <param name="customPropertyNames">List of custom property names</param>
+    /// <param name="overwriteExisting">Whether to overwrite existing database</param>
+    /// <returns>Setup result</returns>
+    public SetupResult SetupDatabase(string databasePath,
+        List<string>? customPropertyNames = null,
+        bool overwriteExisting = false)
+    {
+        try
+        {
+            return SetupDatabaseAsync(databasePath, customPropertyNames, overwriteExisting)
+                .GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            return SetupResult.CreateFailure($"Database setup failed: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Tests database connectivity and returns status information (synchronous version for IronPython)
+    /// </summary>
+    /// <returns>Setup result with database information</returns>
+    public SetupResult TestDatabase()
+    {
+        try
+        {
+            return TestDatabaseAsync().GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            return SetupResult.CreateFailure($"Database test failed: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Closes database connection and cleans up resources (synchronous version for IronPython)
+    /// </summary>
+    public void Close()
+    {
+        try
+        {
+            CloseAsync().GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            // Log error but don't throw during cleanup
+            System.Diagnostics.Debug.WriteLine($"Error during close: {ex.Message}");
+        }
+    }
+
+    #endregion
+
+    #region Shared Methods
+
+    /// <summary>
+    /// Checks if the current database is ready for operations
+    /// </summary>
+    /// <returns>True if database is initialized and ready</returns>
+    public bool IsDatabaseReady()
+    {
+        return _databaseService?.IsInitialized == true && _unitOfWork != null;
+    }
+
+    /// <summary>
+    /// Gets the current database path
+    /// </summary>
+    /// <returns>Database file path or null if not initialized</returns>
+    public string? GetDatabasePath()
+    {
+        return _databaseService?.DatabasePath;
+    }
+
+    /// <summary>
     /// Validates custom property names
     /// </summary>
     /// <param name="propertyNames">Property names to validate</param>
@@ -215,27 +311,18 @@ public class DocManagerApi : IDisposable
         return invalid;
     }
 
-    /// <summary>
-    /// Closes database connection and cleans up resources
-    /// </summary>
-    public async Task CloseAsync()
-    {
-        if (_databaseService != null)
-        {
-            await _databaseService.CloseAsync();
-            _databaseService = null;
-        }
+    #endregion
 
-        _unitOfWork?.Dispose();
-        _unitOfWork = null;
-    }
+    #region IDisposable Implementation
 
     public void Dispose()
     {
         if (!_disposed)
         {
-            CloseAsync().Wait();
+            Close(); // Use synchronous version for disposal
             _disposed = true;
         }
     }
+
+    #endregion
 }

@@ -34,6 +34,10 @@ def load_net_dll_path(dlls_to_load):
     Loads dlls from the bin folder of the duHast extension.
     Useful if a dll is not loaded through the startup script of a pyRevit extension.
 
+    expects the bin folder to be in the sys.path
+    which means it needs to be located in the root folder of the extension:
+    YourExtension.extension\\bin
+
     :param dlls_to_load: List of dlls to load.
     :type dlls_to_load: list
     :return: Result object with status and message.
@@ -52,7 +56,7 @@ def load_net_dll_path(dlls_to_load):
             )
             return return_value
 
-        # get all the lib paths from the sys.path
+        # get all the bin paths from the sys.path
         lib_paths = [path for path in sys.path if path.endswith("bin")]
 
         if not lib_paths or len(lib_paths) == 0:
@@ -65,15 +69,14 @@ def load_net_dll_path(dlls_to_load):
 
             return return_value
        
-        return_value.append_message("Found bin paths: {}".format(lib_paths))
+        return_value.append_message("Found lib paths: {}".format(lib_paths))
         
         # iterate over the dlls to load
         for dll in dlls_to_load:
             found_match = False
             # check if the dll exists in the lib paths
             for p in lib_paths:
-                #parent_lib_directory = os.path.dirname(p)
-                #bin_directory = os.path.join(parent_lib_directory, "bin")
+                # build the actual path
                 dll_path = os.path.join(p, dll)
                 
                 # check if path exists

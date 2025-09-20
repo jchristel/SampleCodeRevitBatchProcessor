@@ -88,21 +88,24 @@ def import_rules_from_data(doc, data_rules):
 
 def import_logic_container_from_data(doc, data_object):
 
+    # set up a status tracker
+    return_value = Result()
+    
     # get the logic container at the top of the tree:
     logic_container = data_object.logic_container
     if logic_container is None:
         return_value.append_message("No logic container found. Skipping view filter: {}".format(data_object.name))
-        continue
+        return return_value
 
     if len(logic_container.view_filter_rules) == 0:
         return_value.append_message("No filter rules found. Skipping view filter: {}".format(data_object.name))
-        continue
+        return return_value
     
     # get the logic filter class
     logic_filter_class = get_logical_filter_class(logic_container.logic_container_type)
     if not logic_filter_class:
         return_value.update_sep(False, "Failed to get logic filter class for type: {}. Skipping view filter: {}".format(logic_container.logic_container_type, data_object.name))
-        continue
+        return return_value
 
     # import the rules
     import_rules_result = import_rules_from_data(doc, logic_container)
@@ -110,7 +113,7 @@ def import_logic_container_from_data(doc, data_object):
     # user feedback
     if not import_rules_result.status:
         return_value.update_sep(False, "Failed to import rules for view filter: {}. Error: {}".format(data_object.name, import_rules_result.message))
-    else
+    else:
         return_value.append_message("Successfully imported {} rules for view filter: {}".format(len(import_rules_result.result[0]), data_object.name))
 
     # import the rules
@@ -119,7 +122,7 @@ def import_logic_container_from_data(doc, data_object):
     # user feedback
     if not import_rules_result.status:
         return_value.update_sep(False, "Failed to import rules for view filter: {}. Error: {}".format(data_object.name, import_rules_result.message))
-    else
+    else:
         return_value.append_message("Successfully imported {} rules for view filter: {}".format(len(import_rules_result.result[0]), data_object.name))
     
     # container for new rules
@@ -154,13 +157,13 @@ def import_logic_container_from_data(doc, data_object):
     return return_value
     
 
-def import_view_filters_from_data(doc, json_object)
+def import_view_filters_from_data(doc, json_object, progress_callback=None):
 
     # set up a status tracker
     return_value = Result()
 
     # loop over json objects and create view filters
-    for data_object in data_objects:
+    for data_object in json_object:
         return_value.append_message("Importing view filter: {}".format(data_object.name))
         
         # get the container and all its nested items

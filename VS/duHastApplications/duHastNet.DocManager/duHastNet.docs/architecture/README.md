@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-DocManager is designed to run in two deployment scenarios:
+DocManager is a document revision management system designed to run in two deployment scenarios:
 1. **Standalone executable** - Independent WPF application
 2. **Revit plugin** - Hosted within Revit to bypass certain restrictions
 
@@ -46,11 +46,13 @@ DocManager/
 │
 ├── src/
 │   ├── DocManager.Core/                 # Business Logic DLL
-│   │   ├── Models/
-│   │   ├── Services/
-│   │   ├── Interfaces/
-│   │   ├── Configuration/
-│   │   ├── Utilities/
+│   │   ├── Interfaces/                  # Repository and service interfaces
+│   │   ├── Models/                      # Domain entities and DTOs
+│   │   │   ├── Config/                  # Configuration models
+│   │   │   └── Results/                 # Operation result models
+│   │   ├── Services/                    # Business services and implementations
+│   │   │   ├── Api/                     # External integration APIs
+│   │   │   └── Repositories/            # Data access layer
 │   │   └── DocManager.Core.csproj       # .NET 8
 │   │
 │   ├── DocManager.UI.Shared/            # Shared UI Components DLL
@@ -82,27 +84,83 @@ DocManager/
 │
 ├── tests/
 │   ├── DocManager.Core.Tests/           # Business logic tests
+│   │   ├── Models/                      # Entity model tests
+│   │   ├── Services/                    # Service and repository tests
+│   │   └── Integration/                 # End-to-end tests
 │   └── DocManager.UI.Tests/             # UI component tests
 │
 └── DocManager.sln
 ```
 
-## Documentation Standards
+## Current Implementation Status
 
-### Documentation Structure
-The `/docs` folder follows industry standards and is organized for different audiences:
+### ✅ Completed Components
 
-- **Architecture**: Technical design documents for developers and architects
-- **Development**: Guides and standards for contributing developers
-- **User**: End-user documentation and support materials
-- **API**: Technical reference for services and components
-- **Project**: Project management and planning documents
+#### Core Domain Models
+- **Revision** - Represents document release batches with dates and descriptions
+- **Document** - Individual document versions with complete revision history
+- **CustomProperty** - Flexible key-value properties for documents
+- **ValidationResult** - Input validation results with error/warning collections
+- **DatabaseStatistics** - Database metrics and reporting data
 
-### Documentation Benefits
-- **Version Control**: Documentation stays in sync with code changes
-- **Accessibility**: Easy for team members to find and contribute to docs
-- **Automation**: Can set up automated documentation generation/deployment
-- **Searchability**: IDEs and tools can index documentation alongside code
+#### Configuration & Results Models
+- **DatabaseSetupConfig** - Database initialization configuration
+- **DocumentImportConfig** - Bulk import operation settings
+- **DocumentImportData** - Individual document import data structure
+- **ResultBase** - Base class for operation results with error/warning collections
+- **SetupResult** - Database setup operation results
+- **ValidationResult** - Document validation results
+- **ImportResult** - Document import operation results
+
+#### Data Access Layer (Repository Pattern)
+- **IDatabaseService** - Database connection and schema management
+- **DatabaseService** - SQLite database service implementation using sqlite-net-pcl
+- **IRepository<T>** - Generic repository interface with CRUD operations
+- **BaseRepository<T>** - Base repository implementation with sqlite-net-pcl ORM
+- **IRevisionRepository** - Revision-specific queries (date ranges, latest revision)
+- **RevisionRepository** - Revision data access implementation
+- **IDocumentRepository** - Document-specific queries (by revision, search, existence checks)  
+- **DocumentRepository** - Document data access implementation
+- **ICustomPropertyRepository** - Custom property queries (by document, name, value)
+- **CustomPropertyRepository** - Custom property data access implementation
+- **IUnitOfWork** - Transaction management and repository coordination
+- **UnitOfWork** - Unit of work implementation for sqlite-net-pcl
+
+#### External Integration API
+- **DocManagerApi** - Main API class for external integration (PyRevit, Revit Plugin, Standalone)
+  - Database setup and initialization
+  - Configuration validation
+  - Health checks and diagnostics
+  - Resource management and cleanup
+
+#### Comprehensive Test Suite (200+ Tests)
+- **Model Tests** - Entity behavior, validation, and business logic
+- **Database Service Tests** - Connection management, schema creation, integrity checks
+- **Repository Tests** - Data access operations, queries, and edge cases
+- **Integration Tests** - Cross-component workflows and transactions
+- **Special Cases** - Unicode handling, large datasets, concurrent operations
+
+### 🚧 In Progress / Planned Components
+
+#### High-Level Business Services
+- **IDocumentService** - Document management business logic
+- **DocumentService** - Implementation with validation, search, and statistics
+- Document import/export workflows
+- Revision management operations
+- Custom property management
+
+#### UI Components (Shared Library)
+- WPF UserControls for document management
+- ViewModels implementing MVVM pattern
+- Commands and data binding infrastructure
+- Shared styles and themes
+- Validation UI components
+
+#### Deployment Applications
+- **Standalone Application** - Independent WPF executable
+- **Revit Plugin** - Hosted within Revit environment
+- Application configuration and settings
+- Error handling and logging
 
 ## Architecture Principles
 
@@ -110,12 +168,13 @@ The `/docs` folder follows industry standards and is organized for different aud
 - **Target**: .NET 8
 - **Purpose**: Contains all business logic, data models, and services
 - **Dependencies**: Framework-agnostic, no UI dependencies
+- **Database**: SQLite with sqlite-net-pcl ORM for type-safe operations
 - **Key Features**:
-  - Domain models and entities
-  - Business services and interfaces
-  - Configuration management
-  - Utility functions
-  - Dependency injection support
+  - Domain models with SQLite attributes for automatic schema creation
+  - Repository pattern with generic base implementation
+  - Unit of Work pattern for transaction management
+  - External integration API for PyRevit and plugin scenarios
+  - Comprehensive validation and error handling
 
 ### 2. Shared UI Components (UI.Shared)
 - **Target**: .NET 8
@@ -146,7 +205,11 @@ The `/docs` folder follows industry standards and is organized for different aud
   - Plugin manifest for Revit integration
   - Same UI components as standalone version
 
-## Implementation Guidelines
+### MVVM Pattern Implementation
+- ViewModels in shared library implement INotifyPropertyChanged
+- Commands use RelayCommand or similar implementations
+- Data binding for all UI interactions
+- No code-behind logic in Views (UserControls)
 
 ### Shared UI Component Design
 
@@ -176,23 +239,22 @@ The `/docs` folder follows industry standards and is organized for different aud
 </Window>
 ```
 
-### MVVM Pattern Implementation
-- ViewModels in shared library implement INotifyPropertyChanged
-- Commands use RelayCommand or similar implementations
-- Data binding for all UI interactions
-- No code-behind logic in Views (UserControls)
+### External Integration API
 
-### Dependency Injection Setup
+The `DocManagerApi` class provides a clean interface for external systems:
+
 ```csharp
-// In both Standalone and Revit projects
-public void ConfigureServices(IServiceCollection services)
+// Simple database setup
+using var api = new DocManagerApi();
+var result = await api.SetupDatabaseAsync(
+    databasePath: @"C:\Projects\MyProject.db",
+    customPropertyNames: new[] { "DisciplineCode", "ProjectPhase" },
+    overwriteExisting: true
+);
+
+if (result.Success)
 {
-    // Core services
-    services.AddScoped<IDocumentService, DocumentService>();
-    
-    // ViewModels
-    services.AddTransient<MainViewModel>();
-    services.AddTransient<SettingsViewModel>();
+    Console.WriteLine($"Database ready at: {result.DatabasePath}");
 }
 ```
 
@@ -205,7 +267,7 @@ public void ConfigureServices(IServiceCollection services)
 
 ### Maintainability
 - Clear separation of concerns
-- Testable business logic
+- Testable business logic (200+ comprehensive tests)
 - Modular architecture allows independent development
 
 ### Deployment Flexibility
@@ -214,84 +276,56 @@ public void ConfigureServices(IServiceCollection services)
 - **Future Platforms**: Easy to add new host applications
 
 ### Testing Strategy
-- Unit tests for Core business logic
-- UI tests for shared components
+- Unit tests for Core business logic using NUnit
+- Repository tests with in-memory SQLite databases
 - Integration tests for complete workflows
+- ORM-first approach with sqlite-net-pcl testing patterns
 
-## Project Dependencies
-
-### DocManager.Core.csproj
-```xml
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-  </PropertyGroup>
-</Project>
-```
-
-### DocManager.UI.Shared.csproj
-```xml
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="../DocManager.Core/DocManager.Core.csproj" />
-  </ItemGroup>
-</Project>
-```
-
-### DocManager.Standalone.csproj
-```xml
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <OutputType>WinExe</OutputType>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="../DocManager.UI.Shared/DocManager.UI.Shared.csproj" />
-  </ItemGroup>
-</Project>
-```
-
-### DocManager.Revit.csproj
-```xml
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="../DocManager.UI.Shared/DocManager.UI.Shared.csproj" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Reference Include="RevitAPI">
-      <HintPath>[Path to Revit API DLL]</HintPath>
-      <Private>false</Private>
-    </Reference>
-  </ItemGroup>
-</Project>
-```
-
-## Getting Started
+## Development Setup
 
 ### Prerequisites
 - Visual Studio 2022 or later
 - .NET 8 SDK
 - For Revit plugin development: Autodesk Revit 2024 or later
 
-### Setup Instructions
+### Getting Started
 1. Clone the repository
 2. Open `DocManager.sln` in Visual Studio
 3. Restore NuGet packages
 4. Build the solution
-5. For detailed setup instructions, see `/docs/development/setup-guide.md`
+5. Run tests to verify setup
+
+### Testing
+The project includes comprehensive test coverage:
+- **200+ tests** covering all core functionality
+- Tests use fluent NUnit syntax for readability
+- Database tests use sqlite-net-pcl ORM patterns
+- In-memory SQLite databases for fast test execution
+
+```bash
+# Run all tests
+dotnet test
+
+# Run specific test category
+dotnet test --filter "Category=DatabaseService"
+```
+
+## Documentation Standards
+
+### Documentation Structure
+The `/docs` folder follows industry standards and is organized for different audiences:
+
+- **Architecture**: Technical design documents for developers and architects
+- **Development**: Guides and standards for contributing developers
+- **User**: End-user documentation and support materials
+- **API**: Technical reference for services and components
+- **Project**: Project management and planning documents
+
+### Documentation Benefits
+- **Version Control**: Documentation stays in sync with code changes
+- **Accessibility**: Easy for team members to find and contribute to docs
+- **Automation**: Can set up automated documentation generation/deployment
+- **Searchability**: IDEs and tools can index documentation alongside code
 
 ## Future Considerations
 
@@ -330,6 +364,13 @@ public void ConfigureServices(IServiceCollection services)
 - Easier testing and development
 - Future-proofs for other hosting platforms
 
+### Why sqlite-net-pcl?
+- Provides full ORM capabilities with type safety
+- Automatic schema generation from C# models
+- LINQ-to-SQL query support
+- Excellent performance for document management scenarios
+- File-based databases enable project portability
+
 ## Contributing
 
-Please read `/docs/development/coding-standards.md` and `/docs/development/setup-guide.md` before contributing to this project.
+Please read the development documentation in `/docs/development/` for coding standards, setup instructions, and contribution guidelines.

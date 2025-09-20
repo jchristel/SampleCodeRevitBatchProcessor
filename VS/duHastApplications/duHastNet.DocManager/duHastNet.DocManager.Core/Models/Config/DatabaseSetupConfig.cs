@@ -7,9 +7,7 @@
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
-
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
 // - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
 // - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 // - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
@@ -21,27 +19,26 @@
 //
 //
 
-
-namespace duHastNet.DocManager.Core.Models
+namespace duHastNet.DocManager.Core.Models.Config
 {
     /// <summary>
-    /// Validation result for document operations
+    /// Configuration for database setup
     /// </summary>
-    public class ValidationResult
+    public class DatabaseSetupConfig
     {
-        public bool IsValid { get; set; }
-        public List<string> Errors { get; set; } = new();
-        public List<string> Warnings { get; set; } = new();
+        /// <summary>
+        /// Path where the database file should be created
+        /// </summary>
+        public string DatabasePath { get; set; } = string.Empty;
 
-        public static ValidationResult Success() => new() { IsValid = true };
+        /// <summary>
+        /// List of custom property names that will be used in the project
+        /// </summary>
+        public List<string> CustomPropertyNames { get; set; } = new();
 
-        public static ValidationResult Failure(params string[] errors) => new()
-        {
-            IsValid = false,
-            Errors = [.. errors]
-        };
-
-        public void AddError(string error) => Errors.Add(error);
-        public void AddWarning(string warning) => Warnings.Add(warning);
+        /// <summary>
+        /// Whether to overwrite an existing database file
+        /// </summary>
+        public bool OverwriteExisting { get; set; } = false;
     }
 }

@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using duHastNet.DocManager.Core.Models;
+using duHastNet.DocManager.Core.Models.Result;
 
 namespace duHastNet.DocManager.Core.Tests.Models;
 

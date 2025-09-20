@@ -22,6 +22,7 @@
 //
 
 using duHastNet.DocManager.Core.Models;
+using duHastNet.DocManager.Core.Models.Results;
 
 namespace duHastNet.DocManager.Core.Interfaces;
 
@@ -148,7 +149,7 @@ public interface IDocumentService
     /// <summary>
     /// Validates document data before saving
     /// </summary>
-    Task<Models.ValidationResult> ValidateDocumentAsync(string number, string name, string revision);
+    Task<ValidationResult> ValidateDocumentAsync(string number, string name, string revision);
 
     /// <summary>
     /// Checks if a document with the same number and revision already exists

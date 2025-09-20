@@ -4,7 +4,11 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <!-- Match your build script's expected path -->
+    <OutputPath>bin\x64\$(Configuration)\</OutputPath>
     <Platforms>AnyCPU;x64</Platforms>
+    <!-- Copy NuGet dependencies to output -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>

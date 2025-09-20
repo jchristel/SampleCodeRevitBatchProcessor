@@ -53,11 +53,11 @@ def load_net_dll_path(dlls_to_load):
             return return_value
 
         # get all the lib paths from the sys.path
-        lib_paths = [path for path in sys.path if path.endswith("lib")]
+        lib_paths = [path for path in sys.path if path.endswith("bin")]
 
         if not lib_paths or len(lib_paths) == 0:
             return_value.update_sep(
-                False, "No lib paths found in sys.path."
+                False, "No bin paths found in sys.path."
             )
 
             for p in sys.path:
@@ -65,16 +65,16 @@ def load_net_dll_path(dlls_to_load):
 
             return return_value
        
-        return_value.append_message("Found lib paths: {}".format(lib_paths))
+        return_value.append_message("Found bin paths: {}".format(lib_paths))
         
         # iterate over the dlls to load
         for dll in dlls_to_load:
             found_match = False
             # check if the dll exists in the lib paths
             for p in lib_paths:
-                parent_lib_directory = os.path.dirname(p)
-                bin_directory = os.path.join(parent_lib_directory, "bin")
-                dll_path = os.path.join(bin_directory, dll)
+                #parent_lib_directory = os.path.dirname(p)
+                #bin_directory = os.path.join(parent_lib_directory, "bin")
+                dll_path = os.path.join(p, dll)
                 
                 # check if path exists
                 if os.path.exists(dll_path):

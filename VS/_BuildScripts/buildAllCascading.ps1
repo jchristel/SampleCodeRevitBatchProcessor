@@ -1,3 +1,15 @@
+# Import the Python module updater functions
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$pythonModuleScript = Join-Path $scriptDir "PythonModuleUpdater.ps1"
+
+if (Test-Path $pythonModuleScript) {
+    Write-Host "Loading Python module updater from: $pythonModuleScript" -ForegroundColor Cyan
+    . $pythonModuleScript
+} else {
+    Write-Host "Warning: PythonModuleUpdater.ps1 not found at: $pythonModuleScript" -ForegroundColor Yellow
+    Write-Host "Python module updates will be skipped." -ForegroundColor Yellow
+}
+
 # Cascading DLL Version Update Script
 # Updates version numbers in dependency order: builds each solution after updating its references
 
@@ -657,6 +669,20 @@ $yamlChanges = Update-PyRevitYamlFiles -BasePath $basePath -OldVersion $OldVersi
 
 if ($yamlChanges -eq 0) {
     Write-Host "No pyRevit YAML files needed updating" -ForegroundColor Gray
+}
+
+# Update Python modules
+if (Get-Command "Update-PythonModules" -ErrorAction SilentlyContinue) {
+    Write-Host "`n=== Updating Python Modules ===" -ForegroundColor Magenta
+    $pythonChanges = Update-PythonModules -BasePath $basePath -BranchName $currentBranch -OldVersion $OldVersion -NewVersion $NewVersion -WhatIf:$WhatIf
+    
+    if ($pythonChanges -eq 0) {
+        Write-Host "No Python modules needed updating" -ForegroundColor Gray
+    } else {
+        Write-Host "Updated $pythonChanges Python module references" -ForegroundColor Green
+    }
+} else {
+    Write-Host "Python module updater not available - skipping Python updates" -ForegroundColor Yellow
 }
 
 # Save change history

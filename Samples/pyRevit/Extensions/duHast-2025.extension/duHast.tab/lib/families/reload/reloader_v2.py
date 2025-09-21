@@ -106,7 +106,7 @@ def reloaded_families_entry(doc, output, forms):
 
     try:
         
-        print_header("Reloading families in the model...")
+        print_header("Reloading families in the model {}...".format(doc.Title))
         # load .net interface dlls
         set_dll_path_result = load_net_dll_path([FAMILY_RELOADER_UI])
 

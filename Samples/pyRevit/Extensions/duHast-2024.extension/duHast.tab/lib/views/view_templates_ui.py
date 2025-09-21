@@ -54,7 +54,7 @@ def _get_view_templates_for_ui(doc):
     return view_template_names, view_templates_by_name
 
 
-def _get_source_view_template(doc, forms):
+def _get_source_view_template(doc, forms, button_name="Select View Template To Propagate From"):
     """
     returns the source view template by user selection
 
@@ -79,7 +79,7 @@ def _get_source_view_template(doc, forms):
     # get the user to select the source ( returns a string)
     selection = forms.SelectFromList.show(
         sorted(view_template_name),
-        button_name="Select View Template To Propagate From",
+        button_name=button_name,
         multiselect=False,
     )
 
@@ -89,7 +89,7 @@ def _get_source_view_template(doc, forms):
         return view_templates_by_name[selection]
 
 
-def _get_target_view_templates(doc, forms, source_view_template_name):
+def _get_target_view_templates(doc, forms, source_view_template_name, button_name="Select View Template To Propagate To"):
     """
     returns the target view template by user selection
 
@@ -123,7 +123,7 @@ def _get_target_view_templates(doc, forms, source_view_template_name):
     # get the user to select the source ( returns a string)
     selection = forms.SelectFromList.show(
         sorted(view_template_names),
-        button_name="Select View Template To Propagate To",
+        button_name=button_name,
         multiselect=True,
     )
 

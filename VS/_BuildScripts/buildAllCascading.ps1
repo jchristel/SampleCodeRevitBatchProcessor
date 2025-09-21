@@ -272,7 +272,72 @@ function Copy-DLLs {
     }
 }
 
-# Function to update pyRevit YAML files
+# Function to determine pyRevit extension name based on branch
+function Get-PyRevitExtensionName {
+    param ($branchName)
+    
+    # Check if branch starts with net8 or contains net8
+    if ($branchName -match "^net8" -or $branchName -match "net8") {
+        return "duHast-2025.extension"
+    }
+    # Check if branch starts with net48 or contains net48
+    elseif ($branchName -match "^net48" -or $branchName -match "net48") {
+        return "duHast-2024.extension"
+    }
+    # Default fallback - you can customize this logic
+    else {
+        Write-Host "Warning: Branch '$branchName' doesn't match expected patterns (net8*/net48*)." -ForegroundColor Yellow
+        Write-Host "Available options:" -ForegroundColor Yellow
+        Write-Host "1. duHast-2025.extension (net8)" -ForegroundColor Yellow
+        Write-Host "2. duHast-2024.extension (net48)" -ForegroundColor Yellow
+        
+        $choice = Read-Host "Enter 1 or 2 to select extension manually"
+        if ($choice -eq "1") {
+            return "duHast-2025.extension"
+        } elseif ($choice -eq "2") {
+            return "duHast-2024.extension"
+        } else {
+            Write-Host "Invalid choice. Defaulting to duHast-2024.extension" -ForegroundColor Yellow
+            return "duHast-2024.extension"
+        }
+    }
+}
+
+# Function to get current Git branch
+function Get-CurrentGitBranch {
+    param ($basePath)
+    
+    try {
+        # Try to get branch name from git
+        Push-Location $basePath
+        $branchName = git rev-parse --abbrev-ref HEAD 2>$null
+        Pop-Location
+        
+        if ($branchName -and $branchName -ne "HEAD") {
+            Write-Host "Detected Git branch: $branchName" -ForegroundColor Cyan
+            return $branchName
+        }
+    }
+    catch {
+        Write-Host "Could not detect Git branch automatically." -ForegroundColor Yellow
+    }
+    
+    # Fallback: try to determine from path
+    if ($basePath -match "NET8") {
+        Write-Host "Detected NET8 in path, assuming net8 branch pattern" -ForegroundColor Yellow
+        return "net8-main"
+    } elseif ($basePath -match "NET48") {
+        Write-Host "Detected NET48 in path, assuming net48 branch pattern" -ForegroundColor Yellow
+        return "net48-main"
+    }
+    
+    # Final fallback
+    Write-Host "Could not auto-detect branch. Please specify manually." -ForegroundColor Yellow
+    $manualBranch = Read-Host "Enter branch name (or 'net8' for NET8, 'net48' for NET48)"
+    return $manualBranch
+}
+
+# Function to update pyRevit YAML files (UPDATED VERSION)
 function Update-PyRevitYamlFiles {
     param(
         [string]$BasePath,
@@ -281,13 +346,21 @@ function Update-PyRevitYamlFiles {
         [switch]$WhatIf
     )
     
+    # Get current branch and determine extension name
+    $currentBranch = Get-CurrentGitBranch -basePath $BasePath
+    $extensionName = Get-PyRevitExtensionName -branchName $currentBranch
+    
+    Write-Host "Using pyRevit extension: $extensionName (based on branch: $currentBranch)" -ForegroundColor Cyan
+    
+    # Build dynamic paths based on the determined extension name
     $pyRevitYamlFiles = @(
-        "$BasePath\Samples\pyRevit\Extensions\duHast-2024.extension\duHast.tab\Families.panel\AtTheLibrary.invokebutton\bundle.yaml",
-        "$BasePath\Samples\pyRevit\Extensions\duHast-2024.extension\duHast.tab\PushIt.panel\PushIt.invokebutton\bundle.yaml"
+        "$BasePath\Samples\pyRevit\Extensions\$extensionName\duHast.tab\Families.panel\AtTheLibrary.invokebutton\bundle.yaml",
+        "$BasePath\Samples\pyRevit\Extensions\$extensionName\duHast.tab\PushIt.panel\PushIt.invokebutton\bundle.yaml"
     )
     
     $changesCount = 0
     Write-Host "`nProcessing pyRevit YAML files:" -ForegroundColor Yellow
+    Write-Host "Extension path: $extensionName" -ForegroundColor Gray
     
     foreach ($yamlFile in $pyRevitYamlFiles) {
         if (Test-Path $yamlFile) {
@@ -301,13 +374,53 @@ function Update-PyRevitYamlFiles {
                 $parentDir = Split-Path (Split-Path $yamlFile -Parent) -Leaf
                 Write-Host "  [YAML] $parentDir\$fileName" -ForegroundColor Cyan
                 $changesCount++
+            } else {
+                Write-Host "  [YAML] $((Split-Path (Split-Path $yamlFile -Parent) -Leaf))\$((Split-Path $yamlFile -Leaf)) - No version references found" -ForegroundColor Gray
             }
         } else {
-            Write-Host "  Warning: pyRevit YAML file not found: $yamlFile" -ForegroundColor Yellow
+            $relativePath = $yamlFile.Replace($BasePath, "").TrimStart('\')
+            Write-Host "  Warning: pyRevit YAML file not found: $relativePath" -ForegroundColor Yellow
+            Write-Host "    Full path: $yamlFile" -ForegroundColor Gray
         }
     }
     
+    if ($changesCount -eq 0) {
+        Write-Host "  No pyRevit YAML files needed updating" -ForegroundColor Gray
+    } else {
+        Write-Host "  Updated $changesCount pyRevit YAML files" -ForegroundColor Green
+    }
+    
     return $changesCount
+}
+
+# Additional helper function to validate pyRevit extension structure
+function Test-PyRevitExtensionStructure {
+    param(
+        [string]$BasePath,
+        [string]$ExtensionName
+    )
+    
+    $extensionPath = "$BasePath\Samples\pyRevit\Extensions\$ExtensionName"
+    
+    if (-not (Test-Path $extensionPath)) {
+        Write-Host "Warning: pyRevit extension directory not found: $extensionPath" -ForegroundColor Yellow
+        return $false
+    }
+    
+    $expectedPaths = @(
+        "$extensionPath\duHast.tab\Families.panel\AtTheLibrary.invokebutton",
+        "$extensionPath\duHast.tab\PushIt.panel\PushIt.invokebutton"
+    )
+    
+    $allExist = $true
+    foreach ($path in $expectedPaths) {
+        if (-not (Test-Path $path)) {
+            Write-Host "Warning: Expected pyRevit path not found: $path" -ForegroundColor Yellow
+            $allExist = $false
+        }
+    }
+    
+    return $allExist
 }
 
 # Function to save version change history

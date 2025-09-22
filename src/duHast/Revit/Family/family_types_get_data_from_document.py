@@ -30,19 +30,29 @@ A module with helper function around family types data extraction using Revit fa
 
 from Autodesk.Revit.DB import  UnitUtils
 
-# samples
-ut = UnitUtils
-# get the units from the document
-family_units = doc.GetUnits()
 
-# get unit specification ids (ForgeTypeId)
-mod_specs = family_units.GetModifiableSpecs()
+def get_data_types(doc):
+	"""
+	Get family types data from family document. ( just a test for now)
 
-# get the format options for each spec
-for m_spec in mod_specs:
-	# get the format options for the spec
-	format_option = family_units.GetFormatOptions(m_spec)
-	# get the type catalog string for the spec
-	type_cat_string =  ut.GetTypeCatalogStringForSpec(m_spec)
-	print(type_cat_string)
-	print(format_option)
+	:param doc: The Revit family document
+	:type doc: Autodesk.Revit.DB.Document
+ 
+	:return: None
+	"""
+	# samples
+	ut = UnitUtils
+	# get the units from the document
+	family_units = doc.GetUnits()
+
+	# get unit specification ids (ForgeTypeId)
+	mod_specs = family_units.GetModifiableSpecs()
+
+	# get the format options for each spec
+	for m_spec in mod_specs:
+		# get the format options for the spec
+		format_option = family_units.GetFormatOptions(m_spec)
+		# get the type catalog string for the spec
+		type_cat_string =  ut.GetTypeCatalogStringForSpec(m_spec)
+		print(type_cat_string)
+		print(format_option)

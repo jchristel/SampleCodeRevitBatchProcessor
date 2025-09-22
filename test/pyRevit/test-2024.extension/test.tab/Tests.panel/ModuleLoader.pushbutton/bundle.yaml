@@ -1,0 +1,16 @@
+# bundle title
+title: "Module Loader"
+
+# bundle tooltip
+tooltip: Loads duHast modules to check proper functionality.
+
+
+# bundle author
+author: 
+  - Jan Christel
+
+
+# bundle highlighting ('new' or 'updated')
+# Revit UI will show a orange marker on the button and a border around the tooltip
+highlight: new      # highlight as new
+##highlight: updated  # highlight as updated

@@ -1,0 +1,11 @@
+layout:
+  - About
+  - Tests
+
+# bundle tooltip
+tooltip: A test collection for duHast
+
+
+# bundle author
+author: 
+  - Jan Christel

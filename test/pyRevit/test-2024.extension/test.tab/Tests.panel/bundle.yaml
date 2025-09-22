@@ -1,0 +1,10 @@
+layout:
+  - ModuleLoader
+
+# bundle tooltip
+tooltip: Module Loader
+
+
+# bundle author
+author: 
+  - Jan Christel

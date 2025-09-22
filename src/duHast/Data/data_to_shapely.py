@@ -35,9 +35,20 @@ This module requires python >3.9 due to dependencies:
 # these packages are not available in an iron python environment .e.g. Revit Python shell
 # to avoid an exception stopping the entire package to load these are within a try catch block
 
-import shapely.geometry as sg
-import numpy as np
+try:
+    import shapely.geometry as sg
+    HAS_SHAPELY = True
+except ImportError:
+    HAS_SHAPELY = False
+    sg = None
 
+try:
+    import numpy as np
+    HAS_NUMPY = True
+except ImportError:
+    HAS_NUMPY = False
+    np = None
+    
 from duHast.Data.Objects.Collectors import data_ceiling as dc
 from duHast.Data.Objects.Collectors import data_room as dr
 
@@ -57,6 +68,9 @@ def get_translation_matrix(geometry_object):
     :rtype: numpy array
     """
 
+    if not HAS_NUMPY:
+        raise ImportError("Numpy is not available.")
+    
     translation_matrix = []  # translation only matrix
     # note numpy creates arrays by row!
     # need to append one more row since matrix dot multiplication rule:
@@ -91,6 +105,9 @@ def get_outer_loop_as_shapely_points(geometry_object, translation_matrix):
     :rtype: List[shapely.point]
     """
 
+    if not HAS_SHAPELY:
+        raise ImportError("Shapely is not available.")
+    
     single_polygon_loop = []
     if geometry_object.data_type == geometry_polygon_2.DataGeometryPolygon2.data_type:
         for point_double in geometry_object.outer_loop:
@@ -130,6 +147,12 @@ def get_inner_loops_as_shapely_points(geometry_object, translation_matrix):
     :rtype: list [list[shapely.point]]
     """
 
+    if not HAS_SHAPELY:
+        raise ImportError("Shapely is not available.")
+
+    if not HAS_NUMPY:
+        raise ImportError("Numpy is not available.")
+    
     shapely_points = []
     # get inner loops
     if len(geometry_object.inner_loops) > 0:
@@ -171,6 +194,9 @@ def build_shapely_polygon(shapely_polygons):
     :rtype: shapely.polygon
     """
 
+    if not HAS_SHAPELY:
+        raise ImportError("Shapely is not available.")
+    
     # convert to shapely
     poly = None
     # check if we got multiple polygons

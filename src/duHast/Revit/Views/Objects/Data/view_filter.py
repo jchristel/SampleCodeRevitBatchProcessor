@@ -60,7 +60,7 @@ class ViewFilter(base.Base):
 
         self.data_type = data_type
         self.category_ids = []  # list of category ids the filter applies to
-        self.logic_container = None  # should just be one
+        self.logic_containers = [] #is just one but be consistent with ViewFilterLogicContainer class
         self.name = ""
        
         
@@ -93,7 +93,10 @@ class ViewFilter(base.Base):
                 self.name = j["name"]  
 
                 # get containers
-                self.logic_container = ViewFilterLogicContainer(j=j["logic_container"])
+                # get containers
+                containers = j["logic_containers"]
+                for c in containers:
+                    self.logic_containers.append(ViewFilterLogicContainer(j=c))
                
             except Exception as e:
                 raise ValueError(
@@ -123,8 +126,12 @@ class ViewFilter(base.Base):
         if self.name != other.name:
             return False
 
-        if self.logic_container != other.logic_container:
+        if len(self.logic_containers) != len(other.logic_containers):
             return False
+        else:
+            for container in self.logic_containers:
+                if container not in other.logic_containers:
+                    return False
 
         return True
     
@@ -149,4 +156,4 @@ class ViewFilter(base.Base):
         :rtype: int
         """
         
-        return hash((tuple(self.category_ids), self.name, self.logic_container))
+        return hash((tuple(self.category_ids), self.name, tuple(self.logic_containers)))

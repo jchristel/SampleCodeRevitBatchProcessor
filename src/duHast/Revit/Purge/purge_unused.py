@@ -96,6 +96,7 @@ from duHast.Revit.Ceilings import purge_unused_ceiling_types as rCeilingPurge
 
 from duHast.Revit.DetailItems import detail_items as rDet
 from duHast.Revit.DetailItems import purge_unused_detail_item_types as rDetailItemPurge
+from duHast.Revit.DetailItems.filled_regions import get_all_filled_region_type_ids_available
 
 from duHast.Revit.Floors import floors as rFlo
 from duHast.Revit.Floors import purge_unused_floor_types as rFloorPurge
@@ -644,7 +645,7 @@ PURGE_ACTIONS.append(
         rDetailItemPurge.get_unused_filled_region_type_ids_for_purge,
         "Filled Region Type(s)",
         "Filled Region Type(s)",
-        rDet.get_all_filled_region_type_ids_available,
+        get_all_filled_region_type_ids_available,
     )
 )
 PURGE_ACTIONS.append(

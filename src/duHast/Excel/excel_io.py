@@ -29,8 +29,15 @@ A number of functions Excel file operations.
 
 import clr
 
-clr.AddReference("Microsoft.Office.Interop.Excel")
-import Microsoft.Office.Interop.Excel as Excel
+try:
+    clr.AddReference("Microsoft.Office.Interop.Excel")
+    import Microsoft.Office.Interop.Excel as Excel
+    HAS_EXCEL = True
+except Exception:
+    HAS_EXCEL = False
+    Excel = None
+    
+
 
 import os
 
@@ -55,6 +62,11 @@ def get_excel_tab_names(file_path):
     """
 
     return_value = Result()
+    
+    if not HAS_EXCEL:
+        return_value.update_sep(False, "Excel interop is not available.")
+        return return_value
+    
     excel = None
     wb = None
     try:
@@ -108,6 +120,11 @@ def save_excel_file_as_csv(file_path_excel, file_path_csv, tab_name=None):
     """
 
     return_value = Result()
+    
+    if not HAS_EXCEL:
+        return_value.update_sep(False, "Excel interop is not available.")
+        return return_value
+    
     excel = None
     wb = None
     try:
@@ -169,6 +186,11 @@ def read_excel_file(file_path, excel_tab_name=None):
     """
 
     return_value = Result()
+    
+    if not HAS_EXCEL:
+        return_value.update_sep(False, "Excel interop is not available.")
+        return return_value
+    
     excel = None
     wb = None
     try:
@@ -355,6 +377,11 @@ def save_csv_as_excel(file_path):
     """
 
     return_value = Result()
+    
+    if not HAS_EXCEL:
+        return_value.update_sep(False, "Excel interop is not available.")
+        return return_value
+    
     excel = None
     file_name_new = ""
     try:

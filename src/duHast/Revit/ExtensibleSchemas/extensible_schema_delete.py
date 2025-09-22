@@ -6,7 +6,7 @@ This module contains a number of functions around Extensible storage deletion in
 Notes from the building coder website: https://thebuildingcoder.typepad.com/blog/2022/11/extensible-storage-schema-deletion.html
 
 
-The devteam replied: After running DeleteSchemas macro, open Manage > Purge Unused. In the tree, select Extensible Storage Schema. Check the schema a9dc2b48 and click OK to purge it. Run ListSchemas – the schema is purged. So, please use Purge Unused to delete schemas without entities.
+The dev team replied: After running DeleteSchemas macro, open Manage > Purge Unused. In the tree, select Extensible Storage Schema. Check the schema a9dc2b48 and click OK to purge it. Run ListSchemas - the schema is purged. So, please use Purge Unused to delete schemas without entities.
 
 Extensible storage schema is an application-wide object. If it exists at all in the application, it will populate and "infect" every single document that you touch. That makes it hard to remove, and complicated to understand.
 

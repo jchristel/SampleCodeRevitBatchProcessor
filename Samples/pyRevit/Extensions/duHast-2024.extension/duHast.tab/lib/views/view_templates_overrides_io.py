@@ -77,7 +77,9 @@ def export_overrides_of_selected_viewtemplates(doc, output, forms):
 
     # get templates to export
     view_templates_to_export = _get_target_view_templates(
-        doc=doc, forms=forms, source_view_template_name=None
+        doc=doc, forms=forms, 
+        source_view_template_name=None,
+        button_name="Select View Template To Export"
     )
 
     if view_templates_to_export is None or len(view_templates_to_export) == 0:

@@ -20,13 +20,37 @@
 #
 #
 
-#from duHast.Utilities.Objects.result import Result
-from duHast.Revit.Views.templates import (
-    get_view_template_which_allow_graphical_overrides,
+
+
+from duHast.Utilities.Objects.result import Result
+
+from duHast.Revit.Views.views import (
+    get_views_in_model
 )
 
 
-def _get_view_templates_for_ui(doc):
+
+def get_views_in_model_not_template(doc):
+    """
+    Gets all views in a model which are not templates and not driven by a template.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: list of views
+    :rtype: list of Autodesk.Revit.DB.View
+    """
+
+    def filter_not_template(view):
+        return view.IsTemplate == False
+
+    return get_views_in_model(doc=doc, filter=filter_not_template)
+
+
+
+
+
+def _get_views_for_ui(doc):
     """
     Returns all view templates in the model which allow graphic overrides in 2 variables:
 
@@ -44,8 +68,8 @@ def _get_view_templates_for_ui(doc):
     view_template_names = []
     view_templates_by_name = {}
 
-    # get all view templates
-    view_templates = get_view_template_which_allow_graphical_overrides(doc=doc)
+    # get all views
+    view_templates =get_views_in_model_not_template(doc=doc)
     for vt in view_templates:
         key = vt.Name
         view_template_names.append(key)
@@ -54,7 +78,7 @@ def _get_view_templates_for_ui(doc):
     return view_template_names, view_templates_by_name
 
 
-def _get_source_view_template(doc, forms, button_name="Select View Template To Propagate From"):
+def _get_source_views(doc, forms):
     """
     returns the source view template by user selection
 
@@ -70,7 +94,7 @@ def _get_source_view_template(doc, forms, button_name="Select View Template To P
     source_view_template = None
 
     # get view templates in the model which allow graphical overrides
-    view_template_name, view_templates_by_name = _get_view_templates_for_ui(doc)
+    view_template_name, view_templates_by_name = _get_views_for_ui(doc)
 
     # check if we got any?
     if len(view_template_name) == 0:
@@ -79,7 +103,7 @@ def _get_source_view_template(doc, forms, button_name="Select View Template To P
     # get the user to select the source ( returns a string)
     selection = forms.SelectFromList.show(
         sorted(view_template_name),
-        button_name=button_name,
+        button_name="Select Views To Propagate From",
         multiselect=False,
     )
 
@@ -89,7 +113,9 @@ def _get_source_view_template(doc, forms, button_name="Select View Template To P
         return view_templates_by_name[selection]
 
 
-def _get_target_view_templates(doc, forms, source_view_template_name, button_name="Select View Template To Propagate To"):
+
+
+def _get_target_views(doc, forms, source_view_template_name):
     """
     returns the target view template by user selection
 
@@ -107,7 +133,7 @@ def _get_target_view_templates(doc, forms, source_view_template_name, button_nam
     target_view_templates = []
 
     # get view templates in the model which allow graphical overrides
-    view_template_names, view_templates_by_name = _get_view_templates_for_ui(doc)
+    view_template_names, view_templates_by_name = _get_views_for_ui(doc)
 
     # check if we got any?
     if len(view_template_names) == 0:
@@ -123,7 +149,7 @@ def _get_target_view_templates(doc, forms, source_view_template_name, button_nam
     # get the user to select the source ( returns a string)
     selection = forms.SelectFromList.show(
         sorted(view_template_names),
-        button_name=button_name,
+        button_name="Select Views To Propagate To",
         multiselect=True,
     )
 

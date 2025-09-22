@@ -86,76 +86,134 @@ def import_rules_from_data(doc, data_rules):
     return return_value
 
 
-def import_logic_container_from_data(doc, data_object):
+def import_nested_logic_container_from_data(doc, logic_filter_containers):
 
     # set up a status tracker
     return_value = Result()
     
-    # get the logic container at the top of the tree:
-    logic_container = data_object.logic_container
-    if logic_container is None:
-        return_value.append_message("No logic container found. Skipping view filter: {}".format(data_object.name))
-        return return_value
-
-    if len(logic_container.view_filter_rules) == 0:
-        return_value.append_message("No filter rules found. Skipping view filter: {}".format(data_object.name))
-        return return_value
-    
-    # get the logic filter class
-    logic_filter_class = get_logical_filter_class(logic_container.logic_container_type)
-    if not logic_filter_class:
-        return_value.update_sep(False, "Failed to get logic filter class for type: {}. Skipping view filter: {}".format(logic_container.logic_container_type, data_object.name))
-        return return_value
-
-    # import the rules
-    import_rules_result = import_rules_from_data(doc, logic_container)
-
-    # user feedback
-    if not import_rules_result.status:
-        return_value.update_sep(False, "Failed to import rules for view filter: {}. Error: {}".format(data_object.name, import_rules_result.message))
-    else:
-        return_value.append_message("Successfully imported {} rules for view filter: {}".format(len(import_rules_result.result[0]), data_object.name))
-
-    # import the rules
-    import_rules_result = import_rules_from_data(doc, logic_container)
-
-    # user feedback
-    if not import_rules_result.status:
-        return_value.update_sep(False, "Failed to import rules for view filter: {}. Error: {}".format(data_object.name, import_rules_result.message))
-    else:
-        return_value.append_message("Successfully imported {} rules for view filter: {}".format(len(import_rules_result.result[0]), data_object.name))
-    
-    # container for new rules
+    # container for nested container
     element_parameter_filters = List[ElementFilter]()
 
-    # transfer rules across
-    for entry in import_rules_result.result[0]:
-        element_parameter_filters.Add(entry)
+    for logic_filter_container in  logic_filter_containers:
 
-    # check for nested logic containers
-    if len(logic_container.logic_containers) == 0:
-        return_value.append_message("No nested logic containers found.")
-    else:
-        for entry in logic_container.logic_containers:
-            return_value.append_message("Importing nested logic container of type: {}".format(entry.logic_container_type))
-            # import the nested logic container
-            import_nested_logic_result = import_logic_container_from_data(doc, entry)
-            if not import_nested_logic_result.status:
-                return_value.update_sep(False, "Failed to import nested logic container for view filter: {}. Error: {}".format(data_object.name, import_nested_logic_result.message))
+        # container for nested container
+        nested_element_parameter_filters = List[ElementFilter]()
+
+        # get the logic container filter class
+        logic_filter_class = get_logical_filter_class(logic_filter_container.logic_container_type)
+        
+        if not logic_filter_class:
+            return_value.update_sep(False, "Failed to get logic filter class for type: {}. Skipping view filter: {}".format(logic_container.logic_container_type, data_object.name))
+            return return_value
+
+        # get the nested logic containers 
+        nested_logic_containers = logic_filter_container.logic_containers
+        
+        # check if there are any nested containers
+        if nested_logic_containers is None or len(nested_logic_containers) == 0:
+            return_value.append_message("No logic container found. Skipping logic containers...")
+        else:
+            # recursive call
+            import_nested_containers_result = import_nested_logic_container_from_data(doc, nested_logic_containers)
+
+            if not import_nested_containers_result.status:
+                return_value.update_sep(False, "Failed to import nested logic container. Error: {}".format(import_nested_containers_result.message))
                 # check if any rules were imported
-                if len(import_nested_logic_result.result) > 0:
-                    for entry in import_nested_logic_result.result[0]:
-                        element_parameter_filters.Add(entry)
+                if len(import_nested_containers_result.result) > 0:
+                    for entry in import_nested_containers_result.result[0]:
+                        nested_element_parameter_filters.Add(entry)
+
             else:
-                return_value.append_message("Successfully imported {} rules for nested logic container for view filter: {}".format(len(import_nested_logic_result.result[0]), data_object.name))
+                return_value.append_message("Successfully imported {} rules for nested logic container.".format(len(import_nested_containers_result.result[0])))
                 # add the imported rules to the main container
-                for entry in import_nested_logic_result.result[0]:
-                        element_parameter_filters.Add(entry)
+                for entry in import_nested_containers_result.result[0]:
+                    nested_element_parameter_filters.Add(entry)
+
+        # look at view filter rules at this level
+        if len(logic_container.view_filter_rules) == 0:
+            return_value.append_message("No filter rules found. Skipping view filter rulesd...")
+        
+        else:
+            # import the rules
+            import_rules_result = import_rules_from_data(doc, logic_container)
+
+            # user feedback
+            if not import_rules_result.status:
+                return_value.update_sep(False, "Failed to import rules for view filter: {}. Error: {}".format(data_object.name, import_rules_result.message))
+            else:
+                return_value.append_message("Successfully imported {} rules for view filter: {}".format(len(import_rules_result.result[0]), data_object.name))
+
+            
+            element_parameter_filters = List[ElementFilter]()
+
+            # transfer rules across
+            for entry in import_rules_result.result[0]:
+                nested_element_parameter_filters.Add(entry)
+        
+
+        # create the logic container class instance
+        logic_container_class_instance = logic_filter_class(nested_element_parameter_filters)
+        element_parameter_filters.Add(logic_container_class_instance)
+       
     
+    # add the overall list to the return value
     return_value.result.append(element_parameter_filters)
 
     return return_value
     
+
+
+def import_root_logic_container_from_data(doc, view_filter_json):
+
+    # set up a status tracker
+    return_value = Result()
+    
+    # get the logic containers at the top of the tree
+    logic_filter_container = view_filter_json.logic_containers
+    if logic_filter_container is None or len(logic_filter_container) == 0:
+        return_value.append_message("No logic container found. Skipping view filter: {}".format(view_filter_json.name))
+        return return_value
+
+    # there is no need to check for rules here as this is done in the nested logic container function ( root container has no rules at the same level)
+
+    # get the root container json object (there is always only just one root container)
+    logic_filter_root_container = logic_filter_container[0]
+
+    # get the logic filter class
+    logic_container_class = get_logical_filter_class(logic_filter_root_container.logic_container_type)
+    if not logic_container_class:
+        return_value.update_sep(False, "Failed to get logic filter class for type: {}. Skipping view filter: {}".format(logic_filter_root_container.logic_container_type, view_filter_json.name))
+        return return_value
+
+    # container for nested container
+    element_parameter_filters = List[ElementFilter]()
+
+    return_value.append_message("Importing root logic container of type: {}".format(logic_filter_root_container.logic_container_type))
+
+    # import the nested logic containers (there should be at least one)
+    # there are no rules at this level
+    import_nested_logic_result = import_nested_logic_container_from_data(doc, logic_filter_root_container.logic_containers)
+
+    if not import_nested_logic_result.status:
+        return_value.update_sep(False, "Failed to import root logic container for view filter: {}. Error: {}".format(view_filter_json.name, import_nested_logic_result.message))
+        # check if any rules were imported
+        if len(import_nested_logic_result.result) > 0:
+            for entry in import_nested_logic_result.result[0]:
+                element_parameter_filters.Add(entry)
+    else:
+        return_value.append_message("Successfully imported {} rules for nested logic container for view filter: {}".format(len(import_nested_logic_result.result[0]), view_filter_json.name))
+        # add the imported rules to the main container
+        for entry in import_nested_logic_result.result[0]:
+            element_parameter_filters.Add(entry)
+
+    
+    # add the imported rules to the return value
+    logic_container_class_instance = logic_container_class(element_parameter_filters)
+
+    return_value.result.append(logic_container_class_instance)
+    return return_value
+
+
 
 def import_view_filters_from_data(doc, json_object, progress_callback=None):
 
@@ -163,13 +221,25 @@ def import_view_filters_from_data(doc, json_object, progress_callback=None):
     return_value = Result()
 
     # loop over json objects and create view filters
-    for data_object in json_object:
-        return_value.append_message("Importing view filter: {}".format(data_object.name))
+    for view_filter_json in json_object:
+        return_value.append_message("Importing view filter: {}".format(view_filter_json.name))
         
-        # get the container and all its nested items
-        container = import_logic_container_from_data(doc, data_object)
+        try:
+            # get the container and all its nested items
+            container_result = import_root_logic_container_from_data(doc, view_filter_json)
 
-        # set up a view filter
+            if not container_result.status:
+                return_value.update_sep(False, "Failed to import logic container for view filter: {}. Error: {}".format(view_filter_json.name, container_result.message))
+                continue
+
+            # keep track of the container
+            return_value.append_message("Successfully imported logic container for view filter: {}".format(view_filter_json.name))
+
+            # set up a view filter
+
+        except Exception as e:
+            return_value.update_sep(False, "Failed to import view filter: {}. Error: {}".format(view_filter_json.name, e))
+            continue
 
     
     return return_value

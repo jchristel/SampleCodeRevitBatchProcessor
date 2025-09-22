@@ -30,9 +30,7 @@ Processes family_data_family objects using multi threading ( testing has shown r
 #
 #
 
-import threading
 import os
-import queue
 
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Family.Data.family_report_reader import read_data_into_families

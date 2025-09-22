@@ -27,14 +27,31 @@ A file selection GUI.
 #
 
 import clr
-
-clr.AddReference("System.Windows.Forms")
-clr.AddReference("IronPython.Wpf")
-
-# import WPF creator and base window
-import wpf
-from System import Windows
 import ctypes
+
+# Guard Windows Forms
+try:
+    clr.AddReference("System.Windows.Forms")
+    HAS_WINFORMS = True
+except Exception:
+    HAS_WINFORMS = False
+
+# Guard WPF (your current code is good)
+try:
+    clr.AddReference("IronPython.Wpf")
+    import wpf
+    HAS_WPF = True
+except Exception:
+    HAS_WPF = False
+    wpf = None
+
+# Guard System.Windows
+try:
+    from System import Windows
+    HAS_SYSTEM_WINDOWS = True
+except Exception:
+    HAS_SYSTEM_WINDOWS = False
+    Windows = None
 
 # import settings class
 # from duHast.UI import FileSelectSettings as set
@@ -75,6 +92,11 @@ class MyWindow(Windows.Window):
         :type settings: :class:`.FileSelectionSettings`
         """
 
+        if not HAS_WPF:
+            raise EnvironmentError("WPF is not available.")
+        if not HAS_SYSTEM_WINDOWS:
+            raise EnvironmentError("System.Windows is not available.")
+        
         wpf.LoadComponent(self, xaml_full_file_name)
 
         # set the settings

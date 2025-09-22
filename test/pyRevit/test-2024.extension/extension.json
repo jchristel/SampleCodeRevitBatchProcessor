@@ -1,0 +1,13 @@
+{
+  "builtin": "False",
+  "type": "extension",
+  "rocket_mode_compatible": "False",
+  "name": "test-2024",
+  "version": "1.0.0", 
+  "description": "duHast test extension for Revit 2023 and 2024",
+  "author": "Jan Christel",
+  "min_revit_ver": 2023,
+  "max_revit_ver": 2024,
+  "dependencies": []
+}
+    

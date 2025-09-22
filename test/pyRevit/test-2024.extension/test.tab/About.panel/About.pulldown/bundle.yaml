@@ -1,0 +1,13 @@
+layout:
+  - License
+  - --------
+  - Icon8
+
+# bundle tooltip
+tooltip: |
+    Things to know about duHast extension.
+
+
+# bundle author
+author: 
+  - Jan Christel

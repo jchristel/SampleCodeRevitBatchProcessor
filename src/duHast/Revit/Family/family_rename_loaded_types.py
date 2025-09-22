@@ -151,6 +151,15 @@ def _rename_loaded_family_types(doc, rename_directives, families, progress_callb
                     
                     # exit inner for loop
                     break
+            
+            if not found_type_name_match:
+                return_value.append_message("No match found for family [{}] of category [{}] vs directive category [{}] type: [{}] ".format(
+                    rename_directive.name,
+                    family.FamilyCategory.Name,
+                    rename_directive.category,
+                    rename_directive.old_type_name
+                ))
+                
         else:
             # flag no match found
             return_value.append_message(

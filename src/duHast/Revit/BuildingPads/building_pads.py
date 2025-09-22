@@ -26,9 +26,6 @@ Revit building pads helper functions.
 #
 #
 
-import clr
-import System
-
 from duHast.Revit.Common.common import get_ids_from_element_collector
 from duHast.Revit.BuildingPads.Utility.RevitBuildingPadsFilter import (
     _get_all_building_pad_types_by_category,
@@ -36,8 +33,16 @@ from duHast.Revit.BuildingPads.Utility.RevitBuildingPadsFilter import (
 )
 
 # import Autodesk
+# Guard buildingpad import ( no longer supported in Revit 2024 and up )
+try:
+    from Autodesk.Revit.DB import BuildingPad as BuildingPad
+    HAS_BUILDINGPAD = True
+except Exception:
+    HAS_BUILDINGPAD = False
+    BuildingPad = None
 
-from Autodesk.Revit.DB import BuildingPad, BuiltInCategory, FilteredElementCollector
+
+from Autodesk.Revit.DB import BuiltInCategory, FilteredElementCollector
 
 # --------------------------------------------- utility functions ------------------
 
@@ -97,6 +102,9 @@ def get_all_building_pad_instances_in_model_by_category(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
+    if not HAS_BUILDINGPAD:
+        raise EnvironmentError("BuildingPad class is not available.")
+    
     return (
         FilteredElementCollector(doc)
         .OfCategory(BuiltInCategory.OST_BuildingPad)
@@ -118,6 +126,8 @@ def get_all_building_pad_instances_in_model_by_class(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
+    if not HAS_BUILDINGPAD:
+        raise EnvironmentError("BuildingPad class is not available.")
     return (
         FilteredElementCollector(doc)
         .OfClass(BuildingPad)

@@ -8,6 +8,7 @@ layout:
   - CompareLibraryVsLibrary
   - --------
   - CreateXMLReportLibrary
+  - CleanXMLFiles
 
 
 # bundle tooltip

@@ -5,8 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DocManager.Standalone"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        xmlns:shared="clr-namespace:duHastNet.DocManager.UI.Shared.Views;assembly=duHastNet.DocManager.UI.Shared"
+        Title="Document Manager - Standalone" 
+        Height="700" 
+        Width="900"
+        WindowStartupLocation="CenterScreen">
     <Grid>
-
+        <shared:SettingsView/>
     </Grid>
 </Window>

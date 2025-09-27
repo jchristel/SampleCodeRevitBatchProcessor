@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace duHastNet.DocManager.UI.Shared
+namespace duHastNet.DocManager.UI.Shared.Views
 {
     /// <summary>
     /// Interaction logic for MainView.xaml

@@ -9,4 +9,7 @@
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\duHastNet.DocManager.UI.Shared\duHastNet.DocManager.UI.Shared.csproj" />
+	</ItemGroup>
 </Project>

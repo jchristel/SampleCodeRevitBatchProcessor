@@ -90,6 +90,7 @@
                                     Grid.Row="0"
                                     Grid.Column="1"
                                     Margin="5 10 5 10"
+                                    Text="{Binding DatabasePath, UpdateSourceTrigger=PropertyChanged}"
                                     />
                                 <Button 
                                     Grid.Row="0" 
@@ -120,6 +121,8 @@
                                      Padding="20 0 20 0"
                                      Margin="5 10 5 10" 
                                      Content="Create Database"
+                                    Command="{Binding CreateDatabaseCommand}"
+                                    IsEnabled="{Binding IsCreateDatabaseEnabled}"
                                      />
                             </Grid>
                         </StackPanel>

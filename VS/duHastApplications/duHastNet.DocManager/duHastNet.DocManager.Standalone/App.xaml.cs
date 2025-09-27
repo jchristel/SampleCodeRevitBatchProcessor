@@ -16,7 +16,7 @@ namespace DocManager.Standalone
 
             MainWindow = new MainWindow()
             {
-                DataContext = new duHastNet.DocManager.UI.Shared.ViewModels.MainViewModel(docManagerApi)
+                DataContext = new duHastNet.DocManager.UI.Shared.ViewModels.SettingsViewModel(docManagerApi)
             };
 
             MainWindow.Show();

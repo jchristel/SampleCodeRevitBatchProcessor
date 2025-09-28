@@ -21,40 +21,32 @@
 //
 //
 
-
-//
-// BSD License
-// Copyright 2025, Jan Christel
-// All rights reserved.
-
 using duHastNet.DocManager.Core.Models;
 
-namespace duHastNet.DocManager.Core.Interfaces
+namespace duHastNet.DocManager.Core.Exceptions
 {
-    /// <summary>
-    /// Repository interface for Revision entities with document management support
-    /// </summary>
-    public interface IRevisionRepository : IRepository<Revision>
+    public class RevisionDuplicateException : Exception
     {
-        // Original revision methods
-        Task<List<Revision>> GetRevisionsByDateRangeAsync(DateTime startDate, DateTime endDate);
-        Task<Revision?> GetLatestRevisionAsync();
-        Task<List<Revision>> GetRevisionsByDateAsync(DateTime date);
 
-        // Document management methods
-        Task<int> AddDocumentToRevisionAsync(int revisionId, int documentId);
-        Task<int> RemoveDocumentFromRevisionAsync(int revisionId, int documentId);
-        Task<int> AddDocumentsToRevisionAsync(int revisionId, IEnumerable<int> documentIds);
-        Task<int> RemoveDocumentsFromRevisionAsync(int revisionId, IEnumerable<int> documentIds);
-        Task<int> SetRevisionDocumentsAsync(int revisionId, IEnumerable<int> documentIds);
+        public Revision ExistingRevision { get; }
+        public Revision NewRevision { get; }
 
-        // Document history and query methods
-        Task<List<Revision>> GetRevisionsByDocumentIdAsync(int documentId);
-        Task<int> GetDocumentCountAsync(int revisionId);
-        Task<bool> RevisionContainsDocumentAsync(int revisionId, int documentId);
+        public RevisionDuplicateException(Revision existingRevision, Revision newRevision)
+        {
+            ExistingRevision = existingRevision;
+            NewRevision = newRevision;
+        }
 
-        // Utility methods
-        Task<List<Revision>> GetEmptyRevisionsAsync();
-        Task<Dictionary<string, int>> GetRevisionStatisticsAsync();
+        public RevisionDuplicateException(string message, Revision existingRevision, Revision newRevision) : base(message)
+        {
+            ExistingRevision = existingRevision;
+            NewRevision = newRevision;
+        }
+
+        public RevisionDuplicateException(string message, Exception innerException, Revision existingRevision, Revision newRevision) : base(message, innerException)
+        {
+            ExistingRevision = existingRevision;
+            NewRevision = newRevision;
+        }
     }
 }

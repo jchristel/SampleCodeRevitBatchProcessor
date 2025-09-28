@@ -21,15 +21,32 @@ using duHastNet.DocManager.Core.Models;
 namespace duHastNet.DocManager.Core.Interfaces
 {
     /// <summary>
-    /// Repository interface for Document entities
+    /// Repository interface for Document entities with support for new features
+    /// Active documents are returned by default unless specifically requesting inactive/all documents
     /// </summary>
     public interface IDocumentRepository : IRepository<Document>
     {
+        // Original methods (now return active documents by default)
         Task<List<Document>> GetDocumentsByRevisionAsync(int revisionId);
         Task<List<Document>> GetDocumentsByNumberAsync(string documentNumber);
         Task<Document?> GetLatestDocumentRevisionAsync(string documentNumber);
         Task<List<string>> GetDistinctDocumentNumbersAsync();
         Task<List<Document>> SearchDocumentsAsync(string searchTerm);
         Task<bool> DocumentExistsAsync(string number, string revision);
+
+        // New methods for IsActive field
+        Task<List<Document>> GetActiveDocumentsAsync();
+        Task<List<Document>> GetInactiveDocumentsAsync();
+        Task<int> UpdateActiveStatusAsync(int documentId, bool isActive);
+
+        // New methods for DocumentNumberHistory
+        Task<List<Document>> GetDocumentsByHistoryNumberAsync(string documentNumber);
+        Task<bool> DocumentNumberExistsAnywhereAsync(string documentNumber);
+        Task<List<string>> GetAllDocumentNumbersEverUsedAsync();
+
+        // New methods for when you specifically need ALL documents (active and inactive)
+        Task<List<Document>> GetAllDocumentsByRevisionAsync(int revisionId);
+        Task<List<Document>> GetAllDocumentsByNumberAsync(string documentNumber);
+        Task<bool> AnyDocumentExistsAsync(string number, string revision);
     }
 }

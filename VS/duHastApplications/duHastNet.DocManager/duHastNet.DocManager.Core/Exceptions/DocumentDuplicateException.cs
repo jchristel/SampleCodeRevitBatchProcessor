@@ -21,40 +21,32 @@
 //
 //
 
-
-//
-// BSD License
-// Copyright 2025, Jan Christel
-// All rights reserved.
-
 using duHastNet.DocManager.Core.Models;
 
-namespace duHastNet.DocManager.Core.Interfaces
+namespace duHastNet.DocManager.Core.Exceptions
 {
-    /// <summary>
-    /// Repository interface for Revision entities with document management support
-    /// </summary>
-    public interface IRevisionRepository : IRepository<Revision>
+    public class DocumentDuplicateException:Exception
     {
-        // Original revision methods
-        Task<List<Revision>> GetRevisionsByDateRangeAsync(DateTime startDate, DateTime endDate);
-        Task<Revision?> GetLatestRevisionAsync();
-        Task<List<Revision>> GetRevisionsByDateAsync(DateTime date);
 
-        // Document management methods
-        Task<int> AddDocumentToRevisionAsync(int revisionId, int documentId);
-        Task<int> RemoveDocumentFromRevisionAsync(int revisionId, int documentId);
-        Task<int> AddDocumentsToRevisionAsync(int revisionId, IEnumerable<int> documentIds);
-        Task<int> RemoveDocumentsFromRevisionAsync(int revisionId, IEnumerable<int> documentIds);
-        Task<int> SetRevisionDocumentsAsync(int revisionId, IEnumerable<int> documentIds);
+        public Document ExistingDocument {  get;  }
+        public Document NewDocument { get; }
 
-        // Document history and query methods
-        Task<List<Revision>> GetRevisionsByDocumentIdAsync(int documentId);
-        Task<int> GetDocumentCountAsync(int revisionId);
-        Task<bool> RevisionContainsDocumentAsync(int revisionId, int documentId);
+        public DocumentDuplicateException(Document existingDocument, Document newDocument)
+        {
+            ExistingDocument = existingDocument;
+            NewDocument = newDocument;
+        }
 
-        // Utility methods
-        Task<List<Revision>> GetEmptyRevisionsAsync();
-        Task<Dictionary<string, int>> GetRevisionStatisticsAsync();
+        public DocumentDuplicateException(string message, Document existingDocument, Document newDocument) :base(message) 
+        {
+            ExistingDocument = existingDocument;
+            NewDocument = newDocument;
+        }
+
+        public DocumentDuplicateException(string message,Exception innerException, Document existingDocument, Document newDocument) : base(message, innerException)
+        {
+            ExistingDocument = existingDocument;
+            NewDocument = newDocument;
+        }
     }
 }

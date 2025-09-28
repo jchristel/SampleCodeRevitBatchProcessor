@@ -141,6 +141,7 @@ public class DocManagerApi : IDisposable
             // Test basic operations
             var revisionCount = await _unitOfWork!.Revisions.CountAsync();
             var documentCount = await _unitOfWork.Documents.CountAsync();
+            var activeDocumentCount = await _unitOfWork.Documents.GetActiveDocumentsAsync();
             var propertyCount = await _unitOfWork.CustomProperties.CountAsync();
 
             // Test integrity
@@ -149,7 +150,7 @@ public class DocManagerApi : IDisposable
             var result = SetupResult.CreateSuccess(_databaseService.DatabasePath!);
             result.Message = $"Database test successful. " +
                            $"Revisions: {revisionCount}, " +
-                           $"Documents: {documentCount}, " +
+                           $"Documents: {documentCount} (Active: {activeDocumentCount.Count}), " +
                            $"Properties: {propertyCount}. " +
                            $"Integrity: {(integrityOk ? "OK" : "FAILED")}";
 
@@ -180,7 +181,6 @@ public class DocManagerApi : IDisposable
         _unitOfWork?.Dispose();
         _unitOfWork = null;
     }
-
 
     /// <summary>
     /// Connects to an existing database without creating or overwriting
@@ -229,6 +229,7 @@ public class DocManagerApi : IDisposable
             // Verify database has expected tables (basic validation)
             var revisionCount = await _unitOfWork.Revisions.CountAsync();
             var documentCount = await _unitOfWork.Documents.CountAsync();
+            var activeDocumentCount = await _unitOfWork.Documents.GetActiveDocumentsAsync();
             var propertyCount = await _unitOfWork.CustomProperties.CountAsync();
 
             // Test integrity
@@ -237,7 +238,7 @@ public class DocManagerApi : IDisposable
             var result = SetupResult.CreateSuccess(databasePath);
             result.Message = $"Connected successfully to database. " +
                            $"Revisions: {revisionCount}, " +
-                           $"Documents: {documentCount}, " +
+                           $"Documents: {documentCount} (Active: {activeDocumentCount.Count}), " +
                            $"Properties: {propertyCount}";
 
             if (!integrityOk)
@@ -325,6 +326,23 @@ public class DocManagerApi : IDisposable
         {
             // Log error but don't throw during cleanup
             System.Diagnostics.Debug.WriteLine($"Error during close: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Connects to an existing database (synchronous version for IronPython)
+    /// </summary>
+    /// <param name="databasePath">Path to existing database file</param>
+    /// <returns>Setup result with connection information</returns>
+    public SetupResult ConnectDatabase(string databasePath)
+    {
+        try
+        {
+            return ConnectDatabaseAsync(databasePath).GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            return SetupResult.CreateFailure($"Failed to connect to database: {ex.Message}");
         }
     }
 

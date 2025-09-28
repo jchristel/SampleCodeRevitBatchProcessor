@@ -22,39 +22,57 @@
 //
 
 
-//
-// BSD License
-// Copyright 2025, Jan Christel
-// All rights reserved.
-
-using duHastNet.DocManager.Core.Models;
-
-namespace duHastNet.DocManager.Core.Interfaces
+namespace duHastNet.DocManager.Core.Models
 {
-    /// <summary>
-    /// Repository interface for Revision entities with document management support
-    /// </summary>
-    public interface IRevisionRepository : IRepository<Revision>
+    public class RevisionContainer
     {
-        // Original revision methods
-        Task<List<Revision>> GetRevisionsByDateRangeAsync(DateTime startDate, DateTime endDate);
-        Task<Revision?> GetLatestRevisionAsync();
-        Task<List<Revision>> GetRevisionsByDateAsync(DateTime date);
+        private List<Revision> _revisions;
 
-        // Document management methods
-        Task<int> AddDocumentToRevisionAsync(int revisionId, int documentId);
-        Task<int> RemoveDocumentFromRevisionAsync(int revisionId, int documentId);
-        Task<int> AddDocumentsToRevisionAsync(int revisionId, IEnumerable<int> documentIds);
-        Task<int> RemoveDocumentsFromRevisionAsync(int revisionId, IEnumerable<int> documentIds);
-        Task<int> SetRevisionDocumentsAsync(int revisionId, IEnumerable<int> documentIds);
+        #region get revisions
 
-        // Document history and query methods
-        Task<List<Revision>> GetRevisionsByDocumentIdAsync(int documentId);
-        Task<int> GetDocumentCountAsync(int revisionId);
-        Task<bool> RevisionContainsDocumentAsync(int revisionId, int documentId);
+        /// <summary>
+        /// returns all revisions
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Revision> GetAllRevisions()
+        {
+            return _revisions;
+        }
 
-        // Utility methods
-        Task<List<Revision>> GetEmptyRevisionsAsync();
-        Task<Dictionary<string, int>> GetRevisionStatisticsAsync();
+        #endregion get revisions
+
+        #region edit revisions
+
+        /// <summary>
+        /// adds a document to the container
+        /// </summary>
+        /// <param name="rev"></param>
+        public void AddRevision(Revision rev)
+        {
+            //null check
+            if (rev == null)
+            {
+                throw new ArgumentNullException(nameof(rev), "Revision cannot be null.");
+            }
+
+            //check if a document with this number allready exists
+            foreach (var existingRevision in _revisions)
+            {
+                if (existingRevision.Conflicts(rev))
+                {
+                    throw new Exceptions.RevisionDuplicateException(existingRevision, rev);
+                }
+            }
+
+            //no conflict found - add document
+            _revisions.Add(rev);
+        }
+
+        #endregion edit revisions
+
+        public RevisionContainer() 
+        { 
+            _revisions = [];
+        }
     }
 }

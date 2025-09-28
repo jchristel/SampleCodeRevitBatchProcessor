@@ -181,6 +181,78 @@ public class DocManagerApi : IDisposable
         _unitOfWork = null;
     }
 
+
+    /// <summary>
+    /// Connects to an existing database without creating or overwriting
+    /// </summary>
+    /// <param name="databasePath">Path to existing database file</param>
+    /// <returns>Setup result with connection information</returns>
+    public async Task<SetupResult> ConnectDatabaseAsync(string databasePath)
+    {
+        try
+        {
+            // Validate input
+            if (string.IsNullOrWhiteSpace(databasePath))
+            {
+                return SetupResult.CreateFailure("Database path is required");
+            }
+
+            // Check if file exists
+            if (!File.Exists(databasePath))
+            {
+                return SetupResult.CreateFailure($"Database file does not exist: {databasePath}");
+            }
+
+            // Close any existing connection
+            if (_databaseService != null)
+            {
+                await _databaseService.CloseAsync();
+                _databaseService = null;
+            }
+
+            _unitOfWork?.Dispose();
+            _unitOfWork = null;
+
+            // Initialize database service with existing file
+            _databaseService = new DatabaseService();
+            await _databaseService.InitializeAsync(databasePath);
+
+            // Verify database was opened successfully
+            if (!_databaseService.IsInitialized)
+            {
+                return SetupResult.CreateFailure("Failed to connect to database");
+            }
+
+            // Initialize unit of work
+            _unitOfWork = new UnitOfWork(_databaseService.Connection);
+
+            // Verify database has expected tables (basic validation)
+            var revisionCount = await _unitOfWork.Revisions.CountAsync();
+            var documentCount = await _unitOfWork.Documents.CountAsync();
+            var propertyCount = await _unitOfWork.CustomProperties.CountAsync();
+
+            // Test integrity
+            var integrityOk = await _databaseService.CheckDatabaseIntegrityAsync();
+
+            var result = SetupResult.CreateSuccess(databasePath);
+            result.Message = $"Connected successfully to database. " +
+                           $"Revisions: {revisionCount}, " +
+                           $"Documents: {documentCount}, " +
+                           $"Properties: {propertyCount}";
+
+            if (!integrityOk)
+            {
+                result.AddWarning("Database integrity check failed");
+            }
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return SetupResult.CreateFailure($"Failed to connect to database: {ex.Message}");
+        }
+    }
+
     #endregion
 
     #region Synchronous Methods (for IronPython/PyRevit compatibility)

@@ -98,6 +98,8 @@
                                     Padding="20 0 20 0"
                                     Margin="5 10 0 10" 
                                     Content="Browse"
+                                    Command="{Binding BrowseDatabaseCommand}"
+                                    IsEnabled="{Binding IsBrowseEnabled}"
                                     />
                                 <Button 
                                     Grid.Row="0" 
@@ -105,6 +107,8 @@
                                     Padding="20 0 20 0"
                                     Margin="5 10 5 10" 
                                     Content="Connect"
+                                    Command="{Binding ConnectDatabaseCommand}"
+                                    IsEnabled="{Binding IsConnectDatabaseEnabled}"
                                     />
                             </Grid>
                             <!-- create database-->

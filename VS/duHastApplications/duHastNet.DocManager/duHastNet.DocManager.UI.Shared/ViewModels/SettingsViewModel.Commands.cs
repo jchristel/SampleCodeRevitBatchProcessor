@@ -82,8 +82,46 @@ public partial class SettingsViewModel
     [RelayCommand]
     private async Task ConnectDatabaseAsync()
     {
-        // TODO: Implement connect to existing database
-        await Task.CompletedTask;
+        try
+        {
+            IsBusy = true;
+            StatusMessage = "Connecting to database...";
+
+            // Connect to existing database using the API method
+            var connectResult = await _docManagerApi.ConnectDatabaseAsync(DatabasePath);
+
+            if (connectResult.Success)
+            {
+                // Success - update connection status
+                IsConnected = true;
+                StatusMessage = connectResult.Message;
+                OnPropertyChanged(nameof(IsDatabaseReady));
+                OnPropertyChanged(nameof(CurrentDatabasePath));
+
+                // Show any warnings if present
+                if (connectResult.HasWarnings)
+                {
+                    var warnings = string.Join("; ", connectResult.Warnings);
+                    StatusMessage += $" Warnings: {warnings}";
+                }
+            }
+            else
+            {
+                // Failed - show errors from API
+                var errorMessage = string.Join("; ", connectResult.Errors);
+                StatusMessage = errorMessage;
+                IsConnected = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Error connecting to database: {ex.Message}";
+            IsConnected = false;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     /// <summary>

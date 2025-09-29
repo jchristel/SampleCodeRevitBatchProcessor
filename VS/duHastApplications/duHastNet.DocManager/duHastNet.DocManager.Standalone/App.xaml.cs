@@ -17,7 +17,7 @@ namespace DocManager.Standalone
         // Singleton instances for application lifetime
         private DocManagerApi? _docManagerApi;
         private Manager? _manager;
-        private MessageStore _messageStore;
+        private MessageStore? _messageStore;
 
         protected override void OnStartup(StartupEventArgs e)
         {

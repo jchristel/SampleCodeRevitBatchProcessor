@@ -106,5 +106,15 @@ def process_bim_360_file_data_row(row_data):
             bim360_revit_version=row_data[0],
         )
         return dummy
+    elif len(row_data) == 6:
+        dummy = fi.MyFileItem(
+            name=row_data[5],
+            size=int(row_data[4]),
+            bim360_project_guid=row_data[1],
+            bim360_file_guid=row_data[2],
+            bim360_revit_version=row_data[0],
+            bim360_region=row_data[3], # add region support
+        )
+        return dummy
     else:
         return None

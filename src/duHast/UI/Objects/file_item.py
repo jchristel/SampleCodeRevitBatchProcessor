@@ -40,6 +40,7 @@ class MyFileItem(base.Base):
         bim360_project_guid=None,
         bim360_file_guid=None,
         bim360_revit_version="-",
+        bim360_region=None,
         is_selected=False,
     ):
         """
@@ -65,6 +66,7 @@ class MyFileItem(base.Base):
         self.bim_360_project_guid = bim360_project_guid
         self.bim_360_file_guid = bim360_file_guid
         self.bim_360_revit_version = bim360_revit_version
+        self.bim_360_region = bim360_region
         self.is_selected = is_selected
 
     def __eq__(self, other):
@@ -83,12 +85,14 @@ class MyFileItem(base.Base):
             self.bim_360_project_guid,
             self.bim_360_file_guid,
             self.bim_360_revit_version,
+            self.bim_360_region,
         ) == (
             other.name,
             other.size,
             other.bim_360_project_guid,
             other.bim_360_file_guid,
             other.bim_360_revit_version,
+            other.bim_360_region,
         ):
             return True
         else:

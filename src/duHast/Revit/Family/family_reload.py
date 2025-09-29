@@ -38,6 +38,7 @@ from duHast.Revit.Common import delete as rDel
 
 from duHast.Utilities import files_get as fileGet
 from duHast.Utilities.Objects import result as res
+from duHast.Utilities.files_io import was_file_edited_in_time_span
 from duHast.Revit.Family import family_utils as rFamUtil
 from duHast.Revit.Family import family_load_option as famLoadOpt
 from duHast.Revit.Family.family_load_option import *
@@ -48,7 +49,10 @@ import Autodesk.Revit.DB as rdb
 # --------------------------------------------------- Family Loading / inserting -----------------------------------------
 
 
-def reload_all_families(doc, library_location, include_sub_folders):
+
+
+
+def reload_all_families(doc, library_location, include_sub_folders=False, time_span_in_minutes=None):
     """
     Reloads a number of families with setting: parameter values overwritten: True
 
@@ -59,7 +63,9 @@ def reload_all_families(doc, library_location, include_sub_folders):
     :type library_location: str
     :param include_sub_folders: _description_
     :type include_sub_folders: bool
-
+    :param time_span_in_minutes: the span of time in which the file was modified to be considered for reload, defaults to None
+    :type time_span_in_minutes: int, optional
+    
     :raises UserWarning: _description_
 
     :return: Returns True if any of the reload actions was successful.
@@ -98,6 +104,13 @@ def reload_all_families(doc, library_location, include_sub_folders):
                         result.update_sep(
                             True, "Found single match: {}".format(library[fam_name][0])
                         )
+
+                        # check if family was changed within time span, if not skip reload
+                        if time_span is not None:
+                            if was_file_edited_in_time_span(library[fam_name][0], time_span_in_minutes) == False:
+                                result.append_message("Family {} was not modified within time span of {} minutes...skipping reload.".format(fam_name, time_span_in_minutes))
+                                continue
+
                         # get all symbols attached to this family by name
                         prior_load_symbol_ids = fam.GetFamilySymbolIds()
                         # reload family

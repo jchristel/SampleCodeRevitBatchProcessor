@@ -32,7 +32,9 @@ import os.path
 import shutil
 import uuid
 
-
+# net import for directory delete with fall back
+from System.IO import Directory, IOException
+from System.Threading import Thread
 
 def is_directory(directory_path):
     """
@@ -80,6 +82,43 @@ def directory_delete(full_directory_path):
         return  True
     except Exception as e:
         return  False
+
+
+def directory_delete_with_fallback(full_directory_path, max_attempts=3, delay_ms=100):
+    """
+    Deletes a directory (even if it contains files)
+    If it fails, it will try again after a short wait
+
+    :param full_directory_path: Path to directory
+    :type full_directory_path: str
+    :param max_attempts: Number of attempts to delete the directory
+    :type max_attempts: int
+    :param delay_ms: Delay in milliseconds between attempts
+    :type delay_ms: int
+    :return: True directory deleted, otherwise False
+    :rtype: bool
+    """
+
+    for attempt in range(max_attempts):
+        try:
+            if Directory.Exists(full_directory_path):
+                # delete if it exists
+                Directory.Delete(full_directory_path, True)
+                return True
+            else:
+                # already gone
+                return True
+        except IOException as e:
+            if attempt < max_attempts - 1:
+                # wait a bit before retrying
+                Thread.Sleep(delay_ms)
+            else:
+                # last attempt failed
+                return False
+        except Exception as e:
+            # something went wrong
+            return False
+
 
 
 

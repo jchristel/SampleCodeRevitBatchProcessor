@@ -29,6 +29,7 @@ Helper functions relating to file IO operations.
 import os
 import shutil
 import re
+import time
 
 # from System.IO import Path
 
@@ -436,3 +437,29 @@ def is_last_char_newline(file_path):
         last_char = file.read(1)
         
         return last_char == b'\n'
+
+
+def was_file_edited_in_time_span( file_path, time_span_in_minutes): 
+    """
+    Checks whether a file was edited in the given time span (in minutes) measured from current time.
+
+    :param file_path: The fully qualified file path.
+    :type file_path: str
+    :param time_span_in_minutes: The time span in minutes.
+    :type time_span_in_minutes: int
+
+    :return: True if the file was edited in the given time span, otherwise False.
+    :rtype: bool
+
+    """
+    
+    was_edited = False
+    try:
+        current_time = time.time()
+        file_mod_time = os.path.getmtime(file_path)
+        time_diff = current_time - file_mod_time
+        if time_diff <= time_span_in_minutes * 60:
+            was_edited = True
+    except Exception:
+        pass
+    return was_edited

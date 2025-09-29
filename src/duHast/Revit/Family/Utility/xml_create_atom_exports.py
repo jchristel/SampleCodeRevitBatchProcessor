@@ -36,16 +36,38 @@ import datetime
 import tempfile
 
 from duHast.UI.file_list import get_revit_files
-from duHast.Utilities.files_io import get_file_name_without_ext, file_exist
+from duHast.Utilities.files_io import get_file_name_without_ext, get_file_extension, file_exist, copy_file, file_delete
 from duHast.Utilities.files_xml import read_xml_file
-from duHast.Utilities.directory_io import directory_exists, create_temp_directory
+from duHast.Utilities.directory_io import directory_exists, create_temp_directory, directory_delete_with_fallback
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Utilities.Objects.result import Result
 from duHast.UI.Objects.ProgressBase import ProgressBase
 
 
 def copy_family_to_local_directory(family_path, local_directory):
-    pass
+    """
+    Copy a family to a local directory.
+
+    :param family_path: path to the family
+    :type family_path: str
+    :param local_directory: local directory to copy the family to
+    :type local_directory: str
+
+    :return: path to the copied family or None if copy failed
+    :rtype: str
+    """
+
+    family_file_name = get_file_name_without_ext(family_path) + get_file_extension(family_path)
+    family_name_temp = os.path.join(local_directory, family_file_name)
+
+    # copy the family to the local directory
+    copy_flag = copy_file(family_path, family_name_temp)
+
+    if copy_flag:
+        return family_name_temp
+    else:
+        return None
+
 
 def get_families_from_directory(directory):
     """
@@ -396,16 +418,17 @@ def create_family_xml_files(
             )
         )
 
-    temp_dir = None
-    # set up a local temp directory if required
-    if use_temp_directory:
-        temp_dir = create_temp_directory()
 
     # set up a timer
     t = Timer()
     t.start()
 
     try:
+
+        temp_dir = None
+        # set up a local temp directory if required
+        if use_temp_directory:
+            temp_dir = create_temp_directory()
 
         # loop through directories
         for directory in process_directories:
@@ -457,6 +480,9 @@ def create_family_xml_files(
                 # iterate through families
                 for family in families_to_update:
 
+                    # set up family name temp
+                    family_name_temp = family
+
                     # check if we need to use a local directory mapper
                     if process_directories_to_local_directories_mapper is not None:
                         # check if we have a mapping for this directory
@@ -468,24 +494,65 @@ def create_family_xml_files(
                                 ],
                             )
 
+                            # check if the copy was successful
+                            if family_name_temp is None:
+                                return_value.append_message(
+                                    "Failed to copy family to local directory, skipping family: {}".format(
+                                        family
+                                    )
+                                )
+                                continue
+                            else:
+                                return_value.append_message(
+                                    "Copied family to local directory: {}".format(
+                                        family_name_temp
+                                    )
+                                )
+
                     # check if we need to use a temp directory
                     if process_directories_to_local_directories_mapper is None and use_temp_directory:
                         family_name_temp = copy_family_to_local_directory(family, temp_dir)
+                        # check if the copy was successful
+                        if family_name_temp is None:
+                            return_value.append_message(
+                                "Failed to copy family to temp directory, skipping family: {}".format(
+                                    family
+                                )
+                            )
+                            continue
+                        else:
+                            return_value.append_message(
+                                "Copied family to temp directory: {}".format(family_name_temp)
+                            )
 
                     # get the family name
-                    fam_name = get_file_name_without_ext(family)
+                    fam_name = get_file_name_without_ext(family_name_temp)
 
                     # update progress
                     if progress_callback:
                         progress_callback.update(fam_counter, max_fam, fam_name)
 
-                    create_xml_file(revit_application, family)
+                    # create the xml file
+                    create_xml_file(revit_application, family_name_temp)
                     return_value.append_message(
                         "Created xml file for family: {}".format(fam_name)
                     )
 
                     # update counter
                     fam_counter += 1
+
+                    # delete the temp family if we used a temp directory
+                    if family_name_temp != family and use_temp_directory:
+                        if file_exist(family_name_temp):
+                            delete_flag = file_delete(family_name_temp)
+                            if delete_flag:
+                                return_value.append_message(
+                                    "Deleted temp family file: {}".format(family_name_temp)
+                                )
+                            else:
+                                return_value.append_message(
+                                    "Failed to delete temp family file: {}".format(family_name_temp)
+                                )
 
                     # check for user cancel
                     if progress_callback != None:
@@ -497,6 +564,20 @@ def create_family_xml_files(
         return_value.append_message(
             "Successfully created family atom exports: {}".format(t.stop())
         )
+
+        # delete temp directory if used
+        if temp_dir is not None:
+            if directory_exists(temp_dir):
+                delete_temp_flag = directory_delete_with_fallback (temp_dir)
+                if delete_temp_flag:
+                    return_value.append_message(
+                        "Deleted temp directory: {}".format(temp_dir)
+                    )
+                else:
+                    return_value.append_message(
+                        "Failed to delete temp directory: {}".format(temp_dir)
+                    )
+                
 
     except Exception as e:
         return_value.update_sep(

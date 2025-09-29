@@ -33,6 +33,11 @@ namespace duHastNet.DocManager.Core.Models
     {
         private List<Document> _documents;
 
+        public int DocumentCount
+        {
+            get { return _documents.Count; }
+        }
+
         #region get documents
 
         /// <summary>
@@ -56,7 +61,42 @@ namespace duHastNet.DocManager.Core.Models
 
         #endregion get documents
 
+        #region custom properties
+
+        /// <summary>
+        /// Get a list of all the custom property names
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetAllCustomPropertyNames()
+        {
+            //get the custom property names of the first document only since they are the same for all documents
+            if (_documents.Count == 0)
+            {
+                return [];
+            }
+
+            var doc = _documents[0];
+            List<string> propertyNames = [];
+            foreach (var prop in doc.CustomProperties)
+            {
+                propertyNames.Add(prop.PropertyName);
+            }
+            
+            return propertyNames;
+        }
+
+
+        #endregion custom properties
+
         #region edit documents
+
+        /// <summary>
+        /// removes all documents from the container
+        /// </summary>
+        public void ClearDocuments()
+        {
+            _documents.Clear();
+        }
 
         /// <summary>
         /// adds a document to the container

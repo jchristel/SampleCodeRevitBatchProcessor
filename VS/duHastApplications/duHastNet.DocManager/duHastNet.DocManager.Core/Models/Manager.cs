@@ -35,6 +35,11 @@ namespace duHastNet.DocManager.Core.Models
         /// </summary>
         private readonly RevisionContainer _revisionContainer;
 
+        /// <summary>
+        /// Flag indicating data has been loaded from the database
+        /// </summary>
+        public bool IsDataLoaded { get; private set; }
+
         #region Documents
 
         #region get documents
@@ -46,6 +51,14 @@ namespace duHastNet.DocManager.Core.Models
         public IEnumerable<Document> GetAllDocuments()
         {
             return _documentContainer.GetAllDocuments();
+        }
+
+        /// <summary>
+        /// Number of documents in the container
+        /// </summary>
+        public int DocumentCount
+        {
+            get { return _documentContainer.DocumentCount; }
         }
 
         /// <summary>
@@ -73,6 +86,19 @@ namespace duHastNet.DocManager.Core.Models
 
         #endregion edit documents
 
+        #region custom properties
+
+        /// <summary>
+        /// Returns a list of all custom property names in the document container
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> GetAllCustomPropertyNames()
+        {
+            return _documentContainer.GetAllCustomPropertyNames();
+        }
+
+        #endregion custom properties
+
         #endregion Documents
 
         #region Revisions
@@ -86,6 +112,14 @@ namespace duHastNet.DocManager.Core.Models
         public IEnumerable<Revision> GetAllRevisions()
         {
             return _revisionContainer.GetAllRevisions();
+        }
+
+        /// <summary>
+        /// number of revisions in the container
+        /// </summary>
+        public int RevisionCount
+        {
+            get { return _revisionContainer.RevisionCount; }
         }
 
         #endregion get revisions
@@ -105,6 +139,27 @@ namespace duHastNet.DocManager.Core.Models
 
         #endregion Revisions
 
+        #region data operations
+
+        /// <summary>
+        /// Marks data as loaded (called by DocManagerApi after loading data)
+        /// </summary>
+        internal void MarkDataAsLoaded()
+        {
+            IsDataLoaded = true;
+        }
+
+        /// <summary>
+        /// Clears the data in all containers
+        /// </summary>
+        public void ClearData()
+        {
+            _documentContainer.ClearDocuments();
+            _revisionContainer.ClearRevisions();
+        }
+
+
+        #endregion data operations
         /// <summary>
         /// bussiness logic manager containing all documents and revisions of a project
         /// </summary>
@@ -112,6 +167,9 @@ namespace duHastNet.DocManager.Core.Models
         { 
             _documentContainer = new DocumentContainer();
             _revisionContainer = new RevisionContainer();
+
+            // set default loader flag
+            IsDataLoaded = false;
         }
     }
 }

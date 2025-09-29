@@ -1,6 +1,7 @@
-﻿using System.IO;
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
+using duHastNet.DocManager.UI.Shared.Stores;
 using Microsoft.Win32;
+using System.IO;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels;
 
@@ -20,7 +21,9 @@ public partial class SettingsViewModel
         try
         {
             IsBusy = true;
-            StatusMessage = "Selecting database location...";
+
+            // Inform user
+            _messageStore.SetCurrentMessage("Creating database...", MessageTypes.Information);
 
             // Configure and show SaveFileDialog
             var saveDialog = new SaveFileDialog
@@ -38,36 +41,61 @@ public partial class SettingsViewModel
             if (dialogResult != true)
             {
                 // User cancelled
-                StatusMessage = "Database creation cancelled";
                 return;
             }
 
             // Update the database path
             DatabasePath = saveDialog.FileName;
-            StatusMessage = "Creating database...";
 
             // Create the database using DocManagerApi
             var setupResult = await _docManagerApi.SetupDatabaseAsync(DatabasePath, overwriteExisting: true);
 
             if (setupResult.Success)
             {
-                // Success - update connection status
-                IsConnected = true;
-                StatusMessage = $"Database created successfully: {Path.GetFileName(DatabasePath)}";
+                // Load data into Manager
+                var loadResult = await _docManagerApi.LoadDataIntoManagerAsync(_manager);
+
+                if (loadResult.Success)
+                {
+                    // Success - update connection status and statistics
+                    IsConnected = true;
+
+                    // Inform user of success with auto-dismiss
+                    _messageStore.SetCurrentMessage(
+                        $"Database created successfully: {Path.GetFileName(DatabasePath)}",
+                        MessageTypes.Information,
+                        10); // Auto-dismiss after 10 seconds
+
+                    UpdateStatistics();
+                }
+                else
+                {
+                    // Database created but data load failed
+                    IsConnected = true;
+                }
+
                 OnPropertyChanged(nameof(IsDatabaseReady));
                 OnPropertyChanged(nameof(CurrentDatabasePath));
+                OnPropertyChanged(nameof(IsDataLoaded));
             }
             else
             {
-                // Failed - show errors
                 var errorMessage = string.Join("; ", setupResult.Errors);
-                StatusMessage = $"Failed to create database: {errorMessage}";
+                _messageStore.SetCurrentMessage(
+                    $"Failed to create database: {errorMessage}",
+                    MessageTypes.Error); // No auto-dismiss for errors
+
+                // Failed - database not created
                 IsConnected = false;
             }
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Error creating database: {ex.Message}";
+            // Inform user of error
+            _messageStore.SetCurrentMessage(
+                $"Error creating database: {ex.Message}",
+                MessageTypes.Error);
+
             IsConnected = false;
         }
         finally
@@ -85,37 +113,39 @@ public partial class SettingsViewModel
         try
         {
             IsBusy = true;
-            StatusMessage = "Connecting to database...";
 
             // Connect to existing database using the API method
             var connectResult = await _docManagerApi.ConnectDatabaseAsync(DatabasePath);
 
             if (connectResult.Success)
             {
-                // Success - update connection status
-                IsConnected = true;
-                StatusMessage = connectResult.Message;
+                // Load data into Manager
+                var loadResult = await _docManagerApi.LoadDataIntoManagerAsync(_manager);
+
+                if (loadResult.Success)
+                {
+                    // Success - update connection status and statistics
+                    IsConnected = true;
+                    UpdateStatistics();
+                }
+                else
+                {
+                    // Database connected but data load failed
+                    IsConnected = true;
+                }
+
                 OnPropertyChanged(nameof(IsDatabaseReady));
                 OnPropertyChanged(nameof(CurrentDatabasePath));
-
-                // Show any warnings if present
-                if (connectResult.HasWarnings)
-                {
-                    var warnings = string.Join("; ", connectResult.Warnings);
-                    StatusMessage += $" Warnings: {warnings}";
-                }
+                OnPropertyChanged(nameof(IsDataLoaded));
             }
             else
             {
-                // Failed - show errors from API
-                var errorMessage = string.Join("; ", connectResult.Errors);
-                StatusMessage = errorMessage;
+                // Failed - connection failed
                 IsConnected = false;
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            StatusMessage = $"Error connecting to database: {ex.Message}";
             IsConnected = false;
         }
         finally
@@ -145,12 +175,11 @@ public partial class SettingsViewModel
             if (dialogResult == true)
             {
                 DatabasePath = openDialog.FileName;
-                StatusMessage = "Database file selected. Click Connect to open.";
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            StatusMessage = $"Error selecting database file: {ex.Message}";
+            // Handle silently or add logging
         }
     }
 
@@ -218,6 +247,20 @@ public partial class SettingsViewModel
     {
         // TODO: Implement database schema update
         await Task.CompletedTask;
+    }
+
+    #endregion
+
+    #region Helper Methods
+
+    /// <summary>
+    /// Updates statistics from the Manager
+    /// </summary>
+    private void UpdateStatistics()
+    {
+        LoadedDocumentCount = _manager.DocumentCount;
+        LoadedRevisionCount = _manager.RevisionCount;
+        CustomPropertyCount = _manager.GetAllCustomPropertyNames().Count();
     }
 
     #endregion

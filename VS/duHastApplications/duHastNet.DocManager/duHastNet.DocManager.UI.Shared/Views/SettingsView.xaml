@@ -42,7 +42,13 @@
         </Grid>
         <!-- message banner -->
         <Grid Grid.Row="1">
-
+            <Grid.RowDefinitions>
+                <!-- banner row -->
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <local:GlobalMessageView Grid.Row="1" 
+                              DataContext="{Binding MessageViewModel}"
+                              Margin="0 5 0 5"/>
         </Grid>
         <!-- current documents management expander -->
         <Border Grid.Row="2" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">

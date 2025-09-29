@@ -28,7 +28,20 @@ namespace duHastNet.DocManager.Core.Models
     {
         private List<Revision> _revisions;
 
+        public int RevisionCount
+        {
+            get { return _revisions.Count; }
+        }
+
         #region get revisions
+
+        /// <summary>
+        /// clear all revisions
+        /// </summary>
+        public void ClearRevisions()
+        {
+            _revisions.Clear();
+        }
 
         /// <summary>
         /// returns all revisions

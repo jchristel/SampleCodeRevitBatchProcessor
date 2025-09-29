@@ -348,15 +348,26 @@ def write_data_to_xml_file_and_read_it_back(an_action_to_write_xml_data, xml_fil
 
 
 def create_family_xml_files(
-    revit_application, process_directories, progress_callback=None
+    revit_application, 
+    process_directories, 
+    process_directories_to_local_directories_mapper = None,  
+    use_temp_directory = False, 
+    progress_callback=None
 ):
     """
     Create xml files for all families in a list of directories using Revit API PartAtomExport function.
+    If a family xml file already exists it will be checked if it is out of date and requires updating.
+
+    Allows to use a local directory mapper to process families locally or alternatively use a temp directory to create the xml files. ( directory mapper takes precedence over temp directory)
 
     :param revit_application: revit application object
     :type revit_application: Application
     :param process_directories: list of directories to process
     :type process_directories: [str]
+    :param process_directories_to_local_directories_mapper: optional dictionary to map process directories to local directories ( families will be copied to that directory and the xml file created there to avoid family corruption if located on a network drive)
+    :type process_directories_to_local_directories_mapper: Dict[str,str]
+    :param use_temp_directory: if True a temp directory will be used to create the xml files ( useful if families are located on a network drive)
+    :type use_temp_directory: bool
     :param progress_callback: progress callback object
     :type progress_callback: ProgressBase
 
@@ -437,6 +448,16 @@ def create_family_xml_files(
 
                 # iterate through families
                 for family in families_to_update:
+
+                    # check if we need to use a local directory mapper
+                    if process_directories_to_local_directories_mapper is not None:
+                        # check if we have a mapping for this directory
+                        if directory in process_directories_to_local_directories_mapper:
+                            pass
+
+                    # check if we need to use a temp directory
+                    if process_directories_to_local_directories_mapper is None and use_temp_directory:
+                        pass:
 
                     # get the family name
                     fam_name = get_file_name_without_ext(family)

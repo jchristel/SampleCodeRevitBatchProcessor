@@ -288,7 +288,7 @@ def bucket_to_task_list_bim_360(item):
     :return: The revit version, project guid, file guid separated by a space ' '
     :rtype: str
     """
-    if (item.bim360_region=None):
+    if (item.bim_360_region is None):
         return " ".join(
             [item.bim_360_revit_version, item.bim_360_project_guid, item.bim_360_file_guid])
     else:

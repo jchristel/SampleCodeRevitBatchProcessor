@@ -34,6 +34,15 @@ from duHast.pyRevit.directory_picker import get_process_directories
 from duHast.Utilities.files_csv import write_report_data_as_csv
 from families.util.print_table import print_result_table
 
+# check if we have some filter function in the root directory lib folder - if not use defaults
+# expecting a function named 'filter_data' that takes a nested list of strings representing the xml data to be filtered
+# function will need to return a nested list of strings representing the filtered data
+try:
+    from settings_xml_library_writer import filter_data
+    HAS_FILTER_DATA = True
+except Exception:
+    HAS_FILTER_DATA = False
+    filter_data = None
 
 
 def report_families_in_library_entry(doc, output, forms):
@@ -104,6 +113,12 @@ def report_families_in_library_entry(doc, output, forms):
             )
         )
 
+        # check if report data is going to be filtered
+        if HAS_FILTER_DATA:
+            print("Filtering family data...")
+            family_data = filter_data(family_data)
+            print("Number of families found in library after filter applied: {}".format(len(family_data)))
+
         # print comparison result to pyRevit output
         print_result_table(
             output=output,
@@ -125,7 +140,7 @@ def report_families_in_library_entry(doc, output, forms):
             write_result = write_report_data_as_csv(
                 file_name=file_path,
                 header=LIBRARY_FAMILIES_HEADER,
-                data=report_result.result,
+                data=family_data,
                 quoting=csv.QUOTE_MINIMAL,
             )
             if write_result.status:

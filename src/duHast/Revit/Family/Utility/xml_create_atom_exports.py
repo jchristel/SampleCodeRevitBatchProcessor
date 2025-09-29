@@ -38,11 +38,14 @@ import tempfile
 from duHast.UI.file_list import get_revit_files
 from duHast.Utilities.files_io import get_file_name_without_ext, file_exist
 from duHast.Utilities.files_xml import read_xml_file
-from duHast.Utilities.directory_io import directory_exists
+from duHast.Utilities.directory_io import directory_exists, create_temp_directory
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Utilities.Objects.result import Result
 from duHast.UI.Objects.ProgressBase import ProgressBase
 
+
+def copy_family_to_local_directory(family_path, local_directory):
+    pass
 
 def get_families_from_directory(directory):
     """
@@ -393,6 +396,11 @@ def create_family_xml_files(
             )
         )
 
+    temp_dir = None
+    # set up a local temp directory if required
+    if use_temp_directory:
+        temp_dir = create_temp_directory()
+
     # set up a timer
     t = Timer()
     t.start()
@@ -453,11 +461,16 @@ def create_family_xml_files(
                     if process_directories_to_local_directories_mapper is not None:
                         # check if we have a mapping for this directory
                         if directory in process_directories_to_local_directories_mapper:
-                            pass
+                            family_name_temp = copy_family_to_local_directory(
+                                family,
+                                process_directories_to_local_directories_mapper[
+                                    directory
+                                ],
+                            )
 
                     # check if we need to use a temp directory
                     if process_directories_to_local_directories_mapper is None and use_temp_directory:
-                        pass:
+                        family_name_temp = copy_family_to_local_directory(family, temp_dir)
 
                     # get the family name
                     fam_name = get_file_name_without_ext(family)

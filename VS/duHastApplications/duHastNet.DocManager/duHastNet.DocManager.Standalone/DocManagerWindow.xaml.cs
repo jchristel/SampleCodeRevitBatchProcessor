@@ -14,9 +14,9 @@ namespace DocManager.Standalone
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class DocManagerWindow : Window
     {
-        public MainWindow()
+        public DocManagerWindow()
         {
             InitializeComponent();
         }

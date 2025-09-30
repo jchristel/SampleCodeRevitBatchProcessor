@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="duHastNet.DocManager.UI.Shared.Views.NavigationHostView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:duHastNet.DocManager.UI.Shared.Views"
+             xmlns:viewmodels="clr-namespace:duHastNet.DocManager.UI.Shared.ViewModels"
+             mc:Ignorable="d" 
+             Width="Auto" 
+             Height="Auto"
+             d:DataContext="{d:DesignInstance Type=viewmodels:NavigationHostViewModel}">
+    
+    <UserControl.Resources>
+        <!-- DataTemplate for SettingsViewModel -->
+        <DataTemplate DataType="{x:Type viewmodels:SettingsViewModel}">
+            <local:SettingsView/>
+        </DataTemplate>
+
+        <!-- DataTemplate for MergeViewModel -->
+        <DataTemplate DataType="{x:Type viewmodels:MergeViewModel}">
+            <local:MergeView/>
+        </DataTemplate>
+
+        <!-- Add more DataTemplates here for other ViewModels as needed -->
+    </UserControl.Resources>
+    <Grid>
+        <local:SettingsView DataContext="{Binding CurrentViewModel}"/>
+    </Grid>
+</UserControl>

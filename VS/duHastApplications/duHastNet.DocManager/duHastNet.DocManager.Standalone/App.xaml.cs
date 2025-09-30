@@ -35,12 +35,12 @@ namespace DocManager.Standalone
 
             // Create the main window with ViewModel
             // Pass both API and Manager to the ViewModel
-            MainWindow = new MainWindow()
+            MainWindow = new DocManagerWindow()
             {
-                DataContext = new SettingsViewModel(
+                DataContext = new NavigationHostViewModel(
                     docManagerApi: _docManagerApi,
-                    manager: _manager, 
-                    messageStore:_messageStore)
+                    manager: _manager,
+                    messageStore: _messageStore)
             };
 
             MainWindow.Show();

@@ -18,9 +18,9 @@ namespace duHastNet.DocManager.UI.Shared.Views
     /// <summary>
     /// Interaction logic for MainView.xaml
     /// </summary>
-    public partial class MainView : UserControl
+    public partial class NavigationHostView : UserControl
     {
-        public MainView()
+        public NavigationHostView()
         {
             InitializeComponent();
         }

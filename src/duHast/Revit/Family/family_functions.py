@@ -74,6 +74,27 @@ def get_name_and_category_to_family_dict(rvt_doc):
     return family_dict
 
 
+def get_category_name_to_family_dict(rvt_doc):
+    """
+    Create a dictionary of family name and the Family element
+    :param rvt_doc: Revit document
+    :type rvt_doc: Autodesk.Revit.DB.Document
+    :return: Dictionary of family name and Family element
+    :rtype: dict
+    """
+
+    # Get all the families in the model
+    all_families = FilteredElementCollector(rvt_doc).OfClass(Family).ToElements()
+    # create a dictionary of family category name and family object
+    family_dict = {}
+    for fam in all_families:
+        if category_name not in family_dict:
+            family_dict[category_name] = []
+        family_dict[category_name].append(fam)
+
+    return family_dict
+
+
 def get_symbol_names_of_family(family):
     """
     Get all the symbol names of a family

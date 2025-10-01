@@ -36,7 +36,7 @@ import datetime
 import tempfile
 
 from duHast.UI.file_list import get_revit_files
-from duHast.Utilities.files_io import get_file_name_without_ext, get_file_extension, file_exist, copy_file, file_delete
+from duHast.Utilities.files_io import get_file_name_without_ext, get_file_extension, file_exist, copy_file, file_delete, get_directory_path_from_file_path
 from duHast.Utilities.files_xml import read_xml_file
 from duHast.Utilities.directory_io import directory_exists, create_temp_directory, directory_delete_with_fallback
 from duHast.Utilities.Objects.timer import Timer
@@ -57,17 +57,65 @@ def copy_family_to_local_directory(family_path, local_directory):
     :rtype: str
     """
 
+    # copy the family
     family_file_name = get_file_name_without_ext(family_path) + get_file_extension(family_path)
     family_name_temp = os.path.join(local_directory, family_file_name)
 
     # copy the family to the local directory
     copy_flag = copy_file(family_path, family_name_temp)
 
-    if copy_flag:
-        return family_name_temp
-    else:
+    # check if copy was successful
+    if not copy_flag:
         return None
 
+
+    # get the source directory to build catalogue file name
+    source_directory = get_directory_path_from_file_path(family_path)
+    
+    # copy the catalogue file (if there is one )
+    catalogue_file_name = get_file_name_without_ext(family_path) + ".txt"
+    catalogue_file_name_temp = os.path.join(local_directory, catalogue_file_name)
+
+    source_catalogue_file = os.path.join(source_directory, catalogue_file_name)
+    # copy the catalogue file if it exists
+    if( file_exist(source_catalogue_file)):
+        # copy the family to the local directory
+        copy_flag_catalogue = copy_file(source_catalogue_file, catalogue_file_name_temp )
+
+    # return the path to the copied family
+    return family_name_temp
+   
+
+def copy_xml_file_to_original_directory(family_path, local_directory):
+    """
+    Copy an xml file from a local directory to the original directory.
+
+    :param family_path: path to the family
+    :type family_path: str
+    :param local_directory: local directory to copy the xml file from
+    :type local_directory: str
+
+    :return: path to the copied xml file or None if copy failed
+    :rtype: str
+    """
+
+    # copy the xml file
+    xml_file_name = get_file_name_without_ext(family_path) + ".xml"
+    xml_file_name_temp = os.path.join(local_directory, xml_file_name)
+
+    # get the original directory to copy the xml file to
+    original_directory = get_directory_path_from_file_path(family_path)
+    xml_file_name_original = os.path.join(original_directory, xml_file_name)
+
+    # copy the xml file to the original directory
+    copy_flag = copy_file(xml_file_name_temp, xml_file_name_original)
+
+    # check if copy was successful
+    if not copy_flag:
+        return None
+
+    # return the path to the copied xml file
+    return xml_file_name_original
 
 def get_families_from_directory(directory):
     """
@@ -535,11 +583,27 @@ def create_family_xml_files(
                     # create the xml file
                     create_xml_file(revit_application, family_name_temp)
                     return_value.append_message(
-                        "Created xml file for family: {}".format(fam_name)
+                        "Created xml file for family: {}".format(family_name_temp)
                     )
 
                     # update counter
                     fam_counter += 1
+
+                    # copy the xml file back to the original directory if we used a local directory mapper or temp directory
+                    if family_name_temp != family:
+                        copy_flag = copy_xml_file_to_original_directory(family, get_directory_path_from_file_path(family_name_temp))
+                        if copy_flag is None:
+                            return_value.append_message(
+                                "Failed to copy xml file back to original directory for family: {}".format(
+                                    fam_name
+                                )
+                            )
+                        else:
+                            return_value.append_message(
+                                "Copied xml file back to original directory for family: {}".format(
+                                    fam_name
+                                )
+                            )
 
                     # delete the temp family if we used a temp directory
                     if family_name_temp != family and use_temp_directory:

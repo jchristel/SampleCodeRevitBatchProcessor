@@ -28,6 +28,20 @@ from duHast.pyRevit.directory_picker import get_process_directories
 from duHast.pyRevit.console_output import print_header
 from duHast.Revit.Family.Utility.xml_create_atom_exports import create_family_xml_files
 
+# try to import local settings
+# this is a directory mapper for network locations to local locations
+# in format of a dictionary
+# e.g. {"Z:your_folder_here": "C:/LocalFolder", ...}
+
+HAS_LOCAL_SETTINGS = False
+try:
+    from xml_path_mapper import NETWORK_PATH_MAPPER
+    print("Imported local settings...")
+    HAS_LOCAL_SETTINGS = True
+except Exception as e:
+    print("No local settings imported...")
+    NETWORK_PATH_MAPPER = None
+
 
 def create_part_atom_exports_in_library_entry(doc, output, forms):
     """
@@ -49,6 +63,7 @@ def create_part_atom_exports_in_library_entry(doc, output, forms):
     try:
 
         print_header("Getting directories")
+
         # get user to select library directories to process
         process_dirs_result = get_process_directories(forms)
         if not process_dirs_result.status:
@@ -75,6 +90,8 @@ def create_part_atom_exports_in_library_entry(doc, output, forms):
             create_result = create_family_xml_files(
                 revit_application=doc.Application,
                 process_directories=process_dirs,
+                process_directories_to_local_directories_mapper=NETWORK_PATH_MAPPER,
+                use_temp_directory = False,
                 progress_callback=progress_callback
             )
 

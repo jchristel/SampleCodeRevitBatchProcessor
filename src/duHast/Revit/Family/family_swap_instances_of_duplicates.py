@@ -39,10 +39,35 @@ from duHast.Revit.Common import transaction as rTran
 from duHast.Utilities.Objects import result as res
 from family_find_duplicate import *
 from duHast.UI.Objects.ProgressBase import ProgressBase
+from duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type import FamilyDirectiveSwap
+from duHast.Revit.Family.family_swap_instances_of_types import _swap_loaded_family_instances
+from duHast.Revit.Family.family_functions import get_name_and_category_to_family_dict
 
 from Autodesk.Revit.DB import Element, ElementId, Transaction
 
-DEBUG = True
+DEBUG = False
+
+def get_swap_directive(doc, source_type_id, target_type_id):
+    # get the family types
+    source_family_type = doc.GetElement(ElementId(source_type_id))
+    target_family_type = doc.GetElement(ElementId(target_type_id))
+
+    # get the source family
+    source_family = source_family_type.Family
+    source_family_category_name = source_family.FamilyCategory.Name
+    
+    directive = FamilyDirectiveSwap(
+        name=Element.Name.GetValue(source_family),
+        category=source_family_category_name,
+        source_type_name=Element.Name.GetValue(source_family_type),
+        target_family_name=Element.Name.GetValue(target_family_type.Family),
+        target_family_type_name = Element.Name.GetValue(target_family_type)
+    )
+
+    If DEBUG:
+        print ("Created directive: \n{}".format(directive.formatted_indented_str(1,"...")))
+    
+    return directive
 
 def swap_family_instances_of_duplicates(doc, progress_callback=None):
     """
@@ -75,7 +100,6 @@ def swap_family_instances_of_duplicates(doc, progress_callback=None):
         )
     
     try:
-        print ("here...")
         # attempt to find duplicate families
         duplicate_families = find_duplicate_families(doc)
         
@@ -89,13 +113,17 @@ def swap_family_instances_of_duplicates(doc, progress_callback=None):
             return_value.update_sep(True, "No duplicate families found.", [])
             return return_value
         
-        # find duplicate types in families
+        
+        # list to hold all swap directives
+        swap_directives = []
 
+        # find duplicate types in families
         for fam_id, families in duplicate_families.items():
             
             if DEBUG:
                 print ("Processing family id: {}".format(fam_id))
             
+            # get the target family
             target_family = doc.GetElement(fam_id)
 
             if DEBUG:
@@ -103,10 +131,48 @@ def swap_family_instances_of_duplicates(doc, progress_callback=None):
 
             # get the duplicate families
             for duplicate_family in families:
+
                 if DEBUG:
                     print ("duplicate_family: {}".format(duplicate_family.Name))
+                
+                # find matching types between families
                 target_mapper = find_matching_types_between_families (duplicate_family, target_family)
-                print ("target_mapper: {}".format(target_mapper))
+
+                # if there are no matching types, skip to next duplicate family
+                if len(target_mapper) == 0:
+                    msg = "No matching types found between duplicate family: {} and target family: {}. Skipping.".format(duplicate_family.Name, target_family.Name)
+                    if DEBUG:
+                        print (msg)
+                    return_value.append_message(msg)
+                    continue
+            
+                # set up swap directives
+                for dup_type_id, target_type_id in target_mapper.items():
+                    
+                    # build directive
+                    directive = get_swap_directive(doc, dup_type_id, target_type_id)
+
+                    # add to overall list of directives
+                    swap_directives.append(directive)
+                    if DEBUG:
+                        print ("Added swap directive: \n{}".format(directive.formatted_indented_str(1,"...")))
+
+        if DEBUG:
+            print ("Total swap directives: {}".format(len(swap_directives)))
+        
+        # swap the instances
+        if len(swap_directives)==0:
+            return_value.update_sep(True, "No matching family types found between duplicate families and target families. No swaps performed.", [])
+            return return_value
+        
+        # get all family in file
+        families = get_name_and_category_to_family_dict(doc)
+
+        # perform swap
+        swap_result = _swap_loaded_family_instances(doc, swap_directives, families, progress_callback)
+
+        print (swap_result)
+
     except Exception as e:
         return_value.update_sep(
             False,

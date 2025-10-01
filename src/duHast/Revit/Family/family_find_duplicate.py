@@ -27,6 +27,17 @@ To identify a duplicated family:
         - the remaining string being the same as another family, of the same Revit category, followed by none alphabetical characters ( make sure its not the same family )
 
 
+
+
+A second part of this module is to find matching types for two given families by their type names. This is useful when replacing a family with another one and wanting to keep the same type (i.e. duplicate families).
+
+When creating duplicate families in a project Revit either keeps the type name the same or appends a " 1" or " 2" etc to the type name.
+
+A match therefore is defined as either:
+- the type name being the same as another type name in the other family
+- the type name being the same as another type name in the other family followed by 2 none none alphabetical characters (first character is a space, second character is a number)
+
+
 """
 
 #
@@ -54,7 +65,7 @@ To identify a duplicated family:
 
 
 from duHast.Revit.Family.family_functions import get_category_name_to_family_dict
-
+from Autodesk.Revit.DB import Element
 
 def get_duplicate_family_root_name (family_name):
     """
@@ -130,7 +141,7 @@ def find_duplicate_families (doc):
     
     # get all families in the document
     all_families = get_category_name_to_family_dict(doc)
-
+   
     for category_name, families in all_families.items():
         if len(families) > 1:
             # we have multiple families in this category, check for duplicates
@@ -149,3 +160,42 @@ def find_duplicate_families (doc):
                         pass
     
     return duplicate_families
+
+
+def find_matching_types_between_families (source_family, target_family):
+    """
+    Finds matching types between two families based on type names.
+
+    :param source_family: Source family to find matching types for.
+    :type source_family: Autodesk.Revit.DB.Family
+
+    :param target_family: Target family to find matching types in.
+    :type target_family: Autodesk.Revit.DB.Family
+
+    :return: Dictionary of source type id and target type id. If no match is found the source type id is not included in the dictionary.
+    :rtype: dict[int, int]
+    """
+
+    matching_types = {}
+
+    # get all types in the source family
+    source_types = list(source_family.GetFamilySymbolIds())
+    target_types = list(target_family.GetFamilySymbolIds())
+
+    # compare type names
+    for source_type_id in source_types:
+        source_type = source_family.Document.GetElement(source_type_id)
+        source_type_name = Element.Name.GetValue(source_type)
+        for target_type_id in target_types:
+            target_type = target_family.Document.GetElement(target_type_id)
+            target_type_name = Element.Name.GetValue(target_type)
+            if source_type_name == target_type_name:
+                matching_types[source_type.Id.IntegerValue] = target_type.Id.IntegerValue
+            else:
+                # check if the type name starts with the source type name and is followed by " " and a number
+                if target_type_name.startswith(source_type_name):
+                    if len(target_type_name) > len(source_type_name) + 2:
+                        if target_type_name[len(source_type_name)] == " " and target_type_name[len(source_type_name)+1].isnumeric():
+                            matching_types[source_type.Id.IntegerValue] = target_type.Id.IntegerValue
+
+    return matching_types

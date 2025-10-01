@@ -390,7 +390,7 @@ def _swap_loaded_family_instances(doc, swap_directives, families, progress_callb
 
         # get the target type to swap to
         target_type = target_result.result[0]
-        return_value.append_message("Target type to swap to: {}".format(Element.Name.GetValue(target_type)))
+        return_value.append_message("Target type to swap to: {} of family: {}".format(Element.Name.GetValue(target_type), swap_directive.name))
 
         # set up an action swapping out instance
         def action():

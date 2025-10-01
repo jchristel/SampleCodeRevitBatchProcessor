@@ -88,6 +88,7 @@ def get_category_name_to_family_dict(rvt_doc):
     # create a dictionary of family category name and family object
     family_dict = {}
     for fam in all_families:
+        category_name = fam.FamilyCategory.Name
         if category_name not in family_dict:
             family_dict[category_name] = []
         family_dict[category_name].append(fam)

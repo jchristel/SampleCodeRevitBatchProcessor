@@ -67,6 +67,34 @@ def file_delete(full_file_path):
     return value
 
 
+def files_delete_in_directory(directory_path, file_pattern="*.*"):
+    """
+    Deletes all files in a directory matching the given file pattern.
+
+    :param directory_path: Fully qualified directory path
+    :type directory_path: str
+    :param file_pattern: File pattern to match, defaults to "*.*"
+    :type file_pattern: str
+    :return: True if all files deleted, otherwise False
+    :rtype: bool
+    """
+    value = True
+    try:
+        # Convert the file pattern to a regex pattern
+        regex_pattern = re.compile(fnmatch.translate(file_pattern))
+        for file_name in os.listdir(directory_path):
+            if regex_pattern.match(file_name):
+                full_file_path = os.path.join(directory_path, file_name)
+                if os.path.isfile(full_file_path):
+                    try:
+                        os.remove(full_file_path)
+                    except Exception:
+                        continue
+    except Exception:
+        value = False
+    return value
+
+
 def get_directory_path_from_file_path(file_path):
     """
     Extracts directory from file path.

@@ -199,6 +199,32 @@ def create_directory(root, folder_name):
     return flag
 
 
+def create_nested_directory(directory_path):
+    """
+    Creates a directory and all necessary subdirectories.
+
+    :param directory_path: Fully qualified directory path
+    :type directory_path: str
+    
+    :return: True if directory is created, otherwise False
+    :rtype: bool
+    """
+    try:
+        import clr
+        clr.AddReference("System")
+        from System.IO import Directory
+
+        # Create the directory and all necessary subdirectories
+        Directory.CreateDirectory(directory_path)
+
+        return True
+    except Exception:
+
+        return False
+
+
+print(f"Directory created: {target_path}")
+
 def create_target_directory(root_path, folder_name):
     """
     Create a folder.

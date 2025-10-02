@@ -64,7 +64,7 @@ def get_swap_directive(doc, source_type_id, target_type_id):
         target_family_type_name = Element.Name.GetValue(target_family_type)
     )
 
-    If DEBUG:
+    if DEBUG:
         print ("Created directive: \n{}".format(directive.formatted_indented_str(1,"...")))
     
     return directive

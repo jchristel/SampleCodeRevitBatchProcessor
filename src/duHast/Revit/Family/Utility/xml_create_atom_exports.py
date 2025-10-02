@@ -38,7 +38,7 @@ import tempfile
 from duHast.UI.file_list import get_revit_files
 from duHast.Utilities.files_io import get_file_name_without_ext, get_file_extension, file_exist, copy_file, file_delete, get_directory_path_from_file_path
 from duHast.Utilities.files_xml import read_xml_file
-from duHast.Utilities.directory_io import directory_exists, create_temp_directory, directory_delete_with_fallback
+from duHast.Utilities.directory_io import directory_exists, create_temp_directory, create_nested_directory, directory_delete_with_fallback
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Utilities.Objects.result import Result
 from duHast.UI.Objects.ProgressBase import ProgressBase
@@ -57,6 +57,13 @@ def copy_family_to_local_directory(family_path, local_directory):
     :rtype: str
     """
 
+    # check if the local directory exists
+    if (directory_exists(local_directory) == False):
+        # try to create it
+        create_flag = create_nested_directory(local_directory)
+        if not create_flag:
+            throw Exception("Failed to create local directory: {}".format(local_directory))
+
     # copy the family
     family_file_name = get_file_name_without_ext(family_path) + get_file_extension(family_path)
     family_name_temp = os.path.join(local_directory, family_file_name)
@@ -66,7 +73,7 @@ def copy_family_to_local_directory(family_path, local_directory):
 
     # check if copy was successful
     if not copy_flag:
-        return None
+        throw Exception("Failed to copy family to local directory: {}".format(local_directory))
 
 
     # get the source directory to build catalogue file name

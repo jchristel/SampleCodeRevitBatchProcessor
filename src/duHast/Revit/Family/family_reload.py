@@ -106,7 +106,7 @@ def reload_all_families(doc, library_location, include_sub_folders=False, time_s
                         )
 
                         # check if family was changed within time span, if not skip reload
-                        if time_span is not None:
+                        if time_span_in_minutes is not None:
                             if was_file_edited_in_time_span(library[fam_name][0], time_span_in_minutes) == False:
                                 result.append_message("Family {} was not modified within time span of {} minutes...skipping reload.".format(fam_name, time_span_in_minutes))
                                 continue

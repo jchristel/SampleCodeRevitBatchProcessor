@@ -223,8 +223,6 @@ def create_nested_directory(directory_path):
         return False
 
 
-print(f"Directory created: {target_path}")
-
 def create_target_directory(root_path, folder_name):
     """
     Create a folder.

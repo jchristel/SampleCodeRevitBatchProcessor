@@ -62,7 +62,7 @@ def copy_family_to_local_directory(family_path, local_directory):
         # try to create it
         create_flag = create_nested_directory(local_directory)
         if not create_flag:
-            throw Exception("Failed to create local directory: {}".format(local_directory))
+            raise Exception("Failed to create local directory: {}".format(local_directory))
 
     # copy the family
     family_file_name = get_file_name_without_ext(family_path) + get_file_extension(family_path)
@@ -73,7 +73,7 @@ def copy_family_to_local_directory(family_path, local_directory):
 
     # check if copy was successful
     if not copy_flag:
-        throw Exception("Failed to copy family to local directory: {}".format(local_directory))
+        raise Exception("Failed to copy family to local directory: {}".format(local_directory))
 
 
     # get the source directory to build catalogue file name

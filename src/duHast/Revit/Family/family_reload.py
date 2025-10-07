@@ -38,7 +38,7 @@ from duHast.Revit.Common import delete as rDel
 
 from duHast.Utilities import files_get as fileGet
 from duHast.Utilities.Objects import result as res
-from duHast.Utilities.files_io import was_file_edited_in_time_span
+from duHast.Utilities.files_io import was_file_edited_in_time_span, time_span_file_edited_last
 from duHast.Revit.Family import family_utils as rFamUtil
 from duHast.Revit.Family import family_load_option as famLoadOpt
 from duHast.Revit.Family.family_load_option import *
@@ -108,7 +108,8 @@ def reload_all_families(doc, library_location, include_sub_folders=False, time_s
                         # check if family was changed within time span, if not skip reload
                         if time_span_in_minutes is not None:
                             if was_file_edited_in_time_span(library[fam_name][0], time_span_in_minutes) == False:
-                                result.append_message("Family {} was not modified within time span of {} minutes...skipping reload.".format(fam_name, time_span_in_minutes))
+                                time_last_edited = time_span_file_edited_last(library[fam_name][0])
+                                result.append_message("Family {} was not modified within time span of {} minutes. Edited last: {} ago...skipping reload.".format(fam_name, time_span_in_minutes, time_last_edited))
                                 continue
 
                         # get all symbols attached to this family by name

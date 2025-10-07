@@ -483,11 +483,38 @@ def was_file_edited_in_time_span( file_path, time_span_in_minutes):
     
     was_edited = False
     try:
-        current_time = time.time()
-        file_mod_time = os.path.getmtime(file_path)
-        time_diff = current_time - file_mod_time
-        if time_diff <= time_span_in_minutes * 60:
+        time_diff_in_min = time_span_file_edited_last(file_path)
+        
+        # check if all went ok, if not return false
+        if time_diff_in_min == -1:
+            return False
+
+        # check if file was edited in given time span
+        if time_diff_in_min <= time_span_in_minutes:
             was_edited = True
     except Exception:
         pass
     return was_edited
+
+
+def time_span_file_edited_last(file_path):
+    """
+    Returns the time span in minutes since the file was last edited measured from current time.
+
+    :param file_path: The fully qualified file path.
+    :type file_path: str
+
+    :return: The time span in minutes since the file was last edited. -1 if an exception occurred.
+    :rtype: int
+
+    """
+    
+    time_span = -1
+    try:
+        current_time = time.time()
+        file_mod_time = os.path.getmtime(file_path)
+        time_diff = current_time - file_mod_time
+        time_span = int(time_diff / 60)
+    except Exception:
+        pass
+    return time_span

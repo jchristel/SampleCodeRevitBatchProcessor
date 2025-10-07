@@ -86,8 +86,12 @@ def get_fill_pattern_id(doc, data_pattern):
     """
 
     all_patterns = pattern_ids_by_name(doc)
-    if data_pattern.name in all_patterns:
-        return all_patterns[data_pattern.name][0]
+
+    # the pattern name may contain utf-8 characters, so we need to check for that ( replace with ? if not found)
+    utf_8_name = data_pattern.name.encode("utf-8", "replace").decode("utf-8")
+
+    if utf_8_name in all_patterns:
+        return all_patterns[utf_8_name][0]
     else:
         return ElementId.InvalidElementId
 
@@ -106,6 +110,10 @@ def get_line_pattern_id(doc, data_pattern):
     """
 
     all_patterns = build_patterns_dictionary_by_name(doc)
+
+    # the pattern name may contain utf-8 characters, so we need to check for that
+    utf_8_name = data_pattern.name.encode("utf-8", "replace").decode("utf-8")
+
     if data_pattern.name in all_patterns:
         return all_patterns[data_pattern.name][0]
     elif data_pattern.name == PatternSettingBase.SOLID_PATTERN:

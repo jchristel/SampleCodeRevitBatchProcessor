@@ -111,13 +111,16 @@ def _check_pattern_in_model(pattern_from_model, pattern_data):
     for key, value in pattern_data.items():
         # ignore any pattern with -1 as id...its the default for no pattern assigned
         if value.id != -1:
-            if key not in pattern_from_model:
+            # the json import may contain patterns with non utf-8 characters in the name!
+            # reformat the key to replace non utf-8 characters with ?
+            key_utf_8 = key.encode("utf-8", "replace").decode("utf-8")
+            if key_utf_8 not in pattern_from_model:
                 return_value.update_sep(
-                    False, "{}......does not exist in model.".format(key)
+                    False, "{}......does not exist in model.".format(key_utf_8)
                 )
-                no_match.append(key)
+                no_match.append(key_utf_8)
             else:
-                return_value.update_sep(True, "{}......exists in model.".format(key))
+                return_value.update_sep(True, "{}......exists in model.".format(key_utf_8))
         else:
             return_value.update_sep(True, "{}......ignored -1".format(key))
 

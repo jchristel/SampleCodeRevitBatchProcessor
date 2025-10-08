@@ -76,7 +76,7 @@ namespace duHastNet.DocManager.Core.Models
         /// <summary>
         /// These rules are used to distribute the documents to folders, if current document sets are maintained across multiples.
         /// </summary>
-        private List<Models.FilingRule>? _filingRules;
+        private List<Interfaces.IFilingRule>? _filingRules;
 
 
         #region add new documents
@@ -111,19 +111,23 @@ namespace duHastNet.DocManager.Core.Models
 
         #region filing rules
 
-        public void AddFilingRule(Models.FilingRule filingRule)
+        public void AddFilingRule(Interfaces.IFilingRule filingRule)
         {
             throw new NotImplementedException();
         }
 
-        public void RemoveFilingRule(Models.FilingRule filingRule)
+        public void RemoveFilingRule(Interfaces.IFilingRule filingRule)
         {
             throw new NotImplementedException();
         }
 
         public void ClearFilingRules()
         {
-            _filingRules.Clear();
+            //clear all rules
+            if (_filingRules != null)
+            {
+                _filingRules.Clear();
+            }
         }
 
 

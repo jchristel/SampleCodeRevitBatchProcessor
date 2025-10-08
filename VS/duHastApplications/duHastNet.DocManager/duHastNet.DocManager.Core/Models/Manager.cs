@@ -41,6 +41,11 @@ namespace duHastNet.DocManager.Core.Models
         private readonly Interfaces.ICloudMetaData _cloudMetaData;
 
         /// <summary>
+        /// A class which manages (maintains) a folder or folders with a set of current documents
+        /// </summary>
+        private Models.CurrentFolderManager _currentFolderManager;
+
+        /// <summary>
         /// Flag indicating data has been loaded from the database
         /// </summary>
         public bool IsDataLoaded { get; private set; }

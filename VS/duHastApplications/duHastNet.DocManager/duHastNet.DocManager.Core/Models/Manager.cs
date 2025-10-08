@@ -36,6 +36,11 @@ namespace duHastNet.DocManager.Core.Models
         private readonly RevisionContainer _revisionContainer;
 
         /// <summary>
+        /// The cloud meta data interface implementation
+        /// </summary>
+        private readonly Interfaces.ICloudMetaData _cloudMetaData;
+
+        /// <summary>
         /// Flag indicating data has been loaded from the database
         /// </summary>
         public bool IsDataLoaded { get; private set; }

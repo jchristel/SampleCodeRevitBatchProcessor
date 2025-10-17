@@ -24,11 +24,11 @@
 
 namespace duHastNet.DocManager.Core.Models.FilingRules
 {
-    public class BeginsWith : Interfaces.IFilingRule
+    public class CatchAll : Interfaces.IFilingRule
     {
-        public string Name => "Begins With";
+        public string Name => "Default";
 
-        public string Description => "The file name need to begin with the comparison string";
+        public string Description => "All valid file names will be selected.";
 
         private readonly string _comparisonValue;
         public string ComparisonValue => _comparisonValue;
@@ -44,10 +44,10 @@ namespace duHastNet.DocManager.Core.Models.FilingRules
             //get the file name from path
             string fileName = System.IO.Path.GetFileName(path);
 
-            //check if it begins with comparison value
+            //check if we have a file name
             if (!string.IsNullOrEmpty(fileName))
             {
-                return fileName.StartsWith(_comparisonValue);
+                return true;
             }
             else
             {
@@ -55,7 +55,7 @@ namespace duHastNet.DocManager.Core.Models.FilingRules
             }
         }
 
-        public BeginsWith(string comparisonValue)
+        public CatchAll(string comparisonValue)
         {
             _comparisonValue = comparisonValue;
         }

@@ -21,6 +21,8 @@
 //
 //
 
+using duHastNet.DocManager.Core.Models.CurrentFolder;
+
 namespace duHastNet.DocManager.Core.Models
 {
     public class Manager
@@ -43,7 +45,7 @@ namespace duHastNet.DocManager.Core.Models
         /// <summary>
         /// A class which manages (maintains) a folder or folders with a set of current documents
         /// </summary>
-        private Models.CurrentFolderManager _currentFolderManager;
+        private CurrentFolderManager _currentFolderManager;
 
         /// <summary>
         /// Flag indicating data has been loaded from the database

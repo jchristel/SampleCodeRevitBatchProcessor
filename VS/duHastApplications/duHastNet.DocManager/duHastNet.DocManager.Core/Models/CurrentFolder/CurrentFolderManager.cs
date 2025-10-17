@@ -27,7 +27,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace duHastNet.DocManager.Core.Models
+namespace duHastNet.DocManager.Core.Models.CurrentFolder
 {
     /// <summary>
     /// a class which manages documents in a current folder or multiple folders.
@@ -38,7 +38,8 @@ namespace duHastNet.DocManager.Core.Models
     /// Multiple folder can be used when documentation is split into packages with a large number of documents each.
     /// This allowes for multiple folders with an easier (less) document structure
     /// </summary>
-    public class CurrentFolderManager
+    /// 
+    public partial class CurrentFolderManager
     {
         /// <summary>
         /// the path top the folder containing the incoming documents
@@ -93,20 +94,7 @@ namespace duHastNet.DocManager.Core.Models
 
         #endregion add new documents
 
-        #region supersede documents
-
-        /// <summary>
-        /// Attempts to match up files in the current folder system with incoming new versions of documents.
-        /// If any matches are found these files are moved into the superseded location.
-        /// </summary>
-        /// <param name="newDocuments"></param>
-        /// <returns>A list of file path of documents which could not be moved into the superseded location, combined with an error message why the move failed.</returns>
-        public List<string>? SupersedeDocuments(List<Document> newDocuments)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion supersede documents
+        
 
 
         #region filing rules

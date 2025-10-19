@@ -1,9 +1,4 @@
 ﻿//
-//License:
-//
-//
-// Revit Batch Processor Sample Code
-//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -21,20 +16,13 @@
 //
 //
 
-namespace duHastNet.DocManager.Core.Models
+namespace duHastNet.DocManager.Core.Interfaces
 {
-    public class SupportedFileTypes
+    public interface IDocumentNumberModifier
     {
-        public string FileExtension { get; set; }
-        public string Description { get; set; }
-
         /// <summary>
-        /// a class which holds a single supported file type for documents
+        /// the modified document number
         /// </summary>
-        public SupportedFileTypes(string fileExtension, string description)
-        {
-            FileExtension = fileExtension;
-            Description = description;
-        }
+        string DocumentNumber(string number);
     }
 }

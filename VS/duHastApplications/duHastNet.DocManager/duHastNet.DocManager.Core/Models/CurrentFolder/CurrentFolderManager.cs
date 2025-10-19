@@ -21,11 +21,6 @@
 //
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHastNet.DocManager.Core.Models.CurrentFolder
 {
@@ -82,7 +77,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         /// <summary>
         /// A list of file types which are supported by the document manager
         /// </summary>
-        private List<Models.SupportedFileTypes>? _supportedFileTypes;
+        private List<Models.SupportedFileType>? _supportedFileTypes;
 
         /// <summary>
         /// Represents a collection of matched incoming document.
@@ -138,11 +133,11 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         #endregion
 
         #region supported file types
-        public void AddSupportedFileType(Models.SupportedFileTypes supportedFileType)
+        public void AddSupportedFileType(Models.SupportedFileType supportedFileType)
         {
             throw new NotImplementedException();
         }
-        public void RemoveSupportedFileType(Models.SupportedFileTypes supportedFileType)
+        public void RemoveSupportedFileType(Models.SupportedFileType supportedFileType)
         {
             throw new NotImplementedException();
         }

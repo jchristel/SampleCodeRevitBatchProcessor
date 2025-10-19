@@ -21,34 +21,32 @@
 //
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHastNet.DocManager.Core.Models.CurrentFolder
 {
     public partial class CurrentFolderManager
     {
+
+        #region identifying incoming files and matching them to current documents
+
         /// <summary>
         /// Checks if there are any supported files in the incoming folder.
         /// if any errors occur during the process, they are logged in the _errors list.
         /// if no supported files are found, an empty list is returned.
         /// </summary>
-        private List<string> GetSupportedFilesFromIncomingFolder()
+        private List<string> GetSupportedFilesFromFolder(string? folderPath)
         {
             List<string> supportedIncomingFiles = [];
 
-            if (string.IsNullOrEmpty(_incomingFolderPath) || !System.IO.Directory.Exists(_incomingFolderPath))
+            if (string.IsNullOrEmpty( folderPath) || !System.IO.Directory.Exists(folderPath))
             {
                 // log error
-                _errors.Add(new Exceptions.FolderDoesNotExistException(_incomingFolderPath ?? "null"));
+                _errors.Add(new Exceptions.FolderDoesNotExistException(folderPath ?? "null"));
                 return supportedIncomingFiles;
             }
 
             // check if there are any new documents
-            List<string> incomingFiles = System.IO.Directory.GetFiles(_incomingFolderPath, "*", System.IO.SearchOption.AllDirectories).ToList();
+            List<string> incomingFiles = System.IO.Directory.GetFiles(folderPath, "*", System.IO.SearchOption.AllDirectories).ToList();
 
             if (incomingFiles.Count == 0)
             {
@@ -100,7 +98,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             // check revision prefix and suffix are set
 
             //check incoming folder
-            var files = GetSupportedFilesFromIncomingFolder();
+            var files = GetSupportedFilesFromFolder(_incomingFolderPath);
             if (files.Count == 0)
             {
                 return false;
@@ -178,22 +176,85 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             return true;
         }
 
-        private Document GetDocumentByNumber(string documentNumber)
+        /// <summary>
+        /// Generates a list of document number options based on the provided document number and supported file types.
+        /// </summary>
+        /// <param name="number">The original document number to be processed.</param>
+        /// <returns>A list of document number options. If supported file types are defined, the list contains modified document
+        /// numbers based on each supported file type. If no supported file types are defined, the list contains the
+        /// original document number.</returns>
+        private List<string> GetDocumentNumberOptionsForDocument(string number)
         {
-            // Summary:
-            // get document from database by document number and revision
-            // this is a simplified example, actual implementation may vary based on database access
-            Document document = new Document(); // placeholder for actual database access logic
-            return document;
+            List<string> documentNumberOptions = new List<string>();
+            if (_supportedFileTypes != null && _supportedFileTypes.Count != 0)
+            {
+                // loop over all supported file types and get modified document numbers
+                foreach (var supportedType in _supportedFileTypes)
+                {
+                    string modifiedNumber = supportedType.GetModifiedDocumentNumber(number);
+                    documentNumberOptions.Add(modifiedNumber);
+                }
+            }
+            else
+            {
+                // no supported file types defined, use original number
+                documentNumberOptions.Add(number);
+            }
+            return documentNumberOptions;
         }
-        private string? GetDocumentNumberFromFileName(string fileName)
+
+        /// <summary>
+        /// Returns the document id based on the document number extracted from the specified file name by comparing it against a list of current documents.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="currentDocuments"></param>
+        /// <returns></returns>
+        private int? GetDocumentIdFromFileName(string fileName, List<Document> currentDocuments)
         {
             // Summary:
             // extract document number from file name
             // this is a simplified example, actual implementation may vary based on naming conventions
-            string? documentNumber = null;
+            int? documentId = null;
 
-            return documentNumber;
+            //dictionary to hold document number options and their corresponding files
+            Dictionary<string, int> docNumberMatchesMapper = [];
+
+            // loop over all documents in the database and check if the file name contains the document number
+            foreach (var doc in currentDocuments)
+            {
+                //get the various document numbers for each supported document type of the base document
+                List<string> documentNumberOptions = GetDocumentNumberOptionsForDocument(doc.Number);
+
+                
+                foreach (var docNumberOption in documentNumberOptions)
+                {
+                    // check if file name contains the document number option
+                    if (fileName.Contains(docNumberOption, StringComparison.OrdinalIgnoreCase))
+                    {
+                        docNumberMatchesMapper[docNumberOption] = doc.Id;
+                    }
+                }
+            }
+
+            // check if we have multiple matches
+            // there is the possbility that a file name contains multiple matches i.e.
+            // DOC-123 and DOC-123-DWG
+            // in that case we need to select the most specific match (i.e. the longest match)
+            if (docNumberMatchesMapper.Count > 0)
+            {
+                // select the longest match (key value) from the mapping dictionary
+                var documentNumber = docNumberMatchesMapper.Keys.OrderByDescending(s => s.Length).First();
+                documentId = docNumberMatchesMapper[documentNumber];
+            }
+
+            // log an error if no document number (id) was found
+            if (documentId == null)
+            {
+                // log error
+                _errors.Add(new Exceptions.DocumentNotFoundException(fileName));
+            }
+
+            return documentId;
         }
 
         /// <summary>
@@ -211,7 +272,6 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         {
             // Summary:
             // extract revision from file name
-            // this is a simplified example, actual implementation may vary based on naming conventions
             string? revision = null;
 
             // check if revision prefix and suffix are set
@@ -251,7 +311,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             return revision;
         }
 
-        private Models.IncomingDocumentStatus ExtractDocumentMetadataFromFileName(string filePath)
+        private Models.IncomingDocumentStatus ExtractDocumentMetadataFromFileName(string filePath, List<Document> currentDocuments)
         {
             // Summary:
             // extract document number and revision from file name
@@ -261,16 +321,21 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             Models.IncomingDocumentStatus incomingDocumentStatus = new Models.IncomingDocumentStatus(filePath);
             string fileName = System.IO.Path.GetFileNameWithoutExtension(filePath);
 
-            // extract document number and revision from file name
-            // this is a simplified example, actual implementation may vary based on naming conventions
-            string? documentNumber = GetDocumentNumberFromFileName(fileName); 
+            // extract document number (doc id) and revision from file name
+            int? documentId = GetDocumentIdFromFileName(
+                fileName, 
+                currentDocuments
+            ); 
 
-            if (documentNumber == null)
+            if (documentId == null)
             {
-                // errors are logged in the GetDocumentNumberFromFileName method
+                // errors are logged in the GetDocumentIdFromFileName method
                 // return with no match
                 return incomingDocumentStatus;
             }
+
+            //store the id of the matched document
+            incomingDocumentStatus.MatchedDocumentId = documentId;
 
             // extract revision
             string? revision = GetRevisionFromFileName(fileName);
@@ -285,23 +350,9 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             // set incoming document revision
             incomingDocumentStatus.IncomingDocumentRevision = revision;
 
-            // compare extracted metadata with current documents in the database
-            // this is a simplified example, actual implementation may vary based on database access
-            // assuming we have a method GetDocumentByNumberAndRevision to get the document from the database
-            Document matchedDocument = GetDocumentByNumber(documentNumber);
-            if (matchedDocument != null)
-            {
-                incomingDocumentStatus.MatchedDocumentId = matchedDocument.Id;
-            }
-            else
-            {
-                incomingDocumentStatus.MatchedDocumentId = null;
-                // log warning
-                _errors.Add(new Exceptions.DocumentNotFoundException(filePath));
-            }
+            
             return incomingDocumentStatus;
         }
-
 
         /// <summary>
         /// matches incoming files against current documents in the database.
@@ -316,7 +367,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             // if a match is found, add to matchedDocuments list with status indicating a match
             // if no match is found, add to matchedDocuments list with status indicating no match
             
-            List<string> incomingFiles = GetSupportedFilesFromIncomingFolder();
+            List<string> incomingFiles = GetSupportedFilesFromFolder(_incomingFolderPath);
             // proceed only if there are incoming files, errors are logged in the GetSupportedFilesFromIncomingFolder method
             if (incomingFiles.Count == 0)
             {
@@ -341,7 +392,12 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             foreach (var filePath in incomingFiles)
             {
                 // extract metadata from file name
-                Models.IncomingDocumentStatus incomingDocument = ExtractDocumentMetadataFromFileName(filePath);
+                Models.IncomingDocumentStatus incomingDocument = ExtractDocumentMetadataFromFileName(
+                    filePath, 
+                    currentDocuments
+                );
+
+                // check if a match was found
                 if (incomingDocument.MatchedDocumentId == null)
                 {
                     // specific errors are logged in the ExtractDocumentMetadataFromFileName method
@@ -353,6 +409,9 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             return allFilesMatched;
         }
 
+        #endregion identifying incoming files and matching them to current documents
+
+        
         #region supersede documents
 
         /// <summary>
@@ -398,7 +457,18 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                 return false;
             }
 
-            return true;
+            // loop through all matched documents and supersede them
+            // move matched documents to superseded folder
+            // unlike the other steps, this step can partially fail, so we proceed even if some files could not be moved
+            bool moveSupersededFiles = MoveMatchedFilesToSupersededFolder(currentDocuments);
+
+            //move incoming documents to current folder(s)
+            //unlike the other steps, this step can partially fail, so we proceed even if some files could not be moved
+            bool moveIncomingFiles = MoveMatchedIncomingFilesToCurrentFolders(currentDocuments);
+
+            // return the result of both move operations
+            // both need to be successful for the overall operation to be considered successful
+            return moveSupersededFiles && moveIncomingFiles;
 
         }
 

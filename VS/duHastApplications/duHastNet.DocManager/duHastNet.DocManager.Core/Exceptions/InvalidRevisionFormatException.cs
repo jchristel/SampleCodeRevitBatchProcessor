@@ -21,42 +21,21 @@
 //
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace duHastNet.DocManager.Core.Models
+namespace duHastNet.DocManager.Core.Exceptions
 {
-    public class IncomingDocumentStatus
+    public class InvalidRevisionFormatException: Exception
     {
-        /// <summary>
-        /// a class to hold the status of an incoming document processing attempt
-        /// - the fully qualified file path of the new document
-        /// - the supersede status if applicable
-        /// - the database update status if applicable
-        /// </summary>
-
-        public CurrentFolder.SupersedeStatus? SupersedeStatus { get; set; }
-
-        /// the fully qualified file path of the new document
-        private readonly string _newDocumentPath;
-
-        /// the fully qualified file path of the new document
-        public string? NewDocumentPath { get => _newDocumentPath; }
-
-        /// <summary>
-        /// The matched document id in the database if applicable
-        /// null indicates no match found!
-        /// </summary>
-        public int? MatchedDocumentId { get; set; }
-
-        public string? IncomingDocumentRevision { get; set; }
-
-        public IncomingDocumentStatus(string newDocumentPath)
+        public InvalidRevisionFormatException()
         {
-            _newDocumentPath = newDocumentPath;
+        }
+
+        public InvalidRevisionFormatException(string message) : base(message)
+        {
+        }
+
+        public InvalidRevisionFormatException(string message, Exception innerException) : base(message, innerException)
+        {
         }
     }
 }

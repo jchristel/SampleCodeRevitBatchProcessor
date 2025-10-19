@@ -31,6 +31,60 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
 {
     public partial class CurrentFolderManager
     {
+        /// <summary>
+        /// Checks if there are any supported files in the incoming folder.
+        /// if any errors occur during the process, they are logged in the _errors list.
+        /// if no supported files are found, an empty list is returned.
+        /// </summary>
+        private List<string> GetSupportedFilesFromIncomingFolder()
+        {
+            List<string> supportedIncomingFiles = [];
+
+            if (string.IsNullOrEmpty(_incomingFolderPath) || !System.IO.Directory.Exists(_incomingFolderPath))
+            {
+                // log error
+                _errors.Add(new Exceptions.FolderDoesNotExistException(_incomingFolderPath ?? "null"));
+                return supportedIncomingFiles;
+            }
+
+            // check if there are any new documents
+            List<string> incomingFiles = System.IO.Directory.GetFiles(_incomingFolderPath, "*", System.IO.SearchOption.AllDirectories).ToList();
+
+            if (incomingFiles.Count == 0)
+            {
+                // log info
+                _errors.Add(new Exceptions.IncomingFolderEmptyException());
+                return supportedIncomingFiles;
+            }
+
+            // check if there are supported file types in the incoming folder
+            if (_supportedFileTypes != null && _supportedFileTypes.Count != 0)
+            {
+
+                // check supported file types
+                supportedIncomingFiles = incomingFiles.Where(file =>
+                    _supportedFileTypes.Any(supportedType =>
+                        file.EndsWith(supportedType.FileExtension, StringComparison.OrdinalIgnoreCase))).ToList();
+
+                if (supportedIncomingFiles.Count == 0)
+                {
+                    // build a list of supported file types
+                    string supportedTypesList = string.Join(", ", _supportedFileTypes.Select(t => t.FileExtension));
+
+                    // log info
+                    _errors.Add(new Exceptions.IncomingFolderEmptyException($"Incoming folder does not contain any supported file type: {supportedTypesList}"));
+                    return supportedIncomingFiles;
+                }
+            }
+            else
+            {
+                // log error
+                _errors.Add(new Exceptions.IncomingFolderEmptyException("No supported file types defined, all files in incoming folder will be ignored."));
+                return supportedIncomingFiles;
+            }
+
+            return supportedIncomingFiles;
+        }
 
         /// <summary>
         /// Validates if all prerequisites are met to start the supersede process
@@ -43,51 +97,15 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             // also need to make sure that the superseded folder exists
             // check if target current folder is set ( for single folder mode) and if not multiple folders are in use if all of them exist
             // return true if all prerequisites are met, otherwise false
+            // check revision prefix and suffix are set
 
             //check incoming folder
-            if (string.IsNullOrEmpty(_incomingFolderPath) || !System.IO.Directory.Exists(_incomingFolderPath))
+            var files = GetSupportedFilesFromIncomingFolder();
+            if (files.Count == 0)
             {
-                // log error
-                _errors.Add(new Exceptions.FolderDoesNotExistException(_incomingFolderPath ?? "null"));
                 return false;
             }
-
-            // check if there are any new documents
-            List<string> incomingFiles = System.IO.Directory.GetFiles(_incomingFolderPath, "*", System.IO.SearchOption.AllDirectories).ToList();
             
-            if (incomingFiles.Count == 0)
-            {
-                // log info
-                _errors.Add(new Exceptions.IncomingFolderEmptyException());
-                return false;
-            }
-
-            // check if there are supported file types in the incoming folder
-            if (_supportedFileTypes != null && _supportedFileTypes.Count != 0)
-            {
-
-                // check supported file types
-                List<string> supportedIncomingFiles = incomingFiles.Where(file =>
-                    _supportedFileTypes.Any(supportedType =>
-                        file.EndsWith(supportedType.FileExtension, StringComparison.OrdinalIgnoreCase))).ToList();
-
-                if (supportedIncomingFiles.Count == 0)
-                {
-                    // build a list of supported file types
-                    string supportedTypesList = string.Join(", ", _supportedFileTypes.Select(t => t.FileExtension));
-
-                    // log info
-                    _errors.Add(new Exceptions.IncomingFolderEmptyException($"Incoming folder does not contain any supported file type: {supportedTypesList}"));
-                    return false;
-                }
-            }
-            else
-            {
-                // log error
-                _errors.Add(new Exceptions.IncomingFolderEmptyException("No supported file types defined, all files in incoming folder will be ignored."));
-                return false;
-            }
-
             //check if current folder or folders exists
             if (string.IsNullOrEmpty(_currentFolderPath) && (_filingRules == null || _filingRules.Count == 0))
             {
@@ -147,9 +165,149 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                 _errors.Add(new Exceptions.FolderDoesNotExistException("Supersede folder path is not set."));
 
             }
+
+
+            // check revision prefix and suffix are set
+            if (string.IsNullOrEmpty(_revisionPrefix) || string.IsNullOrEmpty(_revisionSuffix))
+            {
+                // log error
+                _errors.Add(new Exceptions.InvalidRevisionFormatException("Revision prefix and/or suffix are not set."));
+                return false;
+            }
+
             return true;
         }
 
+        private Document GetDocumentByNumber(string documentNumber)
+        {
+            // Summary:
+            // get document from database by document number and revision
+            // this is a simplified example, actual implementation may vary based on database access
+            Document document = new Document(); // placeholder for actual database access logic
+            return document;
+        }
+        private string? GetDocumentNumberFromFileName(string fileName)
+        {
+            // Summary:
+            // extract document number from file name
+            // this is a simplified example, actual implementation may vary based on naming conventions
+            string? documentNumber = null;
+
+            return documentNumber;
+        }
+
+        /// <summary>
+        /// Extracts the revision identifier from the specified file name based on the configured prefix and suffix.
+        /// </summary>
+        /// <remarks>This method relies on the presence of a configured revision prefix and suffix to
+        /// locate the revision  within the file name. If either the prefix or suffix is not set, or if they are not
+        /// found in the file name,  the method returns <see langword="null"/> and logs an error. Additionally, if the
+        /// prefix appears after the  suffix in the file name, the method logs an error and returns <see
+        /// langword="null"/>.</remarks>
+        /// <param name="fileName">The name of the file from which to extract the revision identifier.</param>
+        /// <returns>The extracted revision identifier if both the prefix and suffix are found and properly formatted; 
+        /// otherwise, <see langword="null"/>.</returns>
+        private string? GetRevisionFromFileName(string fileName)
+        {
+            // Summary:
+            // extract revision from file name
+            // this is a simplified example, actual implementation may vary based on naming conventions
+            string? revision = null;
+
+            // check if revision prefix and suffix are set
+            if (_revisionPrefix == null || _revisionSuffix == null)
+            {
+                return revision;
+            }
+            int revisionEndIndex = fileName.LastIndexOf(_revisionSuffix);
+            int revisionStartIndex = fileName.LastIndexOf(_revisionPrefix);
+
+            // check if both prefix and suffix are found
+            if (revisionStartIndex == -1)
+            {
+                //log error
+                _errors.Add(new Exceptions.InvalidRevisionFormatException($"Revision prefix '{_revisionPrefix}' not found in file name '{fileName}'"));
+            }
+
+            if (revisionEndIndex == -1)
+            {
+                //log error
+                _errors.Add(new Exceptions.InvalidRevisionFormatException($"Revision suffix '{_revisionSuffix}' not found in file name '{fileName}'"));
+            }
+
+            if (revisionEndIndex > revisionStartIndex)
+            {
+                // extract revision
+                int start = revisionStartIndex + _revisionPrefix.Length;
+                int length = revisionEndIndex - start;
+                revision = fileName.Substring(start, length);
+            }
+            else
+            {
+                // log error
+                _errors.Add(new Exceptions.InvalidRevisionFormatException($"Invalid revision format in file name '{fileName}'"));
+            }
+
+            return revision;
+        }
+
+        private Models.IncomingDocumentStatus ExtractDocumentMetadataFromFileName(string filePath)
+        {
+            // Summary:
+            // extract document number and revision from file name
+            // compare extracted metadata with current documents in the database
+            // if a match is found, return IncomingDocumentStatus with matched document id
+            // if no match is found, return IncomingDocumentStatus with null matched document id
+            Models.IncomingDocumentStatus incomingDocumentStatus = new Models.IncomingDocumentStatus(filePath);
+            string fileName = System.IO.Path.GetFileNameWithoutExtension(filePath);
+
+            // extract document number and revision from file name
+            // this is a simplified example, actual implementation may vary based on naming conventions
+            string? documentNumber = GetDocumentNumberFromFileName(fileName); 
+
+            if (documentNumber == null)
+            {
+                // errors are logged in the GetDocumentNumberFromFileName method
+                // return with no match
+                return incomingDocumentStatus;
+            }
+
+            // extract revision
+            string? revision = GetRevisionFromFileName(fileName);
+            
+            if (revision == null)
+            {
+                // errors are logged in the GetRevisionFromFileName method
+                // return with no match
+                return incomingDocumentStatus;
+            }
+
+            // set incoming document revision
+            incomingDocumentStatus.IncomingDocumentRevision = revision;
+
+            // compare extracted metadata with current documents in the database
+            // this is a simplified example, actual implementation may vary based on database access
+            // assuming we have a method GetDocumentByNumberAndRevision to get the document from the database
+            Document matchedDocument = GetDocumentByNumber(documentNumber);
+            if (matchedDocument != null)
+            {
+                incomingDocumentStatus.MatchedDocumentId = matchedDocument.Id;
+            }
+            else
+            {
+                incomingDocumentStatus.MatchedDocumentId = null;
+                // log warning
+                _errors.Add(new Exceptions.DocumentNotFoundException(filePath));
+            }
+            return incomingDocumentStatus;
+        }
+
+
+        /// <summary>
+        /// matches incoming files against current documents in the database.
+        /// </summary>
+        /// <param name="currentDocuments"></param>
+        /// <returns>true if all files where matched to documents, otherwise false</returns>
         private bool MatchIncomingFilesToDocuments (List<Document> currentDocuments)
         {
             // loop through all incoming files
@@ -157,7 +315,42 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             // compare extracted metadata with current documents in the database
             // if a match is found, add to matchedDocuments list with status indicating a match
             // if no match is found, add to matchedDocuments list with status indicating no match
-            return true;
+            
+            List<string> incomingFiles = GetSupportedFilesFromIncomingFolder();
+            // proceed only if there are incoming files, errors are logged in the GetSupportedFilesFromIncomingFolder method
+            if (incomingFiles.Count == 0)
+            {
+                // log error
+                return false;
+            }
+
+            // whipe matched documents list
+            if (_matchedDocuments == null)
+            {
+                _matchedDocuments = new List<Models.IncomingDocumentStatus>();
+            }
+            else
+            {
+                _matchedDocuments.Clear();
+            }
+
+            // flag to indicate if all files were matched successfully
+            bool allFilesMatched = true;
+
+            // loop through all incoming files and extract metadata
+            foreach (var filePath in incomingFiles)
+            {
+                // extract metadata from file name
+                Models.IncomingDocumentStatus incomingDocument = ExtractDocumentMetadataFromFileName(filePath);
+                if (incomingDocument.MatchedDocumentId == null)
+                {
+                    // specific errors are logged in the ExtractDocumentMetadataFromFileName method
+                    allFilesMatched = false;
+                }
+                _matchedDocuments.Add(incomingDocument);
+            }
+
+            return allFilesMatched;
         }
 
         #region supersede documents
@@ -200,7 +393,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             
             // proceed only if matching was successful
             if (!matchedDocuments)
-                {
+            {
                 // log error
                 return false;
             }

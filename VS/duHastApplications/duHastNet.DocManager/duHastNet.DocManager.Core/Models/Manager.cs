@@ -172,6 +172,23 @@ namespace duHastNet.DocManager.Core.Models
 
 
         #endregion data operations
+
+        #region current folder manager
+
+        /// <summary>
+        /// supersedes documents in the current folder(s) using the current folder manager
+        /// </summary>
+        private void SupersedeDocuments()
+        {
+            bool supersede = _currentFolderManager.SupersedeDocuments(_documentContainer.GetAllDocuments().ToList());
+
+            //TODO handle result
+            //TODO update database if needed with new document revisions
+            //TODO log result (to file and/or UI)
+        }
+
+        #endregion current folder manager
+
         /// <summary>
         /// bussiness logic manager containing all documents and revisions of a project
         /// </summary>
@@ -179,6 +196,8 @@ namespace duHastNet.DocManager.Core.Models
         { 
             _documentContainer = new DocumentContainer();
             _revisionContainer = new RevisionContainer();
+            _cloudMetaData = new MetaDataMapperAconex();
+            _currentFolderManager = new CurrentFolderManager();
 
             // set default loader flag
             IsDataLoaded = false;

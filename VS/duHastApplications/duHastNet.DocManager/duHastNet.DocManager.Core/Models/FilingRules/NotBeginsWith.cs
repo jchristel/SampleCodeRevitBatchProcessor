@@ -33,6 +33,8 @@ namespace duHastNet.DocManager.Core.Models.FilingRules
         private readonly string _comparisonValue;
         public string ComparisonValue => _comparisonValue;
 
+        private readonly string _targetDirectory = string.Empty;
+        public string TargetDirectory => _targetDirectory;
         public bool IsMatch(string path)
         {
             //check for null or empty path
@@ -55,9 +57,10 @@ namespace duHastNet.DocManager.Core.Models.FilingRules
             }
         }
 
-        public NotBeginsWith(string comparisonValue)
+        public NotBeginsWith(string comparisonValue, string targetDirectory)
         {
             _comparisonValue = comparisonValue;
+            _targetDirectory = targetDirectory;
         }
     }
 }

@@ -93,21 +93,6 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         /// Contains any errors which occurred during operations
         /// </summary> 
         private List<Exception> _errors;
-
-        #region add new documents
-
-        /// <summary>
-        /// Attempts to move files from the incoming folder to current folder(s)
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public List<string>? AddNewDocuments()
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion add new documents
-
         
         #region filing rules
 

@@ -50,7 +50,7 @@ namespace duHastNet.DocManager.Core.Interfaces
         /// <summary>
         /// if a match is found, the target path to move the document to
         /// </summary>
-        string TargetFolderPath { get; }
+        string TargetDirectory { get; }
 
         bool IsMatch(string path);
     }

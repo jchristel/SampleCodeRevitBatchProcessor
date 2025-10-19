@@ -21,12 +21,6 @@
 //
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace duHastNet.DocManager.Core.Models.CurrentFolder
 {
     public partial class CurrentFolderManager
@@ -98,7 +92,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                     string fileName = System.IO.Path.GetFileName(documentPath!);
                     if (rule.IsMatch(fileName))
                     {
-                        return rule.TargetFolderPath;
+                        return rule.TargetDirectory;
                     }
                 }
             }

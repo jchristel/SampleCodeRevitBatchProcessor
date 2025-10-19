@@ -141,10 +141,10 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                 // multiple folders in use, check if all superseded folders exist
                 foreach (var rule in _filingRules)
                 {
-                    if (!System.IO.Directory.Exists(rule.TargetFolderPath))
+                    if (!System.IO.Directory.Exists(rule.TargetDirectory))
                     {
                         // log error
-                        _errors.Add(new Exceptions.FolderDoesNotExistException(rule.Description, rule.TargetFolderPath));
+                        _errors.Add(new Exceptions.FolderDoesNotExistException(rule.Description, rule.TargetDirectory));
                         allFoldersExist = false;
                     }
                 }

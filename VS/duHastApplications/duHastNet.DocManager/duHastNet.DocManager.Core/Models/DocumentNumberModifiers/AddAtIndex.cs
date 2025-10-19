@@ -1,9 +1,4 @@
 ﻿//
-//License:
-//
-//
-// Revit Batch Processor Sample Code
-//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -21,46 +16,26 @@
 //
 //
 
-
-namespace duHastNet.DocManager.Core.Models.FilingRules
+namespace duHastNet.DocManager.Core.Models.DocumentNumberModifiers
 {
-    public class NotContains : Interfaces.IFilingRule
+    public class AddAtIndex : Interfaces.IDocumentNumberModifier
     {
-        public string Name => "Not Contains";
+        /// <summary>
+        /// this class adds a suffix at a particular index to a document number
+        /// </summary>
+        private readonly string _value;
 
-        public string Description => "The file name need to not contain the comparison string";
+        private readonly int _index;
 
-        private readonly string _comparisonValue;
-        public string ComparisonValue => _comparisonValue;
-
-        private readonly string _targetDirectory = string.Empty;
-        public string TargetDirectory => _targetDirectory;
-        public bool IsMatch(string path)
+        public string DocumentNumber(string number)
         {
-            //check for null or empty path
-            if (string.IsNullOrEmpty(path))
-            {
-                return false;
-            }
-
-            //get the file name from path
-            string fileName = System.IO.Path.GetFileName(path);
-
-            //check if it does not contain the comparison value
-            if (!string.IsNullOrEmpty(fileName))
-            {
-                return !fileName.Contains(_comparisonValue);
-            }
-            else
-            {
-                return false;
-            }
+            return number.Insert(_index,_value);
         }
 
-        public NotContains(string comparisonValue, string targetDirectory)
+        public AddAtIndex(string value, int index)
         {
-            _comparisonValue = comparisonValue;
-            _targetDirectory = targetDirectory;
+            _value = value;
+            _index = index;
         }
     }
 }

@@ -53,6 +53,114 @@
         <!-- current documents management expander -->
         <Border Grid.Row="2" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
             <Expander  Header="Current Documents" Margin="5 5 5 5">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <!-- revision prefix suffix-->
+                        <RowDefinition Height="Auto" />
+                        <!-- incoming folder path -->
+                        <RowDefinition Height="Auto" />
+                        <!-- archive folder path -->
+                        <RowDefinition Height="Auto" />
+                        <!-- current folder system-->
+                        <RowDefinition Height="Auto" />
+                        <!-- supported file types -->
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- revision prefix suffix-->
+                    <Grid Grid.Row="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                            <TextBlock 
+                                Margin="5 10 5 10"
+                                Padding="0 0 5 0"
+                                Text="Revision Prefix:" />
+                            <TextBox
+                                x:Name="RevisionPrefixTextBox"
+                                Margin="5 10 5 10"
+                                Width="100"
+                                Text="{Binding RevisionPrefix, UpdateSourceTrigger=PropertyChanged}"
+                                />
+                            <TextBlock 
+                                Margin="15 10 5 10"
+                                Padding="0 0 5 0"
+                                Text="Revision Suffix:" />
+                            <TextBox
+                                x:Name="RevisionSuffixTextBox"
+                                Margin="5 10 5 10"
+                                Width="100"
+                                Text="{Binding RevisionSuffix, UpdateSourceTrigger=PropertyChanged}"
+                                />
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- incoming folder path -->
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock 
+                                Margin="5 10 5 10"
+                                Padding="0 0 5 0"
+                                Text="Incoming Folder Path:" />
+                            <TextBox
+                                x:Name="IncomingFolderPathTextBox"
+                                Margin="5 10 5 10"
+                                Width="400"
+                                Text="{Binding IncomingFolderPath, UpdateSourceTrigger=PropertyChanged}"
+                                />
+                            <Button 
+                                Margin="5 10 5 10" 
+                                Content="Browse"
+                                Command="{Binding BrowseIncomingFolderCommand}"
+                                IsEnabled="{Binding IsBrowseIncomingFolderEnabled}"
+                                />
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- archive folder path -->
+                    <Grid Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock 
+                                Margin="5 10 5 10"
+                                Padding="0 0 5 0"
+                                Text="Archive Folder Path:" />
+                            <TextBox
+                                x:Name="ArchiveFolderPathTextBox"
+                                Margin="5 10 5 10"
+                                Width="400"
+                                Text="{Binding ArchiveFolderPath, UpdateSourceTrigger=PropertyChanged}"
+                                />
+                            <Button 
+                                Margin="5 10 5 10" 
+                                Content="Browse"
+                                Command="{Binding BrowseArchiveFolderCommand}"
+                                IsEnabled="{Binding IsBrowseArchiveFolderEnabled}"
+                                />
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- current folder system-->
+                    <Grid Grid.Row="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                    </Grid>
+                    
+                    <!-- supported file types -->
+                    <Grid Grid.Row="4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                    </Grid>
+                </Grid>
             </Expander>
         </Border>
         <!-- aconex management expander -->

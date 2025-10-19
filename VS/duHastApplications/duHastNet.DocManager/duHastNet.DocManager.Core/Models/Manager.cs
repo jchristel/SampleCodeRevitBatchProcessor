@@ -111,6 +111,21 @@ namespace duHastNet.DocManager.Core.Models
 
         #endregion custom properties
 
+        /// <summary>
+        /// Exports the documents to a CSV file at the specified file path.
+        /// </summary>
+        /// <remarks>This method exports all documents contained in the current document container to a
+        /// CSV file.  Ensure that the specified file path is accessible and that the application has the necessary
+        /// permissions to write to it.</remarks>
+        /// <param name="filePath">The full path, including the file name, where the CSV file will be created. The path must be valid and
+        /// writable.</param>
+        /// <returns><see langword="true"/> if the documents were successfully exported to the CSV file; otherwise, <see
+        /// langword="false"/>.</returns>
+        public bool ExportDocumentsToCsv(string filePath)
+        {
+            return _documentContainer.ExportDocumentsToCsv(filePath);
+        }
+
         #endregion Documents
 
         #region Revisions

@@ -21,37 +21,34 @@
 //
 //
 
-namespace duHastNet.DocManager.Core.Interfaces
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace duHastNet.DocManager.Core.Models
 {
-    public interface IFilingRule
+    public class IncomingDocumentStatus
     {
         /// <summary>
-        /// the human readable name of the rule
+        /// a class to hold the status of an incoming document processing attempt
+        /// - the fully qualified file path of the new document
+        /// - the supersede status if applicable
+        /// - the database update status if applicable
         /// </summary>
-        string Name { get; }
 
-        /// <summary>
-        /// The human readble description of the rule
-        /// </summary>
-        string Description { get; }
+        public CurrentFolder.SupersedeStatus? SupersedeStatus { get; set; }
 
-        /// <summary>
-        /// The value to be checked against.
-        /// </summary>
-        string ComparisonValue { get; }
+        /// the fully qualified file path of the new document
+        private readonly string _newDocumentPath;
 
-        /// <summary>
-        /// implementation of is match algorythm depending on the rule
-        /// </summary>
-        /// <param name="path">The fully qualified file path</param>
-        /// <returns></returns>
-        /// 
+        /// the fully qualified file path of the new document
+        public string? NewDocumentPath { get => _newDocumentPath}
 
-        /// <summary>
-        /// if a match is found, the target path to move the document to
-        /// </summary>
-        string TargetFolderPath { get; }
-
-        bool IsMatch(string path);
+        public IncomingDocumentStatus(string newDocumentPath)
+        {
+            _newDocumentPath = newDocumentPath;
+        }
     }
 }

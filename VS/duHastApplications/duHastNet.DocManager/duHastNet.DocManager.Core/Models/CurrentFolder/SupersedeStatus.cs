@@ -30,10 +30,6 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         /// A class containing the status of a supersede operation for each document
         /// for logging and reporting purposes.
         /// </summary>
-        /// 
-
-        /// the fully qualified file path of the new document
-        public string? NewDocumentPath { get; set; }
 
         /// <summary>
         /// The error message if the supersede operation failed
@@ -50,9 +46,8 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         /// </summary>
         public SupersedeStatusDescription SupersedeStatusDescription { get; set; } = SupersedeStatusDescription.Success;
 
-        public SupersedeStatus(string newDocumentPath) 
+        public SupersedeStatus() 
         { 
-            NewDocumentPath = newDocumentPath;
         }
     }
 }

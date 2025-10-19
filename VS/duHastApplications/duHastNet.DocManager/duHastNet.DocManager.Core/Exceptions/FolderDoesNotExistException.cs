@@ -21,37 +21,25 @@
 //
 //
 
-namespace duHastNet.DocManager.Core.Interfaces
+namespace duHastNet.DocManager.Core.Exceptions
 {
-    public interface IFilingRule
+    public class FolderDoesNotExistException : Exception
     {
-        /// <summary>
-        /// the human readable name of the rule
-        /// </summary>
-        string Name { get; }
+        public string IncomingFolderPath { get; }
+        
+        public FolderDoesNotExistException(string incomingFolderPath)
+        {
+            IncomingFolderPath = incomingFolderPath;
+        }
 
-        /// <summary>
-        /// The human readble description of the rule
-        /// </summary>
-        string Description { get; }
+        public FolderDoesNotExistException(string message, string incomingFolderPath) : base(message)
+        {
+            IncomingFolderPath = incomingFolderPath;
+        }
 
-        /// <summary>
-        /// The value to be checked against.
-        /// </summary>
-        string ComparisonValue { get; }
-
-        /// <summary>
-        /// implementation of is match algorythm depending on the rule
-        /// </summary>
-        /// <param name="path">The fully qualified file path</param>
-        /// <returns></returns>
-        /// 
-
-        /// <summary>
-        /// if a match is found, the target path to move the document to
-        /// </summary>
-        string TargetFolderPath { get; }
-
-        bool IsMatch(string path);
+        public FolderDoesNotExistException(string message, Exception innerException, string incomingFolderPath) : base(message, innerException)
+        {
+            IncomingFolderPath = incomingFolderPath;
+        }
     }
 }

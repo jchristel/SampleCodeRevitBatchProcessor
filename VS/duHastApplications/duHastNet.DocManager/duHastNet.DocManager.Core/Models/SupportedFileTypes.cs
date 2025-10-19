@@ -21,37 +21,20 @@
 //
 //
 
-namespace duHastNet.DocManager.Core.Interfaces
+namespace duHastNet.DocManager.Core.Models
 {
-    public interface IFilingRule
+    public class SupportedFileTypes
     {
-        /// <summary>
-        /// the human readable name of the rule
-        /// </summary>
-        string Name { get; }
+        public string FileExtension { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
-        /// The human readble description of the rule
+        /// a class which holds a single supported file type for documents
         /// </summary>
-        string Description { get; }
-
-        /// <summary>
-        /// The value to be checked against.
-        /// </summary>
-        string ComparisonValue { get; }
-
-        /// <summary>
-        /// implementation of is match algorythm depending on the rule
-        /// </summary>
-        /// <param name="path">The fully qualified file path</param>
-        /// <returns></returns>
-        /// 
-
-        /// <summary>
-        /// if a match is found, the target path to move the document to
-        /// </summary>
-        string TargetFolderPath { get; }
-
-        bool IsMatch(string path);
+        public SupportedFileTypes(string fileExtension, string description)
+        {
+            FileExtension = fileExtension;
+            Description = description;
+        }
     }
 }

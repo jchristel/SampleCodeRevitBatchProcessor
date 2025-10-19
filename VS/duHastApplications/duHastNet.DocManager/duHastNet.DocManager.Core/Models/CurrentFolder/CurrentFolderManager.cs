@@ -79,6 +79,25 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         /// </summary>
         private List<Interfaces.IFilingRule>? _filingRules;
 
+        /// <summary>
+        /// A list of file types which are supported by the document manager
+        /// </summary>
+        private List<Models.SupportedFileTypes>? _supportedFileTypes;
+
+        /// <summary>
+        /// Represents a collection of matched incoming document.
+        /// </summary>
+        /// <remarks>
+        /// This field holds the statuses of incoming files that have been matched to a
+        /// specific documents. It may be empty if no documents have been
+        /// matched.
+        /// </remarks>
+        private List<Models.IncomingDocumentStatus>? _matchedDocuments;
+
+        /// <summary>
+        /// Contains any errors which occurred during operations
+        /// </summary> 
+        private List<Exception> _errors;
 
         #region add new documents
 
@@ -95,8 +114,6 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         #endregion add new documents
 
         
-
-
         #region filing rules
 
         public void AddFilingRule(Interfaces.IFilingRule filingRule)
@@ -118,12 +135,33 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             }
         }
 
+        #endregion
 
+        #region supported file types
+        public void AddSupportedFileType(Models.SupportedFileTypes supportedFileType)
+        {
+            throw new NotImplementedException();
+        }
+        public void RemoveSupportedFileType(Models.SupportedFileTypes supportedFileType)
+        {
+            throw new NotImplementedException();
+        }
+        public void ClearSupportedFileTypes()
+        {
+            //clear all supported file types
+            if (_supportedFileTypes != null)
+            {
+                _supportedFileTypes.Clear();
+            }
+        }
         #endregion
 
         public CurrentFolderManager ()
         {
             _filingRules = [];
+            _errors = [];
+            _supportedFileTypes = [];
+            _matchedDocuments = [];
         }
     }
 }

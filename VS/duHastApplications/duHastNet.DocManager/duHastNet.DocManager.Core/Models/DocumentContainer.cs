@@ -124,7 +124,7 @@ namespace duHastNet.DocManager.Core.Models
 
         #region export documents to csv
 
-        public bool ExportDocumentsToCsv(string filePath)
+        public bool ExportDocumentsToCsv(string filePath, Models.RevisionContainer revContainer)
         {
             try
             {
@@ -140,14 +140,27 @@ namespace duHastNet.DocManager.Core.Models
 
                 foreach (var doc in _documents)
                 {
+                    // get revision data
+                    var revisionData = revContainer.GetAllRevisions().FirstOrDefault(r => r.Id == doc.RevisionId,null);
+
+                    string revisionDescription = string.Empty;
+                    string revisionDate = string.Empty;
+
+                    if (revisionData != null)
+                        {
+                        revisionDescription = revisionData.Description ?? string.Empty;
+                        revisionDate = revisionData.RevisionDate.ToString("yyyy-MM-dd");
+                    }
+
                     List<string> row = [];
                     row.Add(doc.Id.ToString());
                     row.Add(doc.Number);
                     row.Add(doc.Name);
                     row.Add(doc.IsActive.ToString());
                     row.Add(doc.Revision);
-                    row.Add(doc.RevisionDescription ?? string.Empty);
-                    row.Add(doc.RevisionDate.ToString("yyyy-MM-dd"));
+                    row.Add(revisionDescription);
+                    row.Add(revisionDate);
+
                     // add custom property values
                     foreach (var propName in customPropertyNames)
                     {
@@ -156,7 +169,6 @@ namespace duHastNet.DocManager.Core.Models
                     }
                     data.Add(row);
                 }
-
 
                 return true;
             }

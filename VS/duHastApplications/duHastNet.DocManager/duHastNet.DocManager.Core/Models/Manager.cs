@@ -192,15 +192,41 @@ namespace duHastNet.DocManager.Core.Models
 
         /// <summary>
         /// supersedes documents in the current folder(s) using the current folder manager
+        /// this function is usedfull when no prior matching through UI is needed and documents in the current folder(s) need to be updated to the latest version in one step
         /// </summary>
-        private void SupersedeDocuments()
+        public void SupersedeDocuments()
         {
-            bool supersede = _currentFolderManager.SupersedeDocuments(_documentContainer.GetAllDocuments().ToList());
+            // supersede documents in one go
+            bool supersede = _currentFolderManager.SupersedeDocuments([.. _documentContainer.GetAllDocuments()]);
 
-            //TODO handle result
-            //TODO update database if needed with new document revisions
-            //TODO log result (to file and/or UI)
+            // TODO handle result
+            // TODO update database if needed with new document revisions
+            // TODO log result (to file and/or UI)
             // there are two things to log: errors per incoming document and overall errors!!
+        }
+
+
+
+        /// <summary>
+        /// returns a list of incoming document processing statuses for each file in the incoming folder
+        /// </summary>
+        /// <returns></returns>
+        public List<IncomingDocumentProcessingStatus>? GetIncomingDocumentProcessingStatuses()
+        {
+            // process incoming files
+            bool processIncomingFiles = _currentFolderManager.GetIncomingFilesMetadata([.. _documentContainer.GetAllDocuments()]);
+
+            // TODO log result (to file and/or UI)
+            // there are two things to log: errors per incoming document and overall errors!!
+
+            //return matched documents if any
+            if (_currentFolderManager.MatchedDocuments!=null && _currentFolderManager.MatchedDocuments.Count>0)
+            {
+                return _currentFolderManager.MatchedDocuments;
+            }
+
+            // no matched documents, better to return an empty list than null
+            return [];
         }
 
         #endregion current folder manager

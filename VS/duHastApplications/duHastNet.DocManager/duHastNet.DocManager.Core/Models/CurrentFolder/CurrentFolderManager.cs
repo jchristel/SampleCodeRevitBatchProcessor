@@ -89,6 +89,11 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         /// </remarks>
         private List<Models.IncomingDocumentProcessingStatus>? _matchedDocuments;
 
+        public List<Models.IncomingDocumentProcessingStatus>? MatchedDocuments
+        {
+            get { return _matchedDocuments; }
+        }
+
         /// <summary>
         /// Contains any errors which occurred during operations
         /// </summary> 

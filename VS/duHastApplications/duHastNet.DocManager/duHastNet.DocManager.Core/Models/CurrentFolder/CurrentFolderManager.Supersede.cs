@@ -491,5 +491,30 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         }
 
         #endregion supersede documents
+
+        #region get incoming files metadata
+
+        /// <summary>
+        /// Extracts metadata from incoming files and matches them against the provided list of current documents.
+        /// </summary>
+        /// <param name="currentDocuments"></param>
+        /// <returns>True if metadata for all files was extracted succesfully, otherwise False</returns>
+        public bool GetIncomingFilesMetadata(List<Document> currentDocuments)
+        {
+            bool prerequisitesMet = ValidateSupersedePrerequisites();
+            if (!prerequisitesMet)
+            {
+                // log error
+                return false;
+            }
+            // match incoming files against current documents
+            bool matchedDocuments = MatchIncomingFilesToDocuments(currentDocuments);
+
+            // return the result of the matching operation (false if any errors occurred)
+            return matchedDocuments;
+        }
+
+
+        #endregion get incoming files metadata
     }
 }

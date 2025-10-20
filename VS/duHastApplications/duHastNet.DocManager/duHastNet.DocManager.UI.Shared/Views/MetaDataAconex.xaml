@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="duHastNet.DocManager.UI.Shared.Views.MetaDataAconex"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:duHastNet.DocManager.UI.Shared.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <!-- meta data file path-->
+                <RowDefinition Height="Auto" />
+                <!-- field mapping table -->
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            
+            <!-- meta data file path-->
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock 
+                        Margin="5 10 5 10"
+                        Padding="0 0 5 0"
+                        Text="Template Meta Data File Path:" />
+                    <TextBox
+                        x:Name="TemplateMetaDateFilePathTextBox"
+                        Margin="5 10 5 10"
+                        Width="400"
+                        Text="{Binding TemplateMetaDataFilePath, UpdateSourceTrigger=PropertyChanged}"
+                        />
+                    <Button 
+                        Margin="5 10 5 10" 
+                        Content="Browse"
+                        Command="{Binding BrowseTemplateFileCommand}"
+                        IsEnabled="{Binding IsBrowseTemplateFileEnabled}"
+                        />
+                </StackPanel>
+            </Grid>
+
+            <!-- field mapping table -->
+            <Grid Grid.Row="1">
+            </Grid>
+
+        </Grid>
+    </Grid>
+</UserControl>

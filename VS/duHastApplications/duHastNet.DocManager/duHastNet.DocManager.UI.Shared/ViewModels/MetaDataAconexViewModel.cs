@@ -1,4 +1,9 @@
 ﻿//
+//License:
+//
+//
+// Revit Batch Processor Sample Code
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -16,30 +21,45 @@
 //
 //
 
+
 using CommunityToolkit.Mvvm.ComponentModel;
-using duHastNet.DocManager.Core.Services.Api;
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models;
+using duHastNet.DocManager.Core.Services.Api;
 using duHastNet.DocManager.UI.Shared.Stores;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels
 {
-    public partial class NavigationHostViewModel : ObservableObject
+    public partial class MetaDataAconexViewModel : ObservableObject
     {
-        private readonly DocManagerApi _docManagerApi;
-        private readonly Manager _manager;
+
+        #region Private Fields
+
         private readonly MessageStore _messageStore;
+        private readonly Manager _manager;
 
-        [ObservableProperty]
-        private ObservableObject _currentViewModel;
+        #endregion Private Fields
 
-        public NavigationHostViewModel(DocManagerApi docManagerApi, Manager manager, MessageStore messageStore)
+        #region Constructor
+
+        public MetaDataAconexViewModel(MessageStore messageStore, Manager manager)
         {
-            _docManagerApi = docManagerApi;
             _manager = manager;
             _messageStore = messageStore;
-
-            // Initialize with SettingsViewModel as the default view
-            _currentViewModel = new SettingsViewModel(_docManagerApi, _manager, _messageStore);
         }
+
+        #endregion
+
+        #region Observable Properties
+
+        [ObservableProperty]
+        private string _metaDataTemplateFilePath = string.Empty;
+
+        #endregion Observable Properties
+
+        #region Commands - To be implemented
+
+        #endregion  Commands - To be implemented
+
     }
 }

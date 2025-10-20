@@ -21,33 +21,26 @@
 //
 //
 
-namespace duHastNet.DocManager.Core.Models.CurrentFolder
+
+namespace duHastNet.DocManager.Core.Exceptions
 {
-    public class SupersedeStatus
+    public class FileLockedException :Exception
     {
+        public string DocumentFilePath { get; }
 
-        /// <summary>
-        /// A class containing the status of a supersede operation for each document
-        /// for logging and reporting purposes.
-        /// </summary>
+        public FileLockedException(string documentFilePath)
+        {
+            DocumentFilePath = documentFilePath;
+        }
 
-        /// <summary>
-        /// The error message if the supersede operation failed
-        /// </summary>
-        public string? SupersedeErrorMessage { get; set; }
+        public FileLockedException(string message, string documentFilePath) : base(message)
+        {
+            DocumentFilePath = documentFilePath;
+        }
 
-        /// <summary>
-        /// the document path of the superseded document (if there is one)
-        /// </summary>
-        public string? SupersededDocumentPath { get; set; }
-
-        /// <summary>
-        /// the supersede status description
-        /// </summary>
-        public SupersedeStatusDescription SupersedeStatusDescription { get; set; } = SupersedeStatusDescription.Success;
-
-        public SupersedeStatus() 
-        { 
+        public FileLockedException(string message, Exception innerException, string documentFilePath) : base(message, innerException)
+        {
+            DocumentFilePath = documentFilePath;
         }
     }
 }

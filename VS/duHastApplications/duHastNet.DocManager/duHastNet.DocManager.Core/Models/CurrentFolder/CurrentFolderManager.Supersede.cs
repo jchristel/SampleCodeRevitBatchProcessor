@@ -208,8 +208,9 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="currentDocuments"></param>
+        /// <param name="incomingDocumentStatus"></param>
         /// <returns></returns>
-        private int? GetDocumentIdFromFileName(string fileName, List<Document> currentDocuments)
+        private int? GetDocumentIdFromFileName(string fileName, List<Document> currentDocuments, IncomingDocumentProcessingStatus incomingDocumentStatus)
         {
             // Summary:
             // extract document number from file name
@@ -245,13 +246,19 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                 // select the longest match (key value) from the mapping dictionary
                 var documentNumber = docNumberMatchesMapper.Keys.OrderByDescending(s => s.Length).First();
                 documentId = docNumberMatchesMapper[documentNumber];
-            }
 
-            // log an error if no document number (id) was found
-            if (documentId == null)
+                // log success
+                incomingDocumentStatus.AddProcessMessage(
+                    $"Extracted document number '{documentNumber}' from file name '{fileName}' and matched to document id {documentId}.",
+                    Stores.ProcessMessageTypes.Information
+                );
+            }
+            else
             {
                 // log error
-                _errors.Add(new Exceptions.DocumentNotFoundException(fileName));
+                incomingDocumentStatus.AddProcessMessage(
+                    new Exceptions.DocumentNotFoundException(fileName)
+                );
             }
 
             return documentId;
@@ -266,9 +273,10 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         /// prefix appears after the  suffix in the file name, the method logs an error and returns <see
         /// langword="null"/>.</remarks>
         /// <param name="fileName">The name of the file from which to extract the revision identifier.</param>
+        /// <param name="incomingDocumentStatus">The status object used to log processing messages.</param>
         /// <returns>The extracted revision identifier if both the prefix and suffix are found and properly formatted; 
         /// otherwise, <see langword="null"/>.</returns>
-        private string? GetRevisionFromFileName(string fileName)
+        private string? GetRevisionFromFileName(string fileName, IncomingDocumentProcessingStatus incomingDocumentStatus)
         {
             // Summary:
             // extract revision from file name
@@ -286,13 +294,13 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             if (revisionStartIndex == -1)
             {
                 //log error
-                _errors.Add(new Exceptions.InvalidRevisionFormatException($"Revision prefix '{_revisionPrefix}' not found in file name '{fileName}'"));
+                incomingDocumentStatus.AddProcessMessage(new Exceptions.InvalidRevisionFormatException($"Revision prefix '{_revisionPrefix}' not found in file name '{fileName}'"));
             }
 
             if (revisionEndIndex == -1)
             {
                 //log error
-                _errors.Add(new Exceptions.InvalidRevisionFormatException($"Revision suffix '{_revisionSuffix}' not found in file name '{fileName}'"));
+                incomingDocumentStatus.AddProcessMessage(new Exceptions.InvalidRevisionFormatException($"Revision suffix '{_revisionSuffix}' not found in file name '{fileName}'"));
             }
 
             if (revisionEndIndex > revisionStartIndex)
@@ -301,35 +309,46 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                 int start = revisionStartIndex + _revisionPrefix.Length;
                 int length = revisionEndIndex - start;
                 revision = fileName.Substring(start, length);
+
+                //log success
+                incomingDocumentStatus.AddProcessMessage(
+                    $"Extracted revision '{revision}' from file name '{fileName}'.",
+                    Stores.ProcessMessageTypes.Information
+                );
             }
             else
             {
                 // log error
-                _errors.Add(new Exceptions.InvalidRevisionFormatException($"Invalid revision format in file name '{fileName}'"));
+                incomingDocumentStatus.AddProcessMessage(new Exceptions.InvalidRevisionFormatException($"Invalid revision format in file name '{fileName}'"));
             }
 
             return revision;
         }
 
-        private Models.IncomingDocumentStatus ExtractDocumentMetadataFromFileName(string filePath, List<Document> currentDocuments)
+        /// <summary>
+        /// extracts document metadata from the specified file name and compares it against a list of current documents to find a match.
+        /// <paramref name="filePath"/> The full path of the file to extract metadata from.
+        /// <paramref name="currentDocuments"/> The list of current documents to compare against.
+        /// </summary>  
+        private Models.IncomingDocumentProcessingStatus ExtractDocumentMetadataFromFileName(string filePath, List<Document> currentDocuments)
         {
             // Summary:
             // extract document number and revision from file name
             // compare extracted metadata with current documents in the database
             // if a match is found, return IncomingDocumentStatus with matched document id
             // if no match is found, return IncomingDocumentStatus with null matched document id
-            Models.IncomingDocumentStatus incomingDocumentStatus = new Models.IncomingDocumentStatus(filePath);
+            Models.IncomingDocumentProcessingStatus incomingDocumentStatus = new Models.IncomingDocumentProcessingStatus(filePath);
             string fileName = System.IO.Path.GetFileNameWithoutExtension(filePath);
 
             // extract document number (doc id) and revision from file name
             int? documentId = GetDocumentIdFromFileName(
                 fileName, 
-                currentDocuments
-            ); 
+                currentDocuments,
+                incomingDocumentStatus
+            );
 
             if (documentId == null)
             {
-                // errors are logged in the GetDocumentIdFromFileName method
                 // return with no match
                 return incomingDocumentStatus;
             }
@@ -338,15 +357,14 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             incomingDocumentStatus.MatchedDocumentId = documentId;
 
             // extract revision
-            string? revision = GetRevisionFromFileName(fileName);
+            string? revision = GetRevisionFromFileName(fileName, incomingDocumentStatus);
             
             if (revision == null)
             {
-                // errors are logged in the GetRevisionFromFileName method
                 // return with no match
                 return incomingDocumentStatus;
             }
-
+            
             // set incoming document revision
             incomingDocumentStatus.IncomingDocumentRevision = revision;
 
@@ -378,7 +396,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             // whipe matched documents list
             if (_matchedDocuments == null)
             {
-                _matchedDocuments = new List<Models.IncomingDocumentStatus>();
+                _matchedDocuments = new List<Models.IncomingDocumentProcessingStatus>();
             }
             else
             {
@@ -392,7 +410,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             foreach (var filePath in incomingFiles)
             {
                 // extract metadata from file name
-                Models.IncomingDocumentStatus incomingDocument = ExtractDocumentMetadataFromFileName(
+                Models.IncomingDocumentProcessingStatus incomingDocument = ExtractDocumentMetadataFromFileName(
                     filePath, 
                     currentDocuments
                 );

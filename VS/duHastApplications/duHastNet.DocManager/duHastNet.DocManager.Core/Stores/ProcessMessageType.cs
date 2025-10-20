@@ -21,15 +21,12 @@
 //
 //
 
-namespace duHastNet.DocManager.Core.Models.CurrentFolder
+namespace duHastNet.DocManager.Core.Stores
 {
-    public enum SupersedeStatusDescription
+    public enum ProcessMessageTypes
     {
-        Success,
-        FailedNewFileLocked,
-        FailedOldFileLocked,
-        FailedUnknownDocument,
-        FailedNoNewDocumentsInFolder,
-        FailedNewDocumentFolderNotFound,
+        Error,
+        Information,
+        Log,
     }
 }

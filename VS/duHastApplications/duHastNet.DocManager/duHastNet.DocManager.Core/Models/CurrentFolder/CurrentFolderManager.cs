@@ -87,7 +87,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         /// specific documents. It may be empty if no documents have been
         /// matched.
         /// </remarks>
-        private List<Models.IncomingDocumentStatus>? _matchedDocuments;
+        private List<Models.IncomingDocumentProcessingStatus>? _matchedDocuments;
 
         /// <summary>
         /// Contains any errors which occurred during operations

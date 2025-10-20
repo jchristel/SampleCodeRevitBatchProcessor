@@ -123,7 +123,7 @@ namespace duHastNet.DocManager.Core.Models
         /// langword="false"/>.</returns>
         public bool ExportDocumentsToCsv(string filePath)
         {
-            return _documentContainer.ExportDocumentsToCsv(filePath);
+            return _documentContainer.ExportDocumentsToCsv(filePath, _revisionContainer);
         }
 
         #endregion Documents
@@ -200,6 +200,7 @@ namespace duHastNet.DocManager.Core.Models
             //TODO handle result
             //TODO update database if needed with new document revisions
             //TODO log result (to file and/or UI)
+            // there are two things to log: errors per incoming document and overall errors!!
         }
 
         #endregion current folder manager

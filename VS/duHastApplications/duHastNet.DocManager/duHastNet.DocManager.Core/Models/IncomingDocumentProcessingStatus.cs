@@ -29,16 +29,34 @@ using System.Threading.Tasks;
 
 namespace duHastNet.DocManager.Core.Models
 {
-    public class IncomingDocumentStatus
+    public class IncomingDocumentProcessingStatus
     {
         /// <summary>
-        /// a class to hold the status of an incoming document processing attempt
+        /// a class to hold
         /// - the fully qualified file path of the new document
-        /// - the supersede status if applicable
+        /// - process log messages
         /// - the database update status if applicable
         /// </summary>
 
-        public CurrentFolder.SupersedeStatus? SupersedeStatus { get; set; }
+        /// process messages collected during processing
+        private List<(string,Stores.ProcessMessageTypes)> _processMessages;
+
+        /// <summary>
+        /// Add process messages collected during processing
+        /// </summary> 
+        public void AddProcessMessage(string message, Stores.ProcessMessageTypes messageType)
+        {
+            _processMessages.Add((message, messageType));
+        }
+
+        /// <summary>
+        /// Overload to add exception messages as error process messages
+        /// <paramref name="ex"/> The exception to add the message from
+        /// </summary>
+        public void AddProcessMessage(Exception ex)
+        {
+            _processMessages.Add((ex.Message, Stores.ProcessMessageTypes.Error));
+        }
 
         /// the fully qualified file path of the new document
         private readonly string _newDocumentPath;
@@ -54,9 +72,10 @@ namespace duHastNet.DocManager.Core.Models
 
         public string? IncomingDocumentRevision { get; set; }
 
-        public IncomingDocumentStatus(string newDocumentPath)
+        public IncomingDocumentProcessingStatus(string newDocumentPath)
         {
             _newDocumentPath = newDocumentPath;
+            _processMessages = [];
         }
     }
 }

@@ -26,6 +26,10 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
     public partial class CurrentFolderManager
     {
         #region file utilities
+
+        /// <summary>
+        /// Checks if a file is locked by another process.
+        /// </summary>
         private bool IsFileLocked(string filePath)
         {
             // Summary:
@@ -96,16 +100,14 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                     }
                 }
             }
-
-            // log error - no matching folder found
-            _errors.Add(new Exceptions.FolderDoesNotExistException(
-                $"No matching target folder found for document: {documentPath}", 
-                documentPath)
-            );
             
             return string.Empty;
         }
 
+        /// <summary>
+        /// moves matched incoming files to their respective current folders based on filing rules.
+        /// <paramref name="currentDocuments"/> is used to determine the target current folder for each incoming document.
+        /// </summary>
         private bool MoveMatchedIncomingFilesToCurrentFolders(List<Document> currentDocuments)
         {
             // Summary:
@@ -127,31 +129,69 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                     var targetCurrentFolder = DetermineTargetCurrentFolder(incomingDocumentStatus.NewDocumentPath);
                     if (string.IsNullOrEmpty(targetCurrentFolder))
                     {
+                        // log error
+                        incomingDocumentStatus.AddProcessMessage(
+                            new Exceptions.FolderDoesNotExistException(
+                                $"{incomingDocumentStatus.NewDocumentPath}")
+                        );
                         // errors are logged inside DetermineTargetCurrentFolder
                         allFilesMovedSuccessfully = false;
                         // skip to next document
                         continue;
                     }
 
+                    //log success - target current folder determined
+                    incomingDocumentStatus.AddProcessMessage(
+                        $"Target current folder determined: {targetCurrentFolder}",
+                        Stores.ProcessMessageTypes.Information
+                    );
+
                     // check if file is locked
                     if (IsFileLocked(incomingDocumentStatus.NewDocumentPath!))
                     {
-                        allFilesMovedSuccessfully = false;
                         // log error - file is locked
+                        incomingDocumentStatus.AddProcessMessage(
+                            new Exceptions.FileLockedException(
+                                $"File is locked and cannot be moved to current folder: {incomingDocumentStatus.NewDocumentPath}",
+                                incomingDocumentStatus.NewDocumentPath!)
+                        );
+
+                        //set flag indicating not all files moved successfully
+                        allFilesMovedSuccessfully = false;
+                        
+                        // skip to next file
                         continue;
                     }
+
                     // move file to target current folder
                     var fileName = System.IO.Path.GetFileName(incomingDocumentStatus.NewDocumentPath!);
                     var destinationPath = System.IO.Path.Combine(targetCurrentFolder, fileName);
-                    System.IO.File.Move(incomingDocumentStatus.NewDocumentPath!, destinationPath);
+
+                    // perform the move
+                    try
+                    {
+                        System.IO.File.Move(incomingDocumentStatus.NewDocumentPath!, destinationPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        // mark as not all files moved successfully
+                        allFilesMovedSuccessfully = false;
+                        // log exception details
+                        incomingDocumentStatus.AddProcessMessage(ex);
+                    }
+                    
                     // log success - file moved successfully
+                    incomingDocumentStatus.AddProcessMessage(
+                        $"File moved to current folder successfully: {destinationPath}",
+                        Stores.ProcessMessageTypes.Information
+                    );
                 }
                 catch (Exception ex)
                 {
                     // mark as not all files moved successfully
                     allFilesMovedSuccessfully = false;
                     // log exception details
-                    _errors.Add(ex);
+                    incomingDocumentStatus.AddProcessMessage(ex);
                 }
             }
 
@@ -163,7 +203,18 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
 
         #region move matched files to superseded folder
 
-        private List<string> GetMatchedFilesInCurrentFolders(List<Document> currentDocuments)
+        /// <summary>
+        /// Identifies and retrieves the file paths of documents in the current folders that match the specified
+        /// incoming documents and need to be superseded.
+        /// </summary>
+        /// <remarks>This method processes a collection of incoming documents and attempts to find
+        /// corresponding matches in the current folders based on metadata. If a match is found, the file path of the
+        /// matched document is added to the result list. Documents without a match are skipped.</remarks>
+        /// <param name="currentDocuments">A list of current documents to compare against. Each document in this list is checked to determine if it
+        /// matches any of the incoming documents.</param>
+        /// <returns>A list of file paths representing the matched documents in the current folders. The list will be empty if no
+        /// matches are found.</returns>
+        private Dictionary<IncomingDocumentProcessingStatus,List< string>> GetMatchedFilesInCurrentFolders(List<Document> currentDocuments)
         {
             // Summary:
             // loop through all matched documents
@@ -172,7 +223,9 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             // if so, add the document to the list of matched files
             // return the list of matched files
 
-            List<string> matchedFilesToSupersede = new List<string>();
+            //container to hold matched files to be superseded
+            Dictionary<IncomingDocumentProcessingStatus, List<string>> matchedFilesToSupersede = [];
+
             foreach (var incomingDocumentStatus in _matchedDocuments!)
             {
                 // determine target current folder based on filing rules
@@ -181,7 +234,11 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                 // get the location of old files to be superseded
                 if (string.IsNullOrEmpty(targetCurrentFolder))
                 {
-                    // errors are logged inside DetermineTargetCurrentFolder
+                    // log error
+                    incomingDocumentStatus.AddProcessMessage(
+                        new Exceptions.FolderDoesNotExistException(
+                            $"Target current folder could not be determined for document: {incomingDocumentStatus.NewDocumentPath}")
+                    );
                     // skip to next document
                     continue;
                 }
@@ -192,12 +249,14 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                 if (allFilesInTargetFolder.Count == 0)
                 {
                     // no files in target folder
+                    //log information
+                    incomingDocumentStatus.AddProcessMessage(
+                        $"No supported files found in target current folder: {targetCurrentFolder}. Skipping supersede action.",
+                        Stores.ProcessMessageTypes.Information
+                    );
                     // skip to next document
                     continue;
                 }
-
-                // find all files matching the incoming document number
-                bool allFilesMatched = true;
 
                 // loop through all incoming files and extract metadata
                 foreach (var existingFilePath in allFilesInTargetFolder)
@@ -207,7 +266,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                         .FirstOrDefault(d => d.Id == incomingDocumentStatus.MatchedDocumentId);
 
                     // extract metadata from file name
-                    Models.IncomingDocumentStatus incomingDocument = ExtractDocumentMetadataFromFileName(
+                    Models.IncomingDocumentProcessingStatus incomingDocument = ExtractDocumentMetadataFromFileName(
                         existingFilePath,
                         new List<Document>() { currentDocument! }
                     );
@@ -215,19 +274,43 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                     // check if a match was found
                     if (incomingDocument.MatchedDocumentId == null)
                     {
-                        // specific errors are logged in the ExtractDocumentMetadataFromFileName method
-                        allFilesMatched = false;
-
+                        // this file does not match the incoming document, no action required
                         // skip to next file
                         continue;
                     }
-                    matchedFilesToSupersede.Add(existingFilePath);
+
+                    // a match was found, add to the list of files to be superseded
+                    // use a discard: '_', since we do not care if the key already exists
+                    if (!matchedFilesToSupersede.TryGetValue(incomingDocumentStatus, out _))
+                    {
+                        matchedFilesToSupersede[incomingDocumentStatus] = [];
+                    }
+
+                    // add the existing file path to the list of files to be superseded
+                    matchedFilesToSupersede[incomingDocumentStatus].Add(existingFilePath);
+                                        
+                    //log information
+                    incomingDocumentStatus.AddProcessMessage(
+                        $"Matched file for supersede found: {existingFilePath}",
+                        Stores.ProcessMessageTypes.Information
+                    );
                 }
             }
 
             return matchedFilesToSupersede;
         }
 
+        /// <summary>
+        /// Moves matched files from the current folders to the superseded folder.
+        /// </summary>
+        /// <remarks>This method processes a list of documents to identify matched files in the current
+        /// folders. For each matched file, it checks whether the file is locked by another process. If a file is
+        /// locked, it is skipped, and an error message is logged. If the file is not locked, it is moved to the
+        /// superseded folder. The method logs the results of the operation, including any errors encountered during the
+        /// process.</remarks>
+        /// <param name="currentDocuments">A list of <see cref="Document"/> objects representing the current documents to process.</param>
+        /// <returns><see langword="true"/> if all matched files were successfully moved to the superseded folder; otherwise,
+        /// <see langword="false"/>.</returns>
         private bool MoveMatchedFilesToSupersededFolder(List<Document> currentDocuments)
         {
             // Summary:
@@ -239,8 +322,11 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             // if not locked, move the document to the superseded folder
             // keep track of which files were moved successfully and which not
             // log results for user information
-            
-            List<string> matchedFiles = GetMatchedFilesInCurrentFolders(currentDocuments);
+
+            // get matched files in current folders
+            Dictionary<IncomingDocumentProcessingStatus, List<string>> matchedFiles = GetMatchedFilesInCurrentFolders(currentDocuments);
+
+            // check if there are matched files to move
             if (matchedFiles.Count == 0)
             {
                 // no matched files to move
@@ -253,26 +339,49 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             {
                 try
                 {
-                    // check if file is locked
-                    if (IsFileLocked(matchedFile))
+                    foreach (var fileToMove in matchedFile.Value)
                     {
-                        allFilesMovedSuccessfully = false;
-                        // log error - file is locked
-                        continue;
+                        // check if file is locked
+                        if (IsFileLocked(fileToMove))
+                        {
+                            allFilesMovedSuccessfully = false;
+
+                            // log error - file is locked
+                            matchedFile.Key.AddProcessMessage(
+                                new Exceptions.FileLockedException(
+                                    $"File is locked and cannot be moved to superseded folder: {fileToMove}",
+                                    fileToMove)
+                            );
+
+                            //skip to next file
+                            continue;
+                        }
+                        // move file to superseded folder
+                        var fileName = System.IO.Path.GetFileName(fileToMove);
+                        var destinationPath = System.IO.Path.Combine(_supersededFolderPath!, fileName);
+                        try
+                        {
+                            System.IO.File.Move(fileToMove, destinationPath);
+                            // log success - file moved successfully
+                            matchedFile.Key.AddProcessMessage(
+                                $"File moved to superseded folder successfully: {destinationPath}",
+                                Stores.ProcessMessageTypes.Information
+                            );
+                        }
+                        catch (Exception ex)
+                        {
+                            // log exception details
+                            matchedFile.Key.AddProcessMessage(ex);
+
+                            // mark as not all files moved successfully
+                            allFilesMovedSuccessfully = false;
+                        }
                     }
-                    // move file to superseded folder
-                    var fileName = System.IO.Path.GetFileName(matchedFile);
-                    var destinationPath = System.IO.Path.Combine(_supersededFolderPath!, fileName);
-                    System.IO.File.Move(matchedFile, destinationPath);
-                    // log success - file moved successfully
                 }
                 catch (Exception ex)
                 {
                     // log exception details
-                    _errors.Add(ex);
-
-                    // mark as not all files moved successfully
-                    allFilesMovedSuccessfully = false;
+                    matchedFile.Key.AddProcessMessage(ex);
                 }
             }
 

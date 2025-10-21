@@ -26,11 +26,11 @@ using System.Windows.Controls;
 namespace duHastNet.DocManager.UI.Shared.Views
 {
     /// <summary>
-    /// Interaction logic for MainView.xaml
+    /// Interaction logic for MetaDataAconex.xaml
     /// </summary>
-    public partial class MergeView : UserControl
+    public partial class MetaDataAconexView : UserControl
     {
-        public MergeView()
+        public MetaDataAconexView()
         {
             InitializeComponent();
         }

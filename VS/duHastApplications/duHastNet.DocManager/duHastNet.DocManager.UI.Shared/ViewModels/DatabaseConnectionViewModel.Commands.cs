@@ -26,7 +26,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels;
 /// <summary>
 /// Commands partial class for SettingsViewModel
 /// </summary>
-public partial class SettingsViewModel
+public partial class DatabaseConnectionViewModel
 {
     #region Database Commands
 

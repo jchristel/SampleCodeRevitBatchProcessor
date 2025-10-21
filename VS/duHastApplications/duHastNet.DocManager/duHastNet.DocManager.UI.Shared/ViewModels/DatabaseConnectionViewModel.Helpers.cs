@@ -21,9 +21,9 @@ using System.IO;
 namespace duHastNet.DocManager.UI.Shared.ViewModels;
 
 /// <summary>
-/// Helpers partial class for SettingsViewModel - property change handlers and utility methods
+/// Helpers partial class for DatabaseConnectionViewModel - property change handlers and utility methods
 /// </summary>
-public partial class SettingsViewModel
+public partial class DatabaseConnectionViewModel
 {
     #region Property Change Handlers
 

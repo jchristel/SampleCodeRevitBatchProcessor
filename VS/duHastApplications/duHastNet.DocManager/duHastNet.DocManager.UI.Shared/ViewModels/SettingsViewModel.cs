@@ -33,6 +33,8 @@ public partial class SettingsViewModel : ObservableObject
     private readonly DocManagerApi _docManagerApi;
     private readonly MessageStore _messageStore;
     private readonly Manager _manager;
+    Core.Models.CurrentFolder.CurrentFolderManager _currentFolderManager;
+    Core.Models.MetaDataMapperAconex _aconexMetaDataManager;
 
     #endregion
 
@@ -42,74 +44,36 @@ public partial class SettingsViewModel : ObservableObject
     // Expose Aconex Metadata ViewModel for the view
     public MetaDataAconexViewModel AconexMetadataViewModel { get; }
 
+    // Expose current folder ViewModel for the view
+    public CurrentFolderViewModel CurrentFolderViewModel { get;}
+
+    // Expose the database connection ViewModel for the view
+    public DatabaseConnectionViewModel DatabaseConnectionViewModel { get;}
+
     #region Constructor
 
-    public SettingsViewModel(DocManagerApi docManagerApi, Manager manager, Stores.MessageStore messageStore)
+    public SettingsViewModel(
+        DocManagerApi docManagerApi, 
+        Manager manager, 
+        Stores.MessageStore messageStore, 
+        Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager,
+        Core.Models.MetaDataMapperAconex aconexMetaDataManager
+        )
     {
         _docManagerApi = docManagerApi;
         _manager = manager;
         _messageStore = messageStore;
+        _currentFolderManager = currentFolderManager;
+        _aconexMetaDataManager = aconexMetaDataManager;
+
 
         MessageViewModel = new GlobalMessageViewModel(_messageStore);
-
+        DatabaseConnectionViewModel = new DatabaseConnectionViewModel(_docManagerApi, _messageStore, _manager);
         AconexMetadataViewModel = new MetaDataAconexViewModel(_messageStore, _manager);
+        CurrentFolderViewModel = new CurrentFolderViewModel(_messageStore, _manager, currentFolderManager);
+
     }
 
     #endregion
 
-    #region Observable Properties
-
-    [ObservableProperty]
-    private string _databasePath = string.Empty;
-
-    [ObservableProperty]
-    private string _statusMessage = "Ready";
-
-    [ObservableProperty]
-    private bool _isConnected = false;
-
-    [ObservableProperty]
-    private bool _isBusy = false;
-
-    [ObservableProperty]
-    private bool _isCreateDatabaseEnabled = true;
-
-    [ObservableProperty]
-    private bool _isConnectDatabaseEnabled = true;
-
-    [ObservableProperty]
-    private bool _isBrowseEnabled = true;
-
-    [ObservableProperty]
-    private bool _isImportExportEnabled = false;
-
-    [ObservableProperty]
-    private int _loadedDocumentCount = 0;
-
-    [ObservableProperty]
-    private int _loadedRevisionCount = 0;
-
-    [ObservableProperty]
-    private int _customPropertyCount = 0;
-
-    #endregion
-
-    #region Computed Properties
-
-    /// <summary>
-    /// Gets whether database operations are available
-    /// </summary>
-    public bool IsDatabaseReady => _docManagerApi.IsDatabaseReady();
-
-    /// <summary>
-    /// Gets the current database path from the API
-    /// </summary>
-    public string? CurrentDatabasePath => _docManagerApi.GetDatabasePath();
-
-    /// <summary>
-    /// Gets whether data is loaded into the Manager
-    /// </summary>
-    public bool IsDataLoaded => _manager.IsDataLoaded;
-
-    #endregion
 }

@@ -21,18 +21,60 @@
 //
 //
 
-using System.Windows.Controls;
 
-namespace duHastNet.DocManager.UI.Shared.Views
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using duHastNet.DocManager.Core.Models;
+using duHastNet.DocManager.Core.Services.Api;
+using duHastNet.DocManager.UI.Shared.Stores;
+
+
+namespace duHastNet.DocManager.UI.Shared.ViewModels
 {
-    /// <summary>
-    /// Interaction logic for MainView.xaml
-    /// </summary>
-    public partial class MergeView : UserControl
+    public partial class CurrentFolderViewModel: ObservableObject
     {
-        public MergeView()
+        /// <summary>
+        /// view model class for the current folder model
+        /// </summary>
+        #region Private Fields
+
+        private readonly MessageStore _messageStore;
+        private readonly Manager _manager;
+        private readonly Core.Models.CurrentFolder.CurrentFolderManager _currentFolderManager;
+
+        #endregion Private Fields
+
+        #region Constructor
+
+        public CurrentFolderViewModel(MessageStore messageStore, Manager manager, Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager)
         {
-            InitializeComponent();
+            _manager = manager;
+            _messageStore = messageStore;
+            _currentFolderManager = currentFolderManager;
         }
+
+        #endregion
+
+        #region Observable Properties
+
+        [ObservableProperty]
+        private string _incomingFolderPath = string.Empty;
+
+        [ObservableProperty]
+        private string _supersededFolderPath = string.Empty;
+
+        [ObservableProperty]
+        private string _revisionPrefix = string.Empty;
+
+        [ObservableProperty]
+        private string _revisionSuffix = string.Empty;
+
+        #endregion Observable Properties
+
+        #region Commands - To be implemented
+
+        #endregion  Commands - To be implemented
+
     }
 }
+

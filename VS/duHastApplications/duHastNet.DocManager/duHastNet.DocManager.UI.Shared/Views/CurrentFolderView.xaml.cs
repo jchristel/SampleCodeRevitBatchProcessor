@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace duHastNet.DocManager.UI.Shared.Views
 {
     /// <summary>
-    /// Interaction logic for MetaDataAconex.xaml
+    /// Interaction logic for CurrentFolderView.xaml
     /// </summary>
-    public partial class MetaDataAconex : UserControl
+    public partial class CurrentFolderView : UserControl
     {
-        public MetaDataAconex()
+        public CurrentFolderView()
         {
             InitializeComponent();
         }

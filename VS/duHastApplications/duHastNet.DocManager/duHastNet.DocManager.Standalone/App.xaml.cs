@@ -33,6 +33,12 @@ namespace DocManager.Standalone
             // Initialize MessageStore (singleton for application lifetime)
             _messageStore = new MessageStore();
 
+            //initalize cloud metadata mapper (need to be checking settings later)
+            MetaDataMapperAconex cloudMetaData = new MetaDataMapperAconex();
+
+            // Create CurrentFolderManager
+            duHastNet.DocManager.Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager = new();
+
             // Create the main window with ViewModel
             // Pass both API and Manager to the ViewModel
             MainWindow = new DocManagerWindow()
@@ -40,6 +46,8 @@ namespace DocManager.Standalone
                 DataContext = new NavigationHostViewModel(
                     docManagerApi: _docManagerApi,
                     manager: _manager,
+                    currentFolderManager: currentFolderManager,
+                    cloudMetaData: cloudMetaData,
                     messageStore: _messageStore)
             };
 

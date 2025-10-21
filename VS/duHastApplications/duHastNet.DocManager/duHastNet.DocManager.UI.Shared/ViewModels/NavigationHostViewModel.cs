@@ -30,7 +30,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         private readonly Manager _manager;
         private readonly MessageStore _messageStore;
         private readonly Core.Models.CurrentFolder.CurrentFolderManager _currentFolderManager;
-        private readonly Core.Interfaces.ICloudMetaData _cloudMetaData;
+        private readonly MetaDataMapperAconex _cloudMetaData;
 
         [ObservableProperty]
         private ObservableObject _currentViewModel;
@@ -39,7 +39,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             DocManagerApi docManagerApi, 
             Manager manager, 
             Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager,
-            Core.Interfaces.ICloudMetaData cloudMetaData,
+            MetaDataMapperAconex cloudMetaData,
             MessageStore messageStore)
         {
             _docManagerApi = docManagerApi;

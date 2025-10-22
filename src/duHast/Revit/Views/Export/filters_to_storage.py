@@ -32,14 +32,8 @@ clr.AddReference('System')
 from System.Collections.Generic import List
 from System import Enum
 
-from duHast.Data.Utils.data_to_file import build_json_for_file
-from duHast.Utilities.files_io import get_file_name_without_ext
 from duHast.Utilities.Objects.result import Result
-from duHast.Utilities.files_json import write_json_to_file
 
-from duHast.UI.Objects.ProgressBase import ProgressBase
-
-from duHast.Revit.Views.filters import get_all_filters
 from duHast.Revit.Views.Objects.Data.view_filter import ViewFilter
 from duHast.Revit.Views.Objects.Data.view_filter_rule import ViewFilterRule
 from duHast.Revit.Views.Objects.Data.view_filter_logic_container import ViewFilterLogicContainer
@@ -367,7 +361,7 @@ def analyze_logical_filter(doc, logical_filter, project_parameters, nesting_leve
                         # something went wrong
                         return_value.update_sep(False, "Failed to analyze element parameter filter. Error: {}".format(rules_result.message))
 
-                elif isinstance(filter, LogicalAndFilter) or isinstance(filter_elements, LogicalOrFilter):
+                elif isinstance(filter, LogicalAndFilter) or isinstance(filter, LogicalOrFilter):
                     if debug:
                         return_value.append_message ( "{} is logical and filter...recursive call".format("..." * nesting_level))
                     
@@ -375,9 +369,9 @@ def analyze_logical_filter(doc, logical_filter, project_parameters, nesting_leve
                     nested_container_result = analyze_logical_filter(doc,filter, project_parameters, nesting_level + 1, debug)
                     
                     # check what came back
-                    if  nested_container.status and len(nested_container_result.result) > 0:
+                    if  nested_container_result.status and len(nested_container_result.result) > 0:
                         # add nested container to the logical container
-                        logical_container.logic_containers.append(nested_container.result[0])
+                        logical_container.logic_containers.append(nested_container_result.result[0])
                         
         else:
             # not sure what this...

@@ -56,18 +56,18 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             }
 
             // check if there are supported file types in the incoming folder
-            if (_supportedFileTypes != null && _supportedFileTypes.Count != 0)
+            if (_settings.SupportedFileTypes != null && _settings.SupportedFileTypes.Count != 0)
             {
 
                 // check supported file types
                 supportedIncomingFiles = incomingFiles.Where(file =>
-                    _supportedFileTypes.Any(supportedType =>
+                    _settings.SupportedFileTypes.Any(supportedType =>
                         file.EndsWith(supportedType.FileExtension, StringComparison.OrdinalIgnoreCase))).ToList();
 
                 if (supportedIncomingFiles.Count == 0)
                 {
                     // build a list of supported file types
-                    string supportedTypesList = string.Join(", ", _supportedFileTypes.Select(t => t.FileExtension));
+                    string supportedTypesList = string.Join(", ", _settings.SupportedFileTypes.Select(t => t.FileExtension));
 
                     // log info
                     _errors.Add(new Exceptions.IncomingFolderEmptyException($"Incoming folder does not contain any supported file type: {supportedTypesList}"));
@@ -98,14 +98,14 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             // check revision prefix and suffix are set
 
             //check incoming folder
-            var files = GetSupportedFilesFromFolder(_incomingFolderPath);
+            var files = GetSupportedFilesFromFolder(_settings.IncomingFolderPath);
             if (files.Count == 0)
             {
                 return false;
             }
             
             //check if current folder or folders exists
-            if (string.IsNullOrEmpty(_currentFolderPath) && (_filingRules == null || _filingRules.Count == 0))
+            if (string.IsNullOrEmpty(_settings.CurrentFolderPath) && (_settings.FilingRules == null || _settings.FilingRules.Count == 0))
             {
                 // log error
                 _errors.Add(new Exceptions.FolderDoesNotExistException("Current folder path is not set and no filing rules defined for multiple folder mode."));
@@ -113,18 +113,18 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             }
 
             //if there is a single current folder mode, check if that folder exists
-            if (!string.IsNullOrEmpty(_currentFolderPath))
+            if (!string.IsNullOrEmpty(_settings.CurrentFolderPath))
             {
-                if (!System.IO.Directory.Exists(_currentFolderPath))
+                if (!System.IO.Directory.Exists(_settings.CurrentFolderPath))
                 {
                     // log error
-                    _errors.Add(new Exceptions.FolderDoesNotExistException("Current folder path does not exist.", _currentFolderPath));
+                    _errors.Add(new Exceptions.FolderDoesNotExistException("Current folder path does not exist.", _settings.CurrentFolderPath));
                     return false;
                 }
             }
 
             // check if we are in multiple folder mode but no folders are defined
-            if (string.IsNullOrEmpty(_currentFolderPath) && _filingRules!=null && _filingRules.Count == 0)
+            if (string.IsNullOrEmpty(_settings.CurrentFolderPath) && _settings.FilingRules !=null && _settings.FilingRules.Count == 0)
             {
                 // single folder mode but no folder set
                 // log error
@@ -133,13 +133,13 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             }
 
             //check if multiple current folders are in use
-            if (_filingRules != null && _filingRules.Count > 0)
+            if (_settings.FilingRules != null && _settings.FilingRules.Count > 0)
             {
                 // multiple folders in use, check if all superseded folders exist
                 bool allFoldersExist = true;
 
                 // multiple folders in use, check if all superseded folders exist
-                foreach (var rule in _filingRules)
+                foreach (var rule in _settings.FilingRules)
                 {
                     if (!System.IO.Directory.Exists(rule.TargetDirectory))
                     {
@@ -157,7 +157,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             }
             
             // check superseded folder
-            if (string.IsNullOrEmpty(_supersededFolderPath))
+            if (string.IsNullOrEmpty(_settings.SupersededFolderPath))
             {
                 // folder is not set, log error
                 _errors.Add(new Exceptions.FolderDoesNotExistException("Supersede folder path is not set."));
@@ -166,7 +166,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
 
 
             // check revision prefix and suffix are set
-            if (string.IsNullOrEmpty(_revisionPrefix) || string.IsNullOrEmpty(_revisionSuffix))
+            if (string.IsNullOrEmpty(_settings.RevisionPrefix) || string.IsNullOrEmpty(_settings.RevisionSuffix))
             {
                 // log error
                 _errors.Add(new Exceptions.InvalidRevisionFormatException("Revision prefix and/or suffix are not set."));
@@ -186,10 +186,10 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         private List<string> GetDocumentNumberOptionsForDocument(string number)
         {
             List<string> documentNumberOptions = new List<string>();
-            if (_supportedFileTypes != null && _supportedFileTypes.Count != 0)
+            if (_settings.SupportedFileTypes != null && _settings.SupportedFileTypes.Count != 0)
             {
                 // loop over all supported file types and get modified document numbers
-                foreach (var supportedType in _supportedFileTypes)
+                foreach (var supportedType in _settings.SupportedFileTypes)
                 {
                     string modifiedNumber = supportedType.GetModifiedDocumentNumber(number);
                     documentNumberOptions.Add(modifiedNumber);
@@ -283,30 +283,30 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             string? revision = null;
 
             // check if revision prefix and suffix are set
-            if (_revisionPrefix == null || _revisionSuffix == null)
+            if (_settings.RevisionPrefix == null || _settings.RevisionSuffix == null)
             {
                 return revision;
             }
-            int revisionEndIndex = fileName.LastIndexOf(_revisionSuffix);
-            int revisionStartIndex = fileName.LastIndexOf(_revisionPrefix);
+            int revisionEndIndex = fileName.LastIndexOf(_settings.RevisionSuffix);
+            int revisionStartIndex = fileName.LastIndexOf(_settings.RevisionPrefix);
 
             // check if both prefix and suffix are found
             if (revisionStartIndex == -1)
             {
                 //log error
-                incomingDocumentStatus.AddProcessMessage(new Exceptions.InvalidRevisionFormatException($"Revision prefix '{_revisionPrefix}' not found in file name '{fileName}'"));
+                incomingDocumentStatus.AddProcessMessage(new Exceptions.InvalidRevisionFormatException($"Revision prefix '{_settings.RevisionPrefix}' not found in file name '{fileName}'"));
             }
 
             if (revisionEndIndex == -1)
             {
                 //log error
-                incomingDocumentStatus.AddProcessMessage(new Exceptions.InvalidRevisionFormatException($"Revision suffix '{_revisionSuffix}' not found in file name '{fileName}'"));
+                incomingDocumentStatus.AddProcessMessage(new Exceptions.InvalidRevisionFormatException($"Revision suffix '{_settings.RevisionSuffix}' not found in file name '{fileName}'"));
             }
 
             if (revisionEndIndex > revisionStartIndex)
             {
                 // extract revision
-                int start = revisionStartIndex + _revisionPrefix.Length;
+                int start = revisionStartIndex + _settings.RevisionPrefix.Length;
                 int length = revisionEndIndex - start;
                 revision = fileName.Substring(start, length);
 
@@ -385,7 +385,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             // if a match is found, add to matchedDocuments list with status indicating a match
             // if no match is found, add to matchedDocuments list with status indicating no match
             
-            List<string> incomingFiles = GetSupportedFilesFromFolder(_incomingFolderPath);
+            List<string> incomingFiles = GetSupportedFilesFromFolder(_settings.IncomingFolderPath);
             // proceed only if there are incoming files, errors are logged in the GetSupportedFilesFromIncomingFolder method
             if (incomingFiles.Count == 0)
             {

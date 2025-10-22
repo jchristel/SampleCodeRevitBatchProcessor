@@ -21,6 +21,8 @@
 //
 //
 
+using Newtonsoft.Json;
+
 namespace duHastNet.DocManager.Core.Models
 {
     public class SupportedFileType
@@ -33,7 +35,10 @@ namespace duHastNet.DocManager.Core.Models
         /// </summary>
         /// <remarks>This field holds an implementation of the <see
         /// cref="Interfaces.IDocumentNumberModifier"/> interface,  which can be used to alter or customize document
-        /// numbers. If null, no modification will be applied.</remarks>
+        /// numbers. If null, no modification will be applied.
+        /// This is a behavior/logic object and should not be serialized.
+        /// </remarks>
+        [JsonIgnore]
         private Interfaces.IDocumentNumberModifier? _documentNumberModifier;
 
         /// <summary>
@@ -59,6 +64,17 @@ namespace duHastNet.DocManager.Core.Models
             FileExtension = fileExtension;
             Description = description;
             _documentNumberModifier = documentNumberModifier;
+        }
+
+        /// <summary>
+        /// Parameterless constructor for JSON deserialization
+        /// </summary>
+        [JsonConstructor]
+        public SupportedFileType()
+        {
+            FileExtension = string.Empty;
+            Description = string.Empty;
+            _documentNumberModifier = null;
         }
     }
 }

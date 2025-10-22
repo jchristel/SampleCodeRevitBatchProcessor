@@ -21,63 +21,29 @@
 //
 //
 
-
 namespace duHastNet.DocManager.Core.Models.CurrentFolder
 {
     /// <summary>
-    /// a class which manages documents in a current folder or multiple folders.
+    /// A class which manages documents in a current folder or multiple folders.
     /// 
     /// A current folder or folders are defined as keeping the latest version of a document.
     /// Previous versions of a document are moved into a superseded folder
     /// 
     /// Multiple folder can be used when documentation is split into packages with a large number of documents each.
-    /// This allowes for multiple folders with an easier (less) document structure
+    /// This allows for multiple folders with an easier (less) document structure
     /// </summary>
     /// 
     public partial class CurrentFolderManager
     {
         /// <summary>
-        /// the path top the folder containing the incoming documents
-        /// Documents in that folder will be moved to the current folder(s) if:
-        /// - there is no matching document in the current location(s)
-        /// - the previous version of the document was superseded succesfully (moved out of the current folder)
+        /// Configuration settings for this manager instance
         /// </summary>
-        private string? _incomingFolderPath;
+        private readonly CurrentFolderManagerSettings _settings;
 
         /// <summary>
-        /// the path to the folder containing the current documents.
-        /// Can be null if multiple folders are in use. Refer to folder distribution rules.
+        /// Gets the configuration settings for this manager
         /// </summary>
-        private string? _currentFolderPath;
-
-        /// <summary>
-        /// the path to the folder containing all superseded documents. If null, documents will not be moved, if a newer version is added to the current folder(s)
-        /// If the superseded folder allready contains a document (file) with the same name, ie. document manager has been run a number of times
-        /// using the same documents, the document will be replaced with the new version.
-        /// </summary>
-        private string? _supersededFolderPath;
-
-        /// <summary>
-        /// a unique character in the file name indicating the start of a revision i.e. if the revision is indicated using square brackets: '[a]'
-        /// the prefix is '['
-        /// </summary>
-        private string? _revisionPrefix;
-
-        /// <summary>
-        /// a unique character in the file name indicating the end of a revision, i.e. if the revision is indicated using square brackets: '[a]'
-        /// the suffix is ']'
-        /// </summary>
-        private string? _revisionSuffix;
-
-        /// <summary>
-        /// These rules are used to distribute the documents to folders, if current document sets are maintained across multiples.
-        /// </summary>
-        private List<Interfaces.IFilingRule>? _filingRules;
-
-        /// <summary>
-        /// A list of file types which are supported by the document manager
-        /// </summary>
-        private List<Models.SupportedFileType>? _supportedFileTypes;
+        public CurrentFolderManagerSettings Settings => _settings;
 
         /// <summary>
         /// Represents a collection of matched incoming document.
@@ -86,67 +52,101 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         /// This field holds the statuses of incoming files that have been matched to a
         /// specific documents. It may be empty if no documents have been
         /// matched.
+        /// This is runtime state that should not be persisted.
         /// </remarks>
-        private List<Models.IncomingDocumentProcessingStatus>? _matchedDocuments;
+        private List<Models.IncomingDocumentProcessingStatus> _matchedDocuments;
 
-        public List<Models.IncomingDocumentProcessingStatus>? MatchedDocuments
+        /// <summary>
+        /// Gets the collection of matched incoming documents
+        /// </summary>
+        public List<Models.IncomingDocumentProcessingStatus> MatchedDocuments
         {
             get { return _matchedDocuments; }
         }
 
         /// <summary>
         /// Contains any errors which occurred during operations
-        /// </summary> 
+        /// This is runtime state that should not be persisted.
+        /// </summary>
         private List<Exception> _errors;
-        
-        #region filing rules
 
+        /// <summary>
+        /// Gets the collection of errors that occurred during operations
+        /// </summary>
+        public List<Exception> Errors => _errors;
+
+        #region filing rules delegation to settings
+
+        /// <summary>
+        /// Adds a filing rule to the configuration
+        /// </summary>
         public void AddFilingRule(Interfaces.IFilingRule filingRule)
         {
-            throw new NotImplementedException();
+            _settings.AddFilingRule(filingRule);
         }
 
+        /// <summary>
+        /// Removes a filing rule from the configuration
+        /// </summary>
         public void RemoveFilingRule(Interfaces.IFilingRule filingRule)
         {
-            throw new NotImplementedException();
+            _settings.RemoveFilingRule(filingRule);
         }
 
+        /// <summary>
+        /// Clears all filing rules
+        /// </summary>
         public void ClearFilingRules()
         {
-            //clear all rules
-            if (_filingRules != null)
-            {
-                _filingRules.Clear();
-            }
+            _settings.ClearFilingRules();
         }
 
         #endregion
 
-        #region supported file types
+        #region supported file types delegation to settings
+
+        /// <summary>
+        /// Adds a supported file type to the configuration
+        /// </summary>
         public void AddSupportedFileType(Models.SupportedFileType supportedFileType)
         {
-            throw new NotImplementedException();
+            _settings.AddSupportedFileType(supportedFileType);
         }
+
+        /// <summary>
+        /// Removes a supported file type from the configuration
+        /// </summary>
         public void RemoveSupportedFileType(Models.SupportedFileType supportedFileType)
         {
-            throw new NotImplementedException();
+            _settings.RemoveSupportedFileType(supportedFileType);
         }
+
+        /// <summary>
+        /// Clears all supported file types
+        /// </summary>
         public void ClearSupportedFileTypes()
         {
-            //clear all supported file types
-            if (_supportedFileTypes != null)
-            {
-                _supportedFileTypes.Clear();
-            }
+            _settings.ClearSupportedFileTypes();
         }
+
         #endregion
 
-        public CurrentFolderManager ()
+        /// <summary>
+        /// Initializes a new instance of CurrentFolderManager with the specified settings
+        /// </summary>
+        /// <param name="settings">Configuration settings for the manager</param>
+        public CurrentFolderManager(CurrentFolderManagerSettings settings)
         {
-            _filingRules = [];
-            _errors = [];
-            _supportedFileTypes = [];
-            _matchedDocuments = [];
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            _errors = new List<Exception>();
+            _matchedDocuments = new List<Models.IncomingDocumentProcessingStatus>();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of CurrentFolderManager with default settings
+        /// </summary>
+        public CurrentFolderManager() : this(new CurrentFolderManagerSettings())
+        {
         }
     }
 }

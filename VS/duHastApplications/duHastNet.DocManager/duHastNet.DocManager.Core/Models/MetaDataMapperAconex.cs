@@ -19,59 +19,89 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHastNet.DocManager.Core.Models
 {
+    /// <summary>
+    /// Metadata mapper for Aconex cloud document management system
+    /// This class maps document properties to Aconex metadata fields
+    /// </summary>
     public class MetaDataMapperAconex : Interfaces.ICloudMetaData
     {
         /// <summary>
-        /// csv meta data template file path
+        /// CSV metadata template file path
         /// </summary>
         private string _metadataTemplateFilePath = string.Empty;
-        public string MetadataTemplateFilePath { 
-            get => _metadataTemplateFilePath; 
-            set => _metadataTemplateFilePath = value; 
+
+        /// <summary>
+        /// Gets or sets the fully qualified path to the metadata template file
+        /// which is used to upload documents. The file will be duplicated and modified during upload.
+        /// </summary>
+        public string MetadataTemplateFilePath
+        {
+            get => _metadataTemplateFilePath;
+            set => _metadataTemplateFilePath = value;
         }
 
         /// <summary>
-        /// list of all mapped fields
+        /// List of all mapped fields
         /// </summary>
         private List<MetaDataMap> _metaDataMap = new List<MetaDataMap>();
-        public List<MetaDataMap> MetaDataMap { 
-            get => _metaDataMap; 
-        }
 
+        /// <summary>
+        /// Gets the collection of metadata field mappings
+        /// Maps metadata fields to document properties
+        /// </summary>
+        public List<MetaDataMap> MetaDataMap
+        {
+            get => _metaDataMap;
+        }
 
         /// <summary>
         /// Adds a new meta data mapper to collection if not already existing (based on MetaFieldName)
         /// </summary>
-        /// <param name="mapper"></param>
-        /// <exception cref="ArgumentException"></exception>
+        /// <param name="mapper">The metadata mapper to add</param>
+        /// <exception cref="ArgumentNullException">Thrown when mapper is null</exception>
+        /// <exception cref="Exceptions.MetaMapperDuplicateException">Thrown when a mapper for this field already exists</exception>
         public void AddMapper(MetaDataMap mapper)
         {
-            //check if mapper already exists
-            if (!_metaDataMap.Any(m => m.MetaFieldName == mapper.MetaFieldName))
+            if (mapper == null)
+            {
+                throw new ArgumentNullException(nameof(mapper));
+            }
+
+            // Check if mapper already exists
+            var existingMapper = _metaDataMap.FirstOrDefault(m => m.MetaFieldName == mapper.MetaFieldName);
+
+            if (existingMapper == null)
             {
                 _metaDataMap.Add(mapper);
             }
             else
             {
-                throw new ArgumentException($"Mapper for field {mapper.MetaFieldName} already exists.");
+                throw new Exceptions.MetaMapperDuplicateException(
+                    $"Mapper for field '{mapper.MetaFieldName}' already exists.",
+                    existingMapper,
+                    mapper);
             }
         }
 
         /// <summary>
         /// Removes mapper from collection based on MetaFieldName
         /// </summary>
-        /// <param name="mapper"></param>
+        /// <param name="mapper">The metadata mapper to remove</param>
+        /// <exception cref="ArgumentNullException">Thrown when mapper is null</exception>
         public void RemoveMapper(MetaDataMap mapper)
         {
-            //check if mapper exists based on MetaFieldName
+            if (mapper == null)
+            {
+                throw new ArgumentNullException(nameof(mapper));
+            }
+
+            // Check if mapper exists based on MetaFieldName
             var existingMapper = _metaDataMap.FirstOrDefault(m => m.MetaFieldName == mapper.MetaFieldName);
 
-            //if found remove it
+            // If found, remove it
             if (existingMapper != null)
             {
                 _metaDataMap.Remove(existingMapper);
@@ -79,11 +109,20 @@ namespace duHastNet.DocManager.Core.Models
         }
 
         /// <summary>
-        /// clear all mappers from collection
+        /// Clear all mappers from collection
         /// </summary>
         public void ClearMappers()
         {
             _metaDataMap.Clear();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of MetaDataMapperAconex
+        /// </summary>
+        public MetaDataMapperAconex()
+        {
+            _metaDataMap = new List<MetaDataMap>();
+            _metadataTemplateFilePath = string.Empty;
         }
     }
 }

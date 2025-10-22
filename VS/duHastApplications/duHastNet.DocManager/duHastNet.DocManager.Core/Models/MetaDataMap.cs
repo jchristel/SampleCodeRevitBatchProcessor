@@ -16,22 +16,22 @@
 //
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace duHastNet.DocManager.Core.Models
 {
+    /// <summary>
+    /// Maps a metadata field to either a fixed value or a document property
+    /// Used for cloud document management system integrations
+    /// </summary>
     public class MetaDataMap
     {
         /// <summary>
-        /// the meta data field name
+        /// The metadata field name
         /// </summary>
         private string? _metaFieldName;
 
+        /// <summary>
+        /// Gets or sets the metadata field name
+        /// </summary>
         public string? MetaFieldName
         {
             get { return _metaFieldName; }
@@ -39,10 +39,14 @@ namespace duHastNet.DocManager.Core.Models
         }
 
         /// <summary>
-        /// The meta data field value. Null if this value is coming from a document property
+        /// The metadata field value. Null if this value is coming from a document property
         /// </summary>
         private string? _metaFieldValue;
 
+        /// <summary>
+        /// Gets or sets the metadata field value
+        /// Use this for fixed/static values. Set to null if the value comes from a document property.
+        /// </summary>
         public string? MetaFieldValue
         {
             get { return _metaFieldValue; }
@@ -54,6 +58,10 @@ namespace duHastNet.DocManager.Core.Models
         /// </summary>
         private string? _documentPropertyName;
 
+        /// <summary>
+        /// Gets or sets the document property name that provides the value
+        /// Use this for dynamic values from document properties. Set to null if using a fixed value.
+        /// </summary>
         public string? DocumentPropertyName
         {
             get { return _documentPropertyName; }
@@ -65,16 +73,35 @@ namespace duHastNet.DocManager.Core.Models
         /// </summary>
         private string? _cloudServiceProviderName;
 
+        /// <summary>
+        /// Gets or sets the cloud service provider name this metadata mapping is for
+        /// </summary>
         public string? CloudServiceProviderName
         {
             get { return _cloudServiceProviderName; }
             set { _cloudServiceProviderName = value; }
         }
 
+        /// <summary>
+        /// Initializes a new instance of MetaDataMap
+        /// </summary>
+        public MetaDataMap()
+        {
+        }
 
         /// <summary>
-        /// class containing meta data information
+        /// Initializes a new instance of MetaDataMap with specified values
         /// </summary>
-        public MetaDataMap() { }
+        /// <param name="metaFieldName">The metadata field name</param>
+        /// <param name="metaFieldValue">The fixed value (use null if value comes from document property)</param>
+        /// <param name="documentPropertyName">The document property name (use null if using fixed value)</param>
+        /// <param name="cloudServiceProviderName">The cloud service provider name</param>
+        public MetaDataMap(string? metaFieldName, string? metaFieldValue, string? documentPropertyName, string? cloudServiceProviderName)
+        {
+            _metaFieldName = metaFieldName;
+            _metaFieldValue = metaFieldValue;
+            _documentPropertyName = documentPropertyName;
+            _cloudServiceProviderName = cloudServiceProviderName;
+        }
     }
 }

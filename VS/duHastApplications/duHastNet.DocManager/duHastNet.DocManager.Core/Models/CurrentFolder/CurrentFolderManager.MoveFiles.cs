@@ -83,14 +83,14 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                 return string.Empty;
             }
 
-            if (!string.IsNullOrEmpty(_currentFolderPath))
+            if (!string.IsNullOrEmpty(_settings.CurrentFolderPath))
             {
-                return _currentFolderPath;
+                return _settings.CurrentFolderPath;
             }
             else
             {
                 // implement logic for multiple folder mode based on document properties and folder distribution rules
-                foreach (var rule in _filingRules!)
+                foreach (var rule in _settings.FilingRules!)
                 {
                     // get the file name from the document path
                     string fileName = System.IO.Path.GetFileName(documentPath!);
@@ -358,7 +358,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                         }
                         // move file to superseded folder
                         var fileName = System.IO.Path.GetFileName(fileToMove);
-                        var destinationPath = System.IO.Path.Combine(_supersededFolderPath!, fileName);
+                        var destinationPath = System.IO.Path.Combine(_settings.SupersededFolderPath!, fileName);
                         try
                         {
                             System.IO.File.Move(fileToMove, destinationPath);

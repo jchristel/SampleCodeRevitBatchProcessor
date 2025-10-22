@@ -56,7 +56,7 @@ def schedule_contains_sheet_number_field(schedule):
             # sheet number field found, return True
             return True
     
-    return false
+    return False
 
 
 def get_sheet_numbers_in_schedule(schedule):

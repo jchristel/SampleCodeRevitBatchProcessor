@@ -40,13 +40,11 @@ from duHast.Utilities.Objects.result import Result
 from Autodesk.Revit.DB import  (
     BuiltInParameter,
     ElementId, 
-    FilterValueRule,
     FilterDoubleRule,
     FilterIntegerRule,
     FilterInverseRule,
     FilterElementIdRule,
     FilterStringRule,
-    ParameterValueProvider,
 )
 
 # dictionary containing varies rule mappings
@@ -70,6 +68,18 @@ class_mapping = {
 
 
 def create_filter_double_rule(evaluator, value_provider, rule_data_instance):
+    """
+    Creates a FilterDoubleRule.
+    
+    :param evaluator: The evaluator for the rule.
+    :type evaluator: Autodesk.Revit.DB.FilterDoubleEvaluator
+    :param value_provider: The value provider for the rule.
+    :type value_provider: Autodesk.Revit.DB.ParameterValueProvider
+    :param rule_data_instance: The rule data instance containing the rule value and epsilon.
+
+    :return: The created FilterDoubleRule or None if creation failed.
+    """
+
     try:
         rule = FilterDoubleRule( value_provider, evaluator, float(rule_data_instance.rule_value), float(rule_data_instance.epsilon))
         return rule
@@ -79,6 +89,18 @@ def create_filter_double_rule(evaluator, value_provider, rule_data_instance):
 
 
 def create_filter_integer_rule(evaluator, value_provider, rule_data_instance):
+    """
+    Creates a FilterIntegerRule.
+
+    :param evaluator: The evaluator for the rule.
+    :type evaluator: Autodesk.Revit.DB.FilterIntegerEvaluator
+    :param value_provider: The value provider for the rule.
+    :type value_provider: Autodesk.Revit.DB.ParameterValueProvider
+    :param rule_data_instance: The rule data instance containing the rule value.
+
+    :return: The created FilterIntegerRule or None if creation failed.
+    """
+
     try:
         rule = FilterIntegerRule( value_provider, evaluator, int(rule_data_instance.rule_value))
         return rule
@@ -88,6 +110,18 @@ def create_filter_integer_rule(evaluator, value_provider, rule_data_instance):
 
 
 def create_filter_element_id_rule(evaluator, value_provider, rule_data_instance):
+    """
+    Creates a FilterElementIdRule.
+
+    :param evaluator: The evaluator for the rule.
+    :type evaluator: Autodesk.Revit.DB.FilterIntegerEvaluator
+    :param value_provider: The value provider for the rule.
+    :type value_provider: Autodesk.Revit.DB.ParameterValueProvider
+    :param rule_data_instance: The rule data instance containing the rule value.
+
+    :return: The created FilterElementIdRule or None if creation failed.
+    """
+
     try:
         rule = FilterElementIdRule( value_provider, evaluator, ElementId(int(rule_data_instance.rule_value)))
         return rule
@@ -97,7 +131,18 @@ def create_filter_element_id_rule(evaluator, value_provider, rule_data_instance)
 
 
 def create_filter_string_rule(evaluator, value_provider, rule_data_instance):
-    
+    """
+    Creates a FilterStringRule.
+
+    :param evaluator: The evaluator for the rule.
+    :type evaluator: Autodesk.Revit.DB.FilterStringEvaluator
+    :param value_provider: The value provider for the rule.
+    :type value_provider: Autodesk.Revit.DB.ParameterValueProvider
+    :param rule_data_instance: The rule data instance containing the rule value.
+
+    :return: The created FilterStringRule or None if creation failed.
+    """
+
     rule = None
     try:
         rule = FilterStringRule( value_provider, evaluator, rule_data_instance.rule_value)
@@ -107,7 +152,16 @@ def create_filter_string_rule(evaluator, value_provider, rule_data_instance):
 
 
 def get_rule_parameter(doc, rule_data_instance):
-    
+    """
+    Gets the parameter for the given rule data instance.
+
+    :param doc: The Revit document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param rule_data_instance: The rule data instance containing the parameter information.
+    :type rule_data_instance: ViewFilterRule
+    :return: A Result object containing the parameter or an error message.
+    """
+
     return_value = Result()
    
     # get the parameter
@@ -154,8 +208,6 @@ def get_rule_parameter(doc, rule_data_instance):
         # no valid id provided, shouldnt get here but just in case
         return_value.update_sep(False, "Failed to get parameter: {}. No valid parameter id or guid provided.".format( rule_data_instance.parameter_name))
         return return_value
-    
-    return return_value
 
 
 def get_rule_parameter_id(doc, rule_data_instance, parameter ):
@@ -171,7 +223,6 @@ def get_rule_parameter_id(doc, rule_data_instance, parameter ):
         parameter_id = parameter.Id
     
     return parameter_id
-
 
 
 def convert_data_to_rule(doc, rule_data_instance):

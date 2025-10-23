@@ -33,7 +33,7 @@ from duHast.Revit.Family.family_utils import load_family
 from duHast.Revit.Common.delete import delete_by_element_ids
 
 
-def reload_family(doc, family, family_file_path):
+def reload_family(doc, family, family_file_path, delete_new_types=True):
     """
     Reloads a single family into a Revit document.
 
@@ -46,6 +46,9 @@ def reload_family(doc, family, family_file_path):
     :type family: Autodesk.Revit.DB.family
     :param family_file_path: The fully qualified file path of the family to be re-loaded.
     :type family_file_path: str
+    :param delete_new_types: If true, any new family types introduced during the reload will be deleted from the project.
+        Default is True.
+    :type delete_new_types: bool
     :raise: None
 
     :return:
@@ -82,6 +85,15 @@ def reload_family(doc, family, family_file_path):
             
             # get the family returned
             fam_loaded = load_result.result[0]
+           
+            # if no new types to be deleted, return here
+            if not delete_new_types:
+                # no need to delete new types, return here
+                return_value.update_sep(True, "Family reloaded successfully without deleting new types.")
+                # return the family in the result object
+                return_value.result.append(fam_loaded)
+                return return_value
+            
             # get all its symbol ids 
             after_load_symbol_ids = fam_loaded.GetFamilySymbolIds()
             # find all new symbols introduced during the reload

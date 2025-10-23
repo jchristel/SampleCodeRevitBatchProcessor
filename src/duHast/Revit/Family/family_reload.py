@@ -34,15 +34,16 @@ from System.Collections.Generic import List
 
 
 # import common library
-from duHast.Revit.Common import delete as rDel
 
 from duHast.Utilities import files_get as fileGet
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities.files_io import was_file_edited_in_time_span, time_span_file_edited_last
 from duHast.Revit.Family import family_utils as rFamUtil
-from duHast.Revit.Family import family_load_option as famLoadOpt
 from duHast.Revit.Family.family_load_option import *
+from duHast.Revit.Family.family_reload_single import reload_family
+
 from duHast.Revit.Family.Utility import loadable_family_categories as rFamLoadable
+from duHast.UI.Objects.ProgressBase import ProgressBase
 
 import Autodesk.Revit.DB as rdb
 
@@ -52,7 +53,7 @@ import Autodesk.Revit.DB as rdb
 
 
 
-def reload_all_families(doc, library_location, include_sub_folders=False, time_span_in_minutes=None):
+def reload_all_families(doc, library_location, include_sub_folders=False, time_span_in_minutes=None, progress_callback=None, delete_new_types=True, report_matches_only=False):
     """
     Reloads a number of families with setting: parameter values overwritten: True
 
@@ -65,6 +66,12 @@ def reload_all_families(doc, library_location, include_sub_folders=False, time_s
     :type include_sub_folders: bool
     :param time_span_in_minutes: the span of time in which the file was modified to be considered for reload, defaults to None
     :type time_span_in_minutes: int, optional
+    :param progress_callback: a progress call back function, defaults to None
+    :type progress_callback: ProgressBase, optional
+    :param delete_new_types: If true, any new family types introduced during the reload will be deleted from the project. Default is True.
+    :type delete_new_types: bool
+    :param report_matches_only: If true, will only report on families where a reload attempt was made, defaults to False
+    :type report_matches_only: bool, optional
     
     :raises UserWarning: _description_
 
@@ -73,11 +80,14 @@ def reload_all_families(doc, library_location, include_sub_folders=False, time_s
     """
 
     result = res.Result()
-    # if a family is reloaded it may bring in new types not present in the model at reload
-    # this list contains the ids of those types (symbols)
-    # so they can be deleted if so desired
-    symbol_ids_to_be_deleted = []
+    
     try:
+
+        # type checking
+        if progress_callback != None:
+            if not isinstance(progress_callback, ProgressBase):
+                raise TypeError("progress_callback must be an instance of ProgressBase")
+        
         # build library
         library = fileGet.files_as_dictionary(
             library_location, "", "", ".rfa", include_sub_folders
@@ -88,81 +98,118 @@ def reload_all_families(doc, library_location, include_sub_folders=False, time_s
             raise UserWarning("Empty Library")
         else:
             result.append_message("Found: {} families in Library!".format(len(library)))
+        
         # get all families in file:
         family_ids = get_family_ids_from_symbols(doc)
-        if len(family_ids) > 0:
-            result.append_message(
-                "Found:  {} loadable families in file.".format(len(family_ids))
-            )
-            for fam_id in family_ids:
-                fam = doc.GetElement(fam_id)
-                fam_name = rdb.Element.Name.GetValue(fam)
-                if fam_name in library:
-                    result.append_message("Found match for: {}".format(fam_name))
-                    if len(library[fam_name]) == 1:
-                        # found single match for family by name
-                        result.update_sep(
-                            True, "Found single match: {}".format(library[fam_name][0])
-                        )
 
-                        # check if family was changed within time span, if not skip reload
-                        if time_span_in_minutes is not None:
-                            if was_file_edited_in_time_span(library[fam_name][0], time_span_in_minutes) == False:
-                                time_last_edited = time_span_file_edited_last(library[fam_name][0])
-                                result.append_message("Family {} was not modified within time span of {} minutes. Edited last: {} ago...skipping reload.".format(fam_name, time_span_in_minutes, time_last_edited))
-                                continue
-
-                        # get all symbols attached to this family by name
-                        prior_load_symbol_ids = fam.GetFamilySymbolIds()
-                        # reload family
-                        result_load = rFamUtil.load_family(doc, library[fam_name][0])
-                        result.append_message(result_load.message)
-                        if result_load.status == True:
-                            # make sure that if a single reload was successful that this method returns true
-                            result.status = True
-                            # remove symbols (family types) added through reload process
-                            if (
-                                result_load.result != None
-                                and len(result_load.result) > 0
-                            ):
-                                fam_loaded = result_load.result[0]
-                                after_load_symbol_ids = fam_loaded.GetFamilySymbolIds()
-                                new_symbol_ids = get_new_symbol_ids(
-                                    prior_load_symbol_ids, after_load_symbol_ids
-                                )
-                                if len(new_symbol_ids) > 0:
-                                    symbol_ids_to_be_deleted = (
-                                        symbol_ids_to_be_deleted + new_symbol_ids
-                                    )
-                    else:
-                        matches_message = ""
-                        for path in library[fam_name]:
-                            matches_message = matches_message + "..." + path + "\n"
-                        matches_message = "Found multiple matches for {} \n {}".format(
-                            fam_name, matches_message
-                        )
-                        matches_message = matches_message.strip()
-                        # found multiple matches for family by name only...aborting reload
-                        result.append_message(matches_message)
-                else:
-                    result.update_sep(
-                        result.status, "Found no match for: {}".format(fam_name)
-                    )
-            # delete any new symbols introduced during the reload
-            if len(symbol_ids_to_be_deleted) > 0:
-                result_delete = rDel.delete_by_element_ids(
-                    doc,
-                    symbol_ids_to_be_deleted,
-                    "Delete new family types",
-                    "Family types",
-                )
-                result.append_message(result_delete.message)
-            else:
-                message = "No need to delete any new family types since no new types where created."
-                result.append_message(message)  # make sure not to change the status
-        else:
+        # check if anything to reload
+        if len(family_ids)==0:
             message = "Found no loadable families in file!"
             result.update_sep(False, message)
+            return result
+
+        # update result
+        result.append_message(
+            "Found:  {} loadable families in file.".format(len(family_ids))
+        )
+
+        # set up progress
+        progress_max = len(family_ids)
+        callback_counter = 0
+
+        # loop over families in file and attempt reload
+        for fam_id in family_ids:
+
+            # progress call back
+            callback_counter += 1
+
+            # get the family
+            fam = doc.GetElement(fam_id)
+            # get the family name
+            fam_name = rdb.Element.Name.GetValue(fam)
+
+            # check if family name exists in library
+            if fam_name not in library:
+                # set appropriate message
+                message = "Family: {} not found in library.".format(fam_name)
+                # check if progress reporting is desired
+                if progress_callback != None:
+                    # only report progress if not in report matches only mode
+                    if not (report_matches_only):
+                        progress_callback.update(callback_counter, progress_max, message)
+                
+                result.update_sep(
+                    result.status, message
+                )
+
+                # skip to next family
+                continue
+
+            # proceed with reload
+            # check if progress callback is set
+            if progress_callback != None:
+                # only report progress if not in report matches only mode
+                if not (report_matches_only):
+                    progress_callback.update(callback_counter, progress_max, "Found match for: {}".format(fam_name))
+
+            result.append_message("Found match for: {}".format(fam_name))
+
+            # check number of matches found
+            if len(library[fam_name]) != 1:
+                matches_message = ""
+                for path in library[fam_name]:
+                    matches_message = matches_message + "..." + path + "\n"
+                matches_message = "Found multiple matches for {} \n {}".format(
+                    fam_name, matches_message
+                )
+                matches_message = matches_message.strip()
+                # found multiple matches for family by name only...aborting reload
+                result.append_message(matches_message)
+
+                # check if progress callback is set
+                if progress_callback != None:
+                    progress_callback.update(callback_counter, progress_max, matches_message)
+                
+                # skip to next family
+                continue
+
+            # found single match for family by name
+            result.update_sep(
+                True, "Found single match: {}".format(library[fam_name][0])
+            )
+
+            # check if family was changed within time span, if not skip reload
+            if time_span_in_minutes is not None:
+                if was_file_edited_in_time_span(library[fam_name][0], time_span_in_minutes) == False:
+                    time_last_edited = time_span_file_edited_last(library[fam_name][0])
+                    result.append_message("Family {} was not modified within time span of {} minutes. Edited last: {} ago...skipping reload.".format(fam_name, time_span_in_minutes, time_last_edited))
+                    continue
+
+            # attempt to load the family:
+            load_result = reload_family(
+                doc=doc, 
+                family=fam, 
+                family_file_path=library[fam_name][0], 
+                delete_new_types=delete_new_types
+            )
+
+            # check results
+            if load_result.status == True:
+                # make sure that if a single reload was successful that this method returns true
+                result.status = True
+
+            # preserve reload log messages
+            result.append_message(load_result.message)
+
+            # return the reloaded family, if there is one
+            if len(load_result.result) > 0:
+                result.result.append(load_result.result[0])
+
+            # check if progress callback is set
+            if progress_callback != None:
+                progress_callback.update(callback_counter, progress_max, load_result.message)
+
+        
     except Exception as e:
         message = "Failed to load families with exception: {}".format(e)
         result.update_sep(False, message)
@@ -196,25 +243,3 @@ def get_family_ids_from_symbols(doc):
         ):
             family_ids.append(fam_symbol.Family.Id)
     return family_ids
-
-
-def get_new_symbol_ids(pre_load_symbol_id_list, after_load_symbol_list):
-    """
-    Returns a list of symbol ids not present prior to reload.
-
-    Compares past in list of id's and returns ids not in preloadSymbolIdList
-
-    :param pre_load_symbol_id_list: List of Ids of symbols prior the reload.
-    :type pre_load_symbol_id_list: list of Autodesk.Revit.DB.ElementId
-    :param after_load_symbol_list: List of ids of symbols after the reload.
-    :type after_load_symbol_list: list of Autodesk.Revit.DB.ElementId
-
-    :return: List of element ids representing Family Symbols.
-    :rtype: list of Autodesk.Revit.DB.ElementId
-    """
-
-    ids = []
-    for id in after_load_symbol_list:
-        if id not in pre_load_symbol_id_list:
-            ids.append(id)
-    return ids

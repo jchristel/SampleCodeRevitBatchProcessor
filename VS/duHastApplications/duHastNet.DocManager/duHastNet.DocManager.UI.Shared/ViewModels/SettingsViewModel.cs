@@ -33,6 +33,7 @@ public partial class SettingsViewModel : ObservableObject
     private readonly DocManagerApi _docManagerApi;
     private readonly MessageStore _messageStore;
     private readonly Manager _manager;
+    private readonly NavigationStore _navigationStore;
     Core.Models.CurrentFolder.CurrentFolderManager _currentFolderManager;
     Core.Models.MetaDataMapperAconex _aconexMetaDataManager;
 
@@ -55,9 +56,11 @@ public partial class SettingsViewModel : ObservableObject
     public SettingsViewModel(
         DocManagerApi docManagerApi, 
         Manager manager, 
-        Stores.MessageStore messageStore, 
+        MessageStore messageStore, 
         Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager,
-        Core.Models.MetaDataMapperAconex aconexMetaDataManager
+        MetaDataMapperAconex aconexMetaDataManager,
+        NavigationStore navigationStore,
+        Func<MergeViewModel> createViewModel
         )
     {
         _docManagerApi = docManagerApi;
@@ -65,7 +68,7 @@ public partial class SettingsViewModel : ObservableObject
         _messageStore = messageStore;
         _currentFolderManager = currentFolderManager;
         _aconexMetaDataManager = aconexMetaDataManager;
-
+        _navigationStore = navigationStore;
 
         MessageViewModel = new GlobalMessageViewModel(_messageStore);
         DatabaseConnectionViewModel = new DatabaseConnectionViewModel(_docManagerApi, _messageStore, _manager);

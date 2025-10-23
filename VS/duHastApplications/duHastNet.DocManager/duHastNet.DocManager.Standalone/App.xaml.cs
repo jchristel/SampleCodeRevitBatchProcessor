@@ -23,6 +23,7 @@ namespace DocManager.Standalone
         private MessageStore? _messageStore;
         private SettingsService? _settingsService;
         private NavigationStore? _navigationStore;
+
         duHastNet.DocManager.Core.Models.CurrentFolder.CurrentFolderManager? _currentFolderManager;
         MetaDataMapperAconex? _aconexMetaDataMapper;
 
@@ -43,6 +44,9 @@ namespace DocManager.Standalone
             // Initialize MessageStore (singleton for application lifetime)
             _messageStore = new MessageStore();
 
+            // Initialize NavigationStore (singleton for application lifetime)
+            _navigationStore = new NavigationStore();
+
             // Load settings from JSON files
             var (currentFolderManagerSettings, metaDataMapperAconex) = await LoadSettingsAsync();
 
@@ -50,16 +54,20 @@ namespace DocManager.Standalone
             _currentFolderManager
                 = new(currentFolderManagerSettings);
 
+            // set up the navigation store
+            _navigationStore.CurrentViewModel = CreateMergeViewModel();
+
             // Create the main window with ViewModel
             // Pass both API and Manager to the ViewModel
             MainWindow = new DocManagerWindow()
             {
                 DataContext = new NavigationHostViewModel(
-                    docManagerApi: _docManagerApi,
-                    manager: _manager,
-                    currentFolderManager: _currentFolderManager,
-                    cloudMetaData: metaDataMapperAconex,
-                    messageStore: _messageStore)
+                    //docManagerApi: _docManagerApi,
+                    //manager: _manager,
+                    //currentFolderManager: _currentFolderManager,
+                    //cloudMetaData: metaDataMapperAconex,
+                    //messageStore: _messageStore,
+                    _navigationStore)
             };
 
             MainWindow.Show();
@@ -68,20 +76,25 @@ namespace DocManager.Standalone
 
         private SettingsViewModel CreateSettingsViewModel()
         {
-            GlobalMessageViewModel messageViewModel = new GlobalMessageViewModel(_messageStore!);
             return new SettingsViewModel(
-                _docManagerApi,
-                _manager,
-                _currentFolderManager,
-                _aconexMetaDataMapper);
-
-
+                _docManagerApi!,
+                _manager!,
+                _messageStore!,
+                _currentFolderManager!,
+                _aconexMetaDataMapper!,
+                _navigationStore!,
+                CreateMergeViewModel
+            );
         }
 
         private MergeViewModel CreateMergeViewModel()
         {
-            GlobalMessageViewModel messageViewModel = new GlobalMessageViewModel(_messageStore!);
-            return new MergeViewModel(_docManagerApi!, _manager!, _messageStore!);
+            return new MergeViewModel(
+                _docManagerApi!, 
+                _messageStore!,
+                _navigationStore!,
+                CreateSettingsViewModel
+            );
         }
 
         /// <summary>

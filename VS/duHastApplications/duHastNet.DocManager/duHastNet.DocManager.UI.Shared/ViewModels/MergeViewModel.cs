@@ -25,6 +25,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Services.Api;
+using duHastNet.DocManager.UI.Shared.Stores;
+using System;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels;
 
@@ -36,14 +38,22 @@ public partial class MergeViewModel : ObservableObject
     #region Private Fields
 
     private readonly DocManagerApi _docManagerApi;
+    private readonly MessageStore _messageStore;
+    private readonly NavigationStore _navigationStore;
 
     #endregion
 
     #region Constructor
 
-    public MergeViewModel(DocManagerApi docManagerApi)
+    public MergeViewModel(
+        DocManagerApi docManagerApi, 
+        MessageStore messageStore, 
+        NavigationStore navigationStore,
+        Func<SettingsViewModel> createViewModel)
     {
         _docManagerApi = docManagerApi;
+        _messageStore = messageStore;
+        _navigationStore = navigationStore;
     }
 
     #endregion

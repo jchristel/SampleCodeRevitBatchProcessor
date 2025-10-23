@@ -21,41 +21,46 @@ using duHastNet.DocManager.Core.Services.Api;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.UI.Shared.Stores;
 using System.Printing;
+using duHastNet.DocManager.UI.Shared.Interfaces;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels
 {
-    public partial class NavigationHostViewModel : ObservableObject
+    public partial class NavigationHostViewModel : ObservableObject, ICloseable
     {
-        private readonly DocManagerApi _docManagerApi;
-        private readonly Manager _manager;
-        private readonly MessageStore _messageStore;
-        private readonly Core.Models.CurrentFolder.CurrentFolderManager _currentFolderManager;
-        private readonly MetaDataMapperAconex _cloudMetaData;
+        //private readonly DocManagerApi _docManagerApi;
+        //private readonly Manager _manager;
+        //private readonly MessageStore _messageStore;
+        //private readonly Core.Models.CurrentFolder.CurrentFolderManager _currentFolderManager;
+        //private readonly MetaDataMapperAconex _cloudMetaData;
+        private readonly NavigationStore _navigationStore;
 
         [ObservableProperty]
         private ObservableObject _currentViewModel;
 
         public NavigationHostViewModel(
-            DocManagerApi docManagerApi, 
-            Manager manager, 
-            Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager,
-            MetaDataMapperAconex cloudMetaData,
-            MessageStore messageStore)
+            //DocManagerApi docManagerApi, 
+            //Manager manager, 
+            //Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager,
+            //MetaDataMapperAconex cloudMetaData,
+            //MessageStore messageStore,
+            NavigationStore navigationStore)
         {
-            _docManagerApi = docManagerApi;
-            _manager = manager;
-            _currentFolderManager = currentFolderManager;
-            _cloudMetaData = cloudMetaData;
-            _messageStore = messageStore;
+            //_docManagerApi = docManagerApi;
+            //_manager = manager;
+            //_currentFolderManager = currentFolderManager;
+            //_cloudMetaData = cloudMetaData;
+            //_messageStore = messageStore;
+            _navigationStore = navigationStore;
 
             // Initialize with SettingsViewModel as the default view
-            _currentViewModel = new SettingsViewModel(
-                _docManagerApi, 
-                _manager, 
-                _messageStore,
-                _currentFolderManager,
-                _cloudMetaData
-                );
+            _currentViewModel = _navigationStore.CurrentViewModel;
+        }
+
+
+        public void OnClosing()
+        {
+            // Notify the navigation store to close current view model
+            _navigationStore.NotifyClosing();
         }
     }
 }

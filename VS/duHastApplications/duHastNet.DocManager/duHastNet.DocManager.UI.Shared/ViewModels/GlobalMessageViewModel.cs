@@ -24,11 +24,12 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels;
 
-public partial class GlobalMessageViewModel : ObservableObject
+public partial class GlobalMessageViewModel : ObservableObject, ICloseable, IDisposable
 {
     private readonly MessageStore _messageStore;
 
@@ -84,6 +85,13 @@ public partial class GlobalMessageViewModel : ObservableObject
     {
         _messageStore = messageStore;
         _messageStore.PropertyChanged += OnStorePropertyChanged;
+    }
+
+    public void OnClosing()
+    {
+        // Save any message state if needed
+        // Stop any timers that should stop when navigating away
+        _messageStore.PauseDismissTimer();
     }
 
     public void Dispose()

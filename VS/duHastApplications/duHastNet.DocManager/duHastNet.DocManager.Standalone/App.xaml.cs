@@ -21,7 +21,10 @@ namespace DocManager.Standalone
         private DocManagerApi? _docManagerApi;
         private Manager? _manager;
         private MessageStore? _messageStore;
-        private ISettingsService? _settingsService;
+        private SettingsService? _settingsService;
+        private NavigationStore? _navigationStore;
+        duHastNet.DocManager.Core.Models.CurrentFolder.CurrentFolderManager? _currentFolderManager;
+        MetaDataMapperAconex? _aconexMetaDataMapper;
 
         protected override async void OnStartup(StartupEventArgs e)
         {
@@ -44,7 +47,7 @@ namespace DocManager.Standalone
             var (currentFolderManagerSettings, metaDataMapperAconex) = await LoadSettingsAsync();
 
             // Create CurrentFolderManager with loaded settings
-            duHastNet.DocManager.Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager
+            _currentFolderManager
                 = new(currentFolderManagerSettings);
 
             // Create the main window with ViewModel
@@ -54,12 +57,31 @@ namespace DocManager.Standalone
                 DataContext = new NavigationHostViewModel(
                     docManagerApi: _docManagerApi,
                     manager: _manager,
-                    currentFolderManager: currentFolderManager,
+                    currentFolderManager: _currentFolderManager,
                     cloudMetaData: metaDataMapperAconex,
                     messageStore: _messageStore)
             };
 
             MainWindow.Show();
+        }
+
+
+        private SettingsViewModel CreateSettingsViewModel()
+        {
+            GlobalMessageViewModel messageViewModel = new GlobalMessageViewModel(_messageStore!);
+            return new SettingsViewModel(
+                _docManagerApi,
+                _manager,
+                _currentFolderManager,
+                _aconexMetaDataMapper);
+
+
+        }
+
+        private MergeViewModel CreateMergeViewModel()
+        {
+            GlobalMessageViewModel messageViewModel = new GlobalMessageViewModel(_messageStore!);
+            return new MergeViewModel(_docManagerApi!, _manager!, _messageStore!);
         }
 
         /// <summary>

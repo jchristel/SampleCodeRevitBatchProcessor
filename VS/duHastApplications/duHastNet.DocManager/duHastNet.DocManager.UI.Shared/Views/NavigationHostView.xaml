@@ -24,6 +24,6 @@
         <!-- Add more DataTemplates here for other ViewModels as needed -->
     </UserControl.Resources>
     <Grid>
-        <local:SettingsView DataContext="{Binding CurrentViewModel}"/>
+        <ContentControl Content="{Binding CurrentViewModel}"/>
     </Grid>
 </UserControl>

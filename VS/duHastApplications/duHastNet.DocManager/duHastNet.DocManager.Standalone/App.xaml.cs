@@ -54,47 +54,20 @@ namespace DocManager.Standalone
             _currentFolderManager
                 = new(currentFolderManagerSettings);
 
-            // set up the navigation store
-            _navigationStore.CurrentViewModel = CreateMergeViewModel();
-
             // Create the main window with ViewModel
             // Pass both API and Manager to the ViewModel
             MainWindow = new DocManagerWindow()
             {
                 DataContext = new NavigationHostViewModel(
-                    //docManagerApi: _docManagerApi,
-                    //manager: _manager,
-                    //currentFolderManager: _currentFolderManager,
-                    //cloudMetaData: metaDataMapperAconex,
-                    //messageStore: _messageStore,
+                    docManagerApi: _docManagerApi,
+                    manager: _manager,
+                    currentFolderManager: _currentFolderManager,
+                    cloudMetaData: metaDataMapperAconex,
+                    messageStore: _messageStore,
                     _navigationStore)
             };
 
             MainWindow.Show();
-        }
-
-
-        private SettingsViewModel CreateSettingsViewModel()
-        {
-            return new SettingsViewModel(
-                _docManagerApi!,
-                _manager!,
-                _messageStore!,
-                _currentFolderManager!,
-                _aconexMetaDataMapper!,
-                _navigationStore!,
-                CreateMergeViewModel
-            );
-        }
-
-        private MergeViewModel CreateMergeViewModel()
-        {
-            return new MergeViewModel(
-                _docManagerApi!, 
-                _messageStore!,
-                _navigationStore!,
-                CreateSettingsViewModel
-            );
         }
 
         /// <summary>

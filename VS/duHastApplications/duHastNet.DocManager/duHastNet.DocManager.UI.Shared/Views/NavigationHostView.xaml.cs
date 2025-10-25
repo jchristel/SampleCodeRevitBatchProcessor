@@ -21,15 +21,13 @@
 //
 //
 
-using System.Windows.Controls;
-
 
 namespace duHastNet.DocManager.UI.Shared.Views
 {
     /// <summary>
     /// Interaction logic for MainView.xaml
     /// </summary>
-    public partial class NavigationHostView : UserControl
+    public partial class NavigationHostView : System.Windows.Controls.UserControl
     {
         public NavigationHostView()
         {

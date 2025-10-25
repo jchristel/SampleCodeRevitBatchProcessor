@@ -33,6 +33,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         private readonly Core.Models.CurrentFolder.CurrentFolderManager _currentFolderManager;
         private readonly MetaDataMapperAconex _cloudMetaData;
         private readonly NavigationStore _navigationStore;
+        private readonly IDialogService _dialogService;
 
         #region Public Properties
 
@@ -49,7 +50,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager,
             MetaDataMapperAconex cloudMetaData,
             MessageStore messageStore,
-            NavigationStore navigationStore)
+            NavigationStore navigationStore,
+            IDialogService dialogService
+            )
         {
             _docManagerApi = docManagerApi;
             _manager = manager;
@@ -57,6 +60,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             _cloudMetaData = cloudMetaData;
             _messageStore = messageStore;
             _navigationStore = navigationStore;
+            _dialogService = dialogService;
 
             // Subscribe to navigation changes
             _navigationStore.PropertyChanged += (s, e) =>
@@ -80,6 +84,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 _currentFolderManager!,
                 _cloudMetaData!,
                 _navigationStore!,
+                _dialogService!,
                 CreateMergeViewModel
             );
         }

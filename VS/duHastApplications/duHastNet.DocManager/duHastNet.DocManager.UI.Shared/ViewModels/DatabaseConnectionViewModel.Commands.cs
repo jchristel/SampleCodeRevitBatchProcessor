@@ -43,27 +43,20 @@ public partial class DatabaseConnectionViewModel
             // Inform user
             _messageStore.SetCurrentMessage("Creating database...", MessageTypes.Information);
 
-            // Configure and show SaveFileDialog
-            var saveDialog = new SaveFileDialog
-            {
-                Title = "Create New Database",
-                Filter = "Database files (*.db)|*.db|SQLite files (*.sqlite)|*.sqlite|All files (*.*)|*.*",
-                DefaultExt = ".db",
-                AddExtension = true,
-                OverwritePrompt = true,
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-            };
+            // Use dialog service instead of direct dialog
+            var selectedPath = _dialogService.ShowSaveFileDialog(
+                "Create New Database",
+                "Database files (*.db)|*.db|SQLite files (*.sqlite)|*.sqlite|All files (*.*)|*.*",
+                ".db");
 
-            // Show dialog and check result
-            var dialogResult = saveDialog.ShowDialog();
-            if (dialogResult != true)
+            if (string.IsNullOrEmpty(selectedPath))
             {
                 // User cancelled
                 return;
             }
 
             // Update the database path
-            DatabasePath = saveDialog.FileName;
+            DatabasePath = selectedPath;
 
             // Create the database using DocManagerApi
             var setupResult = await _docManagerApi.SetupDatabaseAsync(DatabasePath, overwriteExisting: true);
@@ -180,20 +173,20 @@ public partial class DatabaseConnectionViewModel
     {
         try
         {
-            var openDialog = new OpenFileDialog
-            {
-                Title = "Select Database File",
-                Filter = "Database files (*.db)|*.db|SQLite files (*.sqlite)|*.sqlite|All files (*.*)|*.*",
-                CheckFileExists = true,
-                Multiselect = false,
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-            };
 
-            var dialogResult = openDialog.ShowDialog();
-            if (dialogResult == true)
+            var filePath = _dialogService.ShowOpenFileDialog(
+                "Select Database File",
+                "Database files (*.db)|*.db|SQLite files (*.sqlite)|*.sqlite|All files (*.*)|*.*");
+
+            // Check for cancellation
+            if (filePath == null || filePath.Length==0)
             {
-                DatabasePath = openDialog.FileName;
+                // User cancelled
+                return;
             }
+
+            //set database path
+            DatabasePath = filePath[0];
         }
         catch (Exception)
         {

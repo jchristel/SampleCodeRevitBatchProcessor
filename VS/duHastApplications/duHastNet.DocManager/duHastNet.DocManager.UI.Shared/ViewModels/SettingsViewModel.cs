@@ -20,6 +20,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Services.Api;
+using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels;
@@ -37,6 +38,7 @@ public partial class SettingsViewModel : ObservableObject
     private readonly NavigationStore _navigationStore;
     Core.Models.CurrentFolder.CurrentFolderManager _currentFolderManager;
     Core.Models.MetaDataMapperAconex _aconexMetaDataManager;
+    private readonly IDialogService _dialogService;
 
     //function used to navigate to merge view model
     private readonly Func<MergeViewModel> _createViewModel;
@@ -64,6 +66,7 @@ public partial class SettingsViewModel : ObservableObject
         Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager,
         MetaDataMapperAconex aconexMetaDataManager,
         NavigationStore navigationStore,
+        IDialogService dialogService,
         Func<MergeViewModel> createViewModel
         )
     {
@@ -74,45 +77,29 @@ public partial class SettingsViewModel : ObservableObject
         _aconexMetaDataManager = aconexMetaDataManager;
         _navigationStore = navigationStore;
         _createViewModel = createViewModel;
+        _dialogService = dialogService;
 
         MessageViewModel = new GlobalMessageViewModel(_messageStore);
-        DatabaseConnectionViewModel = new DatabaseConnectionViewModel(_docManagerApi, _messageStore, _manager);
-        AconexMetadataViewModel = new MetaDataAconexViewModel(_messageStore, _manager);
-        CurrentFolderViewModel = new CurrentFolderViewModel(_messageStore, _manager, currentFolderManager);
+
+        DatabaseConnectionViewModel = new DatabaseConnectionViewModel(
+            _docManagerApi,
+            _messageStore,
+            _manager,
+            _dialogService);
+        
+        AconexMetadataViewModel = new MetaDataAconexViewModel(
+            _messageStore, 
+            _manager,
+            _dialogService);
+        
+        CurrentFolderViewModel = new CurrentFolderViewModel(
+            _messageStore, 
+            _manager, 
+            _currentFolderManager,
+            _dialogService);
 
     }
 
     #endregion Constructor
-
-    #region Commands
-
-    /// <summary>
-    /// Command to save settings and close
-    /// </summary>
-    [RelayCommand]
-    private void Save()
-    {
-        // TODO: Implement save logic
-        // - Save current folder settings
-        // - Save Aconex metadata settings
-        // - Save database connection settings
-
-        _messageStore.SetCurrentMessage(
-            "Settings saved successfully",
-            MessageTypes.Information,
-            dismissAfterSeconds: 3);
-
-    }
-
-    /// <summary>
-    /// Command to navigate to the Merge view
-    /// </summary>
-    [RelayCommand]
-    private void NavigateToMerge()
-    {
-        _navigationStore.NavigateTo(() => _createViewModel());
-    }
-
-    #endregion
 
 }

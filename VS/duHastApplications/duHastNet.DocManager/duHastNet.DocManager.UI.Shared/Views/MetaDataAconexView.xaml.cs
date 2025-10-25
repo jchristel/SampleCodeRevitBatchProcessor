@@ -21,14 +21,14 @@
 //
 //
 
-using System.Windows.Controls;
+
 
 namespace duHastNet.DocManager.UI.Shared.Views
 {
     /// <summary>
     /// Interaction logic for MetaDataAconex.xaml
     /// </summary>
-    public partial class MetaDataAconexView : UserControl
+    public partial class MetaDataAconexView : System.Windows.Controls.UserControl
     {
         public MetaDataAconexView()
         {

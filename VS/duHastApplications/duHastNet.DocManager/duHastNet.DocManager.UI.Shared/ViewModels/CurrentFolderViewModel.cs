@@ -26,6 +26,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Services.Api;
+using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
 
 
@@ -41,16 +42,23 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         private readonly MessageStore _messageStore;
         private readonly Manager _manager;
         private readonly Core.Models.CurrentFolder.CurrentFolderManager _currentFolderManager;
+        private readonly IDialogService _dialogService;
 
         #endregion Private Fields
 
         #region Constructor
 
-        public CurrentFolderViewModel(MessageStore messageStore, Manager manager, Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager)
+        public CurrentFolderViewModel(
+            MessageStore messageStore, 
+            Manager manager, 
+            Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager,
+            IDialogService dialogService
+        )
         {
             _manager = manager;
             _messageStore = messageStore;
             _currentFolderManager = currentFolderManager;
+            _dialogService = dialogService;
         }
 
         #endregion
@@ -77,9 +85,59 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
 
         #endregion Observable Properties
 
-        #region Commands - To be implemented
+        #region Commands 
 
-        #endregion  Commands - To be implemented
+        /// <summary>
+        /// Command to browse for incoming folder
+        /// </summary>
+        [RelayCommand]
+        private void BrowseIncomingFolder()
+        {
+            try
+            {
+                var selectedPath = _dialogService.ShowFolderBrowserDialog(
+                    "Select Incoming Folder",
+                    IncomingFolderPath);
+
+                if (!string.IsNullOrEmpty(selectedPath))
+                {
+                    IncomingFolderPath = selectedPath;
+                }
+            }
+            catch (Exception ex)
+            {
+                _messageStore.SetCurrentMessage(
+                    $"Error selecting incoming folder: {ex.Message}",
+                    MessageTypes.Error);
+            }
+        }
+
+        /// <summary>
+        /// Command to browse for archive folder
+        /// </summary>
+        [RelayCommand]
+        private void BrowseArchiveFolder()
+        {
+            try
+            {
+                var selectedPath = _dialogService.ShowFolderBrowserDialog(
+                    "Select Archive Folder",
+                    ArchiveFolderPath);
+
+                if (!string.IsNullOrEmpty(selectedPath))
+                {
+                    ArchiveFolderPath = selectedPath;
+                }
+            }
+            catch (Exception ex)
+            {
+                _messageStore.SetCurrentMessage(
+                    $"Error selecting archive folder: {ex.Message}",
+                    MessageTypes.Error);
+            }
+        }
+
+        #endregion  Commands 
 
     }
 }

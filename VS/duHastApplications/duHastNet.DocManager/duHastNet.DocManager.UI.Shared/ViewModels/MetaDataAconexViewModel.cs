@@ -26,6 +26,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Services.Api;
+using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels
@@ -37,15 +38,17 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
 
         private readonly MessageStore _messageStore;
         private readonly Manager _manager;
+        private readonly IDialogService _dialogService;
 
         #endregion Private Fields
 
         #region Constructor
 
-        public MetaDataAconexViewModel(MessageStore messageStore, Manager manager)
+        public MetaDataAconexViewModel(MessageStore messageStore, Manager manager, IDialogService dialogService)
         {
             _manager = manager;
             _messageStore = messageStore;
+            _dialogService = dialogService;
         }
 
         #endregion
@@ -60,9 +63,35 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
 
         #endregion Observable Properties
 
-        #region Commands - To be implemented
+        #region Commands
 
-        #endregion  Commands - To be implemented
+        [RelayCommand]
+        private void BrowseTemplateFile()
+        {
+            try
+            {
+                IsBrowseTemplateFileEnabled = false;
+                // Use dialog service instead of direct dialog
+                var selectedPath = _dialogService.ShowOpenFileDialog(
+                    "Select Meta Data Template File",
+                    "Excel files (*.xlsx;*.xls)|*.xlsx;*.xls|All files (*.*)|*.*");
+
+                // Check for cancellation
+                if (selectedPath == null || selectedPath.Length == 0)
+                {
+                    // User cancelled
+                    return;
+                }
+
+                TemplateMetaDataFilePath = selectedPath[0];
+            }
+            finally
+            {
+                IsBrowseTemplateFileEnabled = true;
+            }
+        }
+
+        #endregion  Commands
 
     }
 }

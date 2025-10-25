@@ -3,6 +3,8 @@ using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Services;
 using duHastNet.DocManager.Core.Services.Api;
 using duHastNet.DocManager.Core.Stores;
+using duHastNet.DocManager.UI.Shared.Interfaces;
+using duHastNet.DocManager.UI.Shared.Services;
 using duHastNet.DocManager.UI.Shared.Stores;
 using duHastNet.DocManager.UI.Shared.ViewModels;
 using System.Configuration;
@@ -23,6 +25,7 @@ namespace DocManager.Standalone
         private MessageStore? _messageStore;
         private SettingsService? _settingsService;
         private NavigationStore? _navigationStore;
+        private IDialogService? _dialogService;
 
         duHastNet.DocManager.Core.Models.CurrentFolder.CurrentFolderManager? _currentFolderManager;
         MetaDataMapperAconex? _aconexMetaDataMapper;
@@ -46,6 +49,9 @@ namespace DocManager.Standalone
 
             // Initialize NavigationStore (singleton for application lifetime)
             _navigationStore = new NavigationStore();
+            
+            // Initialize DialogService (singleton for application lifetime)
+            _dialogService = new DialogService();
 
             // Load settings from JSON files
             var (currentFolderManagerSettings, metaDataMapperAconex) = await LoadSettingsAsync();
@@ -64,7 +70,8 @@ namespace DocManager.Standalone
                     currentFolderManager: _currentFolderManager,
                     cloudMetaData: metaDataMapperAconex,
                     messageStore: _messageStore,
-                    _navigationStore)
+                    navigationStore: _navigationStore,
+                    dialogService: _dialogService)
             };
 
             MainWindow.Show();

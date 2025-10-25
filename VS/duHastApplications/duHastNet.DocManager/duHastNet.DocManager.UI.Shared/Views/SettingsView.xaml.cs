@@ -21,14 +21,12 @@
 //
 //
 
-using System.Windows.Controls;
-
 namespace duHastNet.DocManager.UI.Shared.Views
 {
     /// <summary>
     /// Interaction logic for MainView.xaml
     /// </summary>
-    public partial class SettingsView : UserControl
+    public partial class SettingsView : System.Windows.Controls.UserControl
     {
         public SettingsView()
         {

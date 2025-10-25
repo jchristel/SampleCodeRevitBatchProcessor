@@ -41,6 +41,9 @@ public partial class MergeViewModel : ObservableObject
     private readonly MessageStore _messageStore;
     private readonly NavigationStore _navigationStore;
 
+    //function used to navigate to settings view model
+    private readonly Func<SettingsViewModel> _createViewModel;
+
     #endregion
 
     #region Constructor
@@ -54,6 +57,7 @@ public partial class MergeViewModel : ObservableObject
         _docManagerApi = docManagerApi;
         _messageStore = messageStore;
         _navigationStore = navigationStore;
+        _createViewModel = createViewModel;
     }
 
     #endregion
@@ -85,7 +89,16 @@ public partial class MergeViewModel : ObservableObject
 
     #endregion
 
-    #region Commands - To be implemented
+    #region Commands
+
+    /// <summary>
+    /// Command to navigate to the Merge view
+    /// </summary>
+    [RelayCommand]
+    private void NavigateToSettings()
+    {
+        _navigationStore.NavigateTo(() => _createViewModel());
+    }
 
     #endregion
 

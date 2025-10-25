@@ -53,7 +53,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         #region Observable Properties
 
         [ObservableProperty]
-        private string _metaDataTemplateFilePath = string.Empty;
+        private string _templateMetaDataFilePath = string.Empty;
+
+        [ObservableProperty]
+        private bool _isBrowseTemplateFileEnabled= true;
 
         #endregion Observable Properties
 

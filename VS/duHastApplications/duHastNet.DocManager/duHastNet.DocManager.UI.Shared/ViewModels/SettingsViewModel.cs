@@ -37,7 +37,9 @@ public partial class SettingsViewModel : ObservableObject
     private readonly NavigationStore _navigationStore;
     Core.Models.CurrentFolder.CurrentFolderManager _currentFolderManager;
     Core.Models.MetaDataMapperAconex _aconexMetaDataManager;
-    Func<MergeViewModel> _createViewModel;
+
+    //function used to navigate to merge view model
+    private readonly Func<MergeViewModel> _createViewModel;
 
     #endregion
 

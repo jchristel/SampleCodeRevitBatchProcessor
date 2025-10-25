@@ -61,7 +61,13 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         private string _incomingFolderPath = string.Empty;
 
         [ObservableProperty]
-        private string _supersededFolderPath = string.Empty;
+        private bool _isBrowseIncomingFolderEnabled = true;
+
+        [ObservableProperty]
+        private string _archiveFolderPath = string.Empty;
+
+        [ObservableProperty]
+        private bool _isBrowseArchiveFolderEnabled = true;
 
         [ObservableProperty]
         private string _revisionPrefix = string.Empty;

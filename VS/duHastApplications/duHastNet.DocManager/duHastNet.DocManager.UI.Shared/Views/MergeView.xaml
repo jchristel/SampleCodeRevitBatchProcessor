@@ -31,8 +31,14 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Grid.Row="0" Text="Merger" FontSize="24"/>
+            <Button  Grid.Column="1" Grid.Row="0"
+                Margin="10 5 10 5"
+                Padding="10 5 10 5"
+                Content = "Settings" 
+                Command="{Binding NavigateToSettingsCommand}"/>
         </Grid>
         <!-- message banner -->
         <Grid Grid.Row="1">

@@ -54,7 +54,7 @@ namespace duHastNet.DocManager.Core.Models
         }
 
         /// <summary>
-        /// The matching document property name. Null if a fixed value is used
+        /// The matching document property name. Null if a fixed value is used (MetaFieldValue)
         /// </summary>
         private string? _documentPropertyName;
 

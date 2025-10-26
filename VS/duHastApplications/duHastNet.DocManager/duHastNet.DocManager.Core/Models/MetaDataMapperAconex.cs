@@ -44,9 +44,19 @@ namespace duHastNet.DocManager.Core.Models
         }
 
         /// <summary>
+        /// A list of all available filds from the aconex metadata template
+        /// </summary>
+        private List<string> _availableFilds = [];
+
+        public List<string> AvailableFilds
+        {
+            get => _availableFilds;
+        }
+
+        /// <summary>
         /// List of all mapped fields
         /// </summary>
-        private List<MetaDataMap> _metaDataMap = new List<MetaDataMap>();
+        private List<MetaDataMap> _metaDataMap = [];
 
         /// <summary>
         /// Gets the collection of metadata field mappings

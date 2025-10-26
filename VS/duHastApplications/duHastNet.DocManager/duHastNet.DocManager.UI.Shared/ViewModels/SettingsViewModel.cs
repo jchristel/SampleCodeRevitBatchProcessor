@@ -90,6 +90,7 @@ public partial class SettingsViewModel : ObservableObject
         AconexMetadataViewModel = new MetaDataAconexViewModel(
             _messageStore, 
             _manager,
+            _aconexMetaDataManager,
             _dialogService);
         
         CurrentFolderViewModel = new CurrentFolderViewModel(

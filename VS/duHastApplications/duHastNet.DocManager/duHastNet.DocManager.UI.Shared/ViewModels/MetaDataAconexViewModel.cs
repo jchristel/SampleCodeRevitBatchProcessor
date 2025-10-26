@@ -39,15 +39,17 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         private readonly MessageStore _messageStore;
         private readonly Manager _manager;
         private readonly IDialogService _dialogService;
+        private readonly MetaDataMapperAconex _aconexMetaDataManager;
 
         #endregion Private Fields
 
         #region Constructor
 
-        public MetaDataAconexViewModel(MessageStore messageStore, Manager manager, IDialogService dialogService)
+        public MetaDataAconexViewModel(MessageStore messageStore, Manager manager, MetaDataMapperAconex aconexMetaDataManager, IDialogService dialogService)
         {
             _manager = manager;
             _messageStore = messageStore;
+            _aconexMetaDataManager = aconexMetaDataManager;
             _dialogService = dialogService;
         }
 

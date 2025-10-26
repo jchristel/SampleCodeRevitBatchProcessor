@@ -36,6 +36,7 @@ import settings as settings  # sets up all commonly used variables and path loca
 
 import duHast.Utilities.Objects.result as res
 from duHast.Revit.Family.family_reload import reload_all_families
+from duHast.Revit.RBP.Objects.ProgressRBPConsole import ProgressRBPConsole
 from duHast.Revit.Family.family_rename_loaded_families import (
     rename_loaded_families,
 )
@@ -74,14 +75,30 @@ def reload_families(doc, revit_file_path, output):
     return_value = res.Result()
     if not _check_begins(settings.EXCLUDE_FILES_FROM_FAMILY_RELOAD, doc.Title):
         output("Reloading families...start")
-        task_value = reload_all_families(doc, settings.PATH_TO_CLINICAL_LIBRARY, False)
-        return_value.update(task_value)
+
+        # set up a progress callback to report progress to console
+        progress_callback = ProgressRBPConsole(output)
+
+        # reload family from library including nested folders and a time span of 4 days (5760 minutes)
         task_value = reload_all_families(
-            doc, settings.PATH_TO_BESPOKE_JOINERY_LIBRARY, False
+            doc = doc, 
+            library_location = settings.PATH_TO_LIBRARY_RELOAD, 
+            include_sub_folders = True, 
+            time_span_in_minutes = settings.RELOAD_TIME_SPAN_MINUTES,
+            progress_callback = progress_callback,
+            delete_new_types = True,
+            report_matches_only = True
         )
-        return_value.update(task_value)
-        task_value = reload_all_families(doc, settings.PATH_TO_UNIONS_LIBRARY, False)
-        return_value.update(task_value)
+        
+        if task_value.status:
+            # successful shorten message since call back will have reported details
+            return_value.update_sep(
+                True, "Successfully reloaded families from library.")
+        else:
+            # unsuccessful, pass on entire message
+            return_value.update(task_value)
+        
+        return return_value
     else:
         output("Not reloading families for this file!")
         return_value.update_sep(True, "Reloading families not required.")

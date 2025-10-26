@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="duHastNet.DocManager.UI.Shared.Controls.ModifierControls.AddSuffixControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:duHastNet.DocManager.UI.Shared.Controls.ModifierControls"
+             xmlns:converters="clr-namespace:duHastNet.DocManager.UI.Shared.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="80" d:DesignWidth="400">
+    <UserControl.Resources>
+        <converters:ValidationErrorConverter x:Key="ValidationErrorConverter"/>
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Vertical" Margin="0">
+        <!-- Label -->
+        <TextBlock Text="Suffix to add:" 
+                   Margin="0 0 0 5"
+                   VerticalAlignment="Center"/>
+
+        <!-- Input TextBox -->
+        <TextBox Text="{Binding Suffix, 
+                        UpdateSourceTrigger=PropertyChanged, 
+                        ValidatesOnNotifyDataErrors=True}"
+                 Width="350"
+                 HorizontalAlignment="Left"
+                 Padding="5"
+                 ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"/>
+
+        <!-- Help Text -->
+        <TextBlock Text="Example: -DWG (will append to end of document number)"
+                   FontSize="10"
+                   Foreground="Gray"
+                   Margin="0 3 0 0"/>
+    </StackPanel>
+</UserControl>

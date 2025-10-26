@@ -1,0 +1,142 @@
+﻿<Window x:Class="duHastNet.DocManager.UI.Shared.Views.SupportedFileTypeDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:duHastNet.DocManager.UI.Shared.Views"
+        xmlns:vm="clr-namespace:duHastNet.DocManager.UI.Shared.ViewModels"
+        xmlns:modifierVm="clr-namespace:duHastNet.DocManager.UI.Shared.ViewModels.ModifierControls"
+        xmlns:modifierControls="clr-namespace:duHastNet.DocManager.UI.Shared.Controls.ModifierControls"
+        xmlns:converters="clr-namespace:duHastNet.DocManager.UI.Shared.Converters"
+        mc:Ignorable="d"
+        Title="{Binding DialogTitle}"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        SizeToContent="Height"
+        Width="500"
+        d:DataContext="{d:DesignInstance Type=vm:SupportedFileTypeDialogViewModel}">
+
+    <Window.Resources>
+        <!-- Validation error converter -->
+        <converters:ValidationErrorConverter x:Key="ValidationErrorConverter"/>
+
+        <!-- DataTemplates for modifier controls -->
+        <DataTemplate DataType="{x:Type modifierVm:AddSuffixControlViewModel}">
+            <modifierControls:AddSuffixControl/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type modifierVm:AddPrefixControlViewModel}">
+            <modifierControls:AddPrefixControl/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type modifierVm:AddAtIndexControlViewModel}">
+            <modifierControls:AddAtIndexControl/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type modifierVm:ReplaceControlViewModel}">
+            <modifierControls:ReplaceControl/>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- File Extension -->
+        <StackPanel Grid.Row="0" Margin="0 0 0 15">
+            <TextBlock Text="File Extension:" 
+                       Margin="0 0 0 5"
+                       FontWeight="SemiBold"/>
+
+            <TextBox Text="{Binding FileExtension, 
+                            UpdateSourceTrigger=PropertyChanged, 
+                            ValidatesOnNotifyDataErrors=True}"
+                     Width="200"
+                     HorizontalAlignment="Left"
+                     Padding="5"
+                     IsEnabled="{Binding IsFileExtensionEnabled}"
+                     ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"/>
+
+            <TextBlock Text="Must start with a period (e.g., .pdf, .dwg)" 
+                       FontSize="10"
+                       Foreground="Gray"
+                       Margin="0 3 0 0"/>
+        </StackPanel>
+
+        <!-- Description -->
+        <StackPanel Grid.Row="1" Margin="0 0 0 15">
+            <TextBlock Text="Description:" 
+                       Margin="0 0 0 5"
+                       FontWeight="SemiBold"/>
+
+            <TextBox Text="{Binding Description, 
+                            UpdateSourceTrigger=PropertyChanged, 
+                            ValidatesOnNotifyDataErrors=True}"
+                     Width="400"
+                     HorizontalAlignment="Left"
+                     Padding="5"
+                     ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"/>
+
+            <TextBlock Text="Example: PDF Document, AutoCAD Drawing" 
+                       FontSize="10"
+                       Foreground="Gray"
+                       Margin="0 3 0 0"/>
+        </StackPanel>
+
+        <!-- Document Number Modifier -->
+        <StackPanel Grid.Row="2" Margin="0 0 0 15">
+            <TextBlock Text="Document Number Modifier:" 
+                       Margin="0 0 0 5"
+                       FontWeight="SemiBold"/>
+
+            <ComboBox ItemsSource="{Binding AvailableModifierTypes}"
+                      SelectedItem="{Binding SelectedModifierType}"
+                      Width="250"
+                      HorizontalAlignment="Left"
+                      Padding="5"/>
+
+            <TextBlock Text="Select how document numbers should be modified (optional)" 
+                       FontSize="10"
+                       Foreground="Gray"
+                       Margin="0 3 0 0"/>
+        </StackPanel>
+
+        <!-- Dynamic Modifier Control Section -->
+        <Grid Grid.Row="3" Margin="0 0 0 15">
+            <ContentControl Content="{Binding CurrentModifierControl}">
+                <ContentControl.Style>
+                    <Style TargetType="ContentControl">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding CurrentModifierControl}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ContentControl.Style>
+            </ContentControl>
+        </Grid>
+
+        <!-- Dialog Buttons -->
+        <StackPanel Grid.Row="4" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right">
+            <Button Content="OK"
+                    Command="{Binding OkCommand}"
+                    Width="80"
+                    Height="30"
+                    Margin="0 0 10 0"
+                    IsDefault="True"/>
+
+            <Button Content="Cancel"
+                    Command="{Binding CancelCommand}"
+                    Width="80"
+                    Height="30"
+                    IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

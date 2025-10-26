@@ -60,6 +60,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// </summary>
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsFilterValueEnabled))]
+        [NotifyCanExecuteChangedFor(nameof(OkCommand))]
         private FilingRuleType _selectedRuleType;
 
         /// <summary>
@@ -67,6 +68,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// </summary>
         [ObservableProperty]
         [CustomValidation(typeof(FilingRuleDialogViewModel), nameof(ValidateFilterValue))]
+        [NotifyCanExecuteChangedFor(nameof(OkCommand))]
         private string _filterValue = string.Empty;
 
         /// <summary>
@@ -75,6 +77,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         [ObservableProperty]
         [CustomValidation(typeof(FolderPathValidator), nameof(FolderPathValidator.ValidateFolderExists))]
         [Required(ErrorMessage = "Target path is required")]
+        [NotifyCanExecuteChangedFor(nameof(OkCommand))]
         private string _targetPath = string.Empty;
 
         /// <summary>
@@ -91,9 +94,19 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// <summary>
         /// The created or edited rule (set when OK is clicked)
         /// </summary>
-        public IFilingRule? CreatedRule { get; private set; }
+        [ObservableProperty]
+        private IFilingRule? _createdRule;
 
         #endregion Observable Properties
+
+        #region Events
+
+        /// <summary>
+        /// Event raised when the ViewModel requests the view to close
+        /// </summary>
+        public event EventHandler? RequestClose;
+
+        #endregion Events
 
         #region Constructor
 
@@ -230,8 +243,8 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
 
             // Check for duplicate (same type + same value)
             if (viewModel._parentViewModel.IsDuplicateRule(
-                viewModel.SelectedRuleType, 
-                value, 
+                viewModel.SelectedRuleType,
+                value,
                 viewModel._editIndex))
             {
                 return new ValidationResult($"A rule with type '{viewModel.GetRuleTypeDisplayName()}' and value '{value}' already exists");
@@ -309,10 +322,6 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             if (HasErrors)
                 return false;
 
-            // Must have a rule type selected
-            if (SelectedRuleType == default)
-                return false;
-
             // For CatchAll, check uniqueness
             if (SelectedRuleType == FilingRuleType.Default)
             {
@@ -360,13 +369,13 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
 
         /// <summary>
         /// Command to cancel dialog (Cancel button)
-        /// Dialog will close with DialogResult = false
+        /// Requests the view to close with DialogResult = false
         /// </summary>
         [RelayCommand]
         private void Cancel()
         {
-            // Dialog will close with DialogResult = false
-            // This is handled in code-behind
+            // Raise event to request window close
+            RequestClose?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion Commands

@@ -32,6 +32,17 @@ namespace duHastNet.DocManager.Core.Models.DocumentNumberModifiers
             return number.Insert(_index,_value);
         }
 
+        public string GetDisplayText()
+        {
+            var displayValue = string.IsNullOrEmpty(_value) ? "(empty)" : _value;
+
+            // Special case: index 0 is a prefix
+            if (_index == 0)
+                return $"Add Prefix: {displayValue}";
+
+            return $"Add at Index {_index}: {displayValue}";
+        }
+
         public AddAtIndex(string value, int index)
         {
             _value = value;

@@ -33,37 +33,38 @@ namespace duHastNet.DocManager.Core.Models
         /// <summary>
         /// Represents an optional dependency for modifying document numbers.
         /// </summary>
-        /// <remarks>This field holds an implementation of the <see
-        /// cref="Interfaces.IDocumentNumberModifier"/> interface,  which can be used to alter or customize document
-        /// numbers. If null, no modification will be applied.
+        /// <remarks>
+        /// This field holds an implementation of the <see cref="Interfaces.IDocumentNumberModifier"/> interface,
+        /// which can be used to alter or customize document numbers. If null, no modification will be applied.
         /// This is a behavior/logic object and should not be serialized.
+        /// Exposed as internal property to allow UI access while maintaining encapsulation.
         /// </remarks>
         [JsonIgnore]
-        private Interfaces.IDocumentNumberModifier? _documentNumberModifier;
+        public Interfaces.IDocumentNumberModifier? DocumentNumberModifier { get; private set; }
 
         /// <summary>
-        /// returns the modified document number if a modifier is defined, else returns the original document number
-        /// This is used to modify document numbers based on file type specific rules i.e. adding suffixes or prefixes to the document number depending on file type
-        /// doc number in database: ABC-123
-        /// doc number modifier for files of type dwg: add suffix -DWG
+        /// Returns the modified document number if a modifier is defined, else returns the original document number.
+        /// This is used to modify document numbers based on file type specific rules i.e. adding suffixes or prefixes 
+        /// to the document number depending on file type.
+        /// Example: doc number in database: ABC-123, doc number modifier for files of type dwg: add suffix -DWG
         /// </summary>
         public string GetModifiedDocumentNumber(string documentNumber)
         {
-            if (_documentNumberModifier != null)
+            if (DocumentNumberModifier != null)
             {
-                return _documentNumberModifier.DocumentNumber(documentNumber);
+                return DocumentNumberModifier.DocumentNumber(documentNumber);
             }
             return documentNumber;
         }
 
         /// <summary>
-        /// a class which holds a single supported file type for documents
+        /// A class which holds a single supported file type for documents
         /// </summary>
         public SupportedFileType(string fileExtension, string description, Interfaces.IDocumentNumberModifier? documentNumberModifier)
         {
             FileExtension = fileExtension;
             Description = description;
-            _documentNumberModifier = documentNumberModifier;
+            DocumentNumberModifier = documentNumberModifier;
         }
 
         /// <summary>
@@ -74,7 +75,7 @@ namespace duHastNet.DocManager.Core.Models
         {
             FileExtension = string.Empty;
             Description = string.Empty;
-            _documentNumberModifier = null;
+            DocumentNumberModifier = null;
         }
     }
 }

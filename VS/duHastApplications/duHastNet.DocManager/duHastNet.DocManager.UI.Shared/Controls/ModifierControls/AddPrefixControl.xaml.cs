@@ -1,4 +1,6 @@
 ﻿//
+// Revit Batch Processor Sample Code
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -16,18 +18,16 @@
 //
 //
 
-namespace duHastNet.DocManager.Core.Interfaces
+namespace duHastNet.DocManager.UI.Shared.Controls.ModifierControls
 {
-    public interface IDocumentNumberModifier
+    /// <summary>
+    /// Interaction logic for AddPrefixControl.xaml
+    /// </summary>
+    public partial class AddPrefixControl : System.Windows.Controls.UserControl
     {
-        /// <summary>
-        /// the modified document number
-        /// </summary>
-        string DocumentNumber(string number);
-
-        /// <summary>
-        /// Merthod used to show modifier details in the UI
-        /// </summary>
-        string GetDisplayText();
+        public AddPrefixControl()
+        {
+            InitializeComponent();
+        }
     }
 }

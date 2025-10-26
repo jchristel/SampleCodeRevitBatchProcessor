@@ -48,6 +48,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// Currently selected filing rule in the ListView
         /// </summary>
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(EditFilingRuleCommand))]
+        [NotifyCanExecuteChangedFor(nameof(RemoveFilingRuleCommand))]
+        [NotifyCanExecuteChangedFor(nameof(MoveRuleUpCommand))]
+        [NotifyCanExecuteChangedFor(nameof(MoveRuleDownCommand))]
         private FilingRuleViewModel? _selectedFilingRule;
 
         #endregion Filing Rules - Observable Properties

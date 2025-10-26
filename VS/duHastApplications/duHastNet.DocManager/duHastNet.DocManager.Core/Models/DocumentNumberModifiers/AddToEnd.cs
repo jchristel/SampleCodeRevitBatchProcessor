@@ -30,6 +30,12 @@ namespace duHastNet.DocManager.Core.Models.DocumentNumberModifiers
             return number + _suffix;
         }
 
+        public string GetDisplayText()
+        {
+            if (string.IsNullOrEmpty(_suffix))
+                return "Add Suffix: (empty)";
+            return $"Add Suffix: {_suffix}";
+        }
         public AddToEnd(string suffix)
         {
             _suffix = suffix;

@@ -192,10 +192,84 @@
         </Grid>
 
         <!-- supported file types -->
-        <Grid Grid.Row="4">
+        <Grid Grid.Row="4" Margin="5 10 5 10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
+
+            <!-- Section Header -->
+            <TextBlock Grid.Row="0" 
+                       Text="Supported File Types:" 
+                       FontWeight="SemiBold"
+                       Margin="0 0 0 5"/>
+
+            <!-- File Types ListView and Buttons -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- ListView -->
+                <ListView Grid.Column="0" 
+                          x:Name="SupportedFileTypesListView"
+                          ItemsSource="{Binding SupportedFileTypes}"
+                          SelectedItem="{Binding SelectedFileType}"
+                          SelectionMode="Single"
+                          MinHeight="120"
+                          MaxHeight="200">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="File Extension" 
+                                            DisplayMemberBinding="{Binding FileExtension}" 
+                                            Width="120"/>
+                            <GridViewColumn Header="Description" 
+                                            DisplayMemberBinding="{Binding Description}" 
+                                            Width="200"/>
+                            <GridViewColumn Header="Number Modifier" 
+                                            DisplayMemberBinding="{Binding ModifierDisplay}" 
+                                            Width="280"/>
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <!-- Highlight PDF row with different background or bold font -->
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsPdf}" Value="True">
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="ToolTip" Value="PDF is a required file type and cannot be removed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+
+                <!-- Action Buttons (Vertical Stack) -->
+                <StackPanel Grid.Column="1" 
+                            Margin="10 0 0 0" 
+                            VerticalAlignment="Top">
+                    <Button Content="Add" 
+                            Command="{Binding AddFileTypeCommand}" 
+                            Width="100"
+                            Padding="5"
+                            Margin="0 0 0 5"
+                            ToolTip="Add a new supported file type"/>
+
+                    <Button Content="Edit" 
+                            Command="{Binding EditFileTypeCommand}" 
+                            Width="100"
+                            Padding="5"
+                            Margin="0 0 0 5"
+                            ToolTip="Edit the selected file type"/>
+
+                    <Button Content="Remove" 
+                            Command="{Binding RemoveFileTypeCommand}" 
+                            Width="100"
+                            Padding="5"
+                            ToolTip="Remove the selected file type (cannot remove PDF)"/>
+                </StackPanel>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

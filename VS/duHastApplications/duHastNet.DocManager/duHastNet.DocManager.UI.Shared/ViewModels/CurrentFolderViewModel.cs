@@ -68,6 +68,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
 
             // Initialize filing rules collection
             InitializeFilingRules();
+
+            //initialise supported file types
+            InitializeSupportedFileTypes();
         }
 
         #endregion Constructor

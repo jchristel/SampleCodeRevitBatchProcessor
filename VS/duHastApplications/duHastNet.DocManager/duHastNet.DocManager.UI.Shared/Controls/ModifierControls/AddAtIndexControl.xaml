@@ -1,0 +1,51 @@
+﻿<UserControl x:Class="duHastNet.DocManager.UI.Shared.Controls.ModifierControls.AddAtIndexControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:duHastNet.DocManager.UI.Shared.Controls.ModifierControls"
+             xmlns:converters="clr-namespace:duHastNet.DocManager.UI.Shared.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="140" d:DesignWidth="400">
+    <UserControl.Resources>
+        <converters:ValidationErrorConverter x:Key="ValidationErrorConverter"/>
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Vertical" Margin="0">
+        <!-- Text to Insert -->
+        <TextBlock Text="Text to insert:" 
+                   Margin="0 0 0 5"
+                   VerticalAlignment="Center"/>
+
+        <TextBox Text="{Binding Text, 
+                        UpdateSourceTrigger=PropertyChanged, 
+                        ValidatesOnNotifyDataErrors=True}"
+                 Width="350"
+                 HorizontalAlignment="Left"
+                 Padding="5"
+                 Margin="0 0 0 10"
+                 ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"/>
+
+        <!-- Position (Index) -->
+        <TextBlock Text="Position (0-based index):" 
+                   Margin="0 0 0 5"
+                   VerticalAlignment="Center"/>
+
+        <TextBox Text="{Binding Index, 
+                        UpdateSourceTrigger=PropertyChanged, 
+                        ValidatesOnNotifyDataErrors=True}"
+                 Width="100"
+                 HorizontalAlignment="Left"
+                 Padding="5"
+                 ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"/>
+
+        <!-- Help Text -->
+        <TextBlock Text="Example: Insert '-DRAFT' at position 7 in 'ABC-123' → 'ABC-123-DRAFT'"
+                   FontSize="10"
+                   Foreground="Gray"
+                   Margin="0 5 0 0"
+                   TextWrapping="Wrap"
+                   Width="350"
+                   HorizontalAlignment="Left"/>
+    </StackPanel>
+</UserControl>

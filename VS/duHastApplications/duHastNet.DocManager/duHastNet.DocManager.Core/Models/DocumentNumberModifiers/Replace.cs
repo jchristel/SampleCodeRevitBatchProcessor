@@ -32,6 +32,13 @@ namespace duHastNet.DocManager.Core.Models.DocumentNumberModifiers
             return number.Replace(_oldValue, _newValue);
         }
 
+        public string GetDisplayText()
+        {
+            var oldDisplay = string.IsNullOrEmpty(_oldValue) ? "(empty)" : _oldValue;
+            var newDisplay = string.IsNullOrEmpty(_newValue) ? "(empty)" : _newValue;
+
+            return $"Replace: {oldDisplay} → {newDisplay}";
+        }
         public Replace(string oldValue, string newValue)
         {
             _oldValue = oldValue;

@@ -21,7 +21,6 @@
 //
 //
 
-
 using duHastNet.DocManager.UI.Shared.ViewModels;
 using System.ComponentModel;
 using System.Windows;
@@ -29,21 +28,21 @@ using System.Windows;
 namespace duHastNet.DocManager.UI.Shared.Views
 {
     /// <summary>
-    /// Interaction logic for FilingRuleDialog.xaml
-    /// Dialog for adding or editing filing rules
+    /// Interaction logic for SupportedFileTypeDialog.xaml
+    /// Dialog for adding or editing a supported file type with optional document number modifier
     /// </summary>
-    public partial class FilingRuleDialog : Window
+    public partial class SupportedFileTypeDialog : Window
     {
         /// <summary>
         /// Gets the ViewModel for this dialog
         /// </summary>
-        public FilingRuleDialogViewModel ViewModel { get; }
+        public SupportedFileTypeDialogViewModel ViewModel { get; }
 
         /// <summary>
         /// Constructor for the dialog
         /// </summary>
         /// <param name="viewModel">The ViewModel instance</param>
-        public FilingRuleDialog(FilingRuleDialogViewModel viewModel)
+        public SupportedFileTypeDialog(SupportedFileTypeDialogViewModel viewModel)
         {
             InitializeComponent();
 
@@ -58,25 +57,29 @@ namespace duHastNet.DocManager.UI.Shared.Views
         }
 
         /// <summary>
+        /// Handles ViewModel property changes
+        /// When CreatedFileType is set (OK button clicked), close with success
+        /// </summary>
+        private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SupportedFileTypeDialogViewModel.CreatedFileType))
+            {
+                // OK command completed successfully
+                if (ViewModel.CreatedFileType != null)
+                {
+                    DialogResult = true;
+                    Close();
+                }
+            }
+        }
+
+        /// <summary>
         /// Handles when ViewModel requests the window to close (Cancel button)
         /// </summary>
         private void OnRequestClose(object? sender, EventArgs e)
         {
             DialogResult = false;
             Close();
-        }
-
-        /// <summary>
-        /// Handles ViewModel property changes to detect when OK command creates a rule
-        /// </summary>
-        private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            // When CreatedRule is set (not null), OK command succeeded
-            if (e.PropertyName == nameof(ViewModel.CreatedRule) && ViewModel.CreatedRule != null)
-            {
-                DialogResult = true;
-                Close();
-            }
         }
 
         /// <summary>
@@ -98,3 +101,4 @@ namespace duHastNet.DocManager.UI.Shared.Views
         }
     }
 }
+

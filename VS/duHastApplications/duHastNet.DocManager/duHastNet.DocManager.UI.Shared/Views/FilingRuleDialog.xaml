@@ -1,0 +1,144 @@
+﻿<Window x:Class="duHastNet.DocManager.UI.Shared.Views.FilingRuleDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:duHastNet.DocManager.UI.Shared.Converters"
+        mc:Ignorable="d"
+        Title="{Binding DialogTitle}"
+        Width="550" 
+        Height="320"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False">
+
+    <Window.Resources>
+        <converters:ValidationErrorConverter x:Key="ValidationErrorConverter"/>
+        <converters:RuleTypeDisplayConverter x:Key="RuleTypeDisplayConverter"/>
+        <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Rule Type Selection -->
+        <Grid Grid.Row="0" Margin="0 0 0 15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" 
+                       Text="Filter Type:" 
+                       FontWeight="SemiBold"
+                       Margin="0 0 0 5"/>
+
+            <ComboBox Grid.Row="1"
+                      x:Name="RuleTypeComboBox"
+                      ItemsSource="{Binding AvailableRuleTypes}"
+                      SelectedItem="{Binding SelectedRuleType, UpdateSourceTrigger=PropertyChanged}"
+                      Height="30">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource RuleTypeDisplayConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Grid>
+
+        <!-- Filter Value -->
+        <Grid Grid.Row="1" Margin="0 0 0 15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" 
+                       Text="Filter Value:" 
+                       FontWeight="SemiBold"
+                       Margin="0 0 0 5"/>
+
+            <TextBox Grid.Row="1"
+                     x:Name="FilterValueTextBox"
+                     Text="{Binding FilterValue, 
+                            UpdateSourceTrigger=PropertyChanged, 
+                            ValidatesOnNotifyDataErrors=True}"
+                     IsEnabled="{Binding IsFilterValueEnabled}"
+                     Height="30"
+                     VerticalContentAlignment="Center"
+                     ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"/>
+
+            <TextBlock Grid.Row="2" 
+                       Text="(Not used for Default/CatchAll rule)"
+                       FontStyle="Italic"
+                       FontSize="11"
+                       Foreground="Gray"
+                       Margin="0 3 0 0"
+                       Visibility="{Binding IsFilterValueEnabled, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
+        </Grid>
+
+        <!-- Target Path -->
+        <Grid Grid.Row="2" Margin="0 0 0 15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" 
+                       Text="Target Path:" 
+                       FontWeight="SemiBold"
+                       Margin="0 0 0 5"/>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0"
+                         x:Name="TargetPathTextBox"
+                         Text="{Binding TargetPath, 
+                                UpdateSourceTrigger=PropertyChanged, 
+                                ValidatesOnNotifyDataErrors=True}"
+                         Height="30"
+                         VerticalContentAlignment="Center"
+                         Margin="0 0 5 0"
+                         ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"/>
+
+                <Button Grid.Column="1"
+                        Content="Browse"
+                        Command="{Binding BrowseTargetPathCommand}"
+                        Width="80"
+                        Height="30"/>
+            </Grid>
+        </Grid>
+
+        <!-- Spacer -->
+        <Grid Grid.Row="3"/>
+
+        <!-- OK / Cancel Buttons -->
+        <StackPanel Grid.Row="4" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right">
+            <Button Content="OK"
+                    Command="{Binding OkCommand}"
+                    Width="80"
+                    Height="30"
+                    Margin="0 0 10 0"
+                    IsDefault="True"/>
+
+            <Button Content="Cancel"
+                    Command="{Binding CancelCommand}"
+                    Width="80"
+                    Height="30"
+                    IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

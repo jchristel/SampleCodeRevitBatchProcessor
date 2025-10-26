@@ -4,8 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:duHastNet.DocManager.UI.Shared.Views"
+             xmlns:converters="clr-namespace:duHastNet.DocManager.UI.Shared.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converters:ValidationErrorConverter x:Key="ValidationErrorConverter"/>
+    </UserControl.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <!-- revision prefix suffix-->
@@ -27,24 +32,26 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Orientation="Horizontal">
                 <TextBlock 
-                Margin="5 10 5 10"
-                Padding="0 0 5 0"
-                Text="Revision Prefix:" />
+                    Margin="5 10 5 10"
+                    Padding="0 0 5 0"
+                    Text="Revision Prefix:" />
                 <TextBox
-                x:Name="RevisionPrefixTextBox"
-                Margin="5 10 5 10"
-                Width="100"
-                Text="{Binding RevisionPrefix, UpdateSourceTrigger=PropertyChanged}"
+                    x:Name="RevisionPrefixTextBox"
+                    Margin="5 10 5 10"
+                    Width="100"
+                    Text="{Binding RevisionPrefix, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
+                    ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"
                 />
                 <TextBlock 
-                Margin="15 10 5 10"
-                Padding="0 0 5 0"
-                Text="Revision Suffix:" />
+                    Margin="15 10 5 10"
+                    Padding="0 0 5 0"
+                    Text="Revision Suffix:" />
                 <TextBox
-                x:Name="RevisionSuffixTextBox"
-                Margin="5 10 5 10"
-                Width="100"
-                Text="{Binding RevisionSuffix, UpdateSourceTrigger=PropertyChanged}"
+                    x:Name="RevisionSuffixTextBox"
+                    Margin="5 10 5 10"
+                    Width="100"
+                    Text="{Binding RevisionSuffix, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                    ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"
                 />
             </StackPanel>
         </Grid>
@@ -56,20 +63,21 @@
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal">
                 <TextBlock 
-                Margin="5 10 5 10"
-                Padding="0 0 5 0"
-                Text="Incoming Folder Path:" />
+                    Margin="5 10 5 10"
+                    Padding="0 0 5 0"
+                    Text="Incoming Folder Path:" />
                 <TextBox
-                x:Name="IncomingFolderPathTextBox"
-                Margin="5 10 5 10"
-                Width="400"
-                Text="{Binding IncomingFolderPath, UpdateSourceTrigger=PropertyChanged}"
+                    x:Name="IncomingFolderPathTextBox"
+                    Margin="5 10 5 10"
+                    Width="400"
+                    Text="{Binding IncomingFolderPath, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                    ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"
                 />
                 <Button 
-                Margin="5 10 5 10" 
-                Content="Browse"
-                Command="{Binding BrowseIncomingFolderCommand}"
-                IsEnabled="{Binding IsBrowseIncomingFolderEnabled}"
+                    Margin="5 10 5 10" 
+                    Content="Browse"
+                    Command="{Binding BrowseIncomingFolderCommand}"
+                    IsEnabled="{Binding IsBrowseIncomingFolderEnabled}"
                 />
             </StackPanel>
         </Grid>
@@ -81,30 +89,106 @@
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal">
                 <TextBlock 
-                Margin="5 10 5 10"
-                Padding="0 0 5 0"
-                Text="Archive Folder Path:" />
+                    Margin="5 10 5 10"
+                    Padding="0 0 5 0"
+                    Text="Archive Folder Path:" />
                 <TextBox
-                x:Name="ArchiveFolderPathTextBox"
-                Margin="5 10 5 10"
-                Width="400"
-                Text="{Binding ArchiveFolderPath, UpdateSourceTrigger=PropertyChanged}"
+                    x:Name="ArchiveFolderPathTextBox"
+                    Margin="5 10 5 10"
+                    Width="400"
+                    Text="{Binding ArchiveFolderPath, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                    ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"
                 />
                 <Button 
-                Margin="5 10 5 10" 
-                Content="Browse"
-                Command="{Binding BrowseArchiveFolderCommand}"
-                IsEnabled="{Binding IsBrowseArchiveFolderEnabled}"
+                    Margin="5 10 5 10" 
+                    Content="Browse"
+                    Command="{Binding BrowseArchiveFolderCommand}"
+                    IsEnabled="{Binding IsBrowseArchiveFolderEnabled}"
                 />
             </StackPanel>
         </Grid>
 
-        <!-- current folder system-->
-        <Grid Grid.Row="3">
+        <!-- filing rules -->
+        <Grid Grid.Row="3" Margin="5 10 5 10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
+            <!-- Section Header -->
+            <TextBlock Grid.Row="0" 
+                       Text="Filing Rules (evaluated top to bottom, first match wins):" 
+                       FontWeight="SemiBold"
+                       Margin="0 0 0 5"/>
+
+            <!-- Rules ListView and Buttons -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- ListView -->
+                <ListView Grid.Column="0" 
+                          x:Name="FilingRulesListView"
+                          ItemsSource="{Binding FilingRules}"
+                          SelectedItem="{Binding SelectedFilingRule}"
+                          SelectionMode="Single"
+                          MinHeight="150">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Filter Type" 
+                                            DisplayMemberBinding="{Binding RuleType}" 
+                                            Width="150"/>
+                            <GridViewColumn Header="Filter Value" 
+                                            DisplayMemberBinding="{Binding FilterValue}" 
+                                            Width="150"/>
+                            <GridViewColumn Header="Target Path" 
+                                            DisplayMemberBinding="{Binding TargetPath}" 
+                                            Width="350"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+                <!-- Action Buttons (Vertical Stack) -->
+                <StackPanel Grid.Column="1" 
+                            Margin="10 0 0 0" 
+                            VerticalAlignment="Top">
+                    <Button Content="Add" 
+                            Command="{Binding AddFilingRuleCommand}" 
+                            Width="100"
+                            Padding="5"
+                            Margin="0 0 0 5"
+                            ToolTip="Add a new filing rule"/>
+
+                    <Button Content="Edit" 
+                            Command="{Binding EditFilingRuleCommand}" 
+                            Width="100"
+                            Padding="5"
+                            Margin="0 0 0 5"
+                            ToolTip="Edit the selected filing rule"/>
+
+                    <Button Content="Remove" 
+                            Command="{Binding RemoveFilingRuleCommand}" 
+                            Width="100"
+                            Padding="5"
+                            Margin="0 0 0 5"
+                            ToolTip="Remove the selected filing rule (cannot remove CatchAll)"/>
+
+                    <Button Content="Move Up" 
+                            Command="{Binding MoveRuleUpCommand}" 
+                            Width="100"
+                            Padding="5"
+                            Margin="0 0 0 5"
+                            ToolTip="Move the selected rule up (higher priority)"/>
+
+                    <Button Content="Move Down" 
+                            Command="{Binding MoveRuleDownCommand}" 
+                            Width="100"
+                            Padding="5"
+                            ToolTip="Move the selected rule down (lower priority)"/>
+                </StackPanel>
+            </Grid>
         </Grid>
 
         <!-- supported file types -->

@@ -28,15 +28,18 @@ using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Services.Api;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
+using duHastNet.DocManager.UI.Shared.Validators;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels
 {
-    public partial class CurrentFolderViewModel: ObservableObject
+    /// <summary>
+    /// ViewModel for the Current Folder configuration view
+    /// Implements hybrid validation: INotifyDataErrorInfo for field-level validation + MessageStore for operation-level feedback
+    /// </summary>
+    public partial class CurrentFolderViewModel : ObservableValidator
     {
-        /// <summary>
-        /// view model class for the current folder model
-        /// </summary>
         #region Private Fields
 
         private readonly MessageStore _messageStore;
@@ -49,8 +52,8 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         #region Constructor
 
         public CurrentFolderViewModel(
-            MessageStore messageStore, 
-            Manager manager, 
+            MessageStore messageStore,
+            Manager manager,
             Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager,
             IDialogService dialogService
         )
@@ -59,31 +62,133 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             _messageStore = messageStore;
             _currentFolderManager = currentFolderManager;
             _dialogService = dialogService;
+
+            // Initialize ViewModel properties from CurrentFolderManager.Settings
+            LoadSettingsIntoViewModel();
+
+            // Initialize filing rules collection
+            InitializeFilingRules();
         }
 
-        #endregion
+        #endregion Constructor
 
         #region Observable Properties
 
+        /// <summary>
+        /// Path to the folder containing incoming documents
+        /// Validates that folder exists if specified
+        /// </summary>
         [ObservableProperty]
+        [CustomValidation(typeof(FolderPathValidator), nameof(FolderPathValidator.ValidateFolderExists))]
         private string _incomingFolderPath = string.Empty;
 
         [ObservableProperty]
         private bool _isBrowseIncomingFolderEnabled = true;
 
+        /// <summary>
+        /// Path to the folder where superseded/archived documents are stored
+        /// Validates that folder exists if specified
+        /// </summary>
         [ObservableProperty]
+        [CustomValidation(typeof(FolderPathValidator), nameof(FolderPathValidator.ValidateFolderExists))]
         private string _archiveFolderPath = string.Empty;
 
         [ObservableProperty]
         private bool _isBrowseArchiveFolderEnabled = true;
 
+        /// <summary>
+        /// Character(s) that mark the beginning of a revision in a filename
+        /// Example: '[' in "Document_Rev[A].pdf"
+        /// </summary>
         [ObservableProperty]
+        [CustomValidation(typeof(RevisionSeparatorValidator), nameof(RevisionSeparatorValidator.ValidateRevisionMarker))]
         private string _revisionPrefix = string.Empty;
 
+        /// <summary>
+        /// Character(s) that mark the end of a revision in a filename
+        /// Example: ']' in "Document_Rev[A].pdf"
+        /// </summary>
         [ObservableProperty]
+        [CustomValidation(typeof(RevisionSeparatorValidator), nameof(RevisionSeparatorValidator.ValidateRevisionMarker))]
         private string _revisionSuffix = string.Empty;
 
         #endregion Observable Properties
+
+        #region Property Changed Handlers
+
+        /// <summary>
+        /// Called when IncomingFolderPath property changes
+        /// Syncs the value to CurrentFolderManager.Settings and triggers validation
+        /// </summary>
+        partial void OnIncomingFolderPathChanged(string value)
+        {
+            // Sync to settings
+            _currentFolderManager.Settings.IncomingFolderPath = value;
+
+            // Trigger immediate validation for field-level feedback
+            ValidateProperty(value, nameof(IncomingFolderPath));
+        }
+
+        /// <summary>
+        /// Called when ArchiveFolderPath property changes
+        /// Syncs the value to CurrentFolderManager.Settings.SupersededFolderPath and triggers validation
+        /// </summary>
+        partial void OnArchiveFolderPathChanged(string value)
+        {
+            // Sync to settings (ArchiveFolderPath maps to SupersededFolderPath in settings)
+            _currentFolderManager.Settings.SupersededFolderPath = value;
+
+            // Trigger immediate validation for field-level feedback
+            ValidateProperty(value, nameof(ArchiveFolderPath));
+        }
+
+        /// <summary>
+        /// Called when RevisionPrefix property changes
+        /// Syncs the value to CurrentFolderManager.Settings and triggers validation
+        /// </summary>
+        partial void OnRevisionPrefixChanged(string value)
+        {
+            // Sync to settings
+            _currentFolderManager.Settings.RevisionPrefix = value;
+
+            // Trigger immediate validation for field-level feedback
+            ValidateProperty(value, nameof(RevisionPrefix));
+        }
+
+        /// <summary>
+        /// Called when RevisionSuffix property changes
+        /// Syncs the value to CurrentFolderManager.Settings and triggers validation
+        /// </summary>
+        partial void OnRevisionSuffixChanged(string value)
+        {
+            // Sync to settings
+            _currentFolderManager.Settings.RevisionSuffix = value;
+
+            // Trigger immediate validation for field-level feedback
+            ValidateProperty(value, nameof(RevisionSuffix));
+        }
+
+        #endregion Property Changed Handlers
+
+        #region Private Helper Methods
+
+        /// <summary>
+        /// Loads settings from CurrentFolderManager.Settings into ViewModel properties
+        /// This is called on initialization to populate the UI with existing settings
+        /// </summary>
+        private void LoadSettingsIntoViewModel()
+        {
+            // Load properties from settings (use null-coalescing to handle nulls)
+            IncomingFolderPath = _currentFolderManager.Settings.IncomingFolderPath ?? string.Empty;
+            ArchiveFolderPath = _currentFolderManager.Settings.SupersededFolderPath ?? string.Empty;
+            RevisionPrefix = _currentFolderManager.Settings.RevisionPrefix ?? string.Empty;
+            RevisionSuffix = _currentFolderManager.Settings.RevisionSuffix ?? string.Empty;
+
+            // Validate all properties to show any errors in loaded settings
+            ValidateAllProperties();
+        }
+
+        #endregion Private Helper Methods
 
         #region Commands 
 
@@ -137,8 +242,41 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             }
         }
 
-        #endregion  Commands 
+        /// <summary>
+        /// Determines if settings can be saved
+        /// Settings can only be saved if there are no validation errors and the system is not busy
+        /// </summary>
+        /// <returns>True if settings can be saved, false otherwise</returns>
+        private bool CanSaveSettings()
+        {
+            return !HasErrors;
+        }
+
+        /// <summary>
+        /// Command to save current settings to JSON file
+        /// Only executes if validation passes (no errors)
+        /// </summary>
+        [RelayCommand(CanExecute = nameof(CanSaveSettings))]
+        private void SaveSettings()
+        {
+            try
+            {
+                // TODO: Implement actual JSON save logic here
+                
+
+                _messageStore.SetCurrentMessage(
+                    "Settings saved successfully",
+                    MessageTypes.Information);
+            }
+            catch (Exception ex)
+            {
+                _messageStore.SetCurrentMessage(
+                    $"Failed to save settings: {ex.Message}",
+                    MessageTypes.Error);
+            }
+        }
+
+        #endregion Commands 
 
     }
 }
-

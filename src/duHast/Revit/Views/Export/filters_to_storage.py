@@ -41,7 +41,8 @@ from duHast.Revit.SharedParameters.shared_parameters import get_all_shared_param
 from duHast.Revit.Common.parameter_project import get_project_parameter_definitions
 
 from Autodesk.Revit.DB import (
-    BuiltInParameter, 
+    BuiltInParameter,
+    ElementId,
     Element, 
     LogicalAndFilter, 
     ElementFilter, 
@@ -202,7 +203,12 @@ def analyze_rule(doc, rule,  is_inversed, project_parameters, nesting_level, deb
             # check for numeric rule
             if debug:
                 return_value.append_message ("{} rule value: {}".format("..." * nesting_level, rule.RuleValue))
-            view_filter_rule.rule_value=rule.RuleValue
+            
+            # check if the rule value is an element id ( if a global parameter provides the value, the rule value is the global parameter id)
+            if isinstance(rule.RuleValue, ElementId):
+                view_filter_rule.rule_value=rule.RuleValue.IntegerValue
+            else:
+                view_filter_rule.rule_value=rule.RuleValue
         
         elif isinstance(rule, FilterStringRule):
             # check for string rule

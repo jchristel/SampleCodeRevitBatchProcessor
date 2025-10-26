@@ -30,30 +30,34 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" Orientation="Horizontal">
-                <TextBlock 
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0"
                     Margin="5 10 5 10"
-                    Padding="0 0 5 0"
+                    Padding="5"
                     Text="Revision Prefix:" />
-                <TextBox
+            <TextBox Grid.Column="1"
                     x:Name="RevisionPrefixTextBox"
                     Margin="5 10 5 10"
-                    Width="100"
                     Text="{Binding RevisionPrefix, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
                     ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"
                 />
-                <TextBlock 
+            <TextBlock Grid.Column="2"
                     Margin="15 10 5 10"
-                    Padding="0 0 5 0"
+                    Padding="5"
                     Text="Revision Suffix:" />
-                <TextBox
+            <TextBox Grid.Column="3"
                     x:Name="RevisionSuffixTextBox"
                     Margin="5 10 5 10"
-                    Width="100"
                     Text="{Binding RevisionSuffix, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                     ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"
                 />
-            </StackPanel>
+            
         </Grid>
 
         <!-- incoming folder path -->
@@ -61,25 +65,28 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock 
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0"
                     Margin="5 10 5 10"
-                    Padding="0 0 5 0"
+                    Padding="5"
                     Text="Incoming Folder Path:" />
-                <TextBox
+            <TextBox Grid.Column="1"
                     x:Name="IncomingFolderPathTextBox"
                     Margin="5 10 5 10"
-                    Width="400"
                     Text="{Binding IncomingFolderPath, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                     ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"
                 />
-                <Button 
-                    Margin="5 10 5 10" 
+            <Button Grid.Column="2"
+                    Margin="5 10 5 10"
+                    Padding="5"
                     Content="Browse"
                     Command="{Binding BrowseIncomingFolderCommand}"
                     IsEnabled="{Binding IsBrowseIncomingFolderEnabled}"
                 />
-            </StackPanel>
         </Grid>
 
         <!-- archive folder path -->
@@ -87,25 +94,29 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock 
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            
+                <TextBlock Grid.Column="0"
                     Margin="5 10 5 10"
-                    Padding="0 0 5 0"
+                    Padding="5"
                     Text="Archive Folder Path:" />
-                <TextBox
+            <TextBox Grid.Column="1"
                     x:Name="ArchiveFolderPathTextBox"
                     Margin="5 10 5 10"
-                    Width="400"
                     Text="{Binding ArchiveFolderPath, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                     ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"
                 />
-                <Button 
-                    Margin="5 10 5 10" 
+            <Button Grid.Column="2"
+                    Margin="5 10 5 10"
+                    Padding="5"
                     Content="Browse"
                     Command="{Binding BrowseArchiveFolderCommand}"
                     IsEnabled="{Binding IsBrowseArchiveFolderEnabled}"
                 />
-            </StackPanel>
         </Grid>
 
         <!-- filing rules -->

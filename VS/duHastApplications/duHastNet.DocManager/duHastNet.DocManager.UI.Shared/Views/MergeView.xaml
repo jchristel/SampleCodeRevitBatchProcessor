@@ -20,7 +20,9 @@
             <!-- message banner -->
             <RowDefinition Height="auto"/>
             <!-- date selection merger-->
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <!-- merger button -->
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- header row content -->
@@ -42,13 +44,43 @@
         </Grid>
         <!-- message banner -->
         <Grid Grid.Row="1">
-            
-        </Grid>
-        <!-- merger date picker -->
-        <Grid Grid.Row="2">
-            
+            <Grid.RowDefinitions>
+                <!-- banner row -->
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <local:GlobalMessageView Grid.Row="1" 
+                  DataContext="{Binding MessageViewModel}"
+                  Margin="0 5 0 5"/>
         </Grid>
         
+            <!-- merger date picker -->
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+               
+            <TextBlock Grid.Row="0"
+                    Text="Revision Date:"
+                       Padding="5"
+                    Margin="10 5 5 5"/>
+            <DatePicker Grid.Row="0" Grid.Column="1"
+                        Padding="5"
+                    Margin="5 5 5 10"/>
+            <TextBlock Grid.Row="1" Grid.Column="0"
+                       Text="Revision Description"
+                       Padding="5"
+                       Margin="5 0 5 10"/>
+            <TextBox Grid.Row="1" Grid.Column="1"
+                        Padding="5"
+                        Margin="5 0 5 10"/>
+
+        </Grid>
+
         <!-- main buttons -->
         <Grid Grid.Row="3">
             <Grid.RowDefinitions>

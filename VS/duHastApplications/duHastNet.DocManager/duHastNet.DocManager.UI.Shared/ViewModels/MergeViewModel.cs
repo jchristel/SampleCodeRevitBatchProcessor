@@ -46,6 +46,9 @@ public partial class MergeViewModel : ObservableObject
 
     #endregion
 
+    // Expose message ViewModel for the view
+    public GlobalMessageViewModel MessageViewModel { get; }
+
     #region Constructor
 
     public MergeViewModel(
@@ -58,6 +61,8 @@ public partial class MergeViewModel : ObservableObject
         _messageStore = messageStore;
         _navigationStore = navigationStore;
         _createViewModel = createViewModel;
+
+        MessageViewModel = new GlobalMessageViewModel(_messageStore);
     }
 
     #endregion

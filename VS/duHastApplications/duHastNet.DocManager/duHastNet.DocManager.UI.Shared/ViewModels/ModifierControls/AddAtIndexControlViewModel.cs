@@ -32,7 +32,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.ModifierControls
     /// <summary>
     /// ViewModel for AddAtIndex modifier control
     /// Handles two parameters: text to insert and the position (index) to insert it at
-    /// Example: "ABC-123" + text "-DRAFT" at index 7 → "ABC-123-DRAFT"
+    /// Example: "ABC-123" + text "-DRAFT" at index 7 â†’ "ABC-123-DRAFT"
     /// Note: Index 0 is handled by AddPrefixControl, so this is for index > 0
     /// </summary>
     public partial class AddAtIndexControlViewModel : ObservableValidator
@@ -56,13 +56,38 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.ModifierControls
 
         #endregion Properties
 
+        #region Property Changed Handlers
+
+        /// <summary>
+        /// Called when Text property changes
+        /// Triggers validation to provide immediate feedback
+        /// </summary>
+        partial void OnTextChanged(string value)
+        {
+            ValidateProperty(value, nameof(Text));
+        }
+
+        /// <summary>
+        /// Called when Index property changes
+        /// Triggers validation to provide immediate feedback
+        /// </summary>
+        partial void OnIndexChanged(int value)
+        {
+            ValidateProperty(value, nameof(Index));
+        }
+
+        #endregion Property Changed Handlers
+
         #region Constructor
 
         /// <summary>
         /// Default constructor for new modifier
+        /// Validates all properties on creation to show initial validation state
         /// </summary>
         public AddAtIndexControlViewModel()
         {
+            // Validate immediately so user sees required field errors
+            ValidateAllProperties();
         }
 
         /// <summary>
@@ -111,7 +136,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.ModifierControls
             if (valueField != null && indexField != null)
             {
                 var loadedIndex = (int)(indexField.GetValue(modifier) ?? 1);
-                
+
                 // Only load if index > 0 (index 0 is prefix, handled by AddPrefixControl)
                 if (loadedIndex > 0)
                 {

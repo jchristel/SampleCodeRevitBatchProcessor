@@ -30,6 +30,7 @@ using duHastNet.DocManager.Core.Models.DocumentNumberModifiers;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.ViewModels.ModifierControls;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
@@ -187,6 +188,12 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// </summary>
         partial void OnSelectedModifierTypeChanged(ModifierType value)
         {
+            // Unsubscribe from old control if it exists
+            if (CurrentModifierControl is INotifyPropertyChanged oldControl)
+            {
+                oldControl.PropertyChanged -= OnModifierControlPropertyChanged;
+            }
+
             // Create appropriate control ViewModel based on selected type
             CurrentModifierControl = value switch
             {
@@ -197,6 +204,26 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 ModifierType.Replace => new ReplaceControlViewModel(),
                 _ => null
             };
+
+            // Subscribe to new control's PropertyChanged to monitor validation state
+            if (CurrentModifierControl is INotifyPropertyChanged newControl)
+            {
+                newControl.PropertyChanged += OnModifierControlPropertyChanged;
+            }
+
+            // Notify that OK command's CanExecute state may have changed
+            OkCommand.NotifyCanExecuteChanged();
+        }
+
+        /// <summary>
+        /// Handles when the nested modifier control's properties change
+        /// Notifies the OK command that its CanExecute state should be re-evaluated
+        /// </summary>
+        private void OnModifierControlPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            // When any property changes in the nested control (including validation state),
+            // notify that OK command should re-check if it can execute
+            OkCommand.NotifyCanExecuteChanged();
         }
 
         /// <summary>
@@ -268,6 +295,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
 
         /// <summary>
         /// Determines if OK button should be enabled
+        /// This method must be read-only and not trigger any validation
         /// </summary>
         private bool CanExecuteOk()
         {
@@ -283,21 +311,18 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             if (string.IsNullOrWhiteSpace(Description))
                 return false;
 
-            // If a modifier is selected, validate the control
+            // If a modifier is selected, check if the control has validation errors
             if (SelectedModifierType != ModifierType.None && CurrentModifierControl != null)
             {
-                // Check if control ViewModel has validation
-                // Use IsValid() method from modifier control ViewModels
-                var isValid = CurrentModifierControl switch
+                // Check HasErrors property directly (read-only, no side effects)
+                // All modifier controls inherit from ObservableValidator which has HasErrors
+                var hasErrors = CurrentModifierControl switch
                 {
-                    AddSuffixControlViewModel suffix => suffix.IsValid(),
-                    AddPrefixControlViewModel prefix => prefix.IsValid(),
-                    AddAtIndexControlViewModel atIndex => atIndex.IsValid(),
-                    ReplaceControlViewModel replace => replace.IsValid(),
-                    _ => true
+                    ObservableValidator validator => validator.HasErrors,
+                    _ => false
                 };
 
-                if (!isValid)
+                if (hasErrors)
                     return false;
             }
 
@@ -311,25 +336,22 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         [RelayCommand(CanExecute = nameof(CanExecuteOk))]
         private void Ok()
         {
-            // Final validation
+            // Final validation of main properties
             ValidateAllProperties();
 
             if (HasErrors)
                 return;
 
-            // Validate modifier control if present
+            // Check modifier control validation state if present
             if (CurrentModifierControl != null)
             {
-                var isValid = CurrentModifierControl switch
+                var hasErrors = CurrentModifierControl switch
                 {
-                    AddSuffixControlViewModel suffix => suffix.IsValid(),
-                    AddPrefixControlViewModel prefix => prefix.IsValid(),
-                    AddAtIndexControlViewModel atIndex => atIndex.IsValid(),
-                    ReplaceControlViewModel replace => replace.IsValid(),
-                    _ => true
+                    ObservableValidator validator => validator.HasErrors,
+                    _ => false
                 };
 
-                if (!isValid)
+                if (hasErrors)
                     return;
             }
 

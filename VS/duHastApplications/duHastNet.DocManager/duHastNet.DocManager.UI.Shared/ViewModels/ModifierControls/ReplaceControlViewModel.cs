@@ -32,7 +32,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.ModifierControls
     /// <summary>
     /// ViewModel for Replace modifier control
     /// Handles two parameters: old value to find and new value to replace it with
-    /// Example: "ABC-123" + replace "ABC" with "XYZ" → "XYZ-123"
+    /// Example: "ABC-123" + replace "ABC" with "XYZ" â†’ "XYZ-123"
     /// </summary>
     public partial class ReplaceControlViewModel : ObservableValidator
     {
@@ -54,13 +54,38 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.ModifierControls
 
         #endregion Properties
 
+        #region Property Changed Handlers
+
+        /// <summary>
+        /// Called when OldValue property changes
+        /// Triggers validation to provide immediate feedback
+        /// </summary>
+        partial void OnOldValueChanged(string value)
+        {
+            ValidateProperty(value, nameof(OldValue));
+        }
+
+        /// <summary>
+        /// Called when NewValue property changes
+        /// Triggers validation to provide immediate feedback
+        /// </summary>
+        partial void OnNewValueChanged(string value)
+        {
+            ValidateProperty(value, nameof(NewValue));
+        }
+
+        #endregion Property Changed Handlers
+
         #region Constructor
 
         /// <summary>
         /// Default constructor for new modifier
+        /// Validates all properties on creation to show initial validation state
         /// </summary>
         public ReplaceControlViewModel()
         {
+            // Validate immediately so user sees required field errors
+            ValidateAllProperties();
         }
 
         /// <summary>

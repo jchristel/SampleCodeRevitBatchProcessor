@@ -47,13 +47,29 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.ModifierControls
 
         #endregion Properties
 
+        #region Property Changed Handlers
+
+        /// <summary>
+        /// Called when Suffix property changes
+        /// Triggers validation to provide immediate feedback
+        /// </summary>
+        partial void OnSuffixChanged(string value)
+        {
+            ValidateProperty(value, nameof(Suffix));
+        }
+
+        #endregion Property Changed Handlers
+
         #region Constructor
 
         /// <summary>
         /// Default constructor for new modifier
+        /// Validates all properties on creation to show initial validation state
         /// </summary>
         public AddSuffixControlViewModel()
         {
+            // Validate immediately so user sees required field errors
+            ValidateAllProperties();
         }
 
         /// <summary>

@@ -33,7 +33,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.ModifierControls
     /// ViewModel for AddPrefix modifier control
     /// Handles a single parameter: the prefix text to add to the beginning of document numbers
     /// Uses AddAtIndex with index 0 under the hood
-    /// Example: "ABC-123" + prefix "DWG-" → "DWG-ABC-123"
+    /// Example: "ABC-123" + prefix "DWG-" â†’ "DWG-ABC-123"
     /// </summary>
     public partial class AddPrefixControlViewModel : ObservableValidator
     {
@@ -48,13 +48,29 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.ModifierControls
 
         #endregion Properties
 
+        #region Property Changed Handlers
+
+        /// <summary>
+        /// Called when Prefix property changes
+        /// Triggers validation to provide immediate feedback
+        /// </summary>
+        partial void OnPrefixChanged(string value)
+        {
+            ValidateProperty(value, nameof(Prefix));
+        }
+
+        #endregion Property Changed Handlers
+
         #region Constructor
 
         /// <summary>
         /// Default constructor for new modifier
+        /// Validates all properties on creation to show initial validation state
         /// </summary>
         public AddPrefixControlViewModel()
         {
+            // Validate immediately so user sees required field errors
+            ValidateAllProperties();
         }
 
         /// <summary>
@@ -105,7 +121,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.ModifierControls
             if (valueField != null && indexField != null)
             {
                 var index = (int)(indexField.GetValue(modifier) ?? 0);
-                
+
                 // Only load if this is actually a prefix (index 0)
                 if (index == 0)
                 {

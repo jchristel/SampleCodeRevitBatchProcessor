@@ -104,6 +104,8 @@ def create_part_atom_exports_in_library_entry(doc , process_directories):
         create_result = create_family_xml_files(
             revit_application=doc.Application,
             process_directories=process_directories,
+            process_directories_to_local_directories_mapper=settings.NETWORK_PATH_MAPPER,
+            use_temp_directory=False,
             progress_callback=progress_callback
         )
 
@@ -132,8 +134,23 @@ def remove_orphaned(process_directories):
     )
     output("{}".format(remove_result.message), revit_script_util.Output)
 
-# run the script to create family types XML exports from families in library directory
-create_part_atom_exports_in_library_entry(doc, PROCESS_DIRECTORIES)
 
-# remove any orphaned xml files
-remove_orphaned(PROCESS_DIRECTORIES)
+try:
+    output("Starting FamilyTypes script", revit_script_util.Output)
+    output("Revit File: {}".format(revitFilePath_), revit_script_util.Output)
+    if debug_:
+        output("Running in Debug mode", revit_script_util.Output)
+    else:
+        output("Running in Batch Processor mode", revit_script_util.Output)
+    
+    # run the script to create family types XML exports from families in library directory
+    create_part_atom_exports_in_library_entry(doc, PROCESS_DIRECTORIES)
+
+    # remove any orphaned xml files
+    remove_orphaned(PROCESS_DIRECTORIES)
+
+except Exception as e:
+    output("error {}".format(e), revit_script_util.Output)
+    import traceback
+    stack_trace = traceback.format_exc()
+    output(stack_trace, revit_script_util.Output)

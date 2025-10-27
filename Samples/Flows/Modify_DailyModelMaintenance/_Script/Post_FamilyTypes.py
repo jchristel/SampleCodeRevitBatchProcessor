@@ -9,7 +9,6 @@ Module executed as a post process script after xml part atoms are created.
 
 """
 
-
 #
 # License:
 #
@@ -109,6 +108,13 @@ def report_families_in_library_entry(process_directories):
         # store report result
         family_data = report_result.result
        
+        output("Rows before filter: {}".format(len(family_data)), script_util.Output)
+
+        # filter data
+        family_data = settings.filter_xml_data(family_data)
+
+        output("Rows after filter: {}".format(len(family_data)), script_util.Output)
+       
         output("Finished reading families in library with status: {}".format(report_result.status), script_util.Output)
 
         output("Writing report to csv file", script_util.Output)
@@ -121,7 +127,7 @@ def report_families_in_library_entry(process_directories):
         file_path = os.path.join(settings.OUTPUT_FOLDER, settings.COMBINED_REPORT_NAME_LIBRARY_FAMILIES)
 
         if (file_path and len(file_path) > 0):
-            write_result = write_report_data_as_csv(file_name=file_path, header= LIBRARY_FAMILIES_HEADER,  data=report_result.result, quoting=csv.QUOTE_MINIMAL)
+            write_result = write_report_data_as_csv(file_name=file_path, header= LIBRARY_FAMILIES_HEADER,  data=family_data, quoting=csv.QUOTE_MINIMAL)
             if(write_result.status):
                 return_value.append_message("Succefully wrote families report to: {} ".format(file_path))
             else:

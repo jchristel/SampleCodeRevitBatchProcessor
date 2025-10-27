@@ -33,6 +33,12 @@ Module containing settings used in all flow scripts.
 #
 
 import os
+import clr
+clr.AddReference("System")
+from System import Environment
+
+# Get the user's Documents folder path
+USER_PATH = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)
 
 DU_HAST_DIRECTORY = (
     r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src"
@@ -95,6 +101,16 @@ PATH_TO_BESPOKE_JOINERY_LIBRARY = os.path.join(
     PROJECT_DIRECTORY, r"\Project Library\__BespokeJoinery"
 )
 PATH_TO_UNIONS_LIBRARY = os.path.join(PROJECT_DIRECTORY, r"\Project Library\__Unions")
+
+# families edited in the last x minutes will be reloaded, others will be ignored
+RELOAD_TIME_SPAN_MINUTES = 11520 #5760  # 4 days
+
+#network path mapper to local drive directories map
+NETWORK_PATH_MAPPER = {
+    PATH_TO_CLINICAL_LIBRARY: os.path.join(USER_PATH, r"Clinical"),
+    PATH_TO_UNIONS_LIBRARY: os.path.join(USER_PATH, r"Unions"),
+    PATH_TO_BESPOKE_JOINERY_LIBRARY:  os.path.join(USER_PATH, r"Bespoke"),
+}
 
 # reports by file extensions used
 REPORT_EXTENSION_LEVELS = "_Levels"
@@ -213,8 +229,44 @@ VIEW_TEMPLATE_HASH_FILE_SUFFIX = "Overrides"
 # ignore file used in family comparison
 COMPARISON_IGNORE_FILE_PATH = os.path.join(SCRIPT_DIRECTORY,"type_ignore_file.csv")
 
+
+# list of files of which to check families in project file vs library
+FAM_COMPARISON_FILE_LIST = [
+    "Project File 1",
+    "Project File 2",
+]
+
 # list of files of which to check families in project file vs library
 FAM_COMPARISON_FILE_LIST = [
     "File Name One",
     "File Name Two",
 ]
+
+# project specific settings for the xml library writer
+
+XML_PARAMETER_PRE_FIX = ["Sample Prefix One", "Sample Prefix Two"]
+
+def filter_xml_data(data):
+    """ filters out not needed data for the xml writer
+    
+        Data columns are in format:
+        PROJECT FILE NAME	FAMILY NAME	CATEGORY	TYPE NAME	DATE REPORTED	TIME REPORTED	PARAMETER NAME	PARAMETER TYPE	PARAMETER STORAGE TYPE	PARAMETER UNIT	PARAMETER VALUE
+
+    
+    """
+
+    filter_data = []
+
+    try:
+        # loop over data and filter out unneeded families
+        for d in data:
+            # loop over prefixes and check if family name starts with one of them
+            for p in XML_PARAMETER_PRE_FIX:
+                if d[6].startswith(p):
+                    filter_data.append(d)
+                    break
+
+    except Exception as e:
+        print("Failed to filter data with error: {}".format(e))
+
+    return filter_data

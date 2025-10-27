@@ -44,6 +44,7 @@ from Autodesk.Revit.DB import  (
     FilterInverseRule,
     FilterElementIdRule,
     FilterStringRule,
+    FilterGlobalParameterAssociationRule
 )
 
 # dictionary containing varies rule mappings
@@ -56,6 +57,7 @@ class_mapping = {
     "FilterElementIdRule":  FilterElementIdRule,
     "FilterIntegerRule": FilterIntegerRule,
     "FilterStringRule":  FilterStringRule,
+    "FilterGlobalParameterAssociationRule": FilterGlobalParameterAssociationRule,
 
 }
 
@@ -145,6 +147,27 @@ def create_filter_string_rule(evaluator, value_provider, rule_data_instance):
     rule = None
     try:
         rule = FilterStringRule( value_provider, evaluator, rule_data_instance.rule_value)
+    except Exception:
+        pass
+    return rule
+
+
+def create_filter_global_parameter_association_rule(evaluator, value_provider, rule_data_instance):
+    """
+    Creates a FilterGlobalParameterAssociationRule.
+
+    :param evaluator: The evaluator for the rule.
+    :type evaluator: Autodesk.Revit.DB.FilterGlobalParameterAssociationEvaluator
+    :param value_provider: The value provider for the rule.
+    :type value_provider: Autodesk.Revit.DB.ParameterValueProvider
+    :param rule_data_instance: The rule data instance containing the rule value.
+
+    :return: The created FilterGlobalParameterAssociationRule or None if creation failed.
+    """
+
+    rule = None
+    try:
+        rule = FilterGlobalParameterAssociationRule( value_provider, evaluator, ElementId(int(rule_data_instance.rule_value)))
     except Exception:
         pass
     return rule
@@ -301,6 +324,11 @@ def convert_data_to_rule(doc, rule_data_instance):
         
         rule = create_filter_string_rule(evaluator, value_provider, rule_data_instance)
         return_value.append_message("Created string rule: {}".format(rule_data_instance.rule_value))
+    elif rule_data_instance.rule_type == FilterGlobalParameterAssociationRule.__name__:
+        # global parameter association rule
+        
+        rule = create_filter_global_parameter_association_rule(evaluator, value_provider, rule_data_instance)
+        return_value.append_message("Created global parameter association rule: {}".format(rule_data_instance.rule_value))
     else:
         # uh this is bad
         return_value.update_sep(False, "Failed to create rule. Unknown rule type: {} for rule: {}".format(rule_data_instance.rule_type, rule_data_instance.parameter_name))

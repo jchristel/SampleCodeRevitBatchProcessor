@@ -1,4 +1,9 @@
 ﻿//
+//License:
+//
+//
+// Revit Batch Processor Sample Code
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -17,43 +22,17 @@
 //
 
 
-using duHastNet.DocManager.Core.Models.MetaData;
 
-namespace duHastNet.DocManager.Core.Interfaces
+namespace duHastNet.DocManager.UI.Shared.Views
 {
     /// <summary>
-    /// An interface for cloud based document management systems which use meta data to upload documents.
-    /// sample provider is Aconex
-    /// </summary> 
-    public interface ICloudMetaData
+    /// Interaction logic for MetaDataAconex.xaml
+    /// </summary>
+    public partial class CloudDocumentManagerView : System.Windows.Controls.UserControl
     {
-        /// <summary>
-        /// The fully qualified path to the metadata template file.
-        /// which is used to upload documents
-        /// The file will be duplicated and modified during upload
-        /// </summary>
-        string MetadataTemplateFilePath { get; set; }
-
-        /// <summary>
-        /// Maps mepa data fields to document properties
-        /// </summary>
-        List<MetaDataMap> MetaDataMap { get; }
-
-        /// <summary>
-        /// adds a new meta data mapper to collection
-        /// </summary>
-        /// <param name="mapper"></param>
-        public void AddMapper (MetaDataMap mapper);
-
-        /// <summary>
-        /// Remove mapper from collection
-        /// </summary>
-        /// <param name="mapper"></param>
-        public void RemoveMapper (MetaDataMap mapper);
-
-        /// <summary>
-        /// Clears all mappers from collection
-        /// </summary>
-        public void ClearMappers();
+        public CloudDocumentManagerView()
+        {
+            InitializeComponent();
+        }
     }
 }

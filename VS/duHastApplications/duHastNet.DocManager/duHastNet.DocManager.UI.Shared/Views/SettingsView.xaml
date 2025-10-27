@@ -84,10 +84,10 @@
                   Margin="0 5 0 5"/>
             </Expander>
         </Border>
-        <!-- aconex management expander -->
+        <!-- cloud document manager management expander -->
         <Border Grid.Row="4" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
-            <Expander  Header="Aconex" Margin="5 5 5 5">
-                <local:MetaDataAconexView 
+            <Expander  Header="Cloud Document Manager" Margin="5 5 5 5">
+                <local:CloudDocumentManagerView 
                   DataContext="{Binding AconexMetadataViewModel}"
                   Margin="0 5 0 5"/>
             </Expander>

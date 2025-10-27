@@ -38,16 +38,6 @@ namespace duHastNet.DocManager.Core.Models
         private readonly RevisionContainer _revisionContainer;
 
         /// <summary>
-        /// The cloud meta data interface implementation
-        /// </summary>
-        private readonly Interfaces.ICloudMetaData _cloudMetaData;
-
-        /// <summary>
-        /// A class which manages (maintains) a folder or folders with a set of current documents
-        /// </summary>
-        private CurrentFolderManager _currentFolderManager;
-
-        /// <summary>
         /// Flag indicating data has been loaded from the database
         /// </summary>
         public bool IsDataLoaded { get; private set; }
@@ -188,48 +178,6 @@ namespace duHastNet.DocManager.Core.Models
 
         #endregion data operations
 
-        #region current folder manager
-
-        /// <summary>
-        /// supersedes documents in the current folder(s) using the current folder manager
-        /// this function is usedfull when no prior matching through UI is needed and documents in the current folder(s) need to be updated to the latest version in one step
-        /// </summary>
-        public void SupersedeDocuments()
-        {
-            // supersede documents in one go
-            bool supersede = _currentFolderManager.SupersedeDocuments([.. _documentContainer.GetAllDocuments()]);
-
-            // TODO handle result
-            // TODO update database if needed with new document revisions
-            // TODO log result (to file and/or UI)
-            // there are two things to log: errors per incoming document and overall errors!!
-        }
-
-
-
-        /// <summary>
-        /// returns a list of incoming document processing statuses for each file in the incoming folder
-        /// </summary>
-        /// <returns></returns>
-        public List<IncomingDocumentProcessingStatus>? GetIncomingDocumentProcessingStatuses()
-        {
-            // process incoming files
-            bool processIncomingFiles = _currentFolderManager.GetIncomingFilesMetadata([.. _documentContainer.GetAllDocuments()]);
-
-            // TODO log result (to file and/or UI)
-            // there are two things to log: errors per incoming document and overall errors!!
-
-            //return matched documents if any
-            if (_currentFolderManager.MatchedDocuments!=null && _currentFolderManager.MatchedDocuments.Count>0)
-            {
-                return _currentFolderManager.MatchedDocuments;
-            }
-
-            // no matched documents, better to return an empty list than null
-            return [];
-        }
-
-        #endregion current folder manager
 
         /// <summary>
         /// bussiness logic manager containing all documents and revisions of a project
@@ -238,9 +186,6 @@ namespace duHastNet.DocManager.Core.Models
         { 
             _documentContainer = new DocumentContainer();
             _revisionContainer = new RevisionContainer();
-            _cloudMetaData = new MetaDataMapperAconex();
-            _currentFolderManager = new CurrentFolderManager();
-
             // set default loader flag
             IsDataLoaded = false;
         }

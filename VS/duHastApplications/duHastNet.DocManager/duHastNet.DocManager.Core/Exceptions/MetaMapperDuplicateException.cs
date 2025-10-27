@@ -21,7 +21,7 @@
 //
 //
 
-using duHastNet.DocManager.Core.Models;
+using duHastNet.DocManager.Core.Models.MetaData;
 
 namespace duHastNet.DocManager.Core.Exceptions
 {

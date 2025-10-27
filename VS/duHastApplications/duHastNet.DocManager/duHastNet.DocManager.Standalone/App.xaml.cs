@@ -1,5 +1,6 @@
 ﻿using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.DocManager.Core.Models;
+using duHastNet.DocManager.Core.Models.MetaData;
 using duHastNet.DocManager.Core.Services;
 using duHastNet.DocManager.Core.Services.Api;
 using duHastNet.DocManager.Core.Stores;
@@ -28,7 +29,7 @@ namespace DocManager.Standalone
         private IDialogService? _dialogService;
 
         duHastNet.DocManager.Core.Models.CurrentFolder.CurrentFolderManager? _currentFolderManager;
-        MetaDataMapperAconex? _aconexMetaDataMapper;
+        CloudDocumentManager _cloudDocumentManager;
 
         protected override async void OnStartup(StartupEventArgs e)
         {
@@ -54,7 +55,10 @@ namespace DocManager.Standalone
             _dialogService = new DialogService();
 
             // Load settings from JSON files
-            var (currentFolderManagerSettings, metaDataMapperAconex) = await LoadSettingsAsync();
+            var (currentFolderManagerSettings, cloudDocumentManager) = await LoadSettingsAsync();
+
+            _cloudDocumentManager = cloudDocumentManager;
+
 
             // Create CurrentFolderManager with loaded settings
             _currentFolderManager
@@ -68,7 +72,7 @@ namespace DocManager.Standalone
                     docManagerApi: _docManagerApi,
                     manager: _manager,
                     currentFolderManager: _currentFolderManager,
-                    cloudMetaData: metaDataMapperAconex,
+                    cloudMetaData: cloudDocumentManager,
                     messageStore: _messageStore,
                     navigationStore: _navigationStore,
                     dialogService: _dialogService)
@@ -81,10 +85,10 @@ namespace DocManager.Standalone
         /// Loads settings from JSON files, creating default instances if files don't exist
         /// </summary>
         /// <returns>Tuple containing CurrentFolderManagerSettings and MetaDataMapperAconex</returns>
-        private async Task<(duHastNet.DocManager.Core.Models.CurrentFolder.CurrentFolderManagerSettings, MetaDataMapperAconex)> LoadSettingsAsync()
+        private async Task<(duHastNet.DocManager.Core.Models.CurrentFolder.CurrentFolderManagerSettings, CloudDocumentManager)> LoadSettingsAsync()
         {
             duHastNet.DocManager.Core.Models.CurrentFolder.CurrentFolderManagerSettings? currentFolderManagerSettings = null;
-            MetaDataMapperAconex? metaDataMapperAconex = null;
+            CloudDocumentManager? cloudDocumentManager = null;
 
             try
             {
@@ -122,39 +126,39 @@ namespace DocManager.Standalone
 
             try
             {
-                // Load MetaDataMapperAconex
-                metaDataMapperAconex = await _settingsService!.LoadAsync<MetaDataMapperAconex>(
-                    "MetaDataMapperAconex.json");
+                // Load CloudDocumentManager
+                cloudDocumentManager = await _settingsService!.LoadAsync<CloudDocumentManager>(
+                    "CloudDocumentManager.json");
 
-                if (metaDataMapperAconex == null)
+                if (cloudDocumentManager == null)
                 {
                     // First run - create default empty mapper
-                    metaDataMapperAconex = new MetaDataMapperAconex();
+                    cloudDocumentManager = new CloudDocumentManager();
 
                     // Log to message store that default mapper was created
                     _messageStore?.SetCurrentMessage(
-                        "MetaDataMapperAconex.json not found. Created default empty mapper.",
+                        "CloudDocumentManager.json not found. Created default empty mapper.",
                         MessageTypes.Information);
                 }
                 else
                 {
                     // Settings loaded successfully
                     _messageStore?.SetCurrentMessage(
-                        "MetaDataMapperAconex loaded successfully.",
+                        "CloudDocumentManager loaded successfully.",
                         MessageTypes.Information);
                 }
             }
             catch (Exception ex)
             {
                 // Error loading settings - create defaults and log error
-                metaDataMapperAconex = new MetaDataMapperAconex();
+                cloudDocumentManager = new CloudDocumentManager();
 
                 _messageStore?.SetCurrentMessage(
-                    $"Error loading MetaDataMapperAconex: {ex.Message}. Using default mapper.",
+                    $"Error loading CloudDocumentManager: {ex.Message}. Using default mapper.",
                     MessageTypes.Error);
             }
 
-            return (currentFolderManagerSettings, metaDataMapperAconex);
+            return (currentFolderManagerSettings, cloudDocumentManager);
         }
 
         protected override void OnExit(ExitEventArgs e)

@@ -31,7 +31,7 @@ using duHastNet.DocManager.UI.Shared.Stores;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels
 {
-    public partial class MetaDataAconexViewModel : ObservableObject
+    public partial class CloudDocumentManagerViewModel : ObservableObject
     {
 
         #region Private Fields
@@ -39,17 +39,17 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         private readonly MessageStore _messageStore;
         private readonly Manager _manager;
         private readonly IDialogService _dialogService;
-        private readonly MetaDataMapperAconex _aconexMetaDataManager;
+        private readonly CloudDocumentManager _cloudDocumentManager;
 
         #endregion Private Fields
 
         #region Constructor
 
-        public MetaDataAconexViewModel(MessageStore messageStore, Manager manager, MetaDataMapperAconex aconexMetaDataManager, IDialogService dialogService)
+        public CloudDocumentManagerViewModel(MessageStore messageStore, Manager manager, CloudDocumentManager cloudDocumentManager, IDialogService dialogService)
         {
             _manager = manager;
             _messageStore = messageStore;
-            _aconexMetaDataManager = aconexMetaDataManager;
+            _cloudDocumentManager = cloudDocumentManager;
             _dialogService = dialogService;
         }
 
@@ -62,6 +62,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
 
         [ObservableProperty]
         private bool _isBrowseTemplateFileEnabled= true;
+
+        [ObservableProperty]
+        private bool _cloudDocumentManagerEnabled = false;
 
         #endregion Observable Properties
 

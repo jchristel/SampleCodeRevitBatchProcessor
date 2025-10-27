@@ -22,6 +22,7 @@ using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.UI.Shared.Stores;
 using System.Printing;
 using duHastNet.DocManager.UI.Shared.Interfaces;
+using duHastNet.DocManager.Core.Models.MetaData;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels
 {
@@ -31,7 +32,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         private readonly Manager _manager;
         private readonly MessageStore _messageStore;
         private readonly Core.Models.CurrentFolder.CurrentFolderManager _currentFolderManager;
-        private readonly MetaDataMapperAconex _cloudMetaData;
+        private readonly CloudDocumentManager _cloudMetaData;
         private readonly NavigationStore _navigationStore;
         private readonly IDialogService _dialogService;
 
@@ -48,7 +49,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             DocManagerApi docManagerApi, 
             Manager manager, 
             Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager,
-            MetaDataMapperAconex cloudMetaData,
+            CloudDocumentManager cloudMetaData,
             MessageStore messageStore,
             NavigationStore navigationStore,
             IDialogService dialogService

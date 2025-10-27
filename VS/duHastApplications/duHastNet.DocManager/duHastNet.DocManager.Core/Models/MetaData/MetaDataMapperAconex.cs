@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace duHastNet.DocManager.Core.Models
+namespace duHastNet.DocManager.Core.Models.MetaData
 {
     /// <summary>
     /// Metadata mapper for Aconex cloud document management system

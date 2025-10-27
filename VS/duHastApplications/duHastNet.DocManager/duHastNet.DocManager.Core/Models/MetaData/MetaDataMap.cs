@@ -16,7 +16,7 @@
 //
 //
 
-namespace duHastNet.DocManager.Core.Models
+namespace duHastNet.DocManager.Core.Models.MetaData
 {
     /// <summary>
     /// Maps a metadata field to either a fixed value or a document property

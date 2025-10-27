@@ -19,6 +19,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models;
+using duHastNet.DocManager.Core.Models.MetaData;
 using duHastNet.DocManager.Core.Services.Api;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
@@ -37,7 +38,7 @@ public partial class SettingsViewModel : ObservableObject
     private readonly Manager _manager;
     private readonly NavigationStore _navigationStore;
     Core.Models.CurrentFolder.CurrentFolderManager _currentFolderManager;
-    Core.Models.MetaDataMapperAconex _aconexMetaDataManager;
+    CloudDocumentManager _cloudDocumentManager;
     private readonly IDialogService _dialogService;
 
     //function used to navigate to merge view model
@@ -49,7 +50,7 @@ public partial class SettingsViewModel : ObservableObject
     public GlobalMessageViewModel MessageViewModel { get; }
 
     // Expose Aconex Metadata ViewModel for the view
-    public MetaDataAconexViewModel AconexMetadataViewModel { get; }
+    public CloudDocumentManagerViewModel AconexMetadataViewModel { get; }
 
     // Expose current folder ViewModel for the view
     public CurrentFolderViewModel CurrentFolderViewModel { get;}
@@ -64,7 +65,7 @@ public partial class SettingsViewModel : ObservableObject
         Manager manager, 
         MessageStore messageStore, 
         Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager,
-        MetaDataMapperAconex aconexMetaDataManager,
+        CloudDocumentManager cloudDocumentManager,
         NavigationStore navigationStore,
         IDialogService dialogService,
         Func<MergeViewModel> createViewModel
@@ -74,7 +75,7 @@ public partial class SettingsViewModel : ObservableObject
         _manager = manager;
         _messageStore = messageStore;
         _currentFolderManager = currentFolderManager;
-        _aconexMetaDataManager = aconexMetaDataManager;
+        _cloudDocumentManager = cloudDocumentManager;
         _navigationStore = navigationStore;
         _createViewModel = createViewModel;
         _dialogService = dialogService;
@@ -87,10 +88,10 @@ public partial class SettingsViewModel : ObservableObject
             _manager,
             _dialogService);
         
-        AconexMetadataViewModel = new MetaDataAconexViewModel(
+        AconexMetadataViewModel = new CloudDocumentManagerViewModel(
             _messageStore, 
             _manager,
-            _aconexMetaDataManager,
+            _cloudDocumentManager,
             _dialogService);
         
         CurrentFolderViewModel = new CurrentFolderViewModel(

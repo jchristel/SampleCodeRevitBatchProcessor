@@ -51,5 +51,19 @@ namespace duHastNet.DocManager.UI.Shared.Interfaces
         /// <param name="initialDirectory">Initial directory to display</param>
         /// <returns>Selected file path, or null if cancelled</returns>
         string? ShowSaveFileDialog(string title, string filter, string defaultExtension, string? initialDirectory = null);
+
+        /// <summary>
+        /// Shows a message box dialog
+        /// </summary>
+        /// <param name="message">Message to display</param>
+        /// <param name="title">Dialog title</param>
+        /// <param name="button">Button configuration (OK, OKCancel, YesNo, etc.)</param>
+        /// <param name="icon">Icon to display (Information, Warning, Error, Question, None)</param>
+        /// <returns>The button that was clicked (OK, Cancel, Yes, No, etc.)</returns>
+        System.Windows.MessageBoxResult ShowMessageBox(
+            string message,
+            string title,
+            System.Windows.MessageBoxButton button = System.Windows.MessageBoxButton.OK,
+            System.Windows.MessageBoxImage icon = System.Windows.MessageBoxImage.None);
     }
 }

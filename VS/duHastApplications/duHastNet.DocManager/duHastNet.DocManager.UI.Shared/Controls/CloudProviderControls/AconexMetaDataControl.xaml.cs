@@ -21,45 +21,18 @@
 //
 //
 
+using System.Windows.Controls;
 
-using duHastNet.DocManager.Core.Models.MetaData;
-
-namespace duHastNet.DocManager.Core.Models
+namespace duHastNet.DocManager.UI.Shared.Controls.CloudProviderControls
 {
-    public class CloudDocumentManager
+    /// <summary>
+    /// Interaction logic for AconexMetadataControl.xaml
+    /// </summary>
+    public partial class AconexMetadataControl : System.Windows.Controls.UserControl
     {
-        /// <summary>
-        /// A class representing an interface to a cloud document manager
-        /// most likely to be a text file telling the cloud document manager what to do with files uploaded
-        /// In the moment only aconex is supported
-        /// may be extended in the future
-        /// </summary>
-        /// 
-
-        #region properties
-        private Interfaces.ICloudMetaData? _metaDataMapper;
-        
-        public Interfaces.ICloudMetaData? MetaDataMapper
+        public AconexMetadataControl()
         {
-            get => _metaDataMapper;
-            set => _metaDataMapper = value;
-        }
-
-        /// <summary>
-        /// Indicates whether the cloud document manager integration is enabled
-        /// </summary>
-        private bool _cloudDocumentManagerEnabled = false;
-        public bool CloudDocumentManagerEnabled
-        {
-            get => _cloudDocumentManagerEnabled;
-            set => _cloudDocumentManagerEnabled = value;
-        }
-
-        #endregion properties
-        public CloudDocumentManager() {
-
-            /// for now only aconex is supported
-            MetaDataMapper = new MetaDataMapperAconex();
+            InitializeComponent();
         }
     }
 }

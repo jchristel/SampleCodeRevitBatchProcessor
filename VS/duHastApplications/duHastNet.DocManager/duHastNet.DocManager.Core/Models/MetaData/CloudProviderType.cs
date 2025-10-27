@@ -21,45 +21,25 @@
 //
 //
 
-
-using duHastNet.DocManager.Core.Models.MetaData;
-
-namespace duHastNet.DocManager.Core.Models
+namespace duHastNet.DocManager.Core.Models.MetaData
 {
-    public class CloudDocumentManager
+    /// <summary>
+    /// Enum representing the available cloud document management provider types
+    /// Used for type-safe selection and for creating concrete ICloudMetaData instances
+    /// </summary>
+    public enum CloudProviderType
     {
         /// <summary>
-        /// A class representing an interface to a cloud document manager
-        /// most likely to be a text file telling the cloud document manager what to do with files uploaded
-        /// In the moment only aconex is supported
-        /// may be extended in the future
+        /// Aconex cloud document management system
+        /// Maps to: MetaDataMapperAconex class
+        /// Uses CSV-based metadata template files for document upload
         /// </summary>
-        /// 
+        Aconex
 
-        #region properties
-        private Interfaces.ICloudMetaData? _metaDataMapper;
-        
-        public Interfaces.ICloudMetaData? MetaDataMapper
-        {
-            get => _metaDataMapper;
-            set => _metaDataMapper = value;
-        }
-
-        /// <summary>
-        /// Indicates whether the cloud document manager integration is enabled
-        /// </summary>
-        private bool _cloudDocumentManagerEnabled = false;
-        public bool CloudDocumentManagerEnabled
-        {
-            get => _cloudDocumentManagerEnabled;
-            set => _cloudDocumentManagerEnabled = value;
-        }
-
-        #endregion properties
-        public CloudDocumentManager() {
-
-            /// for now only aconex is supported
-            MetaDataMapper = new MetaDataMapperAconex();
-        }
+        // Future providers can be added here:
+        // Procore,
+        // AutodeskDocs,
+        // PlanGrid,
+        // etc.
     }
 }

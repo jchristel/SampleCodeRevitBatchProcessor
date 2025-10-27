@@ -4,52 +4,111 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:duHastNet.DocManager.UI.Shared.Views"
+             xmlns:providerVm="clr-namespace:duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls"
+             xmlns:providerControls="clr-namespace:duHastNet.DocManager.UI.Shared.Controls.CloudProviderControls"
+             xmlns:converters="clr-namespace:duHastNet.DocManager.UI.Shared.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <!-- DataTemplate for Aconex provider control -->
+        <DataTemplate DataType="{x:Type providerVm:AconexMetadataControlViewModel}">
+            <providerControls:AconexMetadataControl/>
+        </DataTemplate>
+
+        <!-- Future providers will have their DataTemplates added here -->
+        <!-- Example:
+        <DataTemplate DataType="{x:Type providerVm:ProcoreMetadataControlViewModel}">
+            <providerControls:ProcoreMetadataControl/>
+        </DataTemplate>
+        -->
+
+        <!-- Converter for inverse boolean to visibility -->
+        <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
+    </UserControl.Resources>
+
     <Grid>
-        <Grid>
+        <Grid.RowDefinitions>
+            <!-- Enabled checkbox -->
+            <RowDefinition Height="Auto" />
+            <!-- Provider selection ComboBox -->
+            <RowDefinition Height="Auto" />
+            <!-- Dynamic provider control -->
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Enabled Checkbox -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <CheckBox Grid.Column="0"
+                      Margin="5 10 5 10"
+                      Content="Enable Cloud Document Manager Integration"
+                      IsChecked="{Binding CloudDocumentManagerEnabled, UpdateSourceTrigger=PropertyChanged}"
+                      FontWeight="SemiBold" />
+        </Grid>
+
+        <!-- Provider Selection ComboBox -->
+        <Grid Grid.Row="1"
+              IsEnabled="{Binding CloudDocumentManagerEnabled}">
             <Grid.RowDefinitions>
-                <!-- meta data file path-->
-                <RowDefinition Height="Auto" />
-                <!-- field mapping table -->
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            
-            <!-- meta data file path-->
-            <Grid Grid.Row="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0"
-                        Margin="5 10 5 10"
-                        Padding="5"
-                        Text="Template Meta Data File Path:" />
-                    <TextBox Grid.Column="1"
-                             Padding="5"
-                            x:Name="TemplateMetaDateFilePathTextBox"
-                            Margin="5 10 5 10"
-                            Text="{Binding TemplateMetaDataFilePath, UpdateSourceTrigger=PropertyChanged}"
-                            />
-                <Button Grid.Column="2"
-                        Margin="5 10 5 10"
-                        Padding="5"
-                        Content="Browse"
-                        Command="{Binding BrowseTemplateFileCommand}"
-                        IsEnabled="{Binding IsBrowseTemplateFileEnabled}"
-                        />
-                
-            </Grid>
+            <TextBlock Grid.Column="0"
+                       Margin="5 10 5 10"
+                       Padding="5"
+                       Text="Cloud Provider:" />
 
-            <!-- field mapping table -->
-            <Grid Grid.Row="1">
-            </Grid>
+            <ComboBox Grid.Column="1"
+                      Margin="5 10 5 10"
+                      Padding="5"
+                      Width="250"
+                      HorizontalAlignment="Left"
+                      ItemsSource="{Binding AvailableProviderTypes}"
+                      SelectedItem="{Binding SelectedProviderType, UpdateSourceTrigger=PropertyChanged}" />
+        </Grid>
 
+        <!-- Dynamic Provider Control Section -->
+        <Grid Grid.Row="2">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <!-- Visible when enabled -->
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <!-- Collapsed when disabled -->
+                        <DataTrigger Binding="{Binding CloudDocumentManagerEnabled}" Value="False">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+
+            <!-- Border for visual grouping -->
+            <Border BorderBrush="LightGray" 
+                    BorderThickness="1" 
+                    CornerRadius="3"
+                    Margin="5 10 5 10"
+                    Padding="10">
+                <ContentControl Content="{Binding CurrentProviderControl}">
+                    <ContentControl.Style>
+                        <Style TargetType="ContentControl">
+                            <Style.Triggers>
+                                <!-- Hide the ContentControl if CurrentProviderControl is null -->
+                                <DataTrigger Binding="{Binding CurrentProviderControl}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                </ContentControl>
+            </Border>
         </Grid>
     </Grid>
 </UserControl>

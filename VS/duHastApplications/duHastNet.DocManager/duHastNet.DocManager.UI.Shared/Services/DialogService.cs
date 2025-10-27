@@ -18,6 +18,7 @@
 
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using System.IO;
+using System.Windows;
 
 namespace duHastNet.DocManager.UI.Shared.Services;
 
@@ -82,5 +83,17 @@ public class DialogService : IDialogService
 
         var result = dialog.ShowDialog();
         return result == true ? dialog.FileName : null;
+    }
+
+    /// <summary>
+    /// Shows a message box dialog
+    /// </summary>
+    public MessageBoxResult ShowMessageBox(
+        string message,
+        string title,
+        MessageBoxButton button = MessageBoxButton.OK,
+        MessageBoxImage icon = MessageBoxImage.None)
+    {
+        return System.Windows.MessageBox.Show(message, title, button, icon);
     }
 }

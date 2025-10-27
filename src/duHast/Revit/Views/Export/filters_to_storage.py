@@ -469,7 +469,7 @@ def analyze_filters(doc, filters,  progress_callback, debug = False):
                 if container_host_result.status and len(container_host_result.result) > 0:
 
                     # store the container host in the view filter
-                    view_filter.logic_container = container_host_result.result[0]
+                    view_filter.logic_containers.append(container_host_result.result[0])
                     
                     if debug:
                         return_value.append_message ("...updated container host to view filter")

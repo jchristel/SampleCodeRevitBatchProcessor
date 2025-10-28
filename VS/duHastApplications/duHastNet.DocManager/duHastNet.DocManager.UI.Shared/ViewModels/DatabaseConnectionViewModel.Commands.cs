@@ -1,4 +1,4 @@
-﻿//
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -230,17 +230,9 @@ public partial class DatabaseConnectionViewModel
 
     #endregion
 
+
     #region Helper Methods
 
     /// <summary>
     /// Updates statistics from the Manager
     /// </summary>
-    private void UpdateStatistics()
-    {
-        LoadedDocumentCount = _manager.DocumentCount;
-        LoadedRevisionCount = _manager.RevisionCount;
-        CustomPropertyCount = _manager.GetAllCustomPropertyNames().Count();
-    }
-
-    #endregion
-}

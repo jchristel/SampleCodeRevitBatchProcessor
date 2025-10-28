@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="duHastNet.DocManager.UI.Shared.Views.DatabaseConnectionView"
+<UserControl x:Class="duHastNet.DocManager.UI.Shared.Views.DatabaseConnectionView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -102,7 +102,9 @@
         </Border>
         <!-- document custom property fields -->
         <Border Grid.Row="2" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
-            <Expander Header="Custom Fields" Margin="5 5 5 5">
+            <Expander Header="Custom Fields" 
+                      Margin="5 5 5 5"
+                      IsExpanded="{Binding IsCustomFieldsExpanded, Mode=OneWay}">
                 <Grid Margin="5 10 5 10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -157,7 +159,7 @@
                                     Margin="0 0 0 5"
                                     ToolTip="Remove the selected custom field definition"/>
 
-                            <Button Content="Update" 
+                            <Button Content="Update Database" 
                                     Command="{Binding UpdateDatabaseSchemaCommand}" 
                                     Width="100"
                                     Padding="5"

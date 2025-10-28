@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -57,8 +57,6 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             _manager = manager;
             _messageStore = messageStore;
             _dialogService = dialogService;
-
-            InitializeCustomFields();
         }
 
         #endregion Constructor
@@ -72,6 +70,14 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         private string _statusMessage = "Ready";
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsCustomFieldsExpanded))]
+        [NotifyCanExecuteChangedFor(nameof(AddCustomFieldCommand))]
+        [NotifyCanExecuteChangedFor(nameof(RemoveCustomFieldCommand))]
+        private bool _isConnected = false;
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsCustomFieldsExpanded))]
+        [NotifyCanExecuteChangedFor(nameof(AddCustomFieldCommand))]
+        [NotifyCanExecuteChangedFor(nameof(RemoveCustomFieldCommand))]
         private bool _isConnected = false;
 
         [ObservableProperty]

@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -49,6 +49,12 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         [NotifyCanExecuteChangedFor(nameof(RemoveCustomFieldCommand))]
         private CustomFieldViewModel? _selectedCustomField;
 
+        /// <summary>
+        /// Controls whether the custom fields expander is expanded
+        /// Bound to database connection state
+        /// </summary>
+        public bool IsCustomFieldsExpanded => IsConnected;
+
         #endregion Custom Fields - Observable Properties
 
         #region Custom Fields - Initialization
@@ -83,10 +89,19 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         #region Custom Fields - Commands
 
         /// <summary>
+        /// Determines if a custom field can be added
+        /// Requires database connection
+        /// </summary>
+        private bool CanAddCustomField()
+        {
+            return IsConnected;
+        }
+
+        /// <summary>
         /// Command to add a new custom field
         /// Opens the Add Custom Field dialog
         /// </summary>
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(CanAddCustomField))]
         private void AddCustomField()
         {
             try
@@ -121,10 +136,11 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
 
         /// <summary>
         /// Determines if a custom field can be removed
+        /// Requires database connection and a selected field
         /// </summary>
         private bool CanRemoveCustomField()
         {
-            return SelectedCustomField != null;
+            return IsConnected && SelectedCustomField != null;
         }
 
         /// <summary>
@@ -195,7 +211,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// <returns>True if a duplicate exists, false otherwise</returns>
         public bool IsDuplicateCustomField(string fieldName)
         {
-            return CustomFields.Any(cf =>
+            return CustomFields.Any(cf => 
                 cf.PropertyName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
         }
 

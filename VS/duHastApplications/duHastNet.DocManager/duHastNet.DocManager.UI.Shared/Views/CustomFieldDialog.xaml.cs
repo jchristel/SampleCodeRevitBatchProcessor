@@ -1,4 +1,9 @@
 ﻿//
+//License:
+//
+//
+// Revit Batch Processor Sample Code
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -16,16 +21,43 @@
 //
 //
 
+using duHastNet.DocManager.UI.Shared.ViewModels;
+using System.Windows;
+
 namespace duHastNet.DocManager.UI.Shared.Views
 {
     /// <summary>
-    /// Interaction logic for DatabaseConnectionViewModel.xaml
+    /// Interaction logic for CustomFieldDialog.xaml
     /// </summary>
-    public partial class DatabaseConnectionViewModel : System.Windows.Controls.UserControl
+    public partial class CustomFieldDialog : Window
     {
-        public DatabaseConnectionViewModel()
+        public CustomFieldDialog(CustomFieldDialogViewModel viewModel)
         {
             InitializeComponent();
+            DataContext = viewModel;
+
+            // Subscribe to RequestClose event from ViewModel
+            viewModel.RequestClose += OnViewModelRequestClose;
+        }
+
+        /// <summary>
+        /// Handles the RequestClose event from the ViewModel
+        /// Sets DialogResult based on whether a field name was created
+        /// </summary>
+        private void OnViewModelRequestClose(object? sender, EventArgs e)
+        {
+            if (sender is CustomFieldDialogViewModel viewModel)
+            {
+                // OK was clicked if CreatedFieldName has a value
+                DialogResult = !string.IsNullOrEmpty(viewModel.CreatedFieldName);
+            }
+            else
+            {
+                // Cancel was clicked
+                DialogResult = false;
+            }
+
+            Close();
         }
     }
 }

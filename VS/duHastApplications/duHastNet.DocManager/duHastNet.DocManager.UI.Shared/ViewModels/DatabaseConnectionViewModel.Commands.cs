@@ -230,38 +230,6 @@ public partial class DatabaseConnectionViewModel
 
     #endregion
 
-    #region Custom Field Commands
-
-    /// <summary>
-    /// Command to add a new custom field
-    /// </summary>
-    [RelayCommand]
-    private void AddCustomField()
-    {
-        // TODO: Implement add custom field
-    }
-
-    /// <summary>
-    /// Command to remove selected custom field
-    /// </summary>
-    [RelayCommand]
-    private void RemoveCustomField()
-    {
-        // TODO: Implement remove custom field
-    }
-
-    /// <summary>
-    /// Command to update database schema with custom fields
-    /// </summary>
-    [RelayCommand]
-    private async Task UpdateDatabaseSchemaAsync()
-    {
-        // TODO: Implement database schema update
-        await Task.CompletedTask;
-    }
-
-    #endregion
-
     #region Helper Methods
 
     /// <summary>

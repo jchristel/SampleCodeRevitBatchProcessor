@@ -96,7 +96,7 @@
         <Border Grid.Row="5" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
             <Expander  Header="Database" Margin="5 5 5 5">
                 <Grid>
-                    <local:DatabaseConnectionViewModel
+                    <local:DatabaseConnectionView
                       DataContext="{Binding DatabaseConnectionViewModel}"
                       Margin="0 5 0 5"/>
                 </Grid>

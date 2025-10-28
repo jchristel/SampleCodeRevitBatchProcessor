@@ -57,6 +57,8 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             _manager = manager;
             _messageStore = messageStore;
             _dialogService = dialogService;
+
+            InitializeCustomFields();
         }
 
         #endregion Constructor

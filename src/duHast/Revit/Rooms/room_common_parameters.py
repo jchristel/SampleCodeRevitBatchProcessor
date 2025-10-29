@@ -200,6 +200,7 @@ def get_room_from_element(phase_dictionary, elem):
     """
     Get the room associated with the element. This should be updated
     by Revit as the element moves
+    
     :param phase_dictionary: The dictionary of phases names to phase elements
     :type phase_dictionary: dict
     :param elem: The element to get the room of

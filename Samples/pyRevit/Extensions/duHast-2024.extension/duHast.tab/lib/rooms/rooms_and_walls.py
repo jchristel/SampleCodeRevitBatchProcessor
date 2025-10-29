@@ -164,7 +164,7 @@ def walls_to_rooms_entry(doc, output, forms):
 
         #set up a pyRevit progress bar
         with forms.ProgressBar(
-            title="Adding ceilings: {value} of {max_value}",
+            title="Processing rooms: {value} of {max_value}",
             cancellable=True,
         ) as pb:
             

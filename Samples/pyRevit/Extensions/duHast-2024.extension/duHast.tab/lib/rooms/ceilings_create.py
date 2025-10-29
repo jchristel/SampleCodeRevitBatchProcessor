@@ -30,13 +30,14 @@ from duHast.Revit.Common.transaction import in_transaction
 from duHast.Revit.Common.parameter_get_utils import get_parameter_value, get_built_in_parameter_value
 
 from duHast.pyRevit.console_output import print_error
-
+from duHast.Revit.Common.phases import get_name_to_phase_dict
 
 from Autodesk.Revit.DB import BuiltInParameter,  CurveLoop, Element, SpatialElementBoundaryLocation
 
 
 # where is the ceiling type code located in the room?
 ROOM_CEILING_TYPE_PARAMETER_NAME = "Ceiling Finish"
+PHASE_NAME = "Project Scope"
 
 
 def get_ceiling_type_from_room(doc, room):
@@ -100,6 +101,10 @@ def create_ceiling_by_room(doc, room):
     return_value = Result()
 
     try:
+        # get the created in phase by name
+        phases = get_name_to_phase_dict(doc)
+        ceiling_phase = phases.get(PHASE_NAME, None)
+
         # get the ceiling type from a room property or a default type
         ceiling_type = get_ceiling_type_from_room(doc, room)
 
@@ -137,6 +142,7 @@ def create_ceiling_by_room(doc, room):
             outline = curve_loops,
             elevation=2700.0,
             ceiling_type_id=ceiling_type.Id,
+            phase_created = ceiling_phase,
             transaction_manager=in_transaction
         )
         print("create_ceiling_result: {}".format(create_ceiling_result.message))

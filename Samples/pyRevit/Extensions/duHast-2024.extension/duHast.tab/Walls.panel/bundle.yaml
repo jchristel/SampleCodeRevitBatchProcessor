@@ -1,6 +1,7 @@
 layout:
   - WallsByRooms
-
+  - FacadeOpeningToRoom
+  
 # bundle tooltip
 tooltip: Ceilings
 

@@ -40,7 +40,8 @@ import settings as settings  # sets up all commonly used variables and path loca
 from duHast.Revit.Views.sheets import get_sheet_rev_by_sheet_name
 from duHast.Utilities.utility import pad_single_digit_numeric_string
 from duHast.Utilities.Objects import result as res
-from docFile_io import read_current_file
+
+from files_out_utils.docFile_io import read_current_file
 
 # --------------- read file -------------------
 

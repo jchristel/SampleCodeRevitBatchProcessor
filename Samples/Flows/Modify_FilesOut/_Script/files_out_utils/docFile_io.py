@@ -43,7 +43,7 @@ import settings as settings  # sets up all commonly used variables and path loca
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities.files_csv import write_report_data_as_csv, read_csv_file
 
-from utils.Objects.doc_file import docFile
+from files_out_utils.Objects.doc_file import docFile
 
 
 # --------------- write file -------------------

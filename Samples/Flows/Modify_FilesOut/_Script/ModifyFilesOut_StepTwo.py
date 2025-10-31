@@ -48,11 +48,12 @@ import clr
 
 import os
 import settings as settings  # sets up all commonly used variables and path locations!
-from utils.utils import copy_exports, create_bim360_out_folder
-from utils.docFile_io import read_current_file
-from utils.export_nwc import export_views_to_nwc
-from utils.export_ifc import export_views_to_ifc, check_view_name, optimize_ifc_files
-from utils.export_file_data import write_out_export_file_data
+from files_out_utils.utils import copy_exports, create_bim360_out_folder
+from files_out_utils.docFile_io import read_current_file
+from files_out_utils.export_nwc import export_views_to_nwc
+from files_out_utils.export_ifc import export_views_to_ifc, check_view_name, optimize_ifc_files
+from files_out_utils.export_file_data import write_out_export_file_data
+
 from duHast.Revit.Views.sheets import get_sheet_rev_by_sheet_name
 from duHast.Revit.Views.delete import delete_views_not_on_sheets, delete_all_sheets
 from duHast.Revit.Common.file_io import save_as

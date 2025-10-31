@@ -74,10 +74,10 @@ from duHast.Utilities.console_out import output
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.BIM360.bim_360 import get_bim_360_path, convert_bim_360_file_path
 
-from utils.worksets import modify
-from utils.views import modify_sheets, modify_views
-from utils.revision_marker_files import write_rev_marker_file
-from utils.docFile_utils import build_default_file_list
+from files_out_utils.worksets import modify
+from files_out_utils.views import modify_sheets, modify_views
+from files_out_utils.revision_marker_files import write_rev_marker_file
+from files_out_utils.docFile_utils import build_default_file_list
 
 
 # required in lambda expressions!

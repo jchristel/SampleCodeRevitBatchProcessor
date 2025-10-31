@@ -39,6 +39,7 @@ For information stored refer to class docFile.get_data method
 
 import os
 from csv import QUOTE_MINIMAL
+
 from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Utilities.Objects import result as res
 

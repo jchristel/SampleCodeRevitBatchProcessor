@@ -45,7 +45,8 @@ It:
 
 import os
 import settings as settings  # sets up all commonly used variables and path locations!
-from utils.utils import create_bim360_out_folder, copy_exports
+from files_out_utils.utils import create_bim360_out_folder, copy_exports
+
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities.console_out import output
 from duHast.Utilities.files_io import get_directory_path_from_file_path

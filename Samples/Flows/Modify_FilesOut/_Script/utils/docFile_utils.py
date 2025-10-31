@@ -95,9 +95,20 @@ def build_default_file_list(
     marker_file_data = None
     # get the revision from title sheet
     rev = get_sheet_rev_by_sheet_name(doc, splash_screen_name)
+    return_value.append_message("Sheet revision found: {} on sheet: {}".format(rev, splash_screen_name))
     match = False
     # read current files
-    file_list = read_current_file(revision_data_file_path)
+    file_list_result = read_current_file(revision_data_file_path)
+
+    # check what came back
+    if file_list_result.status == False:
+        return_value.update(file_list_result)
+        return return_value, matched_file_data, marker_file_data
+    
+    # proceed ...
+    file_list = file_list_result.result[0]
+    return_value.append_message("Read file data list: {}".format(len(file_list)))
+
     if any(file_list):
         # loop over file data objects and search for match
         return_value.append_message("looking for match:".format(revit_file_name))

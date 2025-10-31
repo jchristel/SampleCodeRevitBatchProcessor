@@ -138,6 +138,9 @@ save_file, default_file_names_, marker_file_data_ = build_default_file_list(
     revit_file_extension=settings.RVT_FILE_EXTENSION
 )
 
+# provide some user feeback
+output("{} :: [{}]".format(save_file.message,save_file.status),revit_script_util.Output)
+
 if save_file.status:
     # store retrieved marker file data
     file_data_ = marker_file_data_
@@ -240,5 +243,6 @@ if save_file.status:
         )
 else:
     output("Failed to read revision data file. Exiting!!!", revit_script_util.Output)
+    output(save_file.message, revit_script_util.Output)
 
 output("Modifying Revit File.... finished ", revit_script_util.Output)

@@ -38,13 +38,21 @@ from csv import QUOTE_MINIMAL
 # import settings
 import settings as settings  # sets up all commonly used variables and path locations!
 
-# import from library
-from duHast.Utilities.Objects import result as res
-from duHast.Utilities.files_csv import write_report_data_as_csv
-import docFile as df
 
 # import from library
-from duHast.Utilities.files_csv import read_csv_file
+from duHast.Utilities.Objects import result as res
+from duHast.Utilities.files_csv import write_report_data_as_csv, read_csv_file
+
+try:
+    from _Script.utils.doc_file import docFile
+except ImportError:
+    print("Importing DocFile from _Script.utils")
+
+try:
+    from _Script.utils.doc_file import docFile
+except ImportError:
+    print("Importing docFile from _Script.utils")
+
 
 # --------------- write file -------------------
 
@@ -101,7 +109,7 @@ def write_new_data(path, data):
 
     return_value = res.Result()
     try:
-        write_result = write_report_data_as_csv(
+        write_report_data_as_csv(
             file_name=path, 
             header=[], 
             data=data,
@@ -111,11 +119,7 @@ def write_new_data(path, data):
             bom=None,
             quoting=QUOTE_MINIMAL,
         )
-        if write_result.status == False:
-            raise ValueError("{}".format(write_result.message))
-        
-        # drop not required log messages
-        return_value.update_sep(True, "Successfully wrote meta data to file. {}".format(path))
+        return_value.append_message("Wrote new meta data file to: {}".format(path))
     except Exception as e:
         return_value.update_sep(False,"Failed to write data file: {} with exception: {}".format(path, e))
     return return_value
@@ -147,18 +151,24 @@ def read_current_file(revision_data_path):
     :rtype: [docFile]
     """
 
+    return_value = res.Result()
     reference_list = []
     try:
-        # attempt to read data
         rows_result = read_csv_file(revision_data_path)
         if rows_result.status == False:
-            return reference_list
-        rows = rows_result.result
+            return_value.update(rows_result)
+            return_value.result.append(reference_list)
+            return return_value
         
-        # process data
+        # process rows
+        rows = rows_result.result
         for row in rows:
-            reference_list.append(df.docFile(row))
+            reference_list.append(docFile(row))
+        
+        #store result
+        return_value.result.append(reference_list)
     except Exception as e:
-        print(str(e))
+        return_value.update_sep(False, "Failed to read current file data from file: {} with exception: {}".format(revision_data_path, e))
         reference_list = []
-    return reference_list
+        return_value.result.append(reference_list)
+    return return_value

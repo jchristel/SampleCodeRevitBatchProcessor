@@ -72,7 +72,14 @@ root_path_ = settings.ROOT_PATH
 # file data
 doc_files_ = []
 # read current file data
-doc_files_ = read_current_file(settings.REVISION_DATA_FILEPATH)
+doc_files_result_ = read_current_file(settings.REVISION_DATA_FILEPATH)
+
+if doc_files_result_.status == False:
+    output("Failed to read document data file:...[{}]".format(doc_files_result_.message))
+
+doc_files_ = doc_files_result_.result[0]
+
+output("Read document data file:...[{}]".format(len(doc_files_)))
 
 # build out directory location
 root_path_ = os.path.join(root_path_, settings.MODEL_OUT_FOLDER_NAME)

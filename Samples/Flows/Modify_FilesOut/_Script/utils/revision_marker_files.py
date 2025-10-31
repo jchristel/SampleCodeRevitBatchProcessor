@@ -32,11 +32,24 @@ These files are used to rename exports (ifc , nwc) with the right revision infor
 
 import os
 from csv import QUOTE_MINIMAL
-import docFile as df
+
+import settings as settings  # sets up all commonly used variables and path locations!
+
+try:
+    from _Script.utils.doc_file import docFile
+except ImportError:
+    print("Importing DocFile from _Script.utils")
+
+try:
+    from _Script.utils.doc_file import docFile
+except ImportError:
+    print("Importing DocFile from _Script.utils")
 
 from duHast.Utilities.files_get import get_files
 from duHast.Utilities.files_csv import read_csv_file, write_report_data_as_csv
 from duHast.Utilities.Objects import result as res
+
+
 
 
 def read_marker_files_from_revit_processed(marker_dir_path, marker_file_extension):
@@ -71,18 +84,10 @@ def read_marker_files_from_revit_processed(marker_dir_path, marker_file_extensio
     if len(marker_files) > 0:
         try:
             for mf in marker_files:
-                # read csv file
-                rows_result = read_csv_file(mf)
-                if rows_result.status == False:
-                    return_value.update_sep(False, rows_result.message)
-                    # skip to next file
-                    continue
-                
-                rows = rows_result.result
-                
+                rows = read_csv_file(mf)
                 for row in rows:  # each row is a list
                     # read information into class
-                    marker_file_data.append(df.docFile(row))
+                    marker_file_data.append(docFile(row))
         except Exception as e:
             return_value.update_sep(
                 False,
@@ -123,17 +128,13 @@ def write_rev_marker_file_writer(fully_qualified_path, file_data):
     return_value = res.Result()
     if len(file_data) > 0:
         try:
-            write_result = write_report_data_as_csv(
+            write_report_data_as_csv(
                 file_name=fully_qualified_path, 
                 header=[], 
                 data=[file_data],
                 enforce_ascii=True,
                 quoting=QUOTE_MINIMAL,
             )
-            
-            if write_result.status == False:
-                raise ValueError("{}".format(write_result.message))
-        
             return_value.append_message = "Successfully wrote marker file: {}".format(
                 fully_qualified_path
             )

@@ -95,6 +95,15 @@ class docFile(base.Base):
         return_value.append(self.aconex_doc_name)
         return return_value
 
+    def next_char(self, c):
+        if 'A' <= c <= 'Z':
+            return chr((ord(c) - ord('A') + 1) % 26 + ord('A'))
+        elif 'a' <= c <= 'z':
+            return chr((ord(c) - ord('a') + 1) % 26 + ord('a'))
+        else:
+            return c  # Return the original character if it's not a letter
+
+
     def update_numerical_rev(self):
         """
         Increase the numerical revision by +1. If start revision value is "-", numerical revision is set to 1.
@@ -109,6 +118,36 @@ class docFile(base.Base):
                 rev = rev + 1
             # apply new rev value as string
             self.revision = str(rev)
+        except Exception as e:
+            # no need to do anything
+            self.revision = self.revision
+    
+
+    def update_revision(self, value = None):
+        """
+        Update a string based revision to the next character or numerical revision to +1
+
+        - If alphanumeric, simply set to new revision value from settings
+        - If numeric, increase numerical revision by +1
+        """
+
+        try:
+            
+            if value is not None:
+                self.revision = value
+                return
+            
+            # set to new revision to the next char value
+            if self.revision == "-":
+                self.revision = "A"
+                return 
+            # check if numeric
+            if self.revision.isdigit():
+                self.update_numerical_rev()
+            else:
+                # assign the character based on new index + 1
+                self.revision = self.next_char(self.revision)
+
         except Exception as e:
             # no need to do anything
             self.revision = self.revision

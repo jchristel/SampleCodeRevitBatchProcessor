@@ -49,7 +49,7 @@ import clr
 import os
 import settings as settings  # sets up all commonly used variables and path locations!
 from utils.utils import copy_exports, create_bim360_out_folder
-from utils.docFile_utils import read_current_file
+from utils.docFile_io import read_current_file
 from utils.export_nwc import export_views_to_nwc
 from utils.export_ifc import export_views_to_ifc, check_view_name, optimize_ifc_files
 from utils.export_file_data import write_out_export_file_data
@@ -191,9 +191,26 @@ output("Modifying Revit File.... start", revit_script_util.Output)
 
 # array to contain file information read from text file
 # read default file list info
-file_data_ = read_current_file(
+file_data_result_ = read_current_file(
     settings.REVISION_DATA_FILEPATH,
 )
+
+#check what came back
+if file_data_result_.status == False:
+    output(
+        "Failed to read file data:...[{}]".format(file_data_result_.message),
+        revit_script_util.Output,
+    )
+
+if not any(file_data_result_.result):
+    output(
+        "File data list is empty!...".format(file_data_result_.message),
+        revit_script_util.Output,
+    )
+    
+file_data_ = file_data_result_.result[0]
+# give some user feedback
+output ("File data read: {}".format(len(file_data_)), revit_script_util.Output)
 
 # set path to models will be saved to
 models_out_path_ = os.path.join(models_out_path_, settings.MODEL_OUT_FOLDER_NAME)
@@ -201,6 +218,9 @@ models_out_path_ = os.path.join(models_out_path_, settings.MODEL_OUT_FOLDER_NAME
 current_file_revision_ = get_sheet_rev_by_sheet_name(
     doc, settings.SPLASH_SCREEN_SHEET_NAME
 )
+
+output("Current file revision: {}".format(current_file_revision_), revit_script_util.Output)
+
 # the current file name
 revit_file_name_ = get_file_name_without_ext(REVIT_FILE_PATH)
 

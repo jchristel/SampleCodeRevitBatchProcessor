@@ -62,6 +62,11 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         public string TargetPath { get; }
 
         /// <summary>
+        /// Indicates if this is a Default/CatchAll rule
+        /// </summary>
+        public bool IsDefault => RuleTypeEnum == FilingRuleType.Default;
+
+        /// <summary>
         /// Creates a display model from a domain filing rule
         /// </summary>
         /// <param name="rule">The underlying IFilingRule to wrap</param>

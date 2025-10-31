@@ -35,15 +35,7 @@ from csv import QUOTE_MINIMAL
 
 import settings as settings  # sets up all commonly used variables and path locations!
 
-try:
-    from _Script.utils.doc_file import docFile
-except ImportError:
-    print("Importing DocFile from _Script.utils")
-
-try:
-    from _Script.utils.doc_file import docFile
-except ImportError:
-    print("Importing DocFile from _Script.utils")
+from utils.Objects.doc_file import docFile
 
 from duHast.Utilities.files_get import get_files
 from duHast.Utilities.files_csv import read_csv_file, write_report_data_as_csv

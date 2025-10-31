@@ -179,7 +179,7 @@ public partial class DatabaseConnectionViewModel
                 "Database files (*.db)|*.db|SQLite files (*.sqlite)|*.sqlite|All files (*.*)|*.*");
 
             // Check for cancellation
-            if (filePath == null || filePath.Length==0)
+            if (filePath == null || filePath.Length == 0)
             {
                 // User cancelled
                 return;
@@ -230,9 +230,16 @@ public partial class DatabaseConnectionViewModel
 
     #endregion
 
-
     #region Helper Methods
 
     /// <summary>
     /// Updates statistics from the Manager
     /// </summary>
+    #endregion
+
+    private void UpdateStatistics()
+    {
+        //TODO
+    }
+}
+

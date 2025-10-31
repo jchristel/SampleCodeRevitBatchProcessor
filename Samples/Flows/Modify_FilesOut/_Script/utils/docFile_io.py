@@ -43,15 +43,7 @@ import settings as settings  # sets up all commonly used variables and path loca
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities.files_csv import write_report_data_as_csv, read_csv_file
 
-try:
-    from _Script.utils.doc_file import docFile
-except ImportError:
-    print("Importing DocFile from _Script.utils")
-
-try:
-    from _Script.utils.doc_file import docFile
-except ImportError:
-    print("Importing docFile from _Script.utils")
+from utils.Objects.doc_file import docFile
 
 
 # --------------- write file -------------------

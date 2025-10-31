@@ -88,26 +88,54 @@ def write_out_export_file_data(
     """
 
     return_value = res.Result()
+
+    # check if a file was exported
     if export_status.status == True:
+
+        # check if we have export file names
         if any(export_status.result):
+
+            # loop over names of exported files and write marker files
             for export_name in export_status.result:
+                
                 # strip extension of export file name
                 export_file_name = export_name[1][0:-4]
+                
                 # get the file extension including .
                 export_extension = export_name[1][-4:]
-                data = get_file_data_by_file_extension_and_file_name(
+
+                # do some logging
+                return_value.append_message("Processing export file name: {} with extension: {}".format(export_file_name, export_extension))
+
+                # find matching file data for exported file
+                data_result = get_file_data_by_file_extension_and_file_name(
                     export_file_name=export_file_name,
                     file_extension=file_extension,
                     file_data=file_data,
                     current_file_revision=current_file_revision,
                 )
+
+                # updates logs
+                return_value.update(data_result)
+
+                # set a default value for data to be written
+                data = []
+
+                # check if we have data in result
+                if len(data_result.result) > 0: 
+                    # get the data from the result
+                    data = return_value.result[0]
+
+                # check if we have data to write
                 if len(data) > 0:
+
+                    # build file name and write out marker file
                     file_name = os.path.join(
                         root_path,
                         export_file_name + export_extension + marker_file_extension,
                     )
                     try:
-                        write_result = write_report_data_as_csv(
+                        write_report_data_as_csv(
                             file_name=file_name, 
                             header=[], 
                             data=[data],
@@ -117,10 +145,6 @@ def write_out_export_file_data(
                             bom=None,
                             quoting=QUOTE_MINIMAL,
                         )
-                        if write_result.status == False:
-                            raise ValueError("{}".format(write_result.message))
-                        
-                        # drop not required log messages
                         return_value.append_message(
                             "Successfully wrote export file data to: {}".format(
                                 file_name
@@ -178,28 +202,72 @@ def get_file_data_by_file_extension_and_file_name(
     :rtype: [str]
     """
 
-    return_value = []
+    return_value = res.Result()
+
+    # data to be written to file eventually
+    return_value_list = []
+
     # get all file data with extension match
     filtered_data_by_file_extension = []
+
     for fd in file_data:
         if fd.file_extension == file_extension:
             filtered_data_by_file_extension.append(fd)
+    
+    # log how many matches found for extension
+    return_value.append_message("Filtered file data by extension: {}. Found {} matches.".format(file_extension, len(filtered_data_by_file_extension)))
+
     # flag: there are edge cases where the initial view name does not match the output file name
     # if flag is still false after first test...check the aconex doc number property for a match
     found_match = False
+
+    # loop over file extension filtered data and check for matching existing file name
     for fdf in filtered_data_by_file_extension:
+
+        # logging
+        return_value.append_message("Checking existing file name: {} for match with export file name: {}".format(fdf.existing_file_name, export_file_name))
+        
+        # check if exported file name starts with the existing file name property
         if export_file_name.startswith(fdf.existing_file_name):
             # update revision to match revit file revision before writing out marker file
             fdf.update_revision(current_file_revision)
-            return_value = fdf.get_data()
+            return_value_list = fdf.get_data()
             found_match = True
+
+            # logging
+            return_value.append_message("Found match with existing file name: {}".format(fdf.existing_file_name))
             break
+        else:
+            return_value.append_message("No match with existing file name: {}".format(fdf.existing_file_name))
+        
     # check aconex doc number property in edge case...
     if found_match == False:
+
+        # logging
+        return_value.append_message("No match found with existing file names. Checking aconex document numbers for matches.")
+
+        # loop over file extension filtered data and check for matching aconex document number
         for fdf in filtered_data_by_file_extension:
-            if fdf.aconex_doc_number.startswith(export_file_name):
+
+            # logging
+            return_value.append_message("Checking aconex document number: {} for match with export file name: {}".format(fdf.aconex_doc_number, export_file_name))
+            
+            # check if the export file name starts with the aconex document number
+            if export_file_name.startswith(fdf.aconex_doc_number):
                 # update revision to match revit file revision before writing out marker file
                 fdf.update_revision(current_file_revision)
-                return_value = fdf.get_data()
+                return_value_list = fdf.get_data()
+
+                # logging
+                return_value.append_message("Found match with aconex document number: {}".format(fdf.aconex_doc_number))
                 break
+            else:
+                # logging
+                return_value.append_message("No match with aconex document number: {}".format(fdf.aconex_doc_number))
+    
+    #append data to result if there is any, otherwise an empty list is returned
+    if len(return_value_list) > 0:
+        return_value.result.append(return_value_list)
+    
+
     return return_value

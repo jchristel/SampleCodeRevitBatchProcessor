@@ -37,6 +37,7 @@ public class Document
     /// <summary>
     /// Revision indicator (parsed from document, can be number, character, or both)
     /// this is not stored in the revisiona table as revisions group multiple documents which can have different revision indicators
+    /// TODO: this should be a dictioanry to support revision history where the key is the revision Id and the value the revision indicator
     /// </summary>
     [NotNull]
     public string Revision { get; set; } = string.Empty;

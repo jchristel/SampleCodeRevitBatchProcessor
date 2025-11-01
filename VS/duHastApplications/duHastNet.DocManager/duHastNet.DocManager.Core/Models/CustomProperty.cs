@@ -28,6 +28,7 @@ namespace duHastNet.DocManager.Core.Models;
 /// <summary>
 /// Represents a custom property for a document.
 /// Allows flexible extension of document properties without schema changes.
+/// Uses CustomFieldDefinitionId to reference the field definition rather than storing the name directly.
 /// </summary>
 [Table("CustomProperties")]
 public class CustomProperty
@@ -46,11 +47,12 @@ public class CustomProperty
     public int DocumentId { get; set; }
 
     /// <summary>
-    /// Name of the custom property (e.g., "ProjectPhase", "DisciplineCode")
+    /// Foreign key to CustomFieldDefinitions table
+    /// References which custom field this property belongs to
     /// </summary>
     [NotNull]
     [Indexed]
-    public string PropertyName { get; set; } = string.Empty;
+    public int CustomFieldDefinitionId { get; set; }
 
     /// <summary>
     /// Value of the custom property (always stored as string)
@@ -58,16 +60,43 @@ public class CustomProperty
     [NotNull]
     public string PropertyValue { get; set; } = string.Empty;
 
+    /// <summary>
+    /// Name of the custom property (e.g., "ProjectPhase", "DisciplineCode")
+    /// This is not stored in the database - it's resolved from CustomFieldDefinitions
+    /// Used for display and convenience
+    /// </summary>
+    [Ignore]
+    public string PropertyName { get; set; } = string.Empty;
+
     public CustomProperty()
     {
     }
 
     /// <summary>
-    /// Creates a new custom property with specified values
+    /// Creates a new custom property with specified values using field definition ID
     /// </summary>
-    public CustomProperty(int documentId, string propertyName, string propertyValue)
+    /// <param name="documentId">Document ID</param>
+    /// <param name="customFieldDefinitionId">Custom field definition ID</param>
+    /// <param name="propertyValue">Property value</param>
+    public CustomProperty(int documentId, int customFieldDefinitionId, string propertyValue)
     {
         DocumentId = documentId;
+        CustomFieldDefinitionId = customFieldDefinitionId;
+        PropertyValue = propertyValue;
+    }
+
+    /// <summary>
+    /// Creates a new custom property with specified values including property name for convenience
+    /// PropertyName is not stored in database but useful for object initialization
+    /// </summary>
+    /// <param name="documentId">Document ID</param>
+    /// <param name="customFieldDefinitionId">Custom field definition ID</param>
+    /// <param name="propertyName">Property name (for display, not stored)</param>
+    /// <param name="propertyValue">Property value</param>
+    public CustomProperty(int documentId, int customFieldDefinitionId, string propertyName, string propertyValue)
+    {
+        DocumentId = documentId;
+        CustomFieldDefinitionId = customFieldDefinitionId;
         PropertyName = propertyName;
         PropertyValue = propertyValue;
     }

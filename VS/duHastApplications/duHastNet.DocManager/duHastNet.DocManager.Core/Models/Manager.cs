@@ -38,6 +38,11 @@ namespace duHastNet.DocManager.Core.Models
         private readonly RevisionContainer _revisionContainer;
 
         /// <summary>
+        /// Contains all custom field definitions
+        /// </summary>
+        private readonly CustomFieldsContainer _customFieldContainer;
+
+        /// <summary>
         /// Flag indicating data has been loaded from the database
         /// </summary>
         public bool IsDataLoaded { get; private set; }
@@ -90,6 +95,8 @@ namespace duHastNet.DocManager.Core.Models
 
         #region custom properties
 
+        #region custom properties
+
         /// <summary>
         /// Returns a list of all custom property names in the document container
         /// </summary>
@@ -98,6 +105,57 @@ namespace duHastNet.DocManager.Core.Models
         {
             return _documentContainer.GetAllCustomPropertyNames();
         }
+
+        #endregion custom properties
+
+        #region custom field definitions
+
+        /// <summary>
+        /// Returns all custom field definitions
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<CustomFieldDefinition> GetAllCustomFieldDefinitions()
+        {
+            return _customFieldContainer.GetAllCustomFields();
+        }
+
+        /// <summary>
+        /// Returns only active custom field definitions
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<CustomFieldDefinition> GetActiveCustomFieldDefinitions()
+        {
+            return _customFieldContainer.GetActiveCustomFieldDefinitions();
+        }
+
+        /// <summary>
+        /// Number of custom field definitions
+        /// </summary>
+        public int CustomFieldDefinitionCount
+        {
+            get { return _customFieldContainer.CustomFieldsCount; }
+        }
+
+        /// <summary>
+        /// Adds a custom field definition to the list
+        /// Called by DocManagerApi when loading data
+        /// </summary>
+        /// <param name="definition"></param>
+        internal void AddCustomFieldDefinition(CustomFieldDefinition definition)
+        {
+            _customFieldContainer.AddCustomField(definition);
+        }
+
+        /// <summary>
+        /// Clears all custom field definitions
+        /// Called when clearing data
+        /// </summary>
+        internal void ClearCustomFieldDefinitions()
+        {
+            _customFieldContainer.ClearCustomFields();
+        }
+
+        #endregion custom field definitions
 
         #endregion custom properties
 
@@ -173,6 +231,7 @@ namespace duHastNet.DocManager.Core.Models
         {
             _documentContainer.ClearDocuments();
             _revisionContainer.ClearRevisions();
+            _customFieldContainer.ClearCustomFields();
         }
 
 
@@ -186,6 +245,8 @@ namespace duHastNet.DocManager.Core.Models
         { 
             _documentContainer = new DocumentContainer();
             _revisionContainer = new RevisionContainer();
+            _customFieldContainer = new CustomFieldsContainer();
+            
             // set default loader flag
             IsDataLoaded = false;
         }

@@ -26,6 +26,7 @@ namespace duHastNet.DocManager.Core.Interfaces
         IRevisionRepository Revisions { get; }
         IDocumentRepository Documents { get; }
         ICustomPropertyRepository CustomProperties { get; }
+        ICustomFieldDefinitionRepository CustomFieldDefinitions { get; }
         Task<int> SaveChangesAsync();
         Task BeginTransactionAsync();
         Task CommitTransactionAsync();

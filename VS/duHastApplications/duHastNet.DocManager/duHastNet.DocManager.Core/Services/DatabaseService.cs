@@ -79,7 +79,7 @@ public class DatabaseService : IDatabaseService
 
     public async Task CreateTablesAsync()
     {
-        await Connection.CreateTablesAsync<Revision, Document, CustomProperty, CustomFieldDefinition>();
+        await Connection.CreateTablesAsync<Revision, Document, CustomFieldDefinition, CustomProperty>();
     }
 
     public async Task CloseAsync()
@@ -92,7 +92,7 @@ public class DatabaseService : IDatabaseService
         }
     }
 
-    
+
     public async Task<bool> CheckDatabaseIntegrityAsync()
     {
         try

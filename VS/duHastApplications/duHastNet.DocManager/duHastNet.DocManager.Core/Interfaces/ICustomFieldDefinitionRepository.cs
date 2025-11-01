@@ -20,17 +20,34 @@ using duHastNet.DocManager.Core.Models;
 
 namespace duHastNet.DocManager.Core.Interfaces
 {
+    /// <summary>
+    /// Repository interface for CustomFieldDefinition entities
+    /// </summary>
     public interface ICustomFieldDefinitionRepository : IRepository<CustomFieldDefinition>
     {
+        /// <summary>
+        /// Gets a custom field definition by property name
+        /// </summary>
+        Task<CustomFieldDefinition?> GetByPropertyNameAsync(string propertyName);
 
-        Task<bool> CustomFieldDefinitionExistsAsync(string name);
-        Task<List<string>> GetDistinctCustomFieldDefinitionNamesAsync();
+        /// <summary>
+        /// Gets all active custom field definitions
+        /// </summary>
+        Task<List<CustomFieldDefinition>> GetActiveAsync();
 
-        // Methods for IsActive field
-        Task<List<CustomFieldDefinition>> GetActiveCustomFieldDefinitionsAsync();
-        Task<List<CustomFieldDefinition>> GetInactiveCustomFieldDefinitionsAsync();
-        Task<int> UpdateActiveStatusAsync(int customFieldDefinitionId, bool isActive);
+        /// <summary>
+        /// Gets all inactive custom field definitions
+        /// </summary>
+        Task<List<CustomFieldDefinition>> GetInactiveAsync();
 
-        Task<CustomFieldDefinition?> GetCustomFieldDefinitionByNameAsync(string propertyName);
+        /// <summary>
+        /// Checks if a property name already exists (case-insensitive)
+        /// </summary>
+        Task<bool> PropertyNameExistsAsync(string propertyName);
+
+        /// <summary>
+        /// Updates the IsActive status of a custom field definition
+        /// </summary>
+        Task<int> UpdateIsActiveAsync(int id, bool isActive);
     }
 }

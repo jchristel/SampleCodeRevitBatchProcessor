@@ -136,7 +136,10 @@
                                 <GridView>
                                     <GridViewColumn Header="Field Name" 
                                                     DisplayMemberBinding="{Binding PropertyName}" 
-                                                    Width="400"/>
+                                                    Width="300"/>
+                                    <GridViewColumn Header="Status" 
+                                                    DisplayMemberBinding="{Binding StatusDisplay}" 
+                                                    Width="100"/>
                                 </GridView>
                             </ListView.View>
                         </ListView>
@@ -147,23 +150,23 @@
                                     VerticalAlignment="Top">
                             <Button Content="Add" 
                                     Command="{Binding AddCustomFieldCommand}" 
-                                    Width="100"
+                                    Width="120"
                                     Padding="5"
                                     Margin="0 0 0 5"
                                     ToolTip="Add a new custom field definition"/>
 
-                            <Button Content="Remove" 
-                                    Command="{Binding RemoveCustomFieldCommand}" 
-                                    Width="100"
+                            <Button Content="Toggle Active" 
+                                    Command="{Binding ToggleCustomFieldActiveCommand}" 
+                                    Width="120"
                                     Padding="5"
                                     Margin="0 0 0 5"
-                                    ToolTip="Remove the selected custom field definition"/>
+                                    ToolTip="Activate or deactivate the selected custom field"/>
 
                             <Button Content="Update Database" 
                                     Command="{Binding UpdateDatabaseSchemaCommand}" 
-                                    Width="100"
+                                    Width="120"
                                     Padding="5"
-                                    ToolTip="Update the database schema with custom fields"/>
+                                    ToolTip="Apply custom field changes to the database"/>
                         </StackPanel>
                     </Grid>
                 </Grid>

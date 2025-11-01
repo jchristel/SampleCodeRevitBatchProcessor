@@ -22,48 +22,23 @@ using SQLite;
 
 namespace duHastNet.DocManager.Core.Services.Repositories
 {
-    public class CustomFieldDefinitionRepository: BaseRepository<CustomFieldDefinition>, ICustomFieldDefinitionRepository
+    /// <summary>
+    /// Repository implementation for CustomFieldDefinition entities
+    /// </summary>
+    public class CustomFieldDefinitionRepository : BaseRepository<CustomFieldDefinition>, ICustomFieldDefinitionRepository
     {
         public CustomFieldDefinitionRepository(SQLiteAsyncConnection connection) : base(connection)
         {
         }
 
-        /// <summary>
-        /// Checks if a custom field definition with the specified property name exists.
-        /// </summary>
-        public async Task<bool> CustomFieldDefinitionExistsAsync(string propertyName)
+        public async Task<CustomFieldDefinition?> GetByPropertyNameAsync(string propertyName)
         {
-            var count = await _connection.Table<CustomFieldDefinition>()
-                .CountAsync(d => d.PropertyName == propertyName);
-
-            return count > 0;
+            return await _connection.Table<CustomFieldDefinition>()
+                .Where(cfd => cfd.PropertyName == propertyName)
+                .FirstOrDefaultAsync();
         }
 
-        /// <summary>
-        /// Retrieves a list of distinct custom field definition names.
-        /// </summary> 
-        public async Task<List<string>> GetDistinctCustomFieldDefinitionNamesAsync()
-        {
-            // Fetch all custom field definitions from the database (activce and inactive)
-            var customFieldDefinitions = await _connection.Table<CustomFieldDefinition>()
-                .ToListAsync();
-
-            // Extract distinct property names and order them alphabetically
-            return customFieldDefinitions.Select(d => d.PropertyName)
-                .Distinct()
-                .OrderBy(n => n)
-                .ToList();
-        }
-
-        /// <summary>
-        /// Retrieves a list of active custom field definitions.
-        /// </summary>
-        /// <remarks>The returned list is ordered by the <see cref="CustomFieldDefinition.PropertyName"/>
-        /// property.</remarks>
-        /// <returns>A task that represents the asynchronous operation. The task result contains a list of  <see
-        /// cref="CustomFieldDefinition"/> objects where <see cref="CustomFieldDefinition.IsActive"/> is <see
-        /// langword="true"/>.</returns>
-        public async Task<List<CustomFieldDefinition>> GetActiveCustomFieldDefinitionsAsync()
+        public async Task<List<CustomFieldDefinition>> GetActiveAsync()
         {
             return await _connection.Table<CustomFieldDefinition>()
                 .Where(cfd => cfd.IsActive)
@@ -71,14 +46,7 @@ namespace duHastNet.DocManager.Core.Services.Repositories
                 .ToListAsync();
         }
 
-        /// <summary>
-        /// Retrieves a list of inactive custom field definitions.
-        /// </summary>
-        /// <remarks>The returned list is ordered by the <see cref="CustomFieldDefinition.PropertyName"/>
-        /// <returns> A task that represents the asynchronous operation. The task result contains a list of  <see
-        /// cref="CustomFieldDefinition"/> objects where <see cref="CustomFieldDefinition.IsActive"/> is <see
-        /// langword="false"/>.</returns>
-        public async Task<List<CustomFieldDefinition>> GetInactiveCustomFieldDefinitionsAsync()
+        public async Task<List<CustomFieldDefinition>> GetInactiveAsync()
         {
             return await _connection.Table<CustomFieldDefinition>()
                 .Where(cfd => !cfd.IsActive)
@@ -86,31 +54,20 @@ namespace duHastNet.DocManager.Core.Services.Repositories
                 .ToListAsync();
         }
 
-        /// <summary>
-        /// Updates the active status of a document
-        /// </summary>
-        /// <param name="customFieldDefinitionId">Document ID to update</param>
-        /// <param name="isActive">New active status</param>
-        /// <returns>Number of records affected</returns>
-        public async Task<int> UpdateActiveStatusAsync(int customFieldDefinitionId, bool isActive)
+        public async Task<bool> PropertyNameExistsAsync(string propertyName)
         {
-            var customFieldDef = await GetByIdAsync(customFieldDefinitionId);
-            if (customFieldDef == null) return 0;
+            var count = await _connection.Table<CustomFieldDefinition>()
+                .Where(cfd => cfd.PropertyName.ToLower() == propertyName.ToLower())
+                .CountAsync();
 
-            customFieldDef.IsActive = isActive;
-            return await UpdateAsync(customFieldDef);
+            return count > 0;
         }
 
-        /// <summary>
-        /// Retrieves a custom field definition by its property name.
-        /// </summary>
-        /// <param name="propertyName"></param>
-        /// <returns></returns>
-        public async Task<CustomFieldDefinition?> GetCustomFieldDefinitionByNameAsync(string propertyName)
+        public async Task<int> UpdateIsActiveAsync(int id, bool isActive)
         {
-            return await _connection.Table<CustomFieldDefinition>()
-                .Where(cfd => cfd.PropertyName == propertyName)
-                .FirstOrDefaultAsync();
+            return await _connection.ExecuteAsync(
+                "UPDATE CustomFieldDefinitions SET IsActive = ? WHERE Id = ?",
+                isActive, id);
         }
     }
 }

@@ -22,14 +22,21 @@
 //
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using duHastNet.DocManager.Core.Models;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels
 {
     /// <summary>
-    /// ViewModel wrapper for custom field property names to display in ListView
+    /// ViewModel wrapper for custom field definitions to display in ListView
     /// </summary>
     public partial class CustomFieldViewModel : ObservableObject
     {
+        /// <summary>
+        /// The ID of the custom field definition (0 for new fields not yet saved)
+        /// </summary>
+        [ObservableProperty]
+        private int _id;
+
         /// <summary>
         /// The name of the custom property field
         /// </summary>
@@ -37,12 +44,37 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         private string _propertyName = string.Empty;
 
         /// <summary>
-        /// Creates a new CustomFieldViewModel with the specified property name
+        /// Whether this custom field is active or inactive
+        /// </summary>
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(StatusDisplay))]
+        private bool _isActive = true;
+
+        /// <summary>
+        /// Display text for the Status column
+        /// </summary>
+        public string StatusDisplay => IsActive ? "Active" : "Inactive";
+
+        /// <summary>
+        /// Creates a new CustomFieldViewModel from a CustomFieldDefinition model
+        /// </summary>
+        /// <param name="definition">The custom field definition</param>
+        public CustomFieldViewModel(CustomFieldDefinition definition)
+        {
+            Id = definition.Id;
+            PropertyName = definition.PropertyName;
+            IsActive = definition.IsActive;
+        }
+
+        /// <summary>
+        /// Creates a new CustomFieldViewModel with the specified property name (for new fields)
         /// </summary>
         /// <param name="propertyName">The custom property name</param>
         public CustomFieldViewModel(string propertyName)
         {
+            Id = 0; // Not yet saved to database
             PropertyName = propertyName;
+            IsActive = true;
         }
 
         /// <summary>
@@ -52,9 +84,23 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         {
         }
 
+        /// <summary>
+        /// Creates a clone of this custom field view model
+        /// Used for tracking original state
+        /// </summary>
+        public CustomFieldViewModel Clone()
+        {
+            return new CustomFieldViewModel
+            {
+                Id = this.Id,
+                PropertyName = this.PropertyName,
+                IsActive = this.IsActive
+            };
+        }
+
         public override string ToString()
         {
-            return PropertyName;
+            return $"{PropertyName} ({StatusDisplay})";
         }
     }
 }

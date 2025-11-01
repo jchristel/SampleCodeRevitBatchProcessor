@@ -33,6 +33,7 @@ namespace duHastNet.DocManager.Core.Services.Repositories
         public IRevisionRepository Revisions { get; }
         public IDocumentRepository Documents { get; }
         public ICustomPropertyRepository CustomProperties { get; }
+        public ICustomFieldDefinitionRepository CustomFieldDefinitions { get; }
 
         public UnitOfWork(SQLiteAsyncConnection connection)
         {
@@ -41,6 +42,7 @@ namespace duHastNet.DocManager.Core.Services.Repositories
             Revisions = new RevisionRepository(connection);
             Documents = new DocumentRepository(connection);
             CustomProperties = new CustomPropertyRepository(connection);
+            CustomFieldDefinitions = new CustomFieldDefinitionRepository(connection);
         }
 
         public async Task<int> SaveChangesAsync()

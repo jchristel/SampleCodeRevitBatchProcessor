@@ -26,6 +26,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.UI.Shared.Stores;
 using System.Collections.ObjectModel;
+using System.Text;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels
 {
@@ -37,16 +38,21 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         #region Custom Fields - Observable Properties
 
         /// <summary>
-        /// Observable collection of custom fields for display in ListView
+        /// Observable collection of custom fields for display in ListView (working copy)
         /// </summary>
         [ObservableProperty]
         private ObservableCollection<CustomFieldViewModel> _customFields = new();
 
         /// <summary>
+        /// Original custom fields loaded from database (for change tracking)
+        /// </summary>
+        private List<CustomFieldViewModel> _originalCustomFields = new();
+
+        /// <summary>
         /// Currently selected custom field in the ListView
         /// </summary>
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(RemoveCustomFieldCommand))]
+        [NotifyCanExecuteChangedFor(nameof(ToggleCustomFieldActiveCommand))]
         private CustomFieldViewModel? _selectedCustomField;
 
         /// <summary>
@@ -55,13 +61,20 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// </summary>
         public bool IsCustomFieldsExpanded => IsConnected;
 
+        /// <summary>
+        /// Indicates whether there are unsaved changes to custom fields
+        /// </summary>
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(UpdateDatabaseSchemaCommand))]
+        private bool _hasPendingCustomFieldChanges = false;
+
         #endregion Custom Fields - Observable Properties
 
         #region Custom Fields - Initialization
 
         /// <summary>
         /// Initializes the custom fields collection from Manager
-        /// Called during ViewModel construction
+        /// Called after database connection
         /// </summary>
         private void InitializeCustomFields()
         {
@@ -69,19 +82,23 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         }
 
         /// <summary>
-        /// Loads custom field names from Manager into the CustomFields observable collection
+        /// Loads custom field definitions from Manager into the CustomFields observable collection
         /// </summary>
         private void LoadCustomFieldsFromManager()
         {
             CustomFields.Clear();
+            _originalCustomFields.Clear();
 
-            var propertyNames = _manager.GetAllCustomPropertyNames();
+            var definitions = _manager.GetAllCustomFieldDefinitions();
 
-            foreach (var propertyName in propertyNames)
+            foreach (var definition in definitions)
             {
-                var displayModel = new CustomFieldViewModel(propertyName);
+                var displayModel = new CustomFieldViewModel(definition);
                 CustomFields.Add(displayModel);
+                _originalCustomFields.Add(displayModel.Clone());
             }
+
+            HasPendingCustomFieldChanges = false;
         }
 
         #endregion Custom Fields - Initialization
@@ -117,13 +134,17 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
 
                 if (result == true && !string.IsNullOrEmpty(dialogViewModel.CreatedFieldName))
                 {
-                    // Add to display collection
-                    AddCustomFieldToCollection(dialogViewModel.CreatedFieldName);
+                    // Add to display collection (not saved yet)
+                    var newField = new CustomFieldViewModel(dialogViewModel.CreatedFieldName);
+                    CustomFields.Add(newField);
+
+                    // Mark as having pending changes
+                    HasPendingCustomFieldChanges = true;
 
                     _messageStore.SetCurrentMessage(
-                        "Custom field added successfully",
+                        $"Custom field '{dialogViewModel.CreatedFieldName}' added. Click 'Update Database' to save changes.",
                         MessageTypes.Information,
-                        10); // Auto-dismiss after 10 seconds
+                        10);
                 }
             }
             catch (Exception ex)
@@ -135,68 +156,114 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         }
 
         /// <summary>
-        /// Determines if a custom field can be removed
+        /// Determines if a custom field active status can be toggled
         /// Requires database connection and a selected field
         /// </summary>
-        private bool CanRemoveCustomField()
+        private bool CanToggleCustomFieldActive()
         {
             return IsConnected && SelectedCustomField != null;
         }
 
         /// <summary>
-        /// Command to remove the selected custom field
+        /// Command to toggle the active/inactive status of the selected custom field
         /// </summary>
-        [RelayCommand(CanExecute = nameof(CanRemoveCustomField))]
-        private void RemoveCustomField()
+        [RelayCommand(CanExecute = nameof(CanToggleCustomFieldActive))]
+        private void ToggleCustomFieldActive()
         {
             if (SelectedCustomField == null)
                 return;
 
             try
             {
-                var fieldName = SelectedCustomField.PropertyName;
+                // Toggle the IsActive status
+                SelectedCustomField.IsActive = !SelectedCustomField.IsActive;
 
-                // Confirm removal with user
-                var result = System.Windows.MessageBox.Show(
-                    $"Are you sure you want to remove the custom field '{fieldName}'?\n\n" +
-                    "Note: This only removes the field definition. Any existing documents with this custom property will retain their data.",
-                    "Confirm Removal",
-                    System.Windows.MessageBoxButton.YesNo,
-                    System.Windows.MessageBoxImage.Question);
+                // Mark as having pending changes
+                HasPendingCustomFieldChanges = true;
 
-                if (result == System.Windows.MessageBoxResult.Yes)
-                {
-                    // Remove from display collection
-                    RemoveCustomFieldFromCollection(SelectedCustomField);
-
-                    _messageStore.SetCurrentMessage(
-                        $"Custom field '{fieldName}' removed successfully",
-                        MessageTypes.Information,
-                        10); // Auto-dismiss after 10 seconds
-                }
+                var status = SelectedCustomField.IsActive ? "activated" : "deactivated";
+                _messageStore.SetCurrentMessage(
+                    $"Custom field '{SelectedCustomField.PropertyName}' {status}. Click 'Update Database' to save changes.",
+                    MessageTypes.Information,
+                    10);
             }
             catch (Exception ex)
             {
                 _messageStore.SetCurrentMessage(
-                    $"Error removing custom field: {ex.Message}",
+                    $"Error toggling custom field: {ex.Message}",
                     MessageTypes.Error);
             }
         }
 
         /// <summary>
-        /// Command to update database schema with custom fields
+        /// Determines if database can be updated
+        /// Requires connection and pending changes
         /// </summary>
-        [RelayCommand]
+        private bool CanUpdateDatabaseSchema()
+        {
+            return IsConnected && HasPendingCustomFieldChanges;
+        }
+
+        /// <summary>
+        /// Command to update database with custom field changes
+        /// </summary>
+        [RelayCommand(CanExecute = nameof(CanUpdateDatabaseSchema))]
         private async Task UpdateDatabaseSchemaAsync()
         {
-            // TODO: Determine what this command should do
-            // The CustomProperty table already exists in the schema
-            // This might be deprecated or need clarification
-            await Task.CompletedTask;
+            try
+            {
+                IsBusy = true;
 
-            _messageStore.SetCurrentMessage(
-                "Update database schema not yet implemented",
-                MessageTypes.Information);
+                // Get the changes
+                var changes = GetCustomFieldChanges();
+
+                if (!changes.Any())
+                {
+                    _messageStore.SetCurrentMessage(
+                        "No changes to apply",
+                        MessageTypes.Information);
+                    return;
+                }
+
+                // Show confirmation dialog
+                if (!ShowConfirmationDialog(changes))
+                {
+                    return;
+                }
+
+                // Apply changes
+                await ApplyCustomFieldChangesAsync(changes);
+
+                // Reload from manager
+                var reloadResult = await _docManagerApi.ReloadDataIntoManagerAsync(_manager);
+
+                if (reloadResult.Success)
+                {
+                    LoadCustomFieldsFromManager();
+                    UpdateStatistics();
+
+                    _messageStore.SetCurrentMessage(
+                        "Custom field changes applied successfully",
+                        MessageTypes.Information,
+                        10);
+                }
+                else
+                {
+                    _messageStore.SetCurrentMessage(
+                        $"Changes applied but reload failed: {string.Join("; ", reloadResult.Errors)}",
+                        MessageTypes.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                _messageStore.SetCurrentMessage(
+                    $"Error updating database: {ex.Message}",
+                    MessageTypes.Error);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         #endregion Custom Fields - Commands
@@ -207,33 +274,166 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// Checks if a custom field with the given name already exists
         /// Used for duplicate prevention
         /// </summary>
-        /// <param name="fieldName">The field name to check (case-insensitive)</param>
-        /// <returns>True if a duplicate exists, false otherwise</returns>
         public bool IsDuplicateCustomField(string fieldName)
         {
-            return CustomFields.Any(cf => 
+            return CustomFields.Any(cf =>
                 cf.PropertyName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
-        /// Adds a newly created custom field to the display collection
+        /// Gets the list of changes between current and original custom fields
         /// </summary>
-        /// <param name="fieldName">The field name to add</param>
-        private void AddCustomFieldToCollection(string fieldName)
+        private List<CustomFieldChange> GetCustomFieldChanges()
         {
-            var displayModel = new CustomFieldViewModel(fieldName);
-            CustomFields.Add(displayModel);
+            var changes = new List<CustomFieldChange>();
+
+            // Find new fields (Id == 0)
+            foreach (var field in CustomFields.Where(f => f.Id == 0))
+            {
+                changes.Add(new CustomFieldChange
+                {
+                    ChangeType = CustomFieldChangeType.Add,
+                    PropertyName = field.PropertyName,
+                    IsActive = field.IsActive
+                });
+            }
+
+            // Find modified fields (IsActive changed)
+            foreach (var field in CustomFields.Where(f => f.Id > 0))
+            {
+                var original = _originalCustomFields.FirstOrDefault(o => o.Id == field.Id);
+                if (original != null && original.IsActive != field.IsActive)
+                {
+                    changes.Add(new CustomFieldChange
+                    {
+                        ChangeType = field.IsActive ? CustomFieldChangeType.Activate : CustomFieldChangeType.Deactivate,
+                        Id = field.Id,
+                        PropertyName = field.PropertyName,
+                        IsActive = field.IsActive
+                    });
+                }
+            }
+
+            return changes;
         }
 
         /// <summary>
-        /// Removes a custom field from the display collection
+        /// Shows confirmation dialog with summary of changes
         /// </summary>
-        /// <param name="customField">The custom field to remove</param>
-        private void RemoveCustomFieldFromCollection(CustomFieldViewModel customField)
+        private bool ShowConfirmationDialog(List<CustomFieldChange> changes)
         {
-            CustomFields.Remove(customField);
+            var message = new StringBuilder();
+            message.AppendLine("Apply Custom Field Changes?");
+            message.AppendLine();
+
+            var newFields = changes.Where(c => c.ChangeType == CustomFieldChangeType.Add).ToList();
+            var activatedFields = changes.Where(c => c.ChangeType == CustomFieldChangeType.Activate).ToList();
+            var deactivatedFields = changes.Where(c => c.ChangeType == CustomFieldChangeType.Deactivate).ToList();
+
+            if (newFields.Any())
+            {
+                message.AppendLine($"New Fields: {newFields.Count}");
+                foreach (var field in newFields)
+                {
+                    message.AppendLine($"  - {field.PropertyName}");
+                }
+                message.AppendLine();
+            }
+
+            if (activatedFields.Any())
+            {
+                message.AppendLine($"Activated Fields: {activatedFields.Count}");
+                foreach (var field in activatedFields)
+                {
+                    message.AppendLine($"  - {field.PropertyName}");
+                }
+                message.AppendLine();
+            }
+
+            if (deactivatedFields.Any())
+            {
+                message.AppendLine($"Deactivated Fields: {deactivatedFields.Count}");
+                foreach (var field in deactivatedFields)
+                {
+                    message.AppendLine($"  - {field.PropertyName}");
+                }
+                message.AppendLine();
+            }
+
+            if (newFields.Any())
+            {
+                message.AppendLine("Note: New fields will create records for all documents.");
+            }
+
+            var result = System.Windows.MessageBox.Show(
+                message.ToString(),
+                "Confirm Changes",
+                System.Windows.MessageBoxButton.YesNo,
+                System.Windows.MessageBoxImage.Question);
+
+            return result == System.Windows.MessageBoxResult.Yes;
+        }
+
+        /// <summary>
+        /// Applies custom field changes to the database
+        /// </summary>
+        private async Task ApplyCustomFieldChangesAsync(List<CustomFieldChange> changes)
+        {
+            foreach (var change in changes)
+            {
+                switch (change.ChangeType)
+                {
+                    case CustomFieldChangeType.Add:
+                        var addResult = await _docManagerApi.AddCustomFieldDefinitionAsync(
+                            change.PropertyName,
+                            change.IsActive);
+
+                        if (!addResult.Success)
+                        {
+                            throw new Exception($"Failed to add field '{change.PropertyName}': {string.Join("; ", addResult.Errors)}");
+                        }
+                        break;
+
+                    case CustomFieldChangeType.Activate:
+                    case CustomFieldChangeType.Deactivate:
+                        var updateResult = await _docManagerApi.UpdateCustomFieldIsActiveAsync(
+                            change.Id,
+                            change.IsActive);
+
+                        if (!updateResult.Success)
+                        {
+                            throw new Exception($"Failed to update field '{change.PropertyName}': {string.Join("; ", updateResult.Errors)}");
+                        }
+                        break;
+                }
+            }
         }
 
         #endregion Custom Fields - Helper Methods
     }
+
+    #region Helper Classes
+
+    /// <summary>
+    /// Represents a change to a custom field
+    /// </summary>
+    internal class CustomFieldChange
+    {
+        public CustomFieldChangeType ChangeType { get; set; }
+        public int Id { get; set; }
+        public string PropertyName { get; set; } = string.Empty;
+        public bool IsActive { get; set; }
+    }
+
+    /// <summary>
+    /// Type of change to a custom field
+    /// </summary>
+    internal enum CustomFieldChangeType
+    {
+        Add,
+        Activate,
+        Deactivate
+    }
+
+    #endregion
 }

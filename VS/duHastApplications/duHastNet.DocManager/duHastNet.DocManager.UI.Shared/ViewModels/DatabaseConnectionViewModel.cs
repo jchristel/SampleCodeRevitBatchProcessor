@@ -72,7 +72,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsCustomFieldsExpanded))]
         [NotifyCanExecuteChangedFor(nameof(AddCustomFieldCommand))]
-        [NotifyCanExecuteChangedFor(nameof(RemoveCustomFieldCommand))]
+        //[NotifyCanExecuteChangedFor(nameof(RemoveCustomFieldCommand))]
         private bool _isConnected = false;
 
         [ObservableProperty]

@@ -35,9 +35,8 @@ public class Document
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
-    /// Revision indicator (parsed from document, can be number, character, or both)
-    /// this is not stored in the revisiona table as revisions group multiple documents which can have different revision indicators
-    /// TODO: this should be a dictioanry to support revision history where the key is the revision Id and the value the revision indicator
+    /// Current revision indicator (parsed from document, can be number, character, or both)
+    /// For complete revision history, see RevisionIndicatorHistory dictionary
     /// </summary>
     [NotNull]
     public string Revision { get; set; } = string.Empty;
@@ -49,7 +48,7 @@ public class Document
     public bool IsActive { get; set; } = true;
 
     /// <summary>
-    /// Foreign key to Revisions table
+    /// Foreign key to Revisions table (current revision)
     /// </summary>
     [NotNull]
     [Indexed]
@@ -60,6 +59,13 @@ public class Document
     /// SQLite doesn't support Dictionary directly, so we serialize to JSON
     /// </summary>
     public string DocumentNumberHistoryJson { get; set; } = "{}";
+
+    /// <summary>
+    /// JSON serialized revision indicator history for database storage
+    /// Maps RevisionId to the revision indicator for this document in that revision
+    /// SQLite doesn't support Dictionary directly, so we serialize to JSON
+    /// </summary>
+    public string RevisionIndicatorHistoryJson { get; set; } = "{}";
 
     /// <summary>
     /// Gets or sets a dictionary that tracks the history of document numbers and their associated dates.
@@ -108,6 +114,44 @@ public class Document
     }
 
     /// <summary>
+    /// Gets or sets a dictionary that tracks the revision indicator for this document across different revisions.
+    /// This property handles serialization/deserialization to/from JSON for database storage.
+    /// Key: RevisionId, Value: Revision indicator string for this document in that revision
+    /// </summary>
+    [Ignore]
+    public Dictionary<int, string> RevisionIndicatorHistory
+    {
+        get
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(RevisionIndicatorHistoryJson))
+                    return new Dictionary<int, string>();
+
+                var result = JsonSerializer.Deserialize<Dictionary<int, string>>(RevisionIndicatorHistoryJson)
+                    ?? new Dictionary<int, string>();
+
+                return result;
+            }
+            catch
+            {
+                return new Dictionary<int, string>();
+            }
+        }
+        set
+        {
+            try
+            {
+                RevisionIndicatorHistoryJson = JsonSerializer.Serialize(value ?? new Dictionary<int, string>());
+            }
+            catch
+            {
+                RevisionIndicatorHistoryJson = "{}";
+            }
+        }
+    }
+
+    /// <summary>
     /// Custom properties for this document (stored in CustomProperties table, populated by repository)
     /// </summary>
     [Ignore]
@@ -128,6 +172,10 @@ public class Document
         RevisionId = revisionId;
         IsActive = true;
         DocumentNumberHistory = new Dictionary<string, DateOnly>();
+        RevisionIndicatorHistory = new Dictionary<int, string>();
+
+        // Initialize with current revision indicator
+        SetRevisionIndicator(revisionId, revision);
     }
 
     /// <summary>
@@ -140,20 +188,24 @@ public class Document
     }
 
     /// <summary>
-    /// Sets a custom property value (for in-memory operations, database update requires repository)
+    /// Sets a custom property value using CustomFieldDefinitionId
+    /// This is the preferred method as it properly uses the ID-based architecture
     /// </summary>
-    public void SetCustomProperty(string propertyName, string propertyValue)
+    /// <param name="customFieldDefinitionId">ID of the custom field definition</param>
+    /// <param name="propertyName">Property name (for display, stored in [Ignore] field)</param>
+    /// <param name="propertyValue">Property value</param>
+    public void SetCustomProperty(int customFieldDefinitionId, string propertyName, string propertyValue)
     {
-        var existing = CustomProperties.FirstOrDefault(p =>
-            string.Equals(p.PropertyName, propertyName, StringComparison.OrdinalIgnoreCase));
+        var existing = CustomProperties.FirstOrDefault(p => p.CustomFieldDefinitionId == customFieldDefinitionId);
 
         if (existing != null)
         {
             existing.PropertyValue = propertyValue;
+            existing.PropertyName = propertyName; // Update display name in case it changed
         }
         else
         {
-            CustomProperties.Add(new CustomProperty(Id, propertyName, propertyValue));
+            CustomProperties.Add(new CustomProperty(Id, customFieldDefinitionId, propertyName, propertyValue));
         }
     }
 
@@ -216,6 +268,8 @@ public class Document
         return false;
     }
 
+    #region Document Number History Methods
+
     /// <summary>
     /// Adds a document number to the history with the current date
     /// </summary>
@@ -250,4 +304,79 @@ public class Document
         }
         return removed;
     }
+
+    #endregion
+
+    #region Revision Indicator History Methods
+
+    /// <summary>
+    /// Sets the revision indicator for a specific revision
+    /// </summary>
+    /// <param name="revisionId">Revision ID</param>
+    /// <param name="indicator">Revision indicator string</param>
+    public void SetRevisionIndicator(int revisionId, string indicator)
+    {
+        if (!string.IsNullOrWhiteSpace(indicator))
+        {
+            var history = RevisionIndicatorHistory;
+            history[revisionId] = indicator;
+            RevisionIndicatorHistory = history; // Trigger serialization
+        }
+    }
+
+    /// <summary>
+    /// Gets the revision indicator for a specific revision
+    /// </summary>
+    /// <param name="revisionId">Revision ID</param>
+    /// <returns>Revision indicator string, or null if not found</returns>
+    public string? GetRevisionIndicator(int revisionId)
+    {
+        var history = RevisionIndicatorHistory;
+        return history.TryGetValue(revisionId, out var indicator) ? indicator : null;
+    }
+
+    /// <summary>
+    /// Removes a revision indicator from the history
+    /// </summary>
+    /// <param name="revisionId">Revision ID to remove</param>
+    /// <returns>True if the revision indicator was removed, false if it wasn't present</returns>
+    public bool RemoveRevisionIndicator(int revisionId)
+    {
+        var history = RevisionIndicatorHistory;
+        var removed = history.Remove(revisionId);
+        if (removed)
+        {
+            RevisionIndicatorHistory = history; // Trigger serialization
+        }
+        return removed;
+    }
+
+    /// <summary>
+    /// Checks if a revision indicator exists for a specific revision
+    /// </summary>
+    /// <param name="revisionId">Revision ID to check</param>
+    /// <returns>True if a revision indicator exists for this revision</returns>
+    public bool HasRevisionIndicator(int revisionId)
+    {
+        return RevisionIndicatorHistory.ContainsKey(revisionId);
+    }
+
+    /// <summary>
+    /// Gets all revision IDs that have indicators stored
+    /// </summary>
+    /// <returns>Collection of revision IDs</returns>
+    public IEnumerable<int> GetRevisionIdsWithIndicators()
+    {
+        return RevisionIndicatorHistory.Keys;
+    }
+
+    /// <summary>
+    /// Clears all revision indicator history
+    /// </summary>
+    public void ClearRevisionIndicatorHistory()
+    {
+        RevisionIndicatorHistory = new Dictionary<int, string>();
+    }
+
+    #endregion
 }

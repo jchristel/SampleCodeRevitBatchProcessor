@@ -44,7 +44,6 @@ public class CustomFieldDefinition
     /// </summary>
     [NotNull]
     [Unique]
-    [Indexed]
     public string PropertyName { get; set; } = string.Empty;
 
     /// <summary>

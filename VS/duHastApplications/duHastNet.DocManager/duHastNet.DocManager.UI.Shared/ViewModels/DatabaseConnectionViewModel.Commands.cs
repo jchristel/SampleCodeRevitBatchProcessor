@@ -71,6 +71,9 @@ public partial class DatabaseConnectionViewModel
                     // Success - update connection status and statistics
                     IsConnected = true;
 
+                    // Initialize custom fields after data load
+                    InitializeCustomFields();
+
                     // Inform user of success with auto-dismiss
                     _messageStore.SetCurrentMessage(
                         $"Database created successfully: {Path.GetFileName(DatabasePath)}",
@@ -137,6 +140,10 @@ public partial class DatabaseConnectionViewModel
                 {
                     // Success - update connection status and statistics
                     IsConnected = true;
+
+                    // Initialize custom fields after data load
+                    InitializeCustomFields();
+
                     UpdateStatistics();
                 }
                 else
@@ -242,4 +249,3 @@ public partial class DatabaseConnectionViewModel
         //TODO
     }
 }
-

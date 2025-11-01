@@ -55,8 +55,15 @@ public partial class DocManagerApi
             // Clear existing data in manager
             manager.ClearData();
 
+            // Load custom field definitions first (needed to resolve property names)
+            var customFieldDefinitions = await _unitOfWork!.CustomFieldDefinitions.GetAllAsync();
+            foreach (var definition in customFieldDefinitions)
+            {
+                manager.AddCustomFieldDefinition(definition);
+            }
+
             // Load all revisions from database
-            var revisions = await _unitOfWork!.Revisions.GetAllAsync();
+            var revisions = await _unitOfWork.Revisions.GetAllAsync();
             foreach (var revision in revisions)
             {
                 manager.AddRevision(revision);
@@ -69,6 +76,17 @@ public partial class DocManagerApi
             foreach (var document in documents)
             {
                 var customProperties = await _unitOfWork.CustomProperties.GetPropertiesByDocumentAsync(document.Id);
+
+                // Resolve property names from CustomFieldDefinitions
+                foreach (var customProperty in customProperties)
+                {
+                    var definition = customFieldDefinitions.FirstOrDefault(cfd => cfd.Id == customProperty.CustomFieldDefinitionId);
+                    if (definition != null)
+                    {
+                        customProperty.PropertyName = definition.PropertyName;
+                    }
+                }
+
                 document.CustomProperties.Clear();
                 document.CustomProperties.AddRange(customProperties);
 

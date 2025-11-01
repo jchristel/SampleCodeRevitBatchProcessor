@@ -79,7 +79,7 @@ public class DatabaseService : IDatabaseService
 
     public async Task CreateTablesAsync()
     {
-        await Connection.CreateTablesAsync<Revision, Document, CustomProperty>();
+        await Connection.CreateTablesAsync<Revision, Document, CustomProperty, CustomFieldDefinition>();
     }
 
     public async Task CloseAsync()

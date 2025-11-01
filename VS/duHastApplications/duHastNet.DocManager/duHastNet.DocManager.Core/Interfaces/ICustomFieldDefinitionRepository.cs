@@ -1,9 +1,4 @@
 ﻿//
-//License:
-//
-//
-// Revit Batch Processor Sample Code
-//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -21,35 +16,21 @@
 //
 //
 
-
 using duHastNet.DocManager.Core.Models;
 
 namespace duHastNet.DocManager.Core.Interfaces
 {
-    /// <summary>
-    /// Repository interface for Revision entities with document management support
-    /// </summary>
-    public interface IRevisionRepository : IRepository<Revision>
+    public interface ICustomFieldDefinitionRepository : IRepository<CustomFieldDefinition>
     {
-        // Original revision methods
-        Task<List<Revision>> GetRevisionsByDateRangeAsync(DateTime startDate, DateTime endDate);
-        Task<Revision?> GetLatestRevisionAsync();
-        Task<List<Revision>> GetRevisionsByDateAsync(DateTime date);
 
-        // Document management methods
-        Task<int> AddDocumentToRevisionAsync(int revisionId, int documentId);
-        Task<int> RemoveDocumentFromRevisionAsync(int revisionId, int documentId);
-        Task<int> AddDocumentsToRevisionAsync(int revisionId, IEnumerable<int> documentIds);
-        Task<int> RemoveDocumentsFromRevisionAsync(int revisionId, IEnumerable<int> documentIds);
-        Task<int> SetRevisionDocumentsAsync(int revisionId, IEnumerable<int> documentIds);
+        Task<bool> CustomFieldDefinitionExistsAsync(string name);
+        Task<List<string>> GetDistinctCustomFieldDefinitionNamesAsync();
 
-        // Document history and query methods
-        Task<List<Revision>> GetRevisionsByDocumentIdAsync(int documentId);
-        Task<int> GetDocumentCountAsync(int revisionId);
-        Task<bool> RevisionContainsDocumentAsync(int revisionId, int documentId);
+        // Methods for IsActive field
+        Task<List<CustomFieldDefinition>> GetActiveCustomFieldDefinitionsAsync();
+        Task<List<CustomFieldDefinition>> GetInactiveCustomFieldDefinitionsAsync();
+        Task<int> UpdateActiveStatusAsync(int customFieldDefinitionId, bool isActive);
 
-        // Utility methods
-        Task<List<Revision>> GetEmptyRevisionsAsync();
-        Task<Dictionary<string, int>> GetRevisionStatisticsAsync();
+        Task<CustomFieldDefinition?> GetCustomFieldDefinitionByNameAsync(string propertyName);
     }
 }

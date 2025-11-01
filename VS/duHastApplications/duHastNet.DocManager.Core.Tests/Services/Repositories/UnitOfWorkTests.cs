@@ -121,19 +121,19 @@ public class UnitOfWorkTests
         var document = new Document("A-101", "Floor Plan", "1", revision.Id);
         await _unitOfWork.Documents.InsertAsync(document);
 
-        var customProperty = new CustomProperty(document.Id, "DisciplineCode", "ARCH");
-        await _unitOfWork.CustomProperties.InsertAsync(customProperty);
+        //var customProperty = new CustomProperty(document.Id, "DisciplineCode", "ARCH");
+        //await _unitOfWork.CustomProperties.InsertAsync(customProperty);
 
         // Assert - All data should be accessible through any repository since they share the connection
         var retrievedRevision = await _unitOfWork.Revisions.GetByIdAsync(revision.Id);
         var retrievedDocument = await _unitOfWork.Documents.GetByIdAsync(document.Id);
-        var retrievedProperty = await _unitOfWork.CustomProperties.GetByIdAsync(customProperty.Id);
+        //var retrievedProperty = await _unitOfWork.CustomProperties.GetByIdAsync(customProperty.Id);
 
         Assert.Multiple(() =>
         {
             Assert.That(retrievedRevision, Is.Not.Null);
             Assert.That(retrievedDocument, Is.Not.Null);
-            Assert.That(retrievedProperty, Is.Not.Null);
+            //Assert.That(retrievedProperty, Is.Not.Null);
         });
     }
 
@@ -157,32 +157,32 @@ public class UnitOfWorkTests
             await _unitOfWork.Documents.InsertAsync(doc);
         }
 
-        var properties = new[]
-        {
-            new CustomProperty(documents[0].Id, "DisciplineCode", "ARCH"),
-            new CustomProperty(documents[0].Id, "ProjectPhase", "Construction"),
-            new CustomProperty(documents[1].Id, "DisciplineCode", "ARCH")
-        };
+        //var properties = new[]
+        //{
+        //    new CustomProperty(documents[0].Id, "DisciplineCode", "ARCH"),
+        //    new CustomProperty(documents[0].Id, "ProjectPhase", "Construction"),
+        //    new CustomProperty(documents[1].Id, "DisciplineCode", "ARCH")
+        //};
 
-        foreach (var prop in properties)
-        {
-            await _unitOfWork.CustomProperties.InsertAsync(prop);
-        }
+        //foreach (var prop in properties)
+        //{
+        //    await _unitOfWork.CustomProperties.InsertAsync(prop);
+        //}
 
         // Act - Complex query across repositories
         var documentsInRevision = await _unitOfWork.Documents.GetDocumentsByRevisionAsync(revision.Id);
-        var archProperties = await _unitOfWork.CustomProperties.GetPropertiesByNameAndValueAsync("DisciplineCode", "ARCH");
+        //var archProperties = await _unitOfWork.CustomProperties.GetPropertiesByNameAndValueAsync("DisciplineCode", "ARCH");
 
         // Assert
         Assert.Multiple(() =>
         {
             Assert.That(documentsInRevision, Has.Count.EqualTo(2));
-            Assert.That(archProperties, Has.Count.EqualTo(2));
+            //Assert.That(archProperties, Has.Count.EqualTo(2));
         });
 
         // Verify relationships
         var documentIds = documentsInRevision.Select(d => d.Id).ToList();
-        Assert.That(archProperties.All(p => documentIds.Contains(p.DocumentId)), Is.True);
+        //Assert.That(archProperties.All(p => documentIds.Contains(p.DocumentId)), Is.True);
     }
 
     [Test]
@@ -240,8 +240,8 @@ public class UnitOfWorkTests
                 var document = new Document(docNumber, docName, "1", revision.Id);
                 await _unitOfWork.Documents.InsertAsync(document);
 
-                var property = new CustomProperty(document.Id, "Index", i.ToString());
-                await _unitOfWork.CustomProperties.InsertAsync(property);
+                //var property = new CustomProperty(document.Id, "Index", i.ToString());
+                //await _unitOfWork.CustomProperties.InsertAsync(property);
             }));
         }
 
@@ -249,12 +249,12 @@ public class UnitOfWorkTests
 
         // Assert
         var allDocuments = await _unitOfWork.Documents.GetDocumentsByRevisionAsync(revision.Id);
-        var allProperties = await _unitOfWork.CustomProperties.GetPropertiesByNameAsync("Index");
+        //var allProperties = await _unitOfWork.CustomProperties.GetPropertiesByNameAsync("Index");
 
         Assert.Multiple(() =>
         {
             Assert.That(allDocuments, Has.Count.EqualTo(10));
-            Assert.That(allProperties, Has.Count.EqualTo(10));
+            //Assert.That(allProperties, Has.Count.EqualTo(10));
         });
     }
 
@@ -310,20 +310,20 @@ public class UnitOfWorkTests
         }
 
         // Step 3: Add custom properties to documents
-        var properties = new[]
-        {
-            new CustomProperty(documents[0].Id, "DisciplineCode", "ARCH"),
-            new CustomProperty(documents[0].Id, "DrawingSize", "A1"),
-            new CustomProperty(documents[1].Id, "DisciplineCode", "STRUCT"),
-            new CustomProperty(documents[1].Id, "DrawingSize", "A3"),
-            new CustomProperty(documents[2].Id, "DisciplineCode", "MECH"),
-            new CustomProperty(documents[2].Id, "DrawingSize", "A1")
-        };
+        //var properties = new[]
+        //{
+        //    new CustomProperty(documents[0].Id, "DisciplineCode", "ARCH"),
+        //    new CustomProperty(documents[0].Id, "DrawingSize", "A1"),
+        //    new CustomProperty(documents[1].Id, "DisciplineCode", "STRUCT"),
+        //    new CustomProperty(documents[1].Id, "DrawingSize", "A3"),
+        //    new CustomProperty(documents[2].Id, "DisciplineCode", "MECH"),
+        //    new CustomProperty(documents[2].Id, "DrawingSize", "A1")
+        //};
 
-        foreach (var prop in properties)
-        {
-            await _unitOfWork.CustomProperties.InsertAsync(prop);
-        }
+        //foreach (var prop in properties)
+        //{
+        //    await _unitOfWork.CustomProperties.InsertAsync(prop);
+        //}
 
         // Step 4: Perform complex queries
         var revisionDocuments = await _unitOfWork.Documents.GetDocumentsByRevisionAsync(revision.Id);

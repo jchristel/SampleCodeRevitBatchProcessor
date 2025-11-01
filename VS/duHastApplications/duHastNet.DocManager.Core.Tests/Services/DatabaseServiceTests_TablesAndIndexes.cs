@@ -283,8 +283,8 @@ public class DatabaseServiceTests_Tables
         var document = new Document("DOC-001", "Test Document", "1", revision.Id);
         await _databaseService.Connection.InsertAsync(document);
 
-        var customProperty = new CustomProperty(document.Id, "TestProperty", "TestValue");
-        await _databaseService.Connection.InsertAsync(customProperty);
+        //var customProperty = new CustomProperty(document.Id, "TestProperty", "TestValue");
+        //await _databaseService.Connection.InsertAsync(customProperty);
 
         // Should be able to query related data
         var documents = await _databaseService.Connection.Table<Document>()

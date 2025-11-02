@@ -112,29 +112,39 @@ def build_default_file_list(
 
     if any(file_list):
         # loop over file data objects and search for match
-        return_value.append_message("looking for match:".format(revit_file_name))
+        return_value.append_message("looking for match: {}".format(revit_file_name))
         for file_data in file_list:
-            return_value.append_message(
-                "starts with {}".format(file_data.existing_file_name)
-            )
             if (
                 revit_file_name.startswith(file_data.existing_file_name)
                 and file_data.file_extension == revit_file_extension
             ):
-                return_value.append_message("Found match!")
+                return_value.append_message("Found match: {}".format(file_data.existing_file_name))
                 match = True
-                file_data.revision = rev  # update with latest revision from sheet
+
+                # update revision to empty if none found
+                if rev == None or rev == "":
+                    rev = "-"
+                    
+                # update with latest revision from sheet
+                file_data.revision = rev  
+                
                 # pad revision out to two digits if required
                 file_data.revision = pad_single_digit_numeric_string(file_data.revision)
+                
                 # store updated file data to be written to marker file
                 marker_file_data = file_data.get_data()
+                
                 # get new file name for saving as
                 new_file_name = file_data.get_new_file_name()
+                
                 # build revision file name
                 row_default_new = []
                 row_default_new.append(file_data.existing_file_name)
                 row_default_new.append(new_file_name)
                 matched_file_data.append(row_default_new)
+
+                #exit loop
+                break
         if match == False:
             # check whether we found a match
             return_value.update_sep(False, "No file name match found in file list.")

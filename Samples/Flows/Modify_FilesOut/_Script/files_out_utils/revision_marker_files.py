@@ -73,20 +73,50 @@ def read_marker_files_from_revit_processed(marker_dir_path, marker_file_extensio
     marker_file_data = []
     # get all text files in location
     marker_files = get_files(marker_dir_path, marker_file_extension)
-    if len(marker_files) > 0:
-        try:
-            for mf in marker_files:
-                rows = read_csv_file(mf)
-                for row in rows:  # each row is a list
-                    # read information into class
-                    marker_file_data.append(docFile(row))
-        except Exception as e:
-            return_value.update_sep(
-                False,
-                "Failed to read marker file from Revit export with exception: {}".format(
-                    e
-                ),
-            )
+
+    # check if any marker files are present
+    if len(marker_files) ==0:
+        return_value.update_sep(
+            False,
+            "No marker files found in directory: {}".format(
+                marker_dir_path
+            ),
+        )
+        return return_value
+
+   
+    try:
+        # loop over marker files found
+        for mf in marker_files:
+
+            # read the marker file
+            rows_result = read_csv_file(mf)
+
+            # check if read was not successful, if so skip to next file
+            if not rows_result.status:
+                return_value.update_sep(
+                    False,
+                    "Failed to read marker file: {} with message: {}".format(
+                        mf, rows_result.message
+                    ),
+                )
+                # skip to next file
+                continue
+
+            # get rows
+            rows = rows_result.result
+
+            # process rows
+            for row in rows:  # each row is a list
+                # read information into class
+                marker_file_data.append(docFile(row))
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "Failed to read marker file from Revit export with exception: {}".format(
+                e
+            ),
+        )
     return_value.update_sep(True, "Read marker file(s)")
     return_value.result = marker_file_data
     return return_value

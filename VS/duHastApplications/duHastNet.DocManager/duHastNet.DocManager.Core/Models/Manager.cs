@@ -43,6 +43,11 @@ namespace duHastNet.DocManager.Core.Models
         private readonly CustomFieldsContainer _customFieldContainer;
 
         /// <summary>
+        /// Cloud document manager for metadata mapping and upload configuration
+        /// </summary>
+        private readonly CloudDocumentManager _cloudDocumentManager;
+
+        /// <summary>
         /// Flag indicating data has been loaded from the database
         /// </summary>
         public bool IsDataLoaded { get; private set; }
@@ -159,6 +164,19 @@ namespace duHastNet.DocManager.Core.Models
 
         #endregion custom properties
 
+        #region Cloud Document Manager
+
+        /// <summary>
+        /// Gets the cloud document manager instance
+        /// Used for metadata mapping configuration and validation
+        /// </summary>
+        public CloudDocumentManager CloudDocumentManager
+        {
+            get { return _cloudDocumentManager; }
+        }
+
+        #endregion Cloud Document Manager
+
         /// <summary>
         /// Exports the documents to a CSV file at the specified file path.
         /// </summary>
@@ -241,12 +259,14 @@ namespace duHastNet.DocManager.Core.Models
         /// <summary>
         /// bussiness logic manager containing all documents and revisions of a project
         /// </summary>
-        public Manager() 
-        { 
+        /// <param name="cloudDocumentManager">Cloud document manager instance (typically loaded from settings)</param>
+        public Manager(CloudDocumentManager cloudDocumentManager)
+        {
             _documentContainer = new DocumentContainer();
             _revisionContainer = new RevisionContainer();
             _customFieldContainer = new CustomFieldsContainer();
-            
+            _cloudDocumentManager = cloudDocumentManager ?? throw new ArgumentNullException(nameof(cloudDocumentManager));
+
             // set default loader flag
             IsDataLoaded = false;
         }

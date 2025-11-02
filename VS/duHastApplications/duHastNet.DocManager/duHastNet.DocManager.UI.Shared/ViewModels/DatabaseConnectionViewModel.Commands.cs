@@ -249,3 +249,4 @@ public partial class DatabaseConnectionViewModel
         //TODO
     }
 }
+

@@ -41,10 +41,6 @@ namespace DocManager.Standalone
             // Initialize the API service (singleton for application lifetime)
             _docManagerApi = new DocManagerApi();
 
-            // Initialize Manager (singleton for application lifetime)
-            // Manager starts empty - will be populated after database connection
-            _manager = new Manager();
-
             // Initialize MessageStore (singleton for application lifetime)
             _messageStore = new MessageStore();
 
@@ -59,6 +55,10 @@ namespace DocManager.Standalone
 
             _cloudDocumentManager = cloudDocumentManager;
 
+            // Initialize Manager(singleton for application lifetime)
+            // Manager starts empty - will be populated after database connection
+            // Pass loaded CloudDocumentManager
+            _manager = new Manager(_cloudDocumentManager);
 
             // Create CurrentFolderManager with loaded settings
             _currentFolderManager
@@ -72,7 +72,6 @@ namespace DocManager.Standalone
                     docManagerApi: _docManagerApi,
                     manager: _manager,
                     currentFolderManager: _currentFolderManager,
-                    cloudMetaData: cloudDocumentManager,
                     messageStore: _messageStore,
                     navigationStore: _navigationStore,
                     dialogService: _dialogService)

@@ -32,7 +32,6 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         private readonly Manager _manager;
         private readonly MessageStore _messageStore;
         private readonly Core.Models.CurrentFolder.CurrentFolderManager _currentFolderManager;
-        private readonly CloudDocumentManager _cloudMetaData;
         private readonly NavigationStore _navigationStore;
         private readonly IDialogService _dialogService;
 
@@ -49,7 +48,6 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             DocManagerApi docManagerApi, 
             Manager manager, 
             Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager,
-            CloudDocumentManager cloudMetaData,
             MessageStore messageStore,
             NavigationStore navigationStore,
             IDialogService dialogService
@@ -58,7 +56,6 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             _docManagerApi = docManagerApi;
             _manager = manager;
             _currentFolderManager = currentFolderManager;
-            _cloudMetaData = cloudMetaData;
             _messageStore = messageStore;
             _navigationStore = navigationStore;
             _dialogService = dialogService;
@@ -83,7 +80,6 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 _manager!,
                 _messageStore!,
                 _currentFolderManager!,
-                _cloudMetaData!,
                 _navigationStore!,
                 _dialogService!,
                 CreateMergeViewModel

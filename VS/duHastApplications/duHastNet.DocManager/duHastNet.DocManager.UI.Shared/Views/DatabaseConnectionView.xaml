@@ -155,6 +155,13 @@
                                     Margin="0 0 0 5"
                                     ToolTip="Add a new custom field definition"/>
 
+                            <Button Content="Remove" 
+                                    Command="{Binding RemoveCustomFieldCommand}" 
+                                    Width="120"
+                                    Padding="5"
+                                    Margin="0 0 0 5"
+                                    ToolTip="Remove unsaved custom field (only for new fields not yet in database)"/>
+
                             <Button Content="Toggle Active" 
                                     Command="{Binding ToggleCustomFieldActiveCommand}" 
                                     Width="120"

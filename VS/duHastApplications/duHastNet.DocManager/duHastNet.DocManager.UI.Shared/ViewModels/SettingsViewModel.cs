@@ -38,7 +38,6 @@ public partial class SettingsViewModel : ObservableObject
     private readonly Manager _manager;
     private readonly NavigationStore _navigationStore;
     Core.Models.CurrentFolder.CurrentFolderManager _currentFolderManager;
-    CloudDocumentManager _cloudDocumentManager;
     private readonly IDialogService _dialogService;
 
     //function used to navigate to merge view model
@@ -65,7 +64,6 @@ public partial class SettingsViewModel : ObservableObject
         Manager manager, 
         MessageStore messageStore, 
         Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager,
-        CloudDocumentManager cloudDocumentManager,
         NavigationStore navigationStore,
         IDialogService dialogService,
         Func<MergeViewModel> createViewModel
@@ -75,7 +73,6 @@ public partial class SettingsViewModel : ObservableObject
         _manager = manager;
         _messageStore = messageStore;
         _currentFolderManager = currentFolderManager;
-        _cloudDocumentManager = cloudDocumentManager;
         _navigationStore = navigationStore;
         _createViewModel = createViewModel;
         _dialogService = dialogService;
@@ -91,7 +88,6 @@ public partial class SettingsViewModel : ObservableObject
         AconexMetadataViewModel = new CloudDocumentManagerViewModel(
             _messageStore, 
             _manager,
-            _cloudDocumentManager,
             _dialogService);
         
         CurrentFolderViewModel = new CurrentFolderViewModel(

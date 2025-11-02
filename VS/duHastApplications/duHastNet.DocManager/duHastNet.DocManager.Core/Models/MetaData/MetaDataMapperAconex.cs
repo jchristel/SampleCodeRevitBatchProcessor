@@ -44,13 +44,16 @@ namespace duHastNet.DocManager.Core.Models.MetaData
         }
 
         /// <summary>
-        /// A list of all available filds from the aconex metadata template
+        /// A list of all available fields from the aconex metadata template
         /// </summary>
-        private List<string> _availableFilds = [];
+        private List<string> _availableFields = [];
 
-        public List<string> AvailableFilds
+        /// <summary>
+        /// Gets the list of available metadata field names from the template
+        /// </summary>
+        public List<string> AvailableFields
         {
-            get => _availableFilds;
+            get => _availableFields;
         }
 
         /// <summary>
@@ -124,6 +127,49 @@ namespace duHastNet.DocManager.Core.Models.MetaData
         public void ClearMappers()
         {
             _metaDataMap.Clear();
+        }
+
+        /// <summary>
+        /// Updates the available fields list from a template file
+        /// Call this after reading column headers from the template
+        /// </summary>
+        /// <param name="fields">List of field names from template</param>
+        /// <exception cref="ArgumentNullException">Thrown when fields is null</exception>
+        public void UpdateAvailableFields(List<string> fields)
+        {
+            if (fields == null)
+            {
+                throw new ArgumentNullException(nameof(fields));
+            }
+
+            _availableFields.Clear();
+            _availableFields.AddRange(fields);
+        }
+
+        /// <summary>
+        /// Removes mappings for fields that are no longer in the available fields list
+        /// Typically called after refreshing the template
+        /// </summary>
+        /// <returns>List of removed mapping field names</returns>
+        public List<string> CleanupInvalidMappings()
+        {
+            var removedFields = new List<string>();
+
+            var invalidMappings = _metaDataMap
+                .Where(m => !string.IsNullOrEmpty(m.MetaFieldName) &&
+                            !_availableFields.Contains(m.MetaFieldName))
+                .ToList();
+
+            foreach (var mapping in invalidMappings)
+            {
+                _metaDataMap.Remove(mapping);
+                if (mapping.MetaFieldName != null)
+                {
+                    removedFields.Add(mapping.MetaFieldName);
+                }
+            }
+
+            return removedFields;
         }
 
         /// <summary>

@@ -52,6 +52,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// Currently selected custom field in the ListView
         /// </summary>
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(RemoveCustomFieldCommand))]
         [NotifyCanExecuteChangedFor(nameof(ToggleCustomFieldActiveCommand))]
         private CustomFieldViewModel? _selectedCustomField;
 
@@ -156,6 +157,48 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         }
 
         /// <summary>
+        /// Determines if a custom field can be removed
+        /// Only unsaved fields (Id == 0) can be removed
+        /// </summary>
+        private bool CanRemoveCustomField()
+        {
+            return IsConnected && SelectedCustomField != null && SelectedCustomField.Id == 0;
+        }
+
+        /// <summary>
+        /// Command to remove a custom field that hasn't been saved to the database yet
+        /// Only works for fields with Id == 0 (not yet persisted)
+        /// </summary>
+        [RelayCommand(CanExecute = nameof(CanRemoveCustomField))]
+        private void RemoveCustomField()
+        {
+            if (SelectedCustomField == null || SelectedCustomField.Id != 0)
+                return;
+
+            try
+            {
+                var fieldName = SelectedCustomField.PropertyName;
+
+                // Remove from collection
+                CustomFields.Remove(SelectedCustomField);
+
+                // Update pending changes flag
+                HasPendingCustomFieldChanges = GetCustomFieldChanges().Any();
+
+                _messageStore.SetCurrentMessage(
+                    $"Custom field '{fieldName}' removed.",
+                    MessageTypes.Information,
+                    10);
+            }
+            catch (Exception ex)
+            {
+                _messageStore.SetCurrentMessage(
+                    $"Error removing custom field: {ex.Message}",
+                    MessageTypes.Error);
+            }
+        }
+
+        /// <summary>
         /// Determines if a custom field active status can be toggled
         /// Requires database connection and a selected field
         /// </summary>
@@ -241,6 +284,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 {
                     LoadCustomFieldsFromManager();
                     UpdateStatistics();
+
+                    // Clean up metadata mappings that reference deactivated custom fields
+                    CleanupInactiveMappings(changes);
 
                     _messageStore.SetCurrentMessage(
                         "Custom field changes applied successfully",
@@ -406,6 +452,53 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                         }
                         break;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Cleans up metadata mappings that reference deactivated custom fields
+        /// Called after successful database update
+        /// </summary>
+        private void CleanupInactiveMappings(List<CustomFieldChange> changes)
+        {
+            // Get all deactivated fields from changes
+            var deactivatedFields = changes
+                .Where(c => c.ChangeType == CustomFieldChangeType.Deactivate)
+                .Select(c => c.PropertyName)
+                .ToList();
+
+            if (!deactivatedFields.Any())
+                return;
+
+            // Access the metadata mapper through Manager
+            var metaDataMapper = _manager.CloudDocumentManager?.MetaDataMapper;
+            if (metaDataMapper == null)
+                return;
+
+            var removedMappings = new List<string>();
+
+            // Find and remove mappings that reference deactivated custom fields
+            var mappingsToRemove = metaDataMapper.MetaDataMap
+                .Where(mapping => !string.IsNullOrEmpty(mapping.DocumentPropertyName) &&
+                                 deactivatedFields.Contains(mapping.DocumentPropertyName, StringComparer.OrdinalIgnoreCase))
+                .ToList();
+
+            foreach (var mapping in mappingsToRemove)
+            {
+                metaDataMapper.RemoveMapper(mapping);
+                removedMappings.Add($"{mapping.MetaFieldName} -> {mapping.DocumentPropertyName}");
+            }
+
+            // Show message if any mappings were removed
+            if (removedMappings.Any())
+            {
+                var message = $"Removed {removedMappings.Count} metadata mapping(s) referencing deactivated custom field(s):\n" +
+                             string.Join("\n", removedMappings.Select(m => $"  - {m}"));
+
+                _messageStore.SetCurrentMessage(
+                    message,
+                    MessageTypes.Information,
+                    15);
             }
         }
 

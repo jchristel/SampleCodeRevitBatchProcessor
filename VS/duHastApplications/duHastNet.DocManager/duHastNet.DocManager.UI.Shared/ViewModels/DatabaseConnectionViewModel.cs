@@ -31,7 +31,7 @@ using duHastNet.DocManager.UI.Shared.Stores;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels
 {
-    public partial class DatabaseConnectionViewModel :ObservableObject
+    public partial class DatabaseConnectionViewModel : ObservableObject
     {
         /// <summary>
         /// view model class for the current folder model
@@ -48,8 +48,8 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         #region Constructor
 
         public DatabaseConnectionViewModel(
-            DocManagerApi docManagerApi, 
-            MessageStore messageStore, 
+            DocManagerApi docManagerApi,
+            MessageStore messageStore,
             Manager manager,
             IDialogService dialogService)
         {
@@ -72,7 +72,6 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsCustomFieldsExpanded))]
         [NotifyCanExecuteChangedFor(nameof(AddCustomFieldCommand))]
-        //[NotifyCanExecuteChangedFor(nameof(RemoveCustomFieldCommand))]
         private bool _isConnected = false;
 
         [ObservableProperty]

@@ -24,6 +24,8 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using duHastNet.DocManager.Core.Interfaces;
+using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.MetaData;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
@@ -46,6 +48,8 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         private readonly MessageStore _messageStore;
         private readonly IDialogService _dialogService;
         private readonly MetaDataMapperAconex _aconexMapper;
+        private readonly IMetaDataTemplateService _templateService;
+        private readonly Manager _manager;
 
         #endregion Private Fields
 
@@ -67,10 +71,17 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         private bool _isBrowseTemplateFileEnabled = true;
 
         /// <summary>
+        /// Controls whether the refresh button is enabled
+        /// Disabled during refresh operations or when no template file is selected
+        /// </summary>
+        [ObservableProperty]
+        private bool _isRefreshTemplateEnabled = false;
+
+        /// <summary>
         /// Collection of metadata field mappings
         /// Phase 2: Will be populated and displayed in ListView
         /// </summary>
-        public ObservableCollection<MetaDataMap> MetaDataMappings { get; }
+        public ObservableCollection<MetaDataMapViewModel> MetaDataMappings { get; }
 
         #endregion Observable Properties
 
@@ -78,16 +89,25 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
 
         /// <summary>
         /// Called when TemplateMetaDataFilePath property changes
-        /// Triggers validation and updates the underlying model
+        /// Triggers validation, updates the underlying model, and loads template headers
         /// </summary>
         partial void OnTemplateMetaDataFilePathChanged(string value)
         {
             ValidateProperty(value, nameof(TemplateMetaDataFilePath));
-            
+
             // Update the underlying mapper
             if (_aconexMapper != null)
             {
                 _aconexMapper.MetadataTemplateFilePath = value;
+            }
+
+            // Enable/disable refresh button based on whether a valid file is selected
+            IsRefreshTemplateEnabled = !string.IsNullOrWhiteSpace(value) && File.Exists(value);
+
+            // Automatically load template headers when file path is set
+            if (IsRefreshTemplateEnabled)
+            {
+                _ = LoadTemplateHeadersAsync();
             }
         }
 
@@ -101,17 +121,22 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         /// <param name="messageStore">Message store for displaying messages</param>
         /// <param name="dialogService">Dialog service for file selection</param>
         /// <param name="aconexMapper">The Aconex mapper instance to bind to</param>
+        /// <param name="templateService">Service for reading metadata template files</param>
         public AconexMetadataControlViewModel(
-            MessageStore messageStore, 
-            IDialogService dialogService, 
-            MetaDataMapperAconex aconexMapper)
+            MessageStore messageStore,
+            IDialogService dialogService,
+            MetaDataMapperAconex aconexMapper,
+            IMetaDataTemplateService templateService,
+            Manager manager)
         {
             _messageStore = messageStore ?? throw new ArgumentNullException(nameof(messageStore));
             _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             _aconexMapper = aconexMapper ?? throw new ArgumentNullException(nameof(aconexMapper));
+            _templateService = templateService ?? throw new ArgumentNullException(nameof(templateService));
+            _manager = manager ?? throw new ArgumentNullException(nameof(manager));
 
             // Initialize metadata mappings collection
-            MetaDataMappings = new ObservableCollection<MetaDataMap>();
+            MetaDataMappings = new ObservableCollection<MetaDataMapViewModel>();
 
             // Load existing values from the mapper
             LoadFromMapper();
@@ -126,7 +151,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
 
         /// <summary>
         /// Command to browse for template file
-        /// Opens file dialog for selecting Excel template files
+        /// Opens file dialog for selecting CSV template files
         /// </summary>
         [RelayCommand]
         private void BrowseTemplateFile()
@@ -134,11 +159,11 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             try
             {
                 IsBrowseTemplateFileEnabled = false;
-                
-                // Use dialog service to show file dialog
+
+                // Use dialog service to show file dialog (CSV only as per requirements)
                 var selectedPath = _dialogService.ShowOpenFileDialog(
                     "Select Meta Data Template File",
-                    "Excel files (*.xlsx;*.xls)|*.xlsx;*.xls|CSV files (*.csv)|*.csv|All files (*.*)|*.*");
+                    "CSV files (*.csv)|*.csv|All files (*.*)|*.*");
 
                 // Check for cancellation
                 if (selectedPath == null || selectedPath.Length == 0)
@@ -155,15 +180,80 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             }
         }
 
-        // Phase 2: Commands for metadata mappings
-        // [RelayCommand]
-        // private void AddMetadataMapping() { }
-        
-        // [RelayCommand]
-        // private void EditMetadataMapping() { }
-        
-        // [RelayCommand]
-        // private void RemoveMetadataMapping() { }
+        /// <summary>
+        /// Command to refresh the template headers from the current template file
+        /// Re-reads the CSV file and updates available fields, cleaning up invalid mappings
+        /// </summary>
+        [RelayCommand]
+        private async Task RefreshTemplateAsync()
+        {
+            if (string.IsNullOrWhiteSpace(TemplateMetaDataFilePath))
+            {
+                _messageStore.SetCurrentMessage(
+                    "No template file selected. Please select a template file first.", MessageTypes.Warning);
+                return;
+            }
+
+            try
+            {
+                IsRefreshTemplateEnabled = false;
+
+                // Re-read the template file
+                var result = await _templateService.ReadColumnHeadersAsync(TemplateMetaDataFilePath);
+
+                if (result.IsReadSuccessful)
+                {
+                    // Update available fields in the mapper
+                    _aconexMapper.UpdateAvailableFields(result.ColumnHeaders);
+
+                    // Clean up invalid mappings (fields that no longer exist in template)
+                    var removedFields = _aconexMapper.CleanupInvalidMappings();
+
+                    // Show success message
+                    _messageStore.SetCurrentMessage(
+                        
+                        $"Template refreshed: {result.ColumnHeaders.Count} column headers loaded.", MessageTypes.Information);
+
+                    // Show warnings if any (e.g., duplicate headers)
+                    foreach (var warning in result.Warnings)
+                    {
+                        _messageStore.SetCurrentMessage(warning, MessageTypes.Warning);
+                    }
+
+                    // Notify about removed mappings
+                    if (removedFields.Count > 0)
+                    {
+                        _messageStore.SetCurrentMessage(
+                            $"Removed {removedFields.Count} mapping(s) for fields no longer in template: {string.Join(", ", removedFields)}", MessageTypes.Warning);
+                    }
+
+                    // Phase 2: Reload the mappings display
+                    // LoadFromMapper();
+                }
+                else
+                {
+                    // Show error message
+                    _messageStore.SetCurrentMessage(
+                        $"Failed to refresh template: {result.Message}", MessageTypes.Error);
+
+                    // Show detailed errors if available
+                    foreach (var error in result.Errors)
+                    {
+                        _messageStore.SetCurrentMessage(error, MessageTypes.Error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _messageStore.SetCurrentMessage(
+                    $"Unexpected error refreshing template: {ex.Message}", MessageTypes.Error);
+            }
+            finally
+            {
+                IsRefreshTemplateEnabled = !string.IsNullOrWhiteSpace(TemplateMetaDataFilePath) &&
+                                          File.Exists(TemplateMetaDataFilePath);
+            }
+        }
 
         #endregion Commands
 
@@ -171,7 +261,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
 
         /// <summary>
         /// Validates the template file path
-        /// Checks if file exists and has valid extension
+        /// Checks if file exists and has valid extension (CSV only)
         /// </summary>
         public static ValidationResult? ValidateTemplateFilePath(string? value, ValidationContext context)
         {
@@ -187,10 +277,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             if (!File.Exists(value))
                 return new ValidationResult("Template file does not exist");
 
-            // Check file extension (Excel or CSV)
+            // Check file extension (CSV only as per requirements)
             var extension = Path.GetExtension(value).ToLowerInvariant();
-            if (extension != ".xlsx" && extension != ".xls" && extension != ".csv")
-                return new ValidationResult("Template file must be an Excel (.xlsx, .xls) or CSV (.csv) file");
+            if (extension != ".csv")
+                return new ValidationResult("Template file must be a CSV (.csv) file");
 
             return ValidationResult.Success;
         }
@@ -219,6 +309,55 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         }
 
         /// <summary>
+        /// Loads template headers from the current template file
+        /// Called automatically when template file path is set
+        /// </summary>
+        private async Task LoadTemplateHeadersAsync()
+        {
+            if (string.IsNullOrWhiteSpace(TemplateMetaDataFilePath))
+                return;
+
+            try
+            {
+                // Read the CSV headers
+                var result = await _templateService.ReadColumnHeadersAsync(TemplateMetaDataFilePath);
+
+                if (result.IsReadSuccessful)
+                {
+                    // Update available fields in the mapper
+                    _aconexMapper.UpdateAvailableFields(result.ColumnHeaders);
+
+                    // Show success message
+                    _messageStore.SetCurrentMessage(
+                        $"Loaded {result.ColumnHeaders.Count} column headers from template", MessageTypes.Information);
+
+                    // Show warnings if any (e.g., duplicate headers)
+                    foreach (var warning in result.Warnings)
+                    {
+                        _messageStore.SetCurrentMessage(warning, MessageTypes.Warning);
+                    }
+                }
+                else
+                {
+                    // Show error message
+                    _messageStore.SetCurrentMessage(
+                        $"Failed to read template: {result.Message}", MessageTypes.Error);
+
+                    // Show detailed errors if available
+                    foreach (var error in result.Errors)
+                    {
+                        _messageStore.SetCurrentMessage(error, MessageTypes.Error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _messageStore.SetCurrentMessage(
+                    $"Unexpected error reading template: {ex.Message}", MessageTypes.Error);
+            }
+        }
+
+        /// <summary>
         /// Saves values back to the Aconex mapper instance
         /// Called when configuration is saved
         /// </summary>
@@ -228,6 +367,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
                 return;
 
             // Template file path is already updated in property changed handler
+            // Available fields are already updated in the mapper
             // No additional save logic needed for Phase 1
 
             // Phase 2: Save metadata mappings

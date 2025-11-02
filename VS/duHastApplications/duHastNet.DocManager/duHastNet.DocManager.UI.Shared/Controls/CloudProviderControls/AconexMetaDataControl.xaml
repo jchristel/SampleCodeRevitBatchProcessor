@@ -20,37 +20,53 @@
             <!-- <RowDefinition Height="Auto" /> -->
         </Grid.RowDefinitions>
 
-        <!-- Template Meta Data File Path -->
-        <Grid Grid.Row="0">
+        <!-- Template Meta Data File Path Row -->
+        <Grid Grid.Row="0" Margin="0,5,0,5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
+                <!-- Label -->
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto"/>
+                <!-- TextBox -->
+                <ColumnDefinition Width="Auto" />
+                <!-- Buttons -->
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0"
-                       Margin="5 10 5 10"
-                       Padding="5"
-                       Text="Template Meta Data File Path:" />
+            <!-- Label -->
+            <Label Grid.Column="0" 
+           Content="Template File:" 
+           VerticalAlignment="Center"/>
 
-            <TextBox Grid.Column="1"
-                     x:Name="TemplateMetaDataFilePathTextBox"
-                     Margin="5 10 5 10"
-                     Padding="5"
-                     Text="{Binding TemplateMetaDataFilePath, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
-                     ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}" />
+            <!-- File Path TextBox -->
+            <TextBox Grid.Column="1" 
+             Text="{Binding TemplateMetaDataFilePath, UpdateSourceTrigger=PropertyChanged}"
+             Margin="5,0,5,0"
+             VerticalAlignment="Center"/>
 
-            <Button Grid.Column="2"
-                    Margin="5 10 5 10"
-                    Padding="5"
-                    Content="Browse"
-                    Command="{Binding BrowseTemplateFileCommand}"
-                    IsEnabled="{Binding IsBrowseTemplateFileEnabled}" />
+            <!-- Button Panel -->
+            <StackPanel Grid.Column="2" 
+                Orientation="Horizontal" 
+                VerticalAlignment="Center">
+
+                <!-- Browse Button -->
+                <Button Content="Browse..." 
+                Command="{Binding BrowseTemplateFileCommand}"
+                IsEnabled="{Binding IsBrowseTemplateFileEnabled}"
+                MinWidth="75"
+                ToolTip="Select a CSV metadata template file"/>
+
+                <!-- Refresh Button (NEW) -->
+                <Button Content="Refresh" 
+                Command="{Binding RefreshTemplateCommand}"
+                IsEnabled="{Binding IsRefreshTemplateEnabled}"
+                Margin="5,0,0,0"
+                MinWidth="75"
+                ToolTip="Refresh column headers from template file"
+                AutomationProperties.Name="Refresh Template Headers"/>
+            </StackPanel>
         </Grid>
-
         <!-- Phase 2: Metadata Mappings Section -->
         <!-- This will be added in Phase 2 following the pattern from CurrentFolderView's Filing Rules section -->
         <!--

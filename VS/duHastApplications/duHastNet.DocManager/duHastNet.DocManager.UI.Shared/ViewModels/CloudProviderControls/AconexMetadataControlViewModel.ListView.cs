@@ -48,6 +48,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         /// Currently selected mapping in the ListView
         /// </summary>
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(EditMetadataMappingCommand))]
         private MetaDataMapViewModel? _selectedMapping;
 
         #endregion Observable Properties
@@ -91,31 +92,39 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
                 return;
             }
 
-            // TODO: Open dialog to create new mapping
-            // For now, show placeholder message
-            _messageStore.SetCurrentMessage(
-                $"Add Mapping dialog will open here. {unmappedFields.Count} fields available to map.", MessageTypes.Information);
+            try
+            {
+                // Create ViewModel for Add mode
+                var dialogViewModel = new ViewModels.CloudProviderControls.MetaDataMappingDialogViewModel(
+                    unmappedFields,
+                    GetAvailableDocumentProperties(),
+                    _messageStore);
 
-            // Placeholder: This will be implemented when we create the mapping dialog
-            // var dialogViewModel = new MetaDataMappingDialogViewModel(
-            //     unmappedFields,
-            //     GetAvailableDocumentProperties(),
-            //     _messageStore);
-            // 
-            // var result = _dialogService.ShowDialog(dialogViewModel);
-            // if (result == true && dialogViewModel.CreatedMapping != null)
-            // {
-            //     try
-            //     {
-            //         _aconexMapper.AddMapper(dialogViewModel.CreatedMapping);
-            //         LoadMappingsFromModel();
-            //         _messageStore.AddMessage(MessageTypes.Success, "Mapping added successfully");
-            //     }
-            //     catch (Exception ex)
-            //     {
-            //         _messageStore.AddMessage(MessageTypes.Error, $"Failed to add mapping: {ex.Message}");
-            //     }
-            // }
+                // Create and show dialog
+                var dialog = new Views.MetaDataMappingDialog();
+                dialog.Owner = System.Windows.Application.Current.MainWindow;
+
+                var result = dialog.ShowDialog();
+
+                if (result == true && dialogViewModel.CreatedMapping != null)
+                {
+                    // Add the mapping to the model
+                    _aconexMapper.AddMapper(dialogViewModel.CreatedMapping);
+
+                    // Reload the display collection
+                    LoadMappingsFromModel();
+
+                    _messageStore.SetCurrentMessage(
+                        $"Mapping for '{dialogViewModel.CreatedMapping.MetaFieldName}' added successfully.",
+                        MessageTypes.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                _messageStore.SetCurrentMessage(
+                    $"Error adding mapping: {ex.Message}",
+                    MessageTypes.Error);
+            }
         }
 
         /// <summary>
@@ -133,6 +142,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
 
             try
             {
+                // Store field name for message
+                string fieldName = SelectedMapping.MetaFieldName;
+
                 // Remove from the model
                 _aconexMapper.RemoveMapper(SelectedMapping.Model);
 
@@ -140,7 +152,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
                 MetaDataMappings.Remove(SelectedMapping);
 
                 _messageStore.SetCurrentMessage(
-                    $"Mapping for '{SelectedMapping.MetaFieldName}' removed successfully.", MessageTypes.Information);
+                    $"Mapping for '{fieldName}' removed successfully.", MessageTypes.Information);
 
                 // Clear selection
                 SelectedMapping = null;
@@ -149,6 +161,74 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             {
                 _messageStore.SetCurrentMessage(
                     $"Failed to remove mapping: {ex.Message}", MessageTypes.Error);
+            }
+        }
+
+        /// <summary>
+        /// Determines if a mapping can be edited
+        /// </summary>
+        private bool CanEditMetadataMapping()
+        {
+            return SelectedMapping != null;
+        }
+
+        /// <summary>
+        /// Command to edit the selected metadata mapping
+        /// Opens dialog with existing values pre-populated
+        /// </summary>
+        [RelayCommand(CanExecute = nameof(CanEditMetadataMapping))]
+        private void EditMetadataMapping()
+        {
+            if (SelectedMapping == null)
+                return;
+
+            // Check if template is loaded
+            if (_aconexMapper.AvailableFields.Count == 0)
+            {
+                _messageStore.SetCurrentMessage(
+                    "Please select and load a template file before editing mappings.", MessageTypes.Warning);
+                return;
+            }
+
+            try
+            {
+                // Create ViewModel for Edit mode with existing mapping
+                var dialogViewModel = new ViewModels.CloudProviderControls.MetaDataMappingDialogViewModel(
+                    _aconexMapper.AvailableFields.ToList(),  // All fields (not just unmapped) for Edit mode
+                    GetAvailableDocumentProperties(),
+                    SelectedMapping.Model,  // Pass existing mapping
+                    _messageStore);
+
+                // Create and show dialog
+                var dialog = new Views.MetaDataMappingDialog();
+                dialog.Owner = System.Windows.Application.Current.MainWindow;
+
+                var result = dialog.ShowDialog();
+
+                if (result == true && dialogViewModel.CreatedMapping != null)
+                {
+                    // Remove the old mapping
+                    _aconexMapper.RemoveMapper(SelectedMapping.Model);
+
+                    // Add the updated mapping
+                    _aconexMapper.AddMapper(dialogViewModel.CreatedMapping);
+
+                    // Reload the display collection
+                    LoadMappingsFromModel();
+
+                    _messageStore.SetCurrentMessage(
+                        $"Mapping for '{dialogViewModel.CreatedMapping.MetaFieldName}' updated successfully.",
+                        MessageTypes.Information);
+
+                    // Clear selection since we reloaded
+                    SelectedMapping = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                _messageStore.SetCurrentMessage(
+                    $"Error editing mapping: {ex.Message}",
+                    MessageTypes.Error);
             }
         }
 
@@ -163,7 +243,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         private void LoadMappingsFromModel()
         {
             MetaDataMappings.Clear();
-            
+
             foreach (var mapping in _aconexMapper.MetaDataMap)
             {
                 MetaDataMappings.Add(new MetaDataMapViewModel(mapping));

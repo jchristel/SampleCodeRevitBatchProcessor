@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -21,16 +21,33 @@
 //
 //
 
-namespace duHastNet.DocManager.UI.Shared.Controls.CloudProviderControls
+
+using System;
+using System.Globalization;
+using System.Windows.Data;
+
+namespace duHastNet.DocManager.UI.Shared.Converters
 {
     /// <summary>
-    /// Interaction logic for AconexMetadataControl.xaml
+    /// Converter that converts a count to a boolean enabled/disabled state
+    /// Count > 0 → True (Enabled), Count = 0 → False (Disabled)
+    /// Useful for enabling controls only when a collection has items
     /// </summary>
-    public partial class AconexMetadataControl : System.Windows.Controls.UserControl
+    public class CountToEnabledConverter : IValueConverter
     {
-        public AconexMetadataControl()
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            InitializeComponent();
+            if (value is int count)
+            {
+                return count > 0;
+            }
+
+            return false;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException("ConvertBack is not supported for CountToEnabledConverter");
         }
     }
 }

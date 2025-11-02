@@ -1,0 +1,132 @@
+﻿<Window x:Class="duHastNet.DocManager.UI.Shared.Views.MetaDataMappingDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:duHastNet.DocManager.UI.Shared.Converters"
+        mc:Ignorable="d"
+        Title="{Binding DialogTitle}"
+        Height="350" Width="500"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False">
+
+    <Window.Resources>
+        <!-- Converters -->
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <converters:CountToEnabledConverter x:Key="CountToEnabledConverter"/>
+        <!-- Style for group boxes -->
+        <Style TargetType="GroupBox">
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+
+        <!-- Style for labels -->
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="0,0,0,5"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Style for combo boxes -->
+        <Style TargetType="ComboBox">
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Height" Value="25"/>
+        </Style>
+
+        <!-- Style for radio buttons -->
+        <Style TargetType="RadioButton">
+            <Setter Property="Margin" Value="0,5,0,5"/>
+        </Style>
+
+        <!-- Style for text boxes -->
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Metadata Field Selection -->
+        <GroupBox Grid.Row="0" Header="Template Field">
+            <StackPanel>
+                <TextBlock Text="Select the metadata field from your template:"/>
+                <ComboBox ItemsSource="{Binding AvailableMetaFields}"
+                          SelectedItem="{Binding SelectedMetaFieldName, ValidatesOnNotifyDataErrors=True}"
+                          IsEnabled="{Binding AvailableMetaFields.Count, Converter={StaticResource CountToEnabledConverter}}"/>
+
+                <!-- Validation message for metadata field -->
+                <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource AncestorType=ComboBox}}"
+                           Foreground="Red"
+                           Margin="0,-8,0,5"
+                           Visibility="{Binding (Validation.HasError), RelativeSource={RelativeSource AncestorType=ComboBox}, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- Mapping Type and Value -->
+        <GroupBox Grid.Row="1" Header="Mapping Configuration">
+            <StackPanel>
+                <!-- Mapping Type Selection -->
+                <TextBlock Text="Select mapping type:" Margin="0,0,0,10"/>
+
+                <RadioButton Content="Map to Document Property"
+                             IsChecked="{Binding IsStaticValue, Converter={StaticResource InverseBooleanConverter}}"
+                             GroupName="MappingType"/>
+
+                <RadioButton Content="Use Static Value"
+                             IsChecked="{Binding IsStaticValue}"
+                             GroupName="MappingType"
+                             Margin="0,5,0,15"/>
+
+                <!-- Document Property Selection (visible when IsStaticValue = false) -->
+                <StackPanel Visibility="{Binding IsStaticValue, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                    <TextBlock Text="Select document property:"/>
+                    <ComboBox ItemsSource="{Binding AvailableDocumentProperties}"
+                              SelectedItem="{Binding SelectedDocumentProperty, ValidatesOnNotifyDataErrors=True}"/>
+
+                    <!-- Validation message for document property -->
+                    <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource AncestorType=ComboBox}}"
+                               Foreground="Red"
+                               Margin="0,-8,0,5"
+                               Visibility="{Binding (Validation.HasError), RelativeSource={RelativeSource AncestorType=ComboBox}, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                </StackPanel>
+
+                <!-- Static Value Input (visible when IsStaticValue = true) -->
+                <StackPanel Visibility="{Binding IsStaticValue, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <TextBlock Text="Enter static value:"/>
+                    <TextBox Text="{Binding StaticValue, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+
+                    <!-- Validation message for static value -->
+                    <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource AncestorType=TextBox}}"
+                               Foreground="Red"
+                               Margin="0,-8,0,5"
+                               Visibility="{Binding (Validation.HasError), RelativeSource={RelativeSource AncestorType=TextBox}, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- Dialog Buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Content="OK"
+                    Width="80"
+                    Height="30"
+                    Margin="0,0,10,0"
+                    IsDefault="True"
+                    Command="{Binding OkCommand}"/>
+
+            <Button Content="Cancel"
+                    Width="80"
+                    Height="30"
+                    IsCancel="True"
+                    Command="{Binding CancelCommand}"/>
+        </StackPanel>
+    </Grid>
+</Window>

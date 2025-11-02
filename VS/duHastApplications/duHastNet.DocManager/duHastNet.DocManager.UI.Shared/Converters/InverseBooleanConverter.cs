@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -21,16 +21,38 @@
 //
 //
 
-namespace duHastNet.DocManager.UI.Shared.Controls.CloudProviderControls
+
+using System;
+using System.Globalization;
+using System.Windows.Data;
+
+namespace duHastNet.DocManager.UI.Shared.Converters
 {
     /// <summary>
-    /// Interaction logic for AconexMetadataControl.xaml
+    /// Converter that inverts a boolean value
+    /// True → False, False → True
+    /// Used for RadioButton two-way binding to a single boolean property
     /// </summary>
-    public partial class AconexMetadataControl : System.Windows.Controls.UserControl
+    public class InverseBooleanConverter : IValueConverter
     {
-        public AconexMetadataControl()
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            InitializeComponent();
+            if (value is bool boolValue)
+            {
+                return !boolValue;
+            }
+
+            return false;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool boolValue)
+            {
+                return !boolValue;
+            }
+
+            return false;
         }
     }
 }

@@ -88,6 +88,7 @@ public partial class SettingsViewModel : ObservableObject
         AconexMetadataViewModel = new CloudDocumentManagerViewModel(
             _messageStore, 
             _manager,
+            _manager.CloudDocumentManager,
             _dialogService);
         
         CurrentFolderViewModel = new CurrentFolderViewModel(

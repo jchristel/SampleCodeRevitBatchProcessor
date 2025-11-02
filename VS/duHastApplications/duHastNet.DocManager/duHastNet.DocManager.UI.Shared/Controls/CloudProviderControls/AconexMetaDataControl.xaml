@@ -17,7 +17,7 @@
             <!-- Template file path -->
             <RowDefinition Height="Auto" />
             <!-- Phase 2: Metadata mappings ListView will go here -->
-            <!-- <RowDefinition Height="Auto" /> -->
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!-- Template Meta Data File Path Row -->
@@ -68,8 +68,7 @@
             </StackPanel>
         </Grid>
         <!-- Phase 2: Metadata Mappings Section -->
-        <!-- This will be added in Phase 2 following the pattern from CurrentFolderView's Filing Rules section -->
-        <!--
+
         <Grid Grid.Row="1" Margin="5 10 5 10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -104,12 +103,14 @@
                 <StackPanel Grid.Column="1" 
                             Margin="10 0 0 0" 
                             VerticalAlignment="Top">
-                    <Button Content="Add" Width="100" Padding="5" Margin="0 0 0 5"/>
-                    <Button Content="Edit" Width="100" Padding="5" Margin="0 0 0 5"/>
-                    <Button Content="Remove" Width="100" Padding="5"/>
+                    <Button Content="Add" Width="100" Padding="5" Margin="0 0 0 5"
+                            Command="{Binding AddMetadataMappingCommand}"/>
+                    <Button Content="Edit" Width="100" Padding="5" Margin="0 0 0 5"
+                            Command="{Binding EditMetadataMappingCommand}"/>
+                    <Button Content="Remove" Width="100" Padding="5"
+                            Command="{Binding RemoveMetadataMappingCommand}"/>
                 </StackPanel>
             </Grid>
         </Grid>
-        -->
     </Grid>
 </UserControl>

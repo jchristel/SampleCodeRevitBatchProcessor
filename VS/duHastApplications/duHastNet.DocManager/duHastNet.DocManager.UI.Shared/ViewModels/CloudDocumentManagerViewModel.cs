@@ -47,6 +47,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         private readonly MessageStore _messageStore;
         private readonly Manager _manager;
         private readonly IDialogService _dialogService;
+        private readonly CloudDocumentManager _cloudDocumentManager;
 
         #endregion Private Fields
 
@@ -83,10 +84,12 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         public CloudDocumentManagerViewModel(
             MessageStore messageStore,
             Manager manager,
+            CloudDocumentManager cloudDocumentManager,
             IDialogService dialogService)
         {
             _manager = manager;
             _messageStore = messageStore;
+            _cloudDocumentManager = cloudDocumentManager;
             _dialogService = dialogService;
 
             // Initialize available provider types
@@ -148,8 +151,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 newControl.PropertyChanged += OnProviderControlPropertyChanged;
             }
 
-            // Update the model
-            UpdateModelProvider(value);
+            // Note: UpdateModelProvider is not called here because CreateAconexControl (and future provider methods)
+            // already handle creating/setting the MetaDataMapper instance correctly.
+            // Calling UpdateModelProvider here would create a new mapper instance and break the binding.
         }
 
         /// <summary>
@@ -158,7 +162,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// </summary>
         partial void OnCloudDocumentManagerEnabledChanged(bool value)
         {
-            _manager.CloudDocumentManager.CloudDocumentManagerEnabled = value;
+            _cloudDocumentManager.CloudDocumentManagerEnabled = value;
         }
 
         /// <summary>
@@ -182,12 +186,12 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// </summary>
         private void LoadFromModel()
         {
-            CloudDocumentManagerEnabled = _manager.CloudDocumentManager.CloudDocumentManagerEnabled;
+            CloudDocumentManagerEnabled = _cloudDocumentManager.CloudDocumentManagerEnabled;
 
             // Determine provider type from existing MetaDataMapper
-            if (_manager.CloudDocumentManager.MetaDataMapper != null)
+            if (_cloudDocumentManager.MetaDataMapper != null)
             {
-                SelectedProviderType = _manager.CloudDocumentManager.MetaDataMapper switch
+                SelectedProviderType = _cloudDocumentManager.MetaDataMapper switch
                 {
                     MetaDataMapperAconex => CloudProviderType.Aconex,
                     _ => CloudProviderType.Aconex // Default to Aconex
@@ -216,12 +220,12 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// </summary>
         private bool HasExistingProviderData()
         {
-            if (_manager.CloudDocumentManager.MetaDataMapper == null)
+            if (_cloudDocumentManager.MetaDataMapper == null)
                 return false;
 
             // Check if there's any meaningful configuration
             // For Aconex: check if template path is set or mappings exist
-            if (_manager.CloudDocumentManager.MetaDataMapper is MetaDataMapperAconex aconexMapper)
+            if (_cloudDocumentManager.MetaDataMapper is MetaDataMapperAconex aconexMapper)
             {
                 return !string.IsNullOrWhiteSpace(aconexMapper.MetadataTemplateFilePath)
                        || aconexMapper.MetaDataMap.Count > 0;
@@ -236,35 +240,21 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         private ObservableObject CreateAconexControl()
         {
             // Ensure we have an Aconex mapper in the model
-            if (_manager.CloudDocumentManager.MetaDataMapper is not MetaDataMapperAconex aconexMapper)
+            if (_cloudDocumentManager.MetaDataMapper is not MetaDataMapperAconex aconexMapper)
             {
                 aconexMapper = new MetaDataMapperAconex();
-                _manager.CloudDocumentManager.MetaDataMapper = aconexMapper;
+                _cloudDocumentManager.MetaDataMapper = aconexMapper;
             }
 
-            // Create the template service for Aconex (CSV-based)
-            var templateService = new Core.Services.MetaDataTemplateService();
-
-            // Create and return the Aconex control ViewModel with the service
+            // Create and return the Aconex control ViewModel
             return new ViewModels.CloudProviderControls.AconexMetadataControlViewModel(
                 _messageStore,
                 _dialogService,
                 aconexMapper,
-                templateService,
+                new duHastNet.DocManager.Core.Services.MetaDataTemplateService(),
                 _manager);
         }
 
-        /// <summary>
-        /// Updates the CloudDocumentManager model with the selected provider
-        /// </summary>
-        private void UpdateModelProvider(CloudProviderType providerType)
-        {
-            _manager.CloudDocumentManager.MetaDataMapper = providerType switch
-            {
-                CloudProviderType.Aconex => new MetaDataMapperAconex(),
-                _ => throw new ArgumentException($"Unknown provider type: {providerType}")
-            };
-        }
 
         /// <summary>
         /// Saves the current configuration from the provider control back to the model
@@ -273,7 +263,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         public void SaveToModel()
         {
             // Update enabled state
-            _manager.CloudDocumentManager.CloudDocumentManagerEnabled = CloudDocumentManagerEnabled;
+            _cloudDocumentManager.CloudDocumentManagerEnabled = CloudDocumentManagerEnabled;
 
             // If disabled, we're done
             if (!CloudDocumentManagerEnabled)

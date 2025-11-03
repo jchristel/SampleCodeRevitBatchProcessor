@@ -48,10 +48,11 @@ import os
 
 
 import settings as settings  # sets up all commonly used variables and path locations!
-from utils.revision_marker_files import read_marker_files_from_revit_processed
-from utils.meta_data import write_meta_data
-from utils.post_cleanup import clean_up_export_folder
-from utils.docFile_io import write_new_file_data, read_current_file
+from files_out_utils.revision_marker_files import read_marker_files_from_revit_processed
+from files_out_utils.meta_data import write_meta_data
+from files_out_utils.post_cleanup import clean_up_export_folder
+from files_out_utils.docFile_io import write_new_file_data, read_current_file
+
 from duHast.Utilities.console_out import output_with_time_stamp as output
 from duHast.Utilities.batch_processor_log_utils import process_log_files
 from duHast.Utilities.worksharing_monitor_process import clean_up_wsm_data_files

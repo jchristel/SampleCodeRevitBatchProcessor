@@ -24,6 +24,7 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.UI.Shared.Stores;
 using System.Collections.ObjectModel;
 using System.Text;
@@ -492,6 +493,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             // Show message if any mappings were removed
             if (removedMappings.Any())
             {
+                // Raise the MappingsChanged event so subscribers (AconexMetadataControlViewModel) can refresh
+                if (_manager.CloudDocumentManager != null)
+                    _manager.CloudDocumentManager.RaiseMappingsChanged();
+
                 var message = $"Removed {removedMappings.Count} metadata mapping(s) referencing deactivated custom field(s):\n" +
                              string.Join("\n", removedMappings.Select(m => $"  - {m}"));
 

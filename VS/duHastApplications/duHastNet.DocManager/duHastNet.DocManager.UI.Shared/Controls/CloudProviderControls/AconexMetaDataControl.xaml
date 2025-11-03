@@ -93,13 +93,18 @@
                           MinHeight="150">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Meta Field" Width="150"/>
-                            <GridViewColumn Header="Value/Property" Width="200"/>
-                            <GridViewColumn Header="Type" Width="100"/>
+                            <GridViewColumn Header="Meta Field" 
+                                            DisplayMemberBinding="{Binding MetaFieldName}" 
+                                            Width="150"/>
+                            <GridViewColumn Header="Value/Property" 
+                                            DisplayMemberBinding="{Binding ValueOrProperty}" 
+                                            Width="200"/>
+                            <GridViewColumn Header="Type" 
+                                            DisplayMemberBinding="{Binding MappingType}" 
+                                            Width="100"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
-
                 <StackPanel Grid.Column="1" 
                             Margin="10 0 0 0" 
                             VerticalAlignment="Top">

@@ -64,7 +64,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// Currently selected cloud provider type from dropdown
         /// </summary>
         [ObservableProperty]
-        private CloudProviderType _selectedProviderType = CloudProviderType.Aconex;
+        private CloudProviderType _selectedProviderType = CloudProviderType.None;
 
         /// <summary>
         /// The current provider control ViewModel (dynamically switched based on SelectedProviderType)
@@ -95,6 +95,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             // Initialize available provider types
             AvailableProviderTypes = new ObservableCollection<CloudProviderType>
             {
+                CloudProviderType.None,
                 CloudProviderType.Aconex
                 // Future providers will be added here
             };
@@ -141,6 +142,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             // Create appropriate control ViewModel based on selected type
             CurrentProviderControl = value switch
             {
+                CloudProviderType.None => null, // No control for None
                 CloudProviderType.Aconex => CreateAconexControl(),
                 _ => throw new ArgumentException($"Unknown provider type: {value}")
             };
@@ -194,25 +196,19 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 SelectedProviderType = _cloudDocumentManager.MetaDataMapper switch
                 {
                     MetaDataMapperAconex => CloudProviderType.Aconex,
-                    _ => CloudProviderType.Aconex // Default to Aconex
+                    _ => CloudProviderType.None // Unknown mapper type defaults to None
                 };
             }
             else
             {
-                // No mapper set - default to Aconex
-                SelectedProviderType = CloudProviderType.Aconex;
+                // No mapper set - keep default of None
+                // This forces user to explicitly select a provider
+                SelectedProviderType = CloudProviderType.None;
             }
 
-            // Create the initial provider control
-            // This is necessary because if SelectedProviderType is already set to the default value,
-            // the property changed handler won't fire
-            CurrentProviderControl = CreateAconexControl();
-
-            // Subscribe to property changes from the initial control
-            if (CurrentProviderControl is INotifyPropertyChanged newControl)
-            {
-                newControl.PropertyChanged += OnProviderControlPropertyChanged;
-            }
+            // Note: We don't need to explicitly create the control here anymore
+            // because setting SelectedProviderType will trigger OnSelectedProviderTypeChanged
+            // which will create the appropriate control (or set it to null for None)
         }
 
         /// <summary>
@@ -239,9 +235,17 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// </summary>
         private ObservableObject CreateAconexControl()
         {
-            // Ensure we have an Aconex mapper in the model
-            if (_cloudDocumentManager.MetaDataMapper is not MetaDataMapperAconex aconexMapper)
+            // Get or create an Aconex mapper in the model
+            MetaDataMapperAconex aconexMapper;
+
+            if (_cloudDocumentManager.MetaDataMapper is MetaDataMapperAconex existingMapper)
             {
+                // Use existing mapper
+                aconexMapper = existingMapper;
+            }
+            else
+            {
+                // Create new mapper
                 aconexMapper = new MetaDataMapperAconex();
                 _cloudDocumentManager.MetaDataMapper = aconexMapper;
             }
@@ -284,6 +288,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         {
             if (!CloudDocumentManagerEnabled)
                 return true; // Disabled configuration is always valid
+
+            if (SelectedProviderType == CloudProviderType.None)
+                return false; // Must select a provider when enabled
 
             if (CurrentProviderControl == null)
                 return false;

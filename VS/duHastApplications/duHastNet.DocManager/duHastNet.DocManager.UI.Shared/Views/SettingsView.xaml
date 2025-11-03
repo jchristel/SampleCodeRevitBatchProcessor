@@ -12,7 +12,10 @@
         <!-- a style for the text box if it contains a validation error-->
     </UserControl.Resources>
 
-    <!-- main grid -->
+    <!-- ScrollViewer to enable scrolling when content exceeds available height -->
+    <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                  HorizontalScrollBarVisibility="Disabled">
+        <!-- main grid -->
     <Grid Margin="10 10 10 10">
         <Grid.RowDefinitions>
             <!-- header row -->
@@ -103,4 +106,5 @@
                 FontSize="24" Command="{Binding SaveCommand}"/>
         </Grid>
     </Grid>
+    </ScrollViewer>
 </UserControl>

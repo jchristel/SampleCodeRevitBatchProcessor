@@ -138,6 +138,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             // Initialize metadata mappings collection
             MetaDataMappings = new ObservableCollection<MetaDataMapViewModel>();
 
+            // Subscribe to MappingsChanged event from CloudDocumentManager
+            // This event is raised when mappings are modified externally (e.g., custom field deactivation)
+            _manager.CloudDocumentManager.MappingsChanged += OnMappingsChanged;
+
             // Load existing values from the mapper
             LoadFromMapper();
 

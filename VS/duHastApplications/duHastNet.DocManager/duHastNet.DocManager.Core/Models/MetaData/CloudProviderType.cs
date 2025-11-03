@@ -30,6 +30,11 @@ namespace duHastNet.DocManager.Core.Models.MetaData
     public enum CloudProviderType
     {
         /// <summary>
+        /// The default value indicating no provider selected
+        /// </summary>
+        None,
+
+        /// <summary>
         /// Aconex cloud document management system
         /// Maps to: MetaDataMapperAconex class
         /// Uses CSV-based metadata template files for document upload

@@ -54,7 +54,17 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         #endregion Observable Properties
 
         #region Property Changed Handlers
-
+        
+        /// <summary>
+        /// Event handler for CloudDocumentManager.MappingsChanged
+        /// Called when mappings are modified externally (e.g., custom field deactivation)
+        /// Refreshes the MetaDataMappings collection from the underlying model
+        /// </summary>
+        private void OnMappingsChanged(object? sender, EventArgs e)
+        {
+            // Refresh the mappings display from the model
+            LoadMappingsFromModel();
+        }
 
         #endregion Property Changed Handlers
 
@@ -101,7 +111,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
                     _messageStore);
 
                 // Create and show dialog
-                var dialog = new Views.MetaDataMappingDialog();
+                var dialog = new Views.MetaDataMappingDialog(dialogViewModel);
                 dialog.Owner = System.Windows.Application.Current.MainWindow;
 
                 var result = dialog.ShowDialog();
@@ -200,7 +210,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
                     _messageStore);
 
                 // Create and show dialog
-                var dialog = new Views.MetaDataMappingDialog();
+                var dialog = new Views.MetaDataMappingDialog(dialogViewModel);
                 dialog.Owner = System.Windows.Application.Current.MainWindow;
 
                 var result = dialog.ShowDialog();

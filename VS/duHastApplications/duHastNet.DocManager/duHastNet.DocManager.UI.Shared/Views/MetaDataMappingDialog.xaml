@@ -6,7 +6,7 @@
         xmlns:converters="clr-namespace:duHastNet.DocManager.UI.Shared.Converters"
         mc:Ignorable="d"
         Title="{Binding DialogTitle}"
-        Height="350" Width="500"
+        Height="470" Width="500"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         ShowInTaskbar="False">
@@ -17,6 +17,7 @@
         <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <converters:CountToEnabledConverter x:Key="CountToEnabledConverter"/>
+        <converters:ValidationErrorConverter x:Key="ValidationErrorConverter"/>
         <!-- Style for group boxes -->
         <Style TargetType="GroupBox">
             <Setter Property="Margin" Value="0,0,0,10"/>
@@ -61,13 +62,8 @@
                 <TextBlock Text="Select the metadata field from your template:"/>
                 <ComboBox ItemsSource="{Binding AvailableMetaFields}"
                           SelectedItem="{Binding SelectedMetaFieldName, ValidatesOnNotifyDataErrors=True}"
-                          IsEnabled="{Binding AvailableMetaFields.Count, Converter={StaticResource CountToEnabledConverter}}"/>
-
-                <!-- Validation message for metadata field -->
-                <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource AncestorType=ComboBox}}"
-                           Foreground="Red"
-                           Margin="0,-8,0,5"
-                           Visibility="{Binding (Validation.HasError), RelativeSource={RelativeSource AncestorType=ComboBox}, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                          IsEnabled="{Binding AvailableMetaFields.Count, Converter={StaticResource CountToEnabledConverter}}"
+                          ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"/>
             </StackPanel>
         </GroupBox>
 
@@ -90,25 +86,15 @@
                 <StackPanel Visibility="{Binding IsStaticValue, Converter={StaticResource InverseBoolToVisibilityConverter}}">
                     <TextBlock Text="Select document property:"/>
                     <ComboBox ItemsSource="{Binding AvailableDocumentProperties}"
-                              SelectedItem="{Binding SelectedDocumentProperty, ValidatesOnNotifyDataErrors=True}"/>
-
-                    <!-- Validation message for document property -->
-                    <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource AncestorType=ComboBox}}"
-                               Foreground="Red"
-                               Margin="0,-8,0,5"
-                               Visibility="{Binding (Validation.HasError), RelativeSource={RelativeSource AncestorType=ComboBox}, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                              SelectedItem="{Binding SelectedDocumentProperty, ValidatesOnNotifyDataErrors=True}"
+                              ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"/>
                 </StackPanel>
 
                 <!-- Static Value Input (visible when IsStaticValue = true) -->
                 <StackPanel Visibility="{Binding IsStaticValue, Converter={StaticResource BoolToVisibilityConverter}}">
                     <TextBlock Text="Enter static value:"/>
-                    <TextBox Text="{Binding StaticValue, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
-
-                    <!-- Validation message for static value -->
-                    <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource AncestorType=TextBox}}"
-                               Foreground="Red"
-                               Margin="0,-8,0,5"
-                               Visibility="{Binding (Validation.HasError), RelativeSource={RelativeSource AncestorType=TextBox}, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    <TextBox Text="{Binding StaticValue, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
+                             ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"/>
                 </StackPanel>
             </StackPanel>
         </GroupBox>

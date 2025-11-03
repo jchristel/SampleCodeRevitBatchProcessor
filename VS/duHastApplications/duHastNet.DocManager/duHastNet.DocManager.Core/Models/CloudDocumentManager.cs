@@ -36,6 +36,16 @@ namespace duHastNet.DocManager.Core.Models
         /// </summary>
         /// 
 
+        #region Events
+
+        /// <summary>
+        /// Event raised when metadata mappings have been modified externally
+        /// (e.g., when custom fields are deactivated and their mappings are removed)
+        /// </summary>
+        public event EventHandler? MappingsChanged;
+
+        #endregion Events
+
         #region properties
         private Interfaces.ICloudMetaData? _metaDataMapper;
         
@@ -56,10 +66,30 @@ namespace duHastNet.DocManager.Core.Models
         }
 
         #endregion properties
-        public CloudDocumentManager() {
 
-            /// for now only aconex is supported
-            MetaDataMapper = new MetaDataMapperAconex();
+        #region Constructor
+
+        public CloudDocumentManager()
+        {
+
+            // Don't create a default mapper - let the UI/ViewModel create one when user selects a provider
+            // This allows the "None" selection to work properly in the UI
+            MetaDataMapper = null;
         }
+
+        #endregion Constructor
+
+        #region Methods
+
+        /// <summary>
+        /// Raises the MappingsChanged event
+        /// Called externally when metadata mappings are modified (e.g., after cleanup)
+        /// </summary>
+        public void RaiseMappingsChanged()
+        {
+            MappingsChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        #endregion Methods
     }
 }

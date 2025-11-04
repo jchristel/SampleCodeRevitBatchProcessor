@@ -1,4 +1,4 @@
-﻿//
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -32,6 +32,9 @@ public partial class DatabaseConnectionViewModel
     /// </summary>
     partial void OnDatabasePathChanged(string value)
     {
+        // Trigger validation for immediate feedback
+        ValidateProperty(value, nameof(DatabasePath));
+        
         // Update button states based on path validity
         UpdateButtonStates();
     }
@@ -85,6 +88,11 @@ public partial class DatabaseConnectionViewModel
         {
             // Check if directory exists or can be created
             var directory = Path.GetDirectoryName(path);
+            
+            //in case the user only enters a filename without path
+            if (string.IsNullOrEmpty(directory))
+                return false;
+
             if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
                 // Try to create the directory to validate the path

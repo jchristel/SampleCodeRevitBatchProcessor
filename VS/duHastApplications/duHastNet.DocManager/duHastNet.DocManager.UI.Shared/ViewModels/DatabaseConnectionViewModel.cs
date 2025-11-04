@@ -28,10 +28,11 @@ using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Services.Api;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
+using System.ComponentModel.DataAnnotations;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels
 {
-    public partial class DatabaseConnectionViewModel : ObservableObject
+    public partial class DatabaseConnectionViewModel : ObservableValidator
     {
         /// <summary>
         /// view model class for the current folder model
@@ -64,6 +65,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         #region Observable Properties
 
         [ObservableProperty]
+        [CustomValidation(typeof(DatabaseConnectionViewModel), nameof(ValidateDatabasePath))]
         private string _databasePath = string.Empty;
 
         [ObservableProperty]
@@ -99,6 +101,33 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         private int _customPropertyCount = 0;
 
         #endregion
+
+        #region Validation
+
+        /// <summary>
+        /// Validates the database path
+        /// Used for both UI validation and internal validation checks
+        /// </summary>
+        public static ValidationResult? ValidateDatabasePath(string? value, ValidationContext context)
+        {
+            var viewModel = context.ObjectInstance as DatabaseConnectionViewModel;
+            if (viewModel == null)
+                return ValidationResult.Success;
+
+            // Empty is not valid
+            if (string.IsNullOrWhiteSpace(value))
+                return new ValidationResult("Database path is empty (null)");
+
+            // Use the existing IsValidDatabasePath method for validation
+            if (!viewModel.IsValidDatabasePath(value))
+            {
+                return new ValidationResult("Database path is invalid or cannot be created");
+            }
+
+            return ValidationResult.Success;
+        }
+
+        #endregion Validation
 
         #region Computed Properties
 

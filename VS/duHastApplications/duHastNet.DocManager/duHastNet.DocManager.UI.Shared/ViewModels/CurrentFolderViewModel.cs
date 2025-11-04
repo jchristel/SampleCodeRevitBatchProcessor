@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -245,39 +245,6 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             }
         }
 
-        /// <summary>
-        /// Determines if settings can be saved
-        /// Settings can only be saved if there are no validation errors and the system is not busy
-        /// </summary>
-        /// <returns>True if settings can be saved, false otherwise</returns>
-        private bool CanSaveSettings()
-        {
-            return !HasErrors;
-        }
-
-        /// <summary>
-        /// Command to save current settings to JSON file
-        /// Only executes if validation passes (no errors)
-        /// </summary>
-        [RelayCommand(CanExecute = nameof(CanSaveSettings))]
-        private void SaveSettings()
-        {
-            try
-            {
-                // TODO: Implement actual JSON save logic here
-                
-
-                _messageStore.SetCurrentMessage(
-                    "Settings saved successfully",
-                    MessageTypes.Information);
-            }
-            catch (Exception ex)
-            {
-                _messageStore.SetCurrentMessage(
-                    $"Failed to save settings: {ex.Message}",
-                    MessageTypes.Error);
-            }
-        }
 
         #endregion Commands 
 

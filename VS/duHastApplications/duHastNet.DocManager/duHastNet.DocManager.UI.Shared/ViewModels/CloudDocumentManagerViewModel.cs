@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -39,8 +39,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
     /// ViewModel for Cloud Document Manager configuration
     /// Handles provider selection and dynamic control switching
     /// Follows the same pattern as SupportedFileTypeDialogViewModel for modifier controls
+    /// Implements validation and error propagation from nested child ViewModels
     /// </summary>
-    public partial class CloudDocumentManagerViewModel : ObservableObject
+    public partial class CloudDocumentManagerViewModel : ObservableValidator
     {
         #region Private Fields
 
@@ -78,6 +79,69 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         public ObservableCollection<CloudProviderType> AvailableProviderTypes { get; }
 
         #endregion Observable Properties
+
+        #region Computed Properties for Error Aggregation
+
+        /// <summary>
+        /// Gets whether this ViewModel has validation errors
+        /// This includes both own validation rules and child control validation
+        /// Overrides the base HasErrors to include child validation state
+        /// </summary>
+        public bool HasValidationErrors
+        {
+            get
+            {
+                // If disabled, no errors
+                if (!CloudDocumentManagerEnabled)
+                    return false;
+
+                // Check if enabled but no provider selected
+                if (SelectedProviderType == CloudProviderType.None)
+                    return true;
+
+                // Check if control should exist but doesn't
+                if (CurrentProviderControl == null)
+                    return true;
+
+                // Check if child control has errors
+                if (CurrentProviderControl is ObservableValidator childValidator)
+                {
+                    return childValidator.HasErrors;
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets the count of validation errors for display purposes
+        /// </summary>
+        public int ErrorCount
+        {
+            get
+            {
+                int count = 0;
+
+                if (!CloudDocumentManagerEnabled)
+                    return 0;
+
+                if (SelectedProviderType == CloudProviderType.None)
+                    count++;
+
+                if (CurrentProviderControl == null)
+                    count++;
+
+                if (CurrentProviderControl is ObservableValidator childValidator && childValidator.HasErrors)
+                {
+                    // Add 1 to indicate child has errors
+                    count++;
+                }
+
+                return count;
+            }
+        }
+
+        #endregion Computed Properties for Error Aggregation
 
         #region Constructor
 
@@ -134,9 +198,17 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             }
 
             // Unsubscribe from old control if it exists
-            if (CurrentProviderControl is INotifyPropertyChanged oldControl)
+            if (CurrentProviderControl != null)
             {
-                oldControl.PropertyChanged -= OnProviderControlPropertyChanged;
+                if (CurrentProviderControl is INotifyPropertyChanged oldPropertyControl)
+                {
+                    oldPropertyControl.PropertyChanged -= OnProviderControlPropertyChanged;
+                }
+                
+                if (CurrentProviderControl is INotifyDataErrorInfo oldErrorControl)
+                {
+                    oldErrorControl.ErrorsChanged -= OnProviderControlErrorsChanged;
+                }
             }
 
             // Create appropriate control ViewModel based on selected type
@@ -147,11 +219,23 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 _ => throw new ArgumentException($"Unknown provider type: {value}")
             };
 
-            // Subscribe to new control property changes for validation propagation
-            if (CurrentProviderControl is INotifyPropertyChanged newControl)
+            // Subscribe to new control property changes and error changes for validation propagation
+            if (CurrentProviderControl != null)
             {
-                newControl.PropertyChanged += OnProviderControlPropertyChanged;
+                if (CurrentProviderControl is INotifyPropertyChanged newPropertyControl)
+                {
+                    newPropertyControl.PropertyChanged += OnProviderControlPropertyChanged;
+                }
+                
+                if (CurrentProviderControl is INotifyDataErrorInfo newErrorControl)
+                {
+                    newErrorControl.ErrorsChanged += OnProviderControlErrorsChanged;
+                }
             }
+
+            // Notify that validation state has changed
+            OnPropertyChanged(nameof(HasValidationErrors));
+            OnPropertyChanged(nameof(ErrorCount));
 
             // Note: UpdateModelProvider is not called here because CreateAconexControl (and future provider methods)
             // already handle creating/setting the MetaDataMapper instance correctly.
@@ -161,10 +245,15 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// <summary>
         /// Handles when CloudDocumentManagerEnabled changes
         /// Controls visibility/enabled state of provider selection and controls
+        /// Triggers validation as enabled state affects validation rules
         /// </summary>
         partial void OnCloudDocumentManagerEnabledChanged(bool value)
         {
             _cloudDocumentManager.CloudDocumentManagerEnabled = value;
+            
+            // Notify that validation state has changed
+            OnPropertyChanged(nameof(HasValidationErrors));
+            OnPropertyChanged(nameof(ErrorCount));
         }
 
         /// <summary>
@@ -177,6 +266,18 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             // This allows the parent ViewModel to react to child validation errors
             // Property name is intentionally empty to trigger all dependent properties
             OnPropertyChanged(string.Empty);
+        }
+
+        /// <summary>
+        /// Handles error changes from child provider controls
+        /// When child validation state changes, re-evaluate parent HasValidationErrors property
+        /// </summary>
+        private void OnProviderControlErrorsChanged(object? sender, DataErrorsChangedEventArgs e)
+        {
+            // When child errors change, notify that our validation properties have changed
+            // This propagates the validation state up to the parent ViewModel
+            OnPropertyChanged(nameof(HasValidationErrors));
+            OnPropertyChanged(nameof(ErrorCount));
         }
 
         #endregion Property Changed Handlers
@@ -283,25 +384,12 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// <summary>
         /// Validates the current configuration
         /// Returns true if valid, false otherwise
+        /// DEPRECATED: Use HasValidationErrors property instead
+        /// Kept for backward compatibility
         /// </summary>
         public bool ValidateConfiguration()
         {
-            if (!CloudDocumentManagerEnabled)
-                return true; // Disabled configuration is always valid
-
-            if (SelectedProviderType == CloudProviderType.None)
-                return false; // Must select a provider when enabled
-
-            if (CurrentProviderControl == null)
-                return false;
-
-            // Check if provider control has validation errors
-            if (CurrentProviderControl is ObservableValidator validator)
-            {
-                return !validator.HasErrors;
-            }
-
-            return true;
+            return !HasValidationErrors;
         }
 
         #endregion Helper Methods

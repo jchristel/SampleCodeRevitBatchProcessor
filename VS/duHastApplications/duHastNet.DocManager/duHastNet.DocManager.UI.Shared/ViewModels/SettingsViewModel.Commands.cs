@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.UI.Shared.Stores;
 using System;
 using System.Collections.Generic;
@@ -13,21 +13,39 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         #region Commands
 
         /// <summary>
-        /// Command to save settings and close
+        /// Determines if settings can be saved
+        /// Save is only enabled when no child ViewModels have validation errors
         /// </summary>
-        [RelayCommand]
+        private bool CanSave()
+        {
+            return !HasAnyErrors;
+        }
+
+        /// <summary>
+        /// Command to save all settings
+        /// Saves current folder settings, cloud document manager settings, etc.
+        /// </summary>
+        [RelayCommand(CanExecute = nameof(CanSave))]
         private void Save()
         {
-            // TODO: Implement save logic
-            // - Save current folder settings
-            // - Save Aconex metadata settings
-            // - Save database connection settings
+            try
+            {
+                // TODO: Implement actual save logic using ISettingsService
+                // - Save current folder settings via ISettingsService
+                // - Save cloud document manager settings via ISettingsService
+                // - Database connection doesn't need separate save (connects directly)
 
-            _messageStore.SetCurrentMessage(
-                "Settings saved successfully",
-                MessageTypes.Information,
-                dismissAfterSeconds: 3);
-
+                _messageStore.SetCurrentMessage(
+                    "Settings saved successfully",
+                    MessageTypes.Information,
+                    dismissAfterSeconds: 3);
+            }
+            catch (Exception ex)
+            {
+                _messageStore.SetCurrentMessage(
+                    $"Failed to save settings: {ex.Message}",
+                    MessageTypes.Error);
+            }
         }
 
         /// <summary>

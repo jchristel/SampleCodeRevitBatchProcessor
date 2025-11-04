@@ -1,4 +1,4 @@
-﻿//
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -23,11 +23,13 @@ using duHastNet.DocManager.Core.Models.MetaData;
 using duHastNet.DocManager.Core.Services.Api;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
+using System.ComponentModel;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels;
 
 /// <summary>
 /// Main ViewModel for the Settings view - handles database configuration and management
+/// Aggregates validation state from child ViewModels to control Save button
 /// </summary>
 public partial class SettingsViewModel : ObservableObject
 {
@@ -97,8 +99,112 @@ public partial class SettingsViewModel : ObservableObject
             _currentFolderManager,
             _dialogService);
 
+        // Subscribe to child ViewModels' error state changes
+        SubscribeToChildErrors();
     }
 
     #endregion Constructor
+
+    #region Error Aggregation
+
+    /// <summary>
+    /// Subscribe to error state changes from all child ViewModels
+    /// </summary>
+    private void SubscribeToChildErrors()
+    {
+        // CurrentFolderViewModel - has validation with ErrorsChanged event
+        CurrentFolderViewModel.ErrorsChanged += OnChildErrorsChanged;
+
+        // DatabaseConnectionViewModel - has validation with ErrorsChanged event
+        DatabaseConnectionViewModel.ErrorsChanged += OnChildErrorsChanged;
+
+        // CloudDocumentManagerViewModel - uses computed properties, subscribe to PropertyChanged
+        AconexMetadataViewModel.PropertyChanged += OnCloudDocumentManagerPropertyChanged;
+    }
+
+    /// <summary>
+    /// Handles ErrorsChanged from child ViewModels with validation attributes
+    /// </summary>
+    private void OnChildErrorsChanged(object? sender, DataErrorsChangedEventArgs e)
+    {
+        // Notify that validation summary properties have changed
+        OnPropertyChanged(nameof(HasAnyErrors));
+        OnPropertyChanged(nameof(ErrorSummary));
+        
+        // Notify Save command that CanExecute state may have changed
+        SaveCommand.NotifyCanExecuteChanged();
+    }
+
+    /// <summary>
+    /// Handles PropertyChanged from CloudDocumentManagerViewModel
+    /// Watches for HasValidationErrors property changes
+    /// </summary>
+    private void OnCloudDocumentManagerPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        // Only care about validation-related property changes
+        if (e.PropertyName == nameof(CloudDocumentManagerViewModel.HasValidationErrors) ||
+            string.IsNullOrEmpty(e.PropertyName))
+        {
+            OnPropertyChanged(nameof(HasAnyErrors));
+            OnPropertyChanged(nameof(ErrorSummary));
+            
+            // Notify Save command that CanExecute state may have changed
+            SaveCommand.NotifyCanExecuteChanged();
+        }
+    }
+
+    /// <summary>
+    /// Gets whether any child ViewModel has validation errors
+    /// </summary>
+    public bool HasAnyErrors
+    {
+        get
+        {
+            return CurrentFolderViewModel.HasErrors ||
+                   DatabaseConnectionViewModel.HasErrors ||
+                   AconexMetadataViewModel.HasValidationErrors;
+        }
+    }
+
+    /// <summary>
+    /// Gets summary of validation errors from all child ViewModels
+    /// Format: "Cannot save: Current Folder has 2 errors, Database has 1 error"
+    /// Excludes disabled sections from count
+    /// </summary>
+    public string ErrorSummary
+    {
+        get
+        {
+            if (!HasAnyErrors)
+                return string.Empty;
+
+            var errors = new List<string>();
+
+            // Current Folder errors
+            if (CurrentFolderViewModel.HasErrors)
+            {
+                var errorCount = CurrentFolderViewModel.GetErrors(null).Cast<object>().Count();
+                errors.Add($"Current Folder has {errorCount} error{(errorCount != 1 ? "s" : "")}");
+            }
+
+            // Database errors
+            if (DatabaseConnectionViewModel.HasErrors)
+            {
+                var errorCount = DatabaseConnectionViewModel.GetErrors(null).Cast<object>().Count();
+                errors.Add($"Database has {errorCount} error{(errorCount != 1 ? "s" : "")}");
+            }
+
+            // Cloud Document Manager errors (only if enabled)
+            if (AconexMetadataViewModel.HasValidationErrors)
+            {
+                var errorCount = AconexMetadataViewModel.ErrorCount;
+                errors.Add($"Cloud Document Manager has {errorCount} error{(errorCount != 1 ? "s" : "")}");
+            }
+
+            return errors.Count > 0 ? $"Cannot save: {string.Join(", ", errors)}" : string.Empty;
+        }
+    }
+
+    #endregion Error Aggregation
 
 }

@@ -273,9 +273,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             if (viewModel == null)
                 return ValidationResult.Success;
 
-            // Not required - can be empty
+            // Can not be empty
             if (string.IsNullOrWhiteSpace(value))
-                return ValidationResult.Success;
+                return new ValidationResult("Template file path is empty (null)");
 
             // Check if file exists
             if (!File.Exists(value))

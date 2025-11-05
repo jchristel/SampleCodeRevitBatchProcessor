@@ -58,6 +58,40 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             _manager = manager;
             _messageStore = messageStore;
             _dialogService = dialogService;
+
+            // Load current state from DocManagerApi
+            InitializeFromApi();
+
+            // Validate all properties on startup to show initial validation state
+            ValidateAllProperties();
+        }
+
+        /// <summary>
+        /// Initializes ViewModel state from DocManagerApi
+        /// Loads database path and connection status
+        /// </summary>
+        private void InitializeFromApi()
+        {
+            // Load database path if one is currently connected
+            var currentPath = _docManagerApi.GetDatabasePath();
+
+            // get out if no path
+            if (string.IsNullOrEmpty(currentPath))
+            {
+                return;
+            }
+
+            // store current path
+            DatabasePath = currentPath;
+            
+            // Set connection status based on whether database is ready
+            IsConnected = _docManagerApi.IsDatabaseReady();
+
+            // If connected, initialize custom fields
+            if (IsConnected && _manager.IsDataLoaded)
+            {
+                InitializeCustomFields();
+            }
         }
 
         #endregion Constructor
@@ -65,7 +99,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         #region Observable Properties
 
         [ObservableProperty]
-        [CustomValidation(typeof(DatabaseConnectionViewModel), nameof(ValidateDatabasePath))]
+        [CustomValidation(typeof(DatabaseConnectionViewModel), nameof(ValidateDatabaseConnection))]
         private string _databasePath = string.Empty;
 
         [ObservableProperty]
@@ -105,23 +139,28 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         #region Validation
 
         /// <summary>
-        /// Validates the database path
-        /// Used for both UI validation and internal validation checks
+        /// Validates the database connection state
+        /// Requires a database to be connected before settings can be saved
         /// </summary>
-        public static ValidationResult? ValidateDatabasePath(string? value, ValidationContext context)
+        public static ValidationResult? ValidateDatabaseConnection(string? value, ValidationContext context)
         {
             var viewModel = context.ObjectInstance as DatabaseConnectionViewModel;
             if (viewModel == null)
                 return ValidationResult.Success;
 
-            // Empty is not valid
-            if (string.IsNullOrWhiteSpace(value))
-                return new ValidationResult("Database path is empty (null)");
-
-            // Use the existing IsValidDatabasePath method for validation
-            if (!viewModel.IsValidDatabasePath(value))
+            // Must be connected to a database
+            if (!viewModel.IsConnected)
             {
-                return new ValidationResult("Database path is invalid or cannot be created");
+                return new ValidationResult("Database must be connected");
+            }
+
+            // If connected, validate the path format
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                if (!viewModel.IsValidDatabasePath(value))
+                {
+                    return new ValidationResult("Database path is invalid or cannot be created");
+                }
             }
 
             return ValidationResult.Success;

@@ -19,6 +19,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models;
+using duHastNet.DocManager.Core.Interfaces;
+using duHastNet.DocManager.Core.Services;
 using duHastNet.DocManager.Core.Models.MetaData;
 using duHastNet.DocManager.Core.Services.Api;
 using duHastNet.DocManager.UI.Shared.Interfaces;
@@ -44,6 +46,9 @@ public partial class SettingsViewModel : ObservableObject
 
     //function used to navigate to merge view model
     private readonly Func<MergeViewModel> _createViewModel;
+
+    //settings service
+    private readonly ISettingsService _settingsService;
 
     #endregion
 
@@ -98,6 +103,9 @@ public partial class SettingsViewModel : ObservableObject
             _manager, 
             _currentFolderManager,
             _dialogService);
+
+        //set up a settings service
+        _settingsService = new SettingsService();
 
         // Subscribe to child ViewModels' error state changes
         SubscribeToChildErrors();

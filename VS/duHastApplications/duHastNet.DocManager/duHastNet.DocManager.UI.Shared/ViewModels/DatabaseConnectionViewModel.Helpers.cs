@@ -44,6 +44,9 @@ public partial class DatabaseConnectionViewModel
     /// </summary>
     partial void OnIsConnectedChanged(bool value)
     {
+        // Revalidate database path since connection state affects validation
+        ValidateProperty(DatabasePath, nameof(DatabasePath));
+        
         // Update dependent properties
         UpdateButtonStates();
         OnPropertyChanged(nameof(IsDatabaseReady));
@@ -88,11 +91,6 @@ public partial class DatabaseConnectionViewModel
         {
             // Check if directory exists or can be created
             var directory = Path.GetDirectoryName(path);
-            
-            //in case the user only enters a filename without path
-            if (string.IsNullOrEmpty(directory))
-                return false;
-
             if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
                 // Try to create the directory to validate the path

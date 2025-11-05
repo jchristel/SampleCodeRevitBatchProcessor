@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.UI.Shared.Stores;
+using duHastNet.DocManager.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,36 +15,85 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
 
         /// <summary>
         /// Determines if settings can be saved
-        /// Save is only enabled when no child ViewModels have validation errors
+        /// Checks validation state of all child ViewModels
         /// </summary>
         private bool CanSave()
         {
-            return !HasAnyErrors;
+            // Check CurrentFolderViewModel for validation errors
+            if (CurrentFolderViewModel.HasErrors)
+                return false;
+
+            // Check DatabaseConnectionViewModel - must have database ready
+            if (!DatabaseConnectionViewModel.IsDatabaseReady)
+                return false;
+
+            // Check CloudDocumentManagerViewModel configuration
+            if (!AconexMetadataViewModel.ValidateConfiguration())
+                return false;
+
+            return true;
         }
 
         /// <summary>
-        /// Command to save all settings
-        /// Saves current folder settings, cloud document manager settings, etc.
+        /// Command to save settings and close
         /// </summary>
         [RelayCommand(CanExecute = nameof(CanSave))]
-        private void Save()
+        private async Task SaveAsync()
         {
             try
             {
-                // TODO: Implement actual save logic using ISettingsService
-                // - Save current folder settings via ISettingsService
-                // - Save cloud document manager settings via ISettingsService
-                // - Database connection doesn't need separate save (connects directly)
+                // Save DatabaseConnection settings (just the path)
+                var databaseSettings = new DatabaseConnectionSettings(
+                    _docManagerApi.GetDatabasePath() ?? string.Empty);
+                
+                var databaseResult = await _settingsService.SaveAsync(
+                    databaseSettings,
+                    "DatabaseConnection.json");
 
+                if (!databaseResult.Success)
+                {
+                    _messageStore.SetCurrentMessage(
+                        $"Failed to save Database Connection settings: {string.Join("; ", databaseResult.Errors)}",
+                        MessageTypes.Error);
+                    return;
+                }
+
+                // Save CurrentFolderManager settings
+                var currentFolderResult = await _settingsService.SaveAsync(
+                    _currentFolderManager.Settings,
+                    "CurrentFolderManager.json");
+
+                if (!currentFolderResult.Success)
+                {
+                    _messageStore.SetCurrentMessage(
+                        $"Failed to save Current Folder settings: {string.Join("; ", currentFolderResult.Errors)}",
+                        MessageTypes.Error);
+                    return;
+                }
+
+                // Save CloudDocumentManager settings
+                var cloudDocResult = await _settingsService.SaveAsync(
+                    _manager.CloudDocumentManager,
+                    "CloudDocumentManager.json");
+
+                if (!cloudDocResult.Success)
+                {
+                    _messageStore.SetCurrentMessage(
+                        $"Failed to save Cloud Document Manager settings: {string.Join("; ", cloudDocResult.Errors)}",
+                        MessageTypes.Error);
+                    return;
+                }
+
+                // All saves successful
                 _messageStore.SetCurrentMessage(
                     "Settings saved successfully",
                     MessageTypes.Information,
-                    dismissAfterSeconds: 3);
+                    dismissAfterSeconds: 5);
             }
             catch (Exception ex)
             {
                 _messageStore.SetCurrentMessage(
-                    $"Failed to save settings: {ex.Message}",
+                    $"Error saving settings: {ex.Message}",
                     MessageTypes.Error);
             }
         }

@@ -92,6 +92,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 _docManagerApi!,
                 _messageStore!,
                 _navigationStore!,
+                _manager!,
                 CreateSettingsViewModel
             );
         }

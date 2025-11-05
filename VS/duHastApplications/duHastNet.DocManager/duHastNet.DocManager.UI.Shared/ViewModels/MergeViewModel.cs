@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -24,9 +24,12 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Services.Api;
 using duHastNet.DocManager.UI.Shared.Stores;
 using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels;
 
@@ -40,6 +43,7 @@ public partial class MergeViewModel : ObservableObject
     private readonly DocManagerApi _docManagerApi;
     private readonly MessageStore _messageStore;
     private readonly NavigationStore _navigationStore;
+    private readonly Manager _manager;
 
     //function used to navigate to settings view model
     private readonly Func<SettingsViewModel> _createViewModel;
@@ -55,14 +59,20 @@ public partial class MergeViewModel : ObservableObject
         DocManagerApi docManagerApi, 
         MessageStore messageStore, 
         NavigationStore navigationStore,
-        Func<SettingsViewModel> createViewModel)
+        Manager manager,
+        Func<SettingsViewModel> createViewModel
+        )
     {
         _docManagerApi = docManagerApi;
         _messageStore = messageStore;
         _navigationStore = navigationStore;
         _createViewModel = createViewModel;
+        _manager = manager ?? throw new ArgumentNullException(nameof(manager));
 
         MessageViewModel = new GlobalMessageViewModel(_messageStore);
+        
+        // Initialize collections
+        FilteredRevisionDescriptions = new ObservableCollection<string>();
     }
 
     #endregion
@@ -77,6 +87,15 @@ public partial class MergeViewModel : ObservableObject
 
     [ObservableProperty]
     private bool _isBusy = false;
+
+    [ObservableProperty]
+    private string _revisionDescription = string.Empty;
+
+    [ObservableProperty]
+    private ObservableCollection<string> _filteredRevisionDescriptions;
+
+    [ObservableProperty]
+    private bool _isRevisionSuggestionsPopupOpen = false;
 
     #endregion
 
@@ -105,6 +124,20 @@ public partial class MergeViewModel : ObservableObject
         _navigationStore.NavigateTo(() => _createViewModel());
     }
 
+    /// <summary>
+    /// Command to select a revision description from the suggestions
+    /// </summary>
+    [RelayCommand]
+    private void SelectRevisionDescription(string selectedDescription)
+    {
+        if (!string.IsNullOrEmpty(selectedDescription))
+        {
+            RevisionDescription = selectedDescription;
+            IsRevisionSuggestionsPopupOpen = false;
+            FilteredRevisionDescriptions.Clear();
+        }
+    }
+
     #endregion
 
     #region Private Methods - To be implemented
@@ -130,6 +163,42 @@ public partial class MergeViewModel : ObservableObject
     {
         // Update button states during operations
         UpdateButtonStates();
+    }
+
+    /// <summary>
+    /// Called when RevisionDescription changes - filters and displays matching revision descriptions
+    /// </summary>
+    partial void OnRevisionDescriptionChanged(string value)
+    {
+        // Clear suggestions if input is empty
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            FilteredRevisionDescriptions.Clear();
+            IsRevisionSuggestionsPopupOpen = false;
+            return;
+        }
+
+        // Get all revisions from the manager
+        var allRevisions = _manager.GetAllRevisions();
+
+        // Filter revisions that have a description starting with the input text (case-insensitive)
+        var matches = allRevisions
+            .Where(r => !string.IsNullOrEmpty(r.Description) && 
+                       r.Description.StartsWith(value, StringComparison.OrdinalIgnoreCase))
+            .Select(r => r.Description)
+            .Distinct()
+            .OrderBy(d => d)
+            .Take(10); // Limit to 10 suggestions for performance
+
+        // Update the filtered collection
+        FilteredRevisionDescriptions.Clear();
+        foreach (var match in matches)
+        {
+            FilteredRevisionDescriptions.Add(match!);
+        }
+
+        // Show popup if there are suggestions
+        IsRevisionSuggestionsPopupOpen = FilteredRevisionDescriptions.Count > 0;
     }
 
     #endregion

@@ -79,9 +79,13 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
 
         /// <summary>
         /// Collection of metadata field mappings
-        /// Phase 2: Will be populated and displayed in ListView
+        /// Will be populated and displayed in ListView
         /// </summary>
-        public ObservableCollection<MetaDataMapViewModel> MetaDataMappings { get; }
+        [ObservableProperty]
+        private ObservableCollection<MetaDataMapViewModel> _metaDataMappings;
+
+
+        //public ObservableCollection<MetaDataMapViewModel> MetaDataMappings { get => _metaDataMappings; }
 
         #endregion Observable Properties
 
@@ -136,7 +140,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             _manager = manager ?? throw new ArgumentNullException(nameof(manager));
 
             // Initialize metadata mappings collection
-            MetaDataMappings = new ObservableCollection<MetaDataMapViewModel>();
+            _metaDataMappings = [];
 
             // Subscribe to MappingsChanged event from CloudDocumentManager
             // This event is raised when mappings are modified externally (e.g., custom field deactivation)
@@ -304,12 +308,8 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             // Load template file path
             TemplateMetaDataFilePath = _aconexMapper.MetadataTemplateFilePath ?? string.Empty;
 
-            // Phase 2: Load metadata mappings
-            // MetaDataMappings.Clear();
-            // foreach (var mapping in _aconexMapper.MetaDataMap)
-            // {
-            //     MetaDataMappings.Add(mapping);
-            // }
+            // load the metadata mappings
+            LoadMappingsFromModel();
         }
 
         /// <summary>
@@ -361,26 +361,26 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             }
         }
 
-        /// <summary>
-        /// Saves values back to the Aconex mapper instance
-        /// Called when configuration is saved
-        /// </summary>
-        public void SaveToMapper()
-        {
-            if (_aconexMapper == null)
-                return;
+        ///// <summary>
+        ///// Saves values back to the Aconex mapper instance
+        ///// Called when configuration is saved
+        ///// </summary>
+        //public void SaveToMapper()
+        //{
+        //    if (_aconexMapper == null)
+        //        return;
 
-            // Template file path is already updated in property changed handler
-            // Available fields are already updated in the mapper
-            // No additional save logic needed for Phase 1
+        //    // Template file path is already updated in property changed handler
+        //    // Available fields are already updated in the mapper
+        //    // No additional save logic needed for Phase 1
 
-            // Phase 2: Save metadata mappings
-            // _aconexMapper.ClearMappers();
-            // foreach (var mapping in MetaDataMappings)
-            // {
-            //     _aconexMapper.AddMapper(mapping);
-            // }
-        }
+        //    // Phase 2: Save metadata mappings
+        //    // _aconexMapper.ClearMappers();
+        //    // foreach (var mapping in MetaDataMappings)
+        //    // {
+        //    //     _aconexMapper.AddMapper(mapping);
+        //    // }
+        //}
 
         /// <summary>
         /// Validates all properties

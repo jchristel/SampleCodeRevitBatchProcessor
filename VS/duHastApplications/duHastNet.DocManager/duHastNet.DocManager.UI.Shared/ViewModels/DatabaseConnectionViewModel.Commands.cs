@@ -231,8 +231,64 @@ public partial class DatabaseConnectionViewModel
     [RelayCommand]
     private async Task ExportDocumentsAsync()
     {
-        // TODO: Implement document export
-        await Task.CompletedTask;
+        try
+        {
+            IsBusy = true;
+            _messageStore.SetCurrentMessage("Exporting documents...", MessageTypes.Information);
+
+            // Check if data is loaded
+            if (!_manager.IsDataLoaded)
+            {
+                _messageStore.SetCurrentMessage("No data loaded. Please connect to a database first.", MessageTypes.Error);
+                return;
+            }
+
+            // Show save file dialog
+            var selectedPath = _dialogService.ShowSaveFileDialog(
+                "Export Documents",
+                "CSV files (*.csv)|*.csv|All files (*.*)|*.*",
+                "Documents.csv");
+
+            // Check for cancellation
+            if (string.IsNullOrEmpty(selectedPath))
+            {
+                _messageStore.SetCurrentMessage("Export cancelled.", MessageTypes.Information);
+                return;
+            }
+
+            // Get data from manager
+            var documents = _manager.GetAllDocuments().ToList();
+            var customFieldDefinitions = _manager.GetActiveCustomFieldDefinitions().ToList();
+            var revisions = _manager.GetAllRevisions().ToList();
+
+            // Create export service and perform export
+            var exportService = new Core.Services.DocumentExportService();
+            var success = await Task.Run(() =>
+                exportService.ExportDocuments(
+                    selectedPath,
+                    documents,
+                    customFieldDefinitions,
+                    revisions));
+
+            if (success)
+            {
+                _messageStore.SetCurrentMessage(
+                    $"Successfully exported {documents.Count} documents to {Path.GetFileName(selectedPath)}",
+                    MessageTypes.Information);
+            }
+            else
+            {
+                _messageStore.SetCurrentMessage("Export failed. Please check the file path and try again.", MessageTypes.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            _messageStore.SetCurrentMessage($"Export failed: {ex.Message}", MessageTypes.Error);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     #endregion

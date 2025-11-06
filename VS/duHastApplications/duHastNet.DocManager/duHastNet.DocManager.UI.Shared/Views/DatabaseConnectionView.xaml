@@ -93,10 +93,14 @@
                 <Button Grid.Column="0"
             Margin="5 10 5 10" 
             Content="Import Documents"
+            Command="{Binding ImportDocumentsCommand}"
+            IsEnabled="{Binding IsImportExportEnabled}"
         />
                 <Button Grid.Column="1"
             Margin="0 10 5 10" 
             Content="Export Documents"
+            Command="{Binding ExportDocumentsCommand}"
+            IsEnabled="{Binding IsImportExportEnabled}"
         />
             </Grid>
         </Border>

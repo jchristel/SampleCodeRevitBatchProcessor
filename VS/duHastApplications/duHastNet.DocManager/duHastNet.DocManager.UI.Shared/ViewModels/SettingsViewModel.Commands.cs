@@ -48,7 +48,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 
                 var databaseResult = await _settingsService.SaveAsync(
                     databaseSettings,
-                    "DatabaseConnection.json");
+                    SettingsFileNames.DatabaseConnection);
 
                 if (!databaseResult.Success)
                 {
@@ -61,7 +61,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 // Save CurrentFolderManager settings
                 var currentFolderResult = await _settingsService.SaveAsync(
                     _currentFolderManager.Settings,
-                    "CurrentFolderManager.json");
+                    SettingsFileNames.CurrentFolderManager);
 
                 if (!currentFolderResult.Success)
                 {
@@ -74,7 +74,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 // Save CloudDocumentManager settings
                 var cloudDocResult = await _settingsService.SaveAsync(
                     _manager.CloudDocumentManager,
-                    "CloudDocumentManager.json");
+                    SettingsFileNames.CloudDocumentManager);
 
                 if (!cloudDocResult.Success)
                 {

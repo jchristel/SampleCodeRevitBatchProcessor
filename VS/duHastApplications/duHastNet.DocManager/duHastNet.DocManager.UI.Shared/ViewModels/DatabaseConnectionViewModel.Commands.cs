@@ -221,8 +221,63 @@ public partial class DatabaseConnectionViewModel
     [RelayCommand]
     private async Task ImportDocumentsAsync()
     {
-        // TODO: Implement document import
-        await Task.CompletedTask;
+        try
+        {
+            IsBusy = true;
+            _messageStore.SetCurrentMessage("Importing documents...", MessageTypes.Information);
+
+            // Check if data is loaded
+            if (!_manager.IsDataLoaded)
+            {
+                _messageStore.SetCurrentMessage("No data loaded. Please connect to a database first.", MessageTypes.Error);
+                return;
+            }
+
+            // Show open file dialog
+            var selectedPath = _dialogService.ShowOpenFileDialog(
+                "Import Documents",
+                "CSV files (*.csv)|*.csv|All files (*.*)|*.*");
+
+            // Check for cancellation
+            if (selectedPath == null || selectedPath.Length == 0)
+            {
+                _messageStore.SetCurrentMessage("Import cancelled.", MessageTypes.Information);
+                return;
+            }
+
+            // Create import service with unit of work
+            var importService = new Core.Services.DocumentImportService(_docManagerApi.GetUnitOfWork());
+            
+            // Perform import on background thread
+            var result = await Task.Run(() => importService.ImportDocumentsAsync(selectedPath[0]));
+
+            if (result.IsImportSuccessful)
+            {
+                _messageStore.SetCurrentMessage(
+                    $"Successfully imported: {result.DocumentsCreated} documents created, {result.DocumentsProcessed - result.DocumentsCreated} updated",
+                    MessageTypes.Success);
+
+                // Reload data into manager
+                await _docManagerApi.ReloadDataIntoManagerAsync(_manager);
+                UpdateStatistics();
+            }
+            else
+            {
+                var errorMessage = result.HasErrors 
+                    ? $"Import completed with errors. {result.Message}. First error: {result.Errors.FirstOrDefault()}" 
+                    : result.Message;
+                    
+                _messageStore.SetCurrentMessage(errorMessage, MessageTypes.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            _messageStore.SetCurrentMessage($"Import failed: {ex.Message}", MessageTypes.Error);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     /// <summary>
@@ -274,7 +329,7 @@ public partial class DatabaseConnectionViewModel
             {
                 _messageStore.SetCurrentMessage(
                     $"Successfully exported {documents.Count} documents to {Path.GetFileName(selectedPath)}",
-                    MessageTypes.Information);
+                    MessageTypes.Success);
             }
             else
             {

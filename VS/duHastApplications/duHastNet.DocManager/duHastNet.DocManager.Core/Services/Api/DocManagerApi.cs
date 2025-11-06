@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -366,6 +366,21 @@ public partial class DocManagerApi : IDisposable
     public string? GetDatabasePath()
     {
         return _databaseService?.DatabasePath;
+    }
+
+    /// <summary>
+    /// Gets the unit of work for direct database operations
+    /// Used by import/export services
+    /// </summary>
+    /// <returns>Unit of work instance</returns>
+    /// <exception cref="InvalidOperationException">Thrown if database is not initialized</exception>
+    public IUnitOfWork GetUnitOfWork()
+    {
+        if (_unitOfWork == null)
+        {
+            throw new InvalidOperationException("Database not initialized. Call SetupDatabaseAsync or ConnectDatabaseAsync first.");
+        }
+        return _unitOfWork;
     }
 
     /// <summary>

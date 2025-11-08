@@ -346,6 +346,131 @@ public partial class DatabaseConnectionViewModel
         }
     }
 
+    /// <summary>
+    /// Command to export revisions to CSV format
+    /// </summary>
+    [RelayCommand]
+    private async Task ExportRevisionsAsync()
+    {
+        try
+        {
+            IsBusy = true;
+            _messageStore.SetCurrentMessage("Exporting revisions...", MessageTypes.Information);
+
+            // Check if data is loaded
+            if (!_manager.IsDataLoaded)
+            {
+                _messageStore.SetCurrentMessage("No data loaded. Please connect to a database first.", MessageTypes.Error);
+                return;
+            }
+
+            // Show save file dialog
+            var selectedPath = _dialogService.ShowSaveFileDialog(
+                "Export Revisions",
+                "CSV files (*.csv)|*.csv|All files (*.*)|*.*",
+                "Revisions.csv");
+
+            // Check for cancellation
+            if (string.IsNullOrEmpty(selectedPath))
+            {
+                _messageStore.SetCurrentMessage("Export cancelled.", MessageTypes.Information);
+                return;
+            }
+
+            // Get revisions from manager
+            var revisions = _manager.GetAllRevisions().ToList();
+
+            // Create export service and perform export
+            var exportService = new Core.Services.RevisionExportService();
+            var success = await Task.Run(() =>
+                exportService.ExportRevisions(selectedPath, revisions));
+
+            if (success)
+            {
+                _messageStore.SetCurrentMessage(
+                    $"Successfully exported {revisions.Count} revisions to {Path.GetFileName(selectedPath)}",
+                    MessageTypes.Information);
+            }
+            else
+            {
+                _messageStore.SetCurrentMessage("Export failed. Please check the file path and try again.", MessageTypes.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            _messageStore.SetCurrentMessage($"Export failed: {ex.Message}", MessageTypes.Error);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    /// <summary>
+    /// Command to import revisions from CSV format
+    /// </summary>
+    [RelayCommand]
+    private async Task ImportRevisionsAsync()
+    {
+        try
+        {
+            IsBusy = true;
+            _messageStore.SetCurrentMessage("Importing revisions...", MessageTypes.Information);
+
+            // Check if data is loaded
+            if (!_manager.IsDataLoaded)
+            {
+                _messageStore.SetCurrentMessage("No data loaded. Please connect to a database first.", MessageTypes.Error);
+                return;
+            }
+
+            // Show open file dialog
+            var selectedPath = _dialogService.ShowOpenFileDialog(
+                "Import Revisions",
+                "CSV files (*.csv)|*.csv|All files (*.*)|*.*");
+
+            // Check for cancellation
+            if (selectedPath == null || selectedPath.Length == 0)
+            {
+                _messageStore.SetCurrentMessage("Import cancelled.", MessageTypes.Information);
+                return;
+            }
+
+            // Create import service with unit of work
+            var importService = new Core.Services.RevisionImportService(_docManagerApi.GetUnitOfWork());
+            
+            // Perform import on background thread
+            var result = await Task.Run(() => importService.ImportRevisionsAsync(selectedPath[0]));
+
+            if (result.IsImportSuccessful)
+            {
+                _messageStore.SetCurrentMessage(
+                    $"Successfully imported: {result.DocumentsCreated} revisions created, {result.DocumentsProcessed - result.DocumentsCreated} updated",
+                    MessageTypes.Information);
+
+                // Reload data into manager
+                await _docManagerApi.ReloadDataIntoManagerAsync(_manager);
+                UpdateStatistics();
+            }
+            else
+            {
+                var errorMessage = result.HasErrors 
+                    ? $"Import completed with errors. {result.Message}. First error: {result.Errors.FirstOrDefault()}" 
+                    : result.Message;
+                    
+                _messageStore.SetCurrentMessage(errorMessage, MessageTypes.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            _messageStore.SetCurrentMessage($"Import failed: {ex.Message}", MessageTypes.Error);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
     #endregion
 
     #region Helper Methods

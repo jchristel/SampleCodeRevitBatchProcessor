@@ -12,6 +12,8 @@
             <RowDefinition Height="Auto" />
             <!-- document import export -->
             <RowDefinition Height="Auto" />
+            <!-- revision import export -->
+            <RowDefinition Height="Auto" />
             <!-- document custom property fields -->
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -104,8 +106,32 @@
         />
             </Grid>
         </Border>
-        <!-- document custom property fields -->
+        <!-- revision import and export -->
         <Border Grid.Row="2" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0"
+            Margin="5 10 5 10" 
+            Content="Import Revisions"
+            Command="{Binding ImportRevisionsCommand}"
+            IsEnabled="{Binding IsImportExportEnabled}"
+        />
+                <Button Grid.Column="1"
+            Margin="0 10 5 10" 
+            Content="Export Revisions"
+            Command="{Binding ExportRevisionsCommand}"
+            IsEnabled="{Binding IsImportExportEnabled}"
+        />
+            </Grid>
+        </Border>
+        <!-- document custom property fields -->
+        <Border Grid.Row="3" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
             <Expander Header="Custom Fields" 
                       Margin="5 5 5 5"
                       IsExpanded="{Binding IsCustomFieldsExpanded, Mode=OneWay}">

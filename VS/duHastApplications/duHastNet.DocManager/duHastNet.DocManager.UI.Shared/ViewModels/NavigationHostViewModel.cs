@@ -93,6 +93,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 _messageStore!,
                 _navigationStore!,
                 _manager!,
+                _currentFolderManager!,
                 CreateSettingsViewModel
             );
         }

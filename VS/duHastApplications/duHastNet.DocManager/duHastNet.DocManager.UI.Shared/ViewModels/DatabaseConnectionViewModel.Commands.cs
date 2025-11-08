@@ -255,7 +255,7 @@ public partial class DatabaseConnectionViewModel
             {
                 _messageStore.SetCurrentMessage(
                     $"Successfully imported: {result.DocumentsCreated} documents created, {result.DocumentsProcessed - result.DocumentsCreated} updated",
-                    MessageTypes.Success);
+                    MessageTypes.Information);
 
                 // Reload data into manager
                 await _docManagerApi.ReloadDataIntoManagerAsync(_manager);
@@ -329,7 +329,7 @@ public partial class DatabaseConnectionViewModel
             {
                 _messageStore.SetCurrentMessage(
                     $"Successfully exported {documents.Count} documents to {Path.GetFileName(selectedPath)}",
-                    MessageTypes.Success);
+                    MessageTypes.Information);
             }
             else
             {

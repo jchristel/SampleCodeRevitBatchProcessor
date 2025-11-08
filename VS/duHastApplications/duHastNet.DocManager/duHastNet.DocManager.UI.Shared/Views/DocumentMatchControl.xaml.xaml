@@ -1,0 +1,131 @@
+<UserControl x:Class="duHastNet.DocManager.UI.Shared.Views.DocumentMatchControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:duHastNet.DocManager.UI.Shared.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    
+    <UserControl.Resources>
+        <!-- Style for status indicator -->
+        <Style x:Key="StatusEllipseStyle" TargetType="Ellipse">
+            <Setter Property="Width" Value="12"/>
+            <Setter Property="Height" Value="12"/>
+            <Setter Property="Margin" Value="5,0,5,0"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" 
+                Background="#F5F5F5" 
+                BorderBrush="Gray" 
+                BorderThickness="0,0,0,1"
+                Padding="10,5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" 
+                           Text="Document Matching Results" 
+                           FontWeight="SemiBold" 
+                           FontSize="14"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <TextBlock Text="Total: " FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding MatchedDocuments.Count}"/>
+                    <TextBlock Text=" | Matched: " FontWeight="SemiBold" Margin="10,0,0,0"/>
+                    <TextBlock Text="{Binding MatchedCount}" Foreground="Green"/>
+                    <TextBlock Text=" | Warnings: " FontWeight="SemiBold" Margin="10,0,0,0"/>
+                    <TextBlock Text="{Binding WarningCount}" Foreground="Orange"/>
+                    <TextBlock Text=" | No Match: " FontWeight="SemiBold" Margin="10,0,0,0"/>
+                    <TextBlock Text="{Binding NoMatchCount}" Foreground="Red"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- DataGrid for matched documents -->
+        <DataGrid Grid.Row="1" 
+                  ItemsSource="{Binding MatchedDocuments}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  IsReadOnly="True"
+                  SelectionMode="Single"
+                  GridLinesVisibility="Horizontal"
+                  HeadersVisibility="Column"
+                  AlternatingRowBackground="#F9F9F9"
+                  Margin="0,5,0,5">
+            <DataGrid.Columns>
+                <!-- Status Indicator -->
+                <DataGridTemplateColumn Header="Status" Width="60">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Ellipse Fill="{Binding StatusColor}" 
+                                         Style="{StaticResource StatusEllipseStyle}"
+                                         ToolTip="{Binding StatusMessage}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Incoming File Name -->
+                <DataGridTextColumn Header="Incoming File" 
+                                    Binding="{Binding IncomingFileName}" 
+                                    Width="200"/>
+
+                <!-- Incoming Revision -->
+                <DataGridTextColumn Header="Incoming Rev" 
+                                    Binding="{Binding IncomingRevision}" 
+                                    Width="80"/>
+
+                <!-- Matched Document Number -->
+                <DataGridTextColumn Header="Matched Doc #" 
+                                    Binding="{Binding MatchedDocumentNumber}" 
+                                    Width="120"/>
+
+                <!-- Matched Document Name -->
+                <DataGridTextColumn Header="Matched Doc Name" 
+                                    Binding="{Binding MatchedDocumentName}" 
+                                    Width="*"/>
+
+                <!-- Matched Document Current Revision -->
+                <DataGridTextColumn Header="Current Rev" 
+                                    Binding="{Binding MatchedDocumentRevision}" 
+                                    Width="80"/>
+
+                <!-- Status Message -->
+                <DataGridTextColumn Header="Status Message" 
+                                    Binding="{Binding StatusMessage}" 
+                                    Width="250"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Footer with action buttons -->
+        <Border Grid.Row="2" 
+                Background="#F5F5F5" 
+                BorderBrush="Gray" 
+                BorderThickness="0,1,0,0"
+                Padding="10,5">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Add New Documents" 
+                        Command="{Binding AddNewDocumentsCommand}"
+                        Padding="10,5"
+                        Margin="0,0,10,0"
+                        ToolTip="Add documents with no match to the database"/>
+                <Button Content="Refresh" 
+                        Command="{Binding RefreshMatchingCommand}"
+                        Padding="10,5"
+                        ToolTip="Re-scan incoming folder and refresh matches"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

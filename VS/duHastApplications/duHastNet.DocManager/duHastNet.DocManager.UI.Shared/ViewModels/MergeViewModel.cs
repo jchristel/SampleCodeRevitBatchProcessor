@@ -25,6 +25,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models;
+using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.Core.Services.Api;
 using duHastNet.DocManager.UI.Shared.Stores;
 using System;
@@ -44,6 +45,7 @@ public partial class MergeViewModel : ObservableObject
     private readonly MessageStore _messageStore;
     private readonly NavigationStore _navigationStore;
     private readonly Manager _manager;
+    private readonly CurrentFolderManager _currentFolderManager;
 
     //function used to navigate to settings view model
     private readonly Func<SettingsViewModel> _createViewModel;
@@ -53,13 +55,17 @@ public partial class MergeViewModel : ObservableObject
     // Expose message ViewModel for the view
     public GlobalMessageViewModel MessageViewModel { get; }
 
+    // Expose document match control ViewModel for the view
+    public DocumentMatchControlViewModel DocumentMatchViewModel { get; }
+
     #region Constructor
 
     public MergeViewModel(
-        DocManagerApi docManagerApi, 
-        MessageStore messageStore, 
+        DocManagerApi docManagerApi,
+        MessageStore messageStore,
         NavigationStore navigationStore,
         Manager manager,
+        CurrentFolderManager currentFolderManager,
         Func<SettingsViewModel> createViewModel
         )
     {
@@ -68,9 +74,11 @@ public partial class MergeViewModel : ObservableObject
         _navigationStore = navigationStore;
         _createViewModel = createViewModel;
         _manager = manager ?? throw new ArgumentNullException(nameof(manager));
+        _currentFolderManager = currentFolderManager ?? throw new ArgumentNullException(nameof(currentFolderManager));
 
         MessageViewModel = new GlobalMessageViewModel(_messageStore);
-        
+        DocumentMatchViewModel = new DocumentMatchControlViewModel(_currentFolderManager, _manager, _messageStore);
+
         // Initialize collections
         FilteredRevisionDescriptions = new ObservableCollection<string>();
     }
@@ -97,6 +105,9 @@ public partial class MergeViewModel : ObservableObject
     [ObservableProperty]
     private bool _isRevisionSuggestionsPopupOpen = false;
 
+    [ObservableProperty]
+    private DateTime? _revisionDate;
+
     #endregion
 
     #region Computed Properties
@@ -111,12 +122,17 @@ public partial class MergeViewModel : ObservableObject
     /// </summary>
     public string? CurrentDatabasePath => _docManagerApi.GetDatabasePath();
 
+    /// <summary>
+    /// Gets whether the merge button should be enabled
+    /// </summary>
+    public bool CanMerge => IsDatabaseReady && !IsBusy && DocumentMatchViewModel.MatchedCount > 0;
+
     #endregion
 
     #region Commands
 
     /// <summary>
-    /// Command to navigate to the Merge view
+    /// Command to navigate to the Settings view
     /// </summary>
     [RelayCommand]
     private void NavigateToSettings()
@@ -138,9 +154,73 @@ public partial class MergeViewModel : ObservableObject
         }
     }
 
-    #endregion
+    /// <summary>
+    /// Command to perform the document merge operation
+    /// </summary>
+    [RelayCommand]
+    private async Task MergeDocumentsAsync()
+    {
+        if (!CanMerge) return;
 
-    #region Private Methods - To be implemented
+        IsBusy = true;
+        try
+        {
+            // Validate inputs
+            if (!RevisionDate.HasValue)
+            {
+                _messageStore.SetCurrentMessage("Please select a revision date.", MessageTypes.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(RevisionDescription))
+            {
+                _messageStore.SetCurrentMessage("Please enter a revision description.", MessageTypes.Warning);
+                return;
+            }
+
+            // Step 1: Check incoming folder and match documents
+            _messageStore.SetCurrentMessage("Checking incoming folder for documents...", MessageTypes.Information);
+
+            var currentDocuments = _manager.GetAllDocuments().ToList();
+            bool matchingSuccessful = _currentFolderManager.GetIncomingFilesMetadata(currentDocuments);
+
+            if (!matchingSuccessful)
+            {
+                _messageStore.SetCurrentMessage("Error matching incoming files. Check logs for details.", MessageTypes.Error);
+
+                // Still load the results so user can see what went wrong
+                var matchedStatuses = _currentFolderManager.GetMatchedDocuments();
+                DocumentMatchViewModel.LoadMatchedDocuments(matchedStatuses, currentDocuments);
+                return;
+            }
+
+            // Step 2: Load matched documents into the control
+            var matchedDocs = _currentFolderManager.GetMatchedDocuments();
+            DocumentMatchViewModel.LoadMatchedDocuments(matchedDocs, currentDocuments);
+
+            _messageStore.SetCurrentMessage(
+                $"Document matching complete. {DocumentMatchViewModel.MatchedCount} matched, " +
+                $"{DocumentMatchViewModel.WarningCount} warnings, {DocumentMatchViewModel.NoMatchCount} without matches.",
+                MessageTypes.Information
+            );
+
+            // TODO: Implement actual merge logic
+            // This would include:
+            // - Creating/updating revisions in the database
+            // - Moving files to appropriate folders
+            // - Updating document records
+
+        }
+        catch (Exception ex)
+        {
+            _messageStore.SetCurrentMessage($"Error during merge operation: {ex.Message}", MessageTypes.Error);
+        }
+        finally
+        {
+            IsBusy = false;
+            OnPropertyChanged(nameof(CanMerge));
+        }
+    }
 
     #endregion
 
@@ -154,6 +234,7 @@ public partial class MergeViewModel : ObservableObject
         // Update dependent properties
         UpdateButtonStates();
         OnPropertyChanged(nameof(IsDatabaseReady));
+        OnPropertyChanged(nameof(CanMerge));
     }
 
     /// <summary>
@@ -163,6 +244,7 @@ public partial class MergeViewModel : ObservableObject
     {
         // Update button states during operations
         UpdateButtonStates();
+        OnPropertyChanged(nameof(CanMerge));
     }
 
     /// <summary>
@@ -183,7 +265,7 @@ public partial class MergeViewModel : ObservableObject
 
         // Filter revisions that have a description starting with the input text (case-insensitive)
         var matches = allRevisions
-            .Where(r => !string.IsNullOrEmpty(r.Description) && 
+            .Where(r => !string.IsNullOrEmpty(r.Description) &&
                        r.Description.StartsWith(value, StringComparison.OrdinalIgnoreCase))
             .Select(r => r.Description)
             .Distinct()
@@ -210,7 +292,7 @@ public partial class MergeViewModel : ObservableObject
     /// </summary>
     private void UpdateButtonStates()
     {
-        
+        OnPropertyChanged(nameof(CanMerge));
     }
 
     #endregion

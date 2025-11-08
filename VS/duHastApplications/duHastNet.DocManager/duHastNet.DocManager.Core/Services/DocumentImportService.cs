@@ -92,7 +92,7 @@ public class DocumentImportService
                 {
                     var importRow = ParseRow(csv, headers, customFieldColumns, revisionHistoryColumns);
 
-                    if (importRow.Id == "new")
+                    if (importRow.Id.Equals("new", StringComparison.OrdinalIgnoreCase))
                     {
                         // Create new document
                         var createResult = await CreateNewDocumentAsync(
@@ -175,7 +175,9 @@ public class DocumentImportService
             DocumentNumber = csv.GetField("Document Number") ?? string.Empty,
             DocumentName = csv.GetField("Document Name") ?? string.Empty,
             RevisionIndicator = csv.GetField("Revision Indicator") ?? string.Empty,
-            RevisionId = csv.GetField<int>("Revision Id")
+            // Empty or invalid RevisionId defaults to 0 (no revision assigned yet)
+            // This allows importing documents that don't have revisions
+            RevisionId = int.TryParse(csv.GetField("Revision Id"), out int revId) ? revId : 0
         };
 
         // Parse custom fields
@@ -191,9 +193,9 @@ public class DocumentImportService
             var indicator = csv.GetField(indicatorColumn) ?? string.Empty;
             var idString = csv.GetField(idColumn) ?? string.Empty;
 
-            if (!string.IsNullOrWhiteSpace(indicator) && int.TryParse(idString, out int revId))
+            if (!string.IsNullOrWhiteSpace(indicator) && int.TryParse(idString, out int historyRevId))
             {
-                row.RevisionHistory.Add((index, revId, indicator));
+                row.RevisionHistory.Add((index, historyRevId, indicator));
             }
         }
 
@@ -270,10 +272,16 @@ public class DocumentImportService
                 return ValidationResult.CreateFailure($"Row {rowNumber}: Document Name is required");
             }
 
-            if (!revisionLookup.ContainsKey(importRow.RevisionId))
+            // Allow RevisionId = 0 or empty to indicate "No Revision" 
+            // This supports documents that don't have a revision assigned yet
+            // Any non-zero value must exist in the revisions table
+            if (importRow.RevisionId != 0 && !revisionLookup.ContainsKey(importRow.RevisionId))
             {
+                var availableRevisions = revisionLookup.Count > 0
+                    ? string.Join(", ", revisionLookup.Keys.OrderBy(k => k))
+                    : "none";
                 return ValidationResult.CreateFailure(
-                    $"Row {rowNumber}: Invalid Revision Id {importRow.RevisionId}");
+                    $"Row {rowNumber}: Invalid Revision Id {importRow.RevisionId}. Available revisions: {availableRevisions}. Use 0 or leave empty for documents without a revision.");
             }
 
             // Check if document already exists
@@ -300,10 +308,25 @@ public class DocumentImportService
                 document.SetRevisionIndicator(revId, indicator);
             }
 
-            // Insert document
+            // Insert document - SQLite-net-pcl should update the Id property
             await _unitOfWork.Documents.InsertAsync(document);
 
-            // Add custom properties
+            // Verify we have a valid Id after insert
+            if (document.Id == 0)
+            {
+                // Fallback: Query for the just-inserted document
+                var docs = await _unitOfWork.Documents.GetDocumentsByNumberAsync(importRow.DocumentNumber);
+                var insertedDoc = docs.FirstOrDefault(d => d.Revision == importRow.RevisionIndicator);
+
+                if (insertedDoc == null)
+                {
+                    return ValidationResult.CreateFailure($"Row {rowNumber}: Document created but could not be retrieved for custom properties");
+                }
+
+                document = insertedDoc;
+            }
+
+            // Add custom properties using the valid document Id
             foreach (var (fieldName, fieldValue) in importRow.CustomFields)
             {
                 if (customFieldLookup.TryGetValue(fieldName, out var fieldDef))
@@ -378,10 +401,11 @@ public class DocumentImportService
             // Check for revision id change (validates and updates, keeps indicator unchanged)
             if (document.RevisionId != importRow.RevisionId)
             {
-                if (!revisionLookup.ContainsKey(importRow.RevisionId))
+                // Allow RevisionId = 0 to indicate "No Revision"
+                if (importRow.RevisionId != 0 && !revisionLookup.ContainsKey(importRow.RevisionId))
                 {
                     return ValidationResult.CreateFailure(
-                        $"Row {rowNumber}: Invalid Revision Id {importRow.RevisionId}");
+                        $"Row {rowNumber}: Invalid Revision Id {importRow.RevisionId}. Use 0 for documents without a revision.");
                 }
 
                 document.RevisionId = importRow.RevisionId;

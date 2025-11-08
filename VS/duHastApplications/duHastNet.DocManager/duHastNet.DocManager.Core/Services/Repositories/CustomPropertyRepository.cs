@@ -36,7 +36,7 @@ namespace duHastNet.DocManager.Core.Services.Repositories
         {
             return await _connection.Table<CustomProperty>()
                 .Where(cp => cp.DocumentId == documentId)
-                .OrderBy(cp => cp.PropertyName)
+                .OrderBy(cp => cp.CustomFieldDefinitionId)
                 .ToListAsync();
         }
 

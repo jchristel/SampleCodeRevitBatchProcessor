@@ -45,6 +45,7 @@ from Autodesk.Revit.DB import (
     FilterRule,
 )
 
+DEBUG = False
 
 def import_rules_from_data(doc, data_rules):
 
@@ -108,7 +109,8 @@ def import_nested_logic_container_from_data(doc, logic_filter_containers):
             
             return_value.append_message("Using logic filter class: {} for logic container of type: {}".format(logic_filter_class.__name__, logic_filter_container.logic_container_type))
             
-            print("Using logic filter class: {} for logic container of type: {}".format(logic_filter_class.__name__, logic_filter_container.logic_container_type))
+            if DEBUG:
+                print("Using logic filter class: {} for logic container of type: {}".format(logic_filter_class.__name__, logic_filter_container.logic_container_type))
 
             # get the nested logic containers 
             nested_logic_containers = logic_filter_container.logic_containers
@@ -136,10 +138,13 @@ def import_nested_logic_container_from_data(doc, logic_filter_containers):
             # look at view filter rules at this level
             if len(logic_filter_container.view_filter_rules) == 0:
                 return_value.append_message("No filter rules found. Skipping view filter rules...")
-                print ("no rules\n")
+                
+                if DEBUG:
+                    print ("no rules\n")
             else:
 
-                print ("got rules {}\n".format(len(logic_filter_container.view_filter_rules)))
+                if DEBUG:
+                    print ("got rules {}\n".format(len(logic_filter_container.view_filter_rules)))
 
                 # import the rules
                 import_rules_result = import_rules_from_data(doc, logic_filter_container)
@@ -147,27 +152,39 @@ def import_nested_logic_container_from_data(doc, logic_filter_containers):
                 # user feedback
                 if not import_rules_result.status:
                     return_value.update_sep(False, "Failed to import rules for view filter. Error: {}".format(import_rules_result.message))
-                    print("Failed to import rules for view filter. Error: {}\n".format(import_rules_result.message))
+                    if DEBUG:
+                        print("Failed to import rules for view filter. Error: {}\n".format(import_rules_result.message))
                 else:
                     return_value.append_message("Successfully imported {} rules for view filter".format(len(import_rules_result.result[0])))
-                    print("Successfully imported {} rules for view filter\n".format(len(import_rules_result.result[0])))
+                    if DEBUG:
+                        print("Successfully imported {} rules for view filter\n".format(len(import_rules_result.result[0])))
 
                 
                 #element_parameter_filters = List[ElementFilter]()
 
                 # transfer rules across
                 for entry in import_rules_result.result[0]:
-                    print("adding rule {}\n".format(entry))
+                    if DEBUG:
+                        print("adding rule {}\n".format(entry))
                     nested_element_parameter_filters.Add(entry)
                 
                 # user feedback
-                print("imported rules {}\n".format(nested_element_parameter_filters.Count))
-            
+                if DEBUG:
+                    print("imported rules {}\n".format(nested_element_parameter_filters.Count))
 
-            # create the logic container class instance
-            logic_container_class_instance = logic_filter_class(nested_element_parameter_filters)
-            element_parameter_filters.Add(logic_container_class_instance)
-        
+
+            try:
+                # create the logic container class instance
+                logic_container_class_instance = logic_filter_class(nested_element_parameter_filters)
+                element_parameter_filters.Add(logic_container_class_instance)
+                return_value.append_message("Successfully created logic container of type: {}".format(logic_filter_container.logic_container_type))
+                if DEBUG:
+                    print("Successfully created logic container of type: {}\n".format(logic_filter_container.logic_container_type))
+            except Exception as e:
+                return_value.update_sep(False, "Failed to create logic container of type: {}. Error: {}".format(logic_filter_container.logic_container_type, e))
+                if DEBUG:
+                    print("Failed to create logic container of type: {}. Error: {}\n".format(logic_filter_container.logic_container_type, e))
+
         
         # add the overall list to the return value
         return_value.result.append(element_parameter_filters)
@@ -190,10 +207,14 @@ def import_root_logic_container_from_data(doc, view_filter_json):
         logic_filter_container = view_filter_json.logic_containers
         if logic_filter_container is None or len(logic_filter_container) == 0:
             return_value.append_message("No logic container found. Skipping view filter: {}".format(view_filter_json.name))
+            if DEBUG:
+                print("No logic container found. Skipping view filter: {}\n".format(view_filter_json.name))
             return return_value
 
         return_value.append_message("Found {} root logic container(s) for view filter: {}".format(len(logic_filter_container), view_filter_json.name))
         # there is no need to check for rules here as this is done in the nested logic container function ( root container has no rules at the same level)
+        if DEBUG:
+            print("Found {} root logic container(s) for view filter: {}\n".format(len(logic_filter_container), view_filter_json.name))
 
         # get the root container json object (there is always only just one root container)
         logic_filter_root_container = logic_filter_container[0]
@@ -205,35 +226,73 @@ def import_root_logic_container_from_data(doc, view_filter_json):
             return return_value
     
         return_value.append_message("Using logic container class: {} for view filter: {}".format(logic_container_class.__name__, view_filter_json.name))
+        if DEBUG:
+            print("Using logic container class: {} for view filter: {}\n".format(logic_container_class.__name__, view_filter_json.name))
 
-        # container for nested container
+        # container for nested container(s)
         element_parameter_filters = List[ElementFilter]()
 
-        return_value.append_message("Importing root logic container of type: {}".format(logic_filter_root_container.logic_container_type))
+        # check if there are any nested containers to import
+        if len(logic_filter_root_container.logic_containers)> 0:
+            # got nested containers
+            if DEBUG:
+                print("Importing root logic containers: {} of type: {}".format(len( logic_filter_root_container.logic_containers), logic_filter_root_container.logic_container_type))
 
-        # import the nested logic containers (there might be none if all we have are rules within the root logic container)
-        import_nested_logic_result = import_nested_logic_container_from_data(doc, logic_filter_root_container.logic_containers)
+            # import the nested logic containers (there might be none if all we have are rules within the root logic container)
+            import_nested_logic_result = import_nested_logic_container_from_data(doc, logic_filter_root_container.logic_containers)
 
-        print("here {}\n".format(view_filter_json.name),import_nested_logic_result.result)
+            if DEBUG:
+                print("here {}\n".format(view_filter_json.name),import_nested_logic_result.result)
 
-        # check what we got...
-        if not import_nested_logic_result.status:
-            # only rules within the root container
-            return_value.append_message("No nested logic containers found for {}".format(view_filter_json.name))
-            # check if any rules were imported ( .net list!!)
-            if import_nested_logic_result.result[0].Count>0:
-                return_value.append_message("Successfully imported {} rules for root logic container for view filter: {}".format(import_nested_logic_result.result[0].Count, view_filter_json.name))
+            # check what we got...
+            if not import_nested_logic_result.status:
+                # only rules within the root container
+                return_value.append_message("No nested logic containers found for {}".format(view_filter_json.name))
+                # check if any rules were imported ( .net list!!)
+                if import_nested_logic_result.result[0].Count>0:
+                    return_value.append_message("Successfully imported {} rules for root logic container for view filter: {}".format(import_nested_logic_result.result[0].Count, view_filter_json.name))
+                    for entry in import_nested_logic_result.result[0]:
+                        element_parameter_filters.Add(entry)
+                else:
+                    return_value.append_message("No rules found for root container for view filter: {}".format(view_filter_json.name))
+            else:
+                # nested containers and/or rules found
+                return_value.append_message("Successfully imported {} rules for nested logic container for view filter: {}".format(len(import_nested_logic_result.result[0]), view_filter_json.name))
+                # add the imported rules to the main container
                 for entry in import_nested_logic_result.result[0]:
                     element_parameter_filters.Add(entry)
-            else:
-                return_value.append_message("No rules found for root container for view filter: {}".format(view_filter_json.name))
         else:
-            # nested containers and/or rules found
-            return_value.append_message("Successfully imported {} rules for nested logic container for view filter: {}".format(len(import_nested_logic_result.result[0]), view_filter_json.name))
-            # add the imported rules to the main container
-            for entry in import_nested_logic_result.result[0]:
-                element_parameter_filters.Add(entry)
+            # no nested containers...need to check for rules at this level
+            if DEBUG:
+                print("No nested logic containers found for {}\n".format(view_filter_json.name))
+            return_value.append_message("No nested logic containers found for {}".format(view_filter_json.name))
 
+            if DEBUG:
+                print("Checking for rules at root level for view filter: {}\n".format(view_filter_json.name))
+                print("Number of rules at root level: {}\n".format(len(logic_filter_root_container.view_filter_rules)))
+
+            if len(logic_filter_root_container.view_filter_rules) == 0:
+                return_value.append_message("No filter rules found. Skipping view filter rules for view filter: {}".format(view_filter_json.name))
+                if DEBUG:
+                    print ("no rules\n")
+                return return_value
+            
+            try:
+                rules_result = import_rules_from_data(doc, logic_filter_root_container)
+
+                if DEBUG:
+                    print("here2 {}\n".format(view_filter_json.name),rules_result.result)
+
+                # add filters to main container
+                for entry in rules_result.result[0]:
+                    element_parameter_filters.Add(entry)
+
+            except Exception as e:
+                return_value.update_sep(False, "Failed to import rules at root level for view filter: {}. Error: {}".format(view_filter_json.name, e))
+                if DEBUG:
+                    print("Failed to import rules at root level for view filter: {}. Error: {}\n".format(view_filter_json.name, e))
+                return return_value
+        
         
         # add the imported rules to the return value
         logic_container_class_instance = logic_container_class(element_parameter_filters)
@@ -262,6 +321,9 @@ def import_view_filters_from_data(doc, json_object, progress_callback=None):
             progress_callback.update(counter, max_value, view_filter_json.name)
 
         return_value.append_message("Importing view filter: {}".format(view_filter_json.name))
+
+        if DEBUG:
+            print("\nImporting view filter: {}\n".format(view_filter_json.name))
         
         try:
             # get the container and all its nested items

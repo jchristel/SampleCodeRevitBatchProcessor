@@ -56,7 +56,7 @@ def read_filter_storage_from_file(file_path, node_name=""):
         # check if read was successful
         if not data_result.status:
             return_value.update(data_result)
-            return result
+            return return_value
 
         # check if any data was found
         if len(data_result.result) == 0:

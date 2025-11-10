@@ -1,0 +1,8 @@
+Id,Document Number,Document Name,Revision Indicator,Revision Id,Revision Indicator 1,Revision Id 1,Revision Indicator 2,Revision Id 2,Revision Indicator 3,Revision Id 3,Revision Indicator 4,Revision Id 4,Revision Indicator 5,Revision Id 5,Revision Indicator 6,Revision Id 6
+1,123-01-001,Test Document one,,0,,,,,,,,,,,,
+2,123-01-002,Test Document two,,0,,,,,,,,,,,,
+3,123-02-001,Test Document three,,0,,,,,,,,,,,,
+4,123-02-002,Test Document four,,0,,,,,,,,,,,,
+5,DOC-001,Drawing,A,1,A,1,,,,,,,,,,
+6,DOC-002,Specification,A,1,A,1,,,,,,,,,,
+7,DOC-003,Detail,B,2,,,B,2,,,,,,,,

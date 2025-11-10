@@ -248,8 +248,8 @@ public partial class DatabaseConnectionViewModel
             // Create import service with unit of work
             var importService = new Core.Services.DocumentImportService(_docManagerApi.GetUnitOfWork());
             
-            // Perform import on background thread
-            var result = await Task.Run(() => importService.ImportDocumentsAsync(selectedPath[0]));
+            // Perform import on background thread, passing the revision history mode
+            var result = await Task.Run(() => importService.ImportDocumentsAsync(selectedPath[0], UseFullRevisionHistoryMode));
 
             if (result.IsImportSuccessful)
             {
@@ -316,14 +316,15 @@ public partial class DatabaseConnectionViewModel
             var customFieldDefinitions = _manager.GetActiveCustomFieldDefinitions().ToList();
             var revisions = _manager.GetAllRevisions().ToList();
 
-            // Create export service and perform export
+            // Create export service and perform export, passing the revision history mode
             var exportService = new Core.Services.DocumentExportService();
             var success = await Task.Run(() =>
                 exportService.ExportDocuments(
                     selectedPath,
                     documents,
                     customFieldDefinitions,
-                    revisions));
+                    revisions,
+                    UseFullRevisionHistoryMode));
 
             if (success)
             {

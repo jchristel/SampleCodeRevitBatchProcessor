@@ -84,27 +84,37 @@
         </Border>
         <!-- document import and export -->
         <Border Grid.Row="1" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Button Grid.Column="0"
-            Margin="5 10 5 10" 
-            Content="Import Documents"
-            Command="{Binding ImportDocumentsCommand}"
-            IsEnabled="{Binding IsImportExportEnabled}"
-        />
-                <Button Grid.Column="1"
-            Margin="0 10 5 10" 
-            Content="Export Documents"
-            Command="{Binding ExportDocumentsCommand}"
-            IsEnabled="{Binding IsImportExportEnabled}"
-        />
-            </Grid>
+            <StackPanel>
+                <!-- Import/Export Mode Selection -->
+                <CheckBox 
+                    Margin="5 5 5 5" 
+                    Content="Include Full Revision History (All Revisions)"
+                    IsChecked="{Binding UseFullRevisionHistoryMode}"
+                    ToolTip="When checked, exports/imports all revisions with blank indicators for documents not in that revision. When unchecked, only exports/imports revision history for documents that have indicators."/>
+                
+                <!-- Import/Export Buttons -->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0"
+                Margin="5 10 5 10" 
+                Content="Import Documents"
+                Command="{Binding ImportDocumentsCommand}"
+                IsEnabled="{Binding IsImportExportEnabled}"
+            />
+                    <Button Grid.Column="1"
+                Margin="0 10 5 10" 
+                Content="Export Documents"
+                Command="{Binding ExportDocumentsCommand}"
+                IsEnabled="{Binding IsImportExportEnabled}"
+            />
+                </Grid>
+            </StackPanel>
         </Border>
         <!-- revision import and export -->
         <Border Grid.Row="2" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">

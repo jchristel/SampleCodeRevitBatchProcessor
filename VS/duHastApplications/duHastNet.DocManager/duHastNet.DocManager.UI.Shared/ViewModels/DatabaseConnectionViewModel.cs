@@ -134,6 +134,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         [ObservableProperty]
         private int _customPropertyCount = 0;
 
+        [ObservableProperty]
+        private bool _useFullRevisionHistoryMode = false;
+
         #endregion
 
         #region Validation

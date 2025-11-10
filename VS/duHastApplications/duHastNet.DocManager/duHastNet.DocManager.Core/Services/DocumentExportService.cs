@@ -36,22 +36,25 @@ public class DocumentExportService
     /// <param name="documents">Collection of documents to export</param>
     /// <param name="customFieldDefinitions">Custom field definitions for column headers</param>
     /// <param name="revisions">All revisions for looking up revision details</param>
+    /// <param name="useFullRevisionHistory">If true, exports all revisions with blank indicators for documents not in that revision. If false, only exports revisions where document has indicators.</param>
     /// <returns>True if export successful, false otherwise</returns>
     public bool ExportDocuments(
         string filePath,
         IEnumerable<Document> documents,
         IEnumerable<CustomFieldDefinition> customFieldDefinitions,
-        IEnumerable<Revision> revisions)
+        IEnumerable<Revision> revisions,
+        bool useFullRevisionHistory = false)
     {
         try
         {
             // Convert to list for multiple enumeration
             var documentsList = documents.ToList();
+            var revisionsList = revisions.OrderBy(r => r.RevisionDate).ToList();
 
-            // Determine the maximum number of revisions any document has
-            var maxRevisionCount = documentsList.Any() 
-                ? documentsList.Max(d => d.RevisionIndicatorHistory.Count) 
-                : 0;
+            // Determine the number of revision columns needed
+            var revisionColumnCount = useFullRevisionHistory
+                ? revisionsList.Count  // All revisions
+                : (documentsList.Any() ? documentsList.Max(d => d.RevisionIndicatorHistory.Count) : 0); // Only used revisions
 
             // Build the list of all custom field names in order
             var customFieldNames = customFieldDefinitions
@@ -69,12 +72,12 @@ public class DocumentExportService
             });
 
             // Write header row
-            WriteHeader(csv, customFieldNames, maxRevisionCount);
+            WriteHeader(csv, customFieldNames, revisionColumnCount, useFullRevisionHistory, revisionsList);
 
             // Write data rows
             foreach (var document in documentsList)
             {
-                WriteDocumentRow(csv, document, customFieldNames, maxRevisionCount, revisionLookup);
+                WriteDocumentRow(csv, document, customFieldNames, revisionColumnCount, revisionLookup, useFullRevisionHistory, revisionsList);
             }
 
             return true;
@@ -88,7 +91,7 @@ public class DocumentExportService
     /// <summary>
     /// Writes the CSV header row with fixed columns, custom fields, and revision history columns
     /// </summary>
-    private void WriteHeader(CsvWriter csv, List<string> customFieldNames, int maxRevisionCount)
+    private void WriteHeader(CsvWriter csv, List<string> customFieldNames, int revisionColumnCount, bool useFullRevisionHistory, List<Revision> allRevisions)
     {
         // Fixed columns
         csv.WriteField("Id");
@@ -104,10 +107,23 @@ public class DocumentExportService
         }
 
         // Revision history columns (pairs of Revision Indicator N and Revision Id N)
-        for (int i = 1; i <= maxRevisionCount; i++)
+        if (useFullRevisionHistory)
         {
-            csv.WriteField($"Revision Indicator {i}");
-            csv.WriteField($"Revision Id {i}");
+            // Full mode: Use revision IDs as column identifiers
+            foreach (var revision in allRevisions)
+            {
+                csv.WriteField($"Revision Indicator {revision.Id}");
+                csv.WriteField($"Revision Id {revision.Id}");
+            }
+        }
+        else
+        {
+            // Sparse mode: Use sequential numbering
+            for (int i = 1; i <= revisionColumnCount; i++)
+            {
+                csv.WriteField($"Revision Indicator {i}");
+                csv.WriteField($"Revision Id {i}");
+            }
         }
 
         csv.NextRecord();
@@ -120,8 +136,10 @@ public class DocumentExportService
         CsvWriter csv,
         Document document,
         List<string> customFieldNames,
-        int maxRevisionCount,
-        Dictionary<int, Revision> revisionLookup)
+        int revisionColumnCount,
+        Dictionary<int, Revision> revisionLookup,
+        bool useFullRevisionHistory,
+        List<Revision> allRevisions)
     {
         // Fixed columns
         csv.WriteField(document.Id);
@@ -138,43 +156,67 @@ public class DocumentExportService
             csv.WriteField(customProperty?.PropertyValue ?? string.Empty);
         }
 
-        // Revision history - sorted by index, with current revision as last entry
-        WriteRevisionHistory(csv, document, maxRevisionCount, revisionLookup);
+        // Revision history
+        WriteRevisionHistory(csv, document, revisionColumnCount, revisionLookup, useFullRevisionHistory, allRevisions);
 
         csv.NextRecord();
     }
 
     /// <summary>
     /// Writes revision history columns for a document
-    /// History is sorted by index with current revision appearing as the last entry
     /// </summary>
     private void WriteRevisionHistory(
         CsvWriter csv,
         Document document,
-        int maxRevisionCount,
-        Dictionary<int, Revision> revisionLookup)
+        int revisionColumnCount,
+        Dictionary<int, Revision> revisionLookup,
+        bool useFullRevisionHistory,
+        List<Revision> allRevisions)
     {
-        // Get revision history sorted by index (which is the key in the dictionary)
-        var sortedHistory = document.RevisionIndicatorHistory
-            .OrderBy(kvp => kvp.Key)
-            .ToList();
-
-        // Write each historical revision pair
-        for (int i = 0; i < maxRevisionCount; i++)
+        if (useFullRevisionHistory)
         {
-            if (i < sortedHistory.Count)
+            // Full mode: Write a column for every revision in the database
+            // Blank indicator means document was not part of that revision
+            foreach (var revision in allRevisions)
             {
-                var revisionId = sortedHistory[i].Key;
-                var revisionIndicator = sortedHistory[i].Value;
-
-                csv.WriteField(revisionIndicator);
-                csv.WriteField(revisionId);
+                if (document.RevisionIndicatorHistory.TryGetValue(revision.Id, out var indicator))
+                {
+                    // Document has this revision - write indicator and ID
+                    csv.WriteField(indicator);
+                    csv.WriteField(revision.Id);
+                }
+                else
+                {
+                    // Document does not have this revision - write blanks
+                    csv.WriteField(string.Empty);
+                    csv.WriteField(string.Empty);
+                }
             }
-            else
+        }
+        else
+        {
+            // Sparse mode: Only write revisions where document has indicators
+            var sortedHistory = document.RevisionIndicatorHistory
+                .OrderBy(kvp => kvp.Key)
+                .ToList();
+
+            // Write each historical revision pair
+            for (int i = 0; i < revisionColumnCount; i++)
             {
-                // Empty cells for documents with fewer revisions
-                csv.WriteField(string.Empty);
-                csv.WriteField(string.Empty);
+                if (i < sortedHistory.Count)
+                {
+                    var revisionId = sortedHistory[i].Key;
+                    var revisionIndicator = sortedHistory[i].Value;
+
+                    csv.WriteField(revisionIndicator);
+                    csv.WriteField(revisionId);
+                }
+                else
+                {
+                    // Empty cells for documents with fewer revisions
+                    csv.WriteField(string.Empty);
+                    csv.WriteField(string.Empty);
+                }
             }
         }
     }

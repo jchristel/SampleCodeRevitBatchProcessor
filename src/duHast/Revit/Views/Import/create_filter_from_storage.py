@@ -37,9 +37,13 @@ from duHast.Utilities.Objects.result import Result
 
 from duHast.Revit.Views.Utility.convert_data_to_filter_rule import convert_data_to_rule
 from duHast.Revit.Views.Utility.convert_data_to_filter_logic_filter import get_logical_filter_class
+from duHast.Revit.Views.filters import create_filter
+from duHast.Revit.Categories.categories import get_category_by_id
 
 
 from Autodesk.Revit.DB import (
+    Category,
+    ElementId,
     ElementFilter,
     ElementParameterFilter,
     FilterRule,
@@ -304,8 +308,48 @@ def import_root_logic_container_from_data(doc, view_filter_json):
     return return_value
 
 
+def create_filter_from_json(doc, view_filter_json, element_filters):
 
-def import_view_filters_from_data(doc, json_object, progress_callback=None):
+    return_value = Result()
+    try:
+        # set up a .net list of Element Ids
+        category_ids = List[ElementId]()
+
+        # loop over category ids and add as element id
+        for category_id in view_filter_json.category_ids:
+            category_ids.Add(ElementId(category_id))
+            
+        # check we got a least one category
+        if category_ids.Count == 0:
+            return_value.update_sep(False, "No valid categories found for filter: {}.".format(view_filter_json.name))
+            return return_value
+
+        # create the filter
+        filter_element = create_filter(
+            doc, 
+            view_filter_json.name,
+            category_ids,
+            element_filters,
+        )
+
+        # check result
+        if not filter_element:
+            return_value.update_sep(False, "Failed to create filter: {}.".format(view_filter_json.name))
+            return return_value
+
+        # add success message
+        return_value.append_message("Successfully created filter: {}".format(view_filter_json.name))
+
+        # return created filter
+        return_value.result.append(filter_element)
+    except Exception as e:
+        
+        return_value.update_sep(False, "Failed to create filter: {}. Error: {}".format(view_filter_json.name, e))
+    return return_value
+
+
+
+def import_view_filters_from_data(doc, json_object, progress_callback=None, overwrite_existing=False):
 
     # set up a status tracker
     return_value = Result()
@@ -316,6 +360,7 @@ def import_view_filters_from_data(doc, json_object, progress_callback=None):
     # loop over json objects and create view filters
     for view_filter_json in json_object:
 
+        #toDO: check if filter already exists and handle overwrite_existing flag
 
         if progress_callback:
             progress_callback.update(counter, max_value, view_filter_json.name)
@@ -336,8 +381,19 @@ def import_view_filters_from_data(doc, json_object, progress_callback=None):
             # keep track of the container
             return_value.append_message("Successfully imported logic container for view filter: {}".format(view_filter_json.name))
 
-            # TODO: set up a view filter
+            # set up a Revit view filter
+            create_filter_result = create_filter_from_json(doc, view_filter_json, container_result.result[0])
 
+            # check result
+            if not create_filter_result.status:
+                return_value.update_sep(False, "Failed to create filter for view filter: {}. Error: {}".format(view_filter_json.name, create_filter_result.message))
+                continue
+
+            # create success message
+            return_value.append_message("Successfully created filter for view filter: {}".format(view_filter_json.name))
+
+            # return created filter
+            return_value.result.append(create_filter_result.result[0])
 
         except Exception as e:
             return_value.update_sep(False, "Failed to import view filter: {}. Error: {}".format(view_filter_json.name, e))

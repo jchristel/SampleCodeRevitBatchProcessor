@@ -37,8 +37,7 @@ from duHast.Utilities.Objects.result import Result
 
 from duHast.Revit.Views.Utility.convert_data_to_filter_rule import convert_data_to_rule
 from duHast.Revit.Views.Utility.convert_data_to_filter_logic_filter import get_logical_filter_class
-from duHast.Revit.Views.filters import create_filter
-from duHast.Revit.Categories.categories import get_category_by_id
+from duHast.Revit.Views.filters import create_filter, get_all_filters, update_filter
 
 
 from Autodesk.Revit.DB import (
@@ -348,6 +347,58 @@ def create_filter_from_json(doc, view_filter_json, element_filters):
     return return_value
 
 
+def update_filter_from_json(doc, existing_filter, view_filter_json, element_filters):
+
+    return_value = Result()
+    try:
+        # set up a .net list of Element Ids
+        category_ids = List[ElementId]()
+
+        # loop over category ids and add as element id
+        for category_id in view_filter_json.category_ids:
+            category_ids.Add(ElementId(category_id))
+            
+        # check we got a least one category
+        if category_ids.Count == 0:
+            return_value.update_sep(False, "No valid categories found for filter: {}.".format(view_filter_json.name))
+            return return_value
+
+        # update the filter
+        updated_filter_element = create_filter(
+            doc, 
+            view_filter_json.name,
+            category_ids,
+            element_filters,
+            existing_filter,
+        )
+
+        # check result
+        if not updated_filter_element:
+            return_value.update_sep(False, "Failed to update filter: {}.".format(view_filter_json.name))
+            return return_value
+
+        # add success message
+        return_value.append_message("Successfully updated filter: {}".format(view_filter_json.name))
+
+        # return created filter
+        return_value.result.append(updated_filter_element)
+    except Exception as e:
+        
+        return_value.update_sep(False, "Failed to update filter: {}. Error: {}".format(view_filter_json.name, e))
+    return return_value
+
+
+def get_filters_in_model_by_name(doc):
+    """
+    Get all view filters in the model by name.
+
+    :param doc: Revit Document
+    :return: Dictionary of view filters by name
+    """
+    filters_in_model = get_all_filters(doc)
+    filters_by_name = {f.Name: f for f in filters_in_model}
+    return filters_by_name
+
 
 def import_view_filters_from_data(doc, json_object, progress_callback=None, overwrite_existing=False):
 
@@ -357,10 +408,25 @@ def import_view_filters_from_data(doc, json_object, progress_callback=None, over
     counter = 0
     max_value = len(json_object)
 
+    # get all filter in the model to check if we need to overwrite any
+    existing_filters_by_name = get_filters_in_model_by_name(doc)
+
     # loop over json objects and create view filters
     for view_filter_json in json_object:
 
-        #toDO: check if filter already exists and handle overwrite_existing flag
+        # check if we have any existing filters
+        is_existing_filter = view_filter_json.name in existing_filters_by_name
+
+        #TODO: check if filter already exists and handle overwrite_existing flag
+        if not overwrite_existing and is_existing_filter:
+            return_value.append_message("Skipping existing view filter: {}".format(view_filter_json.name))
+            if DEBUG:
+                print("Skipping existing view filter: {}\n".format(view_filter_json.name))
+            # update progress
+            counter = counter + 1
+            if progress_callback:
+                progress_callback.update(counter, max_value, view_filter_json.name)
+            continue
 
         if progress_callback:
             progress_callback.update(counter, max_value, view_filter_json.name)
@@ -381,8 +447,17 @@ def import_view_filters_from_data(doc, json_object, progress_callback=None, over
             # keep track of the container
             return_value.append_message("Successfully imported logic container for view filter: {}".format(view_filter_json.name))
 
-            # set up a Revit view filter
-            create_filter_result = create_filter_from_json(doc, view_filter_json, container_result.result[0])
+            # set up a Revit view filter depending on whether this is a new filter or an update of an existing one
+            if is_existing_filter:
+                return_value.append_message("Updating existing filter: {}".format(view_filter_json.name))
+                if DEBUG:
+                    print("Updating existing filter: {}\n".format(view_filter_json.name))
+                create_filter_result = update_filter_from_json(doc, existing_filters_by_name[view_filter_json.name], view_filter_json, container_result.result[0])
+            else:
+                return_value.append_message("Creating new filter: {}".format(view_filter_json.name))
+                if DEBUG:
+                    print("Creating new filter: {}\n".format(view_filter_json.name))
+                create_filter_result = create_filter_from_json(doc, view_filter_json, container_result.result[0])
 
             # check result
             if not create_filter_result.status:

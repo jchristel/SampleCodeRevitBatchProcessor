@@ -326,3 +326,71 @@ def create_filter(doc, filter_name, categories, element_filter, transaction_mana
     except Exception as e:
         return_value.update_sep (False,"{}".format(e))
     return return_value
+
+
+def update_filter(doc, filter_name, categories, element_filter, transaction_manager=in_transaction):
+    """
+    Updates an existing view filter in Autodesk Revit.
+
+    Args:
+        doc (Autodesk.Revit.DB.Document): The document object representing the Revit model.
+        filter_name (str): The name of the filter to be created.
+        categories (list of Autodesk.Revit.DB.BuiltInCategory): The list of categories to be included in the view filter. (.net list!)
+        element_filter (Autodesk.Revit.DB.ElementFilter): The element filter defining the categories for the view filter.
+
+    Returns:
+        duHast.Utilities.Objects.result.Result: The result object containing the outcome of creating the filter. The `result` attribute of the result object contains the created filter object if successful, or None if not. The `messages` attribute of the result object contains any additional messages related to the creation of the filter.
+    """
+
+    return_value = res.Result()
+
+    try:
+        # get the existing filter by name
+        filter_to_update = get_filter_by_name(doc, filter_name)
+
+        if not filter_to_update:
+            return_value.update_sep(
+                False,
+                "Filter: {} not found in document. Cannot update non existing filter.".format(
+                    filter_name
+                ),
+            )
+            return return_value
+        
+        def action():
+            action_return_value = res.Result()
+            try:
+                # update filter categories
+                filter_to_update.SetCategories(categories)
+
+                # update the element filter
+                filter_to_update.SetElementFilter(element_filter)
+                
+                action_return_value.append_message(
+                    "Filter: {} updated successfully.".format(filter_name)
+                )
+                action_return_value.result.append(filter_to_update)
+            except Exception as e:
+                action_return_value.update_sep(
+                    False,
+                    "Failed to update filter: {} with exception: {}".format(
+                        filter_name,
+                        e,
+                    ),
+                )
+            return action_return_value
+
+        # execute inside transaction if a transaction manager is provided, otherwise run the action directly
+        # assuming there is a transaction running already
+        if transaction_manager:
+            # Start the transaction
+            tranny = Transaction(doc, "Update Filter: {}".format(filter_name))
+            return_value = transaction_manager(tranny, action)
+        else:
+            return_value = action()
+        
+        return return_value
+    
+    except Exception as e:
+        return_value.update_sep (False,"{}".format(e))
+    return return_value

@@ -46,7 +46,8 @@ from Autodesk.Revit.DB import (
     Element, 
     LogicalAndFilter, 
     ElementFilter, 
-    ElementParameterFilter, 
+    ElementParameterFilter,
+    FilteredElementCollector,
     FilterElementIdRule, 
     FilterNumericValueRule, 
     FilterInverseRule, 
@@ -425,7 +426,15 @@ def analyze_filters(doc, filters,  progress_callback, debug = False):
         # get all project parameters in order to be able to identify any shared parameters properly when re-importing the filters
         project_parameters = get_project_parameters(doc)
 
-        max_value = len(filters.ToElements())
+        # prepare progress bar
+        max_value = 0
+
+        # check if we got a FilteredElementCollector or a list
+        if isinstance(filters,FilteredElementCollector):
+            max_value = len(filters.ToElements())
+        else:
+            max_value = len(filters)
+        
         counter = 1
 
         # loop over view filters in the model

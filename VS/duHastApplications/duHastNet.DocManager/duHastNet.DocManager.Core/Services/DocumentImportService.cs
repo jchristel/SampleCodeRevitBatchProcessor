@@ -42,8 +42,9 @@ public class DocumentImportService
     /// Imports documents from a CSV file
     /// </summary>
     /// <param name="filePath">Path to CSV file to import</param>
+    /// <param name="useFullRevisionHistory">If true, expects all revision columns (including blanks for documents not in that revision). If false, only imports revisions with non-blank indicators.</param>
     /// <returns>Import result with statistics and any errors</returns>
-    public async Task<ImportResult> ImportDocumentsAsync(string filePath)
+    public async Task<ImportResult> ImportDocumentsAsync(string filePath, bool useFullRevisionHistory = false)
     {
         var result = new ImportResult();
         var errors = new List<string>();
@@ -188,6 +189,10 @@ public class DocumentImportService
         }
 
         // Parse revision history
+        // Note: This method handles both import modes automatically:
+        // - Full mode (useFullRevisionHistory=true): Reads all revision columns, stores only non-blank indicators
+        // - Sparse mode (useFullRevisionHistory=false): Reads only present revision columns, stores non-blank indicators
+        // In both cases, blank indicators are skipped, which is the desired behavior
         foreach (var (indicatorColumn, idColumn, index) in revisionHistoryColumns)
         {
             var indicator = csv.GetField(indicatorColumn) ?? string.Empty;
@@ -340,6 +345,12 @@ public class DocumentImportService
                 }
             }
 
+            // Update bidirectional relationship: add document to revision's DocumentIds collection
+            if (document.RevisionId != 0)
+            {
+                await _unitOfWork.Revisions.AddDocumentToRevisionAsync(document.RevisionId, document.Id);
+            }
+
             return ValidationResult.CreateSuccess();
         }
         catch (Exception ex)
@@ -373,6 +384,7 @@ public class DocumentImportService
             }
 
             bool documentChanged = false;
+            int oldRevisionId = document.RevisionId; // Track old revision for bidirectional update
 
             // Check for document number change
             if (document.Number != importRow.DocumentNumber)
@@ -416,6 +428,22 @@ public class DocumentImportService
             if (documentChanged)
             {
                 await _unitOfWork.Documents.UpdateAsync(document);
+            }
+
+            // Update bidirectional relationship if revision changed
+            if (oldRevisionId != document.RevisionId)
+            {
+                // Remove from old revision's DocumentIds collection
+                if (oldRevisionId != 0)
+                {
+                    await _unitOfWork.Revisions.RemoveDocumentFromRevisionAsync(oldRevisionId, document.Id);
+                }
+
+                // Add to new revision's DocumentIds collection
+                if (document.RevisionId != 0)
+                {
+                    await _unitOfWork.Revisions.AddDocumentToRevisionAsync(document.RevisionId, document.Id);
+                }
             }
 
             // Update custom properties
@@ -471,4 +499,4 @@ public class DocumentImportService
         public Dictionary<string, string> CustomFields { get; set; } = new();
         public List<(int Index, int RevisionId, string Indicator)> RevisionHistory { get; set; } = new();
     }
-}
+}

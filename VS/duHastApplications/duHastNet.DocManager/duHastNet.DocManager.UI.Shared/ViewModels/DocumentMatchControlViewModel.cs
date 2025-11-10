@@ -71,14 +71,39 @@ public partial class DocumentMatchControlViewModel : ObservableObject
     public int MatchedCount => MatchedDocuments?.Count(d => d.MatchStatus == DocumentMatchStatus.Ok) ?? 0;
 
     /// <summary>
-    /// Gets the count of documents with warning status
+    /// Gets the count of documents with any warning status (non-blocking)
     /// </summary>
-    public int WarningCount => MatchedDocuments?.Count(d => d.MatchStatus == DocumentMatchStatus.WarningRevisionNotSequential) ?? 0;
+    public int WarningCount => MatchedDocuments?.Count(d => d.HasWarning) ?? 0;
 
     /// <summary>
-    /// Gets the count of documents with no match
+    /// Gets the count of documents with revision not sequential warning
+    /// </summary>
+    public int RevisionNotSequentialCount => MatchedDocuments?.Count(d => d.MatchStatus == DocumentMatchStatus.WarningRevisionNotSequential) ?? 0;
+
+    /// <summary>
+    /// Gets the count of documents with missing revision warning
+    /// </summary>
+    public int MissingRevisionCount => MatchedDocuments?.Count(d => d.MatchStatus == DocumentMatchStatus.WarningMissingRevision) ?? 0;
+
+    /// <summary>
+    /// Gets the count of duplicate documents (blocking errors)
+    /// </summary>
+    public int DuplicateDocumentCount => MatchedDocuments?.Count(d => d.MatchStatus == DocumentMatchStatus.ErrorDuplicateDocument) ?? 0;
+
+    /// <summary>
+    /// Gets the count of documents with no match (blocking errors)
     /// </summary>
     public int NoMatchCount => MatchedDocuments?.Count(d => d.MatchStatus == DocumentMatchStatus.NoMatch) ?? 0;
+
+    /// <summary>
+    /// Gets the total count of errors (duplicates + no match)
+    /// </summary>
+    public int ErrorCount => DuplicateDocumentCount + NoMatchCount;
+
+    /// <summary>
+    /// Gets the count of documents that can be merged (no blocking errors)
+    /// </summary>
+    public int CanMergeCount => MatchedDocuments?.Count(d => d.CanMerge) ?? 0;
 
     #endregion
 
@@ -136,22 +161,49 @@ public partial class DocumentMatchControlViewModel : ObservableObject
             }
 
             // Update computed properties
-            OnPropertyChanged(nameof(MatchedCount));
-            OnPropertyChanged(nameof(WarningCount));
-            OnPropertyChanged(nameof(NoMatchCount));
+            UpdateCounts();
+
+            // Build detailed warning message
+            var warningDetails = new List<string>();
+            if (RevisionNotSequentialCount > 0)
+                warningDetails.Add($"{RevisionNotSequentialCount} non-sequential");
+            if (MissingRevisionCount > 0)
+                warningDetails.Add($"{MissingRevisionCount} missing revision");
+
+            var warningText = warningDetails.Count > 0 
+                ? $" ({string.Join(", ", warningDetails)})" 
+                : string.Empty;
+
+            // Build error message
+            var errorDetails = new List<string>();
+            if (DuplicateDocumentCount > 0)
+                errorDetails.Add($"{DuplicateDocumentCount} duplicate(s)");
+            if (NoMatchCount > 0)
+                errorDetails.Add($"{NoMatchCount} no match");
+
+            var errorText = errorDetails.Count > 0
+                ? $" Errors: {string.Join(", ", errorDetails)}."
+                : string.Empty;
 
             // Show success message
-            if (matchingSuccessful)
+            if (ErrorCount > 0)
             {
                 _messageStore.SetCurrentMessage(
-                    $"Successfully matched {MatchedCount} documents. {WarningCount} warnings, {NoMatchCount} without matches.",
+                    $"Document matching completed. {CanMergeCount} can be merged, {WarningCount} warnings{warningText}.{errorText}",
+                    MessageTypes.Warning
+                );
+            }
+            else if (matchingSuccessful)
+            {
+                _messageStore.SetCurrentMessage(
+                    $"Successfully matched {MatchedCount} documents. {WarningCount} warnings{warningText}.",
                     MessageTypes.Information
                 );
             }
             else
             {
                 _messageStore.SetCurrentMessage(
-                    $"Document matching completed with errors. {MatchedCount} matched, {WarningCount} warnings, {NoMatchCount} without matches.",
+                    $"Document matching completed with issues. {CanMergeCount} can be merged, {WarningCount} warnings{warningText}.{errorText}",
                     MessageTypes.Warning
                 );
             }
@@ -221,9 +273,26 @@ public partial class DocumentMatchControlViewModel : ObservableObject
         }
 
         // Update computed properties
+        UpdateCounts();
+    }
+
+    #endregion
+
+    #region Private Helper Methods
+
+    /// <summary>
+    /// Updates all count properties
+    /// </summary>
+    private void UpdateCounts()
+    {
         OnPropertyChanged(nameof(MatchedCount));
         OnPropertyChanged(nameof(WarningCount));
+        OnPropertyChanged(nameof(RevisionNotSequentialCount));
+        OnPropertyChanged(nameof(MissingRevisionCount));
+        OnPropertyChanged(nameof(DuplicateDocumentCount));
         OnPropertyChanged(nameof(NoMatchCount));
+        OnPropertyChanged(nameof(ErrorCount));
+        OnPropertyChanged(nameof(CanMergeCount));
     }
 
     #endregion

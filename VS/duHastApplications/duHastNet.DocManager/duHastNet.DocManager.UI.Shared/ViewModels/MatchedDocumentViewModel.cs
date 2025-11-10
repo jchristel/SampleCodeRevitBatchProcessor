@@ -24,6 +24,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
+using System.Linq;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels;
 
@@ -94,6 +95,18 @@ public partial class MatchedDocumentViewModel : ObservableObject
     [ObservableProperty]
     private bool _isSelected;
 
+    /// <summary>
+    /// Indicates if this is a duplicate document
+    /// </summary>
+    [ObservableProperty]
+    private bool _isDuplicate;
+
+    /// <summary>
+    /// The number of duplicate files found
+    /// </summary>
+    [ObservableProperty]
+    private int _duplicateCount;
+
     #endregion
 
     #region Computed Properties
@@ -105,6 +118,8 @@ public partial class MatchedDocumentViewModel : ObservableObject
     {
         DocumentMatchStatus.Ok => "Green",
         DocumentMatchStatus.WarningRevisionNotSequential => "Orange",
+        DocumentMatchStatus.WarningMissingRevision => "Orange",
+        DocumentMatchStatus.ErrorDuplicateDocument => "Red",
         DocumentMatchStatus.NoMatch => "Red",
         _ => "Gray"
     };
@@ -118,6 +133,23 @@ public partial class MatchedDocumentViewModel : ObservableObject
     /// Gets whether this is a new document (no match)
     /// </summary>
     public bool IsNewDocument => !HasMatch;
+
+    /// <summary>
+    /// Gets whether this document has any warnings (non-blocking issues)
+    /// </summary>
+    public bool HasWarning => MatchStatus == DocumentMatchStatus.WarningRevisionNotSequential ||
+                               MatchStatus == DocumentMatchStatus.WarningMissingRevision;
+
+    /// <summary>
+    /// Gets whether this document has an error that blocks merging
+    /// </summary>
+    public bool HasError => MatchStatus == DocumentMatchStatus.ErrorDuplicateDocument ||
+                            MatchStatus == DocumentMatchStatus.NoMatch;
+
+    /// <summary>
+    /// Gets whether this document can be merged (no blocking errors)
+    /// </summary>
+    public bool CanMerge => !HasError;
 
     #endregion
 
@@ -141,6 +173,8 @@ public partial class MatchedDocumentViewModel : ObservableObject
         IncomingFileName = System.IO.Path.GetFileName(IncomingFilePath);
         IncomingRevision = status.IncomingDocumentRevision;
         MatchedDocumentId = status.MatchedDocumentId;
+        IsDuplicate = status.IsDuplicate;
+        DuplicateCount = status.DuplicateFilePaths?.Count ?? 0;
 
         if (matchedDocument != null)
         {
@@ -148,10 +182,25 @@ public partial class MatchedDocumentViewModel : ObservableObject
             MatchedDocumentName = matchedDocument.Name;
             MatchedDocumentRevision = matchedDocument.Revision;
 
-            // Determine match status based on revision comparison
-            if (!string.IsNullOrEmpty(IncomingRevision) && !string.IsNullOrEmpty(matchedDocument.Revision))
+            // Check for duplicate documents first (highest priority - blocks merge)
+            if (IsDuplicate && DuplicateCount > 0)
             {
-                // Check if revisions are sequential
+                MatchStatus = DocumentMatchStatus.ErrorDuplicateDocument;
+                var duplicateFileNames = status.DuplicateFilePaths
+                    .Select(fp => System.IO.Path.GetFileName(fp))
+                    .ToList();
+                StatusMessage = $"ERROR - Duplicate document (blocks merge). Same file type matched to document {matchedDocument.Number}. " +
+                               $"Duplicates: {string.Join(", ", duplicateFileNames)}";
+            }
+            // Check for missing revision information
+            else if (string.IsNullOrEmpty(IncomingRevision))
+            {
+                MatchStatus = DocumentMatchStatus.WarningMissingRevision;
+                StatusMessage = $"Warning - No revision information found in filename for document {matchedDocument.Number}";
+            }
+            // Check if revisions are sequential
+            else if (!string.IsNullOrEmpty(matchedDocument.Revision))
+            {
                 if (IsRevisionSequential(matchedDocument.Revision, IncomingRevision))
                 {
                     MatchStatus = DocumentMatchStatus.Ok;
@@ -216,6 +265,9 @@ public partial class MatchedDocumentViewModel : ObservableObject
     partial void OnMatchStatusChanged(DocumentMatchStatus value)
     {
         OnPropertyChanged(nameof(StatusColor));
+        OnPropertyChanged(nameof(HasWarning));
+        OnPropertyChanged(nameof(HasError));
+        OnPropertyChanged(nameof(CanMerge));
     }
 
     #endregion

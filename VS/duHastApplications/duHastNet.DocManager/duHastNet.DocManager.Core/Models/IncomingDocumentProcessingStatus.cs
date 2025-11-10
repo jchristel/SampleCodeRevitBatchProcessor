@@ -72,10 +72,21 @@ namespace duHastNet.DocManager.Core.Models
 
         public string? IncomingDocumentRevision { get; set; }
 
+        /// <summary>
+        /// Indicates if this is a duplicate document (multiple files with same file type matched to same document)
+        /// </summary>
+        public bool IsDuplicate { get; set; }
+
+        /// <summary>
+        /// Gets the list of other file paths that are duplicates of this document
+        /// </summary>
+        public List<string> DuplicateFilePaths { get; set; }
+
         public IncomingDocumentProcessingStatus(string newDocumentPath)
         {
             _newDocumentPath = newDocumentPath;
             _processMessages = [];
+            DuplicateFilePaths = [];
         }
     }
 }

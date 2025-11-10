@@ -30,6 +30,75 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         #region identifying incoming files and matching them to current documents
 
         /// <summary>
+        /// Detects duplicate documents in the matched documents list
+        /// Duplicates are defined as multiple files with the same file type matched to the same document number
+        /// </summary>
+        /// <remarks>
+        /// This method should be called after MatchIncomingFilesToDocuments() to identify duplicates.
+        /// It groups documents by their matched document ID and file extension, and marks duplicates.
+        /// </remarks>
+        private void DetectDuplicateDocuments()
+        {
+            if (_matchedDocuments == null || _matchedDocuments.Count == 0)
+            {
+                return;
+            }
+
+            // Group by matched document ID and file extension
+            var groupedByDocAndType = _matchedDocuments
+                .Where(d => d.MatchedDocumentId.HasValue) // Only consider matched documents
+                .GroupBy(d => new
+                {
+                    DocumentId = d.MatchedDocumentId.Value,
+                    FileExtension = System.IO.Path.GetExtension(d.NewDocumentPath).ToLowerInvariant()
+                })
+                .Where(g => g.Count() > 1); // Only groups with more than one file
+
+            // Mark duplicates
+            foreach (var group in groupedByDocAndType)
+            {
+                var documentsInGroup = group.ToList();
+
+                // Mark all documents in the group as duplicates
+                foreach (var doc in documentsInGroup)
+                {
+                    doc.IsDuplicate = true;
+
+                    // Add all other files in the group as duplicates
+                    doc.DuplicateFilePaths = documentsInGroup
+                        .Where(d => d.NewDocumentPath != doc.NewDocumentPath)
+                        .Select(d => d.NewDocumentPath ?? string.Empty)
+                        .Where(path => !string.IsNullOrEmpty(path))
+                        .ToList();
+
+                    // Log error message (duplicates block merge)
+                    var fileExtension = System.IO.Path.GetExtension(doc.NewDocumentPath);
+                    doc.AddProcessMessage(
+                        $"ERROR: Duplicate {fileExtension} file found for document ID {group.Key.DocumentId}. " +
+                        $"Total duplicates: {documentsInGroup.Count}. This document cannot be merged until duplicates are resolved.",
+                        Stores.ProcessMessageTypes.Error
+                    );
+                }
+            }
+        }
+
+        /// <summary>
+        /// Enhanced version of MatchIncomingFilesToDocuments that also detects duplicates
+        /// </summary>
+        /// <param name="currentDocuments">List of current documents from the database</param>
+        /// <returns>True if all files were matched successfully, otherwise false</returns>
+        private bool MatchIncomingFilesToDocumentsWithDuplicateDetection(List<Document> currentDocuments)
+        {
+            // First, perform the normal matching
+            bool matchingResult = MatchIncomingFilesToDocuments(currentDocuments);
+
+            // Then detect duplicates
+            DetectDuplicateDocuments();
+
+            return matchingResult;
+        }
+
+        /// <summary>
         /// Checks if there are any supported files in the incoming folder.
         /// if any errors occur during the process, they are logged in the _errors list.
         /// if no supported files are found, an empty list is returned.
@@ -507,8 +576,9 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                 // log error
                 return false;
             }
-            // match incoming files against current documents
-            bool matchedDocuments = MatchIncomingFilesToDocuments(currentDocuments);
+            // Match incoming files against current documents
+            // CHANGE: Use the enhanced version that includes duplicate detection
+            bool matchedDocuments = MatchIncomingFilesToDocumentsWithDuplicateDetection(currentDocuments);
 
             // return the result of the matching operation (false if any errors occurred)
             return matchedDocuments;

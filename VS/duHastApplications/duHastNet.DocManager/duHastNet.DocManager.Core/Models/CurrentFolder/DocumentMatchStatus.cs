@@ -39,6 +39,16 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         WarningRevisionNotSequential,
 
         /// <summary>
+        /// Document matched but no revision information found in filename
+        /// </summary>
+        WarningMissingRevision,
+
+        /// <summary>
+        /// Multiple documents of the same file type matched to the same document number (blocks merge)
+        /// </summary>
+        ErrorDuplicateDocument,
+
+        /// <summary>
         /// Document matched successfully with sequential revision
         /// </summary>
         Ok

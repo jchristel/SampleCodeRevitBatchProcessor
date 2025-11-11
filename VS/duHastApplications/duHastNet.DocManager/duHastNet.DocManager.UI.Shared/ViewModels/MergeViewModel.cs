@@ -125,8 +125,13 @@ public partial class MergeViewModel : ObservableObject
 
     /// <summary>
     /// Gets whether the merge button should be enabled
+    /// Requires: Database connected, Revision date set, Revision description set
     /// </summary>
-    public bool CanMerge => IsDatabaseReady && !IsBusy && DocumentMatchViewModel.MatchedCount > 0;
+    public bool CanMerge => IsDatabaseReady && 
+                            !IsBusy && 
+                            RevisionDate.HasValue && 
+                            !string.IsNullOrWhiteSpace(RevisionDescription);
+
 
     #endregion
 
@@ -214,6 +219,10 @@ public partial class MergeViewModel : ObservableObject
                 await ExportMetadataAsync();
             }
 
+            // Step 5: Merge incoming files with red and yellow status into their target locations
+            // This happens regardless of database update success, as file operations are independent
+            await MergeFilesAsync();
+
         }
         catch (Exception ex)
         {
@@ -256,6 +265,10 @@ public partial class MergeViewModel : ObservableObject
     /// </summary>
     partial void OnRevisionDescriptionChanged(string value)
     {
+
+        // Update merge button state
+        OnPropertyChanged(nameof(CanMerge));
+
         // Clear suggestions if input is empty
         if (string.IsNullOrWhiteSpace(value))
         {
@@ -285,6 +298,15 @@ public partial class MergeViewModel : ObservableObject
 
         // Show popup if there are suggestions
         IsRevisionSuggestionsPopupOpen = FilteredRevisionDescriptions.Count > 0;
+    }
+
+    /// <summary>
+    /// Called when RevisionDate changes
+    /// </summary>
+    partial void OnRevisionDateChanged(DateTime? value)
+    {
+        // Update merge button state
+        OnPropertyChanged(nameof(CanMerge));
     }
 
     #endregion

@@ -40,6 +40,7 @@ namespace duHastNet.DocManager.Core.Models
 
         /// process messages collected during processing
         private List<(string,Stores.ProcessMessageTypes)> _processMessages;
+        public List<(string,Stores.ProcessMessageTypes)> ProcessMessages { get => _processMessages; }
 
         /// <summary>
         /// Add process messages collected during processing
@@ -82,6 +83,19 @@ namespace duHastNet.DocManager.Core.Models
         /// </summary>
         public List<string> DuplicateFilePaths { get; set; }
 
+        /// <summary>
+        /// check if during processing any errors were logged
+        /// </summary>
+        public bool GetProcessStatus()
+        {
+            // processing is successful if no error messages were logged
+            return !_processMessages.Any(x => x.Item2 == Stores.ProcessMessageTypes.Error);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IncomingDocumentProcessingStatus"/> class.
+        /// </summary>
+        /// <param name="newDocumentPath"></param>
         public IncomingDocumentProcessingStatus(string newDocumentPath)
         {
             _newDocumentPath = newDocumentPath;

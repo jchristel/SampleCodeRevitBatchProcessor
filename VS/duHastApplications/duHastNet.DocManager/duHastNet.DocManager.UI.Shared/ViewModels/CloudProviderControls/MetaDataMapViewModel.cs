@@ -50,6 +50,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
                 {
                     return Model.DocumentPropertyName;
                 }
+                else if (!string.IsNullOrWhiteSpace(Model.FilePropertyName))
+                {
+                    return $"[File].{Model.FilePropertyName}";
+                }
                 else
                 {
                     return "(Not Set)";
@@ -71,6 +75,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
                 else if (!string.IsNullOrWhiteSpace(Model.DocumentPropertyName))
                 {
                     return "Document Property";
+                }
+                else if (!string.IsNullOrWhiteSpace(Model.FilePropertyName))
+                {
+                    return "From File";
                 }
                 else
                 {

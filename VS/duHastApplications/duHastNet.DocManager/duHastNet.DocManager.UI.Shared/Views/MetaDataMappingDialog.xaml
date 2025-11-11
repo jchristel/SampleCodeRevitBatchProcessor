@@ -1,4 +1,4 @@
-﻿<Window x:Class="duHastNet.DocManager.UI.Shared.Views.MetaDataMappingDialog"
+<Window x:Class="duHastNet.DocManager.UI.Shared.Views.MetaDataMappingDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -18,6 +18,8 @@
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <converters:CountToEnabledConverter x:Key="CountToEnabledConverter"/>
         <converters:ValidationErrorConverter x:Key="ValidationErrorConverter"/>
+        <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+        <converters:EnumToVisibilityConverter x:Key="EnumToVisibilityConverter"/>
         <!-- Style for group boxes -->
         <Style TargetType="GroupBox">
             <Setter Property="Margin" Value="0,0,0,10"/>
@@ -74,24 +76,36 @@
                 <TextBlock Text="Select mapping type:" Margin="0,0,0,10"/>
 
                 <RadioButton Content="Map to Document Property"
-                             IsChecked="{Binding IsStaticValue, Converter={StaticResource InverseBooleanConverter}}"
+                             IsChecked="{Binding SelectedMappingSource, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=DocumentProperty}"
+                             GroupName="MappingType"/>
+
+                <RadioButton Content="Map to File Property"
+                             IsChecked="{Binding SelectedMappingSource, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=FileProperty}"
                              GroupName="MappingType"/>
 
                 <RadioButton Content="Use Static Value"
-                             IsChecked="{Binding IsStaticValue}"
+                             IsChecked="{Binding SelectedMappingSource, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=StaticValue}"
                              GroupName="MappingType"
                              Margin="0,5,0,15"/>
 
-                <!-- Document Property Selection (visible when IsStaticValue = false) -->
-                <StackPanel Visibility="{Binding IsStaticValue, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                <!-- Document Property Selection (visible when SelectedMappingSource = DocumentProperty) -->
+                <StackPanel Visibility="{Binding SelectedMappingSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=DocumentProperty}">
                     <TextBlock Text="Select document property:"/>
                     <ComboBox ItemsSource="{Binding AvailableDocumentProperties}"
                               SelectedItem="{Binding SelectedDocumentProperty, ValidatesOnNotifyDataErrors=True}"
                               ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"/>
                 </StackPanel>
 
-                <!-- Static Value Input (visible when IsStaticValue = true) -->
-                <StackPanel Visibility="{Binding IsStaticValue, Converter={StaticResource BoolToVisibilityConverter}}">
+                <!-- File Property Selection (visible when SelectedMappingSource = FileProperty) -->
+                <StackPanel Visibility="{Binding SelectedMappingSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=FileProperty}">
+                    <TextBlock Text="Select file property:"/>
+                    <ComboBox ItemsSource="{Binding AvailableFileProperties}"
+                              SelectedItem="{Binding SelectedFileProperty, ValidatesOnNotifyDataErrors=True}"
+                              ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"/>
+                </StackPanel>
+
+                <!-- Static Value Input (visible when SelectedMappingSource = StaticValue) -->
+                <StackPanel Visibility="{Binding SelectedMappingSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=StaticValue}">
                     <TextBlock Text="Enter static value:"/>
                     <TextBox Text="{Binding StaticValue, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
                              ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"/>

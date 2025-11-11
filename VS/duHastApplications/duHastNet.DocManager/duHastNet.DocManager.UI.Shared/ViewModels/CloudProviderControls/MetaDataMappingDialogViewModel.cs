@@ -32,6 +32,27 @@ using System.ComponentModel.DataAnnotations;
 namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
 {
     /// <summary>
+    /// Enumeration for mapping source types
+    /// </summary>
+    public enum MappingSourceType
+    {
+        /// <summary>
+        /// Map to a document property (Number, Name, Revision, or custom field)
+        /// </summary>
+        DocumentProperty,
+
+        /// <summary>
+        /// Use a static/fixed value
+        /// </summary>
+        StaticValue,
+
+        /// <summary>
+        /// Map to a file property (e.g., FileName)
+        /// </summary>
+        FileProperty
+    }
+
+    /// <summary>
     /// ViewModel for the MetaDataMapping dialog
     /// Handles adding and editing metadata field mappings
     /// </summary>
@@ -59,6 +80,11 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         public ObservableCollection<string> AvailableDocumentProperties { get; }
 
         /// <summary>
+        /// Available file properties for mapping
+        /// </summary>
+        public ObservableCollection<string> AvailableFileProperties { get; }
+
+        /// <summary>
         /// Currently selected metadata field name from template
         /// </summary>
         [ObservableProperty]
@@ -66,24 +92,31 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         private string? _selectedMetaFieldName;
 
         /// <summary>
-        /// Indicates whether this mapping uses a static value (true) or document property (false)
+        /// The selected mapping source type (DocumentProperty, StaticValue, or FileProperty)
         /// </summary>
         [ObservableProperty]
-        private bool _isStaticValue = false;
+        private MappingSourceType _selectedMappingSource = MappingSourceType.DocumentProperty;
 
         /// <summary>
-        /// The static value to use (only if IsStaticValue is true)
+        /// The static value to use (only if SelectedMappingSource is StaticValue)
         /// </summary>
         [ObservableProperty]
         [CustomValidation(typeof(MetaDataMappingDialogViewModel), nameof(ValidateStaticValue))]
         private string _staticValue = string.Empty;
 
         /// <summary>
-        /// The selected document property name (only if IsStaticValue is false)
+        /// The selected document property name (only if SelectedMappingSource is DocumentProperty)
         /// </summary>
         [ObservableProperty]
         [CustomValidation(typeof(MetaDataMappingDialogViewModel), nameof(ValidateDocumentProperty))]
         private string? _selectedDocumentProperty;
+
+        /// <summary>
+        /// The selected file property name (only if SelectedMappingSource is FileProperty)
+        /// </summary>
+        [ObservableProperty]
+        [CustomValidation(typeof(MetaDataMappingDialogViewModel), nameof(ValidateFileProperty))]
+        private string? _selectedFileProperty;
 
         /// <summary>
         /// Dialog title (Add or Edit)
@@ -127,6 +160,12 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             // Initialize collections
             AvailableMetaFields = new ObservableCollection<string>(availableMetaFields ?? throw new ArgumentNullException(nameof(availableMetaFields)));
             AvailableDocumentProperties = new ObservableCollection<string>(availableDocumentProperties ?? throw new ArgumentNullException(nameof(availableDocumentProperties)));
+            
+            // Initialize file properties collection
+            AvailableFileProperties = new ObservableCollection<string>
+            {
+                "FileName"  // Initially only filename, extensible for future properties
+            };
 
             // Select first items as defaults
             if (AvailableMetaFields.Count > 0)
@@ -138,6 +177,15 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             {
                 SelectedDocumentProperty = AvailableDocumentProperties[0];
             }
+
+            if (AvailableFileProperties.Count > 0)
+            {
+                SelectedFileProperty = AvailableFileProperties[0];
+            }
+
+            // Explicitly set default selection and force UI update
+            SelectedMappingSource = MappingSourceType.DocumentProperty;
+            OnPropertyChanged(nameof(SelectedMappingSource));
         }
 
         /// <summary>
@@ -176,18 +224,24 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             // Set the metadata field name
             SelectedMetaFieldName = _existingMapping.MetaFieldName;
 
-            // Determine if it's a static value or document property
+            // Determine mapping source type and set appropriate values
             if (!string.IsNullOrWhiteSpace(_existingMapping.MetaFieldValue))
             {
                 // Static value
-                IsStaticValue = true;
+                SelectedMappingSource = MappingSourceType.StaticValue;
                 StaticValue = _existingMapping.MetaFieldValue;
             }
             else if (!string.IsNullOrWhiteSpace(_existingMapping.DocumentPropertyName))
             {
                 // Document property
-                IsStaticValue = false;
+                SelectedMappingSource = MappingSourceType.DocumentProperty;
                 SelectedDocumentProperty = _existingMapping.DocumentPropertyName;
+            }
+            else if (!string.IsNullOrWhiteSpace(_existingMapping.FilePropertyName))
+            {
+                // File property
+                SelectedMappingSource = MappingSourceType.FileProperty;
+                SelectedFileProperty = _existingMapping.FilePropertyName;
             }
         }
 
@@ -206,31 +260,28 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         }
 
         /// <summary>
-        /// Called when IsStaticValue changes
+        /// Called when SelectedMappingSource changes
         /// Triggers validation of relevant fields
         /// </summary>
-        partial void OnIsStaticValueChanged(bool value)
+        partial void OnSelectedMappingSourceChanged(MappingSourceType value)
         {
-            // Clear validation for the field that's no longer relevant
-            if (value)
-            {
-                // Using static value, clear document property validation
-                ClearErrors(nameof(SelectedDocumentProperty));
-            }
-            else
-            {
-                // Using document property, clear static value validation
-                ClearErrors(nameof(StaticValue));
-            }
+            // Clear validation for fields that are no longer relevant
+            ClearErrors(nameof(StaticValue));
+            ClearErrors(nameof(SelectedDocumentProperty));
+            ClearErrors(nameof(SelectedFileProperty));
 
             // Trigger validation for the active field
-            if (value)
+            switch (value)
             {
-                ValidateProperty(StaticValue, nameof(StaticValue));
-            }
-            else
-            {
-                ValidateProperty(SelectedDocumentProperty, nameof(SelectedDocumentProperty));
+                case MappingSourceType.StaticValue:
+                    ValidateProperty(StaticValue, nameof(StaticValue));
+                    break;
+                case MappingSourceType.DocumentProperty:
+                    ValidateProperty(SelectedDocumentProperty, nameof(SelectedDocumentProperty));
+                    break;
+                case MappingSourceType.FileProperty:
+                    ValidateProperty(SelectedFileProperty, nameof(SelectedFileProperty));
+                    break;
             }
 
             OkCommand.NotifyCanExecuteChanged();
@@ -253,6 +304,16 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         partial void OnSelectedDocumentPropertyChanged(string? value)
         {
             ValidateProperty(value, nameof(SelectedDocumentProperty));
+            OkCommand.NotifyCanExecuteChanged();
+        }
+
+        /// <summary>
+        /// Called when SelectedFileProperty changes
+        /// Triggers validation
+        /// </summary>
+        partial void OnSelectedFilePropertyChanged(string? value)
+        {
+            ValidateProperty(value, nameof(SelectedFileProperty));
             OkCommand.NotifyCanExecuteChanged();
         }
 
@@ -279,12 +340,13 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
 
             try
             {
-                // Create the mapping
+                // Create the mapping based on selected source type
                 var mapping = new MetaDataMap
                 {
                     MetaFieldName = SelectedMetaFieldName,
-                    MetaFieldValue = IsStaticValue ? StaticValue : null,
-                    DocumentPropertyName = IsStaticValue ? null : SelectedDocumentProperty,
+                    MetaFieldValue = SelectedMappingSource == MappingSourceType.StaticValue ? StaticValue : null,
+                    DocumentPropertyName = SelectedMappingSource == MappingSourceType.DocumentProperty ? SelectedDocumentProperty : null,
+                    FilePropertyName = SelectedMappingSource == MappingSourceType.FileProperty ? SelectedFileProperty : null,
                     CloudServiceProviderName = "Aconex" // This is for Aconex integration
                 };
 
@@ -308,14 +370,17 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             if (string.IsNullOrWhiteSpace(SelectedMetaFieldName))
                 return false;
 
-            // Must have either a static value or document property selected
-            if (IsStaticValue)
+            // Must have appropriate value based on selected source type
+            switch (SelectedMappingSource)
             {
-                return !string.IsNullOrWhiteSpace(StaticValue);
-            }
-            else
-            {
-                return !string.IsNullOrWhiteSpace(SelectedDocumentProperty);
+                case MappingSourceType.StaticValue:
+                    return !string.IsNullOrWhiteSpace(StaticValue);
+                case MappingSourceType.DocumentProperty:
+                    return !string.IsNullOrWhiteSpace(SelectedDocumentProperty);
+                case MappingSourceType.FileProperty:
+                    return !string.IsNullOrWhiteSpace(SelectedFileProperty);
+                default:
+                    return false;
             }
         }
 
@@ -335,7 +400,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
 
         /// <summary>
         /// Validates the static value
-        /// Only required if IsStaticValue is true
+        /// Only required if SelectedMappingSource is StaticValue
         /// </summary>
         public static ValidationResult? ValidateStaticValue(string? value, ValidationContext context)
         {
@@ -344,7 +409,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
                 return ValidationResult.Success;
 
             // Only validate if using static value mode
-            if (viewModel.IsStaticValue && string.IsNullOrWhiteSpace(value))
+            if (viewModel.SelectedMappingSource == MappingSourceType.StaticValue && string.IsNullOrWhiteSpace(value))
             {
                 return new ValidationResult("Static value is required");
             }
@@ -354,7 +419,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
 
         /// <summary>
         /// Validates the document property selection
-        /// Only required if IsStaticValue is false
+        /// Only required if SelectedMappingSource is DocumentProperty
         /// </summary>
         public static ValidationResult? ValidateDocumentProperty(string? value, ValidationContext context)
         {
@@ -363,9 +428,28 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
                 return ValidationResult.Success;
 
             // Only validate if using document property mode
-            if (!viewModel.IsStaticValue && string.IsNullOrWhiteSpace(value))
+            if (viewModel.SelectedMappingSource == MappingSourceType.DocumentProperty && string.IsNullOrWhiteSpace(value))
             {
                 return new ValidationResult("Please select a document property");
+            }
+
+            return ValidationResult.Success;
+        }
+
+        /// <summary>
+        /// Validates the file property selection
+        /// Only required if SelectedMappingSource is FileProperty
+        /// </summary>
+        public static ValidationResult? ValidateFileProperty(string? value, ValidationContext context)
+        {
+            var viewModel = context.ObjectInstance as MetaDataMappingDialogViewModel;
+            if (viewModel == null)
+                return ValidationResult.Success;
+
+            // Only validate if using file property mode
+            if (viewModel.SelectedMappingSource == MappingSourceType.FileProperty && string.IsNullOrWhiteSpace(value))
+            {
+                return new ValidationResult("Please select a file property");
             }
 
             return ValidationResult.Success;

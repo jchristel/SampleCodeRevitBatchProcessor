@@ -1,4 +1,4 @@
-﻿//
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -69,6 +69,22 @@ namespace duHastNet.DocManager.Core.Models.MetaData
         }
 
         /// <summary>
+        /// The file property name to extract from incoming files. Null if this value is coming from a static value or document property.
+        /// </summary>
+        private string? _filePropertyName;
+
+        /// <summary>
+        /// Gets or sets the file property name that provides the value
+        /// Use this for values extracted from file properties (e.g., "FileName").
+        /// Set to null if using a static value or document property.
+        /// </summary>
+        public string? FilePropertyName
+        {
+            get { return _filePropertyName; }
+            set { _filePropertyName = value; }
+        }
+
+        /// <summary>
         /// The name of the cloud service provider this meta data is for
         /// </summary>
         private string? _cloudServiceProviderName;
@@ -93,14 +109,16 @@ namespace duHastNet.DocManager.Core.Models.MetaData
         /// Initializes a new instance of MetaDataMap with specified values
         /// </summary>
         /// <param name="metaFieldName">The metadata field name</param>
-        /// <param name="metaFieldValue">The fixed value (use null if value comes from document property)</param>
-        /// <param name="documentPropertyName">The document property name (use null if using fixed value)</param>
+        /// <param name="metaFieldValue">The fixed value (use null if value comes from document property or file property)</param>
+        /// <param name="documentPropertyName">The document property name (use null if using fixed value or file property)</param>
         /// <param name="cloudServiceProviderName">The cloud service provider name</param>
-        public MetaDataMap(string? metaFieldName, string? metaFieldValue, string? documentPropertyName, string? cloudServiceProviderName)
+        /// <param name="filePropertyName">The file property name (use null if using fixed value or document property)</param>
+        public MetaDataMap(string? metaFieldName, string? metaFieldValue, string? documentPropertyName, string? filePropertyName, string? cloudServiceProviderName)
         {
             _metaFieldName = metaFieldName;
             _metaFieldValue = metaFieldValue;
             _documentPropertyName = documentPropertyName;
+            _filePropertyName = filePropertyName;
             _cloudServiceProviderName = cloudServiceProviderName;
         }
     }

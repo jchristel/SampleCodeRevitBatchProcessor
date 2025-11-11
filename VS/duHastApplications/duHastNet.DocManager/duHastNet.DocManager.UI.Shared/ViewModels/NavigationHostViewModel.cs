@@ -94,6 +94,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 _navigationStore!,
                 _manager!,
                 _currentFolderManager!,
+                _dialogService!,
                 CreateSettingsViewModel
             );
         }

@@ -27,11 +27,9 @@ using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.Core.Services.Api;
+using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-
 namespace duHastNet.DocManager.UI.Shared.ViewModels;
 
 /// <summary>
@@ -46,6 +44,7 @@ public partial class MergeViewModel : ObservableObject
     private readonly NavigationStore _navigationStore;
     private readonly Manager _manager;
     private readonly CurrentFolderManager _currentFolderManager;
+    private readonly IDialogService _dialogService;
 
     //function used to navigate to settings view model
     private readonly Func<SettingsViewModel> _createViewModel;
@@ -66,6 +65,7 @@ public partial class MergeViewModel : ObservableObject
         NavigationStore navigationStore,
         Manager manager,
         CurrentFolderManager currentFolderManager,
+        IDialogService dialogService,
         Func<SettingsViewModel> createViewModel
         )
     {
@@ -75,6 +75,7 @@ public partial class MergeViewModel : ObservableObject
         _createViewModel = createViewModel;
         _manager = manager ?? throw new ArgumentNullException(nameof(manager));
         _currentFolderManager = currentFolderManager ?? throw new ArgumentNullException(nameof(currentFolderManager));
+        _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
         MessageViewModel = new GlobalMessageViewModel(_messageStore);
         DocumentMatchViewModel = new DocumentMatchControlViewModel(_currentFolderManager, _manager, _messageStore);
@@ -204,11 +205,14 @@ public partial class MergeViewModel : ObservableObject
                 MessageTypes.Information
             );
 
-            // TODO: Implement actual merge logic
-            // This would include:
-            // - Creating/updating revisions in the database
-            // - Moving files to appropriate folders
-            // - Updating document records
+            // Step 3: Update database with documents of green and yellow status
+            bool databaseUpdateSuccessful = await UpdateDatabaseAsync();
+
+            // Step 4: Export metadata to cloud provider (if enabled and database update was successful)
+            if (databaseUpdateSuccessful)
+            {
+                await ExportMetadataAsync();
+            }
 
         }
         catch (Exception ex)

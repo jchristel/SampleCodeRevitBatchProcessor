@@ -129,7 +129,7 @@ public partial class DocumentMatchControlViewModel : ObservableObject
     /// Command to refresh the document matching
     /// </summary>
     [RelayCommand]
-    private async Task RefreshMatchingAsync()
+    public async Task RefreshMatchingAsync()
     {
         if (IsBusy) return;
 

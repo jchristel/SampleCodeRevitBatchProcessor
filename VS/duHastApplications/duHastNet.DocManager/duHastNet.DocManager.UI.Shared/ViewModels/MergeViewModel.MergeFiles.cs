@@ -49,19 +49,19 @@ public partial class MergeViewModel
                 "Merging files into target folders...",
                 MessageTypes.Information);
 
-            // Get documents to merge (red and yellow status)
-            // Red = NoMatch or ErrorDuplicateDocument (need to be handled manually)
+            // Get documents to merge (green and yellow status)
+            // Green = Ok 
             // Yellow = Warnings (safe to merge but with caution)
             var documentsToMerge = DocumentMatchViewModel.MatchedDocuments
                 .Where(d => d.MatchStatus == DocumentMatchStatus.WarningRevisionNotSequential ||
                             d.MatchStatus == DocumentMatchStatus.WarningMissingRevision ||
-                            d.MatchStatus == DocumentMatchStatus.NoMatch)
+                            d.MatchStatus == DocumentMatchStatus.Ok)
                 .ToList();
 
             if (!documentsToMerge.Any())
             {
                 _messageStore.SetCurrentMessage(
-                    "No files with warnings or unmatched status to merge.",
+                    "No files with warnings or matched status to merge.",
                     MessageTypes.Information);
                 return;
             }
@@ -70,12 +70,6 @@ public partial class MergeViewModel
             // we can use the supersede functionality to move old files and bring in new ones
             var documentsWithMatches = documentsToMerge
                 .Where(d => d.HasMatch)
-                .ToList();
-
-            // For documents without matches (red - NoMatch), we can only move the incoming files
-            // Cannot supersede because there's nothing to supersede
-            var documentsWithoutMatches = documentsToMerge
-                .Where(d => !d.HasMatch)
                 .ToList();
 
             int filesMovedSuccessfully = 0;
@@ -134,63 +128,6 @@ public partial class MergeViewModel
                             $"File merge completed. Moved: {successfulMoves} files.",
                             MessageTypes.Information);
                     }
-                }
-            }
-
-            // Handle documents without matches (just move incoming files, no superseding)
-            if (documentsWithoutMatches.Any())
-            {
-                _messageStore.SetCurrentMessage(
-                    $"Processing {documentsWithoutMatches.Count} unmatched files (will move to target folders without superseding)...",
-                    MessageTypes.Information);
-
-                // For unmatched documents, we need to manually move them to target folders
-                // based on filing rules
-                int unmatchedSuccess = 0;
-                int unmatchedFailed = 0;
-
-                foreach (var doc in documentsWithoutMatches)
-                {
-                    try
-                    {
-                        // Get the incoming file path
-                        var incomingFilePath = doc.IncomingFilePath;
-
-                        if (string.IsNullOrEmpty(incomingFilePath) || !File.Exists(incomingFilePath))
-                        {
-                            unmatchedFailed++;
-                            _messageStore.SetCurrentMessage(
-                                $"Incoming file not found: {doc.IncomingFileName}",
-                                MessageTypes.Warning);
-                            continue;
-                        }
-
-                        // Determine target folder based on filing rules
-                        // We'll need to add a public method to CurrentFolderManager for this
-                        // For now, log that unmatched files need manual handling
-                        unmatchedFailed++;
-
-                        _messageStore.SetCurrentMessage(
-                            $"Unmatched file requires manual handling: {doc.IncomingFileName}. " +
-                            $"File path: {incomingFilePath}",
-                            MessageTypes.Warning);
-                    }
-                    catch (Exception ex)
-                    {
-                        unmatchedFailed++;
-                        _messageStore.SetCurrentMessage(
-                            $"Error processing unmatched file {doc.IncomingFileName}: {ex.Message}",
-                            MessageTypes.Error);
-                    }
-                }
-
-                if (unmatchedSuccess > 0)
-                {
-                    filesMovedSuccessfully += unmatchedSuccess;
-                }
-                if (unmatchedFailed > 0)
-                {
-                    filesMovedFailed += unmatchedFailed;
                 }
             }
 

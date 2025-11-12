@@ -171,34 +171,34 @@ public partial class MergeViewModel : ObservableObject
         IsBusy = true;
         try
         {
-            // Validate inputs
-            if (!RevisionDate.HasValue)
-            {
-                _messageStore.SetCurrentMessage("Please select a revision date.", MessageTypes.Warning);
-                return;
-            }
+            //// Validate inputs
+            //if (!RevisionDate.HasValue)
+            //{
+            //    _messageStore.SetCurrentMessage("Please select a revision date.", MessageTypes.Warning);
+            //    return;
+            //}
 
-            if (string.IsNullOrWhiteSpace(RevisionDescription))
-            {
-                _messageStore.SetCurrentMessage("Please enter a revision description.", MessageTypes.Warning);
-                return;
-            }
+            //if (string.IsNullOrWhiteSpace(RevisionDescription))
+            //{
+            //    _messageStore.SetCurrentMessage("Please enter a revision description.", MessageTypes.Warning);
+            //    return;
+            //}
 
-            // Step 1: Check incoming folder and match documents
-            _messageStore.SetCurrentMessage("Checking incoming folder for documents...", MessageTypes.Information);
+            //// Step 1: Check incoming folder and match documents
+            //_messageStore.SetCurrentMessage("Checking incoming folder for documents...", MessageTypes.Information);
 
             var currentDocuments = _manager.GetAllDocuments().ToList();
-            bool matchingSuccessful = _currentFolderManager.GetIncomingFilesMetadata(currentDocuments);
+            //bool matchingSuccessful = _currentFolderManager.GetIncomingFilesMetadata(currentDocuments);
 
-            if (!matchingSuccessful)
-            {
-                _messageStore.SetCurrentMessage("Error matching incoming files. Check logs for details.", MessageTypes.Error);
+            //if (!matchingSuccessful)
+            //{
+            //    _messageStore.SetCurrentMessage("Error matching incoming files. Check logs for details.", MessageTypes.Error);
 
-                // Still load the results so user can see what went wrong
-                var matchedStatuses = _currentFolderManager.GetMatchedDocuments();
-                DocumentMatchViewModel.LoadMatchedDocuments(matchedStatuses, currentDocuments);
-                return;
-            }
+            //    // Still load the results so user can see what went wrong
+            //    var matchedStatuses = _currentFolderManager.GetMatchedDocuments();
+            //    DocumentMatchViewModel.LoadMatchedDocuments(matchedStatuses, currentDocuments);
+            //    return;
+            //}
 
             // Step 2: Load matched documents into the control
             var matchedDocs = _currentFolderManager.GetMatchedDocuments();
@@ -222,6 +222,9 @@ public partial class MergeViewModel : ObservableObject
             // Step 5: Merge incoming files with red and yellow status into their target locations
             // This happens regardless of database update success, as file operations are independent
             await MergeFilesAsync();
+
+            // refresh the document list after merge
+            await DocumentMatchViewModel.RefreshMatchingAsync();
 
         }
         catch (Exception ex)

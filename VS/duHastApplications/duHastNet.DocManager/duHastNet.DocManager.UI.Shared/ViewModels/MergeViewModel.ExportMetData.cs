@@ -95,8 +95,7 @@ public partial class MergeViewModel : ObservableObject
             // Get documents that were updated (green and yellow status)
             var documentsToExport = DocumentMatchViewModel.MatchedDocuments
                 .Where(d => d.MatchStatus == DocumentMatchStatus.Ok ||
-                            d.MatchStatus == DocumentMatchStatus.WarningRevisionNotSequential ||
-                            d.MatchStatus == DocumentMatchStatus.WarningMissingRevision)
+                            d.MatchStatus == DocumentMatchStatus.WarningRevisionNotSequential)
                 .Select(d => d.MatchedDocumentId)
                 .Where(id => id.HasValue)
                 .Select(id => id!.Value)
@@ -112,12 +111,23 @@ public partial class MergeViewModel : ObservableObject
 
             // Get full document objects from database
             var documents = new List<Document>();
-            foreach (var docId in documentsToExport)
+            var filePathsByDocumentId = new Dictionary<int, string>();
+
+            foreach (var matchedDoc in documentsToExport)
             {
-                var doc = await _docManagerApi.GetDocumentByIdAsync(docId);
+                //if (!matchedDoc.MatchedDocumentId.HasValue)
+                //    continue;
+
+                var doc = await _docManagerApi.GetDocumentByIdAsync(matchedDoc.MatchedDocumentId);
                 if (doc != null)
                 {
                     documents.Add(doc);
+                    
+                    // Store the incoming file path for this document
+                    if (!string.IsNullOrWhiteSpace(matchedDoc.IncomingFilePath))
+                    {
+                        filePathsByDocumentId[doc.Id] = matchedDoc.IncomingFilePath;
+                    }
                 }
             }
 
@@ -138,7 +148,8 @@ public partial class MergeViewModel : ObservableObject
                 documents,
                 revisions,
                 metaDataMapper,
-                customProperties);
+                customProperties,
+                filePathsByDocumentId);
 
             if (success)
             {

@@ -125,6 +125,16 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             {
                 try
                 {
+                    //only move files without problems
+                    if (incomingDocumentStatus.IsDuplicate ||
+                        incomingDocumentStatus.MatchedDocumentId == null ||
+                        incomingDocumentStatus.IncomingDocumentRevision == null)
+                    {
+                        // skip to next document
+                        continue;
+                    }
+
+
                     // determine target current folder based on filing rules
                     var targetCurrentFolder = DetermineTargetCurrentFolder(incomingDocumentStatus.NewDocumentPath);
                     if (string.IsNullOrEmpty(targetCurrentFolder))
@@ -228,6 +238,28 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
 
             foreach (var incomingDocumentStatus in _matchedDocuments!)
             {
+
+                //skip documents without a match
+                if (incomingDocumentStatus.MatchedDocumentId == null)
+                {
+                    // no match found, skip to next document
+                    continue;
+                }
+
+                //skip duplicate documents
+                if (incomingDocumentStatus.IsDuplicate)
+                {
+                    // is a duplicate, skip to next document
+                    continue;
+                }
+
+                //skip documents without a revision
+                if (incomingDocumentStatus.IncomingDocumentRevision == null)
+                {
+                    // no revision found, skip to next document
+                    continue;
+                }
+
                 // determine target current folder based on filing rules
                 var targetCurrentFolder = DetermineTargetCurrentFolder(incomingDocumentStatus.NewDocumentPath);
 

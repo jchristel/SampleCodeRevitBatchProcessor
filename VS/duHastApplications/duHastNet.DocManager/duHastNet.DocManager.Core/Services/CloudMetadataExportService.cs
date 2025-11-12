@@ -39,13 +39,15 @@ public class CloudMetadataExportService
     /// <param name="revisions">All revisions for looking up revision details</param>
     /// <param name="cloudMetaData">Cloud provider metadata mapper (e.g., Aconex)</param>
     /// <param name="customProperties">Custom properties for each document</param>
+    /// <param name="filePathsByDocumentId">Dictionary mapping document IDs to their incoming file paths</param>
     /// <returns>True if export successful, false otherwise</returns>
     public async Task<bool> ExportMetadataAsync(
         string filePath,
         IEnumerable<Document> documents,
         IEnumerable<Revision> revisions,
         ICloudMetaData cloudMetaData,
-        Dictionary<int, List<CustomProperty>> customProperties)
+        Dictionary<int, List<CustomProperty>> customProperties,
+        Dictionary<int, string> filePathsByDocumentId)
     {
         try
         {
@@ -101,7 +103,7 @@ public class CloudMetadataExportService
             // Write data rows
             foreach (var document in documentsList)
             {
-                await WriteDocumentRowAsync(csv, document, columnHeaders, mappings, revisionsList, customProperties);
+                await WriteDocumentRowAsync(csv, document, columnHeaders, mappings, revisionsList, customProperties, filePathsByDocumentId);
             }
 
             return true;
@@ -154,7 +156,8 @@ public class CloudMetadataExportService
         List<string> columnHeaders,
         List<MetaDataMap> mappings,
         List<Revision> revisions,
-        Dictionary<int, List<CustomProperty>> customProperties)
+        Dictionary<int, List<CustomProperty>> customProperties,
+        Dictionary<int, string> filePathsByDocumentId)
     {
         // For each column header, find the corresponding mapping and get the value
         foreach (var header in columnHeaders)
@@ -180,6 +183,11 @@ public class CloudMetadataExportService
             {
                 // Dynamic value from document property
                 value = GetDocumentPropertyValue(document, mapping.DocumentPropertyName, revisions, customProperties);
+            }
+            else if (!string.IsNullOrWhiteSpace(mapping.FilePropertyName))
+            {
+                // Dynamic value from file property
+                value = GetFilePropertyValue(document, mapping.FilePropertyName, filePathsByDocumentId);
             }
             else
             {
@@ -246,6 +254,51 @@ public class CloudMetadataExportService
 
                     return customProp?.PropertyValue ?? string.Empty;
                 }
+                return string.Empty;
+        }
+    }
+
+    /// <summary>
+    /// Gets a file property value by name
+    /// Supports file name, extension, and full path
+    /// </summary>
+    private string GetFilePropertyValue(
+        Document document,
+        string propertyName,
+        Dictionary<int, string> filePathsByDocumentId)
+    {
+        // Try to get the file path for this document
+        if (!filePathsByDocumentId.TryGetValue(document.Id, out var filePath))
+        {
+            return string.Empty;
+        }
+
+        // Handle different file property names
+        switch (propertyName.ToLowerInvariant())
+        {
+            case "filename":
+            case "name":
+                return Path.GetFileName(filePath);
+
+            case "filenamewithoutextension":
+            case "namewithoutextension":
+                return Path.GetFileNameWithoutExtension(filePath);
+
+            case "extension":
+            case "fileextension":
+                return Path.GetExtension(filePath).TrimStart('.');
+
+            case "fullpath":
+            case "filepath":
+            case "path":
+                return filePath;
+
+            case "directoryname":
+            case "directory":
+            case "folder":
+                return Path.GetDirectoryName(filePath) ?? string.Empty;
+
+            default:
                 return string.Empty;
         }
     }

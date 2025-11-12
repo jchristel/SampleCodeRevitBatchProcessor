@@ -535,14 +535,14 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             }
 
             // match incoming files against current documents
-            bool matchedDocuments = MatchIncomingFilesToDocuments(currentDocuments);
+            //bool matchedDocuments = MatchIncomingFilesToDocuments(currentDocuments);
             
             // proceed only if matching was successful
-            if (!matchedDocuments)
-            {
-                // log error
-                return false;
-            }
+            //if (!matchedDocuments)
+            //{
+            //    // log error
+            //    return false;
+            //}
 
             // loop through all matched documents and supersede them
             // move matched documents to superseded folder

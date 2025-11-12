@@ -96,9 +96,6 @@ public partial class MergeViewModel : ObservableObject
             var documentsToExport = DocumentMatchViewModel.MatchedDocuments
                 .Where(d => d.MatchStatus == DocumentMatchStatus.Ok ||
                             d.MatchStatus == DocumentMatchStatus.WarningRevisionNotSequential)
-                .Select(d => d.MatchedDocumentId)
-                .Where(id => id.HasValue)
-                .Select(id => id!.Value)
                 .ToList();
 
             if (!documentsToExport.Any())
@@ -109,6 +106,7 @@ public partial class MergeViewModel : ObservableObject
                 return;
             }
 
+
             // Get full document objects from database
             var documents = new List<Document>();
             var filePathsByDocumentId = new Dictionary<int, string>();
@@ -118,7 +116,7 @@ public partial class MergeViewModel : ObservableObject
                 //if (!matchedDoc.MatchedDocumentId.HasValue)
                 //    continue;
 
-                var doc = await _docManagerApi.GetDocumentByIdAsync(matchedDoc.MatchedDocumentId);
+                var doc = await _docManagerApi.GetDocumentByIdAsync(matchedDoc.MatchedDocumentId.Value);
                 if (doc != null)
                 {
                     documents.Add(doc);

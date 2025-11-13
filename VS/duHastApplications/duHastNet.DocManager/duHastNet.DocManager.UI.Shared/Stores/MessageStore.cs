@@ -26,7 +26,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace duHastNet.DocManager.UI.Shared.Stores;
 
-public partial class MessageStore : ObservableObject
+public partial class MessageStore : ObservableObject, IDisposable
 {
     private CancellationTokenSource? _dismissCancellation;
     private const int DefaultDismissSeconds = 5;
@@ -151,5 +151,10 @@ public partial class MessageStore : ObservableObject
     partial void OnCurrentMessageChanged(string value)
     {
         OnPropertyChanged(nameof(HasCurrentMessage));
+    }
+
+    public void Dispose()
+    {
+        CancelDismissTimer();
     }
 }

@@ -31,6 +31,14 @@ namespace duHastNet.DocManager.Core.Models;
 [Table("Revisions")]
 public class Revision
 {
+
+    /// <summary>
+    /// constants for property names
+    /// used in mapping and querying
+    /// </summary> 
+    public const string PropertyRevisionDate = "RevisionDate";
+    public const string PropertyDescription = "RevisionDescription";
+
     /// <summary>
     /// Unique identifier for each revision batch
     /// </summary>

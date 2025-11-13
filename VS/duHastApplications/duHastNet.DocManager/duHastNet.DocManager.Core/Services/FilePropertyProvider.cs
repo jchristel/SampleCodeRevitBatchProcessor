@@ -24,6 +24,13 @@ namespace duHastNet.DocManager.Core.Services;
 /// </summary>
 public static class FilePropertyProvider
 {
+    // Public constants for property names
+    public const string PropertyFileName = "FileName";
+    public const string PropertyFileNameWithoutExtension = "FileNameWithoutExtension";
+    public const string PropertyExtension = "Extension";
+    public const string PropertyFullPath = "FullPath";
+    public const string PropertyDirectoryName = "DirectoryName";
+
     /// <summary>
     /// Gets the list of available file property names for UI dropdowns and validation
     /// These are the canonical names users will see in the UI
@@ -33,11 +40,11 @@ public static class FilePropertyProvider
     {
         return new List<string>
         {
-            "FileName",
-            "FileNameWithoutExtension",
-            "Extension",
-            "FullPath",
-            "DirectoryName"
+            PropertyFileName,
+            PropertyFileNameWithoutExtension,
+            PropertyExtension,
+            PropertyFullPath,
+            PropertyDirectoryName
         };
     }
 

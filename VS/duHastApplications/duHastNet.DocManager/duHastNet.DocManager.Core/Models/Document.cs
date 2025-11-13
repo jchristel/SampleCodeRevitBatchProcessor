@@ -16,6 +16,14 @@ namespace duHastNet.DocManager.Core.Models;
 public class Document
 {
     /// <summary>
+    /// constants for property names
+    /// used in mappinmg and querying
+    /// </summary> 
+    public const string PropertyNumber = "Number";
+    public const string PropertyName = "Name";
+    public const string PropertyRevision = "Revision";
+
+    /// <summary>
     /// Unique identifier for each document version
     /// </summary>
     [PrimaryKey, AutoIncrement]

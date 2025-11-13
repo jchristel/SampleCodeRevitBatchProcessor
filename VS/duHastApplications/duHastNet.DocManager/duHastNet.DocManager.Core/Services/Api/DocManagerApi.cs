@@ -321,7 +321,8 @@ public partial class DocManagerApi : IDisposable
     {
         try
         {
-            CloseAsync().GetAwaiter().GetResult();
+            // Use Task.Run to avoid deadlock
+            Task.Run(async () => await CloseAsync()).GetAwaiter().GetResult();
         }
         catch (Exception ex)
         {

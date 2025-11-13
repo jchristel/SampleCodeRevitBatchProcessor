@@ -268,11 +268,14 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         {
             var properties = new List<string>
             {
-                // Standard document properties (excluding IDs and histories as per requirements)
-                "Number",
-                "Name",
-                "Revision"
-                // Note: Revision Date and Description will be added when we access Revision data
+                // Standard document properties
+                Document.PropertyNumber,
+                Document.PropertyName,
+                Document.PropertyRevision,
+
+                // Revision properties
+                Revision.PropertyRevisionDate,
+                Revision.PropertyDescription,
             };
 
             // Add active custom field definitions

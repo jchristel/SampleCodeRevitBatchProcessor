@@ -8,6 +8,7 @@ using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Services;
 using duHastNet.DocManager.UI.Shared.Stores;
 using duHastNet.DocManager.UI.Shared.ViewModels;
+using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Windows;
@@ -79,6 +80,10 @@ namespace DocManager.Standalone
                     navigationStore: _navigationStore,
                     dialogService: _dialogService)
             };
+
+
+            // Subscribe to the Closed event to ensure proper shutdown
+            MainWindow.Closed += MainWindow_Closed;
 
             MainWindow.Show();
         }
@@ -271,10 +276,25 @@ namespace DocManager.Standalone
 
         protected override void OnExit(ExitEventArgs e)
         {
+            // Dispose MessageStore to cancel timers
+            if (_messageStore is IDisposable disposableStore)
+            {
+                disposableStore.Dispose();
+            }
+
             // Clean up resources
             _docManagerApi?.Dispose();
 
             base.OnExit(e);
+        }
+
+        /// <summary>
+        /// Handles main window closed event - ensures application shuts down completely
+        /// </summary>
+        private void MainWindow_Closed(object? sender, EventArgs e)
+        {
+            // Explicitly shut down the application when main window closes
+            Application.Current.Shutdown();
         }
     }
 }

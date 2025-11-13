@@ -28,6 +28,7 @@ using duHastNet.DocManager.Core.Models.MetaData;
 using duHastNet.DocManager.UI.Shared.Stores;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using duHastNet.DocManager.Core.Services;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
 {
@@ -162,10 +163,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             AvailableDocumentProperties = new ObservableCollection<string>(availableDocumentProperties ?? throw new ArgumentNullException(nameof(availableDocumentProperties)));
             
             // Initialize file properties collection
-            AvailableFileProperties = new ObservableCollection<string>
-            {
-                "FileName"  // Initially only filename, extensible for future properties
-            };
+            AvailableFileProperties = new ObservableCollection<string>(
+                FilePropertyProvider.GetAvailableFileProperties()
+            );
 
             // Select first items as defaults
             if (AvailableMetaFields.Count > 0)

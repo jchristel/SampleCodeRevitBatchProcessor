@@ -232,7 +232,7 @@ public class CloudMetadataExportService
 
             case "revisiondate":
                 var revision = revisions.FirstOrDefault(r => r.Id == document.RevisionId);
-                return revision?.RevisionDate.ToString("yyyy-MM-dd") ?? string.Empty;
+                return revision?.RevisionDate.ToString("dd/MM/yyyy") ?? string.Empty;
 
             case "revisiondescription":
                 var rev = revisions.FirstOrDefault(r => r.Id == document.RevisionId);

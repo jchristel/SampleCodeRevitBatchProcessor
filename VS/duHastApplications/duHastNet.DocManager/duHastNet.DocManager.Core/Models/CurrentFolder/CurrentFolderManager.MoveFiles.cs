@@ -352,6 +352,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             // and if so if it is locked by another process
             // if locked, log an error and skip to next document
             // if not locked, move the document to the superseded folder
+            // if a file with the same name exists, append a timestamp
             // keep track of which files were moved successfully and which not
             // log results for user information
 
@@ -388,12 +389,32 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                             //skip to next file
                             continue;
                         }
-                        // move file to superseded folder
+
+                        // prepare destination path with duplicate handling
                         var fileName = System.IO.Path.GetFileName(fileToMove);
                         var destinationPath = System.IO.Path.Combine(_settings.SupersededFolderPath!, fileName);
+
+                        // Check if file already exists in destination
+                        if (System.IO.File.Exists(destinationPath))
+                        {
+                            // File exists - append timestamp to make it unique
+                            var fileNameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(fileName);
+                            var extension = System.IO.Path.GetExtension(fileName);
+                            var timestamp = DateTime.Now.ToString("yyyyMMdd_HH_mm_ss");
+                            var newFileName = $"{fileNameWithoutExtension}_{timestamp}{extension}";
+                            destinationPath = System.IO.Path.Combine(_settings.SupersededFolderPath!, newFileName);
+
+                            // Log that we're appending timestamp due to duplicate
+                            matchedFile.Key.AddProcessMessage(
+                                $"File already exists in superseded folder. Appending timestamp: {newFileName}",
+                                Stores.ProcessMessageTypes.Information
+                            );
+                        }
+
                         try
                         {
                             System.IO.File.Move(fileToMove, destinationPath);
+
                             // log success - file moved successfully
                             matchedFile.Key.AddProcessMessage(
                                 $"File moved to superseded folder successfully: {destinationPath}",
@@ -404,7 +425,6 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                         {
                             // log exception details
                             matchedFile.Key.AddProcessMessage(ex);
-
                             // mark as not all files moved successfully
                             allFilesMovedSuccessfully = false;
                         }

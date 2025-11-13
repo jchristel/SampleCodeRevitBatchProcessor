@@ -1,5 +1,6 @@
 from duHast.Utilities.Objects.result import Result
 
+
 from duHast.Revit.Views.filters import get_filter_ids_from_view_by_filter
 from duHast.Revit.Views.visibility_graphics_filters import (
     get_filters_from_model,
@@ -7,16 +8,17 @@ from duHast.Revit.Views.visibility_graphics_filters import (
     apply_filter_override_to_view,
     remove_filter_from_view,
 )
+
 from duHast.pyRevit.console_output import print_header
 
-from views.view_templates_ui import (
-    _get_source_view_template,
-    _get_target_view_templates,
+from views.views_ui import (
+    _get_source_views,
+    _get_target_views,
 )
+
 from views.view_filters_ui import _get_selected_filters
 
 from Autodesk.Revit.DB import Element
-
 
 def _get_filters_to_propagate(doc, forms, source_view_template):
     """
@@ -170,7 +172,7 @@ def apply_filter_overrides_to_views(doc, add_filter_if_not_present, forms):
     return_value = Result()
 
     # get the source view template
-    source_view_template = _get_source_view_template(doc, forms)
+    source_view_template =_get_source_views(doc, forms)
     if source_view_template == None:
         print(
             "No view template selected or no suitable view templates in file. Exiting."
@@ -181,7 +183,7 @@ def apply_filter_overrides_to_views(doc, add_filter_if_not_present, forms):
         return return_value
 
     # get the target view templates
-    target_view_templates = _get_target_view_templates(
+    target_view_templates =_get_target_views(
         doc, forms, source_view_template.Name
     )
     if len(target_view_templates) == 0:
@@ -223,70 +225,4 @@ def apply_filter_overrides_to_views(doc, add_filter_if_not_present, forms):
     return_value.update(apply_status)
 
     print("Finished")
-    return return_value
-
-
-def remove_filters_from_view_templates(doc, output, forms):
-    """
-    Removes filters from selected view templates
-
-    :param doc: The current model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :param output: pyRevit output module
-    :type output: module
-    :param forms: pyRevit forms module
-    :type forms: module
-
-    :return:
-        Result class instance.
-
-        - result.status (bool) will be True if successful.
-        - result.message will contain the log messages.
-        - result.result will be an empty list.
-
-        On exception:
-
-        - result.status (bool) will be False.
-        - result.message will contain exception message.
-
-    :rtype: :class:`.Result`:return:
-    """
-
-    # set up a status tracker
-    return_value = Result()
-
-    # get all filters to be removed
-    filters_to_remove = _get_selected_filters(doc, forms)
-
-    if filters_to_remove is None or len(filters_to_remove) == 0:
-        print("No filters selected.")
-        return_value.update_sep(False, "No filters selected.")
-        return return_value
-
-    # get user to selecte target templates
-    target_templates = _get_target_view_templates(doc, forms, None)
-    if len(target_templates) == 0:
-        print(
-            "No target view template(s) selected or no suitable view templates in file. Exiting."
-        )
-        return_value.update_sep(
-            False,
-            "No target view template(s) selected or no suitable view templates in file.",
-        )
-        return return_value
-
-    # delete away
-    for target_template in target_templates:
-        print_header(
-            "Removing filters from view template: {}".format(target_template.Name)
-        )
-        for filter in filters_to_remove:
-            status_delete_filter = remove_filter_from_view(
-                doc=doc, filter=filter, view=target_template
-            )
-            print(status_delete_filter.message)
-            return_value.update(status_delete_filter)
-
-    print("Finished")
-
     return return_value

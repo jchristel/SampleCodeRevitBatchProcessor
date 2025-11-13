@@ -1,8 +1,8 @@
 # bundle title
-title: "Export View Overrides"
+title: "Import View Filters"
 
 # bundle tooltip
-tooltip: Exports category and filter overrides from selected view templates to file.
+tooltip: Imports view filters from file. 
 
 
 # bundle author
@@ -13,7 +13,7 @@ author:
 # bundle highlighting ('new' or 'updated')
 # Revit UI will show a orange marker on the button and a border around the tooltip
 #highlight: new      # highlight as new
-#highlight: updated  # highlight as updated
+highlight: new  # highlight as updated
 
 
 # bundle help url

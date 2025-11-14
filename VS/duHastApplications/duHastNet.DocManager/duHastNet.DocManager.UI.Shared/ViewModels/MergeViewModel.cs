@@ -78,7 +78,7 @@ public partial class MergeViewModel : ObservableObject
         _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
         MessageViewModel = new GlobalMessageViewModel(_messageStore);
-        DocumentMatchViewModel = new DocumentMatchControlViewModel(_currentFolderManager, _manager, _messageStore);
+        DocumentMatchViewModel = new DocumentMatchControlViewModel(_currentFolderManager, _manager,  _messageStore, _dialogService, _docManagerApi);
 
         // Initialize collections
         FilteredRevisionDescriptions = new ObservableCollection<string>();
@@ -132,6 +132,28 @@ public partial class MergeViewModel : ObservableObject
                             RevisionDate.HasValue && 
                             !string.IsNullOrWhiteSpace(RevisionDescription);
 
+
+    ///// <summary>
+    ///// Gets whether there are any unknown documents with supported file types
+    ///// </summary>
+    //public bool HasUnknownDocuments
+    //{
+    //    get
+    //    {
+    //        if (_currentFolderManager?.MatchedDocuments == null)
+    //            return false;
+
+    //        var supportedFileTypes = _currentFolderManager.Settings.SupportedFileTypes;
+    //        var supportedExtensions = new HashSet<string>(
+    //            supportedFileTypes.Select(ft => ft.FileExtension),
+    //            StringComparer.OrdinalIgnoreCase);
+
+    //        return _currentFolderManager.MatchedDocuments
+    //            .Where(d => !d.MatchedDocumentId.HasValue)
+    //            .Any(d => !string.IsNullOrEmpty(d.NewDocumentPath) &&
+    //                     supportedExtensions.Contains(System.IO.Path.GetExtension(d.NewDocumentPath)));
+    //    }
+    //}
 
     #endregion
 
@@ -203,6 +225,9 @@ public partial class MergeViewModel : ObservableObject
             // Step 2: Load matched documents into the control
             var matchedDocs = _currentFolderManager.GetMatchedDocuments();
             DocumentMatchViewModel.LoadMatchedDocuments(matchedDocs, currentDocuments);
+
+            // Notify that unknown documents may have changed
+            //OnPropertyChanged(nameof(HasUnknownDocuments));
 
             _messageStore.SetCurrentMessage(
                 $"Document matching complete. {DocumentMatchViewModel.MatchedCount} matched, " +

@@ -1,4 +1,4 @@
-﻿//
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -15,6 +15,7 @@
 //
 //
 //
+
 
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using System.IO;
@@ -95,5 +96,48 @@ public class DialogService : IDialogService
         MessageBoxImage icon = MessageBoxImage.None)
     {
         return System.Windows.MessageBox.Show(message, title, button, icon);
+    }
+
+    /// <summary>
+    /// Shows a custom dialog window with a ViewModel
+    /// </summary>
+    public bool? ShowDialog(object viewModel)
+    {
+        Window? dialog = null;
+
+        // Map ViewModels to their corresponding Views
+        if (viewModel is ViewModels.AddNewDocumentsDialogViewModel addNewDocumentsViewModel)
+        {
+            dialog = new Views.AddNewDocumentsDialog(addNewDocumentsViewModel);
+        }
+        else if (viewModel is ViewModels.CustomFieldDialogViewModel customFieldViewModel)
+        {
+            dialog = new Views.CustomFieldDialog(customFieldViewModel);
+        }
+        else if (viewModel is ViewModels.FilingRuleDialogViewModel filingRuleViewModel)
+        {
+            dialog = new Views.FilingRuleDialog(filingRuleViewModel);
+        }
+        else if (viewModel is ViewModels.SupportedFileTypeDialogViewModel supportedFileTypeViewModel)
+        {
+            dialog = new Views.SupportedFileTypeDialog(supportedFileTypeViewModel);
+        }
+        else if (viewModel is ViewModels.CloudProviderControls.MetaDataMappingDialogViewModel metaDataMappingViewModel)
+        {
+            dialog = new Views.MetaDataMappingDialog(metaDataMappingViewModel);
+        }
+        else
+        {
+            throw new ArgumentException($"No dialog mapping found for ViewModel type: {viewModel.GetType().Name}");
+        }
+
+        // Set the owner to the active window if available
+        if (System.Windows.Application.Current?.Windows.Count > 0)
+        {
+            dialog.Owner = System.Windows.Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive)
+                        ?? System.Windows.Application.Current.MainWindow;
+        }
+
+        return dialog.ShowDialog();
     }
 }

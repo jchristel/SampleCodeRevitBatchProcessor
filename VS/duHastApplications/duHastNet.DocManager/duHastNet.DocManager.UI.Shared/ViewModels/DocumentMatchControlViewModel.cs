@@ -25,6 +25,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
+using duHastNet.DocManager.Core.Services.Api;
+using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
 using System;
 using System.Collections.Generic;
@@ -44,6 +46,8 @@ public partial class DocumentMatchControlViewModel : ObservableObject
     private readonly CurrentFolderManager _currentFolderManager;
     private readonly Manager _manager;
     private readonly MessageStore _messageStore;
+    private readonly IDialogService _dialogService;
+    private readonly DocManagerApi _docManagerApi;
 
     #endregion
 
@@ -112,11 +116,15 @@ public partial class DocumentMatchControlViewModel : ObservableObject
     public DocumentMatchControlViewModel(
         CurrentFolderManager currentFolderManager,
         Manager manager,
-        MessageStore messageStore)
+        MessageStore messageStore,
+        IDialogService dialogService,
+        DocManagerApi docManagerApi)
     {
         _currentFolderManager = currentFolderManager ?? throw new ArgumentNullException(nameof(currentFolderManager));
         _manager = manager ?? throw new ArgumentNullException(nameof(manager));
         _messageStore = messageStore ?? throw new ArgumentNullException(nameof(messageStore));
+        _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+        _docManagerApi = docManagerApi ?? throw new ArgumentNullException(nameof(docManagerApi));
 
         _matchedDocuments = new ObservableCollection<MatchedDocumentViewModel>();
     }
@@ -227,21 +235,99 @@ public partial class DocumentMatchControlViewModel : ObservableObject
         if (IsBusy) return;
 
         // Get documents with no match
-        var newDocuments = MatchedDocuments.Where(d => d.IsNewDocument).ToList();
+        var unknownDocuments = _currentFolderManager.MatchedDocuments
+            .Where(d => !d.MatchedDocumentId.HasValue)
+            .ToList();
 
-        if (!newDocuments.Any())
+        if (!unknownDocuments.Any())
         {
-            _messageStore.SetCurrentMessage("No new documents to add.", MessageTypes.Information);
+            _messageStore.SetCurrentMessage("No unknown documents found to add.", MessageTypes.Information);
             return;
         }
 
-        // TODO: Implement logic to add new documents to the database
-        // This would typically open a dialog for the user to provide additional metadata
-        // For now, show a message
-        _messageStore.SetCurrentMessage(
-            $"Found {newDocuments.Count} new documents. Document addition dialog to be implemented.",
-            MessageTypes.Information
-        );
+        // Filter to only include supported file types
+        var supportedFileTypes = _currentFolderManager.Settings.SupportedFileTypes;
+        var supportedExtensions = new HashSet<string>(
+            supportedFileTypes.Select(ft => ft.FileExtension),
+            StringComparer.OrdinalIgnoreCase);
+
+        var supportedUnknownDocuments = unknownDocuments
+            .Where(d => !string.IsNullOrEmpty(d.NewDocumentPath) &&
+                       supportedExtensions.Contains(System.IO.Path.GetExtension(d.NewDocumentPath)))
+            .ToList();
+
+        if (!supportedUnknownDocuments.Any())
+        {
+            _messageStore.SetCurrentMessage("No unknown documents with supported file types found.", MessageTypes.Information);
+            return;
+        }
+
+        // Get current documents for duplicate checking
+        var currentDocuments = _manager.GetAllDocuments().ToList();
+
+        // Create and show the dialog
+        var dialogViewModel = new AddNewDocumentsDialogViewModel(
+            _currentFolderManager,
+            currentDocuments,
+            supportedUnknownDocuments);
+
+        var result = _dialogService.ShowDialog(dialogViewModel);
+
+        if (result == true && dialogViewModel.DialogConfirmed)
+        {
+            // Get documents to add
+            var documentsToAdd = dialogViewModel.GetDocumentsToAdd();
+
+            if (documentsToAdd.Any())
+            {
+                IsBusy = true;
+                try
+                {
+                    // Create Document objects
+                    var documents = new List<Document>();
+                    foreach (var docRow in documentsToAdd)
+                    {
+                        var document = new Document(
+                            docRow.ProposedDocumentNumber.Trim(),
+                            docRow.ProposedDocumentName.Trim(),
+                            "",  // Empty revision indicator
+                            0    // No revision (RevisionId = 0)
+                        );
+                        documents.Add(document);
+                    }
+
+                    // Insert documents into database using batch insert
+                    var unitOfWork = _docManagerApi.GetUnitOfWork();
+                    var insertedCount = await unitOfWork.Documents.InsertAllAsync(documents);
+
+                    if (insertedCount > 0)
+                    {
+                        _messageStore.SetCurrentMessage(
+                            $"Successfully added {insertedCount} document(s) to database.",
+                            MessageTypes.Information);
+
+                        // Refresh the document matching after adding
+                        await RefreshMatchingAsync();
+                    }
+                    else
+                    {
+                        _messageStore.SetCurrentMessage(
+                            "No documents were added to the database.",
+                            MessageTypes.Warning);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _messageStore.SetCurrentMessage(
+                        $"Error adding documents to database: {ex.Message}",
+                        MessageTypes.Error);
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
+            }
+        }
     }
 
     #endregion

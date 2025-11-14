@@ -1,4 +1,4 @@
-﻿//
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -65,5 +65,12 @@ namespace duHastNet.DocManager.UI.Shared.Interfaces
             string title,
             System.Windows.MessageBoxButton button = System.Windows.MessageBoxButton.OK,
             System.Windows.MessageBoxImage icon = System.Windows.MessageBoxImage.None);
+
+        /// <summary>
+        /// Shows a custom dialog window with a ViewModel
+        /// </summary>
+        /// <param name="viewModel">The ViewModel to display</param>
+        /// <returns>Dialog result (true if OK/confirmed, false if cancelled)</returns>
+        bool? ShowDialog(object viewModel);
     }
 }

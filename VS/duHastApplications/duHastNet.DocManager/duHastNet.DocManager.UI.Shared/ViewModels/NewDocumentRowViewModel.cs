@@ -56,6 +56,7 @@ public partial class NewDocumentRowViewModel : ObservableObject
     /// The proposed document name (default: same as document number)
     /// </summary>
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanAdd))]
     private string _proposedDocumentName = string.Empty;
 
     /// <summary>
@@ -254,6 +255,15 @@ public partial class NewDocumentRowViewModel : ObservableObject
         _validationCallback?.Invoke(this);
     }
 
+    /// <summary>
+    /// Called when ProposedDocumentName changes - triggers validation
+    /// </summary>
+    partial void OnProposedDocumentNameChanged(string value)
+    {
+        // Invoke validation callback to re-validate status
+        _validationCallback?.Invoke(this);
+    }
+
     #endregion
 
     #region Public Methods
@@ -266,9 +276,8 @@ public partial class NewDocumentRowViewModel : ObservableObject
     /// <param name="allRows">All rows in the dialog for duplicate checking</param>
     internal void Validate(HashSet<string> existingDocumentNumbers, IEnumerable<NewDocumentRowViewModel> allRows)
     {
-        // Don't validate if this row has fundamental issues
-        if (Status == NewDocumentRowStatus.NoRevisionIndicator ||
-            Status == NewDocumentRowStatus.MissingDocumentName)
+        // Don't validate if this row has fundamental issues (no revision indicator)
+        if (Status == NewDocumentRowStatus.NoRevisionIndicator)
         {
             return;
         }
@@ -278,6 +287,14 @@ public partial class NewDocumentRowViewModel : ObservableObject
         {
             Status = NewDocumentRowStatus.MissingDocumentName;
             StatusMessage = "Document number is required";
+            return;
+        }
+
+        // Check for missing document name
+        if (string.IsNullOrWhiteSpace(ProposedDocumentName))
+        {
+            Status = NewDocumentRowStatus.MissingDocumentName;
+            StatusMessage = "Document name is required";
             return;
         }
 
@@ -371,4 +388,4 @@ public enum NewDocumentRowStatus
     /// Document number does not match the file name
     /// </summary>
     NumberDoesNotMatchFileName
-}
+}

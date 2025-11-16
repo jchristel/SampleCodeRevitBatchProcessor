@@ -1,4 +1,4 @@
-﻿//
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -75,7 +75,9 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
         // Avoid duplicates
         if (!revision.DocumentIds.Contains(documentId))
         {
-            revision.DocumentIds.Add(documentId);
+            var currentIds = revision.DocumentIds;
+            currentIds.Add(documentId);
+            revision.DocumentIds = currentIds; // Trigger serialization
             return await UpdateAsync(revision);
         }
 
@@ -93,8 +95,10 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
         var revision = await GetByIdAsync(revisionId);
         if (revision == null) return 0;
 
-        if (revision.DocumentIds.Remove(documentId))
+        var currentIds = revision.DocumentIds;
+        if (currentIds.Remove(documentId))
         {
+            revision.DocumentIds = currentIds; // Trigger serialization
             return await UpdateAsync(revision);
         }
 
@@ -112,17 +116,24 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
         var revision = await GetByIdAsync(revisionId);
         if (revision == null) return 0;
 
+        var currentIds = revision.DocumentIds;
         bool changed = false;
         foreach (var documentId in documentIds)
         {
-            if (!revision.DocumentIds.Contains(documentId))
+            if (!currentIds.Contains(documentId))
             {
-                revision.DocumentIds.Add(documentId);
+                currentIds.Add(documentId);
                 changed = true;
             }
         }
 
-        return changed ? await UpdateAsync(revision) : 0;
+        if (changed)
+        {
+            revision.DocumentIds = currentIds; // Trigger serialization
+            return await UpdateAsync(revision);
+        }
+
+        return 0;
     }
 
     /// <summary>
@@ -136,16 +147,23 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
         var revision = await GetByIdAsync(revisionId);
         if (revision == null) return 0;
 
+        var currentIds = revision.DocumentIds;
         bool changed = false;
         foreach (var documentId in documentIds)
         {
-            if (revision.DocumentIds.Remove(documentId))
+            if (currentIds.Remove(documentId))
             {
                 changed = true;
             }
         }
 
-        return changed ? await UpdateAsync(revision) : 0;
+        if (changed)
+        {
+            revision.DocumentIds = currentIds; // Trigger serialization
+            return await UpdateAsync(revision);
+        }
+
+        return 0;
     }
 
     /// <summary>
@@ -239,4 +257,4 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
     }
 
     #endregion
-}
+}

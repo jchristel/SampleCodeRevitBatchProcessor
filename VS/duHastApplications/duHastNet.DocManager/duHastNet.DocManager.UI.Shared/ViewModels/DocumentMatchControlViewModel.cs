@@ -302,9 +302,21 @@ public partial class DocumentMatchControlViewModel : ObservableObject
 
                     if (insertedCount > 0)
                     {
-                        _messageStore.SetCurrentMessage(
-                            $"Successfully added {insertedCount} document(s) to database.",
-                            MessageTypes.Information);
+                        // Reload the manager to include the newly added documents
+                        var reloadResult = await _docManagerApi.ReloadDataIntoManagerAsync(_manager);
+                        
+                        if (!reloadResult.Success)
+                        {
+                            _messageStore.SetCurrentMessage(
+                                $"Documents added to database but failed to reload: {reloadResult.Message}",
+                                MessageTypes.Warning);
+                        }
+                        else
+                        {
+                            _messageStore.SetCurrentMessage(
+                                $"Successfully added {insertedCount} document(s) to database.",
+                                MessageTypes.Information);
+                        }
 
                         // Refresh the document matching after adding
                         await RefreshMatchingAsync();

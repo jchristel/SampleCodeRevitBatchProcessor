@@ -317,9 +317,6 @@ public partial class DocumentMatchControlViewModel : ObservableObject
                                 $"Successfully added {insertedCount} document(s) to database.",
                                 MessageTypes.Information);
                         }
-
-                        // Refresh the document matching after adding
-                        await RefreshMatchingAsync();
                     }
                     else
                     {
@@ -337,6 +334,13 @@ public partial class DocumentMatchControlViewModel : ObservableObject
                 finally
                 {
                     IsBusy = false;
+                    
+                    // Refresh the document matching after adding documents and releasing IsBusy
+                    // This must be done after IsBusy = false, otherwise RefreshMatchingAsync will exit early
+                    if (documentsToAdd.Any())
+                    {
+                        await RefreshMatchingAsync();
+                    }
                 }
             }
         }

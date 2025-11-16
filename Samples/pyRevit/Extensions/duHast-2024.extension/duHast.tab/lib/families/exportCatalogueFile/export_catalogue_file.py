@@ -27,6 +27,7 @@ from duHast.Revit.Family.family_types_get_data_from_xml import (
 from duHast.Utilities.files_io import get_file_name_without_ext
 
 from families.util.family_on_disc_selection import get_families, get_user_selection
+from duHast.Revit.Family.family_types_catalogue import export_catalogue_file
 
 
 def report_data(fam_type_data, output):
@@ -77,7 +78,7 @@ def report_data(fam_type_data, output):
     )
 
 
-def export_catalogue_file(doc, output, forms):
+def export_catalogue_file_entry(doc, output, forms):
     """
     Exports family type data to an xml file, reads that data back into custom objects and prints it to the pyRevit output as a table.
 

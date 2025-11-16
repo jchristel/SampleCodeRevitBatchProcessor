@@ -20,7 +20,7 @@ doc = revit.doc
 # export catalogue files
 
 # import grids and bubbles from library
-from families.exportCatalogueFile.export_catalogue_file import export_catalogue_file
+from families.exportCatalogueFile.export_catalogue_file import export_catalogue_file_entry
 
 # export it baby!
-export_catalogue_file(doc=doc, output=output, forms=forms)
+export_catalogue_file_entry(doc=doc, output=output, forms=forms)

@@ -40,6 +40,7 @@ The filters are applied to the family type names ( x in the above examples ). If
 import os
 import csv
 
+from duHast.Revit.Family.family_types_model_get_data_from_xml import get_type_data_via_XML_from_family_object
 from duHast.Revit.Family.family_types_get_data_from_xml import get_type_data_via_XML_from_family_file
 from duHast.Revit.Family.family_parameter_utils import  get_family_type_parameters,  filter_parameters_by_formula_driven
 from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import FamilyTypeDataStorageManager
@@ -297,8 +298,11 @@ def export_catalogue_file(doc, file_path = None, filters = None, parameter_order
         if file_path is None:
             file_path= family_path
 
-        # get the family type data
-        family_type_data_result = get_type_data_via_XML_from_family_file(doc.Application, family_name, family_path)
+        # get the family type data from file ?? 
+        # not sure this is the right call since the family is already open? 
+        # should be a call to:
+        family_type_data_result = get_type_data_via_XML_from_family_object(doc, family_name, None)
+        #family_type_data_result = get_type_data_via_XML_from_family_file(doc.Application, family_name, family_path)
 
         # check if the family type data was successfully extracted
         if not family_type_data_result.status:

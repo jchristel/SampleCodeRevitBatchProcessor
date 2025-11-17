@@ -19,6 +19,11 @@ import clr
 script_dir = os.path.dirname(__file__)
 lib_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(script_dir))), "lib")
 
+
+print ("script_dir",script_dir)
+print ("lib_dir", lib_dir)
+
+
 # Add lib directory to system path
 sys.path.append(lib_dir)
 

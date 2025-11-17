@@ -6,8 +6,19 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Platforms>AnyCPU;x64</Platforms>
+	<!-- Copy NuGet dependencies to output -->
+	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	  <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+
   </PropertyGroup>
 
+	<Target Name="CopyNativeDependencies" AfterTargets="Build">
+		<ItemGroup>
+			<NativeLibs Include="..\duHastNet.DocManager.Core\duHastNet.DocManager.Core\bin\x64\$(Configuration)\net8.0-windows\runtimes\win-x64\native\*.dll" />
+		</ItemGroup>
+		<Copy SourceFiles="@(NativeLibs)" DestinationFolder="$(OutputPath)\runtimes\win-x64\native" SkipUnchangedFiles="true" />
+	</Target>
+	
   <ItemGroup>
     <Folder Include="pyRevit\" />
   </ItemGroup>

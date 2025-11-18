@@ -75,7 +75,7 @@ public class MetaDataTemplateService : IMetaDataTemplateService
             using (var csv = new CsvReader(reader, config))
             {
                 // Read the header record
-                await csv.ReadAsync();
+                await csv.ReadAsync().ConfigureAwait(false);
                 csv.ReadHeader();
 
                 // Get the header names

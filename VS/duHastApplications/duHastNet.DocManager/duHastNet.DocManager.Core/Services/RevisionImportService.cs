@@ -68,7 +68,7 @@ public class RevisionImportService
             int rowNumber = 1; // Start at 1 for first data row
 
             // Read each row
-            while (await Task.Run(() => csv.Read()))
+            while (await Task.Run(() => csv.Read()).ConfigureAwait(false))
             {
                 rowNumber++;
                 revisionsProcessed++;
@@ -80,7 +80,7 @@ public class RevisionImportService
                     if (importRow.Id.Equals("new", StringComparison.OrdinalIgnoreCase))
                     {
                         // Create new revision
-                        var createResult = await CreateNewRevisionAsync(importRow, rowNumber);
+                        var createResult = await CreateNewRevisionAsync(importRow, rowNumber).ConfigureAwait(false);
 
                         if (createResult.Success)
                         {
@@ -95,7 +95,7 @@ public class RevisionImportService
                     else
                     {
                         // Update existing revision
-                        var updateResult = await UpdateExistingRevisionAsync(importRow, rowNumber);
+                        var updateResult = await UpdateExistingRevisionAsync(importRow, rowNumber).ConfigureAwait(false);
 
                         if (updateResult.Success)
                         {
@@ -170,7 +170,7 @@ public class RevisionImportService
             }
 
             // Check if revision with same date already exists
-            var existingRevisions = await _unitOfWork.Revisions.GetRevisionsByDateAsync(revisionDate);
+            var existingRevisions = await _unitOfWork.Revisions.GetRevisionsByDateAsync(revisionDate).ConfigureAwait(false);
             if (existingRevisions.Any())
             {
                 return ValidationResult.CreateFailure(
@@ -181,7 +181,7 @@ public class RevisionImportService
             var revision = new Revision(revisionDate, importRow.Description);
 
             // Insert revision
-            await _unitOfWork.Revisions.InsertAsync(revision);
+            await _unitOfWork.Revisions.InsertAsync(revision).ConfigureAwait(false);
 
             return ValidationResult.CreateSuccess();
         }
@@ -207,7 +207,7 @@ public class RevisionImportService
             }
 
             // Get existing revision
-            var revision = await _unitOfWork.Revisions.GetByIdAsync(revisionId);
+            var revision = await _unitOfWork.Revisions.GetByIdAsync(revisionId).ConfigureAwait(false);
             if (revision == null)
             {
                 return ValidationResult.CreateFailure($"Row {rowNumber}: Revision with Id {revisionId} not found");
@@ -246,7 +246,7 @@ public class RevisionImportService
             // Update revision if changed
             if (revisionChanged)
             {
-                await _unitOfWork.Revisions.UpdateAsync(revision);
+                await _unitOfWork.Revisions.UpdateAsync(revision).ConfigureAwait(false);
             }
 
             return ValidationResult.CreateSuccess();

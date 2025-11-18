@@ -207,7 +207,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
                 IsRefreshTemplateEnabled = false;
 
                 // Re-read the template file
-                var result = await _templateService.ReadColumnHeadersAsync(TemplateMetaDataFilePath);
+                var result = await _templateService.ReadColumnHeadersAsync(TemplateMetaDataFilePath).ConfigureAwait(false);
 
                 if (result.IsReadSuccessful)
                 {
@@ -324,7 +324,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             try
             {
                 // Read the CSV headers
-                var result = await _templateService.ReadColumnHeadersAsync(TemplateMetaDataFilePath);
+                var result = await _templateService.ReadColumnHeadersAsync(TemplateMetaDataFilePath).ConfigureAwait(false);
 
                 if (result.IsReadSuccessful)
                 {

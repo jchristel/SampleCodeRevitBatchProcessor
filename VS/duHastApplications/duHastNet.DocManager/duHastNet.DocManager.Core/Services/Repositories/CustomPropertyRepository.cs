@@ -37,34 +37,34 @@ namespace duHastNet.DocManager.Core.Services.Repositories
             return await _connection.Table<CustomProperty>()
                 .Where(cp => cp.DocumentId == documentId)
                 .OrderBy(cp => cp.CustomFieldDefinitionId)
-                .ToListAsync();
+                .ToListAsync().ConfigureAwait(false);
         }
 
         public async Task<CustomProperty?> GetPropertyAsync(int documentId, string propertyName)
         {
             return await _connection.Table<CustomProperty>()
                 .Where(cp => cp.DocumentId == documentId && cp.PropertyName == propertyName)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync().ConfigureAwait(false);
         }
 
         public async Task<List<CustomProperty>> GetPropertiesByNameAsync(string propertyName)
         {
             return await _connection.Table<CustomProperty>()
                 .Where(cp => cp.PropertyName == propertyName)
-                .ToListAsync();
+                .ToListAsync().ConfigureAwait(false);
         }
 
         public async Task<List<CustomProperty>> GetPropertiesByNameAndValueAsync(string propertyName, string propertyValue)
         {
             return await _connection.Table<CustomProperty>()
                 .Where(cp => cp.PropertyName == propertyName && cp.PropertyValue == propertyValue)
-                .ToListAsync();
+                .ToListAsync().ConfigureAwait(false);
         }
 
         public async Task<List<string>> GetDistinctPropertyNamesAsync()
         {
             var properties = await _connection.Table<CustomProperty>()
-                .ToListAsync();
+                .ToListAsync().ConfigureAwait(false);
 
             return properties.Select(cp => cp.PropertyName)
                 .Distinct()

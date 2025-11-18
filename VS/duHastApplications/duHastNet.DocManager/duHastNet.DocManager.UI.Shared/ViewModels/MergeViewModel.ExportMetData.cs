@@ -116,7 +116,7 @@ public partial class MergeViewModel : ObservableObject
                 //if (!matchedDoc.MatchedDocumentId.HasValue)
                 //    continue;
 
-                var doc = await _docManagerApi.GetDocumentByIdAsync(matchedDoc.MatchedDocumentId.Value);
+                var doc = await _docManagerApi.GetDocumentByIdAsync(matchedDoc.MatchedDocumentId.Value).ConfigureAwait(false);
                 if (doc != null)
                 {
                     documents.Add(doc);
@@ -147,7 +147,7 @@ public partial class MergeViewModel : ObservableObject
                 revisions,
                 metaDataMapper,
                 customProperties,
-                filePathsByDocumentId);
+                filePathsByDocumentId).ConfigureAwait(false);
 
             if (success)
             {

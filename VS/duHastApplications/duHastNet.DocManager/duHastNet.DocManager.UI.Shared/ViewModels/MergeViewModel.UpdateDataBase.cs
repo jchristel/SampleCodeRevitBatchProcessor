@@ -75,7 +75,7 @@ public partial class MergeViewModel : ObservableObject
             //DateOnly revisionDateOnly = DateOnly.FromDateTime(RevisionDate!.Value);
 
             // Check if revision with same date and description exists
-            var existingRevisions = await _docManagerApi.GetRevisionsByDateAsync(RevisionDate!.Value);
+            var existingRevisions = await _docManagerApi.GetRevisionsByDateAsync(RevisionDate!.Value).ConfigureAwait(false);
             Revision? targetRevision = existingRevisions
                 .FirstOrDefault(r => string.Equals(r.Description, RevisionDescription,
                                      StringComparison.OrdinalIgnoreCase));
@@ -84,7 +84,7 @@ public partial class MergeViewModel : ObservableObject
             {
                 // Create new revision
                 targetRevision = new Revision(RevisionDate!.Value, RevisionDescription);
-                await _docManagerApi.CreateRevisionAsync(targetRevision);
+                await _docManagerApi.CreateRevisionAsync(targetRevision).ConfigureAwait(false);
 
                 _messageStore.SetCurrentMessage(
                     $"Created new revision: {RevisionDescription} ({RevisionDate!.Value:yyyy-MM-dd})",
@@ -108,7 +108,7 @@ public partial class MergeViewModel : ObservableObject
                     if (matchedDoc.HasMatch && matchedDoc.MatchedDocumentId.HasValue)
                     {
                         // Update existing document
-                        var document = await _docManagerApi.GetDocumentByIdAsync(matchedDoc.MatchedDocumentId.Value);
+                        var document = await _docManagerApi.GetDocumentByIdAsync(matchedDoc.MatchedDocumentId.Value).ConfigureAwait(false);
 
                         if (document != null)
                         {
@@ -122,7 +122,7 @@ public partial class MergeViewModel : ObservableObject
                             document.RevisionId = targetRevision.Id;
 
                             // Update document in database
-                            await _docManagerApi.UpdateDocumentAsync(document);
+                            await _docManagerApi.UpdateDocumentAsync(document).ConfigureAwait(false);
 
                             // Update bidirectional relationship
                             if (oldRevisionId != targetRevision.Id)
@@ -130,11 +130,11 @@ public partial class MergeViewModel : ObservableObject
                                 // Remove from old revision
                                 if (oldRevisionId != 0)
                                 {
-                                    await _docManagerApi.RemoveDocumentFromRevisionAsync(oldRevisionId, document.Id);
+                                    await _docManagerApi.RemoveDocumentFromRevisionAsync(oldRevisionId, document.Id).ConfigureAwait(false);
                                 }
 
                                 // Add to new revision
-                                await _docManagerApi.AddDocumentToRevisionAsync(targetRevision.Id, document.Id);
+                                await _docManagerApi.AddDocumentToRevisionAsync(targetRevision.Id, document.Id).ConfigureAwait(false);
                             }
 
                             documentsUpdated++;

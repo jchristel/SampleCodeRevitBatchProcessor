@@ -59,12 +59,12 @@ public partial class DatabaseConnectionViewModel
             DatabasePath = selectedPath;
 
             // Create the database using DocManagerApi
-            var setupResult = await _docManagerApi.SetupDatabaseAsync(DatabasePath, overwriteExisting: true);
+            var setupResult = await _docManagerApi.SetupDatabaseAsync(DatabasePath, overwriteExisting: true).ConfigureAwait(false);
 
             if (setupResult.Success)
             {
                 // Load data into Manager
-                var loadResult = await _docManagerApi.LoadDataIntoManagerAsync(_manager);
+                var loadResult = await _docManagerApi.LoadDataIntoManagerAsync(_manager).ConfigureAwait(false);
 
                 if (loadResult.Success)
                 {
@@ -129,12 +129,12 @@ public partial class DatabaseConnectionViewModel
             IsBusy = true;
 
             // Connect to existing database using the API method
-            var connectResult = await _docManagerApi.ConnectDatabaseAsync(DatabasePath);
+            var connectResult = await _docManagerApi.ConnectDatabaseAsync(DatabasePath).ConfigureAwait(false);
 
             if (connectResult.Success)
             {
                 // Load data into Manager
-                var loadResult = await _docManagerApi.LoadDataIntoManagerAsync(_manager);
+                var loadResult = await _docManagerApi.LoadDataIntoManagerAsync(_manager).ConfigureAwait(false);
 
                 if (loadResult.Success)
                 {
@@ -249,7 +249,7 @@ public partial class DatabaseConnectionViewModel
             var importService = new Core.Services.DocumentImportService(_docManagerApi.GetUnitOfWork());
             
             // Perform import on background thread, passing the revision history mode
-            var result = await Task.Run(() => importService.ImportDocumentsAsync(selectedPath[0], UseFullRevisionHistoryMode));
+            var result = await Task.Run(() => importService.ImportDocumentsAsync(selectedPath[0], UseFullRevisionHistoryMode)).ConfigureAwait(false);
 
             if (result.IsImportSuccessful)
             {
@@ -258,7 +258,7 @@ public partial class DatabaseConnectionViewModel
                     MessageTypes.Information);
 
                 // Reload data into manager
-                await _docManagerApi.ReloadDataIntoManagerAsync(_manager);
+                await _docManagerApi.ReloadDataIntoManagerAsync(_manager).ConfigureAwait(false);
                 UpdateStatistics();
             }
             else
@@ -324,7 +324,7 @@ public partial class DatabaseConnectionViewModel
                     documents,
                     customFieldDefinitions,
                     revisions,
-                    UseFullRevisionHistoryMode));
+                    UseFullRevisionHistoryMode)).ConfigureAwait(false);
 
             if (success)
             {
@@ -384,7 +384,7 @@ public partial class DatabaseConnectionViewModel
             // Create export service and perform export
             var exportService = new Core.Services.RevisionExportService();
             var success = await Task.Run(() =>
-                exportService.ExportRevisions(selectedPath, revisions));
+                exportService.ExportRevisions(selectedPath, revisions)).ConfigureAwait(false);
 
             if (success)
             {
@@ -441,7 +441,7 @@ public partial class DatabaseConnectionViewModel
             var importService = new Core.Services.RevisionImportService(_docManagerApi.GetUnitOfWork());
             
             // Perform import on background thread
-            var result = await Task.Run(() => importService.ImportRevisionsAsync(selectedPath[0]));
+            var result = await Task.Run(() => importService.ImportRevisionsAsync(selectedPath[0])).ConfigureAwait(false);
 
             if (result.IsImportSuccessful)
             {
@@ -450,7 +450,7 @@ public partial class DatabaseConnectionViewModel
                     MessageTypes.Information);
 
                 // Reload data into manager
-                await _docManagerApi.ReloadDataIntoManagerAsync(_manager);
+                await _docManagerApi.ReloadDataIntoManagerAsync(_manager).ConfigureAwait(false);
                 UpdateStatistics();
             }
             else

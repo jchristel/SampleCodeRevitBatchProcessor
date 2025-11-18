@@ -35,7 +35,7 @@ namespace duHastNet.DocManager.Core.Services.Repositories
         {
             return await _connection.Table<CustomFieldDefinition>()
                 .Where(cfd => cfd.PropertyName == propertyName)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync().ConfigureAwait(false);
         }
 
         public async Task<List<CustomFieldDefinition>> GetActiveAsync()
@@ -43,7 +43,7 @@ namespace duHastNet.DocManager.Core.Services.Repositories
             return await _connection.Table<CustomFieldDefinition>()
                 .Where(cfd => cfd.IsActive)
                 .OrderBy(cfd => cfd.PropertyName)
-                .ToListAsync();
+                .ToListAsync().ConfigureAwait(false);
         }
 
         public async Task<List<CustomFieldDefinition>> GetInactiveAsync()
@@ -51,14 +51,14 @@ namespace duHastNet.DocManager.Core.Services.Repositories
             return await _connection.Table<CustomFieldDefinition>()
                 .Where(cfd => !cfd.IsActive)
                 .OrderBy(cfd => cfd.PropertyName)
-                .ToListAsync();
+                .ToListAsync().ConfigureAwait(false);
         }
 
         public async Task<bool> PropertyNameExistsAsync(string propertyName)
         {
             var count = await _connection.Table<CustomFieldDefinition>()
                 .Where(cfd => cfd.PropertyName.ToLower() == propertyName.ToLower())
-                .CountAsync();
+                .CountAsync().ConfigureAwait(false);
 
             return count > 0;
         }
@@ -67,7 +67,7 @@ namespace duHastNet.DocManager.Core.Services.Repositories
         {
             return await _connection.ExecuteAsync(
                 "UPDATE CustomFieldDefinitions SET IsActive = ? WHERE Id = ?",
-                isActive, id);
+                isActive, id).ConfigureAwait(false);
         }
     }
 }

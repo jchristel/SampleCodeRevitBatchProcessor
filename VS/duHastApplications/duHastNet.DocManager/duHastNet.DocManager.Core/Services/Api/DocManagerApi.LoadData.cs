@@ -56,26 +56,26 @@ public partial class DocManagerApi
             manager.ClearData();
 
             // Load custom field definitions first (needed to resolve property names)
-            var customFieldDefinitions = await _unitOfWork!.CustomFieldDefinitions.GetAllAsync();
+            var customFieldDefinitions = await _unitOfWork!.CustomFieldDefinitions.GetAllAsync().ConfigureAwait(false);
             foreach (var definition in customFieldDefinitions)
             {
                 manager.AddCustomFieldDefinition(definition);
             }
 
             // Load all revisions from database
-            var revisions = await _unitOfWork.Revisions.GetAllAsync();
+            var revisions = await _unitOfWork.Revisions.GetAllAsync().ConfigureAwait(false);
             foreach (var revision in revisions)
             {
                 manager.AddRevision(revision);
             }
 
             // Load all active documents from database (including custom properties)
-            var documents = await _unitOfWork.Documents.GetActiveDocumentsAsync();
+            var documents = await _unitOfWork.Documents.GetActiveDocumentsAsync().ConfigureAwait(false);
 
             // Load custom properties for each document
             foreach (var document in documents)
             {
-                var customProperties = await _unitOfWork.CustomProperties.GetPropertiesByDocumentAsync(document.Id);
+                var customProperties = await _unitOfWork.CustomProperties.GetPropertiesByDocumentAsync(document.Id).ConfigureAwait(false);
 
                 // Resolve property names from CustomFieldDefinitions
                 foreach (var customProperty in customProperties)
@@ -117,7 +117,7 @@ public partial class DocManagerApi
     public async Task<SetupResult> ReloadDataIntoManagerAsync(Manager manager)
     {
         // Same implementation as LoadDataIntoManagerAsync - it clears and reloads
-        return await LoadDataIntoManagerAsync(manager);
+        return await LoadDataIntoManagerAsync(manager).ConfigureAwait(false);
     }
 
     #endregion

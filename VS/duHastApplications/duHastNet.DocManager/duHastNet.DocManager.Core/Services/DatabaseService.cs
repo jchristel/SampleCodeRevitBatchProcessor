@@ -59,7 +59,7 @@ public class DatabaseService : IDatabaseService
         // Close existing connection if reinitializing
         if (_connection != null)
         {
-            await _connection.CloseAsync();
+            await _connection.CloseAsync().ConfigureAwait(false);
             _connection = null;
         }
 
@@ -74,19 +74,19 @@ public class DatabaseService : IDatabaseService
         DatabasePath = databasePath;
 
         // Create tables
-        await CreateTablesAsync();
+        await CreateTablesAsync().ConfigureAwait(false);
     }
 
     public async Task CreateTablesAsync()
     {
-        await Connection.CreateTablesAsync<Revision, Document, CustomFieldDefinition, CustomProperty>();
+        await Connection.CreateTablesAsync<Revision, Document, CustomFieldDefinition, CustomProperty>().ConfigureAwait(false);
     }
 
     public async Task CloseAsync()
     {
         if (_connection != null)
         {
-            await _connection.CloseAsync();
+            await _connection.CloseAsync().ConfigureAwait(false);
             _connection = null;
             DatabasePath = null;
         }

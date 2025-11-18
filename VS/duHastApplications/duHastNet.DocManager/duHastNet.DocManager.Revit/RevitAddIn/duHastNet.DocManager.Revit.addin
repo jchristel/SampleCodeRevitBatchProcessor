@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <!-- External Application - Manages add-in lifecycle and creates ribbon UI -->
+  <AddIn Type="Application">
+    <Name>DocManager Application</Name>
+    <Assembly>duHastNet.DocManager.Revit.dll</Assembly>
+    <AddInId>8F3C4B2A-1D5E-4C9B-A8F2-6E7D9C3B4A1F</AddInId>
+    <FullClassName>duHastNet.DocManager.Revit.RevitAddIn.DocManagerApplication</FullClassName>
+    <VendorId>DHNT</VendorId>
+    <VendorDescription>duHastNet, Jan Christel</VendorDescription>
+  </AddIn>
+
+  <!-- External Command - Launches DocManager window (registered by Application) -->
+  <AddIn Type="Command">
+    <Name>Launch DocManager</Name>
+    <Assembly>duHastNet.DocManager.Revit.dll</Assembly>
+    <AddInId>7A2B1C3D-4E5F-6A7B-8C9D-0E1F2A3B4C5D</AddInId>
+    <FullClassName>duHastNet.DocManager.Revit.RevitAddIn.LaunchDocManagerCommand</FullClassName>
+    <Text>Launch DocManager</Text>
+    <Description>Document Management System - Independent application launcher</Description>
+    <VisibilityMode>AlwaysVisible</VisibilityMode>
+    <VendorId>DHNT</VendorId>
+    <VendorDescription>duHastNet, Jan Christel</VendorDescription>
+  </AddIn>
+</RevitAddIns>

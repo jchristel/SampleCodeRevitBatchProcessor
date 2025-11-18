@@ -55,7 +55,7 @@ public partial class DocManagerApi
             }
 
             // Check for duplicates
-            var exists = await _unitOfWork!.CustomFieldDefinitions.PropertyNameExistsAsync(propertyName);
+            var exists = await _unitOfWork!.CustomFieldDefinitions.PropertyNameExistsAsync(propertyName).ConfigureAwait(false);
             if (exists)
             {
                 return SetupResult.CreateFailure($"Custom field '{propertyName}' already exists");
@@ -63,10 +63,10 @@ public partial class DocManagerApi
 
             // Create the custom field definition
             var customFieldDefinition = new CustomFieldDefinition(propertyName, isActive);
-            await _unitOfWork.CustomFieldDefinitions.InsertAsync(customFieldDefinition);
+            await _unitOfWork.CustomFieldDefinitions.InsertAsync(customFieldDefinition).ConfigureAwait(false);
 
             // Get all active documents
-            var documents = await _unitOfWork.Documents.GetActiveDocumentsAsync();
+            var documents = await _unitOfWork.Documents.GetActiveDocumentsAsync().ConfigureAwait(false);
 
             // Create CustomProperty records for all documents with empty values
             foreach (var document in documents)
@@ -76,7 +76,7 @@ public partial class DocManagerApi
                     customFieldDefinition.Id,
                     string.Empty); // Empty value initially
 
-                await _unitOfWork.CustomProperties.InsertAsync(customProperty);
+                await _unitOfWork.CustomProperties.InsertAsync(customProperty).ConfigureAwait(false);
             }
 
             var result = SetupResult.CreateSuccess(_databaseService!.DatabasePath!);
@@ -106,14 +106,14 @@ public partial class DocManagerApi
             }
 
             // Get the custom field definition
-            var definition = await _unitOfWork!.CustomFieldDefinitions.GetByIdAsync(customFieldDefinitionId);
+            var definition = await _unitOfWork!.CustomFieldDefinitions.GetByIdAsync(customFieldDefinitionId).ConfigureAwait(false);
             if (definition == null)
             {
                 return SetupResult.CreateFailure($"Custom field definition with ID {customFieldDefinitionId} not found");
             }
 
             // Update IsActive status
-            var rowsAffected = await _unitOfWork.CustomFieldDefinitions.UpdateIsActiveAsync(customFieldDefinitionId, isActive);
+            var rowsAffected = await _unitOfWork.CustomFieldDefinitions.UpdateIsActiveAsync(customFieldDefinitionId, isActive).ConfigureAwait(false);
 
             if (rowsAffected == 0)
             {
@@ -144,7 +144,7 @@ public partial class DocManagerApi
                 return new List<CustomFieldDefinition>();
             }
 
-            return await _unitOfWork!.CustomFieldDefinitions.GetAllAsync();
+            return await _unitOfWork!.CustomFieldDefinitions.GetAllAsync().ConfigureAwait(false);
         }
         catch (Exception)
         {
@@ -165,7 +165,7 @@ public partial class DocManagerApi
                 return new List<CustomFieldDefinition>();
             }
 
-            return await _unitOfWork!.CustomFieldDefinitions.GetActiveAsync();
+            return await _unitOfWork!.CustomFieldDefinitions.GetActiveAsync().ConfigureAwait(false);
         }
         catch (Exception)
         {

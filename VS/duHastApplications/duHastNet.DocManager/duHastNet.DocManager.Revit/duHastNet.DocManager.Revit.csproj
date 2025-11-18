@@ -9,7 +9,6 @@
 	<!-- Copy NuGet dependencies to output -->
 	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	  <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-
   </PropertyGroup>
 
 	<Target Name="CopyNativeDependencies" AfterTargets="Build">
@@ -20,12 +19,31 @@
 	</Target>
 	
   <ItemGroup>
+    <Folder Include="ironPython\" />
+    <Folder Include="RevitAddIn\" />
     <Folder Include="pyRevit\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\duHastNet.DocManager.Core\duHastNet.DocManager.Core.csproj" />
     <ProjectReference Include="..\duHastNet.DocManager.UI.Shared\duHastNet.DocManager.UI.Shared.csproj" />
+	  <Reference Include="RevitAPI">
+		  <HintPath>..\\..\\..\\_References\\Autodesk\\RevitAPI.dll</HintPath>
+		  <Private>False</Private>
+	  </Reference>
+	  <Reference Include="RevitAPIUI">
+		  <HintPath>..\\..\\..\\_References\\Autodesk\\RevitAPIUI.dll</HintPath>
+		  <Private>False</Private>
+	  </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="RevitAddIn\Deploy-DocManager.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="RevitAddIn\duHastNet.DocManager.Revit.addin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

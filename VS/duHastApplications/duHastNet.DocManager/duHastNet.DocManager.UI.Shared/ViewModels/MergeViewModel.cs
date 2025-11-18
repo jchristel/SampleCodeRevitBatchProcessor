@@ -236,20 +236,20 @@ public partial class MergeViewModel : ObservableObject
             );
 
             // Step 3: Update database with documents of green and yellow status
-            bool databaseUpdateSuccessful = await UpdateDatabaseAsync();
+            bool databaseUpdateSuccessful = await UpdateDatabaseAsync().ConfigureAwait(false);
 
             // Step 4: Export metadata to cloud provider (if enabled and database update was successful)
             if (databaseUpdateSuccessful)
             {
-                await ExportMetadataAsync();
+                await ExportMetadataAsync().ConfigureAwait(false);
             }
 
             // Step 5: Merge incoming files with red and yellow status into their target locations
             // This happens regardless of database update success, as file operations are independent
-            await MergeFilesAsync();
+            await MergeFilesAsync().ConfigureAwait(false);
 
             // refresh the document list after merge
-            await DocumentMatchViewModel.RefreshMatchingAsync();
+            await DocumentMatchViewModel.RefreshMatchingAsync().ConfigureAwait(false);
 
         }
         catch (Exception ex)

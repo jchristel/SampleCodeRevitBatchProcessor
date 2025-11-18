@@ -68,7 +68,7 @@ public partial class DocManagerApi : IDisposable
 
             // Initialize database service
             _databaseService = new DatabaseService();
-            await _databaseService.InitializeAsync(config.DatabasePath);
+            await _databaseService.InitializeAsync(config.DatabasePath).ConfigureAwait(false);
 
             // Verify database was created successfully
             if (!_databaseService.IsInitialized)
@@ -123,7 +123,7 @@ public partial class DocManagerApi : IDisposable
             OverwriteExisting = overwriteExisting
         };
 
-        return await SetupDatabaseAsync(config);
+        return await SetupDatabaseAsync(config).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -140,13 +140,13 @@ public partial class DocManagerApi : IDisposable
             }
 
             // Test basic operations
-            var revisionCount = await _unitOfWork!.Revisions.CountAsync();
-            var documentCount = await _unitOfWork.Documents.CountAsync();
-            var activeDocumentCount = await _unitOfWork.Documents.GetActiveDocumentsAsync();
-            var propertyCount = await _unitOfWork.CustomProperties.CountAsync();
+            var revisionCount = await _unitOfWork!.Revisions.CountAsync().ConfigureAwait(false);
+            var documentCount = await _unitOfWork.Documents.CountAsync().ConfigureAwait(false);
+            var activeDocumentCount = await _unitOfWork.Documents.GetActiveDocumentsAsync().ConfigureAwait(false);
+            var propertyCount = await _unitOfWork.CustomProperties.CountAsync().ConfigureAwait(false);
 
             // Test integrity
-            var integrityOk = await _databaseService!.CheckDatabaseIntegrityAsync();
+            var integrityOk = await _databaseService!.CheckDatabaseIntegrityAsync().ConfigureAwait(false);
 
             var result = SetupResult.CreateSuccess(_databaseService.DatabasePath!);
             result.Message = $"Database test successful. " +
@@ -175,7 +175,7 @@ public partial class DocManagerApi : IDisposable
     {
         if (_databaseService != null)
         {
-            await _databaseService.CloseAsync();
+            await _databaseService.CloseAsync().ConfigureAwait(false);
             _databaseService = null;
         }
 
@@ -207,7 +207,7 @@ public partial class DocManagerApi : IDisposable
             // Close any existing connection
             if (_databaseService != null)
             {
-                await _databaseService.CloseAsync();
+                await _databaseService.CloseAsync().ConfigureAwait(false);
                 _databaseService = null;
             }
 
@@ -216,7 +216,7 @@ public partial class DocManagerApi : IDisposable
 
             // Initialize database service with existing file
             _databaseService = new DatabaseService();
-            await _databaseService.InitializeAsync(databasePath);
+            await _databaseService.InitializeAsync(databasePath).ConfigureAwait(false);
 
             // Verify database was opened successfully
             if (!_databaseService.IsInitialized)
@@ -228,13 +228,13 @@ public partial class DocManagerApi : IDisposable
             _unitOfWork = new UnitOfWork(_databaseService.Connection);
 
             // Verify database has expected tables (basic validation)
-            var revisionCount = await _unitOfWork.Revisions.CountAsync();
-            var documentCount = await _unitOfWork.Documents.CountAsync();
-            var activeDocumentCount = await _unitOfWork.Documents.GetActiveDocumentsAsync();
-            var propertyCount = await _unitOfWork.CustomProperties.CountAsync();
+            var revisionCount = await _unitOfWork.Revisions.CountAsync().ConfigureAwait(false);
+            var documentCount = await _unitOfWork.Documents.CountAsync().ConfigureAwait(false);
+            var activeDocumentCount = await _unitOfWork.Documents.GetActiveDocumentsAsync().ConfigureAwait(false);
+            var propertyCount = await _unitOfWork.CustomProperties.CountAsync().ConfigureAwait(false);
 
             // Test integrity
-            var integrityOk = await _databaseService.CheckDatabaseIntegrityAsync();
+            var integrityOk = await _databaseService.CheckDatabaseIntegrityAsync().ConfigureAwait(false);
 
             var result = SetupResult.CreateSuccess(databasePath);
             result.Message = $"Connected successfully to database. " +
@@ -451,7 +451,7 @@ public partial class DocManagerApi : IDisposable
         if (revision == null)
             throw new ArgumentNullException(nameof(revision));
 
-        return await _unitOfWork!.Revisions.InsertAsync(revision);
+        return await _unitOfWork!.Revisions.InsertAsync(revision).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -466,7 +466,7 @@ public partial class DocManagerApi : IDisposable
         if (!IsDatabaseReady())
             throw new InvalidOperationException("Database not initialized");
 
-        return await _unitOfWork!.Revisions.AddDocumentToRevisionAsync(revisionId, documentId);
+        return await _unitOfWork!.Revisions.AddDocumentToRevisionAsync(revisionId, documentId).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -481,7 +481,7 @@ public partial class DocManagerApi : IDisposable
         if (!IsDatabaseReady())
             throw new InvalidOperationException("Database not initialized");
 
-        return await _unitOfWork!.Revisions.RemoveDocumentFromRevisionAsync(revisionId, documentId);
+        return await _unitOfWork!.Revisions.RemoveDocumentFromRevisionAsync(revisionId, documentId).ConfigureAwait(false);
     }
 
     #endregion
@@ -499,7 +499,7 @@ public partial class DocManagerApi : IDisposable
         if (!IsDatabaseReady())
             throw new InvalidOperationException("Database not initialized");
 
-        return await _unitOfWork!.Documents.GetByIdAsync(documentId);
+        return await _unitOfWork!.Documents.GetByIdAsync(documentId).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -517,7 +517,7 @@ public partial class DocManagerApi : IDisposable
         if (document == null)
             throw new ArgumentNullException(nameof(document));
 
-        return await _unitOfWork!.Documents.UpdateAsync(document);
+        return await _unitOfWork!.Documents.UpdateAsync(document).ConfigureAwait(false);
     }
 
     #endregion

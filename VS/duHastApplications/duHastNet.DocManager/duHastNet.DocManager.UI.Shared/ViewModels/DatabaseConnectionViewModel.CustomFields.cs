@@ -143,7 +143,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                     // Mark as having pending changes
                     HasPendingCustomFieldChanges = true;
 
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         $"Custom field '{dialogViewModel.CreatedFieldName}' added. Click 'Update Database' to save changes.",
                         MessageTypes.Information,
                         10);
@@ -151,7 +151,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Error adding custom field: {ex.Message}",
                     MessageTypes.Error);
             }
@@ -186,14 +186,14 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 // Update pending changes flag
                 HasPendingCustomFieldChanges = GetCustomFieldChanges().Any();
 
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Custom field '{fieldName}' removed.",
                     MessageTypes.Information,
                     10);
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Error removing custom field: {ex.Message}",
                     MessageTypes.Error);
             }
@@ -226,14 +226,14 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 HasPendingCustomFieldChanges = true;
 
                 var status = SelectedCustomField.IsActive ? "activated" : "deactivated";
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Custom field '{SelectedCustomField.PropertyName}' {status}. Click 'Update Database' to save changes.",
                     MessageTypes.Information,
                     10);
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Error toggling custom field: {ex.Message}",
                     MessageTypes.Error);
             }
@@ -263,9 +263,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
 
                 if (!changes.Any())
                 {
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         "No changes to apply",
-                        MessageTypes.Information);
+                        MessageTypes.Information,dismissAfterSeconds: 3);
                     return;
                 }
 
@@ -289,21 +289,21 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                     // Clean up metadata mappings that reference deactivated custom fields
                     CleanupInactiveMappings(changes);
 
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         "Custom field changes applied successfully",
                         MessageTypes.Information,
                         10);
                 }
                 else
                 {
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         $"Changes applied but reload failed: {string.Join("; ", reloadResult.Errors)}",
-                        MessageTypes.Warning);
+                        MessageTypes.Warning, dismissAfterSeconds: 20);
                 }
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Error updating database: {ex.Message}",
                     MessageTypes.Error);
             }
@@ -500,7 +500,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 var message = $"Removed {removedMappings.Count} metadata mapping(s) referencing deactivated custom field(s):\n" +
                              string.Join("\n", removedMappings.Select(m => $"  - {m}"));
 
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     message,
                     MessageTypes.Information,
                     15);

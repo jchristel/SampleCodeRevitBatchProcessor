@@ -197,8 +197,8 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         {
             if (string.IsNullOrWhiteSpace(TemplateMetaDataFilePath))
             {
-                _messageStore.SetCurrentMessage(
-                    "No template file selected. Please select a template file first.", MessageTypes.Warning);
+                _messageStore.EnqueueMessage(
+                    "No template file selected. Please select a template file first.", MessageTypes.Warning, dismissAfterSeconds: 20);
                 return;
             }
 
@@ -218,21 +218,21 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
                     var removedFields = _aconexMapper.CleanupInvalidMappings();
 
                     // Show success message
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         
-                        $"Template refreshed: {result.ColumnHeaders.Count} column headers loaded.", MessageTypes.Information);
+                        $"Template refreshed: {result.ColumnHeaders.Count} column headers loaded.", MessageTypes.Information, dismissAfterSeconds: 3);
 
                     // Show warnings if any (e.g., duplicate headers)
                     foreach (var warning in result.Warnings)
                     {
-                        _messageStore.SetCurrentMessage(warning, MessageTypes.Warning);
+                        _messageStore.EnqueueMessage(warning, MessageTypes.Warning, dismissAfterSeconds: 20);
                     }
 
                     // Notify about removed mappings
                     if (removedFields.Count > 0)
                     {
-                        _messageStore.SetCurrentMessage(
-                            $"Removed {removedFields.Count} mapping(s) for fields no longer in template: {string.Join(", ", removedFields)}", MessageTypes.Warning);
+                        _messageStore.EnqueueMessage(
+                            $"Removed {removedFields.Count} mapping(s) for fields no longer in template: {string.Join(", ", removedFields)}", MessageTypes.Warning, dismissAfterSeconds: 20);
                     }
 
                     // Phase 2: Reload the mappings display
@@ -241,19 +241,19 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
                 else
                 {
                     // Show error message
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         $"Failed to refresh template: {result.Message}", MessageTypes.Error);
 
                     // Show detailed errors if available
                     foreach (var error in result.Errors)
                     {
-                        _messageStore.SetCurrentMessage(error, MessageTypes.Error);
+                        _messageStore.EnqueueMessage(error, MessageTypes.Error);
                     }
                 }
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Unexpected error refreshing template: {ex.Message}", MessageTypes.Error);
             }
             finally
@@ -332,31 +332,31 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
                     _aconexMapper.UpdateAvailableFields(result.ColumnHeaders);
 
                     // Show success message
-                    _messageStore.SetCurrentMessage(
-                        $"Loaded {result.ColumnHeaders.Count} column headers from template", MessageTypes.Information);
+                    _messageStore.EnqueueMessage(
+                        $"Loaded {result.ColumnHeaders.Count} column headers from template", MessageTypes.Information, dismissAfterSeconds: 3);
 
                     // Show warnings if any (e.g., duplicate headers)
                     foreach (var warning in result.Warnings)
                     {
-                        _messageStore.SetCurrentMessage(warning, MessageTypes.Warning);
+                        _messageStore.EnqueueMessage(warning, MessageTypes.Warning, dismissAfterSeconds: 20);
                     }
                 }
                 else
                 {
                     // Show error message
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         $"Failed to read template: {result.Message}", MessageTypes.Error);
 
                     // Show detailed errors if available
                     foreach (var error in result.Errors)
                     {
-                        _messageStore.SetCurrentMessage(error, MessageTypes.Error);
+                        _messageStore.EnqueueMessage(error, MessageTypes.Error);
                     }
                 }
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Unexpected error reading template: {ex.Message}", MessageTypes.Error);
             }
         }

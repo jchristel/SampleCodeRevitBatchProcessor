@@ -45,24 +45,23 @@ public partial class MergeViewModel
     {
         try
         {
-            _messageStore.SetCurrentMessage(
+            _messageStore.EnqueueMessage(
                 "Merging files into target folders...",
-                MessageTypes.Information);
+                MessageTypes.Information, dismissAfterSeconds: 3);
 
             // Get documents to merge (green and yellow status)
             // Green = Ok 
             // Yellow = Warnings (safe to merge but with caution)
             var documentsToMerge = DocumentMatchViewModel.MatchedDocuments
                 .Where(d => d.MatchStatus == DocumentMatchStatus.WarningRevisionNotSequential ||
-                            d.MatchStatus == DocumentMatchStatus.WarningMissingRevision ||
                             d.MatchStatus == DocumentMatchStatus.Ok)
                 .ToList();
 
             if (!documentsToMerge.Any())
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     "No files with warnings or matched status to merge.",
-                    MessageTypes.Information);
+                    MessageTypes.Information, dismissAfterSeconds: 3);
                 return;
             }
 
@@ -79,9 +78,9 @@ public partial class MergeViewModel
             // Handle documents with matches (can supersede old versions)
             if (documentsWithMatches.Any())
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Processing {documentsWithMatches.Count} files with matches (will supersede old versions)...",
-                    MessageTypes.Information);
+                    MessageTypes.Information, dismissAfterSeconds: 3);
 
                 // Get current documents from manager for supersede operation
                 var currentDocuments = _manager.GetAllDocuments().ToList();
@@ -97,9 +96,9 @@ public partial class MergeViewModel
                     filesSuperseded = documentsWithMatches.Count;
                     filesMovedSuccessfully += documentsWithMatches.Count;
 
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         $"Successfully superseded {filesSuperseded} files (old versions moved to superseded folder).",
-                        MessageTypes.Information);
+                        MessageTypes.Information, dismissAfterSeconds: 3);
                 }
                 else
                 {
@@ -117,16 +116,16 @@ public partial class MergeViewModel
 
                     if (errorMessages.Any())
                     {
-                        _messageStore.SetCurrentMessage(
+                        _messageStore.EnqueueMessage(
                             $"File merge completed with errors. Moved: {successfulMoves}, Failed: {filesMovedFailed}. " +
                             $"First error: {errorMessages.First()}",
-                            MessageTypes.Warning);
+                            MessageTypes.Warning, dismissAfterSeconds: 20);
                     }
                     else
                     {
-                        _messageStore.SetCurrentMessage(
+                        _messageStore.EnqueueMessage(
                             $"File merge completed. Moved: {successfulMoves} files.",
-                            MessageTypes.Information);
+                            MessageTypes.Information, dismissAfterSeconds: 3);
                     }
                 }
             }
@@ -134,23 +133,23 @@ public partial class MergeViewModel
             // Final summary
             if (filesMovedFailed > 0)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"File merge completed with some issues. " +
                     $"Successfully moved: {filesMovedSuccessfully}, Failed: {filesMovedFailed}. " +
                     $"Check individual file messages for details.",
-                    MessageTypes.Warning);
+                    MessageTypes.Warning, dismissAfterSeconds: 20);
             }
             else
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"File merge completed successfully! Moved {filesMovedSuccessfully} files to target locations. " +
                     $"{filesSuperseded} old file versions were superseded.",
-                    MessageTypes.Information);
+                    MessageTypes.Information, dismissAfterSeconds: 3);
             }
         }
         catch (Exception ex)
         {
-            _messageStore.SetCurrentMessage(
+            _messageStore.EnqueueMessage(
                 $"Error during file merge: {ex.Message}",
                 MessageTypes.Error);
         }

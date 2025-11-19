@@ -332,9 +332,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
 
             if (HasErrors)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     "Please fix validation errors before continuing.", 
-                    MessageTypes.Warning);
+                    MessageTypes.Warning, dismissAfterSeconds: 20);
                 return;
             }
 
@@ -355,7 +355,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Failed to create mapping: {ex.Message}", 
                     MessageTypes.Error);
             }

@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -39,24 +39,32 @@ namespace duHastNet.DocManager.Core.Models
         /// </summary>
 
         /// process messages collected during processing
-        private List<(string,Stores.ProcessMessageTypes)> _processMessages;
-        public List<(string,Stores.ProcessMessageTypes)> ProcessMessages { get => _processMessages; }
+        private List<(string message, Stores.ProcessMessageTypes messageType, Type? exceptionType)> _processMessages;
+        public List<(string message, Stores.ProcessMessageTypes messageType, Type? exceptionType)> ProcessMessages { get => _processMessages; }
 
         /// <summary>
         /// Add process messages collected during processing
         /// </summary> 
         public void AddProcessMessage(string message, Stores.ProcessMessageTypes messageType)
         {
-            _processMessages.Add((message, messageType));
+            _processMessages.Add((message, messageType, null));
         }
 
         /// <summary>
         /// Overload to add exception messages as error process messages
+        /// Automatically updates IsDuplicate and DuplicateFilePaths when IncomingFileDuplicateException is added
         /// <paramref name="ex"/> The exception to add the message from
         /// </summary>
         public void AddProcessMessage(Exception ex)
         {
-            _processMessages.Add((ex.Message, Stores.ProcessMessageTypes.Error));
+            _processMessages.Add((ex.Message, Stores.ProcessMessageTypes.Error, ex.GetType()));
+
+            // Auto-update duplicate fields when IncomingFileDuplicateException is added
+            if (ex is Exceptions.IncomingFileDuplicateException duplicateEx)
+            {
+                IsDuplicate = true;
+                DuplicateFilePaths = duplicateEx.DuplicateFilePaths;
+            }
         }
 
         /// the fully qualified file path of the new document
@@ -89,7 +97,107 @@ namespace duHastNet.DocManager.Core.Models
         public bool GetProcessStatus()
         {
             // processing is successful if no error messages were logged
-            return !_processMessages.Any(x => x.Item2 == Stores.ProcessMessageTypes.Error);
+            return !_processMessages.Any(x => x.messageType == Stores.ProcessMessageTypes.Error);
+        }
+
+        /// <summary>
+        /// Checks if this document has a revision error (InvalidRevisionFormatException)
+        /// </summary>
+        public bool HasRevisionError()
+        {
+            return _processMessages.Any(x => 
+                x.messageType == Stores.ProcessMessageTypes.Error && 
+                x.exceptionType == typeof(Exceptions.InvalidRevisionFormatException));
+        }
+
+        /// <summary>
+        /// Checks if this document has a duplicate error (IncomingFileDuplicateException)
+        /// </summary>
+        public bool HasDuplicateError()
+        {
+            return _processMessages.Any(x => 
+                x.messageType == Stores.ProcessMessageTypes.Error && 
+                x.exceptionType == typeof(Exceptions.IncomingFileDuplicateException));
+        }
+
+        /// <summary>
+        /// Checks if this document has a document not found error (DocumentNotFoundException)
+        /// </summary>
+        public bool HasDocumentNotFoundError()
+        {
+            return _processMessages.Any(x => 
+                x.messageType == Stores.ProcessMessageTypes.Error && 
+                x.exceptionType == typeof(Exceptions.DocumentNotFoundException));
+        }
+
+        /// <summary>
+        /// Gets the revision error message if one exists
+        /// </summary>
+        /// <returns>The error message or null if no revision error exists</returns>
+        public string? GetRevisionErrorMessage()
+        {
+            return _processMessages
+                .FirstOrDefault(x => 
+                    x.messageType == Stores.ProcessMessageTypes.Error && 
+                    x.exceptionType == typeof(Exceptions.InvalidRevisionFormatException))
+                .message;
+        }
+
+        /// <summary>
+        /// Gets the duplicate error message if one exists
+        /// </summary>
+        /// <returns>The error message or null if no duplicate error exists</returns>
+        public string? GetDuplicateErrorMessage()
+        {
+            return _processMessages
+                .FirstOrDefault(x => 
+                    x.messageType == Stores.ProcessMessageTypes.Error && 
+                    x.exceptionType == typeof(Exceptions.IncomingFileDuplicateException))
+                .message;
+        }
+
+        /// <summary>
+        /// Gets the document not found error message if one exists
+        /// </summary>
+        /// <returns>The error message or null if no document not found error exists</returns>
+        public string? GetDocumentNotFoundErrorMessage()
+        {
+            return _processMessages
+                .FirstOrDefault(x => 
+                    x.messageType == Stores.ProcessMessageTypes.Error && 
+                    x.exceptionType == typeof(Exceptions.DocumentNotFoundException))
+                .message;
+        }
+
+        /// <summary>
+        /// Gets all error messages
+        /// </summary>
+        /// <returns>List of all error messages</returns>
+        public List<string> GetAllErrorMessages()
+        {
+            return _processMessages
+                .Where(x => x.messageType == Stores.ProcessMessageTypes.Error)
+                .Select(x => x.message)
+                .ToList();
+        }
+
+        /// <summary>
+        /// Gets the highest priority error type based on the error hierarchy
+        /// Priority: Revision Error > Duplicate Error > Document Not Found > None
+        /// </summary>
+        /// <returns>The highest priority error type</returns>
+        public ProcessingErrorType GetHighestPriorityError()
+        {
+            if (HasRevisionError())
+                return ProcessingErrorType.RevisionError;
+            
+            if (HasDuplicateError())
+                return ProcessingErrorType.DuplicateError;
+            
+            if (HasDocumentNotFoundError())
+                return ProcessingErrorType.DocumentNotFoundError;
+
+            return ProcessingErrorType.None;
         }
 
         /// <summary>
@@ -102,5 +210,31 @@ namespace duHastNet.DocManager.Core.Models
             _processMessages = [];
             DuplicateFilePaths = [];
         }
+    }
+
+    /// <summary>
+    /// Enum representing the types of processing errors
+    /// </summary>
+    public enum ProcessingErrorType
+    {
+        /// <summary>
+        /// No error occurred
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// Revision format error (highest priority)
+        /// </summary>
+        RevisionError,
+
+        /// <summary>
+        /// Duplicate document error (second priority)
+        /// </summary>
+        DuplicateError,
+
+        /// <summary>
+        /// Document not found error (third priority)
+        /// </summary>
+        DocumentNotFoundError
     }
 }

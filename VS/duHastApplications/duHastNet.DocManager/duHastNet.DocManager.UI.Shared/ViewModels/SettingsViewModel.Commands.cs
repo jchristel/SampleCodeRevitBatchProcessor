@@ -52,7 +52,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
 
                 if (!databaseResult.Success)
                 {
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         $"Failed to save Database Connection settings: {string.Join("; ", databaseResult.Errors)}",
                         MessageTypes.Error);
                     return;
@@ -65,7 +65,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
 
                 if (!currentFolderResult.Success)
                 {
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         $"Failed to save Current Folder settings: {string.Join("; ", currentFolderResult.Errors)}",
                         MessageTypes.Error);
                     return;
@@ -78,21 +78,21 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
 
                 if (!cloudDocResult.Success)
                 {
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         $"Failed to save Cloud Document Manager settings: {string.Join("; ", cloudDocResult.Errors)}",
                         MessageTypes.Error);
                     return;
                 }
 
                 // All saves successful
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     "Settings saved successfully",
                     MessageTypes.Information,
                     dismissAfterSeconds: 5);
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Error saving settings: {ex.Message}",
                     MessageTypes.Error);
             }

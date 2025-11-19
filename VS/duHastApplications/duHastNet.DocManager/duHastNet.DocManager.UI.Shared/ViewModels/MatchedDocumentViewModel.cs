@@ -118,7 +118,7 @@ public partial class MatchedDocumentViewModel : ObservableObject
     {
         DocumentMatchStatus.Ok => "Green",
         DocumentMatchStatus.WarningRevisionNotSequential => "Orange",
-        DocumentMatchStatus.WarningMissingRevision => "Orange",
+        DocumentMatchStatus.ErrorMissingRevision => "Red",
         DocumentMatchStatus.ErrorDuplicateDocument => "Red",
         DocumentMatchStatus.NoMatch => "Red",
         _ => "Gray"
@@ -137,13 +137,13 @@ public partial class MatchedDocumentViewModel : ObservableObject
     /// <summary>
     /// Gets whether this document has any warnings (non-blocking issues)
     /// </summary>
-    public bool HasWarning => MatchStatus == DocumentMatchStatus.WarningRevisionNotSequential ||
-                               MatchStatus == DocumentMatchStatus.WarningMissingRevision;
+    public bool HasWarning => MatchStatus == DocumentMatchStatus.WarningRevisionNotSequential;
 
     /// <summary>
     /// Gets whether this document has an error that blocks merging
     /// </summary>
-    public bool HasError => MatchStatus == DocumentMatchStatus.ErrorDuplicateDocument ||
+    public bool HasError => MatchStatus == DocumentMatchStatus.ErrorMissingRevision ||
+                            MatchStatus == DocumentMatchStatus.ErrorDuplicateDocument ||
                             MatchStatus == DocumentMatchStatus.NoMatch;
 
     /// <summary>
@@ -176,30 +176,59 @@ public partial class MatchedDocumentViewModel : ObservableObject
         IsDuplicate = status.IsDuplicate;
         DuplicateCount = status.DuplicateFilePaths?.Count ?? 0;
 
-        if (matchedDocument != null)
+        // ERROR HIERARCHY (highest to lowest priority):
+        // 1. Missing revision information (ErrorMissingRevision) - blocks merge
+        // 2. Duplicate documents (ErrorDuplicateDocument) - blocks merge
+        // 3. No match found (NoMatch) - blocks merge
+        // 4. Revision not sequential (WarningRevisionNotSequential) - warning only
+        // 5. OK - all good
+
+        // Use the helper methods to determine error status based on actual logged exceptions
+        var highestPriorityError = status.GetHighestPriorityError();
+
+        // HIGHEST PRIORITY: Check for missing revision information
+        if (highestPriorityError == ProcessingErrorType.RevisionError)
+        {
+            MatchStatus = DocumentMatchStatus.ErrorMissingRevision;
+            //StatusMessage = status.GetRevisionErrorMessage() ?? "ERROR - No revision information found in filename (blocks merge)";
+            StatusMessage = "ERROR - No revision information found in filename (blocks merge)";
+            
+            if (matchedDocument != null)
+            {
+                MatchedDocumentNumber = matchedDocument.Number;
+                MatchedDocumentName = matchedDocument.Name;
+                MatchedDocumentRevision = matchedDocument.Revision;
+            }
+        }
+        // SECOND PRIORITY: Check for duplicate documents
+        else if (highestPriorityError == ProcessingErrorType.DuplicateError)
+        {
+            MatchStatus = DocumentMatchStatus.ErrorDuplicateDocument;
+            //StatusMessage = status.GetDuplicateErrorMessage() ?? "ERROR - Duplicate document (blocks merge)";
+            StatusMessage =  "ERROR - Duplicate document (blocks merge)";
+
+            if (matchedDocument != null)
+            {
+                MatchedDocumentNumber = matchedDocument.Number;
+                MatchedDocumentName = matchedDocument.Name;
+                MatchedDocumentRevision = matchedDocument.Revision;
+            }
+        }
+        // THIRD PRIORITY: Check if there's no match
+        else if (highestPriorityError == ProcessingErrorType.DocumentNotFoundError)
+        {
+            MatchStatus = DocumentMatchStatus.NoMatch;
+            //StatusMessage = status.GetDocumentNotFoundErrorMessage() ?? "No match found";
+            StatusMessage = "ERROR - No match found (blocks merge)";
+        }
+        // If we have a match and no errors, check if revisions are sequential
+        else if (matchedDocument != null)
         {
             MatchedDocumentNumber = matchedDocument.Number;
             MatchedDocumentName = matchedDocument.Name;
             MatchedDocumentRevision = matchedDocument.Revision;
 
-            // Check for duplicate documents first (highest priority - blocks merge)
-            if (IsDuplicate && DuplicateCount > 0)
-            {
-                MatchStatus = DocumentMatchStatus.ErrorDuplicateDocument;
-                var duplicateFileNames = status.DuplicateFilePaths
-                    .Select(fp => System.IO.Path.GetFileName(fp))
-                    .ToList();
-                StatusMessage = $"ERROR - Duplicate document (blocks merge). Same file type matched to document {matchedDocument.Number}. " +
-                               $"Duplicates: {string.Join(", ", duplicateFileNames)}";
-            }
-            // Check for missing revision information
-            else if (string.IsNullOrEmpty(IncomingRevision))
-            {
-                MatchStatus = DocumentMatchStatus.WarningMissingRevision;
-                StatusMessage = $"Warning - No revision information found in filename for document {matchedDocument.Number}";
-            }
-            // Check if revisions are sequential
-            else if (!string.IsNullOrEmpty(matchedDocument.Revision))
+            if (!string.IsNullOrEmpty(matchedDocument.Revision) && !string.IsNullOrEmpty(IncomingRevision))
             {
                 if (IsRevisionSequential(matchedDocument.Revision, IncomingRevision))
                 {
@@ -220,8 +249,9 @@ public partial class MatchedDocumentViewModel : ObservableObject
         }
         else
         {
+            // Fallback: No match and no error logged (shouldn't happen, but handle gracefully)
             MatchStatus = DocumentMatchStatus.NoMatch;
-            StatusMessage = "No match found";
+            StatusMessage = "ERROR - No match found (blocks merge)";
         }
     }
 

@@ -21,37 +21,23 @@
 //
 //
 
-namespace duHastNet.DocManager.Core.Models.CurrentFolder
+
+namespace duHastNet.DocManager.UI.Shared.Stores;
+
+public class QueuedMessage
 {
-    /// <summary>
-    /// Represents the status of matching an incoming document file to a document in the database
-    /// Priority order (highest to lowest): ErrorMissingRevision, ErrorDuplicateDocument, NoMatch, WarningRevisionNotSequential, Ok
-    /// </summary>
-    public enum DocumentMatchStatus
+    public string Message { get; }
+    public MessageTypes MessageType { get; }
+    public int? DismissAfterSeconds { get; }
+    public Guid Id { get; }
+    public DateTime Timestamp { get; }
+
+    public QueuedMessage(string message, MessageTypes messageType, int? dismissAfterSeconds = null)
     {
-        /// <summary>
-        /// No matching document was found in the database
-        /// </summary>
-        NoMatch,
-
-        /// <summary>
-        /// Document matched but revision is not sequential
-        /// </summary>
-        WarningRevisionNotSequential,
-
-        /// <summary>
-        /// No revision information found in filename (highest priority error - blocks merge)
-        /// </summary>
-        ErrorMissingRevision,
-
-        /// <summary>
-        /// Multiple documents of the same file type matched to the same document number (blocks merge)
-        /// </summary>
-        ErrorDuplicateDocument,
-
-        /// <summary>
-        /// Document matched successfully with sequential revision
-        /// </summary>
-        Ok
+        Message = message;
+        MessageType = messageType;
+        DismissAfterSeconds = dismissAfterSeconds;
+        Id = Guid.NewGuid();
+        Timestamp = DateTime.Now;
     }
 }

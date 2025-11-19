@@ -133,14 +133,14 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 {
                     AddFileTypeToCollections(dialogViewModel.CreatedFileType);
 
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         "File type added successfully",
-                        MessageTypes.Information);
+                        MessageTypes.Information,dismissAfterSeconds: 3);
                 }
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Error adding file type: {ex.Message}",
                     MessageTypes.Error);
             }
@@ -186,14 +186,14 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 {
                     ReplaceFileTypeAtIndex(selectedIndex, dialogViewModel.CreatedFileType);
 
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         "File type updated successfully",
-                        MessageTypes.Information);
+                        MessageTypes.Information,dismissAfterSeconds: 3);
                 }
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Error editing file type: {ex.Message}",
                     MessageTypes.Error);
             }
@@ -227,9 +227,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 // Double-check: prevent removal of PDF
                 if (SelectedFileType.IsPdf)
                 {
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         "The PDF file type is required and cannot be removed.",
-                        MessageTypes.Warning);
+                        MessageTypes.Warning, dismissAfterSeconds: 20);
                     return;
                 }
 
@@ -239,13 +239,13 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 // Remove from display collection
                 SupportedFileTypes.Remove(SelectedFileType);
 
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     "File type removed successfully",
-                    MessageTypes.Information);
+                    MessageTypes.Information,dismissAfterSeconds: 3);
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Error removing file type: {ex.Message}",
                     MessageTypes.Error);
             }

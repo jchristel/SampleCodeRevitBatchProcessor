@@ -80,8 +80,8 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             // Check if template is loaded
             if (_aconexMapper.AvailableFields.Count == 0)
             {
-                _messageStore.SetCurrentMessage(
-                    "Please select and load a template file before adding mappings.", MessageTypes.Warning);
+                _messageStore.EnqueueMessage(
+                    "Please select and load a template file before adding mappings.", MessageTypes.Warning,dismissAfterSeconds: 20);
                 return;
             }
 
@@ -97,8 +97,8 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
 
             if (unmappedFields.Count == 0)
             {
-                _messageStore.SetCurrentMessage(
-                    "All template fields are already mapped.", MessageTypes.Information);
+                _messageStore.EnqueueMessage(
+                    "All template fields are already mapped.", MessageTypes.Information, dismissAfterSeconds: 3);
                 return;
             }
 
@@ -124,14 +124,14 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
                     // Reload the display collection
                     LoadMappingsFromModel();
 
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         $"Mapping for '{dialogViewModel.CreatedMapping.MetaFieldName}' added successfully.",
-                        MessageTypes.Information);
+                        MessageTypes.Information, dismissAfterSeconds: 3);
                 }
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Error adding mapping: {ex.Message}",
                     MessageTypes.Error);
             }
@@ -145,8 +145,8 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         {
             if (SelectedMapping == null)
             {
-                _messageStore.SetCurrentMessage(
-                    "Please select a mapping to remove.", MessageTypes.Warning);
+                _messageStore.EnqueueMessage(
+                    "Please select a mapping to remove.", MessageTypes.Warning, dismissAfterSeconds: 20);
                 return;
             }
 
@@ -161,15 +161,15 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
                 // Remove from the display collection
                 MetaDataMappings.Remove(SelectedMapping);
 
-                _messageStore.SetCurrentMessage(
-                    $"Mapping for '{fieldName}' removed successfully.", MessageTypes.Information);
+                _messageStore.EnqueueMessage(
+                    $"Mapping for '{fieldName}' removed successfully.", MessageTypes.Information,dismissAfterSeconds: 3);
 
                 // Clear selection
                 SelectedMapping = null;
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Failed to remove mapping: {ex.Message}", MessageTypes.Error);
             }
         }
@@ -195,8 +195,8 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             // Check if template is loaded
             if (_aconexMapper.AvailableFields.Count == 0)
             {
-                _messageStore.SetCurrentMessage(
-                    "Please select and load a template file before editing mappings.", MessageTypes.Warning);
+                _messageStore.EnqueueMessage(
+                    "Please select and load a template file before editing mappings.", MessageTypes.Warning, dismissAfterSeconds: 20);
                 return;
             }
 
@@ -226,9 +226,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
                     // Reload the display collection
                     LoadMappingsFromModel();
 
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         $"Mapping for '{dialogViewModel.CreatedMapping.MetaFieldName}' updated successfully.",
-                        MessageTypes.Information);
+                        MessageTypes.Information, dismissAfterSeconds: 3);
 
                     // Clear selection since we reloaded
                     SelectedMapping = null;
@@ -236,7 +236,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Error editing mapping: {ex.Message}",
                     MessageTypes.Error);
             }

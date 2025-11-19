@@ -193,34 +193,7 @@ public partial class MergeViewModel : ObservableObject
         IsBusy = true;
         try
         {
-            //// Validate inputs
-            //if (!RevisionDate.HasValue)
-            //{
-            //    _messageStore.SetCurrentMessage("Please select a revision date.", MessageTypes.Warning);
-            //    return;
-            //}
-
-            //if (string.IsNullOrWhiteSpace(RevisionDescription))
-            //{
-            //    _messageStore.SetCurrentMessage("Please enter a revision description.", MessageTypes.Warning);
-            //    return;
-            //}
-
-            //// Step 1: Check incoming folder and match documents
-            //_messageStore.SetCurrentMessage("Checking incoming folder for documents...", MessageTypes.Information);
-
             var currentDocuments = _manager.GetAllDocuments().ToList();
-            //bool matchingSuccessful = _currentFolderManager.GetIncomingFilesMetadata(currentDocuments);
-
-            //if (!matchingSuccessful)
-            //{
-            //    _messageStore.SetCurrentMessage("Error matching incoming files. Check logs for details.", MessageTypes.Error);
-
-            //    // Still load the results so user can see what went wrong
-            //    var matchedStatuses = _currentFolderManager.GetMatchedDocuments();
-            //    DocumentMatchViewModel.LoadMatchedDocuments(matchedStatuses, currentDocuments);
-            //    return;
-            //}
 
             // Step 2: Load matched documents into the control
             var matchedDocs = _currentFolderManager.GetMatchedDocuments();
@@ -229,32 +202,33 @@ public partial class MergeViewModel : ObservableObject
             // Notify that unknown documents may have changed
             //OnPropertyChanged(nameof(HasUnknownDocuments));
 
-            _messageStore.SetCurrentMessage(
+            _messageStore.EnqueueMessage(
                 $"Document matching complete. {DocumentMatchViewModel.MatchedCount} matched, " +
                 $"{DocumentMatchViewModel.WarningCount} warnings, {DocumentMatchViewModel.NoMatchCount} without matches.",
-                MessageTypes.Information
+                MessageTypes.Information,
+                10
             );
 
             // Step 3: Update database with documents of green and yellow status
-            bool databaseUpdateSuccessful = await UpdateDatabaseAsync().ConfigureAwait(false);
+            bool databaseUpdateSuccessful = await UpdateDatabaseAsync();
 
             // Step 4: Export metadata to cloud provider (if enabled and database update was successful)
             if (databaseUpdateSuccessful)
             {
-                await ExportMetadataAsync().ConfigureAwait(false);
+                await ExportMetadataAsync();
             }
 
             // Step 5: Merge incoming files with red and yellow status into their target locations
             // This happens regardless of database update success, as file operations are independent
-            await MergeFilesAsync().ConfigureAwait(false);
+            await MergeFilesAsync();
 
             // refresh the document list after merge
-            await DocumentMatchViewModel.RefreshMatchingAsync().ConfigureAwait(false);
+            await DocumentMatchViewModel.RefreshMatchingAsync();
 
         }
         catch (Exception ex)
         {
-            _messageStore.SetCurrentMessage($"Error during merge operation: {ex.Message}", MessageTypes.Error);
+            _messageStore.EnqueueMessage($"Error during merge operation: {ex.Message}", MessageTypes.Error);
         }
         finally
         {

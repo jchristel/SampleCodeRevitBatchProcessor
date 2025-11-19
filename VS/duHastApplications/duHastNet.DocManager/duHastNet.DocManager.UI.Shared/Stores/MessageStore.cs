@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -30,6 +30,9 @@ public partial class MessageStore : ObservableObject, IDisposable
 {
     private CancellationTokenSource? _dismissCancellation;
     private const int DefaultDismissSeconds = 5;
+    private readonly Queue<QueuedMessage> _messageQueue = new();
+    private readonly object _queueLock = new();
+    private bool _isProcessingMessage = false;
 
     [ObservableProperty]
     private string _currentMessage = string.Empty;
@@ -43,19 +46,61 @@ public partial class MessageStore : ObservableObject, IDisposable
     [ObservableProperty]
     private bool _isTimerActive = false;
 
-    public bool HasCurrentMessage => !string.IsNullOrEmpty(CurrentMessage);
+    [ObservableProperty]
+    private int _pendingMessageCount = 0;
 
-    public void ClearCurrentMessage()
+    public bool HasCurrentMessage => !string.IsNullOrEmpty(CurrentMessage);
+    public bool HasPendingMessages => PendingMessageCount > 0;
+
+    public void EnqueueMessage(string message, MessageTypes messageType, int? dismissAfterSeconds = null)
+    {
+        lock (_queueLock)
+        {
+            var queuedMessage = new QueuedMessage(message, messageType, dismissAfterSeconds);
+            _messageQueue.Enqueue(queuedMessage);
+            PendingMessageCount = _messageQueue.Count;
+        }
+
+        // If no message is currently being displayed, process the next one immediately
+        if (!_isProcessingMessage && !HasCurrentMessage)
+        {
+            ProcessNextMessage();
+        }
+    }
+
+    public void ClearCurrentMessage(bool autoAdvance = true)
     {
         CancelDismissTimer();
         CurrentMessage = string.Empty;
-        ProgressPercentage = 100; // Changed from 0
+        ProgressPercentage = 100;
         IsTimerActive = false;
+        _isProcessingMessage = false;
+
+        if (autoAdvance)
+        {
+            ProcessNextMessage();
+        }
     }
 
+    public void ClearQueue()
+    {
+        lock (_queueLock)
+        {
+            _messageQueue.Clear();
+            PendingMessageCount = 0;
+        }
+    }
+
+    public void ClearAll()
+    {
+        ClearQueue();
+        ClearCurrentMessage(autoAdvance: false);
+    }
+
+    [Obsolete("Use EnqueueMessage instead. This method is deprecated and will be removed in a future version.")]
     public void SetCurrentMessage(string message, MessageTypes messageType, int? dismissAfterSeconds = null)
     {
-        // Cancel any existing timer
+        // For backward compatibility, directly set the message without queueing
         CancelDismissTimer();
 
         // Limit to 10 rows
@@ -75,6 +120,58 @@ public partial class MessageStore : ObservableObject, IDisposable
         if (dismissAfterSeconds.HasValue && dismissAfterSeconds.Value > 0)
         {
             StartDismissTimer(dismissAfterSeconds.Value);
+        }
+        else
+        {
+            ProgressPercentage = 0;
+            IsTimerActive = false;
+        }
+    }
+
+    private void ProcessNextMessage()
+    {
+        QueuedMessage? nextMessage = null;
+
+        lock (_queueLock)
+        {
+            if (_messageQueue.Count > 0)
+            {
+                nextMessage = _messageQueue.Dequeue();
+                PendingMessageCount = _messageQueue.Count;
+            }
+        }
+
+        if (nextMessage != null)
+        {
+            _isProcessingMessage = true;
+            DisplayMessage(nextMessage);
+        }
+        else
+        {
+            _isProcessingMessage = false;
+        }
+    }
+
+    private void DisplayMessage(QueuedMessage queuedMessage)
+    {
+        // Limit to 10 rows
+        string message = queuedMessage.Message;
+        if (message.Contains('\n'))
+        {
+            string[] lines = message.Split(['\n'], StringSplitOptions.RemoveEmptyEntries);
+            if (lines.Length > 10)
+            {
+                message = string.Join("\n", lines[..10]);
+            }
+        }
+
+        CurrentMessage = message;
+        CurrentMessageType = queuedMessage.MessageType;
+
+        // Start auto-dismiss timer if specified
+        if (queuedMessage.DismissAfterSeconds.HasValue && queuedMessage.DismissAfterSeconds.Value > 0)
+        {
+            StartDismissTimer(queuedMessage.DismissAfterSeconds.Value);
         }
         else
         {
@@ -124,9 +221,9 @@ public partial class MessageStore : ObservableObject, IDisposable
 
                     if (progress <= 0) // Changed from >= 100
                     {
-                        // Time's up - dismiss message
+                        // Time's up - dismiss message and show next
                         await Task.Delay(100); // Small delay for visual smoothness
-                        ClearCurrentMessage();
+                        ClearCurrentMessage(autoAdvance: true);
                         break;
                     }
 
@@ -153,8 +250,14 @@ public partial class MessageStore : ObservableObject, IDisposable
         OnPropertyChanged(nameof(HasCurrentMessage));
     }
 
+    partial void OnPendingMessageCountChanged(int value)
+    {
+        OnPropertyChanged(nameof(HasPendingMessages));
+    }
+
     public void Dispose()
     {
         CancelDismissTimer();
+        ClearQueue();
     }
 }

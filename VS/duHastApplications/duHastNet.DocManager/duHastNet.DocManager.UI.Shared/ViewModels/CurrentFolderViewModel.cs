@@ -214,7 +214,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Error selecting incoming folder: {ex.Message}",
                     MessageTypes.Error);
             }
@@ -239,7 +239,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Error selecting archive folder: {ex.Message}",
                     MessageTypes.Error);
             }

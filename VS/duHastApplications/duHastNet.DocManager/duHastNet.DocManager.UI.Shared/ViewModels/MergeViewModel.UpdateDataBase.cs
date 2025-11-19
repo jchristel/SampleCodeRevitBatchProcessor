@@ -46,7 +46,7 @@ public partial class MergeViewModel : ObservableObject
             // Validate database connection
             if (!_docManagerApi.IsDatabaseReady())
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     "Database connection not available.",
                     MessageTypes.Error);
                 return false;
@@ -55,21 +55,20 @@ public partial class MergeViewModel : ObservableObject
             // Filter documents for database update (green and yellow status only)
             var documentsToUpdate = DocumentMatchViewModel.MatchedDocuments
                 .Where(d => d.MatchStatus == DocumentMatchStatus.Ok ||
-                            d.MatchStatus == DocumentMatchStatus.WarningRevisionNotSequential ||
-                            d.MatchStatus == DocumentMatchStatus.WarningMissingRevision)
+                            d.MatchStatus == DocumentMatchStatus.WarningRevisionNotSequential)
                 .ToList();
 
             if (!documentsToUpdate.Any())
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     "No documents with green or yellow status to update.",
-                    MessageTypes.Warning);
+                    MessageTypes.Warning, dismissAfterSeconds: 20);
                 return false;
             }
 
-            _messageStore.SetCurrentMessage(
+            _messageStore.EnqueueMessage(
                 $"Updating database with {documentsToUpdate.Count} documents...",
-                MessageTypes.Information);
+                MessageTypes.Information, dismissAfterSeconds: 3);
 
             // Convert DateTime to DateOnly
             //DateOnly revisionDateOnly = DateOnly.FromDateTime(RevisionDate!.Value);
@@ -86,15 +85,15 @@ public partial class MergeViewModel : ObservableObject
                 targetRevision = new Revision(RevisionDate!.Value, RevisionDescription);
                 await _docManagerApi.CreateRevisionAsync(targetRevision).ConfigureAwait(false);
 
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Created new revision: {RevisionDescription} ({RevisionDate!.Value:yyyy-MM-dd})",
-                    MessageTypes.Information);
+                    MessageTypes.Information, dismissAfterSeconds: 3);
             }
             else
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Using existing revision: {RevisionDescription} ({RevisionDate!.Value:yyyy-MM-dd})",
-                    MessageTypes.Information);
+                    MessageTypes.Information, dismissAfterSeconds: 3);
             }
 
             // Update documents in database
@@ -163,21 +162,21 @@ public partial class MergeViewModel : ObservableObject
                 var errorMessage = $"Database update completed with errors. " +
                                   $"Updated: {documentsUpdated}, Errors: {updateErrors.Count}. " +
                                   $"First error: {updateErrors.First()}";
-                _messageStore.SetCurrentMessage(errorMessage, MessageTypes.Warning);
+                _messageStore.EnqueueMessage(errorMessage, MessageTypes.Warning, dismissAfterSeconds: 20);
                 return false; // Had errors, so return false
             }
             else
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Successfully updated {documentsUpdated} documents in database with revision " +
                     $"{RevisionDescription} ({RevisionDate!.Value:yyyy-MM-dd})",
-                    MessageTypes.Information);
+                    MessageTypes.Information, dismissAfterSeconds: 3);
                 return true; // Success, return true
             }
         }
         catch (Exception ex)
         {
-            _messageStore.SetCurrentMessage(
+            _messageStore.EnqueueMessage(
                 $"Error during database update: {ex.Message}",
                 MessageTypes.Error);
             return false; // Exception occurred, return false

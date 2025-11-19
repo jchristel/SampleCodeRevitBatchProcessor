@@ -1,22 +1,9 @@
-﻿<UserControl x:Class="duHastNet.DocManager.UI.Shared.Views.GlobalMessageView"
+<UserControl x:Class="duHastNet.DocManager.UI.Shared.Views.GlobalMessageView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-        <!-- Error Message Style -->
-        <Style x:Key="ErrorMessageStyle" TargetType="Border">
-            <Setter Property="Background" Value="#FFEBEE"/>
-            <Setter Property="BorderBrush" Value="#F44336"/>
-            <Setter Property="BorderThickness" Value="1"/>
-        </Style>
-
-        <!-- Information Message Style -->
-        <Style x:Key="InfoMessageStyle" TargetType="Border">
-            <Setter Property="Background" Value="#E3F2FD"/>
-            <Setter Property="BorderBrush" Value="#2196F3"/>
-            <Setter Property="BorderThickness" Value="1"/>
-        </Style>
     </UserControl.Resources>
 
     <!-- Message Banner -->
@@ -39,6 +26,11 @@
                     <DataTrigger Binding="{Binding IsInformationMessage}" Value="True">
                         <Setter Property="Background" Value="#E3F2FD"/>
                         <Setter Property="BorderBrush" Value="#2196F3"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsWarningMessage}" Value="True">
+                        <Setter Property="Background" Value="#FFF3E0"/>
+                        <Setter Property="BorderBrush" Value="#FF9800"/>
                         <Setter Property="BorderThickness" Value="1"/>
                     </DataTrigger>
                 </Style.Triggers>
@@ -76,27 +68,48 @@
                         ToolTip="Dismiss message"/>
             </Grid>
 
-            <!-- Progress Bar -->
-            <ProgressBar Grid.Row="1"
-                         Height="3"
-                         Margin="0 8 0 0"
-                         Value="{Binding ProgressPercentage, Mode=OneWay}"
-                         Minimum="0"
-                         Maximum="100"
-                         Visibility="{Binding IsTimerActive, Converter={StaticResource BoolToVisibilityConverter}}">
-                <ProgressBar.Style>
-                    <Style TargetType="ProgressBar">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsErrorMessage}" Value="True">
-                                <Setter Property="Foreground" Value="#F44336"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding IsInformationMessage}" Value="True">
-                                <Setter Property="Foreground" Value="#2196F3"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </ProgressBar.Style>
-            </ProgressBar>
+            <!-- Message Count and Progress Bar -->
+            <Grid Grid.Row="1" Margin="0 8 0 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Pending Message Count -->
+                <TextBlock Grid.Column="0"
+                           Margin="0 0 8 0"
+                           VerticalAlignment="Center"
+                           FontSize="11"
+                           Foreground="#757575"
+                           Visibility="{Binding HasPendingMessages, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Run Text="{Binding PendingMessageCount, Mode=OneWay}"/>
+                    <Run Text="pending"/>
+                </TextBlock>
+
+                <!-- Progress Bar -->
+                <ProgressBar Grid.Column="1"
+                             Height="3"
+                             Value="{Binding ProgressPercentage, Mode=OneWay}"
+                             Minimum="0"
+                             Maximum="100"
+                             Visibility="{Binding IsTimerActive, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <ProgressBar.Style>
+                        <Style TargetType="ProgressBar">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsErrorMessage}" Value="True">
+                                    <Setter Property="Foreground" Value="#F44336"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsInformationMessage}" Value="True">
+                                    <Setter Property="Foreground" Value="#2196F3"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsWarningMessage}" Value="True">
+                                    <Setter Property="Foreground" Value="#FF9800"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ProgressBar.Style>
+                </ProgressBar>
+            </Grid>
         </Grid>
     </Border>
 </UserControl>

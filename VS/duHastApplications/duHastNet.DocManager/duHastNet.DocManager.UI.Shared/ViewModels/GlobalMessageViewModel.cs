@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -36,9 +36,12 @@ public partial class GlobalMessageViewModel : ObservableObject, ICloseable, IDis
     public string CurrentMessage => _messageStore.CurrentMessage;
     public bool IsErrorMessage => _messageStore.CurrentMessageType == MessageTypes.Error;
     public bool IsInformationMessage => _messageStore.CurrentMessageType == MessageTypes.Information;
+    public bool IsWarningMessage => _messageStore.CurrentMessageType == MessageTypes.Warning;
     public bool HasMessage => _messageStore.HasCurrentMessage;
     public double ProgressPercentage => _messageStore.ProgressPercentage;
     public bool IsTimerActive => _messageStore.IsTimerActive;
+    public int PendingMessageCount => _messageStore.PendingMessageCount;
+    public bool HasPendingMessages => _messageStore.HasPendingMessages;
 
     [RelayCommand]
     private void ClearMessage()
@@ -70,6 +73,7 @@ public partial class GlobalMessageViewModel : ObservableObject, ICloseable, IDis
         {
             OnPropertyChanged(nameof(IsErrorMessage));
             OnPropertyChanged(nameof(IsInformationMessage));
+            OnPropertyChanged(nameof(IsWarningMessage));
         }
         else if (e.PropertyName == nameof(MessageStore.ProgressPercentage))
         {
@@ -78,6 +82,11 @@ public partial class GlobalMessageViewModel : ObservableObject, ICloseable, IDis
         else if (e.PropertyName == nameof(MessageStore.IsTimerActive))
         {
             OnPropertyChanged(nameof(IsTimerActive));
+        }
+        else if (e.PropertyName == nameof(MessageStore.PendingMessageCount))
+        {
+            OnPropertyChanged(nameof(PendingMessageCount));
+            OnPropertyChanged(nameof(HasPendingMessages));
         }
     }
 

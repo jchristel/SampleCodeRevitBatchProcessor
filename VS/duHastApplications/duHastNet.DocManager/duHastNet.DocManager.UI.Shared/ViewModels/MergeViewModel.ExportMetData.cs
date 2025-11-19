@@ -47,18 +47,18 @@ public partial class MergeViewModel : ObservableObject
             // Check if cloud document manager is enabled
             if (!_manager.CloudDocumentManager.CloudDocumentManagerEnabled)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     "Cloud document manager is not enabled. Skipping metadata export.",
-                    MessageTypes.Information);
+                    MessageTypes.Information, dismissAfterSeconds: 3);
                 return;
             }
 
             // Check if metadata mapper is configured
             if (_manager.CloudDocumentManager.MetaDataMapper == null)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     "No cloud provider configured. Skipping metadata export.",
-                    MessageTypes.Information);
+                    MessageTypes.Information, dismissAfterSeconds: 3);
                 return;
             }
 
@@ -67,15 +67,15 @@ public partial class MergeViewModel : ObservableObject
             // Check if there are any mappings configured
             if (!metaDataMapper.MetaDataMap.Any())
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     "No metadata mappings configured. Skipping metadata export.",
-                    MessageTypes.Warning);
+                    MessageTypes.Warning, dismissAfterSeconds: 20);
                 return;
             }
 
-            _messageStore.SetCurrentMessage(
+            _messageStore.EnqueueMessage(
                 "Exporting metadata for cloud upload...",
-                MessageTypes.Information);
+                MessageTypes.Information, dismissAfterSeconds: 3);
 
             // Prompt user for export location
             var selectedPath = _dialogService.ShowSaveFileDialog(
@@ -86,9 +86,9 @@ public partial class MergeViewModel : ObservableObject
             // Check for cancellation
             if (string.IsNullOrEmpty(selectedPath))
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     "Metadata export cancelled.",
-                    MessageTypes.Information);
+                    MessageTypes.Information, dismissAfterSeconds: 3);
                 return;
             }
 
@@ -100,9 +100,9 @@ public partial class MergeViewModel : ObservableObject
 
             if (!documentsToExport.Any())
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     "No documents to export metadata for.",
-                    MessageTypes.Warning);
+                    MessageTypes.Warning, dismissAfterSeconds: 20);
                 return;
             }
 
@@ -151,20 +151,20 @@ public partial class MergeViewModel : ObservableObject
 
             if (success)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Successfully exported metadata for {documents.Count} documents to {Path.GetFileName(selectedPath)}",
-                    MessageTypes.Information);
+                    MessageTypes.Information, dismissAfterSeconds: 3);
             }
             else
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     "Metadata export failed. Please check the configuration and try again.",
                     MessageTypes.Error);
             }
         }
         catch (Exception ex)
         {
-            _messageStore.SetCurrentMessage(
+            _messageStore.EnqueueMessage(
                 $"Error during metadata export: {ex.Message}",
                 MessageTypes.Error);
         }

@@ -85,9 +85,9 @@ public partial class DocumentMatchControlViewModel : ObservableObject
     public int RevisionNotSequentialCount => MatchedDocuments?.Count(d => d.MatchStatus == DocumentMatchStatus.WarningRevisionNotSequential) ?? 0;
 
     /// <summary>
-    /// Gets the count of documents with missing revision warning
+    /// Gets the count of documents with missing revision error (blocks merge)
     /// </summary>
-    public int MissingRevisionCount => MatchedDocuments?.Count(d => d.MatchStatus == DocumentMatchStatus.WarningMissingRevision) ?? 0;
+    public int MissingRevisionCount => MatchedDocuments?.Count(d => d.MatchStatus == DocumentMatchStatus.ErrorMissingRevision) ?? 0;
 
     /// <summary>
     /// Gets the count of duplicate documents (blocking errors)
@@ -100,9 +100,9 @@ public partial class DocumentMatchControlViewModel : ObservableObject
     public int NoMatchCount => MatchedDocuments?.Count(d => d.MatchStatus == DocumentMatchStatus.NoMatch) ?? 0;
 
     /// <summary>
-    /// Gets the total count of errors (duplicates + no match)
+    /// Gets the total count of errors (missing revision + duplicates + no match)
     /// </summary>
-    public int ErrorCount => DuplicateDocumentCount + NoMatchCount;
+    public int ErrorCount => MissingRevisionCount + DuplicateDocumentCount + NoMatchCount;
 
     /// <summary>
     /// Gets the count of documents that can be merged (no blocking errors)
@@ -171,19 +171,19 @@ public partial class DocumentMatchControlViewModel : ObservableObject
             // Update computed properties
             UpdateCounts();
 
-            // Build detailed warning message
+            // Build detailed warning message (only non-sequential revisions)
             var warningDetails = new List<string>();
             if (RevisionNotSequentialCount > 0)
                 warningDetails.Add($"{RevisionNotSequentialCount} non-sequential");
-            if (MissingRevisionCount > 0)
-                warningDetails.Add($"{MissingRevisionCount} missing revision");
 
             var warningText = warningDetails.Count > 0 
                 ? $" ({string.Join(", ", warningDetails)})" 
                 : string.Empty;
 
-            // Build error message
+            // Build error message (missing revision, duplicates, no match)
             var errorDetails = new List<string>();
+            if (MissingRevisionCount > 0)
+                errorDetails.Add($"{MissingRevisionCount} missing revision");
             if (DuplicateDocumentCount > 0)
                 errorDetails.Add($"{DuplicateDocumentCount} duplicate(s)");
             if (NoMatchCount > 0)
@@ -196,29 +196,29 @@ public partial class DocumentMatchControlViewModel : ObservableObject
             // Show success message
             if (ErrorCount > 0)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Document matching completed. {CanMergeCount} can be merged, {WarningCount} warnings{warningText}.{errorText}",
-                    MessageTypes.Warning
+                    MessageTypes.Warning, dismissAfterSeconds: 20
                 );
             }
             else if (matchingSuccessful)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Successfully matched {MatchedCount} documents. {WarningCount} warnings{warningText}.",
-                    MessageTypes.Information
+                    MessageTypes.Information, dismissAfterSeconds: 3
                 );
             }
             else
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Document matching completed with issues. {CanMergeCount} can be merged, {WarningCount} warnings{warningText}.{errorText}",
-                    MessageTypes.Warning
+                    MessageTypes.Warning, dismissAfterSeconds: 20
                 );
             }
         }
         catch (Exception ex)
         {
-            _messageStore.SetCurrentMessage($"Error during document matching: {ex.Message}", MessageTypes.Error);
+            _messageStore.EnqueueMessage($"Error during document matching: {ex.Message}", MessageTypes.Error);
         }
         finally
         {
@@ -234,14 +234,16 @@ public partial class DocumentMatchControlViewModel : ObservableObject
     {
         if (IsBusy) return;
 
-        // Get documents with no match
+        // Get documents with NoMatch status only (third priority error)
+        // Exclude documents with RevisionError (first priority) and DuplicateError (second priority)
         var unknownDocuments = _currentFolderManager.MatchedDocuments
-            .Where(d => !d.MatchedDocumentId.HasValue)
+            .Where(d => !d.MatchedDocumentId.HasValue && 
+                       d.GetHighestPriorityError() == ProcessingErrorType.DocumentNotFoundError)
             .ToList();
 
         if (!unknownDocuments.Any())
         {
-            _messageStore.SetCurrentMessage("No unknown documents found to add.", MessageTypes.Information);
+            _messageStore.EnqueueMessage("No unknown documents found to add.", MessageTypes.Information, dismissAfterSeconds: 3);
             return;
         }
 
@@ -258,7 +260,7 @@ public partial class DocumentMatchControlViewModel : ObservableObject
 
         if (!supportedUnknownDocuments.Any())
         {
-            _messageStore.SetCurrentMessage("No unknown documents with supported file types found.", MessageTypes.Information);
+            _messageStore.EnqueueMessage("No unknown documents with supported file types found.", MessageTypes.Information, dismissAfterSeconds: 3);
             return;
         }
 
@@ -307,27 +309,27 @@ public partial class DocumentMatchControlViewModel : ObservableObject
                         
                         if (!reloadResult.Success)
                         {
-                            _messageStore.SetCurrentMessage(
+                            _messageStore.EnqueueMessage(
                                 $"Documents added to database but failed to reload: {reloadResult.Message}",
-                                MessageTypes.Warning);
+                                MessageTypes.Warning, dismissAfterSeconds: 20);
                         }
                         else
                         {
-                            _messageStore.SetCurrentMessage(
+                            _messageStore.EnqueueMessage(
                                 $"Successfully added {insertedCount} document(s) to database.",
-                                MessageTypes.Information);
+                                MessageTypes.Information, dismissAfterSeconds: 3);
                         }
                     }
                     else
                     {
-                        _messageStore.SetCurrentMessage(
+                        _messageStore.EnqueueMessage(
                             "No documents were added to the database.",
-                            MessageTypes.Warning);
+                            MessageTypes.Warning, dismissAfterSeconds: 20);
                     }
                 }
                 catch (Exception ex)
                 {
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         $"Error adding documents to database: {ex.Message}",
                         MessageTypes.Error);
                 }

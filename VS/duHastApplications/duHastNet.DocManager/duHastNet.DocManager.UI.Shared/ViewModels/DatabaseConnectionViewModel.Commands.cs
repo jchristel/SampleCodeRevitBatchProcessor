@@ -41,7 +41,7 @@ public partial class DatabaseConnectionViewModel
             IsBusy = true;
 
             // Inform user
-            _messageStore.SetCurrentMessage("Creating database...", MessageTypes.Information);
+            _messageStore.EnqueueMessage("Creating database...", MessageTypes.Information);
 
             // Use dialog service instead of direct dialog
             var selectedPath = _dialogService.ShowSaveFileDialog(
@@ -75,7 +75,7 @@ public partial class DatabaseConnectionViewModel
                     InitializeCustomFields();
 
                     // Inform user of success with auto-dismiss
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         $"Database created successfully: {Path.GetFileName(DatabasePath)}",
                         MessageTypes.Information,
                         10); // Auto-dismiss after 10 seconds
@@ -95,7 +95,7 @@ public partial class DatabaseConnectionViewModel
             else
             {
                 var errorMessage = string.Join("; ", setupResult.Errors);
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Failed to create database: {errorMessage}",
                     MessageTypes.Error); // No auto-dismiss for errors
 
@@ -106,7 +106,7 @@ public partial class DatabaseConnectionViewModel
         catch (Exception ex)
         {
             // Inform user of error
-            _messageStore.SetCurrentMessage(
+            _messageStore.EnqueueMessage(
                 $"Error creating database: {ex.Message}",
                 MessageTypes.Error);
 
@@ -224,12 +224,12 @@ public partial class DatabaseConnectionViewModel
         try
         {
             IsBusy = true;
-            _messageStore.SetCurrentMessage("Importing documents...", MessageTypes.Information);
+            _messageStore.EnqueueMessage("Importing documents...", MessageTypes.Information,dismissAfterSeconds: 3);
 
             // Check if data is loaded
             if (!_manager.IsDataLoaded)
             {
-                _messageStore.SetCurrentMessage("No data loaded. Please connect to a database first.", MessageTypes.Error);
+                _messageStore.EnqueueMessage("No data loaded. Please connect to a database first.", MessageTypes.Error);
                 return;
             }
 
@@ -241,7 +241,7 @@ public partial class DatabaseConnectionViewModel
             // Check for cancellation
             if (selectedPath == null || selectedPath.Length == 0)
             {
-                _messageStore.SetCurrentMessage("Import cancelled.", MessageTypes.Information);
+                _messageStore.EnqueueMessage("Import cancelled.", MessageTypes.Information,dismissAfterSeconds: 3);
                 return;
             }
 
@@ -253,7 +253,7 @@ public partial class DatabaseConnectionViewModel
 
             if (result.IsImportSuccessful)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Successfully imported: {result.DocumentsCreated} documents created, {result.DocumentsProcessed - result.DocumentsCreated} updated",
                     MessageTypes.Information);
 
@@ -267,12 +267,12 @@ public partial class DatabaseConnectionViewModel
                     ? $"Import completed with errors. {result.Message}. First error: {result.Errors.FirstOrDefault()}" 
                     : result.Message;
                     
-                _messageStore.SetCurrentMessage(errorMessage, MessageTypes.Error);
+                _messageStore.EnqueueMessage(errorMessage, MessageTypes.Error);
             }
         }
         catch (Exception ex)
         {
-            _messageStore.SetCurrentMessage($"Import failed: {ex.Message}", MessageTypes.Error);
+            _messageStore.EnqueueMessage($"Import failed: {ex.Message}", MessageTypes.Error);
         }
         finally
         {
@@ -289,12 +289,12 @@ public partial class DatabaseConnectionViewModel
         try
         {
             IsBusy = true;
-            _messageStore.SetCurrentMessage("Exporting documents...", MessageTypes.Information);
+            _messageStore.EnqueueMessage("Exporting documents...", MessageTypes.Information,dismissAfterSeconds: 3);
 
             // Check if data is loaded
             if (!_manager.IsDataLoaded)
             {
-                _messageStore.SetCurrentMessage("No data loaded. Please connect to a database first.", MessageTypes.Error);
+                _messageStore.EnqueueMessage("No data loaded. Please connect to a database first.", MessageTypes.Error);
                 return;
             }
 
@@ -307,7 +307,7 @@ public partial class DatabaseConnectionViewModel
             // Check for cancellation
             if (string.IsNullOrEmpty(selectedPath))
             {
-                _messageStore.SetCurrentMessage("Export cancelled.", MessageTypes.Information);
+                _messageStore.EnqueueMessage("Export cancelled.", MessageTypes.Information,dismissAfterSeconds: 3);
                 return;
             }
 
@@ -328,18 +328,18 @@ public partial class DatabaseConnectionViewModel
 
             if (success)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Successfully exported {documents.Count} documents to {Path.GetFileName(selectedPath)}",
-                    MessageTypes.Information);
+                    MessageTypes.Information,dismissAfterSeconds: 3);
             }
             else
             {
-                _messageStore.SetCurrentMessage("Export failed. Please check the file path and try again.", MessageTypes.Error);
+                _messageStore.EnqueueMessage("Export failed. Please check the file path and try again.", MessageTypes.Error);
             }
         }
         catch (Exception ex)
         {
-            _messageStore.SetCurrentMessage($"Export failed: {ex.Message}", MessageTypes.Error);
+            _messageStore.EnqueueMessage($"Export failed: {ex.Message}", MessageTypes.Error);
         }
         finally
         {
@@ -356,12 +356,12 @@ public partial class DatabaseConnectionViewModel
         try
         {
             IsBusy = true;
-            _messageStore.SetCurrentMessage("Exporting revisions...", MessageTypes.Information);
+            _messageStore.EnqueueMessage("Exporting revisions...", MessageTypes.Information,dismissAfterSeconds: 3);
 
             // Check if data is loaded
             if (!_manager.IsDataLoaded)
             {
-                _messageStore.SetCurrentMessage("No data loaded. Please connect to a database first.", MessageTypes.Error);
+                _messageStore.EnqueueMessage("No data loaded. Please connect to a database first.", MessageTypes.Error);
                 return;
             }
 
@@ -374,7 +374,7 @@ public partial class DatabaseConnectionViewModel
             // Check for cancellation
             if (string.IsNullOrEmpty(selectedPath))
             {
-                _messageStore.SetCurrentMessage("Export cancelled.", MessageTypes.Information);
+                _messageStore.EnqueueMessage("Export cancelled.", MessageTypes.Information,dismissAfterSeconds: 3);
                 return;
             }
 
@@ -388,18 +388,18 @@ public partial class DatabaseConnectionViewModel
 
             if (success)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Successfully exported {revisions.Count} revisions to {Path.GetFileName(selectedPath)}",
-                    MessageTypes.Information);
+                    MessageTypes.Information,dismissAfterSeconds: 3);
             }
             else
             {
-                _messageStore.SetCurrentMessage("Export failed. Please check the file path and try again.", MessageTypes.Error);
+                _messageStore.EnqueueMessage("Export failed. Please check the file path and try again.", MessageTypes.Error);
             }
         }
         catch (Exception ex)
         {
-            _messageStore.SetCurrentMessage($"Export failed: {ex.Message}", MessageTypes.Error);
+            _messageStore.EnqueueMessage($"Export failed: {ex.Message}", MessageTypes.Error);
         }
         finally
         {
@@ -416,12 +416,12 @@ public partial class DatabaseConnectionViewModel
         try
         {
             IsBusy = true;
-            _messageStore.SetCurrentMessage("Importing revisions...", MessageTypes.Information);
+            _messageStore.EnqueueMessage("Importing revisions...", MessageTypes.Information,dismissAfterSeconds: 3);
 
             // Check if data is loaded
             if (!_manager.IsDataLoaded)
             {
-                _messageStore.SetCurrentMessage("No data loaded. Please connect to a database first.", MessageTypes.Error);
+                _messageStore.EnqueueMessage("No data loaded. Please connect to a database first.", MessageTypes.Error);
                 return;
             }
 
@@ -433,7 +433,7 @@ public partial class DatabaseConnectionViewModel
             // Check for cancellation
             if (selectedPath == null || selectedPath.Length == 0)
             {
-                _messageStore.SetCurrentMessage("Import cancelled.", MessageTypes.Information);
+                _messageStore.EnqueueMessage("Import cancelled.", MessageTypes.Information,dismissAfterSeconds: 3);
                 return;
             }
 
@@ -445,9 +445,9 @@ public partial class DatabaseConnectionViewModel
 
             if (result.IsImportSuccessful)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Successfully imported: {result.DocumentsCreated} revisions created, {result.DocumentsProcessed - result.DocumentsCreated} updated",
-                    MessageTypes.Information);
+                    MessageTypes.Information,dismissAfterSeconds: 3);
 
                 // Reload data into manager
                 await _docManagerApi.ReloadDataIntoManagerAsync(_manager).ConfigureAwait(false);
@@ -459,12 +459,12 @@ public partial class DatabaseConnectionViewModel
                     ? $"Import completed with errors. {result.Message}. First error: {result.Errors.FirstOrDefault()}" 
                     : result.Message;
                     
-                _messageStore.SetCurrentMessage(errorMessage, MessageTypes.Error);
+                _messageStore.EnqueueMessage(errorMessage, MessageTypes.Error);
             }
         }
         catch (Exception ex)
         {
-            _messageStore.SetCurrentMessage($"Import failed: {ex.Message}", MessageTypes.Error);
+            _messageStore.EnqueueMessage($"Import failed: {ex.Message}", MessageTypes.Error);
         }
         finally
         {

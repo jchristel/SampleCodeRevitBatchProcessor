@@ -130,14 +130,14 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                     // Add the new rule to both collections
                     AddRuleToCollections(dialogViewModel.CreatedRule);
 
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         "Filing rule added successfully",
-                        MessageTypes.Information);
+                        MessageTypes.Information,dismissAfterSeconds: 3);
                 }
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Error adding filing rule: {ex.Message}",
                     MessageTypes.Error);
             }
@@ -183,14 +183,14 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                     // Replace the rule at the same position
                     ReplaceRuleAtIndex(selectedIndex, dialogViewModel.CreatedRule);
 
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         "Filing rule updated successfully",
-                        MessageTypes.Information);
+                        MessageTypes.Information,dismissAfterSeconds: 3);
                 }
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Error editing filing rule: {ex.Message}",
                     MessageTypes.Error);
             }
@@ -224,9 +224,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 // Double-check: prevent removal of CatchAll
                 if (SelectedFilingRule.RuleTypeEnum == FilingRuleType.Default)
                 {
-                    _messageStore.SetCurrentMessage(
+                    _messageStore.EnqueueMessage(
                         "The Default (CatchAll) rule cannot be deleted. It can only be edited to change its target path.",
-                        MessageTypes.Warning);
+                        MessageTypes.Warning,dismissAfterSeconds: 20);
                     return;
                 }
 
@@ -236,13 +236,13 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 // Remove from display collection
                 FilingRules.Remove(SelectedFilingRule);
 
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     "Filing rule removed successfully",
-                    MessageTypes.Information);
+                    MessageTypes.Information,dismissAfterSeconds: 3);
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Error removing filing rule: {ex.Message}",
                     MessageTypes.Error);
             }
@@ -284,7 +284,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Error moving filing rule: {ex.Message}",
                     MessageTypes.Error);
             }
@@ -326,7 +326,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage(
+                _messageStore.EnqueueMessage(
                     $"Error moving filing rule: {ex.Message}",
                     MessageTypes.Error);
             }

@@ -201,16 +201,16 @@ public class DocManagerBootstrapper : IDisposable
                 databaseConnectionSettings = new DatabaseConnectionSettings();
 
                 // Log to message store that default settings were created
-                _messageStore?.SetCurrentMessage(
+                _messageStore?.EnqueueMessage(
                     $"{SettingsFileNames.DatabaseConnection} not found. Created default empty settings.",
-                    MessageTypes.Information);
+                    MessageTypes.Information,dismissAfterSeconds: 3);
             }
             else
             {
                 // Settings loaded successfully
-                _messageStore?.SetCurrentMessage(
+                _messageStore?.EnqueueMessage(
                     "DatabaseConnection settings loaded successfully.",
-                    MessageTypes.Information);
+                    MessageTypes.Information,dismissAfterSeconds: 3);
             }
         }
         catch (Exception ex)
@@ -218,7 +218,7 @@ public class DocManagerBootstrapper : IDisposable
             // Error loading settings - create defaults and log error
             databaseConnectionSettings = new DatabaseConnectionSettings();
 
-            _messageStore?.SetCurrentMessage(
+            _messageStore?.EnqueueMessage(
                 $"Error loading DatabaseConnection settings: {ex.Message}. Using default settings.",
                 MessageTypes.Error);
         }
@@ -235,16 +235,16 @@ public class DocManagerBootstrapper : IDisposable
                 currentFolderManagerSettings = new duHastNet.DocManager.Core.Models.CurrentFolder.CurrentFolderManagerSettings();
 
                 // Log to message store that default settings were created
-                _messageStore?.SetCurrentMessage(
+                _messageStore?.EnqueueMessage(
                     $"{SettingsFileNames.CurrentFolderManager} not found. Created default empty settings.",
-                    MessageTypes.Information);
+                    MessageTypes.Information,dismissAfterSeconds: 3);
             }
             else
             {
                 // Settings loaded successfully
-                _messageStore?.SetCurrentMessage(
+                _messageStore?.EnqueueMessage(
                     "CurrentFolderManagerSettings loaded successfully.",
-                    MessageTypes.Information);
+                    MessageTypes.Information,dismissAfterSeconds: 3);
             }
         }
         catch (Exception ex)
@@ -252,7 +252,7 @@ public class DocManagerBootstrapper : IDisposable
             // Error loading settings - create defaults and log error
             currentFolderManagerSettings = new duHastNet.DocManager.Core.Models.CurrentFolder.CurrentFolderManagerSettings();
 
-            _messageStore?.SetCurrentMessage(
+            _messageStore?.EnqueueMessage(
                 $"Error loading CurrentFolderManagerSettings: {ex.Message}. Using default settings.",
                 MessageTypes.Error);
         }
@@ -269,16 +269,16 @@ public class DocManagerBootstrapper : IDisposable
                 cloudDocumentManager = new CloudDocumentManager();
 
                 // Log to message store that default mapper was created
-                _messageStore?.SetCurrentMessage(
+                _messageStore?.EnqueueMessage(
                     $"{SettingsFileNames.CloudDocumentManager} not found. Created default empty mapper.",
-                    MessageTypes.Information);
+                    MessageTypes.Information,dismissAfterSeconds: 3);
             }
             else
             {
                 // Settings loaded successfully
-                _messageStore?.SetCurrentMessage(
+                _messageStore?.EnqueueMessage(
                     "CloudDocumentManager loaded successfully.",
-                    MessageTypes.Information);
+                    MessageTypes.Information,dismissAfterSeconds: 3);
             }
         }
         catch (Exception ex)
@@ -286,7 +286,7 @@ public class DocManagerBootstrapper : IDisposable
             // Error loading settings - create defaults and log error
             cloudDocumentManager = new CloudDocumentManager();
 
-            _messageStore?.SetCurrentMessage(
+            _messageStore?.EnqueueMessage(
                 $"Error loading CloudDocumentManager: {ex.Message}. Using default mapper.",
                 MessageTypes.Error);
         }
@@ -305,9 +305,9 @@ public class DocManagerBootstrapper : IDisposable
         if (string.IsNullOrWhiteSpace(databaseConnectionSettings.DatabasePath))
         {
             // No saved database - this is normal for first run
-            _messageStore?.SetCurrentMessage(
+            _messageStore?.EnqueueMessage(
                 "No saved database connection. Please connect to or create a database.",
-                MessageTypes.Information);
+                MessageTypes.Information,dismissAfterSeconds: 3);
             return;
         }
 
@@ -315,9 +315,9 @@ public class DocManagerBootstrapper : IDisposable
         if (!System.IO.File.Exists(databaseConnectionSettings.DatabasePath))
         {
             // Database file no longer exists
-            _messageStore?.SetCurrentMessage(
+            _messageStore?.EnqueueMessage(
                 $"Saved database file not found: {databaseConnectionSettings.DatabasePath}. Please reconnect to a database.",
-                MessageTypes.Warning);
+                MessageTypes.Warning,dismissAfterSeconds: 20);
             return;
         }
 
@@ -329,7 +329,7 @@ public class DocManagerBootstrapper : IDisposable
             if (!connectResult.Success)
             {
                 // Connection failed
-                _messageStore?.SetCurrentMessage(
+                _messageStore?.EnqueueMessage(
                     $"Failed to connect to saved database: {string.Join("; ", connectResult.Errors)}",
                     MessageTypes.Error);
                 return;
@@ -343,23 +343,23 @@ public class DocManagerBootstrapper : IDisposable
                 int count = _manager!.GetAllDocuments().ToList().Count;
 
                 // Success - database connected and data loaded
-                _messageStore?.SetCurrentMessage(
+                _messageStore?.EnqueueMessage(
                     $"Connected to database: {System.IO.Path.GetFileName(databaseConnectionSettings.DatabasePath)}. Loaded {count} documents.",
                     MessageTypes.Information,
-                    dismissAfterSeconds: 10);
+                    dismissAfterSeconds: 3);
             }
             else
             {
                 // Database connected but data load failed
-                _messageStore?.SetCurrentMessage(
+                _messageStore?.EnqueueMessage(
                     $"Database connected but failed to load data: {string.Join("; ", loadResult.Errors)}",
-                    MessageTypes.Warning);
+                    MessageTypes.Warning, dismissAfterSeconds: 20);
             }
         }
         catch (Exception ex)
         {
             // Unexpected error during connection
-            _messageStore?.SetCurrentMessage(
+            _messageStore?.EnqueueMessage(
                 $"Error connecting to saved database: {ex.Message}",
                 MessageTypes.Error);
         }

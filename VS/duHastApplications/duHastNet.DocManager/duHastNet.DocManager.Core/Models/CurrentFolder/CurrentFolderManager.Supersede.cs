@@ -62,21 +62,23 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                 // Mark all documents in the group as duplicates
                 foreach (var doc in documentsInGroup)
                 {
-                    doc.IsDuplicate = true;
-
                     // Add all other files in the group as duplicates
-                    doc.DuplicateFilePaths = documentsInGroup
+                    var otherDuplicates = documentsInGroup
                         .Where(d => d.NewDocumentPath != doc.NewDocumentPath)
                         .Select(d => d.NewDocumentPath ?? string.Empty)
                         .Where(path => !string.IsNullOrEmpty(path))
                         .ToList();
 
-                    // Log error message (duplicates block merge)
+                    // Create and add IncomingFileDuplicateException
+                    // This will automatically set IsDuplicate = true and populate DuplicateFilePaths
                     var fileExtension = System.IO.Path.GetExtension(doc.NewDocumentPath);
                     doc.AddProcessMessage(
-                        $"ERROR: Duplicate {fileExtension} file found for document ID {group.Key.DocumentId}. " +
-                        $"Total duplicates: {documentsInGroup.Count}. This document cannot be merged until duplicates are resolved.",
-                        Stores.ProcessMessageTypes.Error
+                        new Exceptions.IncomingFileDuplicateException(
+                            doc.NewDocumentPath ?? string.Empty,
+                            group.Key.DocumentId,
+                            otherDuplicates,
+                            fileExtension
+                        )
                     );
                 }
             }
@@ -416,24 +418,16 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                 incomingDocumentStatus
             );
 
-            if (documentId == null)
-            {
-                // return with no match
-                return incomingDocumentStatus;
-            }
+            //finish all checks...
 
             //store the id of the matched document
             incomingDocumentStatus.MatchedDocumentId = documentId;
 
             // extract revision
             string? revision = GetRevisionFromFileName(fileName, incomingDocumentStatus);
-            
-            if (revision == null)
-            {
-                // return with no match
-                return incomingDocumentStatus;
-            }
-            
+
+            //finish all checks...
+
             // set incoming document revision
             incomingDocumentStatus.IncomingDocumentRevision = revision;
 

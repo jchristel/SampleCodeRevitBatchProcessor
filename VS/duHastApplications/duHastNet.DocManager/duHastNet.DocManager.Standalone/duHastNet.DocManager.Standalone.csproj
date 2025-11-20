@@ -7,9 +7,20 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <Platforms>AnyCPU;x64</Platforms>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Icon.ico" />
+  </ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\duHastNet.DocManager.UI.Shared\duHastNet.DocManager.UI.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Icon.ico">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 </Project>

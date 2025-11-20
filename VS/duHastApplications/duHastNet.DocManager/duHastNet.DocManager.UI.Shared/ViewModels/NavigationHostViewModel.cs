@@ -70,7 +70,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             };
 
             // Navigate to initial view
-            _navigationStore.NavigateTo(CreateSettingsViewModel);
+            _navigationStore.NavigateTo(CreateMergeViewModel);
         }
 
         private SettingsViewModel CreateSettingsViewModel()

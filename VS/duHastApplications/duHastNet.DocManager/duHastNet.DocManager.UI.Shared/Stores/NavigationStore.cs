@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -64,6 +64,24 @@ namespace duHastNet.DocManager.UI.Shared.Stores
                 System.Diagnostics.Debug.WriteLine(
                     $"Disposing {CurrentViewModel.GetType().Name}");
                 disposable.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Called after CurrentViewModel has changed
+        /// Handles initialization of the new ViewModel
+        /// </summary>
+        partial void OnCurrentViewModelChanged(ObservableObject? value)
+        {
+            // Call IActivatable.OnActivatedAsync() if implemented
+            if (CurrentViewModel is IActivatable activatable)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"Calling OnActivatedAsync() on {CurrentViewModel.GetType().Name}");
+                
+                // Fire and forget the async activation
+                // This allows navigation to complete immediately while activation runs in background
+                _ = activatable.OnActivatedAsync();
             }
         }
 

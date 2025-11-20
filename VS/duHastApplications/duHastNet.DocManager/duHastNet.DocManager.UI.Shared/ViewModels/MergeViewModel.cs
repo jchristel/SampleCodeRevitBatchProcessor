@@ -35,7 +35,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels;
 /// <summary>
 /// Main ViewModel for the Document Manager application
 /// </summary>
-public partial class MergeViewModel : ObservableObject
+public partial class MergeViewModel : ObservableObject, IActivatable
 {
     #region Private Fields
 
@@ -82,6 +82,8 @@ public partial class MergeViewModel : ObservableObject
 
         // Initialize collections
         FilteredRevisionDescriptions = new ObservableCollection<string>();
+
+        
     }
 
     #endregion
@@ -132,28 +134,28 @@ public partial class MergeViewModel : ObservableObject
                             RevisionDate.HasValue && 
                             !string.IsNullOrWhiteSpace(RevisionDescription);
 
+    #endregion
 
-    ///// <summary>
-    ///// Gets whether there are any unknown documents with supported file types
-    ///// </summary>
-    //public bool HasUnknownDocuments
-    //{
-    //    get
-    //    {
-    //        if (_currentFolderManager?.MatchedDocuments == null)
-    //            return false;
+    #region IActivatable Implementation
 
-    //        var supportedFileTypes = _currentFolderManager.Settings.SupportedFileTypes;
-    //        var supportedExtensions = new HashSet<string>(
-    //            supportedFileTypes.Select(ft => ft.FileExtension),
-    //            StringComparer.OrdinalIgnoreCase);
-
-    //        return _currentFolderManager.MatchedDocuments
-    //            .Where(d => !d.MatchedDocumentId.HasValue)
-    //            .Any(d => !string.IsNullOrEmpty(d.NewDocumentPath) &&
-    //                     supportedExtensions.Contains(System.IO.Path.GetExtension(d.NewDocumentPath)));
-    //    }
-    //}
+    /// <summary>
+    /// Called when the ViewModel is activated (navigated to)
+    /// Refreshes the document matching to show current state
+    /// </summary>
+    public async Task OnActivatedAsync()
+    {
+        try
+        {
+            // Refresh the document matching when the view is displayed
+            await DocumentMatchViewModel.RefreshMatchingAsync().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _messageStore.EnqueueMessage(
+                $"Error initializing merge view: {ex.Message}",
+                MessageTypes.Error);
+        }
+    }
 
     #endregion
 

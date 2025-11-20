@@ -625,3 +625,6 @@ Samples/Flows/TheChain/_00_ReportFamilyData/_Users/*
 
 # But do NOT ignore the _default directory
 !Samples/Flows/TheChain/_00_ReportFamilyData/_Users/_default/
+
+#include any .msi files in the /Samples/Apps folder
+!Samples/Apps/*.msi

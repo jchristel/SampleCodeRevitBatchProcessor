@@ -30,4 +30,4 @@ Apps
    :maxdepth: 4
    :glob:
 
-   apps/*
+   apps/index

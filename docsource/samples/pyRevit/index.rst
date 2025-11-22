@@ -1,5 +1,5 @@
 pyRevit
 ========
 
-.. include:: ../../../Samples/pyRevit/readme.rst
+.. include:: ../../../Samples/pyRevit/readme.md
    

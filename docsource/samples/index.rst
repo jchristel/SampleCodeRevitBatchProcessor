@@ -11,7 +11,6 @@ Flows
    :maxdepth: 4
 
    flows/index
-   pyRevit/index
 
 
 pyRevit

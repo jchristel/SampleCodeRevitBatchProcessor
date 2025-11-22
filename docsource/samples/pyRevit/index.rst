@@ -1,5 +1,7 @@
 pyRevit
 ========
 
-.. include:: ../../../Samples/pyRevit/readme.rst
-   
+.. toctree::
+   :maxdepth: 2
+
+   ../../../Samples/pyRevit/readme

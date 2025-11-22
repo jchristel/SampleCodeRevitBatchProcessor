@@ -55,7 +55,8 @@
         </Border>
 
         <!-- DataGrid -->
-        <DataGrid Grid.Row="2" 
+        <DataGrid x:Name="DocumentsDataGrid"
+                  Grid.Row="2" 
                   ItemsSource="{Binding DocumentRows}"
                   AutoGenerateColumns="False"
                   SelectionMode="Extended"

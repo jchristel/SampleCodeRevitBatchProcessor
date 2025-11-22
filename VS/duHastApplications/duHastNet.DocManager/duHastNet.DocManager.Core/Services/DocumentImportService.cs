@@ -56,13 +56,13 @@ public class DocumentImportService
         try
         {
             // Load custom field definitions and revisions for validation
-            var customFieldDefinitions = await _unitOfWork.CustomFieldDefinitions.GetAllAsync().ConfigureAwait(false);
+            var customFieldDefinitions = await _unitOfWork.CustomFieldDefinitions.GetAllAsync();
             var customFieldLookup = customFieldDefinitions.ToDictionary(
                 cfd => cfd.PropertyName,
                 cfd => cfd,
                 StringComparer.OrdinalIgnoreCase);
 
-            var revisions = await _unitOfWork.Revisions.GetAllAsync().ConfigureAwait(false);
+            var revisions = await _unitOfWork.Revisions.GetAllAsync();
             var revisionLookup = revisions.ToDictionary(r => r.Id, r => r);
 
             using var reader = new StreamReader(filePath);
@@ -84,7 +84,7 @@ public class DocumentImportService
             int rowNumber = 1; // Start at 1 for first data row
 
             // Read each row
-            while (await Task.Run(() => csv.Read()).ConfigureAwait(false))
+            while (await Task.Run(() => csv.Read()))
             {
                 rowNumber++;
                 documentsProcessed++;
@@ -100,7 +100,7 @@ public class DocumentImportService
                             importRow,
                             customFieldLookup,
                             revisionLookup,
-                            rowNumber).ConfigureAwait(false);
+                            rowNumber);
 
                         if (createResult.Success)
                         {
@@ -119,7 +119,7 @@ public class DocumentImportService
                             importRow,
                             customFieldLookup,
                             revisionLookup,
-                            rowNumber).ConfigureAwait(false);
+                            rowNumber);
 
                         if (updateResult.Success)
                         {
@@ -292,7 +292,7 @@ public class DocumentImportService
             // Check if document already exists
             var exists = await _unitOfWork.Documents.DocumentExistsAsync(
                 importRow.DocumentNumber,
-                importRow.RevisionIndicator).ConfigureAwait(false);
+                importRow.RevisionIndicator);
 
             if (exists)
             {
@@ -314,13 +314,13 @@ public class DocumentImportService
             }
 
             // Insert document - SQLite-net-pcl should update the Id property
-            await _unitOfWork.Documents.InsertAsync(document).ConfigureAwait(false);
+            await _unitOfWork.Documents.InsertAsync(document);
 
             // Verify we have a valid Id after insert
             if (document.Id == 0)
             {
                 // Fallback: Query for the just-inserted document
-                var docs = await _unitOfWork.Documents.GetDocumentsByNumberAsync(importRow.DocumentNumber).ConfigureAwait(false);
+                var docs = await _unitOfWork.Documents.GetDocumentsByNumberAsync(importRow.DocumentNumber);
                 var insertedDoc = docs.FirstOrDefault(d => d.Revision == importRow.RevisionIndicator);
 
                 if (insertedDoc == null)
@@ -341,14 +341,14 @@ public class DocumentImportService
                         fieldDef.Id,
                         fieldValue);
 
-                    await _unitOfWork.CustomProperties.InsertAsync(customProperty).ConfigureAwait(false);
+                    await _unitOfWork.CustomProperties.InsertAsync(customProperty);
                 }
             }
 
             // Update bidirectional relationship: add document to revision's DocumentIds collection
             if (document.RevisionId != 0)
             {
-                await _unitOfWork.Revisions.AddDocumentToRevisionAsync(document.RevisionId, document.Id).ConfigureAwait(false);
+                await _unitOfWork.Revisions.AddDocumentToRevisionAsync(document.RevisionId, document.Id);
             }
 
             return ValidationResult.CreateSuccess();
@@ -377,7 +377,7 @@ public class DocumentImportService
             }
 
             // Get existing document
-            var document = await _unitOfWork.Documents.GetByIdAsync(documentId).ConfigureAwait(false);
+            var document = await _unitOfWork.Documents.GetByIdAsync(documentId);
             if (document == null)
             {
                 return ValidationResult.CreateFailure($"Row {rowNumber}: Document with Id {documentId} not found");
@@ -427,7 +427,7 @@ public class DocumentImportService
             // Update document if changed
             if (documentChanged)
             {
-                await _unitOfWork.Documents.UpdateAsync(document).ConfigureAwait(false);
+                await _unitOfWork.Documents.UpdateAsync(document);
             }
 
             // Update bidirectional relationship if revision changed
@@ -436,18 +436,18 @@ public class DocumentImportService
                 // Remove from old revision's DocumentIds collection
                 if (oldRevisionId != 0)
                 {
-                    await _unitOfWork.Revisions.RemoveDocumentFromRevisionAsync(oldRevisionId, document.Id).ConfigureAwait(false);
+                    await _unitOfWork.Revisions.RemoveDocumentFromRevisionAsync(oldRevisionId, document.Id);
                 }
 
                 // Add to new revision's DocumentIds collection
                 if (document.RevisionId != 0)
                 {
-                    await _unitOfWork.Revisions.AddDocumentToRevisionAsync(document.RevisionId, document.Id).ConfigureAwait(false);
+                    await _unitOfWork.Revisions.AddDocumentToRevisionAsync(document.RevisionId, document.Id);
                 }
             }
 
             // Update custom properties
-            var existingProperties = await _unitOfWork.CustomProperties.GetPropertiesByDocumentAsync(documentId).ConfigureAwait(false);
+            var existingProperties = await _unitOfWork.CustomProperties.GetPropertiesByDocumentAsync(documentId);
 
             foreach (var (fieldName, fieldValue) in importRow.CustomFields)
             {
@@ -462,7 +462,7 @@ public class DocumentImportService
                         if (existingProperty.PropertyValue != fieldValue)
                         {
                             existingProperty.PropertyValue = fieldValue;
-                            await _unitOfWork.CustomProperties.UpdateAsync(existingProperty).ConfigureAwait(false);
+                            await _unitOfWork.CustomProperties.UpdateAsync(existingProperty);
                         }
                     }
                     else
@@ -473,7 +473,7 @@ public class DocumentImportService
                             fieldDef.Id,
                             fieldValue);
 
-                        await _unitOfWork.CustomProperties.InsertAsync(customProperty).ConfigureAwait(false);
+                        await _unitOfWork.CustomProperties.InsertAsync(customProperty);
                     }
                 }
             }

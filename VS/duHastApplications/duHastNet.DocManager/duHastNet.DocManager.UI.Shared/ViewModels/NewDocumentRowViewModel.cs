@@ -23,6 +23,7 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using duHastNet.DocManager.Core.Models;
+using System.Collections.ObjectModel;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels;
 
@@ -101,6 +102,12 @@ public partial class NewDocumentRowViewModel : ObservableObject
     /// </summary>
     private Action<NewDocumentRowViewModel>? _validationCallback;
 
+    /// <summary>
+    /// Collection of custom field values for this document
+    /// </summary>
+    [ObservableProperty]
+    private ObservableCollection<CustomFieldValueViewModel> _customFieldValues = new();
+
     #endregion
 
     #region Computed Properties
@@ -143,6 +150,7 @@ public partial class NewDocumentRowViewModel : ObservableObject
     /// <param name="existingDocumentNumbers">List of existing document numbers in the database</param>
     /// <param name="revisionPrefix">The revision prefix character (e.g., '[')</param>
     /// <param name="revisionSuffix">The revision suffix character (e.g., ']')</param>
+    /// <param name="customFieldDefinitions">List of custom field definitions to create value placeholders for</param>
     /// <param name="validationCallback">Callback to invoke when validation is needed</param>
     public NewDocumentRowViewModel(
         string filePath,
@@ -150,11 +158,22 @@ public partial class NewDocumentRowViewModel : ObservableObject
         HashSet<string> existingDocumentNumbers,
         string? revisionPrefix,
         string? revisionSuffix,
+        IEnumerable<CustomFieldDefinition>? customFieldDefinitions = null,
         Action<NewDocumentRowViewModel>? validationCallback = null)
     {
         FullFilePath = filePath;
         SupportedFileType = supportedFileType;
         _validationCallback = validationCallback;
+
+        // Initialize custom field values from definitions
+        CustomFieldValues = new ObservableCollection<CustomFieldValueViewModel>();
+        if (customFieldDefinitions != null)
+        {
+            foreach (var definition in customFieldDefinitions)
+            {
+                CustomFieldValues.Add(new CustomFieldValueViewModel(definition));
+            }
+        }
 
         // Extract filename and extension
         FileName = System.IO.Path.GetFileName(filePath);

@@ -116,7 +116,7 @@ public partial class MergeViewModel : ObservableObject
                 //if (!matchedDoc.MatchedDocumentId.HasValue)
                 //    continue;
 
-                var doc = await _docManagerApi.GetDocumentByIdAsync(matchedDoc.MatchedDocumentId.Value).ConfigureAwait(false);
+                var doc = await _docManagerApi.GetDocumentByIdAsync(matchedDoc.MatchedDocumentId.Value);
                 if (doc != null)
                 {
                     documents.Add(doc);
@@ -129,8 +129,8 @@ public partial class MergeViewModel : ObservableObject
                 }
             }
 
-            // Get revisions for metadata
-            var revisions = _manager.GetAllRevisions().ToList();
+            // Get revisions for metadata from database (not in-memory manager)
+            var revisions = await _docManagerApi.GetAllRevisionsAsync();
 
             // Get custom properties for documents
             var customProperties = new Dictionary<int, List<CustomProperty>>();
@@ -147,7 +147,7 @@ public partial class MergeViewModel : ObservableObject
                 revisions,
                 metaDataMapper,
                 customProperties,
-                filePathsByDocumentId).ConfigureAwait(false);
+                filePathsByDocumentId);
 
             if (success)
             {

@@ -39,6 +39,7 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
 
     private readonly CurrentFolderManager _currentFolderManager;
     private readonly List<Document> _existingDocuments;
+    private readonly List<CustomFieldDefinition> _customFieldDefinitions;
 
     #endregion
 
@@ -88,6 +89,11 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
     /// </summary>
     public int TotalCount => DocumentRows?.Count ?? 0;
 
+    /// <summary>
+    /// Gets the custom field definitions for dynamic column generation
+    /// </summary>
+    public IReadOnlyList<CustomFieldDefinition> CustomFieldDefinitions => _customFieldDefinitions;
+
     #endregion
 
     #region Events
@@ -107,13 +113,16 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
     /// <param name="currentFolderManager">The current folder manager containing file matching information</param>
     /// <param name="existingDocuments">List of existing documents in the database</param>
     /// <param name="unknownDocuments">List of unknown document processing statuses</param>
+    /// <param name="customFieldDefinitions">List of custom field definitions for the new documents</param>
     public AddNewDocumentsDialogViewModel(
         CurrentFolderManager currentFolderManager,
         List<Document> existingDocuments,
-        List<IncomingDocumentProcessingStatus> unknownDocuments)
+        List<IncomingDocumentProcessingStatus> unknownDocuments,
+        List<CustomFieldDefinition>? customFieldDefinitions = null)
     {
         _currentFolderManager = currentFolderManager ?? throw new ArgumentNullException(nameof(currentFolderManager));
         _existingDocuments = existingDocuments ?? throw new ArgumentNullException(nameof(existingDocuments));
+        _customFieldDefinitions = customFieldDefinitions ?? new List<CustomFieldDefinition>();
 
         _documentRows = new ObservableCollection<NewDocumentRowViewModel>();
 
@@ -224,6 +233,7 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
                 existingDocumentNumbers,
                 revisionPrefix,
                 revisionSuffix,
+                _customFieldDefinitions,
                 ValidateRow); // Pass validation callback
 
             // Skip documents without revision indicators (they shouldn't be shown)

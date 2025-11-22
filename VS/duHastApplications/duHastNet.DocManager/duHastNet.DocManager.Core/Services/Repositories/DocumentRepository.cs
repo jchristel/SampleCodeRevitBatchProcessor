@@ -39,7 +39,7 @@ public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
         return await _connection.Table<Document>()
             .Where(d => d.RevisionId == revisionId && d.IsActive)
             .OrderBy(d => d.Number)
-            .ToListAsync().ConfigureAwait(false);
+            .ToListAsync();
     }
 
     public async Task<List<Document>> GetDocumentsByNumberAsync(string documentNumber)
@@ -47,7 +47,7 @@ public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
         return await _connection.Table<Document>()
             .Where(d => d.Number == documentNumber && d.IsActive)
             .OrderByDescending(d => d.Id) // Most recent first
-            .ToListAsync().ConfigureAwait(false);
+            .ToListAsync();
     }
 
     public async Task<Document?> GetLatestDocumentRevisionAsync(string documentNumber)
@@ -55,14 +55,14 @@ public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
         return await _connection.Table<Document>()
             .Where(d => d.Number == documentNumber && d.IsActive)
             .OrderByDescending(d => d.Id)
-            .FirstOrDefaultAsync().ConfigureAwait(false);
+            .FirstOrDefaultAsync();
     }
 
     public async Task<List<string>> GetDistinctDocumentNumbersAsync()
     {
         var documents = await _connection.Table<Document>()
             .Where(d => d.IsActive)
-            .ToListAsync().ConfigureAwait(false);
+            .ToListAsync();
 
         return documents.Select(d => d.Number)
             .Distinct()
@@ -81,13 +81,13 @@ public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
                         d.Revision.ToLower().Contains(term)))
             .OrderBy(d => d.Number)
             .ThenByDescending(d => d.Id)
-            .ToListAsync().ConfigureAwait(false);
+            .ToListAsync();
     }
 
     public async Task<bool> DocumentExistsAsync(string number, string revision)
     {
         var count = await _connection.Table<Document>()
-            .CountAsync(d => d.Number == number && d.Revision == revision && d.IsActive).ConfigureAwait(false);
+            .CountAsync(d => d.Number == number && d.Revision == revision && d.IsActive);
 
         return count > 0;
     }
@@ -100,7 +100,7 @@ public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
         return await _connection.Table<Document>()
             .Where(d => d.IsActive)
             .OrderBy(d => d.Number)
-            .ToListAsync().ConfigureAwait(false);
+            .ToListAsync();
     }
 
     /// <summary>
@@ -111,11 +111,11 @@ public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
     /// <returns>Number of records affected</returns>
     public async Task<int> UpdateActiveStatusAsync(int documentId, bool isActive)
     {
-        var document = await GetByIdAsync(documentId).ConfigureAwait(false);
+        var document = await GetByIdAsync(documentId);
         if (document == null) return 0;
 
         document.IsActive = isActive;
-        return await UpdateAsync(document).ConfigureAwait(false);
+        return await UpdateAsync(document);
     }
 
     #endregion
@@ -130,7 +130,7 @@ public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
         return await _connection.Table<Document>()
             .Where(d => !d.IsActive)
             .OrderBy(d => d.Number)
-            .ToListAsync().ConfigureAwait(false);
+            .ToListAsync();
     }
 
     #endregion
@@ -148,7 +148,7 @@ public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
         // This is a simple LIKE search - for more complex queries, consider using FTS
         var documents = await _connection.Table<Document>()
             .Where(d => d.DocumentNumberHistoryJson.Contains($"\"{documentNumber}\""))
-            .ToListAsync().ConfigureAwait(false);
+            .ToListAsync();
 
         // Filter results by actually checking the deserialized dictionary
         // to ensure accurate matching
@@ -165,12 +165,12 @@ public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
     {
         // Check current document numbers
         var existsAsCurrent = await _connection.Table<Document>()
-            .CountAsync(d => d.Number == documentNumber).ConfigureAwait(false) > 0;
+            .CountAsync(d => d.Number == documentNumber) > 0;
 
         if (existsAsCurrent) return true;
 
         // Check document histories
-        var documentsWithHistory = await GetDocumentsByHistoryNumberAsync(documentNumber).ConfigureAwait(false);
+        var documentsWithHistory = await GetDocumentsByHistoryNumberAsync(documentNumber);
         return documentsWithHistory.Any();
     }
 
@@ -181,7 +181,7 @@ public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
     /// <returns>Distinct list of all document numbers ever used</returns>
     public async Task<List<string>> GetAllDocumentNumbersEverUsedAsync()
     {
-        var allDocs = await GetAllAsync().ConfigureAwait(false);
+        var allDocs = await GetAllAsync();
         var allNumbers = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var doc in allDocs)
@@ -211,7 +211,7 @@ public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
         return await _connection.Table<Document>()
             .Where(d => d.RevisionId == revisionId)
             .OrderBy(d => d.Number)
-            .ToListAsync().ConfigureAwait(false);
+            .ToListAsync();
     }
 
     /// <summary>
@@ -222,7 +222,7 @@ public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
         return await _connection.Table<Document>()
             .Where(d => d.Number == documentNumber)
             .OrderByDescending(d => d.Id) // Most recent first
-            .ToListAsync().ConfigureAwait(false);
+            .ToListAsync();
     }
 
     /// <summary>
@@ -231,7 +231,7 @@ public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
     public async Task<bool> AnyDocumentExistsAsync(string number, string revision)
     {
         var count = await _connection.Table<Document>()
-            .CountAsync(d => d.Number == number && d.Revision == revision).ConfigureAwait(false);
+            .CountAsync(d => d.Number == number && d.Revision == revision);
 
         return count > 0;
     }

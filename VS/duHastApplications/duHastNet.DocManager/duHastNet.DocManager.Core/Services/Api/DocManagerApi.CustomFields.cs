@@ -55,7 +55,7 @@ public partial class DocManagerApi
             }
 
             // Check for duplicates
-            var exists = await _unitOfWork!.CustomFieldDefinitions.PropertyNameExistsAsync(propertyName).ConfigureAwait(false);
+            var exists = await _unitOfWork!.CustomFieldDefinitions.PropertyNameExistsAsync(propertyName);
             if (exists)
             {
                 return SetupResult.CreateFailure($"Custom field '{propertyName}' already exists");
@@ -63,10 +63,10 @@ public partial class DocManagerApi
 
             // Create the custom field definition
             var customFieldDefinition = new CustomFieldDefinition(propertyName, isActive);
-            await _unitOfWork.CustomFieldDefinitions.InsertAsync(customFieldDefinition).ConfigureAwait(false);
+            await _unitOfWork.CustomFieldDefinitions.InsertAsync(customFieldDefinition);
 
             // Get all active documents
-            var documents = await _unitOfWork.Documents.GetActiveDocumentsAsync().ConfigureAwait(false);
+            var documents = await _unitOfWork.Documents.GetActiveDocumentsAsync();
 
             // Create CustomProperty records for all documents with empty values
             foreach (var document in documents)
@@ -76,7 +76,7 @@ public partial class DocManagerApi
                     customFieldDefinition.Id,
                     string.Empty); // Empty value initially
 
-                await _unitOfWork.CustomProperties.InsertAsync(customProperty).ConfigureAwait(false);
+                await _unitOfWork.CustomProperties.InsertAsync(customProperty);
             }
 
             var result = SetupResult.CreateSuccess(_databaseService!.DatabasePath!);
@@ -106,14 +106,14 @@ public partial class DocManagerApi
             }
 
             // Get the custom field definition
-            var definition = await _unitOfWork!.CustomFieldDefinitions.GetByIdAsync(customFieldDefinitionId).ConfigureAwait(false);
+            var definition = await _unitOfWork!.CustomFieldDefinitions.GetByIdAsync(customFieldDefinitionId);
             if (definition == null)
             {
                 return SetupResult.CreateFailure($"Custom field definition with ID {customFieldDefinitionId} not found");
             }
 
             // Update IsActive status
-            var rowsAffected = await _unitOfWork.CustomFieldDefinitions.UpdateIsActiveAsync(customFieldDefinitionId, isActive).ConfigureAwait(false);
+            var rowsAffected = await _unitOfWork.CustomFieldDefinitions.UpdateIsActiveAsync(customFieldDefinitionId, isActive);
 
             if (rowsAffected == 0)
             {
@@ -144,7 +144,7 @@ public partial class DocManagerApi
                 return new List<CustomFieldDefinition>();
             }
 
-            return await _unitOfWork!.CustomFieldDefinitions.GetAllAsync().ConfigureAwait(false);
+            return await _unitOfWork!.CustomFieldDefinitions.GetAllAsync();
         }
         catch (Exception)
         {
@@ -165,7 +165,7 @@ public partial class DocManagerApi
                 return new List<CustomFieldDefinition>();
             }
 
-            return await _unitOfWork!.CustomFieldDefinitions.GetActiveAsync().ConfigureAwait(false);
+            return await _unitOfWork!.CustomFieldDefinitions.GetActiveAsync();
         }
         catch (Exception)
         {

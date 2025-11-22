@@ -300,12 +300,12 @@ public partial class DocumentMatchControlViewModel : ObservableObject
 
                     // Insert documents into database using batch insert
                     var unitOfWork = _docManagerApi.GetUnitOfWork();
-                    var insertedCount = await unitOfWork.Documents.InsertAllAsync(documents).ConfigureAwait(false);
+                    var insertedCount = await unitOfWork.Documents.InsertAllAsync(documents);
 
                     if (insertedCount > 0)
                     {
                         // Reload the manager to include the newly added documents
-                        var reloadResult = await _docManagerApi.ReloadDataIntoManagerAsync(_manager).ConfigureAwait(false);
+                        var reloadResult = await _docManagerApi.ReloadDataIntoManagerAsync(_manager);
                         
                         if (!reloadResult.Success)
                         {

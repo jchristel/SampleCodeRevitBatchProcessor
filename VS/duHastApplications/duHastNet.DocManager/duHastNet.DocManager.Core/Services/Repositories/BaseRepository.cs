@@ -36,68 +36,68 @@ public abstract class BaseRepository<T> : IRepository<T> where T : class, new()
 
     public virtual async Task<T?> GetByIdAsync(int id)
     {
-        return await _connection.FindAsync<T>(id).ConfigureAwait(false);
+        return await _connection.FindAsync<T>(id);
     }
 
     public virtual async Task<List<T>> GetAllAsync()
     {
-        return await _connection.Table<T>().ToListAsync().ConfigureAwait(false);
+        return await _connection.Table<T>().ToListAsync();
     }
 
     public virtual async Task<List<T>> FindAsync(Expression<Func<T, bool>> predicate)
     {
-        return await _connection.Table<T>().Where(predicate).ToListAsync().ConfigureAwait(false);
+        return await _connection.Table<T>().Where(predicate).ToListAsync();
     }
 
     public virtual async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
     {
-        return await _connection.Table<T>().Where(predicate).FirstOrDefaultAsync().ConfigureAwait(false);
+        return await _connection.Table<T>().Where(predicate).FirstOrDefaultAsync();
     }
 
     public virtual async Task<int> InsertAsync(T entity)
     {
-        return await _connection.InsertAsync(entity).ConfigureAwait(false);
+        return await _connection.InsertAsync(entity);
     }
 
     public virtual async Task<int> UpdateAsync(T entity)
     {
-        return await _connection.UpdateAsync(entity).ConfigureAwait(false);
+        return await _connection.UpdateAsync(entity);
     }
 
     public virtual async Task<int> DeleteAsync(T entity)
     {
-        return await _connection.DeleteAsync(entity).ConfigureAwait(false);
+        return await _connection.DeleteAsync(entity);
     }
 
     public virtual async Task<int> DeleteAsync(int id)
     {
-        return await _connection.DeleteAsync<T>(id).ConfigureAwait(false);
+        return await _connection.DeleteAsync<T>(id);
     }
 
     public virtual async Task<int> CountAsync()
     {
-        return await _connection.Table<T>().CountAsync().ConfigureAwait(false);
+        return await _connection.Table<T>().CountAsync();
     }
 
     public virtual async Task<int> CountAsync(Expression<Func<T, bool>> predicate)
     {
-        return await _connection.Table<T>().Where(predicate).CountAsync().ConfigureAwait(false);
+        return await _connection.Table<T>().Where(predicate).CountAsync();
     }
 
     public virtual async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate)
     {
-        var count = await CountAsync(predicate).ConfigureAwait(false);
+        var count = await CountAsync(predicate);
         return count > 0;
     }
 
     public virtual async Task<int> InsertAllAsync(IEnumerable<T> entities)
     {
-        return await _connection.InsertAllAsync(entities).ConfigureAwait(false);
+        return await _connection.InsertAllAsync(entities);
     }
 
     public virtual async Task<int> UpdateAllAsync(IEnumerable<T> entities)
     {
-        return await _connection.UpdateAllAsync(entities).ConfigureAwait(false);
+        return await _connection.UpdateAllAsync(entities);
     }
 
     public virtual async Task<int> DeleteAllAsync(IEnumerable<T> entities)
@@ -105,7 +105,7 @@ public abstract class BaseRepository<T> : IRepository<T> where T : class, new()
         var count = 0;
         foreach (var entity in entities)
         {
-            count += await DeleteAsync(entity).ConfigureAwait(false);
+            count += await DeleteAsync(entity);
         }
         return count;
     }

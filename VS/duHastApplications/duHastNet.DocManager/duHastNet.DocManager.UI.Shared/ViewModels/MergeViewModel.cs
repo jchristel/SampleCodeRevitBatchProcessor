@@ -147,7 +147,7 @@ public partial class MergeViewModel : ObservableObject, IActivatable
         try
         {
             // Refresh the document matching when the view is displayed
-            await DocumentMatchViewModel.RefreshMatchingAsync().ConfigureAwait(false);
+            await DocumentMatchViewModel.RefreshMatchingAsync();
         }
         catch (Exception ex)
         {

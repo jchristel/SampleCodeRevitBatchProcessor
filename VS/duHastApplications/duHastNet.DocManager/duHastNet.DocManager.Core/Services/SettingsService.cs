@@ -123,7 +123,7 @@ public class SettingsService : ISettingsService
             // Write to temporary file first
             try
             {
-                await File.WriteAllTextAsync(tempPath, json).ConfigureAwait(false);
+                await File.WriteAllTextAsync(tempPath, json);
             }
             catch (Exception ex)
             {
@@ -209,7 +209,7 @@ public class SettingsService : ISettingsService
             {
                 try
                 {
-                    var json = await File.ReadAllTextAsync(filePath).ConfigureAwait(false);
+                    var json = await File.ReadAllTextAsync(filePath);
                     var obj = JsonConvert.DeserializeObject<T>(json, _jsonSettings);
                     return obj;
                 }
@@ -224,7 +224,7 @@ public class SettingsService : ISettingsService
                     {
                         try
                         {
-                            var json = await File.ReadAllTextAsync(backupPath).ConfigureAwait(false);
+                            var json = await File.ReadAllTextAsync(backupPath);
                             var obj = JsonConvert.DeserializeObject<T>(json, _jsonSettings);
                             return obj;
                         }

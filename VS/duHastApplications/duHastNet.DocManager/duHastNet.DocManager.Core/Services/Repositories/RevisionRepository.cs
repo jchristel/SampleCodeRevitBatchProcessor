@@ -36,7 +36,7 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
         return await _connection.Table<Revision>()
             .Where(r => r.RevisionDate >= startDate && r.RevisionDate <= endDate)
             .OrderByDescending(r => r.RevisionDate)
-            .ToListAsync().ConfigureAwait(false);
+            .ToListAsync();
     }
 
     public async Task<Revision?> GetLatestRevisionAsync()
@@ -44,7 +44,7 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
         return await _connection.Table<Revision>()
             .OrderByDescending(r => r.RevisionDate)
             .ThenByDescending(r => r.Id)
-            .FirstOrDefaultAsync().ConfigureAwait(false);
+            .FirstOrDefaultAsync();
     }
 
     public async Task<List<Revision>> GetRevisionsByDateAsync(DateTime date)
@@ -54,7 +54,7 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
         return await _connection.Table<Revision>()
             .Where(r => r.RevisionDate >= startOfDay && r.RevisionDate <= endOfDay)
             .OrderBy(r => r.Id)
-            .ToListAsync().ConfigureAwait(false);
+            .ToListAsync();
     }
 
     #endregion
@@ -69,7 +69,7 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
     /// <returns>Number of records affected</returns>
     public async Task<int> AddDocumentToRevisionAsync(int revisionId, int documentId)
     {
-        var revision = await GetByIdAsync(revisionId).ConfigureAwait(false);
+        var revision = await GetByIdAsync(revisionId);
         if (revision == null) return 0;
 
         // Avoid duplicates
@@ -78,7 +78,7 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
             var currentIds = revision.DocumentIds;
             currentIds.Add(documentId);
             revision.DocumentIds = currentIds; // Trigger serialization
-            return await UpdateAsync(revision).ConfigureAwait(false);
+            return await UpdateAsync(revision);
         }
 
         return 0; // No change needed
@@ -92,14 +92,14 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
     /// <returns>Number of records affected</returns>
     public async Task<int> RemoveDocumentFromRevisionAsync(int revisionId, int documentId)
     {
-        var revision = await GetByIdAsync(revisionId).ConfigureAwait(false);
+        var revision = await GetByIdAsync(revisionId);
         if (revision == null) return 0;
 
         var currentIds = revision.DocumentIds;
         if (currentIds.Remove(documentId))
         {
             revision.DocumentIds = currentIds; // Trigger serialization
-            return await UpdateAsync(revision).ConfigureAwait(false);
+            return await UpdateAsync(revision);
         }
 
         return 0; // Document wasn't in the list
@@ -113,7 +113,7 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
     /// <returns>Number of records affected</returns>
     public async Task<int> AddDocumentsToRevisionAsync(int revisionId, IEnumerable<int> documentIds)
     {
-        var revision = await GetByIdAsync(revisionId).ConfigureAwait(false);
+        var revision = await GetByIdAsync(revisionId);
         if (revision == null) return 0;
 
         var currentIds = revision.DocumentIds;
@@ -130,7 +130,7 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
         if (changed)
         {
             revision.DocumentIds = currentIds; // Trigger serialization
-            return await UpdateAsync(revision).ConfigureAwait(false);
+            return await UpdateAsync(revision);
         }
 
         return 0;
@@ -144,7 +144,7 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
     /// <returns>Number of records affected</returns>
     public async Task<int> RemoveDocumentsFromRevisionAsync(int revisionId, IEnumerable<int> documentIds)
     {
-        var revision = await GetByIdAsync(revisionId).ConfigureAwait(false);
+        var revision = await GetByIdAsync(revisionId);
         if (revision == null) return 0;
 
         var currentIds = revision.DocumentIds;
@@ -160,7 +160,7 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
         if (changed)
         {
             revision.DocumentIds = currentIds; // Trigger serialization
-            return await UpdateAsync(revision).ConfigureAwait(false);
+            return await UpdateAsync(revision);
         }
 
         return 0;
@@ -174,11 +174,11 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
     /// <returns>Number of records affected</returns>
     public async Task<int> SetRevisionDocumentsAsync(int revisionId, IEnumerable<int> documentIds)
     {
-        var revision = await GetByIdAsync(revisionId).ConfigureAwait(false);
+        var revision = await GetByIdAsync(revisionId);
         if (revision == null) return 0;
 
         revision.DocumentIds = documentIds.Distinct().ToList();
-        return await UpdateAsync(revision).ConfigureAwait(false);
+        return await UpdateAsync(revision);
     }
 
     /// <summary>
@@ -197,7 +197,7 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
                        r.DocumentIdsJson.Contains($"[{documentId}") ||
                        r.DocumentIdsJson.Contains($",{documentId}]"))
             .OrderByDescending(r => r.RevisionDate)
-            .ToListAsync().ConfigureAwait(false);
+            .ToListAsync();
 
         // Filter results by actually checking the deserialized list
         // to ensure accurate matching
@@ -211,7 +211,7 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
     /// <returns>Number of documents in this revision</returns>
     public async Task<int> GetDocumentCountAsync(int revisionId)
     {
-        var revision = await GetByIdAsync(revisionId).ConfigureAwait(false);
+        var revision = await GetByIdAsync(revisionId);
         return revision?.DocumentIds.Count ?? 0;
     }
 
@@ -223,7 +223,7 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
     /// <returns>True if the revision contains the document</returns>
     public async Task<bool> RevisionContainsDocumentAsync(int revisionId, int documentId)
     {
-        var revision = await GetByIdAsync(revisionId).ConfigureAwait(false);
+        var revision = await GetByIdAsync(revisionId);
         return revision?.DocumentIds.Contains(documentId) ?? false;
     }
 
@@ -233,7 +233,7 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
     /// <returns>List of empty revisions</returns>
     public async Task<List<Revision>> GetEmptyRevisionsAsync()
     {
-        var allRevisions = await GetAllAsync().ConfigureAwait(false);
+        var allRevisions = await GetAllAsync();
         return allRevisions.Where(r => r.DocumentIds.Count == 0).ToList();
     }
 
@@ -243,7 +243,7 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
     /// <returns>Dictionary with revision statistics</returns>
     public async Task<Dictionary<string, int>> GetRevisionStatisticsAsync()
     {
-        var allRevisions = await GetAllAsync().ConfigureAwait(false);
+        var allRevisions = await GetAllAsync();
 
         return new Dictionary<string, int>
         {

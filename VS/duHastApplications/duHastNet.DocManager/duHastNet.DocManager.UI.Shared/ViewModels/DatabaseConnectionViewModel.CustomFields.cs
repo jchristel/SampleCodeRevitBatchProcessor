@@ -276,10 +276,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 }
 
                 // Apply changes
-                await ApplyCustomFieldChangesAsync(changes).ConfigureAwait(false);
+                await ApplyCustomFieldChangesAsync(changes);
 
                 // Reload from manager
-                var reloadResult = await _docManagerApi.ReloadDataIntoManagerAsync(_manager).ConfigureAwait(false);
+                var reloadResult = await _docManagerApi.ReloadDataIntoManagerAsync(_manager);
 
                 if (reloadResult.Success)
                 {
@@ -433,7 +433,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                     case CustomFieldChangeType.Add:
                         var addResult = await _docManagerApi.AddCustomFieldDefinitionAsync(
                             change.PropertyName,
-                            change.IsActive).ConfigureAwait(false);
+                            change.IsActive);
 
                         if (!addResult.Success)
                         {
@@ -445,7 +445,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                     case CustomFieldChangeType.Deactivate:
                         var updateResult = await _docManagerApi.UpdateCustomFieldIsActiveAsync(
                             change.Id,
-                            change.IsActive).ConfigureAwait(false);
+                            change.IsActive);
 
                         if (!updateResult.Success)
                         {

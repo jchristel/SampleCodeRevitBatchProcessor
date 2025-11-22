@@ -71,7 +71,7 @@ public class CloudMetadataExportService
                 File.Exists(cloudMetaData.MetadataTemplateFilePath))
             {
                 // Read headers from template to maintain order
-                columnHeaders = await ReadTemplateHeadersAsync(cloudMetaData.MetadataTemplateFilePath).ConfigureAwait(false);
+                columnHeaders = await ReadTemplateHeadersAsync(cloudMetaData.MetadataTemplateFilePath);
             }
             else
             {
@@ -103,7 +103,7 @@ public class CloudMetadataExportService
             // Write data rows
             foreach (var document in documentsList)
             {
-                await WriteDocumentRowAsync(csv, document, columnHeaders, mappings, revisionsList, customProperties, filePathsByDocumentId).ConfigureAwait(false);
+                await WriteDocumentRowAsync(csv, document, columnHeaders, mappings, revisionsList, customProperties, filePathsByDocumentId);
             }
 
             return true;
@@ -131,7 +131,7 @@ public class CloudMetadataExportService
                 DetectDelimiterValues = new[] { ",", ";", "\t", "|" }
             });
 
-            await csv.ReadAsync().ConfigureAwait(false);
+            await csv.ReadAsync();
             csv.ReadHeader();
 
             if (csv.HeaderRecord != null)
@@ -199,7 +199,7 @@ public class CloudMetadataExportService
         }
 
         csv.NextRecord();
-        await Task.CompletedTask.ConfigureAwait(false); // For async signature consistency
+        await Task.CompletedTask; // For async signature consistency
     }
 
     /// <summary>

@@ -13,6 +13,21 @@ Flows
    flows/index
    pyRevit/index
 
+
 pyRevit
 -------
 
+.. toctree::
+   :maxdepth: 4
+
+   pyRevit/index
+
+
+Apps
+----
+
+.. toctree::
+   :maxdepth: 4
+   :glob:
+
+   apps/*

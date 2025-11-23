@@ -1,4 +1,4 @@
-﻿//
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -62,12 +62,27 @@ namespace duHastNet.DocManager.Core.Models.MetaData
         private List<MetaDataMap> _metaDataMap = [];
 
         /// <summary>
+        /// List of supported file types with their document number modifiers
+        /// </summary>
+        private List<SupportedFileType> _supportedFileTypes = [];
+
+        /// <summary>
         /// Gets the collection of metadata field mappings
         /// Maps metadata fields to document properties
         /// </summary>
         public List<MetaDataMap> MetaDataMap
         {
             get => _metaDataMap;
+        }
+
+        /// <summary>
+        /// Gets or sets the collection of supported file types with their document number modifiers.
+        /// Used to apply file-type-specific modifications to document numbers during export.
+        /// </summary>
+        public List<SupportedFileType> SupportedFileTypes
+        {
+            get => _supportedFileTypes;
+            set => _supportedFileTypes = value ?? new List<SupportedFileType>();
         }
 
         /// <summary>
@@ -179,6 +194,7 @@ namespace duHastNet.DocManager.Core.Models.MetaData
         {
             _metaDataMap = new List<MetaDataMap>();
             _metadataTemplateFilePath = string.Empty;
+            _supportedFileTypes = new List<SupportedFileType>();
         }
     }
 }

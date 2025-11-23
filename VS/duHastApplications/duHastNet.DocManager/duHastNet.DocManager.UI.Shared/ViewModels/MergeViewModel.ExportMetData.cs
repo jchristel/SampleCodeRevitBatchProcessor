@@ -108,26 +108,40 @@ public partial class MergeViewModel : ObservableObject
 
 
             // Get full document objects from database
-            var documents = new List<Document>();
-            var filePathsByDocumentId = new Dictionary<int, string>();
+            // Use a dictionary to track documents we've already loaded to avoid duplicates
+            var documentsById = new Dictionary<int, Document>();
+            var filePathsByDocumentId = new Dictionary<int, List<string>>();
 
             foreach (var matchedDoc in documentsToExport)
             {
                 //if (!matchedDoc.MatchedDocumentId.HasValue)
                 //    continue;
 
-                var doc = await _docManagerApi.GetDocumentByIdAsync(matchedDoc.MatchedDocumentId.Value);
-                if (doc != null)
+                var docId = matchedDoc.MatchedDocumentId.Value;
+                
+                // Only fetch the document if we haven't already
+                if (!documentsById.ContainsKey(docId))
                 {
-                    documents.Add(doc);
-                    
-                    // Store the incoming file path for this document
-                    if (!string.IsNullOrWhiteSpace(matchedDoc.IncomingFilePath))
+                    var doc = await _docManagerApi.GetDocumentByIdAsync(docId);
+                    if (doc != null)
                     {
-                        filePathsByDocumentId[doc.Id] = matchedDoc.IncomingFilePath;
+                        documentsById[docId] = doc;
                     }
                 }
+                
+                // Store the incoming file path for this document
+                if (!string.IsNullOrWhiteSpace(matchedDoc.IncomingFilePath))
+                {
+                    if (!filePathsByDocumentId.ContainsKey(docId))
+                    {
+                        filePathsByDocumentId[docId] = new List<string>();
+                    }
+                    filePathsByDocumentId[docId].Add(matchedDoc.IncomingFilePath);
+                }
             }
+
+            // Convert dictionary to list for export
+            var documents = documentsById.Values.ToList();
 
             // Get revisions for metadata from database (not in-memory manager)
             var revisions = await _docManagerApi.GetAllRevisionsAsync();
@@ -138,6 +152,9 @@ public partial class MergeViewModel : ObservableObject
             {
                 customProperties[doc.Id] = doc.CustomProperties;
             }
+
+            // Set supported file types in the metadata mapper
+            metaDataMapper.SupportedFileTypes = _currentFolderManager.Settings.SupportedFileTypes;
 
             // Create export service and perform export
             var exportService = new CloudMetadataExportService();

@@ -267,12 +267,15 @@ public partial class DocumentMatchControlViewModel : ObservableObject
         // Get current documents for duplicate checking
         var currentDocuments = _manager.GetAllDocuments().ToList();
 
+        // Get custom field definitions for the dialog
+        var customFieldDefinitions = _manager.GetActiveCustomFieldDefinitions().ToList();
+
         // Create and show the dialog
         var dialogViewModel = new AddNewDocumentsDialogViewModel(
             _currentFolderManager,
             currentDocuments,
-            supportedUnknownDocuments);
-
+            supportedUnknownDocuments,
+            customFieldDefinitions);
         var result = _dialogService.ShowDialog(dialogViewModel);
 
         if (result == true && dialogViewModel.DialogConfirmed)
@@ -301,6 +304,39 @@ public partial class DocumentMatchControlViewModel : ObservableObject
                     // Insert documents into database using batch insert
                     var unitOfWork = _docManagerApi.GetUnitOfWork();
                     var insertedCount = await unitOfWork.Documents.InsertAllAsync(documents);
+
+                    // Save custom properties for the newly added documents
+                    if (insertedCount > 0 && customFieldDefinitions.Any())
+                    {
+                        var customPropertiesToAdd = new List<CustomProperty>();
+                        
+                        for (int i = 0; i < documentsToAdd.Count; i++)
+                        {
+                            var docRow = documentsToAdd[i];
+                            var document = documents[i];
+                            
+                            // Create custom properties for each custom field value
+                            foreach (var customFieldValue in docRow.CustomFieldValues)
+                            {
+                                if (!string.IsNullOrWhiteSpace(customFieldValue.Value))
+                                {
+                                    var customProperty = new CustomProperty
+                                    {
+                                        DocumentId = document.Id,
+                                        CustomFieldDefinitionId = customFieldValue.CustomFieldDefinitionId,
+                                        PropertyValue = customFieldValue.Value
+                                    };
+                                    customPropertiesToAdd.Add(customProperty);
+                                }
+                            }
+                        }
+                        
+                        // Batch insert custom properties
+                        if (customPropertiesToAdd.Any())
+                        {
+                            await unitOfWork.CustomProperties.InsertAllAsync(customPropertiesToAdd);
+                        }
+                    }
 
                     if (insertedCount > 0)
                     {

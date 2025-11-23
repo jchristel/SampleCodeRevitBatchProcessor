@@ -1,4 +1,4 @@
-﻿//
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -18,6 +18,7 @@
 
 
 using duHastNet.DocManager.Core.Models.MetaData;
+using duHastNet.DocManager.Core.Models;
 
 namespace duHastNet.DocManager.Core.Interfaces
 {
@@ -38,6 +39,13 @@ namespace duHastNet.DocManager.Core.Interfaces
         /// Maps mepa data fields to document properties
         /// </summary>
         List<MetaDataMap> MetaDataMap { get; }
+
+        /// <summary>
+        /// Collection of supported file types with their document number modifiers.
+        /// Used to apply file-type-specific modifications to document numbers during export.
+        /// Each file type may have a different modifier (e.g., PDF = no modifier, DWG = add "-DWG" suffix)
+        /// </summary>
+        List<SupportedFileType> SupportedFileTypes { get; set; }
 
         /// <summary>
         /// adds a new meta data mapper to collection

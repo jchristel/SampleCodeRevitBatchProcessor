@@ -47,7 +47,7 @@ public class CloudMetadataExportService
         IEnumerable<Revision> revisions,
         ICloudMetaData cloudMetaData,
         Dictionary<int, List<CustomProperty>> customProperties,
-        Dictionary<int, string> filePathsByDocumentId)
+        Dictionary<int, List<string>> filePathsByDocumentId)
     {
         try
         {
@@ -100,10 +100,18 @@ public class CloudMetadataExportService
             }
             csv.NextRecord();
 
-            // Write data rows
+            // Write data rows - one row per file (which may result in multiple rows per document)
             foreach (var document in documentsList)
             {
-                await WriteDocumentRowAsync(csv, document, columnHeaders, mappings, revisionsList, customProperties, filePathsByDocumentId);
+                // Get all file paths for this document
+                if (filePathsByDocumentId.TryGetValue(document.Id, out var filePaths) && filePaths.Any())
+                {
+                    // Write a row for each file associated with this document
+                    foreach (var docfilePath in filePaths)
+                    {
+                        await WriteDocumentRowAsync(csv, document, docfilePath, columnHeaders, mappings, revisionsList, customProperties, cloudMetaData);
+                    }
+                }
             }
 
             return true;
@@ -153,11 +161,13 @@ public class CloudMetadataExportService
     private async Task WriteDocumentRowAsync(
         CsvWriter csv,
         Document document,
+        string currentFilePath,
         List<string> columnHeaders,
         List<MetaDataMap> mappings,
         List<Revision> revisions,
         Dictionary<int, List<CustomProperty>> customProperties,
-        Dictionary<int, string> filePathsByDocumentId)
+        ICloudMetaData cloudMetaData)
+
     {
         // For each column header, find the corresponding mapping and get the value
         foreach (var header in columnHeaders)
@@ -182,12 +192,12 @@ public class CloudMetadataExportService
             else if (!string.IsNullOrWhiteSpace(mapping.DocumentPropertyName))
             {
                 // Dynamic value from document property
-                value = GetDocumentPropertyValue(document, mapping.DocumentPropertyName, revisions, customProperties);
+                value = GetDocumentPropertyValue(document, mapping.DocumentPropertyName, revisions, customProperties, currentFilePath, cloudMetaData);
             }
             else if (!string.IsNullOrWhiteSpace(mapping.FilePropertyName))
             {
                 // Dynamic value from file property
-                value = GetFilePropertyValue(document, mapping.FilePropertyName, filePathsByDocumentId);
+                value = GetFilePropertyValue(currentFilePath, mapping.FilePropertyName);
             }
             else
             {
@@ -205,19 +215,23 @@ public class CloudMetadataExportService
     /// <summary>
     /// Gets a document property value by name
     /// Supports standard properties and custom properties
+    /// Applies file-type-specific document number modifiers when retrieving document numbers
     /// </summary>
     private string GetDocumentPropertyValue(
         Document document,
         string propertyName,
         List<Revision> revisions,
-        Dictionary<int, List<CustomProperty>> customProperties)
+        Dictionary<int, List<CustomProperty>> customProperties,
+        string currentFilePath,
+        ICloudMetaData cloudMetaData)
     {
         // Standard document properties
         switch (propertyName.ToLowerInvariant())
         {
             case "number":
             case "documentnumber":
-                return document.Number;
+                // Apply file-type-specific modifier to document number
+                return ApplyDocumentNumberModifier(document.Number, currentFilePath, cloudMetaData);
 
             case "name":
             case "documentname":
@@ -259,21 +273,20 @@ public class CloudMetadataExportService
     }
 
     /// <summary>
-    /// Gets a file property value by name
+    /// <summary>
+    /// Gets a file property value by name from the current file path
     /// Supports file name, extension, and full path
     /// </summary>
     private string GetFilePropertyValue(
-        Document document,
-        string propertyName,
-        Dictionary<int, string> filePathsByDocumentId)
+        string filePath,
+        string propertyName)
     {
-        // Try to get the file path for this document
-        if (!filePathsByDocumentId.TryGetValue(document.Id, out var filePath))
+        // Use the current file path directly
+        if (string.IsNullOrWhiteSpace(filePath))
         {
             return string.Empty;
         }
 
-        // Handle different file property names
         switch (propertyName.ToLowerInvariant())
         {
             case "filename":
@@ -301,5 +314,45 @@ public class CloudMetadataExportService
             default:
                 return string.Empty;
         }
+
     }
-}
+
+    /// <summary>
+    /// <summary>
+    /// Applies the file-type-specific document number modifier to the document number
+    /// based on the current file's extension
+    /// <param name="documentNumber">The base document number from the database</param>
+    /// <param name="filePath">The current file path being exported</param>
+    /// <param name="cloudMetaData">The cloud metadata mapper containing supported file types</param>
+    /// <returns>The modified document number with file-type-specific modifier applied</returns>
+    private string ApplyDocumentNumberModifier(
+        string documentNumber,
+        string filePath,
+        ICloudMetaData cloudMetaData)
+    {
+        if (string.IsNullOrWhiteSpace(documentNumber) || string.IsNullOrWhiteSpace(filePath))
+        {
+            return documentNumber;
+        }
+
+        // Get the file extension
+        var fileExtension = Path.GetExtension(filePath);
+        if (string.IsNullOrWhiteSpace(fileExtension))
+        {
+            return documentNumber;
+        }
+
+        // Find the matching supported file type
+        var supportedFileType = cloudMetaData.SupportedFileTypes?
+            .FirstOrDefault(ft => string.Equals(ft.FileExtension, fileExtension, StringComparison.OrdinalIgnoreCase));
+
+        if (supportedFileType == null)
+        {
+            // No matching file type found, return unmodified document number
+            return documentNumber;
+        }
+
+        // Apply the modifier (if any) and return the modified document number
+        return supportedFileType.GetModifiedDocumentNumber(documentNumber);
+    }
+    }

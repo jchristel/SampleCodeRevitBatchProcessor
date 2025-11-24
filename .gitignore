@@ -627,4 +627,4 @@ Samples/Flows/TheChain/_00_ReportFamilyData/_Users/*
 !Samples/Flows/TheChain/_00_ReportFamilyData/_Users/_default/
 
 #include any .msi files in the /Samples/Apps folder
-!Samples/Apps/*.msi
+!Samples/Apps/**/*.msi

@@ -13,7 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "duHastNet.DocManager.Revit"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "duHastNet.DocManager.Core.Tests", "..\duHastNet.DocManager.Core.Tests\duHastNet.DocManager.Core.Tests.csproj", "{82A1EEE6-00B4-4821-ADC7-15AC3EA0069A}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "DocManager.Setup", "DocManager.Setup\DocManager.Setup.vdproj", "{511F2E9B-B5FE-6EF6-E8D8-C830303ADF53}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "DocManager.Setup.PerMachine", "DocManager.Setup\DocManager.Setup.vdproj", "{511F2E9B-B5FE-6EF6-E8D8-C830303ADF53}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "DocManager.Setup.PerUser", "DocManager.Setup.PerUser\DocManager.Setup.PerUser.vdproj", "{36D0A8D1-6933-8CE9-19DD-AFACAB7EADC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,6 +68,10 @@ Global
 		{511F2E9B-B5FE-6EF6-E8D8-C830303ADF53}.Debug|x64.ActiveCfg = Debug
 		{511F2E9B-B5FE-6EF6-E8D8-C830303ADF53}.Release|Any CPU.ActiveCfg = Release
 		{511F2E9B-B5FE-6EF6-E8D8-C830303ADF53}.Release|x64.ActiveCfg = Release
+		{36D0A8D1-6933-8CE9-19DD-AFACAB7EADC3}.Debug|Any CPU.ActiveCfg = Debug
+		{36D0A8D1-6933-8CE9-19DD-AFACAB7EADC3}.Debug|x64.ActiveCfg = Debug
+		{36D0A8D1-6933-8CE9-19DD-AFACAB7EADC3}.Release|Any CPU.ActiveCfg = Release
+		{36D0A8D1-6933-8CE9-19DD-AFACAB7EADC3}.Release|x64.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

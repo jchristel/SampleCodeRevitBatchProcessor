@@ -18,7 +18,7 @@ author:
 
 # bundle highlighting ('new' or 'updated')
 # Revit UI will show a orange marker on the button and a border around the tooltip
-highlight: new      # highlight as new
+#highlight: new      # highlight as new
 #highlight: updated  # highlight as updated
 
 

@@ -1,7 +1,7 @@
 title: At The Library
 tooltip: A family library
 author: "Jan Christel"
-highlight: new
+#highlight: new
 context: zero-doc
 assembly: 'AtTheLibrary.25.0.0.1'
 command_class: 'Main'

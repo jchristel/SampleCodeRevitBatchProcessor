@@ -29,6 +29,7 @@ This module contains a number of helper functions relating to Revit view schedul
 from Autodesk.Revit.DB import (
     BuiltInCategory,
     Category,
+    ElementId,
     FilteredElementCollector,
     FilteredElementCollector, 
     ScheduleSheetInstance,

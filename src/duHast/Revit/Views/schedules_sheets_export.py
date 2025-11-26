@@ -33,7 +33,7 @@ from duHast.Revit.Views.schedules_fields import schedule_contains_sheet_number_f
 from duHast.Revit.Views.schedules_export import export_schedule_to_file
 
 from duHast.Utilities.Objects.result import Result
-from duHast.Utilities.directory_io import directory_exists, create_temp_directory, directory_delete
+from duHast.Utilities.directory_io import directory_exists, create_temp_directory, directory_delete_with_fallback
 from duHast.Utilities.files_get import get_files_single_directory
 from duHast.Utilities.files_io import get_file_name_without_ext
 from duHast.Utilities.file_base_read_net import read_from_delimited_text_file
@@ -151,7 +151,7 @@ def export_all_sheet_schedules_and_read_data_back(doc, export_if_number_is_hidde
             return_value.update_sep(False, "No files found in temporary directory: {directory_path}".format(directory_path=directory_path))
             
             # delete the temp directory
-            delete_flag = directory_delete(directory_path)
+            delete_flag = directory_delete_with_fallback(directory_path)
             return_value.append_message("Deleted temporary directory: {directory_path} with status {flag}".format(directory_path=directory_path, flag=delete_flag))
 
             return return_value
@@ -176,7 +176,7 @@ def export_all_sheet_schedules_and_read_data_back(doc, export_if_number_is_hidde
                 data[file_name] = file_data_result.result
 
         # delete the temporary directory
-        delete_flag = directory_delete(directory_path)
+        delete_flag = directory_delete_with_fallback(directory_path)
         return_value.append_message("Deleted temporary directory: {directory_path} with status {flag}".format(directory_path=directory_path, flag=delete_flag))
 
         # return the data read

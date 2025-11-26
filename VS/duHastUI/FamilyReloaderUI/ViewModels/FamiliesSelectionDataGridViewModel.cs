@@ -88,6 +88,9 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
 
             // Set up automatic data synchronization
             SetupDataSynchronization();
+
+            //subscribe to underlying model changes
+            FamiliesDataModel.PropertyChanged += Model_PropertyChanged;
         }
 
         /// <summary>
@@ -100,14 +103,16 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
             if (this.FamiliesDataModel == null) return;
 
             //initialise available columns with default sheet properties
-            AvailableColumns = [ 
+            AvailableColumns = new ObservableCollection<AvailableColumnDefinition> { 
             
                 // Basic sheet Info
-                new(Constants.ColumnHeaderReload.Replace(" ", ""), Constants.ColumnHeaderReload, typeof(bool)),
-                new(Constants.ColumnHeaderFamilyName.Replace(" ", ""), Constants.ColumnHeaderFamilyName, typeof(string)),
-                new(Constants.ColumnHeaderFamilyCategory.Replace(" ", ""), Constants.ColumnHeaderFamilyCategory, typeof(string)),
-                new(Constants.ColumnHeaderIsSharedFamily.Replace(" ", ""), Constants.ColumnHeaderIsSharedFamily, typeof(bool)),
-            ];
+                new AvailableColumnDefinition(Constants.ColumnHeaderReload.Replace(" ", ""), Constants.ColumnHeaderReload, typeof(bool)),
+                new AvailableColumnDefinition(Constants.ColumnHeaderFamilyName.Replace(" ", ""), Constants.ColumnHeaderFamilyName, typeof(string)),
+                new AvailableColumnDefinition(Constants.ColumnHeaderFamilyCategory.Replace(" ", ""), Constants.ColumnHeaderFamilyCategory, typeof(string)),
+                new AvailableColumnDefinition(Constants.ColumnHeaderIsSharedFamily.Replace(" ", ""), Constants.ColumnHeaderIsSharedFamily, typeof(bool)),
+                new AvailableColumnDefinition(Constants.ColumnHeaderMatchStatus.Replace(" ",""), Constants.ColumnHeaderMatchStatus, typeof(string)),
+                new AvailableColumnDefinition(Constants.ColumnHeaderFamilyLastUpdated.Replace(" ",""), Constants.ColumnHeaderFamilyLastUpdated, typeof(DateTime)),
+            };
 
             // Pre-compute the parameter name to column id lookup dictionary
             _columnIdToParameterNameLookUp = Constants.ColumnInfo;
@@ -165,8 +170,36 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
             rowData[Constants.ColumnHeaderFamilyName.Replace(" ", "")] = family.FamilyName ?? "";
             rowData[Constants.ColumnHeaderFamilyCategory.Replace(" ", "")] = family.FamilyCategory ?? "";
             rowData[Constants.ColumnHeaderIsSharedFamily.Replace(" ", "")] = family.IsShared;
+            rowData[Constants.ColumnHeaderMatchStatus.Replace(" ", "")] = family.MatchStatus.ToString();
+            rowData[Constants.ColumnHeaderFamilyLastUpdated.Replace(" ", "")] = family.FamilyFileLastUpdated ?? null;
 
             return rowData;
+        }
+
+
+        #region event handlers
+
+        /// <summary>
+        /// used to catch property changed events from the underlying model in order to update the ui
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // check which property changed in the underlying model
+            switch (e.PropertyName)
+            {
+                case Constants.DATA_MODEL_FAMILIES_UPDATED:
+                    //update rooms in the view model
+                    RefreshData();
+                    break;
+
+                // Add more cases for other properties as needed
+
+                default:
+                    // Handle changes for properties not explicitly handled
+                    break;
+            }
         }
 
         /// <summary>
@@ -176,6 +209,8 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
         {
             LoadDataFromFamiliesModel();
         }
+
+        #endregion
 
         #region Private Helper Methods
 
@@ -188,6 +223,8 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
                 { Constants.ColumnHeaderFamilyName.Replace(" ", ""), vm =>  ""},
                 { Constants.ColumnHeaderFamilyCategory.Replace(" ", ""), vm => "" },
                 { Constants.ColumnHeaderIsSharedFamily.Replace(" ", ""), vm => false },
+                { Constants.ColumnHeaderMatchStatus.Replace(" ",""), vm => Utils.MatchStatus.NoMatch.ToString() },
+                { Constants.ColumnHeaderFamilyLastUpdated.Replace(" ",""), vm=>null },
             };
         }
 
@@ -235,6 +272,14 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
                 else if (propertyName == Constants.ColumnHeaderIsSharedFamily.Replace(" ", ""))
                 {
                     rowData[propertyName] = family.IsShared;
+                }
+                else if (propertyName == Constants.ColumnHeaderMatchStatus.Replace(" ", ""))
+                {
+                    rowData[propertyName] = family.MatchStatus.ToString();
+                }
+                else if (propertyName == Constants.ColumnHeaderFamilyLastUpdated.Replace(" ", ""))
+                {
+                    rowData[propertyName] = family.FamilyFileLastUpdated;
                 }
             }
         }

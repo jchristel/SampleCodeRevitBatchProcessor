@@ -46,7 +46,8 @@ namespace duHastNet.UI.FamilyReloaderUI.Models
             {ColumnHeaderFamilyName.Replace(" ", ""), ColumnHeaderFamilyName },
             {ColumnHeaderFamilyCategory.Replace(" ", "") , ColumnHeaderFamilyCategory },
             {ColumnHeaderIsSharedFamily.Replace(" ", "") , ColumnHeaderIsSharedFamily },
-            
+            {ColumnHeaderMatchStatus.Replace(" ", "") , ColumnHeaderMatchStatus },
+            {ColumnHeaderFamilyLastUpdated.Replace(" ", "") , ColumnHeaderFamilyLastUpdated },
         };
 
 
@@ -54,6 +55,8 @@ namespace duHastNet.UI.FamilyReloaderUI.Models
         public const string ColumnHeaderFamilyName = "Family Name";
         public const string ColumnHeaderFamilyCategory = "Family Category";
         public const string ColumnHeaderIsSharedFamily = "IsShared";
+        public const string ColumnHeaderMatchStatus = "Match Status";
+        public const string ColumnHeaderFamilyLastUpdated = "Family Last Updated";
 
         #endregion
     }

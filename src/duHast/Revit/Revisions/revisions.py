@@ -55,6 +55,34 @@ REVISION_DATA = namedtuple(
 )
 
 
+def get_all_revisions(doc):
+    """
+    Returns all revisions in model as list of named tuples.
+    
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: list of named tuples containing revision data
+    :rtype: [ :class:`.revisionData` ]
+    """
+
+    revision_data = []
+    revisions_in_model = rdb.Revision.GetAllRevisionIds(doc)
+    for revision_id in revisions_in_model:
+        # get the revision element
+        revision = doc.GetElement(revision_id)
+        rev_entry = REVISION_DATA(
+            description=revision.Description,
+            issued_by=revision.IssuedBy,
+            issued_to=revision.IssuedTo,
+            revision_number_type=revision.RevisionNumberType,
+            revision_date=revision.RevisionDate,
+            tag_cloud_visibility=revision.Visibility
+            )
+        revision_data.append(rev_entry)
+    return revision_data
+
+
 def create_revision(doc, revision_data):
     """
     Creates a revision in the document.

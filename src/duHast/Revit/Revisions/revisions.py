@@ -75,7 +75,7 @@ def get_all_revisions(doc):
             description=revision.Description,
             issued_by=revision.IssuedBy,
             issued_to=revision.IssuedTo,
-            revision_number_type=revision.RevisionNumberType,
+            revision_number_type=None, # need to work on something a little more complex here
             revision_date=revision.RevisionDate,
             tag_cloud_visibility=revision.Visibility
             )

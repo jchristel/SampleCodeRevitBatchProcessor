@@ -186,10 +186,8 @@ def compare_entry(doc, output, forms):
     return_value = Result()
 
     try:
-        pass
-        # get user to select schedule
        
-
+        # get user input for schedule name
         schedule_name_result = get_schedule_name_from_user(doc, forms)
 
         if not schedule_name_result.status:

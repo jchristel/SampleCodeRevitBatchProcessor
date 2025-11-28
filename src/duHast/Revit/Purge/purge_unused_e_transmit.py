@@ -29,7 +29,7 @@ https://thebuildingcoder.typepad.com/blog/2022/03/purge-unused-and-the-autodesk-
 #
 #
 
-
+import os
 import clr
 
 # import Autodesk.Revit.DB as rdb
@@ -62,129 +62,26 @@ def _purge(doc, dll_path):
     return result == UpgradeFailureType.UpgradeSucceeded
 
 
-# -------------------------------------------- Purge Unused using eTransmit for Revit 2019 -------------------------------------
-
-
-def _purge_unused_2019(doc):
+def check_path_and_purge(rvt_doc, rvt_ver):
     """
-    Purges the document, revit version 2019, using the purge unused functionality of the eTransmit tool provided by Autodesk
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
+    Creates a path to the eTransmit dll based on the revit version, checks existence and then uses or returns False.
+    :param rvt_doc: Current Revit model document.
+    :type rvt_doc: Autodesk.Revit.DB.Document
+    :param rvt_ver: Revit version as string.
+    :type rvt_ver: str
     :return: True purge was successful, otherwise False.
     :rtype: bool
     """
-
-    # path to e-Transmit dll for Revit 2019
-    e_transmit_file_path = (
-        r"C:\Program Files\Autodesk\eTransmit for Revit 2019\eTransmitForRevitDB.dll"
+    root_path = (
+        "C:\\Program Files\\Autodesk\\eTransmit for Revit {}\\eTransmitForRevitDB.dll"
     )
-    value = _purge(doc, e_transmit_file_path)
-    return value
 
-
-# -------------------------------------------- Purge Unused using eTransmit for Revit 2020 -------------------------------------
-
-
-def _purge_unused_2020(doc):
-    """
-    Purges the document, revit version 2020, using the purge unused functionality of the eTransmit tool provided by Autodesk
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: True purge was successful, otherwise False.
-    :rtype: bool
-    """
-
-    # path to e-Transmit dll for Revit 2019
-    e_transmit_file_path = (
-        r"C:\Program Files\Autodesk\eTransmit for Revit 2020\eTransmitForRevitDB.dll"
-    )
-    value = _purge(doc, e_transmit_file_path)
-    return value
-
-
-# -------------------------------------------- Purge Unused using eTransmit for Revit 2021 -------------------------------------
-
-
-def _purge_unused_2021(doc):
-    """
-    Purges the document, revit version 2021, using the purge unused functionality of the eTransmit tool provided by Autodesk
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: True purge was successful, otherwise False.
-    :rtype: bool
-    """
-
-    # path to e-Transmit dll for Revit 2019
-    e_transmit_file_path = (
-        r"C:\Program Files\Autodesk\eTransmit for Revit 2021\eTransmitForRevitDB.dll"
-    )
-    value = _purge(doc, e_transmit_file_path)
-    return value
-
-
-# -------------------------------------------- Purge Unused using eTransmit for Revit 2021 -------------------------------------
-
-
-def _purge_unused_2022(doc):
-    """
-    Purges the document, revit version 2022, using the purge unused functionality of the eTransmit tool provided by Autodesk
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: True purge was successful, otherwise False.
-    :rtype: bool
-    """
-
-    # path to e-Transmit dll for Revit 2019
-    e_transmit_file_path = (
-        r"C:\Program Files\Autodesk\eTransmit for Revit 2022\eTransmitForRevitDB.dll"
-    )
-    value = _purge(doc, e_transmit_file_path)
-    return value
-
-
-def _purge_unused_2023(doc):
-    """
-    Purges the document, revit version 2023, using the purge unused functionality of the eTransmit tool provided by Autodesk
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: True purge was successful, otherwise False.
-    :rtype: bool
-    """
-
-    # path to e-Transmit dll for Revit 2019
-    e_transmit_file_path = (
-        r"C:\Program Files\Autodesk\eTransmit for Revit 2023\eTransmitForRevitDB.dll"
-    )
-    value = _purge(doc, e_transmit_file_path)
-    return value
-
-
-def _purge_unused_2024(doc):
-    """
-    Purges the document, revit version 2024, using the purge unused functionality of the eTransmit tool provided by Autodesk
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: True purge was successful, otherwise False.
-    :rtype: bool
-    """
-
-    # path to e-Transmit dll for Revit 2019
-    e_transmit_file_path = (
-        r"C:\Program Files\Autodesk\eTransmit for Revit 2024\eTransmitForRevitDB.dll"
-    )
-    value = _purge(doc, e_transmit_file_path)
+    e_transmit_file_path = root_path.format(rvt_ver)
+    if os.path.exists(e_transmit_file_path):
+        value = _purge(rvt_doc, e_transmit_file_path)
+    else:
+        print("No such file as: {}".format(e_transmit_file_path))
+        value = False
     return value
 
 
@@ -216,32 +113,14 @@ def purge_unused_e_transmit(doc):
     t_overall = Timer()
     t_overall.start()
     # get the revit version:
-    revit_version = doc.Application.VersionNumber
+    revit_version = str(doc.Application.VersionNumber)
     try:
-        if revit_version == "2019":
-            result_value.status = _purge_unused_2019(doc)
-        elif revit_version == "2020":
-            result_value.status = _purge_unused_2020(doc)
-        elif revit_version == "2021":
-            result_value.status = _purge_unused_2021(doc)
-        elif revit_version == "2022":
-            result_value.status = _purge_unused_2022(doc)
-        elif revit_version == "2023":
-            result_value.status = _purge_unused_2023(doc)
-        elif revit_version == "2024":
-            result_value.status = _purge_unused_2024(doc)
-        else:
-            # this is a non supported revit version!
-            raise ValueError(
-                "Revit version: {} is currently not supported by purge unused!".format(
-                    revit_version
-                )
-            )
-        # update messaging
+        result_value.status = check_path_and_purge(doc, revit_version)
+
         if result_value.status == True:
-            result_value.append_message ("Successfully purged model!")
+            result_value.append_message("Successfully purged model!")
         else:
-            result_value.append_message ("Failed to purge model!")
+            result_value.append_message("Failed to purge model!")
     except Exception as e:
         result_value.update_sep(
             False, "Terminated purge unused actions with exception: {}".format(e)

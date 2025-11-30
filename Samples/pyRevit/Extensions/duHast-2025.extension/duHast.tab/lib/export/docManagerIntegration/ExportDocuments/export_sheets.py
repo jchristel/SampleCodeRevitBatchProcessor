@@ -28,12 +28,16 @@ from duHast.pyRevit.console_output import print_header, print_error
 from duHast.Revit.Revisions.revisions import get_all_revisions
 from duHast.Utilities.files_csv import write_report_data_as_csv
 
-DEBUG = False
+from export.docManagerIntegration.ExportDocuments.export_user_ui import get_revision_file_path
+from export.docManagerIntegration.docIntutils.revision_data_get import get_revision_data
+from export.docManagerIntegration.docIntutils.sheet_data_get import get_sheet_data
+
+DEBUG = True
 
 
 def export_sheets_entry(doc, output, forms):
     """
-    Exports sheet data to csv for import to doc mananger.
+    Exports sheet data to csv for import to doc manager.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -50,7 +54,52 @@ def export_sheets_entry(doc, output, forms):
     return_value = Result()
 
     try:
-        pass
+        
+        # get user to select revision input file
+        revision_file_path = get_revision_file_path()
+        
+        if revision_file_path is None or revision_file_path == "":
+            message = "No revision file selected. Aborting export."
+            return_value.update_sep(
+                False, message
+            )
+            print_error(message)
+            return return_value
+        
+        if DEBUG:
+            print("Using revision file path: {}".format(revision_file_path))
+        
+        
+        # read the revision data from csv
+        rev_data_result = get_revision_data(revision_file_path)
+        if not rev_data_result.status:
+            message = "Failed to get revision data from file: {}\n{}".format(revision_file_path, rev_data_result.message)
+            return_value.update_sep(False, message)
+            print_error(message)
+            return return_value
+        
+        # extract revision data from result
+        revision_data = rev_data_result.result[0]
+        
+        if DEBUG:
+            print("Retrieved {} revision records from file.".format(len(revision_data)))
+            for rev in revision_data:
+                print("Rev date: {}, description: {}, db id: {}".format(rev.date, rev.description, rev.database_id))
+                
+        # get all sheets and their revision info
+        sheet_result = get_sheet_data(doc)
+        if not sheet_result.status:
+            message = "Failed to get sheet data from document.\n{}".format(sheet_result.message)
+            return_value.update_sep(False, message)
+            print_error(message)
+            return return_value
+        
+        # extract sheet data from result
+        sheet_data = sheet_result.result[0]
+        if DEBUG:
+            print("Retrieved {} sheets from document.".format(len(sheet_data)))
+            for sheet in sheet_data:
+                print("Sheet number: {}, name: {}".format(sheet.number, sheet.name))
         
     except Exception as e:
         # handle any exceptions that occur during the export process

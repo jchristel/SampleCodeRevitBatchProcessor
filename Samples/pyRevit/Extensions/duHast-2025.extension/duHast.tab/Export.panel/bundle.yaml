@@ -1,6 +1,9 @@
 layout:
   - PDF_DWG
-
+  - Compare
+  - -------
+  - docManager
+  
 # bundle tooltip
 tooltip: Exporting to PDF and DWG
 

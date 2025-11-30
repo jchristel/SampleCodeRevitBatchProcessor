@@ -40,13 +40,15 @@ def parse_date(date_str):
     - "dd/mm/YYYY"
     - "dd.mm.yy"
     - "dd.mm.YYYY"
+    - "dd-mm-yy"
+    - "dd-mm-YYYY"
 
     :param date_str: The date string to parse.
     :return: A datetime.date object if parsing is successful, None otherwise.
     """
     
     # Possible formats
-    formats = ["%d/%m/%y", "%d/%m/%Y", "%d.%m.%y", "%d.%m.%Y"]
+    formats = ["%d/%m/%y", "%d/%m/%Y", "%d.%m.%y", "%d.%m.%Y","%d-%m-%y", "%d-%m-%Y"]
     
     for fmt in formats:
         try:
@@ -55,3 +57,4 @@ def parse_date(date_str):
             continue
     
     return None
+

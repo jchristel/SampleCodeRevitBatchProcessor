@@ -157,8 +157,8 @@ public class RevisionImportService
     /// Creates a new revision from import row
     /// </summary>
     private async Task<ValidationResult> CreateNewRevisionAsync(
-    RevisionImportRow importRow,
-    int rowNumber)
+        RevisionImportRow importRow,
+        int rowNumber)
     {
         try
         {
@@ -169,16 +169,18 @@ public class RevisionImportService
                     $"Row {rowNumber}: Invalid Revision Date '{importRow.RevisionDateString}'. Use format: yyyy-MM-dd");
             }
 
-            // Check if revision with same date already exists
-            var existingRevisions = await _unitOfWork.Revisions.GetRevisionsByDateAsync(revisionDate);
-            if (existingRevisions.Any())
-            {
-                return ValidationResult.CreateFailure(
-                    $"Row {rowNumber}: Revision with date {revisionDate:yyyy-MM-dd} already exists");
-            }
-
             // Create new revision
             var revision = new Revision(revisionDate, importRow.Description);
+
+            // Check if revision with same date and description already exists
+            var existingRevisions = await _unitOfWork.Revisions.GetRevisionsByDateAsync(revisionDate);
+            var conflictingRevision = existingRevisions.FirstOrDefault(r => revision.Conflicts(r));
+
+            if (conflictingRevision != null)
+            {
+                return ValidationResult.CreateFailure(
+                    $"Row {rowNumber}: Revision with date {revisionDate:yyyy-MM-dd} and description '{importRow.Description}' already exists");
+            }
 
             // Insert revision
             await _unitOfWork.Revisions.InsertAsync(revision);

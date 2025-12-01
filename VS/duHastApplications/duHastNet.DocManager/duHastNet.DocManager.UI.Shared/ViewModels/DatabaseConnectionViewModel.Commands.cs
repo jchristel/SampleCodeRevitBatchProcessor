@@ -251,15 +251,15 @@ public partial class DatabaseConnectionViewModel
             // Perform import on background thread, passing the revision history mode
             var result = await Task.Run(() => importService.ImportDocumentsAsync(selectedPath[0], UseFullRevisionHistoryMode));
 
+            // Reload data into manager
+            await _docManagerApi.ReloadDataIntoManagerAsync(_manager);
+            UpdateStatistics();
+
             if (result.IsImportSuccessful)
             {
                 _messageStore.EnqueueMessage(
                     $"Successfully imported: {result.DocumentsCreated} documents created, {result.DocumentsProcessed - result.DocumentsCreated} updated",
                     MessageTypes.Information, dismissAfterSeconds:3);
-
-                // Reload data into manager
-                await _docManagerApi.ReloadDataIntoManagerAsync(_manager);
-                UpdateStatistics();
             }
             else
             {
@@ -443,15 +443,15 @@ public partial class DatabaseConnectionViewModel
             // Perform import on background thread
             var result = await Task.Run(() => importService.ImportRevisionsAsync(selectedPath[0]));
 
+            // Reload data into manager
+            await _docManagerApi.ReloadDataIntoManagerAsync(_manager);
+            UpdateStatistics();
+
             if (result.IsImportSuccessful)
             {
                 _messageStore.EnqueueMessage(
                     $"Successfully imported: {result.DocumentsCreated} revisions created, {result.DocumentsProcessed - result.DocumentsCreated} updated",
                     MessageTypes.Information,dismissAfterSeconds: 3);
-
-                // Reload data into manager
-                await _docManagerApi.ReloadDataIntoManagerAsync(_manager);
-                UpdateStatistics();
             }
             else
             {

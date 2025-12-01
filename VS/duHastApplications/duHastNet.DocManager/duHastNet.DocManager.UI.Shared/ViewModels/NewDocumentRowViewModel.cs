@@ -340,21 +340,15 @@ public partial class NewDocumentRowViewModel : ObservableObject
         }
 
         // Check if number matches filename
+        // The document number (with modifier applied) should be at the start of the filename
         bool numberMatches = false;
         if (SupportedFileType != null)
         {
-            // Extract just the document number part from the original filename
-            var filenameParts = OriginalFileNameWithoutExtension.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
-            if (filenameParts.Length > 0)
-            {
-                var documentNumberPart = filenameParts[0].Trim();
-                var modifiedDocNumber = SupportedFileType.GetModifiedDocumentNumber(ProposedDocumentNumber.Trim());
-                numberMatches = string.Equals(
-                    modifiedDocNumber,
-                    documentNumberPart,
-                    StringComparison.OrdinalIgnoreCase);
-                NumberMatchesFileName = numberMatches;
-            }
+            var modifiedDocNumber = SupportedFileType.GetModifiedDocumentNumber(ProposedDocumentNumber.Trim());
+            numberMatches = OriginalFileNameWithoutExtension.StartsWith(
+                modifiedDocNumber,
+                StringComparison.OrdinalIgnoreCase);
+            NumberMatchesFileName = numberMatches;
         }
 
         // If number doesn't match filename, this is a blocking error
@@ -407,4 +401,4 @@ public enum NewDocumentRowStatus
     /// Document number does not match the file name
     /// </summary>
     NumberDoesNotMatchFileName
-}
+}

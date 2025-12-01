@@ -175,6 +175,107 @@ public class DocManagerBootstrapper : IDisposable
         return InitializeAsync().GetAwaiter().GetResult();
     }
 
+    /// <summary>
+    /// Initializes the DocManager application asynchronously with custom settings path
+    /// Creates all services, loads settings, connects to database, and creates main window
+    /// </summary>
+    /// <param name="customSettingsPath">Custom path for settings directory.
+    /// If provided, all settings will be loaded from and saved to this location.
+    /// This allows multiple users to share the same settings by pointing to a network location.
+    /// Example: "\\server\share\DocManagerSettings" or "C:\Shared\DocManagerSettings"
+    /// </param>
+    /// <returns>The main window ready to be shown</returns>
+    public async Task<Window> InitializeAsync(string customSettingsPath)
+    {
+        if (IsInitialized)
+        {
+            throw new InvalidOperationException("Bootstrapper has already been initialized. Create a new instance to initialize again.");
+        }
+
+        // Initialize the settings service with custom path (singleton for application lifetime)
+        _settingsService = new SettingsService(customSettingsPath);
+
+        // Initialize the API service (singleton for application lifetime)
+        _docManagerApi = new DocManagerApi();
+
+        // Initialize MessageStore (singleton for application lifetime)
+        _messageStore = new MessageStore();
+
+        // Initialize NavigationStore (singleton for application lifetime)
+        _navigationStore = new NavigationStore();
+
+        // Initialize DialogService (singleton for application lifetime)
+        _dialogService = new DialogService();
+
+        // Load settings from JSON files
+        var (databaseConnectionSettings, currentFolderManagerSettings, cloudDocumentManager) = await LoadSettingsAsync();
+
+        _cloudDocumentManager = cloudDocumentManager;
+
+        // Initialize Manager (singleton for application lifetime)
+        // Manager starts empty - will be populated after database connection
+        // Pass loaded CloudDocumentManager
+        _manager = new Manager(_cloudDocumentManager);
+
+        // Create CurrentFolderManager with loaded settings
+        _currentFolderManager = new duHastNet.DocManager.Core.Models.CurrentFolder.CurrentFolderManager(currentFolderManagerSettings);
+
+        // Attempt to connect to saved database if path exists
+        await ConnectToSavedDatabaseAsync(databaseConnectionSettings);
+
+        // Create the NavigationHostViewModel
+        var navigationHostViewModel = new NavigationHostViewModel(
+            docManagerApi: _docManagerApi,
+            manager: _manager,
+            currentFolderManager: _currentFolderManager,
+            messageStore: _messageStore,
+            navigationStore: _navigationStore,
+            dialogService: _dialogService);
+
+        // Create the NavigationHostView (UserControl)
+        var navigationHostView = new NavigationHostView()
+        {
+            DataContext = navigationHostViewModel
+        };
+
+        // Create a Window to host the NavigationHostView
+        _mainWindow = new Window()
+        {
+            Title = "DocManager",
+            Content = navigationHostView,
+            Width = 1200,
+            Height = 800,
+            WindowStartupLocation = WindowStartupLocation.CenterScreen
+        };
+
+        // Subscribe to the Closed event to ensure proper cleanup
+        _mainWindow.Closed += MainWindow_Closed;
+
+        // Subscribe to Closing event to notify ViewModel
+        _mainWindow.Closing += (s, e) =>
+        {
+            if (navigationHostViewModel is ICloseable closeable)
+            {
+                closeable.OnClosing();
+            }
+        };
+
+        IsInitialized = true;
+
+        return _mainWindow;
+    }
+
+    /// <summary>
+    /// Initializes the DocManager application synchronously with custom settings path (for IronPython compatibility)
+    /// Creates all services, loads settings, connects to database, and creates main window
+    /// </summary>
+    /// <param name="customSettingsPath">Custom path for settings directory</param>
+    /// <returns>The main window ready to be shown</returns>
+    public Window Initialize(string customSettingsPath)
+    {
+        return InitializeAsync(customSettingsPath).GetAwaiter().GetResult();
+    }
+
     #endregion
 
     #region Settings Management

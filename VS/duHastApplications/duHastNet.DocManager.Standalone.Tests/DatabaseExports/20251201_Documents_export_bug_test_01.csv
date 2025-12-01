@@ -1,0 +1,6 @@
+Id,Document Number,Document Name,Revision Indicator,Revision Id,DocumentType
+1,123-01-001,test 1,A,1,
+4,123-01-002,schedule x,B,1,Schedule
+5,123-02-001,schedule y,01,1,Schedule
+2,123-02-002,test 2,02,1,Drawing
+3,123-03-001,Unknown Dcoument,A,1,Specification

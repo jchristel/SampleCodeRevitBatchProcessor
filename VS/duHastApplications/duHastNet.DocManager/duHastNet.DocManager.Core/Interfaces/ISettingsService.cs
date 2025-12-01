@@ -1,4 +1,4 @@
-﻿//
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -25,7 +25,9 @@ namespace duHastNet.DocManager.Core.Interfaces;
 public interface ISettingsService
 {
     /// <summary>
-    /// Gets the full path to the settings directory (%LocalAppData%/duHast)
+    /// Gets the full path to the settings directory
+    /// Default: %LocalAppData%/duHast
+    /// Can be overridden via constructor parameter for shared settings scenarios
     /// </summary>
     string SettingsDirectory { get; }
 

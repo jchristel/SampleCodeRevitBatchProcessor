@@ -36,14 +36,55 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
-        // Create and initialize the bootstrapper
-        _bootstrapper = new DocManagerBootstrapper();
+        try
+        {
+            // Parse command-line arguments for custom settings path
+            string? customSettingsPath = ParseSettingsPathFromArguments(e.Args);
 
-        // Initialize and get the main window
-        MainWindow = await _bootstrapper.InitializeAsync();
+            var bootstrapper = new DocManagerBootstrapper();
+            Window window;
 
-        // Show the window
-        MainWindow.Show();
+            if (!string.IsNullOrEmpty(customSettingsPath))
+            {
+                // Custom settings path provided
+                window = await bootstrapper.InitializeAsync(customSettingsPath);
+            }
+            else
+            {
+                // Use default settings location
+                window = await bootstrapper.InitializeAsync();
+            }
+
+            window.Show();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(
+                $"Failed to start application: {ex.Message}",
+                "Startup Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+            Shutdown(1);
+        }
+    }
+
+    // Add this helper method to your App class
+    private string? ParseSettingsPathFromArguments(string[] args)
+    {
+        if (args == null || args.Length == 0)
+            return null;
+
+        // Look for --settings=path argument
+        foreach (var arg in args)
+        {
+            if (arg.StartsWith("--settings=", StringComparison.OrdinalIgnoreCase))
+            {
+                string path = arg.Substring("--settings=".Length).Trim('"');
+                return string.IsNullOrWhiteSpace(path) ? null : path;
+            }
+        }
+
+        return null;
     }
 
     protected override void OnExit(ExitEventArgs e)

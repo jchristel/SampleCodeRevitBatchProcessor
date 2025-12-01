@@ -1,4 +1,4 @@
-﻿//
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -33,18 +33,51 @@ public class SettingsService : ISettingsService
     private readonly JsonSerializerSettings _jsonSettings;
 
     /// <summary>
-    /// Gets the full path to the settings directory (%LocalAppData%/duHast)
+    /// Gets the full path to the settings directory
+    /// Default: %LocalAppData%/duHast
+    /// Can be overridden via constructor parameter for shared settings scenarios
     /// </summary>
     public string SettingsDirectory { get; }
 
     /// <summary>
-    /// Initializes a new instance of SettingsService
+    /// Initializes a new instance of SettingsService using default settings location
+    /// Default location: %LocalAppData%/duHast
     /// </summary>
     public SettingsService()
     {
-        // Initialize settings directory path
+        // Initialize settings directory path - use default location
         var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         SettingsDirectory = Path.Combine(localAppData, SettingsFolderName);
+
+        // Configure JSON serialization settings
+        _jsonSettings = new JsonSerializerSettings
+        {
+            Formatting = Formatting.Indented,
+            NullValueHandling = NullValueHandling.Ignore,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            TypeNameHandling = TypeNameHandling.Auto,
+            PreserveReferencesHandling = PreserveReferencesHandling.Objects
+        };
+
+        // Ensure settings directory exists
+        EnsureSettingsDirectoryExists();
+    }
+
+    /// <summary>
+    /// Initializes a new instance of SettingsService with custom settings path
+    /// </summary>
+    /// <param name="customSettingsPath">Custom path for settings directory. 
+    /// Uses the specified path directly without appending "duHast" subfolder.
+    /// </param>
+    public SettingsService(string customSettingsPath)
+    {
+        if (string.IsNullOrWhiteSpace(customSettingsPath))
+        {
+            throw new ArgumentException("Custom settings path cannot be null or empty. Use parameterless constructor for default location.", nameof(customSettingsPath));
+        }
+
+        // Use custom path directly
+        SettingsDirectory = customSettingsPath;
 
         // Configure JSON serialization settings
         _jsonSettings = new JsonSerializerSettings

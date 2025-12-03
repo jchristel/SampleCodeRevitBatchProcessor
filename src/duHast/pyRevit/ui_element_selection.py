@@ -97,9 +97,17 @@ def get_element_selection_from_user(doc, forms, element_getter, element_selectio
         elements_selected = []
         # check if string ( single selection) or list ( multiple selection)
         if(isinstance(selection, str)):
-            elements_selected.append(elements_by_name[selection].Id)
+            try:
+                elements_selected.append(elements_by_name[selection].Id)
+            except Exception:
+                # in case the element has no ID property
+                elements_selected.append(elements_by_name[selection])
             return elements_selected
         else:
             for element_key_name in selection:
-                elements_selected.append(elements_by_name[element_key_name].Id)
+                try:
+                    elements_selected.append(elements_by_name[element_key_name].Id)
+                except Exception:
+                    # in case the element has no ID property
+                    elements_selected.append(elements_by_name[element_key_name])
             return elements_selected

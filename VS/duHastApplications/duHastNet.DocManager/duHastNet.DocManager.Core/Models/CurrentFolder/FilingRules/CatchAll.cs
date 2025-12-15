@@ -1,4 +1,9 @@
 ﻿//
+//License:
+//
+//
+// Revit Batch Processor Sample Code
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -16,54 +21,45 @@
 //
 //
 
-using Newtonsoft.Json;
-
-namespace duHastNet.DocManager.Core.Models.DocumentNumberModifiers
+namespace duHastNet.DocManager.Core.Models.CurrentFolder.FilingRules
 {
-    public class AddToEnd : Interfaces.IDocumentNumberModifier
+    public class CatchAll : Interfaces.IFilingRule
     {
-        /// <summary>
-        /// this class adds a suffix to the end of a document number
-        /// </summary>
-        private string _suffix;
+        public string Name => "Default";
 
-        /// <summary>
-        /// The suffix to add to the end of the document number
-        /// </summary>
-        public string Suffix
+        public string Description => "All valid file names will be selected.";
+
+        private readonly string _comparisonValue;
+        public string ComparisonValue => _comparisonValue;
+
+        private readonly string _targetDirectory = string.Empty;
+        public string TargetDirectory => _targetDirectory;
+        public bool IsMatch(string path)
         {
-            get => _suffix;
-            set => _suffix = value ?? string.Empty;
+            //check for null or empty path
+            if (string.IsNullOrEmpty(path))
+            {
+                return false;
+            }
+
+            //get the file name from path
+            string fileName = Path.GetFileName(path);
+
+            //check if we have a file name
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        public string DocumentNumber(string number)
+        public CatchAll(string comparisonValue, string targetDirectory)
         {
-            return number + _suffix;
-        }
-
-        public string GetDisplayText()
-        {
-            if (string.IsNullOrEmpty(_suffix))
-                return "Add Suffix: (empty)";
-            return $"Add Suffix: {_suffix}";
-        }
-
-        /// <summary>
-        /// Constructor for creating a new AddToEnd modifier
-        /// </summary>
-        /// <param name="suffix">The suffix to add</param>
-        public AddToEnd(string suffix)
-        {
-            _suffix = suffix ?? string.Empty;
-        }
-
-        /// <summary>
-        /// Parameterless constructor for JSON deserialization
-        /// </summary>
-        [JsonConstructor]
-        public AddToEnd()
-        {
-            _suffix = string.Empty;
+            _comparisonValue = comparisonValue;
+            _targetDirectory = targetDirectory;
         }
     }
 }

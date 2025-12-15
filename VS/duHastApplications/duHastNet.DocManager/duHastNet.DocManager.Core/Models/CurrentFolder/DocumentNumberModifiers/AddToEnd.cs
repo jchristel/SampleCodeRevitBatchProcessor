@@ -18,67 +18,52 @@
 
 using Newtonsoft.Json;
 
-namespace duHastNet.DocManager.Core.Models.DocumentNumberModifiers
+namespace duHastNet.DocManager.Core.Models.CurrentFolder.DocumentNumberModifiers
 {
-    public class Replace : Interfaces.IDocumentNumberModifier
+    public class AddToEnd : Interfaces.IDocumentNumberModifier
     {
         /// <summary>
-        /// this class replaces a given string with a new string in a document number
+        /// this class adds a suffix to the end of a document number
         /// </summary>
-        private string _oldValue;
-
-        private string _newValue;
+        private string _suffix;
 
         /// <summary>
-        /// The old value to be replaced in the document number
+        /// The suffix to add to the end of the document number
         /// </summary>
-        public string OldValue
+        public string Suffix
         {
-            get => _oldValue;
-            set => _oldValue = value ?? string.Empty;
-        }
-
-        /// <summary>
-        /// The new value to replace the old value with
-        /// </summary>
-        public string NewValue
-        {
-            get => _newValue;
-            set => _newValue = value ?? string.Empty;
+            get => _suffix;
+            set => _suffix = value ?? string.Empty;
         }
 
         public string DocumentNumber(string number)
         {
-            return number.Replace(_oldValue, _newValue);
+            return number + _suffix;
         }
 
         public string GetDisplayText()
         {
-            var oldDisplay = string.IsNullOrEmpty(_oldValue) ? "(empty)" : _oldValue;
-            var newDisplay = string.IsNullOrEmpty(_newValue) ? "(empty)" : _newValue;
-
-            return $"Replace: {oldDisplay} → {newDisplay}";
+            if (string.IsNullOrEmpty(_suffix))
+                return "Add Suffix: (empty)";
+            return $"Add Suffix: {_suffix}";
         }
 
         /// <summary>
-        /// Constructor for creating a new Replace modifier
+        /// Constructor for creating a new AddToEnd modifier
         /// </summary>
-        /// <param name="oldValue">The value to be replaced</param>
-        /// <param name="newValue">The value to replace with</param>
-        public Replace(string oldValue, string newValue)
+        /// <param name="suffix">The suffix to add</param>
+        public AddToEnd(string suffix)
         {
-            _oldValue = oldValue ?? string.Empty;
-            _newValue = newValue ?? string.Empty;
+            _suffix = suffix ?? string.Empty;
         }
 
         /// <summary>
         /// Parameterless constructor for JSON deserialization
         /// </summary>
         [JsonConstructor]
-        public Replace()
+        public AddToEnd()
         {
-            _oldValue = string.Empty;
-            _newValue = string.Empty;
+            _suffix = string.Empty;
         }
     }
 }

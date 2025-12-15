@@ -24,8 +24,7 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using duHastNet.DocManager.Core.Models;
-using duHastNet.DocManager.Core.Models.FilingRules;
+using duHastNet.DocManager.Core.Models.CurrentFolder.FilingRules;
 using duHastNet.DocManager.UI.Shared.Stores;
 using System.Collections.ObjectModel;
 
@@ -81,7 +80,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         private void CreateDefaultCatchAllRule()
         {
             var documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            var defaultRule = new Core.Models.FilingRules.CatchAll(
+            var defaultRule = new duHastNet.DocManager.Core.Models.CurrentFolder.FilingRules.CatchAll(
                 comparisonValue: string.Empty,
                 targetDirectory: documentsPath
             );

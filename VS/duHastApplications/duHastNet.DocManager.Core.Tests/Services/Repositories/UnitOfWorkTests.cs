@@ -3,6 +3,7 @@ using SQLite;
 using duHastNet.DocManager.Core.Services.Repositories;
 using duHastNet.DocManager.Core.Models;
 using System.IO;
+using duHastNet.DocManager.Core.Models.Database;
 
 namespace duHastNet.DocManager.Core.Tests.Services.Repositories;
 

@@ -1,4 +1,4 @@
-//
+﻿//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -16,52 +16,72 @@
 //
 //
 
+using Newtonsoft.Json;
 
-using duHastNet.DocManager.Core.Models.CurrentFolder;
-using duHastNet.DocManager.Core.Models.CloudDocManager.MetaData;
-
-namespace duHastNet.DocManager.Core.Interfaces
+namespace duHastNet.DocManager.Core.Models.CurrentFolder.DocumentNumberModifiers
 {
-    /// <summary>
-    /// An interface for cloud based document management systems which use meta data to upload documents.
-    /// sample provider is Aconex
-    /// </summary> 
-    public interface ICloudMetaData
+    public class AddAtIndex : Interfaces.IDocumentNumberModifier
     {
         /// <summary>
-        /// The fully qualified path to the metadata template file.
-        /// which is used to upload documents
-        /// The file will be duplicated and modified during upload
+        /// this class adds a suffix at a particular index to a document number
         /// </summary>
-        string MetadataTemplateFilePath { get; set; }
+        private string _value;
+
+        private int _index;
 
         /// <summary>
-        /// Maps mepa data fields to document properties
+        /// The value to insert at the specified index
         /// </summary>
-        List<MetaDataMap> MetaDataMap { get; }
+        public string Value
+        {
+            get => _value;
+            set => _value = value ?? string.Empty;
+        }
 
         /// <summary>
-        /// Collection of supported file types with their document number modifiers.
-        /// Used to apply file-type-specific modifications to document numbers during export.
-        /// Each file type may have a different modifier (e.g., PDF = no modifier, DWG = add "-DWG" suffix)
+        /// The index position where the value will be inserted (0 for prefix)
         /// </summary>
-        List<SupportedFileType> SupportedFileTypes { get; set; }
+        public int Index
+        {
+            get => _index;
+            set => _index = value;
+        }
+
+        public string DocumentNumber(string number)
+        {
+            return number.Insert(_index, _value);
+        }
+
+        public string GetDisplayText()
+        {
+            var displayValue = string.IsNullOrEmpty(_value) ? "(empty)" : _value;
+
+            // Special case: index 0 is a prefix
+            if (_index == 0)
+                return $"Add Prefix: {displayValue}";
+
+            return $"Add at Index {_index}: {displayValue}";
+        }
 
         /// <summary>
-        /// adds a new meta data mapper to collection
+        /// Constructor for creating a new AddAtIndex modifier
         /// </summary>
-        /// <param name="mapper"></param>
-        public void AddMapper (MetaDataMap mapper);
+        /// <param name="value">The value to insert</param>
+        /// <param name="index">The index position (0 for prefix)</param>
+        public AddAtIndex(string value, int index)
+        {
+            _value = value ?? string.Empty;
+            _index = index;
+        }
 
         /// <summary>
-        /// Remove mapper from collection
+        /// Parameterless constructor for JSON deserialization
         /// </summary>
-        /// <param name="mapper"></param>
-        public void RemoveMapper (MetaDataMap mapper);
-
-        /// <summary>
-        /// Clears all mappers from collection
-        /// </summary>
-        public void ClearMappers();
+        [JsonConstructor]
+        public AddAtIndex()
+        {
+            _value = string.Empty;
+            _index = 0;
+        }
     }
 }

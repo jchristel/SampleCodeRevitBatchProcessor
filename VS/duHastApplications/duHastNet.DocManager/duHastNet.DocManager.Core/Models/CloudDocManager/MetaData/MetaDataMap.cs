@@ -16,7 +16,7 @@
 //
 //
 
-namespace duHastNet.DocManager.Core.Models.MetaData
+namespace duHastNet.DocManager.Core.Models.CloudDocManager.MetaData
 {
     /// <summary>
     /// Maps a metadata field to either a fixed value or a document property

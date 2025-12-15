@@ -25,8 +25,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Interfaces;
-using duHastNet.DocManager.Core.Models;
-using duHastNet.DocManager.Core.Models.DocumentNumberModifiers;
+using duHastNet.DocManager.Core.Models.CurrentFolder;
+using duHastNet.DocManager.Core.Models.CurrentFolder.DocumentNumberModifiers;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.ViewModels.ModifierControls;
 using System.Collections.ObjectModel;

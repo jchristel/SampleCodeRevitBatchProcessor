@@ -24,11 +24,11 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using duHastNet.DocManager.Core.Models.MetaData;
 using duHastNet.DocManager.UI.Shared.Stores;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using duHastNet.DocManager.Core.Services;
+using duHastNet.DocManager.Core.Models.CloudDocManager.MetaData;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
 {

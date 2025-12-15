@@ -19,6 +19,7 @@
 using CsvHelper;
 using CsvHelper.Configuration;
 using duHastNet.DocManager.Core.Models;
+using duHastNet.DocManager.Core.Models.Database;
 using System.Globalization;
 
 namespace duHastNet.DocManager.Core.Services;

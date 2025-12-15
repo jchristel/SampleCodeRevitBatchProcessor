@@ -3,6 +3,7 @@
 // Copyright 2025, Jan Christel
 //
 
+using duHastNet.DocManager.Core.Models.Database;
 using SQLite;
 using System.Text.Json;
 

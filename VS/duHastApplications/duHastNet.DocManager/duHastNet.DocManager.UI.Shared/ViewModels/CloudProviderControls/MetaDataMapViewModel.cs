@@ -15,7 +15,7 @@
 //
 //
 
-using duHastNet.DocManager.Core.Models.MetaData;
+using duHastNet.DocManager.Core.Models.CloudDocManager.MetaData;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
 {

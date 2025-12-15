@@ -75,7 +75,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         /// <summary>
         /// A list of file types which are supported by the document manager
         /// </summary>
-        public List<Models.SupportedFileType> SupportedFileTypes { get; set; }
+        public List<SupportedFileType> SupportedFileTypes { get; set; }
 
         /// <summary>
         /// Initializes a new instance of CurrentFolderManagerSettings with default values
@@ -83,7 +83,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         public CurrentFolderManagerSettings()
         {
             FilingRules = new List<Interfaces.IFilingRule>();
-            SupportedFileTypes = new List<Models.SupportedFileType>();
+            SupportedFileTypes = new List<SupportedFileType>();
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         /// <summary>
         /// Adds a supported file type to the configuration
         /// </summary>
-        public void AddSupportedFileType(Models.SupportedFileType supportedFileType)
+        public void AddSupportedFileType(SupportedFileType supportedFileType)
         {
             if (supportedFileType == null)
             {
@@ -133,7 +133,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         /// <summary>
         /// Removes a supported file type from the configuration
         /// </summary>
-        public void RemoveSupportedFileType(Models.SupportedFileType supportedFileType)
+        public void RemoveSupportedFileType(SupportedFileType supportedFileType)
         {
             if (supportedFileType == null)
             {

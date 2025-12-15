@@ -24,7 +24,7 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using duHastNet.DocManager.Core.Interfaces;
-using duHastNet.DocManager.Core.Models.DocumentNumberModifiers;
+using duHastNet.DocManager.Core.Models.CurrentFolder.DocumentNumberModifiers;
 using System.ComponentModel.DataAnnotations;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels.ModifierControls

@@ -21,46 +21,30 @@
 //
 //
 
-
-namespace duHastNet.DocManager.Core.Models.FilingRules
+namespace duHastNet.DocManager.Core.Models.CloudDocManager.MetaData
 {
-    public class Contains : Interfaces.IFilingRule
+    /// <summary>
+    /// Enum representing the available cloud document management provider types
+    /// Used for type-safe selection and for creating concrete ICloudMetaData instances
+    /// </summary>
+    public enum CloudProviderType
     {
-        public string Name => "Contains";
+        /// <summary>
+        /// The default value indicating no provider selected
+        /// </summary>
+        None,
 
-        public string Description => "The file name needs to contain the comparison string";
+        /// <summary>
+        /// Aconex cloud document management system
+        /// Maps to: MetaDataMapperAconex class
+        /// Uses CSV-based metadata template files for document upload
+        /// </summary>
+        Aconex
 
-        private readonly string _comparisonValue;
-        public string ComparisonValue => _comparisonValue;
-
-        private readonly string _targetDirectory = string.Empty;
-        public string TargetDirectory => _targetDirectory;
-        public bool IsMatch(string path)
-        {
-            //check for null or empty path
-            if (string.IsNullOrEmpty(path))
-            {
-                return false;
-            }
-
-            //get the file name from path
-            string fileName = System.IO.Path.GetFileName(path);
-
-            //check if it contains the comparison value
-            if (!string.IsNullOrEmpty(fileName))
-            {
-                return fileName.Contains(_comparisonValue);
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public Contains(string comparisonValue, string targetDirectory)
-        {
-            _comparisonValue = comparisonValue;
-            _targetDirectory = targetDirectory;
-        }
+        // Future providers can be added here:
+        // Procore,
+        // AutodeskDocs,
+        // PlanGrid,
+        // etc.
     }
 }

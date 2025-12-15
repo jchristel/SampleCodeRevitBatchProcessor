@@ -23,7 +23,7 @@
 
 using SQLite;
 
-namespace duHastNet.DocManager.Core.Models;
+namespace duHastNet.DocManager.Core.Models.Database;
 
 /// <summary>
 /// Represents a custom property for a document.

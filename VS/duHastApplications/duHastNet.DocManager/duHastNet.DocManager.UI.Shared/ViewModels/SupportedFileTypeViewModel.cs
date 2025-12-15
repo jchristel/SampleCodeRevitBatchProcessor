@@ -22,7 +22,7 @@
 //
 
 
-using duHastNet.DocManager.Core.Models;
+using duHastNet.DocManager.Core.Models.CurrentFolder;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels
 {

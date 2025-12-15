@@ -21,7 +21,9 @@
 //
 //
 
+using duHastNet.DocManager.Core.Models.CloudDocManager;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
+using duHastNet.DocManager.Core.Models.Database;
 
 namespace duHastNet.DocManager.Core.Models
 {

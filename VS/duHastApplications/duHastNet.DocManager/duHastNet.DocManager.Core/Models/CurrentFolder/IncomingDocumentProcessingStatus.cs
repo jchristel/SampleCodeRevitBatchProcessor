@@ -27,7 +27,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace duHastNet.DocManager.Core.Models
+namespace duHastNet.DocManager.Core.Models.CurrentFolder
 {
     public class IncomingDocumentProcessingStatus
     {

@@ -298,7 +298,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                         .FirstOrDefault(d => d.Id == incomingDocumentStatus.MatchedDocumentId);
 
                     // extract metadata from file name
-                    Models.IncomingDocumentProcessingStatus incomingDocument = ExtractDocumentMetadataFromFileName(
+                    IncomingDocumentProcessingStatus incomingDocument = ExtractDocumentMetadataFromFileName(
                         existingFilePath,
                         new List<Document>() { currentDocument! }
                     );

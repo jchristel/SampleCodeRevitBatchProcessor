@@ -22,6 +22,7 @@
 //
 
 using duHastNet.DocManager.Core.Models;
+using duHastNet.DocManager.Core.Models.Database;
 using duHastNet.DocManager.Core.Models.Results;
 
 namespace duHastNet.DocManager.Core.Interfaces;

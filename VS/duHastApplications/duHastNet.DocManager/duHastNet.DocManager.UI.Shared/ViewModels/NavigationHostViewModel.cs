@@ -21,7 +21,7 @@ using duHastNet.DocManager.Core.Services.Api;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.UI.Shared.Stores;
 using duHastNet.DocManager.UI.Shared.Interfaces;
-using duHastNet.DocManager.Core.Models.MetaData;
+using duHastNet.DocManager.Core.Models.CloudDocManager.MetaData;
 using duHastNet.DocManager.Core.Interfaces;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels

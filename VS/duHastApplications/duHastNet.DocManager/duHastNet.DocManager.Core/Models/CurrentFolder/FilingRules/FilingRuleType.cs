@@ -21,21 +21,43 @@
 //
 //
 
-namespace duHastNet.DocManager.Core.Models
+namespace duHastNet.DocManager.Core.Models.CurrentFolder.FilingRules
 {
     /// <summary>
-    /// Database statistics and metrics
+    /// Enum representing the available filing rule types
+    /// Used for type-safe selection and for creating concrete rule instances
     /// </summary>
-    public class DatabaseStatistics
+    public enum FilingRuleType
     {
-        public int TotalRevisions { get; set; }
-        public int TotalDocuments { get; set; }
-        public int UniqueDocumentNumbers { get; set; }
-        public int TotalCustomProperties { get; set; }
-        public DateTime? EarliestRevisionDate { get; set; }
-        public DateTime? LatestRevisionDate { get; set; }
-        public List<string> MostRevisedDocuments { get; set; } = new();
-        public Dictionary<string, int> CustomPropertyUsage { get; set; } = new();
-        public long DatabaseSizeBytes { get; set; }
+        /// <summary>
+        /// File name must begin with the comparison value
+        /// Maps to: BeginsWith class
+        /// </summary>
+        BeginsWith,
+
+        /// <summary>
+        /// File name must contain the comparison value
+        /// Maps to: Contains class
+        /// </summary>
+        Contains,
+
+        /// <summary>
+        /// File name must NOT begin with the comparison value
+        /// Maps to: NotBeginsWith class
+        /// </summary>
+        NotBeginsWith,
+
+        /// <summary>
+        /// File name must NOT contain the comparison value
+        /// Maps to: NotContains class
+        /// </summary>
+        NotContains,
+
+        /// <summary>
+        /// Matches all files (catch-all/default rule)
+        /// Maps to: CatchAll class
+        /// Only one Default rule allowed in the system
+        /// </summary>
+        Default
     }
 }

@@ -21,46 +21,21 @@
 //
 //
 
-
-namespace duHastNet.DocManager.Core.Models.FilingRules
+namespace duHastNet.DocManager.Core.Models.Database
 {
-    public class CatchAll : Interfaces.IFilingRule
+    /// <summary>
+    /// Database statistics and metrics
+    /// </summary>
+    public class DatabaseStatistics
     {
-        public string Name => "Default";
-
-        public string Description => "All valid file names will be selected.";
-
-        private readonly string _comparisonValue;
-        public string ComparisonValue => _comparisonValue;
-
-        private readonly string _targetDirectory = string.Empty;
-        public string TargetDirectory => _targetDirectory;
-        public bool IsMatch(string path)
-        {
-            //check for null or empty path
-            if (string.IsNullOrEmpty(path))
-            {
-                return false;
-            }
-
-            //get the file name from path
-            string fileName = System.IO.Path.GetFileName(path);
-
-            //check if we have a file name
-            if (!string.IsNullOrEmpty(fileName))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public CatchAll(string comparisonValue, string targetDirectory)
-        {
-            _comparisonValue = comparisonValue;
-            _targetDirectory = targetDirectory;
-        }
+        public int TotalRevisions { get; set; }
+        public int TotalDocuments { get; set; }
+        public int UniqueDocumentNumbers { get; set; }
+        public int TotalCustomProperties { get; set; }
+        public DateTime? EarliestRevisionDate { get; set; }
+        public DateTime? LatestRevisionDate { get; set; }
+        public List<string> MostRevisedDocuments { get; set; } = new();
+        public Dictionary<string, int> CustomPropertyUsage { get; set; } = new();
+        public long DatabaseSizeBytes { get; set; }
     }
 }

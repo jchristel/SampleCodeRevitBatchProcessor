@@ -23,7 +23,7 @@
 
 
 using duHastNet.DocManager.Core.Interfaces;
-using duHastNet.DocManager.Core.Models.FilingRules;
+using duHastNet.DocManager.Core.Models.CurrentFolder.FilingRules;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels
 {

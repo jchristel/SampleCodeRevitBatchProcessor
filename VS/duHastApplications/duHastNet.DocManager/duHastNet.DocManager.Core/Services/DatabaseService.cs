@@ -24,6 +24,7 @@
 using SQLite;
 using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.DocManager.Core.Models;
+using duHastNet.DocManager.Core.Models.Database;
 
 namespace duHastNet.DocManager.Core.Services;
 

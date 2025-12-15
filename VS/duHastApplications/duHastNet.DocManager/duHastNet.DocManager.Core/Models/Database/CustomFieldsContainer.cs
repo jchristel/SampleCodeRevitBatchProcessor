@@ -21,8 +21,7 @@
 //
 //
 
-
-namespace duHastNet.DocManager.Core.Models
+namespace duHastNet.DocManager.Core.Models.Database
 {
     public class CustomFieldsContainer
     {

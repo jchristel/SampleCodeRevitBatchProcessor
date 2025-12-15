@@ -1,3 +1,8 @@
+﻿//
+//License:
+//
+//
+// Revit Batch Processor Sample Code
 //
 // BSD License
 // Copyright 2025, Jan Christel
@@ -14,32 +19,47 @@
 // or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 //
 //
+//
 
-namespace duHastNet.DocManager.Core.Models
+namespace duHastNet.DocManager.Core.Models.CurrentFolder.FilingRules
 {
-    /// <summary>
-    /// Settings for database connection that are persisted to JSON
-    /// </summary>
-    public class DatabaseConnectionSettings
+    public class NotBeginsWith : Interfaces.IFilingRule
     {
-        /// <summary>
-        /// Path to the last connected database file
-        /// </summary>
-        public string DatabasePath { get; set; } = string.Empty;
+        public string Name => "Not Begins With";
 
-        /// <summary>
-        /// Default constructor
-        /// </summary>
-        public DatabaseConnectionSettings()
+        public string Description => "The file name need to not to begin with the comparison string";
+
+        private readonly string _comparisonValue;
+        public string ComparisonValue => _comparisonValue;
+
+        private readonly string _targetDirectory = string.Empty;
+        public string TargetDirectory => _targetDirectory;
+        public bool IsMatch(string path)
         {
+            //check for null or empty path
+            if (string.IsNullOrEmpty(path))
+            {
+                return false;
+            }
+
+            //get the file name from path
+            string fileName = Path.GetFileName(path);
+
+            //check if it not begins with comparison value
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                return !fileName.StartsWith(_comparisonValue);
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        /// <summary>
-        /// Constructor with database path
-        /// </summary>
-        public DatabaseConnectionSettings(string databasePath)
+        public NotBeginsWith(string comparisonValue, string targetDirectory)
         {
-            DatabasePath = databasePath;
+            _comparisonValue = comparisonValue;
+            _targetDirectory = targetDirectory;
         }
     }
 }

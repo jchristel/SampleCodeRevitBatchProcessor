@@ -22,7 +22,7 @@
 //
 
 
-using duHastNet.DocManager.Core.Models.FilingRules;
+using duHastNet.DocManager.Core.Models.CurrentFolder.FilingRules;
 using System;
 using System.Globalization;
 using System.Windows.Data;

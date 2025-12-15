@@ -21,21 +21,19 @@
 //
 //
 
-
-namespace duHastNet.DocManager.Core.Models.FilingRules
+namespace duHastNet.DocManager.Core.Models.CurrentFolder.FilingRules
 {
-    public class BeginsWith : Interfaces.IFilingRule
+    public class Contains : Interfaces.IFilingRule
     {
-        public string Name => "Begins With";
+        public string Name => "Contains";
 
-        public string Description => "The file name need to begin with the comparison string";
+        public string Description => "The file name needs to contain the comparison string";
 
         private readonly string _comparisonValue;
         public string ComparisonValue => _comparisonValue;
 
         private readonly string _targetDirectory = string.Empty;
         public string TargetDirectory => _targetDirectory;
-
         public bool IsMatch(string path)
         {
             //check for null or empty path
@@ -45,12 +43,12 @@ namespace duHastNet.DocManager.Core.Models.FilingRules
             }
 
             //get the file name from path
-            string fileName = System.IO.Path.GetFileName(path);
+            string fileName = Path.GetFileName(path);
 
-            //check if it begins with comparison value
+            //check if it contains the comparison value
             if (!string.IsNullOrEmpty(fileName))
             {
-                return fileName.StartsWith(_comparisonValue);
+                return fileName.Contains(_comparisonValue);
             }
             else
             {
@@ -58,7 +56,7 @@ namespace duHastNet.DocManager.Core.Models.FilingRules
             }
         }
 
-        public BeginsWith(string comparisonValue, string targetDirectory)
+        public Contains(string comparisonValue, string targetDirectory)
         {
             _comparisonValue = comparisonValue;
             _targetDirectory = targetDirectory;

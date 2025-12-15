@@ -54,12 +54,12 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         /// matched.
         /// This is runtime state that should not be persisted.
         /// </remarks>
-        private List<Models.IncomingDocumentProcessingStatus> _matchedDocuments;
+        private List<IncomingDocumentProcessingStatus> _matchedDocuments;
 
         /// <summary>
         /// Gets the collection of matched incoming documents
         /// </summary>
-        public List<Models.IncomingDocumentProcessingStatus> MatchedDocuments
+        public List<IncomingDocumentProcessingStatus> MatchedDocuments
         {
             get { return _matchedDocuments; }
         }
@@ -108,7 +108,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         /// <summary>
         /// Adds a supported file type to the configuration
         /// </summary>
-        public void AddSupportedFileType(Models.SupportedFileType supportedFileType)
+        public void AddSupportedFileType(SupportedFileType supportedFileType)
         {
             _settings.AddSupportedFileType(supportedFileType);
         }
@@ -116,7 +116,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         /// <summary>
         /// Removes a supported file type from the configuration
         /// </summary>
-        public void RemoveSupportedFileType(Models.SupportedFileType supportedFileType)
+        public void RemoveSupportedFileType(SupportedFileType supportedFileType)
         {
             _settings.RemoveSupportedFileType(supportedFileType);
         }
@@ -139,7 +139,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         {
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
             _errors = new List<Exception>();
-            _matchedDocuments = new List<Models.IncomingDocumentProcessingStatus>();
+            _matchedDocuments = new List<IncomingDocumentProcessingStatus>();
         }
 
         /// <summary>

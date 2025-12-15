@@ -22,7 +22,8 @@
 //
 
 using CommunityToolkit.Mvvm.ComponentModel;
-using duHastNet.DocManager.Core.Models;
+using duHastNet.DocManager.Core.Models.CurrentFolder;
+using duHastNet.DocManager.Core.Models.Database;
 using System.Collections.ObjectModel;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels;

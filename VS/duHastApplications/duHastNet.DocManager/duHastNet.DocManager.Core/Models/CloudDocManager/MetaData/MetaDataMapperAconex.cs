@@ -16,11 +16,12 @@
 //
 //
 
+using duHastNet.DocManager.Core.Models.CurrentFolder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace duHastNet.DocManager.Core.Models.MetaData
+namespace duHastNet.DocManager.Core.Models.CloudDocManager.MetaData
 {
     /// <summary>
     /// Metadata mapper for Aconex cloud document management system

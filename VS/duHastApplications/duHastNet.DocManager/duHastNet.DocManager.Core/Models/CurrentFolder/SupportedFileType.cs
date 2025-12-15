@@ -23,7 +23,7 @@
 
 using Newtonsoft.Json;
 
-namespace duHastNet.DocManager.Core.Models
+namespace duHastNet.DocManager.Core.Models.CurrentFolder
 {
     public class SupportedFileType
     {

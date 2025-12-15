@@ -21,44 +21,46 @@
 //
 //
 
-
-namespace duHastNet.DocManager.Core.Models.FilingRules
+namespace duHastNet.DocManager.Core.Models.CurrentFolder.FilingRules
 {
-    /// <summary>
-    /// Enum representing the available filing rule types
-    /// Used for type-safe selection and for creating concrete rule instances
-    /// </summary>
-    public enum FilingRuleType
+    public class BeginsWith : Interfaces.IFilingRule
     {
-        /// <summary>
-        /// File name must begin with the comparison value
-        /// Maps to: BeginsWith class
-        /// </summary>
-        BeginsWith,
+        public string Name => "Begins With";
 
-        /// <summary>
-        /// File name must contain the comparison value
-        /// Maps to: Contains class
-        /// </summary>
-        Contains,
+        public string Description => "The file name need to begin with the comparison string";
 
-        /// <summary>
-        /// File name must NOT begin with the comparison value
-        /// Maps to: NotBeginsWith class
-        /// </summary>
-        NotBeginsWith,
+        private readonly string _comparisonValue;
+        public string ComparisonValue => _comparisonValue;
 
-        /// <summary>
-        /// File name must NOT contain the comparison value
-        /// Maps to: NotContains class
-        /// </summary>
-        NotContains,
+        private readonly string _targetDirectory = string.Empty;
+        public string TargetDirectory => _targetDirectory;
 
-        /// <summary>
-        /// Matches all files (catch-all/default rule)
-        /// Maps to: CatchAll class
-        /// Only one Default rule allowed in the system
-        /// </summary>
-        Default
+        public bool IsMatch(string path)
+        {
+            //check for null or empty path
+            if (string.IsNullOrEmpty(path))
+            {
+                return false;
+            }
+
+            //get the file name from path
+            string fileName = Path.GetFileName(path);
+
+            //check if it begins with comparison value
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                return fileName.StartsWith(_comparisonValue);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public BeginsWith(string comparisonValue, string targetDirectory)
+        {
+            _comparisonValue = comparisonValue;
+            _targetDirectory = targetDirectory;
+        }
     }
 }

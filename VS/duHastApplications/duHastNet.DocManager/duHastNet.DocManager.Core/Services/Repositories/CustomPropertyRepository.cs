@@ -17,7 +17,7 @@
 //
 
 using duHastNet.DocManager.Core.Interfaces;
-using duHastNet.DocManager.Core.Models;
+using duHastNet.DocManager.Core.Models.Database;
 using SQLite;
 
 

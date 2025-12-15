@@ -22,9 +22,9 @@
 //
 
 
-using duHastNet.DocManager.Core.Models.MetaData;
+using duHastNet.DocManager.Core.Models.CloudDocManager.MetaData;
 
-namespace duHastNet.DocManager.Core.Models
+namespace duHastNet.DocManager.Core.Models.CloudDocManager
 {
     public class CloudDocumentManager
     {

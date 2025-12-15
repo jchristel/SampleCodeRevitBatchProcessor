@@ -21,7 +21,6 @@
 //
 //
 
-
 namespace duHastNet.DocManager.Core.Models.CurrentFolder
 {
     public partial class CurrentFolderManager
@@ -401,14 +400,14 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         /// <paramref name="filePath"/> The full path of the file to extract metadata from.
         /// <paramref name="currentDocuments"/> The list of current documents to compare against.
         /// </summary>  
-        private Models.IncomingDocumentProcessingStatus ExtractDocumentMetadataFromFileName(string filePath, List<Document> currentDocuments)
+        private IncomingDocumentProcessingStatus ExtractDocumentMetadataFromFileName(string filePath, List<Document> currentDocuments)
         {
             // Summary:
             // extract document number and revision from file name
             // compare extracted metadata with current documents in the database
             // if a match is found, return IncomingDocumentStatus with matched document id
             // if no match is found, return IncomingDocumentStatus with null matched document id
-            Models.IncomingDocumentProcessingStatus incomingDocumentStatus = new Models.IncomingDocumentProcessingStatus(filePath);
+            IncomingDocumentProcessingStatus incomingDocumentStatus = new Models.CurrentFolder.IncomingDocumentProcessingStatus(filePath);
             string fileName = System.IO.Path.GetFileNameWithoutExtension(filePath);
 
             // extract document number (doc id) and revision from file name
@@ -459,7 +458,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             // whipe matched documents list
             if (_matchedDocuments == null)
             {
-                _matchedDocuments = new List<Models.IncomingDocumentProcessingStatus>();
+                _matchedDocuments = new List<IncomingDocumentProcessingStatus>();
             }
             else
             {
@@ -473,7 +472,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             foreach (var filePath in incomingFiles)
             {
                 // extract metadata from file name
-                Models.IncomingDocumentProcessingStatus incomingDocument = ExtractDocumentMetadataFromFileName(
+                IncomingDocumentProcessingStatus incomingDocument = ExtractDocumentMetadataFromFileName(
                     filePath, 
                     currentDocuments
                 );

@@ -18,70 +18,67 @@
 
 using Newtonsoft.Json;
 
-namespace duHastNet.DocManager.Core.Models.DocumentNumberModifiers
+namespace duHastNet.DocManager.Core.Models.CurrentFolder.DocumentNumberModifiers
 {
-    public class AddAtIndex : Interfaces.IDocumentNumberModifier
+    public class Replace : Interfaces.IDocumentNumberModifier
     {
         /// <summary>
-        /// this class adds a suffix at a particular index to a document number
+        /// this class replaces a given string with a new string in a document number
         /// </summary>
-        private string _value;
+        private string _oldValue;
 
-        private int _index;
+        private string _newValue;
 
         /// <summary>
-        /// The value to insert at the specified index
+        /// The old value to be replaced in the document number
         /// </summary>
-        public string Value
+        public string OldValue
         {
-            get => _value;
-            set => _value = value ?? string.Empty;
+            get => _oldValue;
+            set => _oldValue = value ?? string.Empty;
         }
 
         /// <summary>
-        /// The index position where the value will be inserted (0 for prefix)
+        /// The new value to replace the old value with
         /// </summary>
-        public int Index
+        public string NewValue
         {
-            get => _index;
-            set => _index = value;
+            get => _newValue;
+            set => _newValue = value ?? string.Empty;
         }
 
         public string DocumentNumber(string number)
         {
-            return number.Insert(_index, _value);
+            return number.Replace(_oldValue, _newValue);
         }
 
         public string GetDisplayText()
         {
-            var displayValue = string.IsNullOrEmpty(_value) ? "(empty)" : _value;
+            var oldDisplay = string.IsNullOrEmpty(_oldValue) ? "(empty)" : _oldValue;
+            var newDisplay = string.IsNullOrEmpty(_newValue) ? "(empty)" : _newValue;
 
-            // Special case: index 0 is a prefix
-            if (_index == 0)
-                return $"Add Prefix: {displayValue}";
-
-            return $"Add at Index {_index}: {displayValue}";
+            return $"Replace: {oldDisplay} → {newDisplay}";
         }
 
         /// <summary>
-        /// Constructor for creating a new AddAtIndex modifier
+        /// Constructor for creating a new Replace modifier
         /// </summary>
-        /// <param name="value">The value to insert</param>
-        /// <param name="index">The index position (0 for prefix)</param>
-        public AddAtIndex(string value, int index)
+        /// <param name="oldValue">The value to be replaced</param>
+        /// <param name="newValue">The value to replace with</param>
+        public Replace(string oldValue, string newValue)
         {
-            _value = value ?? string.Empty;
-            _index = index;
+            _oldValue = oldValue ?? string.Empty;
+            _newValue = newValue ?? string.Empty;
         }
 
         /// <summary>
         /// Parameterless constructor for JSON deserialization
         /// </summary>
         [JsonConstructor]
-        public AddAtIndex()
+        public Replace()
         {
-            _value = string.Empty;
-            _index = 0;
+            _oldValue = string.Empty;
+            _newValue = string.Empty;
         }
     }
 }

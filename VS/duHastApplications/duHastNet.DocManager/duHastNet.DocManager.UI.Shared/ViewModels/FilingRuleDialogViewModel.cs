@@ -25,7 +25,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Interfaces;
-using duHastNet.DocManager.Core.Models.FilingRules;
+using duHastNet.DocManager.Core.Models.CurrentFolder.FilingRules;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Validators;
 using System.Collections.ObjectModel;

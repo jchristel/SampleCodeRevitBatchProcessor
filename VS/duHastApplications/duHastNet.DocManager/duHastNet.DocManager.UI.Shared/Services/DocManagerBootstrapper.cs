@@ -133,6 +133,7 @@ public class DocManagerBootstrapper : IDisposable
             currentFolderManager: _currentFolderManager,
             messageStore: _messageStore,
             navigationStore: _navigationStore,
+            settingsService: _settingsService,
             dialogService: _dialogService);
         
         // Create the NavigationHostView (UserControl)

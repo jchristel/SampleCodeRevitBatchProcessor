@@ -20,9 +20,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using duHastNet.DocManager.Core.Services.Api;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.UI.Shared.Stores;
-using System.Printing;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.Core.Models.MetaData;
+using duHastNet.DocManager.Core.Interfaces;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels
 {
@@ -34,6 +34,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         private readonly Core.Models.CurrentFolder.CurrentFolderManager _currentFolderManager;
         private readonly NavigationStore _navigationStore;
         private readonly IDialogService _dialogService;
+        public readonly ISettingsService _settingsService;
 
         #region Public Properties
 
@@ -50,6 +51,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager,
             MessageStore messageStore,
             NavigationStore navigationStore,
+            ISettingsService settingsService,
             IDialogService dialogService
             )
         {
@@ -58,6 +60,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             _currentFolderManager = currentFolderManager;
             _messageStore = messageStore;
             _navigationStore = navigationStore;
+            _settingsService = settingsService;
             _dialogService = dialogService;
 
             // Subscribe to navigation changes
@@ -73,6 +76,12 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             _navigationStore.NavigateTo(CreateMergeViewModel);
         }
 
+        /// <summary>
+        /// Creates and initializes a new instance of the <see cref="SettingsViewModel"/> with the required
+        /// dependencies.
+        /// </summary>
+        /// <returns>A fully constructed <see cref="SettingsViewModel"/> instance configured with the current application
+        /// services and state.</returns>
         private SettingsViewModel CreateSettingsViewModel()
         {
             return new SettingsViewModel(
@@ -82,10 +91,14 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 _currentFolderManager!,
                 _navigationStore!,
                 _dialogService!,
+                _settingsService!,
                 CreateMergeViewModel
             );
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="MergeViewModel"/> with the required dependencies.
+        /// </summary>
         private MergeViewModel CreateMergeViewModel()
         {
             return new MergeViewModel(

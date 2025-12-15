@@ -73,6 +73,7 @@ public partial class SettingsViewModel : ObservableObject
         Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager,
         NavigationStore navigationStore,
         IDialogService dialogService,
+        ISettingsService settingsService,
         Func<MergeViewModel> createViewModel
         )
     {
@@ -83,6 +84,8 @@ public partial class SettingsViewModel : ObservableObject
         _navigationStore = navigationStore;
         _createViewModel = createViewModel;
         _dialogService = dialogService;
+        //store settings service
+        _settingsService = settingsService;
 
         MessageViewModel = new GlobalMessageViewModel(_messageStore);
 
@@ -97,15 +100,12 @@ public partial class SettingsViewModel : ObservableObject
             _manager,
             _manager.CloudDocumentManager,
             _dialogService);
-        
+
         CurrentFolderViewModel = new CurrentFolderViewModel(
-            _messageStore, 
-            _manager, 
+            _messageStore,
+            _manager,
             _currentFolderManager,
             _dialogService);
-
-        //set up a settings service
-        _settingsService = new SettingsService();
 
         // Subscribe to child ViewModels' error state changes
         SubscribeToChildErrors();

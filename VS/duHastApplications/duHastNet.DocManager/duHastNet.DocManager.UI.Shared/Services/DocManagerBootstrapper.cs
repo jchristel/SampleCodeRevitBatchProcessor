@@ -80,20 +80,23 @@ public class DocManagerBootstrapper : IDisposable
 
     #region Initialization Methods
 
-    /// <summary>
-    /// Initializes the DocManager application asynchronously
-    /// Creates all services, loads settings, connects to database, and creates main window
-    /// </summary>
-    /// <returns>The main window ready to be shown</returns>
-    public async Task<Window> InitializeAsync()
+    private async Task<Window> InitializeAsyncWorker(string? customSettingsPath)
     {
+        // Check if already initialized
         if (IsInitialized)
         {
             throw new InvalidOperationException("Bootstrapper has already been initialized. Create a new instance to initialize again.");
         }
 
         // Initialize the settings service (singleton for application lifetime)
-        _settingsService = new SettingsService();
+        if (customSettingsPath != null)
+        {
+            _settingsService = new SettingsService(customSettingsPath);
+        }
+        else
+        {
+            _settingsService = new SettingsService();
+        }
 
         // Initialize the API service (singleton for application lifetime)
         _docManagerApi = new DocManagerApi();
@@ -109,20 +112,20 @@ public class DocManagerBootstrapper : IDisposable
 
         // Load settings from JSON files
         var (databaseConnectionSettings, currentFolderManagerSettings, cloudDocumentManager) = await LoadSettingsAsync();
-
+        
         _cloudDocumentManager = cloudDocumentManager;
-
+        
         // Initialize Manager (singleton for application lifetime)
         // Manager starts empty - will be populated after database connection
         // Pass loaded CloudDocumentManager
         _manager = new Manager(_cloudDocumentManager);
-
+        
         // Create CurrentFolderManager with loaded settings
         _currentFolderManager = new duHastNet.DocManager.Core.Models.CurrentFolder.CurrentFolderManager(currentFolderManagerSettings);
-
+        
         // Attempt to connect to saved database if path exists
         await ConnectToSavedDatabaseAsync(databaseConnectionSettings);
-
+        
         // Create the NavigationHostViewModel
         var navigationHostViewModel = new NavigationHostViewModel(
             docManagerApi: _docManagerApi,
@@ -131,13 +134,13 @@ public class DocManagerBootstrapper : IDisposable
             messageStore: _messageStore,
             navigationStore: _navigationStore,
             dialogService: _dialogService);
-
+        
         // Create the NavigationHostView (UserControl)
         var navigationHostView = new NavigationHostView()
         {
             DataContext = navigationHostViewModel
         };
-
+        
         // Create a Window to host the NavigationHostView
         _mainWindow = new Window()
         {
@@ -147,10 +150,10 @@ public class DocManagerBootstrapper : IDisposable
             Height = 800,
             WindowStartupLocation = WindowStartupLocation.CenterScreen
         };
-
+        
         // Subscribe to the Closed event to ensure proper cleanup
         _mainWindow.Closed += MainWindow_Closed;
-
+        
         // Subscribe to Closing event to notify ViewModel
         _mainWindow.Closing += (s, e) =>
         {
@@ -163,6 +166,17 @@ public class DocManagerBootstrapper : IDisposable
         IsInitialized = true;
 
         return _mainWindow;
+    }
+
+
+    /// <summary>
+    /// Initializes the DocManager application asynchronously
+    /// Creates all services, loads settings, connects to database, and creates main window
+    /// </summary>
+    /// <returns>The main window ready to be shown</returns>
+    public async Task<Window> InitializeAsync()
+    {
+        return await InitializeAsyncWorker(null);
     }
 
     /// <summary>
@@ -187,82 +201,7 @@ public class DocManagerBootstrapper : IDisposable
     /// <returns>The main window ready to be shown</returns>
     public async Task<Window> InitializeAsync(string customSettingsPath)
     {
-        if (IsInitialized)
-        {
-            throw new InvalidOperationException("Bootstrapper has already been initialized. Create a new instance to initialize again.");
-        }
-
-        // Initialize the settings service with custom path (singleton for application lifetime)
-        _settingsService = new SettingsService(customSettingsPath);
-
-        // Initialize the API service (singleton for application lifetime)
-        _docManagerApi = new DocManagerApi();
-
-        // Initialize MessageStore (singleton for application lifetime)
-        _messageStore = new MessageStore();
-
-        // Initialize NavigationStore (singleton for application lifetime)
-        _navigationStore = new NavigationStore();
-
-        // Initialize DialogService (singleton for application lifetime)
-        _dialogService = new DialogService();
-
-        // Load settings from JSON files
-        var (databaseConnectionSettings, currentFolderManagerSettings, cloudDocumentManager) = await LoadSettingsAsync();
-
-        _cloudDocumentManager = cloudDocumentManager;
-
-        // Initialize Manager (singleton for application lifetime)
-        // Manager starts empty - will be populated after database connection
-        // Pass loaded CloudDocumentManager
-        _manager = new Manager(_cloudDocumentManager);
-
-        // Create CurrentFolderManager with loaded settings
-        _currentFolderManager = new duHastNet.DocManager.Core.Models.CurrentFolder.CurrentFolderManager(currentFolderManagerSettings);
-
-        // Attempt to connect to saved database if path exists
-        await ConnectToSavedDatabaseAsync(databaseConnectionSettings);
-
-        // Create the NavigationHostViewModel
-        var navigationHostViewModel = new NavigationHostViewModel(
-            docManagerApi: _docManagerApi,
-            manager: _manager,
-            currentFolderManager: _currentFolderManager,
-            messageStore: _messageStore,
-            navigationStore: _navigationStore,
-            dialogService: _dialogService);
-
-        // Create the NavigationHostView (UserControl)
-        var navigationHostView = new NavigationHostView()
-        {
-            DataContext = navigationHostViewModel
-        };
-
-        // Create a Window to host the NavigationHostView
-        _mainWindow = new Window()
-        {
-            Title = "DocManager",
-            Content = navigationHostView,
-            Width = 1200,
-            Height = 800,
-            WindowStartupLocation = WindowStartupLocation.CenterScreen
-        };
-
-        // Subscribe to the Closed event to ensure proper cleanup
-        _mainWindow.Closed += MainWindow_Closed;
-
-        // Subscribe to Closing event to notify ViewModel
-        _mainWindow.Closing += (s, e) =>
-        {
-            if (navigationHostViewModel is ICloseable closeable)
-            {
-                closeable.OnClosing();
-            }
-        };
-
-        IsInitialized = true;
-
-        return _mainWindow;
+        return await InitializeAsyncWorker(customSettingsPath);
     }
 
     /// <summary>

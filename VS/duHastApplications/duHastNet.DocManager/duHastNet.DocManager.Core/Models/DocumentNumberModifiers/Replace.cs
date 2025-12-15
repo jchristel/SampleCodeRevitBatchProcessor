@@ -16,6 +16,8 @@
 //
 //
 
+using Newtonsoft.Json;
+
 namespace duHastNet.DocManager.Core.Models.DocumentNumberModifiers
 {
     public class Replace : Interfaces.IDocumentNumberModifier
@@ -23,9 +25,27 @@ namespace duHastNet.DocManager.Core.Models.DocumentNumberModifiers
         /// <summary>
         /// this class replaces a given string with a new string in a document number
         /// </summary>
-        private readonly string _oldValue;
+        private string _oldValue;
 
-        private readonly string _newValue;
+        private string _newValue;
+
+        /// <summary>
+        /// The old value to be replaced in the document number
+        /// </summary>
+        public string OldValue
+        {
+            get => _oldValue;
+            set => _oldValue = value ?? string.Empty;
+        }
+
+        /// <summary>
+        /// The new value to replace the old value with
+        /// </summary>
+        public string NewValue
+        {
+            get => _newValue;
+            set => _newValue = value ?? string.Empty;
+        }
 
         public string DocumentNumber(string number)
         {
@@ -39,10 +59,26 @@ namespace duHastNet.DocManager.Core.Models.DocumentNumberModifiers
 
             return $"Replace: {oldDisplay} → {newDisplay}";
         }
+
+        /// <summary>
+        /// Constructor for creating a new Replace modifier
+        /// </summary>
+        /// <param name="oldValue">The value to be replaced</param>
+        /// <param name="newValue">The value to replace with</param>
         public Replace(string oldValue, string newValue)
         {
-            _oldValue = oldValue;
-            _newValue = newValue;
+            _oldValue = oldValue ?? string.Empty;
+            _newValue = newValue ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Parameterless constructor for JSON deserialization
+        /// </summary>
+        [JsonConstructor]
+        public Replace()
+        {
+            _oldValue = string.Empty;
+            _newValue = string.Empty;
         }
     }
 }

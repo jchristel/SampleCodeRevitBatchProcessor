@@ -16,6 +16,8 @@
 //
 //
 
+using Newtonsoft.Json;
+
 namespace duHastNet.DocManager.Core.Models.DocumentNumberModifiers
 {
     public class AddToEnd : Interfaces.IDocumentNumberModifier
@@ -23,7 +25,16 @@ namespace duHastNet.DocManager.Core.Models.DocumentNumberModifiers
         /// <summary>
         /// this class adds a suffix to the end of a document number
         /// </summary>
-        private readonly string _suffix;
+        private string _suffix;
+
+        /// <summary>
+        /// The suffix to add to the end of the document number
+        /// </summary>
+        public string Suffix
+        {
+            get => _suffix;
+            set => _suffix = value ?? string.Empty;
+        }
 
         public string DocumentNumber(string number)
         {
@@ -36,9 +47,23 @@ namespace duHastNet.DocManager.Core.Models.DocumentNumberModifiers
                 return "Add Suffix: (empty)";
             return $"Add Suffix: {_suffix}";
         }
+
+        /// <summary>
+        /// Constructor for creating a new AddToEnd modifier
+        /// </summary>
+        /// <param name="suffix">The suffix to add</param>
         public AddToEnd(string suffix)
         {
-            _suffix = suffix;
+            _suffix = suffix ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Parameterless constructor for JSON deserialization
+        /// </summary>
+        [JsonConstructor]
+        public AddToEnd()
+        {
+            _suffix = string.Empty;
         }
     }
 }

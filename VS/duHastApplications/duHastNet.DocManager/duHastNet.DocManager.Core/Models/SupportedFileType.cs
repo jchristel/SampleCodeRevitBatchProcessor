@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -36,11 +36,11 @@ namespace duHastNet.DocManager.Core.Models
         /// <remarks>
         /// This field holds an implementation of the <see cref="Interfaces.IDocumentNumberModifier"/> interface,
         /// which can be used to alter or customize document numbers. If null, no modification will be applied.
-        /// This is a behavior/logic object and should not be serialized.
-        /// Exposed as internal property to allow UI access while maintaining encapsulation.
+        /// Exposed as public property to allow UI access and JSON serialization.
+        /// The JsonProperty attribute with TypeNameHandling ensures proper polymorphic serialization.
         /// </remarks>
-        [JsonIgnore]
-        public Interfaces.IDocumentNumberModifier? DocumentNumberModifier { get; private set; }
+        [JsonProperty(TypeNameHandling = TypeNameHandling.Auto)]
+        public Interfaces.IDocumentNumberModifier? DocumentNumberModifier { get; set; }
 
         /// <summary>
         /// Returns the modified document number if a modifier is defined, else returns the original document number.

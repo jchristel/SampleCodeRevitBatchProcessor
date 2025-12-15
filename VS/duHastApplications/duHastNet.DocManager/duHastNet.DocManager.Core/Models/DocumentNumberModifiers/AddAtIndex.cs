@@ -16,6 +16,8 @@
 //
 //
 
+using Newtonsoft.Json;
+
 namespace duHastNet.DocManager.Core.Models.DocumentNumberModifiers
 {
     public class AddAtIndex : Interfaces.IDocumentNumberModifier
@@ -23,13 +25,31 @@ namespace duHastNet.DocManager.Core.Models.DocumentNumberModifiers
         /// <summary>
         /// this class adds a suffix at a particular index to a document number
         /// </summary>
-        private readonly string _value;
+        private string _value;
 
-        private readonly int _index;
+        private int _index;
+
+        /// <summary>
+        /// The value to insert at the specified index
+        /// </summary>
+        public string Value
+        {
+            get => _value;
+            set => _value = value ?? string.Empty;
+        }
+
+        /// <summary>
+        /// The index position where the value will be inserted (0 for prefix)
+        /// </summary>
+        public int Index
+        {
+            get => _index;
+            set => _index = value;
+        }
 
         public string DocumentNumber(string number)
         {
-            return number.Insert(_index,_value);
+            return number.Insert(_index, _value);
         }
 
         public string GetDisplayText()
@@ -43,10 +63,25 @@ namespace duHastNet.DocManager.Core.Models.DocumentNumberModifiers
             return $"Add at Index {_index}: {displayValue}";
         }
 
+        /// <summary>
+        /// Constructor for creating a new AddAtIndex modifier
+        /// </summary>
+        /// <param name="value">The value to insert</param>
+        /// <param name="index">The index position (0 for prefix)</param>
         public AddAtIndex(string value, int index)
         {
-            _value = value;
+            _value = value ?? string.Empty;
             _index = index;
+        }
+
+        /// <summary>
+        /// Parameterless constructor for JSON deserialization
+        /// </summary>
+        [JsonConstructor]
+        public AddAtIndex()
+        {
+            _value = string.Empty;
+            _index = 0;
         }
     }
 }

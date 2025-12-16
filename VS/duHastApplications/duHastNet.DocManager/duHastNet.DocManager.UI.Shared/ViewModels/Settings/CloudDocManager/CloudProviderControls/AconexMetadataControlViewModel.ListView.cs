@@ -29,6 +29,7 @@ using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.CloudDocManager.MetaData;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
+using duHastNet.DocManager.UI.Shared.ViewModels.Settings.CloudDocManager.CloudProviderControls;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;

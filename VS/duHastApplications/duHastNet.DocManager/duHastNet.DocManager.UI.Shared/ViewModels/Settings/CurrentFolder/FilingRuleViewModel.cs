@@ -25,7 +25,7 @@
 using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.DocManager.Core.Models.CurrentFolder.FilingRules;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.CurrentFolder
 {
     /// <summary>
     /// ViewModel wrapper for IFilingRule to provide UI-friendly properties for ListView binding

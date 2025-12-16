@@ -26,7 +26,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.UI.Shared.Stores;
-using duHastNet.DocManager.UI.Shared.ViewModels;
+using duHastNet.DocManager.UI.Shared.ViewModels.Settings.CurrentFolder;
 using System.Collections.ObjectModel;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels

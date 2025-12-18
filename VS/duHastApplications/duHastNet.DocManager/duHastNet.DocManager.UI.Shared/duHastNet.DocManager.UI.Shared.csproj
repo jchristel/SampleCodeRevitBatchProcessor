@@ -20,7 +20,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Views\SettingsView.xaml.cs">
+	  <Compile Update="Views\Settings\SettingsView.xaml.cs">
 	    <SubType>Code</SubType>
 	  </Compile>
 	</ItemGroup>

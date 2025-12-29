@@ -214,6 +214,19 @@ public partial class MergeViewModel : ObservableObject, IActivatable
             // Step 3: Update database with documents of green and yellow status
             bool databaseUpdateSuccessful = await UpdateDatabaseAsync();
 
+            // Step 3.5: Reload Manager after database update to reflect changes
+            // This is critical for all documents (especially newly added ones) to show updated revision in the UI
+            if (databaseUpdateSuccessful)
+            {
+                var reloadResult = await _docManagerApi.ReloadDataIntoManagerAsync(_manager);
+                if (!reloadResult.Success)
+                {
+                    _messageStore.EnqueueMessage(
+                        $"Database updated but failed to reload data: {reloadResult.Message}",
+                        MessageTypes.Warning, dismissAfterSeconds: 20);
+                }
+            }
+
             // Step 4: Export metadata to cloud provider (if enabled and database update was successful)
             if (databaseUpdateSuccessful)
             {

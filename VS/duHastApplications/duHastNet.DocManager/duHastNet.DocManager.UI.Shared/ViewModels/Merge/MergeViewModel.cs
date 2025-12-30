@@ -80,6 +80,9 @@ public partial class MergeViewModel : ObservableObject, IActivatable
         MessageViewModel = new GlobalMessageViewModel(_messageStore);
         DocumentMatchViewModel = new DocumentMatchControlViewModel(_currentFolderManager, _manager,  _messageStore, _dialogService, _docManagerApi);
 
+        // Subscribe to document match changes to update merge button state
+        DocumentMatchViewModel.MatchedDocumentsChanged += OnMatchedDocumentsChanged;
+
         // Initialize collections
         FilteredRevisionDescriptions = new ObservableCollection<string>();
 
@@ -126,13 +129,14 @@ public partial class MergeViewModel : ObservableObject, IActivatable
     public string? CurrentDatabasePath => _docManagerApi.GetDatabasePath();
 
     /// <summary>
-    /// Gets whether the merge button should be enabled
-    /// Requires: Database connected, Revision date set, Revision description set
+    /// Determines whether the merge button should be enabled
+    /// Requires: Database connected, Revision date set, Revision description set, and documents available to merge
     /// </summary>
-    public bool CanMerge => IsDatabaseReady && 
-                            !IsBusy && 
-                            RevisionDate.HasValue && 
-                            !string.IsNullOrWhiteSpace(RevisionDescription);
+    private bool CanMerge() => IsDatabaseReady &&
+                               !IsBusy &&
+                               RevisionDate.HasValue &&
+                               !string.IsNullOrWhiteSpace(RevisionDescription) &&
+                               DocumentMatchViewModel.CanMergeCount > 0;
 
     #endregion
 
@@ -187,10 +191,10 @@ public partial class MergeViewModel : ObservableObject, IActivatable
     /// <summary>
     /// Command to perform the document merge operation
     /// </summary>
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanMerge))]
     private async Task MergeDocumentsAsync()
     {
-        if (!CanMerge) return;
+        //if (!CanMerge) return;
 
         IsBusy = true;
         try
@@ -251,7 +255,7 @@ public partial class MergeViewModel : ObservableObject, IActivatable
         finally
         {
             IsBusy = false;
-            OnPropertyChanged(nameof(CanMerge));
+            MergeDocumentsCommand.NotifyCanExecuteChanged();
         }
     }
 
@@ -267,7 +271,7 @@ public partial class MergeViewModel : ObservableObject, IActivatable
         // Update dependent properties
         UpdateButtonStates();
         OnPropertyChanged(nameof(IsDatabaseReady));
-        OnPropertyChanged(nameof(CanMerge));
+        MergeDocumentsCommand.NotifyCanExecuteChanged();
     }
 
     /// <summary>
@@ -277,7 +281,7 @@ public partial class MergeViewModel : ObservableObject, IActivatable
     {
         // Update button states during operations
         UpdateButtonStates();
-        OnPropertyChanged(nameof(CanMerge));
+        MergeDocumentsCommand.NotifyCanExecuteChanged();
     }
 
     /// <summary>
@@ -287,7 +291,7 @@ public partial class MergeViewModel : ObservableObject, IActivatable
     {
 
         // Update merge button state
-        OnPropertyChanged(nameof(CanMerge));
+        MergeDocumentsCommand.NotifyCanExecuteChanged();
 
         // Clear suggestions if input is empty
         if (string.IsNullOrWhiteSpace(value))
@@ -326,7 +330,7 @@ public partial class MergeViewModel : ObservableObject, IActivatable
     partial void OnRevisionDateChanged(DateTime? value)
     {
         // Update merge button state
-        OnPropertyChanged(nameof(CanMerge));
+        MergeDocumentsCommand.NotifyCanExecuteChanged();
     }
 
     #endregion
@@ -338,7 +342,16 @@ public partial class MergeViewModel : ObservableObject, IActivatable
     /// </summary>
     private void UpdateButtonStates()
     {
-        OnPropertyChanged(nameof(CanMerge));
+        MergeDocumentsCommand.NotifyCanExecuteChanged();
+    }
+
+    /// <summary>
+    /// Event handler for when matched documents collection changes
+    /// Updates the merge button enabled state
+    /// </summary>
+    private void OnMatchedDocumentsChanged(object? sender, EventArgs e)
+    {
+        MergeDocumentsCommand.NotifyCanExecuteChanged();
     }
 
     #endregion

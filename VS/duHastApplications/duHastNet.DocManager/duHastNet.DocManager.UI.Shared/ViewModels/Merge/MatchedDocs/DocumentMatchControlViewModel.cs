@@ -52,6 +52,14 @@ public partial class DocumentMatchControlViewModel : ObservableObject
 
     #endregion
 
+    #region Events
+
+    /// <summary>
+    /// Event raised when the matched documents collection changes
+    /// </summary>
+    public event EventHandler? MatchedDocumentsChanged;
+
+    #endregion
     #region Observable Properties
 
     /// <summary>
@@ -434,6 +442,9 @@ public partial class DocumentMatchControlViewModel : ObservableObject
         OnPropertyChanged(nameof(NoMatchCount));
         OnPropertyChanged(nameof(ErrorCount));
         OnPropertyChanged(nameof(CanMergeCount));
+
+        // Raise event to notify subscribers that matched documents have changed
+        MatchedDocumentsChanged?.Invoke(this, EventArgs.Empty);
     }
 
     #endregion

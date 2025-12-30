@@ -168,7 +168,6 @@
                 Margin="5 10 5 10" 
                 Content = "Merge Documents"  
                 Command="{Binding MergeDocumentsCommand}"
-                IsEnabled="{Binding CanMerge}"
                 FontSize="24"/>
         </Grid>
     </Grid>

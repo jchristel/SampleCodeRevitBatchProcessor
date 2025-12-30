@@ -24,4 +24,8 @@
 	    <SubType>Code</SubType>
 	  </Compile>
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="ViewModels\Merge\MergeLog\" />
+	</ItemGroup>
 </Project>

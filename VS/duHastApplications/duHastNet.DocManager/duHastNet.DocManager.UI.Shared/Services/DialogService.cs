@@ -126,6 +126,10 @@ public class DialogService : IDialogService
         {
             dialog = new Views.MetaDataMappingDialog(metaDataMappingViewModel);
         }
+        else if (viewModel is ViewModels.Merge.MergeLog.MergeLogDialogViewModel mergeLogViewModel)
+        {
+            dialog = new Views.Merge.MergeLog.MergeLogDialog(mergeLogViewModel);
+        }
         else
         {
             throw new ArgumentException($"No dialog mapping found for ViewModel type: {viewModel.GetType().Name}");

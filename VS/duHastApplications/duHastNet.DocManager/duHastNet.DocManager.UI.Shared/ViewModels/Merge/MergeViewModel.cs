@@ -237,6 +237,9 @@ public partial class MergeViewModel : ObservableObject, IActivatable
             // This happens regardless of database update success, as file operations are independent
             await MergeFilesAsync();
 
+            // Step 6: Show merge log dialog with all process messages
+            ShowMergeLog();
+
             // refresh the document list after merge
             await DocumentMatchViewModel.RefreshMatchingAsync();
 

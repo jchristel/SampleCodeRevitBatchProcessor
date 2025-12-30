@@ -24,10 +24,11 @@
 
 using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.UI.Shared.Stores;
+using duHastNet.DocManager.UI.Shared.ViewModels.Merge.MergeLog;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.IO;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels;
 
@@ -155,5 +156,29 @@ public partial class MergeViewModel
         }
 
         await Task.CompletedTask; // For async signature consistency
+    }
+
+    /// <summary>
+    /// Shows the merge log dialog with all process messages from the merge operation
+    /// </summary>
+    private void ShowMergeLog()
+    {
+        try
+        {
+            // Get all processing statuses from the CurrentFolderManager
+            var processingStatuses = _currentFolderManager.GetMatchedDocuments();
+
+            // Create the dialog ViewModel
+            var dialogViewModel = new MergeLogDialogViewModel(processingStatuses);
+
+            // Show the dialog
+            _dialogService.ShowDialog(dialogViewModel);
+        }
+        catch (Exception ex)
+        {
+            _messageStore.EnqueueMessage(
+                $"Error displaying merge log: {ex.Message}",
+                MessageTypes.Error);
+        }
     }
 }

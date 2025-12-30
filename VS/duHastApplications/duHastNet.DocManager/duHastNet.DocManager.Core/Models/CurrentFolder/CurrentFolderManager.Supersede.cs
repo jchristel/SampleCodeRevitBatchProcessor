@@ -21,6 +21,8 @@
 //
 //
 
+using System.Data;
+
 namespace duHastNet.DocManager.Core.Models.CurrentFolder
 {
     public partial class CurrentFolderManager
@@ -232,6 +234,15 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                 // folder is not set, log error
                 _errors.Add(new Exceptions.FolderDoesNotExistException("Supersede folder path is not set."));
 
+            }
+            else
+            {
+                // check if the folder exists
+                if(!System.IO.Directory.Exists(_settings.SupersededFolderPath))
+                {
+                    //log error
+                    _errors.Add(new Exceptions.FolderDoesNotExistException(_settings.SupersededFolderPath));
+                }
             }
 
 
@@ -566,6 +577,19 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             bool prerequisitesMet = ValidateSupersedePrerequisites();
             if (!prerequisitesMet)
             {
+                // if prerequisites are not met, we cannot proceed...
+                // prerequisites errors contains also a check if there are no files in the incoming folder:
+                // at this point the list of matched documents should be cleared (no files to match)
+                // this can occur if the user deleted all files from the incoming folder after initial matching
+                // check this edge case here
+                var files = GetSupportedFilesFromFolder(_settings.IncomingFolderPath);
+                if (files.Count == 0)
+                {
+                    // whipe matched documents list
+                    _matchedDocuments.Clear();
+                }
+
+
                 // log error
                 return false;
             }

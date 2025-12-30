@@ -22,6 +22,8 @@
             <RowDefinition Height="auto"/>
             <!-- message banner -->
             <RowDefinition Height="auto"/>
+            <!-- settings path -->
+            <RowDefinition Height="auto"/>
             <!-- settings current documents -->
             <RowDefinition Height="auto"/>
             <!-- settings aconex -->
@@ -53,9 +55,15 @@
                               DataContext="{Binding MessageViewModel}"
                               Margin="0 5 0 5"/>
         </Grid>
-        
-        <!-- current documents management expander -->
+        <!-- settings path -->
         <Border Grid.Row="2" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
+            <TextBlock  Margin="5 5 5 5">
+                <Run Text="Settings Path: "/>
+                <Run Text="{Binding SettingsPath, Mode=OneWay}"/>
+            </TextBlock>
+        </Border>
+        <!-- current documents management expander -->
+        <Border Grid.Row="3" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
             <Expander  Header="Current Documents" Margin="5 5 5 5">
                 <local:CurrentFolderView
                   DataContext="{Binding CurrentFolderViewModel}"
@@ -63,7 +71,7 @@
             </Expander>
         </Border>
         <!-- cloud document manager management expander -->
-        <Border Grid.Row="3" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
+        <Border Grid.Row="4" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
             <Expander  Header="Cloud Document Manager" Margin="5 5 5 5">
                 <local:CloudDocumentManagerView 
                   DataContext="{Binding AconexMetadataViewModel}"
@@ -71,7 +79,7 @@
             </Expander>
         </Border>
         <!-- database management expander -->
-        <Border Grid.Row="4" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
+        <Border Grid.Row="5" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
             <Expander  Header="Database" Margin="5 5 5 5">
                 <Grid>
                     <local:DatabaseConnectionView
@@ -81,7 +89,7 @@
             </Expander>
         </Border>
         <!-- main buttons -->
-        <Grid Grid.Row="5">
+        <Grid Grid.Row="6">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>

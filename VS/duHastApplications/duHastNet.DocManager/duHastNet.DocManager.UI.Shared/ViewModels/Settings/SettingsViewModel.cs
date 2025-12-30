@@ -64,6 +64,17 @@ public partial class SettingsViewModel : ObservableObject
     // Expose the database connection ViewModel for the view
     public DatabaseConnectionViewModel DatabaseConnectionViewModel { get;}
 
+
+    #region Observable Properties
+
+    /// <summary>
+    /// Gets the path to the settings directory to be displayed in the UI only.
+    /// </summary>
+    [ObservableProperty]
+    private string _settingsPath = "Ready";
+
+    #endregion Observable Properties
+
     #region Constructor
 
     public SettingsViewModel(
@@ -106,6 +117,9 @@ public partial class SettingsViewModel : ObservableObject
             _manager,
             _currentFolderManager,
             _dialogService);
+
+        // Initialize settings path to be shown in ui
+        _settingsPath = _settingsService.SettingsDirectory;
 
         // Subscribe to child ViewModels' error state changes
         SubscribeToChildErrors();

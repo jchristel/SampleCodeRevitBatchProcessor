@@ -123,7 +123,7 @@ public partial class NewDocumentRowViewModel : ObservableObject
         NewDocumentRowStatus.DuplicateInList => "Red",
         NewDocumentRowStatus.NumberDoesNotMatchFileName => "Red",
         NewDocumentRowStatus.NoRevisionIndicator => "Orange",
-        NewDocumentRowStatus.MissingDocumentName => "Orange",
+        NewDocumentRowStatus.MissingDocumentName => "Red",
         _ => "Gray"
     };
 

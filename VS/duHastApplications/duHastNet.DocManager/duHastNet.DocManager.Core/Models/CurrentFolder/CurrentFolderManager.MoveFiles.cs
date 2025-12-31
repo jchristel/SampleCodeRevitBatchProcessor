@@ -374,6 +374,14 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                 {
                     foreach (var fileToMove in matchedFile.Value)
                     {
+                        // make sure we are only moving the file which has the same file extension as the incoming file 
+                        // Matched files may include other file types of the same document!!
+                        var incomingFileExtension = System.IO.Path.GetExtension(matchedFile.Key.NewDocumentPath!);
+                        if (System.IO.Path.GetExtension(fileToMove).ToLower() != incomingFileExtension.ToLower())
+                        {
+                            continue; // skip this file
+                        }
+
                         // check if file is locked
                         if (IsFileLocked(fileToMove))
                         {

@@ -428,15 +428,11 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                 incomingDocumentStatus
             );
 
-            //finish all checks...
-
             //store the id of the matched document
             incomingDocumentStatus.MatchedDocumentId = documentId;
 
             // extract revision
             string? revision = GetRevisionFromFileName(fileName, incomingDocumentStatus);
-
-            //finish all checks...
 
             // set incoming document revision
             incomingDocumentStatus.IncomingDocumentRevision = revision;
@@ -537,16 +533,6 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
                 // log error
                 return false;
             }
-
-            // match incoming files against current documents
-            //bool matchedDocuments = MatchIncomingFilesToDocuments(currentDocuments);
-            
-            // proceed only if matching was successful
-            //if (!matchedDocuments)
-            //{
-            //    // log error
-            //    return false;
-            //}
 
             // loop through all matched documents and supersede them
             // move matched documents to superseded folder

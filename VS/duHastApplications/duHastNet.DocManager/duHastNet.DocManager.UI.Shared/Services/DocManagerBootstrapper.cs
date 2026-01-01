@@ -390,6 +390,17 @@ public class DocManagerBootstrapper : IDisposable
                     $"Connected to database: {System.IO.Path.GetFileName(databaseConnectionSettings.DatabasePath)}. Loaded {count} documents.",
                     MessageTypes.Information,
                     dismissAfterSeconds: 3);
+
+                //clean up metadata mappings...in case database has changed since last load
+                List<string> customFieldNames = [.. _manager.GetAllCustomPropertyNames()];
+                var removedMappings = _cloudDocumentManager?.MetaDataMapper?.CleanupMappings(customFieldNames);
+                if (removedMappings != null && removedMappings.Count > 0)
+                {
+                    _messageStore?.EnqueueMessage(
+                        $"Cleaned up {removedMappings.Count} invalid metadata mappings due to database and/or metadata template changes: {string.Join(", ", removedMappings)}",
+                        MessageTypes.Warning,
+                        dismissAfterSeconds: 20);
+                }
             }
             else
             {

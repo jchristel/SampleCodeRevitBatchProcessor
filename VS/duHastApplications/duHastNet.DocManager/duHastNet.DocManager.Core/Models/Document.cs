@@ -18,7 +18,7 @@ public class Document
 {
     /// <summary>
     /// constants for property names
-    /// used in mappinmg and querying
+    /// used in mapping and querying
     /// </summary> 
     public const string PropertyNumber = "Number";
     public const string PropertyName = "Name";

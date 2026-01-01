@@ -63,5 +63,12 @@ namespace duHastNet.DocManager.Core.Interfaces
         /// Clears all mappers from collection
         /// </summary>
         public void ClearMappers();
+
+        /// <summary>
+        /// Cleans up any invalid mappings from the metadata.
+        /// Invalid mappings can occur when the available custom fields in the database have changed, or the meta data template has been modified.
+        /// </summary>
+        public List<string> CleanupMappings(List<string> customFieldNames);
+
     }
 }

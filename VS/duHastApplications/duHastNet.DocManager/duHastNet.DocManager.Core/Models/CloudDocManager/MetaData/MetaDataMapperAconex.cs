@@ -146,6 +146,19 @@ namespace duHastNet.DocManager.Core.Models.CloudDocManager.MetaData
         }
 
         /// <summary>
+        /// Remove invalid mappings from both available fields and custom fields
+        /// </summary>
+        public List<string> CleanupMappings(List<string> customFieldNames)
+        {
+            //cleanup both meta data mappings and custom field mappings
+            var invalidMetaMappingFiledNames = CleanupInvalidMappings();
+            var invalidDatabaseMappingFiledNames = CleanupInvalidCustomFieldsMappings(customFieldNames, duHastNet.DocManager.Core.Models.DocumentStandardProperties.StandardProperties);
+
+            //combine both lists and return
+            return invalidMetaMappingFiledNames.Concat(invalidDatabaseMappingFiledNames).ToList();
+        }
+
+        /// <summary>
         /// Updates the available fields list from a template file
         /// Call this after reading column headers from the template
         /// </summary>
@@ -185,6 +198,34 @@ namespace duHastNet.DocManager.Core.Models.CloudDocManager.MetaData
                 }
             }
 
+            return removedFields;
+        }
+
+        /// <summary>
+        /// Removes mappings for fields that are no longer in the custom fields list
+        /// </summary>
+        /// <param name="possibleFieldNames">a list of custom field properties and default </param>
+        /// <returns></returns>
+        public List<string> CleanupInvalidCustomFieldsMappings(List<string> customFieldNames, List<string> defaultDocumentPropertyNames)
+        {
+            //combine both lists (custom field names and default document property names)
+            var possibleFieldNames = new HashSet<string>(customFieldNames);
+            possibleFieldNames.UnionWith(defaultDocumentPropertyNames);
+            List<string> combined = possibleFieldNames.ToList();
+
+            var removedFields = new List<string>();
+            var invalidMappings = _metaDataMap
+                .Where(m => !string.IsNullOrEmpty(m.DocumentPropertyName) && !combined.Contains(m.DocumentPropertyName))
+                .ToList();
+            
+            foreach (var mapping in invalidMappings)
+            {
+                _metaDataMap.Remove(mapping);
+                if (mapping.DocumentPropertyName != null)
+                {
+                    removedFields.Add(mapping.DocumentPropertyName);
+                }
+            }
             return removedFields;
         }
 

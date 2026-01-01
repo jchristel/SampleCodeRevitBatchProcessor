@@ -267,17 +267,8 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         /// </summary>
         private List<string> GetAvailableDocumentProperties()
         {
-            var properties = new List<string>
-            {
-                // Standard document properties
-                Document.PropertyNumber,
-                Document.PropertyName,
-                Document.PropertyRevision,
-
-                // Revision properties
-                Revision.PropertyRevisionDate,
-                Revision.PropertyDescription,
-            };
+            // Start with standard properties
+            var properties = new List<string> (duHastNet.DocManager.Core.Models.DocumentStandardProperties.StandardProperties);
 
             // Add active custom field definitions
             var customFields = _manager.GetActiveCustomFieldDefinitions()

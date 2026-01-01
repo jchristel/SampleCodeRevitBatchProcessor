@@ -235,9 +235,6 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
                         _messageStore.EnqueueMessage(
                             $"Removed {removedFields.Count} mapping(s) for fields no longer in template: {string.Join(", ", removedFields)}", MessageTypes.Warning, dismissAfterSeconds: 20);
                     }
-
-                    // Phase 2: Reload the mappings display
-                    // LoadFromMapper();
                 }
                 else
                 {
@@ -361,27 +358,6 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
                     $"Unexpected error reading template: {ex.Message}", MessageTypes.Error);
             }
         }
-
-        ///// <summary>
-        ///// Saves values back to the Aconex mapper instance
-        ///// Called when configuration is saved
-        ///// </summary>
-        //public void SaveToMapper()
-        //{
-        //    if (_aconexMapper == null)
-        //        return;
-
-        //    // Template file path is already updated in property changed handler
-        //    // Available fields are already updated in the mapper
-        //    // No additional save logic needed for Phase 1
-
-        //    // Phase 2: Save metadata mappings
-        //    // _aconexMapper.ClearMappers();
-        //    // foreach (var mapping in MetaDataMappings)
-        //    // {
-        //    //     _aconexMapper.AddMapper(mapping);
-        //    // }
-        //}
 
         /// <summary>
         /// Validates all properties

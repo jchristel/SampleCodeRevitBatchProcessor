@@ -74,6 +74,12 @@ public partial class DatabaseConnectionViewModel
                     // Initialize custom fields after data load
                     InitializeCustomFields();
 
+                    //check meta mapping is still correct:
+                    _manager.CloudDocumentManager?.MetaDataMapper?.CleanupMappings([.. _manager.GetAllCustomPropertyNames()]);
+
+                    //Notify metadata mapping that database changed
+                    _manager.CloudDocumentManager?.RaiseMappingsChanged();
+
                     // Inform user of success with auto-dismiss
                     _messageStore.EnqueueMessage(
                         $"Database created successfully: {Path.GetFileName(DatabasePath)}",
@@ -143,6 +149,12 @@ public partial class DatabaseConnectionViewModel
 
                     // Initialize custom fields after data load
                     InitializeCustomFields();
+
+                    //check meta mapping is still correct:
+                    _manager.CloudDocumentManager?.MetaDataMapper?.CleanupMappings([.. _manager.GetAllCustomPropertyNames()]);
+
+                    // Notify metadata mapping that database changed
+                    _manager.CloudDocumentManager?.RaiseMappingsChanged();
 
                     UpdateStatistics();
                 }

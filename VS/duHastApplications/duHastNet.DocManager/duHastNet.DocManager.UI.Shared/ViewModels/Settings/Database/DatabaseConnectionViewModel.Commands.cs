@@ -75,16 +75,28 @@ public partial class DatabaseConnectionViewModel
                     InitializeCustomFields();
 
                     //check meta mapping is still correct:
-                    _manager.CloudDocumentManager?.MetaDataMapper?.CleanupMappings([.. _manager.GetAllCustomPropertyNames()]);
+                    var updatedFields = _manager.CloudDocumentManager?.MetaDataMapper?.CleanupMappings([.. _manager.GetAllCustomPropertyNames()]);
 
                     //Notify metadata mapping that database changed
                     _manager.CloudDocumentManager?.RaiseMappingsChanged();
 
-                    // Inform user of success with auto-dismiss
-                    _messageStore.EnqueueMessage(
-                        $"Database created successfully: {Path.GetFileName(DatabasePath)}",
-                        MessageTypes.Information,
-                        10); // Auto-dismiss after 10 seconds
+                    // Inform user of success with auto-dismiss and list updated fields if any
+                    if (updatedFields != null && updatedFields.Count > 0)
+                    {
+                        var fieldsList = string.Join(", ", updatedFields);
+                        _messageStore.EnqueueMessage(
+                            $"Database created successfully: {Path.GetFileName(DatabasePath)}. Metadata mappings updated due to missing custom fields: {fieldsList}",
+                            MessageTypes.Warning,
+                            5); // Auto-dismiss after 5 seconds
+                    }
+                    else
+                    {
+                        // Inform user of success with auto-dismiss
+                        _messageStore.EnqueueMessage(
+                            $"Database created successfully: {Path.GetFileName(DatabasePath)}",
+                            MessageTypes.Information,
+                            2); // Auto-dismiss after 2 seconds
+                    }
 
                     UpdateStatistics();
                 }
@@ -151,17 +163,40 @@ public partial class DatabaseConnectionViewModel
                     InitializeCustomFields();
 
                     //check meta mapping is still correct:
-                    _manager.CloudDocumentManager?.MetaDataMapper?.CleanupMappings([.. _manager.GetAllCustomPropertyNames()]);
+                    var updatedFields = _manager.CloudDocumentManager?.MetaDataMapper?.CleanupMappings([.. _manager.GetAllCustomPropertyNames()]);
 
                     // Notify metadata mapping that database changed
                     _manager.CloudDocumentManager?.RaiseMappingsChanged();
 
                     UpdateStatistics();
+
+                    // Inform user of success with auto-dismiss and list updated fields if any
+                    if (updatedFields != null && updatedFields.Count > 0)
+                    {
+                        var fieldsList = string.Join(", ", updatedFields);
+                        _messageStore.EnqueueMessage(
+                            $"Database connected successfully: {Path.GetFileName(DatabasePath)}. Metadata mappings updated due to missing custom fields: {fieldsList}",
+                            MessageTypes.Warning,
+                            5); // Auto-dismiss after 5 seconds
+                    }
+                    else
+                    {
+                        // Inform user of success with auto-dismiss
+                        _messageStore.EnqueueMessage(
+                            $"Database connected successfully: {Path.GetFileName(DatabasePath)}",
+                            MessageTypes.Information,
+                            2); // Auto-dismiss after 2 seconds
+                    }
                 }
                 else
                 {
                     // Database connected but data load failed
                     IsConnected = true;
+
+                    _messageStore.EnqueueMessage(
+                        "Database connected, but data load failed. Please check the logs for more details.",
+                        MessageTypes.Warning,
+                        5); // Auto-dismiss after 5 seconds
                 }
 
                 OnPropertyChanged(nameof(IsDatabaseReady));

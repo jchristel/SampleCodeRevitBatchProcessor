@@ -112,8 +112,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
                     _messageStore);
 
                 // Create and show dialog
-                var dialog = new Views.MetaDataMappingDialog(dialogViewModel);
-                dialog.Owner = System.Windows.Application.Current.MainWindow;
+                var dialog = new Views.Settings.CloudDocManager.MetaDataMappingDialog(dialogViewModel)
+                {
+                    Owner = System.Windows.Application.Current.MainWindow
+                };
 
                 var result = dialog.ShowDialog();
 
@@ -205,14 +207,16 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             {
                 // Create ViewModel for Edit mode with existing mapping
                 var dialogViewModel = new ViewModels.CloudProviderControls.MetaDataMappingDialogViewModel(
-                    _aconexMapper.AvailableFields.ToList(),  // All fields (not just unmapped) for Edit mode
+                    [.. _aconexMapper.AvailableFields],  // All fields (not just unmapped) for Edit mode
                     GetAvailableDocumentProperties(),
                     SelectedMapping.Model,  // Pass existing mapping
                     _messageStore);
 
                 // Create and show dialog
-                var dialog = new Views.MetaDataMappingDialog(dialogViewModel);
-                dialog.Owner = System.Windows.Application.Current.MainWindow;
+                var dialog = new Views.Settings.CloudDocManager.MetaDataMappingDialog(dialogViewModel)
+                {
+                    Owner = System.Windows.Application.Current.MainWindow
+                };
 
                 var result = dialog.ShowDialog();
 

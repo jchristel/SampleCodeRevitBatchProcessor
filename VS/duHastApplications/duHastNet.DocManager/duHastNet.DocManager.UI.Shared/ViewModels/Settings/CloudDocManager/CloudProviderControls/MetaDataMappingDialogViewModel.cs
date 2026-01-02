@@ -371,17 +371,13 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
                 return false;
 
             // Must have appropriate value based on selected source type
-            switch (SelectedMappingSource)
+            return SelectedMappingSource switch
             {
-                case MappingSourceType.StaticValue:
-                    return !string.IsNullOrWhiteSpace(StaticValue);
-                case MappingSourceType.DocumentProperty:
-                    return !string.IsNullOrWhiteSpace(SelectedDocumentProperty);
-                case MappingSourceType.FileProperty:
-                    return !string.IsNullOrWhiteSpace(SelectedFileProperty);
-                default:
-                    return false;
-            }
+                MappingSourceType.StaticValue => !string.IsNullOrWhiteSpace(StaticValue),
+                MappingSourceType.DocumentProperty => !string.IsNullOrWhiteSpace(SelectedDocumentProperty),
+                MappingSourceType.FileProperty => !string.IsNullOrWhiteSpace(SelectedFileProperty),
+                _ => false,
+            };
         }
 
         /// <summary>
@@ -404,9 +400,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         /// </summary>
         public static ValidationResult? ValidateStaticValue(string? value, ValidationContext context)
         {
-            var viewModel = context.ObjectInstance as MetaDataMappingDialogViewModel;
-            if (viewModel == null)
+            if (context.ObjectInstance is not MetaDataMappingDialogViewModel viewModel)
+            {
                 return ValidationResult.Success;
+            }
 
             // Only validate if using static value mode
             if (viewModel.SelectedMappingSource == MappingSourceType.StaticValue && string.IsNullOrWhiteSpace(value))
@@ -423,9 +420,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         /// </summary>
         public static ValidationResult? ValidateDocumentProperty(string? value, ValidationContext context)
         {
-            var viewModel = context.ObjectInstance as MetaDataMappingDialogViewModel;
-            if (viewModel == null)
+            if (context.ObjectInstance is not MetaDataMappingDialogViewModel viewModel)
+            {
                 return ValidationResult.Success;
+            }
 
             // Only validate if using document property mode
             if (viewModel.SelectedMappingSource == MappingSourceType.DocumentProperty && string.IsNullOrWhiteSpace(value))
@@ -442,9 +440,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         /// </summary>
         public static ValidationResult? ValidateFileProperty(string? value, ValidationContext context)
         {
-            var viewModel = context.ObjectInstance as MetaDataMappingDialogViewModel;
-            if (viewModel == null)
+            if (context.ObjectInstance is not MetaDataMappingDialogViewModel viewModel)
+            {
                 return ValidationResult.Success;
+            }
 
             // Only validate if using file property mode
             if (viewModel.SelectedMappingSource == MappingSourceType.FileProperty && string.IsNullOrWhiteSpace(value))

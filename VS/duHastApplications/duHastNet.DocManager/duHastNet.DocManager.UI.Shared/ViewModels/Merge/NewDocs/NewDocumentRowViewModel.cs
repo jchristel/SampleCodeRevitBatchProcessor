@@ -107,7 +107,7 @@ public partial class NewDocumentRowViewModel : ObservableObject
     /// Collection of custom field values for this document
     /// </summary>
     [ObservableProperty]
-    private ObservableCollection<CustomFieldValueViewModel> _customFieldValues = new();
+    private ObservableCollection<Settings.Database.CustomFieldValueViewModel> _customFieldValues = [];
 
     #endregion
 
@@ -167,12 +167,12 @@ public partial class NewDocumentRowViewModel : ObservableObject
         _validationCallback = validationCallback;
 
         // Initialize custom field values from definitions
-        CustomFieldValues = new ObservableCollection<CustomFieldValueViewModel>();
+        CustomFieldValues = [];
         if (customFieldDefinitions != null)
         {
             foreach (var definition in customFieldDefinitions)
             {
-                CustomFieldValues.Add(new CustomFieldValueViewModel(definition));
+                CustomFieldValues.Add(new Settings.Database.CustomFieldValueViewModel(definition));
             }
         }
 
@@ -204,7 +204,7 @@ public partial class NewDocumentRowViewModel : ObservableObject
         int revisionPrefixIndex = OriginalFileNameWithoutExtension.IndexOf(revisionPrefix);
 
         // Extract document number (everything before revision prefix)
-        string documentNumberPart = OriginalFileNameWithoutExtension.Substring(0, revisionPrefixIndex).Trim();
+        string documentNumberPart = OriginalFileNameWithoutExtension[..revisionPrefixIndex].Trim();
 
         // Find the revision suffix position (after the prefix)
         int revisionSuffixIndex = OriginalFileNameWithoutExtension.IndexOf(revisionSuffix, revisionPrefixIndex);
@@ -213,7 +213,7 @@ public partial class NewDocumentRowViewModel : ObservableObject
         string documentNamePart = string.Empty;
         if (revisionSuffixIndex >= 0 && revisionSuffixIndex < OriginalFileNameWithoutExtension.Length - 1)
         {
-            documentNamePart = OriginalFileNameWithoutExtension.Substring(revisionSuffixIndex + revisionSuffix.Length).Trim();
+            documentNamePart = OriginalFileNameWithoutExtension[(revisionSuffixIndex + revisionSuffix.Length)..].Trim();
         }
 
         // Apply document number modifier if present
@@ -333,7 +333,7 @@ public partial class NewDocumentRowViewModel : ObservableObject
                    string.Equals(r.FileExtension, FileExtension, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
-        if (duplicates.Any())
+        if (duplicates.Count != 0)
         {
             Status = NewDocumentRowStatus.DuplicateInList;
             StatusMessage = "Duplicate document number in list with same file type";

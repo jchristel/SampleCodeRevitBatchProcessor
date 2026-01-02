@@ -47,11 +47,11 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
 
             // Group by matched document ID and file extension
             var groupedByDocAndType = _matchedDocuments
-                .Where(d => d.MatchedDocumentId.HasValue) // Only consider matched documents
+                .Where(d => d.MatchedDocumentId.HasValue && !string.IsNullOrEmpty(d.NewDocumentPath)) // Only consider matched documents
                 .GroupBy(d => new
                 {
-                    DocumentId = d.MatchedDocumentId.Value,
-                    FileExtension = System.IO.Path.GetExtension(d.NewDocumentPath).ToLowerInvariant()
+                    DocumentId = d.MatchedDocumentId!.Value,
+                    FileExtension = Path.GetExtension(d.NewDocumentPath).ToLowerInvariant()
                 })
                 .Where(g => g.Count() > 1); // Only groups with more than one file
 
@@ -118,7 +118,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             }
 
             // check if there are any new documents
-            List<string> incomingFiles = System.IO.Directory.GetFiles(folderPath, "*", System.IO.SearchOption.AllDirectories).ToList();
+            List<string> incomingFiles = [.. System.IO.Directory.GetFiles(folderPath, "*", System.IO.SearchOption.AllDirectories)];
 
             if (incomingFiles.Count == 0)
             {
@@ -132,9 +132,9 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             {
 
                 // check supported file types
-                supportedIncomingFiles = incomingFiles.Where(file =>
+                supportedIncomingFiles = [.. incomingFiles.Where(file =>
                     _settings.SupportedFileTypes.Any(supportedType =>
-                        file.EndsWith(supportedType.FileExtension, StringComparison.OrdinalIgnoreCase))).ToList();
+                        file.EndsWith(supportedType.FileExtension, StringComparison.OrdinalIgnoreCase)))];
 
                 if (supportedIncomingFiles.Count == 0)
                 {
@@ -266,7 +266,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
         /// original document number.</returns>
         private List<string> GetDocumentNumberOptionsForDocument(string number)
         {
-            List<string> documentNumberOptions = new List<string>();
+            List<string> documentNumberOptions = [];
             if (_settings.SupportedFileTypes != null && _settings.SupportedFileTypes.Count != 0)
             {
                 // loop over all supported file types and get modified document numbers
@@ -418,7 +418,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             // compare extracted metadata with current documents in the database
             // if a match is found, return IncomingDocumentStatus with matched document id
             // if no match is found, return IncomingDocumentStatus with null matched document id
-            IncomingDocumentProcessingStatus incomingDocumentStatus = new Models.CurrentFolder.IncomingDocumentProcessingStatus(filePath);
+            IncomingDocumentProcessingStatus incomingDocumentStatus = new(filePath);
             string fileName = System.IO.Path.GetFileNameWithoutExtension(filePath);
 
             // extract document number (doc id) and revision from file name
@@ -465,7 +465,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
             // whipe matched documents list
             if (_matchedDocuments == null)
             {
-                _matchedDocuments = new List<IncomingDocumentProcessingStatus>();
+                _matchedDocuments = [];
             }
             else
             {

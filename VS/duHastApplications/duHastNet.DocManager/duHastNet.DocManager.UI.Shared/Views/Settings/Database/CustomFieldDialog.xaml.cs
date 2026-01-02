@@ -24,14 +24,14 @@
 using duHastNet.DocManager.UI.Shared.ViewModels;
 using System.Windows;
 
-namespace duHastNet.DocManager.UI.Shared.Views
+namespace duHastNet.DocManager.UI.Shared.Views.Settings.Database
 {
     /// <summary>
     /// Interaction logic for CustomFieldDialog.xaml
     /// </summary>
     public partial class CustomFieldDialog : Window
     {
-        public CustomFieldDialog(CustomFieldDialogViewModel viewModel)
+        public CustomFieldDialog(ViewModels.Settings.Database.CustomFieldDialogViewModel viewModel)
         {
             InitializeComponent();
             DataContext = viewModel;
@@ -46,7 +46,7 @@ namespace duHastNet.DocManager.UI.Shared.Views
         /// </summary>
         private void OnViewModelRequestClose(object? sender, EventArgs e)
         {
-            if (sender is CustomFieldDialogViewModel viewModel)
+            if (sender is ViewModels.Settings.Database.CustomFieldDialogViewModel viewModel)
             {
                 // OK was clicked if CreatedFieldName has a value
                 DialogResult = !string.IsNullOrEmpty(viewModel.CreatedFieldName);

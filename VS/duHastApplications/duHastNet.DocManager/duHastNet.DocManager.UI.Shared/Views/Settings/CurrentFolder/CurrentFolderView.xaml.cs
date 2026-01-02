@@ -16,7 +16,7 @@
 //
 //
 
-namespace duHastNet.DocManager.UI.Shared.Views
+namespace duHastNet.DocManager.UI.Shared.Views.Settings.CurrentFolder
 {
     /// <summary>
     /// Interaction logic for CurrentFolderView.xaml

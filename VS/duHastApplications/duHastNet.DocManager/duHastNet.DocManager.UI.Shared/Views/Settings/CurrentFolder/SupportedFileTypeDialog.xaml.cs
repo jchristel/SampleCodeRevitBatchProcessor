@@ -25,7 +25,7 @@ using duHastNet.DocManager.UI.Shared.ViewModels;
 using System.ComponentModel;
 using System.Windows;
 
-namespace duHastNet.DocManager.UI.Shared.Views
+namespace duHastNet.DocManager.UI.Shared.Views.Settings.CurrentFolder
 {
     /// <summary>
     /// Interaction logic for SupportedFileTypeDialog.xaml
@@ -36,13 +36,13 @@ namespace duHastNet.DocManager.UI.Shared.Views
         /// <summary>
         /// Gets the ViewModel for this dialog
         /// </summary>
-        public SupportedFileTypeDialogViewModel ViewModel { get; }
+        public ViewModels.Settings.CurrentFolder.SupportedFileTypeDialogViewModel ViewModel { get; }
 
         /// <summary>
         /// Constructor for the dialog
         /// </summary>
         /// <param name="viewModel">The ViewModel instance</param>
-        public SupportedFileTypeDialog(SupportedFileTypeDialogViewModel viewModel)
+        public SupportedFileTypeDialog(ViewModels.Settings.CurrentFolder.SupportedFileTypeDialogViewModel viewModel)
         {
             InitializeComponent();
 
@@ -62,7 +62,7 @@ namespace duHastNet.DocManager.UI.Shared.Views
         /// </summary>
         private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(SupportedFileTypeDialogViewModel.CreatedFileType))
+            if (e.PropertyName == nameof(ViewModels.Settings.CurrentFolder.SupportedFileTypeDialogViewModel.CreatedFileType))
             {
                 // OK command completed successfully
                 if (ViewModel.CreatedFileType != null)

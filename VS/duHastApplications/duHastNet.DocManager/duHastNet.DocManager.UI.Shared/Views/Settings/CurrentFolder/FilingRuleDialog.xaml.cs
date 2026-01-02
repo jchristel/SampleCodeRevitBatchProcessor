@@ -22,11 +22,10 @@
 //
 
 
-using duHastNet.DocManager.UI.Shared.ViewModels;
 using System.ComponentModel;
 using System.Windows;
 
-namespace duHastNet.DocManager.UI.Shared.Views
+namespace duHastNet.DocManager.UI.Shared.Views.Settings.CurrentFolder
 {
     /// <summary>
     /// Interaction logic for FilingRuleDialog.xaml
@@ -37,13 +36,13 @@ namespace duHastNet.DocManager.UI.Shared.Views
         /// <summary>
         /// Gets the ViewModel for this dialog
         /// </summary>
-        public FilingRuleDialogViewModel ViewModel { get; }
+        public ViewModels.Settings.CurrentFolder.FilingRuleDialogViewModel ViewModel { get; }
 
         /// <summary>
         /// Constructor for the dialog
         /// </summary>
         /// <param name="viewModel">The ViewModel instance</param>
-        public FilingRuleDialog(FilingRuleDialogViewModel viewModel)
+        public FilingRuleDialog(ViewModels.Settings.CurrentFolder.FilingRuleDialogViewModel viewModel)
         {
             InitializeComponent();
 

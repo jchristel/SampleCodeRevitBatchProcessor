@@ -23,18 +23,16 @@
 
 
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.CloudDocManager;
 using duHastNet.DocManager.Core.Models.CloudDocManager.MetaData;
-using duHastNet.DocManager.Core.Services.Api;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.CloudDocManager
 {
     /// <summary>
     /// ViewModel for Cloud Document Manager configuration
@@ -158,12 +156,12 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             _dialogService = dialogService;
 
             // Initialize available provider types
-            AvailableProviderTypes = new ObservableCollection<CloudProviderType>
-            {
+            AvailableProviderTypes =
+            [
                 CloudProviderType.None,
                 CloudProviderType.Aconex
                 // Future providers will be added here
-            };
+            ];
 
             // Load initial state from model
             LoadFromModel();

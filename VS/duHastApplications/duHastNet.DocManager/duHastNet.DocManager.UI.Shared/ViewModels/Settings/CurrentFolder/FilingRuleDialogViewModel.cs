@@ -31,7 +31,7 @@ using duHastNet.DocManager.UI.Shared.Validators;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.CurrentFolder
 {
     /// <summary>
     /// ViewModel for the Add/Edit Filing Rule dialog
@@ -42,7 +42,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         #region Private Fields
 
         private readonly IDialogService _dialogService;
-        private readonly CurrentFolderViewModel _parentViewModel;
+        private readonly Settings.CurrentFolder.CurrentFolderViewModel _parentViewModel;
         private readonly int? _editIndex;
         private readonly bool _isEditMode;
 
@@ -115,7 +115,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// </summary>
         public FilingRuleDialogViewModel(
             IDialogService dialogService,
-            CurrentFolderViewModel parentViewModel)
+            Settings.CurrentFolder.CurrentFolderViewModel parentViewModel)
         {
             _dialogService = dialogService;
             _parentViewModel = parentViewModel;
@@ -123,14 +123,14 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             _editIndex = null;
 
             // Initialize available rule types
-            AvailableRuleTypes = new ObservableCollection<FilingRuleType>
-            {
+            AvailableRuleTypes =
+            [
                 FilingRuleType.BeginsWith,
                 FilingRuleType.Contains,
                 FilingRuleType.NotBeginsWith,
                 FilingRuleType.NotContains,
                 FilingRuleType.Default
-            };
+            ];
 
             // Default selection
             SelectedRuleType = FilingRuleType.BeginsWith;
@@ -141,7 +141,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// </summary>
         public FilingRuleDialogViewModel(
             IDialogService dialogService,
-            CurrentFolderViewModel parentViewModel,
+            Settings.CurrentFolder.CurrentFolderViewModel parentViewModel,
             IFilingRule existingRule,
             int editIndex)
             : this(dialogService, parentViewModel)
@@ -229,8 +229,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// </summary>
         public static ValidationResult? ValidateFilterValue(string? value, ValidationContext context)
         {
-            var viewModel = context.ObjectInstance as FilingRuleDialogViewModel;
-            if (viewModel == null)
+            if (context.ObjectInstance is not FilingRuleDialogViewModel viewModel)
                 return ValidationResult.Success;
 
             // CatchAll doesn't need filter value

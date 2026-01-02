@@ -25,14 +25,13 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models;
-using duHastNet.DocManager.Core.Services.Api;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
 using duHastNet.DocManager.UI.Shared.Validators;
 using System.ComponentModel.DataAnnotations;
 
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.CurrentFolder
 {
     /// <summary>
     /// ViewModel for the Current Folder configuration view

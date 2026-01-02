@@ -26,7 +26,7 @@ using duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls;
 using System.ComponentModel;
 using System.Windows;
 
-namespace duHastNet.DocManager.UI.Shared.Views
+namespace duHastNet.DocManager.UI.Shared.Views.Settings.CloudDocManager
 {
     /// <summary>
     /// Interaction logic for MetaDataMappingDialog.xaml

@@ -28,13 +28,13 @@ using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.Core.Models.CurrentFolder.DocumentNumberModifiers;
 using duHastNet.DocManager.UI.Shared.Interfaces;
-using duHastNet.DocManager.UI.Shared.ViewModels.ModifierControls;
+using duHastNet.DocManager.UI.Shared.ViewModels.Settings.CurrentFolder.ModifierControls;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.CurrentFolder
 {
     /// <summary>
     /// Enumeration of modifier types for dropdown selection
@@ -57,7 +57,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         #region Private Fields
 
         private readonly IDialogService _dialogService;
-        private readonly CurrentFolderViewModel _parentViewModel;
+        private readonly Settings.CurrentFolder.CurrentFolderViewModel _parentViewModel;
         private readonly bool _isEditMode;
         private readonly int? _editIndex;
 
@@ -139,7 +139,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// Constructor for Add mode
         /// </summary>
         public SupportedFileTypeDialogViewModel(
-            CurrentFolderViewModel parentViewModel,
+            Settings.CurrentFolder.CurrentFolderViewModel parentViewModel,
             IDialogService dialogService)
         {
             _parentViewModel = parentViewModel ?? throw new ArgumentNullException(nameof(parentViewModel));
@@ -148,14 +148,14 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             _editIndex = null;
 
             // Initialize available modifier types
-            AvailableModifierTypes = new ObservableCollection<ModifierType>
-            {
+            AvailableModifierTypes =
+            [
                 ModifierType.None,
                 ModifierType.AddSuffix,
                 ModifierType.AddPrefix,
                 ModifierType.AddAtIndex,
                 ModifierType.Replace
-            };
+            ];
 
             // Default to None
             SelectedModifierType = ModifierType.None;
@@ -165,7 +165,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// Constructor for Edit mode
         /// </summary>
         public SupportedFileTypeDialogViewModel(
-            CurrentFolderViewModel parentViewModel,
+            Settings.CurrentFolder.CurrentFolderViewModel parentViewModel,
             IDialogService dialogService,
             SupportedFileType existingFileType,
             int editIndex)
@@ -262,8 +262,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// </summary>
         public static ValidationResult? ValidateFileExtension(string? value, ValidationContext context)
         {
-            var viewModel = context.ObjectInstance as SupportedFileTypeDialogViewModel;
-            if (viewModel == null)
+            if (context.ObjectInstance is not SupportedFileTypeDialogViewModel viewModel)
                 return ValidationResult.Success;
 
             // Required

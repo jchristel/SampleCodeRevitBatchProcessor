@@ -27,7 +27,7 @@ using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.DocManager.Core.Models.CurrentFolder.DocumentNumberModifiers;
 using System.ComponentModel.DataAnnotations;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels.ModifierControls
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.CurrentFolder.ModifierControls
 {
     /// <summary>
     /// ViewModel for Replace modifier control
@@ -120,8 +120,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.ModifierControls
         /// <param name="modifier">The modifier to load from</param>
         public void LoadFrom(Replace modifier)
         {
-            if (modifier == null)
-                throw new ArgumentNullException(nameof(modifier));
+            ArgumentNullException.ThrowIfNull(modifier);
 
             // Access the old and new values using reflection (private fields)
             var oldValueField = typeof(Replace).GetField(

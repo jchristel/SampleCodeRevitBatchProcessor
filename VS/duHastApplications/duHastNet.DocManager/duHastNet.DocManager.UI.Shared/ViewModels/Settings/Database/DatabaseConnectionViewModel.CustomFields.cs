@@ -29,7 +29,7 @@ using duHastNet.DocManager.UI.Shared.Stores;
 using System.Collections.ObjectModel;
 using System.Text;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.Database
 {
     /// <summary>
     /// Partial class for DatabaseConnectionViewModel containing all custom fields functionality
@@ -42,12 +42,12 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// Observable collection of custom fields for display in ListView (working copy)
         /// </summary>
         [ObservableProperty]
-        private ObservableCollection<CustomFieldViewModel> _customFields = new();
+        private ObservableCollection<CustomFieldViewModel> _customFields = [];
 
         /// <summary>
         /// Original custom fields loaded from database (for change tracking)
         /// </summary>
-        private List<CustomFieldViewModel> _originalCustomFields = new();
+        private List<CustomFieldViewModel> _originalCustomFields = [];
 
         /// <summary>
         /// Currently selected custom field in the ListView
@@ -129,8 +129,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 var dialogViewModel = new CustomFieldDialogViewModel(this);
 
                 // Create and show dialog
-                var dialog = new Views.CustomFieldDialog(dialogViewModel);
-                dialog.Owner = System.Windows.Application.Current.MainWindow;
+                var dialog = new Views.Settings.Database.CustomFieldDialog(dialogViewModel)
+                {
+                    Owner = System.Windows.Application.Current.MainWindow
+                };
 
                 var result = dialog.ShowDialog();
 
@@ -184,7 +186,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 CustomFields.Remove(SelectedCustomField);
 
                 // Update pending changes flag
-                HasPendingCustomFieldChanges = GetCustomFieldChanges().Any();
+                HasPendingCustomFieldChanges = GetCustomFieldChanges().Count != 0;
 
                 _messageStore.EnqueueMessage(
                     $"Custom field '{fieldName}' removed.",
@@ -261,7 +263,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 // Get the changes
                 var changes = GetCustomFieldChanges();
 
-                if (!changes.Any())
+                if (changes.Count == 0)
                 {
                     _messageStore.EnqueueMessage(
                         "No changes to apply",
@@ -377,7 +379,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             var activatedFields = changes.Where(c => c.ChangeType == CustomFieldChangeType.Activate).ToList();
             var deactivatedFields = changes.Where(c => c.ChangeType == CustomFieldChangeType.Deactivate).ToList();
 
-            if (newFields.Any())
+            if (newFields.Count != 0)
             {
                 message.AppendLine($"New Fields: {newFields.Count}");
                 foreach (var field in newFields)
@@ -387,7 +389,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 message.AppendLine();
             }
 
-            if (activatedFields.Any())
+            if (activatedFields.Count != 0)
             {
                 message.AppendLine($"Activated Fields: {activatedFields.Count}");
                 foreach (var field in activatedFields)
@@ -397,7 +399,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 message.AppendLine();
             }
 
-            if (deactivatedFields.Any())
+            if (deactivatedFields.Count != 0)
             {
                 message.AppendLine($"Deactivated Fields: {deactivatedFields.Count}");
                 foreach (var field in deactivatedFields)
@@ -407,7 +409,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 message.AppendLine();
             }
 
-            if (newFields.Any())
+            if (newFields.Count != 0)
             {
                 message.AppendLine("Note: New fields will create records for all documents.");
             }
@@ -468,7 +470,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 .Select(c => c.PropertyName)
                 .ToList();
 
-            if (!deactivatedFields.Any())
+            if (deactivatedFields.Count == 0)
                 return;
 
             // Access the metadata mapper through Manager
@@ -491,11 +493,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             }
 
             // Show message if any mappings were removed
-            if (removedMappings.Any())
+            if (removedMappings.Count != 0)
             {
                 // Raise the MappingsChanged event so subscribers (AconexMetadataControlViewModel) can refresh
-                if (_manager.CloudDocumentManager != null)
-                    _manager.CloudDocumentManager.RaiseMappingsChanged();
+                _manager.CloudDocumentManager?.RaiseMappingsChanged();
 
                 var message = $"Removed {removedMappings.Count} metadata mapping(s) referencing deactivated custom field(s):\n" +
                              string.Join("\n", removedMappings.Select(m => $"  - {m}"));

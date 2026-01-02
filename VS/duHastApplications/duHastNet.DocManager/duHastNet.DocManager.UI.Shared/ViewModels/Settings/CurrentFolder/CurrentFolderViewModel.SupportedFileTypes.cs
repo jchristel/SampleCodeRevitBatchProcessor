@@ -26,10 +26,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.UI.Shared.Stores;
-using duHastNet.DocManager.UI.Shared.ViewModels.Settings.CurrentFolder;
 using System.Collections.ObjectModel;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.CurrentFolder
 {
     /// <summary>
     /// Partial class for CurrentFolderViewModel containing all supported file types functionality
@@ -42,7 +41,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// Observable collection of supported file types for display in ListView
         /// </summary>
         [ObservableProperty]
-        private ObservableCollection<SupportedFileTypeViewModel> _supportedFileTypes = new();
+        private ObservableCollection<SupportedFileTypeViewModel> _supportedFileTypes = [];
 
         /// <summary>
         /// Currently selected file type in the ListView
@@ -124,8 +123,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 var dialogViewModel = new SupportedFileTypeDialogViewModel(this, _dialogService);
 
                 // Create and show dialog
-                var dialog = new Views.SupportedFileTypeDialog(dialogViewModel);
-                dialog.Owner = System.Windows.Application.Current.MainWindow;
+                var dialog = new Views.Settings.CurrentFolder.SupportedFileTypeDialog(dialogViewModel)
+                {
+                    Owner = System.Windows.Application.Current.MainWindow
+                };
 
                 var result = dialog.ShowDialog();
 
@@ -177,8 +178,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                     selectedIndex);
 
                 // Create and show dialog
-                var dialog = new Views.SupportedFileTypeDialog(dialogViewModel);
-                dialog.Owner = System.Windows.Application.Current.MainWindow;
+                var dialog = new Views.Settings.CurrentFolder.SupportedFileTypeDialog(dialogViewModel)
+                {
+                    Owner = System.Windows.Application.Current.MainWindow
+                };
 
                 var result = dialog.ShowDialog();
 

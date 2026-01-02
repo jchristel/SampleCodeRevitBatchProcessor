@@ -30,7 +30,7 @@ using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
 using System.ComponentModel.DataAnnotations;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.Database
 {
     public partial class DatabaseConnectionViewModel : ObservableValidator
     {

@@ -33,7 +33,7 @@ public class DialogService : IDialogService
     /// </summary>
     public string? ShowFolderBrowserDialog(string title, string? initialDirectory = null)
     {
-        using var dialog = new FolderBrowserDialog
+        using FolderBrowserDialog dialog = new()
         {
             Description = title,
             UseDescriptionForTitle = true,
@@ -64,7 +64,7 @@ public class DialogService : IDialogService
         };
 
         var result = dialog.ShowDialog();
-        return result == true ? (multiselect ? dialog.FileNames : new[] { dialog.FileName }) : null;
+        return result == true ? (multiselect ? dialog.FileNames : [dialog.FileName]) : null;
     }
 
     /// <summary>
@@ -110,21 +110,21 @@ public class DialogService : IDialogService
         {
             dialog = new Views.Merge.NewDocs.AddNewDocumentsDialog(addNewDocumentsViewModel);
         }
-        else if (viewModel is ViewModels.CustomFieldDialogViewModel customFieldViewModel)
+        else if (viewModel is ViewModels.Settings.Database.CustomFieldDialogViewModel customFieldViewModel)
         {
-            dialog = new Views.CustomFieldDialog(customFieldViewModel);
+            dialog = new Views.Settings.Database.CustomFieldDialog(customFieldViewModel);
         }
-        else if (viewModel is ViewModels.FilingRuleDialogViewModel filingRuleViewModel)
+        else if (viewModel is ViewModels.Settings.CurrentFolder.FilingRuleDialogViewModel filingRuleViewModel)
         {
-            dialog = new Views.FilingRuleDialog(filingRuleViewModel);
+            dialog = new Views.Settings.CurrentFolder.FilingRuleDialog(filingRuleViewModel);
         }
-        else if (viewModel is ViewModels.SupportedFileTypeDialogViewModel supportedFileTypeViewModel)
+        else if (viewModel is ViewModels.Settings.CurrentFolder.SupportedFileTypeDialogViewModel supportedFileTypeViewModel)
         {
-            dialog = new Views.SupportedFileTypeDialog(supportedFileTypeViewModel);
+            dialog = new Views.Settings.CurrentFolder.SupportedFileTypeDialog(supportedFileTypeViewModel);
         }
         else if (viewModel is ViewModels.CloudProviderControls.MetaDataMappingDialogViewModel metaDataMappingViewModel)
         {
-            dialog = new Views.MetaDataMappingDialog(metaDataMappingViewModel);
+            dialog = new Views.Settings.CloudDocManager.MetaDataMappingDialog(metaDataMappingViewModel);
         }
         else if (viewModel is ViewModels.Merge.MergeLog.MergeLogDialogViewModel mergeLogViewModel)
         {

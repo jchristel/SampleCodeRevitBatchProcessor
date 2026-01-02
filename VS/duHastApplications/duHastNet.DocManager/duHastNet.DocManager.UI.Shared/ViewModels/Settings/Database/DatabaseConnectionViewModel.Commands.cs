@@ -18,519 +18,520 @@
 
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.UI.Shared.Stores;
-using Microsoft.Win32;
 using System.IO;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels;
-
-/// <summary>
-/// Commands partial class for SettingsViewModel
-/// </summary>
-public partial class DatabaseConnectionViewModel
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.Database
 {
-    #region Database Commands
 
     /// <summary>
-    /// Command to create a new database - shows save dialog then creates database
+    /// Commands partial class for SettingsViewModel
     /// </summary>
-    [RelayCommand]
-    private async Task CreateDatabaseAsync()
+    public partial class DatabaseConnectionViewModel
     {
-        try
+        #region Database Commands
+
+        /// <summary>
+        /// Command to create a new database - shows save dialog then creates database
+        /// </summary>
+        [RelayCommand]
+        private async Task CreateDatabaseAsync()
         {
-            IsBusy = true;
-
-            // Inform user
-            _messageStore.EnqueueMessage("Creating database...", MessageTypes.Information, dismissAfterSeconds:3);
-
-            // Use dialog service instead of direct dialog
-            var selectedPath = _dialogService.ShowSaveFileDialog(
-                "Create New Database",
-                "Database files (*.db)|*.db|SQLite files (*.sqlite)|*.sqlite|All files (*.*)|*.*",
-                ".db");
-
-            if (string.IsNullOrEmpty(selectedPath))
+            try
             {
-                // User cancelled
-                return;
-            }
+                IsBusy = true;
 
-            // Update the database path
-            DatabasePath = selectedPath;
+                // Inform user
+                _messageStore.EnqueueMessage("Creating database...", MessageTypes.Information, dismissAfterSeconds: 3);
 
-            // Create the database using DocManagerApi
-            var setupResult = await _docManagerApi.SetupDatabaseAsync(DatabasePath, overwriteExisting: true);
+                // Use dialog service instead of direct dialog
+                var selectedPath = _dialogService.ShowSaveFileDialog(
+                    "Create New Database",
+                    "Database files (*.db)|*.db|SQLite files (*.sqlite)|*.sqlite|All files (*.*)|*.*",
+                    ".db");
 
-            if (setupResult.Success)
-            {
-                // Load data into Manager
-                var loadResult = await _docManagerApi.LoadDataIntoManagerAsync(_manager);
-
-                if (loadResult.Success)
+                if (string.IsNullOrEmpty(selectedPath))
                 {
-                    // Success - update connection status and statistics
-                    IsConnected = true;
+                    // User cancelled
+                    return;
+                }
 
-                    // Initialize custom fields after data load
-                    InitializeCustomFields();
+                // Update the database path
+                DatabasePath = selectedPath;
 
-                    //check meta mapping is still correct:
-                    var updatedFields = _manager.CloudDocumentManager?.MetaDataMapper?.CleanupMappings([.. _manager.GetAllCustomPropertyNames()]);
+                // Create the database using DocManagerApi
+                var setupResult = await _docManagerApi.SetupDatabaseAsync(DatabasePath, overwriteExisting: true);
 
-                    //Notify metadata mapping that database changed
-                    _manager.CloudDocumentManager?.RaiseMappingsChanged();
+                if (setupResult.Success)
+                {
+                    // Load data into Manager
+                    var loadResult = await _docManagerApi.LoadDataIntoManagerAsync(_manager);
 
-                    // Inform user of success with auto-dismiss and list updated fields if any
-                    if (updatedFields != null && updatedFields.Count > 0)
+                    if (loadResult.Success)
                     {
-                        var fieldsList = string.Join(", ", updatedFields);
-                        _messageStore.EnqueueMessage(
-                            $"Database created successfully: {Path.GetFileName(DatabasePath)}. Metadata mappings updated due to missing custom fields: {fieldsList}",
-                            MessageTypes.Warning,
-                            5); // Auto-dismiss after 5 seconds
+                        // Success - update connection status and statistics
+                        IsConnected = true;
+
+                        // Initialize custom fields after data load
+                        InitializeCustomFields();
+
+                        //check meta mapping is still correct:
+                        var updatedFields = _manager.CloudDocumentManager?.MetaDataMapper?.CleanupMappings([.. _manager.GetAllCustomPropertyNames()]);
+
+                        //Notify metadata mapping that database changed
+                        _manager.CloudDocumentManager?.RaiseMappingsChanged();
+
+                        // Inform user of success with auto-dismiss and list updated fields if any
+                        if (updatedFields != null && updatedFields.Count > 0)
+                        {
+                            var fieldsList = string.Join(", ", updatedFields);
+                            _messageStore.EnqueueMessage(
+                                $"Database created successfully: {Path.GetFileName(DatabasePath)}. Metadata mappings updated due to missing custom fields: {fieldsList}",
+                                MessageTypes.Warning,
+                                5); // Auto-dismiss after 5 seconds
+                        }
+                        else
+                        {
+                            // Inform user of success with auto-dismiss
+                            _messageStore.EnqueueMessage(
+                                $"Database created successfully: {Path.GetFileName(DatabasePath)}",
+                                MessageTypes.Information,
+                                2); // Auto-dismiss after 2 seconds
+                        }
+
+                        UpdateStatistics();
                     }
                     else
                     {
-                        // Inform user of success with auto-dismiss
-                        _messageStore.EnqueueMessage(
-                            $"Database created successfully: {Path.GetFileName(DatabasePath)}",
-                            MessageTypes.Information,
-                            2); // Auto-dismiss after 2 seconds
+                        // Database created but data load failed
+                        IsConnected = true;
                     }
 
-                    UpdateStatistics();
+                    OnPropertyChanged(nameof(IsDatabaseReady));
+                    OnPropertyChanged(nameof(CurrentDatabasePath));
+                    OnPropertyChanged(nameof(IsDataLoaded));
                 }
                 else
                 {
-                    // Database created but data load failed
-                    IsConnected = true;
-                }
-
-                OnPropertyChanged(nameof(IsDatabaseReady));
-                OnPropertyChanged(nameof(CurrentDatabasePath));
-                OnPropertyChanged(nameof(IsDataLoaded));
-            }
-            else
-            {
-                var errorMessage = string.Join("; ", setupResult.Errors);
-                _messageStore.EnqueueMessage(
-                    $"Failed to create database: {errorMessage}",
-                    MessageTypes.Error); // No auto-dismiss for errors
-
-                // Failed - database not created
-                IsConnected = false;
-            }
-        }
-        catch (Exception ex)
-        {
-            // Inform user of error
-            _messageStore.EnqueueMessage(
-                $"Error creating database: {ex.Message}",
-                MessageTypes.Error);
-
-            IsConnected = false;
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
-
-    /// <summary>
-    /// Command to connect to an existing database
-    /// </summary>
-    [RelayCommand]
-    private async Task ConnectDatabaseAsync()
-    {
-        try
-        {
-            IsBusy = true;
-
-            // Connect to existing database using the API method
-            var connectResult = await _docManagerApi.ConnectDatabaseAsync(DatabasePath);
-
-            if (connectResult.Success)
-            {
-                // Load data into Manager
-                var loadResult = await _docManagerApi.LoadDataIntoManagerAsync(_manager);
-
-                if (loadResult.Success)
-                {
-                    // Success - update connection status and statistics
-                    IsConnected = true;
-
-                    // Initialize custom fields after data load
-                    InitializeCustomFields();
-
-                    //check meta mapping is still correct:
-                    var updatedFields = _manager.CloudDocumentManager?.MetaDataMapper?.CleanupMappings([.. _manager.GetAllCustomPropertyNames()]);
-
-                    // Notify metadata mapping that database changed
-                    _manager.CloudDocumentManager?.RaiseMappingsChanged();
-
-                    UpdateStatistics();
-
-                    // Inform user of success with auto-dismiss and list updated fields if any
-                    if (updatedFields != null && updatedFields.Count > 0)
-                    {
-                        var fieldsList = string.Join(", ", updatedFields);
-                        _messageStore.EnqueueMessage(
-                            $"Database connected successfully: {Path.GetFileName(DatabasePath)}. Metadata mappings updated due to missing custom fields: {fieldsList}",
-                            MessageTypes.Warning,
-                            5); // Auto-dismiss after 5 seconds
-                    }
-                    else
-                    {
-                        // Inform user of success with auto-dismiss
-                        _messageStore.EnqueueMessage(
-                            $"Database connected successfully: {Path.GetFileName(DatabasePath)}",
-                            MessageTypes.Information,
-                            2); // Auto-dismiss after 2 seconds
-                    }
-                }
-                else
-                {
-                    // Database connected but data load failed
-                    IsConnected = true;
-
+                    var errorMessage = string.Join("; ", setupResult.Errors);
                     _messageStore.EnqueueMessage(
-                        "Database connected, but data load failed. Please check the logs for more details.",
-                        MessageTypes.Warning,
-                        5); // Auto-dismiss after 5 seconds
-                }
+                        $"Failed to create database: {errorMessage}",
+                        MessageTypes.Error); // No auto-dismiss for errors
 
-                OnPropertyChanged(nameof(IsDatabaseReady));
-                OnPropertyChanged(nameof(CurrentDatabasePath));
-                OnPropertyChanged(nameof(IsDataLoaded));
+                    // Failed - database not created
+                    IsConnected = false;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // Failed - connection failed
+                // Inform user of error
+                _messageStore.EnqueueMessage(
+                    $"Error creating database: {ex.Message}",
+                    MessageTypes.Error);
+
                 IsConnected = false;
             }
+            finally
+            {
+                IsBusy = false;
+            }
         }
-        catch (Exception)
+
+        /// <summary>
+        /// Command to connect to an existing database
+        /// </summary>
+        [RelayCommand]
+        private async Task ConnectDatabaseAsync()
         {
-            IsConnected = false;
+            try
+            {
+                IsBusy = true;
+
+                // Connect to existing database using the API method
+                var connectResult = await _docManagerApi.ConnectDatabaseAsync(DatabasePath);
+
+                if (connectResult.Success)
+                {
+                    // Load data into Manager
+                    var loadResult = await _docManagerApi.LoadDataIntoManagerAsync(_manager);
+
+                    if (loadResult.Success)
+                    {
+                        // Success - update connection status and statistics
+                        IsConnected = true;
+
+                        // Initialize custom fields after data load
+                        InitializeCustomFields();
+
+                        //check meta mapping is still correct:
+                        var updatedFields = _manager.CloudDocumentManager?.MetaDataMapper?.CleanupMappings([.. _manager.GetAllCustomPropertyNames()]);
+
+                        // Notify metadata mapping that database changed
+                        _manager.CloudDocumentManager?.RaiseMappingsChanged();
+
+                        UpdateStatistics();
+
+                        // Inform user of success with auto-dismiss and list updated fields if any
+                        if (updatedFields != null && updatedFields.Count > 0)
+                        {
+                            var fieldsList = string.Join(", ", updatedFields);
+                            _messageStore.EnqueueMessage(
+                                $"Database connected successfully: {Path.GetFileName(DatabasePath)}. Metadata mappings updated due to missing custom fields: {fieldsList}",
+                                MessageTypes.Warning,
+                                5); // Auto-dismiss after 5 seconds
+                        }
+                        else
+                        {
+                            // Inform user of success with auto-dismiss
+                            _messageStore.EnqueueMessage(
+                                $"Database connected successfully: {Path.GetFileName(DatabasePath)}",
+                                MessageTypes.Information,
+                                2); // Auto-dismiss after 2 seconds
+                        }
+                    }
+                    else
+                    {
+                        // Database connected but data load failed
+                        IsConnected = true;
+
+                        _messageStore.EnqueueMessage(
+                            "Database connected, but data load failed. Please check the logs for more details.",
+                            MessageTypes.Warning,
+                            5); // Auto-dismiss after 5 seconds
+                    }
+
+                    OnPropertyChanged(nameof(IsDatabaseReady));
+                    OnPropertyChanged(nameof(CurrentDatabasePath));
+                    OnPropertyChanged(nameof(IsDataLoaded));
+                }
+                else
+                {
+                    // Failed - connection failed
+                    IsConnected = false;
+                }
+            }
+            catch (Exception)
+            {
+                IsConnected = false;
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
-        finally
+
+        /// <summary>
+        /// Command to browse for an existing database file
+        /// </summary>
+        [RelayCommand]
+        private void BrowseDatabase()
         {
-            IsBusy = false;
+            try
+            {
+
+                var filePath = _dialogService.ShowOpenFileDialog(
+                    "Select Database File",
+                    "Database files (*.db)|*.db|SQLite files (*.sqlite)|*.sqlite|All files (*.*)|*.*");
+
+                // Check for cancellation
+                if (filePath == null || filePath.Length == 0)
+                {
+                    // User cancelled
+                    return;
+                }
+
+                //set database path
+                DatabasePath = filePath[0];
+            }
+            catch (Exception)
+            {
+                // Handle silently or add logging
+            }
+        }
+
+        /// <summary>
+        /// Command to test database connection
+        /// </summary>
+        [RelayCommand]
+        private async Task TestDatabaseAsync()
+        {
+            // TODO: Implement database connection test
+            await Task.CompletedTask;
+        }
+
+        #endregion
+
+        #region Import/Export Commands
+
+        /// <summary>
+        /// Command to import documents from external source
+        /// </summary>
+        [RelayCommand]
+        private async Task ImportDocumentsAsync()
+        {
+            try
+            {
+                IsBusy = true;
+                _messageStore.EnqueueMessage("Importing documents...", MessageTypes.Information, dismissAfterSeconds: 3);
+
+                // Check if data is loaded
+                if (!_manager.IsDataLoaded)
+                {
+                    _messageStore.EnqueueMessage("No data loaded. Please connect to a database first.", MessageTypes.Error);
+                    return;
+                }
+
+                // Show open file dialog
+                var selectedPath = _dialogService.ShowOpenFileDialog(
+                    "Import Documents",
+                    "CSV files (*.csv)|*.csv|All files (*.*)|*.*");
+
+                // Check for cancellation
+                if (selectedPath == null || selectedPath.Length == 0)
+                {
+                    _messageStore.EnqueueMessage("Import cancelled.", MessageTypes.Information, dismissAfterSeconds: 3);
+                    return;
+                }
+
+                // Create import service with unit of work
+                var importService = new Core.Services.DocumentImportService(_docManagerApi.GetUnitOfWork());
+
+                // Perform import on background thread, passing the revision history mode
+                var result = await Task.Run(() => importService.ImportDocumentsAsync(selectedPath[0], UseFullRevisionHistoryMode));
+
+                // Reload data into manager
+                await _docManagerApi.ReloadDataIntoManagerAsync(_manager);
+                UpdateStatistics();
+
+                if (result.IsImportSuccessful)
+                {
+                    _messageStore.EnqueueMessage(
+                        $"Successfully imported: {result.DocumentsCreated} documents created, {result.DocumentsProcessed - result.DocumentsCreated} updated",
+                        MessageTypes.Information, dismissAfterSeconds: 3);
+                }
+                else
+                {
+                    var errorMessage = result.HasErrors
+                        ? $"Import completed with errors. {result.Message}. First error: {result.Errors.FirstOrDefault()}"
+                        : result.Message;
+
+                    _messageStore.EnqueueMessage(errorMessage, MessageTypes.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                _messageStore.EnqueueMessage($"Import failed: {ex.Message}", MessageTypes.Error);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        /// <summary>
+        /// Command to export documents to external format
+        /// </summary>
+        [RelayCommand]
+        private async Task ExportDocumentsAsync()
+        {
+            try
+            {
+                IsBusy = true;
+                _messageStore.EnqueueMessage("Exporting documents...", MessageTypes.Information, dismissAfterSeconds: 3);
+
+                // Check if data is loaded
+                if (!_manager.IsDataLoaded)
+                {
+                    _messageStore.EnqueueMessage("No data loaded. Please connect to a database first.", MessageTypes.Error);
+                    return;
+                }
+
+                // Show save file dialog
+                var selectedPath = _dialogService.ShowSaveFileDialog(
+                    "Export Documents",
+                    "CSV files (*.csv)|*.csv|All files (*.*)|*.*",
+                    "Documents.csv");
+
+                // Check for cancellation
+                if (string.IsNullOrEmpty(selectedPath))
+                {
+                    _messageStore.EnqueueMessage("Export cancelled.", MessageTypes.Information, dismissAfterSeconds: 3);
+                    return;
+                }
+
+                // Get data from manager
+                var documents = _manager.GetAllDocuments().ToList();
+                var customFieldDefinitions = _manager.GetActiveCustomFieldDefinitions().ToList();
+                var revisions = _manager.GetAllRevisions().ToList();
+
+                // Create export service and perform export, passing the revision history mode
+                var exportService = new Core.Services.DocumentExportService();
+                var success = await Task.Run(() =>
+                    exportService.ExportDocuments(
+                        selectedPath,
+                        documents,
+                        customFieldDefinitions,
+                        revisions,
+                        UseFullRevisionHistoryMode));
+
+                if (success)
+                {
+                    _messageStore.EnqueueMessage(
+                        $"Successfully exported {documents.Count} documents to {Path.GetFileName(selectedPath)}",
+                        MessageTypes.Information, dismissAfterSeconds: 3);
+                }
+                else
+                {
+                    _messageStore.EnqueueMessage("Export failed. Please check the file path and try again.", MessageTypes.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                _messageStore.EnqueueMessage($"Export failed: {ex.Message}", MessageTypes.Error);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        /// <summary>
+        /// Command to export revisions to CSV format
+        /// </summary>
+        [RelayCommand]
+        private async Task ExportRevisionsAsync()
+        {
+            try
+            {
+                IsBusy = true;
+                _messageStore.EnqueueMessage("Exporting revisions...", MessageTypes.Information, dismissAfterSeconds: 3);
+
+                // Check if data is loaded
+                if (!_manager.IsDataLoaded)
+                {
+                    _messageStore.EnqueueMessage("No data loaded. Please connect to a database first.", MessageTypes.Error);
+                    return;
+                }
+
+                // Show save file dialog
+                var selectedPath = _dialogService.ShowSaveFileDialog(
+                    "Export Revisions",
+                    "CSV files (*.csv)|*.csv|All files (*.*)|*.*",
+                    "Revisions.csv");
+
+                // Check for cancellation
+                if (string.IsNullOrEmpty(selectedPath))
+                {
+                    _messageStore.EnqueueMessage("Export cancelled.", MessageTypes.Information, dismissAfterSeconds: 3);
+                    return;
+                }
+
+                // Get revisions from manager
+                var revisions = _manager.GetAllRevisions().ToList();
+
+                // Create export service and perform export
+                var exportService = new Core.Services.RevisionExportService();
+                var success = await Task.Run(() =>
+                    exportService.ExportRevisions(selectedPath, revisions));
+
+                if (success)
+                {
+                    _messageStore.EnqueueMessage(
+                        $"Successfully exported {revisions.Count} revisions to {Path.GetFileName(selectedPath)}",
+                        MessageTypes.Information, dismissAfterSeconds: 3);
+                }
+                else
+                {
+                    _messageStore.EnqueueMessage("Export failed. Please check the file path and try again.", MessageTypes.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                _messageStore.EnqueueMessage($"Export failed: {ex.Message}", MessageTypes.Error);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        /// <summary>
+        /// Command to import revisions from CSV format
+        /// </summary>
+        [RelayCommand]
+        private async Task ImportRevisionsAsync()
+        {
+            try
+            {
+                IsBusy = true;
+                _messageStore.EnqueueMessage("Importing revisions...", MessageTypes.Information, dismissAfterSeconds: 3);
+
+                // Check if data is loaded
+                if (!_manager.IsDataLoaded)
+                {
+                    _messageStore.EnqueueMessage("No data loaded. Please connect to a database first.", MessageTypes.Error);
+                    return;
+                }
+
+                // Show open file dialog
+                var selectedPath = _dialogService.ShowOpenFileDialog(
+                    "Import Revisions",
+                    "CSV files (*.csv)|*.csv|All files (*.*)|*.*");
+
+                // Check for cancellation
+                if (selectedPath == null || selectedPath.Length == 0)
+                {
+                    _messageStore.EnqueueMessage("Import cancelled.", MessageTypes.Information, dismissAfterSeconds: 3);
+                    return;
+                }
+
+                // Create import service with unit of work
+                var importService = new Core.Services.RevisionImportService(_docManagerApi.GetUnitOfWork());
+
+                // Perform import on background thread
+                var result = await Task.Run(() => importService.ImportRevisionsAsync(selectedPath[0]));
+
+                // Reload data into manager
+                await _docManagerApi.ReloadDataIntoManagerAsync(_manager);
+                UpdateStatistics();
+
+                if (result.IsImportSuccessful)
+                {
+                    _messageStore.EnqueueMessage(
+                        $"Successfully imported: {result.DocumentsCreated} revisions created, {result.DocumentsProcessed - result.DocumentsCreated} updated",
+                        MessageTypes.Information, dismissAfterSeconds: 3);
+                }
+                else
+                {
+                    var errorMessage = result.HasErrors
+                        ? $"Import completed with errors. {result.Message}. First error: {result.Errors.FirstOrDefault()}"
+                        : result.Message;
+
+                    _messageStore.EnqueueMessage(errorMessage, MessageTypes.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                _messageStore.EnqueueMessage($"Import failed: {ex.Message}", MessageTypes.Error);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Updates statistics from the Manager
+        /// </summary>
+        #endregion
+
+        private void UpdateStatistics()
+        {
+            //TODO
         }
     }
 
-    /// <summary>
-    /// Command to browse for an existing database file
-    /// </summary>
-    [RelayCommand]
-    private void BrowseDatabase()
-    {
-        try
-        {
-
-            var filePath = _dialogService.ShowOpenFileDialog(
-                "Select Database File",
-                "Database files (*.db)|*.db|SQLite files (*.sqlite)|*.sqlite|All files (*.*)|*.*");
-
-            // Check for cancellation
-            if (filePath == null || filePath.Length == 0)
-            {
-                // User cancelled
-                return;
-            }
-
-            //set database path
-            DatabasePath = filePath[0];
-        }
-        catch (Exception)
-        {
-            // Handle silently or add logging
-        }
-    }
-
-    /// <summary>
-    /// Command to test database connection
-    /// </summary>
-    [RelayCommand]
-    private async Task TestDatabaseAsync()
-    {
-        // TODO: Implement database connection test
-        await Task.CompletedTask;
-    }
-
-    #endregion
-
-    #region Import/Export Commands
-
-    /// <summary>
-    /// Command to import documents from external source
-    /// </summary>
-    [RelayCommand]
-    private async Task ImportDocumentsAsync()
-    {
-        try
-        {
-            IsBusy = true;
-            _messageStore.EnqueueMessage("Importing documents...", MessageTypes.Information,dismissAfterSeconds: 3);
-
-            // Check if data is loaded
-            if (!_manager.IsDataLoaded)
-            {
-                _messageStore.EnqueueMessage("No data loaded. Please connect to a database first.", MessageTypes.Error);
-                return;
-            }
-
-            // Show open file dialog
-            var selectedPath = _dialogService.ShowOpenFileDialog(
-                "Import Documents",
-                "CSV files (*.csv)|*.csv|All files (*.*)|*.*");
-
-            // Check for cancellation
-            if (selectedPath == null || selectedPath.Length == 0)
-            {
-                _messageStore.EnqueueMessage("Import cancelled.", MessageTypes.Information,dismissAfterSeconds: 3);
-                return;
-            }
-
-            // Create import service with unit of work
-            var importService = new Core.Services.DocumentImportService(_docManagerApi.GetUnitOfWork());
-            
-            // Perform import on background thread, passing the revision history mode
-            var result = await Task.Run(() => importService.ImportDocumentsAsync(selectedPath[0], UseFullRevisionHistoryMode));
-
-            // Reload data into manager
-            await _docManagerApi.ReloadDataIntoManagerAsync(_manager);
-            UpdateStatistics();
-
-            if (result.IsImportSuccessful)
-            {
-                _messageStore.EnqueueMessage(
-                    $"Successfully imported: {result.DocumentsCreated} documents created, {result.DocumentsProcessed - result.DocumentsCreated} updated",
-                    MessageTypes.Information, dismissAfterSeconds:3);
-            }
-            else
-            {
-                var errorMessage = result.HasErrors 
-                    ? $"Import completed with errors. {result.Message}. First error: {result.Errors.FirstOrDefault()}" 
-                    : result.Message;
-                    
-                _messageStore.EnqueueMessage(errorMessage, MessageTypes.Error);
-            }
-        }
-        catch (Exception ex)
-        {
-            _messageStore.EnqueueMessage($"Import failed: {ex.Message}", MessageTypes.Error);
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
-
-    /// <summary>
-    /// Command to export documents to external format
-    /// </summary>
-    [RelayCommand]
-    private async Task ExportDocumentsAsync()
-    {
-        try
-        {
-            IsBusy = true;
-            _messageStore.EnqueueMessage("Exporting documents...", MessageTypes.Information,dismissAfterSeconds: 3);
-
-            // Check if data is loaded
-            if (!_manager.IsDataLoaded)
-            {
-                _messageStore.EnqueueMessage("No data loaded. Please connect to a database first.", MessageTypes.Error);
-                return;
-            }
-
-            // Show save file dialog
-            var selectedPath = _dialogService.ShowSaveFileDialog(
-                "Export Documents",
-                "CSV files (*.csv)|*.csv|All files (*.*)|*.*",
-                "Documents.csv");
-
-            // Check for cancellation
-            if (string.IsNullOrEmpty(selectedPath))
-            {
-                _messageStore.EnqueueMessage("Export cancelled.", MessageTypes.Information,dismissAfterSeconds: 3);
-                return;
-            }
-
-            // Get data from manager
-            var documents = _manager.GetAllDocuments().ToList();
-            var customFieldDefinitions = _manager.GetActiveCustomFieldDefinitions().ToList();
-            var revisions = _manager.GetAllRevisions().ToList();
-
-            // Create export service and perform export, passing the revision history mode
-            var exportService = new Core.Services.DocumentExportService();
-            var success = await Task.Run(() =>
-                exportService.ExportDocuments(
-                    selectedPath,
-                    documents,
-                    customFieldDefinitions,
-                    revisions,
-                    UseFullRevisionHistoryMode));
-
-            if (success)
-            {
-                _messageStore.EnqueueMessage(
-                    $"Successfully exported {documents.Count} documents to {Path.GetFileName(selectedPath)}",
-                    MessageTypes.Information,dismissAfterSeconds: 3);
-            }
-            else
-            {
-                _messageStore.EnqueueMessage("Export failed. Please check the file path and try again.", MessageTypes.Error);
-            }
-        }
-        catch (Exception ex)
-        {
-            _messageStore.EnqueueMessage($"Export failed: {ex.Message}", MessageTypes.Error);
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
-
-    /// <summary>
-    /// Command to export revisions to CSV format
-    /// </summary>
-    [RelayCommand]
-    private async Task ExportRevisionsAsync()
-    {
-        try
-        {
-            IsBusy = true;
-            _messageStore.EnqueueMessage("Exporting revisions...", MessageTypes.Information,dismissAfterSeconds: 3);
-
-            // Check if data is loaded
-            if (!_manager.IsDataLoaded)
-            {
-                _messageStore.EnqueueMessage("No data loaded. Please connect to a database first.", MessageTypes.Error);
-                return;
-            }
-
-            // Show save file dialog
-            var selectedPath = _dialogService.ShowSaveFileDialog(
-                "Export Revisions",
-                "CSV files (*.csv)|*.csv|All files (*.*)|*.*",
-                "Revisions.csv");
-
-            // Check for cancellation
-            if (string.IsNullOrEmpty(selectedPath))
-            {
-                _messageStore.EnqueueMessage("Export cancelled.", MessageTypes.Information,dismissAfterSeconds: 3);
-                return;
-            }
-
-            // Get revisions from manager
-            var revisions = _manager.GetAllRevisions().ToList();
-
-            // Create export service and perform export
-            var exportService = new Core.Services.RevisionExportService();
-            var success = await Task.Run(() =>
-                exportService.ExportRevisions(selectedPath, revisions));
-
-            if (success)
-            {
-                _messageStore.EnqueueMessage(
-                    $"Successfully exported {revisions.Count} revisions to {Path.GetFileName(selectedPath)}",
-                    MessageTypes.Information,dismissAfterSeconds: 3);
-            }
-            else
-            {
-                _messageStore.EnqueueMessage("Export failed. Please check the file path and try again.", MessageTypes.Error);
-            }
-        }
-        catch (Exception ex)
-        {
-            _messageStore.EnqueueMessage($"Export failed: {ex.Message}", MessageTypes.Error);
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
-
-    /// <summary>
-    /// Command to import revisions from CSV format
-    /// </summary>
-    [RelayCommand]
-    private async Task ImportRevisionsAsync()
-    {
-        try
-        {
-            IsBusy = true;
-            _messageStore.EnqueueMessage("Importing revisions...", MessageTypes.Information,dismissAfterSeconds: 3);
-
-            // Check if data is loaded
-            if (!_manager.IsDataLoaded)
-            {
-                _messageStore.EnqueueMessage("No data loaded. Please connect to a database first.", MessageTypes.Error);
-                return;
-            }
-
-            // Show open file dialog
-            var selectedPath = _dialogService.ShowOpenFileDialog(
-                "Import Revisions",
-                "CSV files (*.csv)|*.csv|All files (*.*)|*.*");
-
-            // Check for cancellation
-            if (selectedPath == null || selectedPath.Length == 0)
-            {
-                _messageStore.EnqueueMessage("Import cancelled.", MessageTypes.Information,dismissAfterSeconds: 3);
-                return;
-            }
-
-            // Create import service with unit of work
-            var importService = new Core.Services.RevisionImportService(_docManagerApi.GetUnitOfWork());
-            
-            // Perform import on background thread
-            var result = await Task.Run(() => importService.ImportRevisionsAsync(selectedPath[0]));
-
-            // Reload data into manager
-            await _docManagerApi.ReloadDataIntoManagerAsync(_manager);
-            UpdateStatistics();
-
-            if (result.IsImportSuccessful)
-            {
-                _messageStore.EnqueueMessage(
-                    $"Successfully imported: {result.DocumentsCreated} revisions created, {result.DocumentsProcessed - result.DocumentsCreated} updated",
-                    MessageTypes.Information,dismissAfterSeconds: 3);
-            }
-            else
-            {
-                var errorMessage = result.HasErrors 
-                    ? $"Import completed with errors. {result.Message}. First error: {result.Errors.FirstOrDefault()}" 
-                    : result.Message;
-                    
-                _messageStore.EnqueueMessage(errorMessage, MessageTypes.Error);
-            }
-        }
-        catch (Exception ex)
-        {
-            _messageStore.EnqueueMessage($"Import failed: {ex.Message}", MessageTypes.Error);
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
-
-    #endregion
-
-    #region Helper Methods
-
-    /// <summary>
-    /// Updates statistics from the Manager
-    /// </summary>
-    #endregion
-
-    private void UpdateStatistics()
-    {
-        //TODO
-    }
 }
-

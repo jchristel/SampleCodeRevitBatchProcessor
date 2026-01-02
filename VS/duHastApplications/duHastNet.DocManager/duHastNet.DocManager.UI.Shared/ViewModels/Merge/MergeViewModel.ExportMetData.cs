@@ -66,7 +66,7 @@ public partial class MergeViewModel : ObservableObject
             var metaDataMapper = _manager.CloudDocumentManager.MetaDataMapper;
 
             // Check if there are any mappings configured
-            if (!metaDataMapper.MetaDataMap.Any())
+            if (metaDataMapper.MetaDataMap.Count == 0)
             {
                 _messageStore.EnqueueMessage(
                     "No metadata mappings configured. Skipping metadata export.",
@@ -99,7 +99,7 @@ public partial class MergeViewModel : ObservableObject
                             d.MatchStatus == DocumentMatchStatus.WarningRevisionNotSequential)
                 .ToList();
 
-            if (!documentsToExport.Any())
+            if (documentsToExport.Count == 0)
             {
                 _messageStore.EnqueueMessage(
                     "No documents to export metadata for.",
@@ -118,7 +118,7 @@ public partial class MergeViewModel : ObservableObject
                 //if (!matchedDoc.MatchedDocumentId.HasValue)
                 //    continue;
 
-                var docId = matchedDoc.MatchedDocumentId.Value;
+                var docId = matchedDoc.MatchedDocumentId!.Value;
                 
                 // Only fetch the document if we haven't already
                 if (!documentsById.ContainsKey(docId))
@@ -133,11 +133,13 @@ public partial class MergeViewModel : ObservableObject
                 // Store the incoming file path for this document
                 if (!string.IsNullOrWhiteSpace(matchedDoc.IncomingFilePath))
                 {
-                    if (!filePathsByDocumentId.ContainsKey(docId))
+                    if (!filePathsByDocumentId.TryGetValue(docId, out List<string>? value))
                     {
-                        filePathsByDocumentId[docId] = new List<string>();
+                        value = [];
+                        filePathsByDocumentId[docId] = value;
                     }
-                    filePathsByDocumentId[docId].Add(matchedDoc.IncomingFilePath);
+
+                    value.Add(matchedDoc.IncomingFilePath);
                 }
             }
 

@@ -271,9 +271,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         /// </summary>
         public static ValidationResult? ValidateTemplateFilePath(string? value, ValidationContext context)
         {
-            var viewModel = context.ObjectInstance as AconexMetadataControlViewModel;
-            if (viewModel == null)
+            if (context.ObjectInstance is not AconexMetadataControlViewModel)
+            {
                 return ValidationResult.Success;
+            }
 
             // Can not be empty
             if (string.IsNullOrWhiteSpace(value))

@@ -24,7 +24,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using duHastNet.DocManager.Core.Models.Database;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.Database
 {
     /// <summary>
     /// ViewModel wrapper for custom field definitions to display in ListView

@@ -17,11 +17,8 @@
 //
 
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Interfaces;
-using duHastNet.DocManager.Core.Services;
-using duHastNet.DocManager.Core.Models.CloudDocManager.MetaData;
 using duHastNet.DocManager.Core.Services.Api;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
@@ -41,7 +38,7 @@ public partial class SettingsViewModel : ObservableObject
     private readonly MessageStore _messageStore;
     private readonly Manager _manager;
     private readonly NavigationStore _navigationStore;
-    Core.Models.CurrentFolder.CurrentFolderManager _currentFolderManager;
+    private readonly Core.Models.CurrentFolder.CurrentFolderManager _currentFolderManager;
     private readonly IDialogService _dialogService;
 
     //function used to navigate to merge view model
@@ -56,13 +53,13 @@ public partial class SettingsViewModel : ObservableObject
     public GlobalMessageViewModel MessageViewModel { get; }
 
     // Expose Aconex Metadata ViewModel for the view
-    public CloudDocumentManagerViewModel AconexMetadataViewModel { get; }
+    public CloudDocManager.CloudDocumentManagerViewModel AconexMetadataViewModel { get; }
 
     // Expose current folder ViewModel for the view
-    public CurrentFolderViewModel CurrentFolderViewModel { get;}
+    public Settings.CurrentFolder.CurrentFolderViewModel CurrentFolderViewModel { get;}
 
     // Expose the database connection ViewModel for the view
-    public DatabaseConnectionViewModel DatabaseConnectionViewModel { get;}
+    public Database.DatabaseConnectionViewModel DatabaseConnectionViewModel { get;}
 
 
     #region Observable Properties
@@ -100,19 +97,19 @@ public partial class SettingsViewModel : ObservableObject
 
         MessageViewModel = new GlobalMessageViewModel(_messageStore);
 
-        DatabaseConnectionViewModel = new DatabaseConnectionViewModel(
+        DatabaseConnectionViewModel = new Settings.Database.DatabaseConnectionViewModel(
             _docManagerApi,
             _messageStore,
             _manager,
             _dialogService);
         
-        AconexMetadataViewModel = new CloudDocumentManagerViewModel(
+        AconexMetadataViewModel = new CloudDocManager.CloudDocumentManagerViewModel(
             _messageStore, 
             _manager,
             _manager.CloudDocumentManager,
             _dialogService);
 
-        CurrentFolderViewModel = new CurrentFolderViewModel(
+        CurrentFolderViewModel = new Settings.CurrentFolder.CurrentFolderViewModel(
             _messageStore,
             _manager,
             _currentFolderManager,
@@ -164,7 +161,7 @@ public partial class SettingsViewModel : ObservableObject
     private void OnCloudDocumentManagerPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         // Only care about validation-related property changes
-        if (e.PropertyName == nameof(CloudDocumentManagerViewModel.HasValidationErrors) ||
+        if (e.PropertyName == nameof(CloudDocManager.CloudDocumentManagerViewModel.HasValidationErrors) ||
             string.IsNullOrEmpty(e.PropertyName))
         {
             OnPropertyChanged(nameof(HasAnyErrors));

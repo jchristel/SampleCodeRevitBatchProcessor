@@ -122,68 +122,6 @@ namespace duHastNet.DocManager.Core.Models
 
         #endregion edit documents
 
-        #region export documents to csv
-
-        public bool ExportDocumentsToCsv(string filePath, Models.RevisionContainer revContainer)
-        {
-            try
-            {
-                //prepare header with default columns
-                List<string> header = ["DocumentId", "Number", "Name", "IsActive", "Revision", "Revision Description", "Revision Date"];
-
-                //prepare header add custom property names
-                var customPropertyNames = GetAllCustomPropertyNames();
-                header.AddRange(customPropertyNames);
-
-                // prepare data rows
-                List<List<string>> data = [];
-
-                foreach (var doc in _documents)
-                {
-                    // get revision data
-                    var revisionData = revContainer.GetAllRevisions().FirstOrDefault(r => r.Id == doc.RevisionId,null);
-
-                    string revisionDescription = string.Empty;
-                    string revisionDate = string.Empty;
-
-                    if (revisionData != null)
-                        {
-                        revisionDescription = revisionData.Description ?? string.Empty;
-                        revisionDate = revisionData.RevisionDate.ToString("yyyy-MM-dd");
-                    }
-
-                    List<string> row = [];
-                    row.Add(doc.Id.ToString());
-                    row.Add(doc.Number);
-                    row.Add(doc.Name);
-                    row.Add(doc.IsActive.ToString());
-                    row.Add(doc.Revision);
-                    row.Add(revisionDescription);
-                    row.Add(revisionDate);
-
-                    // add custom property values
-                    foreach (var propName in customPropertyNames)
-                    {
-                        var prop = doc.CustomProperties.FirstOrDefault(p => p.PropertyName == propName);
-                        row.Add(prop != null ? prop.PropertyValue : string.Empty);
-                    }
-                    data.Add(row);
-                }
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                // Handle exceptions as needed
-                Console.WriteLine($"Error exporting documents to CSV: {ex.Message}");
-                return false;
-            }
-        }
-
-        
-
-        #endregion export documents to csv
-
         public DocumentContainer()
         {
             _documents = [];

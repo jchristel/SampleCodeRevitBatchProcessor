@@ -26,10 +26,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models.CurrentFolder.FilingRules;
 using duHastNet.DocManager.UI.Shared.Stores;
-using duHastNet.DocManager.UI.Shared.ViewModels.Settings.CurrentFolder;
 using System.Collections.ObjectModel;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.CurrentFolder
 {
     /// <summary>
     /// Partial class for CurrentFolderViewModel containing all filing rules functionality
@@ -42,7 +41,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// Observable collection of filing rules for display in ListView
         /// </summary>
         [ObservableProperty]
-        private ObservableCollection<FilingRuleViewModel> _filingRules = new();
+        private ObservableCollection<FilingRuleViewModel> _filingRules = [];
 
         /// <summary>
         /// Currently selected filing rule in the ListView
@@ -117,11 +116,13 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             try
             {
                 // Create ViewModel for Add mode
-                var dialogViewModel = new FilingRuleDialogViewModel(_dialogService, this);
+                var dialogViewModel = new Settings.CurrentFolder.FilingRuleDialogViewModel(_dialogService, this);
 
                 // Create and show dialog
-                var dialog = new Views.FilingRuleDialog(dialogViewModel);
-                dialog.Owner = System.Windows.Application.Current.MainWindow;
+                var dialog = new Views.Settings.CurrentFolder.FilingRuleDialog(dialogViewModel)
+                {
+                    Owner = System.Windows.Application.Current.MainWindow
+                };
 
                 var result = dialog.ShowDialog();
 
@@ -173,8 +174,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                     selectedIndex);
 
                 // Create and show dialog
-                var dialog = new Views.FilingRuleDialog(dialogViewModel);
-                dialog.Owner = System.Windows.Application.Current.MainWindow;
+                var dialog = new Views.Settings.CurrentFolder.FilingRuleDialog(dialogViewModel)
+                {
+                    Owner = System.Windows.Application.Current.MainWindow
+                };
 
                 var result = dialog.ShowDialog();
 

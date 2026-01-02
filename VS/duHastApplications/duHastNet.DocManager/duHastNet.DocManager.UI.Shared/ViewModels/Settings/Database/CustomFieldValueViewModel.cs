@@ -24,51 +24,52 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using duHastNet.DocManager.Core.Models.Database;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels;
-
-/// <summary>
-/// ViewModel representing a custom field value for a new document being added
-/// Holds the field definition and the user-entered value
-/// </summary>
-public partial class CustomFieldValueViewModel : ObservableObject
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.Database
 {
     /// <summary>
-    /// The custom field definition ID
+    /// ViewModel representing a custom field value for a new document being added
+    /// Holds the field definition and the user-entered value
     /// </summary>
-    public int CustomFieldDefinitionId { get; }
-
-    /// <summary>
-    /// The custom field name (for display)
-    /// </summary>
-    public string FieldName { get; }
-
-    /// <summary>
-    /// The user-entered value for this custom field
-    /// </summary>
-    [ObservableProperty]
-    private string _value = string.Empty;
-
-    /// <summary>
-    /// Creates a new CustomFieldValueViewModel from a field definition
-    /// </summary>
-    /// <param name="definition">The custom field definition</param>
-    public CustomFieldValueViewModel(CustomFieldDefinition definition)
+    public partial class CustomFieldValueViewModel : ObservableObject
     {
-        CustomFieldDefinitionId = definition.Id;
-        FieldName = definition.PropertyName;
-        Value = string.Empty;
-    }
+        /// <summary>
+        /// The custom field definition ID
+        /// </summary>
+        public int CustomFieldDefinitionId { get; }
 
-    /// <summary>
-    /// Creates a new CustomFieldValueViewModel with specified values
-    /// </summary>
-    /// <param name="customFieldDefinitionId">The custom field definition ID</param>
-    /// <param name="fieldName">The field name</param>
-    /// <param name="value">The initial value</param>
-    public CustomFieldValueViewModel(int customFieldDefinitionId, string fieldName, string value = "")
-    {
-        CustomFieldDefinitionId = customFieldDefinitionId;
-        FieldName = fieldName;
-        Value = value;
+        /// <summary>
+        /// The custom field name (for display)
+        /// </summary>
+        public string FieldName { get; }
+
+        /// <summary>
+        /// The user-entered value for this custom field
+        /// </summary>
+        [ObservableProperty]
+        private string _value = string.Empty;
+
+        /// <summary>
+        /// Creates a new CustomFieldValueViewModel from a field definition
+        /// </summary>
+        /// <param name="definition">The custom field definition</param>
+        public CustomFieldValueViewModel(CustomFieldDefinition definition)
+        {
+            CustomFieldDefinitionId = definition.Id;
+            FieldName = definition.PropertyName;
+            Value = string.Empty;
+        }
+
+        /// <summary>
+        /// Creates a new CustomFieldValueViewModel with specified values
+        /// </summary>
+        /// <param name="customFieldDefinitionId">The custom field definition ID</param>
+        /// <param name="fieldName">The field name</param>
+        /// <param name="value">The initial value</param>
+        public CustomFieldValueViewModel(int customFieldDefinitionId, string fieldName, string value = "")
+        {
+            CustomFieldDefinitionId = customFieldDefinitionId;
+            FieldName = fieldName;
+            Value = value;
+        }
     }
 }

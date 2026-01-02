@@ -18,7 +18,7 @@
 
 using System.IO;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels;
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.Database;
 
 /// <summary>
 /// Helpers partial class for DatabaseConnectionViewModel - property change handlers and utility methods

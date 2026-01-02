@@ -23,7 +23,7 @@
 
 
 
-namespace duHastNet.DocManager.UI.Shared.Views
+namespace duHastNet.DocManager.UI.Shared.Views.Settings.CloudDocManager
 {
     /// <summary>
     /// Interaction logic for MetaDataAconex.xaml

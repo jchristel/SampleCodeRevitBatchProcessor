@@ -16,7 +16,7 @@
 //
 //
 
-namespace duHastNet.DocManager.UI.Shared.Views
+namespace duHastNet.DocManager.UI.Shared.Views.Settings.Database
 {
     /// <summary>
     /// Interaction logic for DatabaseConnectionViewModel.xaml

@@ -49,7 +49,7 @@ namespace duHastNet.DocManager.Core.Tests.Models
             // Arrange
             var testDate = new DateTime(2024, 3, 15);
             var revision = new Revision(testDate);
-            var expectedString = "2024-03-15";
+            var expectedString = "2024-03-15 (0 documents)";
 
             // Act
             var result = revision.ToString();

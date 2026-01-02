@@ -33,7 +33,7 @@ public class DocumentTests
     {
         // Arrange
         var document = new Document("S-201", "Structural Foundation Plan", "2B", 3);
-        var expectedString = "S-201 Rev 2B - Structural Foundation Plan";
+        var expectedString = "S-201 Rev 2B - Structural Foundation Plan (Active)";
 
         // Act
         var result = document.ToString();

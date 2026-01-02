@@ -163,7 +163,7 @@ public class DatabaseServiceTests_Tables
         var columnNames = columns.Select(c => c.Name).ToList();
         Assert.That(columnNames, Does.Contain("Id"));
         Assert.That(columnNames, Does.Contain("DocumentId"));
-        Assert.That(columnNames, Does.Contain("PropertyName"));
+        Assert.That(columnNames, Does.Contain("CustomFieldDefinitionId"));
         Assert.That(columnNames, Does.Contain("PropertyValue"));
     }
 

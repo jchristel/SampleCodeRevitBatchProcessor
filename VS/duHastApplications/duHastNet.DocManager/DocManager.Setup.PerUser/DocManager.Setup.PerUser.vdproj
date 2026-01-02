@@ -46,30 +46,12 @@
         "Entry"
         {
         "MsmKey" = "8:_3EB2F1CF27A4A3BAFA89A601817C52B2"
-        "OwnerKey" = "8:_4486F484212D4070946F3654F52595F5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_3EB2F1CF27A4A3BAFA89A601817C52B2"
         "OwnerKey" = "8:_6DBF72D123612AEFCABD0A3827585BE4"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_3ED152807D7F424590671B0353059185"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4486F484212D4070946F3654F52595F5"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_576125BB787B493594904680E2157FBD"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -83,12 +65,6 @@
         {
         "MsmKey" = "8:_5E51734F256E482F97AB896BE84BA693"
         "OwnerKey" = "8:_5FCB207CDE0F36A413A4137C0B544D23"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5FCB207CDE0F36A413A4137C0B544D23"
-        "OwnerKey" = "8:_EE99232596204D3EA6BC1361C418F067"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -111,26 +87,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_5FCB207CDE0F36A413A4137C0B544D23"
-        "OwnerKey" = "8:_73436444AF924BCDB79E157C8E6C15C5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5FCB207CDE0F36A413A4137C0B544D23"
-        "OwnerKey" = "8:_EBE891D433A94B4986E7F7AF17B1574F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_6819E1F241054977987F749F9609809B"
         "OwnerKey" = "8:_3EB2F1CF27A4A3BAFA89A601817C52B2"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6819E1F241054977987F749F9609809B"
-        "OwnerKey" = "8:_EBE891D433A94B4986E7F7AF17B1574F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -141,25 +99,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_6DBF72D123612AEFCABD0A3827585BE4"
-        "OwnerKey" = "8:_748EA04A91CC4B6FB1DC8332ABFE2B69"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_6E481E70596A426CA7132C3097D9A681"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_73436444AF924BCDB79E157C8E6C15C5"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_748EA04A91CC4B6FB1DC8332ABFE2B69"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -171,32 +111,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_8199E869B7134907A7596514D025AD67"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_875445D91A023F37DED810ED77D16D07"
         "OwnerKey" = "8:_C1BC9B3C4689BEE51486F58E64BD1F28"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_875445D91A023F37DED810ED77D16D07"
-        "OwnerKey" = "8:_748EA04A91CC4B6FB1DC8332ABFE2B69"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_8EE48DE5790F1271A8AB2375E8EC5030"
         "OwnerKey" = "8:_5FCB207CDE0F36A413A4137C0B544D23"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_8F804B3A39A133FFF147DF571FABB2D2"
-        "OwnerKey" = "8:_4486F484212D4070946F3654F52595F5"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -238,12 +160,6 @@
         "Entry"
         {
         "MsmKey" = "8:_A7F513078751B82497D7CC9BA172D227"
-        "OwnerKey" = "8:_4486F484212D4070946F3654F52595F5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A7F513078751B82497D7CC9BA172D227"
         "OwnerKey" = "8:_6DBF72D123612AEFCABD0A3827585BE4"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -279,12 +195,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_BB661EECF7007AF361B002935C27C38A"
-        "OwnerKey" = "8:_73436444AF924BCDB79E157C8E6C15C5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_BDE41012D6A9AE8CEECF62FF6292195B"
         "OwnerKey" = "8:_5FCB207CDE0F36A413A4137C0B544D23"
         "MsmSig" = "8:_UNDEFINED"
@@ -310,24 +220,6 @@
         "Entry"
         {
         "MsmKey" = "8:_C6D568CD20479B681D62ACB3CA3E2E16"
-        "OwnerKey" = "8:_EBE891D433A94B4986E7F7AF17B1574F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_C6D568CD20479B681D62ACB3CA3E2E16"
-        "OwnerKey" = "8:_8199E869B7134907A7596514D025AD67"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_C6D568CD20479B681D62ACB3CA3E2E16"
-        "OwnerKey" = "8:_73436444AF924BCDB79E157C8E6C15C5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_C6D568CD20479B681D62ACB3CA3E2E16"
         "OwnerKey" = "8:_3EB2F1CF27A4A3BAFA89A601817C52B2"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -339,38 +231,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_D84C1A630454474DBF5A660A3B34A542"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_E5203ECF0011374322B2707205A05517"
         "OwnerKey" = "8:_5FCB207CDE0F36A413A4137C0B544D23"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E8046BF0BA2F460F8B9C9EBD070A78B6"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_EBE891D433A94B4986E7F7AF17B1574F"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_EE99232596204D3EA6BC1361C418F067"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_576125BB787B493594904680E2157FBD"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -443,12 +305,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_7BD13B95D1E8E6A8B50DBD6909FB0B06"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_748EA04A91CC4B6FB1DC8332ABFE2B69"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -699,11 +555,6 @@
             "AssemblyAsmDisplayName" = "8:SQLite-net, Version=1.9.172.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_3EB2F1CF27A4A3BAFA89A601817C52B2"
-                    {
-                    "Name" = "8:SQLite-net.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:SQLite-net.dll"
             "TargetName" = "8:"
@@ -743,80 +594,13 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4486F484212D4070946F3654F52595F5"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:duHastNet.DocManager.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64"
-                "ScatterAssemblies"
-                {
-                    "_4486F484212D4070946F3654F52595F5"
-                    {
-                    "Name" = "8:duHastNet.DocManager.Core.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\duHastNet.DocManager.Standalone\\bin\\x64\\Release\\net8.0-windows\\duHastNet.DocManager.Core.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_863FF23985234E939B91A175F96BFA1B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_576125BB787B493594904680E2157FBD"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:CsvHelper, Version=33.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_576125BB787B493594904680E2157FBD"
-                    {
-                    "Name" = "8:CsvHelper.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\duHastNet.DocManager.Standalone\\bin\\x64\\Release\\net8.0-windows\\CsvHelper.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_863FF23985234E939B91A175F96BFA1B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_59F2226148D844A08C006EC9CD91770F"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:duHastNet.DocManager.Standalone, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64"
+            "AssemblyAsmDisplayName" = "8:duHastNet.DocManager.Standalone, Version=1.0.3.0, Culture=neutral, processorArchitecture=AMD64"
                 "ScatterAssemblies"
                 {
-                    "_59F2226148D844A08C006EC9CD91770F"
-                    {
-                    "Name" = "8:duHastNet.DocManager.Standalone.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:..\\duHastNet.DocManager.Standalone\\bin\\x64\\Release\\net8.0-windows\\duHastNet.DocManager.Standalone.dll"
             "TargetName" = "8:"
@@ -905,11 +689,6 @@
             "AssemblyAsmDisplayName" = "8:SQLitePCLRaw.batteries_v2, Version=2.1.2.1721, Culture=neutral, PublicKeyToken=8226ea5df37bcae9, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_6819E1F241054977987F749F9609809B"
-                    {
-                    "Name" = "8:SQLitePCLRaw.batteries_v2.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:SQLitePCLRaw.batteries_v2.dll"
             "TargetName" = "8:"
@@ -936,11 +715,6 @@
             "AssemblyAsmDisplayName" = "8:duHastNet.DocManager.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64"
                 "ScatterAssemblies"
                 {
-                    "_6DBF72D123612AEFCABD0A3827585BE4"
-                    {
-                    "Name" = "8:duHastNet.DocManager.Core.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:duHastNet.DocManager.Core.dll"
             "TargetName" = "8:"
@@ -964,68 +738,6 @@
             {
             "SourcePath" = "8:..\\duHastNet.DocManager.Standalone\\bin\\x64\\Release\\net8.0-windows\\Icon.ico"
             "TargetName" = "8:Icon.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_863FF23985234E939B91A175F96BFA1B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_73436444AF924BCDB79E157C8E6C15C5"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:SQLitePCLRaw.batteries_v2, Version=2.1.2.1721, Culture=neutral, PublicKeyToken=8226ea5df37bcae9, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_73436444AF924BCDB79E157C8E6C15C5"
-                    {
-                    "Name" = "8:SQLitePCLRaw.batteries_v2.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\duHastNet.DocManager.Standalone\\bin\\x64\\Release\\net8.0-windows\\SQLitePCLRaw.batteries_v2.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_863FF23985234E939B91A175F96BFA1B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_748EA04A91CC4B6FB1DC8332ABFE2B69"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:duHastNet.DocManager.UI.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64"
-                "ScatterAssemblies"
-                {
-                    "_748EA04A91CC4B6FB1DC8332ABFE2B69"
-                    {
-                    "Name" = "8:duHastNet.DocManager.UI.Shared.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\duHastNet.DocManager.Standalone\\bin\\x64\\Release\\net8.0-windows\\duHastNet.DocManager.UI.Shared.dll"
-            "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_863FF23985234E939B91A175F96BFA1B"
             "Condition" = "8:"
@@ -1073,37 +785,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8199E869B7134907A7596514D025AD67"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:SQLitePCLRaw.provider.e_sqlite3, Version=2.1.2.1721, Culture=neutral, PublicKeyToken=9c301db686d0bd12, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_8199E869B7134907A7596514D025AD67"
-                    {
-                    "Name" = "8:SQLitePCLRaw.provider.e_sqlite3.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\duHastNet.DocManager.Standalone\\bin\\x64\\Release\\net8.0-windows\\SQLitePCLRaw.provider.e_sqlite3.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_863FF23985234E939B91A175F96BFA1B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_875445D91A023F37DED810ED77D16D07"
             {
             "AssemblyRegister" = "3:1"
@@ -1111,11 +792,6 @@
             "AssemblyAsmDisplayName" = "8:CommunityToolkit.Mvvm, Version=8.4.0.0, Culture=neutral, PublicKeyToken=4aff67a105548ee2, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_875445D91A023F37DED810ED77D16D07"
-                    {
-                    "Name" = "8:CommunityToolkit.Mvvm.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:CommunityToolkit.Mvvm.dll"
             "TargetName" = "8:"
@@ -1173,11 +849,6 @@
             "AssemblyAsmDisplayName" = "8:CsvHelper, Version=33.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_8F804B3A39A133FFF147DF571FABB2D2"
-                    {
-                    "Name" = "8:CsvHelper.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:CsvHelper.dll"
             "TargetName" = "8:"
@@ -1348,11 +1019,6 @@
             "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_A7F513078751B82497D7CC9BA172D227"
-                    {
-                    "Name" = "8:Newtonsoft.Json.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Newtonsoft.Json.dll"
             "TargetName" = "8:"
@@ -1492,11 +1158,6 @@
             "AssemblyAsmDisplayName" = "8:SQLitePCLRaw.provider.e_sqlite3, Version=2.1.2.1721, Culture=neutral, PublicKeyToken=9c301db686d0bd12, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_BB661EECF7007AF361B002935C27C38A"
-                    {
-                    "Name" = "8:SQLitePCLRaw.provider.e_sqlite3.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:SQLitePCLRaw.provider.e_sqlite3.dll"
             "TargetName" = "8:"
@@ -1585,11 +1246,6 @@
             "AssemblyAsmDisplayName" = "8:duHastNet.DocManager.UI.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64"
                 "ScatterAssemblies"
                 {
-                    "_C1BC9B3C4689BEE51486F58E64BD1F28"
-                    {
-                    "Name" = "8:duHastNet.DocManager.UI.Shared.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:duHastNet.DocManager.UI.Shared.dll"
             "TargetName" = "8:"
@@ -1616,11 +1272,6 @@
             "AssemblyAsmDisplayName" = "8:SQLitePCLRaw.core, Version=2.1.2.1721, Culture=neutral, PublicKeyToken=1488e028ca7ab535, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_C6D568CD20479B681D62ACB3CA3E2E16"
-                    {
-                    "Name" = "8:SQLitePCLRaw.core.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:SQLitePCLRaw.core.dll"
             "TargetName" = "8:"
@@ -1638,37 +1289,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D84C1A630454474DBF5A660A3B34A542"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_D84C1A630454474DBF5A660A3B34A542"
-                    {
-                    "Name" = "8:Newtonsoft.Json.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\duHastNet.DocManager.Standalone\\bin\\x64\\Release\\net8.0-windows\\Newtonsoft.Json.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_863FF23985234E939B91A175F96BFA1B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E5203ECF0011374322B2707205A05517"
@@ -1700,99 +1320,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E8046BF0BA2F460F8B9C9EBD070A78B6"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:CommunityToolkit.Mvvm, Version=8.4.0.0, Culture=neutral, PublicKeyToken=4aff67a105548ee2, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_E8046BF0BA2F460F8B9C9EBD070A78B6"
-                    {
-                    "Name" = "8:CommunityToolkit.Mvvm.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\duHastNet.DocManager.Standalone\\bin\\x64\\Release\\net8.0-windows\\CommunityToolkit.Mvvm.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_863FF23985234E939B91A175F96BFA1B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_EBE891D433A94B4986E7F7AF17B1574F"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:SQLite-net, Version=1.9.172.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_EBE891D433A94B4986E7F7AF17B1574F"
-                    {
-                    "Name" = "8:SQLite-net.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\duHastNet.DocManager.Standalone\\bin\\x64\\Release\\net8.0-windows\\SQLite-net.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_863FF23985234E939B91A175F96BFA1B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_EE99232596204D3EA6BC1361C418F067"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:SQLitePCLRaw.core, Version=2.1.2.1721, Culture=neutral, PublicKeyToken=1488e028ca7ab535, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_EE99232596204D3EA6BC1361C418F067"
-                    {
-                    "Name" = "8:SQLitePCLRaw.core.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\duHastNet.DocManager.Standalone\\bin\\x64\\Release\\net8.0-windows\\SQLitePCLRaw.core.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_863FF23985234E939B91A175F96BFA1B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
         }

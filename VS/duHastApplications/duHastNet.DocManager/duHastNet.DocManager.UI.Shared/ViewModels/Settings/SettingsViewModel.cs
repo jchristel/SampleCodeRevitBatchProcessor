@@ -27,7 +27,7 @@ using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
 using System.ComponentModel;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels;
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings;
 
 /// <summary>
 /// Main ViewModel for the Settings view - handles database configuration and management
@@ -45,7 +45,7 @@ public partial class SettingsViewModel : ObservableObject
     private readonly IDialogService _dialogService;
 
     //function used to navigate to merge view model
-    private readonly Func<MergeViewModel> _createViewModel;
+    private readonly Func<Merge.MergeViewModel> _createViewModel;
 
     //settings service
     private readonly ISettingsService _settingsService;
@@ -85,7 +85,7 @@ public partial class SettingsViewModel : ObservableObject
         NavigationStore navigationStore,
         IDialogService dialogService,
         ISettingsService settingsService,
-        Func<MergeViewModel> createViewModel
+        Func<Merge.MergeViewModel> createViewModel
         )
     {
         _docManagerApi = docManagerApi;

@@ -27,7 +27,7 @@ using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.UI.Shared.Stores;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels;
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Merge;
 
 /// <summary>
 /// Main ViewModel for the Document Manager application
@@ -115,7 +115,7 @@ public partial class MergeViewModel : ObservableObject
                             int oldRevisionId = document.RevisionId;
 
                             // Update revision indicator
-                            document.Revision = matchedDoc.IncomingRevision;
+                            document.Revision = matchedDoc.IncomingRevision!;
 
                             // Update revision ID
                             document.RevisionId = targetRevision.Id;

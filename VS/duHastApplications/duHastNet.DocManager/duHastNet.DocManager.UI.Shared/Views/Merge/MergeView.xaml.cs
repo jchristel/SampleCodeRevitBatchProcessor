@@ -22,7 +22,7 @@
 //
 
 
-namespace duHastNet.DocManager.UI.Shared.Views
+namespace duHastNet.DocManager.UI.Shared.Views.Merge
 {
     /// <summary>
     /// Interaction logic for MainView.xaml

@@ -21,7 +21,7 @@
 //
 //
 
-namespace duHastNet.DocManager.UI.Shared.Views
+namespace duHastNet.DocManager.UI.Shared.Views.Settings
 {
     /// <summary>
     /// Interaction logic for MainView.xaml

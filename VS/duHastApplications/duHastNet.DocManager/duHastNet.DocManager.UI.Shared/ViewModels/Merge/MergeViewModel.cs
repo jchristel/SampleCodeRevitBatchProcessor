@@ -30,7 +30,9 @@ using duHastNet.DocManager.Core.Services.Api;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
 using System.Collections.ObjectModel;
-namespace duHastNet.DocManager.UI.Shared.ViewModels;
+
+
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Merge;
 
 /// <summary>
 /// Main ViewModel for the Document Manager application
@@ -47,7 +49,7 @@ public partial class MergeViewModel : ObservableObject, IActivatable
     private readonly IDialogService _dialogService;
 
     //function used to navigate to settings view model
-    private readonly Func<SettingsViewModel> _createViewModel;
+    private readonly Func<Settings.SettingsViewModel> _createViewModel;
 
     #endregion
 
@@ -66,7 +68,7 @@ public partial class MergeViewModel : ObservableObject, IActivatable
         Manager manager,
         CurrentFolderManager currentFolderManager,
         IDialogService dialogService,
-        Func<SettingsViewModel> createViewModel
+        Func<Settings.SettingsViewModel> createViewModel
         )
     {
         _docManagerApi = docManagerApi;

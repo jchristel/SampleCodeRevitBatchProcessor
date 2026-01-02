@@ -82,9 +82,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// </summary>
         /// <returns>A fully constructed <see cref="SettingsViewModel"/> instance configured with the current application
         /// services and state.</returns>
-        private SettingsViewModel CreateSettingsViewModel()
+        private Settings.SettingsViewModel CreateSettingsViewModel()
         {
-            return new SettingsViewModel(
+            return new Settings.SettingsViewModel(
                 _docManagerApi!,
                 _manager!,
                 _messageStore!,
@@ -99,9 +99,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         /// <summary>
         /// Creates a new instance of <see cref="MergeViewModel"/> with the required dependencies.
         /// </summary>
-        private MergeViewModel CreateMergeViewModel()
+        private Merge.MergeViewModel CreateMergeViewModel()
         {
-            return new MergeViewModel(
+            return new Merge.MergeViewModel(
                 _docManagerApi!,
                 _messageStore!,
                 _navigationStore!,

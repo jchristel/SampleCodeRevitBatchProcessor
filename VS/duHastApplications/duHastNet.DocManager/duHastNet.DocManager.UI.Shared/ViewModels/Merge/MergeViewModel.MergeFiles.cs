@@ -30,7 +30,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels;
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Merge;
 
 /// <summary>
 /// Partial class for MergeViewModel containing file merging logic

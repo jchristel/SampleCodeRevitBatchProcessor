@@ -30,7 +30,7 @@ using duHastNet.DocManager.Core.Services;
 using duHastNet.DocManager.UI.Shared.Stores;
 using System.IO;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels;
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Merge;
 
 /// <summary>
 /// Main ViewModel for the Document Manager application

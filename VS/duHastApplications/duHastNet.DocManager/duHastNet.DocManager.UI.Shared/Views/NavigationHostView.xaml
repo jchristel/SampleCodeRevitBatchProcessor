@@ -3,8 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:duHastNet.DocManager.UI.Shared.Views"
+             xmlns:localsettings="clr-namespace:duHastNet.DocManager.UI.Shared.Views.Settings"
+             xmlns:localmerge="clr-namespace:duHastNet.DocManager.UI.Shared.Views.Merge"
              xmlns:viewmodels="clr-namespace:duHastNet.DocManager.UI.Shared.ViewModels"
+             xmlns:viewmodelssettings="clr-namespace:duHastNet.DocManager.UI.Shared.ViewModels.Settings"
+             xmlns:viewmodelsmerge="clr-namespace:duHastNet.DocManager.UI.Shared.ViewModels.Merge"
              mc:Ignorable="d" 
              Width="Auto" 
              Height="Auto"
@@ -12,13 +15,13 @@
     
     <UserControl.Resources>
         <!-- DataTemplate for SettingsViewModel -->
-        <DataTemplate DataType="{x:Type viewmodels:SettingsViewModel}">
-            <local:SettingsView/>
+        <DataTemplate DataType="{x:Type viewmodelssettings:SettingsViewModel}">
+            <localsettings:SettingsView/>
         </DataTemplate>
 
         <!-- DataTemplate for MergeViewModel -->
-        <DataTemplate DataType="{x:Type viewmodels:MergeViewModel}">
-            <local:MergeView/>
+        <DataTemplate DataType="{x:Type viewmodelsmerge:MergeViewModel}">
+            <localmerge:MergeView/>
         </DataTemplate>
 
         <!-- Add more DataTemplates here for other ViewModels as needed -->

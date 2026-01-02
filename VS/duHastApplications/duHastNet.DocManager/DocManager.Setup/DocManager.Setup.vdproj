@@ -1841,15 +1841,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DocManager"
-        "ProductCode" = "8:{E1476186-14F7-4C9A-BB64-B270C5016E5D}"
-        "PackageCode" = "8:{E130E154-2395-49B8-BCBE-A4637A26DB84}"
+        "ProductCode" = "8:{FC5AE135-AE03-4B9F-9592-EEBDD0A65875}"
+        "PackageCode" = "8:{6EC4CD90-00C4-470A-A670-3A3FDCD847AE}"
         "UpgradeCode" = "8:{0AB55A6E-64AB-4CF4-92E7-CB19D15D31DC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:FALSE"
+        "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.2"
+        "ProductVersion" = "8:1.0.3"
         "Manufacturer" = "8:duHast"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -2377,7 +2377,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_43C64361E79347538584E5332683A629"
             {
-            "SourcePath" = "8:..\\duHastNet.DocManager.Standalone\\obj\\x64\\Release\\net8.0-windows\\duHastNet.DocManager.Standalone.dll"
+            "SourcePath" = "8:..\\duHastNet.DocManager.Standalone\\obj\\x64\\Debug\\net8.0-windows\\duHastNet.DocManager.Standalone.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_763D50555FE344FABC75B91BDB5DF6E1"
@@ -2405,7 +2405,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_97493E1FE9074132B797DB658FFEE651"
             {
-            "SourcePath" = "8:..\\duHastNet.DocManager.Standalone\\obj\\x64\\Release\\net8.0-windows\\duHastNet.DocManager.Standalone.dll"
+            "SourcePath" = "8:..\\duHastNet.DocManager.Standalone\\obj\\x64\\Debug\\net8.0-windows\\duHastNet.DocManager.Standalone.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_763D50555FE344FABC75B91BDB5DF6E1"

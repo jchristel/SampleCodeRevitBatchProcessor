@@ -524,6 +524,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -1843,15 +1851,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DocManager"
-        "ProductCode" = "8:{789AAC87-CE53-41A9-9158-CE36F460274F}"
-        "PackageCode" = "8:{50517E9A-0834-4BED-A1F5-B20D24015ACD}"
+        "ProductCode" = "8:{A5A325F4-32E0-4DEA-8F2E-E4D0F742C8ED}"
+        "PackageCode" = "8:{B9113D19-E431-47BE-A11B-A025169CE906}"
         "UpgradeCode" = "8:{D8A58451-5871-41EC-9DF9-6683530EF4A0}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:FALSE"
+        "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.2"
+        "ProductVersion" = "8:1.0.3"
         "Manufacturer" = "8:duHast"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

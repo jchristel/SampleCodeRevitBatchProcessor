@@ -23,7 +23,7 @@
 
 using System.Windows.Controls;
 
-namespace duHastNet.DocManager.UI.Shared.Views
+namespace duHastNet.DocManager.UI.Shared.Views.Merge.MatchedDocs
 {
     /// <summary>
     /// Interaction logic for DocumentMatchControl.xaml

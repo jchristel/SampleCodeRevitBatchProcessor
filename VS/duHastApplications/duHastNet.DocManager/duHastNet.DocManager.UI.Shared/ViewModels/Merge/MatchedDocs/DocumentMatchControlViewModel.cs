@@ -34,7 +34,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels;
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Merge.MatchedDocs;
 
 /// <summary>
 /// ViewModel for the DocumentMatchControl
@@ -280,7 +280,7 @@ public partial class DocumentMatchControlViewModel : ObservableObject
         var customFieldDefinitions = _manager.GetActiveCustomFieldDefinitions().ToList();
 
         // Create and show the dialog
-        var dialogViewModel = new AddNewDocumentsDialogViewModel(
+        var dialogViewModel = new Merge.NewDocs.AddNewDocumentsDialogViewModel(
             _currentFolderManager,
             currentDocuments,
             supportedUnknownDocuments,

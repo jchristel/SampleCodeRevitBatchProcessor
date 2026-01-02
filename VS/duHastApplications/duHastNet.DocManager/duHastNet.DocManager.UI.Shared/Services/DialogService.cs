@@ -106,9 +106,9 @@ public class DialogService : IDialogService
         Window? dialog = null;
 
         // Map ViewModels to their corresponding Views
-        if (viewModel is ViewModels.AddNewDocumentsDialogViewModel addNewDocumentsViewModel)
+        if (viewModel is ViewModels.Merge.NewDocs.AddNewDocumentsDialogViewModel addNewDocumentsViewModel)
         {
-            dialog = new Views.AddNewDocumentsDialog(addNewDocumentsViewModel);
+            dialog = new Views.Merge.NewDocs.AddNewDocumentsDialog(addNewDocumentsViewModel);
         }
         else if (viewModel is ViewModels.CustomFieldDialogViewModel customFieldViewModel)
         {

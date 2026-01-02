@@ -26,7 +26,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace duHastNet.DocManager.UI.Shared.Views
+namespace duHastNet.DocManager.UI.Shared.Views.Merge.NewDocs
 {
     /// <summary>
     /// Interaction logic for AddNewDocumentsDialog.xaml
@@ -41,7 +41,7 @@ namespace duHastNet.DocManager.UI.Shared.Views
         /// <summary>
         /// Constructor with ViewModel
         /// </summary>
-        public AddNewDocumentsDialog(AddNewDocumentsDialogViewModel viewModel) : this()
+        public AddNewDocumentsDialog(ViewModels.Merge.NewDocs.AddNewDocumentsDialogViewModel viewModel) : this()
         {
             DataContext = viewModel;
 
@@ -59,7 +59,7 @@ namespace duHastNet.DocManager.UI.Shared.Views
         /// <summary>
         /// Generates DataGrid columns for each custom field definition
         /// </summary>
-        private void GenerateCustomFieldColumns(AddNewDocumentsDialogViewModel viewModel)
+        private void GenerateCustomFieldColumns(ViewModels.Merge.NewDocs.AddNewDocumentsDialogViewModel viewModel)
         {
             if (viewModel.CustomFieldDefinitions == null || viewModel.CustomFieldDefinitions.Count == 0)
                 return;

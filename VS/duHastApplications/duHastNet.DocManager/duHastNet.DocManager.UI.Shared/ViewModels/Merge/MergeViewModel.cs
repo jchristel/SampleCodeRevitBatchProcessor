@@ -57,7 +57,7 @@ public partial class MergeViewModel : ObservableObject, IActivatable
     public GlobalMessageViewModel MessageViewModel { get; }
 
     // Expose document match control ViewModel for the view
-    public DocumentMatchControlViewModel DocumentMatchViewModel { get; }
+    public Merge.MatchedDocs.DocumentMatchControlViewModel DocumentMatchViewModel { get; }
 
     #region Constructor
 
@@ -80,7 +80,7 @@ public partial class MergeViewModel : ObservableObject, IActivatable
         _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
         MessageViewModel = new GlobalMessageViewModel(_messageStore);
-        DocumentMatchViewModel = new DocumentMatchControlViewModel(_currentFolderManager, _manager,  _messageStore, _dialogService, _docManagerApi);
+        DocumentMatchViewModel = new Merge.MatchedDocs.DocumentMatchControlViewModel(_currentFolderManager, _manager,  _messageStore, _dialogService, _docManagerApi);
 
         // Subscribe to document match changes to update merge button state
         DocumentMatchViewModel.MatchedDocumentsChanged += OnMatchedDocumentsChanged;

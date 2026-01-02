@@ -28,7 +28,7 @@ using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.Core.Models.Database;
 using System.Collections.ObjectModel;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels;
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Merge.NewDocs;
 
 /// <summary>
 /// ViewModel for the Add New Documents dialog
@@ -50,7 +50,7 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
     /// Collection of new document rows for display
     /// </summary>
     [ObservableProperty]
-    private ObservableCollection<NewDocumentRowViewModel> _documentRows;
+    private ObservableCollection<Merge.NewDocs.NewDocumentRowViewModel> _documentRows;
 
     /// <summary>
     /// Indicates if the dialog is busy performing an operation
@@ -82,8 +82,8 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
     /// Gets the count of documents with duplicate document numbers
     /// </summary>
     public int DuplicateCount => DocumentRows?.Count(d =>
-        d.Status == NewDocumentRowStatus.DuplicateDocumentNumber ||
-        d.Status == NewDocumentRowStatus.DuplicateInList) ?? 0;
+        d.Status == Merge.NewDocs.NewDocumentRowStatus.DuplicateDocumentNumber ||
+        d.Status == Merge.NewDocs.NewDocumentRowStatus.DuplicateInList) ?? 0;
 
     /// <summary>
     /// Gets the total count of documents
@@ -125,7 +125,7 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
         _existingDocuments = existingDocuments ?? throw new ArgumentNullException(nameof(existingDocuments));
         _customFieldDefinitions = customFieldDefinitions ?? new List<CustomFieldDefinition>();
 
-        _documentRows = new ObservableCollection<NewDocumentRowViewModel>();
+        _documentRows = new ObservableCollection<Merge.NewDocs.NewDocumentRowViewModel>();
 
         // Load the unknown documents
         LoadUnknownDocuments(unknownDocuments);
@@ -174,7 +174,7 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
     /// <summary>
     /// Gets the list of documents that are ready to be added
     /// </summary>
-    public List<NewDocumentRowViewModel> GetDocumentsToAdd()
+    public List<Merge.NewDocs.NewDocumentRowViewModel> GetDocumentsToAdd()
     {
         return DocumentRows.Where(d => d.CanAdd).ToList();
     }
@@ -208,7 +208,7 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
         var revisionSuffix = _currentFolderManager.Settings.RevisionSuffix;
 
         // Track proposed document numbers within this list to detect duplicates
-        var proposedDocumentNumbers = new Dictionary<string, List<NewDocumentRowViewModel>>(StringComparer.OrdinalIgnoreCase);
+        var proposedDocumentNumbers = new Dictionary<string, List<Merge.NewDocs.NewDocumentRowViewModel>>(StringComparer.OrdinalIgnoreCase);
 
         // Create view models for each unknown document
         foreach (var unknownDoc in unknownDocuments)
@@ -228,7 +228,7 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
                 continue;
 
             // Create the row view model
-            var rowViewModel = new NewDocumentRowViewModel(
+            var rowViewModel = new Merge.NewDocs.NewDocumentRowViewModel(
                 unknownDoc.NewDocumentPath,
                 supportedFileType,
                 existingDocumentNumbers,
@@ -238,7 +238,7 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
                 ValidateRow); // Pass validation callback
 
             // Skip documents without revision indicators (they shouldn't be shown)
-            if (rowViewModel.Status == NewDocumentRowStatus.NoRevisionIndicator)
+            if (rowViewModel.Status == Merge.NewDocs.NewDocumentRowStatus.NoRevisionIndicator)
                 continue;
 
             DocumentRows.Add(rowViewModel);
@@ -246,11 +246,11 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
             // Track the proposed document number for duplicate detection within the list
             // Only track if it's a valid document number (not empty and not missing doc name)
             if (!string.IsNullOrEmpty(rowViewModel.ProposedDocumentNumber) &&
-                rowViewModel.Status != NewDocumentRowStatus.MissingDocumentName)
+                rowViewModel.Status != Merge.NewDocs.NewDocumentRowStatus.MissingDocumentName)
             {
                 if (!proposedDocumentNumbers.ContainsKey(rowViewModel.ProposedDocumentNumber))
                 {
-                    proposedDocumentNumbers[rowViewModel.ProposedDocumentNumber] = new List<NewDocumentRowViewModel>();
+                    proposedDocumentNumbers[rowViewModel.ProposedDocumentNumber] = new List<Merge.NewDocs.NewDocumentRowViewModel>();
                 }
                 proposedDocumentNumbers[rowViewModel.ProposedDocumentNumber].Add(rowViewModel);
             }
@@ -272,7 +272,7 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
                         // Multiple files with same extension and same document number - this is an error
                         foreach (var duplicate in extensionGroup)
                         {
-                            duplicate.Status = NewDocumentRowStatus.DuplicateInList;
+                            duplicate.Status = Merge.NewDocs.NewDocumentRowStatus.DuplicateInList;
                             duplicate.StatusMessage = $"Duplicate document number in list with same file type";
                         }
                     }
@@ -302,7 +302,7 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
     /// <summary>
     /// Validates a single row when its document number changes
     /// </summary>
-    private void ValidateRow(NewDocumentRowViewModel row)
+    private void ValidateRow(Merge.NewDocs.NewDocumentRowViewModel row)
     {
         // Get existing document numbers for validation
         var existingDocumentNumbers = new HashSet<string>(

@@ -26,7 +26,7 @@ using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
 using System.Linq;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels;
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Merge.MatchedDocs;
 
 /// <summary>
 /// ViewModel representing a matched document for display in the merge grid

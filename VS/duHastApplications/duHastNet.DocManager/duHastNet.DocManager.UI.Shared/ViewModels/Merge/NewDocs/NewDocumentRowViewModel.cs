@@ -26,7 +26,7 @@ using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.Core.Models.Database;
 using System.Collections.ObjectModel;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels;
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Merge.NewDocs;
 
 /// <summary>
 /// ViewModel representing a single row in the Add New Documents dialog
@@ -294,7 +294,7 @@ public partial class NewDocumentRowViewModel : ObservableObject
     /// </summary>
     /// <param name="existingDocumentNumbers">Set of existing document numbers in the database</param>
     /// <param name="allRows">All rows in the dialog for duplicate checking</param>
-    internal void Validate(HashSet<string> existingDocumentNumbers, IEnumerable<NewDocumentRowViewModel> allRows)
+    internal void Validate(HashSet<string> existingDocumentNumbers, IEnumerable<Merge.NewDocs.NewDocumentRowViewModel> allRows)
     {
         // Don't validate if this row has fundamental issues (no revision indicator)
         if (Status == NewDocumentRowStatus.NoRevisionIndicator)

@@ -31,6 +31,8 @@ using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
 using duHastNet.DocManager.UI.Shared.ViewModels;
 using duHastNet.DocManager.UI.Shared.Views;
+using System.Diagnostics;
+using System.Reflection;
 using System.Windows;
 
 namespace duHastNet.DocManager.UI.Shared.Services;
@@ -84,6 +86,13 @@ public class DocManagerBootstrapper : IDisposable
 
     private async Task<Window> InitializeAsyncWorker(string? customSettingsPath)
     {
+        // Get product version to be dispalyed in main window title
+        string productVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion ?? "Unknown";
+        // Split on '+'
+        string versionOnly = productVersion.Contains('+')
+            ? productVersion.Substring(0, productVersion.IndexOf('+'))
+            : productVersion;
+
         // Check if already initialized
         if (IsInitialized)
         {
@@ -147,7 +156,7 @@ public class DocManagerBootstrapper : IDisposable
         // Create a Window to host the NavigationHostView
         _mainWindow = new Window()
         {
-            Title = "DocManager",
+            Title = $"Document Manager - v{versionOnly}",
             Content = navigationHostView,
             Width = 1200,
             Height = 800,

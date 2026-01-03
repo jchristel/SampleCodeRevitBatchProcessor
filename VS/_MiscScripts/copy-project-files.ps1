@@ -3,6 +3,7 @@
 # Define your project paths here
 $project1Path = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager\duHastNet.DocManager.Core"
 $project2Path = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager\duHastNet.DocManager.UI.Shared"
+$project3Path = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager.Core.Tests"
 
 # Define the temp folder destination
 $tempFolder = "$env:TEMP\ProjectFilesCopy"
@@ -72,6 +73,10 @@ Copy-ProjectFiles -sourcePath $project1Path -projectName "Project1" -destination
 
 Write-Host "`nCopying files from Project 2..." -ForegroundColor White
 Copy-ProjectFiles -sourcePath $project2Path -projectName "Project2" -destination $tempFolder
+
+Write-Host "`nCopying files from Project 3..." -ForegroundColor White
+Copy-ProjectFiles -sourcePath $project3Path -projectName "Project3" -destination $tempFolder
+
 
 Write-Host "`nAll files copied successfully to: $tempFolder" -ForegroundColor Green
 Write-Host "Opening destination folder..." -ForegroundColor Gray

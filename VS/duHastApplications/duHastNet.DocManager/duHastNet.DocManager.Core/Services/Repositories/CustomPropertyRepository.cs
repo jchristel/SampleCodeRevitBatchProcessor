@@ -40,49 +40,13 @@ namespace duHastNet.DocManager.Core.Services.Repositories
                 .ToListAsync();
         }
 
-        public async Task<CustomProperty?> GetPropertyAsync(int documentId, string propertyName)
-        {
-            return await _connection.Table<CustomProperty>()
-                .Where(cp => cp.DocumentId == documentId && cp.PropertyName == propertyName)
-                .FirstOrDefaultAsync();
-        }
-
-        public async Task<List<CustomProperty>> GetPropertiesByNameAsync(string propertyName)
-        {
-            return await _connection.Table<CustomProperty>()
-                .Where(cp => cp.PropertyName == propertyName)
-                .ToListAsync();
-        }
-
-        public async Task<List<CustomProperty>> GetPropertiesByNameAndValueAsync(string propertyName, string propertyValue)
-        {
-            return await _connection.Table<CustomProperty>()
-                .Where(cp => cp.PropertyName == propertyName && cp.PropertyValue == propertyValue)
-                .ToListAsync();
-        }
-
         public async Task<List<string>> GetDistinctPropertyNamesAsync()
         {
-            var properties = await _connection.Table<CustomProperty>()
+            var fieldDefinitions = await _connection.Table<CustomFieldDefinition>()
+                .OrderBy(cfd => cfd.PropertyName)
                 .ToListAsync();
 
-            return properties.Select(cp => cp.PropertyName)
-                .Distinct()
-                .OrderBy(name => name)
-                .ToList();
-        }
-
-        public async Task<int> DeletePropertiesByDocumentAsync(int documentId)
-        {
-            return await _connection.ExecuteAsync(
-                "DELETE FROM CustomProperties WHERE DocumentId = ?", documentId);
-        }
-
-        public async Task<int> DeletePropertyAsync(int documentId, string propertyName)
-        {
-            return await _connection.ExecuteAsync(
-                "DELETE FROM CustomProperties WHERE DocumentId = ? AND PropertyName = ?",
-                documentId, propertyName);
+            return fieldDefinitions.Select(cfd => cfd.PropertyName).ToList();
         }
     }
 }

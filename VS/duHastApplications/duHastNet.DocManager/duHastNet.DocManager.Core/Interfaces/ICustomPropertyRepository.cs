@@ -26,11 +26,6 @@ namespace duHastNet.DocManager.Core.Interfaces
     public interface ICustomPropertyRepository : IRepository<CustomProperty>
     {
         Task<List<CustomProperty>> GetPropertiesByDocumentAsync(int documentId);
-        Task<CustomProperty?> GetPropertyAsync(int documentId, string propertyName);
-        Task<List<CustomProperty>> GetPropertiesByNameAsync(string propertyName);
-        Task<List<CustomProperty>> GetPropertiesByNameAndValueAsync(string propertyName, string propertyValue);
         Task<List<string>> GetDistinctPropertyNamesAsync();
-        Task<int> DeletePropertiesByDocumentAsync(int documentId);
-        Task<int> DeletePropertyAsync(int documentId, string propertyName);
     }
 }

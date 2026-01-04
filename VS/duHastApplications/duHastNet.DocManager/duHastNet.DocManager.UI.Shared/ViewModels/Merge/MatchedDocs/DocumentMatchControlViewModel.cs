@@ -327,16 +327,14 @@ public partial class DocumentMatchControlViewModel : ObservableObject
                             // Create custom properties for each custom field value
                             foreach (var customFieldValue in docRow.CustomFieldValues)
                             {
-                                if (!string.IsNullOrWhiteSpace(customFieldValue.Value))
+                                // Create property for ALL fields, even if value is empty
+                                var customProperty = new CustomProperty
                                 {
-                                    var customProperty = new CustomProperty
-                                    {
-                                        DocumentId = document.Id,
-                                        CustomFieldDefinitionId = customFieldValue.CustomFieldDefinitionId,
-                                        PropertyValue = customFieldValue.Value
-                                    };
-                                    customPropertiesToAdd.Add(customProperty);
-                                }
+                                    DocumentId = document.Id,
+                                    CustomFieldDefinitionId = customFieldValue.CustomFieldDefinitionId,
+                                    PropertyValue = customFieldValue.Value ?? string.Empty  // Ensure empty string, not null
+                                };
+                                customPropertiesToAdd.Add(customProperty);
                             }
                         }
                         

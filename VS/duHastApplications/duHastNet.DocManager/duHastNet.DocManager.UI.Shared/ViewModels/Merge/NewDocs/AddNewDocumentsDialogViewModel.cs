@@ -26,7 +26,9 @@ using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.Core.Models.Database;
+using duHastNet.DocManager.UI.Shared.Interfaces;
 using System.Collections.ObjectModel;
+using System.Text;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels.Merge.NewDocs;
 
@@ -41,6 +43,7 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
     private readonly CurrentFolderManager _currentFolderManager;
     private readonly List<Document> _existingDocuments;
     private readonly List<CustomFieldDefinition> _customFieldDefinitions;
+    private readonly IDialogService _dialogService;
 
     #endregion
 
@@ -114,15 +117,18 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
     /// <param name="currentFolderManager">The current folder manager containing file matching information</param>
     /// <param name="existingDocuments">List of existing documents in the database</param>
     /// <param name="unknownDocuments">List of unknown document processing statuses</param>
+    /// <param name="dialogService">Dialog service for user interactions</param>
     /// <param name="customFieldDefinitions">List of custom field definitions for the new documents</param>
     public AddNewDocumentsDialogViewModel(
         CurrentFolderManager currentFolderManager,
         List<Document> existingDocuments,
         List<IncomingDocumentProcessingStatus> unknownDocuments,
+        IDialogService dialogService,
         List<CustomFieldDefinition>? customFieldDefinitions = null)
     {
         _currentFolderManager = currentFolderManager ?? throw new ArgumentNullException(nameof(currentFolderManager));
         _existingDocuments = existingDocuments ?? throw new ArgumentNullException(nameof(existingDocuments));
+        _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         _customFieldDefinitions = customFieldDefinitions ?? new List<CustomFieldDefinition>();
 
         _documentRows = new ObservableCollection<Merge.NewDocs.NewDocumentRowViewModel>();
@@ -173,10 +179,16 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
 
     /// <summary>
     /// Gets the list of documents that are ready to be added
+    /// Returns only unique document numbers - if multiple file types exist for the same document number,
+    /// only the first occurrence is returned
     /// </summary>
     public List<Merge.NewDocs.NewDocumentRowViewModel> GetDocumentsToAdd()
     {
-        return DocumentRows.Where(d => d.CanAdd).ToList();
+        return DocumentRows
+            .Where(d => d.CanAdd)
+            .GroupBy(d => d.ProposedDocumentNumber, StringComparer.OrdinalIgnoreCase)
+            .Select(g => g.First())
+            .ToList();
     }
 
     #endregion
@@ -235,7 +247,8 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
                 revisionPrefix,
                 revisionSuffix,
                 _customFieldDefinitions,
-                ValidateRow); // Pass validation callback
+                ValidateRow,
+                HandleRelatedFiles); // Pass related files callback
 
             // Skip documents without revision indicators (they shouldn't be shown)
             if (rowViewModel.Status == Merge.NewDocs.NewDocumentRowStatus.NoRevisionIndicator)
@@ -313,6 +326,160 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
         row.Validate(existingDocumentNumbers, DocumentRows);
 
         // Update counts after validation
+        UpdateCounts();
+    }
+
+    /// <summary>
+    /// Handles related files detection when document number or name changes
+    /// </summary>
+    private void HandleRelatedFiles(Merge.NewDocs.NewDocumentRowViewModel changedRow, List<Merge.NewDocs.NewDocumentRowViewModel> _)
+    {
+        // Determine if this is a document number change or document name change
+        // by checking which property triggered the callback
+        
+        // Check if document number was shortened (potential for finding related files)
+        var relatedFiles = FindRelatedFilesByDocumentNumber(changedRow);
+        
+        if (relatedFiles.Any())
+        {
+            // Document number was shortened - ask user for confirmation
+            HandleDocumentNumberShorteningWithConfirmation(changedRow, relatedFiles);
+        }
+        else
+        {
+            // Check if document name changed and needs synchronization
+            var sameDocumentFiles = FindFilesBySameDocumentNumber(changedRow);
+            
+            if (sameDocumentFiles.Any())
+            {
+                // Document name changed - silently synchronize
+                SynchronizeDocumentNames(changedRow, sameDocumentFiles);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Finds related files where their document number starts with the changed row's document number
+    /// (indicating they may belong to the same document but have longer document numbers)
+    /// </summary>
+    private List<Merge.NewDocs.NewDocumentRowViewModel> FindRelatedFilesByDocumentNumber(Merge.NewDocs.NewDocumentRowViewModel changedRow)
+    {
+        if (string.IsNullOrWhiteSpace(changedRow.ProposedDocumentNumber))
+        {
+            return new List<Merge.NewDocs.NewDocumentRowViewModel>();
+        }
+
+        var relatedFiles = DocumentRows
+            .Where(r => r != changedRow &&
+                   !string.Equals(r.FileExtension, changedRow.FileExtension, StringComparison.OrdinalIgnoreCase) &&
+                   !string.IsNullOrWhiteSpace(r.ProposedDocumentNumber) &&
+                   r.ProposedDocumentNumber.StartsWith(changedRow.ProposedDocumentNumber, StringComparison.OrdinalIgnoreCase) &&
+                   r.ProposedDocumentNumber.Length > changedRow.ProposedDocumentNumber.Length)
+            .ToList();
+
+        return relatedFiles;
+    }
+
+    /// <summary>
+    /// Finds files with the same document number as the changed row (different file extensions)
+    /// </summary>
+    private List<Merge.NewDocs.NewDocumentRowViewModel> FindFilesBySameDocumentNumber(Merge.NewDocs.NewDocumentRowViewModel changedRow)
+    {
+        if (string.IsNullOrWhiteSpace(changedRow.ProposedDocumentNumber))
+        {
+            return new List<Merge.NewDocs.NewDocumentRowViewModel>();
+        }
+
+        var sameDocumentFiles = DocumentRows
+            .Where(r => r != changedRow &&
+                   !string.Equals(r.FileExtension, changedRow.FileExtension, StringComparison.OrdinalIgnoreCase) &&
+                   string.Equals(r.ProposedDocumentNumber, changedRow.ProposedDocumentNumber, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        return sameDocumentFiles;
+    }
+
+    /// <summary>
+    /// Handles document number shortening by asking user for confirmation and updating related files
+    /// </summary>
+    private void HandleDocumentNumberShorteningWithConfirmation(
+        Merge.NewDocs.NewDocumentRowViewModel changedRow,
+        List<Merge.NewDocs.NewDocumentRowViewModel> relatedFiles)
+    {
+        // Build the confirmation message
+        var messageBuilder = new StringBuilder();
+        messageBuilder.AppendLine("The following files may belong to the same document:");
+        messageBuilder.AppendLine();
+        
+        foreach (var relatedFile in relatedFiles)
+        {
+            messageBuilder.AppendLine($"  • {relatedFile.FileName}");
+        }
+        
+        messageBuilder.AppendLine();
+        messageBuilder.AppendLine("Update these files to use the same document number?");
+
+        // Show confirmation dialog
+        var result = _dialogService.ShowMessageBox(
+            messageBuilder.ToString(),
+            "Related Files Detected",
+            System.Windows.MessageBoxButton.YesNo,
+            System.Windows.MessageBoxImage.Question);
+
+        if (result == System.Windows.MessageBoxResult.Yes)
+        {
+            // User confirmed - update all related files
+            UpdateRelatedFilesDocumentNumber(changedRow.ProposedDocumentNumber, relatedFiles);
+        }
+    }
+
+    /// <summary>
+    /// Updates the document number for all related files
+    /// </summary>
+    private void UpdateRelatedFilesDocumentNumber(string newDocumentNumber, List<Merge.NewDocs.NewDocumentRowViewModel> filesToUpdate)
+    {
+        // Get existing document numbers for validation
+        var existingDocumentNumbers = new HashSet<string>(
+            _existingDocuments.Select(d => d.Number),
+            StringComparer.OrdinalIgnoreCase);
+
+        // Update each file
+        foreach (var file in filesToUpdate)
+        {
+            // Update the document number programmatically (without triggering callbacks)
+            file.UpdateDocumentNumberProgrammatically(newDocumentNumber);
+            
+            // Validate the updated row
+            file.Validate(existingDocumentNumbers, DocumentRows);
+        }
+
+        // Update counts after all changes
+        UpdateCounts();
+    }
+
+    /// <summary>
+    /// Silently synchronizes document names for files with the same document number
+    /// </summary>
+    private void SynchronizeDocumentNames(
+        Merge.NewDocs.NewDocumentRowViewModel changedRow,
+        List<Merge.NewDocs.NewDocumentRowViewModel> sameDocumentFiles)
+    {
+        // Get existing document numbers for validation
+        var existingDocumentNumbers = new HashSet<string>(
+            _existingDocuments.Select(d => d.Number),
+            StringComparer.OrdinalIgnoreCase);
+
+        // Update each file's document name
+        foreach (var file in sameDocumentFiles)
+        {
+            // Update the document name programmatically (without triggering callbacks)
+            file.UpdateDocumentNameProgrammatically(changedRow.ProposedDocumentName);
+            
+            // Validate the updated row
+            file.Validate(existingDocumentNumbers, DocumentRows);
+        }
+
+        // Update counts after all changes
         UpdateCounts();
     }
 

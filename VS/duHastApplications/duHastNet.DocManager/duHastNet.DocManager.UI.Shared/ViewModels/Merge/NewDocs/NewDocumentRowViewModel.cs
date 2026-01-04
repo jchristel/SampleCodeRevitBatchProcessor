@@ -104,6 +104,21 @@ public partial class NewDocumentRowViewModel : ObservableObject
     private Action<NewDocumentRowViewModel>? _validationCallback;
 
     /// <summary>
+    /// Callback to handle related files when document number or name changes
+    /// </summary>
+    private Action<NewDocumentRowViewModel, List<NewDocumentRowViewModel>>? _relatedFilesCallback;
+
+    /// <summary>
+    /// Previous document number value for detecting shortening
+    /// </summary>
+    private string _previousDocumentNumber = string.Empty;
+
+    /// <summary>
+    /// Flag to prevent recursive callback invocations during programmatic updates
+    /// </summary>
+    private bool _isUpdatingProgrammatically = false;
+
+    /// <summary>
     /// Collection of custom field values for this document
     /// </summary>
     [ObservableProperty]
@@ -153,6 +168,7 @@ public partial class NewDocumentRowViewModel : ObservableObject
     /// <param name="revisionSuffix">The revision suffix character (e.g., ']')</param>
     /// <param name="customFieldDefinitions">List of custom field definitions to create value placeholders for</param>
     /// <param name="validationCallback">Callback to invoke when validation is needed</param>
+    /// <param name="relatedFilesCallback">Callback to invoke when related files need to be detected</param>
     public NewDocumentRowViewModel(
         string filePath,
         SupportedFileType supportedFileType,
@@ -160,11 +176,13 @@ public partial class NewDocumentRowViewModel : ObservableObject
         string? revisionPrefix,
         string? revisionSuffix,
         IEnumerable<CustomFieldDefinition>? customFieldDefinitions = null,
-        Action<NewDocumentRowViewModel>? validationCallback = null)
+        Action<NewDocumentRowViewModel>? validationCallback = null,
+        Action<NewDocumentRowViewModel, List<NewDocumentRowViewModel>>? relatedFilesCallback = null)
     {
         FullFilePath = filePath;
         SupportedFileType = supportedFileType;
         _validationCallback = validationCallback;
+        _relatedFilesCallback = relatedFilesCallback;
 
         // Initialize custom field values from definitions
         CustomFieldValues = [];
@@ -219,6 +237,9 @@ public partial class NewDocumentRowViewModel : ObservableObject
         // Apply document number modifier if present
         ProposedDocumentNumber = supportedFileType.GetModifiedDocumentNumber(documentNumberPart);
 
+        // Initialize previous document number for change detection
+        _previousDocumentNumber = ProposedDocumentNumber;
+
         // Set proposed name
         ProposedDocumentName = documentNamePart;
 
@@ -267,19 +288,46 @@ public partial class NewDocumentRowViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Called when ProposedDocumentNumber changes - triggers validation
+    /// Called when ProposedDocumentNumber changes - triggers validation and related files detection
     /// </summary>
     partial void OnProposedDocumentNumberChanged(string value)
     {
+        // Skip if this is a programmatic update (avoid recursion)
+        if (_isUpdatingProgrammatically)
+        {
+            return;
+        }
+
+        // Check if the document number was shortened
+        if (!string.IsNullOrEmpty(_previousDocumentNumber) && 
+            !string.IsNullOrEmpty(value) &&
+            value.Length < _previousDocumentNumber.Length)
+        {
+            // Invoke related files callback for potential matches
+            _relatedFilesCallback?.Invoke(this, new List<NewDocumentRowViewModel>());
+        }
+
+        // Update previous value for next change
+        _previousDocumentNumber = value;
+
         // Invoke validation callback to check for duplicates across all rows
         _validationCallback?.Invoke(this);
     }
 
     /// <summary>
-    /// Called when ProposedDocumentName changes - triggers validation
+    /// Called when ProposedDocumentName changes - triggers validation and related files synchronization
     /// </summary>
     partial void OnProposedDocumentNameChanged(string value)
     {
+        // Skip if this is a programmatic update (avoid recursion)
+        if (_isUpdatingProgrammatically)
+        {
+            return;
+        }
+
+        // Invoke related files callback for document name synchronization
+        _relatedFilesCallback?.Invoke(this, new List<NewDocumentRowViewModel>());
+
         // Invoke validation callback to re-validate status
         _validationCallback?.Invoke(this);
     }
@@ -363,6 +411,38 @@ public partial class NewDocumentRowViewModel : ObservableObject
         // All validations passed
         Status = NewDocumentRowStatus.ReadyToAdd;
         StatusMessage = "Ready to add";
+    }
+
+    /// <summary>
+    /// Sets the programmatic update flag to prevent callback invocations
+    /// </summary>
+    /// <param name="isUpdating">True to disable callbacks, false to enable</param>
+    internal void SetProgrammaticUpdate(bool isUpdating)
+    {
+        _isUpdatingProgrammatically = isUpdating;
+    }
+
+    /// <summary>
+    /// Updates the document number programmatically without triggering callbacks
+    /// </summary>
+    /// <param name="documentNumber">The new document number</param>
+    internal void UpdateDocumentNumberProgrammatically(string documentNumber)
+    {
+        _isUpdatingProgrammatically = true;
+        ProposedDocumentNumber = documentNumber;
+        _previousDocumentNumber = documentNumber;
+        _isUpdatingProgrammatically = false;
+    }
+
+    /// <summary>
+    /// Updates the document name programmatically without triggering callbacks
+    /// </summary>
+    /// <param name="documentName">The new document name</param>
+    internal void UpdateDocumentNameProgrammatically(string documentName)
+    {
+        _isUpdatingProgrammatically = true;
+        ProposedDocumentName = documentName;
+        _isUpdatingProgrammatically = false;
     }
 
     #endregion

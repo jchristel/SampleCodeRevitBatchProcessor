@@ -281,10 +281,12 @@ public partial class DocumentMatchControlViewModel : ObservableObject
 
         // Create and show the dialog
         var dialogViewModel = new Merge.NewDocs.AddNewDocumentsDialogViewModel(
-            _currentFolderManager,
-            currentDocuments,
-            supportedUnknownDocuments,
-            customFieldDefinitions);
+            currentFolderManager: _currentFolderManager,
+            existingDocuments: currentDocuments,
+            unknownDocuments: supportedUnknownDocuments,
+            dialogService: _dialogService,
+            customFieldDefinitions: customFieldDefinitions);
+        
         var result = _dialogService.ShowDialog(dialogViewModel);
 
         if (result == true && dialogViewModel.DialogConfirmed)

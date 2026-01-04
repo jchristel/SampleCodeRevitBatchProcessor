@@ -82,6 +82,19 @@ public class DocumentImportService
             var customFieldColumns = GetCustomFieldColumns(headers, customFieldLookup);
             var revisionHistoryColumns = GetRevisionHistoryColumns(headers);
 
+            // Validate that all custom field definitions have corresponding CSV columns
+            // This ensures the business rule "all documents use all properties" is maintained
+            var missingColumns = customFieldDefinitions
+                .Where(cfd => !customFieldColumns.Contains(cfd.PropertyName, StringComparer.OrdinalIgnoreCase))
+                .Select(cfd => cfd.PropertyName)
+                .ToList();
+
+            if (missingColumns.Any())
+            {
+                return ImportResult.CreateFailure(
+                    $"Import failed: CSV file is missing required custom field columns: {string.Join(", ", missingColumns)}");
+            }
+
             int rowNumber = 1; // Start at 1 for first data row
 
             // Read each row

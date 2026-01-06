@@ -25,6 +25,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.UI.Shared.Stores;
+using duHastNet.DocManager.UI.Shared.Interfaces;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using duHastNet.DocManager.Core.Services;
@@ -61,7 +62,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
     {
         #region Private Fields
 
-        private readonly MessageStore _messageStore;
+        private readonly IMessageStore _messageStore;
         private readonly bool _isEditMode;
         private readonly MetaDataMap? _existingMapping;
 
@@ -152,7 +153,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         public MetaDataMappingDialogViewModel(
             List<string> availableMetaFields,
             List<string> availableDocumentProperties,
-            MessageStore messageStore)
+            IMessageStore messageStore)
         {
             _messageStore = messageStore ?? throw new ArgumentNullException(nameof(messageStore));
             _isEditMode = false;
@@ -199,7 +200,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             List<string> availableMetaFields,
             List<string> availableDocumentProperties,
             MetaDataMap existingMapping,
-            MessageStore messageStore)
+            IMessageStore messageStore)
             : this(availableMetaFields, availableDocumentProperties, messageStore)
         {
             _isEditMode = true;

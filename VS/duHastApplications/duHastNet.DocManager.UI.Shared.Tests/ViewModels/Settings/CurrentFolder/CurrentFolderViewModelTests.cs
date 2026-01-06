@@ -57,8 +57,8 @@ public partial class CurrentFolderViewModelTests
         // Setup settings
         _settings = new CurrentFolderManagerSettings
         {
-            IncomingFolderPath = string.Empty,
-            SupersededFolderPath = string.Empty,
+            IncomingFolderPath = _testDirectory,  // Set to valid existing directory
+            SupersededFolderPath = _testDirectory,  // Set to valid existing directory
             RevisionPrefix = "[",  // Set to valid value to avoid validation errors
             RevisionSuffix = "]",  // Set to valid value to avoid validation errors
             FilingRules = new List<IFilingRule>
@@ -95,8 +95,8 @@ public partial class CurrentFolderViewModelTests
         Assert.Multiple(() =>
         {
             Assert.That(viewModel, Is.Not.Null);
-            Assert.That(viewModel.IncomingFolderPath, Is.EqualTo(string.Empty));
-            Assert.That(viewModel.ArchiveFolderPath, Is.EqualTo(string.Empty));
+            Assert.That(viewModel.IncomingFolderPath, Is.EqualTo(_testDirectory));
+            Assert.That(viewModel.ArchiveFolderPath, Is.EqualTo(_testDirectory));
             Assert.That(viewModel.RevisionPrefix, Is.EqualTo("["));
             Assert.That(viewModel.RevisionSuffix, Is.EqualTo("]"));
         });
@@ -156,8 +156,12 @@ public partial class CurrentFolderViewModelTests
                 propertyChangedRaised = true;
         };
 
-        // Act
-        viewModel.IncomingFolderPath = _testDirectory;
+        // Create a different valid directory
+        var differentDirectory = Path.Combine(_testDirectory, "SubFolder");
+        Directory.CreateDirectory(differentDirectory);
+
+        // Act - Set to a DIFFERENT value than initial
+        viewModel.IncomingFolderPath = differentDirectory;
 
         // Assert
         Assert.That(propertyChangedRaised, Is.True);

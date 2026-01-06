@@ -4,6 +4,9 @@
 $project1Path = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager\duHastNet.DocManager.Core"
 $project2Path = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager\duHastNet.DocManager.UI.Shared"
 $project3Path = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager.Core.Tests"
+$project4Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager.UI.Shared.Tests"
+$project5Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager\duHastNet.docs"
+
 
 # Define the temp folder destination
 $tempFolder = "$env:TEMP\ProjectFilesCopy"
@@ -31,7 +34,7 @@ function Copy-ProjectFiles {
     }
     
     # Get all .cs and .xaml files recursively
-    $files = Get-ChildItem -Path $sourcePath -Include *.cs, *.xaml -Recurse -File
+    $files = Get-ChildItem -Path $sourcePath -Include *.cs, *.xaml, *.md -Recurse -File
     
     # Exclude auto-generated files
     $files = $files | Where-Object { 
@@ -76,6 +79,13 @@ Copy-ProjectFiles -sourcePath $project2Path -projectName "Project2" -destination
 
 Write-Host "`nCopying files from Project 3..." -ForegroundColor White
 Copy-ProjectFiles -sourcePath $project3Path -projectName "Project3" -destination $tempFolder
+
+Write-Host "`nCopying files from Project 4..." -ForegroundColor White
+Copy-ProjectFiles -sourcePath $project4Path -projectName "Project4" -destination $tempFolder
+
+Write-Host "`nCopying files from Project 5..." -ForegroundColor White
+Copy-ProjectFiles -sourcePath $project5Path -projectName "Project5" -destination $tempFolder
+
 
 
 Write-Host "`nAll files copied successfully to: $tempFolder" -ForegroundColor Green

@@ -46,11 +46,11 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
     {
         #region Private Fields
 
-        private readonly MessageStore _messageStore;
+        private readonly IMessageStore _messageStore;
         private readonly IDialogService _dialogService;
-        private readonly MetaDataMapperAconex _aconexMapper;
+        private readonly ICloudMetaData _aconexMapper;
         private readonly IMetaDataTemplateService _templateService;
-        private readonly Manager _manager;
+        private readonly IManager _manager;
 
         #endregion Private Fields
 
@@ -128,11 +128,11 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
         /// <param name="aconexMapper">The Aconex mapper instance to bind to</param>
         /// <param name="templateService">Service for reading metadata template files</param>
         public AconexMetadataControlViewModel(
-            MessageStore messageStore,
+            IMessageStore messageStore,
             IDialogService dialogService,
-            MetaDataMapperAconex aconexMapper,
+            ICloudMetaData aconexMapper,
             IMetaDataTemplateService templateService,
-            Manager manager)
+            IManager manager)
         {
             _messageStore = messageStore ?? throw new ArgumentNullException(nameof(messageStore));
             _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
@@ -145,7 +145,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
 
             // Subscribe to MappingsChanged event from CloudDocumentManager
             // This event is raised when mappings are modified externally (e.g., custom field deactivation)
-            _manager.CloudDocumentManager.MappingsChanged += OnMappingsChanged;
+            _manager.CloudDocManager.MappingsChanged += OnMappingsChanged;
 
             // Load existing values from the mapper
             LoadFromMapper();

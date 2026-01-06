@@ -42,7 +42,7 @@ namespace duHastNet.DocManager.UI.Shared.Validators
         /// <returns>ValidationResult indicating success or failure with error message</returns>
         public static ValidationResult? ValidateFolderExists(string? path, ValidationContext context)
         {
-            // Empty/null paths are valid (optional fields)
+            // Empty/null paths are not valid
             if (string.IsNullOrWhiteSpace(path))
             {
                 return new ValidationResult("Path can not be empty");

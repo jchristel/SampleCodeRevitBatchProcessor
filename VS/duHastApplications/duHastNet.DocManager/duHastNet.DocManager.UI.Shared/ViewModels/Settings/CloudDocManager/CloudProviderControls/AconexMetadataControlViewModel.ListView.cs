@@ -106,7 +106,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             try
             {
                 // Create ViewModel for Add mode
-                var dialogViewModel = new ViewModels.CloudProviderControls.MetaDataMappingDialogViewModel(
+                var dialogViewModel = new MetaDataMappingDialogViewModel(
                     unmappedFields,
                     GetAvailableDocumentProperties(),
                     _messageStore);
@@ -206,7 +206,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             try
             {
                 // Create ViewModel for Edit mode with existing mapping
-                var dialogViewModel = new ViewModels.CloudProviderControls.MetaDataMappingDialogViewModel(
+                var dialogViewModel = new MetaDataMappingDialogViewModel(
                     [.. _aconexMapper.AvailableFields],  // All fields (not just unmapped) for Edit mode
                     GetAvailableDocumentProperties(),
                     SelectedMapping.Model,  // Pass existing mapping

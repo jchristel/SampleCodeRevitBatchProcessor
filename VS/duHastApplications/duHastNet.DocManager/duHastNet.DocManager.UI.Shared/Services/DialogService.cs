@@ -122,7 +122,7 @@ public class DialogService : IDialogService
         {
             dialog = new Views.Settings.CurrentFolder.SupportedFileTypeDialog(supportedFileTypeViewModel);
         }
-        else if (viewModel is ViewModels.CloudProviderControls.MetaDataMappingDialogViewModel metaDataMappingViewModel)
+        else if (viewModel is ViewModels.Settings.CloudDocManager.CloudProviderControls.MetaDataMappingDialogViewModel metaDataMappingViewModel)
         {
             dialog = new Views.Settings.CloudDocManager.MetaDataMappingDialog(metaDataMappingViewModel);
         }

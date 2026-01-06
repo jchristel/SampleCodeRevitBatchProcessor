@@ -34,7 +34,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.CloudDocManager.CloudProviderControls
 {
     /// <summary>
     /// ViewModel for Aconex metadata control

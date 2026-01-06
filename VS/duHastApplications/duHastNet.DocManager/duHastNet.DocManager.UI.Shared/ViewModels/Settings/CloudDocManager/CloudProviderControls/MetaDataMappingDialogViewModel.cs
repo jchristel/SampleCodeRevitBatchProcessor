@@ -31,7 +31,7 @@ using System.ComponentModel.DataAnnotations;
 using duHastNet.DocManager.Core.Services;
 using duHastNet.DocManager.Core.Models.CloudDocManager.MetaData;
 
-namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
+namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.CloudDocManager.CloudProviderControls
 {
     /// <summary>
     /// Enumeration for mapping source types

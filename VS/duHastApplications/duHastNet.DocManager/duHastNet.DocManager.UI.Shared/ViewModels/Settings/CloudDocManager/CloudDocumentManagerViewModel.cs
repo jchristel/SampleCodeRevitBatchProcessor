@@ -351,7 +351,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.CloudDocManager
             }
 
             // Create and return the Aconex control ViewModel
-            return new ViewModels.CloudProviderControls.AconexMetadataControlViewModel(
+            return new ViewModels.Settings.CloudDocManager.CloudProviderControls.AconexMetadataControlViewModel(
                 _messageStore,
                 _dialogService,
                 aconexMapper,

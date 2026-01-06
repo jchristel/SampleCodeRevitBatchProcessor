@@ -22,7 +22,7 @@
 //
 
 using duHastNet.DocManager.UI.Shared.ViewModels;
-using duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls;
+using duHastNet.DocManager.UI.Shared.ViewModels.Settings.CloudDocManager.CloudProviderControls;
 using System.ComponentModel;
 using System.Windows;
 

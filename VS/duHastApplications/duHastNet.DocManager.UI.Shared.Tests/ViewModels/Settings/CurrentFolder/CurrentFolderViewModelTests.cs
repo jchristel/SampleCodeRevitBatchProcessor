@@ -103,6 +103,17 @@ public partial class CurrentFolderViewModelTests
     }
 
     [Test]
+    public void Constructor_WithValidSettings_HasNoErrors()
+    {
+        // Arrange & Act
+        var viewModel = CreateViewModel();
+
+        // Assert
+        Assert.That(viewModel.HasErrors, Is.False, 
+            "ViewModel should have no validation errors after construction with valid settings");
+    }
+
+    [Test]
     public void Constructor_LoadsSettingsFromCurrentFolderManager()
     {
         // Arrange

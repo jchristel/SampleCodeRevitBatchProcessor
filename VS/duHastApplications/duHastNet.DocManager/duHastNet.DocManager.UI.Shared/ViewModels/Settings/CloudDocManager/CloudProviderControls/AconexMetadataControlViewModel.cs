@@ -109,11 +109,8 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls
             // Enable/disable refresh button based on whether a valid file is selected
             IsRefreshTemplateEnabled = !string.IsNullOrWhiteSpace(value) && File.Exists(value);
 
-            // Automatically load template headers when file path is set
-            if (IsRefreshTemplateEnabled)
-            {
-                _ = LoadTemplateHeadersAsync();
-            }
+            // Automatically load template headers when file path is set is not desired
+            // that is done via explicit refresh command
         }
 
         #endregion Property Changed Handlers

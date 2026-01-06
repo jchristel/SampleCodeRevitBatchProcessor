@@ -383,14 +383,11 @@ public partial class AconexMetadataControlViewModelTests
         var viewModel = CreateViewModel();
         viewModel.TemplateMetaDataFilePath = _testCsvFilePath;
 
-        // Wait for the initial async load from property change to complete
-        await Task.Delay(200);
-
         // Act
         await viewModel.RefreshTemplateCommand.ExecuteAsync(null);
 
-        // Assert - Should be called twice: once from setting property, once from refresh
-        _mockAconexMapper.Verify(x => x.UpdateAvailableFields(result.ColumnHeaders), Times.Exactly(2));
+        // Assert
+        _mockAconexMapper.Verify(x => x.UpdateAvailableFields(result.ColumnHeaders), Times.Once);
         _mockMessageStore.Verify(x => x.EnqueueMessage(
             It.Is<string>(s => s.Contains("3 column headers")),
             MessageTypes.Information,

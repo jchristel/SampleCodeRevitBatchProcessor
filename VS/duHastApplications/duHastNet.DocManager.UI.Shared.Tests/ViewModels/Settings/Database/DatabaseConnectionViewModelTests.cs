@@ -16,15 +16,16 @@
 //
 //
 
-using NUnit.Framework;
-using Moq;
-using duHastNet.DocManager.Core.Services.Api;
+using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.Database;
 using duHastNet.DocManager.Core.Models.Results;
+using duHastNet.DocManager.Core.Services.Api;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
 using duHastNet.DocManager.UI.Shared.ViewModels.Settings.Database;
+using Moq;
+using NUnit.Framework;
 
 namespace duHastNet.DocManager.UI.Shared.Tests.ViewModels.Settings.Database;
 
@@ -38,17 +39,17 @@ namespace duHastNet.DocManager.UI.Shared.Tests.ViewModels.Settings.Database;
 [TestFixture]
 public class DatabaseConnectionViewModelTests
 {
-    private Mock<DocManagerApi> _mockDocManagerApi;
-    private Mock<MessageStore> _mockMessageStore;
-    private Mock<Manager> _mockManager;
+    private Mock<IDocManagerApi> _mockDocManagerApi;
+    private Mock<IMessageStore> _mockMessageStore;
+    private Mock<IManager> _mockManager;
     private Mock<IDialogService> _mockDialogService;
 
     [SetUp]
     public void Setup()
     {
-        _mockDocManagerApi = new Mock<DocManagerApi>();
-        _mockMessageStore = new Mock<MessageStore>();
-        _mockManager = new Mock<Manager>();
+        _mockDocManagerApi = new Mock<IDocManagerApi>();
+        _mockMessageStore = new Mock<IMessageStore>();
+        _mockManager = new Mock<IManager>();
         _mockDialogService = new Mock<IDialogService>();
     }
 

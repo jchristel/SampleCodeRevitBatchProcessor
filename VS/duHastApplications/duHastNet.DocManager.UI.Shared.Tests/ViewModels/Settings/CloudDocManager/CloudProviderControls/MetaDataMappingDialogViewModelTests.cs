@@ -20,7 +20,7 @@ using NUnit.Framework;
 using Moq;
 using duHastNet.DocManager.Core.Models.CloudDocManager.MetaData;
 using duHastNet.DocManager.UI.Shared.Stores;
-using duHastNet.DocManager.UI.Shared.ViewModels.CloudProviderControls;
+using duHastNet.DocManager.UI.Shared.ViewModels.Settings.CloudDocManager.CloudProviderControls;
 
 namespace duHastNet.DocManager.UI.Shared.Tests.ViewModels.Settings.CloudDocManager.CloudProviderControls;
 

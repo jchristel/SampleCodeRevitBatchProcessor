@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <Folder Include="ViewModels\Merge\MatchedDocs\" />
+    <Folder Include="ViewModels\Merge\MergeLog\" />
     <Folder Include="ViewModels\Settings\CloudDocManager\CloudProviderControls\" />
     <Folder Include="ViewModels\Settings\Database\" />
     <Folder Include="ViewModels\Settings\CurrentFolder\" />

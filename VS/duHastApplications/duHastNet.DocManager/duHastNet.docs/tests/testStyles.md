@@ -7,9 +7,65 @@ This guide defines the testing standards for the duHastNet.DocManager project. A
 
 ### Framework and Tooling
 - Use **NUnit** as the testing framework
+- Use **Moq** for mocking dependencies in ViewModel and service tests
 - Use **SQLite-NET-PCL** ORM for all database operations in tests
 - Tests should be deterministic and repeatable
 - Each test should be independent and not rely on other tests
+
+### Mocking with Moq
+
+#### Critical Rule: Methods with Optional Parameters
+**IMPORTANT:** Moq's expression trees cannot handle methods with optional parameters when using literal values. You must specify ALL parameters explicitly using `It.Is<T>()` or `It.IsAny<T>()` matchers.
+
+**❌ WRONG - Causes CS0854 Error:**
+```csharp
+// Method signature: SetupDatabaseAsync(string path, List<string>? props = null, bool overwrite = false)
+_mockApi.Setup(x => x.SetupDatabaseAsync(
+    "path.db",      // Literal value with optional params
+    null,           // Optional parameter
+    true))          // Optional parameter - ERROR!
+```
+
+**✅ CORRECT:**
+```csharp
+// Specify ALL parameters using matchers
+_mockApi.Setup(x => x.SetupDatabaseAsync(
+    It.Is<string>(s => s == "path.db"),  // Use It.Is matcher
+    It.IsAny<List<string>>(),            // Use It.IsAny for optional params
+    It.Is<bool>(b => b == true)))        // Use It.Is matcher
+```
+
+**Common Optional Parameter Patterns:**
+```csharp
+// IDialogService.ShowSaveFileDialog(string title, string filter, string ext, string? initialDir = null)
+_mockDialogService.Setup(x => x.ShowSaveFileDialog(
+    It.IsAny<string>(),   // title
+    It.IsAny<string>(),   // filter
+    It.IsAny<string>(),   // defaultExtension
+    It.IsAny<string>()))  // initialDirectory (optional - MUST specify!)
+
+// IDialogService.ShowOpenFileDialog(string title, string filter, string? initialDir = null, bool multiselect = false)
+_mockDialogService.Setup(x => x.ShowOpenFileDialog(
+    It.IsAny<string>(),   // title
+    It.IsAny<string>(),   // filter
+    It.IsAny<string>(),   // initialDirectory (optional - MUST specify!)
+    It.IsAny<bool>()))    // multiselect (optional - MUST specify!)
+```
+
+#### Basic Mocking Patterns
+```csharp
+// Setup - Configure mock behavior
+_mockService.Setup(x => x.GetValue()).Returns("test value");
+_mockService.Setup(x => x.GetValueAsync()).ReturnsAsync("async value");
+
+// Setup with parameter matching
+_mockService.Setup(x => x.Process(It.IsAny<string>())).Returns(true);
+_mockService.Setup(x => x.Process(It.Is<string>(s => s.Length > 5))).Returns(true);
+
+// Verify - Assert mock was called
+_mockService.Verify(x => x.GetValue(), Times.Once);
+_mockService.Verify(x => x.Process(It.IsAny<string>()), Times.Never);
+```
 
 ### Test Organization
 - One test class per production class being tested

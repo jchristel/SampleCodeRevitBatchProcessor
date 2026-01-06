@@ -31,7 +31,7 @@ namespace duHastNet.DocManager.Core.Services.Api;
 /// <summary>
 /// Main API class for external integration (PyRevit, Revit Plugin, Standalone)
 /// </summary>
-public partial class DocManagerApi : IDisposable
+public partial class DocManagerApi : IDocManagerApi
 {
     private IDatabaseService? _databaseService;
     private IUnitOfWork? _unitOfWork;

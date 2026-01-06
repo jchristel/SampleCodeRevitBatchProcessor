@@ -23,10 +23,11 @@
 
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using duHastNet.DocManager.UI.Shared.Interfaces;
 
 namespace duHastNet.DocManager.UI.Shared.Stores;
 
-public partial class MessageStore : ObservableObject, IDisposable
+public partial class MessageStore : ObservableObject, IMessageStore, IDisposable
 {
     private CancellationTokenSource? _dismissCancellation;
     private const int DefaultDismissSeconds = 5;

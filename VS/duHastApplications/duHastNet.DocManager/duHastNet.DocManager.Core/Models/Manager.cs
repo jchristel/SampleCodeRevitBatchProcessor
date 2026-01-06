@@ -24,10 +24,11 @@
 using duHastNet.DocManager.Core.Models.CloudDocManager;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.Core.Models.Database;
+using duHastNet.DocManager.Core.Interfaces;
 
 namespace duHastNet.DocManager.Core.Models
 {
-    public class Manager
+    public class Manager:IManager
     {
         /// <summary>
         /// contains all the documents
@@ -47,12 +48,21 @@ namespace duHastNet.DocManager.Core.Models
         /// <summary>
         /// Cloud document manager for metadata mapping and upload configuration
         /// </summary>
-        private readonly CloudDocumentManager _cloudDocumentManager;
+        private CloudDocumentManager _cloudDocManager;
 
         /// <summary>
         /// Flag indicating data has been loaded from the database
         /// </summary>
         public bool IsDataLoaded { get; private set; }
+
+        /// <summary>
+        /// Cloud document manager for metadata mapping and upload configuration
+        /// </summary>
+        public CloudDocumentManager? CloudDocManager
+        {
+            get => _cloudDocManager;
+            set => _cloudDocManager = value;
+        }
 
         #region Documents
 
@@ -174,7 +184,7 @@ namespace duHastNet.DocManager.Core.Models
         /// </summary>
         public CloudDocumentManager CloudDocumentManager
         {
-            get { return _cloudDocumentManager; }
+            get { return _cloudDocManager; }
         }
 
         #endregion Cloud Document Manager
@@ -253,7 +263,7 @@ namespace duHastNet.DocManager.Core.Models
             _documentContainer = new DocumentContainer();
             _revisionContainer = new RevisionContainer();
             _customFieldContainer = new CustomFieldsContainer();
-            _cloudDocumentManager = cloudDocumentManager ?? throw new ArgumentNullException(nameof(cloudDocumentManager));
+            _cloudDocManager = cloudDocumentManager ?? throw new ArgumentNullException(nameof(cloudDocumentManager));
 
             // set default loader flag
             IsDataLoaded = false;

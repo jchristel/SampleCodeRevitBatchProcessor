@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\duHastNet.DocManager.Core\duHastNet.DocManager.Core.csproj" />
-    <ProjectReference Include="..\duHastNet.DocManager.UI.Shared\duHastNet.DocManager.UI.Shared.csproj" />
+    <ProjectReference Include="..\duHastNet.DocManager\duHastNet.DocManager.Core\duHastNet.DocManager.Core.csproj" />
+    <ProjectReference Include="..\duHastNet.DocManager\duHastNet.DocManager.UI.Shared\duHastNet.DocManager.UI.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

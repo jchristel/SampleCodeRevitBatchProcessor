@@ -206,6 +206,11 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.Database
                 else
                 {
                     // Failed - connection failed
+                    var errorMessage = string.Join("; ", connectResult.Errors);
+                    _messageStore.EnqueueMessage(
+                        $"Failed to connect to database: {errorMessage}",
+                        MessageTypes.Error); // No auto-dismiss for errors
+
                     IsConnected = false;
                 }
             }
@@ -254,8 +259,39 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.Database
         [RelayCommand]
         private async Task TestDatabaseAsync()
         {
-            // TODO: Implement database connection test
-            await Task.CompletedTask;
+            try
+            {
+                IsBusy = true;
+
+                var testResult = await _docManagerApi.TestDatabaseAsync();
+
+                if (testResult.Success)
+                {
+                    _messageStore.EnqueueMessage(
+                        testResult.Message,
+                        MessageTypes.Information,
+                        5); // Auto-dismiss after 5 seconds
+                }
+                else
+                {
+                    var errorMessage = testResult.HasErrors
+                        ? string.Join("; ", testResult.Errors)
+                        : testResult.Message;
+                    _messageStore.EnqueueMessage(
+                        $"Database test failed: {errorMessage}",
+                        MessageTypes.Error); // No auto-dismiss for errors
+                }
+            }
+            catch (Exception ex)
+            {
+                _messageStore.EnqueueMessage(
+                    $"Database test failed: {ex.Message}",
+                    MessageTypes.Error);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         #endregion

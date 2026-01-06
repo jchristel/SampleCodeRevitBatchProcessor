@@ -65,6 +65,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.Database
 
             // Validate all properties on startup to show initial validation state
             ValidateAllProperties();
+
+            // Initialize button states based on current state
+            UpdateButtonStates();
         }
 
         /// <summary>

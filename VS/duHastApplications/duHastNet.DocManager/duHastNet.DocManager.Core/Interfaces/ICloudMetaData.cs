@@ -17,8 +17,9 @@
 //
 
 
-using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.Core.Models.CloudDocManager.MetaData;
+using duHastNet.DocManager.Core.Models.CurrentFolder;
+using static SQLite.SQLite3;
 
 namespace duHastNet.DocManager.Core.Interfaces
 {
@@ -28,6 +29,12 @@ namespace duHastNet.DocManager.Core.Interfaces
     /// </summary> 
     public interface ICloudMetaData
     {
+        public List<string> AvailableFields
+        {
+            get;
+        }
+
+
         /// <summary>
         /// The fully qualified path to the metadata template file.
         /// which is used to upload documents
@@ -70,5 +77,13 @@ namespace duHastNet.DocManager.Core.Interfaces
         /// </summary>
         public List<string> CleanupMappings(List<string> customFieldNames);
 
+        public List<string> CleanupInvalidMappings();
+
+        /// <summary>
+        /// Updates the list of available fields with the specified field names.
+        /// </summary>
+        /// <param name="fieldNames">A list of field names to be added to the available fields.  The list cannot be null, and each field name
+        /// must be a non-empty string.</param>
+        public void UpdateAvailableFields(List<string> fieldNames);
     }
 }

@@ -26,6 +26,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Services.Api;
+using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
 using System.ComponentModel.DataAnnotations;
@@ -39,9 +40,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.Database
         /// </summary>
         #region Private Fields
 
-        private readonly DocManagerApi _docManagerApi;
-        private readonly MessageStore _messageStore;
-        private readonly Manager _manager;
+        private readonly IDocManagerApi _docManagerApi;
+        private readonly IMessageStore _messageStore;
+        private readonly IManager _manager;
         private readonly IDialogService _dialogService;
 
         #endregion Private Fields
@@ -49,9 +50,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.Database
         #region Constructor
 
         public DatabaseConnectionViewModel(
-            DocManagerApi docManagerApi,
-            MessageStore messageStore,
-            Manager manager,
+            IDocManagerApi docManagerApi,
+            IMessageStore messageStore,
+            IManager manager,
             IDialogService dialogService)
         {
             _docManagerApi = docManagerApi;

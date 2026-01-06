@@ -75,10 +75,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.Database
                         InitializeCustomFields();
 
                         //check meta mapping is still correct:
-                        var updatedFields = _manager.CloudDocumentManager?.MetaDataMapper?.CleanupMappings([.. _manager.GetAllCustomPropertyNames()]);
+                        var updatedFields = _manager.CloudDocManager?.MetaDataMapper?.CleanupMappings([.. _manager.GetAllCustomPropertyNames()]);
 
                         //Notify metadata mapping that database changed
-                        _manager.CloudDocumentManager?.RaiseMappingsChanged();
+                        _manager.CloudDocManager?.RaiseMappingsChanged();
 
                         // Inform user of success with auto-dismiss and list updated fields if any
                         if (updatedFields != null && updatedFields.Count > 0)
@@ -163,10 +163,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.Database
                         InitializeCustomFields();
 
                         //check meta mapping is still correct:
-                        var updatedFields = _manager.CloudDocumentManager?.MetaDataMapper?.CleanupMappings([.. _manager.GetAllCustomPropertyNames()]);
+                        var updatedFields = _manager.CloudDocManager?.MetaDataMapper?.CleanupMappings([.. _manager.GetAllCustomPropertyNames()]);
 
                         // Notify metadata mapping that database changed
-                        _manager.CloudDocumentManager?.RaiseMappingsChanged();
+                        _manager.CloudDocManager?.RaiseMappingsChanged();
 
                         UpdateStatistics();
 

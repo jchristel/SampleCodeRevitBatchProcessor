@@ -93,14 +93,14 @@ public interface IDocManagerApi : IDisposable
     /// </summary>
     /// <param name="manager">Manager instance to load data into</param>
     /// <returns>Setup result with load information</returns>
-    Task<SetupResult> LoadDataIntoManagerAsync(Manager manager);
+    Task<SetupResult> LoadDataIntoManagerAsync(IManager manager);
 
     /// <summary>
     /// Reloads data from database into Manager
     /// </summary>
     /// <param name="manager">Manager instance to reload data into</param>
     /// <returns>Setup result with reload information</returns>
-    Task<SetupResult> ReloadDataIntoManagerAsync(Manager manager);
+    Task<SetupResult> ReloadDataIntoManagerAsync(IManager manager);
 
     #endregion
 
@@ -161,4 +161,11 @@ public interface IDocManagerApi : IDisposable
     Task<int> UpdateDocumentAsync(Document document);
 
     #endregion
+
+    #region custom field Operations
+    Task<SetupResult> AddCustomFieldDefinitionAsync(string propertyName, bool isActive = true);
+
+    Task<SetupResult> UpdateCustomFieldIsActiveAsync(int customFieldDefinitionId, bool isActive);
+
+    #endregion Custom Field Operations
 }

@@ -474,7 +474,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.Database
                 return;
 
             // Access the metadata mapper through Manager
-            var metaDataMapper = _manager.CloudDocumentManager?.MetaDataMapper;
+            var metaDataMapper = _manager.CloudDocManager?.MetaDataMapper;
             if (metaDataMapper == null)
                 return;
 
@@ -496,7 +496,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.Database
             if (removedMappings.Count != 0)
             {
                 // Raise the MappingsChanged event so subscribers (AconexMetadataControlViewModel) can refresh
-                _manager.CloudDocumentManager?.RaiseMappingsChanged();
+                _manager.CloudDocManager?.RaiseMappingsChanged();
 
                 var message = $"Removed {removedMappings.Count} metadata mapping(s) referencing deactivated custom field(s):\n" +
                              string.Join("\n", removedMappings.Select(m => $"  - {m}"));

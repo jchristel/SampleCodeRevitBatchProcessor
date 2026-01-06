@@ -38,7 +38,7 @@ public partial class DocManagerApi
     /// </summary>
     /// <param name="manager">Manager instance to populate with data</param>
     /// <returns>Setup result with success/failure information</returns>
-    public async Task<SetupResult> LoadDataIntoManagerAsync(Manager manager)
+    public async Task<SetupResult> LoadDataIntoManagerAsync(IManager manager)
     {
         try
         {
@@ -114,7 +114,7 @@ public partial class DocManagerApi
     /// </summary>
     /// <param name="manager">Manager instance to refresh with data</param>
     /// <returns>Setup result with success/failure information</returns>
-    public async Task<SetupResult> ReloadDataIntoManagerAsync(Manager manager)
+    public async Task<SetupResult> ReloadDataIntoManagerAsync(IManager manager)
     {
         // Same implementation as LoadDataIntoManagerAsync - it clears and reloads
         return await LoadDataIntoManagerAsync(manager);
@@ -129,7 +129,7 @@ public partial class DocManagerApi
     /// </summary>
     /// <param name="manager">Manager instance to populate with data</param>
     /// <returns>Setup result with success/failure information</returns>
-    public SetupResult LoadDataIntoManager(Manager manager)
+    public SetupResult LoadDataIntoManager(IManager manager)
     {
         try
         {

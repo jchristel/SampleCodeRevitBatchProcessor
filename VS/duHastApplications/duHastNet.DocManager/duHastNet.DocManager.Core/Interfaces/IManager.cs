@@ -33,12 +33,23 @@ public interface IManager
     /// </summary>
     bool IsDataLoaded { get; }
 
+    int DocumentCount { get; }
+
+    int RevisionCount { get; }
+
+
     /// <summary>
     /// Gets or sets the cloud document manager
     /// </summary>
     Models.CloudDocManager.CloudDocumentManager? CloudDocManager { get; set; }
 
     #endregion
+
+    /// <summary>
+    /// Marks the data as loaded into the manager
+    /// </summary>
+    void MarkDataAsLoaded();
+
 
     #region Document Operations
 
@@ -61,6 +72,8 @@ public interface IManager
     /// <param name="doc">Document to add</param>
     void AddDocument(Document doc);
 
+
+
     #endregion
 
     #region Custom Field Operations
@@ -82,6 +95,8 @@ public interface IManager
     /// </summary>
     /// <returns>Collection of active custom field definitions</returns>
     IEnumerable<CustomFieldDefinition> GetActiveCustomFieldDefinitions();
+
+    void AddCustomFieldDefinition(CustomFieldDefinition customFieldDefinition);
 
     #endregion
 

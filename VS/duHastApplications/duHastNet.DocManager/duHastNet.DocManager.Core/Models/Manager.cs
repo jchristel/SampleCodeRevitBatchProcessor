@@ -110,7 +110,6 @@ namespace duHastNet.DocManager.Core.Models
 
         #endregion edit documents
 
-        #region custom properties
 
         #region custom properties
 
@@ -158,7 +157,7 @@ namespace duHastNet.DocManager.Core.Models
         /// Called by DocManagerApi when loading data
         /// </summary>
         /// <param name="definition"></param>
-        internal void AddCustomFieldDefinition(CustomFieldDefinition definition)
+        public void AddCustomFieldDefinition(CustomFieldDefinition definition)
         {
             _customFieldContainer.AddCustomField(definition);
         }
@@ -188,9 +187,6 @@ namespace duHastNet.DocManager.Core.Models
         }
 
         #endregion Cloud Document Manager
-
-
-        #endregion Documents
 
         #region Revisions
 
@@ -235,7 +231,7 @@ namespace duHastNet.DocManager.Core.Models
         /// <summary>
         /// Marks data as loaded (called by DocManagerApi after loading data)
         /// </summary>
-        internal void MarkDataAsLoaded()
+        public void MarkDataAsLoaded()
         {
             IsDataLoaded = true;
         }

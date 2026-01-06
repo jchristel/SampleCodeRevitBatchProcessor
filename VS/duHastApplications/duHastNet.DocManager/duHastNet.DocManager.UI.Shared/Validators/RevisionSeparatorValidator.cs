@@ -38,7 +38,7 @@ namespace duHastNet.DocManager.UI.Shared.Validators
         /// <returns>ValidationResult indicating success or failure with error message</returns>
         public static ValidationResult? ValidateRevisionMarker(string? value, ValidationContext context)
         {
-            // Empty/null values are valid (optional fields)
+            // Empty/null values are invalid - these fields are required
             if (string.IsNullOrWhiteSpace(value))
             {
                 return new ValidationResult("Must contain at least a single character");

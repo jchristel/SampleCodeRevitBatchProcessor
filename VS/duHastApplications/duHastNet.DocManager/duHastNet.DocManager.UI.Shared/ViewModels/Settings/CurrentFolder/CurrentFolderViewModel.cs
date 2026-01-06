@@ -24,6 +24,7 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
@@ -41,9 +42,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.CurrentFolder
     {
         #region Private Fields
 
-        private readonly MessageStore _messageStore;
-        private readonly Manager _manager;
-        private readonly Core.Models.CurrentFolder.CurrentFolderManager _currentFolderManager;
+        private readonly IMessageStore _messageStore;
+        private readonly IManager _manager;
+        private readonly ICurrentFolderManager _currentFolderManager;
         private readonly IDialogService _dialogService;
 
         #endregion Private Fields
@@ -51,9 +52,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.CurrentFolder
         #region Constructor
 
         public CurrentFolderViewModel(
-            MessageStore messageStore,
-            Manager manager,
-            Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager,
+            IMessageStore messageStore,
+            IManager manager,
+            ICurrentFolderManager currentFolderManager,
             IDialogService dialogService
         )
         {

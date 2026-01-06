@@ -21,6 +21,8 @@
 //
 //
 
+using duHastNet.DocManager.Core.Interfaces;
+
 namespace duHastNet.DocManager.Core.Models.CurrentFolder
 {
     /// <summary>
@@ -33,7 +35,7 @@ namespace duHastNet.DocManager.Core.Models.CurrentFolder
     /// This allows for multiple folders with an easier (less) document structure
     /// </summary>
     /// 
-    public partial class CurrentFolderManager
+    public partial class CurrentFolderManager : ICurrentFolderManager
     {
         /// <summary>
         /// Configuration settings for this manager instance

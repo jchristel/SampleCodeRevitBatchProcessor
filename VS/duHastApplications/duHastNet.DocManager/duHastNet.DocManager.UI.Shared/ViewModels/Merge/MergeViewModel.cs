@@ -26,7 +26,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
-using duHastNet.DocManager.Core.Services.Api;
+using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
 using System.Collections.ObjectModel;
@@ -41,11 +41,11 @@ public partial class MergeViewModel : ObservableObject, IActivatable
 {
     #region Private Fields
 
-    private readonly DocManagerApi _docManagerApi;
-    private readonly MessageStore _messageStore;
+    private readonly IDocManagerApi _docManagerApi;
+    private readonly IMessageStore _messageStore;
     private readonly NavigationStore _navigationStore;
-    private readonly Manager _manager;
-    private readonly CurrentFolderManager _currentFolderManager;
+    private readonly IManager _manager;
+    private readonly ICurrentFolderManager _currentFolderManager;
     private readonly IDialogService _dialogService;
 
     //function used to navigate to settings view model
@@ -62,11 +62,11 @@ public partial class MergeViewModel : ObservableObject, IActivatable
     #region Constructor
 
     public MergeViewModel(
-        DocManagerApi docManagerApi,
-        MessageStore messageStore,
+        IDocManagerApi docManagerApi,
+        IMessageStore messageStore,
         NavigationStore navigationStore,
-        Manager manager,
-        CurrentFolderManager currentFolderManager,
+        IManager manager,
+        ICurrentFolderManager currentFolderManager,
         IDialogService dialogService,
         Func<Settings.SettingsViewModel> createViewModel
         )

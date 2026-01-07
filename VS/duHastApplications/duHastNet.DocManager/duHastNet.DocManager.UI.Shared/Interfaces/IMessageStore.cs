@@ -26,10 +26,62 @@ namespace duHastNet.DocManager.UI.Shared.Interfaces;
 public interface IMessageStore
 {
     /// <summary>
+    /// Gets the current message being displayed
+    /// </summary>
+    string CurrentMessage { get; }
+
+    /// <summary>
+    /// Gets the type of the current message
+    /// </summary>
+    MessageTypes CurrentMessageType { get; }
+
+    /// <summary>
+    /// Gets the progress percentage for auto-dismiss timer (100 = full time remaining, 0 = expired)
+    /// </summary>
+    double ProgressPercentage { get; }
+
+    /// <summary>
+    /// Gets whether the auto-dismiss timer is currently active
+    /// </summary>
+    bool IsTimerActive { get; }
+
+    /// <summary>
+    /// Gets the number of messages waiting in the queue
+    /// </summary>
+    int PendingMessageCount { get; }
+
+    /// <summary>
+    /// Gets whether there is currently a message being displayed
+    /// </summary>
+    bool HasCurrentMessage { get; }
+
+    /// <summary>
+    /// Gets whether there are messages pending in the queue
+    /// </summary>
+    bool HasPendingMessages { get; }
+
+    /// <summary>
     /// Enqueues a message to be displayed to the user
     /// </summary>
     /// <param name="message">Message text to display</param>
     /// <param name="messageType">Type of message (Information, Warning, Error)</param>
     /// <param name="dismissAfterSeconds">Optional auto-dismiss time in seconds</param>
     void EnqueueMessage(string message, MessageTypes messageType, int? dismissAfterSeconds = null);
+
+    /// <summary>
+    /// Clears the current message and optionally processes the next queued message
+    /// </summary>
+    /// <param name="autoAdvance">Whether to automatically show the next queued message</param>
+    void ClearCurrentMessage(bool autoAdvance = true);
+
+    /// <summary>
+    /// Pauses the auto-dismiss timer for the current message
+    /// </summary>
+    void PauseDismissTimer();
+
+    /// <summary>
+    /// Resumes the auto-dismiss timer for the current message
+    /// </summary>
+    /// <param name="seconds">Number of seconds until auto-dismiss</param>
+    void ResumeDismissTimer(int seconds);
 }

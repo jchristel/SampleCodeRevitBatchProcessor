@@ -26,7 +26,7 @@ using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.Core.Models.Database;
-using duHastNet.DocManager.Core.Services.Api;
+using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
 using System;
@@ -44,11 +44,11 @@ public partial class DocumentMatchControlViewModel : ObservableObject
 {
     #region Private Fields
 
-    private readonly CurrentFolderManager _currentFolderManager;
-    private readonly Manager _manager;
-    private readonly MessageStore _messageStore;
+    private readonly ICurrentFolderManager _currentFolderManager;
+    private readonly IManager _manager;
+    private readonly IMessageStore _messageStore;
     private readonly IDialogService _dialogService;
-    private readonly DocManagerApi _docManagerApi;
+    private readonly IDocManagerApi _docManagerApi;
 
     #endregion
 
@@ -123,11 +123,11 @@ public partial class DocumentMatchControlViewModel : ObservableObject
     #region Constructor
 
     public DocumentMatchControlViewModel(
-        CurrentFolderManager currentFolderManager,
-        Manager manager,
-        MessageStore messageStore,
+        ICurrentFolderManager currentFolderManager,
+        IManager manager,
+        IMessageStore messageStore,
         IDialogService dialogService,
-        DocManagerApi docManagerApi)
+        IDocManagerApi docManagerApi)
     {
         _currentFolderManager = currentFolderManager ?? throw new ArgumentNullException(nameof(currentFolderManager));
         _manager = manager ?? throw new ArgumentNullException(nameof(manager));

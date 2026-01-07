@@ -26,12 +26,13 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
+using System.ComponentModel;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels;
 
 public partial class GlobalMessageViewModel : ObservableObject, ICloseable, IDisposable
 {
-    private readonly MessageStore _messageStore;
+    private readonly IMessageStore _messageStore;
 
     public string CurrentMessage => _messageStore.CurrentMessage;
     public bool IsErrorMessage => _messageStore.CurrentMessageType == MessageTypes.Error;
@@ -61,39 +62,44 @@ public partial class GlobalMessageViewModel : ObservableObject, ICloseable, IDis
         _messageStore.ResumeDismissTimer(5); // Resume with default 5 seconds
     }
 
-    private void OnStorePropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    private void OnStorePropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         // Forward all property changes from store to ViewModel
-        if (e.PropertyName == nameof(MessageStore.CurrentMessage))
+        if (e.PropertyName == nameof(_messageStore.CurrentMessage))
         {
             OnPropertyChanged(nameof(CurrentMessage));
             OnPropertyChanged(nameof(HasMessage));
         }
-        else if (e.PropertyName == nameof(MessageStore.CurrentMessageType))
+        else if (e.PropertyName == nameof(_messageStore.CurrentMessageType))
         {
             OnPropertyChanged(nameof(IsErrorMessage));
             OnPropertyChanged(nameof(IsInformationMessage));
             OnPropertyChanged(nameof(IsWarningMessage));
         }
-        else if (e.PropertyName == nameof(MessageStore.ProgressPercentage))
+        else if (e.PropertyName == nameof(_messageStore.ProgressPercentage))
         {
             OnPropertyChanged(nameof(ProgressPercentage));
         }
-        else if (e.PropertyName == nameof(MessageStore.IsTimerActive))
+        else if (e.PropertyName == nameof(_messageStore.IsTimerActive))
         {
             OnPropertyChanged(nameof(IsTimerActive));
         }
-        else if (e.PropertyName == nameof(MessageStore.PendingMessageCount))
+        else if (e.PropertyName == nameof(_messageStore.PendingMessageCount))
         {
             OnPropertyChanged(nameof(PendingMessageCount));
             OnPropertyChanged(nameof(HasPendingMessages));
         }
     }
 
-    public GlobalMessageViewModel(MessageStore messageStore)
+    public GlobalMessageViewModel(IMessageStore messageStore)
     {
         _messageStore = messageStore;
-        _messageStore.PropertyChanged += OnStorePropertyChanged;
+        
+        // Subscribe to property changes if the store implements INotifyPropertyChanged
+        if (_messageStore is INotifyPropertyChanged notifyPropertyChanged)
+        {
+            notifyPropertyChanged.PropertyChanged += OnStorePropertyChanged;
+        }
     }
 
     public void OnClosing()
@@ -105,6 +111,10 @@ public partial class GlobalMessageViewModel : ObservableObject, ICloseable, IDis
 
     public void Dispose()
     {
-        _messageStore.PropertyChanged -= OnStorePropertyChanged;
+        // Unsubscribe from property changes if we subscribed
+        if (_messageStore is INotifyPropertyChanged notifyPropertyChanged)
+        {
+            notifyPropertyChanged.PropertyChanged -= OnStorePropertyChanged;
+        }
     }
 }

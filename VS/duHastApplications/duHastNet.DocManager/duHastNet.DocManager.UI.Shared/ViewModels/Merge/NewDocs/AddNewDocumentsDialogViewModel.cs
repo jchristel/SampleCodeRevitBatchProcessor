@@ -26,6 +26,7 @@ using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.Core.Models.Database;
+using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using System.Collections.ObjectModel;
 using System.Text;
@@ -40,7 +41,7 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
 {
     #region Private Fields
 
-    private readonly CurrentFolderManager _currentFolderManager;
+    private readonly ICurrentFolderManager _currentFolderManager;
     private readonly List<Document> _existingDocuments;
     private readonly List<CustomFieldDefinition> _customFieldDefinitions;
     private readonly IDialogService _dialogService;
@@ -120,7 +121,7 @@ public partial class AddNewDocumentsDialogViewModel : ObservableObject
     /// <param name="dialogService">Dialog service for user interactions</param>
     /// <param name="customFieldDefinitions">List of custom field definitions for the new documents</param>
     public AddNewDocumentsDialogViewModel(
-        CurrentFolderManager currentFolderManager,
+        ICurrentFolderManager currentFolderManager,
         List<Document> existingDocuments,
         List<IncomingDocumentProcessingStatus> unknownDocuments,
         IDialogService dialogService,

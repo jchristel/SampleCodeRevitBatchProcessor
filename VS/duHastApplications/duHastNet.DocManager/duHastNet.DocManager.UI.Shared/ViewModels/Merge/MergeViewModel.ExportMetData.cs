@@ -46,7 +46,7 @@ public partial class MergeViewModel : ObservableObject
         try
         {
             // Check if cloud document manager is enabled
-            if (!_manager.CloudDocumentManager.CloudDocumentManagerEnabled)
+            if (!_manager.CloudDocManager.CloudDocumentManagerEnabled)
             {
                 _messageStore.EnqueueMessage(
                     "Cloud document manager is not enabled. Skipping metadata export.",
@@ -55,7 +55,7 @@ public partial class MergeViewModel : ObservableObject
             }
 
             // Check if metadata mapper is configured
-            if (_manager.CloudDocumentManager.MetaDataMapper == null)
+            if (_manager.CloudDocManager.MetaDataMapper == null)
             {
                 _messageStore.EnqueueMessage(
                     "No cloud provider configured. Skipping metadata export.",
@@ -63,7 +63,7 @@ public partial class MergeViewModel : ObservableObject
                 return;
             }
 
-            var metaDataMapper = _manager.CloudDocumentManager.MetaDataMapper;
+            var metaDataMapper = _manager.CloudDocManager.MetaDataMapper;
 
             // Check if there are any mappings configured
             if (metaDataMapper.MetaDataMap.Count == 0)

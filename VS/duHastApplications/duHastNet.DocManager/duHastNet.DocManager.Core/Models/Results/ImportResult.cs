@@ -103,6 +103,11 @@ public class ImportResult : ResultBase
             result.AddError(error);
         }
 
+        // Set Message to summarize the failure
+        result.Message = errors.Length > 0
+            ? (errors.Length == 1 ? errors[0] : $"Import failed with {errors.Length} errors")
+            : "Import failed";
+
         return result;
     }
 }

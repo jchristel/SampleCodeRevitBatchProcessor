@@ -19,7 +19,8 @@ using NUnit.Framework;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.Core.Stores;
 
-namespace duHastNet.DocManager.Core.Tests.Models.CurrentFolder;
+namespace duHastNet.DocManager.Core.Tests.Models.CurrentFolder
+{
 
 [TestFixture]
 public class IncomingDocumentProcessingStatusTests
@@ -59,14 +60,14 @@ public class IncomingDocumentProcessingStatusTests
         var message = "Document processed successfully";
 
         // Act
-        status.AddProcessMessage(message, ProcessMessageTypes.Info);
+        status.AddProcessMessage(message, ProcessMessageTypes.Information);
 
         // Assert
         Assert.Multiple(() =>
         {
             Assert.That(status.ProcessMessages, Has.Count.EqualTo(1));
             Assert.That(status.ProcessMessages[0].message, Is.EqualTo(message));
-            Assert.That(status.ProcessMessages[0].messageType, Is.EqualTo(ProcessMessageTypes.Info));
+            Assert.That(status.ProcessMessages[0].messageType, Is.EqualTo(ProcessMessageTypes.Information));
             Assert.That(status.ProcessMessages[0].exceptionType, Is.Null);
         });
     }
@@ -97,7 +98,11 @@ public class IncomingDocumentProcessingStatusTests
         // Arrange
         var status = new IncomingDocumentProcessingStatus(TestDocumentPath);
         var duplicatePaths = new List<string> { @"C:\Dup1.pdf", @"C:\Dup2.pdf" };
-        var exception = new Exceptions.IncomingFileDuplicateException("Duplicate found", duplicatePaths);
+        var exception = new Exceptions.IncomingFileDuplicateException(
+            TestDocumentPath, 
+            123, 
+            duplicatePaths, 
+            ".pdf");
 
         // Act
         status.AddProcessMessage(exception);
@@ -119,8 +124,8 @@ public class IncomingDocumentProcessingStatusTests
         var status = new IncomingDocumentProcessingStatus(TestDocumentPath);
 
         // Act
-        status.AddProcessMessage("Info message", ProcessMessageTypes.Info);
-        status.AddProcessMessage("Warning message", ProcessMessageTypes.Warning);
+        status.AddProcessMessage("Information message", ProcessMessageTypes.Information);
+        status.AddProcessMessage("Log message", ProcessMessageTypes.Log);
         status.AddProcessMessage("Error message", ProcessMessageTypes.Error);
 
         // Assert
@@ -136,8 +141,8 @@ public class IncomingDocumentProcessingStatusTests
     {
         // Arrange
         var status = new IncomingDocumentProcessingStatus(TestDocumentPath);
-        status.AddProcessMessage("Info message", ProcessMessageTypes.Info);
-        status.AddProcessMessage("Warning message", ProcessMessageTypes.Warning);
+        status.AddProcessMessage("Information message", ProcessMessageTypes.Information);
+        status.AddProcessMessage("Log message", ProcessMessageTypes.Log);
 
         // Act
         var result = status.GetProcessStatus();
@@ -165,9 +170,9 @@ public class IncomingDocumentProcessingStatusTests
     {
         // Arrange
         var status = new IncomingDocumentProcessingStatus(TestDocumentPath);
-        status.AddProcessMessage("Info message", ProcessMessageTypes.Info);
+        status.AddProcessMessage("Information message", ProcessMessageTypes.Information);
         status.AddProcessMessage("Error message", ProcessMessageTypes.Error);
-        status.AddProcessMessage("Warning message", ProcessMessageTypes.Warning);
+        status.AddProcessMessage("Log message", ProcessMessageTypes.Log);
 
         // Act
         var result = status.GetProcessStatus();
@@ -185,7 +190,7 @@ public class IncomingDocumentProcessingStatusTests
     {
         // Arrange
         var status = new IncomingDocumentProcessingStatus(TestDocumentPath);
-        var exception = new Exceptions.InvalidRevisionFormatException("A-101.pdf", "Invalid format");
+        var exception = new Exceptions.InvalidRevisionFormatException("Invalid format for file A-101.pdf");
 
         // Act
         status.AddProcessMessage(exception);
@@ -210,7 +215,11 @@ public class IncomingDocumentProcessingStatusTests
     {
         // Arrange
         var status = new IncomingDocumentProcessingStatus(TestDocumentPath);
-        var exception = new Exceptions.IncomingFileDuplicateException("Duplicate", new List<string>());
+        var exception = new Exceptions.IncomingFileDuplicateException(
+            TestDocumentPath, 
+            1, 
+            new List<string>(), 
+            ".pdf");
 
         // Act
         status.AddProcessMessage(exception);
@@ -242,7 +251,7 @@ public class IncomingDocumentProcessingStatusTests
     {
         // Arrange
         var status = new IncomingDocumentProcessingStatus(TestDocumentPath);
-        var exception = new Exceptions.InvalidRevisionFormatException("A-101.pdf", "Invalid format");
+        var exception = new Exceptions.InvalidRevisionFormatException("Invalid format for file A-101.pdf");
 
         status.AddProcessMessage(exception);
 
@@ -272,7 +281,12 @@ public class IncomingDocumentProcessingStatusTests
     {
         // Arrange
         var status = new IncomingDocumentProcessingStatus(TestDocumentPath);
-        var exception = new Exceptions.IncomingFileDuplicateException("Duplicate found", new List<string>());
+        var exception = new Exceptions.IncomingFileDuplicateException(
+            "Duplicate found",
+            TestDocumentPath,
+            1,
+            new List<string>(),
+            ".pdf");
 
         status.AddProcessMessage(exception);
 
@@ -305,7 +319,7 @@ public class IncomingDocumentProcessingStatusTests
         // Arrange
         var status = new IncomingDocumentProcessingStatus(TestDocumentPath);
         status.AddProcessMessage("Error 1", ProcessMessageTypes.Error);
-        status.AddProcessMessage("Info", ProcessMessageTypes.Info);
+        status.AddProcessMessage("Information", ProcessMessageTypes.Information);
         status.AddProcessMessage("Error 2", ProcessMessageTypes.Error);
 
         // Act
@@ -342,7 +356,7 @@ public class IncomingDocumentProcessingStatusTests
     {
         // Arrange
         var status = new IncomingDocumentProcessingStatus(TestDocumentPath);
-        status.AddProcessMessage(new Exceptions.InvalidRevisionFormatException("file.pdf", "error"));
+        status.AddProcessMessage(new Exceptions.InvalidRevisionFormatException("Revision format error for file.pdf"));
 
         // Act
         var errorType = status.GetHighestPriorityError();
@@ -357,8 +371,12 @@ public class IncomingDocumentProcessingStatusTests
         // Arrange
         var status = new IncomingDocumentProcessingStatus(TestDocumentPath);
         status.AddProcessMessage(new Exceptions.DocumentNotFoundException("A-101"));
-        status.AddProcessMessage(new Exceptions.IncomingFileDuplicateException("Dup", new List<string>()));
-        status.AddProcessMessage(new Exceptions.InvalidRevisionFormatException("file.pdf", "error"));
+        status.AddProcessMessage(new Exceptions.IncomingFileDuplicateException(
+            TestDocumentPath, 
+            1, 
+            new List<string>(), 
+            ".pdf"));
+        status.AddProcessMessage(new Exceptions.InvalidRevisionFormatException("Revision format error for file.pdf"));
 
         // Act
         var errorType = status.GetHighestPriorityError();
@@ -373,7 +391,11 @@ public class IncomingDocumentProcessingStatusTests
         // Arrange
         var status = new IncomingDocumentProcessingStatus(TestDocumentPath);
         status.AddProcessMessage(new Exceptions.DocumentNotFoundException("A-101"));
-        status.AddProcessMessage(new Exceptions.IncomingFileDuplicateException("Dup", new List<string>()));
+        status.AddProcessMessage(new Exceptions.IncomingFileDuplicateException(
+            TestDocumentPath, 
+            1, 
+            new List<string>(), 
+            ".pdf"));
 
         // Act
         var errorType = status.GetHighestPriorityError();
@@ -436,10 +458,10 @@ public class IncomingDocumentProcessingStatusTests
         var status = new IncomingDocumentProcessingStatus(TestDocumentPath);
 
         // Act - Simulate processing
-        status.AddProcessMessage("Starting processing", ProcessMessageTypes.Info);
+        status.AddProcessMessage("Starting processing", ProcessMessageTypes.Information);
         status.MatchedDocumentId = 456;
         status.IncomingDocumentRevision = "Rev B";
-        status.AddProcessMessage("Processing complete", ProcessMessageTypes.Info);
+        status.AddProcessMessage("Processing complete", ProcessMessageTypes.Information);
 
         // Assert
         Assert.Multiple(() =>
@@ -458,8 +480,8 @@ public class IncomingDocumentProcessingStatusTests
         var status = new IncomingDocumentProcessingStatus(TestDocumentPath);
 
         // Act - Simulate error scenario
-        status.AddProcessMessage("Starting processing", ProcessMessageTypes.Info);
-        status.AddProcessMessage(new Exceptions.InvalidRevisionFormatException("file.pdf", "Bad format"));
+        status.AddProcessMessage("Starting processing", ProcessMessageTypes.Information);
+        status.AddProcessMessage(new Exceptions.InvalidRevisionFormatException("Bad format for file.pdf"));
         status.AddProcessMessage("Processing failed", ProcessMessageTypes.Error);
 
         // Assert
@@ -473,4 +495,5 @@ public class IncomingDocumentProcessingStatusTests
     }
 
     #endregion
+}
 }

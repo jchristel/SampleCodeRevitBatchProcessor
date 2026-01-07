@@ -7,7 +7,8 @@ using NUnit.Framework;
 using duHastNet.DocManager.Core.Models.CloudDocManager.MetaData;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
 
-namespace duHastNet.DocManager.Core.Tests.Models.CloudDocManager.MetaData;
+namespace duHastNet.DocManager.Core.Tests.Models.CloudDocManager.MetaData
+{
 
 [TestFixture]
 public class MetaDataMapperAconexTests
@@ -44,7 +45,7 @@ public class MetaDataMapperAconexTests
     [Test]
     public void AddMapper_WithValidMapper_AddsToCollection()
     {
-        var metaMap = new MetaDataMap("DocumentNumber", "Number");
+        var metaMap = new MetaDataMap("DocumentNumber", null, "Number", null, "Aconex");
 
         _mapper.AddMapper(metaMap);
 
@@ -60,8 +61,8 @@ public class MetaDataMapperAconexTests
     [Test]
     public void AddMapper_WithDuplicateMetaFieldName_ThrowsException()
     {
-        var metaMap1 = new MetaDataMap("DocumentNumber", "Number");
-        var metaMap2 = new MetaDataMap("DocumentNumber", "Num");
+        var metaMap1 = new MetaDataMap("DocumentNumber", null, "Number", null, "Aconex");
+        var metaMap2 = new MetaDataMap("DocumentNumber", null, "Num", null, "Aconex");
 
         _mapper.AddMapper(metaMap1);
 
@@ -75,7 +76,7 @@ public class MetaDataMapperAconexTests
     [Test]
     public void RemoveMapper_WithExistingMapper_RemovesFromCollection()
     {
-        var metaMap = new MetaDataMap("DocumentNumber", "Number");
+        var metaMap = new MetaDataMap("DocumentNumber", null, "Number", null, "Aconex");
         _mapper.AddMapper(metaMap);
 
         _mapper.RemoveMapper(metaMap);
@@ -92,7 +93,7 @@ public class MetaDataMapperAconexTests
     [Test]
     public void RemoveMapper_WithNonExistentMapper_DoesNotThrow()
     {
-        var metaMap = new MetaDataMap("DocumentNumber", "Number");
+        var metaMap = new MetaDataMap("DocumentNumber", null, "Number", null, "Aconex");
 
         Assert.DoesNotThrow(() => _mapper.RemoveMapper(metaMap));
     }
@@ -104,8 +105,8 @@ public class MetaDataMapperAconexTests
     [Test]
     public void ClearMappers_RemovesAllMappers()
     {
-        _mapper.AddMapper(new MetaDataMap("Field1", "Prop1"));
-        _mapper.AddMapper(new MetaDataMap("Field2", "Prop2"));
+        _mapper.AddMapper(new MetaDataMap("Field1", null, "Prop1", null, "Aconex"));
+        _mapper.AddMapper(new MetaDataMap("Field2", null, "Prop2", null, "Aconex"));
 
         _mapper.ClearMappers();
 
@@ -157,8 +158,8 @@ public class MetaDataMapperAconexTests
     public void CleanupInvalidMappings_RemovesInvalidMappings()
     {
         _mapper.UpdateAvailableFields(new List<string> { "ValidField" });
-        _mapper.AddMapper(new MetaDataMap("ValidField", "Prop1"));
-        _mapper.AddMapper(new MetaDataMap("InvalidField", "Prop2"));
+        _mapper.AddMapper(new MetaDataMap("ValidField", null, "Prop1", null, "Aconex"));
+        _mapper.AddMapper(new MetaDataMap("InvalidField", null, "Prop2", null, "Aconex"));
 
         var removed = _mapper.CleanupInvalidMappings();
 
@@ -173,8 +174,8 @@ public class MetaDataMapperAconexTests
     public void CleanupInvalidMappings_WithAllValidMappings_RemovesNone()
     {
         _mapper.UpdateAvailableFields(new List<string> { "Field1", "Field2" });
-        _mapper.AddMapper(new MetaDataMap("Field1", "Prop1"));
-        _mapper.AddMapper(new MetaDataMap("Field2", "Prop2"));
+        _mapper.AddMapper(new MetaDataMap("Field1", null, "Prop1", null, "Aconex"));
+        _mapper.AddMapper(new MetaDataMap("Field2", null, "Prop2", null, "Aconex"));
 
         var removed = _mapper.CleanupInvalidMappings();
 
@@ -195,9 +196,9 @@ public class MetaDataMapperAconexTests
         var customFields = new List<string> { "CustomField1" };
         var defaultProps = new List<string> { "DocumentNumber" };
 
-        _mapper.AddMapper(new MetaDataMap("Meta1", "CustomField1"));
-        _mapper.AddMapper(new MetaDataMap("Meta2", "DocumentNumber"));
-        _mapper.AddMapper(new MetaDataMap("Meta3", "InvalidField"));
+        _mapper.AddMapper(new MetaDataMap("Meta1", null, "CustomField1", null, "Aconex"));
+        _mapper.AddMapper(new MetaDataMap("Meta2", null, "DocumentNumber", null, "Aconex"));
+        _mapper.AddMapper(new MetaDataMap("Meta3", null, "InvalidField", null, "Aconex"));
 
         var removed = _mapper.CleanupInvalidCustomFieldsMappings(customFields, defaultProps);
 
@@ -236,4 +237,5 @@ public class MetaDataMapperAconexTests
     }
 
     #endregion
+}
 }

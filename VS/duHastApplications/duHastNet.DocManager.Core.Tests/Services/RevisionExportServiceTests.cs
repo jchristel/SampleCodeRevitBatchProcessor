@@ -22,7 +22,8 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using System.Globalization;
 
-namespace duHastNet.DocManager.Core.Tests.Services;
+namespace duHastNet.DocManager.Core.Tests.Services
+{
 
 [TestFixture]
 public class RevisionExportServiceTests
@@ -54,7 +55,7 @@ public class RevisionExportServiceTests
     {
         // Arrange
         var filePath = Path.Combine(_testDirectory, "single_revision.csv");
-        var revision = new Revision(1, new DateTime(2024, 3, 15), "Initial Release");
+        var revision = new Revision(new DateTime(2024, 3, 15), "Initial Release") { Id = 1 };
         revision.DocumentIds.Add(101);
         revision.DocumentIds.Add(102);
         var revisions = new List<Revision> { revision };
@@ -83,14 +84,14 @@ public class RevisionExportServiceTests
     {
         // Arrange
         var filePath = Path.Combine(_testDirectory, "multiple_revisions.csv");
-        var revision1 = new Revision(1, new DateTime(2024, 1, 15), "First Release");
+        var revision1 = new Revision(new DateTime(2024, 1, 15), "First Release") { Id = 1 };
         revision1.DocumentIds.Add(101);
 
-        var revision2 = new Revision(2, new DateTime(2024, 2, 20), "Second Release");
+        var revision2 = new Revision(new DateTime(2024, 2, 20), "Second Release") { Id = 2 };
         revision2.DocumentIds.Add(201);
         revision2.DocumentIds.Add(202);
 
-        var revision3 = new Revision(3, new DateTime(2024, 3, 25), "Third Release");
+        var revision3 = new Revision(new DateTime(2024, 3, 25), "Third Release") { Id = 3 };
         revision3.DocumentIds.Add(301);
         revision3.DocumentIds.Add(302);
         revision3.DocumentIds.Add(303);
@@ -142,7 +143,7 @@ public class RevisionExportServiceTests
     {
         // Arrange
         var filePath = Path.Combine(_testDirectory, "no_documents.csv");
-        var revision = new Revision(1, new DateTime(2024, 3, 15), "No Documents");
+        var revision = new Revision(new DateTime(2024, 3, 15), "No Documents") { Id = 1 };
         var revisions = new List<Revision> { revision };
 
         // Act
@@ -164,7 +165,7 @@ public class RevisionExportServiceTests
     {
         // Arrange
         var filePath = Path.Combine(_testDirectory, "null_description.csv");
-        var revision = new Revision(1, new DateTime(2024, 3, 15), null);
+        var revision = new Revision(new DateTime(2024, 3, 15), null) { Id = 1 };
         revision.DocumentIds.Add(101);
         var revisions = new List<Revision> { revision };
 
@@ -183,7 +184,7 @@ public class RevisionExportServiceTests
     {
         // Arrange
         var filePath = Path.Combine(_testDirectory, "description_with_commas.csv");
-        var revision = new Revision(1, new DateTime(2024, 3, 15), "Release for Site A, B, and C");
+        var revision = new Revision(new DateTime(2024, 3, 15), "Release for Site A, B, and C") { Id = 1 };
         revision.DocumentIds.Add(101);
         var revisions = new List<Revision> { revision };
 
@@ -237,7 +238,7 @@ public class RevisionExportServiceTests
     {
         // Arrange
         var filePath = Path.Combine(_testDirectory, "description_with_newlines.csv");
-        var revision = new Revision(1, new DateTime(2024, 3, 15), "Release\r\nfor\r\nSite A");
+        var revision = new Revision(new DateTime(2024, 3, 15), "Release\r\nfor\r\nSite A") { Id = 1 };
         revision.DocumentIds.Add(101);
         var revisions = new List<Revision> { revision };
 
@@ -264,8 +265,8 @@ public class RevisionExportServiceTests
     {
         // Arrange
         var filePath = Path.Combine(_testDirectory, "date_formats.csv");
-        var revision1 = new Revision(1, new DateTime(2024, 1, 5), "January");
-        var revision2 = new Revision(2, new DateTime(2024, 12, 25), "December");
+        var revision1 = new Revision(new DateTime(2024, 1, 5), "January") { Id = 1 };
+        var revision2 = new Revision(new DateTime(2024, 12, 25), "December") { Id = 2 };
         var revisions = new List<Revision> { revision1, revision2 };
 
         // Act
@@ -287,7 +288,7 @@ public class RevisionExportServiceTests
     {
         // Arrange
         var filePath = Path.Combine(_testDirectory, "large_count.csv");
-        var revision = new Revision(1, new DateTime(2024, 3, 15), "Large Release");
+        var revision = new Revision(new DateTime(2024, 3, 15), "Large Release") { Id = 1 };
         for (int i = 1; i <= 1000; i++)
         {
             revision.DocumentIds.Add(i);
@@ -309,7 +310,7 @@ public class RevisionExportServiceTests
     {
         // Arrange
         var filePath = Path.Combine("Z:\\NonExistentDrive", "invalid.csv");
-        var revision = new Revision(1, new DateTime(2024, 3, 15), "Test");
+        var revision = new Revision(new DateTime(2024, 3, 15), "Test") { Id = 1 };
         var revisions = new List<Revision> { revision };
 
         // Act
@@ -329,7 +330,7 @@ public class RevisionExportServiceTests
         dirInfo.Attributes = FileAttributes.ReadOnly;
 
         var filePath = Path.Combine(readOnlyDir, "test.csv");
-        var revision = new Revision(1, new DateTime(2024, 3, 15), "Test");
+        var revision = new Revision(new DateTime(2024, 3, 15), "Test") { Id = 1 };
         var revisions = new List<Revision> { revision };
 
         try
@@ -353,7 +354,7 @@ public class RevisionExportServiceTests
         var filePath = Path.Combine(_testDirectory, "overwrite.csv");
         File.WriteAllText(filePath, "Old content");
 
-        var revision = new Revision(1, new DateTime(2024, 3, 15), "New Release");
+        var revision = new Revision(new DateTime(2024, 3, 15), "New Release") { Id = 1 };
         revision.DocumentIds.Add(101);
         var revisions = new List<Revision> { revision };
 
@@ -377,7 +378,7 @@ public class RevisionExportServiceTests
     {
         // Arrange
         var filePath = Path.Combine(_testDirectory, "special_chars.csv");
-        var revision = new Revision(1, new DateTime(2024, 3, 15), "Release #1 - 100% complete & verified!");
+        var revision = new Revision(new DateTime(2024, 3, 15), "Release #1 - 100% complete & verified!") { Id = 1 };
         revision.DocumentIds.Add(101);
         var revisions = new List<Revision> { revision };
 
@@ -514,11 +515,11 @@ public class RevisionExportServiceTests
     {
         // Arrange
         var filePath = Path.Combine(_testDirectory, "mixed_states.csv");
-        var revision1 = new Revision(1, new DateTime(2024, 1, 15), "With Documents");
+        var revision1 = new Revision(new DateTime(2024, 1, 15), "With Documents") { Id = 1 };
         revision1.DocumentIds.Add(101);
         revision1.DocumentIds.Add(102);
 
-        var revision2 = new Revision(2, new DateTime(2024, 2, 15), null);
+        var revision2 = new Revision(new DateTime(2024, 2, 15), null) { Id = 2 };
 
         var revision3 = new Revision(3, new DateTime(2024, 3, 15), string.Empty);
         revision3.DocumentIds.Add(301);
@@ -543,4 +544,5 @@ public class RevisionExportServiceTests
     }
 
     #endregion
+}
 }

@@ -18,15 +18,12 @@
 
 using NUnit.Framework;
 using Moq;
-using CsvHelper;
-using CsvHelper.Configuration;
 using duHastNet.DocManager.Core.Services;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.Database;
 using duHastNet.DocManager.Core.Models.CloudDocManager.MetaData;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.Core.Interfaces;
-using System.Globalization;
 
 namespace duHastNet.DocManager.Core.Tests.Services;
 
@@ -35,7 +32,6 @@ public class CloudMetadataExportServiceTests
 {
     private CloudMetadataExportService _service;
     private string _testDirectory;
-    private Mock<ICloudMetaData> _mockCloudMetaData;
 
     [SetUp]
     public void Setup()
@@ -43,7 +39,6 @@ public class CloudMetadataExportServiceTests
         _service = new CloudMetadataExportService();
         _testDirectory = Path.Combine(Path.GetTempPath(), "CloudMetadataExportServiceTests", Guid.NewGuid().ToString());
         Directory.CreateDirectory(_testDirectory);
-        _mockCloudMetaData = new Mock<ICloudMetaData>();
     }
 
     [TearDown]
@@ -64,6 +59,7 @@ public class CloudMetadataExportServiceTests
         string filePath = null;
         var documents = new List<Document>();
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>();
 
@@ -72,7 +68,7 @@ public class CloudMetadataExportServiceTests
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -87,6 +83,7 @@ public class CloudMetadataExportServiceTests
         var filePath = string.Empty;
         var documents = new List<Document>();
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>();
 
@@ -95,7 +92,7 @@ public class CloudMetadataExportServiceTests
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -110,6 +107,7 @@ public class CloudMetadataExportServiceTests
         var filePath = "   ";
         var documents = new List<Document>();
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>();
 
@@ -118,7 +116,7 @@ public class CloudMetadataExportServiceTests
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -156,20 +154,17 @@ public class CloudMetadataExportServiceTests
         var filePath = Path.Combine(_testDirectory, "metadata.csv");
         var documents = new List<Document>();
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.AddMapper(new MetaDataMap("Field1", "Value1", null, null, "Aconex"));
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>();
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(new List<MetaDataMap>
-        {
-            new MetaDataMap("Field1", "Value1", null, null, "Aconex")
-        });
 
         // Act
         var result = await _service.ExportMetadataAsync(
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -187,17 +182,17 @@ public class CloudMetadataExportServiceTests
             new Document("A-101", "Floor Plan", "1", 1)
         };
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
+        // No mappings added
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>();
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(new List<MetaDataMap>());
 
         // Act
         var result = await _service.ExportMetadataAsync(
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -224,28 +219,22 @@ public class CloudMetadataExportServiceTests
 
         var documents = new List<Document> { document };
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.AddMapper(new MetaDataMap("Project", "Test Project", null, null, "Aconex"));
+        cloudMetaData.AddMapper(new MetaDataMap("Status", "Current", null, null, "Aconex"));
+        
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>
         {
             { 1, new List<string> { Path.Combine(_testDirectory, "A-101.pdf") } }
         };
 
-        var mappings = new List<MetaDataMap>
-        {
-            new MetaDataMap("Project", "Test Project", null, null, "Aconex"),
-            new MetaDataMap("Status", "Current", null, null, "Aconex")
-        };
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(mappings);
-        _mockCloudMetaData.Setup(x => x.MetadataTemplateFilePath).Returns(string.Empty);
-        _mockCloudMetaData.Setup(x => x.SupportedFileTypes).Returns(new List<SupportedFileType>());
-
         // Act
         var result = await _service.ExportMetadataAsync(
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -281,29 +270,23 @@ public class CloudMetadataExportServiceTests
 
         var documents = new List<Document> { document };
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.AddMapper(new MetaDataMap("DocumentNumber", null, "Number", null, "Aconex"));
+        cloudMetaData.AddMapper(new MetaDataMap("DocumentName", null, "Name", null, "Aconex"));
+        cloudMetaData.AddMapper(new MetaDataMap("Revision", null, "Revision", null, "Aconex"));
+
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>
         {
             { 1, new List<string> { Path.Combine(_testDirectory, "S-201.pdf") } }
         };
 
-        var mappings = new List<MetaDataMap>
-        {
-            new MetaDataMap("DocumentNumber", null, "Number", null, "Aconex"),
-            new MetaDataMap("DocumentName", null, "Name", null, "Aconex"),
-            new MetaDataMap("Revision", null, "Revision", null, "Aconex")
-        };
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(mappings);
-        _mockCloudMetaData.Setup(x => x.MetadataTemplateFilePath).Returns(string.Empty);
-        _mockCloudMetaData.Setup(x => x.SupportedFileTypes).Returns(new List<SupportedFileType>());
-
         // Act
         var result = await _service.ExportMetadataAsync(
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -331,6 +314,9 @@ public class CloudMetadataExportServiceTests
 
         var documents = new List<Document> { document1, document2 };
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.AddMapper(new MetaDataMap("DocumentNumber", null, "Number", null, "Aconex"));
+
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>
         {
@@ -338,21 +324,12 @@ public class CloudMetadataExportServiceTests
             { 2, new List<string> { Path.Combine(_testDirectory, "A-102.pdf") } }
         };
 
-        var mappings = new List<MetaDataMap>
-        {
-            new MetaDataMap("DocumentNumber", null, "Number", null, "Aconex")
-        };
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(mappings);
-        _mockCloudMetaData.Setup(x => x.MetadataTemplateFilePath).Returns(string.Empty);
-        _mockCloudMetaData.Setup(x => x.SupportedFileTypes).Returns(new List<SupportedFileType>());
-
         // Act
         var result = await _service.ExportMetadataAsync(
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -381,6 +358,10 @@ public class CloudMetadataExportServiceTests
 
         var documents = new List<Document> { document };
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.AddMapper(new MetaDataMap("DocumentNumber", null, "Number", null, "Aconex"));
+        cloudMetaData.AddMapper(new MetaDataMap("FileName", null, null, "FileName", "Aconex"));
+
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>
         {
@@ -394,22 +375,12 @@ public class CloudMetadataExportServiceTests
             }
         };
 
-        var mappings = new List<MetaDataMap>
-        {
-            new MetaDataMap("DocumentNumber", null, "Number", null, "Aconex"),
-            new MetaDataMap("FileName", null, null, "FileName", "Aconex")
-        };
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(mappings);
-        _mockCloudMetaData.Setup(x => x.MetadataTemplateFilePath).Returns(string.Empty);
-        _mockCloudMetaData.Setup(x => x.SupportedFileTypes).Returns(new List<SupportedFileType>());
-
         // Act
         var result = await _service.ExportMetadataAsync(
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -440,27 +411,21 @@ public class CloudMetadataExportServiceTests
 
         var documents = new List<Document> { document };
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.AddMapper(new MetaDataMap("FileName", null, null, "FileName", "Aconex"));
+
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>
         {
             { 1, new List<string> { incomingFilePath } }
         };
 
-        var mappings = new List<MetaDataMap>
-        {
-            new MetaDataMap("FileName", null, null, "FileName", "Aconex")
-        };
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(mappings);
-        _mockCloudMetaData.Setup(x => x.MetadataTemplateFilePath).Returns(string.Empty);
-        _mockCloudMetaData.Setup(x => x.SupportedFileTypes).Returns(new List<SupportedFileType>());
-
         // Act
         var result = await _service.ExportMetadataAsync(
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -481,27 +446,21 @@ public class CloudMetadataExportServiceTests
 
         var documents = new List<Document> { document };
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.AddMapper(new MetaDataMap("Extension", null, null, "Extension", "Aconex"));
+
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>
         {
             { 1, new List<string> { incomingFilePath } }
         };
 
-        var mappings = new List<MetaDataMap>
-        {
-            new MetaDataMap("Extension", null, null, "Extension", "Aconex")
-        };
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(mappings);
-        _mockCloudMetaData.Setup(x => x.MetadataTemplateFilePath).Returns(string.Empty);
-        _mockCloudMetaData.Setup(x => x.SupportedFileTypes).Returns(new List<SupportedFileType>());
-
         // Act
         var result = await _service.ExportMetadataAsync(
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -522,27 +481,21 @@ public class CloudMetadataExportServiceTests
 
         var documents = new List<Document> { document };
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.AddMapper(new MetaDataMap("NameWithoutExt", null, null, "FileNameWithoutExtension", "Aconex"));
+
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>
         {
             { 1, new List<string> { incomingFilePath } }
         };
 
-        var mappings = new List<MetaDataMap>
-        {
-            new MetaDataMap("NameWithoutExt", null, null, "FileNameWithoutExtension", "Aconex")
-        };
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(mappings);
-        _mockCloudMetaData.Setup(x => x.MetadataTemplateFilePath).Returns(string.Empty);
-        _mockCloudMetaData.Setup(x => x.SupportedFileTypes).Returns(new List<SupportedFileType>());
-
         // Act
         var result = await _service.ExportMetadataAsync(
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -563,32 +516,26 @@ public class CloudMetadataExportServiceTests
         // Arrange
         var filePath = Path.Combine(_testDirectory, "metadata.csv");
         var revisionDate = new DateTime(2024, 6, 15);
-        var revision = new Revision("Rev A", revisionDate, "First Issue") { Id = 1 };
+        var revision = new Revision(revisionDate, "First Issue") { Id = 1 };
         var document = new Document("A-101", "Floor Plan", "A", 1) { Id = 1 };
 
         var documents = new List<Document> { document };
         var revisions = new List<Revision> { revision };
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.AddMapper(new MetaDataMap("RevisionDate", null, "RevisionDate", null, "Aconex"));
+
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>
         {
             { 1, new List<string> { Path.Combine(_testDirectory, "A-101.pdf") } }
         };
 
-        var mappings = new List<MetaDataMap>
-        {
-            new MetaDataMap("RevisionDate", null, "RevisionDate", null, "Aconex")
-        };
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(mappings);
-        _mockCloudMetaData.Setup(x => x.MetadataTemplateFilePath).Returns(string.Empty);
-        _mockCloudMetaData.Setup(x => x.SupportedFileTypes).Returns(new List<SupportedFileType>());
-
         // Act
         var result = await _service.ExportMetadataAsync(
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -605,32 +552,26 @@ public class CloudMetadataExportServiceTests
         // Arrange
         var filePath = Path.Combine(_testDirectory, "metadata.csv");
         var revisionDescription = "Initial Submission";
-        var revision = new Revision("Rev A", DateTime.Now, revisionDescription) { Id = 1 };
+        var revision = new Revision(DateTime.Now, revisionDescription) { Id = 1 };
         var document = new Document("A-101", "Floor Plan", "A", 1) { Id = 1 };
 
         var documents = new List<Document> { document };
         var revisions = new List<Revision> { revision };
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.AddMapper(new MetaDataMap("RevisionDesc", null, "RevisionDescription", null, "Aconex"));
+
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>
         {
             { 1, new List<string> { Path.Combine(_testDirectory, "A-101.pdf") } }
         };
 
-        var mappings = new List<MetaDataMap>
-        {
-            new MetaDataMap("RevisionDesc", null, "RevisionDescription", null, "Aconex")
-        };
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(mappings);
-        _mockCloudMetaData.Setup(x => x.MetadataTemplateFilePath).Returns(string.Empty);
-        _mockCloudMetaData.Setup(x => x.SupportedFileTypes).Returns(new List<SupportedFileType>());
-
         // Act
         var result = await _service.ExportMetadataAsync(
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -656,6 +597,9 @@ public class CloudMetadataExportServiceTests
 
         var documents = new List<Document> { document };
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.AddMapper(new MetaDataMap("DisciplineField", null, "Discipline", null, "Aconex"));
+
         var customProperties = new Dictionary<int, List<CustomProperty>>
         {
             { 1, new List<CustomProperty> { customProperty } }
@@ -665,21 +609,12 @@ public class CloudMetadataExportServiceTests
             { 1, new List<string> { Path.Combine(_testDirectory, "A-101.pdf") } }
         };
 
-        var mappings = new List<MetaDataMap>
-        {
-            new MetaDataMap("DisciplineField", null, "Discipline", null, "Aconex")
-        };
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(mappings);
-        _mockCloudMetaData.Setup(x => x.MetadataTemplateFilePath).Returns(string.Empty);
-        _mockCloudMetaData.Setup(x => x.SupportedFileTypes).Returns(new List<SupportedFileType>());
-
         // Act
         var result = await _service.ExportMetadataAsync(
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -702,6 +637,10 @@ public class CloudMetadataExportServiceTests
 
         var documents = new List<Document> { document };
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.AddMapper(new MetaDataMap("DisciplineField", null, "Discipline", null, "Aconex"));
+        cloudMetaData.AddMapper(new MetaDataMap("ZoneField", null, "Zone", null, "Aconex"));
+
         var customProperties = new Dictionary<int, List<CustomProperty>>
         {
             { 1, new List<CustomProperty> { customProperty1, customProperty2 } }
@@ -711,22 +650,12 @@ public class CloudMetadataExportServiceTests
             { 1, new List<string> { Path.Combine(_testDirectory, "A-101.pdf") } }
         };
 
-        var mappings = new List<MetaDataMap>
-        {
-            new MetaDataMap("DisciplineField", null, "Discipline", null, "Aconex"),
-            new MetaDataMap("ZoneField", null, "Zone", null, "Aconex")
-        };
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(mappings);
-        _mockCloudMetaData.Setup(x => x.MetadataTemplateFilePath).Returns(string.Empty);
-        _mockCloudMetaData.Setup(x => x.SupportedFileTypes).Returns(new List<SupportedFileType>());
-
         // Act
         var result = await _service.ExportMetadataAsync(
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -751,33 +680,29 @@ public class CloudMetadataExportServiceTests
 
         var documents = new List<Document> { document };
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.AddMapper(new MetaDataMap("DocumentNumber", null, "Number", null, "Aconex"));
+
+        // Create mock modifier for DWG files
+        var mockModifier = new Mock<IDocumentNumberModifier>();
+        mockModifier.Setup(x => x.DocumentNumber(It.IsAny<string>()))
+            .Returns((string num) => num + "-DWG");
+
+        var supportedFileType = new SupportedFileType(".dwg", "AutoCAD Drawing", mockModifier.Object);
+        cloudMetaData.SupportedFileTypes = new List<SupportedFileType> { supportedFileType };
+
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>
         {
             { 1, new List<string> { incomingFilePath } }
         };
 
-        var mockModifier = new Mock<IDocumentNumberModifier>();
-        mockModifier.Setup(x => x.DocumentNumber(It.IsAny<string>()))
-            .Returns((string num) => num + "-DWG");
-
-        var supportedFileType = new SupportedFileType(".dwg", "AutoCAD Drawing", mockModifier.Object);
-
-        var mappings = new List<MetaDataMap>
-        {
-            new MetaDataMap("DocumentNumber", null, "Number", null, "Aconex")
-        };
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(mappings);
-        _mockCloudMetaData.Setup(x => x.MetadataTemplateFilePath).Returns(string.Empty);
-        _mockCloudMetaData.Setup(x => x.SupportedFileTypes).Returns(new List<SupportedFileType> { supportedFileType });
-
         // Act
         var result = await _service.ExportMetadataAsync(
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -798,33 +723,29 @@ public class CloudMetadataExportServiceTests
 
         var documents = new List<Document> { document };
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.AddMapper(new MetaDataMap("DocumentNumber", null, "Number", null, "Aconex"));
+
+        // Create mock modifier for DWG files only
+        var mockModifier = new Mock<IDocumentNumberModifier>();
+        mockModifier.Setup(x => x.DocumentNumber(It.IsAny<string>()))
+            .Returns((string num) => num + "-DWG");
+
+        var supportedFileType = new SupportedFileType(".dwg", "AutoCAD Drawing", mockModifier.Object);
+        cloudMetaData.SupportedFileTypes = new List<SupportedFileType> { supportedFileType };
+
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>
         {
             { 1, new List<string> { incomingFilePath } }
         };
 
-        var mockModifier = new Mock<IDocumentNumberModifier>();
-        mockModifier.Setup(x => x.DocumentNumber(It.IsAny<string>()))
-            .Returns((string num) => num + "-DWG");
-
-        var supportedFileType = new SupportedFileType(".dwg", "AutoCAD Drawing", mockModifier.Object);
-
-        var mappings = new List<MetaDataMap>
-        {
-            new MetaDataMap("DocumentNumber", null, "Number", null, "Aconex")
-        };
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(mappings);
-        _mockCloudMetaData.Setup(x => x.MetadataTemplateFilePath).Returns(string.Empty);
-        _mockCloudMetaData.Setup(x => x.SupportedFileTypes).Returns(new List<SupportedFileType> { supportedFileType });
-
         // Act
         var result = await _service.ExportMetadataAsync(
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -853,29 +774,24 @@ public class CloudMetadataExportServiceTests
 
         var documents = new List<Document> { document };
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.MetadataTemplateFilePath = templatePath;
+        cloudMetaData.AddMapper(new MetaDataMap("Column1", "Value1", null, null, "Aconex"));
+        cloudMetaData.AddMapper(new MetaDataMap("Column2", "Value2", null, null, "Aconex"));
+        cloudMetaData.AddMapper(new MetaDataMap("Column3", "Value3", null, null, "Aconex"));
+
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>
         {
             { 1, new List<string> { Path.Combine(_testDirectory, "A-101.pdf") } }
         };
 
-        var mappings = new List<MetaDataMap>
-        {
-            new MetaDataMap("Column1", "Value1", null, null, "Aconex"),
-            new MetaDataMap("Column2", "Value2", null, null, "Aconex"),
-            new MetaDataMap("Column3", "Value3", null, null, "Aconex")
-        };
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(mappings);
-        _mockCloudMetaData.Setup(x => x.MetadataTemplateFilePath).Returns(templatePath);
-        _mockCloudMetaData.Setup(x => x.SupportedFileTypes).Returns(new List<SupportedFileType>());
-
         // Act
         var result = await _service.ExportMetadataAsync(
             outputPath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -901,28 +817,23 @@ public class CloudMetadataExportServiceTests
 
         var documents = new List<Document> { document };
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.MetadataTemplateFilePath = templatePath;
+        cloudMetaData.AddMapper(new MetaDataMap("FieldA", "ValueA", null, null, "Aconex"));
+        cloudMetaData.AddMapper(new MetaDataMap("FieldB", "ValueB", null, null, "Aconex"));
+
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>
         {
             { 1, new List<string> { Path.Combine(_testDirectory, "A-101.pdf") } }
         };
 
-        var mappings = new List<MetaDataMap>
-        {
-            new MetaDataMap("FieldA", "ValueA", null, null, "Aconex"),
-            new MetaDataMap("FieldB", "ValueB", null, null, "Aconex")
-        };
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(mappings);
-        _mockCloudMetaData.Setup(x => x.MetadataTemplateFilePath).Returns(templatePath);
-        _mockCloudMetaData.Setup(x => x.SupportedFileTypes).Returns(new List<SupportedFileType>());
-
         // Act
         var result = await _service.ExportMetadataAsync(
             outputPath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -951,28 +862,23 @@ public class CloudMetadataExportServiceTests
 
         var documents = new List<Document> { document };
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.MetadataTemplateFilePath = templatePath;
+        cloudMetaData.AddMapper(new MetaDataMap("MappedField", "SomeValue", null, null, "Aconex"));
+        // No mapping for UnmappedField
+
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>
         {
             { 1, new List<string> { Path.Combine(_testDirectory, "A-101.pdf") } }
         };
 
-        var mappings = new List<MetaDataMap>
-        {
-            new MetaDataMap("MappedField", "SomeValue", null, null, "Aconex")
-            // No mapping for UnmappedField
-        };
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(mappings);
-        _mockCloudMetaData.Setup(x => x.MetadataTemplateFilePath).Returns(templatePath);
-        _mockCloudMetaData.Setup(x => x.SupportedFileTypes).Returns(new List<SupportedFileType>());
-
         // Act
         var result = await _service.ExportMetadataAsync(
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -992,27 +898,21 @@ public class CloudMetadataExportServiceTests
 
         var documents = new List<Document> { document };
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.AddMapper(new MetaDataMap("CustomField", null, "NonExistentProperty", null, "Aconex"));
+
         var customProperties = new Dictionary<int, List<CustomProperty>>(); // No custom properties
         var filePathsByDocumentId = new Dictionary<int, List<string>>
         {
             { 1, new List<string> { Path.Combine(_testDirectory, "A-101.pdf") } }
         };
 
-        var mappings = new List<MetaDataMap>
-        {
-            new MetaDataMap("CustomField", null, "NonExistentProperty", null, "Aconex")
-        };
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(mappings);
-        _mockCloudMetaData.Setup(x => x.MetadataTemplateFilePath).Returns(string.Empty);
-        _mockCloudMetaData.Setup(x => x.SupportedFileTypes).Returns(new List<SupportedFileType>());
-
         // Act
         var result = await _service.ExportMetadataAsync(
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -1036,27 +936,21 @@ public class CloudMetadataExportServiceTests
 
         var documents = new List<Document> { document };
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.AddMapper(new MetaDataMap("Field", "Value", null, null, "Aconex"));
+
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>
         {
             { 1, new List<string> { "test.pdf" } }
         };
 
-        var mappings = new List<MetaDataMap>
-        {
-            new MetaDataMap("Field", "Value", null, null, "Aconex")
-        };
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(mappings);
-        _mockCloudMetaData.Setup(x => x.MetadataTemplateFilePath).Returns(string.Empty);
-        _mockCloudMetaData.Setup(x => x.SupportedFileTypes).Returns(new List<SupportedFileType>());
-
         // Act
         var result = await _service.ExportMetadataAsync(
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -1073,24 +967,18 @@ public class CloudMetadataExportServiceTests
 
         var documents = new List<Document> { document };
         var revisions = new List<Revision>();
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.AddMapper(new MetaDataMap("Field", "Value", null, null, "Aconex"));
+
         var customProperties = new Dictionary<int, List<CustomProperty>>();
         var filePathsByDocumentId = new Dictionary<int, List<string>>(); // No files for document
-
-        var mappings = new List<MetaDataMap>
-        {
-            new MetaDataMap("Field", "Value", null, null, "Aconex")
-        };
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(mappings);
-        _mockCloudMetaData.Setup(x => x.MetadataTemplateFilePath).Returns(string.Empty);
-        _mockCloudMetaData.Setup(x => x.SupportedFileTypes).Returns(new List<SupportedFileType>());
 
         // Act
         var result = await _service.ExportMetadataAsync(
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 
@@ -1114,14 +1002,33 @@ public class CloudMetadataExportServiceTests
         // Arrange
         var filePath = Path.Combine(_testDirectory, "metadata.csv");
 
-        var revision1 = new Revision("Rev A", new DateTime(2024, 1, 15), "Initial Issue") { Id = 1 };
-        var revision2 = new Revision("Rev B", new DateTime(2024, 2, 20), "Client Comments") { Id = 2 };
+        var revision1 = new Revision(new DateTime(2024, 1, 15), "Initial Issue") { Id = 1 };
+        var revision2 = new Revision(new DateTime(2024, 2, 20), "Client Comments") { Id = 2 };
 
         var document1 = new Document("A-101", "Ground Floor Plan", "A", 1) { Id = 1 };
         var document2 = new Document("S-201", "Structural Layout", "B", 2) { Id = 2 };
 
         var documents = new List<Document> { document1, document2 };
         var revisions = new List<Revision> { revision1, revision2 };
+
+        var cloudMetaData = new MetaDataMapperAconex();
+        cloudMetaData.AddMapper(new MetaDataMap("Project", "Test Project", null, null, "Aconex"));
+        cloudMetaData.AddMapper(new MetaDataMap("DocumentNumber", null, "Number", null, "Aconex"));
+        cloudMetaData.AddMapper(new MetaDataMap("DocumentName", null, "Name", null, "Aconex"));
+        cloudMetaData.AddMapper(new MetaDataMap("Revision", null, "Revision", null, "Aconex"));
+        cloudMetaData.AddMapper(new MetaDataMap("RevisionDate", null, "RevisionDate", null, "Aconex"));
+        cloudMetaData.AddMapper(new MetaDataMap("Discipline", null, "Discipline", null, "Aconex"));
+        cloudMetaData.AddMapper(new MetaDataMap("FileName", null, null, "FileName", "Aconex"));
+
+        var mockModifier = new Mock<IDocumentNumberModifier>();
+        mockModifier.Setup(x => x.DocumentNumber(It.IsAny<string>()))
+            .Returns((string num) => num + "-DWG");
+
+        var supportedFileTypes = new List<SupportedFileType>
+        {
+            new SupportedFileType(".dwg", "AutoCAD Drawing", mockModifier.Object)
+        };
+        cloudMetaData.SupportedFileTypes = supportedFileTypes;
 
         var customProperties = new Dictionary<int, List<CustomProperty>>
         {
@@ -1158,36 +1065,12 @@ public class CloudMetadataExportServiceTests
             }
         };
 
-        var mockModifier = new Mock<IDocumentNumberModifier>();
-        mockModifier.Setup(x => x.DocumentNumber(It.IsAny<string>()))
-            .Returns((string num) => num + "-DWG");
-
-        var supportedFileTypes = new List<SupportedFileType>
-        {
-            new SupportedFileType(".dwg", "AutoCAD Drawing", mockModifier.Object)
-        };
-
-        var mappings = new List<MetaDataMap>
-        {
-            new MetaDataMap("Project", "Test Project", null, null, "Aconex"),
-            new MetaDataMap("DocumentNumber", null, "Number", null, "Aconex"),
-            new MetaDataMap("DocumentName", null, "Name", null, "Aconex"),
-            new MetaDataMap("Revision", null, "Revision", null, "Aconex"),
-            new MetaDataMap("RevisionDate", null, "RevisionDate", null, "Aconex"),
-            new MetaDataMap("Discipline", null, "Discipline", null, "Aconex"),
-            new MetaDataMap("FileName", null, null, "FileName", "Aconex")
-        };
-
-        _mockCloudMetaData.Setup(x => x.MetaDataMap).Returns(mappings);
-        _mockCloudMetaData.Setup(x => x.MetadataTemplateFilePath).Returns(string.Empty);
-        _mockCloudMetaData.Setup(x => x.SupportedFileTypes).Returns(supportedFileTypes);
-
         // Act
         var result = await _service.ExportMetadataAsync(
             filePath,
             documents,
             revisions,
-            _mockCloudMetaData.Object,
+            cloudMetaData,
             customProperties,
             filePathsByDocumentId);
 

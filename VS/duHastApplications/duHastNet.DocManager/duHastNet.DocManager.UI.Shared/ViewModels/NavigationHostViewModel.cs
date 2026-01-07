@@ -1,4 +1,4 @@
-﻿//
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -17,7 +17,7 @@
 //
 
 using CommunityToolkit.Mvvm.ComponentModel;
-using duHastNet.DocManager.Core.Services.Api;
+
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.UI.Shared.Stores;
 using duHastNet.DocManager.UI.Shared.Interfaces;
@@ -28,10 +28,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
 {
     public partial class NavigationHostViewModel : ObservableObject, ICloseable
     {
-        private readonly DocManagerApi _docManagerApi;
-        private readonly Manager _manager;
-        private readonly MessageStore _messageStore;
-        private readonly Core.Models.CurrentFolder.CurrentFolderManager _currentFolderManager;
+        private readonly IDocManagerApi _docManagerApi;
+        private readonly IManager _manager;
+        private readonly IMessageStore _messageStore;
+        private readonly ICurrentFolderManager _currentFolderManager;
         private readonly NavigationStore _navigationStore;
         private readonly IDialogService _dialogService;
         public readonly ISettingsService _settingsService;
@@ -46,10 +46,10 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         #endregion
 
         public NavigationHostViewModel(
-            DocManagerApi docManagerApi, 
-            Manager manager, 
-            Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager,
-            MessageStore messageStore,
+            IDocManagerApi docManagerApi, 
+            IManager manager, 
+            ICurrentFolderManager currentFolderManager,
+            IMessageStore messageStore,
             NavigationStore navigationStore,
             ISettingsService settingsService,
             IDialogService dialogService

@@ -36,6 +36,7 @@ public class DocumentImportService
 
     public DocumentImportService(IUnitOfWork unitOfWork)
     {
+        ArgumentNullException.ThrowIfNull(unitOfWork);
         _unitOfWork = unitOfWork;
     }
 
@@ -85,7 +86,7 @@ public class DocumentImportService
             // Validate that all custom field definitions have corresponding CSV columns
             // This ensures the business rule "all documents use all properties" is maintained
             var missingColumns = customFieldDefinitions
-                .Where(cfd => !customFieldColumns.Contains(cfd.PropertyName, StringComparer.OrdinalIgnoreCase))
+                .Where(cfd => !customFieldColumns.Any(c => c.Equals(cfd.PropertyName, StringComparison.OrdinalIgnoreCase)))
                 .Select(cfd => cfd.PropertyName)
                 .ToList();
 

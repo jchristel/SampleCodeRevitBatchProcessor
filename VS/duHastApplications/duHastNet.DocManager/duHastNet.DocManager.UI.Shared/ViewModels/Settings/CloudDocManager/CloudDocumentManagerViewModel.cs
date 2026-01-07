@@ -23,7 +23,7 @@
 
 
 using CommunityToolkit.Mvvm.ComponentModel;
-using duHastNet.DocManager.Core.Models;
+using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.DocManager.Core.Models.CloudDocManager;
 using duHastNet.DocManager.Core.Models.CloudDocManager.MetaData;
 using duHastNet.DocManager.UI.Shared.Interfaces;
@@ -44,8 +44,8 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.CloudDocManager
     {
         #region Private Fields
 
-        private readonly MessageStore _messageStore;
-        private readonly Manager _manager;
+        private readonly IMessageStore _messageStore;
+        private readonly IManager _manager;
         private readonly IDialogService _dialogService;
         private readonly CloudDocumentManager _cloudDocumentManager;
 
@@ -145,8 +145,8 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings.CloudDocManager
         #region Constructor
 
         public CloudDocumentManagerViewModel(
-            MessageStore messageStore,
-            Manager manager,
+            IMessageStore messageStore,
+            IManager manager,
             CloudDocumentManager cloudDocumentManager,
             IDialogService dialogService)
         {

@@ -19,7 +19,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Interfaces;
-using duHastNet.DocManager.Core.Services.Api;
+
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
 using System.ComponentModel;
@@ -34,11 +34,11 @@ public partial class SettingsViewModel : ObservableObject
 {
     #region Private Fields
 
-    private readonly DocManagerApi _docManagerApi;
-    private readonly MessageStore _messageStore;
-    private readonly Manager _manager;
+    private readonly IDocManagerApi _docManagerApi;
+    private readonly IMessageStore _messageStore;
+    private readonly IManager _manager;
     private readonly NavigationStore _navigationStore;
-    private readonly Core.Models.CurrentFolder.CurrentFolderManager _currentFolderManager;
+    private readonly ICurrentFolderManager _currentFolderManager;
     private readonly IDialogService _dialogService;
 
     //function used to navigate to merge view model
@@ -75,10 +75,10 @@ public partial class SettingsViewModel : ObservableObject
     #region Constructor
 
     public SettingsViewModel(
-        DocManagerApi docManagerApi, 
-        Manager manager, 
-        MessageStore messageStore, 
-        Core.Models.CurrentFolder.CurrentFolderManager currentFolderManager,
+        IDocManagerApi docManagerApi, 
+        IManager manager, 
+        IMessageStore messageStore, 
+        ICurrentFolderManager currentFolderManager,
         NavigationStore navigationStore,
         IDialogService dialogService,
         ISettingsService settingsService,
@@ -106,7 +106,7 @@ public partial class SettingsViewModel : ObservableObject
         AconexMetadataViewModel = new CloudDocManager.CloudDocumentManagerViewModel(
             _messageStore, 
             _manager,
-            _manager.CloudDocumentManager,
+            _manager.CloudDocManager,
             _dialogService);
 
         CurrentFolderViewModel = new Settings.CurrentFolder.CurrentFolderViewModel(

@@ -92,7 +92,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings
 
                 // Save CloudDocumentManager settings
                 var cloudDocResult = await _settingsService.SaveAsync(
-                    _manager.CloudDocumentManager,
+                    _manager.CloudDocManager,
                     SettingsFileNames.CloudDocumentManager);
 
                 if (!cloudDocResult.Success)

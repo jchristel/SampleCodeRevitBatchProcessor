@@ -172,7 +172,7 @@ This column shows a colored circle that quickly tells you the status of each fil
 
 **ðŸŸ¢ Green Circle - All Good**
 - The file was successfully matched to a document in your database
-- The revision is the next logical step from what's currently in the database
+- The revision is different from what's currently in the database
 - You can merge this file without any concerns
 - Hover your mouse over the circle to see more details
 
@@ -248,7 +248,7 @@ Shows the current revision of the matched document in your database.
 - Current Rev: `B`
 - Status: Green (C follows B)
 
-If your incoming file skipped a revision (like going from `B` to `D`), you'll see an orange warning.
+If your incoming files revision is the same as the current revision(like going from `B` to `B`), you'll see an orange warning.
 
 #### Status Message
 
@@ -261,8 +261,9 @@ A plain-English explanation of what's happening with this file.
 - "Match found"
 
 **Orange Warning:**
-- "Warning - Revision not sequential (Current: A, Incoming: C)"
-  - This means the database shows revision A, but your incoming file is revision C (skipping B)
+- "Warning - Revision not sequential (Current: C, Incoming: C)"
+  - This means the database shows revision C, but your incoming file is revision C
+  - The application is not attempting to verify whether revisions are sequential
 
 **Red Errors:**
 - "ERROR - No revision information found in filename (blocks merge)"
@@ -349,38 +350,6 @@ Here's the order of importance (most serious first):
 
 ---
 
-## How Revision Sequencing Works
-
-The application checks if your incoming revision is the "next" logical revision after what's currently in the database.
-
-### For Letter Revisions (A, B, C...)
-
-**Sequential means:** The next letter in the alphabet
-
-**Examples:**
-- Current: A, Incoming: B â†’ âœ“ Sequential (green)
-- Current: A, Incoming: C â†’ âœ— Not Sequential (orange warning)
-- Current: B, Incoming: C â†’ âœ“ Sequential (green)
-
-### For Number Revisions (1, 2, 3... or 01, 02, 03...)
-
-**Sequential means:** The next number in sequence
-
-**Examples:**
-- Current: 5, Incoming: 6 â†’ âœ“ Sequential (green)
-- Current: 5, Incoming: 7 â†’ âœ— Not Sequential (orange warning)
-- Current: 01, Incoming: 02 â†’ âœ“ Sequential (green)
-
-### For Other Revision Schemes (P01, Rev-A, etc.)
-
-For more complex revision numbering, the application currently accepts any incoming revision without a warning. This can be customized based on your specific needs.
-
-### If the Database Has No Current Revision
-
-If a document in your database doesn't have a revision yet (the revision field is blank), any incoming revision is accepted as OK.
-
----
-
 ## When Does the List Update?
 
 The list of files and their matching status updates automatically in these situations:
@@ -426,7 +395,7 @@ The list of files and their matching status updates automatically in these situa
 
 At the top of the screen, you'll see messages that tell you what's happening:
 
-**Blue/Gray Messages:** General information (auto-disappears after a few seconds)
+**Blue Messages:** General information (auto-disappears after a few seconds)
 - "Successfully matched 18 documents. 3 warnings."
 - "Refresh completed."
 
@@ -561,8 +530,6 @@ The Refresh operation is usually pretty quick:
 - How many files are in your incoming folder
 - How many documents are in your database
 - How complex your filing rules are
-
-**Tip:** Keep your incoming folder organized. After processing files, move them out or archive them so the folder doesn't get too full.
 
 ---
 

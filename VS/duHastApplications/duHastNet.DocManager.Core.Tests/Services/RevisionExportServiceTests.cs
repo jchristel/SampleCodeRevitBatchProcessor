@@ -211,7 +211,7 @@ public class RevisionExportServiceTests
     {
         // Arrange
         var filePath = Path.Combine(_testDirectory, "description_with_quotes.csv");
-        var revision = new Revision(1, new DateTime(2024, 3, 15), "Release \"Alpha\" version");
+        var revision = new Revision(new DateTime(2024, 3, 15), "Release 'Alpha' version") { Id = 1 };
         revision.DocumentIds.Add(101);
         var revisions = new List<Revision> { revision };
 
@@ -408,7 +408,7 @@ public class RevisionExportServiceTests
         var revisions = new List<Revision>();
         for (int i = 1; i <= 100; i++)
         {
-            var revision = new Revision(i, new DateTime(2024, 1, 1).AddDays(i), $"Release {i}");
+            var revision = new Revision(new DateTime(2024, 1, 1).AddDays(i), $"Release {i}") { Id = i };
             revision.DocumentIds.Add(i * 10);
             revisions.Add(revision);
         }
@@ -465,7 +465,7 @@ public class RevisionExportServiceTests
         // Arrange
         var filePath = Path.Combine(_testDirectory, "long_description.csv");
         var longDescription = new string('A', 1000);
-        var revision = new Revision(1, new DateTime(2024, 3, 15), longDescription);
+        var revision = new Revision(new DateTime(2024, 3, 15), longDescription) { Id = 1 };
         revision.DocumentIds.Add(101);
         var revisions = new List<Revision> { revision };
 
@@ -496,7 +496,7 @@ public class RevisionExportServiceTests
     {
         // Arrange
         var filePath = Path.Combine(_testDirectory, "empty_description.csv");
-        var revision = new Revision(1, new DateTime(2024, 3, 15), string.Empty);
+        var revision = new Revision(new DateTime(2024, 3, 15), string.Empty) { Id = 1 };
         revision.DocumentIds.Add(101);
         var revisions = new List<Revision> { revision };
 
@@ -521,7 +521,7 @@ public class RevisionExportServiceTests
 
         var revision2 = new Revision(new DateTime(2024, 2, 15), null) { Id = 2 };
 
-        var revision3 = new Revision(3, new DateTime(2024, 3, 15), string.Empty);
+        var revision3 = new Revision(new DateTime(2024, 3, 15), string.Empty) { Id = 3 };
         revision3.DocumentIds.Add(301);
 
         var revisions = new List<Revision> { revision1, revision2, revision3 };

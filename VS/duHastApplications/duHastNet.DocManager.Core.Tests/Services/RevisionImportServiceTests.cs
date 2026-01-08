@@ -21,7 +21,8 @@ using duHastNet.DocManager.Core.Services;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Interfaces;
 
-namespace duHastNet.DocManager.Core.Tests.Services;
+namespace duHastNet.DocManager.Core.Tests.Services
+{
 
 [TestFixture]
 public class RevisionImportServiceTests
@@ -88,7 +89,7 @@ public class RevisionImportServiceTests
             .ReturnsAsync(new List<Revision>());
 
         _mockRevisionRepository.Setup(x => x.InsertAsync(It.IsAny<Revision>()))
-            .Returns(Task.CompletedTask);
+            .ReturnsAsync(1);
 
         // Act
         var result = await _service.ImportRevisionsAsync(filePath);
@@ -122,7 +123,7 @@ public class RevisionImportServiceTests
             .ReturnsAsync(new List<Revision>());
 
         _mockRevisionRepository.Setup(x => x.InsertAsync(It.IsAny<Revision>()))
-            .Returns(Task.CompletedTask);
+            .ReturnsAsync(1);
 
         // Act
         var result = await _service.ImportRevisionsAsync(filePath);
@@ -210,7 +211,7 @@ public class RevisionImportServiceTests
             .ReturnsAsync(new List<Revision>());
 
         _mockRevisionRepository.Setup(x => x.InsertAsync(It.IsAny<Revision>()))
-            .Returns(Task.CompletedTask);
+            .ReturnsAsync(1);
 
         // Act
         var result = await _service.ImportRevisionsAsync(filePath);
@@ -238,12 +239,12 @@ public class RevisionImportServiceTests
                         "1,2024-03-15,Updated Description,5\r\n";
         await File.WriteAllTextAsync(filePath, csvContent);
 
-        var existingRevision = new Revision(1, new DateTime(2024, 3, 15), "Original Description");
+        var existingRevision = new Revision(new DateTime(2024, 3, 15), "Original Description") { Id = 1 };
         _mockRevisionRepository.Setup(x => x.GetByIdAsync(It.Is<int>(id => id == 1)))
             .ReturnsAsync(existingRevision);
 
         _mockRevisionRepository.Setup(x => x.UpdateAsync(It.IsAny<Revision>()))
-            .Returns(Task.CompletedTask);
+            .ReturnsAsync(1);
 
         // Act
         var result = await _service.ImportRevisionsAsync(filePath);
@@ -317,12 +318,12 @@ public class RevisionImportServiceTests
                         "1,2024-04-20,Description,0\r\n";
         await File.WriteAllTextAsync(filePath, csvContent);
 
-        var existingRevision = new Revision(1, new DateTime(2024, 3, 15), "Description");
+        var existingRevision = new Revision(new DateTime(2024, 3, 15), "Description") { Id = 1 };
         _mockRevisionRepository.Setup(x => x.GetByIdAsync(It.Is<int>(id => id == 1)))
             .ReturnsAsync(existingRevision);
 
         _mockRevisionRepository.Setup(x => x.UpdateAsync(It.IsAny<Revision>()))
-            .Returns(Task.CompletedTask);
+            .ReturnsAsync(1);
 
         // Act
         var result = await _service.ImportRevisionsAsync(filePath);
@@ -346,7 +347,7 @@ public class RevisionImportServiceTests
                         "1,2024-03-15,Same Description,0\r\n";
         await File.WriteAllTextAsync(filePath, csvContent);
 
-        var existingRevision = new Revision(1, new DateTime(2024, 3, 15), "Same Description");
+        var existingRevision = new Revision(new DateTime(2024, 3, 15), "Same Description") { Id = 1 };
         _mockRevisionRepository.Setup(x => x.GetByIdAsync(It.Is<int>(id => id == 1)))
             .ReturnsAsync(existingRevision);
 
@@ -368,12 +369,12 @@ public class RevisionImportServiceTests
                         "1,2024-03-15,,0\r\n";
         await File.WriteAllTextAsync(filePath, csvContent);
 
-        var existingRevision = new Revision(1, new DateTime(2024, 3, 15), "Original Description");
+        var existingRevision = new Revision(new DateTime(2024, 3, 15), "Original Description") { Id = 1 };
         _mockRevisionRepository.Setup(x => x.GetByIdAsync(It.Is<int>(id => id == 1)))
             .ReturnsAsync(existingRevision);
 
         _mockRevisionRepository.Setup(x => x.UpdateAsync(It.IsAny<Revision>()))
-            .Returns(Task.CompletedTask);
+            .ReturnsAsync(1);
 
         // Act
         var result = await _service.ImportRevisionsAsync(filePath);
@@ -397,7 +398,7 @@ public class RevisionImportServiceTests
                         "1,invalid-date,Description,0\r\n";
         await File.WriteAllTextAsync(filePath, csvContent);
 
-        var existingRevision = new Revision(1, new DateTime(2024, 3, 15), "Description");
+        var existingRevision = new Revision(new DateTime(2024, 3, 15), "Description") { Id = 1 };
         _mockRevisionRepository.Setup(x => x.GetByIdAsync(It.Is<int>(id => id == 1)))
             .ReturnsAsync(existingRevision);
 
@@ -431,7 +432,7 @@ public class RevisionImportServiceTests
                         "new,2024-03-25,Another New,0\r\n";
         await File.WriteAllTextAsync(filePath, csvContent);
 
-        var existingRevision = new Revision(1, new DateTime(2024, 2, 20), "Old Description");
+        var existingRevision = new Revision(new DateTime(2024, 2, 20), "Old Description") { Id = 1 };
         _mockRevisionRepository.Setup(x => x.GetByIdAsync(It.Is<int>(id => id == 1)))
             .ReturnsAsync(existingRevision);
 
@@ -439,10 +440,10 @@ public class RevisionImportServiceTests
             .ReturnsAsync(new List<Revision>());
 
         _mockRevisionRepository.Setup(x => x.InsertAsync(It.IsAny<Revision>()))
-            .Returns(Task.CompletedTask);
+            .ReturnsAsync(1);
 
         _mockRevisionRepository.Setup(x => x.UpdateAsync(It.IsAny<Revision>()))
-            .Returns(Task.CompletedTask);
+            .ReturnsAsync(1);
 
         // Act
         var result = await _service.ImportRevisionsAsync(filePath);
@@ -473,7 +474,7 @@ public class RevisionImportServiceTests
                         "1,2024-02-20,Valid Update,0\r\n";
         await File.WriteAllTextAsync(filePath, csvContent);
 
-        var existingRevision = new Revision(1, new DateTime(2024, 2, 20), "Old");
+        var existingRevision = new Revision(new DateTime(2024, 2, 20), "Old") { Id = 1 };
         _mockRevisionRepository.Setup(x => x.GetByIdAsync(It.Is<int>(id => id == 1)))
             .ReturnsAsync(existingRevision);
         _mockRevisionRepository.Setup(x => x.GetByIdAsync(It.Is<int>(id => id == 999)))
@@ -483,10 +484,10 @@ public class RevisionImportServiceTests
             .ReturnsAsync(new List<Revision>());
 
         _mockRevisionRepository.Setup(x => x.InsertAsync(It.IsAny<Revision>()))
-            .Returns(Task.CompletedTask);
+            .ReturnsAsync(1);
 
         _mockRevisionRepository.Setup(x => x.UpdateAsync(It.IsAny<Revision>()))
-            .Returns(Task.CompletedTask);
+            .ReturnsAsync(1);
 
         // Act
         var result = await _service.ImportRevisionsAsync(filePath);
@@ -578,7 +579,7 @@ public class RevisionImportServiceTests
             .ReturnsAsync(new List<Revision>());
 
         _mockRevisionRepository.Setup(x => x.InsertAsync(It.IsAny<Revision>()))
-            .Returns(Task.CompletedTask);
+            .ReturnsAsync(1);
 
         // Act
         var result = await _service.ImportRevisionsAsync(filePath);
@@ -608,7 +609,7 @@ public class RevisionImportServiceTests
             .ReturnsAsync(new List<Revision>());
 
         _mockRevisionRepository.Setup(x => x.InsertAsync(It.IsAny<Revision>()))
-            .Returns(Task.CompletedTask);
+            .ReturnsAsync(1);
 
         // Act
         var result = await _service.ImportRevisionsAsync(filePath);
@@ -639,7 +640,7 @@ public class RevisionImportServiceTests
             .ReturnsAsync(new List<Revision>());
 
         _mockRevisionRepository.Setup(x => x.InsertAsync(It.IsAny<Revision>()))
-            .Returns(Task.CompletedTask);
+            .ReturnsAsync(1);
 
         // Act
         var result = await _service.ImportRevisionsAsync(filePath);
@@ -666,7 +667,7 @@ public class RevisionImportServiceTests
             .ReturnsAsync(new List<Revision>());
 
         _mockRevisionRepository.Setup(x => x.InsertAsync(It.IsAny<Revision>()))
-            .Returns(Task.CompletedTask);
+            .ReturnsAsync(1);
 
         _mockRevisionRepository.Setup(x => x.GetByIdAsync(It.Is<int>(id => id == 1)))
             .ThrowsAsync(new Exception("Database error"));
@@ -700,7 +701,7 @@ public class RevisionImportServiceTests
             .ReturnsAsync(new List<Revision>());
 
         _mockRevisionRepository.Setup(x => x.InsertAsync(It.IsAny<Revision>()))
-            .Returns(Task.CompletedTask);
+            .ReturnsAsync(1);
 
         // Act
         var result = await _service.ImportRevisionsAsync(filePath);
@@ -730,7 +731,7 @@ public class RevisionImportServiceTests
                         "1,2024-03-16,Update,0\r\n";
         await File.WriteAllTextAsync(filePath, csvContent);
 
-        var existingRevision = new Revision(1, new DateTime(2024, 3, 16), "Old");
+        var existingRevision = new Revision(new DateTime(2024, 3, 16), "Old") { Id = 1 };
         _mockRevisionRepository.Setup(x => x.GetByIdAsync(It.Is<int>(id => id == 1)))
             .ReturnsAsync(existingRevision);
 
@@ -738,10 +739,10 @@ public class RevisionImportServiceTests
             .ReturnsAsync(new List<Revision>());
 
         _mockRevisionRepository.Setup(x => x.InsertAsync(It.IsAny<Revision>()))
-            .Returns(Task.CompletedTask);
+            .ReturnsAsync(1);
 
         _mockRevisionRepository.Setup(x => x.UpdateAsync(It.IsAny<Revision>()))
-            .Returns(Task.CompletedTask);
+            .ReturnsAsync(1);
 
         // Act
         var result = await _service.ImportRevisionsAsync(filePath);
@@ -778,4 +779,5 @@ public class RevisionImportServiceTests
     }
 
     #endregion
+}
 }

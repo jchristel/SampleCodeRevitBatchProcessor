@@ -2,102 +2,98 @@
 
 ## Overview
 
-The Database Connection section in the Settings view manages all aspects of the SQLite database used by the application. This includes database creation, connection management, data import/export, and custom field definitions. The database stores all document and revision information used by the application for matching, tracking, and metadata management.
-
-## Technology
-
-The application uses **SQLite** as its database engine with the **sqlite-net-pcl** library as the Object-Relational Mapping (ORM) layer. This provides a lightweight, file-based database solution that requires no separate database server installation.
+The Database Connection section in the Settings view manages your project's database. The database stores all document and revision information that the application uses for matching incoming files, tracking document history, and managing metadata. This section allows you to create new databases, connect to existing ones, import and export data, and define custom fields for your documents.
 
 ---
 
-## Database Path and Connection Management
+## Database Path and Connection
 
 ### Database Path
 
-**Description:** The file path where the SQLite database is located or will be created.
+**Description:** The location where your database file is stored or will be created. This is a file on your computer or network that contains all your project's document and revision data.
 
-**Type:** Text input
+**Type:** Text field with Browse button
 
-**Format:** Full file path with `.db` or `.sqlite` extension
+**Sample Values:**
+- `C:\ProjectData\DocumentDatabase.db` - Local drive location
+- `\\FileServer\Projects\ABC\Documents.db` - Network shared location
+- `D:\MyProjects\Construction2024.db` - Alternative drive location
 
-**Example:** `C:\ProjectData\DocumentDatabase.db`
+**Requirements:**
+- Must be a complete file path (not just a folder)
+- File extension should be `.db` or `.sqlite`
+- Directory must exist (or will be created when you create a new database)
+- You must have read/write access to the location
 
-**Validation:**
-- **When Connected:** Path must be valid and database must be connected
-- **When Disconnected:** No validation (allows entering path before connection)
-- **For Creation:** Directory must exist or be creatable, filename must be valid
+**Usage Notes:**
+- Use the Browse button to select an existing database or navigate to where you want to create a new one
+- The path is validated when you click Connect or Create Database
+- Network paths are supported but may be slower than local drives
 
-**Features:**
+### Browse Button
 
-#### Browse Button
+**Description:** Opens a file selection dialog to help you find an existing database file or choose a location for a new database.
 
-**Function:** Opens a file browser dialog to select an existing database file
+**Type:** Button
 
-**Dialog Filter:** 
-- Database files (*.db)
-- SQLite files (*.sqlite)
-- All files (*.*)
+**Usage Notes:**
+- Click to open the file browser
+- Shows database files (*.db), SQLite files (*.sqlite), and all files
+- Available unless the application is busy with another operation
+- After selecting a file, the path appears in the Database Path field
 
-**Enabled When:**
-- Not busy with database operations
+### Connect Button
 
-**Usage:** 
-- Select an existing database to connect to
-- Navigate to the desired location when creating a new database
+**Description:** Connects to an existing database file at the path you specified. After connecting, you can import/export data and manage custom fields.
 
-#### Connect Button
+**Type:** Button
 
-**Function:** Establishes connection to an existing database at the specified path
+**Requirements:**
+- Database Path must be filled in
+- The database file must exist at that location
+- The application must not be busy with another operation
 
-**Enabled When:**
-- Database path is specified
-- File exists at the specified path
-- Not busy with database operations
-
-**Process:**
-1. Validates file exists
-2. Opens database connection
-3. Verifies database schema
-4. Loads data into the application's Manager
-5. Updates connection status
-6. Initializes custom fields collection
-7. Enables import/export operations
-
-**Success Indicators:**
-- Import/Export buttons become enabled
-- Custom Fields expander becomes accessible
-- Data is loaded and available for use
-
-**Error Conditions:**
-- File doesn't exist at specified path
-- Database file is corrupted
-- Database schema is incompatible
-- Database is locked by another process
-
-#### Create Database Button
-
-**Function:** Creates a new SQLite database at the specified path with the required schema
-
-**Enabled When:**
-- Database path is specified
-- Path is valid (directory exists or can be created)
-- Not busy with database operations
-
-**Process:**
-1. Shows Save File Dialog to select location and name
-2. Creates database file at specified location
-3. Initializes schema (Document, Revision, CustomProperty tables)
-4. Creates indexes for performance
-5. Establishes connection to new database
-6. Loads (empty) data into Manager
-7. Updates connection status
-
-**Overwrite Behavior:** If file already exists, will overwrite it with a new empty database
+**What Happens When You Click:**
+1. The application checks that the file exists
+2. Opens the database and checks that it's valid
+3. Loads all documents and revisions into memory
+4. Enables the Import/Export buttons
+5. Makes the Custom Fields section available
+6. Shows a success message
 
 **Success Indicators:**
-- Success message displayed with database filename
-- Database path updated
-- Connection established
+- Import Documents and Export Documents buttons become active
+- Custom Fields section becomes accessible
+- Your data is ready to use
+
+**Common Errors:**
+- **File doesn't exist:** Check that you typed the path correctly or use Browse
+- **Database is locked:** Another program might have the file open
+- **Database is corrupted:** The file may be damaged - try restoring from a backup
+- **Wrong format:** The file might not be a valid database
+
+### Create Database Button
+
+**Description:** Creates a brand new, empty database file at the location you specify. Use this when starting a new project.
+
+**Type:** Button
+
+**Requirements:**
+- The application must not be busy with another operation
+
+**What Happens When You Click:**
+1. A Save File dialog opens for you to choose location and name
+2. The application creates a new database file
+3. Sets up the required structure (document and revision tables)
+4. Automatically connects to the new database
+5. Shows a success message with the filename
+
+**Important Warning:** If you choose a location where a database file already exists, the old file will be overwritten and permanently deleted. Make sure you have backups before creating a database at an existing location.
+
+**After Creating:**
+- The database is empty and ready for you to import data or add documents
+- Import/Export buttons become active
+- Custom Fields section becomes accessible
 - Import/Export buttons enabled
 - Custom Fields expander accessible
 
@@ -105,186 +101,191 @@ The application uses **SQLite** as its database engine with the **sqlite-net-pcl
 
 ---
 
-## Import/Export Operations
+## Import and Export Operations
 
-All import and export operations require an active database connection. These operations work with CSV format files for easy data exchange with external systems and spreadsheet applications.
+All import and export operations require that you're connected to a database. These operations use CSV (comma-separated values) files, which can be opened in Excel or any spreadsheet application.
 
-### Revision History Mode Selection
+### Revision History Mode
 
-**Description:** Checkbox that controls how revision history is handled during import/export operations.
+**Description:** A checkbox that controls how much revision history information is included when you export documents.
+
+**Type:** Checkbox
 
 **Options:**
 
 #### Include Full Revision History (Checked)
 
-**Behavior:**
-- Exports ALL documents in ALL revisions
-- Documents not in a particular revision appear with blank revision indicators
-- Creates a complete matrix of documents × revisions
-- Results in larger CSV files with many blank cells
+**What This Does:**
+- Exports every document for every revision, even if a document wasn't part of that revision
+- Creates a complete grid showing which documents were in which revisions
+- Produces larger CSV files with many blank cells
+- Gives you a complete picture of your document history
 
-**Use Case:** 
-- When you need to see which documents are present in each revision
-- For comprehensive revision tracking across all documents
-- When importing/exporting to systems that expect a full matrix
+**When to Use This:**
+- You need to see the complete revision matrix
+- You're analyzing which documents were part of each revision
+- You're exporting to a system that expects a full grid
+- You want comprehensive revision tracking
 
-**Example:** If you have 100 documents and 10 revisions, the export will have up to 1000 rows (100 × 10), with blanks where a document wasn't part of that revision.
+**Example:** If you have 100 documents and 10 revisions, the export will create up to 1,000 rows (one for each document in each revision). Many cells will be blank where a document wasn't included in a particular revision.
 
 #### Revision History Only (Unchecked - Default)
 
-**Behavior:**
-- Exports only documents that have revision indicators in each revision
+**What This Does:**
+- Exports only documents that actually have revision information
 - Skips documents that weren't part of a revision
-- Creates more compact CSV files
-- Only includes meaningful revision history entries
+- Creates smaller, more compact CSV files
+- Focuses on documents with explicit revision markers
 
-**Use Case:**
-- When you only care about documents that have explicit revision markers
-- For smaller, more focused exports
-- When most documents don't participate in every revision
+**When to Use This:**
+- You only need documents that have revision history
+- You want smaller, more manageable files
+- Most of your documents don't appear in every revision
+- You're doing focused revision analysis
 
-**Example:** If you have 100 documents but only 30 have revision indicators, the export will only include those 30 documents' revision entries.
-
----
-
-### Document Operations
-
-#### Import Documents
-
-**Function:** Imports document data from a CSV file into the database
-
-**Button:** Import Documents
-
-**Enabled When:**
-- Database is connected
-- Not busy with other operations
-
-**Process:**
-1. Opens file dialog to select CSV file
-2. Parses CSV and validates format
-3. Creates or updates documents in database
-4. Creates custom property records for new documents
-5. Reloads data into Manager
-6. Displays success/error statistics
-
-**CSV Format Expected:**
-
-**Required Columns:**
-- `Number` - Document number (unique identifier)
-- `Name` - Document name/title
-- `Revision` - Current revision code
-
-**Optional Columns:**
-- `[CustomFieldName]` - Any active custom field property name
-- Custom fields must match those defined in the database
-
-**Revision History Columns (if using Full Revision History Mode):**
-- Columns named after revision codes (e.g., `A`, `B`, `C`, `P01`)
-- Values are revision indicators (e.g., `S0`, `S1`, `AS`, `-`)
-- Blank cells indicate document was not in that revision
-
-**Import Behavior:**
-
-**New Documents:**
-- Created with specified properties
-- Custom property records created for all active custom fields
-- Blank custom fields set to empty string
-
-**Existing Documents:**
-- Updated with new values
-- Document number used as primary key for matching
-- Custom properties updated or created as needed
-
-**Validation:**
-- CSV must have required columns
-- Document numbers must be valid (not null/empty)
-- Warns about documents with issues but continues with others
-
-**Success Message:** Shows count of documents created and updated
-
-**Error Handling:**
-- Displays first error encountered if import fails
-- Partial imports possible (some documents may succeed)
-- Check message banner for detailed error information
-
-#### Export Documents
-
-**Function:** Exports document data from the database to a CSV file
-
-**Button:** Export Documents
-
-**Enabled When:**
-- Database is connected
-- Data is loaded into Manager
-- Not busy with other operations
-
-**Process:**
-1. Validates data is loaded
-2. Opens Save File Dialog for output location
-3. Retrieves all documents from Manager
-4. Retrieves all active custom field definitions
-5. Retrieves all revisions (if applicable)
-6. Generates CSV with appropriate columns
-7. Writes file to specified location
-8. Displays success message with count
-
-**CSV Format Generated:**
-
-**Standard Columns:**
-- `Number` - Document number
-- `Name` - Document name
-- `Revision` - Current revision code
-
-**Custom Field Columns:**
-- One column per active custom field
-- Column header matches custom field property name
-- Values from custom property records
-
-**Revision History Columns (if Full Revision History Mode enabled):**
-- One column per revision code
-- Contains revision indicators for that document in that revision
-- Blank for documents not in that revision
-
-**File Naming:** Default filename is `Documents.csv` but can be changed in Save dialog
-
-**Success Message:** Shows count of documents exported and output filename
-
-**Use Cases:**
-- Backup document data
-- Share document list with external systems
-- Bulk editing in spreadsheet applications
-- Data migration between databases
+**Example:** If you have 100 documents but only 30 were actually revised, the export will only include those 30 documents with their revision information.
 
 ---
 
-### Revision Operations
+## Working with Documents
 
-#### Import Revisions
+### Import Documents Button
 
-**Function:** Imports revision definitions from a CSV file into the database
+**Description:** Brings document information from a CSV file into your database. Use this to add many documents at once or update existing documents.
 
-**Button:** Import Revisions
+**Type:** Button
 
-**Enabled When:**
-- Database is connected
-- Data is loaded into Manager
-- Not busy with other operations
+**Requirements:**
+- Database must be connected
+- You must have a properly formatted CSV file
 
-**Process:**
-1. Opens file dialog to select CSV file
-2. Parses CSV and validates format
-3. Creates or updates revisions in database
-4. Reloads data into Manager
-5. Displays success/error statistics
+**What Happens When You Click:**
+1. A file selection dialog opens
+2. Choose your CSV file
+3. The application reads and validates the file
+4. New documents are created in the database
+5. Existing documents are updated with new information
+6. A success message shows how many documents were added or updated
 
-**CSV Format Expected:**
+**CSV File Format:**
 
-**Required Columns:**
-- `RevisionCode` - Unique revision identifier (e.g., "A", "B", "P01")
-- `RevisionDate` - Date of revision in ISO format (YYYY-MM-DD)
-- `Description` - Description of the revision
+Your CSV file must have these columns:
+- **Number** - The document number (like ABC-001)
+- **Name** - The document name or title
+- **Revision** - The current revision code (like A, B, or P01)
 
-**Example:**
+Your CSV file can also have:
+- **Custom field columns** - Any custom fields you've defined (column name must match exactly)
+- **Revision columns** - If using Full Revision History mode (column names are revision codes)
+
+**How It Works:**
+
+**For New Documents:**
+- A new document is created with the information from the CSV
+- All custom fields are set (blank if not in CSV)
+- Document is added to the database
+
+**For Existing Documents:**
+- The document number is used to find the existing document
+- All information is updated with the CSV values
+- Custom fields are updated or added as needed
+
+**Example CSV:**
+```
+Number,Name,Revision,DrawingType,Discipline
+ABC-001,Floor Plan,A,Architectural,Architecture
+ABC-002,Site Plan,B,Civil,Civil Engineering
+```
+
+**Success Message:** "Imported 45 documents (23 new, 22 updated)"
+
+**If There's a Problem:**
+- Check that your CSV has the required columns
+- Make sure document numbers aren't empty
+- Verify custom field names match exactly
+- The application will show which documents had issues
+
+### Export Documents Button
+
+**Description:** Saves your document information from the database to a CSV file. Use this to back up your data or share it with other systems.
+
+**Type:** Button
+
+**Requirements:**
+- Database must be connected
+- Documents must be loaded
+
+**What Happens When You Click:**
+1. A Save File dialog opens
+2. Choose where to save and what to name the file
+3. The application gathers all document information
+4. A CSV file is created with all your documents
+5. A success message shows how many documents were exported
+
+**What's Included in the Export:**
+
+**Always Included:**
+- Document Number
+- Document Name
+- Current Revision code
+
+**Also Included:**
+- All active custom fields (one column per field)
+- Revision history (if Full Revision History mode is checked)
+
+**File Naming:** The default filename is `Documents.csv`, but you can change it to anything you want.
+
+**Example of What You Get:**
+```
+Number,Name,Revision,DrawingType,Discipline
+ABC-001,Floor Plan,A,Architectural,Architecture  
+ABC-002,Site Plan,B,Civil,Civil Engineering
+```
+
+**Success Message:** "Exported 156 documents to Documents.csv"
+
+**Usage Tips:**
+- Export regularly as a backup
+- Use exports to share document lists with team members
+- Open the CSV in Excel for bulk editing, then import back
+- Keep dated backups before making major changes
+
+---
+
+## Working with Revisions
+
+---
+
+## Working with Revisions
+
+Revisions represent milestones in your project (like "Issued for Construction" or "Planning Submittal"). Each revision has a code (like A, B, P01), a date, and a description.
+
+### Import Revisions Button
+
+**Description:** Brings revision information from a CSV file into your database. Use this to add multiple revisions at once or update existing revision information.
+
+**Type:** Button
+
+**Requirements:**
+- Database must be connected
+- You must have a properly formatted CSV file
+
+**What Happens When You Click:**
+1. A file selection dialog opens
+2. Choose your CSV file
+3. The application reads and validates the file
+4. New revisions are created in the database
+5. Existing revisions are updated with new information
+6. A success message shows how many revisions were added or updated
+
+**CSV File Format:**
+
+Your CSV file must have these three columns:
+- **RevisionCode** - The revision identifier (like A, B, P01, etc.)
+- **RevisionDate** - The date in YYYY-MM-DD format (like 2024-01-15)
+- **Description** - What this revision represents (like "Issued for Construction")
+
+**Example CSV:**
 ```
 RevisionCode,RevisionDate,Description
 A,2024-01-15,Issued for Construction
@@ -292,59 +293,67 @@ B,2024-02-20,Client Comments Incorporated
 P01,2024-03-10,Planning Submission
 ```
 
-**Import Behavior:**
+**How It Works:**
 
-**New Revisions:**
-- Created with specified properties
-- Added to the revisions collection
+**For New Revisions:**
+- A new revision is created with the code, date, and description from the CSV
+- The revision is added to your project's revision list
 
-**Existing Revisions:**
-- Updated with new date and description
-- RevisionCode used as primary key for matching
+**For Existing Revisions:**
+- The revision code is used to find the existing revision
+- The date and description are updated with the CSV values
 
-**Validation:**
-- CSV must have required columns
-- Revision codes must be unique within file
-- Dates must be valid format
+**Requirements:**
+- Revision codes must be unique in your CSV file
+- Dates must be in YYYY-MM-DD format
+- All three columns are required
 
-**Success Message:** Shows count of revisions created and updated
+**Success Message:** "Imported 8 revisions (3 new, 5 updated)"
 
-**Error Handling:**
-- Displays errors if CSV format invalid
-- Shows first error if revisions fail to import
+**If There's a Problem:**
+- Check that your CSV has all three required columns
+- Make sure dates are in the correct format (YYYY-MM-DD)
+- Verify revision codes are unique
 
-#### Export Revisions
+### Export Revisions Button
 
-**Function:** Exports revision definitions from the database to a CSV file
+**Description:** Saves your revision information from the database to a CSV file. Use this to back up your revision list or share it with others.
 
-**Button:** Export Revisions
+**Type:** Button
 
-**Enabled When:**
-- Database is connected
-- Data is loaded into Manager
-- Not busy with other operations
+**Requirements:**
+- Database must be connected
+- Revisions must be loaded
 
-**Process:**
-1. Validates data is loaded
-2. Opens Save File Dialog for output location
-3. Retrieves all revisions from Manager
-4. Generates CSV with revision columns
-5. Writes file to specified location
-6. Displays success message with count
+**What Happens When You Click:**
+1. A Save File dialog opens
+2. Choose where to save and what to name the file
+3. The application gathers all revision information
+4. A CSV file is created with all your revisions
+5. A success message shows how many revisions were exported
 
-**CSV Format Generated:**
-- `RevisionCode` - The revision identifier
-- `RevisionDate` - Date in ISO format (YYYY-MM-DD)
-- `Description` - Revision description
+**What's Included in the Export:**
+- Revision Code (like A, B, P01)
+- Revision Date (in YYYY-MM-DD format)
+- Description (what the revision represents)
 
-**File Naming:** Default filename is `Revisions.csv` but can be changed in Save dialog
+**File Naming:** The default filename is `Revisions.csv`, but you can change it to anything you want.
 
-**Success Message:** Shows count of revisions exported and output filename
+**Example of What You Get:**
+```
+RevisionCode,RevisionDate,Description
+A,2024-01-15,Issued for Construction
+B,2024-02-20,Client Comments Incorporated
+P01,2024-03-10,Planning Submission
+```
 
-**Use Cases:**
-- Backup revision list
-- Share revision schedule with project team
-- Synchronize revisions between databases
+**Success Message:** "Exported 12 revisions to Revisions.csv"
+
+**Usage Tips:**
+- Export regularly as a backup of your revision schedule
+- Share the revision list with project team members
+- Use this to synchronize revisions between multiple databases
+- Open in Excel to edit revision descriptions, then import back
 - Documentation of project timeline
 
 ---
@@ -470,7 +479,7 @@ Each custom field has the following properties:
 **Process:**
 1. Select a custom field from the list
 2. Click Toggle Active button
-3. Field's IsActive status toggles (Active ↔ Inactive)
+3. Field's IsActive status toggles (Active â†” Inactive)
 4. Status display updates in ListView
 5. Pending changes flag set
 
@@ -490,44 +499,40 @@ Each custom field has the following properties:
 - Field hidden from import/export by default
 - Can be reactivated later without data loss
 
-**Warning:** Deactivating a custom field will remove any cloud metadata mappings that reference it. This cleanup happens automatically when "Update Database" is clicked.
+**Warning:** Deactivating a custom field will remove any cloud metadata mappings that use it. This cleanup happens automatically when you click Update Database.
 
-#### Updating Database Schema
+#### Update Database Button
 
-**Button:** Update Database
+**Description:** Saves all your custom field changes to the database. This button applies any pending changes like new fields, activated fields, or deactivated fields.
 
-**Enabled When:**
-- Database is connected
-- There are pending custom field changes
+**Type:** Button
 
-**Pending Changes Include:**
-- New fields added (Id = 0)
-- Active status toggled on existing fields
+**Requirements:**
+- Database must be connected
+- You must have pending changes (new fields added or status toggles)
 
-**Process:**
-1. Click Update Database button
-2. Confirmation dialog appears showing summary of changes:
-   - New fields to be added
-   - Fields to be activated
-   - Fields to be deactivated
-3. Review changes and click Yes to proceed
-4. Application applies changes to database:
-   - New fields: Schema updated, custom property records created for ALL documents
-   - Activations: IsActive flag updated in database
-   - Deactivations: IsActive flag updated, metadata mappings cleaned up
-5. Data reloaded into Manager
-6. Custom Fields list refreshed
-7. Success message displayed
+**When This Button Is Available:**
 
-**Change Summary Dialog Contents:**
+The button becomes active when you have unsaved changes:
+- You've added new custom fields
+- You've toggled the Active status on any fields
 
-The confirmation dialog shows:
-- Count of new fields with their names
-- Count of activated fields with their names  
-- Count of deactivated fields with their names
-- Warning if new fields will create records for all documents
+**What Happens When You Click:**
 
-**Example:**
+1. A confirmation dialog appears showing all the changes you're about to make
+2. Review the summary carefully
+3. Click Yes to proceed with the changes
+4. The application saves all changes to the database
+5. A success message confirms what was changed
+
+**The Confirmation Dialog Shows:**
+
+The dialog lists all pending changes:
+- **New Fields:** Names of fields being added
+- **Activated Fields:** Names of fields being reactivated
+- **Deactivated Fields:** Names of fields being hidden
+
+**Example Dialog:**
 ```
 Apply Custom Field Changes?
 
@@ -541,54 +546,70 @@ Deactivated Fields: 1
 Note: New fields will create records for all documents.
 ```
 
-**Database Operations Performed:**
+**What Each Change Does:**
 
-**For New Fields:**
-- Adds CustomFieldDefinition record to database
-- Creates CustomProperty record for EVERY existing document
-- Initial values set to empty string
-- May take time if many documents exist
+**Adding New Fields:**
+- The field becomes available throughout the application
+- Every document in your database gets this field added (initially blank)
+- This may take a moment if you have many documents
+- The field appears in dropdown lists and metadata mappings
 
-**For Status Changes:**
-- Updates IsActive flag on CustomFieldDefinition
-- For deactivations: Removes metadata mappings referencing the field
-- CustomProperty data preserved in database
+**Activating Fields:**
+- The field becomes visible and usable again
+- Data that was preserved is now accessible
+- Field appears in dropdown lists and metadata mappings
 
-**Automatic Cleanup:**
+**Deactivating Fields:**
+- The field becomes hidden from most places in the application
+- Any cloud metadata mappings using this field are automatically removed
+- **Data is preserved** - nothing is deleted
+- You'll see a notification if any mappings were removed
 
-When fields are deactivated:
-- Scans all cloud metadata mappings
-- Removes any mappings referencing deactivated fields
-- Shows notification of removed mappings
-- Triggers refresh in Cloud Document Manager view
+**Success Message:** "Database updated successfully. Added 2 fields, deactivated 1 field. Removed 3 metadata mappings."
 
-**Success Message:** Displays count of changes applied and any mappings removed
+**If Something Goes Wrong:**
+- If any part of the update fails, nothing is saved (all-or-nothing)
+- An error message tells you which field caused the problem
+- Fix the issue and try again
 
-**Error Handling:**
-- If any change fails, entire operation rolls back (transaction)
-- Error message shows which field caused the failure
-- Changes are not persisted if errors occur
-
-**Use Cases:**
-- Adding custom fields for new project requirements
-- Deactivating fields no longer needed
-- Batch applying multiple custom field changes
+**Usage Notes:**
+- Always review the confirmation dialog carefully before clicking Yes
+- If you have many documents, adding new fields may take a minute
+- You can't undo this operation, but you can add/remove fields later
+- Make sure you really want to deactivate fields before proceeding
 
 ---
 
-### Custom Fields ListView
+### Understanding the Custom Fields List
 
-**Columns:**
+The custom fields list shows all your custom fields in a table with two columns:
 
-#### Field Name
-- Displays the property name of the custom field
-- Sorted alphabetically by default
-- Primary identifier for the field
+#### Field Name Column
 
-#### Status
-- Shows "Active" or "Inactive"
-- Indicates current usability of the field
-- Determines availability in metadata mappings
+**Shows:** The name of each custom field
+
+**Sorted:** Alphabetically by default
+
+**What You See:**
+- Standard naming (like Discipline, BuildingName, ProjectPhase)
+- This is the name you'll see throughout the application
+
+#### Status Column
+
+**Shows:** Whether each field is Active or Inactive
+
+**Visual Display:**
+- **Active** appears in green text - Field is currently in use
+- **Inactive** appears in gray text - Field is hidden but data is preserved
+
+**What This Means:**
+- Active fields appear in dropdown menus and can be used
+- Inactive fields are hidden but can be reactivated later
+
+**Selection:**
+- Click on a row to select that field
+- The selected field is highlighted
+- Selected field determines which buttons are enabled
 
 **Visual Indicators:**
 - **New fields (Id = 0):** May be shown in different style (implementation-specific)
@@ -655,7 +676,7 @@ The SQLite database contains the following core tables:
 
 ## Data Model Relationships
 
-### Document ↔ CustomProperty
+### Document â†” CustomProperty
 
 **Relationship:** One document has many custom properties
 
@@ -663,7 +684,7 @@ The SQLite database contains the following core tables:
 
 **Purpose:** Allows flexible extension of document data model
 
-### Document ↔ Revision
+### Document â†” Revision
 
 **Relationship:** Many-to-many through DocumentRevision join table
 
@@ -711,296 +732,249 @@ The SQLite database contains the following core tables:
 
 ## Best Practices
 
-### Database Management
+### Managing Your Database
 
-1. **Location:** Store database in a stable location with regular backups
-2. **Naming:** Use descriptive names indicating project and purpose
-3. **Backups:** Regularly export documents and revisions as CSV backups
-4. **Version Control:** Keep database backups when making major changes
-5. **Network Drives:** Avoid network drives for database location (performance issues)
+**1. Choose a Good Location**
+- Store your database in a stable location that gets backed up regularly
+- Use a local drive rather than a network drive (network drives are slower)
+- Make sure you have read and write permissions to that location
 
-### Data Import/Export
+**2. Use Descriptive Names**
+- Name your database file to indicate the project (like `ProjectABC_Documents.db`)
+- Include version numbers if you maintain multiple database versions
+- Avoid generic names like `database.db` or `docs.db`
 
-1. **Before Import:**
-   - Backup current database
-   - Validate CSV format in spreadsheet first
-   - Check for duplicate document numbers
-   - Ensure custom field names match exactly
+**3. Back Up Regularly**
+- Export your documents and revisions to CSV files monthly
+- Keep database file backups before making major changes
+- Store backups in a different location than your main database
+- Test your backups occasionally to make sure they work
 
-2. **Export Workflow:**
-   - Export regularly for backup purposes
-   - Use descriptive filenames with dates
-   - Keep exported CSVs for audit trail
-   - Test import/export cycle periodically
+**4. Version Control**
+- Make a backup copy before adding many custom fields
+- Save a backup before importing large amounts of data
+- Keep dated backups so you can recover old versions if needed
 
-3. **CSV Editing:**
-   - Edit exported CSVs in Excel or similar
-   - Don't modify document numbers (primary keys)
-   - Keep required columns
-   - Maintain date formats (ISO 8601)
+### Working with CSV Files
 
-### Custom Fields
+**Before You Import:**
+- Always back up your database first
+- Open the CSV in Excel and check for errors
+- Make sure there are no duplicate document numbers
+- Verify that custom field names match your database exactly (including capitalization)
 
-1. **Planning:**
-   - Plan custom fields before creation
-   - Use consistent naming conventions
-   - Document field purposes and usage
-   - Consider export requirements
+**When You Export:**
+- Use descriptive filenames with dates (like `Documents_2024-03-15.csv`)
+- Export regularly as a backup strategy
+- Keep your exported CSV files for historical records
+- Test the import/export cycle periodically to ensure it works
 
-2. **Naming Conventions:**
-   - Use PascalCase (e.g., `ProjectPhase`)
-   - Avoid spaces and special characters
-   - Be descriptive but concise
-   - Follow property naming standards
+**Editing CSV Files:**
+- You can edit exported CSVs in Excel or Google Sheets
+- Don't change document numbers (they're used to match existing documents)
+- Keep all the required columns (Number, Name, Revision)
+- Keep dates in YYYY-MM-DD format
 
-3. **Lifecycle:**
-   - Add fields as needed for new requirements
-   - Deactivate rather than delete obsolete fields
-   - Test with sample documents before production use
-   - Update documentation when fields change
+### Planning Custom Fields
 
-4. **Performance:**
-   - Limit to necessary fields (each adds database operations)
-   - Create fields with data population plan
-   - Consider indexing needs for large databases
+**Before Creating Fields:**
+- Think about what information you really need to track
+- Use consistent naming (like ProjectPhase, not project-phase or projectphase)
+- Write down what each field is for
+- Consider how you'll use the fields in exports and reports
 
----
+**Naming Your Fields:**
+- Use PascalCase: capitalize the first letter of each word (like `BuildingName`)
+- Avoid spaces - use `ProjectPhase` not `Project Phase`
+- Avoid special characters like hyphens, underscores, or punctuation
+- Be descriptive but concise
 
-## Troubleshooting
+**Managing Fields Over Time:**
+- Add new fields when you have a clear need for them
+- Deactivate fields you no longer need (don't delete them - the data stays safe)
+- Test new fields with a few sample documents first
+- Keep notes about when and why you added or changed fields
 
-### Common Issues
-
-#### Issue: Cannot connect to database
-**Symptoms:** Error when clicking Connect button
-
-**Solutions:**
-- Verify file exists at specified path
-- Check file is not locked by another application
-- Ensure you have read/write permissions
-- Check database file is not corrupted
-- Verify it's a valid SQLite database
-
-#### Issue: Create Database button disabled
-**Symptoms:** Button grayed out, cannot create database
-
-**Solutions:**
-- Enter a valid path in the Database Path field
-- Ensure directory exists or can be created
-- Check path doesn't contain invalid characters
-- Verify you have write permissions to directory
-
-#### Issue: Import fails with format error
-**Symptoms:** Error message about CSV format during import
-
-**Solutions:**
-- Open CSV in spreadsheet and verify columns
-- Check required columns are present
-- Ensure column names match exactly
-- Look for extra commas or quotes in data
-- Verify file is saved as CSV (not Excel format)
-- Check for BOM or encoding issues
-
-#### Issue: Custom field not appearing in metadata mappings
-**Symptoms:** New custom field doesn't show in Cloud Document Manager
-
-**Solutions:**
-- Verify custom field is Active status
-- Check "Update Database" was clicked after adding field
-- Confirm database was reloaded
-- Refresh the Cloud Document Manager template
-
-#### Issue: Update Database fails
-**Symptoms:** Error when clicking Update Database button
-
-**Solutions:**
-- Check database is not read-only
-- Verify you have write permissions
-- Ensure database is not locked
-- Check disk space available
-- Try smaller batch of changes
-- Review error message for specific field causing issue
-
-#### Issue: All documents gone after import
-**Symptoms:** Document count shows 0 after import operation
-
-**Solutions:**
-- Check if import file was empty or had errors
-- Restore from backup database or CSV export
-- Verify import file had correct format
-- Review import error messages
-
-### Validation Errors
-
-#### "Database must be connected"
-**Cause:** Attempting operation without database connection
-
-**Solution:** Click Browse to select database, then Connect
-
-#### "No data loaded"
-**Cause:** Database connected but data not loaded into Manager
-
-**Solution:** Reconnect to database, or restart application
-
-#### "Custom field name already exists"
-**Cause:** Attempting to add duplicate custom field name
-
-**Solution:** Choose a different, unique field name
-
-#### "Import file not found"
-**Cause:** Selected import file doesn't exist or was moved
-
-**Solution:** Browse to correct file location
+**Performance Tips:**
+- Don't create fields "just in case" - only add what you need
+- Each field adds a small amount of processing time
+- If you have thousands of documents, adding a field takes longer (it adds the field to every document)
+- Plan ahead rather than adding fields one at a time
 
 ---
 
-## Data Persistence
+## Troubleshooting Common Issues
 
-### What Gets Saved
+### Cannot Connect to Database
 
-**In Database:**
-- All document records with properties
-- All revision definitions
-- All custom field definitions (schema)
-- All custom property values (data)
+**What's Happening:** You get an error when clicking the Connect button
 
-**In Settings File:**
-- Database path
-- Last connection state
-- UI preferences (expander states, etc.)
+**Why This Happens:**
+- The file doesn't exist at the path you specified
+- Another program has the database file open and locked
+- You don't have permission to access that location
+- The database file is corrupted
 
-### When Saving Occurs
+**How to Fix:**
+1. Double-check that you typed the path correctly
+2. Use the Browse button to navigate to the file
+3. Close any other programs that might have the file open
+4. Check file permissions - you need read and write access
+5. If the file is corrupted, restore from a backup
 
-**Automatic:**
-- When database operations complete (Connect, Create)
-- When import/export succeeds
-- When Update Database applies changes
+### Create Database Button Is Disabled
 
-**Manual:**
-- Click Save button in Settings view to save path
-- Custom field changes require explicit Update Database click
+**What's Happening:** The Create Database button is grayed out and you can't click it
 
-### Backup Strategy
+**Why This Happens:**
+- No path is entered in the Database Path field
+- The path has invalid characters
+- You don't have write permission to that location
 
-**Recommended:**
-1. **Regular Database Backups:** Copy .db file to backup location
-2. **CSV Exports:** Export documents and revisions monthly
-3. **Version Control:** Keep dated backups before major changes
-4. **Test Restores:** Periodically verify backups are valid
+**How to Fix:**
+1. Enter a valid file path in the Database Path field
+2. Make sure the directory exists (or can be created by you)
+3. Check for special characters in the path that aren't allowed
+4. Verify you have permission to create files in that location
+5. Try selecting a different location using Save File dialog
+
+### Import Fails with Format Error
+
+**What's Happening:** You get an error about CSV format when trying to import documents or revisions
+
+**Why This Happens:**
+- The CSV file doesn't have the required columns
+- Column names are misspelled or have wrong capitalization
+- The file has extra commas or quotes that confuse the parser
+- The file is actually an Excel file, not a true CSV
+
+**How to Fix:**
+1. Open the CSV file in Excel or a text editor
+2. Check that all required columns are present (Number, Name, Revision for documents)
+3. Make sure column names match exactly (including capitalization)
+4. Look for data cells that have unexpected commas or quotation marks
+5. If you saved from Excel, make sure you chose CSV format, not Excel format
+6. Try creating a fresh CSV with just a few rows to test
+
+### Custom Field Not Appearing
+
+**What's Happening:** You added a custom field, but it doesn't show up in dropdown lists or metadata mappings
+
+**Why This Happens:**
+- The field is set to Inactive status
+- You didn't click Update Database after adding the field
+- The field wasn't saved properly
+
+**How to Fix:**
+1. Check that the custom field shows as "Active" (green) in the list
+2. Make sure you clicked Update Database button after adding the field
+3. Try disconnecting and reconnecting to the database
+4. If working with Cloud Document Manager, click the Refresh button on the template
+
+### Update Database Fails
+
+**What's Happening:** You get an error when clicking Update Database to save custom field changes
+
+**Why This Happens:**
+- The database file is read-only
+- You don't have write permission
+- Another program has the database locked
+- There's not enough disk space
+- A specific field name is causing an issue
+
+**How to Fix:**
+1. Check the database file properties - make sure it's not read-only
+2. Verify you have write permissions to the database location
+3. Close any other programs that might have the database open
+4. Check that you have enough disk space
+5. Try applying changes one field at a time to identify problem fields
+6. Read the error message carefully - it usually tells you which field caused the issue
+
+### All Documents Gone After Import
+
+**What's Happening:** After importing a CSV file, your document count shows zero
+
+**Why This Happens:**
+- The import file was empty or had format errors
+- The import operation failed but appeared to succeed
+
+**How to Fix:**
+1. Don't panic - disconnect and reconnect to see if documents reappear
+2. If documents are truly gone, restore from your last CSV export backup
+3. Check the CSV file you imported - was it empty or corrupted?
+4. Review any error messages that appeared during import
+5. In the future, always back up before importing
+
+### Common Validation Messages
+
+**"Database must be connected"**
+- **What It Means:** You're trying to do something that requires a database connection
+- **How to Fix:** Click Connect to connect to an existing database, or Create Database to make a new one
+
+**"No data loaded"**
+- **What It Means:** The database is connected but the data isn't loaded
+- **How to Fix:** Try disconnecting and reconnecting, or restart the application
+
+**"Custom field name already exists"**
+- **What It Means:** You're trying to add a field with a name that's already in use
+- **How to Fix:** Choose a different, unique name for your field
+
+**"Import file not found"**
+- **What It Means:** The CSV file you selected doesn't exist anymore
+- **How to Fix:** Make sure the file wasn't moved or deleted, then browse to its correct location
 
 ---
 
-## Performance Considerations
+## How Settings Are Saved
 
-### Database Size
+When you make changes in the Database Connection section, those changes are saved when you click the **Save** button at the bottom of the Settings view. The application automatically loads your saved settings the next time you open the Settings view.
 
-- SQLite handles databases up to 140 TB (theoretical)
-- Practical limit depends on disk space and performance needs
-- Thousands of documents: No issues
-- Tens of thousands: Some operations may take seconds
-- Hundreds of thousands: Consider indexing and optimization
+**Important:** Changes are not permanent until you click Save. If you navigate away without saving, your database path and connection settings will be lost.
 
-### Custom Fields Impact
-
-- Each custom field adds:
-  - One column in conceptual data model
-  - One record per document in CustomProperty table
-  - Overhead in import/export operations
-- Limit to 20-30 custom fields for best performance
-- More fields = larger database and slower operations
-
-### Import/Export Performance
-
-- CSV operations are relatively fast
-- Large files (>10,000 rows) may take 10-30 seconds
-- Progress not shown during operation (appears busy)
-- Database operations are transactional (all or nothing)
+**What Gets Saved:**
+- Database file path
+- Custom field changes (after clicking Update Database)
+- Revision History Mode checkbox setting
 
 ---
 
-## Integration with Other Features
+## Related Settings
 
-### Current Folder Settings
+**Current Folder Settings:** Uses the database for matching incoming files to documents
 
-Database provides:
-- Document numbers for filename matching
-- Revision codes for revision extraction
-- Custom fields for metadata enrichment
+**Cloud Document Manager:** Exports metadata using custom fields you've defined
 
-### Cloud Document Manager
-
-Database provides:
-- Document properties for metadata mappings
-- Revision information for document context
-- Custom field values for dynamic metadata
-
-### Merge View
-
-Database provides:
-- Document master records for matching incoming files
-- Revision history for superseded tracking
-- Custom properties for enriched document data
+**Merge View:** The main screen where database information is used for document processing
 
 ---
 
-## Security Considerations
+## Quick Reference: CSV Format Examples
 
-### Database Access
-
-- SQLite is file-based with no user authentication
-- File system permissions control access
-- Anyone with file access can read/modify database
-- No encryption by default (consider encrypted containers)
-
-### Data Privacy
-
-- Database may contain sensitive project information
-- Store in secure locations with appropriate permissions
-- Consider access control at file system level
-- Include in data governance policies
-
-### Backup Security
-
-- Exported CSVs contain all project data
-- Secure backup locations with access controls
-- Encrypt backups if required by policy
-- Control access to historical exports
-
----
-
-## Related Documentation
-
-- **Current Folder Settings:** Document processing that uses database for matching
-- **Cloud Document Manager:** Metadata export that uses custom fields
-- **Merge View:** The main interface for document matching and processing
-- **Document/Revision Models:** The data structures stored in database
-
----
-
-## Appendix: CSV Format Reference
-
-### Document Export CSV Format
+### Document Import/Export CSV
 
 ```csv
-Number,Name,Revision,[CustomField1],[CustomField2],...,[Rev1],[Rev2],...
-ABC-001,Floor Plan,A,Value1,Value2,...,S0,S1,...
-ABC-002,Elevation,B,Value1,Value2,...,-,S0,...
+Number,Name,Revision,Discipline,ProjectPhase
+ABC-001,Floor Plan,A,Architecture,Construction
+ABC-002,Site Plan,B,Civil,Planning
+ABC-003,Elevation,A,Architecture,Construction
 ```
 
 **Notes:**
-- Custom field columns match active custom field property names
-- Revision columns (if Full History Mode) are revision codes
-- Revision indicators: S0, S1, S2, AS, etc. or blank/dash
+- Number, Name, and Revision are required
+- Additional columns are custom fields (must match field names exactly)
+- If using Full Revision History mode, you'll also see columns for each revision code
 
-### Revision Export CSV Format
+### Revision Import/Export CSV
 
 ```csv
 RevisionCode,RevisionDate,Description
 A,2024-01-15,Issued for Construction
-B,2024-02-20,Client Comments
+B,2024-02-20,Client Comments Incorporated
 P01,2024-03-10,Planning Submission
 ```
 
 **Notes:**
-- Date must be ISO format (YYYY-MM-DD)
-- Description can contain spaces and special characters
-- RevisionCode should be concise (typically 1-4 characters)
+- All three columns are required
+- Date must be in YYYY-MM-DD format
+- Description can contain spaces and most characters
+

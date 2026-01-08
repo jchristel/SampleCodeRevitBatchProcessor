@@ -1,8 +1,8 @@
-# Cloud Document Manager Settings (Aconex Implementation)
+# Cloud Document Manager Settings - Aconex
 
 ## Overview
 
-The Cloud Document Manager integration enables the application to export document metadata to cloud-based document management systems. The current implementation supports Aconex, a widely-used construction document management platform. This integration allows you to generate metadata CSV files that can be uploaded to Aconex along with your documents.
+The Cloud Document Manager integration enables the application to export document information (metadata) to cloud-based document management systems. The application currently supports Aconex, a widely-used construction document management platform. This integration allows you to generate CSV files containing document information that can be uploaded to Aconex along with your documents.
 
 ## General Settings
 
@@ -26,19 +26,24 @@ The Cloud Document Manager integration enables the application to export documen
 
 **Description:** Dropdown menu to select which cloud document management provider to configure.
 
+**Type:** Dropdown list
+
 **Available Options:**
 - **None:** No provider selected (default state)
 - **Aconex:** Aconex document management system
 
-**Behavior:**
+**Sample Values:**
+- Select "None" if you're not using cloud document management
+- Select "Aconex" if you're uploading documents to Aconex
+
+**Requirements:**
+- When cloud integration is enabled, you must select a provider (cannot remain on "None")
+- Changing providers will clear your current configuration (you'll get a warning first)
+
+**Usage Notes:**
 - Only enabled when "Enable Cloud Document Manager Integration" is checked
-- Switching providers will display a warning if existing configuration data exists
-- Changing providers will clear the current provider configuration (after confirmation)
-
-**Future Expansion:** Additional cloud providers (Procore, Autodesk Docs, PlanGrid, etc.) will be added as options in future versions.
-
-**Validation:**
-- When cloud integration is enabled, a provider must be selected (cannot remain on "None")
+- If you switch providers after configuring Aconex, you'll see a warning
+- Future versions will support additional providers (Procore, Autodesk Docs, PlanGrid, etc.)
 
 ---
 
@@ -50,42 +55,64 @@ When "Aconex" is selected as the cloud provider, the following configuration opt
 
 #### Template File Path
 
-**Description:** Path to the CSV metadata template file that defines the structure and fields for Aconex metadata export.
+**Description:** Path to the CSV template file that defines which information fields Aconex expects. This template file comes from Aconex and tells the application which columns to include in your metadata export.
 
-**Type:** Text input with Browse and Refresh buttons
+**Type:** Text field with Browse and Refresh buttons
 
-**Validation:**
-- **Required:** Cannot be empty when Aconex provider is selected
-- **Must Exist:** File must exist at the specified path
-- **Format:** Must be a CSV (.csv) file
+**Sample Values:**
+- `C:\Projects\ABC\Aconex\MetadataTemplate.csv` - Local project folder
+- `\\FileServer\Projects\Templates\Aconex_Template.csv` - Network shared location
+- `D:\Templates\Aconex\ABC_Project_Template.csv` - Alternative location
+
+**Requirements:**
+- Cannot be empty when Aconex provider is selected
+- File must exist at the specified path
+- File must be a CSV file (.csv extension)
+- File must have a header row with column names
+
+**Usage Notes:**
+- Get this template file from your Aconex project administrator
+- The template defines which fields Aconex expects for your project
+- Use the Browse button to navigate to and select your template file
+- After loading, the application reads the column headers from the first row
 
 **Features:**
 
 ##### Browse Button
 
-**Function:** Opens a file dialog to select the metadata template file
+**Description:** Opens a file selection dialog to help you find and select your Aconex template file.
 
-**Dialog Filter:** CSV files (*.csv)
+**Type:** Button
 
-**Usage:** Click to navigate to and select your Aconex metadata template file
+**Usage Notes:**
+- Click to open the file browser
+- The dialog filters to show CSV files (*.csv)
+- Navigate to your template file location
+- Select the file and click Open
+- The path appears in the Template File Path field
 
 ##### Refresh Button
 
-**Function:** Re-reads the template file and updates available column headers
+**Description:** Reloads the template file and updates the list of available metadata fields. Use this after you've modified the template file.
 
-**Enabled When:**
-- A valid template file path is set
-- The file exists
+**Type:** Button
 
-**Behavior:**
-- Reloads column headers from the CSV template
-- Updates the list of available metadata fields
-- Removes any mappings that reference fields no longer in the template
-- Displays success message with the number of columns loaded
-- Shows warnings for any issues (e.g., duplicate column headers)
-- Notifies user if any existing mappings were removed due to missing fields
+**Requirements:**
+- Template file path must be set
+- The file must exist at that path
 
-**Use Case:** Use this when you've modified the Aconex template file and need to update the application to reflect the changes.
+**What Happens When You Click:**
+1. The application reads the template file again
+2. Updates the list of available metadata field names
+3. Removes any mappings that refer to fields no longer in the template
+4. Shows a success message with the number of columns loaded
+5. Warns you if any fields were removed
+6. Notifies you if any existing mappings were deleted
+
+**Usage Notes:**
+- Use this when you've updated the Aconex template file
+- If you see a warning about removed mappings, you'll need to recreate them
+- The button is only enabled when a valid template path is set
 
 #### Template File Loading
 
@@ -269,7 +296,7 @@ Each mapping has three components:
 
 **Available Changes:**
 - Can change the value/property
-- Can change the mapping type (Fixed ↔ Document Property ↔ File Property)
+- Can change the mapping type (Fixed â†” Document Property â†” File Property)
 - Cannot change the meta field (create a new mapping instead)
 
 **Note:** When editing, all template fields are available (not just unmapped ones), allowing you to reassign a mapping to a different source.

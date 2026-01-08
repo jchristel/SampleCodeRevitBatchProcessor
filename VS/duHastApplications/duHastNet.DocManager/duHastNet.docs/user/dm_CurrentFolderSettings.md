@@ -4,260 +4,383 @@
 
 The Current Documents section in the Settings view configures how the application handles incoming documents, including file naming conventions, folder locations, filing rules, and supported file types.
 
-## Settings Sections
+---
 
-### 1. Revision Markers
+## Revision Markers
 
 These settings define the characters used to identify revision indicators in document filenames.
 
-#### Revision Prefix
+### Revision Prefix
 
-**Description:** Character(s) that mark the beginning of a revision identifier in a filename.
+**Description:** Character or characters that mark the beginning of a revision identifier in a filename. The application uses this to identify where the revision code starts when reading document filenames.
 
-**Example:** In the filename `Document_Rev[A].pdf`, the revision prefix is `[`
+**Type:** Text field
 
-**Validation:**
-- Custom validation through `RevisionSeparatorValidator`
-- Must be a valid revision marker character
+**Sample Values:**
+- `[` - Used with filename format: `Document_Rev[A].pdf`
+- `_Rev` - Used with filename format: `Document_RevA.pdf`
+- `-R` - Used with filename format: `Document-RA.pdf`
 
-**Usage:** The application uses this prefix to parse and identify revision information from filenames when matching documents against the database.
+**Requirements:**
+- Must be a valid filename character
+- Cannot be empty
+- Must be different from Revision Suffix
 
-#### Revision Suffix
+**Usage Notes:**
+- This setting works together with Revision Suffix to extract revision codes from filenames
+- Common practice is to use bracket notation: `[` and `]`
+- Ensure all incoming documents follow the same naming convention
+- The application will look for this character sequence to find where the revision code begins
 
-**Description:** Character(s) that mark the end of a revision identifier in a filename.
+### Revision Suffix
 
-**Example:** In the filename `Document_Rev[A].pdf`, the revision suffix is `]`
+**Description:** Character or characters that mark the end of a revision identifier in a filename. The application uses this to identify where the revision code ends when reading document filenames.
 
-**Validation:**
-- Custom validation through `RevisionSeparatorValidator`
-- Must be a valid revision marker character
+**Type:** Text field
 
-**Usage:** Works in conjunction with Revision Prefix to extract revision information from filenames.
+**Sample Values:**
+- `]` - Used with filename format: `Document_Rev[A].pdf`
+- `-` - Used with filename format: `Document_RevA-.pdf`
+- `_` - Used with filename format: `Document_RevA_.pdf`
 
----
+**Requirements:**
+- Must be a valid filename character
+- Cannot be empty
+- Must be different from Revision Prefix
 
-### 2. Folder Paths
-
-Configuration for the directories used in document processing.
-
-#### Incoming Folder Path
-
-**Description:** Path to the folder containing documents to be processed by the application.
-
-**Validation:**
-- Folder must exist on the file system
-- Validated using `FolderPathValidator.ValidateFolderExists`
-
-**Features:**
-- Text input with real-time validation
-- Browse button to select folder via dialog
-- Validation errors displayed as tooltips
-
-**Usage:** The application monitors this folder for new documents to process and match against the database.
-
-#### Archive Folder Path
-
-**Description:** Path to the folder where superseded or archived documents are stored.
-
-**Note:** This setting maps to `SupersededFolderPath` in the underlying configuration.
-
-**Validation:**
-- Folder must exist on the file system
-- Validated using `FolderPathValidator.ValidateFolderExists`
-
-**Features:**
-- Text input with real-time validation
-- Browse button to select folder via dialog
-- Validation errors displayed as tooltips
-
-**Usage:** When documents are superseded by newer revisions, the older versions are moved to this archive location.
+**Usage Notes:**
+- Works in conjunction with Revision Prefix to extract revision information from filenames
+- Common practice is to use closing bracket when prefix is opening bracket
+- Must match the pattern used in your document naming standard
 
 ---
 
-### 3. Filing Rules
+## Folder Paths
 
-Filing rules determine where incoming documents are filed based on their filename patterns. Rules are evaluated from top to bottom, and the first matching rule determines the target directory.
+These settings specify the directories used for document processing and archiving.
 
-#### Rule Evaluation Order
+### Incoming Folder Path
 
-**Priority:** Rules are evaluated in the order they appear in the list (top to bottom). The first rule that matches a filename wins, and no further rules are evaluated.
+**Description:** The folder location containing documents that will be processed by the application. The application reads files from this folder to match them against the database and prepare them for merging.
 
-**Reordering:** Use the Move Up and Move Down buttons to adjust rule priority.
+**Type:** Text field with Browse button
 
-#### Available Rule Types
+**Sample Values:**
+- `C:\Projects\ABC\Incoming` - Local project folder
+- `\\FileServer\Projects\Documents\Incoming` - Network shared folder
+- `D:\DocumentProcessing\New` - Alternative drive location
 
-##### BeginsWith
+**Requirements:**
+- Folder must exist before connecting
+- You must have read access to the folder
+- Path must be a valid folder location
+- Can be a local drive or network path
 
-**Description:** Matches filenames that start with the specified filter value.
+**Usage Notes:**
+- Use the Browse button to select the folder location
+- If you see an error tooltip, the folder doesn't exist or isn't accessible
+- The application checks this folder for new documents to process
+- Ensure this folder has sufficient space for incoming documents
 
-**Example:**
-- Filter Value: `ARCH-`
-- Matches: `ARCH-001-Drawing.pdf`, `ARCH-Floor-Plan.dwg`
-- Does Not Match: `STRUCT-ARCH-001.pdf`
+### Archive Folder Path
 
-##### Contains
+**Description:** The folder location where older document versions are stored after they are superseded by newer revisions. When the application processes a new revision of a document, it moves the previous version to this archive location.
 
-**Description:** Matches filenames that contain the specified filter value anywhere in the name.
+**Type:** Text field with Browse button
 
-**Example:**
-- Filter Value: `MECHANICAL`
-- Matches: `MECHANICAL-001.pdf`, `Project-MECHANICAL-Drawing.dwg`, `Test-MECHANICAL.pdf`
-- Does Not Match: `ARCH-001.pdf`
+**Sample Values:**
+- `C:\Projects\ABC\Archive` - Local archive folder
+- `\\FileServer\Projects\Documents\Archive` - Network archive location
+- `D:\DocumentProcessing\Superseded` - Alternative archive location
 
-##### NotBeginsWith
+**Requirements:**
+- Folder must exist before saving settings
+- You must have read and write access to the folder
+- Path must be a valid folder location
+- Can be a local drive or network path
+- Should have sufficient storage for archived documents
 
-**Description:** Matches filenames that do NOT start with the specified filter value.
+**Usage Notes:**
+- Use the Browse button to select the folder location
+- If you see an error tooltip, the folder doesn't exist or isn't accessible
+- Archived documents are moved here automatically during the merge process
+- Keep this folder backed up as it contains historical document versions
 
-**Example:**
-- Filter Value: `TEMP-`
-- Matches: `ARCH-001.pdf`, `Drawing.dwg`, `Notes.docx`
-- Does Not Match: `TEMP-File.pdf`, `TEMP-Drawing.dwg`
+---
 
-##### NotContains
+## Filing Rules
 
-**Description:** Matches filenames that do NOT contain the specified filter value anywhere in the name.
+Filing rules determine where incoming documents are moved based on their filename patterns. Rules are evaluated from top to bottom, and the first matching rule determines the target directory.
 
-**Example:**
-- Filter Value: `DRAFT`
-- Matches: `ARCH-001.pdf`, `Final-Drawing.dwg`, `Report.pdf`
-- Does Not Match: `DRAFT-Report.pdf`, `Drawing-DRAFT.dwg`
+### Rule Evaluation Order
 
-##### Default (CatchAll)
+Rules are evaluated in the order they appear in the list (top to bottom). The first rule that matches a filename wins, and no further rules are evaluated. Use the Move Up and Move Down buttons to adjust rule priority when you need to change which rules are checked first.
 
-**Description:** Matches all files regardless of filename. This is the default/fallback rule.
+### Available Rule Types
+
+### Available Rule Types
+
+#### BeginsWith
+
+**Description:** Matches filenames that start with the specified filter text. Use this rule type when you want to file documents based on how their filename begins.
+
+**Sample Values:**
+- `ARCH-` matches `ARCH-001-Drawing.pdf`, `ARCH-Floor-Plan.dwg`
+- `ARCH-` does not match `STRUCT-ARCH-001.pdf`
+- `MEP-` matches `MEP-001.pdf`, `MEP-HVAC-Drawing.pdf`
+
+**Usage Notes:**
+- This is one of the most commonly used rule types
+- Useful for filing documents by discipline or project code
+- Case-sensitive matching
+
+#### Contains
+
+**Description:** Matches filenames that contain the specified filter text anywhere in the name. Use this rule type when the identifying text might appear in the middle of the filename.
+
+**Sample Values:**
+- `MECHANICAL` matches `MECHANICAL-001.pdf`, `Project-MECHANICAL-Drawing.dwg`, `Test-MECHANICAL.pdf`
+- `MECHANICAL` does not match `ARCH-001.pdf`
+- `DRAFT` matches `ABC-DRAFT-01.pdf`, `DRAFT-Document.pdf`, `Report-DRAFT.docx`
+
+**Usage Notes:**
+- More flexible than BeginsWith but may match unintended files
+- Useful when your naming convention has keywords in variable positions
+- Be specific with your filter value to avoid false matches
+
+#### NotBeginsWith
+
+**Description:** Matches filenames that do NOT start with the specified filter text. Use this rule type to file documents by excluding those with certain prefixes.
+
+**Sample Values:**
+- `TEMP-` matches `ARCH-001.pdf`, `Drawing.dwg`, `Notes.docx`
+- `TEMP-` does not match `TEMP-File.pdf`, `TEMP-Drawing.dwg`
+- `DRAFT-` matches all files except those starting with `DRAFT-`
+
+**Usage Notes:**
+- Useful for routing non-draft documents to a specific location
+- Often used in combination with other rules
+- Can help separate temporary from permanent documents
+
+#### NotContains
+
+**Description:** Matches filenames that do NOT contain the specified filter text anywhere in the name. Use this rule type to file documents by excluding those with certain keywords.
+
+**Sample Values:**
+- `DRAFT` matches `ARCH-001.pdf`, `Final-Drawing.dwg`, `Report.pdf`
+- `DRAFT` does not match `DRAFT-Report.pdf`, `Drawing-DRAFT.dwg`
+- `TEMP` matches all files except those containing `TEMP`
+
+**Usage Notes:**
+- Useful for ensuring only finalized documents go to certain locations
+- Be careful with short filter values that might accidentally match
+- Can help keep working files separate from final deliverables
+
+#### Default (CatchAll)
+
+**Description:** Matches all files regardless of filename. This is the default fallback rule that ensures every file has a destination even if no other rules match.
 
 **Special Properties:**
-- Only one Default rule allowed in the system
-- Cannot be deleted (can only be edited to change target path)
-- Displayed in bold in the list view
-- Automatically created on first initialization (points to user's Documents folder)
-- Filter value is always empty for CatchAll rules
+- Only one Default rule is allowed in the application
+- Cannot be deleted (can only edit the target folder)
+- Displayed in bold text in the rules list
+- Automatically created if missing (points to your Documents folder)
+- Does not use a filter value
 
-**Usage:** Ensures every file has a destination even if no other rules match.
+**Usage Notes:**
+- This should always be your last rule (lowest priority)
+- Acts as a safety net for files that don't match other rules
+- Edit this rule to change where unmatched files are filed
+- Good practice to regularly check this folder for unexpected files
 
-#### Filing Rule Management
+### Managing Filing Rules
 
-##### Adding a Rule
+#### Adding a New Rule
 
-1. Click the "Add" button
-2. Select a rule type from the dropdown
-3. Enter a filter value (not required for CatchAll)
-4. Browse or enter a target directory path
-5. Click Save
+To add a new filing rule:
 
-**Validation:**
-- Duplicate rules (same type and filter value) are not allowed
-- Only one CatchAll rule is permitted
-- Target path must be a valid directory
+1. Click the **Add** button in the Filing Rules section
+2. Select a rule type from the dropdown menu
+3. Enter a filter value (leave empty for CatchAll rules)
+4. Click Browse or type a target folder path where matching files should be moved
+5. Click **Save** to add the rule
 
-##### Editing a Rule
+**Important Notes:**
+- You cannot create duplicate rules (same type and filter value)
+- Only one CatchAll rule is allowed
+- The target folder must be a valid directory location
+- New rules are added to the bottom of the list (lowest priority)
 
-1. Select a rule from the list
-2. Click the "Edit" button
-3. Modify the rule properties
-4. Click Save
+#### Editing an Existing Rule
 
-**Note:** For CatchAll rules, only the target path can be modified.
+To modify a filing rule:
 
-##### Removing a Rule
+1. Click on a rule in the list to select it
+2. Click the **Edit** button
+3. Make your changes to the rule properties
+4. Click **Save** to apply the changes
 
-1. Select a rule from the list
-2. Click the "Remove" button
+**Note:** For CatchAll rules, you can only change the target folder path, not the rule type.
 
-**Restrictions:**
-- CatchAll rules cannot be removed
-- Any other rule type can be removed
+#### Removing a Rule
 
-##### Reordering Rules
+To delete a filing rule:
 
-**Move Up:** Increases the priority of the selected rule (moves it higher in the list)
+1. Click on a rule in the list to select it
+2. Click the **Remove** button
+3. The rule is immediately removed from the list
 
-**Move Down:** Decreases the priority of the selected rule (moves it lower in the list)
+**Restriction:** The CatchAll (Default) rule cannot be removed as it ensures all files have a destination.
 
-**Note:** Rule order is critical because evaluation stops at the first match.
+#### Changing Rule Priority
 
-#### ListView Columns
+To adjust when a rule is evaluated:
 
-- **Filter Type:** The type of rule (BeginsWith, Contains, NotBeginsWith, NotContains, Default)
-- **Filter Value:** The text value used for matching (empty for CatchAll)
-- **Target Path:** The directory where matching files will be filed
+**Move Up:** Click to increase the priority (check this rule earlier)
+**Move Down:** Click to decrease the priority (check this rule later)
+
+**Why This Matters:** Rules are evaluated from top to bottom, and the first match wins. Moving a rule up makes it more likely to match files before other rules.
+
+### Understanding the Filing Rules List
+
+The filing rules list displays three columns:
+
+**Filter Type:** Shows the type of rule (BeginsWith, Contains, NotBeginsWith, NotContains, or Default)
+
+**Filter Value:** Shows the text used for matching (empty for CatchAll rules)
+
+**Target Path:** Shows the folder where matching files will be moved
+
+**Visual Indicators:**
+- The Default (CatchAll) rule appears in bold text
+- The currently selected rule is highlighted
 
 ---
 
-### 4. Supported File Types
+## Supported File Types
 
-Defines which file extensions the application will process and how document numbers should be modified for each file type.
+This section defines which file types the application will process and how document numbers should be modified for each file type. This allows the application to handle different file formats and apply naming transformations when matching documents against the database.
 
-#### File Type Configuration
+### File Type Components
 
-Each supported file type consists of:
+Each supported file type has three parts that you configure:
 
-##### File Extension
+#### File Extension
 
-**Description:** The file extension including the leading period.
+**Description:** The file extension that identifies this file type, including the leading period.
 
-**Example:** `.pdf`, `.dwg`, `.docx`
+**Type:** Text field
 
-**Validation:**
-- Must include the leading period
-- Must be unique (no duplicate extensions allowed)
-- Case-insensitive comparison
+**Sample Values:**
+- `.pdf` - PDF documents
+- `.dwg` - AutoCAD drawings
+- `.docx` - Microsoft Word documents
+- `.xlsx` - Microsoft Excel spreadsheets
+- `.rvt` - Revit models
 
-##### Description
+**Requirements:**
+- Must start with a period (`.`)
+- Must be unique (no duplicate extensions)
+- Case doesn't matter (`.PDF` and `.pdf` are treated as the same)
 
-**Description:** Human-readable description of the file type.
+**Usage Notes:**
+- Always include the leading period
+- Use standard file extensions for your industry
+- Cannot change the extension for PDF files (it's fixed)
 
-**Example:** "PDF Document", "AutoCAD Drawing", "Word Document"
+#### Description
 
-**Purpose:** Provides context for users about what the file extension represents.
+**Description:** A friendly name that describes what this file type is used for. This helps you identify the file type in the list.
 
-##### Number Modifier
+**Type:** Text field
 
-**Description:** Optional modifier that transforms document numbers for specific file types when matching against the database.
+**Sample Values:**
+- `PDF Document` - For `.pdf` files
+- `AutoCAD Drawing` - For `.dwg` files
+- `Microsoft Word Document` - For `.docx` files
+- `Revit Model File` - For `.rvt` files
 
-**Purpose:** Allows different file types to have different document numbering schemes. For example, a CAD drawing might need a "-DWG" suffix added to its document number when stored.
+**Requirements:**
+- Can be any descriptive text
+- Not required to be unique (but recommended for clarity)
+
+**Usage Notes:**
+- Use clear, recognizable descriptions
+- Include the software name if applicable
+- Keep descriptions concise but informative
+
+#### Number Modifier
+
+**Description:** An optional setting that changes how document numbers are matched for this file type. This is useful when different file types use different numbering schemes in your document database.
+
+**Type:** Dropdown selection with additional configuration
+
+For example, if CAD drawings have `-DWG` appended to their document numbers in the database, but the PDF versions don't, you can configure the `.dwg` file type with an "Add Suffix: -DWG" modifier.
 
 **Available Modifiers:**
 
 ###### None (No Modifier)
 
-**Description:** No modification applied to document numbers.
+**Description:** No modification is applied to document numbers. The filename document number must exactly match the database document number.
 
-**Display:** "(None)" or empty display
+**Display in List:** `(None)` or empty
 
-**Usage:** Default for PDF files and file types that use standard document numbers.
+**Sample Values:** N/A - no modification occurs
 
-###### Add Prefix (AddAtIndex with index 0)
+**Usage Notes:**
+- This is the default for PDF files
+- Use this when your file naming matches your database numbering exactly
+- Most common option for standard document workflows
 
-**Description:** Adds a specified string to the beginning of the document number.
+###### Add Prefix
 
-**Example:**
-- Original Document Number: `ABC-123`
-- Prefix: `DRAFT-`
-- Modified Number: `DRAFT-ABC-123`
+**Description:** Adds text to the beginning of the document number before matching against the database.
 
-**Display:** `Add Prefix: DRAFT-`
+**Sample Values:**
+- **Configuration:** Prefix text: `DRAFT-`
+- **Original Filename:** `ABC-123.pdf`
+- **Searched As:** `DRAFT-ABC-123`
+- **Display in List:** `Add Prefix: DRAFT-`
 
-###### Add Suffix (AddToEnd)
+**Usage Notes:**
+- Useful when draft versions have a prefix in the database but not in filenames
+- The prefix is added automatically during matching
+- Common for separating working documents from issued documents
 
-**Description:** Adds a specified string to the end of the document number.
+###### Add Suffix
 
-**Example:**
-- Original Document Number: `ABC-123`
-- Suffix: `-DWG`
-- Modified Number: `ABC-123-DWG`
+**Description:** Adds text to the end of the document number before matching against the database.
 
-**Display:** `Add Suffix: -DWG`
+**Sample Values:**
+- **Configuration:** Suffix text: `-DWG`
+- **Original Filename:** `ABC-123.dwg`
+- **Searched As:** `ABC-123-DWG`
+- **Display in List:** `Add Suffix: -DWG`
 
-###### Add at Index (AddAtIndex)
+**Usage Notes:**
+- Very common for CAD drawings that have a suffix in the database
+- Allows PDF and DWG versions of the same document to have different database entries
+- The suffix is added automatically during matching
 
-**Description:** Inserts a specified string at a specific character position in the document number.
+###### Add at Index
 
-**Example:**
-- Original Document Number: `ABC-123`
-- Insert Value: `-REV`
-- Index: 3
-- Modified Number: `ABC-REV-123`
+**Description:** Inserts text at a specific character position in the document number before matching against the database.
+
+**Sample Values:**
+- **Configuration:** Text: `-REV`, Position: `3`
+- **Original Filename:** `ABC123.pdf`
+- **Searched As:** `ABC-REV123`
+- **Display in List:** `Add at Index 3: -REV`
+
+**Requirements:**
+- Position must be a valid number
+- Position 0 is the same as Add Prefix
+- If position is beyond the end of the number, text is added at the end
+
+**Usage Notes:**
+- Use this when you need to insert text at a specific location
+- Positions are counted starting from 0 (first character)
+- Less common than Prefix or Suffix modifiers
 
 **Display:** `Add at Index 3: -REV`
 
@@ -273,7 +396,7 @@ Each supported file type consists of:
 - New Value: `FINAL`
 - Modified Number: `ABC-FINAL-123`
 
-**Display:** `Replace: TEMP → FINAL`
+**Display:** `Replace: TEMP â†’ FINAL`
 
 #### Required File Types
 
@@ -334,42 +457,52 @@ Each supported file type consists of:
 
 ---
 
-## Data Persistence
+## How Settings Are Saved
 
-All settings in the Current Documents section are:
+When you make changes to any setting in the Current Documents section, those changes are saved when you click the **Save** button at the bottom of the Settings view. The application automatically loads your saved settings the next time you open the Settings view.
 
-1. **Synchronized** with the `CurrentFolderManager.Settings` object in real-time as values change
-2. **Validated** immediately upon change using data annotations and custom validators
-3. **Saved** to persistent storage when the user clicks the Save button in the Settings view
-4. **Loaded** automatically when the Settings view is initialized
+**Important:** Changes are not permanent until you click Save. If you navigate away without saving, your changes will be lost.
 
-## Validation Summary
+---
 
-### Field-Level Validation
+## Understanding Validation Messages
 
-- **Incoming Folder Path:** Must exist as a valid directory
-- **Archive Folder Path:** Must exist as a valid directory
-- **Revision Prefix:** Must be a valid revision marker character
-- **Revision Suffix:** Must be a valid revision marker character
+The application checks your settings as you enter them to help prevent errors. Here's what different types of validation mean:
 
-### Operation-Level Validation
+### Field Validation
 
-- **Filing Rules:**
-  - No duplicate rules (same type and filter value)
-  - Only one CatchAll rule allowed
-  - Target path must be valid
+These checks happen as you type:
 
-- **File Types:**
-  - No duplicate file extensions
-  - PDF cannot be removed
-  - File extension must include leading period
+**Incoming Folder Path:** Must be an existing folder that you can access
+- If you see an error, the folder doesn't exist or you don't have permission to access it
 
-### Validation Feedback
+**Archive Folder Path:** Must be an existing folder that you can access
+- If you see an error, the folder doesn't exist or you don't have permission to access it
 
-- Field-level errors appear as tooltips on text boxes
-- Operation-level errors appear in the message banner at the top of the Settings view
-- Validation occurs in real-time as the user types
-- Command buttons are disabled when validation fails
+**Revision Prefix and Suffix:** Must be valid filename characters
+- If you see an error, you've entered a character that isn't allowed in filenames
+
+### List Operation Validation
+
+These checks happen when you add or edit items:
+
+**Filing Rules:**
+- Cannot create duplicate rules (same type and filter value)
+- Only one CatchAll rule is allowed
+- Target folder path must be valid
+
+**File Types:**
+- Cannot use duplicate file extensions
+- PDF file type cannot be removed
+- File extension must include the leading period (`.`)
+
+### Where Validation Messages Appear
+
+**Field Errors:** Hover over a field with a red border to see the error in a tooltip
+
+**Operation Errors:** Appear in the message banner at the top of the Settings view
+
+**Button States:** Save and action buttons are disabled (grayed out) when there are validation errors
 
 ---
 
@@ -398,24 +531,63 @@ All settings in the Current Documents section are:
 
 ---
 
-## Troubleshooting
+## Troubleshooting Common Issues
 
-### Common Issues
+### Documents Not Filing to Expected Location
 
-**Issue:** Documents not filing to expected location
-**Solution:** Check filing rule order. Remember that the first matching rule wins. Move more specific rules higher in the list.
+**What's Happening:** Your files are being moved to the wrong folder or not being moved at all.
 
-**Issue:** Validation error on folder paths
-**Solution:** Verify the folder exists and you have appropriate permissions. Use the Browse button to ensure correct path selection.
+**Why This Happens:** Filing rules are evaluated from top to bottom, and the first matching rule wins. A rule higher in the list might be catching your files before the rule you expect.
 
-**Issue:** Cannot remove a file type
-**Solution:** PDF file type is required and cannot be removed. This is by design.
+**How to Fix:**
+1. Review your filing rules in order from top to bottom
+2. Check which rule would match first for the problem filenames
+3. Move more specific rules higher in the list
+4. Use the Move Up button to adjust rule priority
+5. Test with a few files to verify the change works
 
-**Issue:** Cannot create duplicate filing rule
-**Solution:** Duplicate rules (same type and filter value) are prevented. Edit the existing rule or use a different filter value.
+### Validation Error on Folder Paths
 
-**Issue:** CatchAll rule disappeared
-**Solution:** The CatchAll rule cannot be deleted. If it's missing, the application will recreate it automatically pointing to your Documents folder.
+**What's Happening:** You see a red border or error message on a folder path field.
+
+**Why This Happens:** The folder doesn't exist at the location you specified, or you don't have permission to access it.
+
+**How to Fix:**
+1. Verify the folder exists using Windows Explorer
+2. Check that you typed the path correctly (or use the Browse button)
+3. Confirm you have read/write permissions to the folder
+4. If it's a network path, ensure you're connected to the network
+5. Ask your IT administrator if you need access permissions
+
+### Cannot Remove a File Type
+
+**What's Happening:** The Remove button is disabled for the PDF file type.
+
+**Why This Happens:** PDF is a required file type and cannot be removed by design.
+
+**This is Normal:** The application requires PDF support for document management. You can add other file types, but PDF will always be in the list.
+
+### Cannot Create Duplicate Filing Rule
+
+**What's Happening:** You get an error when trying to add a filing rule that already exists.
+
+**Why This Happens:** You already have a rule with the same type and filter value. Duplicate rules are not allowed because they would be redundant.
+
+**How to Fix:**
+1. Edit the existing rule if you need to change its target folder
+2. Use a different filter value if you need a similar but distinct rule
+3. Check your existing rules list to see what's already configured
+
+### CatchAll Rule Disappeared
+
+**What's Happening:** You can't find the Default (CatchAll) rule in your list.
+
+**Why This Can't Happen:** The CatchAll rule cannot be deleted. It's a required rule that ensures every file has a destination.
+
+**If You Think It's Missing:** 
+- The rule might be scrolled out of view at the bottom of the list
+- The application will automatically recreate it if it's truly missing
+- The rule is always displayed in bold text to make it easy to spot
 
 ---
 

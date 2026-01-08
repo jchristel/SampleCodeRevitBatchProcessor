@@ -20,48 +20,69 @@ Before processing documents, you need to provide two pieces of information about
 
 ### Revision Date
 
-**What it is:** The official date for this revision batch.
+**Description:** The official date for this revision batch. This date is saved with each document's revision history and represents when the documents were issued or submitted.
 
-**Why it matters:** This date is saved with each document's revision history. It might be:
+**Type:** Date picker
+
+**Sample Values:**
+- `2024-01-15` - For a January 15, 2024 issue
+- `2024-03-10` - For a March 10, 2024 submission
+- Today's date - For documents being issued today
+
+**Requirements:**
+- Must select a date before you can merge documents
+- Cannot be empty
+- Date format displays based on your computer's regional settings
+
+**What This Date Represents:**
 - The date you issued drawings for construction
 - The date documents were submitted to the client
 - The date of a planning submission
 - Any other significant milestone date
 
-**How to use it:**
+**How to Use It:**
 
 1. Click on the date picker control
-2. A calendar will pop up
+2. A calendar pops up
 3. Navigate to the month and year you need
 4. Click the date to select it
-5. The selected date will appear in the control
+5. The selected date appears in the control
 
-**Important:** You must select a date before you can merge documents. The "Merge Documents" button won't work until you've chosen a date.
-
-**Tips:**
+**Usage Notes:**
 - Use the date from your project transmittal or cover sheet
 - Be consistent - decide if you're using issue dates, approval dates, etc., and stick with it
-- The date format shown depends on your computer's regional settings
+- The "Merge Documents" button remains disabled until you select a date
 
 ---
 
 ### Revision Description
 
-**What it is:** A brief description explaining what this revision is for.
+**Description:** A brief explanation of what this revision is for. This helps you and others understand the purpose of the revision when looking at document history later.
 
-**Why it matters:** This helps you (and anyone else) understand the purpose of the revision when looking at document history later. Good descriptions make it easy to find specific revisions.
+**Type:** Text field with autocomplete suggestions
 
-**How to use it:**
+**Sample Values:**
+- `Issued for Construction` - Documents released to contractors for building
+- `Client Comments Incorporated` - Revisions based on client feedback
+- `Planning Submission` - Documents submitted for planning approval
+- `Reissued - Contractor Queries Answered` - Updated documents responding to questions
+- `Tender Issue` - Documents released for bidding
 
-1. Click in the text box
-2. Start typing your description
-3. As you type, you'll see suggestions appear below the box
-4. These suggestions come from descriptions you've used before
-5. Click a suggestion to use it, or keep typing your own
+**Requirements:**
+- Must enter a description before you can merge documents
+- Cannot be empty
+- Can be any text that describes the revision purpose
 
 **The Smart Suggestions Feature:**
 
-As soon as you start typing, the application looks through your previous revision descriptions and shows you ones that start with what you've typed.
+As you type, the application searches through descriptions you've used before and shows matching suggestions. This helps keep your descriptions consistent.
+
+**How It Works:**
+1. Click in the text box
+2. Start typing your description
+3. Suggestions appear below the box as you type
+4. Click a suggestion to use it, or keep typing your own
+5. Press Enter or click elsewhere to confirm your entry
 
 **Example:**
 - You type: "Issued"
@@ -71,24 +92,29 @@ As soon as you start typing, the application looks through your previous revisio
   - Issued for Approval
 - Click one to use it, or keep typing your own description
 
-**Why this helps:**
-- Keeps your descriptions consistent
-- Saves typing time
-- Reduces typos
+**Why This Helps:**
+- Keeps your descriptions consistent across revisions
+- Saves typing time for common descriptions
+- Reduces typos and spelling errors
 - Helps you remember the exact wording you used before
+- Makes it easier to find specific revisions later
 
-**Important:** You must enter a description before you can merge documents. The "Merge Documents" button won't work until you've provided one.
+**Good Description Examples:**
+- `Issued for Construction` - Clear purpose
+- `Client Comments Incorporated` - Explains what changed
+- `Planning Submission` - Indicates destination
+- `Reissued - Contractor Queries Answered` - Explains why it's being reissued
 
-**Good Examples:**
-- "Issued for Construction"
-- "Client Comments Incorporated"
-- "Planning Submission"
-- "Reissued - Contractor Queries Answered"
+**Avoid Vague Descriptions:**
+- `Updates` ❌ - Too vague (What updates?)
+- `Changes` ❌ - Too general (What changed?)
+- `Version 2` ❌ - Unclear (Why version 2?)
+- `Rev B` ❌ - Redundant (revision code is already tracked separately)
 
-**Avoid vague descriptions like:**
-- "Updates" (What updates?)
-- "Changes" (What changed?)
-- "Version 2" (Why version 2?)
+**Usage Notes:**
+- The "Merge Documents" button remains disabled until you enter a description
+- Suggestions only appear if you've used similar descriptions before
+- You're not limited to suggestions - you can type anything you want
 
 ---
 
@@ -96,8 +122,8 @@ As soon as you start typing, the application looks through your previous revisio
 
 The "Merge Documents" button will only become active (clickable) when you've provided both pieces of information:
 
-✓ **Revision Date** - Selected from the date picker
-✓ **Revision Description** - Entered in the text box
+âœ“ **Revision Date** - Selected from the date picker
+âœ“ **Revision Description** - Entered in the text box
 
 If the button is grayed out, check that you've filled in both fields.
 
@@ -144,19 +170,19 @@ Here's what each column tells you:
 
 This column shows a colored circle that quickly tells you the status of each file:
 
-**🟢 Green Circle - All Good**
+**ðŸŸ¢ Green Circle - All Good**
 - The file was successfully matched to a document in your database
 - The revision is the next logical step from what's currently in the database
 - You can merge this file without any concerns
 - Hover your mouse over the circle to see more details
 
-**🟠 Orange Circle - Warning**
+**ðŸŸ  Orange Circle - Warning**
 - The file was matched to a document, but there's something to be aware of
 - Usually means the revision isn't sequential (for example, going from revision B to revision D, skipping C)
 - You CAN still merge these files - the warning just alerts you to check if this is intentional
 - Hover over the circle to see exactly what the issue is
 
-**🔴 Red Circle - Error (Needs Attention)**
+**ðŸ”´ Red Circle - Error (Needs Attention)**
 - Something is preventing this file from being processed
 - There are three types of red circle errors:
 
@@ -291,22 +317,22 @@ When the application checks a file, it can find multiple issues. But it only sho
 
 Here's the order of importance (most serious first):
 
-1. **🔴 Missing Revision** (Most Serious)
+1. **ðŸ”´ Missing Revision** (Most Serious)
    - If a file has no revision information, this error shows up first
    - Even if the file matches a document, the missing revision is the critical problem
 
-2. **🔴 Duplicate Document**
+2. **ðŸ”´ Duplicate Document**
    - If you have multiple files of the same type for the same document
    - Only checked if the file has revision information
 
-3. **🔴 No Match**
+3. **ðŸ”´ No Match**
    - The document number isn't in your database
 
-4. **🟠 Revision Not Sequential**
+4. **ðŸŸ  Revision Not Sequential**
    - The file matches, but the revision skips a number
    - This is just a warning - you can still merge
 
-5. **🟢 All Good** (Least Serious)
+5. **ðŸŸ¢ All Good** (Least Serious)
    - Everything checks out fine
 
 ### Why This Matters
@@ -332,18 +358,18 @@ The application checks if your incoming revision is the "next" logical revision 
 **Sequential means:** The next letter in the alphabet
 
 **Examples:**
-- Current: A, Incoming: B → ✓ Sequential (green)
-- Current: A, Incoming: C → ✗ Not Sequential (orange warning)
-- Current: B, Incoming: C → ✓ Sequential (green)
+- Current: A, Incoming: B â†’ âœ“ Sequential (green)
+- Current: A, Incoming: C â†’ âœ— Not Sequential (orange warning)
+- Current: B, Incoming: C â†’ âœ“ Sequential (green)
 
 ### For Number Revisions (1, 2, 3... or 01, 02, 03...)
 
 **Sequential means:** The next number in sequence
 
 **Examples:**
-- Current: 5, Incoming: 6 → ✓ Sequential (green)
-- Current: 5, Incoming: 7 → ✗ Not Sequential (orange warning)
-- Current: 01, Incoming: 02 → ✓ Sequential (green)
+- Current: 5, Incoming: 6 â†’ âœ“ Sequential (green)
+- Current: 5, Incoming: 7 â†’ âœ— Not Sequential (orange warning)
+- Current: 01, Incoming: 02 â†’ âœ“ Sequential (green)
 
 ### For Other Revision Schemes (P01, Rev-A, etc.)
 
@@ -573,9 +599,9 @@ This is covered in more detail in separate documentation about the merge process
 
 ### Status Colors at a Glance
 
-🟢 **Green** = All good, ready to merge
-🟠 **Orange** = Warning, can still merge but be aware
-🔴 **Red** = Error, needs to be fixed before merging
+ðŸŸ¢ **Green** = All good, ready to merge
+ðŸŸ  **Orange** = Warning, can still merge but be aware
+ðŸ”´ **Red** = Error, needs to be fixed before merging
 
 ### Common Error Messages
 

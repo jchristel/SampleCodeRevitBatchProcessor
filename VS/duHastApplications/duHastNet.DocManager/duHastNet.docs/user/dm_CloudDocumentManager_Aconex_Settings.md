@@ -30,7 +30,7 @@ The Cloud Document Manager integration enables the application to export documen
 
 **Available Options:**
 - **None:** No provider selected (default state)
-- **Aconex:** Aconex document management system
+- **Aconex:** Aconex document management system (Only available option)
 
 **Sample Values:**
 - Select "None" if you're not using cloud document management
@@ -74,7 +74,7 @@ When "Aconex" is selected as the cloud provider, the following configuration opt
 - Get this template file from your Aconex project administrator
 - The template defines which fields Aconex expects for your project
 - Use the Browse button to navigate to and select your template file
-- After loading, the application reads the column headers from the first row
+- After loading, the application reads the column headers from the first row and makes them available in the mapping options below
 
 **Features:**
 
@@ -106,8 +106,7 @@ When "Aconex" is selected as the cloud provider, the following configuration opt
 2. Updates the list of available metadata field names
 3. Removes any mappings that refer to fields no longer in the template
 4. Shows a success message with the number of columns loaded
-5. Warns you if any fields were removed
-6. Notifies you if any existing mappings were deleted
+5. Warns you if any previously defined mapping fields were removed
 
 **Usage Notes:**
 - Use this when you've updated the Aconex template file
@@ -126,6 +125,7 @@ When "Aconex" is selected as the cloud provider, the following configuration opt
 
 **Error Conditions:**
 - File cannot be read
+- File no longer exists
 - File is not a valid CSV
 - File has no headers
 - Duplicate column headers detected (shown as warning)
@@ -159,7 +159,6 @@ Each mapping has three components:
 **Use Case:** Use this for values that are the same for all documents in an export, such as:
 - Project name
 - Discipline
-- Status codes
 - Standard categories
 
 **Example:**
@@ -179,7 +178,7 @@ Each mapping has three components:
 - Revision code
 - Revision date
 - Revision description
-- Custom field values
+- Custom document property field values
 
 **Available Document Properties:**
 
@@ -279,7 +278,7 @@ Each mapping has three components:
 
 **Error Conditions:**
 - Template not loaded: Warning message displayed
-- All fields already mapped: Information message displayed
+- All fields already mapped: Information message displayed and the Add button is no longer available at this point
 - Validation failure: Error displayed in dialog
 
 ##### Editing a Mapping
@@ -319,7 +318,7 @@ Each mapping has three components:
 
 **Use Case:** Remove mappings for fields you no longer need to export, or to reconfigure a mapping completely.
 
-#### ListView Columns
+#### Metadata mapping columns
 
 The Metadata Field Mappings list displays the following columns:
 
@@ -346,7 +345,7 @@ The Metadata Field Mappings list displays the following columns:
 
 #### Automatic Cleanup
 
-**Trigger:** When a custom field is deactivated in the database settings
+**Trigger:** When a custom document property field is deactivated in the database settings
 
 **Behavior:** 
 - The application automatically scans all Aconex mappings
@@ -373,7 +372,7 @@ When documents are merged/processed by the application with Cloud Document Manag
    - Column headers matching the Aconex template
    - One row per document
    - Values populated according to mappings
-4. **File Placement:** The metadata CSV is saved alongside the processed documents
+4. **File Placement:** The metadata CSV is saved using a file save dialogue displayed during the merge process
 5. **Upload to Aconex:** The CSV can then be used when uploading documents to Aconex
 
 ### Mapping Priority
@@ -381,14 +380,13 @@ When documents are merged/processed by the application with Cloud Document Manag
 When a metadata field has a mapping configured:
 - The mapped value takes precedence
 - Empty or null values are written as empty strings in the CSV
-- Missing document properties result in empty values (with warning)
+
 
 ### Unmapped Fields
 
 Fields in the Aconex template that have no configured mapping:
 - Will appear as empty columns in the exported CSV
 - Can be filled manually in the CSV before upload
-- Can be populated by Aconex's default values (if configured in Aconex)
 
 ---
 
@@ -398,7 +396,7 @@ Fields in the Aconex template that have no configured mapping:
 
 1. **Obtain Aconex Template**
    - Download the metadata template CSV from your Aconex project
-   - Save it to a accessible location on your computer
+   - Save it to a accessible location on your computer / networked project drive
 
 2. **Enable Integration**
    - Check "Enable Cloud Document Manager Integration"
@@ -410,7 +408,7 @@ Fields in the Aconex template that have no configured mapping:
    - Verify the column count in the success message
 
 4. **Configure Mappings**
-   - Review the required Aconex fields in your template
+   - Review the required Aconex fields in your template (usually bold font)
    - Add mappings for all required fields (marked in Aconex documentation)
    - Add mappings for optional fields as needed
    - Use appropriate mapping types based on data source
@@ -508,37 +506,6 @@ The configuration is stored in the application's settings file format and persis
 
 ---
 
-## Best Practices
-
-### Template Management
-
-1. **Version Control:** Keep versions of your Aconex template files with dates in filename
-2. **Test First:** Always test template changes with sample data before production use
-3. **Backup:** Keep a backup of your working template file
-4. **Document Changes:** Note what changed between template versions
-
-### Mapping Strategy
-
-1. **Required Fields First:** Map all Aconex-required fields before optional ones
-2. **Use Fixed Values Sparingly:** Prefer document properties for data that varies
-3. **Consistent Naming:** Use consistent property names across your database
-4. **Document Mappings:** Keep notes on what each mapping represents and why it's configured that way
-
-### Data Quality
-
-1. **Validate Sources:** Ensure document properties are consistently populated in your database
-2. **Handle Missing Data:** Plan for missing values (empty fields in Aconex)
-3. **Test Thoroughly:** Process test documents before bulk operations
-4. **Review Exports:** Periodically review exported CSV files for accuracy
-
-### Workflow Integration
-
-1. **Training:** Train users on the importance of accurate database entry
-2. **Custom Fields:** Design custom fields with Aconex export needs in mind
-3. **Automation:** Leverage document properties to minimize manual metadata entry
-4. **Quality Checks:** Implement checks before uploading to Aconex
-
----
 
 ## Troubleshooting
 
@@ -662,60 +629,7 @@ The metadata export occurs during the merge process:
 - After documents are matched to database
 - Before final file organization
 - One CSV per batch of processed documents
-- CSV placed in output location with documents
-
----
-
-## Security and Privacy Considerations
-
-### Template Files
-
-- Template files may contain sensitive project information
-- Store templates in secure locations
-- Control access to template files
-- Consider encryption for highly sensitive projects
-
-### Metadata Content
-
-- Review what data is being exported to Aconex
-- Ensure compliance with data privacy regulations
-- Be cautious with personal information in metadata
-- Follow organizational data governance policies
-
-### File Properties
-
-- Be aware that file paths may reveal internal structure
-- Consider implications of exporting directory names
-- Review full path exports for sensitive location information
-
----
-
-## Future Enhancements
-
-### Planned Features
-
-- **Additional Providers:** Procore, Autodesk Docs, PlanGrid support
-- **Field Transformations:** Apply formatting or transformations to values
-- **Conditional Mappings:** Map different values based on conditions
-- **Bulk Mapping:** Configure multiple similar mappings at once
-- **Mapping Templates:** Save and reuse mapping configurations
-- **Import/Export:** Share mapping configurations between installations
-
-### Version Compatibility
-
-The current Aconex implementation is designed to be:
-- **Forward-compatible:** New features won't break existing mappings
-- **Extensible:** Additional providers use the same architecture
-- **Configurable:** Settings can be updated without code changes
-
----
-
-## Related Documentation
-
-- **Current Folder Settings:** Document processing and filing rules
-- **Database Settings:** Custom field configuration used in mappings
-- **Merge View:** Where metadata export actually occurs
-- **Document/Revision Models:** Available properties for mapping
+- CSV placed in location defined in file save as dialogue
 
 ---
 

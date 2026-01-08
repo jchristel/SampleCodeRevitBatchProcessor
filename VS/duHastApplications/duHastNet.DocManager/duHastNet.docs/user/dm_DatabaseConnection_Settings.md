@@ -129,21 +129,17 @@ All import and export operations require that you're connected to a database. Th
 
 **Example:** If you have 100 documents and 10 revisions, the export will create 100 rows (one for each document) and 20 revision columns (2 per revision). Many cells will be blank where a document wasn't included in a particular revision.
 
-#### Revision History Only (Unchecked - Default)
+#### Revision History (Unchecked - Default)
 
 **What This Does:**
-- Exports only documents that actually have revision information
-- Skips documents that weren't part of a revision
+- Exports documents with current revision information
 - Creates smaller, more compact CSV files
-- Focuses on documents with explicit revision markers
 
 **When to Use This:**
-- You only need documents that have revision history
+- You only need documents with current revision
 - You want smaller, more manageable files
-- Most of your documents don't appear in every revision
-- You're doing focused revision analysis
 
-**Example:** If you have 100 documents but only 30 were actually revised, the export will only include those 30 documents with their revision information.
+**Example:** If you have 100 documents only the current revision per document will be exported.
 
 ---
 
@@ -170,44 +166,50 @@ All import and export operations require that you're connected to a database. Th
 **CSV File Format:**
 
 Your CSV file must have these columns:
-- **Number** - The document number (like ABC-001)
-- **Name** - The document name or title
-- **Revision** - The current revision code (like A, B, or P01)
+- **Id** - The database Id of the document. Any new documents to be added need to set Id to "New"
+- **Document Number** - The document number (like ABC-001)
+- **Document Name** - The document name or title
+- **Revision Indicator** - The current revision code (like A, B, or P01), If no revision this filed can be blank
+- **Revision Id** - The revision Id in the database, if no revision this field can be blank
 
 Your CSV file can also have:
 - **Custom field columns** - Any custom fields you've defined (column name must match exactly)
-- **Revision columns** - If using Full Revision History mode (column names are revision codes)
+
 
 **How It Works:**
 
 **For New Documents:**
+- The Id column needs to contain 'New'
 - A new document is created with the information from the CSV
 - All custom fields are set (blank if not in CSV)
 - Document is added to the database
 
 **For Existing Documents:**
-- The document number is used to find the existing document
+- The document id is used to find the existing document
 - All information is updated with the CSV values
 - Custom fields are updated or added as needed
 
 **Example CSV:**
 ```
-Number,Name,Revision,DrawingType,Discipline
-ABC-001,Floor Plan,A,Architectural,Architecture
-ABC-002,Site Plan,B,Civil,Civil Engineering
+Id,Document Number,Document Name,Revision Indicator,Revision Id,DrawingType,Discipline
+1,ABC-001,Floor Plan,A,1,Architectural,Architecture
+New,ABC-002,Site Plan,,,Civil,Civil Engineering
 ```
 
 **Success Message:** "Imported 45 documents (23 new, 22 updated)"
 
 **If There's a Problem:**
 - Check that your CSV has the required columns
-- Make sure document numbers aren't empty
+- Make sure document numbers and names aren't empty
 - Verify custom field names match exactly
 - The application will show which documents had issues
 
+**Best Practise**
+Use the export function (below) to get a CSV with the correct columns.
+
 ### Export Documents Button
 
-**Description:** Saves your document information from the database to a CSV file. Use this to back up your data or share it with other systems.
+**Description:** Saves your document information from the database to a CSV file. Use this to make batch changes to your documents and or import new documents to the database.
 
 **Type:** Button
 
@@ -233,22 +235,18 @@ ABC-002,Site Plan,B,Civil,Civil Engineering
 - All active custom fields (one column per field)
 - Revision history (if Full Revision History mode is checked)
 
-**File Naming:** The default filename is `Documents.csv`, but you can change it to anything you want.
 
 **Example of What You Get:**
 ```
-Number,Name,Revision,DrawingType,Discipline
-ABC-001,Floor Plan,A,Architectural,Architecture  
-ABC-002,Site Plan,B,Civil,Civil Engineering
+Id,Document Number,Document Name,Revision Indicator,Revision Id,DrawingType,Discipline
+1,ABC-001,Floor Plan,A,1,Architectural,Architecture  
+2,ABC-002,Site Plan,B,2,Civil,Civil Engineering
 ```
 
-**Success Message:** "Exported 156 documents to Documents.csv"
+**Success Message:** "Exported 156 documents to SampleDoc.csv"
 
 **Usage Tips:**
-- Export regularly as a backup
-- Use exports to share document lists with team members
 - Open the CSV in Excel for bulk editing, then import back
-- Keep dated backups before making major changes
 
 ---
 
@@ -281,22 +279,23 @@ Revisions represent milestones in your project (like "Issued for Construction" o
 **CSV File Format:**
 
 Your CSV file must have these three columns:
-- **RevisionCode** - The revision identifier (like A, B, P01, etc.)
+- **Id** - The revision database id
 - **RevisionDate** - The date in YYYY-MM-DD format (like 2024-01-15)
 - **Description** - What this revision represents (like "Issued for Construction")
 
 **Example CSV:**
 ```
-RevisionCode,RevisionDate,Description
-A,2024-01-15,Issued for Construction
-B,2024-02-20,Client Comments Incorporated
-P01,2024-03-10,Planning Submission
+Id,RevisionDate,Description
+1,2024-01-15,Issued for Construction
+2,2024-02-20,Client Comments Incorporated
+3,2024-03-10,Planning Submission
 ```
 
 **How It Works:**
 
 **For New Revisions:**
-- A new revision is created with the code, date, and description from the CSV
+- A new revision is created with the date, and description from the CSV
+- Id field must read 'New'
 - The revision is added to your project's revision list
 
 **For Existing Revisions:**
@@ -304,16 +303,17 @@ P01,2024-03-10,Planning Submission
 - The date and description are updated with the CSV values
 
 **Requirements:**
-- Revision codes must be unique in your CSV file
 - Dates must be in YYYY-MM-DD format
+- A revision description value must be set
 - All three columns are required
+- Any duplicate revision ( same value of date and description, the latter is compared using case sensitive comparison) will cause an error message.
 
 **Success Message:** "Imported 8 revisions (3 new, 5 updated)"
 
 **If There's a Problem:**
 - Check that your CSV has all three required columns
 - Make sure dates are in the correct format (YYYY-MM-DD)
-- Verify revision codes are unique
+- Verify revision are unique
 
 ### Export Revisions Button
 
@@ -333,28 +333,22 @@ P01,2024-03-10,Planning Submission
 5. A success message shows how many revisions were exported
 
 **What's Included in the Export:**
-- Revision Code (like A, B, P01)
+- Id
 - Revision Date (in YYYY-MM-DD format)
 - Description (what the revision represents)
 
-**File Naming:** The default filename is `Revisions.csv`, but you can change it to anything you want.
-
 **Example of What You Get:**
 ```
-RevisionCode,RevisionDate,Description
-A,2024-01-15,Issued for Construction
-B,2024-02-20,Client Comments Incorporated
-P01,2024-03-10,Planning Submission
+Id,RevisionDate,Description
+1,2024-01-15,Issued for Construction
+2,2024-02-20,Client Comments Incorporated
+3,2024-03-10,Planning Submission
 ```
 
 **Success Message:** "Exported 12 revisions to Revisions.csv"
 
 **Usage Tips:**
-- Export regularly as a backup of your revision schedule
-- Share the revision list with project team members
-- Use this to synchronize revisions between multiple databases
 - Open in Excel to edit revision descriptions, then import back
-- Documentation of project timeline
 
 ---
 
@@ -412,12 +406,6 @@ Each custom field has the following properties:
 
 **Description:** Database identifier for the custom field
 
-**Values:**
-- `0` - New field not yet saved to database
-- `> 0` - Existing field persisted in database
-
-**Visibility:** Not displayed in UI, used internally for operations
-
 ---
 
 ### Custom Field Management
@@ -434,7 +422,6 @@ Each custom field has the following properties:
 3. Enter desired custom field name
 4. Click OK in dialog
 5. Field added to list with Status "Active" (not saved yet)
-6. Status shows as unsaved (Id = 0)
 
 **Validation in Dialog:**
 - Field name cannot be empty
@@ -454,12 +441,12 @@ Each custom field has the following properties:
 **Enabled When:**
 - Database is connected
 - A custom field is selected
-- Selected field has Id = 0 (not yet saved to database)
+- not yet saved to database
 
 **Restriction:** Can only remove fields that haven't been saved yet
 
 **Process:**
-1. Select an unsaved custom field (Status shows Id = 0)
+1. Select an unsaved custom field
 2. Click Remove button
 3. Field removed from list immediately
 4. Pending changes flag updated
@@ -550,7 +537,7 @@ Note: New fields will create records for all documents.
 
 **Adding New Fields:**
 - The field becomes available throughout the application
-- Every document in your database gets this field added (initially blank)
+- Every document in your database gets this field added (initially value is blank)
 - This may take a moment if you have many documents
 - The field appears in dropdown lists and metadata mappings
 
@@ -623,77 +610,6 @@ The custom fields list shows all your custom fields in a table with two columns:
 
 ---
 
-## Database Schema Overview
-
-The SQLite database contains the following core tables:
-
-### Document Table
-
-**Purpose:** Stores document master records
-
-**Key Fields:**
-- Id (Primary Key)
-- Number (Unique)
-- Name
-- Revision
-
-**Indexes:** Number (for fast lookups)
-
-### Revision Table
-
-**Purpose:** Stores revision definitions and schedule
-
-**Key Fields:**
-- Id (Primary Key)
-- RevisionCode (Unique)
-- RevisionDate
-- Description
-
-### CustomProperty Table
-
-**Purpose:** Stores custom field values for documents
-
-**Key Fields:**
-- Id (Primary Key)
-- DocumentId (Foreign Key to Document)
-- PropertyName
-- PropertyValue
-
-**Relationship:** Many-to-one with Document (one document can have many custom properties)
-
-### CustomFieldDefinition Table
-
-**Purpose:** Stores custom field definitions (metadata about custom fields)
-
-**Key Fields:**
-- Id (Primary Key)
-- PropertyName (Unique)
-- IsActive
-
-**Usage:** Defines which custom fields exist and their status
-
----
-
-## Data Model Relationships
-
-### Document â†” CustomProperty
-
-**Relationship:** One document has many custom properties
-
-**Cascade:** When document deleted, custom properties deleted
-
-**Purpose:** Allows flexible extension of document data model
-
-### Document â†” Revision
-
-**Relationship:** Many-to-many through DocumentRevision join table
-
-**Purpose:** Tracks which documents are in which revisions
-
-**Indicators:** Each relationship has an indicator string (e.g., "S0", "S1")
-
----
-
 ## Validation
 
 ### Database Path Validation
@@ -736,7 +652,6 @@ The SQLite database contains the following core tables:
 
 **1. Choose a Good Location**
 - Store your database in a stable location that gets backed up regularly
-- Use a local drive rather than a network drive (network drives are slower)
 - Make sure you have read and write permissions to that location
 
 **2. Use Descriptive Names**
@@ -744,13 +659,7 @@ The SQLite database contains the following core tables:
 - Include version numbers if you maintain multiple database versions
 - Avoid generic names like `database.db` or `docs.db`
 
-**3. Back Up Regularly**
-- Export your documents and revisions to CSV files monthly
-- Keep database file backups before making major changes
-- Store backups in a different location than your main database
-- Test your backups occasionally to make sure they work
-
-**4. Version Control**
+**3. Version Control**
 - Make a backup copy before adding many custom fields
 - Save a backup before importing large amounts of data
 - Keep dated backups so you can recover old versions if needed
@@ -771,7 +680,7 @@ The SQLite database contains the following core tables:
 
 **Editing CSV Files:**
 - You can edit exported CSVs in Excel or Google Sheets
-- Don't change document numbers (they're used to match existing documents)
+- Don't change ID column values
 - Keep all the required columns (Number, Name, Revision)
 - Keep dates in YYYY-MM-DD format
 
@@ -780,7 +689,6 @@ The SQLite database contains the following core tables:
 **Before Creating Fields:**
 - Think about what information you really need to track
 - Use consistent naming (like ProjectPhase, not project-phase or projectphase)
-- Write down what each field is for
 - Consider how you'll use the fields in exports and reports
 
 **Naming Your Fields:**
@@ -791,9 +699,8 @@ The SQLite database contains the following core tables:
 
 **Managing Fields Over Time:**
 - Add new fields when you have a clear need for them
-- Deactivate fields you no longer need (don't delete them - the data stays safe)
+- Deactivate fields you no longer need
 - Test new fields with a few sample documents first
-- Keep notes about when and why you added or changed fields
 
 **Performance Tips:**
 - Don't create fields "just in case" - only add what you need
@@ -947,34 +854,3 @@ When you make changes in the Database Connection section, those changes are save
 **Merge View:** The main screen where database information is used for document processing
 
 ---
-
-## Quick Reference: CSV Format Examples
-
-### Document Import/Export CSV
-
-```csv
-Number,Name,Revision,Discipline,ProjectPhase
-ABC-001,Floor Plan,A,Architecture,Construction
-ABC-002,Site Plan,B,Civil,Planning
-ABC-003,Elevation,A,Architecture,Construction
-```
-
-**Notes:**
-- Number, Name, and Revision are required
-- Additional columns are custom fields (must match field names exactly)
-- If using Full Revision History mode, you'll also see columns for each revision code
-
-### Revision Import/Export CSV
-
-```csv
-RevisionCode,RevisionDate,Description
-A,2024-01-15,Issued for Construction
-B,2024-02-20,Client Comments Incorporated
-P01,2024-03-10,Planning Submission
-```
-
-**Notes:**
-- All three columns are required
-- Date must be in YYYY-MM-DD format
-- Description can contain spaces and most characters
-

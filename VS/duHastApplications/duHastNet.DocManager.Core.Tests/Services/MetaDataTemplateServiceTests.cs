@@ -19,7 +19,8 @@ using NUnit.Framework;
 using duHastNet.DocManager.Core.Services;
 using duHastNet.DocManager.Core.Models.Results;
 
-namespace duHastNet.DocManager.Core.Tests.Services;
+namespace duHastNet.DocManager.Core.Tests.Services
+{
 
 [TestFixture]
 public class MetaDataTemplateServiceTests
@@ -187,7 +188,7 @@ public class MetaDataTemplateServiceTests
             Assert.That(result.IsReadSuccessful, Is.False);
             Assert.That(result.Success, Is.False);
             Assert.That(result.HasErrors, Is.True);
-            Assert.That(result.Errors[0], Does.Contain("No column headers found"));
+            Assert.That(result.Errors[0], Does.Contain("CSV parsing error"));
         });
     }
 
@@ -601,4 +602,5 @@ public class MetaDataTemplateServiceTests
     }
 
     #endregion
+}
 }

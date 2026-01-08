@@ -56,8 +56,8 @@ public class RevisionExportServiceTests
         // Arrange
         var filePath = Path.Combine(_testDirectory, "single_revision.csv");
         var revision = new Revision(new DateTime(2024, 3, 15), "Initial Release") { Id = 1 };
-        revision.DocumentIds.Add(101);
-        revision.DocumentIds.Add(102);
+        revision.AddDocument(101);
+        revision.AddDocument(102);
         var revisions = new List<Revision> { revision };
 
         // Act
@@ -85,16 +85,16 @@ public class RevisionExportServiceTests
         // Arrange
         var filePath = Path.Combine(_testDirectory, "multiple_revisions.csv");
         var revision1 = new Revision(new DateTime(2024, 1, 15), "First Release") { Id = 1 };
-        revision1.DocumentIds.Add(101);
+        revision1.AddDocument(101);
 
         var revision2 = new Revision(new DateTime(2024, 2, 20), "Second Release") { Id = 2 };
-        revision2.DocumentIds.Add(201);
-        revision2.DocumentIds.Add(202);
+        revision2.AddDocument(201);
+        revision2.AddDocument(202);
 
         var revision3 = new Revision(new DateTime(2024, 3, 25), "Third Release") { Id = 3 };
-        revision3.DocumentIds.Add(301);
-        revision3.DocumentIds.Add(302);
-        revision3.DocumentIds.Add(303);
+        revision3.AddDocument(301);
+        revision3.AddDocument(302);
+        revision3.AddDocument(303);
 
         var revisions = new List<Revision> { revision1, revision2, revision3 };
 
@@ -166,7 +166,7 @@ public class RevisionExportServiceTests
         // Arrange
         var filePath = Path.Combine(_testDirectory, "null_description.csv");
         var revision = new Revision(new DateTime(2024, 3, 15), null) { Id = 1 };
-        revision.DocumentIds.Add(101);
+        revision.AddDocument(101);
         var revisions = new List<Revision> { revision };
 
         // Act
@@ -185,7 +185,7 @@ public class RevisionExportServiceTests
         // Arrange
         var filePath = Path.Combine(_testDirectory, "description_with_commas.csv");
         var revision = new Revision(new DateTime(2024, 3, 15), "Release for Site A, B, and C") { Id = 1 };
-        revision.DocumentIds.Add(101);
+        revision.AddDocument(101);
         var revisions = new List<Revision> { revision };
 
         // Act
@@ -211,8 +211,8 @@ public class RevisionExportServiceTests
     {
         // Arrange
         var filePath = Path.Combine(_testDirectory, "description_with_quotes.csv");
-        var revision = new Revision(new DateTime(2024, 3, 15), "Release 'Alpha' version") { Id = 1 };
-        revision.DocumentIds.Add(101);
+        var revision = new Revision(new DateTime(2024, 3, 15), "Release \"Alpha\" version") { Id = 1 };
+        revision.AddDocument(101);
         var revisions = new List<Revision> { revision };
 
         // Act
@@ -239,7 +239,7 @@ public class RevisionExportServiceTests
         // Arrange
         var filePath = Path.Combine(_testDirectory, "description_with_newlines.csv");
         var revision = new Revision(new DateTime(2024, 3, 15), "Release\r\nfor\r\nSite A") { Id = 1 };
-        revision.DocumentIds.Add(101);
+        revision.AddDocument(101);
         var revisions = new List<Revision> { revision };
 
         // Act
@@ -291,7 +291,7 @@ public class RevisionExportServiceTests
         var revision = new Revision(new DateTime(2024, 3, 15), "Large Release") { Id = 1 };
         for (int i = 1; i <= 1000; i++)
         {
-            revision.DocumentIds.Add(i);
+            revision.AddDocument(i);
         }
         var revisions = new List<Revision> { revision };
 
@@ -308,8 +308,8 @@ public class RevisionExportServiceTests
     [Test]
     public void ExportRevisions_WithInvalidFilePath_ReturnsFalse()
     {
-        // Arrange
-        var filePath = Path.Combine("Z:\\NonExistentDrive", "invalid.csv");
+        // Arrange - Use illegal characters in filename to ensure it fails
+        var filePath = Path.Combine(_testDirectory, "invalid<>|.csv");
         var revision = new Revision(new DateTime(2024, 3, 15), "Test") { Id = 1 };
         var revisions = new List<Revision> { revision };
 
@@ -321,21 +321,20 @@ public class RevisionExportServiceTests
     }
 
     [Test]
-    public void ExportRevisions_WithReadOnlyDirectory_ReturnsFalse()
+    public void ExportRevisions_WithReadOnlyFile_ReturnsFalse()
     {
-        // Arrange
-        var readOnlyDir = Path.Combine(_testDirectory, "readonly");
-        Directory.CreateDirectory(readOnlyDir);
-        var dirInfo = new DirectoryInfo(readOnlyDir);
-        dirInfo.Attributes = FileAttributes.ReadOnly;
+        // Arrange - Create a file and make it read-only
+        var filePath = Path.Combine(_testDirectory, "readonly.csv");
+        File.WriteAllText(filePath, "existing content");
+        var fileInfo = new FileInfo(filePath);
+        fileInfo.IsReadOnly = true;
 
-        var filePath = Path.Combine(readOnlyDir, "test.csv");
         var revision = new Revision(new DateTime(2024, 3, 15), "Test") { Id = 1 };
         var revisions = new List<Revision> { revision };
 
         try
         {
-            // Act
+            // Act - Try to overwrite the read-only file
             var result = _service.ExportRevisions(filePath, revisions);
 
             // Assert
@@ -343,7 +342,8 @@ public class RevisionExportServiceTests
         }
         finally
         {
-            dirInfo.Attributes = FileAttributes.Normal;
+            // Clean up - remove read-only attribute
+            fileInfo.IsReadOnly = false;
         }
     }
 
@@ -355,7 +355,7 @@ public class RevisionExportServiceTests
         File.WriteAllText(filePath, "Old content");
 
         var revision = new Revision(new DateTime(2024, 3, 15), "New Release") { Id = 1 };
-        revision.DocumentIds.Add(101);
+        revision.AddDocument(101);
         var revisions = new List<Revision> { revision };
 
         // Act
@@ -379,7 +379,7 @@ public class RevisionExportServiceTests
         // Arrange
         var filePath = Path.Combine(_testDirectory, "special_chars.csv");
         var revision = new Revision(new DateTime(2024, 3, 15), "Release #1 - 100% complete & verified!") { Id = 1 };
-        revision.DocumentIds.Add(101);
+        revision.AddDocument(101);
         var revisions = new List<Revision> { revision };
 
         // Act
@@ -409,7 +409,7 @@ public class RevisionExportServiceTests
         for (int i = 1; i <= 100; i++)
         {
             var revision = new Revision(new DateTime(2024, 1, 1).AddDays(i), $"Release {i}") { Id = i };
-            revision.DocumentIds.Add(i * 10);
+            revision.AddDocument(i * 10);
             revisions.Add(revision);
         }
 
@@ -466,7 +466,7 @@ public class RevisionExportServiceTests
         var filePath = Path.Combine(_testDirectory, "long_description.csv");
         var longDescription = new string('A', 1000);
         var revision = new Revision(new DateTime(2024, 3, 15), longDescription) { Id = 1 };
-        revision.DocumentIds.Add(101);
+        revision.AddDocument(101);
         var revisions = new List<Revision> { revision };
 
         // Act
@@ -497,7 +497,7 @@ public class RevisionExportServiceTests
         // Arrange
         var filePath = Path.Combine(_testDirectory, "empty_description.csv");
         var revision = new Revision(new DateTime(2024, 3, 15), string.Empty) { Id = 1 };
-        revision.DocumentIds.Add(101);
+        revision.AddDocument(101);
         var revisions = new List<Revision> { revision };
 
         // Act
@@ -516,13 +516,13 @@ public class RevisionExportServiceTests
         // Arrange
         var filePath = Path.Combine(_testDirectory, "mixed_states.csv");
         var revision1 = new Revision(new DateTime(2024, 1, 15), "With Documents") { Id = 1 };
-        revision1.DocumentIds.Add(101);
-        revision1.DocumentIds.Add(102);
+        revision1.AddDocument(101);
+        revision1.AddDocument(102);
 
         var revision2 = new Revision(new DateTime(2024, 2, 15), null) { Id = 2 };
 
         var revision3 = new Revision(new DateTime(2024, 3, 15), string.Empty) { Id = 3 };
-        revision3.DocumentIds.Add(301);
+        revision3.AddDocument(301);
 
         var revisions = new List<Revision> { revision1, revision2, revision3 };
 

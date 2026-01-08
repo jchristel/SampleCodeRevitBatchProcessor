@@ -550,10 +550,14 @@ public class RevisionImportServiceTests
     [Test]
     public async Task ImportRevisionsAsync_WithMalformedCsv_ReturnsFailure()
     {
-        // Arrange
+        // Arrange - Create a CSV with header but malformed data that will cause parsing errors
         var filePath = Path.Combine(_testDirectory, "malformed.csv");
-        var csvContent = "This is not a valid CSV file";
+        var csvContent = "Id,Revision Date,Description\r\n" +
+                        "1,not-a-date,Description\r\n"; // Invalid date format will cause error
         await File.WriteAllTextAsync(filePath, csvContent);
+
+        _mockRevisionRepository.Setup(x => x.GetRevisionsByDateAsync(It.IsAny<DateTime>()))
+            .ReturnsAsync(new List<Revision>());
 
         // Act
         var result = await _service.ImportRevisionsAsync(filePath);
@@ -563,6 +567,7 @@ public class RevisionImportServiceTests
         {
             Assert.That(result.IsImportSuccessful, Is.False);
             Assert.That(result.HasErrors, Is.True);
+            Assert.That(result.Errors[0], Does.Contain("Row 2"));
         });
     }
 
@@ -599,9 +604,11 @@ public class RevisionImportServiceTests
         var filePath = Path.Combine(_testDirectory, "many_revisions.csv");
         var sb = new System.Text.StringBuilder();
         sb.AppendLine("Id,Revision Date,Description,Document Count");
-        for (int i = 1; i <= 100; i++)
+        var startDate = new DateTime(2024, 1, 1);
+        for (int i = 0; i < 100; i++)
         {
-            sb.AppendLine($"new,2024-01-{i:D2},Release {i},0");
+            var date = startDate.AddDays(i);
+            sb.AppendLine($"new,{date:yyyy-MM-dd},Release {i + 1},0");
         }
         await File.WriteAllTextAsync(filePath, sb.ToString());
 

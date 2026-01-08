@@ -66,8 +66,8 @@ public class MetaDataMapperAconexTests
 
         _mapper.AddMapper(metaMap1);
 
-        // MetaMapperDuplicateException is internal, so we test for generic Exception
-        var ex = Assert.Throws<Exception>(() => _mapper.AddMapper(metaMap2));
+        // MetaMapperDuplicateException is internal, so we use Catch to capture any exception
+        var ex = Assert.Catch(() => _mapper.AddMapper(metaMap2));
         Assert.That(ex.GetType().Name, Is.EqualTo("MetaMapperDuplicateException"));
     }
 

@@ -19,7 +19,8 @@ using NUnit.Framework;
 using duHastNet.DocManager.Core.Services;
 using duHastNet.DocManager.Core.Models.Results;
 
-namespace duHastNet.DocManager.Core.Tests.Services;
+namespace duHastNet.DocManager.Core.Tests.Services
+{
 
 [TestFixture]
 public class SettingsServiceTests
@@ -396,11 +397,19 @@ public class SettingsServiceTests
         var testObject = new TestSettings { Name = "Backup", Value = 999 };
         var filename = "corrupted.json";
 
+        // First save creates the file
+        await _service.SaveAsync(testObject, filename);
+        
+        // Second save creates a backup of the first save
         await _service.SaveAsync(testObject, filename);
 
         var filePath = _service.GetSettingsPath(filename);
         var backupPath = filePath + ".bak";
 
+        // Verify backup was created
+        Assert.That(File.Exists(backupPath), Is.True, "Backup file should exist after second save");
+
+        // Corrupt the main file
         await File.WriteAllTextAsync(filePath, "{ corrupted json }");
 
         // Act
@@ -701,4 +710,5 @@ public class SettingsServiceTests
     }
 
     #endregion
+}
 }

@@ -22,7 +22,6 @@ The Database Connection section in the Settings view manages your project's data
 **Requirements:**
 - Must be a complete file path (not just a folder)
 - File extension should be `.db` or `.sqlite`
-- Directory must exist (or will be created when you create a new database)
 - You must have read/write access to the location
 
 **Usage Notes:**
@@ -41,6 +40,7 @@ The Database Connection section in the Settings view manages your project's data
 - Shows database files (*.db), SQLite files (*.sqlite), and all files
 - Available unless the application is busy with another operation
 - After selecting a file, the path appears in the Database Path field
+- This does not automatically connect to the database. Refer below
 
 ### Connect Button
 
@@ -59,7 +59,7 @@ The Database Connection section in the Settings view manages your project's data
 3. Loads all documents and revisions into memory
 4. Enables the Import/Export buttons
 5. Makes the Custom Fields section available
-6. Shows a success message
+6. Shows a success message or failure message if an error occurred.
 
 **Success Indicators:**
 - Import Documents and Export Documents buttons become active
@@ -116,7 +116,7 @@ All import and export operations require that you're connected to a database. Th
 #### Include Full Revision History (Checked)
 
 **What This Does:**
-- Exports every document for every revision, even if a document wasn't part of that revision
+- Exports every revision for every document as 2 cells: revision value, revision id, a revision not used on a document is represented through two empty cell
 - Creates a complete grid showing which documents were in which revisions
 - Produces larger CSV files with many blank cells
 - Gives you a complete picture of your document history
@@ -127,7 +127,7 @@ All import and export operations require that you're connected to a database. Th
 - You're exporting to a system that expects a full grid
 - You want comprehensive revision tracking
 
-**Example:** If you have 100 documents and 10 revisions, the export will create up to 1,000 rows (one for each document in each revision). Many cells will be blank where a document wasn't included in a particular revision.
+**Example:** If you have 100 documents and 10 revisions, the export will create 100 rows (one for each document) and 20 revision columns (2 per revision). Many cells will be blank where a document wasn't included in a particular revision.
 
 #### Revision History Only (Unchecked - Default)
 

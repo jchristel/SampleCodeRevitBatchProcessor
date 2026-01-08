@@ -80,7 +80,6 @@ These settings specify the directories used for document processing and archivin
 - Use the Browse button to select the folder location
 - If you see an error tooltip, the folder doesn't exist or isn't accessible
 - The application checks this folder for new documents to process
-- Ensure this folder has sufficient space for incoming documents
 
 ### Archive Folder Path
 
@@ -98,13 +97,13 @@ These settings specify the directories used for document processing and archivin
 - You must have read and write access to the folder
 - Path must be a valid folder location
 - Can be a local drive or network path
-- Should have sufficient storage for archived documents
 
 **Usage Notes:**
 - Use the Browse button to select the folder location
 - If you see an error tooltip, the folder doesn't exist or isn't accessible
 - Archived documents are moved here automatically during the merge process
 - Keep this folder backed up as it contains historical document versions
+- a current date stamp is attached to a file name if a file gets archived multiple times
 
 ---
 

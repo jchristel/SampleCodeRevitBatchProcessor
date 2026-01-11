@@ -44,6 +44,14 @@ duHast.Utilities.console\_out module
    :undoc-members:
    :show-inheritance:
 
+duHast.Utilities.date\_parse module
+-----------------------------------
+
+.. automodule:: duHast.Utilities.date_parse
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Utilities.date\_stamps module
 ------------------------------------
 

@@ -135,6 +135,14 @@ duHast.Revit.Common.parameter\_grouping module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Common.parameter\_project module
+---------------------------------------------
+
+.. automodule:: duHast.Revit.Common.parameter_project
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Common.parameter\_set\_utils module
 ------------------------------------------------
 

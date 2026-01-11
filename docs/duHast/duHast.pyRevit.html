@@ -276,6 +276,9 @@
 <span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.net_dll_loader.</span></span><span class="sig-name descname"><span class="pre">load_net_dll_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dlls_to_load</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.net_dll_loader.load_net_dll_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads dlls from the bin folder of the duHast extension.
 Useful if a dll is not loaded through the startup script of a pyRevit extension.</p>
+<p>expects the bin folder to be in the sys.path
+which means it needs to be located in the root folder of the extension:
+YourExtension.extensionbin</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dlls_to_load</strong> (<em>list</em>) – List of dlls to load.</p>

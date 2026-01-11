@@ -504,6 +504,26 @@ On exception (handled by optimizer itself!):
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters.get_shared_parameter_by_guid">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters.</span></span><span class="sig-name descname"><span class="pre">get_shared_parameter_by_guid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters.get_shared_parameter_by_guid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a shared parameter in a model by GUID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>guid</strong> (<em>str</em>) – The GUID of the shared parameter.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A shared parameter element if found, otherwise None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.SharedParameterElement</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters.get_all_shared_parameters_from_file">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters.</span></span><span class="sig-name descname"><span class="pre">get_all_shared_parameters_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shared_param_file_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters.get_all_shared_parameters_from_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all the shared parameter definitions from a shared parameter file. Can

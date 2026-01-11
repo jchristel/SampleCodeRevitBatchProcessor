@@ -4,6 +4,14 @@ duHast.Revit.Views.Export package
 Submodules
 ----------
 
+duHast.Revit.Views.Export.filters\_to\_storage module
+-----------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.Export.filters_to_storage
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Views.Export.sheets\_to\_data module
 -------------------------------------------------
 

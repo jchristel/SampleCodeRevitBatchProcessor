@@ -1,6 +1,6 @@
 [project]
 name = "duhast"
-version = "1.2.1"
+version = "1.2.2+net48"
 description = "Sample code for Revit batch processing and the Revit API."
 authors = [{name = "duhast", email = "jan.r.christel@gmail.com"}]
 readme = "README.md"
@@ -25,7 +25,7 @@ duHast = ["lib/*.dll"]
 license-files = []
 
 [tool.bumpver]
-current_version = "1.2.1"
+current_version = "1.2.2+net48"
 version_pattern = "MAJOR.MINOR.PATCH"
 commit_message = "Bump version {old_version} -> {new_version}"
 commit = true

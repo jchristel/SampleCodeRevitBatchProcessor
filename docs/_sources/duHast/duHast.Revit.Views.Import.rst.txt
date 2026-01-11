@@ -1,0 +1,29 @@
+duHast.Revit.Views.Import package
+=================================
+
+Submodules
+----------
+
+duHast.Revit.Views.Import.create\_filter\_from\_storage module
+--------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.Import.create_filter_from_storage
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Views.Import.read\_filter\_storage module
+------------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.Import.read_filter_storage
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.Views.Import
+   :members:
+   :undoc-members:
+   :show-inheritance:

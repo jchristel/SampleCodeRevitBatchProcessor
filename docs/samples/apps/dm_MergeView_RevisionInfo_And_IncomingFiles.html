@@ -1,0 +1,738 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Merge View - User Guide &#8212; Sample Code Revit Batch Processor 1.1.17-test documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.17-test documentation" href="../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.17-test documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>Merge View - User Guide</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Samples</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/samples/apps/dm_MergeView_RevisionInfo_And_IncomingFiles.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="merge-view-user-guide">
+<h1>Merge View - User Guide<a class="headerlink" href="#merge-view-user-guide" title="Permalink to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
+<p>The Merge View is where you process incoming documents. This is the main screen you’ll use daily to:</p>
+<ul class="simple">
+<li><p>Match incoming files to documents in your database</p></li>
+<li><p>Record revision information</p></li>
+<li><p>Review matching status before processing</p></li>
+<li><p>Merge files into their final locations</p></li>
+</ul>
+<p>Think of this view as your document processing workbench. All the settings you configured earlier come together here to help you quickly process batches of documents.</p>
+<p>This guide covers how to use the Revision Information section and understand the Document Matching Results.</p>
+</section>
+<hr class="docutils" />
+<section id="recording-revision-information">
+<h2>Recording Revision Information<a class="headerlink" href="#recording-revision-information" title="Permalink to this heading">¶</a></h2>
+<p>Before processing documents, you need to provide two pieces of information about the revision batch:</p>
+<section id="revision-date">
+<h3>Revision Date<a class="headerlink" href="#revision-date" title="Permalink to this heading">¶</a></h3>
+<p><strong>What it is:</strong> The official date for this revision batch.</p>
+<p><strong>Why it matters:</strong> This date is saved with each document’s revision history. It might be:</p>
+<ul class="simple">
+<li><p>The date you issued drawings for construction</p></li>
+<li><p>The date documents were submitted to the client</p></li>
+<li><p>The date of a planning submission</p></li>
+<li><p>Any other significant milestone date</p></li>
+</ul>
+<p><strong>How to use it:</strong></p>
+<ol class="arabic simple">
+<li><p>Click on the date picker control</p></li>
+<li><p>A calendar will pop up</p></li>
+<li><p>Navigate to the month and year you need</p></li>
+<li><p>Click the date to select it</p></li>
+<li><p>The selected date will appear in the control</p></li>
+</ol>
+<p><strong>Important:</strong> You must select a date before you can merge documents. The “Merge Documents” button won’t work until you’ve chosen a date.</p>
+<p><strong>Tips:</strong></p>
+<ul class="simple">
+<li><p>Use the date from your project transmittal or cover sheet</p></li>
+<li><p>Be consistent - decide if you’re using issue dates, approval dates, etc., and stick with it</p></li>
+<li><p>The date format shown depends on your computer’s regional settings</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="revision-description">
+<h3>Revision Description<a class="headerlink" href="#revision-description" title="Permalink to this heading">¶</a></h3>
+<p><strong>What it is:</strong> A brief description explaining what this revision is for.</p>
+<p><strong>Why it matters:</strong> This helps you (and anyone else) understand the purpose of the revision when looking at document history later. Good descriptions make it easy to find specific revisions.</p>
+<p><strong>How to use it:</strong></p>
+<ol class="arabic simple">
+<li><p>Click in the text box</p></li>
+<li><p>Start typing your description</p></li>
+<li><p>As you type, you’ll see suggestions appear below the box</p></li>
+<li><p>These suggestions come from descriptions you’ve used before</p></li>
+<li><p>Click a suggestion to use it, or keep typing your own</p></li>
+</ol>
+<p><strong>The Smart Suggestions Feature:</strong></p>
+<p>As soon as you start typing, the application looks through your previous revision descriptions and shows you ones that start with what you’ve typed.</p>
+<p><strong>Example:</strong></p>
+<ul class="simple">
+<li><p>You type: “Issued”</p></li>
+<li><p>You see suggestions like:</p>
+<ul>
+<li><p>Issued for Construction</p></li>
+<li><p>Issued for Tender</p></li>
+<li><p>Issued for Approval</p></li>
+</ul>
+</li>
+<li><p>Click one to use it, or keep typing your own description</p></li>
+</ul>
+<p><strong>Why this helps:</strong></p>
+<ul class="simple">
+<li><p>Keeps your descriptions consistent</p></li>
+<li><p>Saves typing time</p></li>
+<li><p>Reduces typos</p></li>
+<li><p>Helps you remember the exact wording you used before</p></li>
+</ul>
+<p><strong>Important:</strong> You must enter a description before you can merge documents. The “Merge Documents” button won’t work until you’ve provided one.</p>
+<p><strong>Good Examples:</strong></p>
+<ul class="simple">
+<li><p>“Issued for Construction”</p></li>
+<li><p>“Client Comments Incorporated”</p></li>
+<li><p>“Planning Submission”</p></li>
+<li><p>“Reissued - Contractor Queries Answered”</p></li>
+</ul>
+<p><strong>Avoid vague descriptions like:</strong></p>
+<ul class="simple">
+<li><p>“Updates” (What updates?)</p></li>
+<li><p>“Changes” (What changed?)</p></li>
+<li><p>“Version 2” (Why version 2?)</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="ready-to-merge">
+<h3>Ready to Merge?<a class="headerlink" href="#ready-to-merge" title="Permalink to this heading">¶</a></h3>
+<p>The “Merge Documents” button will only become active (clickable) when you’ve provided both pieces of information:</p>
+<p>✓ <strong>Revision Date</strong> - Selected from the date picker
+✓ <strong>Revision Description</strong> - Entered in the text box</p>
+<p>If the button is grayed out, check that you’ve filled in both fields.</p>
+<p><strong>Note:</strong> The button also requires that your database is connected and the system isn’t busy processing something else.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="understanding-your-document-matching-results">
+<h2>Understanding Your Document Matching Results<a class="headerlink" href="#understanding-your-document-matching-results" title="Permalink to this heading">¶</a></h2>
+<p>After the application scans your incoming folder, it shows you a list of all files it found and whether it could match each one to a document in your database. This section helps you understand what you’re looking at and what actions you might need to take.</p>
+<p>The results appear in a table in the middle of the screen, with a summary bar at the top and action buttons at the bottom.</p>
+<hr class="docutils" />
+<section id="the-summary-bar-at-the-top">
+<h3>The Summary Bar (At the Top)<a class="headerlink" href="#the-summary-bar-at-the-top" title="Permalink to this heading">¶</a></h3>
+<p>At the top of the results table, you’ll see a summary that gives you a quick overview:</p>
+<p><strong>Total:</strong> How many files were found in your incoming folder</p>
+<p><strong>Matched:</strong> How many files were successfully matched and are ready to process (shown in green)</p>
+<p><strong>Warnings:</strong> How many files have minor issues but can still be processed (shown in orange)</p>
+<p><strong>No Match:</strong> How many files couldn’t be matched or have errors that need fixing (shown in red)</p>
+<p><strong>Example:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Total</span><span class="p">:</span> <span class="mi">25</span> <span class="o">|</span> <span class="n">Matched</span><span class="p">:</span> <span class="mi">18</span> <span class="o">|</span> <span class="n">Warnings</span><span class="p">:</span> <span class="mi">3</span> <span class="o">|</span> <span class="n">No</span> <span class="n">Match</span><span class="p">:</span> <span class="mi">4</span>
+</pre></div>
+</div>
+<p>This tells you that out of 25 files, 18 are good to go, 3 have warnings you should be aware of, and 4 need attention before they can be processed.</p>
+</section>
+<hr class="docutils" />
+<section id="the-results-table">
+<h3>The Results Table<a class="headerlink" href="#the-results-table" title="Permalink to this heading">¶</a></h3>
+<p>Below the summary, you’ll see a table with one row for each file found in your incoming folder. The table has alternating white and light gray rows to make it easier to read.</p>
+<p>Here’s what each column tells you:</p>
+<section id="status-colored-circle">
+<h4>Status (Colored Circle)<a class="headerlink" href="#status-colored-circle" title="Permalink to this heading">¶</a></h4>
+<p>This column shows a colored circle that quickly tells you the status of each file:</p>
+<p><strong>🟢 Green Circle - All Good</strong></p>
+<ul class="simple">
+<li><p>The file was successfully matched to a document in your database</p></li>
+<li><p>The revision is the next logical step from what’s currently in the database</p></li>
+<li><p>You can merge this file without any concerns</p></li>
+<li><p>Hover your mouse over the circle to see more details</p></li>
+</ul>
+<p><strong>🟠 Orange Circle - Warning</strong></p>
+<ul class="simple">
+<li><p>The file was matched to a document, but there’s something to be aware of</p></li>
+<li><p>Usually means the revision isn’t sequential (for example, going from revision B to revision D, skipping C)</p></li>
+<li><p>You CAN still merge these files - the warning just alerts you to check if this is intentional</p></li>
+<li><p>Hover over the circle to see exactly what the issue is</p></li>
+</ul>
+<p><strong>🔴 Red Circle - Error (Needs Attention)</strong></p>
+<ul class="simple">
+<li><p>Something is preventing this file from being processed</p></li>
+<li><p>There are three types of red circle errors:</p></li>
+</ul>
+<ol class="arabic simple">
+<li><p><strong>Missing Revision Information</strong></p>
+<ul class="simple">
+<li><p>The application couldn’t find revision information in the filename</p></li>
+<li><p>Check that your filename includes the revision markers you configured in Settings</p></li>
+<li><p>Example error: “No revision information found in filename”</p></li>
+</ul>
+</li>
+<li><p><strong>Duplicate Document</strong></p>
+<ul class="simple">
+<li><p>You have multiple files of the same type trying to match the same document</p></li>
+<li><p>For example: Two PDFs both trying to match document ABC-001</p></li>
+<li><p>Remove the duplicate or process files separately</p></li>
+<li><p>The error message will list all the duplicate filenames</p></li>
+</ul>
+</li>
+<li><p><strong>No Match Found</strong></p>
+<ul class="simple">
+<li><p>The application couldn’t find a matching document in your database</p></li>
+<li><p>The document number in the filename doesn’t exist in your database</p></li>
+<li><p>Use the “Add New Documents” button to add it, or check if the filename format is correct</p></li>
+</ul>
+</li>
+</ol>
+<p><strong>Tip:</strong> Always hover your mouse over the colored circle to see the full explanation.</p>
+</section>
+<section id="incoming-file">
+<h4>Incoming File<a class="headerlink" href="#incoming-file" title="Permalink to this heading">¶</a></h4>
+<p>Shows the name of the file in your incoming folder.</p>
+<p><strong>Example:</strong> <code class="docutils literal notranslate"><span class="pre">ABC-001-Rev-A.pdf</span></code></p>
+<p>This is just the filename, not the full path to where it’s stored.</p>
+</section>
+<section id="incoming-rev">
+<h4>Incoming Rev<a class="headerlink" href="#incoming-rev" title="Permalink to this heading">¶</a></h4>
+<p>Shows the revision code that was extracted from the filename.</p>
+<p><strong>Examples:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">A</span></code>, <code class="docutils literal notranslate"><span class="pre">B</span></code>, <code class="docutils literal notranslate"><span class="pre">C</span></code> (letter revisions)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">01</span></code>, <code class="docutils literal notranslate"><span class="pre">02</span></code>, <code class="docutils literal notranslate"><span class="pre">03</span></code> (number revisions)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">P01</span></code>, <code class="docutils literal notranslate"><span class="pre">P02</span></code> (prefixed revisions)</p></li>
+</ul>
+<p><strong>If blank:</strong> The application couldn’t find revision information in the filename, which will cause a red error status.</p>
+</section>
+<section id="matched-doc">
+<h4>Matched Doc<a class="headerlink" href="#matched-doc" title="Permalink to this heading">¶</a></h4>
+<p>Shows the document number from your database that the file matched to.</p>
+<p><strong>Example:</strong> <code class="docutils literal notranslate"><span class="pre">ABC-001</span></code></p>
+<p><strong>If blank:</strong> No matching document was found in your database (red “No Match Found” error).</p>
+</section>
+<section id="matched-doc-name">
+<h4>Matched Doc Name<a class="headerlink" href="#matched-doc-name" title="Permalink to this heading">¶</a></h4>
+<p>Shows the document name/title from your database. This helps you confirm the right document was matched.</p>
+<p><strong>Example:</strong> <code class="docutils literal notranslate"><span class="pre">Ground</span> <span class="pre">Floor</span> <span class="pre">Plan</span></code></p>
+<p><strong>If blank:</strong> No match was found.</p>
+</section>
+<section id="current-rev">
+<h4>Current Rev<a class="headerlink" href="#current-rev" title="Permalink to this heading">¶</a></h4>
+<p>Shows the current revision of the matched document in your database.</p>
+<p><strong>Example:</strong> If the database shows revision <code class="docutils literal notranslate"><span class="pre">B</span></code> and your incoming file is revision <code class="docutils literal notranslate"><span class="pre">C</span></code>, you’ll see:</p>
+<ul class="simple">
+<li><p>Incoming Rev: <code class="docutils literal notranslate"><span class="pre">C</span></code></p></li>
+<li><p>Current Rev: <code class="docutils literal notranslate"><span class="pre">B</span></code></p></li>
+<li><p>Status: Green (C follows B)</p></li>
+</ul>
+<p>If your incoming file skipped a revision (like going from <code class="docutils literal notranslate"><span class="pre">B</span></code> to <code class="docutils literal notranslate"><span class="pre">D</span></code>), you’ll see an orange warning.</p>
+</section>
+<section id="status-message">
+<h4>Status Message<a class="headerlink" href="#status-message" title="Permalink to this heading">¶</a></h4>
+<p>A plain-English explanation of what’s happening with this file.</p>
+<p><strong>Examples you might see:</strong></p>
+<p><strong>Green Status:</strong></p>
+<ul class="simple">
+<li><p>“Match OK - Sequential revision”</p></li>
+<li><p>“Match found”</p></li>
+</ul>
+<p><strong>Orange Warning:</strong></p>
+<ul class="simple">
+<li><p>“Warning - Revision not sequential (Current: A, Incoming: C)”</p>
+<ul>
+<li><p>This means the database shows revision A, but your incoming file is revision C (skipping B)</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Red Errors:</strong></p>
+<ul class="simple">
+<li><p>“ERROR - No revision information found in filename (blocks merge)”</p>
+<ul>
+<li><p>Check your filename format and Settings configuration</p></li>
+</ul>
+</li>
+<li><p>“ERROR - Duplicate document (blocks merge). Same file type matched to document ABC-001. Duplicates: ABC-001-A.pdf, ABC-001-A-Copy.pdf”</p>
+<ul>
+<li><p>Multiple files are trying to match the same document - remove duplicates</p></li>
+</ul>
+</li>
+<li><p>“No match found”</p>
+<ul>
+<li><p>This document number isn’t in your database</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="action-buttons-at-the-bottom">
+<h3>Action Buttons (At the Bottom)<a class="headerlink" href="#action-buttons-at-the-bottom" title="Permalink to this heading">¶</a></h3>
+<p>At the bottom of the results table, you’ll find two buttons:</p>
+<section id="refresh-button">
+<h4>Refresh Button<a class="headerlink" href="#refresh-button" title="Permalink to this heading">¶</a></h4>
+<p><strong>What it does:</strong> Scans your incoming folder again and updates all the matching results.</p>
+<p><strong>When to use it:</strong></p>
+<ul class="simple">
+<li><p>After you’ve added or removed files from your incoming folder</p></li>
+<li><p>After you’ve changed settings (like revision markers or filing rules)</p></li>
+<li><p>After you’ve added documents to your database</p></li>
+<li><p>When you want to see the current state of files</p></li>
+</ul>
+<p><strong>How it works:</strong></p>
+<ol class="arabic simple">
+<li><p>Click the Refresh button</p></li>
+<li><p>The application scans your incoming folder</p></li>
+<li><p>It matches each file against your current database</p></li>
+<li><p>The table updates with the latest results</p></li>
+<li><p>You’ll see a message at the top summarizing the results</p></li>
+</ol>
+<p><strong>What gets checked:</strong></p>
+<ul class="simple">
+<li><p>Which files are in the incoming folder</p></li>
+<li><p>Whether each file matches a document in the database</p></li>
+<li><p>Whether revisions are sequential</p></li>
+<li><p>Whether there are any duplicate files</p></li>
+</ul>
+<p><strong>How long it takes:</strong> Usually just a few seconds, depending on how many files you have.</p>
+</section>
+<section id="add-new-documents-button">
+<h4>Add New Documents Button<a class="headerlink" href="#add-new-documents-button" title="Permalink to this heading">¶</a></h4>
+<p>This button opens a dialog that helps you add unmatched files to your database as new documents. It’s covered in a separate section of the documentation.</p>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="understanding-status-priority">
+<h2>Understanding Status Priority<a class="headerlink" href="#understanding-status-priority" title="Permalink to this heading">¶</a></h2>
+<p>When the application checks a file, it can find multiple issues. But it only shows you one status per file - the most important issue.</p>
+<p>Here’s the order of importance (most serious first):</p>
+<ol class="arabic simple">
+<li><p><strong>🔴 Missing Revision</strong> (Most Serious)</p>
+<ul class="simple">
+<li><p>If a file has no revision information, this error shows up first</p></li>
+<li><p>Even if the file matches a document, the missing revision is the critical problem</p></li>
+</ul>
+</li>
+<li><p><strong>🔴 Duplicate Document</strong></p>
+<ul class="simple">
+<li><p>If you have multiple files of the same type for the same document</p></li>
+<li><p>Only checked if the file has revision information</p></li>
+</ul>
+</li>
+<li><p><strong>🔴 No Match</strong></p>
+<ul class="simple">
+<li><p>The document number isn’t in your database</p></li>
+</ul>
+</li>
+<li><p><strong>🟠 Revision Not Sequential</strong></p>
+<ul class="simple">
+<li><p>The file matches, but the revision skips a number</p></li>
+<li><p>This is just a warning - you can still merge</p></li>
+</ul>
+</li>
+<li><p><strong>🟢 All Good</strong> (Least Serious)</p>
+<ul class="simple">
+<li><p>Everything checks out fine</p></li>
+</ul>
+</li>
+</ol>
+<section id="why-this-matters">
+<h3>Why This Matters<a class="headerlink" href="#why-this-matters" title="Permalink to this heading">¶</a></h3>
+<p><strong>Example:</strong> Imagine you have a file called <code class="docutils literal notranslate"><span class="pre">ABC-001.pdf</span></code> (no revision in the name).</p>
+<ul class="simple">
+<li><p>The document ABC-001 exists in your database</p></li>
+<li><p>But you’ll still see a red “Missing Revision” error</p></li>
+<li><p>That’s because missing revision is more important than whether it matched</p></li>
+</ul>
+<p><strong>Another Example:</strong> You have two files: <code class="docutils literal notranslate"><span class="pre">ABC-001-Rev-A.pdf</span></code> and <code class="docutils literal notranslate"><span class="pre">ABC-001-Rev-A-Copy.pdf</span></code></p>
+<ul class="simple">
+<li><p>Both are PDFs trying to match document ABC-001</p></li>
+<li><p>You’ll see a red “Duplicate Document” error</p></li>
+<li><p>The application can’t tell which one is the right file to use</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="how-revision-sequencing-works">
+<h2>How Revision Sequencing Works<a class="headerlink" href="#how-revision-sequencing-works" title="Permalink to this heading">¶</a></h2>
+<p>The application checks if your incoming revision is the “next” logical revision after what’s currently in the database.</p>
+<section id="for-letter-revisions-a-b-c">
+<h3>For Letter Revisions (A, B, C…)<a class="headerlink" href="#for-letter-revisions-a-b-c" title="Permalink to this heading">¶</a></h3>
+<p><strong>Sequential means:</strong> The next letter in the alphabet</p>
+<p><strong>Examples:</strong></p>
+<ul class="simple">
+<li><p>Current: A, Incoming: B → ✓ Sequential (green)</p></li>
+<li><p>Current: A, Incoming: C → ✗ Not Sequential (orange warning)</p></li>
+<li><p>Current: B, Incoming: C → ✓ Sequential (green)</p></li>
+</ul>
+</section>
+<section id="for-number-revisions-1-2-3-or-01-02-03">
+<h3>For Number Revisions (1, 2, 3… or 01, 02, 03…)<a class="headerlink" href="#for-number-revisions-1-2-3-or-01-02-03" title="Permalink to this heading">¶</a></h3>
+<p><strong>Sequential means:</strong> The next number in sequence</p>
+<p><strong>Examples:</strong></p>
+<ul class="simple">
+<li><p>Current: 5, Incoming: 6 → ✓ Sequential (green)</p></li>
+<li><p>Current: 5, Incoming: 7 → ✗ Not Sequential (orange warning)</p></li>
+<li><p>Current: 01, Incoming: 02 → ✓ Sequential (green)</p></li>
+</ul>
+</section>
+<section id="for-other-revision-schemes-p01-rev-a-etc">
+<h3>For Other Revision Schemes (P01, Rev-A, etc.)<a class="headerlink" href="#for-other-revision-schemes-p01-rev-a-etc" title="Permalink to this heading">¶</a></h3>
+<p>For more complex revision numbering, the application currently accepts any incoming revision without a warning. This can be customized based on your specific needs.</p>
+</section>
+<section id="if-the-database-has-no-current-revision">
+<h3>If the Database Has No Current Revision<a class="headerlink" href="#if-the-database-has-no-current-revision" title="Permalink to this heading">¶</a></h3>
+<p>If a document in your database doesn’t have a revision yet (the revision field is blank), any incoming revision is accepted as OK.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="when-does-the-list-update">
+<h2>When Does the List Update?<a class="headerlink" href="#when-does-the-list-update" title="Permalink to this heading">¶</a></h2>
+<p>The list of files and their matching status updates automatically in these situations:</p>
+<p><strong>You click the Refresh button:</strong> This is the manual way to update the list whenever you want.</p>
+<p><strong>After you add new documents:</strong> When you use the “Add New Documents” button and successfully add documents to the database, the list automatically refreshes to show you the new matches.</p>
+<p><strong>After you merge documents:</strong> Once the merge process completes, the list refreshes to show you which files are still in the incoming folder.</p>
+<p><strong>Tip:</strong> If you add or remove files from your incoming folder outside the application (using Windows Explorer, for example), click the Refresh button to see the changes.</p>
+</section>
+<hr class="docutils" />
+<section id="working-with-the-results">
+<h2>Working with the Results<a class="headerlink" href="#working-with-the-results" title="Permalink to this heading">¶</a></h2>
+<section id="getting-more-information">
+<h3>Getting More Information<a class="headerlink" href="#getting-more-information" title="Permalink to this heading">¶</a></h3>
+<p><strong>Hover over colored circles:</strong> Move your mouse over any colored status circle to see a tooltip with detailed information about that file’s status.</p>
+<p><strong>Click a row:</strong> You can click on any row to select it. The row will be highlighted.</p>
+<p><strong>Scroll through results:</strong> If you have many files, use the scrollbar on the right or your mouse wheel to scroll through the list.</p>
+</section>
+<section id="what-you-can-do">
+<h3>What You Can Do<a class="headerlink" href="#what-you-can-do" title="Permalink to this heading">¶</a></h3>
+<p><strong>Review the results:</strong> Look through the list to see which files are ready (green), which have warnings (orange), and which need attention (red).</p>
+<p><strong>Fix issues:</strong> Based on what you see, you might need to:</p>
+<ul class="simple">
+<li><p>Remove duplicate files from your incoming folder</p></li>
+<li><p>Check that filenames have revision information</p></li>
+<li><p>Add missing documents to your database</p></li>
+</ul>
+<p><strong>Refresh when needed:</strong> After making changes, click the Refresh button to see updated results.</p>
+<p><strong>Add new documents:</strong> If you have files with “No match found,” you can add them to your database using the “Add New Documents” button.</p>
+<p><strong>Proceed with merge:</strong> Once you’re satisfied with the results and have entered revision information, click the “Merge Documents” button.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="messages-you-ll-see">
+<h2>Messages You’ll See<a class="headerlink" href="#messages-you-ll-see" title="Permalink to this heading">¶</a></h2>
+<p>At the top of the screen, you’ll see messages that tell you what’s happening:</p>
+<p><strong>Blue/Gray Messages:</strong> General information (auto-disappears after a few seconds)</p>
+<ul class="simple">
+<li><p>“Successfully matched 18 documents. 3 warnings.”</p></li>
+<li><p>“Refresh completed.”</p></li>
+</ul>
+<p><strong>Orange/Yellow Messages:</strong> Warnings that need your attention (stay visible longer)</p>
+<ul class="simple">
+<li><p>“Document matching completed with issues. 15 can be merged, 3 warnings. Errors: 2 missing revision, 1 duplicate, 4 no match.”</p></li>
+</ul>
+<p><strong>Red Messages:</strong> Errors that need to be fixed (stay visible until you dismiss them)</p>
+<ul class="simple">
+<li><p>“Error during document matching: [details of what went wrong]”</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="tips-for-success">
+<h2>Tips for Success<a class="headerlink" href="#tips-for-success" title="Permalink to this heading">¶</a></h2>
+<section id="before-you-start">
+<h3>Before You Start<a class="headerlink" href="#before-you-start" title="Permalink to this heading">¶</a></h3>
+<p><strong>Check Your Settings:</strong></p>
+<ul class="simple">
+<li><p>Make sure your incoming folder path is correct</p></li>
+<li><p>Verify your revision markers (prefix and suffix) match your file naming</p></li>
+<li><p>Confirm your filing rules are set up correctly</p></li>
+<li><p>Make sure all the file types you use are listed in supported file types</p></li>
+</ul>
+<p><strong>Check Your Database:</strong></p>
+<ul class="simple">
+<li><p>Ensure your database is connected</p></li>
+<li><p>Verify the documents in your database are up to date</p></li>
+</ul>
+</section>
+<section id="reading-the-results">
+<h3>Reading the Results<a class="headerlink" href="#reading-the-results" title="Permalink to this heading">¶</a></h3>
+<p><strong>Green Circles (All Good):</strong></p>
+<ul class="simple">
+<li><p>Double-check the matched document number is what you expect</p></li>
+<li><p>Verify the revision makes sense (going from A to B, 1 to 2, etc.)</p></li>
+<li><p>These files are ready to process</p></li>
+</ul>
+<p><strong>Orange Circles (Warning):</strong></p>
+<ul class="simple">
+<li><p>Read the warning message to understand what’s not sequential</p></li>
+<li><p>Decide if the revision jump is intentional (sometimes you skip revisions)</p></li>
+<li><p>These files CAN still be merged - the warning is just alerting you</p></li>
+<li><p>If it’s a mistake, you may want to fix it before merging</p></li>
+</ul>
+<p><strong>Red Circles (Error):</strong></p>
+<ul class="simple">
+<li><p><strong>Missing Revision:</strong> Check your filename includes the revision markers</p></li>
+<li><p><strong>Duplicate:</strong> Remove extra copies of files or rename them</p></li>
+<li><p><strong>No Match:</strong> Either add the document to your database or check if the filename is correct</p></li>
+</ul>
+</section>
+<section id="handling-common-situations">
+<h3>Handling Common Situations<a class="headerlink" href="#handling-common-situations" title="Permalink to this heading">¶</a></h3>
+<p><strong>Processing Many Files at Once:</strong></p>
+<ul class="simple">
+<li><p>Look at the summary numbers first to get an overview</p></li>
+<li><p>Focus on fixing red errors before anything else</p></li>
+<li><p>Deal with duplicates first, then missing revisions, then no matches</p></li>
+</ul>
+<p><strong>Frequent Orange Warnings:</strong></p>
+<ul class="simple">
+<li><p>If you often skip revisions (like going from A to C), this is normal</p></li>
+<li><p>The warnings are just making sure you’re aware</p></li>
+<li><p>You can still merge - just make sure it’s intentional</p></li>
+</ul>
+<p><strong>Lots of “No Match Found” Errors:</strong></p>
+<ul class="simple">
+<li><p>This usually means you have new documents that aren’t in your database yet</p></li>
+<li><p>Use the “Add New Documents” button to add them in a batch</p></li>
+<li><p>Or double-check that your filing rules are extracting document numbers correctly</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="troubleshooting-common-problems">
+<h2>Troubleshooting Common Problems<a class="headerlink" href="#troubleshooting-common-problems" title="Permalink to this heading">¶</a></h2>
+<section id="problem-no-files-showing-up">
+<h3>Problem: No files showing up<a class="headerlink" href="#problem-no-files-showing-up" title="Permalink to this heading">¶</a></h3>
+<p><strong>What you see:</strong> The table is empty, Total count shows 0</p>
+<p><strong>What to check:</strong></p>
+<ul class="simple">
+<li><p>Is your incoming folder path correct? (Check in Settings)</p></li>
+<li><p>Are there actually files in that folder?</p></li>
+<li><p>Do the files have file extensions you’ve set up as supported? (Check Settings)</p></li>
+<li><p>Can you open the folder in Windows Explorer?</p></li>
+</ul>
+</section>
+<section id="problem-everything-shows-no-match-found">
+<h3>Problem: Everything shows “No match found”<a class="headerlink" href="#problem-everything-shows-no-match-found" title="Permalink to this heading">¶</a></h3>
+<p><strong>What you see:</strong> All files have red circles with “No match found”</p>
+<p><strong>What to check:</strong></p>
+<ul class="simple">
+<li><p>Is your database connected?</p></li>
+<li><p>Does your database actually have documents in it?</p></li>
+<li><p>Are your filing rules extracting the document numbers correctly from filenames?</p></li>
+<li><p>Try testing with one file you know should match</p></li>
+</ul>
+</section>
+<section id="problem-everything-shows-missing-revision">
+<h3>Problem: Everything shows “Missing Revision”<a class="headerlink" href="#problem-everything-shows-missing-revision" title="Permalink to this heading">¶</a></h3>
+<p><strong>What you see:</strong> All files have red circles saying “ERROR - No revision information found”</p>
+<p><strong>What to check:</strong></p>
+<ul class="simple">
+<li><p>Do your filenames actually include revision information?</p></li>
+<li><p>Are the revision prefix and suffix in Settings correct?</p></li>
+<li><p>Does the prefix and suffix match exactly what’s in your filenames?</p></li>
+<li><p>Example: If your files look like <code class="docutils literal notranslate"><span class="pre">ABC-001-Rev-A.pdf</span></code>, your prefix should be <code class="docutils literal notranslate"><span class="pre">Rev-</span></code> and suffix should be something like <code class="docutils literal notranslate"><span class="pre">.pdf</span></code></p></li>
+</ul>
+</section>
+<section id="problem-many-duplicate-file-errors">
+<h3>Problem: Many duplicate file errors<a class="headerlink" href="#problem-many-duplicate-file-errors" title="Permalink to this heading">¶</a></h3>
+<p><strong>What you see:</strong> Multiple files showing “ERROR - Duplicate document”</p>
+<p><strong>What to check:</strong></p>
+<ul class="simple">
+<li><p>Do you have actual duplicate files in your incoming folder?</p></li>
+<li><p>Look for files with names like <code class="docutils literal notranslate"><span class="pre">Document(1).pdf</span></code> or <code class="docutils literal notranslate"><span class="pre">Document-Copy.pdf</span></code></p></li>
+<li><p>Remove or rename the duplicates</p></li>
+</ul>
+</section>
+<section id="problem-the-refresh-button-doesn-t-work">
+<h3>Problem: The Refresh button doesn’t work<a class="headerlink" href="#problem-the-refresh-button-doesn-t-work" title="Permalink to this heading">¶</a></h3>
+<p><strong>What you see:</strong> Nothing happens when you click Refresh</p>
+<p><strong>What to check:</strong></p>
+<ul class="simple">
+<li><p>Is the system busy? (The button might be grayed out)</p></li>
+<li><p>Is your database still connected?</p></li>
+<li><p>Look for error messages at the top of the screen</p></li>
+<li><p>Try closing and reopening the application</p></li>
+</ul>
+</section>
+<section id="problem-the-counts-don-t-add-up">
+<h3>Problem: The counts don’t add up<a class="headerlink" href="#problem-the-counts-don-t-add-up" title="Permalink to this heading">¶</a></h3>
+<p><strong>What you see:</strong> Matched + Warnings + No Match doesn’t equal Total</p>
+<p><strong>This is normal!</strong> The “No Match” count includes all the red errors (missing revision, duplicates, and actual no matches). Some categories overlap.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="how-long-does-refresh-take">
+<h2>How Long Does Refresh Take?<a class="headerlink" href="#how-long-does-refresh-take" title="Permalink to this heading">¶</a></h2>
+<p>The Refresh operation is usually pretty quick:</p>
+<ul class="simple">
+<li><p><strong>Few files (under 100):</strong> Less than a second</p></li>
+<li><p><strong>Medium batch (100-500):</strong> A few seconds</p></li>
+<li><p><strong>Large batch (500-1000):</strong> 5-15 seconds</p></li>
+<li><p><strong>Very large batch (over 1000):</strong> 15-30 seconds or more</p></li>
+</ul>
+<p><strong>What affects speed:</strong></p>
+<ul class="simple">
+<li><p>How many files are in your incoming folder</p></li>
+<li><p>How many documents are in your database</p></li>
+<li><p>How complex your filing rules are</p></li>
+</ul>
+<p><strong>Tip:</strong> Keep your incoming folder organized. After processing files, move them out or archive them so the folder doesn’t get too full.</p>
+</section>
+<hr class="docutils" />
+<section id="how-this-connects-to-other-features">
+<h2>How This Connects to Other Features<a class="headerlink" href="#how-this-connects-to-other-features" title="Permalink to this heading">¶</a></h2>
+<section id="settings-you-ve-already-configured">
+<h3>Settings You’ve Already Configured<a class="headerlink" href="#settings-you-ve-already-configured" title="Permalink to this heading">¶</a></h3>
+<p>Everything you see in the Merge View comes from settings you configured earlier:</p>
+<p><strong>From Current Folder Settings:</strong></p>
+<ul class="simple">
+<li><p><strong>Incoming Folder Path:</strong> Where the application looks for files</p></li>
+<li><p><strong>Revision Prefix/Suffix:</strong> How the application finds revision information in filenames</p></li>
+<li><p><strong>Filing Rules:</strong> How the application figures out document numbers from filenames</p></li>
+<li><p><strong>Supported File Types:</strong> Which files the application processes</p></li>
+</ul>
+<p><strong>From Database Settings:</strong></p>
+<ul class="simple">
+<li><p><strong>Documents:</strong> The list of documents that incoming files are matched against</p></li>
+<li><p><strong>Current Revisions:</strong> What the incoming revisions are compared to</p></li>
+</ul>
+</section>
+<section id="what-happens-when-you-click-merge-documents">
+<h3>What Happens When You Click “Merge Documents”<a class="headerlink" href="#what-happens-when-you-click-merge-documents" title="Permalink to this heading">¶</a></h3>
+<p>Once you’ve reviewed the results and entered revision information, clicking “Merge Documents” will:</p>
+<ol class="arabic simple">
+<li><p>Update your database with the new revision information</p></li>
+<li><p>Move files to their final locations based on your filing rules</p></li>
+<li><p>Export metadata if you have cloud integration enabled</p></li>
+<li><p>Give you a summary of what was processed</p></li>
+</ol>
+<p>This is covered in more detail in separate documentation about the merge process.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="quick-reference">
+<h2>Quick Reference<a class="headerlink" href="#quick-reference" title="Permalink to this heading">¶</a></h2>
+<section id="status-colors-at-a-glance">
+<h3>Status Colors at a Glance<a class="headerlink" href="#status-colors-at-a-glance" title="Permalink to this heading">¶</a></h3>
+<p>🟢 <strong>Green</strong> = All good, ready to merge
+🟠 <strong>Orange</strong> = Warning, can still merge but be aware
+🔴 <strong>Red</strong> = Error, needs to be fixed before merging</p>
+</section>
+<section id="common-error-messages">
+<h3>Common Error Messages<a class="headerlink" href="#common-error-messages" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Message</p></th>
+<th class="head"><p>What It Means</p></th>
+<th class="head"><p>What To Do</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>No match found</p></td>
+<td><p>Document number not in database</p></td>
+<td><p>Use “Add New Documents” or check filename</p></td>
+</tr>
+<tr class="row-odd"><td><p>ERROR - No revision information found</p></td>
+<td><p>Filename doesn’t have revision markers</p></td>
+<td><p>Check filename format and Settings</p></td>
+</tr>
+<tr class="row-even"><td><p>ERROR - Duplicate document</p></td>
+<td><p>Multiple files for same document+type</p></td>
+<td><p>Remove duplicate files</p></td>
+</tr>
+<tr class="row-odd"><td><p>Warning - Revision not sequential</p></td>
+<td><p>Revision skips a number/letter</p></td>
+<td><p>Verify this is intentional, can still merge</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="before-you-merge-checklist">
+<h3>Before You Merge Checklist<a class="headerlink" href="#before-you-merge-checklist" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>[ ] Review all red errors and fix them</p></li>
+<li><p>[ ] Check orange warnings and confirm they’re OK</p></li>
+<li><p>[ ] Verify green matches look correct</p></li>
+<li><p>[ ] Enter Revision Date</p></li>
+<li><p>[ ] Enter Revision Description</p></li>
+<li><p>[ ] Click “Merge Documents” when ready</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                Merge View - User Guide
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

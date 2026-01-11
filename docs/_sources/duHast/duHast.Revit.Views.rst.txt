@@ -10,6 +10,7 @@ Subpackages
    duHast.Revit.Views.Export
    duHast.Revit.Views.FromRooms
    duHast.Revit.Views.Geometry
+   duHast.Revit.Views.Import
    duHast.Revit.Views.Objects
    duHast.Revit.Views.Reporting
    duHast.Revit.Views.Utility

@@ -4,6 +4,38 @@ duHast.Revit.Views.Utility package
 Submodules
 ----------
 
+duHast.Revit.Views.Utility.convert\_data\_to\_filter\_evaluator module
+----------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.Utility.convert_data_to_filter_evaluator
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Views.Utility.convert\_data\_to\_filter\_logic\_filter module
+--------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.Utility.convert_data_to_filter_logic_filter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Views.Utility.convert\_data\_to\_filter\_rule module
+-----------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.Utility.convert_data_to_filter_rule
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Views.Utility.convert\_data\_to\_filter\_value\_provider module
+----------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.Utility.convert_data_to_filter_value_provider
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Views.Utility.convert\_data\_to\_override\_storage module
 ----------------------------------------------------------------------
 

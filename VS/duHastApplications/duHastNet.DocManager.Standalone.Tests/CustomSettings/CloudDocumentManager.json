@@ -1,0 +1,70 @@
+{
+  "$id": "1",
+  "MetaDataMapper": {
+    "$id": "2",
+    "$type": "duHastNet.DocManager.Core.Models.CloudDocManager.MetaData.MetaDataMapperAconex, duHastNet.DocManager.Core",
+    "MetadataTemplateFilePath": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor-NET8\\VS\\duHastApplications\\duHastNet.DocManager.Standalone.Tests\\MetaTemplate\\Long.csv",
+    "AvailableFields": [
+      "Number",
+      "Name",
+      "Type",
+      "Company",
+      "Revision",
+      "RevisionDate",
+      "Status",
+      "File"
+    ],
+    "MetaDataMap": [
+      {
+        "$id": "3",
+        "MetaFieldName": "Number",
+        "DocumentPropertyName": "Number",
+        "CloudServiceProviderName": "Aconex"
+      },
+      {
+        "$id": "4",
+        "MetaFieldName": "Name",
+        "DocumentPropertyName": "Name",
+        "CloudServiceProviderName": "Aconex"
+      },
+      {
+        "$id": "5",
+        "MetaFieldName": "Type",
+        "DocumentPropertyName": "DocumentType",
+        "CloudServiceProviderName": "Aconex"
+      },
+      {
+        "$id": "6",
+        "MetaFieldName": "Company",
+        "MetaFieldValue": "TEST COMPANY",
+        "CloudServiceProviderName": "Aconex"
+      },
+      {
+        "$id": "7",
+        "MetaFieldName": "Revision",
+        "DocumentPropertyName": "Revision",
+        "CloudServiceProviderName": "Aconex"
+      },
+      {
+        "$id": "8",
+        "MetaFieldName": "RevisionDate",
+        "DocumentPropertyName": "RevisionDate",
+        "CloudServiceProviderName": "Aconex"
+      },
+      {
+        "$id": "9",
+        "MetaFieldName": "Status",
+        "DocumentPropertyName": "RevisionDescription",
+        "CloudServiceProviderName": "Aconex"
+      },
+      {
+        "$id": "10",
+        "MetaFieldName": "File",
+        "FilePropertyName": "FileName",
+        "CloudServiceProviderName": "Aconex"
+      }
+    ],
+    "SupportedFileTypes": []
+  },
+  "CloudDocumentManagerEnabled": true
+}

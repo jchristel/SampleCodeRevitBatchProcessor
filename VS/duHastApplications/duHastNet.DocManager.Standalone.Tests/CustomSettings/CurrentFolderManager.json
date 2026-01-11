@@ -1,0 +1,42 @@
+{
+  "$id": "1",
+  "IncomingFolderPath": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor-NET8\\VS\\duHastApplications\\duHastNet.DocManager.Standalone.Tests\\Merge\\Incoming",
+  "SupersededFolderPath": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor-NET8\\VS\\duHastApplications\\duHastNet.DocManager.Standalone.Tests\\Merge\\Archive",
+  "RevisionPrefix": "[",
+  "RevisionSuffix": "]",
+  "FilingRules": [
+    {
+      "$id": "2",
+      "$type": "duHastNet.DocManager.Core.Models.CurrentFolder.FilingRules.Contains, duHastNet.DocManager.Core",
+      "Name": "Contains",
+      "Description": "The file name needs to contain the comparison string",
+      "ComparisonValue": "-00-",
+      "TargetDirectory": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor-NET8\\VS\\duHastApplications\\duHastNet.DocManager.Standalone.Tests\\Merge\\Current\\Package_One"
+    },
+    {
+      "$id": "3",
+      "$type": "duHastNet.DocManager.Core.Models.CurrentFolder.FilingRules.CatchAll, duHastNet.DocManager.Core",
+      "Name": "Default",
+      "Description": "All valid file names will be selected.",
+      "ComparisonValue": "",
+      "TargetDirectory": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor-NET8\\VS\\duHastApplications\\duHastNet.DocManager.Standalone.Tests\\Merge\\Current\\Default"
+    }
+  ],
+  "SupportedFileTypes": [
+    {
+      "$id": "4",
+      "FileExtension": ".pdf",
+      "Description": "PDF Document"
+    },
+    {
+      "$id": "5",
+      "FileExtension": ".dwg",
+      "Description": "AutoCAD",
+      "DocumentNumberModifier": {
+        "$id": "6",
+        "$type": "duHastNet.DocManager.Core.Models.CurrentFolder.DocumentNumberModifiers.AddToEnd, duHastNet.DocManager.Core",
+        "Suffix": "-DWG"
+      }
+    }
+  ]
+}

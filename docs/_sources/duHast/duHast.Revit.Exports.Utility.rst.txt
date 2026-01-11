@@ -12,58 +12,26 @@ duHast.Revit.Exports.Utility.convert\_pdf\_dwg\_settings module
    :undoc-members:
    :show-inheritance:
 
-duHast.Revit.Exports.Utility.export\_ifc\_config\_2019 module
+duHast.Revit.Exports.Utility.export\_ifc\_config\_2025 module
 -------------------------------------------------------------
 
-.. automodule:: duHast.Revit.Exports.Utility.export_ifc_config_2019
+.. automodule:: duHast.Revit.Exports.Utility.export_ifc_config_2025
    :members:
    :undoc-members:
    :show-inheritance:
 
-duHast.Revit.Exports.Utility.export\_ifc\_config\_2020 module
--------------------------------------------------------------
+duHast.Revit.Exports.Utility.export\_ifc\_constants module
+----------------------------------------------------------
 
-.. automodule:: duHast.Revit.Exports.Utility.export_ifc_config_2020
+.. automodule:: duHast.Revit.Exports.Utility.export_ifc_constants
    :members:
    :undoc-members:
    :show-inheritance:
 
-duHast.Revit.Exports.Utility.export\_ifc\_config\_2021 module
--------------------------------------------------------------
-
-.. automodule:: duHast.Revit.Exports.Utility.export_ifc_config_2021
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-duHast.Revit.Exports.Utility.export\_ifc\_config\_2022 module
--------------------------------------------------------------
-
-.. automodule:: duHast.Revit.Exports.Utility.export_ifc_config_2022
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-duHast.Revit.Exports.Utility.export\_ifc\_config\_2023 module
--------------------------------------------------------------
-
-.. automodule:: duHast.Revit.Exports.Utility.export_ifc_config_2023
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-duHast.Revit.Exports.Utility.export\_ifc\_config\_2024 module
--------------------------------------------------------------
-
-.. automodule:: duHast.Revit.Exports.Utility.export_ifc_config_2024
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-duHast.Revit.Exports.Utility.export\_options\_pdf\_2024 module
+duHast.Revit.Exports.Utility.export\_options\_pdf\_2025 module
 --------------------------------------------------------------
 
-.. automodule:: duHast.Revit.Exports.Utility.export_options_pdf_2024
+.. automodule:: duHast.Revit.Exports.Utility.export_options_pdf_2025
    :members:
    :undoc-members:
    :show-inheritance:

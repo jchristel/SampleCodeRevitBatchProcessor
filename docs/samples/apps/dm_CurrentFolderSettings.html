@@ -1,0 +1,551 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Current Documents Settings &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>Current Documents Settings</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Samples</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/samples/apps/dm_CurrentFolderSettings.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="current-documents-settings">
+<h1>Current Documents Settings<a class="headerlink" href="#current-documents-settings" title="Permalink to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
+<p>The Current Documents section in the Settings view configures how the application handles incoming documents, including file naming conventions, folder locations, filing rules, and supported file types.</p>
+</section>
+<section id="settings-sections">
+<h2>Settings Sections<a class="headerlink" href="#settings-sections" title="Permalink to this heading">¶</a></h2>
+<section id="revision-markers">
+<h3>1. Revision Markers<a class="headerlink" href="#revision-markers" title="Permalink to this heading">¶</a></h3>
+<p>These settings define the characters used to identify revision indicators in document filenames.</p>
+<section id="revision-prefix">
+<h4>Revision Prefix<a class="headerlink" href="#revision-prefix" title="Permalink to this heading">¶</a></h4>
+<p><strong>Description:</strong> Character(s) that mark the beginning of a revision identifier in a filename.</p>
+<p><strong>Example:</strong> In the filename <code class="docutils literal notranslate"><span class="pre">Document_Rev[A].pdf</span></code>, the revision prefix is <code class="docutils literal notranslate"><span class="pre">[</span></code></p>
+<p><strong>Validation:</strong></p>
+<ul class="simple">
+<li><p>Custom validation through <code class="docutils literal notranslate"><span class="pre">RevisionSeparatorValidator</span></code></p></li>
+<li><p>Must be a valid revision marker character</p></li>
+</ul>
+<p><strong>Usage:</strong> The application uses this prefix to parse and identify revision information from filenames when matching documents against the database.</p>
+</section>
+<section id="revision-suffix">
+<h4>Revision Suffix<a class="headerlink" href="#revision-suffix" title="Permalink to this heading">¶</a></h4>
+<p><strong>Description:</strong> Character(s) that mark the end of a revision identifier in a filename.</p>
+<p><strong>Example:</strong> In the filename <code class="docutils literal notranslate"><span class="pre">Document_Rev[A].pdf</span></code>, the revision suffix is <code class="docutils literal notranslate"><span class="pre">]</span></code></p>
+<p><strong>Validation:</strong></p>
+<ul class="simple">
+<li><p>Custom validation through <code class="docutils literal notranslate"><span class="pre">RevisionSeparatorValidator</span></code></p></li>
+<li><p>Must be a valid revision marker character</p></li>
+</ul>
+<p><strong>Usage:</strong> Works in conjunction with Revision Prefix to extract revision information from filenames.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="folder-paths">
+<h3>2. Folder Paths<a class="headerlink" href="#folder-paths" title="Permalink to this heading">¶</a></h3>
+<p>Configuration for the directories used in document processing.</p>
+<section id="incoming-folder-path">
+<h4>Incoming Folder Path<a class="headerlink" href="#incoming-folder-path" title="Permalink to this heading">¶</a></h4>
+<p><strong>Description:</strong> Path to the folder containing documents to be processed by the application.</p>
+<p><strong>Validation:</strong></p>
+<ul class="simple">
+<li><p>Folder must exist on the file system</p></li>
+<li><p>Validated using <code class="docutils literal notranslate"><span class="pre">FolderPathValidator.ValidateFolderExists</span></code></p></li>
+</ul>
+<p><strong>Features:</strong></p>
+<ul class="simple">
+<li><p>Text input with real-time validation</p></li>
+<li><p>Browse button to select folder via dialog</p></li>
+<li><p>Validation errors displayed as tooltips</p></li>
+</ul>
+<p><strong>Usage:</strong> The application monitors this folder for new documents to process and match against the database.</p>
+</section>
+<section id="archive-folder-path">
+<h4>Archive Folder Path<a class="headerlink" href="#archive-folder-path" title="Permalink to this heading">¶</a></h4>
+<p><strong>Description:</strong> Path to the folder where superseded or archived documents are stored.</p>
+<p><strong>Note:</strong> This setting maps to <code class="docutils literal notranslate"><span class="pre">SupersededFolderPath</span></code> in the underlying configuration.</p>
+<p><strong>Validation:</strong></p>
+<ul class="simple">
+<li><p>Folder must exist on the file system</p></li>
+<li><p>Validated using <code class="docutils literal notranslate"><span class="pre">FolderPathValidator.ValidateFolderExists</span></code></p></li>
+</ul>
+<p><strong>Features:</strong></p>
+<ul class="simple">
+<li><p>Text input with real-time validation</p></li>
+<li><p>Browse button to select folder via dialog</p></li>
+<li><p>Validation errors displayed as tooltips</p></li>
+</ul>
+<p><strong>Usage:</strong> When documents are superseded by newer revisions, the older versions are moved to this archive location.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="filing-rules">
+<h3>3. Filing Rules<a class="headerlink" href="#filing-rules" title="Permalink to this heading">¶</a></h3>
+<p>Filing rules determine where incoming documents are filed based on their filename patterns. Rules are evaluated from top to bottom, and the first matching rule determines the target directory.</p>
+<section id="rule-evaluation-order">
+<h4>Rule Evaluation Order<a class="headerlink" href="#rule-evaluation-order" title="Permalink to this heading">¶</a></h4>
+<p><strong>Priority:</strong> Rules are evaluated in the order they appear in the list (top to bottom). The first rule that matches a filename wins, and no further rules are evaluated.</p>
+<p><strong>Reordering:</strong> Use the Move Up and Move Down buttons to adjust rule priority.</p>
+</section>
+<section id="available-rule-types">
+<h4>Available Rule Types<a class="headerlink" href="#available-rule-types" title="Permalink to this heading">¶</a></h4>
+<section id="beginswith">
+<h5>BeginsWith<a class="headerlink" href="#beginswith" title="Permalink to this heading">¶</a></h5>
+<p><strong>Description:</strong> Matches filenames that start with the specified filter value.</p>
+<p><strong>Example:</strong></p>
+<ul class="simple">
+<li><p>Filter Value: <code class="docutils literal notranslate"><span class="pre">ARCH-</span></code></p></li>
+<li><p>Matches: <code class="docutils literal notranslate"><span class="pre">ARCH-001-Drawing.pdf</span></code>, <code class="docutils literal notranslate"><span class="pre">ARCH-Floor-Plan.dwg</span></code></p></li>
+<li><p>Does Not Match: <code class="docutils literal notranslate"><span class="pre">STRUCT-ARCH-001.pdf</span></code></p></li>
+</ul>
+</section>
+<section id="contains">
+<h5>Contains<a class="headerlink" href="#contains" title="Permalink to this heading">¶</a></h5>
+<p><strong>Description:</strong> Matches filenames that contain the specified filter value anywhere in the name.</p>
+<p><strong>Example:</strong></p>
+<ul class="simple">
+<li><p>Filter Value: <code class="docutils literal notranslate"><span class="pre">MECHANICAL</span></code></p></li>
+<li><p>Matches: <code class="docutils literal notranslate"><span class="pre">MECHANICAL-001.pdf</span></code>, <code class="docutils literal notranslate"><span class="pre">Project-MECHANICAL-Drawing.dwg</span></code>, <code class="docutils literal notranslate"><span class="pre">Test-MECHANICAL.pdf</span></code></p></li>
+<li><p>Does Not Match: <code class="docutils literal notranslate"><span class="pre">ARCH-001.pdf</span></code></p></li>
+</ul>
+</section>
+<section id="notbeginswith">
+<h5>NotBeginsWith<a class="headerlink" href="#notbeginswith" title="Permalink to this heading">¶</a></h5>
+<p><strong>Description:</strong> Matches filenames that do NOT start with the specified filter value.</p>
+<p><strong>Example:</strong></p>
+<ul class="simple">
+<li><p>Filter Value: <code class="docutils literal notranslate"><span class="pre">TEMP-</span></code></p></li>
+<li><p>Matches: <code class="docutils literal notranslate"><span class="pre">ARCH-001.pdf</span></code>, <code class="docutils literal notranslate"><span class="pre">Drawing.dwg</span></code>, <code class="docutils literal notranslate"><span class="pre">Notes.docx</span></code></p></li>
+<li><p>Does Not Match: <code class="docutils literal notranslate"><span class="pre">TEMP-File.pdf</span></code>, <code class="docutils literal notranslate"><span class="pre">TEMP-Drawing.dwg</span></code></p></li>
+</ul>
+</section>
+<section id="notcontains">
+<h5>NotContains<a class="headerlink" href="#notcontains" title="Permalink to this heading">¶</a></h5>
+<p><strong>Description:</strong> Matches filenames that do NOT contain the specified filter value anywhere in the name.</p>
+<p><strong>Example:</strong></p>
+<ul class="simple">
+<li><p>Filter Value: <code class="docutils literal notranslate"><span class="pre">DRAFT</span></code></p></li>
+<li><p>Matches: <code class="docutils literal notranslate"><span class="pre">ARCH-001.pdf</span></code>, <code class="docutils literal notranslate"><span class="pre">Final-Drawing.dwg</span></code>, <code class="docutils literal notranslate"><span class="pre">Report.pdf</span></code></p></li>
+<li><p>Does Not Match: <code class="docutils literal notranslate"><span class="pre">DRAFT-Report.pdf</span></code>, <code class="docutils literal notranslate"><span class="pre">Drawing-DRAFT.dwg</span></code></p></li>
+</ul>
+</section>
+<section id="default-catchall">
+<h5>Default (CatchAll)<a class="headerlink" href="#default-catchall" title="Permalink to this heading">¶</a></h5>
+<p><strong>Description:</strong> Matches all files regardless of filename. This is the default/fallback rule.</p>
+<p><strong>Special Properties:</strong></p>
+<ul class="simple">
+<li><p>Only one Default rule allowed in the system</p></li>
+<li><p>Cannot be deleted (can only be edited to change target path)</p></li>
+<li><p>Displayed in bold in the list view</p></li>
+<li><p>Automatically created on first initialization (points to user’s Documents folder)</p></li>
+<li><p>Filter value is always empty for CatchAll rules</p></li>
+</ul>
+<p><strong>Usage:</strong> Ensures every file has a destination even if no other rules match.</p>
+</section>
+</section>
+<section id="filing-rule-management">
+<h4>Filing Rule Management<a class="headerlink" href="#filing-rule-management" title="Permalink to this heading">¶</a></h4>
+<section id="adding-a-rule">
+<h5>Adding a Rule<a class="headerlink" href="#adding-a-rule" title="Permalink to this heading">¶</a></h5>
+<ol class="arabic simple">
+<li><p>Click the “Add” button</p></li>
+<li><p>Select a rule type from the dropdown</p></li>
+<li><p>Enter a filter value (not required for CatchAll)</p></li>
+<li><p>Browse or enter a target directory path</p></li>
+<li><p>Click Save</p></li>
+</ol>
+<p><strong>Validation:</strong></p>
+<ul class="simple">
+<li><p>Duplicate rules (same type and filter value) are not allowed</p></li>
+<li><p>Only one CatchAll rule is permitted</p></li>
+<li><p>Target path must be a valid directory</p></li>
+</ul>
+</section>
+<section id="editing-a-rule">
+<h5>Editing a Rule<a class="headerlink" href="#editing-a-rule" title="Permalink to this heading">¶</a></h5>
+<ol class="arabic simple">
+<li><p>Select a rule from the list</p></li>
+<li><p>Click the “Edit” button</p></li>
+<li><p>Modify the rule properties</p></li>
+<li><p>Click Save</p></li>
+</ol>
+<p><strong>Note:</strong> For CatchAll rules, only the target path can be modified.</p>
+</section>
+<section id="removing-a-rule">
+<h5>Removing a Rule<a class="headerlink" href="#removing-a-rule" title="Permalink to this heading">¶</a></h5>
+<ol class="arabic simple">
+<li><p>Select a rule from the list</p></li>
+<li><p>Click the “Remove” button</p></li>
+</ol>
+<p><strong>Restrictions:</strong></p>
+<ul class="simple">
+<li><p>CatchAll rules cannot be removed</p></li>
+<li><p>Any other rule type can be removed</p></li>
+</ul>
+</section>
+<section id="reordering-rules">
+<h5>Reordering Rules<a class="headerlink" href="#reordering-rules" title="Permalink to this heading">¶</a></h5>
+<p><strong>Move Up:</strong> Increases the priority of the selected rule (moves it higher in the list)</p>
+<p><strong>Move Down:</strong> Decreases the priority of the selected rule (moves it lower in the list)</p>
+<p><strong>Note:</strong> Rule order is critical because evaluation stops at the first match.</p>
+</section>
+</section>
+<section id="listview-columns">
+<h4>ListView Columns<a class="headerlink" href="#listview-columns" title="Permalink to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><strong>Filter Type:</strong> The type of rule (BeginsWith, Contains, NotBeginsWith, NotContains, Default)</p></li>
+<li><p><strong>Filter Value:</strong> The text value used for matching (empty for CatchAll)</p></li>
+<li><p><strong>Target Path:</strong> The directory where matching files will be filed</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="supported-file-types">
+<h3>4. Supported File Types<a class="headerlink" href="#supported-file-types" title="Permalink to this heading">¶</a></h3>
+<p>Defines which file extensions the application will process and how document numbers should be modified for each file type.</p>
+<section id="file-type-configuration">
+<h4>File Type Configuration<a class="headerlink" href="#file-type-configuration" title="Permalink to this heading">¶</a></h4>
+<p>Each supported file type consists of:</p>
+<section id="file-extension">
+<h5>File Extension<a class="headerlink" href="#file-extension" title="Permalink to this heading">¶</a></h5>
+<p><strong>Description:</strong> The file extension including the leading period.</p>
+<p><strong>Example:</strong> <code class="docutils literal notranslate"><span class="pre">.pdf</span></code>, <code class="docutils literal notranslate"><span class="pre">.dwg</span></code>, <code class="docutils literal notranslate"><span class="pre">.docx</span></code></p>
+<p><strong>Validation:</strong></p>
+<ul class="simple">
+<li><p>Must include the leading period</p></li>
+<li><p>Must be unique (no duplicate extensions allowed)</p></li>
+<li><p>Case-insensitive comparison</p></li>
+</ul>
+</section>
+<section id="description">
+<h5>Description<a class="headerlink" href="#description" title="Permalink to this heading">¶</a></h5>
+<p><strong>Description:</strong> Human-readable description of the file type.</p>
+<p><strong>Example:</strong> “PDF Document”, “AutoCAD Drawing”, “Word Document”</p>
+<p><strong>Purpose:</strong> Provides context for users about what the file extension represents.</p>
+</section>
+<section id="number-modifier">
+<h5>Number Modifier<a class="headerlink" href="#number-modifier" title="Permalink to this heading">¶</a></h5>
+<p><strong>Description:</strong> Optional modifier that transforms document numbers for specific file types when matching against the database.</p>
+<p><strong>Purpose:</strong> Allows different file types to have different document numbering schemes. For example, a CAD drawing might need a “-DWG” suffix added to its document number when stored.</p>
+<p><strong>Available Modifiers:</strong></p>
+<section id="none-no-modifier">
+<h6>None (No Modifier)<a class="headerlink" href="#none-no-modifier" title="Permalink to this heading">¶</a></h6>
+<p><strong>Description:</strong> No modification applied to document numbers.</p>
+<p><strong>Display:</strong> “(None)” or empty display</p>
+<p><strong>Usage:</strong> Default for PDF files and file types that use standard document numbers.</p>
+</section>
+<section id="add-prefix-addatindex-with-index-0">
+<h6>Add Prefix (AddAtIndex with index 0)<a class="headerlink" href="#add-prefix-addatindex-with-index-0" title="Permalink to this heading">¶</a></h6>
+<p><strong>Description:</strong> Adds a specified string to the beginning of the document number.</p>
+<p><strong>Example:</strong></p>
+<ul class="simple">
+<li><p>Original Document Number: <code class="docutils literal notranslate"><span class="pre">ABC-123</span></code></p></li>
+<li><p>Prefix: <code class="docutils literal notranslate"><span class="pre">DRAFT-</span></code></p></li>
+<li><p>Modified Number: <code class="docutils literal notranslate"><span class="pre">DRAFT-ABC-123</span></code></p></li>
+</ul>
+<p><strong>Display:</strong> <code class="docutils literal notranslate"><span class="pre">Add</span> <span class="pre">Prefix:</span> <span class="pre">DRAFT-</span></code></p>
+</section>
+<section id="add-suffix-addtoend">
+<h6>Add Suffix (AddToEnd)<a class="headerlink" href="#add-suffix-addtoend" title="Permalink to this heading">¶</a></h6>
+<p><strong>Description:</strong> Adds a specified string to the end of the document number.</p>
+<p><strong>Example:</strong></p>
+<ul class="simple">
+<li><p>Original Document Number: <code class="docutils literal notranslate"><span class="pre">ABC-123</span></code></p></li>
+<li><p>Suffix: <code class="docutils literal notranslate"><span class="pre">-DWG</span></code></p></li>
+<li><p>Modified Number: <code class="docutils literal notranslate"><span class="pre">ABC-123-DWG</span></code></p></li>
+</ul>
+<p><strong>Display:</strong> <code class="docutils literal notranslate"><span class="pre">Add</span> <span class="pre">Suffix:</span> <span class="pre">-DWG</span></code></p>
+</section>
+<section id="add-at-index-addatindex">
+<h6>Add at Index (AddAtIndex)<a class="headerlink" href="#add-at-index-addatindex" title="Permalink to this heading">¶</a></h6>
+<p><strong>Description:</strong> Inserts a specified string at a specific character position in the document number.</p>
+<p><strong>Example:</strong></p>
+<ul class="simple">
+<li><p>Original Document Number: <code class="docutils literal notranslate"><span class="pre">ABC-123</span></code></p></li>
+<li><p>Insert Value: <code class="docutils literal notranslate"><span class="pre">-REV</span></code></p></li>
+<li><p>Index: 3</p></li>
+<li><p>Modified Number: <code class="docutils literal notranslate"><span class="pre">ABC-REV-123</span></code></p></li>
+</ul>
+<p><strong>Display:</strong> <code class="docutils literal notranslate"><span class="pre">Add</span> <span class="pre">at</span> <span class="pre">Index</span> <span class="pre">3:</span> <span class="pre">-REV</span></code></p>
+<p><strong>Note:</strong> Index 0 is displayed as “Add Prefix” for clarity.</p>
+</section>
+<section id="replace">
+<h6>Replace<a class="headerlink" href="#replace" title="Permalink to this heading">¶</a></h6>
+<p><strong>Description:</strong> Replaces all occurrences of one string with another in the document number.</p>
+<p><strong>Example:</strong></p>
+<ul class="simple">
+<li><p>Original Document Number: <code class="docutils literal notranslate"><span class="pre">ABC-TEMP-123</span></code></p></li>
+<li><p>Old Value: <code class="docutils literal notranslate"><span class="pre">TEMP</span></code></p></li>
+<li><p>New Value: <code class="docutils literal notranslate"><span class="pre">FINAL</span></code></p></li>
+<li><p>Modified Number: <code class="docutils literal notranslate"><span class="pre">ABC-FINAL-123</span></code></p></li>
+</ul>
+<p><strong>Display:</strong> <code class="docutils literal notranslate"><span class="pre">Replace:</span> <span class="pre">TEMP</span> <span class="pre">→</span> <span class="pre">FINAL</span></code></p>
+</section>
+</section>
+</section>
+<section id="required-file-types">
+<h4>Required File Types<a class="headerlink" href="#required-file-types" title="Permalink to this heading">¶</a></h4>
+<section id="pdf">
+<h5>PDF<a class="headerlink" href="#pdf" title="Permalink to this heading">¶</a></h5>
+<p><strong>Special Status:</strong> PDF is a required file type and has special protections:</p>
+<ul class="simple">
+<li><p>Cannot be removed from the list</p></li>
+<li><p>Displayed in bold font in the list view</p></li>
+<li><p>Automatically created if missing during initialization</p></li>
+<li><p>File extension field is disabled during editing</p></li>
+<li><p>Default modifier is None</p></li>
+</ul>
+<p><strong>Rationale:</strong> PDF is the standard format for document management and must always be supported.</p>
+</section>
+</section>
+<section id="file-type-management">
+<h4>File Type Management<a class="headerlink" href="#file-type-management" title="Permalink to this heading">¶</a></h4>
+<section id="adding-a-file-type">
+<h5>Adding a File Type<a class="headerlink" href="#adding-a-file-type" title="Permalink to this heading">¶</a></h5>
+<ol class="arabic simple">
+<li><p>Click the “Add” button in the Supported File Types section</p></li>
+<li><p>Enter the file extension (with leading period)</p></li>
+<li><p>Enter a description</p></li>
+<li><p>Select a number modifier (optional)</p>
+<ul class="simple">
+<li><p>Choose modifier type from dropdown</p></li>
+<li><p>Configure modifier-specific parameters</p></li>
+</ul>
+</li>
+<li><p>Click Save</p></li>
+</ol>
+<p><strong>Validation:</strong></p>
+<ul class="simple">
+<li><p>File extension must be unique</p></li>
+<li><p>File extension must include leading period</p></li>
+<li><p>Modifier configuration must be valid (if specified)</p></li>
+</ul>
+</section>
+<section id="editing-a-file-type">
+<h5>Editing a File Type<a class="headerlink" href="#editing-a-file-type" title="Permalink to this heading">¶</a></h5>
+<ol class="arabic simple">
+<li><p>Select a file type from the list</p></li>
+<li><p>Click the “Edit” button</p></li>
+<li><p>Modify the properties</p></li>
+<li><p>Click Save</p></li>
+</ol>
+<p><strong>Restrictions:</strong></p>
+<ul class="simple">
+<li><p>PDF file extension cannot be changed</p></li>
+<li><p>Description and modifier can always be edited</p></li>
+</ul>
+</section>
+<section id="removing-a-file-type">
+<h5>Removing a File Type<a class="headerlink" href="#removing-a-file-type" title="Permalink to this heading">¶</a></h5>
+<ol class="arabic simple">
+<li><p>Select a file type from the list</p></li>
+<li><p>Click the “Remove” button</p></li>
+</ol>
+<p><strong>Restrictions:</strong></p>
+<ul class="simple">
+<li><p>PDF file type cannot be removed</p></li>
+<li><p>Any other file type can be removed</p></li>
+</ul>
+</section>
+</section>
+<section id="id1">
+<h4>ListView Columns<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><strong>File Extension:</strong> The file extension (e.g., <code class="docutils literal notranslate"><span class="pre">.pdf</span></code>, <code class="docutils literal notranslate"><span class="pre">.dwg</span></code>)</p></li>
+<li><p><strong>Description:</strong> Human-readable description of the file type</p></li>
+<li><p><strong>Number Modifier:</strong> Display text showing the configured modifier (e.g., “Add Suffix: -DWG”, “(None)”)</p></li>
+</ul>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="data-persistence">
+<h2>Data Persistence<a class="headerlink" href="#data-persistence" title="Permalink to this heading">¶</a></h2>
+<p>All settings in the Current Documents section are:</p>
+<ol class="arabic simple">
+<li><p><strong>Synchronized</strong> with the <code class="docutils literal notranslate"><span class="pre">CurrentFolderManager.Settings</span></code> object in real-time as values change</p></li>
+<li><p><strong>Validated</strong> immediately upon change using data annotations and custom validators</p></li>
+<li><p><strong>Saved</strong> to persistent storage when the user clicks the Save button in the Settings view</p></li>
+<li><p><strong>Loaded</strong> automatically when the Settings view is initialized</p></li>
+</ol>
+</section>
+<section id="validation-summary">
+<h2>Validation Summary<a class="headerlink" href="#validation-summary" title="Permalink to this heading">¶</a></h2>
+<section id="field-level-validation">
+<h3>Field-Level Validation<a class="headerlink" href="#field-level-validation" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Incoming Folder Path:</strong> Must exist as a valid directory</p></li>
+<li><p><strong>Archive Folder Path:</strong> Must exist as a valid directory</p></li>
+<li><p><strong>Revision Prefix:</strong> Must be a valid revision marker character</p></li>
+<li><p><strong>Revision Suffix:</strong> Must be a valid revision marker character</p></li>
+</ul>
+</section>
+<section id="operation-level-validation">
+<h3>Operation-Level Validation<a class="headerlink" href="#operation-level-validation" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Filing Rules:</strong></p>
+<ul>
+<li><p>No duplicate rules (same type and filter value)</p></li>
+<li><p>Only one CatchAll rule allowed</p></li>
+<li><p>Target path must be valid</p></li>
+</ul>
+</li>
+<li><p><strong>File Types:</strong></p>
+<ul>
+<li><p>No duplicate file extensions</p></li>
+<li><p>PDF cannot be removed</p></li>
+<li><p>File extension must include leading period</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="validation-feedback">
+<h3>Validation Feedback<a class="headerlink" href="#validation-feedback" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Field-level errors appear as tooltips on text boxes</p></li>
+<li><p>Operation-level errors appear in the message banner at the top of the Settings view</p></li>
+<li><p>Validation occurs in real-time as the user types</p></li>
+<li><p>Command buttons are disabled when validation fails</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this heading">¶</a></h2>
+<section id="id2">
+<h3>Filing Rules<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Order Matters:</strong> Place more specific rules at the top, general rules at the bottom</p></li>
+<li><p><strong>Test Your Rules:</strong> Use the application’s matching feature to verify rules work as expected</p></li>
+<li><p><strong>Keep It Simple:</strong> Use the minimum number of rules necessary to organize your documents</p></li>
+<li><p><strong>Use CatchAll:</strong> Always keep the CatchAll rule as your last rule to ensure all files have a destination</p></li>
+</ol>
+</section>
+<section id="id3">
+<h3>Supported File Types<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Standard Extensions:</strong> Use standard file extensions (e.g., <code class="docutils literal notranslate"><span class="pre">.pdf</span></code>, <code class="docutils literal notranslate"><span class="pre">.dwg</span></code>, <code class="docutils literal notranslate"><span class="pre">.docx</span></code>)</p></li>
+<li><p><strong>Document Your Modifiers:</strong> Use descriptive modifier configurations that make sense to your team</p></li>
+<li><p><strong>Test Modifiers:</strong> Verify that document number modifications work correctly with your naming scheme</p></li>
+<li><p><strong>Minimal Modifications:</strong> Only add modifiers when necessary for your workflow</p></li>
+</ol>
+</section>
+<section id="id4">
+<h3>Folder Paths<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Use Absolute Paths:</strong> Always specify complete, absolute folder paths</p></li>
+<li><p><strong>Verify Permissions:</strong> Ensure the application has read/write access to specified folders</p></li>
+<li><p><strong>Backup Regularly:</strong> Keep backups of your archive folder</p></li>
+<li><p><strong>Network Paths:</strong> Be cautious with network paths as they may have performance implications</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading">¶</a></h2>
+<section id="common-issues">
+<h3>Common Issues<a class="headerlink" href="#common-issues" title="Permalink to this heading">¶</a></h3>
+<p><strong>Issue:</strong> Documents not filing to expected location
+<strong>Solution:</strong> Check filing rule order. Remember that the first matching rule wins. Move more specific rules higher in the list.</p>
+<p><strong>Issue:</strong> Validation error on folder paths
+<strong>Solution:</strong> Verify the folder exists and you have appropriate permissions. Use the Browse button to ensure correct path selection.</p>
+<p><strong>Issue:</strong> Cannot remove a file type
+<strong>Solution:</strong> PDF file type is required and cannot be removed. This is by design.</p>
+<p><strong>Issue:</strong> Cannot create duplicate filing rule
+<strong>Solution:</strong> Duplicate rules (same type and filter value) are prevented. Edit the existing rule or use a different filter value.</p>
+<p><strong>Issue:</strong> CatchAll rule disappeared
+<strong>Solution:</strong> The CatchAll rule cannot be deleted. If it’s missing, the application will recreate it automatically pointing to your Documents folder.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="related-documentation">
+<h2>Related Documentation<a class="headerlink" href="#related-documentation" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Merge View Documentation:</strong> Details on how filing rules are applied during the merge process</p></li>
+<li><p><strong>Database Settings:</strong> Configuration for database connection used for document matching</p></li>
+<li><p><strong>Cloud Document Manager:</strong> Integration with cloud-based document management systems</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                Current Documents Settings
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

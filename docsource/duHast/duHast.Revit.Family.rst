@@ -24,6 +24,14 @@ duHast.Revit.Family.family\_element\_utils module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Family.family\_find\_duplicate module
+--------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.family_find_duplicate
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Family.family\_force\_update module
 ------------------------------------------------
 
@@ -132,6 +140,14 @@ duHast.Revit.Family.family\_rename\_loaded\_types module
 --------------------------------------------------------
 
 .. automodule:: duHast.Revit.Family.family_rename_loaded_types
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.family\_swap\_instances\_of\_duplicates module
+------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.family_swap_instances_of_duplicates
    :members:
    :undoc-members:
    :show-inheritance:

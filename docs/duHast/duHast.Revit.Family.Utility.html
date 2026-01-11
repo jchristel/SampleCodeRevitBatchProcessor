@@ -322,6 +322,46 @@ i.e. built in revit type settings</p>
 </ul>
 </section>
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_create_atom_exports.copy_family_to_local_directory">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_create_atom_exports.</span></span><span class="sig-name descname"><span class="pre">copy_family_to_local_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_directory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_create_atom_exports.copy_family_to_local_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy a family to a local directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>family_path</strong> (<em>str</em>) – path to the family</p></li>
+<li><p><strong>local_directory</strong> (<em>str</em>) – local directory to copy the family to</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>path to the copied family or None if copy failed</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_create_atom_exports.copy_xml_file_to_original_directory">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_create_atom_exports.</span></span><span class="sig-name descname"><span class="pre">copy_xml_file_to_original_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_directory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_create_atom_exports.copy_xml_file_to_original_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy an xml file from a local directory to the original directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>family_path</strong> (<em>str</em>) – path to the family</p></li>
+<li><p><strong>local_directory</strong> (<em>str</em>) – local directory to copy the xml file from</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>path to the copied xml file or None if copy failed</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_create_atom_exports.get_families_from_directory">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_create_atom_exports.</span></span><span class="sig-name descname"><span class="pre">get_families_from_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_create_atom_exports.get_families_from_directory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all family files from a directory. (ignores subdirectories)</p>
@@ -493,13 +533,17 @@ i.e. built in revit type settings</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_create_atom_exports.create_family_xml_files">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_create_atom_exports.</span></span><span class="sig-name descname"><span class="pre">create_family_xml_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">revit_application</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_directories</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_create_atom_exports.create_family_xml_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create xml files for all families in a list of directories using Revit API PartAtomExport function.</p>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_create_atom_exports.</span></span><span class="sig-name descname"><span class="pre">create_family_xml_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">revit_application</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_directories</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_directories_to_local_directories_mapper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_temp_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_create_atom_exports.create_family_xml_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create xml files for all families in a list of directories using Revit API PartAtomExport function.
+If a family xml file already exists it will be checked if it is out of date and requires updating.</p>
+<p>Allows to use a local directory mapper to process families locally or alternatively use a temp directory to create the xml files. ( directory mapper takes precedence over temp directory)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>revit_application</strong> (<em>Application</em>) – revit application object</p></li>
 <li><p><strong>process_directories</strong> (<em>[</em><em>str</em><em>]</em>) – list of directories to process</p></li>
+<li><p><strong>process_directories_to_local_directories_mapper</strong> (<em>Dict</em><em>[</em><em>str</em><em>,</em><em>str</em><em>]</em>) – optional dictionary to map process directories to local directories ( families will be copied to that directory and the xml file created there to avoid family corruption if located on a network drive)</p></li>
+<li><p><strong>use_temp_directory</strong> (<em>bool</em>) – if True a temp directory will be used to create the xml files ( useful if families are located on a network drive)</p></li>
 <li><p><strong>progress_callback</strong> (<a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.ProgressBase.ProgressBase" title="duHast.UI.Objects.ProgressBase.ProgressBase"><em>ProgressBase</em></a>) – progress callback object</p></li>
 </ul>
 </dd>

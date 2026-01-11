@@ -176,7 +176,7 @@
 <section id="this-module-contains-a-number-of-functions-around-extensible-storage-deletion-in-revit">
 <h3>This module contains a number of functions around Extensible storage deletion in Revit.<a class="headerlink" href="#this-module-contains-a-number-of-functions-around-extensible-storage-deletion-in-revit" title="Permalink to this heading">¶</a></h3>
 <p>Notes from the building coder website: <a class="reference external" href="https://thebuildingcoder.typepad.com/blog/2022/11/extensible-storage-schema-deletion.html">https://thebuildingcoder.typepad.com/blog/2022/11/extensible-storage-schema-deletion.html</a></p>
-<p>The devteam replied: After running DeleteSchemas macro, open Manage &gt; Purge Unused. In the tree, select Extensible Storage Schema. Check the schema a9dc2b48 and click OK to purge it. Run ListSchemas – the schema is purged. So, please use Purge Unused to delete schemas without entities.</p>
+<p>The dev team replied: After running DeleteSchemas macro, open Manage &gt; Purge Unused. In the tree, select Extensible Storage Schema. Check the schema a9dc2b48 and click OK to purge it. Run ListSchemas - the schema is purged. So, please use Purge Unused to delete schemas without entities.</p>
 <p>Extensible storage schema is an application-wide object. If it exists at all in the application, it will populate and “infect” every single document that you touch. That makes it hard to remove, and complicated to understand.</p>
 <p>Personally I found:</p>
 <ul class="simple">

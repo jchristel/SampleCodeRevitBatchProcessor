@@ -208,6 +208,18 @@ user so-chong from the below forum post
 <a class="reference external" href="https://thebuildingcoder.typepad.com/blog/2022/03/purge-unused-and-the-autodesk-camel.html">https://thebuildingcoder.typepad.com/blog/2022/03/purge-unused-and-the-autodesk-camel.html</a></p>
 </section>
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Purge.purge_unused_e_transmit.check_path_and_purge">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Purge.purge_unused_e_transmit.</span></span><span class="sig-name descname"><span class="pre">check_path_and_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rvt_ver</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Purge.purge_unused_e_transmit.check_path_and_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a path to the eTransmit dll based on the revit version, checks existence and then uses or returns False.
+:param rvt_doc: Current Revit model document.
+:type rvt_doc: Autodesk.Revit.DB.Document
+:param rvt_ver: Revit version as string.
+:type rvt_ver: str
+:return: True purge was successful, otherwise False.
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Purge.purge_unused_e_transmit.purge_unused_e_transmit">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Purge.purge_unused_e_transmit.</span></span><span class="sig-name descname"><span class="pre">purge_unused_e_transmit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Purge.purge_unused_e_transmit.purge_unused_e_transmit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Purges the document using the purge unused functionality of the eTransmit tool provided by Autodesk.</p>

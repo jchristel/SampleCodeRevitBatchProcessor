@@ -10,7 +10,6 @@ Subpackages
    duHast.Revit.Annotation
    duHast.Revit.Areas
    duHast.Revit.BIM360
-   duHast.Revit.BuildingPads
    duHast.Revit.Categories
    duHast.Revit.Ceilings
    duHast.Revit.ColourFillSchemes

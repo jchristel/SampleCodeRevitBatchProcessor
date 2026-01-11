@@ -483,6 +483,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.Utility.html#module-duHast.Revit.Family.Utility.xml_create_atom_exports">duHast.Revit.Family.Utility.xml_create_atom_exports module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Utility.html#module-containing-functions-relating-to-family-type-xml-file-creation">Module containing functions relating to family type xml file creation.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Utility.html#duHast.Revit.Family.Utility.xml_create_atom_exports.copy_family_to_local_directory"><code class="docutils literal notranslate"><span class="pre">copy_family_to_local_directory()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Utility.html#duHast.Revit.Family.Utility.xml_create_atom_exports.copy_xml_file_to_original_directory"><code class="docutils literal notranslate"><span class="pre">copy_xml_file_to_original_directory()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Utility.html#duHast.Revit.Family.Utility.xml_create_atom_exports.get_families_from_directory"><code class="docutils literal notranslate"><span class="pre">get_families_from_directory()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Utility.html#duHast.Revit.Family.Utility.xml_create_atom_exports.get_xml_files_from_directory"><code class="docutils literal notranslate"><span class="pre">get_xml_files_from_directory()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Utility.html#duHast.Revit.Family.Utility.xml_create_atom_exports.check_file_item_exists"><code class="docutils literal notranslate"><span class="pre">check_file_item_exists()</span></code></a></li>
@@ -615,6 +617,113 @@
 </dd></dl>
 
 </section>
+<section id="module-duHast.Revit.Family.family_find_duplicate">
+<span id="duhast-revit-family-family-find-duplicate-module"></span><h2>duHast.Revit.Family.family_find_duplicate module<a class="headerlink" href="#module-duHast.Revit.Family.family_find_duplicate" title="Permalink to this heading">¶</a></h2>
+<section id="revit-families-helper-functions-retrieving-duplicated-families">
+<h3>Revit families helper functions retrieving duplicated families.<a class="headerlink" href="#revit-families-helper-functions-retrieving-duplicated-families" title="Permalink to this heading">¶</a></h3>
+<p>A duplicated family is a family which has the name of another family with an appended (1) or (2) etc.
+Revit seems to do this when loading families with the same name into a project and the family loaded in has the same name as one already in the project but is slightly different. (May hav to do with versioning of families but not sure yet).</p>
+<p>Samples:
+NRS_Button_NurseCall_Emergency_ITCL-004
+NRS_Button_NurseCall_Emergency_ITCL1</p>
+<p>Last characters of a family are removed if they represent a none alphabetical character and are replaced with a 1 or 2 etc to indicate a duplicate family.</p>
+<p>LevelHead
+LevelHead1</p>
+<p>If there are no numbers at the end of the family name then a 1 or 2 etc is appended to indicate a duplicate family.</p>
+<p>To identify a duplicated family:
+1. check if the last character is a number
+2. if so, check if the character before is an alphabetical character, if not ignore ( assume we dont have more than 9 duplicates in a file… )
+3. if so, remove the number and check if the remaining string is a match with another family name in the project.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>A match is defined as either</dt><dd><ul class="simple">
+<li><p>the remaining string being the same as another family name of the same Revit category or</p></li>
+<li><p>the remaining string being the same as another family, of the same Revit category, followed by none alphabetical characters ( make sure its not the same family )</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+<p>A second part of this module is to find matching types for two given families by their type names. This is useful when replacing a family with another one and wanting to keep the same type (i.e. duplicate families).</p>
+<p>When creating duplicate families in a project Revit either keeps the type name the same or appends a “ 1” or “ 2” etc to the type name.</p>
+<p>A match therefore is defined as either:
+- the type name being the same as another type name in the other family
+- the type name being the same as another type name in the other family followed by 2 none none alphabetical characters (first character is a space, second character is a number)</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_find_duplicate.get_duplicate_family_root_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_find_duplicate.</span></span><span class="sig-name descname"><span class="pre">get_duplicate_family_root_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_find_duplicate.get_duplicate_family_root_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the root name of a duplicate family or None if not a duplicate family.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>family_name</strong> (<em>str</em>) – Name of the family to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Root name of duplicate family or None if not a duplicate family.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_find_duplicate.find_original_family_based_on_duplicate_family">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_find_duplicate.</span></span><span class="sig-name descname"><span class="pre">find_original_family_based_on_duplicate_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_families_by_category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_family_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duplicate_family_root_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duplicate_family_category_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_find_duplicate.find_original_family_based_on_duplicate_family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the original family based on the duplicate family root name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>original_families_by_category</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>list</em><em>[</em><em>Autodesk.Revit.DB.Family</em><em>]</em><em>]</em>) – Dictionary of original families by category.</p></li>
+<li><p><strong>duplicate_family_root_name</strong> (<em>str</em>) – Root name of the duplicate family.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The original family or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.Family | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_find_duplicate.find_duplicate_families">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_find_duplicate.</span></span><span class="sig-name descname"><span class="pre">find_duplicate_families</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_find_duplicate.find_duplicate_families" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find duplicate families in the document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Revit document</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary of original family id and list of duplicate families.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[int, list[Autodesk.Revit.DB.Family]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_find_duplicate.find_matching_types_between_families">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_find_duplicate.</span></span><span class="sig-name descname"><span class="pre">find_matching_types_between_families</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_family</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_family</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_find_duplicate.find_matching_types_between_families" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds matching types between two families based on type names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_family</strong> (<em>Autodesk.Revit.DB.Family</em>) – Source family to find matching types for.</p></li>
+<li><p><strong>target_family</strong> (<em>Autodesk.Revit.DB.Family</em>) – Target family to find matching types in.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary of source type id and target type id. If no match is found the source type id is not included in the dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Family.family_force_update">
 <span id="duhast-revit-family-family-force-update-module"></span><h2>duHast.Revit.Family.family_force_update module<a class="headerlink" href="#module-duHast.Revit.Family.family_force_update" title="Permalink to this heading">¶</a></h2>
 <section id="revit-families-helper-functions-forcing-revit-to-recognize-changes-in-families-and-reload-it">
@@ -677,6 +786,16 @@ This is achieved by creating a dummy type, saving the file, deleting the dummy t
 <dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_functions.get_category_name_to_family_dict">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_functions.</span></span><span class="sig-name descname"><span class="pre">get_category_name_to_family_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_functions.get_category_name_to_family_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a dictionary of family name and the Family element
+:param rvt_doc: Revit document
+:type rvt_doc: Autodesk.Revit.DB.Document
+:return: Dictionary of family name and Family element
+:rtype: dict</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1264,7 +1383,7 @@ target_parameter: The parameter to check in formulas.</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_reload.reload_all_families">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_reload.</span></span><span class="sig-name descname"><span class="pre">reload_all_families</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">library_location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_sub_folders</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_reload.reload_all_families" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_reload.</span></span><span class="sig-name descname"><span class="pre">reload_all_families</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">library_location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_sub_folders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_span_in_minutes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_new_types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_matches_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_reload.reload_all_families" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reloads a number of families with setting: parameter values overwritten: True</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1272,6 +1391,10 @@ target_parameter: The parameter to check in formulas.</p>
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>library_location</strong> (<em>str</em>) – _description_</p></li>
 <li><p><strong>include_sub_folders</strong> (<em>bool</em>) – _description_</p></li>
+<li><p><strong>time_span_in_minutes</strong> (<em>int</em><em>, </em><em>optional</em>) – the span of time in which the file was modified to be considered for reload, defaults to None</p></li>
+<li><p><strong>progress_callback</strong> (<a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.ProgressBase.ProgressBase" title="duHast.UI.Objects.ProgressBase.ProgressBase"><em>ProgressBase</em></a><em>, </em><em>optional</em>) – a progress call back function, defaults to None</p></li>
+<li><p><strong>delete_new_types</strong> (<em>bool</em>) – If true, any new family types introduced during the reload will be deleted from the project. Default is True.</p></li>
+<li><p><strong>report_matches_only</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, will only report on families where a reload attempt was made, defaults to False</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
@@ -1303,27 +1426,6 @@ target_parameter: The parameter to check in formulas.</p>
 </dl>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Family.family_reload.get_new_symbol_ids">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_reload.</span></span><span class="sig-name descname"><span class="pre">get_new_symbol_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pre_load_symbol_id_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_load_symbol_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_reload.get_new_symbol_ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of symbol ids not present prior to reload.</p>
-<p>Compares past in list of id’s and returns ids not in preloadSymbolIdList</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pre_load_symbol_id_list</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.ElementId</em>) – List of Ids of symbols prior the reload.</p></li>
-<li><p><strong>after_load_symbol_list</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.ElementId</em>) – List of ids of symbols after the reload.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>List of element ids representing Family Symbols.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 <section id="module-duHast.Revit.Family.family_reload_single">
 <span id="duhast-revit-family-family-reload-single-module"></span><h2>duHast.Revit.Family.family_reload_single module<a class="headerlink" href="#module-duHast.Revit.Family.family_reload_single" title="Permalink to this heading">¶</a></h2>
@@ -1332,7 +1434,7 @@ target_parameter: The parameter to check in formulas.</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_reload_single.reload_family">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_reload_single.</span></span><span class="sig-name descname"><span class="pre">reload_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_reload_single.reload_family" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_reload_single.</span></span><span class="sig-name descname"><span class="pre">reload_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_new_types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_reload_single.reload_family" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reloads a single family into a Revit document.</p>
 <p>Will reload family provided in in path. By default the type parameter values in the project file will be overwritten
 with type parameter values in family.</p>
@@ -1342,6 +1444,8 @@ with type parameter values in family.</p>
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>family</strong> (<em>Autodesk.Revit.DB.family</em>) – The family to be reloaded</p></li>
 <li><p><strong>family_file_path</strong> (<em>str</em>) – The fully qualified file path of the family to be re-loaded.</p></li>
+<li><p><strong>delete_new_types</strong> (<em>bool</em>) – If true, any new family types introduced during the reload will be deleted from the project.
+Default is True.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raise<span class="colon">:</span></dt>
@@ -1533,6 +1637,9 @@ loaded family types accordingly.</p>
 </dl>
 </dd></dl>
 
+</section>
+<section id="duhast-revit-family-family-swap-instances-of-duplicates-module">
+<h2>duHast.Revit.Family.family_swap_instances_of_duplicates module<a class="headerlink" href="#duhast-revit-family-family-swap-instances-of-duplicates-module" title="Permalink to this heading">¶</a></h2>
 </section>
 <section id="module-duHast.Revit.Family.family_swap_instances_of_types">
 <span id="duhast-revit-family-family-swap-instances-of-types-module"></span><h2>duHast.Revit.Family.family_swap_instances_of_types module<a class="headerlink" href="#module-duHast.Revit.Family.family_swap_instances_of_types" title="Permalink to this heading">¶</a></h2>
@@ -1853,8 +1960,25 @@ Filter format:</p>
 </dd></dl>
 
 </section>
-<section id="duhast-revit-family-family-types-get-data-from-document-module">
-<h2>duHast.Revit.Family.family_types_get_data_from_document module<a class="headerlink" href="#duhast-revit-family-family-types-get-data-from-document-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-duHast.Revit.Family.family_types_get_data_from_document">
+<span id="duhast-revit-family-family-types-get-data-from-document-module"></span><h2>duHast.Revit.Family.family_types_get_data_from_document module<a class="headerlink" href="#module-duHast.Revit.Family.family_types_get_data_from_document" title="Permalink to this heading">¶</a></h2>
+<section id="a-module-with-helper-function-around-family-types-data-extraction-using-revit-family-document">
+<h3>A module with helper function around family types data extraction using Revit family document.<a class="headerlink" href="#a-module-with-helper-function-around-family-types-data-extraction-using-revit-family-document" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_types_get_data_from_document.get_data_types">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_types_get_data_from_document.</span></span><span class="sig-name descname"><span class="pre">get_data_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_types_get_data_from_document.get_data_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get family types data from family document. ( just a test for now)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit family document</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Revit.Family.family_types_get_data_from_xml">
 <span id="duhast-revit-family-family-types-get-data-from-xml-module"></span><h2>duHast.Revit.Family.family_types_get_data_from_xml module<a class="headerlink" href="#module-duHast.Revit.Family.family_types_get_data_from_xml" title="Permalink to this heading">¶</a></h2>

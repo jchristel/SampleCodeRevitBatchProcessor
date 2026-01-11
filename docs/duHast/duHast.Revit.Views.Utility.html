@@ -94,6 +94,209 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
+<section id="module-duHast.Revit.Views.Utility.convert_data_to_filter_evaluator">
+<span id="duhast-revit-views-utility-convert-data-to-filter-evaluator-module"></span><h2>duHast.Revit.Views.Utility.convert_data_to_filter_evaluator module<a class="headerlink" href="#module-duHast.Revit.Views.Utility.convert_data_to_filter_evaluator" title="Permalink to this heading">¶</a></h2>
+<section id="storage-to-revit-api-evaluator-conversion-helper-functions">
+<h3>storage to revit api evaluator conversion helper functions.<a class="headerlink" href="#storage-to-revit-api-evaluator-conversion-helper-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Utility.convert_data_to_filter_evaluator.get_evaluator_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.convert_data_to_filter_evaluator.</span></span><span class="sig-name descname"><span class="pre">get_evaluator_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.convert_data_to_filter_evaluator.get_evaluator_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an evaluator class based on the provided class name.
+None ignored or not found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>class_name</strong> (<em>str</em>) – Name of the evaluator class to retrieve.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The evaluator class if found, otherwise None.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>class or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.Utility.convert_data_to_filter_logic_filter">
+<span id="duhast-revit-views-utility-convert-data-to-filter-logic-filter-module"></span><h2>duHast.Revit.Views.Utility.convert_data_to_filter_logic_filter module<a class="headerlink" href="#module-duHast.Revit.Views.Utility.convert_data_to_filter_logic_filter" title="Permalink to this heading">¶</a></h2>
+<section id="storage-to-revit-api-value-provider-conversion-helper-functions">
+<h3>storage to revit api value provider conversion helper functions.<a class="headerlink" href="#storage-to-revit-api-value-provider-conversion-helper-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Utility.convert_data_to_filter_logic_filter.get_logical_filter_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.convert_data_to_filter_logic_filter.</span></span><span class="sig-name descname"><span class="pre">get_logical_filter_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.convert_data_to_filter_logic_filter.get_logical_filter_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a logical filter class based on the provided class name.
+None ignored or not found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>class_name</strong> (<em>str</em>) – Name of the logical filter class to retrieve.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The logical filter class if found, otherwise None.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>class or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.Utility.convert_data_to_filter_rule">
+<span id="duhast-revit-views-utility-convert-data-to-filter-rule-module"></span><h2>duHast.Revit.Views.Utility.convert_data_to_filter_rule module<a class="headerlink" href="#module-duHast.Revit.Views.Utility.convert_data_to_filter_rule" title="Permalink to this heading">¶</a></h2>
+<section id="data-to-revit-api-filtervaluerule-conversion-helper-functions">
+<h3>data to revit api FilterValueRule conversion helper functions.<a class="headerlink" href="#data-to-revit-api-filtervaluerule-conversion-helper-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Utility.convert_data_to_filter_rule.create_filter_double_rule">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.convert_data_to_filter_rule.</span></span><span class="sig-name descname"><span class="pre">create_filter_double_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evaluator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_provider</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule_data_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.convert_data_to_filter_rule.create_filter_double_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a FilterDoubleRule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>evaluator</strong> (<em>Autodesk.Revit.DB.FilterDoubleEvaluator</em>) – The evaluator for the rule.</p></li>
+<li><p><strong>value_provider</strong> (<em>Autodesk.Revit.DB.ParameterValueProvider</em>) – The value provider for the rule.</p></li>
+<li><p><strong>rule_data_instance</strong> – The rule data instance containing the rule value and epsilon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The created FilterDoubleRule or None if creation failed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Utility.convert_data_to_filter_rule.create_filter_integer_rule">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.convert_data_to_filter_rule.</span></span><span class="sig-name descname"><span class="pre">create_filter_integer_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evaluator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_provider</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule_data_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.convert_data_to_filter_rule.create_filter_integer_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a FilterIntegerRule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>evaluator</strong> (<em>Autodesk.Revit.DB.FilterIntegerEvaluator</em>) – The evaluator for the rule.</p></li>
+<li><p><strong>value_provider</strong> (<em>Autodesk.Revit.DB.ParameterValueProvider</em>) – The value provider for the rule.</p></li>
+<li><p><strong>rule_data_instance</strong> – The rule data instance containing the rule value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The created FilterIntegerRule or None if creation failed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Utility.convert_data_to_filter_rule.create_filter_element_id_rule">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.convert_data_to_filter_rule.</span></span><span class="sig-name descname"><span class="pre">create_filter_element_id_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evaluator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_provider</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule_data_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.convert_data_to_filter_rule.create_filter_element_id_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a FilterElementIdRule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>evaluator</strong> (<em>Autodesk.Revit.DB.FilterIntegerEvaluator</em>) – The evaluator for the rule.</p></li>
+<li><p><strong>value_provider</strong> (<em>Autodesk.Revit.DB.ParameterValueProvider</em>) – The value provider for the rule.</p></li>
+<li><p><strong>rule_data_instance</strong> – The rule data instance containing the rule value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The created FilterElementIdRule or None if creation failed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Utility.convert_data_to_filter_rule.create_filter_string_rule">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.convert_data_to_filter_rule.</span></span><span class="sig-name descname"><span class="pre">create_filter_string_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evaluator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_provider</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule_data_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.convert_data_to_filter_rule.create_filter_string_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a FilterStringRule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>evaluator</strong> (<em>Autodesk.Revit.DB.FilterStringEvaluator</em>) – The evaluator for the rule.</p></li>
+<li><p><strong>value_provider</strong> (<em>Autodesk.Revit.DB.ParameterValueProvider</em>) – The value provider for the rule.</p></li>
+<li><p><strong>rule_data_instance</strong> – The rule data instance containing the rule value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The created FilterStringRule or None if creation failed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Utility.convert_data_to_filter_rule.create_filter_global_parameter_association_rule">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.convert_data_to_filter_rule.</span></span><span class="sig-name descname"><span class="pre">create_filter_global_parameter_association_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evaluator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_provider</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule_data_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.convert_data_to_filter_rule.create_filter_global_parameter_association_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a FilterGlobalParameterAssociationRule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>evaluator</strong> (<em>Autodesk.Revit.DB.FilterGlobalParameterAssociationEvaluator</em>) – The evaluator for the rule.</p></li>
+<li><p><strong>value_provider</strong> (<em>Autodesk.Revit.DB.ParameterValueProvider</em>) – The value provider for the rule.</p></li>
+<li><p><strong>rule_data_instance</strong> – The rule data instance containing the rule value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The created FilterGlobalParameterAssociationRule or None if creation failed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Utility.convert_data_to_filter_rule.get_rule_parameter">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.convert_data_to_filter_rule.</span></span><span class="sig-name descname"><span class="pre">get_rule_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule_data_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.convert_data_to_filter_rule.get_rule_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the parameter for the given rule data instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document.</p></li>
+<li><p><strong>rule_data_instance</strong> (<a class="reference internal" href="duHast.Revit.Views.Objects.Data.html#duHast.Revit.Views.Objects.Data.view_filter_rule.ViewFilterRule" title="duHast.Revit.Views.Objects.Data.view_filter_rule.ViewFilterRule"><em>ViewFilterRule</em></a>) – The rule data instance containing the parameter information.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Result object containing the parameter or an error message.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Utility.convert_data_to_filter_rule.get_rule_parameter_id">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.convert_data_to_filter_rule.</span></span><span class="sig-name descname"><span class="pre">get_rule_parameter_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule_data_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.convert_data_to_filter_rule.get_rule_parameter_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Utility.convert_data_to_filter_rule.convert_data_to_rule">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.convert_data_to_filter_rule.</span></span><span class="sig-name descname"><span class="pre">convert_data_to_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule_data_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.convert_data_to_filter_rule.convert_data_to_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a ViewFilterRule data instance to a Revit FilterValueRule.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>doc (Revit Document): The Revit document object.
+rule_data_instance (ViewFilterRule): An instance of the ViewFilterRule class containing the rule data.</p>
+</dd>
+<dt>Returns:</dt><dd><p>FilterValueRule or None: The created FilterValueRule object if successful, otherwise None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.Utility.convert_data_to_filter_value_provider">
+<span id="duhast-revit-views-utility-convert-data-to-filter-value-provider-module"></span><h2>duHast.Revit.Views.Utility.convert_data_to_filter_value_provider module<a class="headerlink" href="#module-duHast.Revit.Views.Utility.convert_data_to_filter_value_provider" title="Permalink to this heading">¶</a></h2>
+<section id="id1">
+<h3>storage to revit api value provider conversion helper functions.<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Utility.convert_data_to_filter_value_provider.get_value_provider_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.convert_data_to_filter_value_provider.</span></span><span class="sig-name descname"><span class="pre">get_value_provider_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.convert_data_to_filter_value_provider.get_value_provider_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an value provider class based on the provided class name.
+None ignored or not found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>class_name</strong> (<em>str</em>) – Name of the value provider class to retrieve.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The value provider class if found, otherwise None.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>class or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Views.Utility.convert_data_to_override_storage">
 <span id="duhast-revit-views-utility-convert-data-to-override-storage-module"></span><h2>duHast.Revit.Views.Utility.convert_data_to_override_storage module<a class="headerlink" href="#module-duHast.Revit.Views.Utility.convert_data_to_override_storage" title="Permalink to this heading">¶</a></h2>
 <section id="data-category-and-filter-override-instances-to-storage-object-helper-functions">

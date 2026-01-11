@@ -1,0 +1,921 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Cloud Document Manager Settings (Aconex Implementation) &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>Cloud Document Manager Settings (Aconex Implementation)</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Samples</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/samples/apps/dm_CloudDocumentManager_Aconex_Settings.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="cloud-document-manager-settings-aconex-implementation">
+<h1>Cloud Document Manager Settings (Aconex Implementation)<a class="headerlink" href="#cloud-document-manager-settings-aconex-implementation" title="Permalink to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
+<p>The Cloud Document Manager integration enables the application to export document metadata to cloud-based document management systems. The current implementation supports Aconex, a widely-used construction document management platform. This integration allows you to generate metadata CSV files that can be uploaded to Aconex along with your documents.</p>
+</section>
+<section id="general-settings">
+<h2>General Settings<a class="headerlink" href="#general-settings" title="Permalink to this heading">¶</a></h2>
+<section id="enable-cloud-document-manager-integration">
+<h3>Enable Cloud Document Manager Integration<a class="headerlink" href="#enable-cloud-document-manager-integration" title="Permalink to this heading">¶</a></h3>
+<p><strong>Description:</strong> Master switch that enables or disables the entire cloud document manager integration.</p>
+<p><strong>Type:</strong> Checkbox</p>
+<p><strong>Default:</strong> Disabled (unchecked)</p>
+<p><strong>Behavior:</strong></p>
+<ul class="simple">
+<li><p>When <strong>enabled</strong>: Provider selection and configuration sections become active</p></li>
+<li><p>When <strong>disabled</strong>: All provider controls are collapsed and disabled. No metadata export will occur during the merge process.</p></li>
+</ul>
+<p><strong>Usage:</strong> Enable this checkbox when you need to export document metadata for cloud document management systems. Leave disabled if you don’t use cloud-based document management.</p>
+</section>
+<hr class="docutils" />
+<section id="cloud-provider-selection">
+<h3>Cloud Provider Selection<a class="headerlink" href="#cloud-provider-selection" title="Permalink to this heading">¶</a></h3>
+<p><strong>Description:</strong> Dropdown menu to select which cloud document management provider to configure.</p>
+<p><strong>Available Options:</strong></p>
+<ul class="simple">
+<li><p><strong>None:</strong> No provider selected (default state)</p></li>
+<li><p><strong>Aconex:</strong> Aconex document management system</p></li>
+</ul>
+<p><strong>Behavior:</strong></p>
+<ul class="simple">
+<li><p>Only enabled when “Enable Cloud Document Manager Integration” is checked</p></li>
+<li><p>Switching providers will display a warning if existing configuration data exists</p></li>
+<li><p>Changing providers will clear the current provider configuration (after confirmation)</p></li>
+</ul>
+<p><strong>Future Expansion:</strong> Additional cloud providers (Procore, Autodesk Docs, PlanGrid, etc.) will be added as options in future versions.</p>
+<p><strong>Validation:</strong></p>
+<ul class="simple">
+<li><p>When cloud integration is enabled, a provider must be selected (cannot remain on “None”)</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="aconex-provider-configuration">
+<h2>Aconex Provider Configuration<a class="headerlink" href="#aconex-provider-configuration" title="Permalink to this heading">¶</a></h2>
+<p>When “Aconex” is selected as the cloud provider, the following configuration options become available.</p>
+<section id="template-file-configuration">
+<h3>Template File Configuration<a class="headerlink" href="#template-file-configuration" title="Permalink to this heading">¶</a></h3>
+<section id="template-file-path">
+<h4>Template File Path<a class="headerlink" href="#template-file-path" title="Permalink to this heading">¶</a></h4>
+<p><strong>Description:</strong> Path to the CSV metadata template file that defines the structure and fields for Aconex metadata export.</p>
+<p><strong>Type:</strong> Text input with Browse and Refresh buttons</p>
+<p><strong>Validation:</strong></p>
+<ul class="simple">
+<li><p><strong>Required:</strong> Cannot be empty when Aconex provider is selected</p></li>
+<li><p><strong>Must Exist:</strong> File must exist at the specified path</p></li>
+<li><p><strong>Format:</strong> Must be a CSV (.csv) file</p></li>
+</ul>
+<p><strong>Features:</strong></p>
+<section id="browse-button">
+<h5>Browse Button<a class="headerlink" href="#browse-button" title="Permalink to this heading">¶</a></h5>
+<p><strong>Function:</strong> Opens a file dialog to select the metadata template file</p>
+<p><strong>Dialog Filter:</strong> CSV files (*.csv)</p>
+<p><strong>Usage:</strong> Click to navigate to and select your Aconex metadata template file</p>
+</section>
+<section id="refresh-button">
+<h5>Refresh Button<a class="headerlink" href="#refresh-button" title="Permalink to this heading">¶</a></h5>
+<p><strong>Function:</strong> Re-reads the template file and updates available column headers</p>
+<p><strong>Enabled When:</strong></p>
+<ul class="simple">
+<li><p>A valid template file path is set</p></li>
+<li><p>The file exists</p></li>
+</ul>
+<p><strong>Behavior:</strong></p>
+<ul class="simple">
+<li><p>Reloads column headers from the CSV template</p></li>
+<li><p>Updates the list of available metadata fields</p></li>
+<li><p>Removes any mappings that reference fields no longer in the template</p></li>
+<li><p>Displays success message with the number of columns loaded</p></li>
+<li><p>Shows warnings for any issues (e.g., duplicate column headers)</p></li>
+<li><p>Notifies user if any existing mappings were removed due to missing fields</p></li>
+</ul>
+<p><strong>Use Case:</strong> Use this when you’ve modified the Aconex template file and need to update the application to reflect the changes.</p>
+</section>
+</section>
+<section id="template-file-loading">
+<h4>Template File Loading<a class="headerlink" href="#template-file-loading" title="Permalink to this heading">¶</a></h4>
+<p><strong>Automatic Loading:</strong> When a template file path is set or changed, the application automatically loads the column headers from the file.</p>
+<p><strong>Column Headers:</strong> The first row of the CSV file is read as the column headers. These headers represent the metadata fields that Aconex expects.</p>
+<p><strong>Success Indicators:</strong></p>
+<ul class="simple">
+<li><p>Information message showing number of columns loaded</p></li>
+<li><p>Metadata field mappings section becomes active</p></li>
+</ul>
+<p><strong>Error Conditions:</strong></p>
+<ul class="simple">
+<li><p>File cannot be read</p></li>
+<li><p>File is not a valid CSV</p></li>
+<li><p>File has no headers</p></li>
+<li><p>Duplicate column headers detected (shown as warning)</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="metadata-field-mappings">
+<h3>Metadata Field Mappings<a class="headerlink" href="#metadata-field-mappings" title="Permalink to this heading">¶</a></h3>
+<p>The Metadata Field Mappings section allows you to define how data from your document database maps to the metadata fields expected by Aconex. Each mapping connects an Aconex metadata field to either a static value, a document property, or a file property.</p>
+<section id="prerequisites">
+<h4>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">¶</a></h4>
+<p>Before adding mappings, you must:</p>
+<ol class="arabic simple">
+<li><p>Select and load a valid template file</p></li>
+<li><p>The template must contain column headers (available fields)</p></li>
+</ol>
+</section>
+<section id="mapping-concept">
+<h4>Mapping Concept<a class="headerlink" href="#mapping-concept" title="Permalink to this heading">¶</a></h4>
+<p>Each mapping has three components:</p>
+<ol class="arabic simple">
+<li><p><strong>Meta Field:</strong> The column name from the Aconex template (the destination field)</p></li>
+<li><p><strong>Value Source:</strong> Where the value comes from (static value, document property, or file property)</p></li>
+<li><p><strong>Type:</strong> The type of mapping (Fixed, Document Property, or File Property)</p></li>
+</ol>
+</section>
+<section id="mapping-types">
+<h4>Mapping Types<a class="headerlink" href="#mapping-types" title="Permalink to this heading">¶</a></h4>
+<section id="fixed-value-mapping">
+<h5>Fixed Value Mapping<a class="headerlink" href="#fixed-value-mapping" title="Permalink to this heading">¶</a></h5>
+<p><strong>Description:</strong> Maps a metadata field to a static, unchanging value.</p>
+<p><strong>Use Case:</strong> Use this for values that are the same for all documents in an export, such as:</p>
+<ul class="simple">
+<li><p>Project name</p></li>
+<li><p>Discipline</p></li>
+<li><p>Status codes</p></li>
+<li><p>Standard categories</p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<ul class="simple">
+<li><p>Meta Field: <code class="docutils literal notranslate"><span class="pre">Project</span></code></p></li>
+<li><p>Value: <code class="docutils literal notranslate"><span class="pre">Building</span> <span class="pre">ABC</span> <span class="pre">Construction</span></code></p></li>
+<li><p>Type: <code class="docutils literal notranslate"><span class="pre">Fixed</span></code></p></li>
+</ul>
+<p><strong>Result:</strong> Every exported document will have “Building ABC Construction” in the Project field.</p>
+</section>
+<section id="document-property-mapping">
+<h5>Document Property Mapping<a class="headerlink" href="#document-property-mapping" title="Permalink to this heading">¶</a></h5>
+<p><strong>Description:</strong> Maps a metadata field to a property from the document database.</p>
+<p><strong>Use Case:</strong> Use this for values that vary per document and come from your database, such as:</p>
+<ul class="simple">
+<li><p>Document number</p></li>
+<li><p>Document name</p></li>
+<li><p>Revision code</p></li>
+<li><p>Revision date</p></li>
+<li><p>Revision description</p></li>
+<li><p>Custom field values</p></li>
+</ul>
+<p><strong>Available Document Properties:</strong></p>
+<section id="standard-document-properties">
+<h6>Standard Document Properties<a class="headerlink" href="#standard-document-properties" title="Permalink to this heading">¶</a></h6>
+<ul class="simple">
+<li><p><strong>Number:</strong> The document number from the database</p></li>
+<li><p><strong>Name:</strong> The document name/title</p></li>
+<li><p><strong>Revision:</strong> The revision code (e.g., “A”, “B”, “P01”)</p></li>
+</ul>
+</section>
+<section id="standard-revision-properties">
+<h6>Standard Revision Properties<a class="headerlink" href="#standard-revision-properties" title="Permalink to this heading">¶</a></h6>
+<ul class="simple">
+<li><p><strong>RevisionDate:</strong> The date of the revision</p></li>
+<li><p><strong>Description:</strong> The revision description</p></li>
+</ul>
+</section>
+<section id="custom-field-properties">
+<h6>Custom Field Properties<a class="headerlink" href="#custom-field-properties" title="Permalink to this heading">¶</a></h6>
+<ul class="simple">
+<li><p>Any active custom field definitions in the database</p></li>
+<li><p>Custom fields appear by their property name</p></li>
+<li><p>Only active custom fields are available for mapping</p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<ul class="simple">
+<li><p>Meta Field: <code class="docutils literal notranslate"><span class="pre">Document</span> <span class="pre">Number</span></code></p></li>
+<li><p>Property: <code class="docutils literal notranslate"><span class="pre">Number</span></code></p></li>
+<li><p>Type: <code class="docutils literal notranslate"><span class="pre">Document</span> <span class="pre">Property</span></code></p></li>
+</ul>
+<p><strong>Result:</strong> Each exported document will have its database document number in the “Document Number” field.</p>
+</section>
+</section>
+<section id="file-property-mapping">
+<h5>File Property Mapping<a class="headerlink" href="#file-property-mapping" title="Permalink to this heading">¶</a></h5>
+<p><strong>Description:</strong> Maps a metadata field to a property extracted from the physical file being processed.</p>
+<p><strong>Use Case:</strong> Use this for values derived from the file itself, such as:</p>
+<ul class="simple">
+<li><p>File name</p></li>
+<li><p>File extension</p></li>
+<li><p>Directory path</p></li>
+<li><p>File name without extension</p></li>
+</ul>
+<p><strong>Available File Properties:</strong></p>
+<section id="filename">
+<h6>FileName<a class="headerlink" href="#filename" title="Permalink to this heading">¶</a></h6>
+<ul class="simple">
+<li><p><strong>Description:</strong> The file name including extension</p></li>
+<li><p><strong>Example:</strong> <code class="docutils literal notranslate"><span class="pre">Document-Rev-A.pdf</span></code></p></li>
+<li><p><strong>Use Case:</strong> When Aconex needs the actual filename that will be uploaded</p></li>
+</ul>
+</section>
+<section id="filenamewithoutextension">
+<h6>FileNameWithoutExtension<a class="headerlink" href="#filenamewithoutextension" title="Permalink to this heading">¶</a></h6>
+<ul class="simple">
+<li><p><strong>Description:</strong> The file name without the file extension</p></li>
+<li><p><strong>Example:</strong> <code class="docutils literal notranslate"><span class="pre">Document-Rev-A</span></code></p></li>
+<li><p><strong>Use Case:</strong> When you need the filename but not the extension</p></li>
+</ul>
+</section>
+<section id="extension">
+<h6>Extension<a class="headerlink" href="#extension" title="Permalink to this heading">¶</a></h6>
+<ul class="simple">
+<li><p><strong>Description:</strong> The file extension without the leading dot</p></li>
+<li><p><strong>Example:</strong> <code class="docutils literal notranslate"><span class="pre">pdf</span></code></p></li>
+<li><p><strong>Use Case:</strong> To categorize or filter documents by file type</p></li>
+</ul>
+</section>
+<section id="fullpath">
+<h6>FullPath<a class="headerlink" href="#fullpath" title="Permalink to this heading">¶</a></h6>
+<ul class="simple">
+<li><p><strong>Description:</strong> The complete file path including directory and filename</p></li>
+<li><p><strong>Example:</strong> <code class="docutils literal notranslate"><span class="pre">C:\Incoming\Document-Rev-A.pdf</span></code></p></li>
+<li><p><strong>Use Case:</strong> For audit trails or when full path context is needed</p></li>
+</ul>
+</section>
+<section id="directoryname">
+<h6>DirectoryName<a class="headerlink" href="#directoryname" title="Permalink to this heading">¶</a></h6>
+<ul class="simple">
+<li><p><strong>Description:</strong> The directory containing the file</p></li>
+<li><p><strong>Example:</strong> <code class="docutils literal notranslate"><span class="pre">C:\Incoming</span></code></p></li>
+<li><p><strong>Use Case:</strong> When directory location provides context (e.g., discipline folders)</p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<ul class="simple">
+<li><p>Meta Field: <code class="docutils literal notranslate"><span class="pre">File</span> <span class="pre">Name</span></code></p></li>
+<li><p>Property: <code class="docutils literal notranslate"><span class="pre">FileName</span></code></p></li>
+<li><p>Type: <code class="docutils literal notranslate"><span class="pre">File</span> <span class="pre">Property</span></code></p></li>
+</ul>
+<p><strong>Result:</strong> Each exported document will have its actual filename in the “File Name” field.</p>
+</section>
+</section>
+</section>
+<section id="mapping-management">
+<h4>Mapping Management<a class="headerlink" href="#mapping-management" title="Permalink to this heading">¶</a></h4>
+<section id="adding-a-mapping">
+<h5>Adding a Mapping<a class="headerlink" href="#adding-a-mapping" title="Permalink to this heading">¶</a></h5>
+<p><strong>Prerequisites:</strong></p>
+<ul class="simple">
+<li><p>Template file must be loaded</p></li>
+<li><p>At least one unmapped field must be available</p></li>
+</ul>
+<p><strong>Steps:</strong></p>
+<ol class="arabic simple">
+<li><p>Click the “Add” button</p></li>
+<li><p>Select a metadata field from the dropdown (shows only unmapped fields)</p></li>
+<li><p>Choose the mapping type:</p>
+<ul class="simple">
+<li><p><strong>Fixed Value:</strong> Enter a static value</p></li>
+<li><p><strong>Document Property:</strong> Select a document property from dropdown</p></li>
+<li><p><strong>File Property:</strong> Select a file property from dropdown</p></li>
+</ul>
+</li>
+<li><p>Click Save in the dialog</p></li>
+</ol>
+<p><strong>Validation:</strong></p>
+<ul class="simple">
+<li><p>Meta field must be selected</p></li>
+<li><p>For Fixed Value: Value cannot be empty</p></li>
+<li><p>For Document Property: Property must be selected</p></li>
+<li><p>For File Property: Property must be selected</p></li>
+<li><p>Cannot map the same field twice</p></li>
+</ul>
+<p><strong>Success:</strong></p>
+<ul class="simple">
+<li><p>Mapping added to the list</p></li>
+<li><p>Information message displayed</p></li>
+<li><p>Selected field removed from available unmapped fields</p></li>
+</ul>
+<p><strong>Error Conditions:</strong></p>
+<ul class="simple">
+<li><p>Template not loaded: Warning message displayed</p></li>
+<li><p>All fields already mapped: Information message displayed</p></li>
+<li><p>Validation failure: Error displayed in dialog</p></li>
+</ul>
+</section>
+<section id="editing-a-mapping">
+<h5>Editing a Mapping<a class="headerlink" href="#editing-a-mapping" title="Permalink to this heading">¶</a></h5>
+<p><strong>Prerequisites:</strong></p>
+<ul class="simple">
+<li><p>A mapping must be selected in the list</p></li>
+<li><p>Template file must be loaded</p></li>
+</ul>
+<p><strong>Steps:</strong></p>
+<ol class="arabic simple">
+<li><p>Select a mapping from the list</p></li>
+<li><p>Click the “Edit” button</p></li>
+<li><p>Modify the mapping properties in the dialog</p></li>
+<li><p>Click Save</p></li>
+</ol>
+<p><strong>Available Changes:</strong></p>
+<ul class="simple">
+<li><p>Can change the value/property</p></li>
+<li><p>Can change the mapping type (Fixed ↔ Document Property ↔ File Property)</p></li>
+<li><p>Cannot change the meta field (create a new mapping instead)</p></li>
+</ul>
+<p><strong>Note:</strong> When editing, all template fields are available (not just unmapped ones), allowing you to reassign a mapping to a different source.</p>
+</section>
+<section id="removing-a-mapping">
+<h5>Removing a Mapping<a class="headerlink" href="#removing-a-mapping" title="Permalink to this heading">¶</a></h5>
+<p><strong>Prerequisites:</strong></p>
+<ul class="simple">
+<li><p>A mapping must be selected in the list</p></li>
+</ul>
+<p><strong>Steps:</strong></p>
+<ol class="arabic simple">
+<li><p>Select a mapping from the list</p></li>
+<li><p>Click the “Remove” button</p></li>
+</ol>
+<p><strong>Behavior:</strong></p>
+<ul class="simple">
+<li><p>Mapping removed from the model</p></li>
+<li><p>Mapping removed from the display list</p></li>
+<li><p>Selection cleared</p></li>
+<li><p>Success message displayed</p></li>
+<li><p>The metadata field becomes available for remapping</p></li>
+</ul>
+<p><strong>Use Case:</strong> Remove mappings for fields you no longer need to export, or to reconfigure a mapping completely.</p>
+</section>
+</section>
+<section id="listview-columns">
+<h4>ListView Columns<a class="headerlink" href="#listview-columns" title="Permalink to this heading">¶</a></h4>
+<p>The Metadata Field Mappings list displays the following columns:</p>
+<section id="meta-field">
+<h5>Meta Field<a class="headerlink" href="#meta-field" title="Permalink to this heading">¶</a></h5>
+<p><strong>Description:</strong> The name of the metadata field from the Aconex template</p>
+<p><strong>Example:</strong> <code class="docutils literal notranslate"><span class="pre">Document</span> <span class="pre">Number</span></code>, <code class="docutils literal notranslate"><span class="pre">Revision</span></code>, <code class="docutils literal notranslate"><span class="pre">Project</span> <span class="pre">Name</span></code></p>
+</section>
+<section id="value-property">
+<h5>Value/Property<a class="headerlink" href="#value-property" title="Permalink to this heading">¶</a></h5>
+<p><strong>Description:</strong> The actual value or property name that provides the data</p>
+<p><strong>Examples:</strong></p>
+<ul class="simple">
+<li><p>For Fixed Value: <code class="docutils literal notranslate"><span class="pre">&quot;Building</span> <span class="pre">ABC&quot;</span></code> (the actual static value)</p></li>
+<li><p>For Document Property: <code class="docutils literal notranslate"><span class="pre">Number</span></code> (the property name)</p></li>
+<li><p>For File Property: <code class="docutils literal notranslate"><span class="pre">FileName</span></code> (the property name)</p></li>
+</ul>
+</section>
+<section id="type">
+<h5>Type<a class="headerlink" href="#type" title="Permalink to this heading">¶</a></h5>
+<p><strong>Description:</strong> The type of mapping</p>
+<p><strong>Values:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Fixed</span></code> - Static value</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Document</span> <span class="pre">Property</span></code> - Value from database</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">File</span> <span class="pre">Property</span></code> - Value from file</p></li>
+</ul>
+</section>
+</section>
+<section id="automatic-cleanup">
+<h4>Automatic Cleanup<a class="headerlink" href="#automatic-cleanup" title="Permalink to this heading">¶</a></h4>
+<p><strong>Trigger:</strong> When a custom field is deactivated in the database settings</p>
+<p><strong>Behavior:</strong></p>
+<ul class="simple">
+<li><p>The application automatically scans all Aconex mappings</p></li>
+<li><p>Removes any mappings that reference the deactivated custom field</p></li>
+<li><p>Displays a notification about removed mappings</p></li>
+<li><p>Updates the ListView to reflect changes</p></li>
+</ul>
+<p><strong>Purpose:</strong> Prevents invalid mappings from causing export errors</p>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="how-metadata-export-works">
+<h2>How Metadata Export Works<a class="headerlink" href="#how-metadata-export-works" title="Permalink to this heading">¶</a></h2>
+<section id="export-process-overview">
+<h3>Export Process Overview<a class="headerlink" href="#export-process-overview" title="Permalink to this heading">¶</a></h3>
+<p>When documents are merged/processed by the application with Cloud Document Manager integration enabled:</p>
+<ol class="arabic simple">
+<li><p><strong>For Each Document:</strong> The application evaluates all configured metadata mappings</p></li>
+<li><p><strong>Value Resolution:</strong> For each mapping:</p>
+<ul class="simple">
+<li><p>Fixed values are used as-is</p></li>
+<li><p>Document properties are looked up in the database</p></li>
+<li><p>File properties are extracted from the physical file</p></li>
+</ul>
+</li>
+<li><p><strong>CSV Generation:</strong> A metadata CSV file is generated with:</p>
+<ul class="simple">
+<li><p>Column headers matching the Aconex template</p></li>
+<li><p>One row per document</p></li>
+<li><p>Values populated according to mappings</p></li>
+</ul>
+</li>
+<li><p><strong>File Placement:</strong> The metadata CSV is saved alongside the processed documents</p></li>
+<li><p><strong>Upload to Aconex:</strong> The CSV can then be used when uploading documents to Aconex</p></li>
+</ol>
+</section>
+<section id="mapping-priority">
+<h3>Mapping Priority<a class="headerlink" href="#mapping-priority" title="Permalink to this heading">¶</a></h3>
+<p>When a metadata field has a mapping configured:</p>
+<ul class="simple">
+<li><p>The mapped value takes precedence</p></li>
+<li><p>Empty or null values are written as empty strings in the CSV</p></li>
+<li><p>Missing document properties result in empty values (with warning)</p></li>
+</ul>
+</section>
+<section id="unmapped-fields">
+<h3>Unmapped Fields<a class="headerlink" href="#unmapped-fields" title="Permalink to this heading">¶</a></h3>
+<p>Fields in the Aconex template that have no configured mapping:</p>
+<ul class="simple">
+<li><p>Will appear as empty columns in the exported CSV</p></li>
+<li><p>Can be filled manually in the CSV before upload</p></li>
+<li><p>Can be populated by Aconex’s default values (if configured in Aconex)</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="configuration-workflow">
+<h2>Configuration Workflow<a class="headerlink" href="#configuration-workflow" title="Permalink to this heading">¶</a></h2>
+<section id="initial-setup">
+<h3>Initial Setup<a class="headerlink" href="#initial-setup" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Obtain Aconex Template</strong></p>
+<ul class="simple">
+<li><p>Download the metadata template CSV from your Aconex project</p></li>
+<li><p>Save it to a accessible location on your computer</p></li>
+</ul>
+</li>
+<li><p><strong>Enable Integration</strong></p>
+<ul class="simple">
+<li><p>Check “Enable Cloud Document Manager Integration”</p></li>
+<li><p>Select “Aconex” from the Cloud Provider dropdown</p></li>
+</ul>
+</li>
+<li><p><strong>Load Template</strong></p>
+<ul class="simple">
+<li><p>Click Browse to select your template file</p></li>
+<li><p>Wait for automatic loading confirmation</p></li>
+<li><p>Verify the column count in the success message</p></li>
+</ul>
+</li>
+<li><p><strong>Configure Mappings</strong></p>
+<ul class="simple">
+<li><p>Review the required Aconex fields in your template</p></li>
+<li><p>Add mappings for all required fields (marked in Aconex documentation)</p></li>
+<li><p>Add mappings for optional fields as needed</p></li>
+<li><p>Use appropriate mapping types based on data source</p></li>
+</ul>
+</li>
+<li><p><strong>Test Configuration</strong></p>
+<ul class="simple">
+<li><p>Save settings</p></li>
+<li><p>Process a test document</p></li>
+<li><p>Verify the exported metadata CSV structure</p></li>
+<li><p>Check that values are correct</p></li>
+<li><p>Upload test CSV to Aconex to verify compatibility</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="updating-configuration">
+<h3>Updating Configuration<a class="headerlink" href="#updating-configuration" title="Permalink to this heading">¶</a></h3>
+<section id="when-template-changes">
+<h4>When Template Changes<a class="headerlink" href="#when-template-changes" title="Permalink to this heading">¶</a></h4>
+<p>If your Aconex project template is updated:</p>
+<ol class="arabic simple">
+<li><p>Replace the template file with the new version (or select new file)</p></li>
+<li><p>Click the “Refresh” button</p></li>
+<li><p>Review the notification about column changes</p></li>
+<li><p>Update mappings for new fields</p></li>
+<li><p>Verify removed mappings (if any fields were removed from template)</p></li>
+<li><p>Test with a sample document</p></li>
+</ol>
+</section>
+<section id="when-database-changes">
+<h4>When Database Changes<a class="headerlink" href="#when-database-changes" title="Permalink to this heading">¶</a></h4>
+<p>If custom fields are added/removed/modified:</p>
+<ol class="arabic simple">
+<li><p>For new custom fields: Add mappings as needed</p></li>
+<li><p>For removed/deactivated fields: Automatic cleanup occurs, review notifications</p></li>
+<li><p>For renamed fields: Update mappings to reference the new property name</p></li>
+</ol>
+</section>
+<section id="when-requirements-change">
+<h4>When Requirements Change<a class="headerlink" href="#when-requirements-change" title="Permalink to this heading">¶</a></h4>
+<p>If Aconex requirements change (new required fields, etc.):</p>
+<ol class="arabic simple">
+<li><p>Obtain updated template from Aconex</p></li>
+<li><p>Load new template</p></li>
+<li><p>Add mappings for new required fields</p></li>
+<li><p>Update existing mappings if field purposes changed</p></li>
+<li><p>Test thoroughly before production use</p></li>
+</ol>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="data-persistence">
+<h2>Data Persistence<a class="headerlink" href="#data-persistence" title="Permalink to this heading">¶</a></h2>
+<p>All Cloud Document Manager settings are:</p>
+<ol class="arabic simple">
+<li><p><strong>Synchronized</strong> with the <code class="docutils literal notranslate"><span class="pre">CloudDocumentManager</span></code> model in real-time</p></li>
+<li><p><strong>Validated</strong> when changes are made (template file path, mappings)</p></li>
+<li><p><strong>Saved</strong> to persistent storage when the Settings Save button is clicked</p></li>
+<li><p><strong>Loaded</strong> automatically when the Settings view is opened</p></li>
+</ol>
+<section id="what-gets-saved">
+<h3>What Gets Saved<a class="headerlink" href="#what-gets-saved" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Enabled State:</strong> Whether cloud integration is enabled</p></li>
+<li><p><strong>Provider Type:</strong> Selected provider (Aconex, or None)</p></li>
+<li><p><strong>Template Path:</strong> Path to the Aconex template file</p></li>
+<li><p><strong>Available Fields:</strong> Column headers from the template (loaded at runtime)</p></li>
+<li><p><strong>Mappings:</strong> All configured metadata field mappings</p></li>
+</ul>
+</section>
+<section id="configuration-files">
+<h3>Configuration Files<a class="headerlink" href="#configuration-files" title="Permalink to this heading">¶</a></h3>
+<p>The configuration is stored in the application’s settings file format and persists across application restarts.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="validation-summary">
+<h2>Validation Summary<a class="headerlink" href="#validation-summary" title="Permalink to this heading">¶</a></h2>
+<section id="integration-level">
+<h3>Integration Level<a class="headerlink" href="#integration-level" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>When Enabled:</strong> A cloud provider must be selected (cannot be None)</p></li>
+<li><p><strong>When Disabled:</strong> No validation, all settings inactive</p></li>
+</ul>
+</section>
+<section id="template-file">
+<h3>Template File<a class="headerlink" href="#template-file" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Required:</strong> Must be specified when Aconex provider is active</p></li>
+<li><p><strong>Must Exist:</strong> File path must point to an existing file</p></li>
+<li><p><strong>Format:</strong> Must be a CSV file (.csv extension)</p></li>
+<li><p><strong>Content:</strong> Must contain at least one column header</p></li>
+</ul>
+</section>
+<section id="mappings">
+<h3>Mappings<a class="headerlink" href="#mappings" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Unique Fields:</strong> Each metadata field can only be mapped once</p></li>
+<li><p><strong>Valid Properties:</strong> Document/File properties must exist in the system</p></li>
+<li><p><strong>Complete Mappings:</strong> Each mapping must have a value source configured</p></li>
+<li><p><strong>Template Synchronization:</strong> Mappings automatically cleaned when fields removed from template</p></li>
+</ul>
+</section>
+<section id="validation-feedback">
+<h3>Validation Feedback<a class="headerlink" href="#validation-feedback" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Field-level errors:</strong> Displayed as validation messages in dialogs</p></li>
+<li><p><strong>Template errors:</strong> Displayed in message banner after file operations</p></li>
+<li><p><strong>Mapping errors:</strong> Displayed when adding/editing mappings</p></li>
+<li><p><strong>Warnings:</strong> Shown for non-critical issues (duplicate headers, removed mappings)</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this heading">¶</a></h2>
+<section id="template-management">
+<h3>Template Management<a class="headerlink" href="#template-management" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Version Control:</strong> Keep versions of your Aconex template files with dates in filename</p></li>
+<li><p><strong>Test First:</strong> Always test template changes with sample data before production use</p></li>
+<li><p><strong>Backup:</strong> Keep a backup of your working template file</p></li>
+<li><p><strong>Document Changes:</strong> Note what changed between template versions</p></li>
+</ol>
+</section>
+<section id="mapping-strategy">
+<h3>Mapping Strategy<a class="headerlink" href="#mapping-strategy" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Required Fields First:</strong> Map all Aconex-required fields before optional ones</p></li>
+<li><p><strong>Use Fixed Values Sparingly:</strong> Prefer document properties for data that varies</p></li>
+<li><p><strong>Consistent Naming:</strong> Use consistent property names across your database</p></li>
+<li><p><strong>Document Mappings:</strong> Keep notes on what each mapping represents and why it’s configured that way</p></li>
+</ol>
+</section>
+<section id="data-quality">
+<h3>Data Quality<a class="headerlink" href="#data-quality" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Validate Sources:</strong> Ensure document properties are consistently populated in your database</p></li>
+<li><p><strong>Handle Missing Data:</strong> Plan for missing values (empty fields in Aconex)</p></li>
+<li><p><strong>Test Thoroughly:</strong> Process test documents before bulk operations</p></li>
+<li><p><strong>Review Exports:</strong> Periodically review exported CSV files for accuracy</p></li>
+</ol>
+</section>
+<section id="workflow-integration">
+<h3>Workflow Integration<a class="headerlink" href="#workflow-integration" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Training:</strong> Train users on the importance of accurate database entry</p></li>
+<li><p><strong>Custom Fields:</strong> Design custom fields with Aconex export needs in mind</p></li>
+<li><p><strong>Automation:</strong> Leverage document properties to minimize manual metadata entry</p></li>
+<li><p><strong>Quality Checks:</strong> Implement checks before uploading to Aconex</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading">¶</a></h2>
+<section id="common-issues">
+<h3>Common Issues<a class="headerlink" href="#common-issues" title="Permalink to this heading">¶</a></h3>
+<section id="issue-template-file-won-t-load">
+<h4>Issue: Template file won’t load<a class="headerlink" href="#issue-template-file-won-t-load" title="Permalink to this heading">¶</a></h4>
+<p><strong>Symptoms:</strong> Error message when selecting template, or no column headers loaded</p>
+<p><strong>Solutions:</strong></p>
+<ul class="simple">
+<li><p>Verify file is a valid CSV format (open in Excel to check)</p></li>
+<li><p>Check file is not locked by another application</p></li>
+<li><p>Ensure file path doesn’t contain special characters</p></li>
+<li><p>Verify you have read permissions on the file</p></li>
+<li><p>Check the CSV has a header row</p></li>
+</ul>
+</section>
+<section id="issue-cannot-add-mappings">
+<h4>Issue: Cannot add mappings<a class="headerlink" href="#issue-cannot-add-mappings" title="Permalink to this heading">¶</a></h4>
+<p><strong>Symptoms:</strong> “Template not loaded” warning when clicking Add</p>
+<p><strong>Solutions:</strong></p>
+<ul class="simple">
+<li><p>Ensure template file is selected and loaded</p></li>
+<li><p>Click Refresh button to reload template</p></li>
+<li><p>Verify template file still exists at the specified path</p></li>
+<li><p>Check that template has valid column headers</p></li>
+</ul>
+</section>
+<section id="issue-mappings-removed-after-refresh">
+<h4>Issue: Mappings removed after refresh<a class="headerlink" href="#issue-mappings-removed-after-refresh" title="Permalink to this heading">¶</a></h4>
+<p><strong>Symptoms:</strong> Warning about removed mappings after clicking Refresh</p>
+<p><strong>Solutions:</strong></p>
+<ul class="simple">
+<li><p>Compare old and new template files to see what changed</p></li>
+<li><p>Re-add mappings for fields that still exist (may have been renamed)</p></li>
+<li><p>If fields truly removed from Aconex requirements, no action needed</p></li>
+<li><p>Update template file if changes were unintentional</p></li>
+</ul>
+</section>
+<section id="issue-exported-csv-doesn-t-match-aconex-expectations">
+<h4>Issue: Exported CSV doesn’t match Aconex expectations<a class="headerlink" href="#issue-exported-csv-doesn-t-match-aconex-expectations" title="Permalink to this heading">¶</a></h4>
+<p><strong>Symptoms:</strong> Aconex rejects CSV upload or data appears incorrect</p>
+<p><strong>Solutions:</strong></p>
+<ul class="simple">
+<li><p>Verify template file matches current Aconex project template exactly</p></li>
+<li><p>Check all required Aconex fields have mappings</p></li>
+<li><p>Review mapping values in exported CSV</p></li>
+<li><p>Verify document properties are correctly populated in database</p></li>
+<li><p>Test with Aconex’s CSV validation tool (if available)</p></li>
+</ul>
+</section>
+<section id="issue-custom-field-mappings-showing-errors">
+<h4>Issue: Custom field mappings showing errors<a class="headerlink" href="#issue-custom-field-mappings-showing-errors" title="Permalink to this heading">¶</a></h4>
+<p><strong>Symptoms:</strong> Mappings referencing custom fields show errors or produce empty values</p>
+<p><strong>Solutions:</strong></p>
+<ul class="simple">
+<li><p>Verify custom field is still active in database settings</p></li>
+<li><p>Check custom field property name hasn’t changed</p></li>
+<li><p>Ensure documents in database have values for the custom field</p></li>
+<li><p>Re-map if custom field was recreated with different property name</p></li>
+</ul>
+</section>
+<section id="issue-file-property-mappings-produce-unexpected-values">
+<h4>Issue: File property mappings produce unexpected values<a class="headerlink" href="#issue-file-property-mappings-produce-unexpected-values" title="Permalink to this heading">¶</a></h4>
+<p><strong>Symptoms:</strong> File properties in CSV don’t match expectations</p>
+<p><strong>Solutions:</strong></p>
+<ul class="simple">
+<li><p>Verify files are in the expected location (check FullPath)</p></li>
+<li><p>Check for special characters in filenames</p></li>
+<li><p>Ensure file extensions match expected format</p></li>
+<li><p>Review file naming conventions for consistency</p></li>
+</ul>
+</section>
+</section>
+<section id="validation-errors">
+<h3>Validation Errors<a class="headerlink" href="#validation-errors" title="Permalink to this heading">¶</a></h3>
+<section id="template-file-path-is-empty-null">
+<h4>“Template file path is empty (null)”<a class="headerlink" href="#template-file-path-is-empty-null" title="Permalink to this heading">¶</a></h4>
+<p><strong>Cause:</strong> Template file path not set</p>
+<p><strong>Solution:</strong> Click Browse and select a template file</p>
+</section>
+<section id="template-file-does-not-exist">
+<h4>“Template file does not exist”<a class="headerlink" href="#template-file-does-not-exist" title="Permalink to this heading">¶</a></h4>
+<p><strong>Cause:</strong> File was moved or deleted</p>
+<p><strong>Solution:</strong> Browse to the correct file location or restore the file</p>
+</section>
+<section id="template-file-must-be-a-csv-csv-file">
+<h4>“Template file must be a CSV (.csv) file”<a class="headerlink" href="#template-file-must-be-a-csv-csv-file" title="Permalink to this heading">¶</a></h4>
+<p><strong>Cause:</strong> Selected file has wrong extension</p>
+<p><strong>Solution:</strong> Select a CSV file, not Excel or other format</p>
+</section>
+<section id="no-provider-selected">
+<h4>“No provider selected”<a class="headerlink" href="#no-provider-selected" title="Permalink to this heading">¶</a></h4>
+<p><strong>Cause:</strong> Cloud integration enabled but provider set to “None”</p>
+<p><strong>Solution:</strong> Select “Aconex” from the Cloud Provider dropdown</p>
+</section>
+</section>
+<section id="warning-messages">
+<h3>Warning Messages<a class="headerlink" href="#warning-messages" title="Permalink to this heading">¶</a></h3>
+<section id="duplicate-column-headers-detected-in-template">
+<h4>“Duplicate column headers detected in template”<a class="headerlink" href="#duplicate-column-headers-detected-in-template" title="Permalink to this heading">¶</a></h4>
+<p><strong>Meaning:</strong> Template CSV has duplicate column names</p>
+<p><strong>Impact:</strong> Mappings may not work correctly for duplicate columns</p>
+<p><strong>Solution:</strong> Fix the template file to have unique column names</p>
+</section>
+<section id="removed-x-mapping-s-for-fields-no-longer-in-template">
+<h4>“Removed X mapping(s) for fields no longer in template”<a class="headerlink" href="#removed-x-mapping-s-for-fields-no-longer-in-template" title="Permalink to this heading">¶</a></h4>
+<p><strong>Meaning:</strong> Template was updated and some fields were removed</p>
+<p><strong>Impact:</strong> Those mappings won’t export data anymore</p>
+<p><strong>Solution:</strong> Review removed fields, re-add if they were mistakenly removed from template</p>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="integration-with-other-features">
+<h2>Integration with Other Features<a class="headerlink" href="#integration-with-other-features" title="Permalink to this heading">¶</a></h2>
+<section id="document-database">
+<h3>Document Database<a class="headerlink" href="#document-database" title="Permalink to this heading">¶</a></h3>
+<p>The Cloud Document Manager relies heavily on the document database:</p>
+<ul class="simple">
+<li><p>Document properties (Number, Name, Revision) must be populated</p></li>
+<li><p>Custom fields used in mappings must have values</p></li>
+<li><p>Inactive custom fields cannot be used in mappings</p></li>
+</ul>
+</section>
+<section id="current-folder-settings">
+<h3>Current Folder Settings<a class="headerlink" href="#current-folder-settings" title="Permalink to this heading">¶</a></h3>
+<p>Works in conjunction with Current Folder settings:</p>
+<ul class="simple">
+<li><p>Files processed through the incoming folder workflow</p></li>
+<li><p>Metadata exported during the merge operation</p></li>
+<li><p>File properties extracted from incoming files</p></li>
+</ul>
+</section>
+<section id="merge-process">
+<h3>Merge Process<a class="headerlink" href="#merge-process" title="Permalink to this heading">¶</a></h3>
+<p>The metadata export occurs during the merge process:</p>
+<ul class="simple">
+<li><p>After documents are matched to database</p></li>
+<li><p>Before final file organization</p></li>
+<li><p>One CSV per batch of processed documents</p></li>
+<li><p>CSV placed in output location with documents</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="security-and-privacy-considerations">
+<h2>Security and Privacy Considerations<a class="headerlink" href="#security-and-privacy-considerations" title="Permalink to this heading">¶</a></h2>
+<section id="template-files">
+<h3>Template Files<a class="headerlink" href="#template-files" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Template files may contain sensitive project information</p></li>
+<li><p>Store templates in secure locations</p></li>
+<li><p>Control access to template files</p></li>
+<li><p>Consider encryption for highly sensitive projects</p></li>
+</ul>
+</section>
+<section id="metadata-content">
+<h3>Metadata Content<a class="headerlink" href="#metadata-content" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Review what data is being exported to Aconex</p></li>
+<li><p>Ensure compliance with data privacy regulations</p></li>
+<li><p>Be cautious with personal information in metadata</p></li>
+<li><p>Follow organizational data governance policies</p></li>
+</ul>
+</section>
+<section id="file-properties">
+<h3>File Properties<a class="headerlink" href="#file-properties" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Be aware that file paths may reveal internal structure</p></li>
+<li><p>Consider implications of exporting directory names</p></li>
+<li><p>Review full path exports for sensitive location information</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="future-enhancements">
+<h2>Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permalink to this heading">¶</a></h2>
+<section id="planned-features">
+<h3>Planned Features<a class="headerlink" href="#planned-features" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Additional Providers:</strong> Procore, Autodesk Docs, PlanGrid support</p></li>
+<li><p><strong>Field Transformations:</strong> Apply formatting or transformations to values</p></li>
+<li><p><strong>Conditional Mappings:</strong> Map different values based on conditions</p></li>
+<li><p><strong>Bulk Mapping:</strong> Configure multiple similar mappings at once</p></li>
+<li><p><strong>Mapping Templates:</strong> Save and reuse mapping configurations</p></li>
+<li><p><strong>Import/Export:</strong> Share mapping configurations between installations</p></li>
+</ul>
+</section>
+<section id="version-compatibility">
+<h3>Version Compatibility<a class="headerlink" href="#version-compatibility" title="Permalink to this heading">¶</a></h3>
+<p>The current Aconex implementation is designed to be:</p>
+<ul class="simple">
+<li><p><strong>Forward-compatible:</strong> New features won’t break existing mappings</p></li>
+<li><p><strong>Extensible:</strong> Additional providers use the same architecture</p></li>
+<li><p><strong>Configurable:</strong> Settings can be updated without code changes</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="related-documentation">
+<h2>Related Documentation<a class="headerlink" href="#related-documentation" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Current Folder Settings:</strong> Document processing and filing rules</p></li>
+<li><p><strong>Database Settings:</strong> Custom field configuration used in mappings</p></li>
+<li><p><strong>Merge View:</strong> Where metadata export actually occurs</p></li>
+<li><p><strong>Document/Revision Models:</strong> Available properties for mapping</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="glossary">
+<h2>Glossary<a class="headerlink" href="#glossary" title="Permalink to this heading">¶</a></h2>
+<p><strong>Aconex:</strong> Cloud-based construction document management and collaboration platform</p>
+<p><strong>Cloud Provider:</strong> The document management system being integrated with</p>
+<p><strong>Metadata:</strong> Information about documents (properties, attributes) separate from document content</p>
+<p><strong>Template File:</strong> CSV file defining the structure and fields for metadata export</p>
+<p><strong>Mapping:</strong> Connection between an Aconex field and a data source (fixed value, property, or file attribute)</p>
+<p><strong>Fixed Value Mapping:</strong> Mapping with a static value used for all documents</p>
+<p><strong>Document Property Mapping:</strong> Mapping that pulls values from the document database</p>
+<p><strong>File Property Mapping:</strong> Mapping that extracts values from the physical file</p>
+<p><strong>Column Header:</strong> Field name from the first row of the CSV template</p>
+<p><strong>Meta Field:</strong> A metadata field in the Aconex template that needs to be populated</p>
+<p><strong>Custom Field:</strong> User-defined property in the document database</p>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                Cloud Document Manager Settings (Aconex Implementation)
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

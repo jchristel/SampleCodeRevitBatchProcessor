@@ -1,0 +1,1203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Database Connection Settings &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>Database Connection Settings</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Samples</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/samples/apps/dm_DatabaseConnection_Settings.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="database-connection-settings">
+<h1>Database Connection Settings<a class="headerlink" href="#database-connection-settings" title="Permalink to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
+<p>The Database Connection section in the Settings view manages all aspects of the SQLite database used by the application. This includes database creation, connection management, data import/export, and custom field definitions. The database stores all document and revision information used by the application for matching, tracking, and metadata management.</p>
+</section>
+<section id="technology">
+<h2>Technology<a class="headerlink" href="#technology" title="Permalink to this heading">¶</a></h2>
+<p>The application uses <strong>SQLite</strong> as its database engine with the <strong>sqlite-net-pcl</strong> library as the Object-Relational Mapping (ORM) layer. This provides a lightweight, file-based database solution that requires no separate database server installation.</p>
+</section>
+<hr class="docutils" />
+<section id="database-path-and-connection-management">
+<h2>Database Path and Connection Management<a class="headerlink" href="#database-path-and-connection-management" title="Permalink to this heading">¶</a></h2>
+<section id="database-path">
+<h3>Database Path<a class="headerlink" href="#database-path" title="Permalink to this heading">¶</a></h3>
+<p><strong>Description:</strong> The file path where the SQLite database is located or will be created.</p>
+<p><strong>Type:</strong> Text input</p>
+<p><strong>Format:</strong> Full file path with <code class="docutils literal notranslate"><span class="pre">.db</span></code> or <code class="docutils literal notranslate"><span class="pre">.sqlite</span></code> extension</p>
+<p><strong>Example:</strong> <code class="docutils literal notranslate"><span class="pre">C:\ProjectData\DocumentDatabase.db</span></code></p>
+<p><strong>Validation:</strong></p>
+<ul class="simple">
+<li><p><strong>When Connected:</strong> Path must be valid and database must be connected</p></li>
+<li><p><strong>When Disconnected:</strong> No validation (allows entering path before connection)</p></li>
+<li><p><strong>For Creation:</strong> Directory must exist or be creatable, filename must be valid</p></li>
+</ul>
+<p><strong>Features:</strong></p>
+<section id="browse-button">
+<h4>Browse Button<a class="headerlink" href="#browse-button" title="Permalink to this heading">¶</a></h4>
+<p><strong>Function:</strong> Opens a file browser dialog to select an existing database file</p>
+<p><strong>Dialog Filter:</strong></p>
+<ul class="simple">
+<li><p>Database files (*.db)</p></li>
+<li><p>SQLite files (*.sqlite)</p></li>
+<li><p>All files (<em>.</em>)</p></li>
+</ul>
+<p><strong>Enabled When:</strong></p>
+<ul class="simple">
+<li><p>Not busy with database operations</p></li>
+</ul>
+<p><strong>Usage:</strong></p>
+<ul class="simple">
+<li><p>Select an existing database to connect to</p></li>
+<li><p>Navigate to the desired location when creating a new database</p></li>
+</ul>
+</section>
+<section id="connect-button">
+<h4>Connect Button<a class="headerlink" href="#connect-button" title="Permalink to this heading">¶</a></h4>
+<p><strong>Function:</strong> Establishes connection to an existing database at the specified path</p>
+<p><strong>Enabled When:</strong></p>
+<ul class="simple">
+<li><p>Database path is specified</p></li>
+<li><p>File exists at the specified path</p></li>
+<li><p>Not busy with database operations</p></li>
+</ul>
+<p><strong>Process:</strong></p>
+<ol class="arabic simple">
+<li><p>Validates file exists</p></li>
+<li><p>Opens database connection</p></li>
+<li><p>Verifies database schema</p></li>
+<li><p>Loads data into the application’s Manager</p></li>
+<li><p>Updates connection status</p></li>
+<li><p>Initializes custom fields collection</p></li>
+<li><p>Enables import/export operations</p></li>
+</ol>
+<p><strong>Success Indicators:</strong></p>
+<ul class="simple">
+<li><p>Import/Export buttons become enabled</p></li>
+<li><p>Custom Fields expander becomes accessible</p></li>
+<li><p>Data is loaded and available for use</p></li>
+</ul>
+<p><strong>Error Conditions:</strong></p>
+<ul class="simple">
+<li><p>File doesn’t exist at specified path</p></li>
+<li><p>Database file is corrupted</p></li>
+<li><p>Database schema is incompatible</p></li>
+<li><p>Database is locked by another process</p></li>
+</ul>
+</section>
+<section id="create-database-button">
+<h4>Create Database Button<a class="headerlink" href="#create-database-button" title="Permalink to this heading">¶</a></h4>
+<p><strong>Function:</strong> Creates a new SQLite database at the specified path with the required schema</p>
+<p><strong>Enabled When:</strong></p>
+<ul class="simple">
+<li><p>Database path is specified</p></li>
+<li><p>Path is valid (directory exists or can be created)</p></li>
+<li><p>Not busy with database operations</p></li>
+</ul>
+<p><strong>Process:</strong></p>
+<ol class="arabic simple">
+<li><p>Shows Save File Dialog to select location and name</p></li>
+<li><p>Creates database file at specified location</p></li>
+<li><p>Initializes schema (Document, Revision, CustomProperty tables)</p></li>
+<li><p>Creates indexes for performance</p></li>
+<li><p>Establishes connection to new database</p></li>
+<li><p>Loads (empty) data into Manager</p></li>
+<li><p>Updates connection status</p></li>
+</ol>
+<p><strong>Overwrite Behavior:</strong> If file already exists, will overwrite it with a new empty database</p>
+<p><strong>Success Indicators:</strong></p>
+<ul class="simple">
+<li><p>Success message displayed with database filename</p></li>
+<li><p>Database path updated</p></li>
+<li><p>Connection established</p></li>
+<li><p>Import/Export buttons enabled</p></li>
+<li><p>Custom Fields expander accessible</p></li>
+</ul>
+<p><strong>Warning:</strong> Creating a new database will overwrite any existing file at the same path. Ensure you have backups before creating a database at an existing location.</p>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="import-export-operations">
+<h2>Import/Export Operations<a class="headerlink" href="#import-export-operations" title="Permalink to this heading">¶</a></h2>
+<p>All import and export operations require an active database connection. These operations work with CSV format files for easy data exchange with external systems and spreadsheet applications.</p>
+<section id="revision-history-mode-selection">
+<h3>Revision History Mode Selection<a class="headerlink" href="#revision-history-mode-selection" title="Permalink to this heading">¶</a></h3>
+<p><strong>Description:</strong> Checkbox that controls how revision history is handled during import/export operations.</p>
+<p><strong>Options:</strong></p>
+<section id="include-full-revision-history-checked">
+<h4>Include Full Revision History (Checked)<a class="headerlink" href="#include-full-revision-history-checked" title="Permalink to this heading">¶</a></h4>
+<p><strong>Behavior:</strong></p>
+<ul class="simple">
+<li><p>Exports ALL documents in ALL revisions</p></li>
+<li><p>Documents not in a particular revision appear with blank revision indicators</p></li>
+<li><p>Creates a complete matrix of documents × revisions</p></li>
+<li><p>Results in larger CSV files with many blank cells</p></li>
+</ul>
+<p><strong>Use Case:</strong></p>
+<ul class="simple">
+<li><p>When you need to see which documents are present in each revision</p></li>
+<li><p>For comprehensive revision tracking across all documents</p></li>
+<li><p>When importing/exporting to systems that expect a full matrix</p></li>
+</ul>
+<p><strong>Example:</strong> If you have 100 documents and 10 revisions, the export will have up to 1000 rows (100 × 10), with blanks where a document wasn’t part of that revision.</p>
+</section>
+<section id="revision-history-only-unchecked-default">
+<h4>Revision History Only (Unchecked - Default)<a class="headerlink" href="#revision-history-only-unchecked-default" title="Permalink to this heading">¶</a></h4>
+<p><strong>Behavior:</strong></p>
+<ul class="simple">
+<li><p>Exports only documents that have revision indicators in each revision</p></li>
+<li><p>Skips documents that weren’t part of a revision</p></li>
+<li><p>Creates more compact CSV files</p></li>
+<li><p>Only includes meaningful revision history entries</p></li>
+</ul>
+<p><strong>Use Case:</strong></p>
+<ul class="simple">
+<li><p>When you only care about documents that have explicit revision markers</p></li>
+<li><p>For smaller, more focused exports</p></li>
+<li><p>When most documents don’t participate in every revision</p></li>
+</ul>
+<p><strong>Example:</strong> If you have 100 documents but only 30 have revision indicators, the export will only include those 30 documents’ revision entries.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="document-operations">
+<h3>Document Operations<a class="headerlink" href="#document-operations" title="Permalink to this heading">¶</a></h3>
+<section id="import-documents">
+<h4>Import Documents<a class="headerlink" href="#import-documents" title="Permalink to this heading">¶</a></h4>
+<p><strong>Function:</strong> Imports document data from a CSV file into the database</p>
+<p><strong>Button:</strong> Import Documents</p>
+<p><strong>Enabled When:</strong></p>
+<ul class="simple">
+<li><p>Database is connected</p></li>
+<li><p>Not busy with other operations</p></li>
+</ul>
+<p><strong>Process:</strong></p>
+<ol class="arabic simple">
+<li><p>Opens file dialog to select CSV file</p></li>
+<li><p>Parses CSV and validates format</p></li>
+<li><p>Creates or updates documents in database</p></li>
+<li><p>Creates custom property records for new documents</p></li>
+<li><p>Reloads data into Manager</p></li>
+<li><p>Displays success/error statistics</p></li>
+</ol>
+<p><strong>CSV Format Expected:</strong></p>
+<p><strong>Required Columns:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Number</span></code> - Document number (unique identifier)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Name</span></code> - Document name/title</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Revision</span></code> - Current revision code</p></li>
+</ul>
+<p><strong>Optional Columns:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[CustomFieldName]</span></code> - Any active custom field property name</p></li>
+<li><p>Custom fields must match those defined in the database</p></li>
+</ul>
+<p><strong>Revision History Columns (if using Full Revision History Mode):</strong></p>
+<ul class="simple">
+<li><p>Columns named after revision codes (e.g., <code class="docutils literal notranslate"><span class="pre">A</span></code>, <code class="docutils literal notranslate"><span class="pre">B</span></code>, <code class="docutils literal notranslate"><span class="pre">C</span></code>, <code class="docutils literal notranslate"><span class="pre">P01</span></code>)</p></li>
+<li><p>Values are revision indicators (e.g., <code class="docutils literal notranslate"><span class="pre">S0</span></code>, <code class="docutils literal notranslate"><span class="pre">S1</span></code>, <code class="docutils literal notranslate"><span class="pre">AS</span></code>, <code class="docutils literal notranslate"><span class="pre">-</span></code>)</p></li>
+<li><p>Blank cells indicate document was not in that revision</p></li>
+</ul>
+<p><strong>Import Behavior:</strong></p>
+<p><strong>New Documents:</strong></p>
+<ul class="simple">
+<li><p>Created with specified properties</p></li>
+<li><p>Custom property records created for all active custom fields</p></li>
+<li><p>Blank custom fields set to empty string</p></li>
+</ul>
+<p><strong>Existing Documents:</strong></p>
+<ul class="simple">
+<li><p>Updated with new values</p></li>
+<li><p>Document number used as primary key for matching</p></li>
+<li><p>Custom properties updated or created as needed</p></li>
+</ul>
+<p><strong>Validation:</strong></p>
+<ul class="simple">
+<li><p>CSV must have required columns</p></li>
+<li><p>Document numbers must be valid (not null/empty)</p></li>
+<li><p>Warns about documents with issues but continues with others</p></li>
+</ul>
+<p><strong>Success Message:</strong> Shows count of documents created and updated</p>
+<p><strong>Error Handling:</strong></p>
+<ul class="simple">
+<li><p>Displays first error encountered if import fails</p></li>
+<li><p>Partial imports possible (some documents may succeed)</p></li>
+<li><p>Check message banner for detailed error information</p></li>
+</ul>
+</section>
+<section id="export-documents">
+<h4>Export Documents<a class="headerlink" href="#export-documents" title="Permalink to this heading">¶</a></h4>
+<p><strong>Function:</strong> Exports document data from the database to a CSV file</p>
+<p><strong>Button:</strong> Export Documents</p>
+<p><strong>Enabled When:</strong></p>
+<ul class="simple">
+<li><p>Database is connected</p></li>
+<li><p>Data is loaded into Manager</p></li>
+<li><p>Not busy with other operations</p></li>
+</ul>
+<p><strong>Process:</strong></p>
+<ol class="arabic simple">
+<li><p>Validates data is loaded</p></li>
+<li><p>Opens Save File Dialog for output location</p></li>
+<li><p>Retrieves all documents from Manager</p></li>
+<li><p>Retrieves all active custom field definitions</p></li>
+<li><p>Retrieves all revisions (if applicable)</p></li>
+<li><p>Generates CSV with appropriate columns</p></li>
+<li><p>Writes file to specified location</p></li>
+<li><p>Displays success message with count</p></li>
+</ol>
+<p><strong>CSV Format Generated:</strong></p>
+<p><strong>Standard Columns:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Number</span></code> - Document number</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Name</span></code> - Document name</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Revision</span></code> - Current revision code</p></li>
+</ul>
+<p><strong>Custom Field Columns:</strong></p>
+<ul class="simple">
+<li><p>One column per active custom field</p></li>
+<li><p>Column header matches custom field property name</p></li>
+<li><p>Values from custom property records</p></li>
+</ul>
+<p><strong>Revision History Columns (if Full Revision History Mode enabled):</strong></p>
+<ul class="simple">
+<li><p>One column per revision code</p></li>
+<li><p>Contains revision indicators for that document in that revision</p></li>
+<li><p>Blank for documents not in that revision</p></li>
+</ul>
+<p><strong>File Naming:</strong> Default filename is <code class="docutils literal notranslate"><span class="pre">Documents.csv</span></code> but can be changed in Save dialog</p>
+<p><strong>Success Message:</strong> Shows count of documents exported and output filename</p>
+<p><strong>Use Cases:</strong></p>
+<ul class="simple">
+<li><p>Backup document data</p></li>
+<li><p>Share document list with external systems</p></li>
+<li><p>Bulk editing in spreadsheet applications</p></li>
+<li><p>Data migration between databases</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="revision-operations">
+<h3>Revision Operations<a class="headerlink" href="#revision-operations" title="Permalink to this heading">¶</a></h3>
+<section id="import-revisions">
+<h4>Import Revisions<a class="headerlink" href="#import-revisions" title="Permalink to this heading">¶</a></h4>
+<p><strong>Function:</strong> Imports revision definitions from a CSV file into the database</p>
+<p><strong>Button:</strong> Import Revisions</p>
+<p><strong>Enabled When:</strong></p>
+<ul class="simple">
+<li><p>Database is connected</p></li>
+<li><p>Data is loaded into Manager</p></li>
+<li><p>Not busy with other operations</p></li>
+</ul>
+<p><strong>Process:</strong></p>
+<ol class="arabic simple">
+<li><p>Opens file dialog to select CSV file</p></li>
+<li><p>Parses CSV and validates format</p></li>
+<li><p>Creates or updates revisions in database</p></li>
+<li><p>Reloads data into Manager</p></li>
+<li><p>Displays success/error statistics</p></li>
+</ol>
+<p><strong>CSV Format Expected:</strong></p>
+<p><strong>Required Columns:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">RevisionCode</span></code> - Unique revision identifier (e.g., “A”, “B”, “P01”)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RevisionDate</span></code> - Date of revision in ISO format (YYYY-MM-DD)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Description</span></code> - Description of the revision</p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">RevisionCode</span><span class="p">,</span><span class="n">RevisionDate</span><span class="p">,</span><span class="n">Description</span>
+<span class="n">A</span><span class="p">,</span><span class="mi">2024</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span><span class="n">Issued</span> <span class="k">for</span> <span class="n">Construction</span>
+<span class="n">B</span><span class="p">,</span><span class="mi">2024</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="n">Client</span> <span class="n">Comments</span> <span class="n">Incorporated</span>
+<span class="n">P01</span><span class="p">,</span><span class="mi">2024</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="n">Planning</span> <span class="n">Submission</span>
+</pre></div>
+</div>
+<p><strong>Import Behavior:</strong></p>
+<p><strong>New Revisions:</strong></p>
+<ul class="simple">
+<li><p>Created with specified properties</p></li>
+<li><p>Added to the revisions collection</p></li>
+</ul>
+<p><strong>Existing Revisions:</strong></p>
+<ul class="simple">
+<li><p>Updated with new date and description</p></li>
+<li><p>RevisionCode used as primary key for matching</p></li>
+</ul>
+<p><strong>Validation:</strong></p>
+<ul class="simple">
+<li><p>CSV must have required columns</p></li>
+<li><p>Revision codes must be unique within file</p></li>
+<li><p>Dates must be valid format</p></li>
+</ul>
+<p><strong>Success Message:</strong> Shows count of revisions created and updated</p>
+<p><strong>Error Handling:</strong></p>
+<ul class="simple">
+<li><p>Displays errors if CSV format invalid</p></li>
+<li><p>Shows first error if revisions fail to import</p></li>
+</ul>
+</section>
+<section id="export-revisions">
+<h4>Export Revisions<a class="headerlink" href="#export-revisions" title="Permalink to this heading">¶</a></h4>
+<p><strong>Function:</strong> Exports revision definitions from the database to a CSV file</p>
+<p><strong>Button:</strong> Export Revisions</p>
+<p><strong>Enabled When:</strong></p>
+<ul class="simple">
+<li><p>Database is connected</p></li>
+<li><p>Data is loaded into Manager</p></li>
+<li><p>Not busy with other operations</p></li>
+</ul>
+<p><strong>Process:</strong></p>
+<ol class="arabic simple">
+<li><p>Validates data is loaded</p></li>
+<li><p>Opens Save File Dialog for output location</p></li>
+<li><p>Retrieves all revisions from Manager</p></li>
+<li><p>Generates CSV with revision columns</p></li>
+<li><p>Writes file to specified location</p></li>
+<li><p>Displays success message with count</p></li>
+</ol>
+<p><strong>CSV Format Generated:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">RevisionCode</span></code> - The revision identifier</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RevisionDate</span></code> - Date in ISO format (YYYY-MM-DD)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Description</span></code> - Revision description</p></li>
+</ul>
+<p><strong>File Naming:</strong> Default filename is <code class="docutils literal notranslate"><span class="pre">Revisions.csv</span></code> but can be changed in Save dialog</p>
+<p><strong>Success Message:</strong> Shows count of revisions exported and output filename</p>
+<p><strong>Use Cases:</strong></p>
+<ul class="simple">
+<li><p>Backup revision list</p></li>
+<li><p>Share revision schedule with project team</p></li>
+<li><p>Synchronize revisions between databases</p></li>
+<li><p>Documentation of project timeline</p></li>
+</ul>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="custom-fields">
+<h2>Custom Fields<a class="headerlink" href="#custom-fields" title="Permalink to this heading">¶</a></h2>
+<p>Custom Fields allow you to extend the document data model with additional properties specific to your project needs. Custom fields are stored in the database and can be used throughout the application for filtering, metadata export, and reporting.</p>
+<section id="custom-fields-expander">
+<h3>Custom Fields Expander<a class="headerlink" href="#custom-fields-expander" title="Permalink to this heading">¶</a></h3>
+<p><strong>Visibility:</strong> Only visible when database is connected</p>
+<p><strong>Behavior:</strong></p>
+<ul class="simple">
+<li><p>Automatically expands when database connected</p></li>
+<li><p>Collapses when database disconnected</p></li>
+<li><p>Contains ListView and management buttons</p></li>
+</ul>
+</section>
+<section id="custom-field-properties">
+<h3>Custom Field Properties<a class="headerlink" href="#custom-field-properties" title="Permalink to this heading">¶</a></h3>
+<p>Each custom field has the following properties:</p>
+<section id="field-name-property-name">
+<h4>Field Name (Property Name)<a class="headerlink" href="#field-name-property-name" title="Permalink to this heading">¶</a></h4>
+<p><strong>Description:</strong> The name of the custom property field</p>
+<p><strong>Constraints:</strong></p>
+<ul class="simple">
+<li><p>Must be unique within the database</p></li>
+<li><p>Case-sensitive</p></li>
+<li><p>Should follow naming conventions (e.g., PascalCase, no spaces)</p></li>
+<li><p>Becomes a property on the Document model</p></li>
+</ul>
+<p><strong>Examples:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Discipline</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BuildingName</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ContractorCompany</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DrawingType</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ProjectPhase</span></code></p></li>
+</ul>
+<p><strong>Best Practice:</strong> Use descriptive, meaningful names that clearly indicate the field’s purpose</p>
+</section>
+<section id="status-active-inactive">
+<h4>Status (Active/Inactive)<a class="headerlink" href="#status-active-inactive" title="Permalink to this heading">¶</a></h4>
+<p><strong>Description:</strong> Whether the custom field is currently active and usable</p>
+<p><strong>Values:</strong></p>
+<ul class="simple">
+<li><p><strong>Active:</strong> Field can be used in metadata mappings, exports, and throughout the application</p></li>
+<li><p><strong>Inactive:</strong> Field is hidden from most operations but data is preserved in database</p></li>
+</ul>
+<p><strong>Displayed As:</strong></p>
+<ul class="simple">
+<li><p>“Active” in green (in ListView)</p></li>
+<li><p>“Inactive” in gray (in ListView)</p></li>
+</ul>
+<p><strong>Purpose:</strong> Allows temporarily disabling fields without deleting data</p>
+</section>
+<section id="id">
+<h4>Id<a class="headerlink" href="#id" title="Permalink to this heading">¶</a></h4>
+<p><strong>Description:</strong> Database identifier for the custom field</p>
+<p><strong>Values:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code> - New field not yet saved to database</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&gt;</span> <span class="pre">0</span></code> - Existing field persisted in database</p></li>
+</ul>
+<p><strong>Visibility:</strong> Not displayed in UI, used internally for operations</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="custom-field-management">
+<h3>Custom Field Management<a class="headerlink" href="#custom-field-management" title="Permalink to this heading">¶</a></h3>
+<section id="adding-a-custom-field">
+<h4>Adding a Custom Field<a class="headerlink" href="#adding-a-custom-field" title="Permalink to this heading">¶</a></h4>
+<p><strong>Button:</strong> Add</p>
+<p><strong>Enabled When:</strong> Database is connected</p>
+<p><strong>Process:</strong></p>
+<ol class="arabic simple">
+<li><p>Click Add button</p></li>
+<li><p>Dialog opens prompting for field name</p></li>
+<li><p>Enter desired custom field name</p></li>
+<li><p>Click OK in dialog</p></li>
+<li><p>Field added to list with Status “Active” (not saved yet)</p></li>
+<li><p>Status shows as unsaved (Id = 0)</p></li>
+</ol>
+<p><strong>Validation in Dialog:</strong></p>
+<ul class="simple">
+<li><p>Field name cannot be empty</p></li>
+<li><p>Field name must be unique (checked against existing fields)</p></li>
+<li><p>Field name should follow property naming conventions</p></li>
+</ul>
+<p><strong>Important:</strong> New fields are NOT saved to the database immediately. You must click “Update Database” to persist changes.</p>
+<p><strong>Success Message:</strong> Displays confirmation that field was added with instruction to update database</p>
+<p><strong>Use Case:</strong> Add project-specific properties needed for document categorization or reporting</p>
+</section>
+<section id="removing-a-custom-field">
+<h4>Removing a Custom Field<a class="headerlink" href="#removing-a-custom-field" title="Permalink to this heading">¶</a></h4>
+<p><strong>Button:</strong> Remove</p>
+<p><strong>Enabled When:</strong></p>
+<ul class="simple">
+<li><p>Database is connected</p></li>
+<li><p>A custom field is selected</p></li>
+<li><p>Selected field has Id = 0 (not yet saved to database)</p></li>
+</ul>
+<p><strong>Restriction:</strong> Can only remove fields that haven’t been saved yet</p>
+<p><strong>Process:</strong></p>
+<ol class="arabic simple">
+<li><p>Select an unsaved custom field (Status shows Id = 0)</p></li>
+<li><p>Click Remove button</p></li>
+<li><p>Field removed from list immediately</p></li>
+<li><p>Pending changes flag updated</p></li>
+</ol>
+<p><strong>Rationale:</strong> Once a custom field is saved to the database and has data, it should be deactivated rather than deleted to preserve data integrity.</p>
+<p><strong>For Saved Fields:</strong> Use “Toggle Active” instead to deactivate the field</p>
+</section>
+<section id="toggling-active-status">
+<h4>Toggling Active Status<a class="headerlink" href="#toggling-active-status" title="Permalink to this heading">¶</a></h4>
+<p><strong>Button:</strong> Toggle Active</p>
+<p><strong>Enabled When:</strong></p>
+<ul class="simple">
+<li><p>Database is connected</p></li>
+<li><p>A custom field is selected</p></li>
+</ul>
+<p><strong>Process:</strong></p>
+<ol class="arabic simple">
+<li><p>Select a custom field from the list</p></li>
+<li><p>Click Toggle Active button</p></li>
+<li><p>Field’s IsActive status toggles (Active ↔ Inactive)</p></li>
+<li><p>Status display updates in ListView</p></li>
+<li><p>Pending changes flag set</p></li>
+</ol>
+<p><strong>Important:</strong> Status change is NOT saved immediately. Click “Update Database” to persist the change.</p>
+<p><strong>Behavior by Status:</strong></p>
+<p><strong>Activating a Field:</strong></p>
+<ul class="simple">
+<li><p>Field becomes available for use in metadata mappings</p></li>
+<li><p>Field appears in document property lists</p></li>
+<li><p>Field available for import/export</p></li>
+</ul>
+<p><strong>Deactivating a Field:</strong></p>
+<ul class="simple">
+<li><p>Field removed from available properties in mappings</p></li>
+<li><p>Existing metadata mappings using this field are removed automatically</p></li>
+<li><p>Data preserved in database (custom property records remain)</p></li>
+<li><p>Field hidden from import/export by default</p></li>
+<li><p>Can be reactivated later without data loss</p></li>
+</ul>
+<p><strong>Warning:</strong> Deactivating a custom field will remove any cloud metadata mappings that reference it. This cleanup happens automatically when “Update Database” is clicked.</p>
+</section>
+<section id="updating-database-schema">
+<h4>Updating Database Schema<a class="headerlink" href="#updating-database-schema" title="Permalink to this heading">¶</a></h4>
+<p><strong>Button:</strong> Update Database</p>
+<p><strong>Enabled When:</strong></p>
+<ul class="simple">
+<li><p>Database is connected</p></li>
+<li><p>There are pending custom field changes</p></li>
+</ul>
+<p><strong>Pending Changes Include:</strong></p>
+<ul class="simple">
+<li><p>New fields added (Id = 0)</p></li>
+<li><p>Active status toggled on existing fields</p></li>
+</ul>
+<p><strong>Process:</strong></p>
+<ol class="arabic simple">
+<li><p>Click Update Database button</p></li>
+<li><p>Confirmation dialog appears showing summary of changes:</p>
+<ul class="simple">
+<li><p>New fields to be added</p></li>
+<li><p>Fields to be activated</p></li>
+<li><p>Fields to be deactivated</p></li>
+</ul>
+</li>
+<li><p>Review changes and click Yes to proceed</p></li>
+<li><p>Application applies changes to database:</p>
+<ul class="simple">
+<li><p>New fields: Schema updated, custom property records created for ALL documents</p></li>
+<li><p>Activations: IsActive flag updated in database</p></li>
+<li><p>Deactivations: IsActive flag updated, metadata mappings cleaned up</p></li>
+</ul>
+</li>
+<li><p>Data reloaded into Manager</p></li>
+<li><p>Custom Fields list refreshed</p></li>
+<li><p>Success message displayed</p></li>
+</ol>
+<p><strong>Change Summary Dialog Contents:</strong></p>
+<p>The confirmation dialog shows:</p>
+<ul class="simple">
+<li><p>Count of new fields with their names</p></li>
+<li><p>Count of activated fields with their names</p></li>
+<li><p>Count of deactivated fields with their names</p></li>
+<li><p>Warning if new fields will create records for all documents</p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Apply Custom Field Changes?
+
+New Fields: 2
+  - ProjectPhase
+  - ContractorName
+
+Deactivated Fields: 1
+  - OldFieldName
+
+Note: New fields will create records for all documents.
+</pre></div>
+</div>
+<p><strong>Database Operations Performed:</strong></p>
+<p><strong>For New Fields:</strong></p>
+<ul class="simple">
+<li><p>Adds CustomFieldDefinition record to database</p></li>
+<li><p>Creates CustomProperty record for EVERY existing document</p></li>
+<li><p>Initial values set to empty string</p></li>
+<li><p>May take time if many documents exist</p></li>
+</ul>
+<p><strong>For Status Changes:</strong></p>
+<ul class="simple">
+<li><p>Updates IsActive flag on CustomFieldDefinition</p></li>
+<li><p>For deactivations: Removes metadata mappings referencing the field</p></li>
+<li><p>CustomProperty data preserved in database</p></li>
+</ul>
+<p><strong>Automatic Cleanup:</strong></p>
+<p>When fields are deactivated:</p>
+<ul class="simple">
+<li><p>Scans all cloud metadata mappings</p></li>
+<li><p>Removes any mappings referencing deactivated fields</p></li>
+<li><p>Shows notification of removed mappings</p></li>
+<li><p>Triggers refresh in Cloud Document Manager view</p></li>
+</ul>
+<p><strong>Success Message:</strong> Displays count of changes applied and any mappings removed</p>
+<p><strong>Error Handling:</strong></p>
+<ul class="simple">
+<li><p>If any change fails, entire operation rolls back (transaction)</p></li>
+<li><p>Error message shows which field caused the failure</p></li>
+<li><p>Changes are not persisted if errors occur</p></li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul class="simple">
+<li><p>Adding custom fields for new project requirements</p></li>
+<li><p>Deactivating fields no longer needed</p></li>
+<li><p>Batch applying multiple custom field changes</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="custom-fields-listview">
+<h3>Custom Fields ListView<a class="headerlink" href="#custom-fields-listview" title="Permalink to this heading">¶</a></h3>
+<p><strong>Columns:</strong></p>
+<section id="field-name">
+<h4>Field Name<a class="headerlink" href="#field-name" title="Permalink to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>Displays the property name of the custom field</p></li>
+<li><p>Sorted alphabetically by default</p></li>
+<li><p>Primary identifier for the field</p></li>
+</ul>
+</section>
+<section id="status">
+<h4>Status<a class="headerlink" href="#status" title="Permalink to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>Shows “Active” or “Inactive”</p></li>
+<li><p>Indicates current usability of the field</p></li>
+<li><p>Determines availability in metadata mappings</p></li>
+</ul>
+<p><strong>Visual Indicators:</strong></p>
+<ul class="simple">
+<li><p><strong>New fields (Id = 0):</strong> May be shown in different style (implementation-specific)</p></li>
+<li><p><strong>Active fields:</strong> Standard display</p></li>
+<li><p><strong>Inactive fields:</strong> Grayed out or dimmed</p></li>
+</ul>
+<p><strong>Selection:</strong></p>
+<ul class="simple">
+<li><p>Single selection mode</p></li>
+<li><p>Selected field determines which buttons are enabled</p></li>
+<li><p>Click to select, click away to deselect</p></li>
+</ul>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="database-schema-overview">
+<h2>Database Schema Overview<a class="headerlink" href="#database-schema-overview" title="Permalink to this heading">¶</a></h2>
+<p>The SQLite database contains the following core tables:</p>
+<section id="document-table">
+<h3>Document Table<a class="headerlink" href="#document-table" title="Permalink to this heading">¶</a></h3>
+<p><strong>Purpose:</strong> Stores document master records</p>
+<p><strong>Key Fields:</strong></p>
+<ul class="simple">
+<li><p>Id (Primary Key)</p></li>
+<li><p>Number (Unique)</p></li>
+<li><p>Name</p></li>
+<li><p>Revision</p></li>
+</ul>
+<p><strong>Indexes:</strong> Number (for fast lookups)</p>
+</section>
+<section id="revision-table">
+<h3>Revision Table<a class="headerlink" href="#revision-table" title="Permalink to this heading">¶</a></h3>
+<p><strong>Purpose:</strong> Stores revision definitions and schedule</p>
+<p><strong>Key Fields:</strong></p>
+<ul class="simple">
+<li><p>Id (Primary Key)</p></li>
+<li><p>RevisionCode (Unique)</p></li>
+<li><p>RevisionDate</p></li>
+<li><p>Description</p></li>
+</ul>
+</section>
+<section id="customproperty-table">
+<h3>CustomProperty Table<a class="headerlink" href="#customproperty-table" title="Permalink to this heading">¶</a></h3>
+<p><strong>Purpose:</strong> Stores custom field values for documents</p>
+<p><strong>Key Fields:</strong></p>
+<ul class="simple">
+<li><p>Id (Primary Key)</p></li>
+<li><p>DocumentId (Foreign Key to Document)</p></li>
+<li><p>PropertyName</p></li>
+<li><p>PropertyValue</p></li>
+</ul>
+<p><strong>Relationship:</strong> Many-to-one with Document (one document can have many custom properties)</p>
+</section>
+<section id="customfielddefinition-table">
+<h3>CustomFieldDefinition Table<a class="headerlink" href="#customfielddefinition-table" title="Permalink to this heading">¶</a></h3>
+<p><strong>Purpose:</strong> Stores custom field definitions (metadata about custom fields)</p>
+<p><strong>Key Fields:</strong></p>
+<ul class="simple">
+<li><p>Id (Primary Key)</p></li>
+<li><p>PropertyName (Unique)</p></li>
+<li><p>IsActive</p></li>
+</ul>
+<p><strong>Usage:</strong> Defines which custom fields exist and their status</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="data-model-relationships">
+<h2>Data Model Relationships<a class="headerlink" href="#data-model-relationships" title="Permalink to this heading">¶</a></h2>
+<section id="document-customproperty">
+<h3>Document ↔ CustomProperty<a class="headerlink" href="#document-customproperty" title="Permalink to this heading">¶</a></h3>
+<p><strong>Relationship:</strong> One document has many custom properties</p>
+<p><strong>Cascade:</strong> When document deleted, custom properties deleted</p>
+<p><strong>Purpose:</strong> Allows flexible extension of document data model</p>
+</section>
+<section id="document-revision">
+<h3>Document ↔ Revision<a class="headerlink" href="#document-revision" title="Permalink to this heading">¶</a></h3>
+<p><strong>Relationship:</strong> Many-to-many through DocumentRevision join table</p>
+<p><strong>Purpose:</strong> Tracks which documents are in which revisions</p>
+<p><strong>Indicators:</strong> Each relationship has an indicator string (e.g., “S0”, “S1”)</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="validation">
+<h2>Validation<a class="headerlink" href="#validation" title="Permalink to this heading">¶</a></h2>
+<section id="database-path-validation">
+<h3>Database Path Validation<a class="headerlink" href="#database-path-validation" title="Permalink to this heading">¶</a></h3>
+<p><strong>Rules:</strong></p>
+<ul class="simple">
+<li><p>Must have valid path format</p></li>
+<li><p>Directory must exist or be creatable</p></li>
+<li><p>Filename must be valid (no invalid characters)</p></li>
+<li><p>Extension typically .db or .sqlite</p></li>
+</ul>
+<p><strong>Validated When:</strong></p>
+<ul class="simple">
+<li><p>Path is entered or changed</p></li>
+<li><p>Connect or Create button is clicked</p></li>
+</ul>
+</section>
+<section id="database-connection-validation">
+<h3>Database Connection Validation<a class="headerlink" href="#database-connection-validation" title="Permalink to this heading">¶</a></h3>
+<p><strong>Rules:</strong></p>
+<ul class="simple">
+<li><p>Must be connected before saving settings</p></li>
+<li><p>Must be connected to enable import/export</p></li>
+<li><p>Must be connected to manage custom fields</p></li>
+</ul>
+<p><strong>Error Message:</strong> “Database must be connected”</p>
+</section>
+<section id="custom-field-validation">
+<h3>Custom Field Validation<a class="headerlink" href="#custom-field-validation" title="Permalink to this heading">¶</a></h3>
+<p><strong>Rules:</strong></p>
+<ul class="simple">
+<li><p>Field name cannot be empty</p></li>
+<li><p>Field name must be unique in database</p></li>
+<li><p>Should follow naming conventions (no spaces, special characters)</p></li>
+</ul>
+<p><strong>Validated When:</strong></p>
+<ul class="simple">
+<li><p>Adding new custom field in dialog</p></li>
+<li><p>Updating database schema</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this heading">¶</a></h2>
+<section id="database-management">
+<h3>Database Management<a class="headerlink" href="#database-management" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Location:</strong> Store database in a stable location with regular backups</p></li>
+<li><p><strong>Naming:</strong> Use descriptive names indicating project and purpose</p></li>
+<li><p><strong>Backups:</strong> Regularly export documents and revisions as CSV backups</p></li>
+<li><p><strong>Version Control:</strong> Keep database backups when making major changes</p></li>
+<li><p><strong>Network Drives:</strong> Avoid network drives for database location (performance issues)</p></li>
+</ol>
+</section>
+<section id="data-import-export">
+<h3>Data Import/Export<a class="headerlink" href="#data-import-export" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Before Import:</strong></p>
+<ul class="simple">
+<li><p>Backup current database</p></li>
+<li><p>Validate CSV format in spreadsheet first</p></li>
+<li><p>Check for duplicate document numbers</p></li>
+<li><p>Ensure custom field names match exactly</p></li>
+</ul>
+</li>
+<li><p><strong>Export Workflow:</strong></p>
+<ul class="simple">
+<li><p>Export regularly for backup purposes</p></li>
+<li><p>Use descriptive filenames with dates</p></li>
+<li><p>Keep exported CSVs for audit trail</p></li>
+<li><p>Test import/export cycle periodically</p></li>
+</ul>
+</li>
+<li><p><strong>CSV Editing:</strong></p>
+<ul class="simple">
+<li><p>Edit exported CSVs in Excel or similar</p></li>
+<li><p>Don’t modify document numbers (primary keys)</p></li>
+<li><p>Keep required columns</p></li>
+<li><p>Maintain date formats (ISO 8601)</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="id1">
+<h3>Custom Fields<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Planning:</strong></p>
+<ul class="simple">
+<li><p>Plan custom fields before creation</p></li>
+<li><p>Use consistent naming conventions</p></li>
+<li><p>Document field purposes and usage</p></li>
+<li><p>Consider export requirements</p></li>
+</ul>
+</li>
+<li><p><strong>Naming Conventions:</strong></p>
+<ul class="simple">
+<li><p>Use PascalCase (e.g., <code class="docutils literal notranslate"><span class="pre">ProjectPhase</span></code>)</p></li>
+<li><p>Avoid spaces and special characters</p></li>
+<li><p>Be descriptive but concise</p></li>
+<li><p>Follow property naming standards</p></li>
+</ul>
+</li>
+<li><p><strong>Lifecycle:</strong></p>
+<ul class="simple">
+<li><p>Add fields as needed for new requirements</p></li>
+<li><p>Deactivate rather than delete obsolete fields</p></li>
+<li><p>Test with sample documents before production use</p></li>
+<li><p>Update documentation when fields change</p></li>
+</ul>
+</li>
+<li><p><strong>Performance:</strong></p>
+<ul class="simple">
+<li><p>Limit to necessary fields (each adds database operations)</p></li>
+<li><p>Create fields with data population plan</p></li>
+<li><p>Consider indexing needs for large databases</p></li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading">¶</a></h2>
+<section id="common-issues">
+<h3>Common Issues<a class="headerlink" href="#common-issues" title="Permalink to this heading">¶</a></h3>
+<section id="issue-cannot-connect-to-database">
+<h4>Issue: Cannot connect to database<a class="headerlink" href="#issue-cannot-connect-to-database" title="Permalink to this heading">¶</a></h4>
+<p><strong>Symptoms:</strong> Error when clicking Connect button</p>
+<p><strong>Solutions:</strong></p>
+<ul class="simple">
+<li><p>Verify file exists at specified path</p></li>
+<li><p>Check file is not locked by another application</p></li>
+<li><p>Ensure you have read/write permissions</p></li>
+<li><p>Check database file is not corrupted</p></li>
+<li><p>Verify it’s a valid SQLite database</p></li>
+</ul>
+</section>
+<section id="issue-create-database-button-disabled">
+<h4>Issue: Create Database button disabled<a class="headerlink" href="#issue-create-database-button-disabled" title="Permalink to this heading">¶</a></h4>
+<p><strong>Symptoms:</strong> Button grayed out, cannot create database</p>
+<p><strong>Solutions:</strong></p>
+<ul class="simple">
+<li><p>Enter a valid path in the Database Path field</p></li>
+<li><p>Ensure directory exists or can be created</p></li>
+<li><p>Check path doesn’t contain invalid characters</p></li>
+<li><p>Verify you have write permissions to directory</p></li>
+</ul>
+</section>
+<section id="issue-import-fails-with-format-error">
+<h4>Issue: Import fails with format error<a class="headerlink" href="#issue-import-fails-with-format-error" title="Permalink to this heading">¶</a></h4>
+<p><strong>Symptoms:</strong> Error message about CSV format during import</p>
+<p><strong>Solutions:</strong></p>
+<ul class="simple">
+<li><p>Open CSV in spreadsheet and verify columns</p></li>
+<li><p>Check required columns are present</p></li>
+<li><p>Ensure column names match exactly</p></li>
+<li><p>Look for extra commas or quotes in data</p></li>
+<li><p>Verify file is saved as CSV (not Excel format)</p></li>
+<li><p>Check for BOM or encoding issues</p></li>
+</ul>
+</section>
+<section id="issue-custom-field-not-appearing-in-metadata-mappings">
+<h4>Issue: Custom field not appearing in metadata mappings<a class="headerlink" href="#issue-custom-field-not-appearing-in-metadata-mappings" title="Permalink to this heading">¶</a></h4>
+<p><strong>Symptoms:</strong> New custom field doesn’t show in Cloud Document Manager</p>
+<p><strong>Solutions:</strong></p>
+<ul class="simple">
+<li><p>Verify custom field is Active status</p></li>
+<li><p>Check “Update Database” was clicked after adding field</p></li>
+<li><p>Confirm database was reloaded</p></li>
+<li><p>Refresh the Cloud Document Manager template</p></li>
+</ul>
+</section>
+<section id="issue-update-database-fails">
+<h4>Issue: Update Database fails<a class="headerlink" href="#issue-update-database-fails" title="Permalink to this heading">¶</a></h4>
+<p><strong>Symptoms:</strong> Error when clicking Update Database button</p>
+<p><strong>Solutions:</strong></p>
+<ul class="simple">
+<li><p>Check database is not read-only</p></li>
+<li><p>Verify you have write permissions</p></li>
+<li><p>Ensure database is not locked</p></li>
+<li><p>Check disk space available</p></li>
+<li><p>Try smaller batch of changes</p></li>
+<li><p>Review error message for specific field causing issue</p></li>
+</ul>
+</section>
+<section id="issue-all-documents-gone-after-import">
+<h4>Issue: All documents gone after import<a class="headerlink" href="#issue-all-documents-gone-after-import" title="Permalink to this heading">¶</a></h4>
+<p><strong>Symptoms:</strong> Document count shows 0 after import operation</p>
+<p><strong>Solutions:</strong></p>
+<ul class="simple">
+<li><p>Check if import file was empty or had errors</p></li>
+<li><p>Restore from backup database or CSV export</p></li>
+<li><p>Verify import file had correct format</p></li>
+<li><p>Review import error messages</p></li>
+</ul>
+</section>
+</section>
+<section id="validation-errors">
+<h3>Validation Errors<a class="headerlink" href="#validation-errors" title="Permalink to this heading">¶</a></h3>
+<section id="database-must-be-connected">
+<h4>“Database must be connected”<a class="headerlink" href="#database-must-be-connected" title="Permalink to this heading">¶</a></h4>
+<p><strong>Cause:</strong> Attempting operation without database connection</p>
+<p><strong>Solution:</strong> Click Browse to select database, then Connect</p>
+</section>
+<section id="no-data-loaded">
+<h4>“No data loaded”<a class="headerlink" href="#no-data-loaded" title="Permalink to this heading">¶</a></h4>
+<p><strong>Cause:</strong> Database connected but data not loaded into Manager</p>
+<p><strong>Solution:</strong> Reconnect to database, or restart application</p>
+</section>
+<section id="custom-field-name-already-exists">
+<h4>“Custom field name already exists”<a class="headerlink" href="#custom-field-name-already-exists" title="Permalink to this heading">¶</a></h4>
+<p><strong>Cause:</strong> Attempting to add duplicate custom field name</p>
+<p><strong>Solution:</strong> Choose a different, unique field name</p>
+</section>
+<section id="import-file-not-found">
+<h4>“Import file not found”<a class="headerlink" href="#import-file-not-found" title="Permalink to this heading">¶</a></h4>
+<p><strong>Cause:</strong> Selected import file doesn’t exist or was moved</p>
+<p><strong>Solution:</strong> Browse to correct file location</p>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="data-persistence">
+<h2>Data Persistence<a class="headerlink" href="#data-persistence" title="Permalink to this heading">¶</a></h2>
+<section id="what-gets-saved">
+<h3>What Gets Saved<a class="headerlink" href="#what-gets-saved" title="Permalink to this heading">¶</a></h3>
+<p><strong>In Database:</strong></p>
+<ul class="simple">
+<li><p>All document records with properties</p></li>
+<li><p>All revision definitions</p></li>
+<li><p>All custom field definitions (schema)</p></li>
+<li><p>All custom property values (data)</p></li>
+</ul>
+<p><strong>In Settings File:</strong></p>
+<ul class="simple">
+<li><p>Database path</p></li>
+<li><p>Last connection state</p></li>
+<li><p>UI preferences (expander states, etc.)</p></li>
+</ul>
+</section>
+<section id="when-saving-occurs">
+<h3>When Saving Occurs<a class="headerlink" href="#when-saving-occurs" title="Permalink to this heading">¶</a></h3>
+<p><strong>Automatic:</strong></p>
+<ul class="simple">
+<li><p>When database operations complete (Connect, Create)</p></li>
+<li><p>When import/export succeeds</p></li>
+<li><p>When Update Database applies changes</p></li>
+</ul>
+<p><strong>Manual:</strong></p>
+<ul class="simple">
+<li><p>Click Save button in Settings view to save path</p></li>
+<li><p>Custom field changes require explicit Update Database click</p></li>
+</ul>
+</section>
+<section id="backup-strategy">
+<h3>Backup Strategy<a class="headerlink" href="#backup-strategy" title="Permalink to this heading">¶</a></h3>
+<p><strong>Recommended:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Regular Database Backups:</strong> Copy .db file to backup location</p></li>
+<li><p><strong>CSV Exports:</strong> Export documents and revisions monthly</p></li>
+<li><p><strong>Version Control:</strong> Keep dated backups before major changes</p></li>
+<li><p><strong>Test Restores:</strong> Periodically verify backups are valid</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="performance-considerations">
+<h2>Performance Considerations<a class="headerlink" href="#performance-considerations" title="Permalink to this heading">¶</a></h2>
+<section id="database-size">
+<h3>Database Size<a class="headerlink" href="#database-size" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>SQLite handles databases up to 140 TB (theoretical)</p></li>
+<li><p>Practical limit depends on disk space and performance needs</p></li>
+<li><p>Thousands of documents: No issues</p></li>
+<li><p>Tens of thousands: Some operations may take seconds</p></li>
+<li><p>Hundreds of thousands: Consider indexing and optimization</p></li>
+</ul>
+</section>
+<section id="custom-fields-impact">
+<h3>Custom Fields Impact<a class="headerlink" href="#custom-fields-impact" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Each custom field adds:</p>
+<ul>
+<li><p>One column in conceptual data model</p></li>
+<li><p>One record per document in CustomProperty table</p></li>
+<li><p>Overhead in import/export operations</p></li>
+</ul>
+</li>
+<li><p>Limit to 20-30 custom fields for best performance</p></li>
+<li><p>More fields = larger database and slower operations</p></li>
+</ul>
+</section>
+<section id="import-export-performance">
+<h3>Import/Export Performance<a class="headerlink" href="#import-export-performance" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>CSV operations are relatively fast</p></li>
+<li><p>Large files (&gt;10,000 rows) may take 10-30 seconds</p></li>
+<li><p>Progress not shown during operation (appears busy)</p></li>
+<li><p>Database operations are transactional (all or nothing)</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="integration-with-other-features">
+<h2>Integration with Other Features<a class="headerlink" href="#integration-with-other-features" title="Permalink to this heading">¶</a></h2>
+<section id="current-folder-settings">
+<h3>Current Folder Settings<a class="headerlink" href="#current-folder-settings" title="Permalink to this heading">¶</a></h3>
+<p>Database provides:</p>
+<ul class="simple">
+<li><p>Document numbers for filename matching</p></li>
+<li><p>Revision codes for revision extraction</p></li>
+<li><p>Custom fields for metadata enrichment</p></li>
+</ul>
+</section>
+<section id="cloud-document-manager">
+<h3>Cloud Document Manager<a class="headerlink" href="#cloud-document-manager" title="Permalink to this heading">¶</a></h3>
+<p>Database provides:</p>
+<ul class="simple">
+<li><p>Document properties for metadata mappings</p></li>
+<li><p>Revision information for document context</p></li>
+<li><p>Custom field values for dynamic metadata</p></li>
+</ul>
+</section>
+<section id="merge-view">
+<h3>Merge View<a class="headerlink" href="#merge-view" title="Permalink to this heading">¶</a></h3>
+<p>Database provides:</p>
+<ul class="simple">
+<li><p>Document master records for matching incoming files</p></li>
+<li><p>Revision history for superseded tracking</p></li>
+<li><p>Custom properties for enriched document data</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="security-considerations">
+<h2>Security Considerations<a class="headerlink" href="#security-considerations" title="Permalink to this heading">¶</a></h2>
+<section id="database-access">
+<h3>Database Access<a class="headerlink" href="#database-access" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>SQLite is file-based with no user authentication</p></li>
+<li><p>File system permissions control access</p></li>
+<li><p>Anyone with file access can read/modify database</p></li>
+<li><p>No encryption by default (consider encrypted containers)</p></li>
+</ul>
+</section>
+<section id="data-privacy">
+<h3>Data Privacy<a class="headerlink" href="#data-privacy" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Database may contain sensitive project information</p></li>
+<li><p>Store in secure locations with appropriate permissions</p></li>
+<li><p>Consider access control at file system level</p></li>
+<li><p>Include in data governance policies</p></li>
+</ul>
+</section>
+<section id="backup-security">
+<h3>Backup Security<a class="headerlink" href="#backup-security" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Exported CSVs contain all project data</p></li>
+<li><p>Secure backup locations with access controls</p></li>
+<li><p>Encrypt backups if required by policy</p></li>
+<li><p>Control access to historical exports</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="related-documentation">
+<h2>Related Documentation<a class="headerlink" href="#related-documentation" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Current Folder Settings:</strong> Document processing that uses database for matching</p></li>
+<li><p><strong>Cloud Document Manager:</strong> Metadata export that uses custom fields</p></li>
+<li><p><strong>Merge View:</strong> The main interface for document matching and processing</p></li>
+<li><p><strong>Document/Revision Models:</strong> The data structures stored in database</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="appendix-csv-format-reference">
+<h2>Appendix: CSV Format Reference<a class="headerlink" href="#appendix-csv-format-reference" title="Permalink to this heading">¶</a></h2>
+<section id="document-export-csv-format">
+<h3>Document Export CSV Format<a class="headerlink" href="#document-export-csv-format" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-csv notranslate"><div class="highlight"><pre><span></span>Number,Name,Revision,[CustomField1],[CustomField2],...,[Rev1],[Rev2],...
+ABC-001,Floor Plan,A,Value1,Value2,...,S0,S1,...
+ABC-002,Elevation,B,Value1,Value2,...,-,S0,...
+</pre></div>
+</div>
+<p><strong>Notes:</strong></p>
+<ul class="simple">
+<li><p>Custom field columns match active custom field property names</p></li>
+<li><p>Revision columns (if Full History Mode) are revision codes</p></li>
+<li><p>Revision indicators: S0, S1, S2, AS, etc. or blank/dash</p></li>
+</ul>
+</section>
+<section id="revision-export-csv-format">
+<h3>Revision Export CSV Format<a class="headerlink" href="#revision-export-csv-format" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-csv notranslate"><div class="highlight"><pre><span></span>RevisionCode,RevisionDate,Description
+A,2024-01-15,Issued for Construction
+B,2024-02-20,Client Comments
+P01,2024-03-10,Planning Submission
+</pre></div>
+</div>
+<p><strong>Notes:</strong></p>
+<ul class="simple">
+<li><p>Date must be ISO format (YYYY-MM-DD)</p></li>
+<li><p>Description can contain spaces and special characters</p></li>
+<li><p>RevisionCode should be concise (typically 1-4 characters)</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                Database Connection Settings
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

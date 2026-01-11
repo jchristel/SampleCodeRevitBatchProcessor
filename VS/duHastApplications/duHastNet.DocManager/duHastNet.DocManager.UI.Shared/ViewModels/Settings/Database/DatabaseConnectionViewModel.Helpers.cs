@@ -73,7 +73,7 @@ public partial class DatabaseConnectionViewModel
         var hasValidPath = !string.IsNullOrWhiteSpace(DatabasePath);
         var fileExists = hasValidPath && File.Exists(DatabasePath);
 
-        IsCreateDatabaseEnabled = !IsBusy && hasValidPath;
+        IsCreateDatabaseEnabled = !IsBusy;
         IsConnectDatabaseEnabled = !IsBusy && fileExists;
         IsBrowseEnabled = !IsBusy;
         IsImportExportEnabled = !IsBusy && IsConnected;

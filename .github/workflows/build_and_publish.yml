@@ -70,7 +70,7 @@ jobs:
       shell: bash
       run: |
         # Extract version number (remove 'v' or 'V' prefix)
-        VERSION=$(echo "$TAG_NUM" | sed 's/^[vV]//')
+        VERSION=$(echo "$TAG_NUM" | sed 's/^[vV]//' | sed 's/+.*//')
         echo "Setting version to: $VERSION"
         echo "Setting package name to: $PACKAGE_NAME"
         

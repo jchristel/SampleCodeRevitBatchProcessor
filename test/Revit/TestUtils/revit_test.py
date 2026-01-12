@@ -33,7 +33,7 @@ import Autodesk.Revit.DB as rdb
 
 import tempfile
 from duHast.Utilities.Objects import base
-from duHast.Utilities.directory_io import directory_delete, directory_exists
+from duHast.Utilities.directory_io import directory_delete_with_fallback, directory_exists
 from duHast.Utilities.files_io import file_exist
 from duHast.Utilities.files_csv import read_csv_file
 from duHast.Revit.Common.revit_version import get_revit_version_number
@@ -100,7 +100,7 @@ class RevitTest(base.Base):
         """
         try:
             if self.tmp_dir is not None:
-                del_temp_dir = directory_delete(self.tmp_dir)
+                del_temp_dir = directory_delete_with_fallback(self.tmp_dir)
                 assert del_temp_dir == True
                 temp_dir_exists = directory_exists(self.tmp_dir)
                 assert temp_dir_exists == False

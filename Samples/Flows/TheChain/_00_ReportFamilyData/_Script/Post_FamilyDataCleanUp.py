@@ -38,7 +38,7 @@ import settings as settings  # sets up all commonly used variables and path loca
 from duHast.Utilities.console_out import output
 from duHast.Utilities.files_get import get_files_single_directory
 from duHast.Utilities.files_io import file_delete
-from duHast.Utilities.directory_io import get_child_directories, directory_delete
+from duHast.Utilities.directory_io import get_child_directories, directory_delete_with_fallback
 
 
 # -------------
@@ -72,5 +72,5 @@ def delete_working_directories():
     # clean up. get directories in output folder and delete them
     dirs = get_child_directories(settings.OUTPUT_FOLDER)
     for dir in dirs:
-        flag_delete = directory_delete(dir)
+        flag_delete = directory_delete_with_fallback(dir)
         output("Deleted directory: {} [{}]".format(dir, flag_delete))

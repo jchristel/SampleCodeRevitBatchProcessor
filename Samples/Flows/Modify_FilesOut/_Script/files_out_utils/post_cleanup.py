@@ -45,7 +45,7 @@ import settings as settings  # sets up all commonly used variables and path loca
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities.directory_io import (
     get_child_directories,
-    directory_delete,
+    directory_delete_with_fallback
 )
 from duHast.Utilities.files_get import get_files_with_filter
 from duHast.Utilities.files_io import file_delete
@@ -81,7 +81,7 @@ def clean_up_export_folder(model_export_directory):
         sub_dirs = get_child_directories(settings.OUTPUT_FOLDER)
         if len(sub_dirs) > 0:
             for d in sub_dirs:
-                delete_dir_flag = directory_delete(d)
+                delete_dir_flag = directory_delete_with_fallback(d)
                 return_value.update_sep(
                     delete_dir_flag,
                     "Deleted directory {} with status [{}]".format(d, delete_dir_flag),

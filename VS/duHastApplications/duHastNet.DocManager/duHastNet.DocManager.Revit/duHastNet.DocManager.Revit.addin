@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+	<!-- External Command - POC: Shows documents in CEFSharp WebView -->
+	<AddIn Type="Command">
+		<Name>Show Documents POC</Name>
+		<Assembly>.\DocManager\duHastNet.DocManager.Revit.dll</Assembly>
+		<AddInId>9B4C5D6E-7F8A-9B0C-1D2E-3F4A5B6C7D8E</AddInId>
+		<FullClassName>duHastNet.DocManager.Revit.Commands.ShowDocumentsCommand</FullClassName>
+		<Text>Show Documents POC</Text>
+		<Description>Proof of concept - Display documents from database using CEFSharp WebView</Description>
+		<VisibilityMode>AlwaysVisible</VisibilityMode>
+		<VendorId>DHNT</VendorId>
+		<VendorDescription>duHastNet, Jan Christel</VendorDescription>
+	</AddIn>
+</RevitAddIns>

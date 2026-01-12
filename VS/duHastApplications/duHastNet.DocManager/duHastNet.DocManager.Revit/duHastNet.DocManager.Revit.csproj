@@ -17,12 +17,6 @@
 		</ItemGroup>
 		<Copy SourceFiles="@(NativeLibs)" DestinationFolder="$(OutputPath)\runtimes\win-x64\native" SkipUnchangedFiles="true" />
 	</Target>
-	
-  <ItemGroup>
-    <Folder Include="ironPython\" />
-    <Folder Include="RevitAddIn\" />
-    <Folder Include="pyRevit\" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\duHastNet.DocManager.Core\duHastNet.DocManager.Core.csproj" />
@@ -50,12 +44,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="RevitAddIn\Deploy-DocManager.bat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="RevitAddIn\duHastNet.DocManager.Revit.addin">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <Folder Include="Commands\" />
+    <Folder Include="Bridge\" />
+    <Folder Include="Views\" />
   </ItemGroup>
 
 </Project>

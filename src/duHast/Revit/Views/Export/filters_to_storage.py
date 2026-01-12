@@ -402,7 +402,7 @@ def analyze_logical_filter(doc, logical_filter, project_parameters, nesting_leve
 
 def analyze_filters(doc, filters,  progress_callback, debug = False):
     """
-    Analyze all view filters in the document and return a list of view filter objects.
+    Analyze past in view filters and return a list of view filter objects.
 
     :param doc: The Revit document.
     :type doc: Document

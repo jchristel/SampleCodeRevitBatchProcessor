@@ -100,7 +100,7 @@ class RevitTest(base.Base):
         """
         try:
             if self.tmp_dir is not None:
-                del_temp_dir = directory_delete_with_fallback(self.tmp_dir)
+                del_temp_dir = directory_delete_with_fallback   (self.tmp_dir)
                 assert del_temp_dir == True
                 temp_dir_exists = directory_exists(self.tmp_dir)
                 assert temp_dir_exists == False

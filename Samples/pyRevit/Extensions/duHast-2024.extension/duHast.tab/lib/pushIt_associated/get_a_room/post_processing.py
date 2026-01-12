@@ -26,7 +26,7 @@ from duHast.Utilities.Objects.result import Result
 from duHast.pyRevit.console_output import print_error, print_header
 from duHast.Revit.Common.delete import delete_by_element_ids
 from duHast.Utilities.files_io import move_all_files_from_dir_to_dir
-from duHast.Utilities.directory_io import directory_delete
+from duHast.Utilities.directory_io import directory_delete_with_fallback
 
 # set up some options for the user to select
 YES = "Yes, delete just this filled region"
@@ -188,7 +188,7 @@ def move_family_files (temp_dir, target_dir):
         time.sleep(1)
 
         # delete the temp directory 
-        delete_result = directory_delete(temp_dir)
+        delete_result = directory_delete_with_fallback(temp_dir)
 
         if delete_result:
             return_value.append_message("Deleted temporary directory: {}".format(temp_dir))

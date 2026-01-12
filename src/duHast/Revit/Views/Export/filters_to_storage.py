@@ -207,7 +207,7 @@ def analyze_rule(doc, rule,  is_inversed, project_parameters, nesting_level, deb
             
             # check if the rule value is an element id ( if a global parameter provides the value, the rule value is the global parameter id)
             if isinstance(rule.RuleValue, ElementId):
-                view_filter_rule.rule_value=rule.RuleValue.IntegerValue
+                view_filter_rule.rule_value=rule.RuleValue.Value
             else:
                 view_filter_rule.rule_value=rule.RuleValue
         

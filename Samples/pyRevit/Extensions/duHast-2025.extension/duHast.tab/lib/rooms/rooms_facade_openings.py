@@ -212,7 +212,7 @@ def report_room_data(doc, wall_segments_by_room, openings_by_host):
                 openings_in_room = []
                 for opening in openings:
                     room_of_opening = get_room_from_element(phase_dictionary, opening)
-                    if room_of_opening and room_of_opening.Id.IntegerValue == room.Id.IntegerValue:
+                    if room_of_opening and room_of_opening.Id.Value == room.Id.Value:
                         openings_in_room.append(opening)
                         continue
 
@@ -220,11 +220,11 @@ def report_room_data(doc, wall_segments_by_room, openings_by_host):
                     to_room = opening.ToRoom[phase_dictionary[PHASE_NAME]]
                     from_room = opening.FromRoom[phase_dictionary[PHASE_NAME]]
                     
-                    if to_room and to_room.Id.IntegerValue == room.Id.IntegerValue:
+                    if to_room and to_room.Id.Value == room.Id.Value:
                         openings_in_room.append(opening)
                         continue
                 
-                    if from_room and from_room.Id.IntegerValue == room.Id.IntegerValue:
+                    if from_room and from_room.Id.Value == room.Id.Value:
                         openings_in_room.append(opening)
                         continue
                 

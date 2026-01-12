@@ -175,7 +175,7 @@ def ifc_get_third_party_export_config_by_model_2022(ifc_version):
     ifcExportConfig.SpaceBoundaries = (
         1  # double check this value...built wants that to be None
     )
-    ifcExportConfig.ActivePhaseId = rdb.ElementId.InvalidElementId.IntegerValue
+    ifcExportConfig.ActivePhaseId = rdb.ElementId.InvalidElementId.Value
     ifcExportConfig.ExportBaseQuantities = True  # as per BIM exec plan
     ifcExportConfig.SplitWallsAndColumns = False  # as per BIM exec plan
     ifcExportConfig.VisibleElementsOfCurrentView = False  # export entire model

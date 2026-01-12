@@ -34,7 +34,7 @@ def get_window_families_by_host_id(doc, filter_by_family_name=None):
     windows_by_host = {}
 
     for window in col_list:
-        host_id = window.Host.Id.IntegerValue
+        host_id = window.Host.Id.Value
         if host_id not in windows_by_host:
             windows_by_host[host_id] = []
         windows_by_host[host_id].append(window)

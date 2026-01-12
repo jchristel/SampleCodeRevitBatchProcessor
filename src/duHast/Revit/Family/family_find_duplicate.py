@@ -190,12 +190,12 @@ def find_matching_types_between_families (source_family, target_family):
             target_type = target_family.Document.GetElement(target_type_id)
             target_type_name = Element.Name.GetValue(target_type)
             if source_type_name == target_type_name:
-                matching_types[source_type.Id.IntegerValue] = target_type.Id.IntegerValue
+                matching_types[source_type.Id.Value] = target_type.Id.Value
             else:
                 # check if the type name starts with the source type name and is followed by " " and a number
                 if target_type_name.startswith(source_type_name):
                     if len(target_type_name) > len(source_type_name) + 2:
                         if target_type_name[len(source_type_name)] == " " and target_type_name[len(source_type_name)+1].isnumeric():
-                            matching_types[source_type.Id.IntegerValue] = target_type.Id.IntegerValue
+                            matching_types[source_type.Id.Value] = target_type.Id.Value
 
     return matching_types

@@ -35,6 +35,18 @@
 		  <HintPath>..\\..\\..\\_References\\Autodesk\\RevitAPIUI.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
+	  <Reference Include="CefSharp.Core">
+		  <HintPath>..\\..\\..\\_References\\Autodesk\\CefSharp.Core.dll</HintPath>
+		  <Private>False</Private>
+	  </Reference>
+	  <Reference Include="CefSharp">
+		  <HintPath>..\\..\\..\\_References\\Autodesk\\CefSharp.dll</HintPath>
+		  <Private>False</Private>
+	  </Reference>
+	  <Reference Include="CefSharp.Wpf">
+		  <HintPath>..\\..\\..\\_References\\Autodesk\\CefSharp.Wpf.dll</HintPath>
+		  <Private>False</Private>
+	  </Reference>
   </ItemGroup>
 
   <ItemGroup>

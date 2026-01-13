@@ -29,23 +29,21 @@ using duHastNet.DocManager.Core.Services.Repositories;
 namespace duHastNet.DocManager.Core.Services.Api;
 
 /// <summary>
-/// Main API class for external integration (PyRevit, Revit Plugin, Standalone)
+/// Partial class for DocManagerApi - Synchronous Operations Support
+/// This file adds synchronous database operations for IronPython/PyRevit compatibility
 /// </summary>
-public partial class DocManagerApi : IDocManagerApi
+public partial class DocManagerApi
 {
-    private IDatabaseService? _databaseService;
-    private IUnitOfWork? _unitOfWork;
-    private IUnitOfWorkSync? _unitOfWorkSync;
-    private bool _disposed = false;
 
-    #region Async Methods (for modern .NET usage)
+    #region Synchronous Methods - Updated Implementations
 
     /// <summary>
-    /// Sets up a new document database
+    /// Sets up a new document database (synchronous version for IronPython)
+    /// UPDATED: Now uses proper sync methods instead of .GetAwaiter().GetResult()
     /// </summary>
     /// <param name="config">Database setup configuration</param>
     /// <returns>Setup result with success/failure information</returns>
-    public async Task<SetupResult> SetupDatabaseAsync(DatabaseSetupConfig config)
+    public SetupResult SetupDatabase(DatabaseSetupConfig config)
     {
         try
         {
@@ -67,9 +65,9 @@ public partial class DocManagerApi : IDocManagerApi
                 File.Delete(config.DatabasePath);
             }
 
-            // Initialize database service
+            // Initialize database service using SYNC method
             _databaseService = new DatabaseService();
-            await _databaseService.InitializeAsync(config.DatabasePath);
+            _databaseService.Initialize(config.DatabasePath);
 
             // Verify database was created successfully
             if (!_databaseService.IsInitialized)
@@ -77,8 +75,8 @@ public partial class DocManagerApi : IDocManagerApi
                 return SetupResult.CreateFailure("Failed to initialize database");
             }
 
-            // Initialize unit of work
-            _unitOfWork = new UnitOfWork(_databaseService.Connection);
+            // Initialize SYNC unit of work
+            _unitOfWorkSync = new UnitOfWorkSync(_databaseService.SyncConnection);
 
             // Validate custom property names
             var invalidPropertyNames = ValidateCustomPropertyNames(config.CustomPropertyNames);
@@ -107,13 +105,14 @@ public partial class DocManagerApi : IDocManagerApi
     }
 
     /// <summary>
-    /// Sets up database with simple parameters (for easier calling from external systems)
+    /// Sets up database with simple parameters (synchronous version for IronPython)
+    /// UPDATED: Now calls sync SetupDatabase instead of async version
     /// </summary>
     /// <param name="databasePath">Path to database file</param>
     /// <param name="customPropertyNames">List of custom property names</param>
     /// <param name="overwriteExisting">Whether to overwrite existing database</param>
     /// <returns>Setup result</returns>
-    public async Task<SetupResult> SetupDatabaseAsync(string databasePath,
+    public SetupResult SetupDatabase(string databasePath,
         List<string>? customPropertyNames = null,
         bool overwriteExisting = false)
     {
@@ -124,36 +123,38 @@ public partial class DocManagerApi : IDocManagerApi
             OverwriteExisting = overwriteExisting
         };
 
-        return await SetupDatabaseAsync(config);
+        return SetupDatabase(config);
     }
 
     /// <summary>
-    /// Tests database connectivity and returns status information
+    /// Tests database connectivity and returns status information (synchronous version for IronPython)
+    /// UPDATED: Now uses proper sync methods instead of .GetAwaiter().GetResult()
     /// </summary>
     /// <returns>Setup result with database information</returns>
-    public async Task<SetupResult> TestDatabaseAsync()
+    public SetupResult TestDatabase()
     {
         try
         {
             if (!IsDatabaseReady())
             {
-                return SetupResult.CreateFailure("Database not initialized - call SetupDatabaseAsync first");
+                return SetupResult.CreateFailure("Database not initialized - call SetupDatabase first");
             }
 
-            // Test basic operations
-            var revisionCount = await _unitOfWork!.Revisions.CountAsync();
-            var documentCount = await _unitOfWork.Documents.CountAsync();
-            var activeDocumentCount = await _unitOfWork.Documents.GetActiveDocumentsAsync();
-            var propertyCount = await _unitOfWork.CustomProperties.CountAsync();
+            // Test basic operations using SYNC methods
+            var revisionCount = _unitOfWorkSync!.Revisions.Count();
+            var documentCount = _unitOfWorkSync.Documents.Count();
+            var activeDocuments = _unitOfWorkSync.Documents.GetActiveDocuments();
+            
+            // TODO: Add other counts as repositories are implemented
+            // var propertyCount = _unitOfWorkSync.CustomProperties.Count();
 
-            // Test integrity
-            var integrityOk = await _databaseService!.CheckDatabaseIntegrityAsync();
+            // Test integrity using SYNC method
+            var integrityOk = _databaseService!.CheckDatabaseIntegrity();
 
             var result = SetupResult.CreateSuccess(_databaseService.DatabasePath!);
             result.Message = $"Database test successful. " +
                            $"Revisions: {revisionCount}, " +
-                           $"Documents: {documentCount} (Active: {activeDocumentCount.Count}), " +
-                           $"Properties: {propertyCount}. " +
+                           $"Documents: {documentCount} (Active: {activeDocuments.Count}). " +
                            $"Integrity: {(integrityOk ? "OK" : "FAILED")}";
 
             if (!integrityOk)
@@ -170,26 +171,37 @@ public partial class DocManagerApi : IDocManagerApi
     }
 
     /// <summary>
-    /// Closes database connection and cleans up resources
+    /// Closes database connection and cleans up resources (synchronous version for IronPython)
+    /// UPDATED: Now uses proper sync Close method instead of Task.Run
     /// </summary>
-    public async Task CloseAsync()
+    public void Close()
     {
-        if (_databaseService != null)
+        try
         {
-            await _databaseService.CloseAsync();
+            // Use SYNC close method
+            _databaseService?.Close();
             _databaseService = null;
-        }
 
-        _unitOfWork?.Dispose();
-        _unitOfWork = null;
+            _unitOfWork?.Dispose();
+            _unitOfWork = null;
+
+            _unitOfWorkSync?.Dispose();
+            _unitOfWorkSync = null;
+        }
+        catch (Exception ex)
+        {
+            // Log error but don't throw during cleanup
+            System.Diagnostics.Debug.WriteLine($"Error during close: {ex.Message}");
+        }
     }
 
     /// <summary>
-    /// Connects to an existing database without creating or overwriting
+    /// Connects to an existing database (synchronous version for IronPython)
+    /// UPDATED: Now uses proper sync methods instead of .GetAwaiter().GetResult()
     /// </summary>
     /// <param name="databasePath">Path to existing database file</param>
     /// <returns>Setup result with connection information</returns>
-    public async Task<SetupResult> ConnectDatabaseAsync(string databasePath)
+    public SetupResult ConnectDatabase(string databasePath)
     {
         try
         {
@@ -205,19 +217,19 @@ public partial class DocManagerApi : IDocManagerApi
                 return SetupResult.CreateFailure($"Database file does not exist: {databasePath}");
             }
 
-            // Close any existing connection
-            if (_databaseService != null)
-            {
-                await _databaseService.CloseAsync();
-                _databaseService = null;
-            }
+            // Close any existing connection using SYNC method
+            _databaseService?.Close();
+            _databaseService = null;
 
             _unitOfWork?.Dispose();
             _unitOfWork = null;
 
-            // Initialize database service with existing file
+            _unitOfWorkSync?.Dispose();
+            _unitOfWorkSync = null;
+
+            // Initialize database service with existing file using SYNC method
             _databaseService = new DatabaseService();
-            await _databaseService.InitializeAsync(databasePath);
+            _databaseService.Initialize(databasePath);
 
             // Verify database was opened successfully
             if (!_databaseService.IsInitialized)
@@ -225,23 +237,24 @@ public partial class DocManagerApi : IDocManagerApi
                 return SetupResult.CreateFailure("Failed to connect to database");
             }
 
-            // Initialize unit of work
-            _unitOfWork = new UnitOfWork(_databaseService.Connection);
+            // Initialize SYNC unit of work
+            _unitOfWorkSync = new UnitOfWorkSync(_databaseService.SyncConnection);
 
-            // Verify database has expected tables (basic validation)
-            var revisionCount = await _unitOfWork.Revisions.CountAsync();
-            var documentCount = await _unitOfWork.Documents.CountAsync();
-            var activeDocumentCount = await _unitOfWork.Documents.GetActiveDocumentsAsync();
-            var propertyCount = await _unitOfWork.CustomProperties.CountAsync();
+            // Verify database has expected tables (basic validation) using SYNC methods
+            var revisionCount = _unitOfWorkSync.Revisions.Count();
+            var documentCount = _unitOfWorkSync.Documents.Count();
+            var activeDocuments = _unitOfWorkSync.Documents.GetActiveDocuments();
+            
+            // TODO: Add other counts as repositories are implemented
+            // var propertyCount = _unitOfWorkSync.CustomProperties.Count();
 
-            // Test integrity
-            var integrityOk = await _databaseService.CheckDatabaseIntegrityAsync();
+            // Test integrity using SYNC method
+            var integrityOk = _databaseService.CheckDatabaseIntegrity();
 
             var result = SetupResult.CreateSuccess(databasePath);
             result.Message = $"Connected successfully to database. " +
                            $"Revisions: {revisionCount}, " +
-                           $"Documents: {documentCount} (Active: {activeDocumentCount.Count}), " +
-                           $"Properties: {propertyCount}";
+                           $"Documents: {documentCount} (Active: {activeDocuments.Count})";
 
             if (!integrityOk)
             {
@@ -258,113 +271,43 @@ public partial class DocManagerApi : IDocManagerApi
 
     #endregion
 
-    #region Shared Methods
+    #region Synchronous Revision Methods - NEW
 
     /// <summary>
-    /// Checks if the current database is ready for operations
-    /// </summary>
-    /// <returns>True if database is initialized and ready</returns>
-    public bool IsDatabaseReady()
-    {
-        return _databaseService?.IsInitialized == true && _unitOfWork != null;
-    }
-
-    /// <summary>
-    /// Gets the current database path
-    /// </summary>
-    /// <returns>Database file path or null if not initialized</returns>
-    public string? GetDatabasePath()
-    {
-        return _databaseService?.DatabasePath;
-    }
-
-    /// <summary>
-    /// Gets the unit of work for direct database operations
-    /// Used by import/export services
-    /// </summary>
-    /// <returns>Unit of work instance</returns>
-    /// <exception cref="InvalidOperationException">Thrown if database is not initialized</exception>
-    public IUnitOfWork GetUnitOfWork()
-    {
-        if (_unitOfWork == null)
-        {
-            throw new InvalidOperationException("Database not initialized. Call SetupDatabaseAsync or ConnectDatabaseAsync first.");
-        }
-        return _unitOfWork;
-    }
-
-    /// <summary>
-    /// Validates custom property names
-    /// </summary>
-    /// <param name="propertyNames">Property names to validate</param>
-    /// <returns>List of invalid property names</returns>
-    private static List<string> ValidateCustomPropertyNames(List<string> propertyNames)
-    {
-        var invalid = new List<string>();
-
-        foreach (var name in propertyNames)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                invalid.Add("[empty/whitespace]");
-                continue;
-            }
-
-            // Check for valid property name (basic validation)
-            if (name.Length > 100)
-            {
-                invalid.Add($"{name} (too long - max 100 characters)");
-            }
-
-            // Check for problematic characters that might cause issues
-            if (name.Contains("\"") || name.Contains("'") || name.Contains(";"))
-            {
-                invalid.Add($"{name} (contains problematic characters)");
-            }
-        }
-
-        return invalid;
-    }
-
-    #endregion
-
-    #region Revision Management Methods
-
-    /// <summary>
-    /// Gets all revisions from the database
+    /// Gets all revisions from the database (synchronous version for IronPython)
     /// </summary>
     /// <returns>List of all revisions</returns>
     /// <exception cref="InvalidOperationException">Thrown if database is not initialized</exception>
-    public async Task<List<Revision>> GetAllRevisionsAsync()
+    public List<Revision> GetAllRevisions()
     {
         if (!IsDatabaseReady())
             throw new InvalidOperationException("Database not initialized");
 
-        return await _unitOfWork!.Revisions.GetAllAsync().ConfigureAwait(false);
+        return _unitOfWorkSync!.Revisions.GetAll();
     }
 
     /// <summary>
-    /// Gets all revisions with a specific date
+    /// Gets all revisions with a specific date (synchronous version for IronPython)
     /// </summary>
     /// <param name="date">The revision date to search for</param>
     /// <returns>List of revisions with the specified date</returns>
     /// <exception cref="InvalidOperationException">Thrown if database is not initialized</exception>
-    public async Task<List<Revision>> GetRevisionsByDateAsync(DateTime date)
+    public List<Revision> GetRevisionsByDate(DateTime date)
     {
         if (!IsDatabaseReady())
             throw new InvalidOperationException("Database not initialized");
 
-        return await _unitOfWork!.Revisions.GetRevisionsByDateAsync(date);
+        return _unitOfWorkSync!.Revisions.GetRevisionsByDate(date);
     }
 
     /// <summary>
-    /// Creates a new revision in the database
+    /// Creates a new revision in the database (synchronous version for IronPython)
     /// </summary>
     /// <param name="revision">The revision to create</param>
     /// <returns>Number of records affected (should be 1 on success)</returns>
     /// <exception cref="InvalidOperationException">Thrown if database is not initialized</exception>
     /// <exception cref="ArgumentNullException">Thrown if revision is null</exception>
-    public async Task<int> CreateRevisionAsync(Revision revision)
+    public int CreateRevision(Revision revision)
     {
         if (!IsDatabaseReady())
             throw new InvalidOperationException("Database not initialized");
@@ -372,88 +315,65 @@ public partial class DocManagerApi : IDocManagerApi
         if (revision == null)
             throw new ArgumentNullException(nameof(revision));
 
-        return await _unitOfWork!.Revisions.InsertAsync(revision);
+        return _unitOfWorkSync!.Revisions.Insert(revision);
     }
 
     /// <summary>
-    /// Adds a document to a revision's document list
+    /// Adds a document to a revision's document list (synchronous version for IronPython)
     /// </summary>
     /// <param name="revisionId">Revision ID to update</param>
     /// <param name="documentId">Document ID to add</param>
     /// <returns>Number of records affected</returns>
     /// <exception cref="InvalidOperationException">Thrown if database is not initialized</exception>
-    public async Task<int> AddDocumentToRevisionAsync(int revisionId, int documentId)
+    public int AddDocumentToRevision(int revisionId, int documentId)
     {
         if (!IsDatabaseReady())
             throw new InvalidOperationException("Database not initialized");
 
-        return await _unitOfWork!.Revisions.AddDocumentToRevisionAsync(revisionId, documentId);
+        return _unitOfWorkSync!.Revisions.AddDocumentToRevision(revisionId, documentId);
     }
 
     /// <summary>
-    /// Removes a document from a revision's document list
+    /// Removes a document from a revision's document list (synchronous version for IronPython)
     /// </summary>
     /// <param name="revisionId">Revision ID to update</param>
     /// <param name="documentId">Document ID to remove</param>
     /// <returns>Number of records affected</returns>
     /// <exception cref="InvalidOperationException">Thrown if database is not initialized</exception>
-    public async Task<int> RemoveDocumentFromRevisionAsync(int revisionId, int documentId)
+    public int RemoveDocumentFromRevision(int revisionId, int documentId)
     {
         if (!IsDatabaseReady())
             throw new InvalidOperationException("Database not initialized");
 
-        return await _unitOfWork!.Revisions.RemoveDocumentFromRevisionAsync(revisionId, documentId);
+        return _unitOfWorkSync!.Revisions.RemoveDocumentFromRevision(revisionId, documentId);
     }
 
     #endregion
 
-    #region Document Management Methods
+    #region Synchronous Document Methods - NEW
 
     /// <summary>
-    /// Gets a document by its ID with custom properties loaded
+    /// Gets a document by its ID (synchronous version for IronPython)
     /// </summary>
     /// <param name="documentId">The document ID</param>
-    /// <returns>The document with custom properties populated if found, null otherwise</returns>
+    /// <returns>The document if found, null otherwise</returns>
     /// <exception cref="InvalidOperationException">Thrown if database is not initialized</exception>
-    public async Task<Document?> GetDocumentByIdAsync(int documentId)
+    public Document? GetDocumentById(int documentId)
     {
         if (!IsDatabaseReady())
             throw new InvalidOperationException("Database not initialized");
 
-        var document = await _unitOfWork!.Documents.GetByIdAsync(documentId).ConfigureAwait(false);
-
-        if (document == null)
-            return null;
-
-        // Load custom properties
-        var customProperties = await _unitOfWork.CustomProperties.GetPropertiesByDocumentAsync(document.Id).ConfigureAwait(false);
-
-        // Resolve property names from CustomFieldDefinitions
-        var customFieldDefinitions = await _unitOfWork.CustomFieldDefinitions.GetAllAsync().ConfigureAwait(false);
-        foreach (var customProperty in customProperties)
-        {
-            var definition = customFieldDefinitions.FirstOrDefault(cfd => cfd.Id == customProperty.CustomFieldDefinitionId);
-            if (definition != null)
-            {
-                customProperty.PropertyName = definition.PropertyName;
-            }
-        }
-
-        document.CustomProperties.Clear();
-        document.CustomProperties.AddRange(customProperties);
-
-        return document;
+        return _unitOfWorkSync!.Documents.GetById(documentId);
     }
 
-    
     /// <summary>
-    /// Updates an existing document in the database
+    /// Updates an existing document in the database (synchronous version for IronPython)
     /// </summary>
     /// <param name="document">The document to update</param>
     /// <returns>Number of records affected (should be 1 on success)</returns>
     /// <exception cref="InvalidOperationException">Thrown if database is not initialized</exception>
     /// <exception cref="ArgumentNullException">Thrown if document is null</exception>
-    public async Task<int> UpdateDocumentAsync(Document document)
+    public int UpdateDocument(Document document)
     {
         if (!IsDatabaseReady())
             throw new InvalidOperationException("Database not initialized");
@@ -461,21 +381,68 @@ public partial class DocManagerApi : IDocManagerApi
         if (document == null)
             throw new ArgumentNullException(nameof(document));
 
-        return await _unitOfWork!.Documents.UpdateAsync(document);
+        return _unitOfWorkSync!.Documents.Update(document);
+    }
+
+    /// <summary>
+    /// Gets all active documents from the database (synchronous version for IronPython)
+    /// </summary>
+    /// <returns>List of all active documents</returns>
+    /// <exception cref="InvalidOperationException">Thrown if database is not initialized</exception>
+    public List<Document> GetActiveDocuments()
+    {
+        if (!IsDatabaseReady())
+            throw new InvalidOperationException("Database not initialized");
+
+        return _unitOfWorkSync!.Documents.GetActiveDocuments();
+    }
+
+    /// <summary>
+    /// Gets documents by revision ID (synchronous version for IronPython)
+    /// </summary>
+    /// <param name="revisionId">The revision ID</param>
+    /// <returns>List of documents for the specified revision</returns>
+    /// <exception cref="InvalidOperationException">Thrown if database is not initialized</exception>
+    public List<Document> GetDocumentsByRevision(int revisionId)
+    {
+        if (!IsDatabaseReady())
+            throw new InvalidOperationException("Database not initialized");
+
+        return _unitOfWorkSync!.Documents.GetDocumentsByRevision(revisionId);
+    }
+
+    /// <summary>
+    /// Gets documents by document number (synchronous version for IronPython)
+    /// </summary>
+    /// <param name="documentNumber">The document number</param>
+    /// <returns>List of documents with the specified number</returns>
+    /// <exception cref="InvalidOperationException">Thrown if database is not initialized</exception>
+    public List<Document> GetDocumentsByNumber(string documentNumber)
+    {
+        if (!IsDatabaseReady())
+            throw new InvalidOperationException("Database not initialized");
+
+        return _unitOfWorkSync!.Documents.GetDocumentsByNumber(documentNumber);
     }
 
     #endregion
 
-    #region IDisposable Implementation
+    #region Helper Methods
 
-    public void Dispose()
+    /// <summary>
+    /// Gets the sync unit of work for direct repository access (for advanced scenarios)
+    /// </summary>
+    /// <returns>Sync unit of work instance</returns>
+    /// <exception cref="InvalidOperationException">Thrown if database is not initialized</exception>
+    public IUnitOfWorkSync GetUnitOfWorkSync()
     {
-        if (!_disposed)
+        if (_unitOfWorkSync == null)
         {
-            Close(); // Use synchronous version for disposal
-            _disposed = true;
+            throw new InvalidOperationException("Database not initialized with sync connection. Call SetupDatabase or ConnectDatabase first.");
         }
+        return _unitOfWorkSync;
     }
+
 
     #endregion
 }

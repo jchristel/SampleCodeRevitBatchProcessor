@@ -26,10 +26,8 @@ namespace duHastNet.DocManager.Core.Interfaces
     {
         IRevisionRepositorySync Revisions { get; }
         IDocumentRepositorySync Documents { get; }
-        
-        // TODO: Add other repositories as they are implemented
-        // ICustomPropertyRepositorySync CustomProperties { get; }
-        // ICustomFieldDefinitionRepositorySync CustomFieldDefinitions { get; }
+        ICustomPropertyRepositorySync CustomProperties { get; }
+        ICustomFieldDefinitionRepositorySync CustomFieldDefinitions { get; }
         
         int SaveChanges();
     }

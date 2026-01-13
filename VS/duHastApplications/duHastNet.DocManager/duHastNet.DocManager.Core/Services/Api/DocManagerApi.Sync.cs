@@ -22,6 +22,7 @@
 using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.Config;
+using duHastNet.DocManager.Core.Models.Database;
 using duHastNet.DocManager.Core.Models.Results;
 using duHastNet.DocManager.Core.Services;
 using duHastNet.DocManager.Core.Services.Repositories;
@@ -35,11 +36,10 @@ namespace duHastNet.DocManager.Core.Services.Api;
 public partial class DocManagerApi
 {
 
-    #region Synchronous Methods - Updated Implementations
+    #region Setup and Connection Methods
 
     /// <summary>
     /// Sets up a new document database (synchronous version for IronPython)
-    /// UPDATED: Now uses proper sync methods instead of .GetAwaiter().GetResult()
     /// </summary>
     /// <param name="config">Database setup configuration</param>
     /// <returns>Setup result with success/failure information</returns>
@@ -106,7 +106,6 @@ public partial class DocManagerApi
 
     /// <summary>
     /// Sets up database with simple parameters (synchronous version for IronPython)
-    /// UPDATED: Now calls sync SetupDatabase instead of async version
     /// </summary>
     /// <param name="databasePath">Path to database file</param>
     /// <param name="customPropertyNames">List of custom property names</param>
@@ -127,77 +126,7 @@ public partial class DocManagerApi
     }
 
     /// <summary>
-    /// Tests database connectivity and returns status information (synchronous version for IronPython)
-    /// UPDATED: Now uses proper sync methods instead of .GetAwaiter().GetResult()
-    /// </summary>
-    /// <returns>Setup result with database information</returns>
-    public SetupResult TestDatabase()
-    {
-        try
-        {
-            if (!IsDatabaseReady())
-            {
-                return SetupResult.CreateFailure("Database not initialized - call SetupDatabase first");
-            }
-
-            // Test basic operations using SYNC methods
-            var revisionCount = _unitOfWorkSync!.Revisions.Count();
-            var documentCount = _unitOfWorkSync.Documents.Count();
-            var activeDocuments = _unitOfWorkSync.Documents.GetActiveDocuments();
-            
-            // TODO: Add other counts as repositories are implemented
-            // var propertyCount = _unitOfWorkSync.CustomProperties.Count();
-
-            // Test integrity using SYNC method
-            var integrityOk = _databaseService!.CheckDatabaseIntegrity();
-
-            var result = SetupResult.CreateSuccess(_databaseService.DatabasePath!);
-            result.Message = $"Database test successful. " +
-                           $"Revisions: {revisionCount}, " +
-                           $"Documents: {documentCount} (Active: {activeDocuments.Count}). " +
-                           $"Integrity: {(integrityOk ? "OK" : "FAILED")}";
-
-            if (!integrityOk)
-            {
-                result.AddWarning("Database integrity check failed");
-            }
-
-            return result;
-        }
-        catch (Exception ex)
-        {
-            return SetupResult.CreateFailure($"Database test failed: {ex.Message}");
-        }
-    }
-
-    /// <summary>
-    /// Closes database connection and cleans up resources (synchronous version for IronPython)
-    /// UPDATED: Now uses proper sync Close method instead of Task.Run
-    /// </summary>
-    public void Close()
-    {
-        try
-        {
-            // Use SYNC close method
-            _databaseService?.Close();
-            _databaseService = null;
-
-            _unitOfWork?.Dispose();
-            _unitOfWork = null;
-
-            _unitOfWorkSync?.Dispose();
-            _unitOfWorkSync = null;
-        }
-        catch (Exception ex)
-        {
-            // Log error but don't throw during cleanup
-            System.Diagnostics.Debug.WriteLine($"Error during close: {ex.Message}");
-        }
-    }
-
-    /// <summary>
     /// Connects to an existing database (synchronous version for IronPython)
-    /// UPDATED: Now uses proper sync methods instead of .GetAwaiter().GetResult()
     /// </summary>
     /// <param name="databasePath">Path to existing database file</param>
     /// <returns>Setup result with connection information</returns>
@@ -244,9 +173,8 @@ public partial class DocManagerApi
             var revisionCount = _unitOfWorkSync.Revisions.Count();
             var documentCount = _unitOfWorkSync.Documents.Count();
             var activeDocuments = _unitOfWorkSync.Documents.GetActiveDocuments();
-            
-            // TODO: Add other counts as repositories are implemented
-            // var propertyCount = _unitOfWorkSync.CustomProperties.Count();
+            var customFieldCount = _unitOfWorkSync.CustomFieldDefinitions.Count();
+            var customPropertyCount = _unitOfWorkSync.CustomProperties.Count();
 
             // Test integrity using SYNC method
             var integrityOk = _databaseService.CheckDatabaseIntegrity();
@@ -254,7 +182,9 @@ public partial class DocManagerApi
             var result = SetupResult.CreateSuccess(databasePath);
             result.Message = $"Connected successfully to database. " +
                            $"Revisions: {revisionCount}, " +
-                           $"Documents: {documentCount} (Active: {activeDocuments.Count})";
+                           $"Documents: {documentCount} (Active: {activeDocuments.Count}), " +
+                           $"Custom Fields: {customFieldCount}, " +
+                           $"Custom Properties: {customPropertyCount}";
 
             if (!integrityOk)
             {
@@ -269,9 +199,77 @@ public partial class DocManagerApi
         }
     }
 
+    /// <summary>
+    /// Tests database connectivity and returns status information (synchronous version for IronPython)
+    /// </summary>
+    /// <returns>Setup result with database information</returns>
+    public SetupResult TestDatabase()
+    {
+        try
+        {
+            if (!IsDatabaseReady())
+            {
+                return SetupResult.CreateFailure("Database not initialized - call SetupDatabase first");
+            }
+
+            // Test basic operations using SYNC methods
+            var revisionCount = _unitOfWorkSync!.Revisions.Count();
+            var documentCount = _unitOfWorkSync.Documents.Count();
+            var activeDocuments = _unitOfWorkSync.Documents.GetActiveDocuments();
+            var customFieldCount = _unitOfWorkSync.CustomFieldDefinitions.Count();
+            var customPropertyCount = _unitOfWorkSync.CustomProperties.Count();
+
+            // Test integrity using SYNC method
+            var integrityOk = _databaseService!.CheckDatabaseIntegrity();
+
+            var result = SetupResult.CreateSuccess(_databaseService.DatabasePath!);
+            result.Message = $"Database test successful. " +
+                           $"Revisions: {revisionCount}, " +
+                           $"Documents: {documentCount} (Active: {activeDocuments.Count}), " +
+                           $"Custom Fields: {customFieldCount}, " +
+                           $"Custom Properties: {customPropertyCount}. " +
+                           $"Integrity: {(integrityOk ? "OK" : "FAILED")}";
+
+            if (!integrityOk)
+            {
+                result.AddWarning("Database integrity check failed");
+            }
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return SetupResult.CreateFailure($"Database test failed: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Closes database connection and cleans up resources (synchronous version for IronPython)
+    /// </summary>
+    public void Close()
+    {
+        try
+        {
+            // Use SYNC close method
+            _databaseService?.Close();
+            _databaseService = null;
+
+            _unitOfWork?.Dispose();
+            _unitOfWork = null;
+
+            _unitOfWorkSync?.Dispose();
+            _unitOfWorkSync = null;
+        }
+        catch (Exception ex)
+        {
+            // Log error but don't throw during cleanup
+            System.Diagnostics.Debug.WriteLine($"Error during close: {ex.Message}");
+        }
+    }
+
     #endregion
 
-    #region Synchronous Revision Methods - NEW
+    #region Revision Methods
 
     /// <summary>
     /// Gets all revisions from the database (synchronous version for IronPython)
@@ -350,7 +348,7 @@ public partial class DocManagerApi
 
     #endregion
 
-    #region Synchronous Document Methods - NEW
+    #region Document Methods
 
     /// <summary>
     /// Gets a document by its ID (synchronous version for IronPython)
@@ -427,6 +425,158 @@ public partial class DocManagerApi
 
     #endregion
 
+    #region Custom Field Methods
+
+    /// <summary>
+    /// Adds a new custom field definition and creates CustomProperty records for all documents (synchronous version)
+    /// </summary>
+    /// <param name="propertyName">Name of the custom field</param>
+    /// <param name="isActive">Whether the field is active (default true)</param>
+    /// <returns>Setup result with success/failure information</returns>
+    public SetupResult AddCustomFieldDefinition(string propertyName, bool isActive = true)
+    {
+        try
+        {
+            if (!IsDatabaseReady())
+            {
+                return SetupResult.CreateFailure("Database not initialized - call SetupDatabase or ConnectDatabase first");
+            }
+
+            // Validate property name
+            var validationErrors = ValidateCustomPropertyNames(new List<string> { propertyName });
+            if (validationErrors.Any())
+            {
+                return SetupResult.CreateFailure($"Invalid property name: {validationErrors[0]}");
+            }
+
+            // Check for duplicates using SYNC method
+            var exists = _unitOfWorkSync!.CustomFieldDefinitions.PropertyNameExists(propertyName);
+            if (exists)
+            {
+                return SetupResult.CreateFailure($"Custom field '{propertyName}' already exists");
+            }
+
+            // Create the custom field definition using SYNC method
+            var customFieldDefinition = new CustomFieldDefinition(propertyName, isActive);
+            _unitOfWorkSync.CustomFieldDefinitions.Insert(customFieldDefinition);
+
+            // Get all active documents using SYNC method
+            var documents = _unitOfWorkSync.Documents.GetActiveDocuments();
+
+            // Create CustomProperty records for all documents with empty values using SYNC method
+            var properties = new List<CustomProperty>();
+            foreach (var document in documents)
+            {
+                var customProperty = new CustomProperty(
+                    document.Id,
+                    customFieldDefinition.Id,
+                    string.Empty); // Empty value initially
+
+                properties.Add(customProperty);
+            }
+
+            // Bulk insert using SYNC method
+            if (properties.Any())
+            {
+                _unitOfWorkSync.CustomProperties.InsertAll(properties);
+            }
+
+            var result = SetupResult.CreateSuccess(_databaseService!.DatabasePath!);
+            result.Message = $"Custom field '{propertyName}' added successfully. Created {documents.Count} property records.";
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return SetupResult.CreateFailure($"Failed to add custom field: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Updates the IsActive status of a custom field definition (synchronous version)
+    /// </summary>
+    /// <param name="customFieldDefinitionId">ID of the custom field definition</param>
+    /// <param name="isActive">New active status</param>
+    /// <returns>Setup result with success/failure information</returns>
+    public SetupResult UpdateCustomFieldIsActive(int customFieldDefinitionId, bool isActive)
+    {
+        try
+        {
+            if (!IsDatabaseReady())
+            {
+                return SetupResult.CreateFailure("Database not initialized");
+            }
+
+            // Get the custom field definition using SYNC method
+            var definition = _unitOfWorkSync!.CustomFieldDefinitions.GetById(customFieldDefinitionId);
+            if (definition == null)
+            {
+                return SetupResult.CreateFailure($"Custom field definition with ID {customFieldDefinitionId} not found");
+            }
+
+            // Update IsActive status using SYNC method
+            var rowsAffected = _unitOfWorkSync.CustomFieldDefinitions.UpdateIsActive(customFieldDefinitionId, isActive);
+
+            if (rowsAffected == 0)
+            {
+                return SetupResult.CreateFailure("Failed to update custom field status");
+            }
+
+            var result = SetupResult.CreateSuccess(_databaseService!.DatabasePath!);
+            result.Message = $"Custom field '{definition.PropertyName}' {(isActive ? "activated" : "deactivated")} successfully";
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return SetupResult.CreateFailure($"Failed to update custom field: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Gets all custom field definitions from the database (synchronous version)
+    /// </summary>
+    /// <returns>List of custom field definitions</returns>
+    public List<CustomFieldDefinition> GetCustomFieldDefinitions()
+    {
+        try
+        {
+            if (!IsDatabaseReady())
+            {
+                return new List<CustomFieldDefinition>();
+            }
+
+            return _unitOfWorkSync!.CustomFieldDefinitions.GetAll();
+        }
+        catch (Exception)
+        {
+            return new List<CustomFieldDefinition>();
+        }
+    }
+
+    /// <summary>
+    /// Gets only active custom field definitions from the database (synchronous version)
+    /// </summary>
+    /// <returns>List of active custom field definitions</returns>
+    public List<CustomFieldDefinition> GetActiveCustomFieldDefinitions()
+    {
+        try
+        {
+            if (!IsDatabaseReady())
+            {
+                return new List<CustomFieldDefinition>();
+            }
+
+            return _unitOfWorkSync!.CustomFieldDefinitions.GetActive();
+        }
+        catch (Exception)
+        {
+            return new List<CustomFieldDefinition>();
+        }
+    }
+
+    #endregion
+
     #region Helper Methods
 
     /// <summary>
@@ -442,7 +592,6 @@ public partial class DocManagerApi
         }
         return _unitOfWorkSync;
     }
-
 
     #endregion
 }

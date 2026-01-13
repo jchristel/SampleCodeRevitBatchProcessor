@@ -16,46 +16,43 @@
 //
 //
 
-
 using duHastNet.DocManager.Core.Interfaces;
+using duHastNet.DocManager.Core.Models.Database;
 using SQLite;
 
 
 namespace duHastNet.DocManager.Core.Services.Repositories
 {
     /// <summary>
-    /// Synchronous Unit of Work implementation for managing transactions.
-    /// Provides sync database access for IronPython/PyRevit compatibility.
+    /// Synchronous repository implementation for CustomProperty entities.
+    /// Provides sync methods for IronPython/PyRevit compatibility.
     /// </summary>
-    public class UnitOfWorkSync : IUnitOfWorkSync
+    public class CustomPropertyRepositorySync : BaseRepositorySync<CustomProperty>, ICustomPropertyRepositorySync
     {
-        private readonly SQLiteConnection _connection;
-
-        public IRevisionRepositorySync Revisions { get; }
-        public IDocumentRepositorySync Documents { get; }
-        public ICustomPropertyRepositorySync CustomProperties { get; }
-        public ICustomFieldDefinitionRepositorySync CustomFieldDefinitions { get; }
-
-        public UnitOfWorkSync(SQLiteConnection connection)
+        public CustomPropertyRepositorySync(SQLiteConnection connection) : base(connection)
         {
-            _connection = connection ?? throw new ArgumentNullException(nameof(connection));
-
-            Revisions = new RevisionRepositorySync(connection);
-            Documents = new DocumentRepositorySync(connection);
-            CustomProperties = new CustomPropertyRepositorySync(connection);
-            CustomFieldDefinitions = new CustomFieldDefinitionRepositorySync(connection);
         }
 
-        public int SaveChanges()
+        public List<CustomProperty> GetPropertiesByDocument(int documentId)
         {
-            // With sqlite-net-pcl, changes are immediately persisted
-            // This method is here for interface compatibility
-            return 0;
+            return _connection.Table<CustomProperty>()
+                .Where(cp => cp.DocumentId == documentId)
+                .OrderBy(cp => cp.CustomFieldDefinitionId)
+                .ToList();
         }
 
-        public void Dispose()
+        public List<string> GetDistinctPropertyNames()
         {
-            // Connection is managed by DatabaseService
+            var fieldDefinitions = _connection.Table<CustomFieldDefinition>()
+                .OrderBy(cfd => cfd.PropertyName)
+                .ToList();
+
+            return fieldDefinitions.Select(cfd => cfd.PropertyName).ToList();
+        }
+
+        public int InsertAll(IEnumerable<CustomProperty> properties)
+        {
+            return _connection.InsertAll(properties);
         }
     }
 }

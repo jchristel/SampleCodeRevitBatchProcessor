@@ -16,46 +16,59 @@
 //
 //
 
-
 using duHastNet.DocManager.Core.Interfaces;
+using duHastNet.DocManager.Core.Models.Database;
 using SQLite;
-
 
 namespace duHastNet.DocManager.Core.Services.Repositories
 {
     /// <summary>
-    /// Synchronous Unit of Work implementation for managing transactions.
-    /// Provides sync database access for IronPython/PyRevit compatibility.
+    /// Synchronous repository implementation for CustomFieldDefinition entities.
+    /// Provides sync methods for IronPython/PyRevit compatibility.
     /// </summary>
-    public class UnitOfWorkSync : IUnitOfWorkSync
+    public class CustomFieldDefinitionRepositorySync : BaseRepositorySync<CustomFieldDefinition>, ICustomFieldDefinitionRepositorySync
     {
-        private readonly SQLiteConnection _connection;
-
-        public IRevisionRepositorySync Revisions { get; }
-        public IDocumentRepositorySync Documents { get; }
-        public ICustomPropertyRepositorySync CustomProperties { get; }
-        public ICustomFieldDefinitionRepositorySync CustomFieldDefinitions { get; }
-
-        public UnitOfWorkSync(SQLiteConnection connection)
+        public CustomFieldDefinitionRepositorySync(SQLiteConnection connection) : base(connection)
         {
-            _connection = connection ?? throw new ArgumentNullException(nameof(connection));
-
-            Revisions = new RevisionRepositorySync(connection);
-            Documents = new DocumentRepositorySync(connection);
-            CustomProperties = new CustomPropertyRepositorySync(connection);
-            CustomFieldDefinitions = new CustomFieldDefinitionRepositorySync(connection);
         }
 
-        public int SaveChanges()
+        public CustomFieldDefinition? GetByPropertyName(string propertyName)
         {
-            // With sqlite-net-pcl, changes are immediately persisted
-            // This method is here for interface compatibility
-            return 0;
+            return _connection.Table<CustomFieldDefinition>()
+                .Where(cfd => cfd.PropertyName == propertyName)
+                .FirstOrDefault();
         }
 
-        public void Dispose()
+        public List<CustomFieldDefinition> GetActive()
         {
-            // Connection is managed by DatabaseService
+            return _connection.Table<CustomFieldDefinition>()
+                .Where(cfd => cfd.IsActive)
+                .OrderBy(cfd => cfd.PropertyName)
+                .ToList();
+        }
+
+        public List<CustomFieldDefinition> GetInactive()
+        {
+            return _connection.Table<CustomFieldDefinition>()
+                .Where(cfd => !cfd.IsActive)
+                .OrderBy(cfd => cfd.PropertyName)
+                .ToList();
+        }
+
+        public bool PropertyNameExists(string propertyName)
+        {
+            var count = _connection.Table<CustomFieldDefinition>()
+                .Where(cfd => cfd.PropertyName.ToLower() == propertyName.ToLower())
+                .Count();
+
+            return count > 0;
+        }
+
+        public int UpdateIsActive(int id, bool isActive)
+        {
+            return _connection.Execute(
+                "UPDATE CustomFieldDefinitions SET IsActive = ? WHERE Id = ?",
+                isActive, id);
         }
     }
 }

@@ -54,26 +54,54 @@ Applies category and filter overrides to multiple view templates in a Revit docu
 ---
 
 ## Category Graphics and Filter Overrides - Export
----
 
 Views.Utility.get_views_graphic_settings_data(doc, views, progress_callback=None) is used to convert Revit category and filter overrides to storage class instances which can be written to JSON files.
 
-
-
+---
 
 # View Filters
 
 
-There is currently now overarching storage class for multiple view filters. Instead they are just stored as a list of ViewFilter objects.
+There is currently now overarching storage class for multiple view filters. Instead they are just stored as a list of duHast ViewFilter objects. Those objects contain Containers which in turn contain the actual filter rule. This is done to represent the rule nesting setup in Revit.
 
 | Content                     | Module Name                        | Storage Class                |
 |----------------------------|-----------------------------------|-----------------------------|
 | view filters        | `Views.Objects.Data.view_filter` | `Views.Objects.Data.view_filter.ViewFilter` |
+| view filter logic containers        | `Views.Objects.Data.view_filter_logic_container` | `Views.Objects.Data.view_filter_logic_container.ViewFilterLogicContainer` |
+| filter rules | `Views.Objects.Data.view_filter_rule` | `Views.Objects.Data.view_filter_rule.ViewFilterRule` |
+
+class hierarchy:
+
+- Views.Objects.Data.ViewFilter
+    - Views.Objects.Data.ViewFilterLogicContainer
+        - Views.Objects.Data.ViewFilterRule
 
 
+## View Filters - import
+
+The module Views.Import.read_filter_storage_from_file.py reads .JSON file, and converts the appropriate node into duHast ViewFilter objects. Those objects can be converted into Revit ElemenFilters using  Views.Import.create_filter_from_storage
+
+Flow:
+
+- read json file using Views.Import.read_filter_storage_from_file.read_filter_storage_from_file(...) into duHast ViewFilter objects
+
+- convert duHast ViewFilter objects into Revit ElementFilters using  Views.Import.create_filter_from_storage.import_view_filters_from_data (...)
+    - conversion uses a number of utility modules:
+        - Views.Utility.convert_data_to_filter_rule
+        - Views.Utility.convert_data_to_filter_evaluator
+        - Views.Utility.convert_data_to_filter_logic_filter
+        - Views.Utility.convert_data_to_filter_value_provider
+        
+---
+
+## View Filters - export
+
+---
 
 # TODO
 
 - Stream line namespaces of classes used, currently they are scattered all over the Views namespace.
 
 - Move `duHast.Revit.Views.visibility_graphics.import_graphic_overrides(file_path, call_back)` into the `Views.Import` namespace to be consistent with other import functions.
+
+---

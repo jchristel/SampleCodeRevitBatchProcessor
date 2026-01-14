@@ -1,43 +1,28 @@
 //
-// BSD License
-// Copyright 2026, Jan Christel
-// All rights reserved.
-
-// Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-// - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-// - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-// - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
-//
-// This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
-// In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
-// or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+//License: BSD License
+// Copyright 2025, Jan Christel
 //
 
 using System;
 using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 using duHastNet.DocManager.Core.Services.Api;
 
 namespace duHastNet.DocManager.Revit.Bridge
 {
     /// <summary>
     /// Bridge class that exposes .NET methods to JavaScript in CEFSharp WebView
-    /// Uses DocManagerApi for proper database access following Core architecture
-    /// Database connection is established lazily on first GetDocuments call
+    /// Uses DocManagerApi synchronous methods for proper database access
+    /// No async/await - all operations are truly synchronous
     /// </summary>
     public class WebViewBridge
     {
-        private readonly string _databasePath;
-        private DocManagerApi? _docManagerApi;
-        private bool _isInitialized = false;
+        private readonly DocManagerApi _docManagerApi;
         private bool _disposed = false;
-        private readonly object _lockObject = new object();
 
         /// <summary>
         /// Initializes a new instance of WebViewBridge with the database path
-        /// Database connection happens lazily on first method call
+        /// Connects to database synchronously using new true sync methods
         /// </summary>
         /// <param name="databasePath">Path to the SQLite database</param>
         public WebViewBridge(string databasePath)
@@ -47,29 +32,11 @@ namespace duHastNet.DocManager.Revit.Bridge
                 throw new ArgumentNullException(nameof(databasePath));
             }
 
-            _databasePath = databasePath;
-        }
-
-        /// <summary>
-        /// Ensures database connection is established (lazy initialization)
-        /// </summary>
-        private async Task EnsureInitializedAsync()
-        {
-            if (_isInitialized)
-                return;
-
-            lock (_lockObject)
-            {
-                if (_isInitialized)
-                    return;
-
-                _docManagerApi = new DocManagerApi();
-                _isInitialized = true;
-            }
-
-            // Connect to database (this is async but called from async method)
-            var connectResult = await _docManagerApi.ConnectDatabaseAsync(_databasePath);
-
+            _docManagerApi = new DocManagerApi();
+            
+            // Use TRUE synchronous method - no blocking, no async wrapping
+            var connectResult = _docManagerApi.ConnectDatabase(databasePath);
+            
             if (!connectResult.Success)
             {
                 throw new InvalidOperationException($"Failed to connect to database: {connectResult.Message}");
@@ -78,26 +45,18 @@ namespace duHastNet.DocManager.Revit.Bridge
 
         /// <summary>
         /// Gets all documents from the database and returns them as JSON
-        /// This method is called from JavaScript
+        /// This method is called from JavaScript - fully synchronous, no async
         /// </summary>
         /// <returns>JSON string containing array of documents with DocumentNumber, Name, and Revision</returns>
-        public async Task<string> GetDocuments()
+        public string GetDocuments()
         {
             try
             {
-                // Ensure database is connected (lazy initialization)
-                await EnsureInitializedAsync();
+                // Get SYNC unit of work from DocManagerApi
+                var unitOfWorkSync = _docManagerApi.GetUnitOfWorkSync();
 
-                // Get unit of work from DocManagerApi
-                var unitOfWork = _docManagerApi!.GetUnitOfWork();
-
-                if (unitOfWork == null)
-                {
-                    throw new InvalidOperationException("Database not connected");
-                }
-
-                // Get all active documents using the repository
-                var documents = await unitOfWork.Documents.GetActiveDocumentsAsync();
+                // Get all active documents using SYNC method
+                var documents = unitOfWorkSync.Documents.GetActiveDocuments();
 
                 // Project to simplified DTOs with only needed properties
                 var documentDtos = documents.Select(d => new

@@ -5,14 +5,13 @@ TODO:
 
 ## Graphic Overrides
 
-There are 2 distinctive flows:
-- using _storage classes 
-- using JSON files
-
+There are 2 distinctive flows implemented dealing with graphical overrides:
+- Storage classes 
+- JSON files
 
 ### Storage classes
 
-This flow is primarily used when existing overrides are to be applied within the same file and therefore wrapper requirements of native Revit objects are minimal.
+This flow is primarily used when existing overrides are to be applied within the same Revit project file and therefore requirements on duHast wrapper classes of native Revit objects are minimal.
 
 Modules handling conversion:
 
@@ -28,21 +27,19 @@ Class hierarchy:
 
 ### JSON files
 
-When persisting Revit objects to file, more advanced classes are used to store all aspects of those objects to file via JSON serialization and de-serialization. 
+This flow is used when overrides are written to file so they can be shared between any number of Revit project files. When persisting Revit objects to file, more advanced duHast classes are used to store all aspects of those objects to file via JSON serialization and de-serialization. 
 
-When applying object retrieved from disk in this way, to views in Revit, storage classes are used:
+When applying objects retrieved from disk in this way, to views in Revit, storage classes ( see above ) are used:
 
-1. Read data from file into data classes ?
-2. Create storage classes and native Revit objcts from data objects
+1. Read data from file into ViewGraphicsSettings data classes
+2. Create storage classes and native Revit objects from data objects
 3. Apply to views
-
 
 Modules handling conversion:
 
 | Content                     | Module Handling Conversion       |
 |----------------------------|-----------------------------------|
-| Combination of overrides   | `Views.visibility_graphics`     (import only)       |
-
+| Combination of overrides   | `Views.visibility_graphics`     (import and apply only)       |
 
 Class hierarchy:
 
@@ -53,9 +50,45 @@ Class hierarchy:
         - inherits from Views.Objects.Data.OverrideByBase
     
 
+The `duHast.Revit.Views.visibility_graphics` module contains functions to import category and filter overrides from a JSON file and apply them to view templates in Revit.
 
+#### `visibility_graphics.apply_overrides_from_file(doc, file_path)`
 
+This function combines all the necessary steps to import category and filter overrides from a JSON file and applies them to view templates in a Revit document.
 
+**Purpose:**  
+Applies category and filter overrides to view templates based on data imported from a JSON file.
+
+**Parameters:**  
+- `doc`: The current Revit document.  
+- `file_path`: Path to the JSON file containing override data.  
+
+**Logic:**  
+- Loads override data from the JSON file using `import_graphic_overrides`. (Stores json data into duHast ViewGraphicsSettings classes)
+- Checks if the required line and fill patterns exist in the model using `check_all_line_and_fill_pattern_in_model`.  
+- If patterns exist, it proceeds to find matching templates (by the exported template name) using `get_matching_templates`.  
+- Calls `apply_overrides_to_views` to apply the overrides to the found templates. ( see below for what happens in that function)
+  
+---
+
+#### `visibility_graphics.apply_overrides_to_views(doc, view_data)`
+
+This function applies graphic and filter overrides to multiple view templates in a Revit document.  
+It assumes that the `view_data` has already been prepared and validated. Validation must include checking for the existence of required line and fill patterns in the model.
+
+**Purpose:**  
+Applies category and filter overrides to multiple view templates in a Revit document.
+
+**Parameters:**  
+- `doc`: The current Revit document.  
+- `view_data`: A dictionary where keys are view template names, and values are lists containing the Revit view object and the view override object.  
+
+**Logic:**  
+- Iterates over the `view_data` dictionary.  
+- Calls `apply_override_to_view` for each view and updates the result object. 
+    - this converts duHast OverrideByCategory and duHast OverrideByFilter into native Revit objects
+    - setups duHast storage class instances containing the native Revit objects
+    - applies storage classes ( the native override attached to them ) to Revit views
 
 ---
 
@@ -90,42 +123,7 @@ Flow to read a data object from file, create a native Revit category override ob
 
 ## Category Graphics and Filter Overrides - Import
 
-The `duHast.Revit.Views.visibility_graphics` module contains functions to import category and filter overrides from a JSON file and apply them to view templates in Revit.
 
-### `visibility_graphics.apply_overrides_from_file(doc, file_path)`
-
-This function combines all the necessary steps to import category and filter overrides from a JSON file and applies them to view templates in a Revit document.
-
-**Purpose:**  
-Applies category and filter overrides to view templates based on data imported from a JSON file.
-
-**Parameters:**  
-- `doc`: The current Revit document.  
-- `file_path`: Path to the JSON file containing override data.  
-
-**Logic:**  
-- Loads override data from the JSON file using `import_graphic_overrides`. (Stores json data into storage classes.)
-- Checks if the required line and fill patterns exist in the model using `check_all_line_and_fill_pattern_in_model`.  
-- If patterns exist, it proceeds to find matching templates (by the exported template name) using `get_matching_templates`.  
-- Calls `apply_overrides_to_views` to apply the overrides to the found templates.  
-
----
-
-### `visibility_graphics.apply_overrides_to_views(doc, view_data)`
-
-This function applies graphic and filter overrides to multiple view templates in a Revit document.  
-It assumes that the `view_data` has already been prepared and validated. Validation must include checking for the existence of required line and fill patterns in the model.
-
-**Purpose:**  
-Applies category and filter overrides to multiple view templates in a Revit document.
-
-**Parameters:**  
-- `doc`: The current Revit document.  
-- `view_data`: A dictionary where keys are view template names, and values are lists containing the Revit view object and the view override object.  
-
-**Logic:**  
-- Iterates over the `view_data` dictionary.  
-- Calls `apply_override_to_view` for each view and updates the result object.  
 
 ---
 
@@ -143,7 +141,7 @@ Views.Utility.get_views_graphic_settings_data(doc, views, progress_callback=None
 
 ---
 
-# View Filters
+## View Filters
 
 There is currently now overarching storage class for multiple view filters. Instead they are just stored as a list of duHast ViewFilter objects. Those objects contain Containers which in turn contain the actual filter rule. This is done to represent the rule nesting setup in Revit.
 
@@ -160,7 +158,7 @@ Class hierarchy:
         - Views.Objects.Data.ViewFilterRule
 
 
-## View Filters - import
+### View Filters - import
 
 The module Views.Import.read_filter_storage_from_file.py reads .JSON file, and converts the appropriate node into duHast ViewFilter objects. Those objects can be converted into Revit ElemenFilters using  Views.Import.create_filter_from_storage
 
@@ -177,7 +175,7 @@ Flow:
         
 ---
 
-## View Filters - export
+### View Filters - export
 
 ---
 

@@ -44,8 +44,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\" />
-    <Folder Include="Bridge\" />
     <Folder Include="Views\" />
   </ItemGroup>
 

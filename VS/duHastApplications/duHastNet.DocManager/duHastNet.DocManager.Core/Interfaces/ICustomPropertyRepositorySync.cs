@@ -26,8 +26,19 @@ namespace duHastNet.DocManager.Core.Interfaces
     /// </summary>
     public interface ICustomPropertyRepositorySync : IRepositorySync<CustomProperty>
     {
+        /// <summary>
+        /// Gets all custom properties for a specific document
+        /// </summary>
+        /// <param name="documentId">The document ID</param>
+        /// <returns>List of custom properties for the document</returns>
         List<CustomProperty> GetPropertiesByDocument(int documentId);
+
+        /// <summary>
+        /// Gets all distinct custom property names in the database
+        /// </summary>
+        /// <returns>List of unique property names</returns>
         List<string> GetDistinctPropertyNames();
-        int InsertAll(IEnumerable<CustomProperty> properties);
+
+        // Note: InsertAll is now inherited from IRepositorySync<T>
     }
 }

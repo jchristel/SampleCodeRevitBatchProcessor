@@ -15,11 +15,14 @@
 //
 //
 
+using System.Linq.Expressions;
+
 namespace duHastNet.DocManager.Core.Interfaces;
 
 /// <summary>
 /// Base synchronous repository interface for CRUD operations.
 /// Provides synchronous database access for IronPython/PyRevit compatibility.
+/// Mirrors the async IRepository<T> interface with synchronous methods.
 /// </summary>
 /// <typeparam name="T">Entity type</typeparam>
 public interface IRepositorySync<T> where T : class
@@ -36,6 +39,20 @@ public interface IRepositorySync<T> where T : class
     /// </summary>
     /// <returns>List of all entities</returns>
     List<T> GetAll();
+
+    /// <summary>
+    /// Finds entities matching the specified predicate (sync version)
+    /// </summary>
+    /// <param name="predicate">Expression to filter entities</param>
+    /// <returns>List of matching entities</returns>
+    List<T> Find(Expression<Func<T, bool>> predicate);
+
+    /// <summary>
+    /// Gets the first entity matching the predicate, or null if not found (sync version)
+    /// </summary>
+    /// <param name="predicate">Expression to filter entities</param>
+    /// <returns>First matching entity or null</returns>
+    T? FirstOrDefault(Expression<Func<T, bool>> predicate);
 
     /// <summary>
     /// Inserts a new entity (sync version)
@@ -59,8 +76,50 @@ public interface IRepositorySync<T> where T : class
     int Delete(T entity);
 
     /// <summary>
+    /// Deletes an entity by its ID (sync version)
+    /// </summary>
+    /// <param name="id">Entity ID</param>
+    /// <returns>Number of rows affected</returns>
+    int Delete(int id);
+
+    /// <summary>
     /// Gets the count of all entities (sync version)
     /// </summary>
     /// <returns>Total count</returns>
     int Count();
+
+    /// <summary>
+    /// Gets the count of entities matching the predicate (sync version)
+    /// </summary>
+    /// <param name="predicate">Expression to filter entities</param>
+    /// <returns>Count of matching entities</returns>
+    int Count(Expression<Func<T, bool>> predicate);
+
+    /// <summary>
+    /// Checks if any entity matches the predicate (sync version)
+    /// </summary>
+    /// <param name="predicate">Expression to filter entities</param>
+    /// <returns>True if any entity matches, false otherwise</returns>
+    bool Exists(Expression<Func<T, bool>> predicate);
+
+    /// <summary>
+    /// Inserts multiple entities in a batch operation (sync version)
+    /// </summary>
+    /// <param name="entities">Entities to insert</param>
+    /// <returns>Number of rows affected</returns>
+    int InsertAll(IEnumerable<T> entities);
+
+    /// <summary>
+    /// Updates multiple entities in a batch operation (sync version)
+    /// </summary>
+    /// <param name="entities">Entities to update</param>
+    /// <returns>Number of rows affected</returns>
+    int UpdateAll(IEnumerable<T> entities);
+
+    /// <summary>
+    /// Deletes multiple entities in a batch operation (sync version)
+    /// </summary>
+    /// <param name="entities">Entities to delete</param>
+    /// <returns>Number of rows affected</returns>
+    int DeleteAll(IEnumerable<T> entities);
 }

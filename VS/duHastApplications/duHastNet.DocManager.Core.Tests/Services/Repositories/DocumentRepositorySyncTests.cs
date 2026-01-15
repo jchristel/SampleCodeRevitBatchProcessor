@@ -596,7 +596,7 @@ public class DocumentRepositorySyncTests
     {
         // Arrange
         var doc = new Document("A-101-NEW", "Floor Plan", "1", _testRevisionId);
-        doc.AddDocumentNumberToHistory("A-101-OLD");
+        doc.AddToHistory("A-101-OLD");
         _documentRepository.Insert(doc);
 
         // Act
@@ -645,7 +645,7 @@ public class DocumentRepositorySyncTests
     {
         // Arrange
         var doc = new Document("A-101-NEW", "Floor Plan", "1", _testRevisionId);
-        doc.AddDocumentNumberToHistory("A-101-OLD");
+        doc.AddToHistory("A-101-OLD");
         _documentRepository.Insert(doc);
 
         // Act
@@ -678,8 +678,8 @@ public class DocumentRepositorySyncTests
     {
         // Arrange
         var doc1 = new Document("A-101-V3", "Floor Plan", "1", _testRevisionId);
-        doc1.AddDocumentNumberToHistory("A-101-V1");
-        doc1.AddDocumentNumberToHistory("A-101-V2");
+        doc1.AddToHistory("A-101-V1");
+        doc1.AddToHistory("A-101-V2");
         _documentRepository.Insert(doc1);
 
         var doc2 = new Document("A-102", "Ceiling Plan", "1", _testRevisionId);

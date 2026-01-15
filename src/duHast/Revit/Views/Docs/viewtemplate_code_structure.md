@@ -14,6 +14,7 @@ There are 2 distinctive flows:
 
 This flow is primarily used when existing overrides are to be applied within the same file and therefore wrapper requirements of native Revit objects are minimal.
 
+Modules handling conversion:
 
 | Content                     | Module Handling Conversion       |
 |----------------------------|-----------------------------------|
@@ -28,8 +29,15 @@ Class hierarchy:
 ### JSON files
 
 When persisting Revit objects to file, more advanced classes are used to store all aspects of those objects to file via JSON serialization and de-serialization. 
-When applying object retrieved from disk in this way, to views in Revit, storage classes are used.
 
+When applying object retrieved from disk in this way, to views in Revit, storage classes are used:
+
+1. Read data from file into data classes ?
+2. Create storage classes and native Revit objcts from data objects
+3. Apply to views
+
+
+Modules handling conversion:
 
 | Content                     | Module Handling Conversion       |
 |----------------------------|-----------------------------------|

@@ -124,7 +124,7 @@ def get_line_pattern_id(doc, data_pattern):
 
 def convert_to_revit_graphic_override(doc, data_override, is_filter_override=False):
     """
-    Creates a Revit OverrideGraphicSettings instance from settings stored in an OverrideByCategory object.
+    Creates a Revit OverrideGraphicSettings instance from settings stored in an duHast OverrideByCategory object.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document

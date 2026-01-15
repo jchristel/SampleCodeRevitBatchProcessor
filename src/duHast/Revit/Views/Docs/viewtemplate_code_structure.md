@@ -1,16 +1,39 @@
+# View Templates
 
-# Graphic Overrides
+TODO:
+---
 
-These are currently split into two modules, one for category overrides and one for filter overrides.
-In addition, a third module is used to combine both when applying them to views.
+## Graphic Overrides
 
-| Content                     | Module Name                        | Storage Class                |
-|----------------------------|-----------------------------------|-----------------------------|
-| Category overrides         | `Views.visibility_graphics_categories` | `Views.Objects.category_override_storage.RevitCategoryOverride` |
-| Filter overrides           | `Views.visibility_graphics_filters`    | `Views.Objects.filter_override_storage.RevitFilterOverride`   |
-| Combination of overrides   | `Views.visibility_graphics`            | `Views.Objects.view_graphics_settings.ViewGraphicsSettings`    |
+There are 2 distinctive flows:
+- using _storage classes 
+- using JSON files
 
 
+### Storage classes
+
+This flow is primarily used when existing overrides are to be applied within the same file and therefore wrapper requirements of native Revit objects are minimal.
+
+
+| Content                     | Module Handling Conversion       |
+|----------------------------|-----------------------------------|
+| Category overrides         | `Views.visibility_graphics_categories` | 
+| Filter overrides           | `Views.visibility_graphics_filters`    | 
+
+Class hierarchy:
+
+- Views.Objects.category_override_storage.RevitCategoryOverride
+- Views.Objects.filter_override_storage.RevitFilterOverride
+
+### JSON files
+
+When persisting Revit objects to file, more advanced classes are used to store all aspects of those objects to file via JSON serialization and de-serialization. 
+When applying object retrieved from disk in this way, to views in Revit, storage classes are used.
+
+
+| Content                     | Module Handling Conversion       |
+|----------------------------|-----------------------------------|
+| Combination of overrides   | `Views.visibility_graphics`     (import only)       |
 
 
 Class hierarchy:
@@ -21,6 +44,13 @@ Class hierarchy:
     - Views.Objects.Data.OverrideByFilter
         - inherits from Views.Objects.Data.OverrideByBase
     
+
+
+
+
+
+---
+
    
 
 

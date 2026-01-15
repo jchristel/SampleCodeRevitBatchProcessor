@@ -10,6 +10,44 @@ In addition, a third module is used to combine both when applying them to views.
 | Filter overrides           | `Views.visibility_graphics_filters`    | `Views.Objects.filter_override_storage.RevitFilterOverride`   |
 | Combination of overrides   | `Views.visibility_graphics`            | `Views.Objects.view_graphics_settings.ViewGraphicsSettings`    |
 
+
+
+
+Class hierarchy:
+
+- Views.Objects.view_graphics_settings.ViewGraphicsSettings
+    - Views.Objects.Data.OverrideByCategory
+        - inherits from Views.Objects.Data.OverrideByBase
+    - Views.Objects.Data.OverrideByFilter
+        - inherits from Views.Objects.Data.OverrideByBase
+    
+   
+
+
+
+Flow to convert Revit overrides to data which can be stored on disk and back to native Revit objects
+
+1. Views.Utility.convert_revit_override_to_data
+2. Views.Utility.convert_data_to_revit_override
+
+To apply an override, filter or category, duHast uses storage classes:
+
+- Views.Objects.filter_override_storage.RevitFilterOverride
+- Views.Objects.category_override_storage.RevitCategoryOverride
+
+Functions to apply overrides to views are
+
+- visibility_graphics_filter.apply_filter_override_to_view
+- visibility_graphics_categories.apply_graphic_override_to_view
+
+Flow to read a data object from file, create a native Revit category override object and apply to a view:
+
+1. convert json to duHast objects
+    1.1 Views.Utility.convert_data_to_override_storage.convert_to_category_override_storage_objects
+    1.2 Views.Utility.convert_data_to_override_storage.convert_to_filter_override_storage_objects
+2. Views.Utility.convert_data_to_revit_override (returns native Revit objects)
+3. Views.visibility_graphics.apply_filter_override_to_view
+
 ---
 
 ## Category Graphics and Filter Overrides - Import
@@ -77,7 +115,7 @@ There is currently now overarching storage class for multiple view filters. Inst
 | view filter logic containers        | `Views.Objects.Data.view_filter_logic_container` | `Views.Objects.Data.view_filter_logic_container.ViewFilterLogicContainer` |
 | filter rules | `Views.Objects.Data.view_filter_rule` | `Views.Objects.Data.view_filter_rule.ViewFilterRule` |
 
-class hierarchy:
+Class hierarchy:
 
 - Views.Objects.Data.ViewFilter
     - Views.Objects.Data.ViewFilterLogicContainer

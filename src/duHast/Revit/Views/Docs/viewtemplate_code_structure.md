@@ -57,10 +57,17 @@ Applies category and filter overrides to multiple view templates in a Revit docu
 
 Views.Utility.get_views_graphic_settings_data(doc, views, progress_callback=None) is used to convert Revit category and filter overrides to storage class instances which can be written to JSON files.
 
+
+
+
+
+
+
+
+
 ---
 
 # View Filters
-
 
 There is currently now overarching storage class for multiple view filters. Instead they are just stored as a list of duHast ViewFilter objects. Those objects contain Containers which in turn contain the actual filter rule. This is done to represent the rule nesting setup in Revit.
 

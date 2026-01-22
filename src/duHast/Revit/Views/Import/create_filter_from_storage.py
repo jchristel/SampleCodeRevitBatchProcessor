@@ -31,6 +31,7 @@ This module contains a number of helper functions relating to Revit view filters
 import clr
 clr.AddReference('System')
 from System.Collections.Generic import List
+from System import Int64 # revit element Id expects 64 bit integer
 
 
 from duHast.Utilities.Objects.result import Result
@@ -316,7 +317,7 @@ def create_filter_from_json(doc, view_filter_json, element_filters):
 
         # loop over category ids and add as element id
         for category_id in view_filter_json.category_ids:
-            category_ids.Add(ElementId(category_id))
+            category_ids.Add(ElementId(Int64(category_id)))
             
         # check we got a least one category
         if category_ids.Count == 0:
@@ -356,7 +357,7 @@ def update_filter_from_json(doc, existing_filter, view_filter_json, element_filt
 
         # loop over category ids and add as element id
         for category_id in view_filter_json.category_ids:
-            category_ids.Add(ElementId(category_id))
+            category_ids.Add(ElementId(Int64(category_id)))
             
         # check we got a least one category
         if category_ids.Count == 0:

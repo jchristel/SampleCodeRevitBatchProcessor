@@ -27,6 +27,8 @@ Revit category graphics helper functions for project files.
 #
 #
 
+from System import Int64 # revit element Id expects 64 bit integer
+
 import duHast.Utilities.Objects.result as res
 from duHast.Revit.LinePattern.line_patterns import get_all_line_patterns
 from duHast.Revit.Categories.categories_model import get_categories_in_model
@@ -103,7 +105,7 @@ def set_cut_style(doc, category, line_cut_style):
                 # set line pattern by id
                 # use projection as graphics style since cut is not available (?)
                 category.SetLinePatternId(
-                    ElementId(line_cut_style.line_pattern_settings.id),
+                    ElementId(Int64(line_cut_style.line_pattern_settings.id)),
                     GraphicsStyleType.Projection,
                 )
                 action_return_value.update_sep(
@@ -212,7 +214,7 @@ def set_projection_style(doc, category, line_projection_style):
 
                 # set line pattern by id
                 category.SetLinePatternId(
-                    ElementId(line_projection_style.line_pattern_settings.id),
+                    ElementId(Int64(line_projection_style.line_pattern_settings.id)),
                     GraphicsStyleType.Projection,
                 )
                 action_return_value.update_sep(
@@ -301,7 +303,7 @@ def set_category_material_by_material_id(doc, category, material_id):
             raise TypeError("material_id must be an integer")
 
         # get material by id
-        material = get_material_by_id(doc, ElementId(material_id))
+        material = get_material_by_id(doc, ElementId(Int64(material_id)))
 
         # check if material with this id exists in model
         if material == None and material_id != -1:
@@ -371,7 +373,7 @@ def set_category_style(doc, category_style_source, category_style_target):
 
         # get the revit category object
         target_category = Category.GetCategory(
-            doc, ElementId(category_style_target.category_id)
+            doc, ElementId(Int64(category_style_target.category_id))
         )
 
         # set cut style

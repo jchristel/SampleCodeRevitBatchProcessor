@@ -26,6 +26,8 @@ data to revit api FilterValueRule conversion helper functions.
 #
 #
 
+from System import Int64 # revit element Id expects 64 bit integer
+
 from duHast.Revit.Views.Objects.Data.view_filter_rule import ViewFilterRule
 from duHast.Revit.Common.parameter_project import get_project_parameter_definition_by_name
 from duHast.Revit.SharedParameters.shared_parameters import get_shared_parameter_by_guid
@@ -124,7 +126,7 @@ def create_filter_element_id_rule(evaluator, value_provider, rule_data_instance)
     """
 
     try:
-        rule = FilterElementIdRule( value_provider, evaluator, ElementId(int(rule_data_instance.rule_value)))
+        rule = FilterElementIdRule( value_provider, evaluator, ElementId(Int64(rule_data_instance.rule_value)))
         return rule
     except Exception:
         pass
@@ -167,7 +169,7 @@ def create_filter_global_parameter_association_rule(evaluator, value_provider, r
 
     rule = None
     try:
-        rule = FilterGlobalParameterAssociationRule( value_provider, evaluator, ElementId(int(rule_data_instance.rule_value)))
+        rule = FilterGlobalParameterAssociationRule( value_provider, evaluator, ElementId(Int64(rule_data_instance.rule_value)))
     except Exception:
         pass
     return rule
@@ -239,7 +241,7 @@ def get_rule_parameter_id(doc, rule_data_instance, parameter ):
 
     if rule_data_instance.parameter_id < 0:
         # built in parameter, use what has been stored in the rule
-        parameter_id = ElementId(rule_data_instance.parameter_id)
+        parameter_id = ElementId(Int64(rule_data_instance.parameter_id))
     elif rule_data_instance.parameter_id > 0:
         # use the past in parameter
         parameter_id = parameter.Id

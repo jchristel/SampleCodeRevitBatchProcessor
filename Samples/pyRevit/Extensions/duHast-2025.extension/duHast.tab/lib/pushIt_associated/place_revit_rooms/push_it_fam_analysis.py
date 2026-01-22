@@ -21,6 +21,7 @@
 #
 
 from System.Linq import Enumerable
+from System import Int64 # revit element Id expects 64 bit integer
 
 from duHast.Utilities.Objects.result import Result
 
@@ -119,7 +120,7 @@ def get_family_centroid(doc, family_instance):
     
     try:
         # get the actual family instance
-        revit_family_instance = doc.GetElement(ElementId(family_instance.revit_element_id_integer_value))
+        revit_family_instance = doc.GetElement(ElementId(Int64(family_instance.revit_element_id_integer_value)))
 
         # get the geometry of the family instance
         opt = Options()

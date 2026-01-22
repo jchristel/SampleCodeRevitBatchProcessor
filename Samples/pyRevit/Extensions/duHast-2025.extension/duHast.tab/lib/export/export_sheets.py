@@ -20,6 +20,7 @@
 #
 #
 
+from System import Int64 # revit element Id expects 64 bit integer
 
 from duHast.Utilities.Objects.result import Result
 from duHast.pyRevit.console_output import print_header, print_error
@@ -49,7 +50,7 @@ def export_sheets (doc, rename_settings, selection_settings, forms):
         sheets_to_export = []
         for sheet_id in selection_settings.SheetIdsToExport:
             # get the sheet element
-            sheet_to_export= doc.GetElement(ElementId(sheet_id))
+            sheet_to_export= doc.GetElement(ElementId(Int64(sheet_id)))
             sheets_to_export.append(sheet_to_export)
 
         # set up a pyRevit progress bar

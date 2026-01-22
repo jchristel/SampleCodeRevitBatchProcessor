@@ -20,6 +20,8 @@
 #
 #
 
+from System import Int64 # revit element Id expects 64 bit integer
+
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Family.family_reload_single import reload_family
 from duHast.Revit.NetSupport.dll_names import FAMILY_RELOADER_UI
@@ -62,7 +64,7 @@ def reload_families(doc, families, forms):
         try:
             for fam in families:
                 # reload_family(doc, family, family_file_path):
-                revit_family = doc.GetElement(ElementId(fam.RevitElementId))
+                revit_family = doc.GetElement(ElementId(Int64(fam.RevitElementId)))
                 reload_result = reload_family(
                     doc=doc, 
                     family=revit_family, 

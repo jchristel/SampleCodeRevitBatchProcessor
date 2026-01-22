@@ -20,6 +20,7 @@
 #
 #
 
+from System import Int64 # revit element Id expects 64 bit integer
 
 from duHast.Revit.Rooms.Geometry.room_spatial_elements import get_only_wall_segments_as_walls,  get_room_segments
 from duHast.Revit.Rooms.room_common_parameters import get_room_number, get_room_name
@@ -196,7 +197,7 @@ def update_walls_with_room_number_of_longest_segment(doc, wall_id_and_rooms ,pb=
                 longest_segment = max(rooms, key=lambda x: x.segment_length)
 
                 # get the wall element by id
-                wall_element = doc.GetElement(ElementId(wall_id))
+                wall_element = doc.GetElement(ElementId(Int64(wall_id)))
 
                 if wall_element is None:
                     continue

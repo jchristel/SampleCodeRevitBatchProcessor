@@ -20,6 +20,8 @@
 #
 #
 
+from System import Int64 # revit element Id expects 64 bit integer
+
 import csv
 
 from duHast.Utilities.Objects.result import Result
@@ -41,10 +43,10 @@ from duHast.Utilities.files_csv import write_report_data_as_csv
 
 from rooms.wall_utils import (
     get_wall_segments_of_rooms,  
-    build_segment_and_room_to_wall_id,
-    update_walls_with_room_number_of_longest_segment,
-    get_wall_parameters,
-    get_wall_parameter_by_id,
+    #build_segment_and_room_to_wall_id,
+    #update_walls_with_room_number_of_longest_segment,
+    #get_wall_parameters,
+    #get_wall_parameter_by_id,
 )
 
 from rooms.family_utils import get_window_families_by_host_id, window_area_instance, window_area_type
@@ -176,7 +178,7 @@ def report_room_data(doc, wall_segments_by_room, openings_by_host):
     for walls_by_room in wall_segments_by_room:
 
         # get the room element
-        room = doc.GetElement(ElementId(walls_by_room.room_id))
+        room = doc.GetElement(ElementId(Int64(walls_by_room.room_id)))
         room_name = get_room_name(room)
         room_level = get_room_level(doc, room)
         room_phase = get_room_phase(doc, room)
@@ -189,7 +191,7 @@ def report_room_data(doc, wall_segments_by_room, openings_by_host):
             if wall_segment_id in openings_by_host:
 
                 # get the wall type name
-                wall_instance = doc.GetElement(ElementId(wall_segment_id))
+                wall_instance = doc.GetElement(ElementId(Int64(wall_segment_id)))
                 wall_type_name = wall_instance.Name
 
                 # check if this is a wall of interest
@@ -273,7 +275,7 @@ def report_room_data(doc, wall_segments_by_room, openings_by_host):
             else:
                 # check if this is an external wall without openings
                 # get the wall type name
-                wall_instance = doc.GetElement(ElementId(wall_segment_id))
+                wall_instance = doc.GetElement(ElementId(Int64(wall_segment_id)))
                 wall_type_name = wall_instance.Name
                 if wall_type_name in EXTERNAL_WALL_TYPE_NAMES:
                     has_match = True

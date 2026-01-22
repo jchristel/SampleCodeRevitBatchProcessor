@@ -27,6 +27,8 @@ A number of functions around Revit independent tags.
 #
 
 
+from System import Int64 # revit element Id expects 64 bit integer
+
 from Autodesk.Revit.DB import ElementId, Transaction, XYZ
 from collections import namedtuple
 
@@ -150,7 +152,7 @@ def update_tag_locations_from_report(doc, report_file_path, distance_threshold=5
         id_data = tag_data[TAG_ID]
         try:
             # get the actual tag element in model
-            tag_in_model = doc.GetElement(ElementId(id_data))
+            tag_in_model = doc.GetElement(ElementId(Int64(id_data)))
             # in case tag no longer exists
             if tag_in_model != None:
                 head_location_data = tag_data[TAG_HEAD_LOCATION]

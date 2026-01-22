@@ -31,6 +31,8 @@ This will delete all shared parameter definitions which are not used by any fami
 #
 #
 
+from System import Int64 # revit element Id expects 64 bit integer
+
 # class used for stats reporting
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
@@ -89,7 +91,7 @@ def purge_unused(doc, processor):
                     )
                 )
                 ids_to_delete.append(
-                    rdb.ElementId(root_fam[rSharedParaData.PARAMETER_ID])
+                    rdb.ElementId(Int64(root_fam[rSharedParaData.PARAMETER_ID]))
                 )
         # delete any subcategories found
         if len(ids_to_delete) > 0:

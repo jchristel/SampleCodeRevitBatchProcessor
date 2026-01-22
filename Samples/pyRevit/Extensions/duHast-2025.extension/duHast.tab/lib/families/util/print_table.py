@@ -20,7 +20,7 @@
 #
 #
 
-
+from System import Int64 # revit element Id expects 64 bit integer
 
 from Autodesk.Revit.DB import Element, ElementId
 
@@ -73,9 +73,9 @@ def get_table_data_from_swap_result(doc, result_list):
                 continue
 
             for fam_id, instance_count in data[1].items():
-                host_fams.append([Element.Name.GetValue(doc.GetElement(ElementId(fam_id))), instance_count])
+                host_fams.append([Element.Name.GetValue(doc.GetElement(ElementId(Int64(fam_id)))), instance_count])
             
             for group_id, instance_count in data[2].items():
-                host_groups.append([Element.Name.GetValue(doc.GetElement(ElementId(group_id))), instance_count])
+                host_groups.append([Element.Name.GetValue(doc.GetElement(ElementId(Int64(group_id)))), instance_count])
     
     return host_fams, host_groups

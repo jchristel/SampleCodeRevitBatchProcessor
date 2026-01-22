@@ -23,6 +23,7 @@
 import clr
 
 from System.Collections.Generic import List
+from System import Int64 # revit element Id expects 64 bit integer
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Views.sheets import get_all_sheets
@@ -71,7 +72,7 @@ def get_sheet_numbers_in_schedule(schedule):
 
     sheet_numbers = []
 
-    sheet_number_element_id = ElementId(-1007401)  # SHEET_NUMBER parameter id
+    sheet_number_element_id = ElementId(Int64(-1007401))  # SHEET_NUMBER parameter id
     try:
         sheet_numbers = get_field_values_from_schedule_by_parameter_id(schedule, sheet_number_element_id)
         return sheet_numbers

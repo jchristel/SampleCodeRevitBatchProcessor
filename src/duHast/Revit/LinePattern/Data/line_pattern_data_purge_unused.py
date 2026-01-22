@@ -31,13 +31,15 @@ This will delete all line patterns which are not used by any element in the fami
 #
 #
 
+from System import Int64 # revit element Id expects 64 bit integer
+
 # class used for stats reporting
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common import delete as rDel
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Revit.LinePattern.Data.Objects import line_pattern_data as rLinePatData
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB  import ElementId
 
 
 def purge_unused(doc, processor):
@@ -77,7 +79,7 @@ def purge_unused(doc, processor):
                     root_fam[rLinePatData.PATTERN_ID],
                 )
             )
-            ids_to_delete.append(rdb.ElementId(root_fam[rLinePatData.PATTERN_ID]))
+            ids_to_delete.append(ElementId(Int64(root_fam[rLinePatData.PATTERN_ID])))
     # delete any subcategories found
     if len(ids_to_delete) > 0:
         result_delete = rDel.delete_by_element_ids(

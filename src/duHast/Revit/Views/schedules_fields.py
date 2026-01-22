@@ -26,10 +26,12 @@ This module contains a number of helper functions relating to fields in Revit vi
 #
 #
 
+from System import Int64 # revit element Id expects 64 bit integer
+
 from Autodesk.Revit.DB import ElementId, SectionType
 
 # the sheet number parameter id
-SHEET_NUMBER_PARAMETER_ID = ElementId(-1007401)
+SHEET_NUMBER_PARAMETER_ID = ElementId(Int64(-1007401))
 
 def schedule_contains_field_by_parameter_id(schedule, parameter_id, ignore_hidden_field=False):
     """

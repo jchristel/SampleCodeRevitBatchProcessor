@@ -31,6 +31,8 @@ This will delete all subcategories which are user created ( id greater then 0) a
 #
 #
 
+from System import Int64 # revit element Id expects 64 bit integer
+
 # class used for stats reporting
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common import delete as rDel
@@ -81,7 +83,7 @@ def purge_unused_sub_categories(doc, processor):
                     (root_fam[rCatData.SUB_CATEGORY_ID]),
                 )
             )
-            ids_to_delete.append(ElementId(root_fam[rCatData.SUB_CATEGORY_ID]))
+            ids_to_delete.append(ElementId(Int64(root_fam[rCatData.SUB_CATEGORY_ID])))
     # delete any subcategories found
     if len(ids_to_delete) > 0:
         result_delete = rDel.delete_by_element_ids(

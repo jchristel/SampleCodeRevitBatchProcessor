@@ -19,6 +19,7 @@
 #
 #
 #
+from System import Int64 # revit element Id expects 64 bit integer
 
 from Autodesk.Revit.DB import  ColorFillSchemeEntry, ElementId, StorageType
 
@@ -107,6 +108,6 @@ def set_entry_value (entry, value):
         if isinstance(value, ElementId):
             entry.SetElementIdValue(value)
         else:
-            entry.SetElementIdValue(ElementId(int(value)))
+            entry.SetElementIdValue(ElementId(Int64(value)))
     
     return entry

@@ -27,6 +27,8 @@ Revit API utility functions to set parameter values.
 #
 #
 
+from System import Int64 # revit element Id expects 64 bit integer
+
 # class used for stats reporting
 from duHast.Utilities.Objects import result as res
 
@@ -125,7 +127,7 @@ def set_parameter_value(
     # different parameter storage types will require different actions due to value type past in is a string which will need converting
     # first before applied to the parameter
     if para.StorageType == rdb.StorageType.ElementId:
-        new_id = rdb.ElementId(int(value_as_string))
+        new_id = rdb.ElementId(Int64(value_as_string))
 
         # changing parameter value is required to run inside a transaction
         def action():
@@ -316,7 +318,7 @@ def set_parameter_value_simple(
     # different parameter storage types will require different actions due to value type past in is a string which will need converting
     # first before applied to the parameter
     if para.StorageType == rdb.StorageType.ElementId:
-        new_id = rdb.ElementId(int(value_as_string))
+        new_id = rdb.ElementId(Int64(value_as_string))
         para.Set(new_id)
         return_value.append_message (
             "Changed parameter value of type Id.[ {} ] from: {} to: {}".format(

@@ -35,6 +35,8 @@ Potential issues:
 #
 #
 
+from System import Int64 # revit element Id expects 64 bit integer
+
 from duHast.Revit.Common import transaction as rTran
 from duHast.Utilities.Objects import result as res
 from family_find_duplicate import *
@@ -43,14 +45,14 @@ from duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type im
 from duHast.Revit.Family.family_swap_instances_of_types import _swap_loaded_family_instances
 from duHast.Revit.Family.family_functions import get_name_and_category_to_family_dict
 
-from Autodesk.Revit.DB import Element, ElementId, Transaction
+from Autodesk.Revit.DB import Element, ElementId#, Transaction
 
 DEBUG = False
 
 def get_swap_directive(doc, source_type_id, target_type_id):
     # get the family types
-    source_family_type = doc.GetElement(ElementId(source_type_id))
-    target_family_type = doc.GetElement(ElementId(target_type_id))
+    source_family_type = doc.GetElement(ElementId(Int64(source_type_id)))
+    target_family_type = doc.GetElement(ElementId(Int64(target_type_id)))
 
     # get the source family
     source_family = source_family_type.Family

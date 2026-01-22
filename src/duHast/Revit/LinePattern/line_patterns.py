@@ -30,6 +30,7 @@ import clr
 
 clr.AddReference("System.Core")
 from System import Linq
+from System import Int64 # revit element Id expects 64 bit integer
 
 clr.ImportExtensions(Linq)
 import System
@@ -116,7 +117,7 @@ def get_line_pattern_from_level_element(doc, level):
         line_pattern_id_string = rParaGet.get_built_in_parameter_value(
             level_type, BuiltInParameter.LINE_PATTERN
         )
-        dic_pattern[PROPERTY_PATTERN_ID] = ElementId(int(line_pattern_id_string))
+        dic_pattern[PROPERTY_PATTERN_ID] = ElementId(Int64(line_pattern_id_string))
         dic_pattern[PROPERTY_PATTERN_NAME] = Element.Name.GetValue(level_type)
     except Exception as ex:
         dic_pattern[PROPERTY_PATTERN_NAME] = str(ex)

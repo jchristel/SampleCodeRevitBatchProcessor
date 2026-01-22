@@ -21,6 +21,7 @@
 #
 
 import System
+from System import Int64 # revit element Id expects 64 bit integer
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.ColourFillSchemes.colour_fill_scheme_entry import get_entry_value_as_string, set_entry_value
@@ -91,7 +92,7 @@ def update_by_values(doc, colour_fill_scheme, colour_fill_scheme_data, transacti
                             if entry.FillPatternId.Value != colour_fill_scheme_entry.fill_pattern_id:
                                 action_return_value.append_message("Fill pattern is different: {} != {}".format(entry.FillPatternId.Value, colour_fill_scheme_entry.fill_pattern_id))
                                 # update the entry with the new fill pattern
-                                entry.FillPatternId = ElementId(colour_fill_scheme_entry.fill_pattern_id)
+                                entry.FillPatternId = ElementId(Int64(colour_fill_scheme_entry.fill_pattern_id))
                                 entry_requires_update = True
 
                            
@@ -199,7 +200,6 @@ def update_existing_and_add_new_values (doc, colour_fill_scheme, colour_fill_sch
                     
                     # set the value
                     new_entry = set_entry_value(new_entry, colour_fill_scheme_entry.parameter_value)
-
                     
                     # create a color instance
                     new_colour = Color(
@@ -212,8 +212,7 @@ def update_existing_and_add_new_values (doc, colour_fill_scheme, colour_fill_sch
                     new_entry.Color = new_colour
                     
                     # set the fill pattern id
-                    new_entry.FillPatternId = ElementId(colour_fill_scheme_entry.fill_pattern_id)
-                    
+                    new_entry.FillPatternId = ElementId(Int64(colour_fill_scheme_entry.fill_pattern_id))
 
                     # add the entry to the colour fill scheme
                     colour_fill_scheme.AddEntry(new_entry)

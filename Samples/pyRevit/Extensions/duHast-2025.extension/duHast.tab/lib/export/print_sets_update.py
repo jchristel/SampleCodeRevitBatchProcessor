@@ -20,7 +20,7 @@
 #
 #
 
-
+from System import Int64 # revit element Id expects 64 bit integer
 
 from duHast.Utilities.Objects.result import Result
 from duHast.pyRevit.console_output import print_header, print_error
@@ -49,7 +49,7 @@ def get_sheets_from_print_set(doc, print_set):
     try:
         for sheet_data in print_set.RevitSheets:
             #return_value.result.append(sheet_data)
-            revit_sheet = doc.GetElement(ElementId(int(sheet_data.RevitElementId.Value)))
+            revit_sheet = doc.GetElement(ElementId(Int64(sheet_data.RevitElementId.Value)))
             return_value.result.append(revit_sheet)
 
     except Exception as e:

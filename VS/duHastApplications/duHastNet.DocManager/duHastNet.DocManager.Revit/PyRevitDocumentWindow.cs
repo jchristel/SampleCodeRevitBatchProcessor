@@ -22,19 +22,19 @@
 //
 
 using System.Windows;
-using duHastNet.DocManager.UI.PyRevit.Views;
+using duHastNet.DocManager.Revit.Views;
 
-namespace duHastNet.DocManager.UI.PyRevit
+namespace duHastNet.DocManager.Revit
 {
     /// <summary>
     /// Host window for PyRevit integration
     /// Hosts the PyRevitDocumentListView UserControl
     /// </summary>
-    public partial class PyRevitDocumentWindow : Window
+    public class PyRevitDocumentWindow : Window
     {
         public PyRevitDocumentWindow()
         {
-            InitializeComponent();
+            //InitializeComponent();
             
             // Set window properties
             Title = "Document Manager - PyRevit";

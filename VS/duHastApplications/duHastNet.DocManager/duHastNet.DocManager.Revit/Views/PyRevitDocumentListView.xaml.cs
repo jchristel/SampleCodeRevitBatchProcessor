@@ -22,9 +22,9 @@
 //
 
 using System.Windows.Controls;
-using duHastNet.DocManager.UI.PyRevit.ViewModels;
+using duHastNet.DocManager.Revit.ViewModels;
 
-namespace duHastNet.DocManager.UI.PyRevit.Views
+namespace duHastNet.DocManager.Revit.Views
 {
     /// <summary>
     /// Interaction logic for PyRevitDocumentListView.xaml

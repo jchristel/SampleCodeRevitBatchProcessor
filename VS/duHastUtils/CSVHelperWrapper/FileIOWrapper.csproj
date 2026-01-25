@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
     <RootNamespace>duHastNet.FileIOWrapper</RootNamespace>
-    <AssemblyName>FileIOWrapper.25.0.0.1</AssemblyName>
+    <AssemblyName>FileIOWrapper.25.0.0.3</AssemblyName>
     <OutputType>Library</OutputType>
     <Platforms>AnyCPU;x64</Platforms>
     <!-- Match your build script's expected path -->

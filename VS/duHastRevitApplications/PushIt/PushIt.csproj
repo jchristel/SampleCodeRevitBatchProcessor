@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>duHastNet.PushIt</RootNamespace>
-    <AssemblyName>PushIt.23.0.0.5</AssemblyName>
+    <AssemblyName>PushIt.23.0.0.6</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -56,12 +56,12 @@
     <Reference Include="CsvHelper, Version=33.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\packages\CsvHelper.33.0.1\lib\net48\CsvHelper.dll</HintPath>
     </Reference>
-    <Reference Include="duHastUICustomControls.23.0.0.5">
-      <HintPath>..\..\_References\duHast\duHastUICustomControls.23.0.0.5.dll</HintPath>
+    <Reference Include="duHastUICustomControls.23.0.0.6">
+      <HintPath>..\..\_References\duHast\duHastUICustomControls.23.0.0.6.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="FileIOWrapper.23.0.0.5">
-      <HintPath>..\..\_References\duHast\FileIOWrapper.23.0.0.5.dll</HintPath>
+    <Reference Include="FileIOWrapper.23.0.0.6">
+      <HintPath>..\..\_References\duHast\FileIOWrapper.23.0.0.6.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="LoadingSpinner, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -89,8 +89,8 @@
       <HintPath>..\..\_References\Autodesk\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="RevitUtils.23.0.0.5">
-      <HintPath>..\..\_References\duHast\RevitUtils.23.0.0.5.dll</HintPath>
+    <Reference Include="RevitUtils.23.0.0.6">
+      <HintPath>..\..\_References\duHast\RevitUtils.23.0.0.6.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -135,8 +135,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="Utils.23.0.0.5">
-      <HintPath>..\..\_References\duHast\Utils.23.0.0.5.dll</HintPath>
+    <Reference Include="Utils.23.0.0.6">
+      <HintPath>..\..\_References\duHast\Utils.23.0.0.6.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="WindowsBase" />

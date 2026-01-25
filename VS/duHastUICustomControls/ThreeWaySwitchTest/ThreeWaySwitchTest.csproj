@@ -66,8 +66,8 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Utils.23.0.0.5">
-      <HintPath>..\..\_References\duHast\Utils.23.0.0.5.dll</HintPath>
+    <Reference Include="Utils.23.0.0.6">
+      <HintPath>..\..\_References\duHast\Utils.23.0.0.6.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />

@@ -1,34 +1,53 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<!-- Set target framework -->
+		<TargetFramework>net8.0-windows</TargetFramework>
 
-  <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <UseWPF>true</UseWPF>
-	<UseWindowsForms>true</UseWindowsForms>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Platforms>AnyCPU;x64</Platforms>
-	<!-- Copy NuGet dependencies to output -->
-	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-	  <AssemblyVersion>1.0.3.0</AssemblyVersion>
-	  <FileVersion>1.0.3.0</FileVersion>
-	  <Version>1.0.3</Version>
-  </PropertyGroup>
+		<!-- Include WPF -->
+		<UseWPF>true</UseWPF>
 
-  <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-  </ItemGroup>
+		<!-- Enable implicit usings -->
+		<ImplicitUsings>enable</ImplicitUsings>
+
+		<!-- Enable nullable reference types -->
+		<Nullable>enable</Nullable>
+
+		<!-- Include Windows Forms -->
+		<UseWindowsForms>true</UseWindowsForms>
+
+		<!-- Target x64 platform only -->
+		<Platforms>x64</Platforms>
+		<!-- Ensure platform target is x64 -->
+		<PlatformTarget>x64</PlatformTarget>
+
+		<!-- Copy NuGet dependencies to output -->
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+
+		<!-- Set assembly version information -->
+		<AssemblyVersion>1.0.3.0</AssemblyVersion>
+		<FileVersion>1.0.3.0</FileVersion>
+		<Version>1.0.3</Version>
+
+		<!-- Prevent the target framework folder (net8.0-windows) from being appended -->
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+
+		<!-- Keep runtime identifier out of the output path but select win-x64 assets -->
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+
+		<!-- Don't generate .deps.json file (not needed for class library) -->
+		<GenerateDependencyFile>false</GenerateDependencyFile>
+
+		<!-- Ensure only the win-x64 runtime assets are copied to the output -->
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	</PropertyGroup>
 
 	<ItemGroup>
+		<!-- NuGet package references -->
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Project references -->
 		<ProjectReference Include="..\duHastNet.DocManager.Core\duHastNet.DocManager.Core.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Update="Views\Settings\SettingsView.xaml.cs">
-	    <SubType>Code</SubType>
-	  </Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="ViewModels\Merge\MergeLog\" />
 	</ItemGroup>
 </Project>

@@ -266,7 +266,8 @@ public partial class DocManagerApi : IDocManagerApi
     /// <returns>True if database is initialized and ready</returns>
     public bool IsDatabaseReady()
     {
-        return _databaseService?.IsInitialized == true && _unitOfWork != null;
+        return _databaseService?.IsInitialized == true &&
+           (_unitOfWork != null || _unitOfWorkSync != null);
     }
 
     /// <summary>

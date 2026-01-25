@@ -38,7 +38,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
         #region Private Fields
 
         private readonly DocManagerApi _docManagerApi;
-        private const string HARDCODED_DATABASE_PATH = @"C:\ProjectDatabases\SampleProject.sqlite";
+        private const string HARDCODED_DATABASE_PATH = @"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager.Standalone.Tests\DataBaseTests\20251201_02.db";
 
         #endregion Private Fields
 

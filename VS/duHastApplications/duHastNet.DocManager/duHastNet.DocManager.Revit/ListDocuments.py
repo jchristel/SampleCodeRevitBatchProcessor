@@ -16,15 +16,16 @@ clr.AddReference('System.Xaml')
 
 # Add reference to DocManager assemblies
 # NOTE: Update these paths to match your actual assembly locations
-doc_manager_core_path = r"C:\Development\DocManager\bin\duHastNet.DocManager.Core.dll"
-doc_manager_ui_path = r"C:\Development\DocManager\bin\duHastNet.DocManager.UI.PyRevit.dll"
-
+doc_manager_core_path = r"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager\duHastNet.DocManager.Revit\bin\x64\Release\duHastNet.DocManager.Core.dll"
+doc_manager_ui_path = r"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager\duHastNet.DocManager.Revit\bin\x64\Release\duHastNet.DocManager.UI.Shared.dll"
+doc_manager_revit_path = r"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager\duHastNet.DocManager.Revit\bin\x64\Release\duHastNet.DocManager.Revit.dll"
 clr.AddReferenceToFileAndPath(doc_manager_core_path)
 clr.AddReferenceToFileAndPath(doc_manager_ui_path)
+clr.AddReferenceToFileAndPath(doc_manager_revit_path)
 
 # Import .NET types
 from System.Windows import Application
-from duHastNet.DocManager.UI.PyRevit import PyRevitDocumentWindow
+from duHastNet.DocManager.Revit import PyRevitDocumentWindow
 
 # Import PyRevit modules
 from pyrevit import script

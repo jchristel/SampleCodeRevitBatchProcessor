@@ -211,4 +211,4 @@ function Update-PythonModules {
 }
 
 # Export functions for use in other scripts
-Export-ModuleMember -Function Get-PythonDirectoryPath, Update-PythonFiles, Test-PythonModuleVersions, Update-PythonModules
+# Export-ModuleMember -Function Get-PythonDirectoryPath, Update-PythonFiles, Test-PythonModuleVersions, Update-PythonModules

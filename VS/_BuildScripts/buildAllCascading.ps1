@@ -1,3 +1,14 @@
+# Cascading DLL Version Update Script
+# Updates version numbers in dependency order: builds each solution after updating its references
+
+param(
+    [Parameter(Mandatory=$true)]
+    [string]$NewVersion,
+    [string]$OldVersion,
+    [switch]$WhatIf,
+    [string]$BuildConfig = "Release"
+)
+
 # Import the Python module updater functions
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $pythonModuleScript = Join-Path $scriptDir "PythonModuleUpdater.ps1"
@@ -9,18 +20,6 @@ if (Test-Path $pythonModuleScript) {
     Write-Host "Warning: PythonModuleUpdater.ps1 not found at: $pythonModuleScript" -ForegroundColor Yellow
     Write-Host "Python module updates will be skipped." -ForegroundColor Yellow
 }
-
-# Cascading DLL Version Update Script
-# Updates version numbers in dependency order: builds each solution after updating its references
-
-param(
-    [Parameter(Mandatory=$true)]
-    [string]$NewVersion,
-    [string]$OldVersion,
-    [switch]$WhatIf,
-    [int]$StartFromSolution = 1, # Which solution to start from (1-6)
-    [string]$BuildConfig = "Release"
-)
 
 # Function to determine base path from script location
 function Get-BasePathFromLocation {
@@ -505,12 +504,6 @@ function Invoke-CascadingVersionUpdate {
             Description = "Revit applications (depends on RevitUtils)"
         },
         @{ 
-            Name = "duHastApplications"
-            Path = "$BasePath\VS\duHastApplications\duHastApplications.sln"
-            CopyTo = @()
-            Description = "General applications (depends on Utils)"
-        },
-        @{ 
             Name = "duHastUI"
             Path = "$BasePath\VS\duHastUI\duHastUI.sln"
             CopyTo = @("$BasePath\src\duHast\lib")
@@ -620,10 +613,10 @@ Write-Host "  Starting from: Solution $StartFromSolution" -ForegroundColor Yello
 
 # Enhanced features info
 Write-Host "`nEnhanced Features:" -ForegroundColor Cyan
-Write-Host "  ✓ Detects hardcoded assembly name constants" -ForegroundColor Green
-Write-Host "  ✓ Updates Pack URI strings with versions" -ForegroundColor Green
-Write-Host "  ✓ Finds Assembly.Load calls with versions" -ForegroundColor Green
-Write-Host "  ✓ Catches general assembly references in strings" -ForegroundColor Green
+Write-Host "  Detects hardcoded assembly name constants" -ForegroundColor Green
+Write-Host "  Updates Pack URI strings with versions" -ForegroundColor Green
+Write-Host "  Finds Assembly.Load calls with versions" -ForegroundColor Green
+Write-Host "  Catches general assembly references in strings" -ForegroundColor Green
 
 # Preview the cascading process
 if ($WhatIf) {

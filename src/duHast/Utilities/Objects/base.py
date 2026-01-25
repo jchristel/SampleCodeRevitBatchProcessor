@@ -91,7 +91,7 @@ Methods:
 Fields:
 - No specific fields are defined in the `Base` class.
 """
-
+from System import Int64
 
 class Base(object):
     def __init__(self, **kwargs):
@@ -350,8 +350,11 @@ class Base(object):
         :return: True if object is a python primitive, Otherwise False.
         :rtype: Bool
         """
-
-        return isinstance(obj, (int, float, str, bool))
+        # For IronPython 3.4, also check for .NET Int64 type
+        try:
+            return isinstance(obj, (int, float, str, bool, Int64))
+        except:
+            return isinstance(obj, (int, float, str, bool))
 
     def class_to_dict(self):
         """
@@ -363,26 +366,41 @@ class Base(object):
 
         def serialize(obj):
             """Helper function to recursively serialize objects."""
+            # Handle .NET Int64 types from IronPython
+            try:
+                
+                if isinstance(obj, Int64):
+                    return int(obj)
+            except:
+                pass
+                
             if isinstance(obj, Base):
-                return obj.class_to_dict()  # Call if it's an instance of Base
+                return obj.class_to_dict()
             elif isinstance(obj, list):
                 return [
                     serialize(item) for item in obj
-                ]  # Recursively serialize list items
+                ]
             elif isinstance(obj, dict):
                 return {
                     key: serialize(value) for key, value in obj.items()
-                }  # Recursively serialize dict values
+                }
             else:
-                return obj  # Return the object as is
+                return obj
 
         if isinstance(self, object):
             class_dict = {}
             # Include instance attributes
             for key, value in self.__dict__.items():
-                if not key.startswith("_"):  # Exclude private properties
+                if not key.startswith("_"):
                     if self._is_primitive(value):
-                        class_dict[key] = value
+                        # Convert .NET Int64 to Python int
+                        try:
+                            if isinstance(value, Int64):
+                                class_dict[key] = int(value)
+                            else:
+                                class_dict[key] = value
+                        except:
+                            class_dict[key] = value
                     else:
                         class_dict[key] = serialize(value)
             # Include properties
@@ -390,7 +408,14 @@ class Base(object):
                 if isinstance(getattr(type(self), key, None), property):
                     value = getattr(self, key)
                     if self._is_primitive(value):
-                        class_dict[key] = value
+                        # Convert .NET Int64 to Python int
+                        try:
+                            if isinstance(value, Int64):
+                                class_dict[key] = int(value)
+                            else:
+                                class_dict[key] = value
+                        except:
+                            class_dict[key] = value
                     else:
                         class_dict[key] = serialize(value)
             return class_dict
@@ -431,7 +456,11 @@ class Base(object):
             for key, value in self.__dict__.items():
                 if not key.startswith("_"):  # Exclude private properties
                     if self._is_primitive(value):
-                        items.append((key, value))
+                        # Convert long to int for primitives
+                        if isinstance(value, Int64):
+                            items.append((key, int(value)))
+                        else:
+                            items.append((key, value))
                     else:
                         items.append((key, serialize(value)))
             # Include properties
@@ -439,7 +468,11 @@ class Base(object):
                 if isinstance(getattr(type(self), key, None), property):
                     value = getattr(self, key)
                     if self._is_primitive(value):
-                        items.append((key, value))
+                        # Convert long to int for primitives
+                        if isinstance(value, Int64):
+                            items.append((key, int(value)))
+                        else:
+                            items.append((key, value))
                     else:
                         items.append((key, serialize(value)))
             

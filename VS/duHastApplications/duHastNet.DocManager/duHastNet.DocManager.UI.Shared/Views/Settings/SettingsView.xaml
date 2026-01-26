@@ -38,17 +38,33 @@
         </Grid.RowDefinitions>
 
         <!-- header row content -->
-        <Grid Grid.Row="0">
-            <Grid.RowDefinitions>
-                <!-- header row -->
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Grid.Row="0" Text="Settings" FontSize="24"/>
-        </Grid>
-        <!-- message banner -->
+            <Border 
+                Grid.Row="0" 
+                Background="#2196F3" 
+                Padding="15,10" 
+                Margin="0,0,0,10">
+
+                <Grid Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <!-- header row -->
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Document Manager" 
+                            FontSize="20" 
+                            FontWeight="Bold" 
+                            Foreground="White"/>
+                        <TextBlock Text="Settings" 
+                            FontSize="12" 
+                            Foreground="White" 
+                            Opacity="0.9"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <!-- message banner -->
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <!-- banner row -->

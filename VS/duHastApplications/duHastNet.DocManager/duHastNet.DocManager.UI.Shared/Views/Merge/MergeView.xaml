@@ -29,7 +29,11 @@
         </Grid.RowDefinitions>
 
         <!-- header row content -->
-        <Grid Grid.Row="0">
+        <Border Grid.Row="0" 
+            Background="#2196F3" 
+            Padding="15,10" 
+            Margin="0,0,0,10">
+            <Grid Grid.Row="0">
             <Grid.RowDefinitions>
                 <!-- header row -->
                 <RowDefinition Height="auto"/>
@@ -38,14 +42,34 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Grid.Row="0" Text="Merger" FontSize="24"/>
-            <Button  Grid.Column="1" Grid.Row="0"
-                Margin="10 5 10 5"
-                Padding="10 5 10 5"
-                Content = "Settings" 
-                Command="{Binding NavigateToSettingsCommand}"/>
-        </Grid>
-        
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Document Manager" 
+                        FontSize="20" 
+                        FontWeight="Bold" 
+                        Foreground="White"/>
+                    <TextBlock Text="Process and Merge Outgoing Files" 
+                        FontSize="12" 
+                        Foreground="White" 
+                        Opacity="0.9"/>
+                </StackPanel>
+
+                <Button Grid.Column="1" Grid.Row="0"
+                    Margin="10,5,10,5"
+                    Padding="10,5,10,5"
+                    Command="{Binding NavigateToSettingsCommand}">
+                        <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE713;" 
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="16" 
+                                Foreground="White" 
+                                Margin="0,0,5,0"/>
+                        <TextBlock 
+                                Text="Settings" 
+                                Foreground="White"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Border>
         <!-- message banner -->
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>

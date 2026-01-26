@@ -18,15 +18,12 @@ This document defines the scope, architecture, and coding standards for integrat
 The integration provides the following capabilities:
 
 #### 1. Revit Revisions Management
-- Import revisions from Revit into Document Manager database
-- View and manage Revit revision sequences
-- Synchronize revision metadata (number, date, description, issued status)
+- Import revisions (date, description)from Revit into Document Manager database
+- View Revit revision sequences
 
 #### 2. Revit Sheets (Documents) Management
 - Import sheets from Revit into Document Manager database
-- View and manage Revit sheet properties
 - Update document names in Document Manager based on Revit sheet numbers
-- Synchronize sheet metadata (number, name, revision, sheet properties)
 
 #### 3. Update Operations
 - Update Document Manager document names from Revit sheets
@@ -90,7 +87,7 @@ The WPF interface is divided into two distinct functional areas:
 #### Area 1: Revisions Panel
 - **Purpose**: Manage Revit revisions
 - **Controls**:
-  - DataGrid showing Revit revisions (Number, Date, Description, Issued)
+  - DataGrid showing Revit revisions (Date, Description) which are currently not in the database
   - "Import Revisions" button
   - Revision count display
   - Selection controls for filtering
@@ -109,7 +106,7 @@ The WPF interface is divided into two distinct functional areas:
 #### Import Revisions Workflow
 1. User clicks pyRevit button
 2. WPF UI loads and displays Revit revisions
-3. User reviews revision list
+3. User reviews revision list and checks the revisions to be imported
 4. User clicks "Import Revisions"
 5. System validates and imports revisions to database
 6. User receives success/failure feedback
@@ -117,17 +114,19 @@ The WPF interface is divided into two distinct functional areas:
 #### Import Sheets Workflow
 1. User navigates to Sheets panel
 2. System displays Revit sheets from current document
-3. User reviews sheet list
+3. User reviews sheet list and checks the sheets to be imported
 4. User clicks "Import Sheets"
 5. System validates and imports sheets as documents
 6. User receives success/failure feedback
 
 #### Update Document Names Workflow
 1. User navigates to Sheets panel
-2. User clicks "Update Document Names"
+2. sets radio button or similar to "update sheets mode"
 3. System matches Revit sheets with database documents by sheet number
-4. System updates document names from Revit sheet names
-5. User receives update summary (matched, updated, errors)
+4. System shows the documents which require updating in the database
+5. User clicks "Update Document Names"
+6. System updates document names from Revit sheet names
+7. User receives update summary (matched, updated, errors)
 
 ---
 
@@ -318,9 +317,6 @@ public class RevisionViewModel : ObservableObject
     [ObservableProperty]
     private string _description = string.Empty;
     
-    [ObservableProperty]
-    private bool _issued;
-    
     public Revision ToRevision()
     {
         return new Revision
@@ -328,7 +324,6 @@ public class RevisionViewModel : ObservableObject
             Number = Number,
             Date = Date,
             Description = Description,
-            Issued = Issued
         };
     }
 }
@@ -739,7 +734,7 @@ pyRevit/
 
 ### Requirements
 1. pyRevit installed in Revit
-2. .NET Framework 4.8 or higher
+2. .NET Framework 8 or higher
 3. Document Manager Core DLLs
 4. SQLite database file (or path to create one)
 

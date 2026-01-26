@@ -38,6 +38,7 @@ from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value
 from Autodesk.Revit.DB import (
     BuiltInCategory,
     BuiltInParameter,
+    Element,
     ElementClassFilter,
     ElementMulticategoryFilter,
     FamilyInstance,
@@ -90,6 +91,24 @@ CURTAINWALL_ELEMENTS_CATEGORY_FILTER = List[BuiltInCategory](
 )
 
 # --------------------------------------------- utility functions ------------------
+
+def  get_all_curtain_wall_panels_in_model(doc):
+    """
+    Gets a filtered element collector of all curtain wall elements in the model:
+
+    Filters by category.
+
+    - curtain wall panels
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing curtain wall elements.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    """
+
+    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_CurtainWallPanels ).WhereElementIsNotElementType()
+    return collector
 
 
 def get_all_curtain_wall_element_types_by_category(doc):
@@ -261,6 +280,67 @@ def get_all_curtain_wall_element_type_ids_by_category_excl_symbols(doc):
             ids.append(c.Id)
     return ids
 
+
+def get_zero_area_system_panels_in_model(doc):
+    """
+    Returns a list of all system panel instances in the model that have zero area.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A dictionary containing key: system panel type name, value: list of ids with zero area.
+    :rtype: dic { str: [int]}
+    """
+
+    # get all curtain wall panels in model
+    collector = get_all_curtain_wall_panels_in_model(doc)
+	
+    system_panels = []
+
+    #loop over panels and filter for system panels
+    for curtain_panel in collector:
+        try:
+            # check if a system panel...otherwise ignore
+            if isinstance(curtain_panel,Panel)==False:
+                continue
+
+            # this might only work for english versions of Revit??
+            if "System Panel" not in Element.Name.GetValue(curtain_panel.Symbol.Family):
+                continue
+			
+            system_panels.append(curtain_panel)
+        except Exception:
+            continue
+	
+    # loop over system panels and check area
+    # create dictionary of type name : list of ids with zero area
+    zero_ids = {}
+	
+    for panel_element in system_panels:
+
+        try:
+            # get area parameter
+            area_para = panel_element.get_Parameter(BuiltInParameter.HOST_AREA_COMPUTED)
+
+            # get the symbol name
+            symbol_name = Element.Name.GetValue(panel_element.Symbol)
+
+            # check if symbol name already in dictionary
+            if symbol_name not in zero_ids:
+
+                # create new list under that key
+                zero_ids[symbol_name] = []
+            
+            # check if area is zero
+            if area_para.AsDouble() == 0.0:
+
+                # add to list
+                zero_ids[symbol_name].append(panel_element.Id.Value)
+        except Exception:
+            # ignore and continue
+            continue
+			
+    return zero_ids
 
 # -------------------------------- loadable Curtain Wall Element types -------------------------------------------------------
 

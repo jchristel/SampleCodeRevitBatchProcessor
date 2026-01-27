@@ -106,15 +106,14 @@ function Update-CSharpFiles {
                 $fileChanged = $true
             }
             
-            # Pattern 2: Assembly name constants (like ResourceUriHelper)
-            # Matches patterns like: private const string ASSEMBLY_NAME = "duHastUICustomControls.23.0.0.4";
-            $assemblyNamePattern = '(private\s+const\s+string\s+\w*ASSEMBLY_NAME\w*\s*=\s*")([^"]*\.)(\d+\.\d+\.\d+\.\d+)(")'
-            if ($content -match $assemblyNamePattern) {
-                $content = $content -replace $assemblyNamePattern, "`$1`$2$NewVersion`$4"
+            # Pattern 2: Split VERSION constant inm URI helper class
+            $versionConstPattern = '(private\s+const\s+string\s+VERSION\s*=\s*")(\d+\.\d+\.\d+\.\d+)(")'
+            if ($content -match $versionConstPattern) {
+                $content = $content -replace $versionConstPattern, "`$1$NewVersion`$3"
                 $fileChanged = $true
-                Write-Host "    Found hardcoded assembly name constant in $($_.Name)" -ForegroundColor Magenta
+                Write-Host "    Found VERSION constant in $($_.Name)" -ForegroundColor Magenta
             }
-            
+
             # Pattern 3: Pack URI strings in C# code
             # Matches: "pack://application:,,,/AssemblyName.1.2.3.4;component/..."
             $packUriPattern = '("pack://application:,,,/[^;/]*\.)(\d+\.\d+\.\d+\.\d+)(;[^"]*")'

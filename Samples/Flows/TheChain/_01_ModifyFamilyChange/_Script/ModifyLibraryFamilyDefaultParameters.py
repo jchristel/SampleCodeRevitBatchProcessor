@@ -73,7 +73,7 @@ from duHast.Revit.SharedParameters.shared_parameters_tuple import PARAMETER_DATA
 
 
 # import Revit API
-from Autodesk.Revit.DB import BuiltInParameterGroup, Transaction
+from Autodesk.Revit.DB import GroupTypeId, Transaction
 
 
 # ----------------------------------------------------- default family actions ------------------------------------------
@@ -193,7 +193,7 @@ def change_parameter_to_family_parameter(doc):
                         manager.ReplaceParameter(
                             p,
                             parameter_mapper[p.Definition.Name],
-                            p.Definition.ParameterGroup,
+                            p.Definition.GetGroupTypeId(),
                             p.IsInstance,
                         )
                         return_value_transaction.update_sep(
@@ -388,7 +388,7 @@ TODAYS_DATE = get_file_date_stamp()
 SHARED_PARAMETERS_TO_ADD = {
     "NewTestParameter": [
         PARAMETER_DATA(
-            "NewTestParameter", True, BuiltInParameterGroup.PG_IDENTITY_DATA
+            "NewTestParameter", True, GroupTypeId.IdentityData
         ),
         "",
         "sample value",

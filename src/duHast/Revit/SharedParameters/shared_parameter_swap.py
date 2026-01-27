@@ -100,7 +100,7 @@ def _load_shared_parameter_data_from_file(file_path):
             if row[3].upper() == "TRUE":
                 flag = True
             t = rSharedT.PARAMETER_DATA(
-                row[1], flag, rPG.PRAMETER_GROPUING_TO_BUILD_IN_PARAMETER_GROUPS[row[4]]
+                row[1], flag, rPG.PARAMETER_GROUPING_TO_GROUP_TYPE_ID[row[4]]
             )
             parameter_mapper[row[0]] = PARAMETER_SETTINGS_DATA(row[0], t, row[2])
     return parameter_mapper

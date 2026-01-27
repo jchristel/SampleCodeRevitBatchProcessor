@@ -15,7 +15,7 @@ class ParameterModel(Base):
     """
     A class representing the shared parameter model.
     """
-    def __init__(self, name = None, group=None, is_type_parameter = True, para_type=None, visiblity=False, property_group=None, shared_parameter_file_path=None, j=None):
+    def __init__(self, name = None, group=None, is_type_parameter = True, para_type=None, visiblity=False, groupt_type_id=None, shared_parameter_file_path=None, j=None):
         """
         Constructor for the parameter data class.
 
@@ -29,8 +29,8 @@ class ParameterModel(Base):
         :type para_type: str
         :param visiblity: The visiblity of the parameter.
         :type visiblity: bool
-        :param property_group: The property group of the parameter. (where it will appear in revit UI under)
-        :type property_group: str
+        :param groupt_type_id: The grouping of the parameter. (where it will appear in revit UI under)
+        :type groupt_type_id: str
         :param shared_parameter_file_path: The path to the shared parameter file.
         :type shared_parameter_file_path: str
 
@@ -43,7 +43,7 @@ class ParameterModel(Base):
         self._is_type_parameter = is_type_parameter
         self._para_type = para_type
         self._visibility = visiblity
-        self._property_group = property_group
+        self._groupt_type_id = groupt_type_id
         self._shared_parameter_file_path = shared_parameter_file_path
 
         json_var = None
@@ -68,7 +68,7 @@ class ParameterModel(Base):
                 self._group = (json_var.get("group",None,))
                 self._para_type = (json_var.get("para_type",None,))
                 self._visibility = (json_var.get("visibility",None,))
-                self._property_group = (json_var.get("property_group",None,))
+                self._groupt_type_id = (json_var.get("groupt_type_id",None,))
                 self._shared_parameter_file_path = (json_var.get("shared_parameter_file_path",None,))
             
             except Exception as e:
@@ -117,12 +117,12 @@ class ParameterModel(Base):
         self._visibility = value
     
     @property
-    def property_group(self):
-        return self._property_group
+    def groupt_type_id(self):
+        return self._groupt_type_id
     
-    @property_group.setter
-    def property_group(self, value):
-        self._property_group = value
+    @groupt_type_id.setter
+    def groupt_type_id(self, value):
+        self._groupt_type_id = value
     
     @property
     def shared_parameter_file_path(self):

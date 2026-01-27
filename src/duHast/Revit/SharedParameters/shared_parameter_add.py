@@ -291,9 +291,9 @@ def add_shared_parameter_to_family(para, mgr, doc, def_file):
                 def action():
                     action_return_value = res.Result()
                     try:
-                        # add parameter depending on name, parameter group and isInstance
+                        # add parameter depending on name, forge type id using the group type id and isInstance
                         fam_para = mgr.AddParameter(
-                            def_para, para.builtInParameterGroup, para.isInstance
+                            def_para, para.GroupTypeId, para.isInstance
                         )
                         action_return_value.append_message(
                             para.name + " : parameter successfully added."

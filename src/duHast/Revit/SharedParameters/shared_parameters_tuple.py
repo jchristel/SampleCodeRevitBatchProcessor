@@ -30,4 +30,4 @@ from collections import namedtuple
 
 
 # tuples containing base family data read from file
-PARAMETER_DATA = namedtuple("parameterData", "name isInstance builtInParameterGroup")
+PARAMETER_DATA = namedtuple("parameterData", "name isInstance GroupTypeId")

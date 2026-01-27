@@ -33,6 +33,7 @@ from duHast.Revit.Family.LibraryCleanUp.Utility.family_load import load_families
 
 from duHast.Revit.Purge.purge_unused_e_transmit import purge_unused_e_transmit
 from duHast.Revit.Common.file_io import save_as_family
+from duHast.Revit.Common.parameter_grouping import PARAMETER_GROUPING_TO_GROUP_TYPE_ID
 
 from duHast.Revit.RBP.Objects.ProgressRBPConsole import ProgressRBPConsole
 from duHast.pyRevit.Objects.ProgressPyRevit import ProgressPyRevit
@@ -57,7 +58,7 @@ parameters = [
         is_type_parameter = True,
         para_type = "Text",
         visiblity = True,
-        property_group = "PG_IDENTITY_DATA",
+        group_type_id = "Identity Data",
         shared_parameter_file_path = r"\\proj01\SYD\016713-61A-P\2_Work\2-1_Models\2_Revit\3_Resources\8_SharedParameters\HSL_SharedParameters_Albury.txt"
     ),
 ]
@@ -100,11 +101,12 @@ def add_shared_parameters_to_family(doc, output):
         manager = doc.FamilyManager
 
         # Use reflection to get the enum value
-        parameter_group = getattr(BuiltInParameterGroup, para_model.property_group, None)
-        if parameter_group is None:
-            print("Parameter group not found: {}".format(para_model.property_group))
+        if para_model.group_type_id not in PARAMETER_GROUPING_TO_GROUP_TYPE_ID:
+            print("Parameter group not recognized: {}".format(para_model.group_type_id))
             continue
 
+        parameter_group = PARAMETER_GROUPING_TO_GROUP_TYPE_ID[para_model.group_type_id]
+        
         parameter_tuple = PARAMETER_DATA(para_model.name, not(para_model.is_type_parameter) ,parameter_group)
 
         # add the shared parameter to the family

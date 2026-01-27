@@ -4,8 +4,10 @@ namespace duHastNet.UI.CustomControls
 {
     public static class ResourceUriHelper
     {
-        // Assembly info - change this one place when versioning
-        private const string ASSEMBLY_NAME = "duHastUICustomControls.25.0.0.3";
+        // Assembly info - change VERSION when versioning
+        private const string ASSEMBLY_BASE = "duHastUICustomControls";
+        private const string VERSION = "25.0.0.3";
+        private const string ASSEMBLY_NAME = ASSEMBLY_BASE + "." + VERSION;
 
         // Base URI pattern
         private static string GetPackUri(string resourcePath)

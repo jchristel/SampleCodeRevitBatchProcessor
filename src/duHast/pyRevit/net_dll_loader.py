@@ -81,11 +81,12 @@ def load_net_dll_path(dlls_to_load):
                 
                 # check if path exists
                 if os.path.exists(dll_path):
+                    found_match = True
                     try:
                         # add the dll to the clr
                         clr.AddReferenceToFileAndPath(dll_path)
                         return_value.append_message("Loaded dll: {}".format(dll_path))
-                        found_match = True
+                        
                         break
                     except Exception as e:
                         return_value.update_sep(

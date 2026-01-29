@@ -46,6 +46,7 @@ class SequenceNumeric():
 		return self._min_digits
 		
 	def get_revision(self, revision_index_on_sheet):
+		# TODO: format sequence number in accordance to min_digits value
 		rev = self._start_number+revision_index_on_sheet
 		return "{}{}{}".format(self._prefix,rev,self._suffix)	
 
@@ -80,7 +81,7 @@ class SequenceAlphaNumeric():
 		return self._sequence
 	
 	def get_revision(self, revision_index_on_sheet):
-		
+		# TODO: what happends if a sheet get issued more times than there are characters in the sequence?
 		rev = "Out_of_bounds"
 		if self._sequence.Count>=revision_index_on_sheet:
 			rev = self._sequence[revision_index_on_sheet]

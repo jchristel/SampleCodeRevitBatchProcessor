@@ -34,6 +34,9 @@ The flow is as follows if revisions are the same for all sheets:
 return the list of revision values, revision Id' in the order of the sheet revisions
 
 
+general notes:
+
+in alphanumeric mode: if the number of revisions exceeds the number of entries in the predefined sequence, the sequence continues with A,B,C...Z,AA,BB,CC,AAA,BBB,CCC and so on.
 """
 #
 # License:

@@ -51,7 +51,7 @@ def get_revision_schedule_from_sheet(doc, sheet):
     schedules_on_sheet_ids = sheet.GetDependentElements(filter)
 	
 	# note: there is a chance that there is no revision schedule:
-	# sheet has no title block
+	# sheet has no title block, or titleblock has no revision schedule
 	
     if len(schedules_on_sheet_ids) == 0:
         return None

@@ -46,9 +46,14 @@ class SequenceNumeric():
 		return self._min_digits
 		
 	def get_revision(self, revision_index_on_sheet):
-		# TODO: format sequence number in accordance to min_digits value
+		
+		# calculate the revision number
 		rev = self._start_number+revision_index_on_sheet
-		return "{}{}{}".format(self._prefix,rev,self._suffix)	
+		
+		# format number to show min digits
+		formatted_rev = "{:0{width}d}".format(rev, width=self._min_digits)
+		
+		return "{}{}{}".format(self._prefix, formatted_rev, self._suffix)	
 
 
 class SequenceAlphaNumeric():
@@ -80,12 +85,59 @@ class SequenceAlphaNumeric():
 	def sequence(self):
 		return self._sequence
 	
+	def index_to_revision(self, index):
+	    """
+	    Convert a sequential index to Revit revision format.
+	    
+	    Revit assigns alphanumerical revisions to a sheet as follows:
+		
+		Assume pre defined revision sequence contains letters: A,B,C
+		Revisions on sheet look like so:
+
+		1st revision A (within sequence, sequence repetition is 1)
+		2nd revision B
+		3rd revision C
+		4th revision AA (outside of sequence, start with first letter again  n times, where n is the number of sequence repetitions, here 2)
+		5th revision BB
+		6th revision CC
+		7th revision AAA (outside of sequence, start with first letter again n times, where n is the number of sequence repetitions, here 3)
+		8th revision BBB
+		9th revision CCC
+
+		And so on.
+	    
+	    Args:
+	        index: Sequential index (1-based, e.g., 1, 2, 3, 4...)
+	    
+	    Returns:
+	        Revision string (e.g., 'A', 'B', 'C', 'AA', 'BB', etc.)
+	    """
+	    if index < 1:
+	        return None
+	    
+	    base = len(self._sequence)
+	    
+	    # Determine how many repetitions of the letter
+	    repetitions = 1
+	    cumulative = 0
+	    
+	    while cumulative + base < index:
+	        cumulative += base
+	        repetitions += 1
+	    
+	    # Find which letter in the sequence
+	    position = index - cumulative - 1
+	    letter = self._sequence[position]
+	    
+	    # Return the letter repeated
+	    return letter * repetitions
+    
 	def get_revision(self, revision_index_on_sheet):
-		# TODO: what happends if a sheet get issued more times than there are characters in the sequence?
-		rev = "Out_of_bounds"
-		if self._sequence.Count>=revision_index_on_sheet:
-			rev = self._sequence[revision_index_on_sheet]
-	
+		
+		# get the revision string from the sequence
+		rev = self.index_to_revision(revision_index_on_sheet)
+		
+		# build the complete revision string inluding pre and suffix
 		return "{}{}{}".format(self._prefix,rev,self._suffix)	
 
 

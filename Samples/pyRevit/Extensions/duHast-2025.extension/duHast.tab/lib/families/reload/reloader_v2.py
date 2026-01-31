@@ -20,6 +20,9 @@
 #
 #
 
+import clr
+import System
+
 from System import Int64 # revit element Id expects 64 bit integer
 
 from duHast.Utilities.Objects.result import Result
@@ -109,14 +112,30 @@ def reloaded_families_entry(doc, output, forms):
     try:
         
         print_header("Reloading families in the model {}...".format(doc.Title))
+        
+        # Find the already-loaded assembly
+        assembly = None
+        for asm in System.AppDomain.CurrentDomain.GetAssemblies():
+            if "FamilyReloaderUI" in asm.FullName:
+                assembly = asm
+                break
+        if assembly:
+            # Register it with IronPython using the assembly object
+            clr.AddReference(assembly) #already done in startup ?? but required here again
+            from duHastNet.UI.FamilyReloaderUI import Main
+        else:
+            print_error("Failed to find FamilyReloaderUI assembly.")
+            return_value.update_sep(False, "Failed to find FamilyReloaderUI assembly.")
+            return return_value
+        
         # load .net interface dlls
-        set_dll_path_result = load_net_dll_path([FAMILY_RELOADER_UI])
+        #set_dll_path_result = load_net_dll_path([FAMILY_RELOADER_UI])
 
         # check if the dlls were loaded successfully
-        if not set_dll_path_result.status:
-            print_error(set_dll_path_result.message)
-            return_value.update_sep(False, set_dll_path_result.message)
-            return return_value
+        # if not set_dll_path_result.status:
+        #     print_error(set_dll_path_result.message)
+        #     return_value.update_sep(False, set_dll_path_result.message)
+        #     return return_value
         
         # get all families in file as a list of .net RevitFamily objects
         families_net = get_families_in_model_net(doc=doc)

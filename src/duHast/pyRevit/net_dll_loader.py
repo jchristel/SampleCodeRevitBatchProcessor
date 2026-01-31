@@ -22,6 +22,7 @@
 
 
 import clr
+import System
 import os
 import sys
 
@@ -107,3 +108,20 @@ def load_net_dll_path(dlls_to_load):
 
 
     return return_value
+
+
+def load_duhast_assembly(assembly_name_pattern):
+    """
+    Find and register a duHast assembly that was loaded by startup script.
+    
+    Args:
+        assembly_name_pattern: String to search for in assembly name (e.g., "FamilyReloaderUI")
+    
+    Returns:
+        True if found and loaded, False otherwise
+    """
+    for asm in System.AppDomain.CurrentDomain.GetAssemblies():
+        if assembly_name_pattern in asm.FullName:
+            clr.AddReference(asm)
+            return True
+    return False

@@ -26,6 +26,7 @@ This module contains a number of helper functions relating to Revit revisions.
 #
 #
 
+from pydoc import doc
 import clr
 
 clr.AddReference("System.Core")
@@ -46,7 +47,7 @@ from duHast.Revit.Common import (
 from duHast.Revit.Revisions import new_revision as rNewRev
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import ElementId, FilteredElementCollector, Revision, RevisionSettings,Transaction
 
 # tuples containing revision information
 REVISION_DATA = namedtuple(
@@ -67,7 +68,7 @@ def get_all_revisions(doc):
     """
 
     revision_data = []
-    revisions_in_model = rdb.Revision.GetAllRevisionIds(doc)
+    revisions_in_model = Revision.GetAllRevisionIds(doc)
     for revision_id in revisions_in_model:
         # get the revision element
         revision = doc.GetElement(revision_id)
@@ -119,7 +120,7 @@ def create_revision(doc, revision_data):
             action_return_value = rNewRev.new_revision_action_2023(doc, revision_data)
         return action_return_value
 
-    transaction = rdb.Transaction(doc, "adding revision to file")
+    transaction = Transaction(doc, "adding revision to file")
     return_value = rTran.in_transaction(transaction, action)
     return return_value
 
@@ -131,7 +132,7 @@ def mark_revision_as_issued(doc, revision):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param revision: The revision
-    :type revision: Autodesk.REvit.DB.Revision
+    :type revision: Autodesk.Revit.DB.Revision
 
     :return:
         Result class instance.
@@ -161,7 +162,7 @@ def mark_revision_as_issued(doc, revision):
             )
         return action_return_value
 
-    transaction = rdb.Transaction(doc, "Setting revision to issued")
+    transaction = Transaction(doc, "Setting revision to issued")
     return_value = rTran.in_transaction(transaction, action)
     return return_value
 
@@ -192,7 +193,7 @@ def mark_revision_as_issued_by_revision_id(doc, revision_id):
 
     return_value = res.Result()
     # get all revisions in file
-    revisions_in_model = rdb.Revision.GetAllRevisionIds(doc)
+    revisions_in_model = Revision.GetAllRevisionIds(doc)
     if revision_id in revisions_in_model:
         # get the revision element
         revision = doc.GetElement(revision_id)
@@ -251,7 +252,7 @@ def add_revisions_to_sheet(doc, sheet, revision_ids):
             )
         return action_return_value
 
-    transaction = rdb.Transaction(doc, "adding revision to sheet")
+    transaction = Transaction(doc, "adding revision to sheet")
     return_value = rTran.in_transaction(transaction, action)
     return return_value
 
@@ -268,7 +269,7 @@ def get_issued_revisions(doc):
 
     issued_revisions = []
     # get all revisions in file
-    revisions_in_model = rdb.Revision.GetAllRevisionIds(doc)
+    revisions_in_model = Revision.GetAllRevisionIds(doc)
     for revision_id in revisions_in_model:
         rev = doc.GetElement(revision_id)
         if rev.Issued == True:
@@ -326,7 +327,7 @@ def change_revision_sequence_number(doc, revision, new_sequence_number):
         # note revision sequence list starts with 1 with internal revision id index list starts at 0!
         new_sequence_number = new_sequence_number - 1
         revision_id = revision.Id
-        revisions_in_model = rdb.Revision.GetAllRevisionIds(doc)
+        revisions_in_model = Revision.GetAllRevisionIds(doc)
         if revision_id in revisions_in_model:
             # this is a c# list: List[ElementId] hence .IndexOf
             current_index = revisions_in_model.IndexOf(revision_id)
@@ -391,19 +392,36 @@ def re_order_revisions(doc, revision_sequence):
     def action():
         action_return_value = res.Result()
         try:
-            rdb.Revision.ReorderRevisionSequence(doc, revision_sequence)
+            Revision.ReorderRevisionSequence(doc, revision_sequence)
             action_return_value.update_sep(True, "Re-ordered revisions in model.")
-            action_return_value.result = rdb.Revision.GetAllRevisionIds(doc)
+            action_return_value.result = Revision.GetAllRevisionIds(doc)
         except Exception as e:
             action_return_value.update_sep(
                 False, "Failed to re-order revision(s) with exception: {}".format(e)
             )
         return action_return_value
 
-    transaction = rdb.Transaction(doc, "Re-ordering revisions in model.")
+    transaction = Transaction(doc, "Re-ordering revisions in model.")
     return_value = rTran.in_transaction(transaction, action)
     return return_value
 
+
+def are_revisions_by_sheet(doc):
+    """
+    Checks if revisions in the document are set to be 'by sheet'.
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :return: True if revisions are by sheet, False if revisions are 'by project'.
+    :rtype: bool
+    """
+    
+    doc_revision_settings = RevisionSettings.GetRevisionSettings(doc)
+    revision_numbering = doc_revision_settings.RevisionNumbering
+    if revision_numbering == revision_numbering.PerSheet:
+        return True
+    else:
+        return False
 
 # ---------------------------------------- deleting revisions --------------------------------------------
 
@@ -461,7 +479,7 @@ def delete_all_revisions_in_model(doc, revision_description_filter=[]):
     return_value = res.Result()
     to_delete = []
     filtered_at_least_one = False
-    revisions = rdb.FilteredElementCollector(doc).OfClass(rdb.Revision)
+    revisions = FilteredElementCollector(doc).OfClass(Revision)
     for rev in revisions:
         if len(revision_description_filter) > 0:
             ruleMatch = _check_Revision_against_filters(
@@ -508,7 +526,7 @@ def delete_all_revisions_in_model(doc, revision_description_filter=[]):
                 "Attempting to delete revisions: {}".format(len(to_delete))
             )
             try:
-                doc.Delete(to_delete.ToList[rdb.ElementId]())
+                doc.Delete(to_delete.ToList[ElementId]())
                 action_return_value.append_message(
                     "Deleted {} revisions.".format(len(to_delete))
                 )
@@ -518,7 +536,7 @@ def delete_all_revisions_in_model(doc, revision_description_filter=[]):
                 )
             return action_return_value
 
-        transaction = rdb.Transaction(doc, "Deleting Revisions")
+        transaction = Transaction(doc, "Deleting Revisions")
         return_value.update(rTran.in_transaction(transaction, action))
     else:
         return_value.update_sep(

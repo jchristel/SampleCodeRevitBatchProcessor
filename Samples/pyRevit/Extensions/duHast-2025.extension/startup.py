@@ -29,6 +29,12 @@ from System.IO import MemoryStream
 from System.Reflection import Assembly
 import traceback
 
+def is_assembly_loaded(assembly_name):
+    """Check if an assembly with the given name is already loaded"""
+    for asm in System.AppDomain.CurrentDomain.GetAssemblies():
+        if assembly_name in asm.FullName:
+            return True
+    return False
 
 # set up a debug flag 
 DEBUG = True
@@ -79,6 +85,15 @@ for dll in dlls_to_load:
         # get the file name from the path
         dll_name_only = System.IO.Path.GetFileName(dll)
         
+        # Get assembly name without extension
+        assembly_name = System.IO.Path.GetFileNameWithoutExtension(dll)
+        
+        # Check if already loaded
+        if is_assembly_loaded(assembly_name):
+            if DEBUG:
+                print("Already loaded, skipping: {dll}".format(dll=dll_name_only))
+            continue
+        
         # check if the dll should be ignored
         if dll_name_only in ignore_dlls:
             if DEBUG:
@@ -93,18 +108,11 @@ for dll in dlls_to_load:
             print("File not found: {dll}".format(dll=dll))
             continue
 
-        dll_bytes = File.ReadAllBytes(dll)
-
-        if DEBUG:
-            # Should print <class 'bytearray'>
-            print("bytes array is of type: {}".format(type(dll_bytes)))
-    
-        # Load assembly into the default AppDomain
-        stream = MemoryStream(dll_bytes)
-        assembly = Assembly.Load(stream.ToArray())
-
-        # Ensure it's registered for other add-ins
-        #System.AppDomain.CurrentDomain.Load(assembly.GetName())
+        # Use LoadFrom instead of Load(byte[])
+        assembly = Assembly.LoadFrom(dll)
+        
+        # Register with IronPython
+        clr.AddReference(assembly)
 
         if DEBUG:
             print("loaded successfully: {dll}".format(dll=dll_name_only))

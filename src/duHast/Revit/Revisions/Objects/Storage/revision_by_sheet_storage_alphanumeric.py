@@ -92,47 +92,30 @@ class RevisionBySheetStorageAlphaNumeric(RevisionBySheetStorageBase):
 	def index_to_revision(self, index):
 		"""
 		Convert a sequential index to Revit revision format.
-
-		Revit assigns alphanumerical revisions to a sheet as follows:
-
-		Assume pre defined revision sequence contains letters: A,B,C
-		Revisions on sheet look like so:
-
-		1st revision A (within sequence, sequence repetition is 1)
-		2nd revision B
-		3rd revision C
-		4th revision AA (outside of sequence, start with first letter again  n times, where n is the number of sequence repetitions, here 2)
-		5th revision BB
-		6th revision CC
-		7th revision AAA (outside of sequence, start with first letter again n times, where n is the number of sequence repetitions, here 3)
-		8th revision BBB
-		9th revision CCC
-
-		And so on.
-
+		
 		Args:
-			index: Sequential index (1-based, e.g., 1, 2, 3, 4...)
-
+			index: Sequential index (0-based, e.g., 0, 1, 2, 3...)
+		
 		Returns:
 			Revision string (e.g., 'A', 'B', 'C', 'AA', 'BB', etc.)
 		"""
-		if index < 1:
+		if index < 0:
 			return None
-	    
+		
 		base = len(self._sequence)
-	    
-	    # Determine how many repetitions of the letter
+		
+		# Determine how many repetitions of the letter
 		repetitions = 1
 		cumulative = 0
-	    
-		while cumulative + base < index:
+		
+		while cumulative + base <= index:  # Changed < to <=
 			cumulative += base
 			repetitions += 1
-	    
-	    # Find which letter in the sequence
-		position = index - cumulative - 1
+		
+		# Find which letter in the sequence
+		position = index - cumulative
 		letter = self._sequence[position]
-	    
+		
 		# Return the letter repeated
 		return letter * repetitions
     

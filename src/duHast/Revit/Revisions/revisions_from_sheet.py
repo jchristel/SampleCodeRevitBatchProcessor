@@ -70,6 +70,7 @@ from duHast.Revit.Revisions.revisions import are_revisions_by_sheet
 
 from Autodesk.Revit.DB import ElementId, RevisionNumberType
 
+DEBUG = False
 
 def build_revision_data(rev_dictionary, number_of_revs_on_sheet):
 	"""
@@ -96,14 +97,17 @@ def build_revision_data(rev_dictionary, number_of_revs_on_sheet):
 		
 		# loop over items and build a revision data
 		for sequence_id, revision_data_list in rev_dictionary.items():
-			
+			if DEBUG:
+				print("checking sequence id: {}".format(sequence_id))
+				print("revision data list length: {}".format(len(revision_data_list)))
 			# setup counter by type
 			seq_by_revision_type_counter = 0
 			for rev_data_entry in revision_data_list:
 				
 				# check if this revision index, stored in a tuple at index 1, is matching the current sheet index 
 				if rev_data_entry.revision_index_on_sheet == i:
-					
+					if DEBUG:
+						print("found match for sheet index: {} with revision value: {} with type index: {}".format(i, rev_data_entry.get_revision(seq_by_revision_type_counter), seq_by_revision_type_counter))
 					# get the actual revision value from the first value in the tuple which is a 
 					# helper class instance stored in tuple at index 0
 					revision_value = rev_data_entry.get_revision(seq_by_revision_type_counter)
@@ -146,10 +150,17 @@ def get_revisions_from_sheet(doc, sheet):
 	revisions_are_by_sheet = are_revisions_by_sheet(doc)
 	
 	# get all revision ids on sheet
+	# note: Autodesk docs say: "The Revisions are ordered according to the revision sequence in the project." I have had cases where this was not true.
 	revision_ids_on_sheet = sheet.GetAllRevisionIds()
 	
+ 	# Convert .NET IList to Python list, then sort by SequenceNumber to be sure of order
+	revision_ids_on_sheet = sorted(
+    	list(revision_ids_on_sheet),
+    	key=lambda rev_id: doc.GetElement(rev_id).SequenceNumber
+	)
+
 	# check if any revisions on sheet
-	if (revision_ids_on_sheet.Count == 0):
+	if (len(revision_ids_on_sheet) == 0):
 		return None
 	
 	revision_data = []
@@ -163,6 +174,10 @@ def get_revisions_from_sheet(doc, sheet):
 	# loop over all revisions on sheet
 	for revision_id in revision_ids_on_sheet:
 		revision = doc.GetElement(revision_id)
+  
+		if DEBUG:
+			print("processing revision id: {} with rev number: {}".format(revision.Id, revision.RevisionNumber))
+   
 		revision_sequence_id = revision.RevisionNumberingSequenceId
 		
 		# a class generating the actual revision number
@@ -171,6 +186,9 @@ def get_revisions_from_sheet(doc, sheet):
 		# check if this is a None revision
 		if revision_sequence_id == ElementId.InvalidElementId:
 			rev_sequence_generator = get_revision_storage_sequence_none(revision,rev_index_on_sheet,revisions_are_by_sheet)
+   
+			if DEBUG:
+				print("none revision: {}".format(rev_sequence_generator))
 		else:
 			
 			# get the revision sequence
@@ -179,8 +197,12 @@ def get_revisions_from_sheet(doc, sheet):
 			# check what type of sequence and get helper class accordingly
 			if (revision_sequence.NumberType ==  RevisionNumberType.Numeric):
 				rev_sequence_generator = get_revision_storage_sequence_numeric(revision,revision_sequence,rev_index_on_sheet,revisions_are_by_sheet)
+				if DEBUG:
+					print("numeric revision: {}".format(rev_sequence_generator))
 			elif (revision_sequence.NumberType ==  RevisionNumberType.Alphanumeric):
 				rev_sequence_generator = get_revision_storage_sequence_alphanumeric(revision,revision_sequence,rev_index_on_sheet,revisions_are_by_sheet)
+				if DEBUG:
+					print("alphanumeric revision: {}".format(rev_sequence_generator))
 			else:
 				raise ValueError("Not supported")
 		

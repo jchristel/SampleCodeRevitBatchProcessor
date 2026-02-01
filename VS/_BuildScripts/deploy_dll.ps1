@@ -134,6 +134,7 @@ $atTheLibraryBasePath = "$basePath\VS\duHastRevitApplications\AtTheLibrary"
 $uiPDFDWGExporterBasePath = "$basePath\VS\duHastUI\PDFDWGExporterUI"
 $uiPDFDWGExporterSelectionBasePath = "$basePath\VS\duHastUI\PDFDWGExporterSelectionUI"
 $uiFamilyReloaderBasePath = "$basePath\VS\duHastUI\FamilyReloaderUI"
+$uiDocManagerSettingsBasePath = "$basePath\VS\duHastUI\DocManagerSettingsUI"
 
 # Determine correct build paths using user-selected configuration
 $pushItBuildPath = Get-BuildType $pushItBasePath $buildConfig
@@ -141,6 +142,7 @@ $atTheLibraryBuildPath = Get-BuildType $atTheLibraryBasePath $buildConfig
 $uiPDFDWGExporterBuildPath = Get-BuildType $uiPDFDWGExporterBasePath $buildConfig
 $uiPDFDWGExporterSelectionBuildPath = Get-BuildType $uiPDFDWGExporterSelectionBasePath $buildConfig
 $uiFamilyReloaderBuildPath = Get-BuildType $uiFamilyReloaderBasePath $buildConfig
+$uiDocManagerSettingsBuildPath = Get-BuildType $uiDocManagerSettingsBasePath $buildConfig
 
 # Define source and destination paths for PushIt (using dynamic extension name)
 $sourceFilePushIt = "$pushItBuildPath\PushIt$dllVersion.dll"
@@ -186,6 +188,14 @@ $destinationFileFamilyReloaderUI = "$basePath\VS\_References\duHast\FamilyReload
 # Copy Family Reloader UI DLL
 Copy-Item -Path $sourceFileFamilyReloaderUI -Destination $destinationFileFamilyReloaderUI -Force
 Write-Output "File copied successfully from $sourceFileFamilyReloaderUI to $destinationFileFamilyReloaderUI"
+
+
+# copy doc manager settings UI dlls
+$sourceFileDocManagerSettingsUI = "$uiDocManagerSettingsBuildPath\DocManagerSettingsUI$dllVersion.dll"
+$destinationFileDocManagerSettingsUI = "$basePath\VS\_References\duHast\DocManagerSettingsUI$dllVersion.dll"
+# Copy Doc Manager Settings UI DLL
+Copy-Item -Path $sourceFileDocManagerSettingsUI -Destination $destinationFileDocManagerSettingsUI -Force
+Write-Output "File copied successfully from $sourceFileDocManagerSettingsUI to $destinationFileDocManagerSettingsUI"
 
 # lib directory
 $sourceFolderLib="$basePath\VS\_References\duHast"

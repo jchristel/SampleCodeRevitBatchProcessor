@@ -6,7 +6,7 @@ layout:
   - Import View Filters
   - --------
   - Export Colour Schemes
-  - Export Colour Schemes
+  - Import Colour Schemes
   
 # bundle tooltip
 tooltip: Anything relating to exporting specific view templates from one file and importing same into other files.

@@ -22,6 +22,8 @@
 
 import clr
 import System
+import sys
+import os
 
 from System import Int64 # revit element Id expects 64 bit integer
 
@@ -30,15 +32,17 @@ from duHast.Revit.Family.family_reload_single import reload_family
 from duHast.Revit.NetSupport.dll_names import FAMILY_RELOADER_UI
 
 from duHast.pyRevit.console_output import print_header, print_error
-from duHast.pyRevit.net_dll_loader import load_net_dll_path
+from duHast.pyRevit.net_dll_loader import load_net_dll_path, get_bin_path_from_script_path_within_extension
 
 from families.reload.get_families import get_families_in_model_net
-
+from duHast.Revit.NetSupport.dll_names import UTILITY,WPF_CUSTOM_CONTROLS,FAMILY_RELOADER_UI
 
 from Autodesk.Revit.DB import ElementId
 
 DEBUG = False
 
+# .net dlls to load for this script, these need to be in the bin folder of the extension
+DLL_LIST = [UTILITY,WPF_CUSTOM_CONTROLS,FAMILY_RELOADER_UI]
 
 
 def reload_families(doc, families, forms):
@@ -111,31 +115,36 @@ def reloaded_families_entry(doc, output, forms):
 
     try:
         
+        print_header("Starting ...")
+        # get the bin directory for the extension, this is where the required dlls should be located
+        bin_directory = get_bin_path_from_script_path_within_extension(__file__)   
+        if bin_directory is None:
+            message = "Failed to determine bin directory for dlls."
+            print_error(message)
+            return_value.update_sep(False, message)
+            return return_value
+
+        # load the required dlls for the UI
+        load_result = load_net_dll_path(DLL_LIST, bin_directory=bin_directory, exact_match=True)
+        print(load_result.message)
+
+        # # Find the already-loaded assembly
+        # assembly = None
+        # for asm in System.AppDomain.CurrentDomain.GetAssemblies():
+        #     if "FamilyReloaderUI" in asm.FullName:
+        #         assembly = asm
+        #         break
+        # if assembly:
+        #     # Register it with IronPython using the assembly object
+        #     # the loader will have already loaded the assembly, so we can just reference it here without loading it again
+        #     clr.AddReference(assembly)
+        #     from duHastNet.UI.FamilyReloaderUI import Main
+        # else:
+        #     print_error("Failed to find FamilyReloaderUI assembly.")
+        #     return_value.update_sep(False, "Failed to find FamilyReloaderUI assembly.")
+
         print_header("Reloading families in the model {}...".format(doc.Title))
         
-        # Find the already-loaded assembly
-        assembly = None
-        for asm in System.AppDomain.CurrentDomain.GetAssemblies():
-            if "FamilyReloaderUI" in asm.FullName:
-                assembly = asm
-                break
-        if assembly:
-            # Register it with IronPython using the assembly object
-            clr.AddReference(assembly) #already done in startup ?? but required here again
-            from duHastNet.UI.FamilyReloaderUI import Main
-        else:
-            print_error("Failed to find FamilyReloaderUI assembly.")
-            return_value.update_sep(False, "Failed to find FamilyReloaderUI assembly.")
-            return return_value
-        
-        # load .net interface dlls
-        #set_dll_path_result = load_net_dll_path([FAMILY_RELOADER_UI])
-
-        # check if the dlls were loaded successfully
-        # if not set_dll_path_result.status:
-        #     print_error(set_dll_path_result.message)
-        #     return_value.update_sep(False, set_dll_path_result.message)
-        #     return return_value
         
         # get all families in file as a list of .net RevitFamily objects
         families_net = get_families_in_model_net(doc=doc)

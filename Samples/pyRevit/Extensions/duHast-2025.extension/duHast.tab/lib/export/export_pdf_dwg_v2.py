@@ -24,8 +24,8 @@
 from duHast.Utilities.Objects.result import Result
 from duHast.pyRevit.console_output import print_header, print_error
 from duHast.Revit.ExtensibleSchemas.extensible_schemas import does_schema_exist
-from duHast.pyRevit.net_dll_loader import load_net_dll_path
-from duHast.Revit.NetSupport.dll_names import PDF_AND_DWG_EXPORTER_SELECTION_UI
+from duHast.pyRevit.net_dll_loader import load_net_dll_path, get_bin_path_from_script_path_within_extension
+from duHast.Revit.NetSupport.dll_names import UTILITY,WPF_CUSTOM_CONTROLS,PDF_AND_DWG_EXPORTER_SELECTION_UI
 
 from export.utility import get_sheet_parameter_names
 from export import settings
@@ -34,9 +34,12 @@ from export.ui_data_get import get_ui_data
 from export.print_sets_update import update_print_sets_from_ui
 from export.export_sheets import export_sheets
 
-from Autodesk.Revit.DB import ElementId
+#from Autodesk.Revit.DB import ElementId
 
 DEBUG = False
+
+# .net dlls to load for this script, these need to be in the bin folder of the extension
+DLL_LIST = [UTILITY,WPF_CUSTOM_CONTROLS,PDF_AND_DWG_EXPORTER_SELECTION_UI]
 
 def export_pdf_dwg_entry(doc, output, forms):
     """
@@ -56,14 +59,19 @@ def export_pdf_dwg_entry(doc, output, forms):
     return_value = Result()
 
     try:
-        # load .net interface dlls
-        set_dll_path_result = load_net_dll_path([PDF_AND_DWG_EXPORTER_SELECTION_UI]) #"Utils.23.0.0.3.dll",
-
-        # check if the dlls were loaded successfully
-        if not set_dll_path_result.status:
-            print_error(set_dll_path_result.message)
-            return_value.update_sep(False, set_dll_path_result.message)
+        
+        print_header("Starting ...")
+        # get the bin directory for the extension, this is where the required dlls should be located
+        bin_directory = get_bin_path_from_script_path_within_extension(__file__)   
+        if bin_directory is None:
+            message = "Failed to determine bin directory for dlls."
+            print_error(message)
+            return_value.update_sep(False, message)
             return return_value
+
+        # load the required dlls for the UI
+        load_result = load_net_dll_path(DLL_LIST, bin_directory=bin_directory, exact_match=True)
+        print(load_result.message)
         
         # check if extensible schema exists
         if not does_schema_exist(settings.EXPORTER_ADD_IN_GUID):
@@ -72,6 +80,7 @@ def export_pdf_dwg_entry(doc, output, forms):
             print_error(message)
             return return_value
 
+        print_header("Exporting ...")
         # place holder for the sheet name rule strings
         rename_settings = None
 

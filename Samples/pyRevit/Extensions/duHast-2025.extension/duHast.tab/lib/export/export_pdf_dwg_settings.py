@@ -30,9 +30,9 @@ from duHast.Utilities.Objects.result import Result
 from duHast.Revit.ExtensibleSchemas.extensible_schemas_create import verify_schema_data_storage_based
 from duHast.Revit.ExtensibleSchemas.data_storage import update_entity_on_data_storage
 from duHast.Revit.Views.sheets import get_all_sheets
-from duHast.Revit.NetSupport.dll_names import PDF_AND_DWG_EXPORTER_SETTINGS_UI
+from duHast.Revit.NetSupport.dll_names import UTILITY,WPF_CUSTOM_CONTROLS,PDF_AND_DWG_EXPORTER_SETTINGS_UI
 
-from duHast.pyRevit.net_dll_loader import load_net_dll_path
+from duHast.pyRevit.net_dll_loader import load_net_dll_path, get_bin_path_from_script_path_within_extension
 from duHast.pyRevit.console_output import print_header, print_error
 
 
@@ -40,6 +40,8 @@ from export import settings
 
 DEBUG = False
 
+# .net dlls to load for this script, these need to be in the bin folder of the extension
+DLL_LIST = [UTILITY,WPF_CUSTOM_CONTROLS,PDF_AND_DWG_EXPORTER_SETTINGS_UI]
 
 from Autodesk.Revit.DB import  BaseExportOptions
 
@@ -138,6 +140,20 @@ def settings_export_pdf_dwg_entry(doc, output, forms):
     return_value = Result()
 
     try:
+
+        print_header("Starting ...")
+        # get the bin directory for the extension, this is where the required dlls should be located
+        bin_directory = get_bin_path_from_script_path_within_extension(__file__)   
+        if bin_directory is None:
+            message = "Failed to determine bin directory for dlls."
+            print_error(message)
+            return_value.update_sep(False, message)
+            return return_value
+
+        # load the required dlls for the UI
+        load_result = load_net_dll_path(DLL_LIST, bin_directory=bin_directory, exact_match=True)
+        print(load_result.message)
+
         set_dll_path_result = load_net_dll_path([PDF_AND_DWG_EXPORTER_SETTINGS_UI]) #"Utils.23.0.0.3.dll",
 
         if not set_dll_path_result.status:
@@ -296,7 +312,6 @@ def settings_export_pdf_dwg_entry(doc, output, forms):
 
         if DEBUG:
             print("...export settings updated successfully.")
-        return return_value
 
     except Exception as e:
         # handle any exceptions that occur during the export process

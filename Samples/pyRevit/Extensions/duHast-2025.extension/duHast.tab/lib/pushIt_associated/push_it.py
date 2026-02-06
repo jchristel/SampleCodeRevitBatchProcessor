@@ -70,6 +70,17 @@ def push_it_entry(doc, output, forms):
             print(load_result.message)
     
         
+
+        # start pushit:
+        # import the UI class from the FamilyReloaderUI namespace
+        from duHastNet.PushIt import Main
+       
+        # create an instance of the Main class
+        main = Main(families_net, None, None)
+        
+        # show the output window
+        families_reload = main.Execute()
+
         return return_value
 
     

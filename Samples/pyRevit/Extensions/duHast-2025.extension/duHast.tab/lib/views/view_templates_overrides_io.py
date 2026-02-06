@@ -22,10 +22,6 @@
 
 import sys
 
-duHast_git = r"C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\src"
-
-sys.path.insert(0, duHast_git)
-
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Views.Utility.convert_revit_override_to_data import (
     get_views_graphic_settings_data,

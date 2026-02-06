@@ -47,7 +47,7 @@ from duHast.Revit.SharedParameters.shared_parameters_tuple import PARAMETER_DATA
 
 DEBUG = True
 
-from Autodesk.Revit.DB import BuiltInParameterGroup
+#from Autodesk.Revit.DB import BuiltInParameterGroup
 
 
 # shared parameters to add to family

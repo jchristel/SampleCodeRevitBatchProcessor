@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace duHastNet.UI.ThreeWaySwitchTest.ViewModels
 {
-    public class DynamicDataGridViewModel : BaseDynamicGridViewModel<DynamicRowData>
+    public class DynamicDataGridViewModel : duHastNet.Utils.WPF.ViewModels.BaseDynamicGridViewModel<DynamicRowData>
     {
         public DynamicDataGridViewModel()
         {

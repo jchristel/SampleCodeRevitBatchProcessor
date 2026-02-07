@@ -17,4 +17,4 @@ uiapp = __revit__
 # create default catalogue type in family
 from pushIt_associated.push_it import push_it_entry
 
-push_it_entry(doc=doc, output=output, forms=forms)
+push_it_entry(doc=doc, uiapp=uiapp, output=output, forms=forms)

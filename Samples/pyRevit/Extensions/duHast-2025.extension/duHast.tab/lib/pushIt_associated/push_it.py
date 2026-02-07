@@ -26,12 +26,15 @@ from duHast.pyRevit.console_output import print_header, print_error
 from duHast.pyRevit.net_dll_loader import load_net_dll_path, get_bin_path_from_script_path_within_extension
 
 
-from duHast.Revit.NetSupport.dll_names import UTILITY,WPF_CUSTOM_CONTROLS,FAMILY_RELOADER_UI
+from duHast.Revit.NetSupport.dll_names import UTILITY,WPF_CUSTOM_CONTROLS,PUSHIT
+CSV_HELPER = "CsvHelper"
+NEWTONSOFT = "Newtonsoft.Json"
+REVIT_ASYCNC = "Revit.Async"
 
 # .net dlls to load for this script, these need to be in the bin folder of the extension
-DLL_LIST = [UTILITY,WPF_CUSTOM_CONTROLS,FAMILY_RELOADER_UI]
+DLL_LIST = [CSV_HELPER, NEWTONSOFT, REVIT_ASYCNC, UTILITY, WPF_CUSTOM_CONTROLS, PUSHIT]
 
-def push_it_entry(doc, output, forms):
+def push_it_entry(doc, uiapp, output, forms):
     """
     Reports on loaded families in a project file.
 
@@ -64,7 +67,7 @@ def push_it_entry(doc, output, forms):
             return return_value
 
         # load the required dlls for the UI
-        load_result = load_net_dll_path(DLL_LIST, bin_directory=bin_directory, exact_match=True)
+        load_result = load_net_dll_path(DLL_LIST, bin_directory=bin_directory, exact_match=False)
         if load_result.status is False:
             return_value.update_sep(False, "Failed to load required dlls for the UI.")
             print(load_result.message)
@@ -72,23 +75,23 @@ def push_it_entry(doc, output, forms):
         
 
         # start pushit:
-        # import the UI class from the FamilyReloaderUI namespace
+        # import the UI class from the PushIt namespace
         from duHastNet.PushIt import Main
        
         # create an instance of the Main class
-        main = Main(families_net, None, None)
+        main = Main()
         
         # show the output window
-        families_reload = main.Execute()
+        pushIt_result = main.ExecuteInternal(uiapp)
 
         return return_value
 
     
     except Exception as e:
         # handle any exceptions that occur during the reload process
-        message = "An error occurred while reloading families: {}".format(e)
+        message = "An error occurred while running pushit: {}".format(e)
         return_value.update_sep(
-            False, "Failed to reload families with exception: {}".format(e)
+            False, message
         )
         print(message)
         return return_value

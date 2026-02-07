@@ -17,6 +17,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Reference Include="Utils.25.0.0.3">
+      <HintPath>..\\..\\_References\\duHast\\Utils.25.0.0.3.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <ProjectReference Include="..\duHastUICustomControls\duHastUICustomControls.csproj" />
   </ItemGroup>
 

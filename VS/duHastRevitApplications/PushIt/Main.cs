@@ -51,12 +51,10 @@ namespace duHastNet.PushIt
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolver.ResolveAssembly);
         }
 
-
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        public Result ExecuteInternal(UIApplication uiapp)
         {
-
             // Revit Async version 2.x.x
-            RevitTask.Initialize(commandData.Application);
+            RevitTask.Initialize(uiapp);
 
             //set up stores
             _navigationStore = new duHastNet.Utils.WPF.Stores.NavigationStore();
@@ -67,28 +65,28 @@ namespace duHastNet.PushIt
             _revitDataModel = new Models.RevitDataModel();
 
             //set up the logger
-            // build a file path for the log file using the settings directory and the current date
-            string logFilePath = Path.Combine(Utilities.SettingsUtils.settingsDirectory, "log_pushit_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt");
+            string logFilePath = Path.Combine(Utilities.SettingsUtils.settingsDirectory,
+                "log_pushit_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt");
             _revitDataModel.InitialiseLogger(logFilePath);
 
-            // Example log entry
-            _revitDataModel.LogMessages(new List<(string, duHastNet.Utils.WPF.Stores.MessageTypes)> { ("Starting duHastNet.PushIt.", duHastNet.Utils.WPF.Stores.MessageTypes.Log) });
+            _revitDataModel.LogMessages(new List<(string, duHastNet.Utils.WPF.Stores.MessageTypes)>
+                {
+                    ("Starting duHastNet.PushIt.", duHastNet.Utils.WPF.Stores.MessageTypes.Log)
+                });
 
-            //Get application and document objects
-            UIApplication uiapp = commandData.Application;
+            //Get document
             Document doc = uiapp.ActiveUIDocument.Document;
 
             // load settings from file
             Models.Settings settings = SettingsUtils.LoadSettings();
-            //  settings in data model, this will automatically add enables categories to the category container in the 
-            // data model
             _revitDataModel.Settings = settings;
 
             //load room data into model
             _revitDataModel.LoadRoomsData();
 
-            //get all supported categories and load into the data model ( a supported category is not an enabled category!)
-            List<Models.CategoryDataModel> supportedCategories = Utilities.Revit.RevitCategoryObjectsConverter.ConvertToRevitCategoryObjects(doc);
+            //get all supported categories
+            List<Models.CategoryDataModel> supportedCategories =
+                Utilities.Revit.RevitCategoryObjectsConverter.ConvertToRevitCategoryObjects(doc);
             _revitDataModel.LoadSupportedCategoryData(supportedCategories);
 
             //set up the navigation store
@@ -103,6 +101,60 @@ namespace duHastNet.PushIt
             mainWindow.Show();
 
             return Result.Succeeded;
+        }
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+
+            return ExecuteInternal(commandData.Application);
+
+            //// Revit Async version 2.x.x
+            //RevitTask.Initialize(commandData.Application);
+
+            ////set up stores
+            //_navigationStore = new duHastNet.Utils.WPF.Stores.NavigationStore();
+            //_messageStore = new duHastNet.Utils.WPF.Stores.MessageStore();
+            //_stateStore = new duHastNet.Utils.WPF.Stores.StateStore();
+
+            //// set up th revit data model
+            //_revitDataModel = new Models.RevitDataModel();
+
+            ////set up the logger
+            //// build a file path for the log file using the settings directory and the current date
+            //string logFilePath = Path.Combine(Utilities.SettingsUtils.settingsDirectory, "log_pushit_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt");
+            //_revitDataModel.InitialiseLogger(logFilePath);
+
+            //// Example log entry
+            //_revitDataModel.LogMessages(new List<(string, duHastNet.Utils.WPF.Stores.MessageTypes)> { ("Starting duHastNet.PushIt.", duHastNet.Utils.WPF.Stores.MessageTypes.Log) });
+
+            ////Get application and document objects
+            //UIApplication uiapp = commandData.Application;
+            //Document doc = uiapp.ActiveUIDocument.Document;
+
+            //// load settings from file
+            //Models.Settings settings = SettingsUtils.LoadSettings();
+            ////  settings in data model, this will automatically add enables categories to the category container in the 
+            //// data model
+            //_revitDataModel.Settings = settings;
+
+            ////load room data into model
+            //_revitDataModel.LoadRoomsData();
+
+            ////get all supported categories and load into the data model ( a supported category is not an enabled category!)
+            //List<Models.CategoryDataModel> supportedCategories = Utilities.Revit.RevitCategoryObjectsConverter.ConvertToRevitCategoryObjects(doc);
+            //_revitDataModel.LoadSupportedCategoryData(supportedCategories);
+
+            ////set up the navigation store
+            //_navigationStore.CurrentViewModel = CreateRoomsSelectionViewModel();
+
+            ////show the main window
+            //MainWindow mainWindow = new MainWindow(settings)
+            //{
+            //    DataContext = new ViewModels.MainViewModel(_navigationStore)
+            //};
+
+            //mainWindow.Show();
+
+            //return Result.Succeeded;
 
         }
 

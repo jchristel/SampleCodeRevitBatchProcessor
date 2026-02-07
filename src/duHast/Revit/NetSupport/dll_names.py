@@ -54,3 +54,6 @@ UTILITY = "Utils{}.dll".format(DLL_VERSION)
 
 # doc manager core. This is not a specific version since it is independent of revit version
 DOC_MANAGER_CORE = "duHastNet.DocManager.Core.dll"
+
+# pushit
+PUSHIT = "PushIt{}.dll".format(DLL_VERSION)

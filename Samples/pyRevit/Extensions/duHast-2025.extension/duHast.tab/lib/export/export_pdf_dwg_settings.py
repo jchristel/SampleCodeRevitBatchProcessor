@@ -154,11 +154,12 @@ def settings_export_pdf_dwg_entry(doc, output, forms):
         load_result = load_net_dll_path(DLL_LIST, bin_directory=bin_directory, exact_match=True)
         print(load_result.message)
 
-        set_dll_path_result = load_net_dll_path([PDF_AND_DWG_EXPORTER_SETTINGS_UI]) #"Utils.23.0.0.3.dll",
+        #set_dll_path_result = load_net_dll_path([PDF_AND_DWG_EXPORTER_SETTINGS_UI]) #"Utils.23.0.0.3.dll",
 
-        if not set_dll_path_result.status:
-            print_error(set_dll_path_result.message)
-
+        if not load_result.status:
+            print_error(load_result.message)
+            return_value.update_sep(False, load_result.message)
+            return return_value
 
         # check if extensible schema is available
         schema_check_result = verify_schema_data_storage_based(

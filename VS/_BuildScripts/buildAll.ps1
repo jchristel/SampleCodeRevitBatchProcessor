@@ -229,7 +229,7 @@ Copy-DLLs $solution2 @($commonDir)
 # Build Revit Applications only
 Build-Solution $solution3
 
-# Build duHastApplications only
+# Build doc manager applications
 Build-Solution $solution4
 
 # Build and copy DLLs for UI → Target 3

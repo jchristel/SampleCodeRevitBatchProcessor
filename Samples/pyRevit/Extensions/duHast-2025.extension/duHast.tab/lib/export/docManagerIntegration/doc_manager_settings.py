@@ -38,7 +38,7 @@ from duHast.pyRevit.console_output import print_header, print_error
 
 from export.docManagerIntegration import settings
 
-DEBUG = False
+DEBUG = True
 
 # .net dlls to load for this script, these need to be in the bin folder of the extension
 DLL_LIST = [UTILITY,COMMUNITY_TOOLKIT_MVVM,DOC_MANAGER_SETTINGS_UI]
@@ -163,7 +163,6 @@ def doc_manager_settings_entry(doc, uiapp, output, forms):
         # settings place holders
         doc_manager_settings = None
         
-
         # get the stored entity from the data storage and retrieve settings
         stored_entity = data_storage.GetEntity(schema)
         
@@ -212,7 +211,7 @@ def doc_manager_settings_entry(doc, uiapp, output, forms):
                 export_settings.DocumentNumberString
                 ))
         
-        settings_string = export_settings.PDFRenameString if export_settings.PDFRenameString else ""
+        settings_string = export_settings.DocumentNumberString if export_settings.DocumentNumberString else ""
         
         # save the settings in the file
         # Set the fields for docManager settings

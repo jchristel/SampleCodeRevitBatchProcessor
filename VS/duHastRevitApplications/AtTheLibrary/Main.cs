@@ -48,10 +48,21 @@ namespace duHastNet.AtTheLibrary
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolver.ResolveAssembly);
         }
 
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        /// <summary>
+        /// Initializes application stores, loads settings and Revit family data, configures logging, and displays the
+        /// main window for the Revit add-in.
+        /// </summary>
+        /// <remarks>If the loaded settings contain an invalid or empty data path, the user is prompted to
+        /// set the data file path before proceeding. This method should be called from within a valid Revit application
+        /// context.</remarks>
+        /// <param name="uiapp">The current Revit application instance used to initialize asynchronous operations and access
+        /// application-level data.</param>
+        /// <returns>A value indicating whether the operation completed successfully. Returns Result.Succeeded if initialization
+        /// and window display succeed.</returns>
+        public Result ExecuteInternal(UIApplication uiapp)
         {
             // Revit Async version 2.x.x
-            RevitTask.Initialize(commandData.Application);
+            RevitTask.Initialize(uiapp);
 
             //set up stores
             _navigationStore = new duHastNet.Utils.WPF.Stores.NavigationStore();
@@ -97,6 +108,20 @@ namespace duHastNet.AtTheLibrary
             mainWindow.Show();
 
             return Result.Succeeded;
+        }
+
+        /// <summary>
+        /// Executes the external command using the provided command data and element set.
+        /// </summary>
+        /// <param name="commandData">An object that contains contextual information about the external command, including access to the
+        /// application and active document.</param>
+        /// <param name="message">A message that can be set by the command to provide additional information to the user if execution fails.</param>
+        /// <param name="elements">A set of elements that can be used to highlight or select elements in the user interface if the command
+        /// fails.</param>
+        /// <returns>A Result value indicating the outcome of the command execution.</returns>
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            return ExecuteInternal(commandData.Application);
         }
 
 

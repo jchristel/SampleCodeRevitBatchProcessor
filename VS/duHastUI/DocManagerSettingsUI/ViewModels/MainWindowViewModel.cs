@@ -26,13 +26,14 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
 {
-    internal class MainWindowViewModel:ObservableObject
+    internal partial class MainWindowViewModel:ObservableObject
     {
-        public ObservableObject CurrentViewModel;
+        [ObservableProperty]
+        private ObservableObject _currentViewModel;
 
         public MainWindowViewModel(ViewModels.SettingsViewModel settingsViewModel)
         {
-            CurrentViewModel= settingsViewModel;
+            _currentViewModel = settingsViewModel;
         }
 
         //public override void OnClosing()

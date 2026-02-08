@@ -36,8 +36,18 @@ namespace duHastNet.UI.DocManagerSettingsUI.Utils
         {
             try
             {
-                string json = Newtonsoft.Json.JsonConvert.SerializeObject(settings, Newtonsoft.Json.Formatting.None);
+                // Convert the collection to a JSON string (the DocumentNumberString format)
+                string documentNumberString = SettingsStringParser.ConvertSettingsToDocumentNumberString(settings);
+
+                // Create a Settings object with the serialized string
+                Settings settingsObject = new Settings(documentNumberString);
+
+                // Serialize the Settings object to JSON
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(settingsObject, Newtonsoft.Json.Formatting.Indented);
+
+                // Write to file
                 System.IO.File.WriteAllText(filePath, json);
+
                 AddMessage($"Settings exported to {filePath}", duHastNet.Utils.WPF.Stores.MessageTypes.Information);
             }
             catch (Exception ex)

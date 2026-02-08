@@ -58,7 +58,7 @@
                 <!-- parameter grid -->
                 <DataGrid 
                     Grid.Row="0" Grid.Column="0" x:Name="dataGridParameters" 
-                    ItemsSource="{Binding DataViewAvailableParameters}"
+                    ItemsSource="{Binding DvAvailableParameters}"
                     EnableRowVirtualization="True" 
                     EnableColumnVirtualization="True" 
                     VirtualizingPanel.IsVirtualizing="True" 
@@ -85,7 +85,7 @@
                         Grid.Row="0" 
                         Grid.Column="0" 
                         x:Name="dataGridSheetNumber"
-                        ItemsSource="{Binding DataViewDocumentTypeSettings}"
+                        ItemsSource="{Binding DvDocumentSettings}"
                         VirtualizingPanel.IsVirtualizing="False" 
                         AutoGenerateColumns="False" 
                         CanUserSortColumns="False"

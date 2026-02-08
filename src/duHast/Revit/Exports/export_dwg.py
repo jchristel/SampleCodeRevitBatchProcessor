@@ -236,6 +236,16 @@ def export_sheet_to_dwg (doc, view_sheet, sheet_name_string, output_directory, d
             # built the new file name
             new_file_name = os.path.join(output_directory , sheet_name_new_joined + ".dwg")
 
+            # check if file with the new name already exists, if so, attempt to delete it before renaming the file, if deletion fails, return an error
+            if os.path.exists(new_file_name):
+                return_value.append_message("...File with name {} already exists. Attempting to delete it before renaming the file.".format(new_file_name))
+                try:
+                    os.remove(new_file_name)
+                    return_value.append_message("......File with name {} deleted successfully.".format(new_file_name))
+                except Exception as e:
+                    return_value.update_sep(False, "......File with name {} already exists and could not be deleted. Please check the output directory. Error: {}".format(new_file_name, str(e)))
+                    return return_value
+                
             # Rename the file
             rename_result = rename_file(files_match[0], new_file_name)
 

@@ -57,3 +57,11 @@ DOC_MANAGER_CORE = "duHastNet.DocManager.Core.dll"
 
 # pushit
 PUSHIT = "PushIt{}.dll".format(DLL_VERSION)
+
+# at the library
+AT_THE_LIBRARY = "AtTheLibrary{}.dll".format(DLL_VERSION)
+
+# nuget packages used
+CSV_HELPER = "CsvHelper.dll"
+NEWTONSOFT = "Newtonsoft.Json.dll"
+REVIT_ASYCNC = "Revit.Async.dll"

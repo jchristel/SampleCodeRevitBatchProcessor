@@ -197,6 +197,14 @@ $destinationFileDocManagerSettingsUI = "$basePath\VS\_References\duHast\DocManag
 Copy-Item -Path $sourceFileDocManagerSettingsUI -Destination $destinationFileDocManagerSettingsUI -Force
 Write-Output "File copied successfully from $sourceFileDocManagerSettingsUI to $destinationFileDocManagerSettingsUI"
 
+# copy community toolkit DLL to reference folder from where it will get copied to other locations
+$sourceFileCommunityToolkit = "$uiDocManagerSettingsBuildPath\CommunityToolkit.Mvvm.dll"
+$destinationFileCommunityToolkit = "$basePath\VS\_References\duHast\CommunityToolkit.Mvvm.dll"
+
+# Copy Community Toolkit DLL
+Copy-Item -Path $sourceFileCommunityToolkit -Destination $destinationFileCommunityToolkit -Force
+Write-Output "File copied successfully from $sourceFileCommunityToolkit to $destinationFileCommunityToolkit"
+
 # lib directory
 $sourceFolderLib="$basePath\VS\_References\duHast"
 $destinationFolderLib_one="$basePath\Samples\pyRevit\Extensions\$pyRevitExtensionName\bin"

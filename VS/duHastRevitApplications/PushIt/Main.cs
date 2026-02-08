@@ -51,6 +51,18 @@ namespace duHastNet.PushIt
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolver.ResolveAssembly);
         }
 
+        /// <summary>
+        /// Initializes application state, loads settings and data, and displays the main window for the PushIt add-in
+        /// within a Revit session.
+        /// This function can be called from ironpython (i.e. pyRevit)
+        /// </summary>
+        /// <remarks>This method should be called from within a valid Revit API context. It sets up
+        /// required data models, logging, and user interface components for the PushIt workflow. The method is intended
+        /// for internal use as part of the add-in's startup sequence.</remarks>
+        /// <param name="uiapp">The current Revit application context used to access the active document and application services. Cannot be
+        /// null.</param>
+        /// <returns>A value indicating whether the operation completed successfully. Returns Result.Succeeded if initialization
+        /// and window display succeed.</returns>
         public Result ExecuteInternal(UIApplication uiapp)
         {
             // Revit Async version 2.x.x
@@ -102,59 +114,20 @@ namespace duHastNet.PushIt
 
             return Result.Succeeded;
         }
+
+        /// <summary>
+        /// Executes the external command using the provided command data and element set.
+        /// </summary>
+        /// <param name="commandData">An object that contains contextual information about the external command, including access to the
+        /// application and active document.</param>
+        /// <param name="message">A message that can be set by the command to provide additional information to the user if execution fails.</param>
+        /// <param name="elements">A set of elements that can be used to highlight or select elements in the user interface if the command
+        /// fails.</param>
+        /// <returns>A Result value indicating the outcome of the command execution.</returns>
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-
+            // call execute internal with the application as arg
             return ExecuteInternal(commandData.Application);
-
-            //// Revit Async version 2.x.x
-            //RevitTask.Initialize(commandData.Application);
-
-            ////set up stores
-            //_navigationStore = new duHastNet.Utils.WPF.Stores.NavigationStore();
-            //_messageStore = new duHastNet.Utils.WPF.Stores.MessageStore();
-            //_stateStore = new duHastNet.Utils.WPF.Stores.StateStore();
-
-            //// set up th revit data model
-            //_revitDataModel = new Models.RevitDataModel();
-
-            ////set up the logger
-            //// build a file path for the log file using the settings directory and the current date
-            //string logFilePath = Path.Combine(Utilities.SettingsUtils.settingsDirectory, "log_pushit_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt");
-            //_revitDataModel.InitialiseLogger(logFilePath);
-
-            //// Example log entry
-            //_revitDataModel.LogMessages(new List<(string, duHastNet.Utils.WPF.Stores.MessageTypes)> { ("Starting duHastNet.PushIt.", duHastNet.Utils.WPF.Stores.MessageTypes.Log) });
-
-            ////Get application and document objects
-            //UIApplication uiapp = commandData.Application;
-            //Document doc = uiapp.ActiveUIDocument.Document;
-
-            //// load settings from file
-            //Models.Settings settings = SettingsUtils.LoadSettings();
-            ////  settings in data model, this will automatically add enables categories to the category container in the 
-            //// data model
-            //_revitDataModel.Settings = settings;
-
-            ////load room data into model
-            //_revitDataModel.LoadRoomsData();
-
-            ////get all supported categories and load into the data model ( a supported category is not an enabled category!)
-            //List<Models.CategoryDataModel> supportedCategories = Utilities.Revit.RevitCategoryObjectsConverter.ConvertToRevitCategoryObjects(doc);
-            //_revitDataModel.LoadSupportedCategoryData(supportedCategories);
-
-            ////set up the navigation store
-            //_navigationStore.CurrentViewModel = CreateRoomsSelectionViewModel();
-
-            ////show the main window
-            //MainWindow mainWindow = new MainWindow(settings)
-            //{
-            //    DataContext = new ViewModels.MainViewModel(_navigationStore)
-            //};
-
-            //mainWindow.Show();
-
-            //return Result.Succeeded;
 
         }
 

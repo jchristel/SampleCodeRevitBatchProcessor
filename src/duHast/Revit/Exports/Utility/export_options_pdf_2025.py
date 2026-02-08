@@ -69,13 +69,14 @@ def set_pdf_export_option_2025(
     pdf_export_option.ExportQuality = export_quality
 
     pdf_export_option.HideCropBoundaries = hide_crop_boundaries
-    pdf_export_option.HideReferencePlanes = hide_reference_planes # new in revit 2025
+    pdf_export_option.HideReferencePlane = hide_reference_planes # new in revit 2025
     pdf_export_option.HideScopeBoxes = hide_scope_boxes
     pdf_export_option.HideUnreferencedViewTags = hide_unreferenced_view_tags
     pdf_export_option.MaskCoincidentLines = mask_coincident_lines
     pdf_export_option.ReplaceHalftoneWithThinLines = replace_halftone_with_thin_lines
     pdf_export_option.StopOnError = stop_on_error
     pdf_export_option.ViewLinksInBlue = view_links_in_blue
-    pdf_export_option.ExportInBackground = export_in_background # new in revit 2025
+    pdf_export_option.SetExportInBackground(export_in_background)
+    #pdf_export_option.ExportInBackground = export_in_background # new in revit 2025
 
     return pdf_export_option

@@ -2,9 +2,12 @@ layout:
   - Export Revision
   - Export Sheets
   - POC
+  - ------- 
+  - Settings
+  
   
 # bundle tooltip
-tooltip: Exporting CSV files for Document Management Systems
+tooltip: Revit integration with docManager allowing to import drawings and revision from Revit to the docManager system.
 
 
 # bundle author

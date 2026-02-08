@@ -6,6 +6,7 @@ $project2Path = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProce
 $project3Path = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager.Core.Tests"
 $project4Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager.UI.Shared.Tests"
 $project5Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager\duHastNet.docs"
+$project6Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastUI\DocManagerSettingsUI"
 
 
 # Define the temp folder destination
@@ -71,22 +72,23 @@ function Copy-ProjectFiles {
 }
 
 # Copy files from both projects
-Write-Host "`nCopying files from Project 1..." -ForegroundColor White
-Copy-ProjectFiles -sourcePath $project1Path -projectName "Project1" -destination $tempFolder
+# Write-Host "`nCopying files from Project 1..." -ForegroundColor White
+# Copy-ProjectFiles -sourcePath $project1Path -projectName "Project1" -destination $tempFolder
 
-Write-Host "`nCopying files from Project 2..." -ForegroundColor White
-Copy-ProjectFiles -sourcePath $project2Path -projectName "Project2" -destination $tempFolder
+# Write-Host "`nCopying files from Project 2..." -ForegroundColor White
+# Copy-ProjectFiles -sourcePath $project2Path -projectName "Project2" -destination $tempFolder
 
-Write-Host "`nCopying files from Project 3..." -ForegroundColor White
-Copy-ProjectFiles -sourcePath $project3Path -projectName "Project3" -destination $tempFolder
+# Write-Host "`nCopying files from Project 3..." -ForegroundColor White
+# Copy-ProjectFiles -sourcePath $project3Path -projectName "Project3" -destination $tempFolder
 
-Write-Host "`nCopying files from Project 4..." -ForegroundColor White
-Copy-ProjectFiles -sourcePath $project4Path -projectName "Project4" -destination $tempFolder
+# Write-Host "`nCopying files from Project 4..." -ForegroundColor White
+# Copy-ProjectFiles -sourcePath $project4Path -projectName "Project4" -destination $tempFolder
 
-Write-Host "`nCopying files from Project 5..." -ForegroundColor White
-Copy-ProjectFiles -sourcePath $project5Path -projectName "Project5" -destination $tempFolder
+# Write-Host "`nCopying files from Project 5..." -ForegroundColor White
+# Copy-ProjectFiles -sourcePath $project5Path -projectName "Project5" -destination $tempFolder
 
-
+Write-Host "`nCopying files from Project 6..." -ForegroundColor White
+Copy-ProjectFiles -sourcePath $project6Path -projectName "Project6" -destination $tempFolder
 
 Write-Host "`nAll files copied successfully to: $tempFolder" -ForegroundColor Green
 Write-Host "Opening destination folder..." -ForegroundColor Gray

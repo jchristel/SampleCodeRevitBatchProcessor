@@ -25,13 +25,11 @@ from duHast.Utilities.Objects.result import Result
 from duHast.pyRevit.console_output import print_header, print_error
 from duHast.pyRevit.net_dll_loader import load_net_dll_path, get_bin_path_from_script_path_within_extension
 
-
-from duHast.Revit.NetSupport.dll_names import UTILITY,WPF_CUSTOM_CONTROLS,PUSHIT
-CSV_HELPER = "CsvHelper"
-NEWTONSOFT = "Newtonsoft.Json"
-REVIT_ASYCNC = "Revit.Async"
+# import required dll names
+from duHast.Revit.NetSupport.dll_names import UTILITY,WPF_CUSTOM_CONTROLS,PUSHIT, CSV_HELPER ,NEWTONSOFT, REVIT_ASYCNC
 
 # .net dlls to load for this script, these need to be in the bin folder of the extension
+# apparently load order is important here...start with dependencies first
 DLL_LIST = [CSV_HELPER, NEWTONSOFT, REVIT_ASYCNC, UTILITY, WPF_CUSTOM_CONTROLS, PUSHIT]
 
 def push_it_entry(doc, uiapp, output, forms):

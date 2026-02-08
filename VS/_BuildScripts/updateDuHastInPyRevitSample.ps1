@@ -107,9 +107,6 @@ Write-Host "Current Git branch: $currentBranch" -ForegroundColor Green
 $pyRevitExtensionName = Get-PyRevitExtensionName $currentBranch
 Write-Host "Using pyRevit extension: $pyRevitExtensionName" -ForegroundColor Green
 
-
-
-
 # lib directory
 $sourceFolderLib="$basePath\src"
 $destinationFolderLib_one="$basePath\Samples\pyRevit\Extensions\$pyRevitExtensionName\lib"

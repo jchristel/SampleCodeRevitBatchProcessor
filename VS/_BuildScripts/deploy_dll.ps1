@@ -144,9 +144,10 @@ $uiPDFDWGExporterSelectionBuildPath = Get-BuildType $uiPDFDWGExporterSelectionBa
 $uiFamilyReloaderBuildPath = Get-BuildType $uiFamilyReloaderBasePath $buildConfig
 $uiDocManagerSettingsBuildPath = Get-BuildType $uiDocManagerSettingsBasePath $buildConfig
 
+
 # Define source and destination paths for PushIt (using dynamic extension name)
 $sourceFilePushIt = "$pushItBuildPath\PushIt$dllVersion.dll"
-$destinationFilePushIt = "$basePath\Samples\pyRevit\Extensions\$pyRevitExtensionName\duHast.tab\PushIt.panel\bin\PushIt$dllVersion.dll"
+$destinationFilePushIt = "$basePath\VS\_References\duHast\PushIt$dllVersion.dll"
 
 # Copy PushIt DLL
 Copy-Item -Path $sourceFilePushIt -Destination $destinationFilePushIt -Force
@@ -154,7 +155,7 @@ Write-Output "File copied successfully from $sourceFilePushIt to $destinationFil
 
 # Define source and destination paths for AtTheLibrary (using dynamic extension name)
 $sourceFileAtTheLibrary = "$atTheLibraryBuildPath\AtTheLibrary$dllVersion.dll"
-$destinationAtTheLibrary = "$basePath\Samples\pyRevit\Extensions\$pyRevitExtensionName\duHast.tab\Families.panel\bin\AtTheLibrary$dllVersion.dll"
+$destinationAtTheLibrary = "$basePath\VS\_References\duHast\AtTheLibrary$dllVersion.dll"
 
 # Copy AtTheLibrary DLL
 Copy-Item -Path $sourceFileAtTheLibrary -Destination $destinationAtTheLibrary -Force
@@ -188,7 +189,6 @@ $destinationFileFamilyReloaderUI = "$basePath\VS\_References\duHast\FamilyReload
 # Copy Family Reloader UI DLL
 Copy-Item -Path $sourceFileFamilyReloaderUI -Destination $destinationFileFamilyReloaderUI -Force
 Write-Output "File copied successfully from $sourceFileFamilyReloaderUI to $destinationFileFamilyReloaderUI"
-
 
 # copy doc manager settings UI dlls
 $sourceFileDocManagerSettingsUI = "$uiDocManagerSettingsBuildPath\DocManagerSettingsUI$dllVersion.dll"

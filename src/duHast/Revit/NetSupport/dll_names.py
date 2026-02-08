@@ -55,6 +55,9 @@ UTILITY = "Utils{}.dll".format(DLL_VERSION)
 # doc manager core. This is not a specific version since it is independent of revit version
 DOC_MANAGER_CORE = "duHastNet.DocManager.Core.dll"
 
+# doc manager settings UI:
+DOC_MANAGER_SETTINGS_UI = "DocManagerSettingsUI{}.dll".format(DLL_VERSION)
+
 # pushit
 PUSHIT = "PushIt{}.dll".format(DLL_VERSION)
 
@@ -65,3 +68,4 @@ AT_THE_LIBRARY = "AtTheLibrary{}.dll".format(DLL_VERSION)
 CSV_HELPER = "CsvHelper.dll"
 NEWTONSOFT = "Newtonsoft.Json.dll"
 REVIT_ASYCNC = "Revit.Async.dll"
+COMMUNITY_TOOLKIT_MVVM = "CommunityToolkit.Mvvm.dll"

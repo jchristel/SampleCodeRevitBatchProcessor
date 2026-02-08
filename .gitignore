@@ -604,8 +604,13 @@ _LogMarker/*
 _Output/*
 
 # Include the specific .lib folders and bin folders
-#extension wide bin and lib folders
+# extension wide bin and lib folders
 !Samples/pyRevit/Extensions/duHast-202?.extension/bin
+
+# Ignore everything in lib folder first
+Samples/pyRevit/Extensions/duHast-202?.extension/lib/*
+
+# Then un-ignore the specific text file
 !Samples/pyRevit/Extensions/duHast-202?.extension/lib/place extension libs here.txt
 
 # tab wide library folders

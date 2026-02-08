@@ -27,7 +27,6 @@ from duHast.pyRevit.net_dll_loader import load_net_dll_path, get_bin_path_from_s
 
 # import required dll names
 from duHast.Revit.NetSupport.dll_names import (
-    
     UTILITY,
     WPF_CUSTOM_CONTROLS,
     CSV_HELPER ,

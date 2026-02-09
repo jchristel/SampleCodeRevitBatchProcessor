@@ -29,8 +29,14 @@ namespace duHastNet.UI.DocManagerUI.Models.Revit
     {
         private RevitSheetContainer _revitSheetContainer;
         private RevitRevisionContainer _revitRevisionContainer;
-        public RevitDataModel()
+
+        public string ModelName { get; private set; }
+
+        public string SettingsAsJson { get; private set; }
+        public RevitDataModel(string modelName, string settingsAsJson)
         {
+            ModelName = modelName;
+            SettingsAsJson = settingsAsJson;
             _revitSheetContainer = new RevitSheetContainer();
             _revitRevisionContainer = new RevitRevisionContainer();
         }

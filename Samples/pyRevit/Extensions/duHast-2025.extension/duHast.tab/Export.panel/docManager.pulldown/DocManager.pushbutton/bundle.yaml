@@ -1,8 +1,8 @@
 # bundle title
-title: "Revisions"
+title: "DocManager"
 
 # bundle tooltip
-tooltip: Exports revisions to csv to be imported into doc manager
+tooltip: Import sheets and Revision to Doc Manager from Revit. This tool allows you to import sheets and revisions from Revit to the docManager system, streamlining your workflow and ensuring that your documentation is always up-to-date.
 
 
 # bundle author

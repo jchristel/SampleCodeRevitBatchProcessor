@@ -1,4 +1,4 @@
-print("Oh, hi there! This is the revision exporter script running...")
+print("Oh, hi there! This is the doc manager running...")
 
 import sys
 import os
@@ -9,10 +9,11 @@ logger = script.get_logger()
 output = script.get_output()
 # get the revit document
 doc= revit.doc
+uiapp = __revit__
 
 
 # import ceiling exporter
-from export.docManagerIntegration.ExportRevs.export_revisions import export_revs_entry
+from export.docManagerIntegration.doc_manager import doc_manager_entry
 
 # run the exporter 
-export_revs_entry(doc, output, forms)
+doc_manager_entry(doc=doc, uiapp = uiapp, output=output, forms=forms)

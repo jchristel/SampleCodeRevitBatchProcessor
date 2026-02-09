@@ -542,6 +542,7 @@ def clean_up_catalogue_file(doc, output, forms):
             header=sorted_data[:1][0],
             data=sorted_data[1:],
             encoding="utf-16-le",
+            quoting=2,  # quoting all values to ensure that special characters are preserved and not misinterpreted as delimiters
             bom=BOMValue.UTF_16_LITTLE_ENDIAN,
         )
         if write_result.status is False:

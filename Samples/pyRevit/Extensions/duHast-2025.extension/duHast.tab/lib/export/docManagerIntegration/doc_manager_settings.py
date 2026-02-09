@@ -35,7 +35,6 @@ from duHast.Revit.NetSupport.dll_names import UTILITY,COMMUNITY_TOOLKIT_MVVM,DOC
 from duHast.pyRevit.net_dll_loader import load_net_dll_path, get_bin_path_from_script_path_within_extension
 from duHast.pyRevit.console_output import print_header, print_error
 
-
 from export.docManagerIntegration import settings
 
 DEBUG = True
@@ -130,8 +129,6 @@ def doc_manager_settings_entry(doc, uiapp, output, forms):
         # load the required dlls for the UI
         load_result = load_net_dll_path(DLL_LIST, bin_directory=bin_directory, exact_match=True)
         print(load_result.message)
-
-        #set_dll_path_result = load_net_dll_path([PDF_AND_DWG_EXPORTER_SETTINGS_UI]) #"Utils.23.0.0.3.dll",
 
         if not load_result.status:
             print_error(load_result.message)

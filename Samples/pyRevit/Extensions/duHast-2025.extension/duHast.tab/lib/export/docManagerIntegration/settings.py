@@ -21,7 +21,7 @@
 #
 
 
-
+# schema settings for extended storage
 # guid of the schema to use for the docManager add-in
 DOC_MANAGER_ADD_IN_GUID= "395cd90b-4d20-4d89-9187-03384d6e53ea"
 

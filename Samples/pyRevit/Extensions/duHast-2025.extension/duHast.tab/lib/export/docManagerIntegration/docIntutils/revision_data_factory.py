@@ -5,7 +5,7 @@
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2024, Jan Christel
+# Copyright 2026, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -21,42 +21,54 @@
 #
 #
 
-from duHast.Utilities.files_csv import read_csv_file
-from duHast.Utilities.Objects.result import Result
-from export.docManagerIntegration.Objects.DocManagerRevData import DocManagerRevData
 
-def get_revision_data(file_path):
+from duHast.Utilities.Objects.result import Result
+
+from Autodesk.Revit.DB import Revision
+
+DEBUG = True
+
+def get_revision_data(doc, revit_data_model):
+    """
+    Get the revision data from the model and add it to the data model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revit_data_model: The data model to add the revision data to.
+    :type revit_data_model: RevitDataModel
     
+    :return: Result object with status, message, and the data model with revision data.
+    :rtype: Result
+    
+    """
     return_value = Result()
     
     try:
-        # read csv file
-        csv_data_result = read_csv_file(file_path)
         
-        if not csv_data_result.status:
-            message = "Failed to read revision data from file: {}".format(file_path)
-            return_value.update_sep(False, message)
-            return return_value
-        
-        # get the csv data from the result
-        csv_data = csv_data_result.result
-        
-        # process csv data
-        revisions = []
-        
-        # loop over revision but skip the first row as it is the header
-        for row in csv_data[1:]:
-            revision = DocManagerRevData(
-                date=row[DocManagerRevData.index_date],
-                description=row[DocManagerRevData.index_description],
-                database_id=row[DocManagerRevData.index_database_id]
-            )
-            revisions.append(revision)
-        
-        return_value.update_sep(True, "Successfully read revision data.")
-        return_value.result.append(revisions)
+        # import the UI class from the DocManagerSettingsUI namespace
+        # do this in this function to allow the caller to register the UI dll before this code is executed
+        from  duHastNet.UI.DocManagerUI.Utils.RevitData import RevitRevision
+
+        # get the revision from the model
+        all_revision_ids =  Revision.GetAllRevisionIds(doc)
+        for revision_id in all_revision_ids:
+            # get the revision element
+            revit_revision = doc.GetElement(revision_id)
+
+            # create a RevitRevision object and add it to the list in the data model
+            rev = RevitRevision(revision_id.Value,  revit_revision.RevisionDate,  revit_revision.Description)
+
+            if DEBUG:
+                print("...{}".format(rev))
+
+            # add the revision to the data model
+            revit_data_model.AddRevision(rev)
+
+
+        return_value.update_sep(True, "Successfully retrieved revision data from model.")
+        return_value.result.append(revit_data_model)
         return return_value
     except Exception as e:
-        message = "Error getting revision data from file: {}. Error: {}".format(file_path, str(e))
+        message = "Error getting revision from file: {}".format( e)
         return_value.update_sep(False, message)
         return return_value

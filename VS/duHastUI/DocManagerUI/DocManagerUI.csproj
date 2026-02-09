@@ -1,0 +1,63 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>duHastNet.UI.DocManagerUI</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+  
+    <!-- Target x64 platform only -->
+    <Platforms>x64</Platforms>
+    <!-- Ensure platform target is x64 -->
+    <PlatformTarget>x64</PlatformTarget>
+
+    <!-- Copy NuGet dependencies to output -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+
+    <!-- Assembly metadata (optional - customize as needed) -->
+    <AssemblyName>DocManagerUI.25.0.0.3</AssemblyName>
+    <AssemblyVersion>25.0.0.3</AssemblyVersion>
+    <FileVersion>25.0.0.3</FileVersion>
+    <AssemblyTitle>duHast UI Custom Controls</AssemblyTitle>
+    <Product>duHast</Product>
+    <Company>duHast</Company>
+
+    <!-- Match your build script's expected path -->
+    <OutputPath>bin\x64\$(Configuration)\</OutputPath>
+    <!-- Prevent the target framework folder (net8.0) from being appended -->
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+
+    <!-- Keep runtime identifier out of the output path but select win-x64 assets -->
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+
+    <!-- Don't generate .deps.json file (not needed for class library) -->
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+
+    <!-- Ensure only the win-x64 runtime assets are copied to the output -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Reference Include="Utils.25.0.0.3">
+      <HintPath>..\\..\\_References\\duHast\\Utils.25.0.0.3.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\" />
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DocManagerSettingsUI\DocManagerSettingsUI.csproj" />
+  </ItemGroup>
+
+  
+</Project>

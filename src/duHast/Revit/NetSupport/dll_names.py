@@ -58,6 +58,9 @@ DOC_MANAGER_CORE = "duHastNet.DocManager.Core.dll"
 # doc manager settings UI:
 DOC_MANAGER_SETTINGS_UI = "DocManagerSettingsUI{}.dll".format(DLL_VERSION)
 
+# doc manager integration UI:
+DOC_MANAGER_UI = "DocManagerUI{}.dll".format(DLL_VERSION)
+
 # pushit
 PUSHIT = "PushIt{}.dll".format(DLL_VERSION)
 

@@ -28,7 +28,6 @@ from System.Collections.Generic import List
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.ExtensibleSchemas.extensible_schemas import does_schema_exist
-from duHast.Revit.Views.sheets import get_all_sheets
 from duHast.Revit.NetSupport.dll_names import UTILITY,COMMUNITY_TOOLKIT_MVVM,DOC_MANAGER_UI
 
 from duHast.pyRevit.net_dll_loader import load_net_dll_path, get_bin_path_from_script_path_within_extension
@@ -36,6 +35,7 @@ from duHast.pyRevit.console_output import print_header, print_error
 
 from export.docManagerIntegration.settings_utils import get_name_settings_from_schema
 from export.docManagerIntegration.docIntutils.revision_data_factory import get_revision_data
+from export.docManagerIntegration.docIntutils.sheet_data_factory import get_sheet_data
 from export.docManagerIntegration import settings
 
 DEBUG = True
@@ -128,7 +128,18 @@ def doc_manager_entry(doc, uiapp, output, forms):
             return return_value
     
         # get the updated data model with revisions added
-        revision_data_model = revision_data_status.result[0]
+        revit_data_model = revision_data_status.result[0]
+
+        # get the sheet data from the model
+        sheet_data_status = get_sheet_data(doc, revit_data_model)
+        if not sheet_data_status.status:
+            message = "Failed to get sheet data from model. Error: {}".format(sheet_data_status.message)
+            return_value.update_sep(False, message)
+            print_error(message)
+            return return_value
+        
+        # get the updated data model with sheets added
+        revit_data_model = sheet_data_status.result[0]
 
 
     except Exception as e:

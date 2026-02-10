@@ -44,7 +44,7 @@
         </Border>
         <!-- message banner -->
         <Grid Grid.Row="1">
-
+        <!--database path-->
         </Grid>
         <Grid Grid.Row="2" Margin="0 0 0 10">
             <Grid.ColumnDefinitions>
@@ -59,16 +59,16 @@
                 Text="{Binding DatabasePath, 
                 Mode=TwoWay, 
                 UpdateSourceTrigger=PropertyChanged}" 
-                IsReadOnly="True">
+                IsReadOnly="True"
+                Margin="5 5 5 5">
             </TextBox>
             <Button 
                 Grid.Column="2" 
                 Padding="20 0 20 0"
-                Margin="5 10 5 10" 
+                Margin="5 5 5 5" 
                 Content="Browse"
-                Click="Browse_OnClick"/>
+                Click="PickFile_OnClick"/>
         </Grid>
-
         <!-- grid view -->
         <Border Grid.Row="3" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
             <Grid Margin="5 5 5 5">

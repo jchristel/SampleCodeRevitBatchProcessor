@@ -48,7 +48,8 @@ namespace duHastNet.UI.DocManagerSettingsUI
 
             //set up a setting object
             _settings = new Utils.Settings(
-                documentNumberString: currentDocumentNumberString
+                documentNumberString: currentDocumentNumberString,
+                databasePath: string.Empty
             );
 
             //set up the export data model

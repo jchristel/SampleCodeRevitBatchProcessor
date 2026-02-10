@@ -40,7 +40,7 @@ namespace duHastNet.UI.DocManagerSettingsUI.Utils
                 string documentNumberString = SettingsStringParser.ConvertSettingsToDocumentNumberString(settings);
 
                 // Create a Settings object with the serialized string
-                Settings settingsObject = new Settings(documentNumberString);
+                Settings settingsObject = new Settings(documentNumberString, string.Empty);
 
                 // Serialize the Settings object to JSON
                 string json = Newtonsoft.Json.JsonConvert.SerializeObject(settingsObject, Newtonsoft.Json.Formatting.Indented);

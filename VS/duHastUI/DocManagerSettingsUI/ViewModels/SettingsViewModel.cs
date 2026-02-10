@@ -76,6 +76,12 @@ namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
         /// </summary>
         private ObservableCollection<Utils.DocumentSetting> _documentSettings;
 
+        /// <summary>
+        /// contains the file path for the database file
+        /// </summary>
+        [ObservableProperty]
+        private string _databaseFilePath;
+
         #region column names
 
         /// <summary>
@@ -664,6 +670,9 @@ namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
 
             //populate the document settings data table
             PopulateDocumentSettingsDataTable();
+
+            //populate the database file path
+            _databaseFilePath = exportDataModel.Settings.DatabasePath;
         }
     }
 }

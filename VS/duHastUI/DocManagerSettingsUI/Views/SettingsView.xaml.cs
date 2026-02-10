@@ -61,11 +61,11 @@ namespace duHastNet.UI.DocManagerSettingsUI.Views
             var dialogResult = dialog.ShowDialog();
             if (dialogResult == true)
             {
-                ExportFilePathTextBox.Text = dialog.FileName;
+                DatabaseFilePathTextBox.Text = dialog.FileName;
 
                 // Since setting the property explicitly bypasses the data binding, 
                 // we must explicitly update it by calling BindingExpression.UpdateSource()
-                this.ExportFilePathTextBox
+                this.DatabaseFilePathTextBox
                   .GetBindingExpression(TextBox.TextProperty)
                   .UpdateSource();
             }

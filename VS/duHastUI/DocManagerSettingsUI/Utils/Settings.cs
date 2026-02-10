@@ -27,16 +27,19 @@ namespace duHastNet.UI.DocManagerSettingsUI.Utils
     public class Settings
     {
         public string DocumentNumberString { get; set; }
-       
+
+        public string DatabasePath { get; set; }
+
         public Settings()
         {
             DocumentNumberString = string.Empty;
+            DatabasePath = string.Empty;
         }
 
-
-        public Settings(string documentNumberString)
+        public Settings(string documentNumberString, string databasePath)
         {
             DocumentNumberString = documentNumberString;
+            DatabasePath = databasePath;
         }
     }
 }

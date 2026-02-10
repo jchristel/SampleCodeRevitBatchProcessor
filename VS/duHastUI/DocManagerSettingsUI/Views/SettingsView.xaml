@@ -16,6 +16,8 @@
             <RowDefinition Height="Auto"/>
             <!-- message banner -->
             <RowDefinition Height="Auto"/>
+            <!--database path-->
+            <RowDefinition Height="Auto"/>
             <!-- data -->
             <RowDefinition Height="*"/>
             <!-- buttons export import-->
@@ -44,8 +46,31 @@
         <Grid Grid.Row="1">
 
         </Grid>
+        <Grid Grid.Row="2" Margin="0 0 0 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Database Path:" VerticalAlignment="Center" Margin="0 0 5 0"/>
+            <TextBox 
+                x:Name="DatabaseFilePathTextBox"
+                Grid.Column="1" 
+                Text="{Binding DatabasePath, 
+                Mode=TwoWay, 
+                UpdateSourceTrigger=PropertyChanged}" 
+                IsReadOnly="True">
+            </TextBox>
+            <Button 
+                Grid.Column="2" 
+                Padding="20 0 20 0"
+                Margin="5 10 5 10" 
+                Content="Browse"
+                Click="Browse_OnClick"/>
+        </Grid>
+
         <!-- grid view -->
-        <Border Grid.Row="2" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+        <Border Grid.Row="3" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
             <Grid Margin="5 5 5 5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -150,7 +175,7 @@
             </Grid>
         </Border>
         <!-- export and import buttons -->
-        <Border Grid.Row="3" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+        <Border Grid.Row="4" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
             <Grid Margin="5 2 5 2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -184,7 +209,7 @@
             </Grid>
         </Border>
         <!-- save row content -->
-        <Border Grid.Row="4" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+        <Border Grid.Row="5" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
             <Grid Margin="5 2 5 2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

@@ -49,6 +49,27 @@ namespace duHastNet.UI.DocManagerSettingsUI.Views
             InitializeComponent();
         }
 
+        /// <summary>
+        /// used when browsing database file.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PickFile_OnClick(object sender, EventArgs e)
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog();
+            dialog.Filter = "csv Files (*.csv)|*.csv|All Files (*.*)|*.*";
+            var dialogResult = dialog.ShowDialog();
+            if (dialogResult == true)
+            {
+                ExportFilePathTextBox.Text = dialog.FileName;
+
+                // Since setting the property explicitly bypasses the data binding, 
+                // we must explicitly update it by calling BindingExpression.UpdateSource()
+                this.ExportFilePathTextBox
+                  .GetBindingExpression(TextBox.TextProperty)
+                  .UpdateSource();
+            }
+        }
         private void Export_OnClick(object sender, EventArgs e)
         {
             var dialog = new Microsoft.Win32.SaveFileDialog();

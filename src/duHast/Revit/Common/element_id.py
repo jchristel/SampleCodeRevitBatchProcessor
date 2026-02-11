@@ -61,7 +61,7 @@ def get_el_id_int(el):
         el_id = el
 
     if getattr(el_id, "IntegerValue", None):
-        return int(el_id.Value)
+        return int(el_id.IntegerValue)
     elif getattr(el_id, "Value", None):
         return int(el_id.Value)
     else:

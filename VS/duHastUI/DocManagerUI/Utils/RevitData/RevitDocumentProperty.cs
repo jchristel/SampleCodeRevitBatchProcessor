@@ -45,5 +45,10 @@ namespace duHastNet.UI.DocManagerUI.Utils.RevitData
         {
             return Name == other.Name;
         }
+
+        public override string ToString()
+        {
+            return $"{Name}: {Value}";
+        }
     }
 }

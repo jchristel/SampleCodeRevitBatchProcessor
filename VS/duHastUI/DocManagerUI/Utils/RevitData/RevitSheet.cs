@@ -92,7 +92,7 @@ namespace duHastNet.UI.DocManagerUI.Utils.RevitData
         
         public override string ToString()
         {
-            return $"Sheet Number: {SheetNumber}, Sheet Name: {SheetName}, Revisions on Sheet: {string.Join("; ", RevisionsOnSheet)}, Document Properties: {string.Join("; ", DocumentProperties)}";
+            return $"Sheet Number: {SheetNumber}, Sheet Name: {SheetName}, Revisions on Sheet: {string.Join("; \n", RevisionsOnSheet)}, Document Properties: {string.Join("; \n", DocumentProperties)}";
         }
     }
 }

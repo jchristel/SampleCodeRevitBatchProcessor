@@ -1,0 +1,45 @@
+duHast.Revit.Revisions.Objects.Storage package
+==============================================
+
+Submodules
+----------
+
+duHast.Revit.Revisions.Objects.Storage.revision\_by\_sheet\_storage\_alphanumeric module
+----------------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Revisions.Objects.Storage.revision_by_sheet_storage_alphanumeric
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Revisions.Objects.Storage.revision\_by\_sheet\_storage\_base module
+--------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Revisions.Objects.Storage.revision_by_sheet_storage_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Revisions.Objects.Storage.revision\_by\_sheet\_storage\_none module
+--------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Revisions.Objects.Storage.revision_by_sheet_storage_none
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Revisions.Objects.Storage.revision\_by\_sheet\_storage\_numeric module
+-----------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Revisions.Objects.Storage.revision_by_sheet_storage_numeric
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.Revisions.Objects.Storage
+   :members:
+   :undoc-members:
+   :show-inheritance:

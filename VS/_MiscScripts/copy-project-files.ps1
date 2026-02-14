@@ -8,6 +8,8 @@ $project4Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProces
 $project5Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager\duHastNet.docs"
 $project6Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastUI\DocManagerSettingsUI"
 
+$project7Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastUtils\Utils"
+
 
 # Define the temp folder destination
 $tempFolder = "$env:TEMP\ProjectFilesCopy"
@@ -87,8 +89,11 @@ function Copy-ProjectFiles {
 # Write-Host "`nCopying files from Project 5..." -ForegroundColor White
 # Copy-ProjectFiles -sourcePath $project5Path -projectName "Project5" -destination $tempFolder
 
-Write-Host "`nCopying files from Project 6..." -ForegroundColor White
-Copy-ProjectFiles -sourcePath $project6Path -projectName "Project6" -destination $tempFolder
+# Write-Host "`nCopying files from Project 6..." -ForegroundColor White
+# Copy-ProjectFiles -sourcePath $project6Path -projectName "Project6" -destination $tempFolder
+
+Write-Host "`nCopying files from Project 7..." -ForegroundColor White
+Copy-ProjectFiles -sourcePath $project7Path -projectName "Project7" -destination $tempFolder
 
 Write-Host "`nAll files copied successfully to: $tempFolder" -ForegroundColor Green
 Write-Host "Opening destination folder..." -ForegroundColor Gray

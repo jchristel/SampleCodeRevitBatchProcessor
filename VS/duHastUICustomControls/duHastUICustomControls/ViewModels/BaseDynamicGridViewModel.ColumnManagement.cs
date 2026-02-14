@@ -1,75 +1,27 @@
 using duHastNet.UI.CustomControls.CustomDataGrid;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace duHastNet.Utils.WPF.ViewModels
 {
+    /// <summary>
+    /// Helper methods for column management in BaseDynamicGridViewModel.
+    /// Command implementations have been moved to BaseDynamicGridViewModel_Commands.cs.
+    /// This file contains only the helper/utility methods used by those commands.
+    /// </summary>
     public abstract partial class BaseDynamicGridViewModel<TData>
-    where TData : DynamicRowData, new()
+        where TData : DynamicRowData, new()
     {
-        #region Column Management
+        #region Column Management Helper Methods
 
-        public virtual void AddSelectedColumn(string propertyName)
-        {
-            if (string.IsNullOrEmpty(propertyName)) return;
+        // NOTE: Command methods (AddSelectedColumn, RemoveColumn, ToggleColumnLock, ClearData)
+        // have been moved to BaseDynamicGridViewModel_Commands.cs with [RelayCommand] attributes.
+        // This file now contains only the helper methods used by those commands.
 
-            var availableColumn = AvailableColumns.FirstOrDefault(c => c.PropertyName == propertyName);
-            if (availableColumn == null) return;
-
-            // Check if column already exists
-            if (ColumnDefinitions.Any(c => c.PropertyName == propertyName)) return;
-
-            var newColumn = new DynamicColumnDefinition(
-                availableColumn.PropertyName,
-                availableColumn.DisplayName,
-                availableColumn.DataType)
-            {
-                Width = GetDefaultWidthForType(availableColumn.DataType),
-                IsReadOnly = GetDefaultReadOnlyForColumn(availableColumn.PropertyName)
-            };
-
-            ColumnDefinitions.Add(newColumn);
-
-            // Use RestoreOrSetDefaultColumnData to make sure original data is re-instanted
-            RestoreOrSetDefaultColumnData(propertyName, availableColumn);
-
-            OnPropertyChanged(nameof(AvailableColumnsToAdd));
-        }
-
-        public virtual void RemoveColumn(string propertyName)
-        {
-            if (string.IsNullOrEmpty(propertyName)) return;
-
-            if (propertyName.Equals("last", StringComparison.OrdinalIgnoreCase))
-            {
-                RemoveLastColumn();
-                return;
-            }
-
-            var columnToRemove = ColumnDefinitions.FirstOrDefault(c => c.PropertyName == propertyName);
-            if (columnToRemove != null)
-            {
-
-                // Store the data before removing it
-                StoreRemovedColumnData(propertyName);
-
-                ColumnDefinitions.Remove(columnToRemove);
-
-                // Remove data from all rows
-                foreach (var row in Data)
-                {
-                    if (row.Values.ContainsKey(propertyName))
-                    {
-                        row.Values.Remove(propertyName);
-                    }
-                }
-
-                OnPropertyChanged(nameof(AvailableColumnsToAdd));
-            }
-        }
-
+        /// <summary>
+        /// Stores data from a column before it's removed, allowing restoration if the column is added back.
+        /// Called by RemoveColumn command.
+        /// </summary>
         private void StoreRemovedColumnData(string propertyName)
         {
             var columnData = new Dictionary<int, object>();
@@ -85,7 +37,13 @@ namespace duHastNet.Utils.WPF.ViewModels
             _removedColumnData[propertyName] = columnData;
         }
 
-        // protected virtual so it can be overriden in inehrited class!!
+        /// <summary>
+        /// Restores previously stored column data, or sets default values for a newly added column.
+        /// Protected virtual so it can be overridden in inherited classes.
+        /// Called by AddSelectedColumn command.
+        /// </summary>
+        /// <param name="propertyName">The property name of the column being restored/initialized</param>
+        /// <param name="availableColumn">The column definition containing metadata</param>
         protected virtual void RestoreOrSetDefaultColumnData(string propertyName, AvailableColumnDefinition availableColumn)
         {
             if (_removedColumnData.ContainsKey(propertyName))
@@ -119,19 +77,19 @@ namespace duHastNet.Utils.WPF.ViewModels
             }
         }
 
-        public virtual void ClearData()
-        {
-            Data.Clear();
-            // Also clear stored column data since rows are gone
-            _removedColumnData.Clear();
-        }
-
-        // Add this method to clear stored data when you want a fresh start
+        /// <summary>
+        /// Clears all stored column data that was saved when columns were removed.
+        /// Useful when you want a fresh start without restoring old column values.
+        /// </summary>
         public virtual void ClearStoredColumnData()
         {
             _removedColumnData.Clear();
         }
 
+        /// <summary>
+        /// Removes the last column from the grid.
+        /// Called by RemoveColumn command when parameter is "last".
+        /// </summary>
         public virtual void RemoveLastColumn()
         {
             if (ColumnDefinitions.Count > 0)
@@ -141,16 +99,11 @@ namespace duHastNet.Utils.WPF.ViewModels
             }
         }
 
-        public virtual void ToggleColumnLock(string propertyName)
-        {
-            var column = ColumnDefinitions.FirstOrDefault(c => c.PropertyName == propertyName);
-            if (column != null)
-            {
-                column.IsReadOnly = !column.IsReadOnly;
-                RefreshGrid();
-            }
-        }
-
+        /// <summary>
+        /// Triggers a refresh of the grid by resetting the ColumnDefinitions property.
+        /// This forces the DataGrid to rebuild its columns.
+        /// Called by ToggleColumnLock command.
+        /// </summary>
         protected virtual void RefreshGrid()
         {
             // Trigger collection change to refresh the grid

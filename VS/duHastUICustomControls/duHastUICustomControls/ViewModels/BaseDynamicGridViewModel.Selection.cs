@@ -1,35 +1,33 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.UI.CustomControls.CustomDataGrid;
-using duHastNet.Utils.WPF.Commands;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Input;
 
 namespace duHastNet.Utils.WPF.ViewModels
-
 {
+    /// <summary>
+    /// Selection functionality for BaseDynamicGridViewModel.
+    /// Provides single and multi-selection support with commands.
+    /// </summary>
     public abstract partial class BaseDynamicGridViewModel<TData>
-    where TData : DynamicRowData, new()
+        where TData : DynamicRowData, new()
     {
         #region Selection Properties
 
-        private TData _selectedItem;
-        private ObservableCollection<TData> _selectedItems;
-
         /// <summary>
-        /// The currently selected item (for single selection mode)
+        /// The currently selected item (for single selection mode).
+        /// Generated property with automatic change notification.
         /// </summary>
-        public TData SelectedItem
-        {
-            get => _selectedItem;
-            set
-            {
-                _selectedItem = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(HasSelection));
-                OnSelectionChanged();
-            }
-        }
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(HasSelection))]
+        [NotifyCanExecuteChangedFor(nameof(DeleteSelectedCommand))]
+        [NotifyCanExecuteChangedFor(nameof(ProcessSelectedCommand))]
+        [NotifyCanExecuteChangedFor(nameof(ClearSelectionCommand))]
+        private TData _selectedItem;
+
+        private ObservableCollection<TData> _selectedItems;
 
         /// <summary>
         /// Collection of selected items (for extended/multiple selection mode)
@@ -68,14 +66,69 @@ namespace duHastNet.Utils.WPF.ViewModels
         /// </summary>
         public int SelectionCount => SelectedItems?.Count ?? (SelectedItem != null ? 1 : 0);
 
+        /// <summary>
+        /// Partial method called when SelectedItem changes.
+        /// Used to trigger selection-related side effects.
+        /// </summary>
+        partial void OnSelectedItemChanged(TData value)
+        {
+            OnSelectionChanged();
+        }
+
         #endregion
 
         #region Selection Commands
 
-        public ICommand DeleteSelectedCommand { get; }
-        public ICommand ProcessSelectedCommand { get; }
-        public ICommand SelectAllCommand { get; }
-        public ICommand ClearSelectionCommand { get; }
+        /// <summary>
+        /// Command to delete all selected rows.
+        /// Generated command name: DeleteSelectedCommand
+        /// Can only execute when HasSelection is true.
+        /// </summary>
+        [RelayCommand(CanExecute = nameof(HasSelection))]
+        private void DeleteSelected()
+        {
+            var selectedRows = GetSelectedRows().ToList(); // Create a copy to avoid collection modification issues
+
+            foreach (var row in selectedRows)
+            {
+                Data.Remove(row);
+            }
+
+            ClearSelection();
+        }
+
+        /// <summary>
+        /// Command to process selected rows.
+        /// Generated command name: ProcessSelectedCommand
+        /// Can only execute when HasSelection is true.
+        /// Override ProcessSelectedRows() in derived classes for custom logic.
+        /// </summary>
+        [RelayCommand(CanExecute = nameof(HasSelection))]
+        private void ProcessSelected()
+        {
+            ProcessSelectedRows();
+        }
+
+        /// <summary>
+        /// Command to select all rows.
+        /// Generated command name: SelectAllCommand
+        /// </summary>
+        [RelayCommand]
+        private void SelectAll()
+        {
+            SelectAllRows();
+        }
+
+        /// <summary>
+        /// Command to clear the current selection.
+        /// Generated command name: ClearSelectionCommand
+        /// Can only execute when HasSelection is true.
+        /// </summary>
+        [RelayCommand(CanExecute = nameof(HasSelection))]
+        private void ClearSelectionCommand()
+        {
+            ClearSelection();
+        }
 
         #endregion
 
@@ -85,6 +138,12 @@ namespace duHastNet.Utils.WPF.ViewModels
         {
             OnPropertyChanged(nameof(HasSelection));
             OnPropertyChanged(nameof(SelectionCount));
+
+            // Notify commands that their CanExecute state may have changed
+            DeleteSelectedCommand.NotifyCanExecuteChanged();
+            ProcessSelectedCommand.NotifyCanExecuteChanged();
+            ClearSelectionCommand.NotifyCanExecuteChanged();
+
             OnSelectionChanged();
         }
 
@@ -95,11 +154,6 @@ namespace duHastNet.Utils.WPF.ViewModels
         {
             // Base implementation - derived classes can override for custom behavior
             System.Diagnostics.Debug.WriteLine($"Selection changed: {SelectionCount} items selected");
-
-            // Refresh command states
-            ((RelayCommand)DeleteSelectedCommand).RaiseCanExecuteChanged();
-            ((RelayCommand)ProcessSelectedCommand).RaiseCanExecuteChanged();
-            ((RelayCommand)ClearSelectionCommand).RaiseCanExecuteChanged();
         }
 
         #endregion
@@ -184,22 +238,8 @@ namespace duHastNet.Utils.WPF.ViewModels
         #region Selection Command Implementations
 
         /// <summary>
-        /// Deletes all selected rows. Override in derived classes for custom validation.
-        /// </summary>
-        protected virtual void DeleteSelectedRows()
-        {
-            var selectedRows = GetSelectedRows().ToList(); // Create a copy to avoid collection modification issues
-
-            foreach (var row in selectedRows)
-            {
-                Data.Remove(row);
-            }
-
-            ClearSelection();
-        }
-
-        /// <summary>
         /// Process selected rows. Override in derived classes for application-specific logic.
+        /// Called by ProcessSelectedCommand.
         /// </summary>
         protected virtual void ProcessSelectedRows()
         {

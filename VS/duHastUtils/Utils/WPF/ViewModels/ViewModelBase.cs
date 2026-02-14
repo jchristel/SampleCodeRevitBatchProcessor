@@ -23,27 +23,37 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using duHastNet.Utils.WPF.Interfaces;
+using System;
 using System.Collections.Generic;
 
 namespace duHastNet.Utils.WPF.ViewModels
 {
     /// <summary>
-    /// Base class for ViewModels using Community Toolkit
+    /// Base class for ViewModels using Community Toolkit.
+    /// Provides automatic hierarchical cleanup via ICloseable and IDisposable patterns.
     /// </summary>
-    public partial class ViewModelBase : ObservableObject, ICloseable
+    public partial class ViewModelBase : ObservableObject, ICloseable, IDisposable
     {
         #region ICloseable
 
         /// <summary>
-        /// list of nested view models
+        /// List of child ViewModels that will be automatically cleaned up
         /// </summary>
         protected List<ICloseable> _childViewModels = new List<ICloseable>();
 
+        /// <summary>
+        /// Registers a child ViewModel for automatic cleanup when this ViewModel closes
+        /// </summary>
+        /// <param name="child">The child ViewModel to register</param>
         protected void RegisterChild(ICloseable child)
         {
             _childViewModels.Add(child);
         }
 
+        /// <summary>
+        /// Called when the ViewModel is being navigated away from or closed.
+        /// Performs UI-related cleanup and propagates to child ViewModels.
+        /// </summary>
         public virtual void OnClosing()
         {
             // Close all children first
@@ -54,8 +64,31 @@ namespace duHastNet.Utils.WPF.ViewModels
             _childViewModels.Clear();
         }
 
+        #endregion
+
+        #region IDisposable
+
+        private bool _disposed = false;
+
+        /// <summary>
+        /// Disposes of resources used by this ViewModel.
+        /// Propagates disposal to child ViewModels that implement IDisposable.
+        /// </summary>
         public virtual void Dispose()
         {
+            if (_disposed)
+                return;
+
+            // Dispose child ViewModels that implement IDisposable
+            foreach (var child in _childViewModels)
+            {
+                if (child is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+            }
+
+            _disposed = true;
         }
 
         #endregion

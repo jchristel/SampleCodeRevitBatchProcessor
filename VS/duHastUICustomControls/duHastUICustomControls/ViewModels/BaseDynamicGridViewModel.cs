@@ -1,4 +1,5 @@
-﻿using duHastNet.Utils.WPF.Commands;
+using CommunityToolkit.Mvvm.Input;
+using duHastNet.Utils.WPF.ViewModels;
 using duHastNet.Utils.WPF.Interfaces;
 using duHastNet.Utils.WPF.Stores;
 using duHastNet.UI.CustomControls.CustomDataGrid;
@@ -6,15 +7,18 @@ using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
 namespace duHastNet.Utils.WPF.ViewModels
 {
-    public abstract partial class BaseDynamicGridViewModel<TData> : INotifyPropertyChanged, ICloseable, IGridStateSupport
-    where TData : DynamicRowData, new()
+    /// <summary>
+    /// Base class for dynamic grid ViewModels providing common grid functionality
+    /// including column management, row operations, selection, and state persistence.
+    /// </summary>
+    /// <typeparam name="TData">The type of data rows in the grid, must derive from DynamicRowData</typeparam>
+    public abstract partial class BaseDynamicGridViewModel<TData> : ViewModelBase, IGridStateSupport
+        where TData : DynamicRowData, new()
     {
         #region Private Fields for State Management
 
@@ -26,6 +30,8 @@ namespace duHastNet.Utils.WPF.ViewModels
 
         #endregion
 
+        #region Constructor
+
         protected BaseDynamicGridViewModel(StateStore stateStore = null)
         {
             _stateStore = stateStore;
@@ -34,22 +40,8 @@ namespace duHastNet.Utils.WPF.ViewModels
             ColumnDefinitions = [];
             Data = [];
 
-            // Initialize commands
-            AddRowCommand = new RelayCommand(_ => AddRow());
-            RemoveRowCommand = new RelayCommand(param => RemoveRow(param));
-            AddSelectedColumnCommand = new RelayCommand(param => AddSelectedColumn(param?.ToString()));
-            RemoveColumnCommand = new RelayCommand(param => RemoveColumn(param?.ToString()));
-            ToggleColumnLockCommand = new RelayCommand(param => ToggleColumnLock(param?.ToString()));
-            ClearDataCommand = new RelayCommand(_ => ClearData());
-
             // Initialize available columns (derived classes override this)
             InitializeAvailableColumns();
-
-            // Initialize selection commands
-            DeleteSelectedCommand = new RelayCommand(_ => DeleteSelectedRows(), _ => HasSelection);
-            ProcessSelectedCommand = new RelayCommand(_ => ProcessSelectedRows(), _ => HasSelection);
-            SelectAllCommand = new RelayCommand(_ => SelectAllRows());
-            ClearSelectionCommand = new RelayCommand(_ => ClearSelection(), _ => HasSelection);
 
             // Initialize selected items collection
             SelectedItems = [];
@@ -57,6 +49,8 @@ namespace duHastNet.Utils.WPF.ViewModels
             // Load saved state after everything is initialized
             LoadSavedStateIfExists();
         }
+
+        #endregion
 
         #region Abstract Methods - Must be implemented by derived classes
 
@@ -114,22 +108,14 @@ namespace duHastNet.Utils.WPF.ViewModels
 
         #endregion
 
-        #region INotifyPropertyChanged
+        #region ICloseable Implementation
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        /// <summary>
+        /// Called when the ViewModel is being closed or navigated away from.
+        /// Saves current state and performs cleanup.
+        /// </summary>
+        public override void OnClosing()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
-
-        #region ICloseable
-
-        public virtual void OnClosing()
-        {
-            // In DocumentSelectionViewModel.OnClosing()
             System.Diagnostics.Debug.WriteLine("GridViewModel.OnClosing() called");
 
             // Save current state before closing
@@ -151,8 +137,51 @@ namespace duHastNet.Utils.WPF.ViewModels
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine($"No NavigationStore available for {GetGridStateId()} on closing");
+                System.Diagnostics.Debug.WriteLine($"No StateStore available for {GetGridStateId()} on closing");
             }
+
+            // Call base to cleanup any registered child ViewModels
+            base.OnClosing();
+        }
+
+        #endregion
+
+        #region IDisposable Implementation
+
+        private bool _disposed = false;
+
+        /// <summary>
+        /// Disposes of resources used by this ViewModel.
+        /// Override this method in derived classes to dispose of specific resources.
+        /// </summary>
+        public override void Dispose()
+        {
+            if (_disposed)
+                return;
+
+            System.Diagnostics.Debug.WriteLine($"GridViewModel.Dispose() called for {GetGridStateId()}");
+
+            // Dispose managed resources
+            DisposeManaged();
+
+            // Clear references
+            _stateStore = null;
+            _associatedDataGrid = null;
+
+            _disposed = true;
+
+            // Call base to dispose any child ViewModels that implement IDisposable
+            base.Dispose();
+        }
+
+        /// <summary>
+        /// Override this method in derived classes to dispose of specific managed resources
+        /// (event subscriptions, timers, etc.)
+        /// </summary>
+        protected virtual void DisposeManaged()
+        {
+            // Base implementation has no resources to dispose
+            // Derived classes can override to clean up their specific resources
         }
 
         #endregion

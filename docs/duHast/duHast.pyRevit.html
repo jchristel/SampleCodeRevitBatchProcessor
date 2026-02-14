@@ -272,8 +272,57 @@
 <section id="module-duHast.pyRevit.net_dll_loader">
 <span id="duhast-pyrevit-net-dll-loader-module"></span><h2>duHast.pyRevit.net_dll_loader module<a class="headerlink" href="#module-duHast.pyRevit.net_dll_loader" title="Permalink to this heading">¶</a></h2>
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.pyRevit.net_dll_loader.get_bin_path">
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.net_dll_loader.</span></span><span class="sig-name descname"><span class="pre">get_bin_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bin_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.net_dll_loader.get_bin_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the path to the bin directory of the extension. If a bin directory is provided, it will be used. Otherwise, the function will look for bin directories in the sys.path and return the shortest one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bin_directory</strong> (<em>str</em><em> or </em><em>None</em>) – Optional path to the bin directory. If not provided, the function will search for bin directories in sys.path.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object with status, message, and list of bin paths found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.pyRevit.net_dll_loader.find_dll_path">
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.net_dll_loader.</span></span><span class="sig-name descname"><span class="pre">find_dll_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dll_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_match</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.net_dll_loader.find_dll_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find DLL path based on exact or startswith matching.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dll_name</strong> – Name of the DLL to find (e.g., “MyLibrary.dll”)</p></li>
+<li><p><strong>bin_path</strong> – Directory to search for the DLL</p></li>
+<li><p><strong>exact_match</strong> – If True, looks for an exact match of dll_name. If False, looks for files that start with dll_name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Full path to the DLL if found, otherwise None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.pyRevit.net_dll_loader.is_assembly_loaded">
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.net_dll_loader.</span></span><span class="sig-name descname"><span class="pre">is_assembly_loaded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">assembly_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.net_dll_loader.is_assembly_loaded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if an assembly with the given name is already loaded</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>assembly_name</strong> – Name of the assembly to check (e.g., “MyLibrary”)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if assembly is loaded, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.pyRevit.net_dll_loader.load_net_dll_path">
-<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.net_dll_loader.</span></span><span class="sig-name descname"><span class="pre">load_net_dll_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dlls_to_load</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.net_dll_loader.load_net_dll_path" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.net_dll_loader.</span></span><span class="sig-name descname"><span class="pre">load_net_dll_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dlls_to_load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_match</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.net_dll_loader.load_net_dll_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads dlls from the libs folder of the duHast extension.
 Useful if a dll is not loaded through the startup script of a pyRevit extension.</p>
 <p>expects the bin folder to be in the sys.path
@@ -288,6 +337,72 @@ YourExtension.extensionbin</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.pyRevit.net_dll_loader.get_specific_path">
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.net_dll_loader.</span></span><span class="sig-name descname"><span class="pre">get_specific_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endswith</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.net_dll_loader.get_specific_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract path up to and including target folder.</p>
+<dl>
+<dt>Args:</dt><dd><p>full_path: Full file or directory path
+target_folder: Folder name to search for (e.g., ‘lib’)
+endswith: If True, match folders ending with target_folder.</p>
+<blockquote>
+<div><p>If False (default), exact match only.</p>
+</div></blockquote>
+</dd>
+<dt>Returns:</dt><dd><p>Path ending with target_folder + ‘' or None if target_folder not found</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.pyRevit.net_dll_loader.get_extension_path">
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.net_dll_loader.</span></span><span class="sig-name descname"><span class="pre">get_extension_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.net_dll_loader.get_extension_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract path up to and including ‘lib’ directory.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>full_path: Full file or directory path</p>
+</dd>
+<dt>Returns:</dt><dd><p>Path ending with ‘lib’ or None if ‘lib’ not found</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.pyRevit.net_dll_loader.get_lib_path">
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.net_dll_loader.</span></span><span class="sig-name descname"><span class="pre">get_lib_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.net_dll_loader.get_lib_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract path up to and including ‘lib’ directory.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>full_path: Full file or directory path</p>
+</dd>
+<dt>Returns:</dt><dd><p>Path ending with ‘lib’ or None if ‘lib’ not found</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.pyRevit.net_dll_loader.is_bin_after_extension">
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.net_dll_loader.</span></span><span class="sig-name descname"><span class="pre">is_bin_after_extension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.net_dll_loader.is_bin_after_extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if bin folder comes directly after a folder ending with .extension</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path: Full directory path</p>
+</dd>
+<dt>Returns:</dt><dd><p>True if bin is directly after .extension folder</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.pyRevit.net_dll_loader.get_bin_path_from_script_path_within_extension">
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.net_dll_loader.</span></span><span class="sig-name descname"><span class="pre">get_bin_path_from_script_path_within_extension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">script_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.net_dll_loader.get_bin_path_from_script_path_within_extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the path to the bin directory based on the location of the script folder.
+Assumes that the bin folder is located in the root of the extension and that the script folder is located somewhere within the extension.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>script_folder: Full path to the folder where the script is located</p>
+</dd>
+<dt>Returns:</dt><dd><p>Path to the bin directory if found, otherwise None</p>
 </dd>
 </dl>
 </dd></dl>

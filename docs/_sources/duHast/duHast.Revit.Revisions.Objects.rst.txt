@@ -1,0 +1,18 @@
+duHast.Revit.Revisions.Objects package
+======================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.Revit.Revisions.Objects.Storage
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.Revisions.Objects
+   :members:
+   :undoc-members:
+   :show-inheritance:

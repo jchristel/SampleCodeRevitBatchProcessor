@@ -197,6 +197,27 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.get_all_curtain_wall_panels_in_model">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Walls.curtain_wall_elements.</span></span><span class="sig-name descname"><span class="pre">get_all_curtain_wall_panels_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.get_all_curtain_wall_panels_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a filtered element collector of all curtain wall elements in the model:</p>
+<p>Filters by category.</p>
+<ul class="simple">
+<li><p>curtain wall panels</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A filtered element collector containing curtain wall elements.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.get_all_curtain_wall_element_types_by_category">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Walls.curtain_wall_elements.</span></span><span class="sig-name descname"><span class="pre">get_all_curtain_wall_element_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.get_all_curtain_wall_element_types_by_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a filtered element collector of all curtain wall element types in the model:</p>
@@ -344,6 +365,23 @@ TODO: This code repeats across a number of modules. Use generic instead!</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.get_zero_area_system_panels_in_model">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Walls.curtain_wall_elements.</span></span><span class="sig-name descname"><span class="pre">get_zero_area_system_panels_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.get_zero_area_system_panels_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all system panel instances in the model that have zero area.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary containing key: system panel type name, value: list of ids with zero area.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dic { str: [int]}</p>
 </dd>
 </dl>
 </dd></dl>

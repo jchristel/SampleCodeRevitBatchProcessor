@@ -1,0 +1,21 @@
+duHast.Revit.Revisions.Utility package
+======================================
+
+Submodules
+----------
+
+duHast.Revit.Revisions.Utility.revision\_storage\_factory module
+----------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Revisions.Utility.revision_storage_factory
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.Revisions.Utility
+   :members:
+   :undoc-members:
+   :show-inheritance:

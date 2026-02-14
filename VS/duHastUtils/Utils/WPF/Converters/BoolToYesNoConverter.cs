@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -21,43 +21,28 @@
 //
 //
 
-using System.Collections.Generic;
-using System.Linq;
+using System;
+using System.Globalization;
+using System.Windows.Data;
 
-namespace duHastNet.Utils.WPF.Stores
+namespace duHastNet.Utils.WPF.Converters;
+
+/// <summary>
+/// Converts a boolean value to "Yes" or "No" text
+/// </summary>
+public class BoolToYesNoConverter : IValueConverter
 {
-    public class MessageTypesUtils
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Combines multiple message types into a single message type by counting the number of each type and returning the highest priority type.
-        /// </summary>
-        public static MessageTypes CombineMessageType(List<MessageTypes> messageTypes)
+        if (value is bool boolValue)
         {
-            //count the number of each message type
-            int infoCount = messageTypes.Count(x => x == MessageTypes.Information);
-            int errorCount = messageTypes.Count(x => x == MessageTypes.Error);
-            int logCount = messageTypes.Count(x => x == MessageTypes.Warning);
-
-            //if there are any errors, return error
-            if (errorCount > 0)
-            {
-                return MessageTypes.Error;
-            }
-            // if there are no errors but info messages, return info
-            else if (infoCount > 0)
-            {
-                return MessageTypes.Information;
-            }
-            // if there are no errors or info messages but log messages, return log
-            else if (logCount > 0)
-            {
-                return MessageTypes.Warning;
-            }
-            // if there are no errors, info or log messages, return information
-            else
-            {
-                return MessageTypes.Information;
-            }
+            return boolValue ? "Yes" : "No";
         }
+        return "N/A";
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

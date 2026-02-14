@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -21,43 +21,38 @@
 //
 //
 
-using System.Collections.Generic;
-using System.Linq;
 
-namespace duHastNet.Utils.WPF.Stores
+using System;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
+
+namespace duHastNet.Utils.WPF.Converters
 {
-    public class MessageTypesUtils
+    /// <summary>
+    /// Converter that inverts a boolean value and converts to Visibility
+    /// True → Collapsed, False → Visible
+    /// </summary>
+    public class InverseBoolToVisibilityConverter : IValueConverter
     {
-        /// <summary>
-        /// Combines multiple message types into a single message type by counting the number of each type and returning the highest priority type.
-        /// </summary>
-        public static MessageTypes CombineMessageType(List<MessageTypes> messageTypes)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            //count the number of each message type
-            int infoCount = messageTypes.Count(x => x == MessageTypes.Information);
-            int errorCount = messageTypes.Count(x => x == MessageTypes.Error);
-            int logCount = messageTypes.Count(x => x == MessageTypes.Warning);
+            if (value is bool boolValue)
+            {
+                return boolValue ? Visibility.Collapsed : Visibility.Visible;
+            }
 
-            //if there are any errors, return error
-            if (errorCount > 0)
+            return Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is Visibility visibility)
             {
-                return MessageTypes.Error;
+                return visibility != Visibility.Visible;
             }
-            // if there are no errors but info messages, return info
-            else if (infoCount > 0)
-            {
-                return MessageTypes.Information;
-            }
-            // if there are no errors or info messages but log messages, return log
-            else if (logCount > 0)
-            {
-                return MessageTypes.Warning;
-            }
-            // if there are no errors, info or log messages, return information
-            else
-            {
-                return MessageTypes.Information;
-            }
+
+            return false;
         }
     }
 }

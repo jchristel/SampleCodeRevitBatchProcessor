@@ -1,9 +1,4 @@
 ﻿//
-//License:
-//
-//
-// Revit Batch Processor Sample Code
-//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -21,30 +16,30 @@
 //
 //
 
-using System;
-using System.Windows;
-using System.Windows.Data;
+namespace duHastNet.Utils.WPF.Views;
 
-namespace duHastNet.Utils.WPF.Converters
+public partial class GlobalMessageView : System.Windows.Controls.UserControl
 {
-    public class InverseBooleanToVisibilityConverter : IValueConverter
+    public GlobalMessageView()
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        InitializeComponent();
+    }
+
+    private void MessageBorder_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        // Pause timer when hovering
+        if (DataContext is ViewModels.GlobalMessageViewModel vm)
         {
-            if (value is bool boolValue && boolValue)
-            {
-                return Visibility.Collapsed;
-            }
-            else
-            {
-                return Visibility.Visible;
-            }
-        }
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotImplementedException();
+            vm.PauseTimerCommand.Execute(null);
         }
     }
 
+    private void MessageBorder_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        // Resume timer when mouse leaves
+        if (DataContext is ViewModels.GlobalMessageViewModel vm)
+        {
+            vm.ResumeTimerCommand.Execute(null);
+        }
+    }
 }
-

@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -21,25 +21,38 @@
 //
 //
 
+
 using System;
-using System.Windows.Input;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
 
-namespace duHastNet.Utils.WPF.Commands
+namespace duHastNet.Utils.WPF.Converters
 {
-    public abstract class CommandBase : ICommand
+    /// <summary>
+    /// Converter that converts a boolean value to Visibility
+    /// True → Visible, False → Collapsed
+    /// </summary>
+    public class BoolToVisibilityConverter : IValueConverter
     {
-        public event EventHandler CanExecuteChanged;
-
-        public virtual bool CanExecute(object parameter)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return true;
+            if (value is bool boolValue)
+            {
+                return boolValue ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            return Visibility.Collapsed;
         }
 
-        public abstract void Execute(object parameter);
-
-        protected void OnCanExecutedChanged()
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            CanExecuteChanged?.Invoke(this, new EventArgs());
+            if (value is Visibility visibility)
+            {
+                return visibility == Visibility.Visible;
+            }
+
+            return false;
         }
     }
 }

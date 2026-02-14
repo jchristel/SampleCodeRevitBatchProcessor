@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -22,48 +22,101 @@
 //
 
 
-using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using duHastNet.Utils.WPF.Interfaces;
+using duHastNet.Utils.WPF.Stores;
 
-namespace duHastNet.Utils.WPF.ViewModels
+using System.ComponentModel;
+using System;
+
+namespace duHastNet.Utils.WPF.ViewModels;
+
+public partial class GlobalMessageViewModel : ObservableObject, ICloseable, IDisposable
 {
-    public class GlobalMessageViewModel : ViewModelBase
+    private readonly IMessageStore _messageStore;
+
+    public string CurrentMessage => _messageStore.CurrentMessage;
+    public bool IsErrorMessage => _messageStore.CurrentMessageType == MessageTypes.Error;
+    public bool IsInformationMessage => _messageStore.CurrentMessageType == MessageTypes.Information;
+    public bool IsWarningMessage => _messageStore.CurrentMessageType == MessageTypes.Warning;
+    public bool HasMessage => _messageStore.HasCurrentMessage;
+    public double ProgressPercentage => _messageStore.ProgressPercentage;
+    public bool IsTimerActive => _messageStore.IsTimerActive;
+    public int PendingMessageCount => _messageStore.PendingMessageCount;
+    public bool HasPendingMessages => _messageStore.HasPendingMessages;
+
+    [RelayCommand]
+    private void ClearMessage()
     {
-        private readonly Stores.MessageStore _messageStore;
+        _messageStore.ClearCurrentMessage();
+    }
 
-        public string CurrentMessage => _messageStore.CurrentMessage;
-        public bool IsErrorMessage => _messageStore.CurrentMessageType == Stores.MessageTypes.Error;
-        public bool IsInformationMessage => _messageStore.CurrentMessageType == Stores.MessageTypes.Information;
-        public bool HasMessage => _messageStore.HasCurrentMessage;
+    [RelayCommand]
+    private void PauseTimer()
+    {
+        _messageStore.PauseDismissTimer();
+    }
 
+    [RelayCommand]
+    private void ResumeTimer()
+    {
+        _messageStore.ResumeDismissTimer(5); // Resume with default 5 seconds
+    }
 
-        public ICommand ClearMessageCommand { get; }
-
-
-        private void MessageStore_CurrentMessageChanged()
+    private void OnStorePropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        // Forward all property changes from store to ViewModel
+        if (e.PropertyName == nameof(_messageStore.CurrentMessage))
         {
             OnPropertyChanged(nameof(CurrentMessage));
             OnPropertyChanged(nameof(HasMessage));
         }
-
-        private void MessageStore_CurrentMessageTypeChanged()
+        else if (e.PropertyName == nameof(_messageStore.CurrentMessageType))
         {
             OnPropertyChanged(nameof(IsErrorMessage));
             OnPropertyChanged(nameof(IsInformationMessage));
+            OnPropertyChanged(nameof(IsWarningMessage));
         }
-
-        public override void OnClosing()
+        else if (e.PropertyName == nameof(_messageStore.ProgressPercentage))
         {
-            _messageStore.CurrentMessageChanged -= MessageStore_CurrentMessageChanged;
-            _messageStore.CurrentMessageTypeChanged -= MessageStore_CurrentMessageTypeChanged;
+            OnPropertyChanged(nameof(ProgressPercentage));
         }
-
-        public GlobalMessageViewModel(Stores.MessageStore messageStore)
+        else if (e.PropertyName == nameof(_messageStore.IsTimerActive))
         {
-            _messageStore = messageStore;
-            _messageStore.CurrentMessageChanged += MessageStore_CurrentMessageChanged;
-            _messageStore.CurrentMessageTypeChanged += MessageStore_CurrentMessageTypeChanged;
+            OnPropertyChanged(nameof(IsTimerActive));
+        }
+        else if (e.PropertyName == nameof(_messageStore.PendingMessageCount))
+        {
+            OnPropertyChanged(nameof(PendingMessageCount));
+            OnPropertyChanged(nameof(HasPendingMessages));
+        }
+    }
 
-            ClearMessageCommand = new Commands.ClearMessageCommand(_messageStore);
+    public GlobalMessageViewModel(IMessageStore messageStore)
+    {
+        _messageStore = messageStore;
+        
+        // Subscribe to property changes if the store implements INotifyPropertyChanged
+        if (_messageStore is INotifyPropertyChanged notifyPropertyChanged)
+        {
+            notifyPropertyChanged.PropertyChanged += OnStorePropertyChanged;
+        }
+    }
+
+    public void OnClosing()
+    {
+        // Save any message state if needed
+        // Stop any timers that should stop when navigating away
+        _messageStore.PauseDismissTimer();
+    }
+
+    public void Dispose()
+    {
+        // Unsubscribe from property changes if we subscribed
+        if (_messageStore is INotifyPropertyChanged notifyPropertyChanged)
+        {
+            notifyPropertyChanged.PropertyChanged -= OnStorePropertyChanged;
         }
     }
 }

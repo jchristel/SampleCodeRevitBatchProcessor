@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -21,26 +21,30 @@
 //
 //
 
-namespace duHastNet.Utils.WPF.Commands
+using System;
+using System.Globalization;
+using System.Windows.Data;
+
+namespace duHastNet.Utils.WPF.Converters;
+
+/// <summary>
+/// Converts a boolean value indicating whether number matches filename to a tooltip explanation
+/// </summary>
+public class NumberMatchesTooltipConverter : IValueConverter
 {
-    // Option 1: Use primary constructor (what IDE0290 suggests)
-    public class ClearMessageCommand(Stores.MessageStore messageStore) : CommandBase
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        private readonly Stores.MessageStore _messageStore = messageStore;
-
-        public override bool CanExecute(object parameter)
+        if (value is bool boolValue)
         {
-            return true;
+            return boolValue
+                ? "Document number matches filename (no modifier applied)"
+                : "Document number differs from filename (modifier applied based on file type)";
         }
+        return string.Empty;
+    }
 
-        public override void Execute(object parameter)
-        {
-            _messageStore.ClearCurrentMessage();
-        }
-
-        public void RaiseCanExecuteChanged()
-        {
-            OnCanExecutedChanged();
-        }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

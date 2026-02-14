@@ -43,9 +43,9 @@ namespace duHastNet.Utils.Logging
             return [.. Messages.Where(m => m.Item2 == Utils.WPF.Stores.MessageTypes.Information).Select(m => m.Item1)];
         }
 
-        public List<string> GetLogMessages()
+        public List<string> GetWarningMessages()
         {
-            return [.. Messages.Where(m => m.Item2 == Utils.WPF.Stores.MessageTypes.Log).Select(m => m.Item1)];
+            return [.. Messages.Where(m => m.Item2 == Utils.WPF.Stores.MessageTypes.Warning).Select(m => m.Item1)];
         }
 
         public List<(string, Utils.WPF.Stores.MessageTypes)> GetLogMessagesAndLogTypes()

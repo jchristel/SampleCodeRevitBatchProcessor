@@ -21,11 +21,20 @@
 //
 //
 
-
 namespace duHastNet.Utils.WPF.Interfaces
 {
-    public interface ICloseable
-    {
-        void OnClosing();
+    
+        /// <summary>
+        /// Interface for ViewModels that need to perform cleanup when being navigated away from
+        /// or when their associated view is closing
+        /// </summary>
+        public interface ICloseable
+        {
+            /// <summary>
+            /// Called when the ViewModel is being navigated away from or its view is closing.
+            /// Use this for UI-related cleanup like saving state, canceling operations, etc.
+            /// For resource cleanup (event unsubscription, disposal), implement IDisposable instead.
+            /// </summary>
+            void OnClosing();
+        }
     }
-}

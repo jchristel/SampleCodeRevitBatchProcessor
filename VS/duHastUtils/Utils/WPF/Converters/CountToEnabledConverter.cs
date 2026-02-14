@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -21,43 +21,33 @@
 //
 //
 
-using System.Collections.Generic;
-using System.Linq;
 
-namespace duHastNet.Utils.WPF.Stores
+using System;
+using System.Globalization;
+using System.Windows.Data;
+
+namespace duHastNet.Utils.WPF.Converters
 {
-    public class MessageTypesUtils
+    /// <summary>
+    /// Converter that converts a count to a boolean enabled/disabled state
+    /// Count > 0 → True (Enabled), Count = 0 → False (Disabled)
+    /// Useful for enabling controls only when a collection has items
+    /// </summary>
+    public class CountToEnabledConverter : IValueConverter
     {
-        /// <summary>
-        /// Combines multiple message types into a single message type by counting the number of each type and returning the highest priority type.
-        /// </summary>
-        public static MessageTypes CombineMessageType(List<MessageTypes> messageTypes)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            //count the number of each message type
-            int infoCount = messageTypes.Count(x => x == MessageTypes.Information);
-            int errorCount = messageTypes.Count(x => x == MessageTypes.Error);
-            int logCount = messageTypes.Count(x => x == MessageTypes.Warning);
+            if (value is int count)
+            {
+                return count > 0;
+            }
 
-            //if there are any errors, return error
-            if (errorCount > 0)
-            {
-                return MessageTypes.Error;
-            }
-            // if there are no errors but info messages, return info
-            else if (infoCount > 0)
-            {
-                return MessageTypes.Information;
-            }
-            // if there are no errors or info messages but log messages, return log
-            else if (logCount > 0)
-            {
-                return MessageTypes.Warning;
-            }
-            // if there are no errors, info or log messages, return information
-            else
-            {
-                return MessageTypes.Information;
-            }
+            return false;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException("ConvertBack is not supported for CountToEnabledConverter");
         }
     }
 }

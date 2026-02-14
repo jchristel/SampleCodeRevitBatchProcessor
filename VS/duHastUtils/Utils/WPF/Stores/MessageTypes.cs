@@ -25,8 +25,8 @@ namespace duHastNet.Utils.WPF.Stores
 {
     public enum MessageTypes
     {
-        Error,
         Information,
-        Log,
+        Error,
+        Warning
     }
 }

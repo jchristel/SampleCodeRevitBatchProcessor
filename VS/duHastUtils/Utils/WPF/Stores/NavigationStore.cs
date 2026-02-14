@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -21,76 +21,98 @@
 //
 //
 
-using duHastNet.Utils.WPF.Interfaces;
 using System;
+
+using CommunityToolkit.Mvvm.ComponentModel;
+using duHastNet.Utils.WPF.Interfaces;
 
 namespace duHastNet.Utils.WPF.Stores
 {
     /// <summary>
-    /// Pure navigation store - manages ViewModels and navigation without state management
+    /// Shared navigation store for use across Standalone and Revit-integrated versions
+    /// Manages ViewModels and navigation with state management
     /// </summary>
-    public class NavigationStore
+    public partial class NavigationStore : ObservableObject
     {
-        #region Private Fields
+        #region Observable Properties
 
-        private ViewModels.ViewModelBase _currentViewModel;
+        /// <summary>
+        /// Gets or sets the current ViewModel for navigation
+        /// </summary>
+        [ObservableProperty]
+        private ObservableObject? _currentViewModel;
 
         #endregion
 
-        #region Navigation Properties
+        #region Lifecycle Management
 
         /// <summary>
-        /// Gets or sets the current ViewModel (for navigation)
+        /// Called when CurrentViewModel is about to change
+        /// Handles cleanup of the previous ViewModel
         /// </summary>
-        public ViewModels.ViewModelBase CurrentViewModel
+        partial void OnCurrentViewModelChanging(ObservableObject? value)
         {
-            get => _currentViewModel;
-            set
+            // Call ICloseable.OnClosing() if implemented
+            if (CurrentViewModel is ICloseable closeable)
             {
-                _currentViewModel = value;
-                OnCurrentViewModelChanged();
+                System.Diagnostics.Debug.WriteLine(
+                    $"Calling OnClosing() on {CurrentViewModel.GetType().Name}");
+                closeable.OnClosing();
+            }
+
+            // Dispose if implementing IDisposable
+            if (CurrentViewModel is IDisposable disposable)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"Disposing {CurrentViewModel.GetType().Name}");
+                disposable.Dispose();
             }
         }
 
-        #endregion
-
-        #region Events
-
         /// <summary>
-        /// Fired when the current ViewModel changes (for navigation)
+        /// Called after CurrentViewModel has changed
+        /// Handles initialization of the new ViewModel
         /// </summary>
-        public event Action CurrentViewModelChanged;
-
-        #endregion
-
-        #region Navigation Methods
+        partial void OnCurrentViewModelChanged(ObservableObject? value)
+        {
+            // Call IActivatable.OnActivatedAsync() if implemented
+            if (CurrentViewModel is IActivatable activatable)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"Calling OnActivatedAsync() on {CurrentViewModel.GetType().Name}");
+                
+                // Fire and forget the async activation
+                // This allows navigation to complete immediately while activation runs in background
+                _ = activatable.OnActivatedAsync();
+            }
+        }
 
         /// <summary>
         /// Notify the current ViewModel that the application/window is closing
         /// </summary>
         public void NotifyClosing()
         {
-            System.Diagnostics.Debug.WriteLine("NavigationStore.NotifyClosing() called");
-            System.Diagnostics.Debug.WriteLine($"CurrentViewModel is: {_currentViewModel?.GetType().Name ?? "null"}");
-
-            if (_currentViewModel is ICloseable closeable)
+            if (CurrentViewModel is ICloseable closeable)
             {
-                System.Diagnostics.Debug.WriteLine($"Calling OnClosing() on {_currentViewModel.GetType().Name}");
                 closeable.OnClosing();
-                System.Diagnostics.Debug.WriteLine($"OnClosing() completed for {_currentViewModel.GetType().Name}");
             }
-            else
+
+            if (CurrentViewModel is IDisposable disposable)
             {
-                System.Diagnostics.Debug.WriteLine("CurrentViewModel does not implement ICloseable or is null");
+                disposable.Dispose();
             }
         }
 
+        #endregion
+
+        #region Navigation Methods
+
         /// <summary>
-        /// Navigates to a new ViewModel instance
+        /// Navigates to a new ViewModel instance using a factory
         /// </summary>
         /// <typeparam name="T">Type of ViewModel to navigate to</typeparam>
         /// <param name="viewModelFactory">Factory function to create the ViewModel</param>
-        public void NavigateTo<T>(Func<T> viewModelFactory) where T : ViewModels.ViewModelBase
+        public void NavigateTo<T>(Func<T> viewModelFactory) where T : ObservableObject
         {
             if (viewModelFactory == null)
                 throw new ArgumentNullException(nameof(viewModelFactory));
@@ -102,20 +124,10 @@ namespace duHastNet.Utils.WPF.Stores
         /// Navigates directly to a ViewModel instance
         /// </summary>
         /// <param name="viewModel">The ViewModel to navigate to</param>
-        public void NavigateTo(ViewModels.ViewModelBase viewModel)
+        public void NavigateTo(ObservableObject? viewModel)
         {
             CurrentViewModel = viewModel;
         }
-
-        /// <summary>
-        /// Checks if the navigation store currently has a ViewModel
-        /// </summary>
-        public bool HasCurrentViewModel => _currentViewModel != null;
-
-        /// <summary>
-        /// Gets the type of the current ViewModel (for debugging/logging)
-        /// </summary>
-        public Type CurrentViewModelType => _currentViewModel?.GetType();
 
         /// <summary>
         /// Clears the current ViewModel (navigates to null)
@@ -127,15 +139,17 @@ namespace duHastNet.Utils.WPF.Stores
 
         #endregion
 
-        #region Event Helpers
+        #region Query Methods
 
         /// <summary>
-        /// Raises the CurrentViewModelChanged event
+        /// Checks if the navigation store currently has a ViewModel
         /// </summary>
-        protected virtual void OnCurrentViewModelChanged()
-        {
-            CurrentViewModelChanged?.Invoke();
-        }
+        public bool HasCurrentViewModel => CurrentViewModel != null;
+
+        /// <summary>
+        /// Gets the type of the current ViewModel (for debugging/logging)
+        /// </summary>
+        public Type? CurrentViewModelType => CurrentViewModel?.GetType();
 
         #endregion
 
@@ -149,12 +163,12 @@ namespace duHastNet.Utils.WPF.Stores
         {
             var info = new System.Text.StringBuilder();
             info.AppendLine("=== NAVIGATION STORE DEBUG ===");
-            info.AppendLine($"Current ViewModel: {_currentViewModel?.GetType().Name ?? "None"}");
+            info.AppendLine($"Current ViewModel: {CurrentViewModel?.GetType().Name ?? "None"}");
             info.AppendLine($"Has ViewModel: {HasCurrentViewModel}");
 
-            if (_currentViewModel != null)
+            if (CurrentViewModel != null)
             {
-                info.AppendLine($"ViewModel Type: {CurrentViewModelType.FullName}");
+                info.AppendLine($"ViewModel Type: {CurrentViewModelType?.FullName}");
             }
 
             return info.ToString();

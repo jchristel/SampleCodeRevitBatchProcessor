@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -21,43 +21,23 @@
 //
 //
 
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
-namespace duHastNet.Utils.WPF.Stores
+namespace duHastNet.Utils.WPF.Interfaces
 {
-    public class MessageTypesUtils
+    /// <summary>
+    /// Interface for ViewModels that need to perform initialization when being navigated to
+    /// or when their associated view is being displayed
+    /// </summary>
+    public interface IActivatable
     {
         /// <summary>
-        /// Combines multiple message types into a single message type by counting the number of each type and returning the highest priority type.
+        /// Called when the ViewModel is being navigated to or its view is being displayed.
+        /// Use this for async initialization like loading data, refreshing state, etc.
+        /// This is called after the ViewModel is constructed and set as CurrentViewModel,
+        /// but before the View is fully rendered, ensuring proper async/await support.
         /// </summary>
-        public static MessageTypes CombineMessageType(List<MessageTypes> messageTypes)
-        {
-            //count the number of each message type
-            int infoCount = messageTypes.Count(x => x == MessageTypes.Information);
-            int errorCount = messageTypes.Count(x => x == MessageTypes.Error);
-            int logCount = messageTypes.Count(x => x == MessageTypes.Warning);
-
-            //if there are any errors, return error
-            if (errorCount > 0)
-            {
-                return MessageTypes.Error;
-            }
-            // if there are no errors but info messages, return info
-            else if (infoCount > 0)
-            {
-                return MessageTypes.Information;
-            }
-            // if there are no errors or info messages but log messages, return log
-            else if (logCount > 0)
-            {
-                return MessageTypes.Warning;
-            }
-            // if there are no errors, info or log messages, return information
-            else
-            {
-                return MessageTypes.Information;
-            }
-        }
+        /// <returns>Task representing the async initialization operation</returns>
+        Task OnActivatedAsync();
     }
 }

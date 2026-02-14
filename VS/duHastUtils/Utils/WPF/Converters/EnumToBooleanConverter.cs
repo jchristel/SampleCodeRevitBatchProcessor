@@ -1,9 +1,4 @@
 //
-//License:
-//
-//
-// Revit Batch Processor Sample Code
-//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -21,7 +16,6 @@
 //
 //
 
-
 using System;
 using System.Globalization;
 using System.Windows.Data;
@@ -29,30 +23,49 @@ using System.Windows.Data;
 namespace duHastNet.Utils.WPF.Converters
 {
     /// <summary>
-    /// Converter that inverts a boolean value
-    /// True → False, False → True
-    /// Used for RadioButton two-way binding to a single boolean property
+    /// Converts an enum value to a boolean for radio button binding
+    /// Used to bind multiple radio buttons to a single enum property
     /// </summary>
-    public class InverseBooleanConverter : IValueConverter
+    public class EnumToBooleanConverter : IValueConverter
     {
+        /// <summary>
+        /// Converts enum value to boolean by comparing with parameter
+        /// </summary>
+        /// <param name="value">The enum value</param>
+        /// <param name="targetType">Target type (bool)</param>
+        /// <param name="parameter">String representation of enum value to compare</param>
+        /// <param name="culture">Culture info</param>
+        /// <returns>True if enum value matches parameter, false otherwise</returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is bool boolValue)
-            {
-                return !boolValue;
-            }
+            if (value == null || parameter == null)
+                return false;
 
-            return false;
+            return value.ToString() == parameter.ToString();
         }
 
+        /// <summary>
+        /// Converts boolean back to enum value when radio button is selected
+        /// </summary>
+        /// <param name="value">Boolean value from radio button</param>
+        /// <param name="targetType">Target enum type</param>
+        /// <param name="parameter">String representation of enum value</param>
+        /// <param name="culture">Culture info</param>
+        /// <returns>Enum value if conversion successful, otherwise DoNothing</returns>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is bool boolValue)
+            if (value is bool boolValue && boolValue && parameter != null)
             {
-                return !boolValue;
+                try
+                {
+                    return Enum.Parse(targetType, parameter.ToString()!);
+                }
+                catch
+                {
+                    return System.Windows.Data.Binding.DoNothing;
+                }
             }
-
-            return false;
+            return System.Windows.Data.Binding.DoNothing;
         }
     }
 }

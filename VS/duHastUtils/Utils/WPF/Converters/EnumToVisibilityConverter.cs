@@ -1,8 +1,3 @@
-﻿//
-//License:
-//
-//
-// Revit Batch Processor Sample Code
 //
 // BSD License
 // Copyright 2025, Jan Christel
@@ -21,43 +16,42 @@
 //
 //
 
-using System.Collections.Generic;
-using System.Linq;
+using System;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
 
-namespace duHastNet.Utils.WPF.Stores
+namespace duHastNet.Utils.WPF.Converters
 {
-    public class MessageTypesUtils
+    /// <summary>
+    /// Converts an enum value to Visibility by comparing with parameter
+    /// Returns Visible if enum matches parameter, Collapsed otherwise
+    /// Used for conditionally showing UI elements based on enum state
+    /// </summary>
+    public class EnumToVisibilityConverter : IValueConverter
     {
         /// <summary>
-        /// Combines multiple message types into a single message type by counting the number of each type and returning the highest priority type.
+        /// Converts enum value to Visibility by comparing with parameter
         /// </summary>
-        public static MessageTypes CombineMessageType(List<MessageTypes> messageTypes)
+        /// <param name="value">The enum value</param>
+        /// <param name="targetType">Target type (Visibility)</param>
+        /// <param name="parameter">String representation of enum value to compare</param>
+        /// <param name="culture">Culture info</param>
+        /// <returns>Visible if enum value matches parameter, Collapsed otherwise</returns>
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            //count the number of each message type
-            int infoCount = messageTypes.Count(x => x == MessageTypes.Information);
-            int errorCount = messageTypes.Count(x => x == MessageTypes.Error);
-            int logCount = messageTypes.Count(x => x == MessageTypes.Warning);
+            if (value == null || parameter == null)
+                return Visibility.Collapsed;
 
-            //if there are any errors, return error
-            if (errorCount > 0)
-            {
-                return MessageTypes.Error;
-            }
-            // if there are no errors but info messages, return info
-            else if (infoCount > 0)
-            {
-                return MessageTypes.Information;
-            }
-            // if there are no errors or info messages but log messages, return log
-            else if (logCount > 0)
-            {
-                return MessageTypes.Warning;
-            }
-            // if there are no errors, info or log messages, return information
-            else
-            {
-                return MessageTypes.Information;
-            }
+            return value.ToString() == parameter.ToString() ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        /// <summary>
+        /// ConvertBack is not implemented as this is a one-way converter
+        /// </summary>
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException("EnumToVisibilityConverter does not support two-way binding");
         }
     }
 }

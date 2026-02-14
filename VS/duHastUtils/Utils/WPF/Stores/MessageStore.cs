@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -22,60 +22,247 @@
 //
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
-namespace duHastNet.Utils.WPF.Stores
+using CommunityToolkit.Mvvm.ComponentModel;
+using duHastNet.Utils.WPF.Interfaces;
+
+namespace duHastNet.Utils.WPF.Stores;
+
+public partial class MessageStore : ObservableObject, IMessageStore, IDisposable
 {
-    public class MessageStore
+    private CancellationTokenSource? _dismissCancellation;
+    private const int DefaultDismissSeconds = 5;
+    private readonly Queue<QueuedMessage> _messageQueue = new();
+    private readonly object _queueLock = new();
+    private bool _isProcessingMessage = false;
+
+    [ObservableProperty]
+    private string _currentMessage = string.Empty;
+
+    [ObservableProperty]
+    private MessageTypes _currentMessageType = MessageTypes.Information;
+
+    [ObservableProperty]
+    private double _progressPercentage = 0;
+
+    [ObservableProperty]
+    private bool _isTimerActive = false;
+
+    [ObservableProperty]
+    private int _pendingMessageCount = 0;
+
+    public bool HasCurrentMessage => !string.IsNullOrEmpty(CurrentMessage);
+    public bool HasPendingMessages => PendingMessageCount > 0;
+
+    public void EnqueueMessage(string message, MessageTypes messageType, int? dismissAfterSeconds = null)
     {
-        string _currentMessage;
-        public string CurrentMessage
+        lock (_queueLock)
         {
-            get => _currentMessage;
-            private set
+            var queuedMessage = new QueuedMessage(message, messageType, dismissAfterSeconds);
+            _messageQueue.Enqueue(queuedMessage);
+            PendingMessageCount = _messageQueue.Count;
+        }
+
+        // If no message is currently being displayed, process the next one immediately
+        if (!_isProcessingMessage && !HasCurrentMessage)
+        {
+            ProcessNextMessage();
+        }
+    }
+
+    public void ClearCurrentMessage(bool autoAdvance = true)
+    {
+        CancelDismissTimer();
+        CurrentMessage = string.Empty;
+        ProgressPercentage = 100;
+        IsTimerActive = false;
+        _isProcessingMessage = false;
+
+        if (autoAdvance)
+        {
+            ProcessNextMessage();
+        }
+    }
+
+    public void ClearQueue()
+    {
+        lock (_queueLock)
+        {
+            _messageQueue.Clear();
+            PendingMessageCount = 0;
+        }
+    }
+
+    public void ClearAll()
+    {
+        ClearQueue();
+        ClearCurrentMessage(autoAdvance: false);
+    }
+
+    [Obsolete("Use EnqueueMessage instead. This method is deprecated and will be removed in a future version.")]
+    public void SetCurrentMessage(string message, MessageTypes messageType, int? dismissAfterSeconds = null)
+    {
+        // For backward compatibility, directly set the message without queueing
+        CancelDismissTimer();
+
+        // Limit to 10 rows
+        if (message.Contains('\n'))
+        {
+            string[] lines = message.Split(['\n'], StringSplitOptions.RemoveEmptyEntries);
+            if (lines.Length > 10)
             {
-                _currentMessage = value;
-                CurrentMessageChanged?.Invoke();
+                message = string.Join("\n", lines[..10]);
             }
         }
 
-        MessageTypes _currentMessageType;
-        public MessageTypes CurrentMessageType
+        CurrentMessage = message;
+        CurrentMessageType = messageType;
+
+        // Start auto-dismiss timer if specified
+        if (dismissAfterSeconds.HasValue && dismissAfterSeconds.Value > 0)
         {
-            get => _currentMessageType;
-            private set
+            StartDismissTimer(dismissAfterSeconds.Value);
+        }
+        else
+        {
+            ProgressPercentage = 0;
+            IsTimerActive = false;
+        }
+    }
+
+    private void ProcessNextMessage()
+    {
+        QueuedMessage? nextMessage = null;
+
+        lock (_queueLock)
+        {
+            if (_messageQueue.Count > 0)
             {
-                _currentMessageType = value;
-                CurrentMessageTypeChanged?.Invoke();
+                nextMessage = _messageQueue.Dequeue();
+                PendingMessageCount = _messageQueue.Count;
             }
         }
 
-        public event Action CurrentMessageChanged;
-        public event Action CurrentMessageTypeChanged;
-
-
-        public bool HasCurrentMessage => !string.IsNullOrEmpty(CurrentMessage);
-
-        public void ClearCurrentMessage()
+        if (nextMessage != null)
         {
-            CurrentMessage = string.Empty;
+            _isProcessingMessage = true;
+            DisplayMessage(nextMessage);
+        }
+        else
+        {
+            _isProcessingMessage = false;
+        }
+    }
+
+    private void DisplayMessage(QueuedMessage queuedMessage)
+    {
+        // Limit to 10 rows
+        string message = queuedMessage.Message;
+        if (message.Contains('\n'))
+        {
+            string[] lines = message.Split(['\n'], StringSplitOptions.RemoveEmptyEntries);
+            if (lines.Length > 10)
+            {
+                message = string.Join("\n", lines[..10]);
+            }
         }
 
-        public void SetCurrentMessage(string message, MessageTypes messageType)
-        {
+        CurrentMessage = message;
+        CurrentMessageType = queuedMessage.MessageType;
 
-            //allow a maximum of 10 rows in the message. Check for new line characters
-            if (message.Contains('\n'))
+        // Start auto-dismiss timer if specified
+        if (queuedMessage.DismissAfterSeconds.HasValue && queuedMessage.DismissAfterSeconds.Value > 0)
+        {
+            StartDismissTimer(queuedMessage.DismissAfterSeconds.Value);
+        }
+        else
+        {
+            ProgressPercentage = 0;
+            IsTimerActive = false;
+        }
+    }
+
+    public void PauseDismissTimer()
+    {
+        CancelDismissTimer();
+        IsTimerActive = false;
+    }
+
+    public void ResumeDismissTimer(int seconds)
+    {
+        if (HasCurrentMessage && !IsTimerActive)
+        {
+            // Calculate remaining time based on current progress (now counting down)
+            int remainingSeconds = (int)(seconds * (ProgressPercentage / 100)); // Changed formula
+            if (remainingSeconds > 0)
             {
-                string[] lines = message.Split(['\n'], StringSplitOptions.RemoveEmptyEntries);
-                if (lines.Length > 10)
+                StartDismissTimer(remainingSeconds);
+            }
+        }
+    }
+
+    private void StartDismissTimer(int seconds)
+    {
+        _dismissCancellation = new CancellationTokenSource();
+        IsTimerActive = true;
+        ProgressPercentage = 100; // Start at 100 instead of 0
+
+        Task.Run(async () =>
+        {
+            try
+            {
+                var startTime = DateTime.Now;
+                var duration = TimeSpan.FromSeconds(seconds);
+                var updateInterval = TimeSpan.FromMilliseconds(50); // Update 20 times per second
+
+                while (!_dismissCancellation.Token.IsCancellationRequested)
                 {
-                    message = string.Join("\n", lines, 0, 10);
+                    var elapsed = DateTime.Now - startTime;
+                    // INVERT: Start at 100, count down to 0
+                    var progress = 100 - ((elapsed.TotalSeconds / duration.TotalSeconds) * 100);
+
+                    if (progress <= 0) // Changed from >= 100
+                    {
+                        // Time's up - dismiss message and show next
+                        await Task.Delay(100); // Small delay for visual smoothness
+                        ClearCurrentMessage(autoAdvance: true);
+                        break;
+                    }
+
+                    ProgressPercentage = progress;
+                    await Task.Delay(updateInterval, _dismissCancellation.Token);
                 }
             }
+            catch (TaskCanceledException)
+            {
+                // Timer was cancelled - this is expected
+            }
+        }, _dismissCancellation.Token);
+    }
 
-            CurrentMessage = message;
-            CurrentMessageType = messageType;
-        }
+    private void CancelDismissTimer()
+    {
+        _dismissCancellation?.Cancel();
+        _dismissCancellation?.Dispose();
+        _dismissCancellation = null;
+    }
 
+    partial void OnCurrentMessageChanged(string value)
+    {
+        OnPropertyChanged(nameof(HasCurrentMessage));
+    }
+
+    partial void OnPendingMessageCountChanged(int value)
+    {
+        OnPropertyChanged(nameof(HasPendingMessages));
+    }
+
+    public void Dispose()
+    {
+        CancelDismissTimer();
+        ClearQueue();
     }
 }

@@ -21,43 +21,40 @@
 //
 //
 
-using System.Collections.Generic;
+
+using System;
+using System.Collections;
+using System.Globalization;
 using System.Linq;
+using System.Windows.Controls;
+using System.Windows.Data;
 
-namespace duHastNet.Utils.WPF.Stores
+namespace duHastNet.Utils.WPF.Converters
 {
-    public class MessageTypesUtils
+    /// <summary>
+    /// Converter that safely extracts the first validation error message from a collection of validation errors
+    /// Returns null if no errors exist, preventing ArgumentOutOfRangeException
+    /// </summary>
+    public class ValidationErrorConverter : IValueConverter
     {
-        /// <summary>
-        /// Combines multiple message types into a single message type by counting the number of each type and returning the highest priority type.
-        /// </summary>
-        public static MessageTypes CombineMessageType(List<MessageTypes> messageTypes)
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            //count the number of each message type
-            int infoCount = messageTypes.Count(x => x == MessageTypes.Information);
-            int errorCount = messageTypes.Count(x => x == MessageTypes.Error);
-            int logCount = messageTypes.Count(x => x == MessageTypes.Warning);
+            // Check if value is a collection of validation errors
+            if (value is IEnumerable errors)
+            {
+                // Get the first error if any exist
+                var firstError = errors.Cast<ValidationError>().FirstOrDefault();
 
-            //if there are any errors, return error
-            if (errorCount > 0)
-            {
-                return MessageTypes.Error;
+                // Return the error content if found, otherwise null
+                return firstError?.ErrorContent?.ToString();
             }
-            // if there are no errors but info messages, return info
-            else if (infoCount > 0)
-            {
-                return MessageTypes.Information;
-            }
-            // if there are no errors or info messages but log messages, return log
-            else if (logCount > 0)
-            {
-                return MessageTypes.Warning;
-            }
-            // if there are no errors, info or log messages, return information
-            else
-            {
-                return MessageTypes.Information;
-            }
+
+            return null;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException("ConvertBack is not supported for ValidationErrorConverter");
         }
     }
 }

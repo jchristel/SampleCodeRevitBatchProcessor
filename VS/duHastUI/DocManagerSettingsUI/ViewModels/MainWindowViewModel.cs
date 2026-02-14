@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -23,10 +23,11 @@
 
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using duHastNet.Utils.WPF.ViewModels;
 
 namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
 {
-    internal partial class MainWindowViewModel:ObservableObject
+    internal partial class MainWindowViewModel : ViewModelBase
     {
         [ObservableProperty]
         private ObservableObject _currentViewModel;
@@ -34,12 +35,21 @@ namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
         public MainWindowViewModel(ViewModels.SettingsViewModel settingsViewModel)
         {
             _currentViewModel = settingsViewModel;
+
+            // Register the child ViewModel for lifecycle management
+            RegisterChild(settingsViewModel);
         }
 
-        //public override void OnClosing()
-        //{
-            
-        //    base.OnClosing();
-        //}
+        public override void OnClosing()
+        {
+            // Call base to handle child ViewModels cleanup
+            base.OnClosing();
+        }
+
+        public override void Dispose()
+        {
+            // Call base to handle disposal
+            base.Dispose();
+        }
     }
 }

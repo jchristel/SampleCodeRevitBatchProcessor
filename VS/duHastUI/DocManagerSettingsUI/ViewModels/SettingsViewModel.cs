@@ -1,4 +1,4 @@
-﻿
+
 
 //
 //License:
@@ -36,7 +36,7 @@ using System.Windows.Controls;
 
 namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
 {
-    public partial class SettingsViewModel : ObservableObject
+    public partial class SettingsViewModel : ViewModelBase
     {
         /// <summary>
         /// Global message view model for displaying messages to the user
@@ -635,10 +635,19 @@ namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
         /// <summary>
         /// On window closing, unsubscribe from the event to prevent memory leaks
         /// </summary>
-        public void OnClosing()
+        public override void OnClosing()
         {
             // Unsubscribe from the event to prevent memory leaks
             GlobalMessageViewModel?.Dispose();
+        }
+
+        /// <summary>
+        /// Dispose of resources
+        /// </summary>
+        public override void Dispose()
+        {
+            // Additional cleanup if needed
+            base.Dispose();
         }
 
         #endregion helper methods

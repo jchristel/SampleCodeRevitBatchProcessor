@@ -22,25 +22,30 @@
 //
 
 
+using CommunityToolkit.Mvvm.ComponentModel;
 using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
+using System.ComponentModel;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
         private readonly duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
-        public duHastNet.Utils.WPF.ViewModels.ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
+        public ObservableObject? CurrentViewModel => _navigationStore.CurrentViewModel;
 
         public MainWindowViewModel(duHastNet.Utils.WPF.Stores.NavigationStore navigationStore)
         {
             _navigationStore = navigationStore;
-            _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
+            _navigationStore.PropertyChanged += OnNavigationStorePropertyChanged;
         }
 
-        private void OnCurrentViewModelChanged()
+        private void OnNavigationStorePropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            OnPropertyChanged(nameof(CurrentViewModel));
+            if (e.PropertyName == nameof(NavigationStore.CurrentViewModel))
+            {
+                OnPropertyChanged(nameof(CurrentViewModel));
+            }
         }
 
         public override void OnClosing()
@@ -54,17 +59,17 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             base.OnClosing();
         }
 
-        protected override void DisposeManaged()
+        public override void Dispose()
         {
-            System.Diagnostics.Debug.WriteLine("MainWindowViewModel.DisposeManaged() called");
+            System.Diagnostics.Debug.WriteLine("MainWindowViewModel.Dispose() called");
 
             // Unsubscribe from navigation store events
             if (_navigationStore != null)
             {
-                _navigationStore.CurrentViewModelChanged -= OnCurrentViewModelChanged;
+                _navigationStore.PropertyChanged -= OnNavigationStorePropertyChanged;
             }
 
-            base.DisposeManaged();
+            base.Dispose();
         }
     }
 }

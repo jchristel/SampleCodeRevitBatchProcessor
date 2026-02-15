@@ -530,9 +530,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         }
 
 
-        protected override void DisposeManaged()
+        public override void Dispose()
         {
-            System.Diagnostics.Debug.WriteLine("ViewSelectionDataGridViewModel.DisposeManaged() called");
+            System.Diagnostics.Debug.WriteLine("ViewSelectionDataGridViewModel.Dispose() called");
 
             // Unsubscribe from all row property changed events
             if (Data != null)
@@ -549,7 +549,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                 // when Data collection is disposed
             }
 
-            base.DisposeManaged();
+            base.Dispose();
         }
 
         #endregion

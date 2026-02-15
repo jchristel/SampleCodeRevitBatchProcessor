@@ -22,6 +22,7 @@
 //
 
 
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.UI.CustomControls;
 using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
 using duHastNet.Utils.WPF.Stores;
@@ -96,24 +97,26 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// <summary>
         /// command to save the settings and close the window
         /// </summary>
-        private readonly duHastNet.Utils.WPF.Commands.RelayCommand _saveAndCloseCommand;
+        private readonly RelayCommand _saveAndCloseCommand;
 
         private readonly Commands.PrintSetDeleteCommand _printSetDeleteCommand;
 
         private readonly Commands.PrintSetUpdateCommand _printSetUpdateCommand;
 
-        private readonly Commands.PrintSetDuplicateCommand printSetDuplicateCommand;
+        private readonly Commands.PrintSetDuplicateCommand _printSetDuplicateCommand;
 
         public ICommand SaveAndCloseCommand { get { return _saveAndCloseCommand; } }
-        public ICommand PrintSetDeleteCommand { get { return _printSetDeleteCommand; } }
-        public ICommand PrintSetUpdateCommand { get { return _printSetUpdateCommand; } }
-        public ICommand PrintSetDuplicateCommand { get { return printSetDuplicateCommand; } }
+
+        // Expose command objects directly (not as ICommand) so XAML can bind to generated DeleteCommand property
+        public Commands.PrintSetDeleteCommand PrintSetDeleteCommand { get { return _printSetDeleteCommand; } }
+        public Commands.PrintSetUpdateCommand PrintSetUpdateCommand { get { return _printSetUpdateCommand; } }
+        public Commands.PrintSetDuplicateCommand PrintSetDuplicateCommand { get { return _printSetDuplicateCommand; } }
 
 
         #region event handlers
 
         /// <summary>
-        /// On window closing, unsubscribe from the event to prevent memory leaks
+        /// On window closing, perform UI-related cleanup
         /// </summary>
         public override void OnClosing()
         {
@@ -124,7 +127,10 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             base.OnClosing();
         }
 
-        protected override void DisposeManaged()
+        /// <summary>
+        /// Dispose of managed resources including event subscriptions
+        /// </summary>
+        public override void Dispose()
         {
             System.Diagnostics.Debug.WriteLine("DocumentSelectionViewModel.DisposeManaged() called");
 
@@ -142,7 +148,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             // Note: GlobalMessageViewModel and ViewSelectionDataGridViewModel are registered
             // as children, so they will be automatically disposed by base.Dispose()
 
-            base.DisposeManaged();
+            base.Dispose();
         }
 
         #endregion event handlers
@@ -153,14 +159,16 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         private ObservableCollection<string> _printSetNamesDefaultList = new ObservableCollection<string>();
 
         // Property to expose the default list of print sets
-        public ObservableCollection<string> PrintSetNamesDefaultList {
+        public ObservableCollection<string> PrintSetNamesDefaultList
+        {
             get => _printSetNamesDefaultList;
-            set { 
+            set
+            {
                 _printSetNamesDefaultList = value;
                 OnPropertyChanged(nameof(PrintSetNamesDefaultList));
             }
         }
-        
+
 
         // field to store the selected Revit print set
         private string _selectedPrintSet;
@@ -442,7 +450,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// <summary>
         /// Updates the settings and closes the window - Forces state save before closing
         /// </summary>
-        private void SaveSettingsAndClose(object parameter)
+        private void SaveSettingsAndClose()
         {
             try
             {
@@ -487,18 +495,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                     AddMessage: AddMessage);
 
                 // Close the window
-                if (parameter is Window window)
-                {
-                    window.Close();
-                }
-                else if (parameter is DependencyObject obj)
-                {
-                    Window.GetWindow(obj)?.Close();
-                }
-                else
-                {
-                    Application.Current.MainWindow?.Close();
-                }
+                Application.Current.MainWindow?.Close();
             }
             catch (Exception ex)
             {
@@ -585,7 +582,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             // Trigger the command to re-evaluate its CanExecute state
             if (_saveAndCloseCommand != null)
             {
-                _saveAndCloseCommand.RaiseCanExecuteChanged();
+                _saveAndCloseCommand.NotifyCanExecuteChanged();
             }
         }
 
@@ -646,9 +643,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
             //save and exit
             //only if there are no errors
-            _saveAndCloseCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
+            _saveAndCloseCommand = new RelayCommand(
                 SaveSettingsAndClose,
-                parameter => !HasErrors // Only enabled when there are no errors
+                () => !HasErrors // Only enabled when there are no errors
             );
 
             //command to delete a print set
@@ -656,18 +653,24 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                 this,
                 _sheetsDataModel
                 );
+            // Register command for automatic cleanup
+            RegisterChild(_printSetDeleteCommand);
 
             //command to update a print set
             _printSetUpdateCommand = new Commands.PrintSetUpdateCommand(
                 this,
                 _sheetsDataModel
                 );
+            // Register command for automatic cleanup
+            RegisterChild(_printSetUpdateCommand);
 
             //command to duplicate a print set
-            printSetDuplicateCommand = new Commands.PrintSetDuplicateCommand(
+            _printSetDuplicateCommand = new Commands.PrintSetDuplicateCommand(
                 this,
                 _sheetsDataModel
                 );
+            // Register command for automatic cleanup
+            RegisterChild(_printSetDuplicateCommand);
 
             //set the export file path from settings:
             ExportSheetsFilePath = _sheetsDataModel.Settings.ExportFolderPath;

@@ -21,57 +21,71 @@
 //
 //
 
-
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.UI.PDFDWGExporterSelectionUI.Models;
+using duHastNet.Utils.WPF.Interfaces;
+using System;
 using System.ComponentModel;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Commands
 {
-    public class PrintSetDuplicateCommand : duHastNet.Utils.WPF.Commands.CommandBase
+    /// <summary>
+    /// Command to duplicate an existing print set
+    /// </summary>
+    public partial class PrintSetDuplicateCommand : ICloseable, IDisposable
     {
-
         private readonly ViewModels.DocumentSelectionViewModel _documentSelectionViewModel;
         private readonly Models.SheetsDataModel _revitSheetsDataModel;
 
+        public PrintSetDuplicateCommand(
+            ViewModels.DocumentSelectionViewModel documentSelectionViewModel,
+            Models.SheetsDataModel revitSheetsDataModel)
+        {
+            _documentSelectionViewModel = documentSelectionViewModel;
+            _revitSheetsDataModel = revitSheetsDataModel;
+
+            // Subscribe to property changes to update CanExecute
+            _documentSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
+        }
 
         /// <summary>
-        /// sets the print set to be deleted
+        /// Duplicates the selected print set with a new name
         /// </summary>
-        /// <param name="parameter"></param>
-        public override void Execute(object parameter)
+        [RelayCommand(CanExecute = nameof(CanDuplicate))]
+        private void Duplicate()
         {
             try
             {
-                // get the name of the print set to duplicate
+                // Get the name of the print set to duplicate
                 string printSetToDuplicate = _documentSelectionViewModel.SelectedPrintSet;
 
-                // get the default new print set name
+                // Generate default new name
                 string defaultNewPrintSetName = printSetToDuplicate + "_Copy";
 
-                //get all print set names
+                // Get all existing print set names
                 var allPrintSetNames = _revitSheetsDataModel.GetAllPrintSetNames();
 
-                //show the MVVM dialog
+                // Show dialog to get new name from user
                 var inputDialog = new Views.PrintSetNameDialog(defaultNewPrintSetName, allPrintSetNames);
                 if (inputDialog.ShowDialog() != true)
                 {
-                    // user cancelled
+                    // User cancelled
                     return;
                 }
 
-                //get the new name from the dialog
+                // Get the new name from the dialog
                 string newPrintSetName = inputDialog.PrintSetName;
 
-                //create the new print set
+                // Create the new print set
                 Models.RevitPrintSet newPrintSet = new Models.RevitPrintSet(
                     name: newPrintSetName,
                     updateAction: PrintSetUpdateType.New
-                    );
+                );
 
-                // apply the same sheets as in the original print set
-                var originalPrintSet = _revitSheetsDataModel.GetPrintSetByName (printSetToDuplicate);
+                // Get the original print set
+                var originalPrintSet = _revitSheetsDataModel.GetPrintSetByName(printSetToDuplicate);
 
-                // check if the original print set was found (should never be the case)
+                // Validate that original print set was found
                 if (originalPrintSet == null)
                 {
                     _documentSelectionViewModel.AddMessage(
@@ -81,70 +95,84 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Commands
                     return;
                 }
 
-                // copy sheets
+                // Copy sheets from original to new print set
                 foreach (var sheet in originalPrintSet.RevitSheets)
                 {
                     newPrintSet.AddRevitSheet(sheet);
                 }
 
-                //add the new print set to the model
+                // Add the new print set to the model
                 _revitSheetsDataModel.PrintSets.Add(newPrintSet);
 
-                // raise event to notify the view model that the model has been updated
+                // Notify that the model has been updated
                 _revitSheetsDataModel.RaisePropertyChanged(Utils.PropertyChangedEventNames.DATA_MODEL_PRINTSETS_UPDATED);
 
+                // Select the new print set
                 _documentSelectionViewModel.SelectedPrintSet = newPrintSetName;
 
-                // inform user
+                // Inform user
                 _documentSelectionViewModel.AddMessage(
                     $"New print set '{newPrintSetName}' created.",
                     duHastNet.Utils.WPF.Stores.MessageTypes.Information
                 );
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 _documentSelectionViewModel.AddMessage(
-                    $"Error during print set deletion: {ex.Message}",
+                    $"Error during print set duplication: {ex.Message}",
                     duHastNet.Utils.WPF.Stores.MessageTypes.Error
                 );
             }
-
         }
-
-
 
         /// <summary>
-        /// this command is available if the print set is not none
+        /// Determines if the duplicate command can execute
+        /// Command is enabled when a print set (other than default) is selected
         /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        public override bool CanExecute(object parameter)
+        private bool CanDuplicate()
         {
-            // check if there are any errors ( there is only one which relateds to a valid library path )
-            if (_documentSelectionViewModel.SelectedPrintSet == Constants.DefaultPrintSetName)
-            {
-                return false;
-            }
-            return true;
+            return _documentSelectionViewModel.SelectedPrintSet != Constants.DefaultPrintSetName;
         }
 
+        /// <summary>
+        /// Handles property changes from the ViewModel to update command state
+        /// </summary>
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            // check if the property that changed is the one that we are interested in
             if (e.PropertyName == nameof(ViewModels.DocumentSelectionViewModel.SelectedPrintSet))
             {
-                OnCanExecutedChanged();
+                // Notify that CanExecute state may have changed
+                DuplicateCommand.NotifyCanExecuteChanged();
             }
         }
-        public PrintSetDuplicateCommand(
-            ViewModels.DocumentSelectionViewModel documentSelectionViewModel,
-            Models.SheetsDataModel revitSheetsDataModel)
+
+        #region ICloseable Implementation
+
+        public void OnClosing()
         {
-            _documentSelectionViewModel = documentSelectionViewModel;
-            _revitSheetsDataModel = revitSheetsDataModel;
-
-
-            _documentSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            // No UI-specific cleanup needed for commands
         }
+
+        #endregion
+
+        #region IDisposable Implementation
+
+        private bool _disposed = false;
+
+        public void Dispose()
+        {
+            if (_disposed)
+                return;
+
+            // Unsubscribe from events to prevent memory leaks
+            if (_documentSelectionViewModel != null)
+            {
+                _documentSelectionViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+            }
+
+            _disposed = true;
+        }
+
+        #endregion
     }
 }

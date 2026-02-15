@@ -80,7 +80,7 @@
         </Grid>
         <!-- message banner -->
         <Grid Grid.Row="1">
-            <utilsViews:GlobalMessageBanner DataContext="{Binding GlobalMessageViewModel}"/>
+            <utilsViews:GlobalMessageView DataContext="{Binding GlobalMessageViewModel}"/>
         </Grid>
         <!-- Print set selection -->
         <Border Grid.Row="2" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
@@ -126,7 +126,7 @@
                          Padding="5 0 5 0"
                          Margin="5 5 5 5" 
                          Content="Update"
-                        Command="{Binding PrintSetUpdateCommand}"
+                        Command="{Binding PrintSetUpdateCommand.UpdateCommand}"
                         CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
                     <Button 
                          Grid.Row="0" 
@@ -134,7 +134,7 @@
                          Padding="5 0 5 0"
                          Margin="5 5 5 5" 
                          Content="Duplicate"
-                        Command="{Binding PrintSetDuplicateCommand}"
+                        Command="{Binding PrintSetDuplicateCommand.DuplicateCommand}"
                         CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
                         
                     <Button 
@@ -143,7 +143,7 @@
                          Padding="5 0 5 0"
                          Margin="5 5 5 5" 
                          Content="Delete"
-                        Command="{Binding PrintSetDeleteCommand}"
+                        Command="{Binding PPrintSetDeleteCommand.DeleteCommand}"
                         CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
                 </Grid>
             </Grid>
@@ -228,8 +228,7 @@
         </Border>
         <!--export format selector -->
         <Border Grid.Row="6" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
-            <customControls:ThreeWaySwitch Width="Auto" 
-                Height="Auto"
+            <customControls:ThreeWaySwitch 
                 Margin="10 2 10 2"
                 LabelLeft="Export PDF(s)" LabelCenter="Export DWG(s)" LabelRight="Export PDF(s) and DWG(s)" DisplayName="Export Mode"
                 Value="{Binding ExportTypes, Mode=TwoWay}"/>

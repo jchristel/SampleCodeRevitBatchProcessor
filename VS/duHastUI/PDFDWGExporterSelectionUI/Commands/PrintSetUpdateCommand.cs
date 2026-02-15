@@ -21,99 +21,21 @@
 //
 //
 
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.UI.PDFDWGExporterSelectionUI.Models;
+using duHastNet.Utils.WPF.Interfaces;
+using System;
 using System.ComponentModel;
-using System.Windows.Markup;
-
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Commands
 {
-    public class PrintSetUpdateCommand : duHastNet.Utils.WPF.Commands.CommandBase
+    /// <summary>
+    /// Command to update a print set with currently selected sheets
+    /// </summary>
+    public partial class PrintSetUpdateCommand : ICloseable, IDisposable
     {
         private readonly ViewModels.DocumentSelectionViewModel _documentSelectionViewModel;
         private readonly Models.SheetsDataModel _revitSheetsDataModel;
-
-
-        /// <summary>
-        /// sets the print set to be deleted
-        /// </summary>
-        /// <param name="parameter"></param>
-        public override void Execute(object parameter)
-        {
-            try
-            {
-                // set the status of the print set to be deleted
-                string printSetToUpdate = _documentSelectionViewModel.SelectedPrintSet;
-
-                foreach (var printSet in _revitSheetsDataModel.PrintSets)
-                {
-                    if (printSet.Name == printSetToUpdate)
-                    {
-                        // mark the print set for update
-                        printSet.UpdateAction = PrintSetUpdateType.Update;
-
-                        //wipe all sheets from the print set
-                        printSet.RevitSheets.Clear();
-
-                        //add the selected sheets to the print set
-                        for (int i = 0; i < _revitSheetsDataModel.RevitSheets.Count; i++)
-                        {
-                            if (_revitSheetsDataModel.RevitSheets[i].IsSelected)
-                            {
-                                printSet.RevitSheets.Add(_revitSheetsDataModel.RevitSheets[i]);
-                            }
-                        }
-                    }
-                }
-
-                // raise event to notify the view model that the model has been updated
-                _revitSheetsDataModel.RaisePropertyChanged(Utils.PropertyChangedEventNames.DATA_MODEL_PRINTSETS_UPDATED);
-
-                // reset selected print set in view model to force UI update
-                _documentSelectionViewModel.SelectedPrintSet = printSetToUpdate;
-                
-                // inform user
-                _documentSelectionViewModel.AddMessage(
-                    $"Print set '{printSetToUpdate}' marked for update.",
-                    duHastNet.Utils.WPF.Stores.MessageTypes.Information
-                );
-            }
-            catch (System.Exception ex)
-            {
-                _documentSelectionViewModel.AddMessage(
-                    $"Error during print set update: {ex.Message}",
-                    duHastNet.Utils.WPF.Stores.MessageTypes.Error
-                );
-            }
-            
-        }
-
-
-        /// <summary>
-        /// this command is available if the print set is not none
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        public override bool CanExecute(object parameter)
-        {
-            // check if there are any errors ( there is only one which relateds to a valid library path )
-            if (_documentSelectionViewModel.SelectedPrintSet==Constants.DefaultPrintSetName)
-            {
-                return false;
-            }
-            return true;
-        }
-
-
-        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // check if the property that changed is the one that we are interested in
-            if (e.PropertyName == nameof(ViewModels.DocumentSelectionViewModel.SelectedPrintSet))
-            {
-                OnCanExecutedChanged();
-            }
-        }
-
 
         public PrintSetUpdateCommand(
             ViewModels.DocumentSelectionViewModel documentSelectionViewModel,
@@ -121,7 +43,113 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Commands
         {
             _documentSelectionViewModel = documentSelectionViewModel;
             _revitSheetsDataModel = revitSheetsDataModel;
+
+            // Subscribe to property changes to update CanExecute
             _documentSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
+
+        /// <summary>
+        /// Updates the selected print set with currently selected sheets
+        /// </summary>
+        [RelayCommand(CanExecute = nameof(CanUpdate))]
+        private void Update()
+        {
+            try
+            {
+                // Get the print set to update
+                string printSetToUpdate = _documentSelectionViewModel.SelectedPrintSet;
+
+                foreach (var printSet in _revitSheetsDataModel.PrintSets)
+                {
+                    if (printSet.Name == printSetToUpdate)
+                    {
+                        // Mark the print set for update
+                        printSet.UpdateAction = PrintSetUpdateType.Update;
+
+                        // Clear existing sheets
+                        printSet.RevitSheets.Clear();
+
+                        // Add currently selected sheets
+                        for (int i = 0; i < _revitSheetsDataModel.RevitSheets.Count; i++)
+                        {
+                            if (_revitSheetsDataModel.RevitSheets[i].IsSelected)
+                            {
+                                printSet.RevitSheets.Add(_revitSheetsDataModel.RevitSheets[i]);
+                            }
+                        }
+                        break;
+                    }
+                }
+
+                // Notify that the model has been updated
+                _revitSheetsDataModel.RaisePropertyChanged(Utils.PropertyChangedEventNames.DATA_MODEL_PRINTSETS_UPDATED);
+
+                // Reset selection to trigger UI update
+                _documentSelectionViewModel.SelectedPrintSet = printSetToUpdate;
+
+                // Inform user
+                _documentSelectionViewModel.AddMessage(
+                    $"Print set '{printSetToUpdate}' marked for update.",
+                    duHastNet.Utils.WPF.Stores.MessageTypes.Information
+                );
+            }
+            catch (Exception ex)
+            {
+                _documentSelectionViewModel.AddMessage(
+                    $"Error during print set update: {ex.Message}",
+                    duHastNet.Utils.WPF.Stores.MessageTypes.Error
+                );
+            }
+        }
+
+        /// <summary>
+        /// Determines if the update command can execute
+        /// Command is enabled when a print set (other than default) is selected
+        /// </summary>
+        private bool CanUpdate()
+        {
+            return _documentSelectionViewModel.SelectedPrintSet != Constants.DefaultPrintSetName;
+        }
+
+        /// <summary>
+        /// Handles property changes from the ViewModel to update command state
+        /// </summary>
+        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ViewModels.DocumentSelectionViewModel.SelectedPrintSet))
+            {
+                // Notify that CanExecute state may have changed
+                UpdateCommand.NotifyCanExecuteChanged();
+            }
+        }
+
+        #region ICloseable Implementation
+
+        public void OnClosing()
+        {
+            // No UI-specific cleanup needed for commands
+        }
+
+        #endregion
+
+        #region IDisposable Implementation
+
+        private bool _disposed = false;
+
+        public void Dispose()
+        {
+            if (_disposed)
+                return;
+
+            // Unsubscribe from events to prevent memory leaks
+            if (_documentSelectionViewModel != null)
+            {
+                _documentSelectionViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+            }
+
+            _disposed = true;
+        }
+
+        #endregion
     }
 }

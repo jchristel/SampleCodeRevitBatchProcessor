@@ -286,9 +286,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// <summary>
         /// Dispose of managed resources including event subscriptions
         /// </summary>
-        protected override void DisposeManaged()
+        public override void Dispose()
         {
-            System.Diagnostics.Debug.WriteLine("PrintSetNameDialogViewModel.DisposeManaged() called");
+            System.Diagnostics.Debug.WriteLine("PrintSetNameDialogViewModel.Dispose() called");
 
             // Unsubscribe from events to prevent memory leaks
             if (_errorsViewModel != null)
@@ -296,7 +296,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                 _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
             }
 
-            base.DisposeManaged();
+            base.Dispose();
         }
 
         #endregion

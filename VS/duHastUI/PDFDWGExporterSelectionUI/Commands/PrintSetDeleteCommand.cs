@@ -21,29 +21,45 @@
 //
 //
 
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.UI.PDFDWGExporterSelectionUI.Models;
+using duHastNet.Utils.WPF.Interfaces;
+using System;
 using System.ComponentModel;
-
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.Commands
 {
-    public class PrintSetDeleteCommand : duHastNet.Utils.WPF.Commands.CommandBase
+    /// <summary>
+    /// Command to delete a print set from the model
+    /// </summary>
+    public partial class PrintSetDeleteCommand : ICloseable, IDisposable
     {
         private readonly ViewModels.DocumentSelectionViewModel _documentSelectionViewModel;
         private readonly Models.SheetsDataModel _revitSheetsDataModel;
 
+        public PrintSetDeleteCommand(
+            ViewModels.DocumentSelectionViewModel documentSelectionViewModel,
+            Models.SheetsDataModel revitSheetsDataModel)
+        {
+            _documentSelectionViewModel = documentSelectionViewModel;
+            _revitSheetsDataModel = revitSheetsDataModel;
+
+            // Subscribe to property changes to update CanExecute
+            _documentSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
+        }
 
         /// <summary>
-        /// sets the print set to be deleted
+        /// Deletes the selected print set by marking it for deletion
         /// </summary>
-        /// <param name="parameter"></param>
-        public override void Execute(object parameter)
+        [RelayCommand(CanExecute = nameof(CanDelete))]
+        private void Delete()
         {
             try
             {
-                // set the status of the print set to be deleted
+                // Get the print set to delete
                 string printSetToDelete = _documentSelectionViewModel.SelectedPrintSet;
 
+                // Mark the print set for deletion
                 foreach (var printSet in _revitSheetsDataModel.PrintSets)
                 {
                     if (printSet.Name == printSetToDelete)
@@ -53,63 +69,75 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.Commands
                     }
                 }
 
-                // raise event to notify the view model that the model has been updated
+                // Notify that the model has been updated
                 _revitSheetsDataModel.RaisePropertyChanged(Utils.PropertyChangedEventNames.DATA_MODEL_PRINTSETS_UPDATED);
 
+                // Reset selection to default
                 _documentSelectionViewModel.SelectedPrintSet = Constants.DefaultPrintSetName;
 
-                // inform user
+                // Inform user
                 _documentSelectionViewModel.AddMessage(
                     $"Print set '{printSetToDelete}' marked for deletion.",
                     duHastNet.Utils.WPF.Stores.MessageTypes.Information
                 );
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 _documentSelectionViewModel.AddMessage(
                     $"Error during print set deletion: {ex.Message}",
                     duHastNet.Utils.WPF.Stores.MessageTypes.Error
                 );
             }
-            
         }
-
 
         /// <summary>
-        /// this command is available if the print set is not none
+        /// Determines if the delete command can execute
+        /// Command is enabled when a print set (other than default) is selected
         /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        public override bool CanExecute(object parameter)
+        private bool CanDelete()
         {
-            // check if there are any errors ( there is only one which relateds to a valid library path )
-            if (_documentSelectionViewModel.SelectedPrintSet==Constants.DefaultPrintSetName)
-            {
-                return false;
-            }
-            return true;
+            return _documentSelectionViewModel.SelectedPrintSet != Constants.DefaultPrintSetName;
         }
 
-
+        /// <summary>
+        /// Handles property changes from the ViewModel to update command state
+        /// </summary>
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            // check if the property that changed is the one that we are interested in
             if (e.PropertyName == nameof(ViewModels.DocumentSelectionViewModel.SelectedPrintSet))
             {
-                OnCanExecutedChanged();
+                // Notify that CanExecute state may have changed
+                DeleteCommand.NotifyCanExecuteChanged();
             }
         }
 
+        #region ICloseable Implementation
 
-        public PrintSetDeleteCommand(
-            ViewModels.DocumentSelectionViewModel documentSelectionViewModel,
-            Models.SheetsDataModel revitSheetsDataModel)
+        public void OnClosing()
         {
-            _documentSelectionViewModel = documentSelectionViewModel;
-            _revitSheetsDataModel = revitSheetsDataModel;
-
-
-            _documentSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            // No UI-specific cleanup needed for commands
         }
+
+        #endregion
+
+        #region IDisposable Implementation
+
+        private bool _disposed = false;
+
+        public void Dispose()
+        {
+            if (_disposed)
+                return;
+
+            // Unsubscribe from events to prevent memory leaks
+            if (_documentSelectionViewModel != null)
+            {
+                _documentSelectionViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+            }
+
+            _disposed = true;
+        }
+
+        #endregion
     }
 }

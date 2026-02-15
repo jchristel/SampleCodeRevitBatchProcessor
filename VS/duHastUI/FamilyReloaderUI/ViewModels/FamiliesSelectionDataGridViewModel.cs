@@ -479,9 +479,18 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
         #region Disposal
 
         /// <summary>
+        /// </summary>
+        public override void OnClosing()
+        { 
+
+            // close any child view models
+            base.OnClosing();
+        }
+
+        /// <summary>
         /// Override to clean up event subscriptions and resources specific to this ViewModel
         /// </summary>
-        protected override void DisposeManaged()
+        public override void Dispose()
         {
             // Unsubscribe from model property changes
             if (FamiliesDataModel != null)
@@ -505,7 +514,7 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
             }
 
             // Call base to handle any base class cleanup
-            base.DisposeManaged();
+            base.Dispose();
         }
 
         #endregion

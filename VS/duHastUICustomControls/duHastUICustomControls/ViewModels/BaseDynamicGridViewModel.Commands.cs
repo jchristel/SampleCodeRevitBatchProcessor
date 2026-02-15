@@ -20,7 +20,7 @@ namespace duHastNet.Utils.WPF.ViewModels
         /// Generated command name: AddRowCommand
         /// </summary>
         [RelayCommand]
-        private void AddRow()
+        internal void AddRow()
         {
             var newRow = CreateNewRow();
 
@@ -71,7 +71,7 @@ namespace duHastNet.Utils.WPF.ViewModels
         /// </summary>
         /// <param name="propertyName">The property name of the column to add</param>
         [RelayCommand]
-        private void AddSelectedColumn(string propertyName)
+        internal void AddSelectedColumn(string propertyName)
         {
             if (string.IsNullOrEmpty(propertyName)) return;
 
@@ -104,7 +104,7 @@ namespace duHastNet.Utils.WPF.ViewModels
         /// </summary>
         /// <param name="propertyName">The property name of the column to remove, or "last" to remove the last column</param>
         [RelayCommand]
-        private void RemoveColumn(string propertyName)
+        internal void RemoveColumn(string propertyName)
         {
             if (string.IsNullOrEmpty(propertyName)) return;
 
@@ -160,7 +160,7 @@ namespace duHastNet.Utils.WPF.ViewModels
         /// Generated command name: ClearDataCommand
         /// </summary>
         [RelayCommand]
-        private void ClearData()
+        internal void ClearData()
         {
             Data.Clear();
             // Also clear stored column data since rows are gone

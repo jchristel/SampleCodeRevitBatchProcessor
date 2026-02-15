@@ -49,7 +49,7 @@ namespace duHastNet.Utils.WPF.ViewModels
                     _selectedItems.CollectionChanged += OnSelectedItemsCollectionChanged;
                 }
 
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(SelectedItems));
                 OnPropertyChanged(nameof(HasSelection));
                 OnPropertyChanged(nameof(SelectionCount));
                 OnSelectionChanged();
@@ -125,9 +125,10 @@ namespace duHastNet.Utils.WPF.ViewModels
         /// Can only execute when HasSelection is true.
         /// </summary>
         [RelayCommand(CanExecute = nameof(HasSelection))]
-        private void ClearSelectionCommand()
+        private void ClearSelection()
         {
-            ClearSelection();
+            SelectedItems.Clear();
+            SelectedItem = null;
         }
 
         #endregion
@@ -227,11 +228,11 @@ namespace duHastNet.Utils.WPF.ViewModels
         /// <summary>
         /// Clears the current selection
         /// </summary>
-        public void ClearSelection()
-        {
-            SelectedItems.Clear();
-            SelectedItem = null;
-        }
+        //public void ClearSelection()
+        //{
+        //    SelectedItems.Clear();
+        //    SelectedItem = null;
+        //}
 
         #endregion
 

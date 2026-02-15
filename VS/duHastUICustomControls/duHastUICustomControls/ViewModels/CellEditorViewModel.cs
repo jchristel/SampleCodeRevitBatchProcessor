@@ -19,35 +19,55 @@
 // or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 //
 
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.UI.CustomControls.CustomDataGrid;
 using duHastNet.Utils.WPF.ViewModels;
-using duHastNet.Utils.WPF.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Input;
 
 namespace duHastNet.UI.CustomControls.ViewModels
 {
-    public class CellEditorViewModel : BaseDynamicGridViewModel<CellEditorRowData>
+    /// <summary>
+    /// ViewModel for the CellEditor control, providing dynamic grid functionality
+    /// with row duplication support.
+    /// </summary>
+    public partial class CellEditorViewModel : BaseDynamicGridViewModel<CellEditorRowData>
     {
-        #region Additional Commands
-        public ICommand DuplicateRowCommand { get; }
-        #endregion
+        #region Constructor
 
         public CellEditorViewModel()
         {
-            // Initialize the duplicate row command
-            DuplicateRowCommand = new RelayCommand(param => DuplicateRowFromParameter(param));
+            // No command initialization needed - handled by [RelayCommand] attributes
         }
 
-        private void DuplicateRowFromParameter(object parameter)
+        #endregion
+
+        #region Commands
+
+        /// <summary>
+        /// Command to duplicate a row in the grid.
+        /// Generated command name: DuplicateRowCommand
+        /// </summary>
+        /// <param name="parameter">The CellEditorRowData to duplicate</param>
+        [RelayCommand]
+        private void DuplicateRow(object parameter)
         {
             if (parameter is CellEditorRowData row)
             {
-                DuplicateRow(row);
+                DuplicateRowImpl(row);
             }
         }
+
+        #endregion
+
+        #region Data Loading
+
+        /// <summary>
+        /// Loads data into the grid from headers and data rows.
+        /// </summary>
+        /// <param name="headers">List of column header names</param>
+        /// <param name="dataRows">List of data rows, where each row is a list of values</param>
         public void LoadData(List<string> headers, List<List<object>> dataRows)
         {
             // Clear existing data
@@ -108,7 +128,26 @@ namespace duHastNet.UI.CustomControls.ViewModels
             }
         }
 
+        #endregion
+
+        #region Row Operations
+
+        /// <summary>
+        /// Duplicates the specified row. 
+        /// Public method for external callers (like CellEditor control).
+        /// </summary>
+        /// <param name="sourceRow">The row to duplicate</param>
         public void DuplicateRow(CellEditorRowData sourceRow)
+        {
+            DuplicateRowImpl(sourceRow);
+        }
+
+        /// <summary>
+        /// Internal implementation of row duplication.
+        /// Creates a copy of the source row and inserts it after the original.
+        /// </summary>
+        /// <param name="sourceRow">The row to duplicate</param>
+        private void DuplicateRowImpl(CellEditorRowData sourceRow)
         {
             if (sourceRow == null) return;
 
@@ -132,6 +171,10 @@ namespace duHastNet.UI.CustomControls.ViewModels
             }
         }
 
+        /// <summary>
+        /// Removes a specific row from the grid.
+        /// </summary>
+        /// <param name="row">The row to remove</param>
         public void RemoveRow(CellEditorRowData row)
         {
             if (row != null && Data.Contains(row))
@@ -140,6 +183,16 @@ namespace duHastNet.UI.CustomControls.ViewModels
             }
         }
 
+        #endregion
+
+        #region Type Inference and Conversion
+
+        /// <summary>
+        /// Infers the data type of a column by examining the values in the data rows.
+        /// </summary>
+        /// <param name="dataRows">The data rows to examine</param>
+        /// <param name="columnIndex">The column index to infer type for</param>
+        /// <returns>The inferred Type, defaulting to string if type cannot be determined</returns>
         private Type InferDataType(List<List<object>> dataRows, int columnIndex)
         {
             if (dataRows == null || dataRows.Count == 0)
@@ -183,6 +236,12 @@ namespace duHastNet.UI.CustomControls.ViewModels
             return typeof(string); // Default to string
         }
 
+        /// <summary>
+        /// Converts a value to the specified target type.
+        /// </summary>
+        /// <param name="value">The value to convert</param>
+        /// <param name="targetType">The target type</param>
+        /// <returns>The converted value, or the default value for the type if conversion fails</returns>
         private object ConvertValueToType(object value, Type targetType)
         {
             if (value == null)
@@ -212,14 +271,24 @@ namespace duHastNet.UI.CustomControls.ViewModels
             return value;
         }
 
+        #endregion
+
         #region BaseDynamicGridViewModel Implementation
 
+        /// <summary>
+        /// Initializes available columns. This will be populated dynamically when LoadData is called.
+        /// Base constructor already initializes the collection, so this is a no-op.
+        /// </summary>
         protected override void InitializeAvailableColumns()
         {
+            // No-op: Base constructor already initialized _availableColumns
             // This will be populated dynamically when LoadData is called
-            AvailableColumns = new System.Collections.ObjectModel.ObservableCollection<AvailableColumnDefinition>();
         }
 
+        /// <summary>
+        /// Creates a new row with default values for all current columns.
+        /// </summary>
+        /// <returns>A new CellEditorRowData instance with default values</returns>
         protected override CellEditorRowData CreateNewRow()
         {
             var newRow = new CellEditorRowData();
@@ -233,11 +302,22 @@ namespace duHastNet.UI.CustomControls.ViewModels
             return newRow;
         }
 
+        /// <summary>
+        /// Gets the default value for a specific column.
+        /// </summary>
+        /// <param name="columnDef">The column definition</param>
+        /// <returns>The default value for the column's data type</returns>
         protected override object GetDefaultValueForColumn(AvailableColumnDefinition columnDef)
         {
             return GetDefaultValue(columnDef.DataType);
         }
 
+        /// <summary>
+        /// Determines if a column should be read-only by default.
+        /// In the cell editor, all columns are editable by default.
+        /// </summary>
+        /// <param name="propertyName">The property name of the column</param>
+        /// <returns>False - columns are editable by default</returns>
         protected override bool GetDefaultReadOnlyForColumn(string propertyName)
         {
             // By default, no columns are read-only in the cell editor

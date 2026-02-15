@@ -36,15 +36,18 @@ namespace duHastNet.Utils.WPF.ViewModels
         {
             _stateStore = stateStore;
 
-            // Initialize collections
-            ColumnDefinitions = [];
-            Data = [];
+            // Initialize collection backing fields directly to avoid triggering property change notifications
+            // during construction when dependent properties might not be ready
+            _columnDefinitions = new ObservableCollection<DynamicColumnDefinition>();
+            _data = new ObservableCollection<TData>();
+            _availableColumns = new ObservableCollection<AvailableColumnDefinition>();
 
-            // Initialize available columns (derived classes override this)
+            // Initialize available columns (derived classes override this to populate)
+            // Note: Field is already initialized above, derived classes can populate via property or field
             InitializeAvailableColumns();
 
-            // Initialize selected items collection
-            SelectedItems = [];
+            // Initialize SelectedItems backing field directly to avoid calling property setter during construction
+            _selectedItems = new ObservableCollection<TData>();
 
             // Load saved state after everything is initialized
             LoadSavedStateIfExists();

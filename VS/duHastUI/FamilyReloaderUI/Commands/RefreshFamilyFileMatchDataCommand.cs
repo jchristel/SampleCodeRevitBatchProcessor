@@ -22,19 +22,18 @@
 //
 
 
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.Utils.WPF.Stores;
 using System;
 using System.ComponentModel;
 
 namespace duHastNet.UI.FamilyReloaderUI.Commands
 {
-    public class RefreshFamilyFileMatchDataCommand: duHastNet.Utils.WPF.Commands.CommandBase
+    public partial class RefreshFamilyFileMatchDataCommand
     {
-
         private readonly ViewModels.FamiliesSelectionViewModel _familiesSelectionViewModel;
-        //private readonly ViewModels.FamiliesDataGridViewModel _familiesDataGridViewModel;
-        //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.FamiliesDataModel _revitFamiliesDataModel;
+        private readonly RelayCommand _command;
 
         public RefreshFamilyFileMatchDataCommand(
            ViewModels.FamiliesSelectionViewModel familiesSelectionViewModel,
@@ -43,36 +42,33 @@ namespace duHastNet.UI.FamilyReloaderUI.Commands
             _familiesSelectionViewModel = familiesSelectionViewModel;
             _revitFamiliesDataModel = revitFamiliesDataModel;
 
+            // Create the RelayCommand with Execute and CanExecute logic
+            _command = new RelayCommand(Execute, CanExecute);
+
             _familiesSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
 
         /// <summary>
         /// this command is available if there are no errors in the view model
         /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        public override bool CanExecute(object parameter)
+        private bool CanExecute()
         {
             // check if there are any errors ( there is only one which relateds to a valid library path )
-            if (!_familiesSelectionViewModel.LibraryDirectoryPathValid)
-            {
-                return false;
-            }
-            return true;
+            return _familiesSelectionViewModel.LibraryDirectoryPathValid;
         }
 
-        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             // check if the property that changed is the one that we are interested in
             if (e.PropertyName == nameof(ViewModels.FamiliesSelectionViewModel.LibraryDirectoryPathValid))
             {
-                OnCanExecutedChanged();
+                _command.NotifyCanExecuteChanged();
             }
         }
 
-        public override void Execute(object parameter)
+        private void Execute()
         {
-            
+
             try
             {
                 // Execute the action to refresh the room data with the Revit data
@@ -99,6 +95,22 @@ namespace duHastNet.UI.FamilyReloaderUI.Commands
             finally
             {
             }
+        }
+
+        /// <summary>
+        /// Executes the command (used by consumers)
+        /// </summary>
+        public void Execute(object? parameter = null)
+        {
+            _command.Execute(null);
+        }
+
+        /// <summary>
+        /// Gets whether the command can execute (used by consumers)
+        /// </summary>
+        public bool CanExecute(object? parameter = null)
+        {
+            return _command.CanExecute(null);
         }
     }
 }

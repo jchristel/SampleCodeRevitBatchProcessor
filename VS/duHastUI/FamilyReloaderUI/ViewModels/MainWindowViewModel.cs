@@ -22,24 +22,36 @@
 //
 
 
+using CommunityToolkit.Mvvm.ComponentModel;
 using duHastNet.Utils.WPF.ViewModels;
+using System.ComponentModel;
 
 namespace duHastNet.UI.FamilyReloaderUI.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
         private readonly duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
-        public duHastNet.Utils.WPF.ViewModels.ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
+
+        /// <summary>
+        /// Gets the current ViewModel from the NavigationStore
+        /// </summary>
+        public ObservableObject? CurrentViewModel => _navigationStore.CurrentViewModel;
 
         public MainWindowViewModel(duHastNet.Utils.WPF.Stores.NavigationStore navigationStore)
         {
             _navigationStore = navigationStore;
-            _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
+
+            // Subscribe to PropertyChanged to monitor CurrentViewModel changes
+            _navigationStore.PropertyChanged += OnNavigationStorePropertyChanged;
         }
 
-        private void OnCurrentViewModelChanged()
+        private void OnNavigationStorePropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            OnPropertyChanged(nameof(CurrentViewModel));
+            // When NavigationStore's CurrentViewModel changes, notify our own property
+            if (e.PropertyName == nameof(_navigationStore.CurrentViewModel))
+            {
+                OnPropertyChanged(nameof(CurrentViewModel));
+            }
         }
 
         public override void OnClosing()
@@ -47,10 +59,16 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
             // Notify the navigation store to close current view model
             _navigationStore.NotifyClosing();
 
-            // Custom closing logic for RoomsSelectionViewModel
-            _navigationStore.CurrentViewModelChanged -= OnCurrentViewModelChanged;
+            // Unsubscribe from PropertyChanged
+            _navigationStore.PropertyChanged -= OnNavigationStorePropertyChanged;
 
             base.OnClosing();
+        }
+
+        public override void Dispose()
+        {
+            // Call base to handle disposal
+            base.Dispose();
         }
     }
 }

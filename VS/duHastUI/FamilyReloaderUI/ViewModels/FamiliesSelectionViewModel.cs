@@ -23,6 +23,7 @@
 
 
 
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
 using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
@@ -32,6 +33,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
 
 namespace duHastNet.UI.FamilyReloaderUI.ViewModels
 {
@@ -90,19 +92,15 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
         /// <summary>
         /// command to save the settings and close the window
         /// </summary>
-        private readonly duHastNet.Utils.WPF.Commands.RelayCommand _saveAndCloseCommand;
+        private RelayCommand? _saveAndCloseCommand;
 
         /// <summary>
         /// command to refresh match status of families in UI
         /// </summary>
         private readonly Commands.RefreshFamilyFileMatchDataCommand _updateCommand;
 
-        public ICommand SaveAndCloseCommand { get { return _saveAndCloseCommand; } }
-        public ICommand UpdateCommand { get { return _updateCommand; } }
-
-
-
-
+        public ICommand? SaveAndCloseCommand => _saveAndCloseCommand;
+        public Commands.RefreshFamilyFileMatchDataCommand UpdateCommand => _updateCommand;
 
 
         /// <summary>
@@ -112,7 +110,21 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
         /// <param name="messageType"></param>
         public void AddMessage(string message, duHastNet.Utils.WPF.Stores.MessageTypes messageType)
         {
-            _messageStore.SetCurrentMessage(message, messageType);
+            if (messageType == duHastNet.Utils.WPF.Stores.MessageTypes.Error)
+            {
+                //let user dismiss the message themselves for error messages, since they might want to copy the message text for further use, and errors are more important to see for a longer time
+                _messageStore.EnqueueMessage(message, messageType);
+            }
+            else if (messageType == duHastNet.Utils.WPF.Stores.MessageTypes.Information)
+            {
+                //just flash message to user for information messages, since they are less important and user might not need to copy the message text, and it is better to dismiss them after a short time to avoid too many messages building up in the UI
+                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds:2);
+            }
+            else
+            {
+                //default to short display time for other message types
+                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds:5);
+            }
         }
 
 
@@ -197,6 +209,7 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
             set
             {
                 _updateExistingTypesOnly = value;
+                OnPropertyChanged(nameof(UpdateExistingTypesOnly));
             }
         }
 
@@ -212,6 +225,7 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
                 _loadAllFamilyTypes = value;
                 //store in settings
                 _familiesDataModel.Settings.LoadAllFamilyTypesOnReload = value;
+                OnPropertyChanged(nameof(LoadAllFamilyTypes));
             }
         }
 
@@ -226,7 +240,7 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
             {
                 _includeSudDirectoriesInSearch = value;
                 _familiesDataModel.Settings.IncludeSubdirectories = value;
-                RaisePropertyChanged(nameof(IncludeSubDirectoriesInSearch));
+                OnPropertyChanged(nameof(IncludeSubDirectoriesInSearch));
 
                 //refresh the view model data if command is available
                 if (UpdateCommand != null)
@@ -246,20 +260,20 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
             //unsubscribe from errors changed event
             _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
 
-            
-
-            // close any child view models
+            // close any child view models (base handles GlobalMessageViewModel cleanup)
             base.OnClosing();
+        }
 
-            GlobalMessageViewModel.Dispose();
-
+        public override void Dispose()
+        {
+            // Call base to handle disposal of child ViewModels
+            base.Dispose();
         }
 
         /// <summary>
         /// closes the window
         /// </summary>
-        /// <param name="window"></param>
-        private void SaveSettingsAndClose(object window)
+        private void SaveSettingsAndClose()
         {
             //update the column ids in settings.
             // clear list first
@@ -299,18 +313,8 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
             //store settings
             Utils.SettingsUtils.SaveSettings(_familiesDataModel.Settings);
 
-            if (window is Window w)
-            {
-                w.Close(); // Closes the window
-            }
-            else if (window is DependencyObject obj)
-            {
-                Window.GetWindow(obj)?.Close();
-            }
-            else
-            {
-                Application.Current.MainWindow?.Close();
-            }
+            // Close the application main window
+            Application.Current.MainWindow?.Close();
         }
 
         #region data validation
@@ -346,10 +350,7 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
             OnPropertyChanged(nameof(LibraryDirectoryPathValid));
 
             // Trigger the command to re-evaluate its CanExecute state
-            if (_saveAndCloseCommand != null)
-            {
-                _saveAndCloseCommand.RaiseCanExecuteChanged();
-            }
+            _saveAndCloseCommand?.NotifyCanExecuteChanged();
         }
 
         #endregion data validation
@@ -377,6 +378,9 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
 
             //store the global message view model
             GlobalMessageViewModel = globalMessageViewModel;
+
+            // Register GlobalMessageViewModel as a child for automatic cleanup
+            RegisterChild(GlobalMessageViewModel);
 
             // initialize the errors view model
             _errorsViewModel = new duHastNet.Utils.WPF.ViewModels.ErrorsViewModel();
@@ -406,13 +410,13 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
 
             //commands
             //refresh family match status
-            _updateCommand = new Commands.RefreshFamilyFileMatchDataCommand(this,  _familiesDataModel);
+            _updateCommand = new Commands.RefreshFamilyFileMatchDataCommand(this, _familiesDataModel);
 
             //save and exit
             //only if there are no errors
-            _saveAndCloseCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
+            _saveAndCloseCommand = new RelayCommand(
                 SaveSettingsAndClose,
-                (object parameter) => !HasErrors // Only enabled when there are no errors
+                () => !HasErrors // Only enabled when there are no errors
             );
 
             //refresh the view model data

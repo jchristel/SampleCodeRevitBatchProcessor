@@ -344,7 +344,7 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
 
             foreach (var columnName in defaultColumns)
             {
-                AddSelectedColumn(columnName);
+                AddSelectedColumnCommand.Execute(columnName);
             }
         }
 
@@ -474,6 +474,40 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
                 }
             }
         }
+        #endregion
+
+        #region Disposal
+
+        /// <summary>
+        /// Override to clean up event subscriptions and resources specific to this ViewModel
+        /// </summary>
+        protected override void DisposeManaged()
+        {
+            // Unsubscribe from model property changes
+            if (FamiliesDataModel != null)
+            {
+                FamiliesDataModel.PropertyChanged -= Model_PropertyChanged;
+            }
+
+            // Unsubscribe from row property changes
+            if (Data != null)
+            {
+                foreach (var row in Data)
+                {
+                    if (row is INotifyPropertyChanged notifyRow)
+                    {
+                        notifyRow.PropertyChanged -= OnGridRowPropertyChanged;
+                    }
+                }
+
+                // Note: CollectionChanged uses lambda so can't be explicitly unsubscribed
+                // but will be cleaned up when Data collection is disposed
+            }
+
+            // Call base to handle any base class cleanup
+            base.DisposeManaged();
+        }
+
         #endregion
     }
 }

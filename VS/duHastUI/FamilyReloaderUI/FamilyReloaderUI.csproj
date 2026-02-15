@@ -24,12 +24,13 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Utils.25.0.0.3">
       <HintPath>..\\..\\_References\\duHast\\Utils.25.0.0.3.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="duHastUICustomControls.25.0.0.3">
       <HintPath>..\\..\\_References\\duHast\\duHastUICustomControls.25.0.0.3.dll</HintPath>

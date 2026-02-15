@@ -41,7 +41,7 @@
         </Grid>
         <!-- message banner -->
         <Grid Grid.Row="1">
-            <utilsViews:GlobalMessageBanner DataContext="{Binding GlobalMessageViewModel}"/>
+            <utilsViews:GlobalMessageView DataContext="{Binding GlobalMessageViewModel}"/>
         </Grid>
         <!-- filter -->
         <Border Grid.Row="2" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">

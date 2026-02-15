@@ -23,7 +23,6 @@
 
 
 using duHastNet.UI.PDFDWGExporterSelectionUI.Commands;
-using duHastNet.Utils.WPF.Commands;
 using duHastNet.Utils.WPF.ViewModels;
 using System;
 using System.Collections;
@@ -275,5 +274,31 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             // Validate initial value
             ValidatePrintSetName();
         }
+
+        #region Lifecycle Methods
+
+        public override void OnClosing()
+        {
+            // UI-related cleanup
+            base.OnClosing();
+        }
+
+        /// <summary>
+        /// Dispose of managed resources including event subscriptions
+        /// </summary>
+        protected override void DisposeManaged()
+        {
+            System.Diagnostics.Debug.WriteLine("PrintSetNameDialogViewModel.DisposeManaged() called");
+
+            // Unsubscribe from events to prevent memory leaks
+            if (_errorsViewModel != null)
+            {
+                _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
+            }
+
+            base.DisposeManaged();
+        }
+
+        #endregion
     }
 }

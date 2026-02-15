@@ -37,7 +37,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             get => _columnIdToParameterNameLookUp;
         }
 
-
         /// <summary>
         /// Define what columns are available for the views grid
         /// </summary>
@@ -521,6 +520,39 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
             base.AssociateWithDataGrid(dataGrid);
         }
+
+        #region Lifecycle Methods
+
+        public override void OnClosing()
+        {
+            // UI-related cleanup
+            base.OnClosing();
+        }
+
+
+        protected override void DisposeManaged()
+        {
+            System.Diagnostics.Debug.WriteLine("ViewSelectionDataGridViewModel.DisposeManaged() called");
+
+            // Unsubscribe from all row property changed events
+            if (Data != null)
+            {
+                foreach (var row in Data)
+                {
+                    if (row is INotifyPropertyChanged notifyRow)
+                    {
+                        notifyRow.PropertyChanged -= OnGridRowPropertyChanged;
+                    }
+                }
+
+                // Note: CollectionChanged event handler is anonymous and will be cleaned up
+                // when Data collection is disposed
+            }
+
+            base.DisposeManaged();
+        }
+
+        #endregion
 
         /// <summary>
         /// Class constructor

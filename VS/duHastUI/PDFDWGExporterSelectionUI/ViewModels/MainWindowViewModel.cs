@@ -45,13 +45,26 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
         public override void OnClosing()
         {
+            System.Diagnostics.Debug.WriteLine("MainWindowViewModel.OnClosing() called");
+
             // Notify the navigation store to close current view model
             _navigationStore.NotifyClosing();
 
-            // Custom closing logic for RoomsSelectionViewModel
-            _navigationStore.CurrentViewModelChanged -= OnCurrentViewModelChanged;
-            
+            // Event cleanup moved to DisposeManaged()
             base.OnClosing();
+        }
+
+        protected override void DisposeManaged()
+        {
+            System.Diagnostics.Debug.WriteLine("MainWindowViewModel.DisposeManaged() called");
+
+            // Unsubscribe from navigation store events
+            if (_navigationStore != null)
+            {
+                _navigationStore.CurrentViewModelChanged -= OnCurrentViewModelChanged;
+            }
+
+            base.DisposeManaged();
         }
     }
 }

@@ -117,21 +117,32 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// </summary>
         public override void OnClosing()
         {
-            // In DocumentSelectionViewModel.OnClosing()
             System.Diagnostics.Debug.WriteLine("DocumentSelectionViewModel.OnClosing() called");
 
-            if (GlobalMessageViewModel != null)
+            // Event cleanup now handled by DisposeManaged()
+            // Call base to handle registered child ViewModels
+            base.OnClosing();
+        }
+
+        protected override void DisposeManaged()
+        {
+            System.Diagnostics.Debug.WriteLine("DocumentSelectionViewModel.DisposeManaged() called");
+
+            // Unsubscribe from events to prevent memory leaks
+            if (_errorsViewModel != null)
             {
-                // Unsubscribe from the event to prevent memory leaks
-                GlobalMessageViewModel.Dispose();
+                _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
             }
 
-            //unsubscribe from errors changed event
-            _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
-            //unsubscribe from model property changed event
-            _sheetsDataModel.PropertyChanged -= Model_PropertyChanged;
+            if (_sheetsDataModel != null)
+            {
+                _sheetsDataModel.PropertyChanged -= Model_PropertyChanged;
+            }
 
-            base.OnClosing();
+            // Note: GlobalMessageViewModel and ViewSelectionDataGridViewModel are registered
+            // as children, so they will be automatically disposed by base.Dispose()
+
+            base.DisposeManaged();
         }
 
         #endregion event handlers
@@ -612,6 +623,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
             //store the global message view model
             GlobalMessageViewModel = globalMessageViewModel;
+
+            // Register GlobalMessageViewModel for automatic cleanup
+            RegisterChild(GlobalMessageViewModel);
 
             //initialize the errors view model
             _errorsViewModel = new duHastNet.Utils.WPF.ViewModels.ErrorsViewModel();

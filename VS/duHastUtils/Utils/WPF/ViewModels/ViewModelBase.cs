@@ -79,6 +79,9 @@ namespace duHastNet.Utils.WPF.ViewModels
             if (_disposed)
                 return;
 
+            // Dispose managed resources (override DisposeManaged in derived classes)
+            DisposeManaged();
+
             // Dispose child ViewModels that implement IDisposable
             foreach (var child in _childViewModels)
             {
@@ -89,6 +92,16 @@ namespace duHastNet.Utils.WPF.ViewModels
             }
 
             _disposed = true;
+        }
+
+        /// <summary>
+        /// Override this method in derived classes to dispose of specific managed resources
+        /// (event subscriptions, timers, etc.)
+        /// </summary>
+        protected virtual void DisposeManaged()
+        {
+            // Base implementation has no resources to dispose
+            // Derived classes can override to clean up their specific resources
         }
 
         #endregion

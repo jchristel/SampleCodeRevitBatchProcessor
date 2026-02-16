@@ -28,7 +28,8 @@ This module contains a number of helper functions relating to Revit legends.
 
 from Autodesk.Revit.DB import FilteredElementCollector, View, ViewType
 
-from duHast.Revit.Views.views import get_views_not_on_sheet
+from duHast.Revit.Views.views import get_views_not_on_sheet, get_viewport_on_sheets
+from duHast.Revit.Views.sheets import get_all_sheets
 
 
 def get_view_legends(doc):
@@ -60,9 +61,6 @@ def get_view_legends_not_placed(doc):
     :rtype: list of Autodesk.Revit.DB.View
     """
 
-    # get all legends in model:
-    all_legend_views = get_view_legends(doc=doc)
-
     # get all views not on sheets
     all_views_not_on_sheets = get_views_not_on_sheet(doc=doc)
 
@@ -73,3 +71,27 @@ def get_view_legends_not_placed(doc):
             unplaced_legends.append(view)
 
     return unplaced_legends
+
+
+def get_legends_on_sheets(doc):
+    """
+    Returns all legends that are placed on sheets in the model
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: All legends that are placed on sheets in the model
+    :rtype: list of Autodesk.Revit.DB.View
+    """
+
+    legends_on_sheets = []
+    all_legends = get_view_legends(doc)
+    sheets_in_model = get_all_sheets(doc)
+    view_ports_on_sheets = get_viewport_on_sheets(doc, sheets_in_model)
+
+    for legend_view in all_legends:
+        for view_port_on_sheet in view_ports_on_sheets:
+              if view_port_on_sheet.ViewId == legend_view.Id:
+                legends_on_sheets.append(legend_view)
+                break
+    return legends_on_sheets

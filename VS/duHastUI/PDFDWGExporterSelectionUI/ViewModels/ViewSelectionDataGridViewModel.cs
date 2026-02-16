@@ -382,7 +382,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
             foreach (var columnName in defaultColumns)
             {
-                AddSelectedColumn(columnName);
+                AddSelectedColumnCommand.Execute(columnName);
             }
         }
 

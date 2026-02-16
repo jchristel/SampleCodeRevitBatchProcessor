@@ -21,8 +21,7 @@
 //
 //
 
-
-using duHastNet.UI.PDFDWGExporterSelectionUI.Commands;
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.Utils.WPF.ViewModels;
 using System;
 using System.Collections;
@@ -78,7 +77,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// </summary>
         /// <param name="propertyName">The name of the property of which to get any errors, if they exist, for.</param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public IEnumerable GetErrors(string propertyName)
         {
             return _errorsViewModel.GetErrors(propertyName);
@@ -92,7 +90,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             // Trigger the command to re-evaluate its CanExecute state
             if (CreateCommand != null)
             {
-                ((RelayCommand)CreateCommand).RaiseCanExecuteChanged();
+                ((RelayCommand)CreateCommand).NotifyCanExecuteChanged();
             }
         }
 
@@ -100,14 +98,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// <summary>
         /// Validates the current print set name and updates the validation state.
         /// </summary>
-        /// <remarks>This method checks the print set name for the following conditions: <list
-        /// type="bullet"> <item><description>It must not be null, empty, or consist only of
-        /// whitespace.</description></item> <item><description>It must not exceed 100 characters in
-        /// length.</description></item> <item><description>It must not duplicate an existing print set
-        /// name.</description></item> </list> If any of these conditions are violated, an appropriate error message is
-        /// added to the  <see cref="_errorsViewModel"/> for the <c>PrintSetName</c> property, and the
-        /// <c>PrintSetNameValid</c>  property is set to <see langword="false"/>. Otherwise, the name is considered
-        /// valid, and  <c>PrintSetNameValid</c> is set to <see langword="true"/>.</remarks>
         private void ValidatePrintSetName()
         {
 
@@ -127,7 +117,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
                 return;
             }
-            
+
             // Check if name already exists
             if (_existingNames.Contains(name))
             {
@@ -152,7 +142,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                 return;
             }
 
-            if(name.IndexOfAny(System.IO.Path.GetInvalidFileNameChars()) >= 0)
+            if (name.IndexOfAny(System.IO.Path.GetInvalidFileNameChars()) >= 0)
             {
                 // Add error
                 _errorsViewModel.AddError(nameof(PrintSetName), "Print set name contains invalid characters.");
@@ -166,7 +156,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             // this will trigger data validation
             // from the eventhandler ErrorsViewModel_ErrorsChanged
             _errorsViewModel.ClearErrors(nameof(PrintSetName));
-            
+
         }
 
         #endregion
@@ -174,9 +164,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// <summary>
         /// Gets or sets the name of the print set.
         /// </summary>
-        /// <remarks>Setting this property triggers validation of the print set name and raises a property
-        /// change notification. Additionally, it updates the execution state of the associated create
-        /// command.</remarks>
         public string PrintSetName
         {
             get => _printSetName;
@@ -187,7 +174,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                 ValidatePrintSetName();
 
                 // Notify that CanExecute may have changed
-                ((RelayCommand)CreateCommand).RaiseCanExecuteChanged();
+                ((RelayCommand)CreateCommand).NotifyCanExecuteChanged();
             }
         }
 
@@ -221,27 +208,21 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             remove { _errorsViewModel.ErrorsChanged -= value; }
         }
 
-        
+
         /// <summary>
         /// Check if the create command can be executed
         /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        private bool CanExecuteCreate(object parameter)
+        private bool CanExecuteCreate()
         {
-          return !HasErrors && !string.IsNullOrWhiteSpace(_printSetName);
+            return !HasErrors && !string.IsNullOrWhiteSpace(_printSetName);
         }
 
         /// <summary>
-        /// Executes the create operation if the specified parameter satisfies the conditions for execution.
+        /// Executes the create operation if the conditions are met.
         /// </summary>
-        /// <remarks>This method checks whether the operation can be executed by calling <see
-        /// cref="CanExecuteCreate"/>  with the provided parameter. If the conditions are met, it sets the <see
-        /// cref="DialogResult"/> to <see langword="true"/>.</remarks>
-        /// <param name="parameter">An object representing the parameter to evaluate before executing the operation.</param>
-        private void ExecuteCreate(object parameter)
+        private void ExecuteCreate()
         {
-            if (CanExecuteCreate(parameter))
+            if (CanExecuteCreate())
             {
                 DialogResult = true;
             }
@@ -250,7 +231,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// <summary>
         /// Execute the cancel operation
         /// </summary>
-        private void ExecuteCancel(object parameter)
+        private void ExecuteCancel()
         {
             DialogResult = false;
         }

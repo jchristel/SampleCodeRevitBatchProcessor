@@ -22,31 +22,49 @@
 //
 
 
+using CommunityToolkit.Mvvm.ComponentModel;
 using duHastNet.Utils.WPF.ViewModels;
+using System.ComponentModel;
 
 namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
         private readonly duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
-        public duHastNet.Utils.WPF.ViewModels.ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
+        public ObservableObject? CurrentViewModel => _navigationStore.CurrentViewModel;
 
         public MainWindowViewModel(duHastNet.Utils.WPF.Stores.NavigationStore navigationStore)
         {
             _navigationStore = navigationStore;
-            _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
+            _navigationStore.PropertyChanged += OnNavigationStorePropertyChanged;
         }
 
-        private void OnCurrentViewModelChanged()
+        private void OnNavigationStorePropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            OnPropertyChanged(nameof(CurrentViewModel));
+            if (e.PropertyName == nameof(_navigationStore.CurrentViewModel))
+            {
+                OnPropertyChanged(nameof(CurrentViewModel));
+            }
         }
 
         public override void OnClosing()
         {
-            // Custom closing logic for RoomsSelectionViewModel
-            _navigationStore.CurrentViewModelChanged -= OnCurrentViewModelChanged;
+            System.Diagnostics.Debug.WriteLine("MainWindowViewModel.OnClosing() called");
+            // Notify the navigation store to close current view model
+            _navigationStore.NotifyClosing();
+            // Event cleanup moved to Dispose()
             base.OnClosing();
+        }
+
+        public override void Dispose()
+        {
+            System.Diagnostics.Debug.WriteLine("MainWindowViewModel.Dispose() called");
+            // Unsubscribe from navigation store events
+            if (_navigationStore != null)
+            {
+                _navigationStore.PropertyChanged -= OnNavigationStorePropertyChanged;
+            }
+            base.Dispose();
         }
     }
 }

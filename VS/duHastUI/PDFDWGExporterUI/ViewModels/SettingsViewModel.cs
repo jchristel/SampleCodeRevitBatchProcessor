@@ -22,12 +22,14 @@
 //
 
 
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.UI.PDFDWGExporterUI.Models;
-using duHastNet.Utils.WPF.Commands;
 using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Windows;
@@ -90,32 +92,32 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
         /// <summary>
         /// Command to add a parameter to the document name table
         /// </summary>
-        private readonly duHastNet.Utils.WPF.Commands.RelayCommand _moveParameterToDocumentNameTableCommand;
-        public ICommand MoveParameterToDocumentNameTableCommand { get { return _moveParameterToDocumentNameTableCommand; } }
+        private RelayCommand? _moveParameterToDocumentNameTableCommand;
+        public ICommand? MoveParameterToDocumentNameTableCommand => _moveParameterToDocumentNameTableCommand;
 
         /// <summary>
         /// Command to remove a parameter from the document name table
         /// </summary>
-        private readonly duHastNet.Utils.WPF.Commands.RelayCommand _removeParameterFromDocumentNameTableCommand;
-        public ICommand RemoveParameterFromDocumentNameTableCommand { get { return _removeParameterFromDocumentNameTableCommand; } }
+        private RelayCommand? _removeParameterFromDocumentNameTableCommand;
+        public ICommand? RemoveParameterFromDocumentNameTableCommand => _removeParameterFromDocumentNameTableCommand;
 
         /// <summary>
         /// command move selected parameter up in the document name table
         /// </summary>
-        private readonly duHastNet.Utils.WPF.Commands.RelayCommand _moveUpCommand;
-        public ICommand MoveUpCommand { get { return _moveUpCommand; } }
+        private RelayCommand<object>? _moveUpCommand;
+        public ICommand? MoveUpCommand => _moveUpCommand;
 
         /// <summary>
         /// command move selected parameter down in the document name table
         /// </summary>
-        private readonly duHastNet.Utils.WPF.Commands.RelayCommand _moveDownCommand;
-        public ICommand MoveDownCommand { get { return _moveDownCommand; } }
+        private RelayCommand<object>? _moveDownCommand;
+        public ICommand? MoveDownCommand => _moveDownCommand;
 
         /// <summary>
         /// command to save the settings and close the window
         /// </summary>
-        private readonly duHastNet.Utils.WPF.Commands.RelayCommand _saveAndCloseCommand;
-        public ICommand SaveAndCloseCommand { get { return _saveAndCloseCommand; } }
+        private RelayCommand<object>? _saveAndCloseCommand;
+        public ICommand? SaveAndCloseCommand => _saveAndCloseCommand;
 
 
         #region column names
@@ -142,11 +144,21 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
         /// </summary>
         public override void OnClosing()
         {
+            System.Diagnostics.Debug.WriteLine("SettingsViewModel.OnClosing() called");
+            // Unsubscribe from events if any
+            // (Currently no event subscriptions found)
 
-            // Unsubscribe from the event to prevent memory leaks
-            GlobalMessageViewModel?.Dispose();
-
+            // Call base - automatically handles child cleanup
             base.OnClosing();
+        }
+
+        public override void Dispose()
+        {
+            System.Diagnostics.Debug.WriteLine("SettingsViewModel.Dispose() called");
+            // Custom cleanup if needed
+
+            // Call base to dispose registered children
+            base.Dispose();
         }
 
         #endregion event handlers
@@ -342,17 +354,8 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
                 OnPropertyChanged(nameof(SelectedItemDocumentNameSetting));
 
                 // update the command can execute state
-                if (MoveUpCommand != null)
-                {
-                    //update the command can execute state
-                    ((RelayCommand)MoveUpCommand).RaiseCanExecuteChanged();
-                }
-
-                // update the command can execute state
-                if (MoveDownCommand != null)
-                {
-                    ((RelayCommand)MoveDownCommand).RaiseCanExecuteChanged();
-                }
+                _moveUpCommand?.NotifyCanExecuteChanged();
+                _moveDownCommand?.NotifyCanExecuteChanged();
             }
         }
 
@@ -389,28 +392,10 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
                 if (SelectedIndexDocumentNameSetting != -1 || SelectedItemDocumentNameSetting != null) { ClearSelection(); }
 
                 // update the command can execute state
-                if (MoveParameterToDocumentNameTableCommand != null)
-                {
-                    //update the command can execute state
-                    ((RelayCommand)MoveParameterToDocumentNameTableCommand).RaiseCanExecuteChanged();
-                }
-                // update the command can execute state
-                if (RemoveParameterFromDocumentNameTableCommand != null)
-                {
-                    //update the command can execute state
-                    ((RelayCommand)RemoveParameterFromDocumentNameTableCommand).RaiseCanExecuteChanged();
-                }
-                // update the command can execute state
-                if (MoveUpCommand != null)
-                {
-                    //update the command can execute state
-                    ((RelayCommand)MoveUpCommand).RaiseCanExecuteChanged();
-                }
-                // update the command can execute state
-                if (MoveDownCommand != null)
-                {
-                    ((RelayCommand)MoveDownCommand).RaiseCanExecuteChanged();
-                }
+                _moveParameterToDocumentNameTableCommand?.NotifyCanExecuteChanged();
+                _removeParameterFromDocumentNameTableCommand?.NotifyCanExecuteChanged();
+                _moveUpCommand?.NotifyCanExecuteChanged();
+                _moveDownCommand?.NotifyCanExecuteChanged();
             }
         }
 
@@ -673,20 +658,20 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        private bool CanMoveToTableDocumentSettings(object parameter) => _dvAvailableParameters.Count > 0 && _dvAvailableParameters.Count > _dvDocumentSettings.Count;
+        private bool CanMoveToTableDocumentSettings() => _dvAvailableParameters.Count > 0 && _dvAvailableParameters.Count > _dvDocumentSettings.Count;
 
         /// <summary>
         /// Checks if there are any parameters available to move to the property namer table
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        private bool CanMoveToTableParameterNames(object parameter) => _dvDocumentSettings.Count > 0;
+        private bool CanMoveToTableParameterNames() => _dvDocumentSettings.Count > 0;
 
         /// <summary>
         /// Move the selected parameter to the document name table
         /// </summary>
         /// <param name="parameter"></param>
-        private void MoveParameterToDocumentNameTable(object parameter)
+        private void MoveParameterToDocumentNameTable()
         {
 
             //sync the document name table with the document settings dictionary
@@ -718,7 +703,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
         /// <summary>
         /// Removes the selected parameter from the document name table
         /// </summary>
-        private void RemoveParameterFromDocumentNameTable(object parameter)
+        private void RemoveParameterFromDocumentNameTable()
         {
             //sync the document name table with the document settings dictionary
             SynchronizeDocumentNameTable();
@@ -1055,6 +1040,9 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
             //store the message store
             _messageStore = messageStore;
 
+            // Register child ViewModel for automatic cleanup
+            RegisterChild(GlobalMessageViewModel);
+
             _documentSettingsTables = [];
             _documentSettingsDictionary = [];
 
@@ -1074,33 +1062,33 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
 
             //set up all commands:
             //push in
-            _moveParameterToDocumentNameTableCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
+            _moveParameterToDocumentNameTableCommand = new RelayCommand(
                 MoveParameterToDocumentNameTable,
                 CanMoveToTableDocumentSettings
             );
 
             //push out
-            _removeParameterFromDocumentNameTableCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
+            _removeParameterFromDocumentNameTableCommand = new RelayCommand(
                 RemoveParameterFromDocumentNameTable,
                 CanMoveToTableParameterNames
             );
 
             //push up
-            _moveUpCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
+            _moveUpCommand = new RelayCommand<object>(
                 MoveUp,
                 CanMoveUp
             );
 
             //push down
-            _moveDownCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
+            _moveDownCommand = new RelayCommand<object>(
                 MoveDown,
                 CanMoveDown
             );
 
             //save and exit
-            _saveAndCloseCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
+            _saveAndCloseCommand = new RelayCommand<object>(
                 SaveSettingsAndClose,
-                parameter => true //always enabled
+                _ => true //always enabled
             );
 
             //set the selected dwg export scheme

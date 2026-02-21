@@ -76,7 +76,21 @@ namespace duHastNet.AtTheLibrary.ViewModels
         /// <param name="messageType"></param>
         public void AddMessage(string message, Utils.WPF.Stores.MessageTypes messageType)
         {
-            _messageStore.SetCurrentMessage(message, messageType);
+            if (messageType == duHastNet.Utils.WPF.Stores.MessageTypes.Error)
+            {
+                //let user dismiss the message themselves for error messages, since they might want to copy the message text for further use, and errors are more important to see for a longer time
+                _messageStore.EnqueueMessage(message, messageType);
+            }
+            else if (messageType == duHastNet.Utils.WPF.Stores.MessageTypes.Information)
+            {
+                //just flash message to user for information messages, since they are less important and user might not need to copy the message text, and it is better to dismiss them after a short time to avoid too many messages building up in the UI
+                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds:2);
+            }
+            else
+            {
+                //default to short display time for other message types
+                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds:5);
+            }
         }
 
 

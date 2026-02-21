@@ -48,7 +48,7 @@ namespace duHastNet.AtTheLibrary.RevitActions
                 var fam = _familiesDataGridViewModel.SelectedFamily;
 
                 // log the action
-                AddMessage($"Opening family {fam.FamilyName} into Revit", Utils.WPF.Stores.MessageTypes.Log);
+                AddMessage($"Opening family {fam.FamilyName} into Revit", Utils.WPF.Stores.MessageTypes.Information);
 
                 try
                 {

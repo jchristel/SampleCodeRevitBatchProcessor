@@ -22,42 +22,61 @@
 //
 
 
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.AtTheLibrary.RevitActions;
 using duHastNet.Utils.WPF.Stores;
 using Revit.Async;
 using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 
 namespace duHastNet.AtTheLibrary.Commands
 {
-    public class LoadFamilyAsyncCommand : Utils.WPF.Commands.CommandBase
+    public class LoadFamilyAsyncCommand
     {
-
+        private readonly AsyncRelayCommand _command;
         private readonly ViewModels.FamiliesSelectionViewModel _familiesSelectionViewModel;
         private readonly ViewModels.FamiliesDataGridViewModel _familiesDataGridViewModel;
-        //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitFamiliesDataModel _revitFamiliesDataModel;
 
+        public LoadFamilyAsyncCommand(
+           ViewModels.FamiliesSelectionViewModel familiesSelectionViewModel,
+           ViewModels.FamiliesDataGridViewModel familiesDataGridViewModel,
+           Models.RevitFamiliesDataModel revitFamiliesDataModel
+           )
+        {
+            _revitFamiliesDataModel = revitFamiliesDataModel;
+            _familiesSelectionViewModel = familiesSelectionViewModel;
+            _familiesDataGridViewModel = familiesDataGridViewModel;
 
-        public override async void Execute(object parameter)
+            _command = new AsyncRelayCommand(
+                execute: ExecuteAsync,
+                canExecute: () => !_familiesSelectionViewModel.IsWaitingForRevitCommandToFinish
+            );
+
+            _familiesSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _familiesDataGridViewModel.PropertyChanged += OnViewModelPropertyChanged;
+        }
+
+        private async Task ExecuteAsync()
         {
             //deactivate the ui
             _familiesSelectionViewModel.IsWaitingForRevitCommandToFinish = true;
 
             try
             {
-                (string message, Utils.WPF.Stores.MessageTypes messageType) = await RevitTask.RunAsync(
+                (string message, MessageTypes messageType) = await RevitTask.RunAsync(
                     app =>
                     {
                         //Run Revit API code here
-
                         Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
                         try
                         {
                             // Execute the action to refresh the room data with the Revit data
                             LoadFamilyAction action = new LoadFamilyAction(_revitFamiliesDataModel, _familiesDataGridViewModel);
-                            (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
+                            (string messageAction, MessageTypes messageActionType) = action.Execute(doc);
 
                             //TODO write messages to log...
                             _revitFamiliesDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
@@ -67,7 +86,7 @@ namespace duHastNet.AtTheLibrary.Commands
                         }
                         catch (Exception ex)
                         {
-                            return ($"An exception occurred within the external event handler refresh UI from rooms in model event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+                            return ($"An exception occurred within the external event handler refresh UI from rooms in model event: {ex.Message}", MessageTypes.Error);
                         }
                     });
 
@@ -92,41 +111,28 @@ namespace duHastNet.AtTheLibrary.Commands
             }
         }
 
-        /// <summary>
-        /// this command is always available
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        public override bool CanExecute(object parameter)
+        private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            // check if IsWaitingForRevitCommandToFinish is true
-            if (_familiesSelectionViewModel.IsWaitingForRevitCommandToFinish)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // check if the property that changed is the one that we are interested in
             if (e.PropertyName == nameof(ViewModels.FamiliesSelectionViewModel.IsWaitingForRevitCommandToFinish))
             {
-                OnCanExecutedChanged();
+                _command.NotifyCanExecuteChanged();
             }
         }
 
-        public LoadFamilyAsyncCommand(
-           ViewModels.FamiliesSelectionViewModel familiesSelectionViewModel,
-           ViewModels.FamiliesDataGridViewModel familiesDataGridViewModel,
-           Models.RevitFamiliesDataModel revitFamiliesDataModel
-           )
+        // Public ICommand wrapper so ViewModels can expose this as ICommand
+        public ICommand Command => _command;
+
+        public void Execute(object? parameter = null) => _command.Execute(null);
+        public bool CanExecute(object? parameter = null) => _command.CanExecute(null);
+
+        /// <summary>
+        /// Must be called when the owning ViewModel is closing to prevent memory leaks.
+        /// Unsubscribes from both ViewModels that were subscribed in the constructor.
+        /// </summary>
+        public void Dispose()
         {
-            _revitFamiliesDataModel = revitFamiliesDataModel;
-            _familiesSelectionViewModel = familiesSelectionViewModel;
-            _familiesSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
-            _familiesDataGridViewModel = familiesDataGridViewModel;
-            _familiesDataGridViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _familiesSelectionViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+            _familiesDataGridViewModel.PropertyChanged -= OnViewModelPropertyChanged;
         }
     }
 }

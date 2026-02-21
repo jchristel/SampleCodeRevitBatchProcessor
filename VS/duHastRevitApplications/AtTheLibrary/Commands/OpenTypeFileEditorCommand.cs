@@ -22,74 +22,17 @@
 //
 
 
-using duHastNet.AtTheLibrary.ViewModels;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.ComponentModel;
+using System.Windows.Input;
 
 namespace duHastNet.AtTheLibrary.Commands
 {
-    public class OpenTypeFileEditorCommand : Utils.WPF.Commands.CommandBase
+    public class OpenTypeFileEditorCommand
     {
-        private readonly duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
-        private readonly Func<Models.FamilyDataModel, Utils.WPF.ViewModels.ViewModelBase> _createViewModel;
+        private readonly RelayCommand _command;
         private readonly ViewModels.FamiliesDataGridViewModel _familyDataGridViewModel;
-        private readonly duHastNet.Utils.WPF.Stores.StateStore _stateStore;
-        private readonly Models.RevitFamiliesDataModel _revitFamiliesDataModel;
-        
-
-        /// <summary>
-        /// this command is always available
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        public override bool CanExecute(object parameter)
-        {
-            // check if there is a family selected
-            if (_familyDataGridViewModel.SelectedFamily==null)
-            {
-                return false;
-            }
-            else if( !_familyDataGridViewModel.SelectedFamily.HasTypeCatalogueFile)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // check if the property that changed is the one that we are interested in
-            if (e.PropertyName == nameof(ViewModels.FamiliesDataGridViewModel.SelectedFamily))
-            {
-                OnCanExecutedChanged();
-            }
-        }
-
-        public override void Execute(object parameter)
-        {
-            //save the state
-            try
-            {
-                var currentState = _familyDataGridViewModel.CreateStateFromViewModel();
-                if (currentState != null)
-                {
-                    _stateStore.SaveState(_familyDataGridViewModel, currentState);
-                    System.Diagnostics.Debug.WriteLine($"Forced save of grid state for {_familyDataGridViewModel.GetGridStateId()} before closing");
-                }
-            }
-            catch (Exception stateEx)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error forcing state save: {stateEx.Message}");
-                //_familyDataGridViewModel.AddMessage($"Warning: Could not save grid state: {stateEx.Message}", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
-            }
-
-            // Get states from StateStore for settings persistence
-            var statesForSettings = _stateStore.GetStatesForSettings();
-            _revitFamiliesDataModel.Settings.NavigationStates = statesForSettings;
-
-            //navigate
-            _navigationStore.CurrentViewModel = _createViewModel(_familyDataGridViewModel.SelectedFamily);
-        }
 
         public OpenTypeFileEditorCommand(
             duHastNet.Utils.WPF.Stores.NavigationStore navigationStore,
@@ -99,14 +42,67 @@ namespace duHastNet.AtTheLibrary.Commands
             Models.RevitFamiliesDataModel revitFamiliesDataModel
         )
         {
-            _navigationStore = navigationStore;
-            _stateStore = stateStore;
-            _createViewModel = createViewModel;
             _familyDataGridViewModel = familiesDataGridViewModel;
-            _revitFamiliesDataModel = revitFamiliesDataModel;
 
-            // Subscribe to property changes to update CanExecute
+            _command = new RelayCommand(
+                execute: () =>
+                {
+                    //save the state
+                    try
+                    {
+                        var currentState = _familyDataGridViewModel.CreateStateFromViewModel();
+                        if (currentState != null)
+                        {
+                            stateStore.SaveState(_familyDataGridViewModel, currentState);
+                            System.Diagnostics.Debug.WriteLine($"Forced save of grid state for {_familyDataGridViewModel.GetGridStateId()} before closing");
+                        }
+                    }
+                    catch (Exception stateEx)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Error forcing state save: {stateEx.Message}");
+                    }
+
+                    // Get states from StateStore for settings persistence
+                    var statesForSettings = stateStore.GetStatesForSettings();
+                    revitFamiliesDataModel.Settings.NavigationStates = statesForSettings;
+
+                    //navigate
+                    navigationStore.CurrentViewModel = createViewModel(_familyDataGridViewModel.SelectedFamily);
+                },
+                canExecute: () =>
+                {
+                    // check if there is a family selected
+                    if (_familyDataGridViewModel.SelectedFamily == null)
+                        return false;
+
+                    return _familyDataGridViewModel.SelectedFamily.HasTypeCatalogueFile;
+                }
+            );
+
+            // Subscribe to property changes on the grid view model to re-evaluate CanExecute
             _familyDataGridViewModel.PropertyChanged += OnViewModelPropertyChanged;
+        }
+
+        private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ViewModels.FamiliesDataGridViewModel.SelectedFamily))
+            {
+                _command.NotifyCanExecuteChanged();
+            }
+        }
+
+        // Public ICommand wrapper so ViewModels can expose this as ICommand
+        public ICommand Command => _command;
+
+        public void Execute(object? parameter = null) => _command.Execute(null);
+        public bool CanExecute(object? parameter = null) => _command.CanExecute(null);
+
+        /// <summary>
+        /// Must be called when the owning ViewModel is closing to prevent memory leaks.
+        /// </summary>
+        public void Dispose()
+        {
+            _familyDataGridViewModel.PropertyChanged -= OnViewModelPropertyChanged;
         }
     }
 }

@@ -78,7 +78,7 @@ namespace duHastNet.AtTheLibrary
             _revitDataModel.InitialiseLogger(logFilePath);
 
             // Example log entry
-            _revitDataModel.LogMessages(new List<(string, duHastNet.Utils.WPF.Stores.MessageTypes)> { ("Starting duHastNet.AtTheLirbary.", duHastNet.Utils.WPF.Stores.MessageTypes.Log) });
+            _revitDataModel.LogMessages(new List<(string, duHastNet.Utils.WPF.Stores.MessageTypes)> { ("Starting duHastNet.AtTheLirbary.", duHastNet.Utils.WPF.Stores.MessageTypes.Information) });
 
             // load settings from file
             Models.Settings settings = Utilities.SettingsUtils.LoadSettings();
@@ -93,7 +93,7 @@ namespace duHastNet.AtTheLibrary
             // if the data path is empty, the user will be prompted to set the data path
             if (settings.DataPath != string.Empty && !loadFlag)
             {
-                _messageStore.SetCurrentMessage("Invalid data in file. Please set the data file path and reload.", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
+                _messageStore.EnqueueMessage("Invalid data in file. Please set the data file path and reload.", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
             }
 
             // set up the navigation store

@@ -44,7 +44,7 @@
         </Grid>
         <!-- message banner -->
         <Grid Grid.Row="1">
-            <utilsViews:GlobalMessageBanner DataContext="{Binding GlobalMessageViewModel}"/>
+            <utilsViews:GlobalMessageView DataContext="{Binding GlobalMessageViewModel}"/>
         </Grid>
 
         <!-- dynamic grid view of room data -->

@@ -22,43 +22,64 @@
 //
 
 
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.AtTheLibrary.RevitActions;
 using duHastNet.Utils.WPF.Stores;
 using Revit.Async;
 using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 
 namespace duHastNet.AtTheLibrary.Commands
 {
-    public class OpenFamilyIntoUIAsyncCommand : Utils.WPF.Commands.CommandBase
+    public class OpenFamilyIntoUIAsyncCommand
     {
+        private readonly AsyncRelayCommand _command;
         private readonly ViewModels.FamiliesSelectionViewModel _familiesSelectionViewModel;
         private readonly ViewModels.FamiliesDataGridViewModel _familiesDataGridViewModel;
-        //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitFamiliesDataModel _revitFamiliesDataModel;
 
-        public override async void Execute(object parameter)
+        public OpenFamilyIntoUIAsyncCommand(
+           ViewModels.FamiliesSelectionViewModel familiesSelectionViewModel,
+           ViewModels.FamiliesDataGridViewModel familiesDataGridViewModel,
+           Models.RevitFamiliesDataModel revitFamiliesDataModel
+           )
+        {
+            _revitFamiliesDataModel = revitFamiliesDataModel;
+            _familiesSelectionViewModel = familiesSelectionViewModel;
+            _familiesDataGridViewModel = familiesDataGridViewModel;
+
+            _command = new AsyncRelayCommand(
+                execute: ExecuteAsync,
+                canExecute: () => !_familiesSelectionViewModel.IsWaitingForRevitCommandToFinish
+            );
+
+            _familiesSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _familiesDataGridViewModel.PropertyChanged += OnViewModelPropertyChanged;
+        }
+
+        private async Task ExecuteAsync()
         {
             //deactivate the ui
             _familiesSelectionViewModel.IsWaitingForRevitCommandToFinish = true;
 
             try
             {
-                (string message, Utils.WPF.Stores.MessageTypes messageType) = await RevitTask.RunAsync(
+                (string message, MessageTypes messageType) = await RevitTask.RunAsync(
                     app =>
                     {
                         //Run Revit API code here
-
                         Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
                         try
                         {
-                            // Execute the action to refresh the room data with the Revit data
+                            // Execute the action to open the family into the UI
                             OpenFamilyIntoUIAction action = new OpenFamilyIntoUIAction(
-                                revitModel: _revitFamiliesDataModel, 
-                                familiesSelectionViewModel: _familiesDataGridViewModel, 
+                                revitModel: _revitFamiliesDataModel,
+                                familiesSelectionViewModel: _familiesDataGridViewModel,
                                 uiApp: app);
-                            (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
+                            (string messageAction, MessageTypes messageActionType) = action.Execute(doc);
 
                             //TODO write messages to log...
                             _revitFamiliesDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
@@ -68,13 +89,12 @@ namespace duHastNet.AtTheLibrary.Commands
                         }
                         catch (Exception ex)
                         {
-                            return ($"An exception occurred within the external event handler openm family into Revit event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+                            return ($"An exception occurred within the external event handler open family into Revit event: {ex.Message}", MessageTypes.Error);
                         }
                     });
 
                 //pop message to user
                 _familiesSelectionViewModel.AddMessage(message, messageType);
-
             }
             catch (Exception ex)
             {
@@ -87,41 +107,28 @@ namespace duHastNet.AtTheLibrary.Commands
             }
         }
 
-        /// <summary>
-        /// this command is always available
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        public override bool CanExecute(object parameter)
+        private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            // check if IsWaitingForRevitCommandToFinish is true
-            if (_familiesSelectionViewModel.IsWaitingForRevitCommandToFinish)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // check if the property that changed is the one that we are interested in
             if (e.PropertyName == nameof(ViewModels.FamiliesSelectionViewModel.IsWaitingForRevitCommandToFinish))
             {
-                OnCanExecutedChanged();
+                _command.NotifyCanExecuteChanged();
             }
         }
 
-        public OpenFamilyIntoUIAsyncCommand(
-           ViewModels.FamiliesSelectionViewModel familiesSelectionViewModel,
-           ViewModels.FamiliesDataGridViewModel familiesDataGridViewModel,
-           Models.RevitFamiliesDataModel revitFamiliesDataModel
-           )
+        // Public ICommand wrapper so ViewModels can expose this as ICommand
+        public ICommand Command => _command;
+
+        public void Execute(object? parameter = null) => _command.Execute(null);
+        public bool CanExecute(object? parameter = null) => _command.CanExecute(null);
+
+        /// <summary>
+        /// Must be called when the owning ViewModel is closing to prevent memory leaks.
+        /// Unsubscribes from both ViewModels that were subscribed in the constructor.
+        /// </summary>
+        public void Dispose()
         {
-            _revitFamiliesDataModel = revitFamiliesDataModel;
-            _familiesSelectionViewModel = familiesSelectionViewModel;
-            _familiesSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
-            _familiesDataGridViewModel = familiesDataGridViewModel;
-            _familiesDataGridViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _familiesSelectionViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+            _familiesDataGridViewModel.PropertyChanged -= OnViewModelPropertyChanged;
         }
     }
 }

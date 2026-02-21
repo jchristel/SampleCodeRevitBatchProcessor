@@ -43,7 +43,7 @@ namespace duHastNet.AtTheLibrary.RevitActions
                 var fam = _familiesDataGridViewModel.SelectedFamily;
 
                 // log the action
-                AddMessage($"Loading family {fam.FamilyName} and type {fam.FamilyTypeName} into Revit", Utils.WPF.Stores.MessageTypes.Log);
+                AddMessage($"Loading family {fam.FamilyName} and type {fam.FamilyTypeName} into Revit", Utils.WPF.Stores.MessageTypes.Information);
 
                 // attempt to reload family
                 try

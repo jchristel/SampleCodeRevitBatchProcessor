@@ -22,6 +22,7 @@
 //
 
 
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
 using duHastNet.Utils.WPF.Stores;
 using System;
@@ -62,9 +63,9 @@ namespace duHastNet.AtTheLibrary.ViewModels
 
         #region Commands
 
-        //commands
-        // switch to families selection view model
-        public ICommand SelectFamilies { get { return _navigateCommand; } }
+        // Command property now delegates to the .Command property on the command object,
+        // since the command class no longer inherits ICommand directly (it wraps RelayCommand internally).
+        public ICommand SelectFamilies => _navigateCommand.Command;
 
         #endregion Commands
 
@@ -84,12 +85,12 @@ namespace duHastNet.AtTheLibrary.ViewModels
             else if (messageType == duHastNet.Utils.WPF.Stores.MessageTypes.Information)
             {
                 //just flash message to user for information messages, since they are less important and user might not need to copy the message text, and it is better to dismiss them after a short time to avoid too many messages building up in the UI
-                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds:2);
+                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds: 2);
             }
             else
             {
                 //default to short display time for other message types
-                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds:5);
+                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds: 5);
             }
         }
 
@@ -97,19 +98,13 @@ namespace duHastNet.AtTheLibrary.ViewModels
         // not sure whether this is actually required or not
         // when on closing, dispose of the event manager
         // and remove the event handler
-        public override void Dispose()
-        {
-            base.Dispose();
-        }
 
         /// <summary>
-        /// Custom closing logic for ParametersSelectionViewModel
-        /// Disposes all external events from the event manager
-        /// save the state of the data grid view model
+        /// Custom closing logic for ParametersSelectionViewModel.
+        /// Saves grid and navigation state before handing off to base cleanup.
         /// </summary>
         public override void OnClosing()
         {
-
             //update the column ids in settings.
             // clear list first
             _revitDataModel.Settings.ColumnIds.Clear();
@@ -118,7 +113,6 @@ namespace duHastNet.AtTheLibrary.ViewModels
             {
                 _revitDataModel.Settings.ColumnIds.Add(columnId.PropertyName);
             }
-
 
             //save the state of the data grid view model
             if (ParametersDataGridViewModel != null && _stateStore != null)
@@ -136,7 +130,6 @@ namespace duHastNet.AtTheLibrary.ViewModels
                 catch (Exception stateEx)
                 {
                     System.Diagnostics.Debug.WriteLine($"Error forcing state save: {stateEx.Message}");
-                    //_familyDataGridViewModel.AddMessage($"Warning: Could not save grid state: {stateEx.Message}", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
                 }
             }
 
@@ -144,10 +137,12 @@ namespace duHastNet.AtTheLibrary.ViewModels
             var statesForSettings = _stateStore.GetStatesForSettings();
             _revitDataModel.Settings.NavigationStates = statesForSettings;
 
-            GlobalMessageViewModel.Dispose();
+            // GlobalMessageViewModel.Dispose() removed — it is registered via RegisterChild()
+            // and will be disposed automatically by base.OnClosing().
 
             base.OnClosing();
         }
+
 
         /// <summary>
         /// loads any existing states from settings into the state store

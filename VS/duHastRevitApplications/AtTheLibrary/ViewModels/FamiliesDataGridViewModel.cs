@@ -259,15 +259,26 @@ namespace duHastNet.AtTheLibrary.ViewModels
         }
 
         /// <summary>
-        /// Custom closing logic for RoomsSelectionViewModel
-        /// Disposes all external events from the event manager
+        /// Custom closing logic for FamiliesDataGridViewModel
         /// </summary>
         public override void OnClosing()
         {
-            //unbsubscribe from underlying model changes
-            RevitDataModel.PropertyChanged -= Model_PropertyChanged;
-
             base.OnClosing();
+        }
+
+        /// <summary>
+        /// Unsubscribes from all external event subscriptions to prevent memory leaks.
+        /// Called by the base dispose pattern.
+        /// </summary>
+        protected override void DisposeManaged()
+        {
+            // Unsubscribe from underlying model changes
+            if (RevitDataModel != null)
+            {
+                RevitDataModel.PropertyChanged -= Model_PropertyChanged;
+            }
+
+            base.DisposeManaged();
         }
 
         #endregion event handlers
@@ -352,7 +363,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
                 {
                     rowData[propertyName] = family.FamilyCategory.Value;
                 }
-                else if(propertyName == Models.Constants.ColumnHeaderTypeCatalogueFile.Replace(" ",""))
+                else if (propertyName == Models.Constants.ColumnHeaderTypeCatalogueFile.Replace(" ", ""))
                 {
                     rowData[propertyName] = family.HasTypeCatalogueFile;
                 }
@@ -442,7 +453,9 @@ namespace duHastNet.AtTheLibrary.ViewModels
 
             foreach (var columnName in defaultColumns)
             {
-                AddSelectedColumn(columnName);
+                // AddSelectedColumn is internal to the base assembly.
+                // Use the generated public RelayCommand instead.
+                AddSelectedColumnCommand.Execute(columnName);
             }
         }
 

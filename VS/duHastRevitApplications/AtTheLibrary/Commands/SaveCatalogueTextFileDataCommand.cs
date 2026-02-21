@@ -21,6 +21,7 @@
 //
 //
 
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.UI.CustomControls;
 using duHastNet.Utils.WPF.Stores;
 using System;
@@ -28,107 +29,102 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Windows.Input;
 
 
 namespace duHastNet.AtTheLibrary.Commands
 {
-    public class SaveCatalogueTextFileDataCommand : Utils.WPF.Commands.CommandBase
+    public class SaveCatalogueTextFileDataCommand
     {
+        // RelayCommand<object> because Execute receives a CellEditor via CommandParameter from XAML
+        private readonly RelayCommand<object> _command;
         private readonly ViewModels.TypeCatalogueViewModel _typeDataViewModel;
-        private ViewModels.TypeCatalogueViewModel TypeDataViewModel
+
+        private ViewModels.TypeCatalogueViewModel TypeDataViewModel => _typeDataViewModel;
+
+        public SaveCatalogueTextFileDataCommand(
+           ViewModels.TypeCatalogueViewModel typeDataViewModel,
+           Models.FamilyDataModel selectedFamily
+        )
         {
-            get => _typeDataViewModel;
+            _typeDataViewModel = typeDataViewModel;
+
+            _command = new RelayCommand<object>(
+                execute: parameter =>
+                {
+                    // Get the CellEditor from the parameter
+                    if (parameter is CellEditor cellEditor)
+                    {
+                        // Get the current data as displayed in the grid
+                        var (headers, dataRows) = cellEditor.GetCurrentData();
+
+                        // Get data from the view model and do some sanity checking
+                        var currentSelectedFamily = _typeDataViewModel.SelectedFamily;
+
+                        if (currentSelectedFamily == null)
+                        {
+                            TypeDataViewModel.AddMessage("No family selected", MessageTypes.Error);
+                            return;
+                        }
+
+                        // Validate the data
+                        if (headers == null || headers.Count == 0)
+                        {
+                            TypeDataViewModel.AddMessage("No header row", MessageTypes.Error);
+                        }
+
+                        if (dataRows == null || dataRows.Count == 0)
+                        {
+                            TypeDataViewModel.AddMessage("No type data provided. Catalogue file needs to contain at least 1 row.", MessageTypes.Error);
+                            return;
+                        }
+
+                        //do some sanity checking:
+                        if (!CheckTableData(headers, dataRows)) { return; }
+
+                        //convert data to string so it can be written to file
+                        List<List<string>> convertedTableData = ConvertTableData(headers, dataRows);
+                        if (convertedTableData == null) { return; }
+
+                        // make sure headers contain the original unit data, as well as wiping the first header since type name is usually empty
+                        List<string> convertedHeader = ConvertHeaderRow(headers, TypeDataViewModel.CatalogueFileHeadersOriginalUnformatted);
+
+                        // Process and save the data
+                        SaveDataToTextFile(currentSelectedFamily.FamilyFilePath.Value, convertedHeader, convertedTableData);
+                    }
+                },
+                canExecute: _ => _typeDataViewModel.SelectedFamily != null
+            );
+
+            // Subscribe to property changes to update CanExecute
+            _typeDataViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
 
-
-        Models.FamilyDataModel _selectedFamily;
-
-        /// <summary>
-        /// this command is always available
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        public override bool CanExecute(object parameter)
+        private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            // check if there is a family selected
-            if (_typeDataViewModel.SelectedFamily == null)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // check if the property that changed is the one that we are interested in
             if (e.PropertyName == nameof(ViewModels.TypeCatalogueViewModel.SelectedFamily))
             {
-                OnCanExecutedChanged();
+                _command.NotifyCanExecuteChanged();
             }
         }
 
+        // Public ICommand wrapper so ViewModels can expose this as ICommand
+        public ICommand Command => _command;
+
+        public void Execute(object? parameter = null) => _command.Execute(parameter);
+        public bool CanExecute(object? parameter = null) => _command.CanExecute(parameter);
+
         /// <summary>
-        /// check if data is valid        
+        /// Must be called when the owning ViewModel is closing to prevent memory leaks.
         /// </summary>
-        /// <param name="parameter"></param>
-        public override void Execute(object parameter)
+        public void Dispose()
         {
-            // Get the CellEditor from the parameter
-            if (parameter is CellEditor cellEditor)
-            {
-                // Get the current data as displayed in the grid
-                var (headers, dataRows) = cellEditor.GetCurrentData();
-
-                // Get data from the view model and do some sanity checking
-                var selectedFamily = _typeDataViewModel.SelectedFamily;
-
-                if (selectedFamily == null)
-                {
-                    TypeDataViewModel.AddMessage("No family selected", MessageTypes.Error);
-                    return;
-                }
-
-                // Validate the data
-                if (headers == null || headers.Count == 0)
-                {
-                    // Handle error - no column headers
-                    TypeDataViewModel.AddMessage("No header row", MessageTypes.Error);
-                }
-
-                if (dataRows == null || dataRows.Count == 0)
-                {
-                    // Handle error - no data rows
-                    TypeDataViewModel.AddMessage("No type data provided. Catalogue file needs to contain at least 1 row.", MessageTypes.Error);
-                    return;
-                }
-
-                //do some sanity checking:
-                if (!CheckTableData(headers, dataRows)) { return; }
-
-                //convert data to string so it can be written to file
-                List<List<string>> convertedTableData = ConvertTableData(headers, dataRows);
-                if (convertedTableData == null){ return; }
-
-                // make sure headers contain the original unit data, as well as wiping the first header since type name is usually empty
-                List<string> convertedHeader = ConvertHeaderRow(headers, TypeDataViewModel.CatalogueFileHeadersOriginalUnformatted);
-
-                // Process and save the data
-                SaveDataToTextFile(selectedFamily.FamilyFilePath.Value, convertedHeader, convertedTableData);
-            }
-            else
-            {
-                //nothing to do here
-            }
-
-            return;
+            _typeDataViewModel.PropertyChanged -= OnViewModelPropertyChanged;
         }
 
         /// <summary>
-        /// Saves the catalogue data to a text file ( old file is over written 0
+        /// Saves the catalogue data to a text file ( old file is over written )
         /// </summary>
-        /// <param name="selectedFamilyFilePath"></param>
-        /// <param name="headers"></param>
-        /// <param name="dataRows"></param>
         private void SaveDataToTextFile(string selectedFamilyFilePath, List<string> headers, List<List<string>> dataRows)
         {
             try
@@ -161,7 +157,6 @@ namespace duHastNet.AtTheLibrary.Commands
             }
             catch (Exception ex)
             {
-                // Handle save errors
                 TypeDataViewModel.AddMessage($"Failed to save type catalogue text file with error {ex}", MessageTypes.Error);
             }
         }
@@ -170,9 +165,6 @@ namespace duHastNet.AtTheLibrary.Commands
         /// <summary>
         /// does some sanity checks on the table data ( type name checks only )
         /// </summary>
-        /// <param name="header"></param>
-        /// <param name="tableData"></param>
-        /// <returns></returns>
         private bool CheckTableData(List<string> header, List<List<object>> tableData)
         {
             try
@@ -453,17 +445,6 @@ namespace duHastNet.AtTheLibrary.Commands
         }
 
 
-        public SaveCatalogueTextFileDataCommand(
-           ViewModels.TypeCatalogueViewModel typeDataViewModel,
-           Models.FamilyDataModel selectedFamily
-        )
-        {
-            _typeDataViewModel = typeDataViewModel;
-            _selectedFamily = selectedFamily;
-
-            // Subscribe to property changes to update CanExecute
-            _typeDataViewModel.PropertyChanged += OnViewModelPropertyChanged;
-        }
     }
 
 }

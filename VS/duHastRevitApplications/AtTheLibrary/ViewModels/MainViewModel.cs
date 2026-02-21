@@ -21,6 +21,8 @@
 //
 //
 
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.ComponentModel;
 
 namespace duHastNet.AtTheLibrary.ViewModels
 {
@@ -28,25 +30,33 @@ namespace duHastNet.AtTheLibrary.ViewModels
     {
 
         private readonly Utils.WPF.Stores.NavigationStore _navigationStore;
-        public Utils.WPF.ViewModels.ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
+
+        // Return type changed from ViewModelBase to ObservableObject?
+        // NavigationStore.CurrentViewModel is now typed ObservableObject? (Community Toolkit)
+        public ObservableObject? CurrentViewModel => _navigationStore.CurrentViewModel;
 
         public MainViewModel(Utils.WPF.Stores.NavigationStore navigationStore)
         {
             _navigationStore = navigationStore;
-            _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
+            // CurrentViewModelChanged event no longer exists on NavigationStore.
+            // Subscribe to PropertyChanged and filter by property name instead.
+            _navigationStore.PropertyChanged += OnNavigationStorePropertyChanged;
         }
 
-        private void OnCurrentViewModelChanged()
+        private void OnNavigationStorePropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            OnPropertyChanged(nameof(CurrentViewModel));
+            if (e.PropertyName == nameof(_navigationStore.CurrentViewModel))
+            {
+                OnPropertyChanged(nameof(CurrentViewModel));
+            }
         }
 
         public override void OnClosing()
         {
             // Notify the navigation store to close current view model
             _navigationStore.NotifyClosing();
-            // Custom closing logic for RoomsSelectionViewModel
-            _navigationStore.CurrentViewModelChanged -= OnCurrentViewModelChanged;
+            // Unsubscribe from PropertyChanged (was CurrentViewModelChanged before migration)
+            _navigationStore.PropertyChanged -= OnNavigationStorePropertyChanged;
             base.OnClosing();
         }
     }

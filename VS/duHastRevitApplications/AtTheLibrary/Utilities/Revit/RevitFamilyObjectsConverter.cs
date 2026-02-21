@@ -84,7 +84,7 @@ namespace duHastNet.AtTheLibrary.Utilities.Revit
                 }
             }
 
-            AddMessage($"Converted {familiesInModel.Count} family instances to revit families.", Utils.WPF.Stores.MessageTypes.Log);
+            AddMessage($"Converted {familiesInModel.Count} family instances to revit families.", Utils.WPF.Stores.MessageTypes.Information);
             return familiesInModel;
         }
     }

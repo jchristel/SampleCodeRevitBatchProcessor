@@ -22,6 +22,7 @@
 //
 
 
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.AtTheLibrary.Commands;
 using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
 using duHastNet.Utils.WPF.Stores;
@@ -143,13 +144,14 @@ namespace duHastNet.AtTheLibrary.ViewModels
 
         #region Commands
 
-        //commands
-        public ICommand RefreshGUICommand { get { return _raiseRefreshGUICommand; } }
-        public ICommand ReloadDataCommand { get { return _raiseReloadDataCommand; } }
-        public ICommand LoadFamilyCommand { get { return _loadFamilyCommand; } }
-        public ICommand SelectParameters { get { return _navigateCommand; } }
-        public ICommand OpenFamilyIntoUICommand { get { return _openFamilyCommand; } }
-        public ICommand EditTypeCatalogueFileCommand { get { return _navigateEditTypeCatalogueFileCommand; } }
+        // Command properties now delegate to the .Command property on each command object,
+        // since the command classes no longer inherit ICommand directly (they wrap RelayCommand internally).
+        public ICommand RefreshGUICommand => _raiseRefreshGUICommand.Command;
+        public ICommand ReloadDataCommand => _raiseReloadDataCommand.Command;
+        public ICommand LoadFamilyCommand => _loadFamilyCommand.Command;
+        public ICommand SelectParameters => _navigateCommand.Command;
+        public ICommand OpenFamilyIntoUICommand => _openFamilyCommand.Command;
+        public ICommand EditTypeCatalogueFileCommand => _navigateEditTypeCatalogueFileCommand.Command;
 
         #endregion Commands
 
@@ -170,33 +172,22 @@ namespace duHastNet.AtTheLibrary.ViewModels
             else if (messageType == duHastNet.Utils.WPF.Stores.MessageTypes.Information)
             {
                 //just flash message to user for information messages, since they are less important and user might not need to copy the message text, and it is better to dismiss them after a short time to avoid too many messages building up in the UI
-                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds:2);
+                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds: 2);
             }
             else
             {
                 //default to short display time for other message types
-                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds:5);
+                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds: 5);
             }
         }
 
 
-        // not sure whether this is actually required or not
-        // when on closing, dispose of the event manager
-        // and remove the event handler
-        public override void Dispose()
-        {
-            base.Dispose();
-        }
-
-
         /// <summary>
-        /// Custom closing logic for RoomsSelectionViewModel
-        /// Disposes all external events from the event manager
+        /// Custom closing logic for FamiliesSelectionViewModel
         /// </summary>
         public override void OnClosing()
         {
-
-            //unsubscribe from errors changed event
+            // Unsubscribe from errors view model event
             _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
 
             //update the column ids in settings.
@@ -245,14 +236,30 @@ namespace duHastNet.AtTheLibrary.ViewModels
 
             //TODO save parameter selection view model state ( currently this is past in as a func so not available here )
 
-
             // Get states from StateStore for settings persistence
             var statesForSettings = _stateStore.GetStatesForSettings();
             _revitDataModel.Settings.NavigationStates = statesForSettings;
 
-            GlobalMessageViewModel.Dispose();
+            // GlobalMessageViewModel.Dispose() removed — it is registered via RegisterChild()
+            // and will be disposed automatically by base.OnClosing().
 
             base.OnClosing();
+        }
+
+        /// <summary>
+        /// Disposes commands that hold PropertyChanged subscriptions on external ViewModels.
+        /// Overrides ViewModelBase.Dispose().
+        /// </summary>
+        public override void Dispose()
+        {
+            // Dispose commands that hold PropertyChanged subscriptions on external ViewModels
+            _raiseRefreshGUICommand?.Dispose();
+            _raiseReloadDataCommand?.Dispose();
+            _loadFamilyCommand?.Dispose();
+            _openFamilyCommand?.Dispose();
+            _navigateEditTypeCatalogueFileCommand?.Dispose();
+
+            base.Dispose();
         }
 
 

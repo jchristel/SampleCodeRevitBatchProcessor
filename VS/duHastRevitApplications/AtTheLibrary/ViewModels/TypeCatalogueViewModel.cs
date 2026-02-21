@@ -22,11 +22,9 @@
 //
 
 
-using CsvHelper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Data;
 using System.Windows.Input;
 
 namespace duHastNet.AtTheLibrary.ViewModels
@@ -36,7 +34,6 @@ namespace duHastNet.AtTheLibrary.ViewModels
         private readonly Utils.WPF.Stores.NavigationStore _navigationStore;
         private readonly Utils.WPF.Stores.MessageStore _messageStore;
         private readonly Models.RevitFamiliesDataModel _revitDataModel;
-        private readonly Utils.WPF.ViewModels.ErrorsViewModel _errorsViewModel;
 
         public Utils.WPF.ViewModels.GlobalMessageViewModel GlobalMessageViewModel { get; }
 
@@ -48,9 +45,20 @@ namespace duHastNet.AtTheLibrary.ViewModels
         private Models.RevitFamiliesDataModel RevitDataModel { get; set; }
 
         /// <summary>
-        /// the family of which to display the catalogue file
+        /// The family of which to display the catalogue file.
+        /// Raises PropertyChanged so SaveCatalogueTextFileDataCommand.CanExecute
+        /// re-evaluates when the selection changes.
         /// </summary>
-        public Models.FamilyDataModel SelectedFamily { get; set; }
+        private Models.FamilyDataModel _selectedFamily;
+        public Models.FamilyDataModel SelectedFamily
+        {
+            get => _selectedFamily;
+            set
+            {
+                _selectedFamily = value;
+                OnPropertyChanged(nameof(SelectedFamily));
+            }
+        }
 
         /// <summary>
         /// As read from type catalogue file but with unit data removed
@@ -125,14 +133,32 @@ namespace duHastNet.AtTheLibrary.ViewModels
 
         #region Commands
 
-        //commands
-
-        // switch to families selection view model
-        public ICommand SelectFamiliesCommand { get { return _navigateCommand; } }
-        //save type catalogue text file
-        public ICommand SaveCatalogueTextFileDataCommand { get { return _saveCatalogueTextFileDataCommand; } }
+        // Command properties delegate to the .Command property on each command object,
+        // since the command classes no longer inherit ICommand directly.
+        public ICommand SelectFamiliesCommand => _navigateCommand.Command;
+        public ICommand SaveCatalogueTextFileDataCommand => _saveCatalogueTextFileDataCommand.Command;
 
         #endregion Commands
+
+        /// <summary>
+        /// Called when navigating away. Unsubscribes from any external events.
+        /// GlobalMessageViewModel is a registered child and cleaned up automatically by base.
+        /// </summary>
+        public override void OnClosing()
+        {
+            base.OnClosing();
+        }
+
+        /// <summary>
+        /// Disposes commands that hold PropertyChanged subscriptions on external ViewModels.
+        /// </summary>
+        public override void Dispose()
+        {
+            // SaveCatalogueTextFileDataCommand subscribes to this ViewModel's PropertyChanged
+            _saveCatalogueTextFileDataCommand?.Dispose();
+
+            base.Dispose();
+        }
 
         /// <summary>
         /// Adds a message to the global message store which will then be displayed in the UI
@@ -150,12 +176,12 @@ namespace duHastNet.AtTheLibrary.ViewModels
             else if (messageType == duHastNet.Utils.WPF.Stores.MessageTypes.Information)
             {
                 //just flash message to user for information messages, since they are less important and user might not need to copy the message text, and it is better to dismiss them after a short time to avoid too many messages building up in the UI
-                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds:2);
+                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds: 2);
             }
             else
             {
                 //default to short display time for other message types
-                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds:5);
+                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds: 5);
             }
         }
 
@@ -164,7 +190,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
 
         private object GetCellValue(string cellEntryAsstring, int cellColumnIndex)
         {
-            
+
             if (cellColumnIndex == 0)
             {
                 //family type name is always a string
@@ -180,7 +206,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
             if (property == null) { return cellEntryAsstring; }
 
             //convert value to type
-            return duHastNet.Utils.DataConversion.TypeConverter.ConvertStringToType (cellEntryAsstring, property.StorageType);
+            return duHastNet.Utils.DataConversion.TypeConverter.ConvertStringToType(cellEntryAsstring, property.StorageType);
 
         }
 
@@ -219,18 +245,19 @@ namespace duHastNet.AtTheLibrary.ViewModels
                         var rowEntryConverted = GetCellValue(
                             cellEntryAsstring: rowEntry,
                             cellColumnIndex: i);
-                        
+
                         rowEntries.Add(rowEntryConverted);
                     }
                 }
                 dataRows.Add(rowEntries);
-            };
+            }
+            ;
 
             //update data rows
             DataRows = dataRows;
 
             //no read only columns
-            ReadOnlyColumns = new List<string> ();
+            ReadOnlyColumns = new List<string>();
         }
 
         #endregion

@@ -21,27 +21,31 @@
 //
 //
 
+using CommunityToolkit.Mvvm.Input;
 using System;
+using System.Windows.Input;
 
 namespace duHastNet.AtTheLibrary.Commands
 {
-    public class NavigateCommand : Utils.WPF.Commands.CommandBase
+    public class NavigateCommand
     {
-        private readonly duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
-        private readonly Func<Utils.WPF.ViewModels.ViewModelBase> _createViewModel;
+        private readonly RelayCommand _command;
 
         public NavigateCommand(
             duHastNet.Utils.WPF.Stores.NavigationStore navigationStore,
             Func<Utils.WPF.ViewModels.ViewModelBase> createViewModel
         )
         {
-            _navigationStore = navigationStore;
-            _createViewModel = createViewModel;
+            _command = new RelayCommand(() =>
+            {
+                navigationStore.CurrentViewModel = createViewModel();
+            });
         }
 
-        public override void Execute(object parameter)
-        {
-            _navigationStore.CurrentViewModel = _createViewModel();
-        }
+        // Public ICommand wrapper so ViewModels can expose this as ICommand
+        public ICommand Command => _command;
+
+        public void Execute(object? parameter = null) => _command.Execute(null);
+        public bool CanExecute(object? parameter = null) => _command.CanExecute(null);
     }
 }

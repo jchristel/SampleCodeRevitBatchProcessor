@@ -21,43 +21,15 @@
 //
 //
 
+using CommunityToolkit.Mvvm.Input;
 using System;
+using System.Windows.Input;
 
 namespace duHastNet.AtTheLibrary.Commands
 {
-    public class LeaveParameterSelectionCommand : Utils.WPF.Commands.CommandBase
+    public class LeaveParameterSelectionCommand
     {
-        private readonly duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
-        private readonly duHastNet.Utils.WPF.Stores.StateStore _stateStore;
-        private readonly ViewModels.ParametersDataGridViewModel _parametersDataGridViewModel;
-        private readonly Func<Utils.WPF.ViewModels.ViewModelBase> _createViewModel;
-        private readonly Models.RevitFamiliesDataModel _revitFamiliesDataModel;
-
-        public override void Execute(object parameter)
-        {
-            //save the state
-            try
-            {
-                var currentState = _parametersDataGridViewModel.CreateStateFromViewModel();
-                if (currentState != null)
-                {
-                    _stateStore.SaveState(_parametersDataGridViewModel, currentState);
-                    System.Diagnostics.Debug.WriteLine($"Forced save of grid state for {_parametersDataGridViewModel.GetGridStateId()} before closing");
-                }
-            }
-            catch (Exception stateEx)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error forcing state save: {stateEx.Message}");
-                //_familyDataGridViewModel.AddMessage($"Warning: Could not save grid state: {stateEx.Message}", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
-            }
-
-            // Get states from StateStore for settings persistence
-            var statesForSettings = _stateStore.GetStatesForSettings();
-            _revitFamiliesDataModel.Settings.NavigationStates = statesForSettings;
-
-            // navigate to new view
-            _navigationStore.CurrentViewModel = _createViewModel();
-        }
+        private readonly RelayCommand _command;
 
         public LeaveParameterSelectionCommand(
             duHastNet.Utils.WPF.Stores.NavigationStore navigationStore,
@@ -67,11 +39,36 @@ namespace duHastNet.AtTheLibrary.Commands
             Models.RevitFamiliesDataModel revitFamiliesDataModel
         )
         {
-            _navigationStore = navigationStore;
-            _stateStore = stateStore;
-            _createViewModel = createViewModel;
-            _parametersDataGridViewModel = parametersDataGridViewModel;
-            _revitFamiliesDataModel = revitFamiliesDataModel;
+            _command = new RelayCommand(() =>
+            {
+                //save the state
+                try
+                {
+                    var currentState = parametersDataGridViewModel.CreateStateFromViewModel();
+                    if (currentState != null)
+                    {
+                        stateStore.SaveState(parametersDataGridViewModel, currentState);
+                        System.Diagnostics.Debug.WriteLine($"Forced save of grid state for {parametersDataGridViewModel.GetGridStateId()} before closing");
+                    }
+                }
+                catch (Exception stateEx)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error forcing state save: {stateEx.Message}");
+                }
+
+                // Get states from StateStore for settings persistence
+                var statesForSettings = stateStore.GetStatesForSettings();
+                revitFamiliesDataModel.Settings.NavigationStates = statesForSettings;
+
+                // navigate to new view
+                navigationStore.CurrentViewModel = createViewModel();
+            });
         }
+
+        // Public ICommand wrapper so ViewModels can expose this as ICommand
+        public ICommand Command => _command;
+
+        public void Execute(object? parameter = null) => _command.Execute(null);
+        public bool CanExecute(object? parameter = null) => _command.CanExecute(null);
     }
 }

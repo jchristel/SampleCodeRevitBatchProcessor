@@ -62,16 +62,22 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <!-- header row content -->
-        <Grid Grid.Row="0">
-            <Grid.RowDefinitions>
-                <!-- header row -->
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Grid.Row="0" Text="At the library" FontSize="24"/>
-        </Grid>
+        <Border 
+            Grid.Row="0" 
+            Background="#2196F3" 
+            Padding="15,10" 
+            Margin="0,0,0,10">
+            <StackPanel>
+                <TextBlock Text="At The Library" 
+                    FontSize="20" 
+                    FontWeight="Bold" 
+                    Foreground="White"/>
+                <TextBlock Text="Find your family" 
+                    FontSize="12" 
+                    Foreground="White" 
+                    Opacity="0.9"/>
+            </StackPanel>
+        </Border>
         <!-- message banner -->
         <Grid Grid.Row="1">
             <utilsViews:GlobalMessageView DataContext="{Binding GlobalMessageViewModel}"/>

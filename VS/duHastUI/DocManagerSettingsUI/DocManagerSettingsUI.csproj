@@ -16,9 +16,9 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 
     <!-- Assembly metadata (optional - customize as needed) -->
-    <AssemblyName>DocManagerSettingsUI.25.0.0.3</AssemblyName>
-    <AssemblyVersion>25.0.0.3</AssemblyVersion>
-    <FileVersion>25.0.0.3</FileVersion>
+    <AssemblyName>DocManagerSettingsUI.25.0.1.0</AssemblyName>
+    <AssemblyVersion>25.0.1.0</AssemblyVersion>
+    <FileVersion>25.0.1.0</FileVersion>
     <AssemblyTitle>duHast UI Custom Controls</AssemblyTitle>
     <Product>duHast</Product>
     <Company>duHast</Company>
@@ -39,8 +39,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="Utils.25.0.0.3">
-      <HintPath>..\\..\\_References\\duHast\\Utils.25.0.0.3.dll</HintPath>
+    <Reference Include="Utils.25.0.1.0">
+      <HintPath>..\\..\\_References\\duHast\\Utils.25.0.1.0.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

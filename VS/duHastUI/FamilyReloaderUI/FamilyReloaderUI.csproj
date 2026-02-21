@@ -5,15 +5,15 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>duHastNet.UI.FamilyReloaderUI</RootNamespace>
-    <AssemblyName>FamilyReloaderUI.25.0.0.3</AssemblyName>
+    <AssemblyName>FamilyReloaderUI.25.0.1.0</AssemblyName>
     <OutputType>Library</OutputType>
     <Platforms>AnyCPU;x64</Platforms>
     <!-- Match your build script's expected path -->
     <OutputPath>bin\x64\$(Configuration)\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <!-- Assembly metadata (optional - customize as needed) -->
-    <AssemblyVersion>25.0.0.3</AssemblyVersion>
-    <FileVersion>25.0.0.3</FileVersion>
+    <AssemblyVersion>25.0.1.0</AssemblyVersion>
+    <FileVersion>25.0.1.0</FileVersion>
     <AssemblyTitle>duHast UI Custom Controls</AssemblyTitle>
     <Product>duHastNet</Product>
     <Company>duHast</Company>
@@ -28,12 +28,12 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Utils.25.0.0.3">
-      <HintPath>..\\..\\_References\\duHast\\Utils.25.0.0.3.dll</HintPath>
+    <Reference Include="Utils.25.0.1.0">
+      <HintPath>..\\..\\_References\\duHast\\Utils.25.0.1.0.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="duHastUICustomControls.25.0.0.3">
-      <HintPath>..\\..\\_References\\duHast\\duHastUICustomControls.25.0.0.3.dll</HintPath>
+    <Reference Include="duHastUICustomControls.25.0.1.0">
+      <HintPath>..\\..\\_References\\duHast\\duHastUICustomControls.25.0.1.0.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>

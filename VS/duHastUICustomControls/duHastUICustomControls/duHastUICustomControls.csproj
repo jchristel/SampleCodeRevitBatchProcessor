@@ -1,9 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <RootNamespace>duHastNet.UI.CustomControls</RootNamespace>
-    <AssemblyName>duHastUICustomControls.25.0.0.3</AssemblyName>
+    <AssemblyName>duHastUICustomControls.25.0.1.0</AssemblyName>
     <OutputType>Library</OutputType>
     <Platforms>AnyCPU;x64</Platforms>
     <!-- Match your build script's expected path -->
@@ -12,8 +12,8 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     
     <!-- Assembly metadata (optional - customize as needed) -->
-    <AssemblyVersion>25.0.0.3</AssemblyVersion>
-    <FileVersion>25.0.0.3</FileVersion>
+    <AssemblyVersion>25.0.1.0</AssemblyVersion>
+    <FileVersion>25.0.1.0</FileVersion>
     <AssemblyTitle>duHast UI Custom Controls</AssemblyTitle>
     <Product>duHast</Product>
     <Company>Your Company</Company>
@@ -39,8 +39,8 @@
 
   <!-- Reference to your converted Utils library -->
   <ItemGroup>
-    <Reference Include="Utils.25.0.0.3">
-      <HintPath>..\\..\\_References\\duHast\\Utils.25.0.0.3.dll</HintPath>
+    <Reference Include="Utils.25.0.1.0">
+      <HintPath>..\\..\\_References\\duHast\\Utils.25.0.1.0.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

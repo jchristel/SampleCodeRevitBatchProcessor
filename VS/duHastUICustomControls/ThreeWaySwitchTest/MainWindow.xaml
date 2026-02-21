@@ -1,7 +1,7 @@
 <Window x:Class="ThreeWaySwitchTest.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:tws="clr-namespace:duHastNet.UI.CustomControls;assembly=duHastUICustomControls.25.0.0.3"
+        xmlns:tws="clr-namespace:duHastNet.UI.CustomControls;assembly=duHastUICustomControls.25.0.1.0"
         Title="MainWindow" Height="450" Width="800">
 
     <Grid>

@@ -25,7 +25,6 @@
 using duHastNet.PushIt.Utilities;
 using duHastNet.UI.CustomControls;
 using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
-using duHastNet.Utils.WPF.Commands;
 using duHastNet.Utils.WPF.Stores;
 using System;
 using System.Collections;
@@ -77,7 +76,7 @@ namespace duHastNet.PushIt.ViewModels
         //command to update all rooms in revit from data model
         private readonly Commands.PushAllRoomsInRevitAsyncCommand _updateAllRoomsCommand;
         //command to update the view model if the column order changes
-       
+
         //command to wipe selected rooms in revit
         private readonly Commands.WipeSelectedRevitRoomInstancesAsyncCommand _wipeSelectedRoomDataCommand;
         //command to save data to csv file
@@ -296,35 +295,35 @@ namespace duHastNet.PushIt.ViewModels
                     // this will trigger data validation, which in turn will eventually call OnPropertyChanged(nameof(SaveFilePathValid))
                     // from the eventhandler ErrorsViewModel_ErrorsChanged
                     _errorsViewModel.ClearErrors(nameof(SaveFilePath));
-                    //excute the command to save data if set up
-                    if (SaveDataCommand is null == false)
+                    //execute the command to save data if set up
+                    if (_saveDataCommand != null)
                     {
-                        SaveDataCommand.Execute(null);
+                        _saveDataCommand.Command.Execute(null);
                     }
                 }
 
                 OnPropertyChanged(nameof(SaveFilePath));
             }
         }
-        
+
         #endregion user selection
 
         #region Commands
 
-        //commands
-        public ICommand RefreshGUICommand { get { return _raiseRefreshGUICommand; } }
-        public ICommand PushSingleRoomCommand { get { return _raisePushSingleRoomCommand; } }
-        public ICommand ReloadDataCommand { get { return _raiseReloadDataCommand; } }
-        public ICommand HighLightRoomCommand { get { return _highLightRoomCommand; } }
-        public ICommand WipeStaleRoomsDataCommand { get { return _wipeStaleRoomsDataCommand; } }
-        public ICommand UpdateFromChangedCategoriesCommand { get { return _updateFromChangedCategoriesCommand; } }
-        public ICommand UpdateAllRoomsCommand { get { return _updateAllRoomsCommand; } }
-        public ICommand WipeSelectedRoomDataCommand { get { return _wipeSelectedRoomDataCommand; } }
-        public ICommand SaveDataCommand { get { return _saveDataCommand; } }
+        // Step 6: Command properties now expose the ICommand from each wrapper's .Command property
+        public ICommand RefreshGUICommand => _raiseRefreshGUICommand.Command;
+        public ICommand PushSingleRoomCommand => _raisePushSingleRoomCommand.Command;
+        public ICommand ReloadDataCommand => _raiseReloadDataCommand.Command;
+        public ICommand HighLightRoomCommand => _highLightRoomCommand.Command;
+        public ICommand WipeStaleRoomsDataCommand => _wipeStaleRoomsDataCommand.Command;
+        public ICommand UpdateFromChangedCategoriesCommand => _updateFromChangedCategoriesCommand.Command;
+        public ICommand UpdateAllRoomsCommand => _updateAllRoomsCommand.Command;
+        public ICommand WipeSelectedRoomDataCommand => _wipeSelectedRoomDataCommand.Command;
+        public ICommand SaveDataCommand => _saveDataCommand.Command;
 
         #endregion Commands
 
-        
+
         /// <summary>
         /// Adds a message to the global message store which will then be displayed in the UI
         /// </summary>
@@ -333,7 +332,21 @@ namespace duHastNet.PushIt.ViewModels
         public void AddMessage(string message, Utils.WPF.Stores.MessageTypes messageType)
         {
 
-            _messageStore.SetCurrentMessage(message, messageType);
+            if (messageType == duHastNet.Utils.WPF.Stores.MessageTypes.Error)
+            {
+                //let user dismiss the message themselves for error messages, since they might want to copy the message text for further use, and errors are more important to see for a longer time
+                _messageStore.EnqueueMessage(message, messageType);
+            }
+            else if (messageType == duHastNet.Utils.WPF.Stores.MessageTypes.Information)
+            {
+                //just flash message to user for information messages, since they are less important and user might not need to copy the message text, and it is better to dismiss them after a short time to avoid too many messages building up in the UI
+                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds: 2);
+            }
+            else
+            {
+                //default to short display time for other message types
+                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds: 5);
+            }
         }
 
 
@@ -352,10 +365,10 @@ namespace duHastNet.PushIt.ViewModels
         /// save grid states to settings
         /// </summary>
         public override void OnClosing()
-        { 
+        {
             //unsubscribe from errors changed event
             _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
-           
+
             //update the column ids in settings.
             // clear list first
             _revitDataModel.Settings.ColumnIds.Clear();
@@ -392,9 +405,10 @@ namespace duHastNet.PushIt.ViewModels
             _revitDataModel.Settings.NavigationStates = statesForSettings;
 
             // close any child view models
+            // NOTE: base.OnClosing() automatically disposes all registered children
+            // (GlobalMessageViewModel, SupportedCategoriesDataGridViewModel, RoomsDataGridViewModel)
+            // DO NOT manually call .Dispose() on them here
             base.OnClosing();
-
-            GlobalMessageViewModel.Dispose();
         }
 
 
@@ -454,7 +468,7 @@ namespace duHastNet.PushIt.ViewModels
 
             //initialize the errors view model
             _errorsViewModel = new Utils.WPF.ViewModels.ErrorsViewModel();
-            
+
             //subscribe to errors changed event
             _errorsViewModel.ErrorsChanged += ErrorsViewModel_ErrorsChanged;
 
@@ -473,9 +487,9 @@ namespace duHastNet.PushIt.ViewModels
             RegisterChild(SupportedCategoriesDataGridViewModel);
 
             //push it data grid view model
-            RoomsDataGridViewModel  = new RoomsDataGridViewModel(
+            RoomsDataGridViewModel = new RoomsDataGridViewModel(
                 revitDataModel: revitDataModel,
-                stateStore:stateStore);
+                stateStore: stateStore);
 
             // register as child view model to ensure disposal
             RegisterChild(RoomsDataGridViewModel);
@@ -520,7 +534,7 @@ namespace duHastNet.PushIt.ViewModels
                 roomsMainViewModel: this,
                 revitDataModel: _revitDataModel
             );
-            
+
             //wipe selected rooms in revit
             _wipeSelectedRoomDataCommand = new Commands.WipeSelectedRevitRoomInstancesAsyncCommand(
                 roomsMainViewModel: this,
@@ -536,7 +550,7 @@ namespace duHastNet.PushIt.ViewModels
             _pushOperationMode = PushIt.Utilities.PushMode.Push;
 
             //update rooms data with data from revit through an external event
-            RefreshGUICommand.Execute(null);
+            _raiseRefreshGUICommand.Command.Execute(null);
         }
     }
 }

@@ -22,6 +22,7 @@
 //
 
 
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.PushIt.RevitActions;
 using duHastNet.PushIt.ViewModels;
 using duHastNet.Utils.WPF.Stores;
@@ -29,17 +30,24 @@ using Revit.Async;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Input;
 
 namespace duHastNet.PushIt.Commands
 {
-    public class PushAllRoomsInRevitAsyncCommand : Utils.WPF.Commands.CommandBase
+    public class PushAllRoomsInRevitAsyncCommand
     {
         private readonly ViewModels.RoomsMainViewModel _roomsMainViewModel;
-        //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitDataModel _revitDataModel;
+        private readonly AsyncRelayCommand _command;
 
+        public ICommand Command => _command;
 
-        public override async void Execute(object parameter)
+        private bool CanExecute()
+        {
+            return !_roomsMainViewModel.IsWaitingForRevitCommandToFinish;
+        }
+
+        private async System.Threading.Tasks.Task Execute()
         {
             //deactivate the ui
             _roomsMainViewModel.IsWaitingForRevitCommandToFinish = true;
@@ -99,30 +107,11 @@ namespace duHastNet.PushIt.Commands
             }
         }
 
-        /// <summary>
-        /// this command is always available
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        public override bool CanExecute(object parameter)
+        private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            // check if IsWaitingForRevitCommandToFinish is true
-            if (_roomsMainViewModel.IsWaitingForRevitCommandToFinish)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // check if the property that changed is the one that we are interested in
             if (e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish))
             {
-                OnCanExecutedChanged();
+                _command.NotifyCanExecuteChanged();
             }
         }
 
@@ -133,6 +122,7 @@ namespace duHastNet.PushIt.Commands
         {
             _revitDataModel = revitDataModel;
             _roomsMainViewModel = roomsMainViewModel;
+            _command = new AsyncRelayCommand(Execute, CanExecute);
             _roomsMainViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
     }

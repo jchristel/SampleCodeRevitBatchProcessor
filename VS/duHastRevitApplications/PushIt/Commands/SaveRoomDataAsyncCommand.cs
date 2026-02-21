@@ -21,6 +21,7 @@
 //
 //
 
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.PushIt.RevitActions;
 using duHastNet.PushIt.Utilities;
 using duHastNet.Utils.WPF.Stores;
@@ -28,26 +29,25 @@ using Revit.Async;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Input;
 
 namespace duHastNet.PushIt.Commands
 {
-    public class SaveRoomDataAsyncCommand : Utils.WPF.Commands.CommandBase
+    public class SaveRoomDataAsyncCommand
     {
         private readonly ViewModels.RoomsMainViewModel _roomsMainViewModel;
-        //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitDataModel _revitDataModel;
+        private readonly AsyncRelayCommand _command;
 
-        public override bool CanExecute(object parameter)
+        public ICommand Command => _command;
+
+        private bool CanExecute()
         {
-            // check if IsWaitingForRevitCommandToFinish is true
-            if (_roomsMainViewModel.IsWaitingForRevitCommandToFinish)
-            {
-                return false;
-            }
-            return _roomsMainViewModel.DataFilePathValid && base.CanExecute(parameter);
+            return !_roomsMainViewModel.IsWaitingForRevitCommandToFinish
+                && _roomsMainViewModel.DataFilePathValid;
         }
 
-        public override async void Execute(object parameter)
+        private async System.Threading.Tasks.Task Execute()
         {
             //deactivate the ui
             _roomsMainViewModel.IsWaitingForRevitCommandToFinish = true;
@@ -62,10 +62,9 @@ namespace duHastNet.PushIt.Commands
                         Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
                         try
                         {
-
                             //add new rooms to the data model first
                             UpdateRoomDataModelWithNewRooms actionUpdate = new(
-                                _revitDataModel, 
+                                _revitDataModel,
                                 _roomsMainViewModel
                             );
                             (string messageActionUpdate, Utils.WPF.Stores.MessageTypes messageActionTypeUpdate) = actionUpdate.Execute(doc);
@@ -148,7 +147,7 @@ namespace duHastNet.PushIt.Commands
                                 return ("Failed to write data. Check log for details.", MessageTypes.Error);
                             }
 
-                            //set a succesfull file saved message
+                            //set a successful file saved message
                             (string messageActionSave, Utils.WPF.Stores.MessageTypes messageActionTypeSafe) =
                                 ($"Saved {roomData.Count} rooms to file: {_roomsMainViewModel.SaveFilePath}", MessageTypes.Information);
 
@@ -184,8 +183,6 @@ namespace duHastNet.PushIt.Commands
             }
         }
 
-
-
         private List<List<string>> BuildHeaderRows(List<Models.RoomDataProperty> properties)
         {
             //build header rows
@@ -213,7 +210,6 @@ namespace duHastNet.PushIt.Commands
             headerRow2.Add(string.Empty);
             headerRow3.Add(string.Empty);
 
-
             headerRows.Add(headerRow0);
             headerRows.Add(headerRow1);
             headerRows.Add(headerRow2);
@@ -221,24 +217,18 @@ namespace duHastNet.PushIt.Commands
             return headerRows;
         }
 
-
         /// <summary>
         /// builds a list of property values from a Room data model room.
-        /// order of properties is defined by properties list past in.
+        /// order of properties is defined by properties list passed in.
         /// </summary>
-        /// <param name="room"></param>
-        /// <param name="properties"></param>
-        /// <returns></returns>
         private List<string> BuildDataRowFromRoom(
             Models.RoomBase room,
             List<Models.RoomDataProperty> properties,
             int countPushed = 0,
             int countSplit = 0)
         {
-            // get the property values for the room
             List<string> dataRow = [];
 
-            // get the properties from the data model
             foreach (var property in properties)
             {
                 string propertyValue = room.GetPropertyValueByGUID(property.ParameterGUID);
@@ -259,65 +249,47 @@ namespace duHastNet.PushIt.Commands
             return dataRow;
         }
 
-
         /// <summary>
         /// Build the data rows for the rooms
         /// </summary>
-        /// <param name="rooms"></param>
-        /// <param name="properties"></param>
-        /// <returns></returns>
         private List<List<string>> BuildDataRows(List<Models.RoomDataModel> rooms,
             List<Models.RoomDataProperty> properties
         )
         {
-            //build data rows
             List<List<string>> dataRows = [];
 
-            //loop over each room and get its report data
             foreach (Models.RoomDataModel room in rooms)
             {
-
-                //build data for non pushed room (no matching room or split room in revit )
+                //build data for non pushed room (no matching room or split room in revit)
                 if (room.MatchingRevitRooms.Count == 0 &&
                     room.MatchingSplitRevitRooms.Count == 0)
                 {
-                    // get the property values for the room
-                    List<string> dataRow = BuildDataRowFromRoom(
-                        room,
-                        properties);
-
-                    //add to overall data
+                    List<string> dataRow = BuildDataRowFromRoom(room, properties);
                     dataRows.Add(dataRow);
                 }
                 else
                 {
-                    // need to check how many matching rooms there are and add 1 entry for each of them
+                    // add 1 entry for each matching pushed room
                     for (int i = 0; i < room.MatchingRevitRooms.Count; i++)
                     {
-                        // get the property values for the room
                         List<string> dataRow = BuildDataRowFromRoom(
                             room: room.MatchingRevitRooms[i],
                             properties: properties,
                             countPushed: 1,
                             countSplit: 0
                         );
-
-                        //add to overall data
                         dataRows.Add(dataRow);
                     }
 
-                    //loop over any split rooms:
+                    // loop over any split rooms
                     for (int i = 0; i < room.MatchingSplitRevitRooms.Count; i++)
                     {
-                        // get the property values for the room
                         List<string> dataRow = BuildDataRowFromRoom(
                             room: room.MatchingSplitRevitRooms[i],
                             properties: properties,
                             countPushed: 0,
                             countSplit: 1
                         );
-
-                        //add to overall data
                         dataRows.Add(dataRow);
                     }
                 }
@@ -325,16 +297,14 @@ namespace duHastNet.PushIt.Commands
             return dataRows;
         }
 
-        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            // check if the property that changed is the one that we are interested in
             if (e.PropertyName == nameof(ViewModels.RoomsMainViewModel.DataFilePath) ||
                 e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish))
             {
-                OnCanExecutedChanged();
+                _command.NotifyCanExecuteChanged();
             }
         }
-
 
         public SaveRoomDataAsyncCommand(
             ViewModels.RoomsMainViewModel roomsMainViewModel,
@@ -343,6 +313,7 @@ namespace duHastNet.PushIt.Commands
         {
             _revitDataModel = revitDataModel;
             _roomsMainViewModel = roomsMainViewModel;
+            _command = new AsyncRelayCommand(Execute, CanExecute);
             _roomsMainViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
     }

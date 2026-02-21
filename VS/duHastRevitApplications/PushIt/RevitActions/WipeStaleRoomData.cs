@@ -122,7 +122,7 @@ namespace duHastNet.PushIt.RevitActions
                 {
                     // update the family instances
                     bool wipeSuccess = WipeIt(doc, familyInstancesToWipe, roomsDataModel[0]);
-                    AddMessage($"Wiping {familyInstancesToWipe.Count} family instances. {wipeSuccess}", Utils.WPF.Stores.MessageTypes.Log);
+                    AddMessage($"Wiping {familyInstancesToWipe.Count} family instances. {wipeSuccess}", Utils.WPF.Stores.MessageTypes.Information);
                     overallWipeSuccess = overallWipeSuccess && wipeSuccess;
                     // clear the update family instances
                     familyInstancesToWipe.Clear();
@@ -133,7 +133,7 @@ namespace duHastNet.PushIt.RevitActions
             if (familyInstancesToWipe.Count > 0)
             {
                 bool wipeSuccess = WipeIt(doc, familyInstancesToWipe, roomsDataModel[0]);
-                AddMessage($"Wiping {familyInstancesToWipe.Count} family instances. {wipeSuccess}", Utils.WPF.Stores.MessageTypes.Log);
+                AddMessage($"Wiping {familyInstancesToWipe.Count} family instances. {wipeSuccess}", Utils.WPF.Stores.MessageTypes.Information);
                 overallWipeSuccess = overallWipeSuccess && wipeSuccess;
             }
         }
@@ -182,7 +182,7 @@ namespace duHastNet.PushIt.RevitActions
             }
             else
             {
-                AddMessage($"Wiped {familyInstancesToWipe.Count} family instances.", Utils.WPF.Stores.MessageTypes.Log);
+                AddMessage($"Wiped {familyInstancesToWipe.Count} family instances.", Utils.WPF.Stores.MessageTypes.Information);
                 return true;
             }
         }

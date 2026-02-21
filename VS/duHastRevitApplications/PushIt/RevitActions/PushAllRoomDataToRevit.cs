@@ -72,7 +72,7 @@ namespace duHastNet.PushIt.RevitActions
                         // add log message
                         AddMessage(
                             $"Element with Revit id [{revitRoomInstance.RevitElementId}] and push it id [{revitRoomInstance.Id.Value}] has no properties requiring updates. Skipping it",
-                            Utils.WPF.Stores.MessageTypes.Log
+                            Utils.WPF.Stores.MessageTypes.Information
                         );
                     }
 
@@ -113,7 +113,7 @@ namespace duHastNet.PushIt.RevitActions
                             // add log message
                             AddMessage(
                                 $"Element with Revit id [{revitRoomInstance.RevitElementId}] and push it id [{revitRoomInstance.Id.Value}] has no properties requiring updates. Skipping it",
-                                Utils.WPF.Stores.MessageTypes.Log
+                                Utils.WPF.Stores.MessageTypes.Information
                             );
                         }
                     }
@@ -296,7 +296,7 @@ namespace duHastNet.PushIt.RevitActions
             int bucketSize = DefineBucketSize(currentFamilyInstances, 5);
 
             // log entry
-            AddMessage($"Set bucket size for batch update to {bucketSize}", Utils.WPF.Stores.MessageTypes.Log);
+            AddMessage($"Set bucket size for batch update to {bucketSize}", Utils.WPF.Stores.MessageTypes.Information);
 
             //attempt to update room data in bundles to speed up the process
             (overallUpdateSuccess, updateCounter) = UpdateRevitModel(

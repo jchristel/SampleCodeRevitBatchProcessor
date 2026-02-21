@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
@@ -35,9 +35,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CsvHelper" Version="33.1.0"/>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
-    <PackageReference Include="Revit.Async" Version="2.1.1"/>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="CsvHelper" Version="33.1.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Revit.Async" Version="2.1.1" />
     <PackageReference Include="System.Collections.Immutable" Version="9.0.6" />
     <PackageReference Include="System.Reflection.Metadata" Version="9.0.6" />
     <PackageReference Include="System.Threading.Channels" Version="9.0.6" />
@@ -58,7 +59,7 @@
     </Reference>
     <Reference Include="Utils.25.0.0.3">
       <HintPath>..\\..\\_References\\duHast\\Utils.25.0.0.3.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="duHastUICustomControls.25.0.0.3">
       <HintPath>..\\..\\_References\\duHast\\duHastUICustomControls.25.0.0.3.dll</HintPath>

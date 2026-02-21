@@ -76,7 +76,7 @@ namespace duHastNet.PushIt.ViewModels
                 var selectedRow = SelectedItem;
                 var roomId = selectedRow[Models.Constants.ColumnHeaderRoomId.Replace(" ", "")].ToString();
                 SelectedRoom = RevitDataModel.GetAllRooms().FirstOrDefault(r => r.Id.Value == roomId);
-                
+
                 //check matching revit rooms
                 if (SelectedRoom != null)
                 {
@@ -114,7 +114,7 @@ namespace duHastNet.PushIt.ViewModels
 
         //field to store if the selected room has any matching Revit rooms
         bool _isMatchingRevitRoomsEmpty;
-        
+
         //property to check if the selected room has any matching Revit rooms
         //used to determine if the button to push the selected room to Revit should be enabled
         public bool IsMatchingRevitRoomsEmpty
@@ -125,7 +125,7 @@ namespace duHastNet.PushIt.ViewModels
                 OnPropertyChanged(nameof(IsMatchingRevitRoomsEmpty));
             }
             get => _isMatchingRevitRoomsEmpty;
-            
+
         }
 
         //field to store if the selected room has no matching split rooms
@@ -143,7 +143,7 @@ namespace duHastNet.PushIt.ViewModels
             }
 
             get => _isMatchingSplitRoomsEmpty;
-           
+
         }
 
         #endregion selected room
@@ -267,7 +267,7 @@ namespace duHastNet.PushIt.ViewModels
             // check which property changed in the underlying model
             switch (e.PropertyName)
             {
-                case  duHastNet.PushIt.Utilities.PropertyChangedEventNames.DATA_MODEL_ROOMS_UPDATED:
+                case duHastNet.PushIt.Utilities.PropertyChangedEventNames.DATA_MODEL_ROOMS_UPDATED:
                     //update rooms in the view model
                     LoadDataFromRevitDataModel();
                     break;
@@ -282,15 +282,19 @@ namespace duHastNet.PushIt.ViewModels
 
 
         /// <summary>
-        /// Custom closing logic for RoomsSelectionViewModel
-        /// Disposes all external events from the event manager
+        /// Step 7: Override DisposeManaged to unsubscribe from external event subscriptions.
+        /// This is the correct place for cleanup per the migration guide — it ensures
+        /// unsubscription happens regardless of how disposal is triggered.
         /// </summary>
-        public override void OnClosing()
+        protected override void DisposeManaged()
         {
-            //unbsubscribe from underlying model changes
-            RevitDataModel.PropertyChanged -= Model_PropertyChanged;
+            // Unsubscribe from underlying model property changes
+            if (RevitDataModel != null)
+            {
+                RevitDataModel.PropertyChanged -= Model_PropertyChanged;
+            }
 
-            base.OnClosing();
+            base.DisposeManaged();
         }
 
         #endregion event handlers
@@ -449,9 +453,12 @@ namespace duHastNet.PushIt.ViewModels
 
             foreach (var columnName in defaultColumns)
             {
-                AddSelectedColumn(columnName);
+                // Step 8: Use the generated command instead of calling the internal method directly.
+                // AddSelectedColumn() is marked internal in the base class assembly and is not
+                // accessible from this assembly. AddSelectedColumnCommand is public.
+                AddSelectedColumnCommand.Execute(columnName);
             }
-            
+
         }
 
         public string FindColumnNameById(string id)

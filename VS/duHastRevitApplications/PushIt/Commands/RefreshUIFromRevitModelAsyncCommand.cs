@@ -22,6 +22,7 @@
 //
 
 
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.PushIt.RevitActions;
 using duHastNet.PushIt.Utilities;
 using duHastNet.PushIt.ViewModels;
@@ -30,6 +31,7 @@ using Revit.Async;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Input;
 
 namespace duHastNet.PushIt.Commands
 {
@@ -39,14 +41,20 @@ namespace duHastNet.PushIt.Commands
     /// - updates new rooms from the model
     /// - this command can be slow if there are a large amount of mock room families in the model
     /// </summary>
-    public class RefreshUIFromRevitModelAsyncCommand : Utils.WPF.Commands.CommandBase
+    public class RefreshUIFromRevitModelAsyncCommand
     {
         private readonly ViewModels.RoomsMainViewModel _roomsMainViewModel;
-        //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitDataModel _revitDataModel;
+        private readonly AsyncRelayCommand _command;
 
+        public ICommand Command => _command;
 
-        public override async void Execute(object parameter)
+        private bool CanExecute()
+        {
+            return !_roomsMainViewModel.IsWaitingForRevitCommandToFinish;
+        }
+
+        private async System.Threading.Tasks.Task Execute()
         {
             //deactivate the ui
             _roomsMainViewModel.IsWaitingForRevitCommandToFinish = true;
@@ -76,7 +84,7 @@ namespace duHastNet.PushIt.Commands
 
                             //need to add any new rooms to the data model first...
                             UpdateRoomDataModelWithNewRooms actionUpdate = new(
-                                _revitDataModel, 
+                                _revitDataModel,
                                 _roomsMainViewModel
                             );
 
@@ -89,7 +97,7 @@ namespace duHastNet.PushIt.Commands
                             RefreshRoomDataWithRevitData action = new(
                                 revitModel: _revitDataModel,
                                 roomsMainViewModel: _roomsMainViewModel,
-                                revitMockRooms: actionUpdate.CurrentMockRoomsData //re-use mock room data to speed thhings up
+                                revitMockRooms: actionUpdate.CurrentMockRoomsData //re-use mock room data to speed things up
                             );
 
                             (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
@@ -130,27 +138,11 @@ namespace duHastNet.PushIt.Commands
             }
         }
 
-        /// <summary>
-        /// this command is always available
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        public override bool CanExecute(object parameter)
+        private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            // check if IsWaitingForRevitCommandToFinish is true
-            if (_roomsMainViewModel.IsWaitingForRevitCommandToFinish)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // check if the property that changed is the one that we are interested in
             if (e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish))
             {
-                OnCanExecutedChanged();
+                _command.NotifyCanExecuteChanged();
             }
         }
 
@@ -161,7 +153,7 @@ namespace duHastNet.PushIt.Commands
         {
             _revitDataModel = revitDataModel;
             _roomsMainViewModel = roomsMainViewModel;
-
+            _command = new AsyncRelayCommand(Execute, CanExecute);
             _roomsMainViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
     }

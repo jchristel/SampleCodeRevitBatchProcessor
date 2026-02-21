@@ -1,5 +1,29 @@
-﻿using Autodesk.Revit.DB;
+﻿//
+//License:
+//
+//
+// Revit Batch Processor Sample Code
+//
+// BSD License
+// Copyright 2025, Jan Christel
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+// - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+// - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+// - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+//
+// This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+// In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+// or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+//
+//
+//
+
+using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.PushIt.RevitActions;
 using duHastNet.PushIt.Utilities;
 using duHastNet.Utils.WPF.Stores;
@@ -8,18 +32,24 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Input;
 
 namespace duHastNet.PushIt.Commands
 {
-    public class WipeSelectedRevitRoomInstancesAsyncCommand : Utils.WPF.Commands.CommandBase
+    public class WipeSelectedRevitRoomInstancesAsyncCommand
     {
-
         private readonly ViewModels.RoomsMainViewModel _roomsMainViewModel;
-        //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitDataModel _revitDataModel;
+        private readonly AsyncRelayCommand _command;
 
+        public ICommand Command => _command;
 
-        public override async void Execute(object parameter)
+        private bool CanExecute()
+        {
+            return !_roomsMainViewModel.IsWaitingForRevitCommandToFinish;
+        }
+
+        private async System.Threading.Tasks.Task Execute()
         {
             //deactivate the ui
             _roomsMainViewModel.IsWaitingForRevitCommandToFinish = true;
@@ -29,7 +59,6 @@ namespace duHastNet.PushIt.Commands
                 (string message, Utils.WPF.Stores.MessageTypes messageType) = await RevitTask.RunAsync(
                     app =>
                     {
-
                         int wipeCounter = 0;
                         //Run Revit API code here
                         Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
@@ -60,7 +89,6 @@ namespace duHastNet.PushIt.Commands
                                 }
                                 else
                                 {
-                                    // convert element to family instance
                                     try
                                     {
                                         validElements.Add(selectedElement as FamilyInstance);
@@ -95,13 +123,6 @@ namespace duHastNet.PushIt.Commands
                                 return (messageActionVerify, messageActionTypeVerify);
                             }
 
-                            //add new rooms to the data model first
-                            //UpdateRoomDataModelWithNewRooms actionUpdate = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(_revitDataModel, _roomsSelectionViewModel);
-                            //(string messageActionUpdate, Utils.WPF.Stores.MessageTypes messageActionTypeUpdate) = actionUpdate.Execute(doc);
-
-                            //write messages to log...
-                            //_revitDataModel.LogMessages(actionUpdate.GetLogMessagesAndLogTypes());
-
                             // Execute the action to wipe selected rooms in the Revit model
                             WipeSelectedRevitRoomsData actionWipe = new(
                                 revitModel: _revitDataModel,
@@ -114,8 +135,7 @@ namespace duHastNet.PushIt.Commands
                             //write messages to log...
                             _revitDataModel.LogMessages(actionWipe.GetLogMessagesAndLogTypes());
 
-                            //update the room data model again ( this time to check whether a new room was wiped and therefore needs to be removed from the data model)
-                            //add new rooms to the data model first
+                            // update the room data model again (check whether a new room was wiped and needs removing from the data model)
                             UpdateRoomDataModelWithNewRooms actionUpdateTwo = new(_revitDataModel, _roomsMainViewModel);
                             (string messageActionUpdateTwo, Utils.WPF.Stores.MessageTypes messageActionTypeUpdateTwo) = actionUpdateTwo.Execute(doc);
 
@@ -126,9 +146,8 @@ namespace duHastNet.PushIt.Commands
                             RefreshRoomDataWithRevitData refreshRoomDataWithRevitData = new(
                                 revitModel: _revitDataModel,
                                 roomsMainViewModel: _roomsMainViewModel,
-                                revitMockRooms: actionUpdateTwo.CurrentMockRoomsData //re-use mock room data to speed thhings up
+                                revitMockRooms: actionUpdateTwo.CurrentMockRoomsData //re-use mock room data to speed things up
                             );
-
 
                             //execute the refresh action
                             (string messageActionRefresh, Utils.WPF.Stores.MessageTypes messageActionTypeRefresh) = refreshRoomDataWithRevitData.Execute(doc);
@@ -170,26 +189,11 @@ namespace duHastNet.PushIt.Commands
             }
         }
 
-        public override bool CanExecute(object parameter)
+        private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            // check if IsWaitingForRevitCommandToFinish is true
-            if (_roomsMainViewModel.IsWaitingForRevitCommandToFinish)
-            {
-                //button is not available
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // check if the property that changed is the one that we are interested in
             if (e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish))
             {
-                OnCanExecutedChanged();
+                _command.NotifyCanExecuteChanged();
             }
         }
 
@@ -200,6 +204,7 @@ namespace duHastNet.PushIt.Commands
         {
             _revitDataModel = revitDataModel;
             _roomsMainViewModel = roomsMainViewModel;
+            _command = new AsyncRelayCommand(Execute, CanExecute);
             _roomsMainViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
     }

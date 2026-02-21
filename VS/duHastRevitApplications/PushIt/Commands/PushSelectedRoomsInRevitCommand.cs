@@ -21,32 +21,32 @@
 //
 //
 
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.PushIt.ViewModels;
 using duHastNet.Utils.WPF.Stores;
 using Revit.Async;
 using System;
 using System.ComponentModel;
+using System.Windows.Input;
 
 namespace duHastNet.PushIt.Commands
 {
-    public class PushSelectedRoomsInRevitCommand : Utils.WPF.Commands.CommandBase
+    public class PushSelectedRoomsInRevitCommand
     {
         private readonly ViewModels.RoomsMainViewModel _roomsMainViewModel;
         private readonly ViewModels.RoomsDataGridViewModel _roomsDataGridViewModel;
-        //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitDataModel _revitDataModel;
+        private readonly AsyncRelayCommand _command;
 
-        public override bool CanExecute(object parameter)
+        public ICommand Command => _command;
+
+        private bool CanExecute()
         {
-            // check if IsWaitingForRevitCommandToFinish is true
-            if (_roomsMainViewModel.IsWaitingForRevitCommandToFinish)
-            {
-                return false;
-            }
-            return _roomsMainViewModel.DataFilePathValid && base.CanExecute(parameter);
+            return !_roomsMainViewModel.IsWaitingForRevitCommandToFinish
+                && _roomsMainViewModel.DataFilePathValid;
         }
 
-        public override async void Execute(object parameter)
+        private async System.Threading.Tasks.Task Execute()
         {
             //deactivate the ui
             _roomsMainViewModel.IsWaitingForRevitCommandToFinish = true;
@@ -61,35 +61,21 @@ namespace duHastNet.PushIt.Commands
                         Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
                         try
                         {
-
-
-
-                            //(string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
-
-                            //write messages to log...
-                            //_revitDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
-
-
-
-
-
+                            // TODO: implement push selected rooms logic here
 
                             // return the messages to the caller
                             return ("", MessageTypes.Information);
-                            //   $"{messageActionUpdate}\n{messageAction}\n{messageActionSave}",
-                            //  Utilities.MessageActionTypesUtils.CombineMessageActionType(new List<MessageTypes> { messageActionTypeUpdate, messageActionType, messageActionTypeSafe })
-                            //);
                         }
                         catch (Exception ex)
                         {
-                            return ($"An exception occurred within the external event handler update after uypdating rooms event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+                            return ($"An exception occurred within the external event handler update after updating rooms event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
                         }
                     });
 
                 if (messageType == MessageTypes.Information)
                 {
                     // raise event to notify the view model that the model has been updated
-                    //_revitDataModel.RaisePropertyChanged(PropertyChangedEventNames.DATA_MODEL_ROOMS_UPDATED);
+                    // _revitDataModel.RaisePropertyChanged(PropertyChangedEventNames.DATA_MODEL_ROOMS_UPDATED);
                 }
 
                 //pop message to user
@@ -106,12 +92,11 @@ namespace duHastNet.PushIt.Commands
             }
         }
 
-        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            // check if the property that changed is the one that we are interested in
             if (e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish))
             {
-                OnCanExecutedChanged();
+                _command.NotifyCanExecuteChanged();
             }
         }
 
@@ -124,7 +109,7 @@ namespace duHastNet.PushIt.Commands
             _revitDataModel = revitDataModel;
             _roomsMainViewModel = roomsMainViewModel;
             _roomsDataGridViewModel = roomsDataGridViewModel;
-
+            _command = new AsyncRelayCommand(Execute, CanExecute);
             _roomsMainViewModel.PropertyChanged += OnViewModelPropertyChanged;
             _roomsDataGridViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }

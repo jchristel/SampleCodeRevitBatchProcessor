@@ -80,7 +80,7 @@ namespace duHastNet.PushIt.RevitActions
                 staleFamilyInstances.Add(doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance);
             }
 
-            AddMessage($"Wiping {staleFamilyInstances.Count} family instances.", Utils.WPF.Stores.MessageTypes.Log);
+            AddMessage($"Wiping {staleFamilyInstances.Count} family instances.", Utils.WPF.Stores.MessageTypes.Information);
 
             bool wipeSuccess = WipeIt(doc, staleFamilyInstances, roomsDataModel[0]);
         }
@@ -128,7 +128,7 @@ namespace duHastNet.PushIt.RevitActions
             }
             else
             {
-                AddMessage($"Wiped {familyInstancesToWipe.Count} family instances.", Utils.WPF.Stores.MessageTypes.Log);
+                AddMessage($"Wiped {familyInstancesToWipe.Count} family instances.", Utils.WPF.Stores.MessageTypes.Information);
                 return true;
             }
         }

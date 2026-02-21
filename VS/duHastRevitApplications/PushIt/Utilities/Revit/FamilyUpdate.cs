@@ -73,12 +73,12 @@ namespace duHastNet.PushIt.Utilities.Revit
 
                     // set the room id parameter
                     flagId = duHastNet.RevitUtils.Parameters.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.Id.ParameterGUID, room_id);
-                    AddMessage($"Updated room id with value [{room_id}] for family instance [{familyInstance.Id}] with status: [{flagId}]", Utils.WPF.Stores.MessageTypes.Log);
+                    AddMessage($"Updated room id with value [{room_id}] for family instance [{familyInstance.Id}] with status: [{flagId}]", Utils.WPF.Stores.MessageTypes.Information);
                 }
                 else
                 {
                     // add a log message
-                    AddMessage($"Skipping ID update for room [{roomData.Id.Value}]", Utils.WPF.Stores.MessageTypes.Log);
+                    AddMessage($"Skipping ID update for room [{roomData.Id.Value}]", Utils.WPF.Stores.MessageTypes.Information);
                 }
 
                 //update other properties
@@ -92,7 +92,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                     // skip read only properties
                     if (property.IsReadOnly)
                     {
-                        AddMessage($"Skipping read only property [{property.Name}] for family instance [{familyInstance.Id}]", Utils.WPF.Stores.MessageTypes.Log);
+                        AddMessage($"Skipping read only property [{property.Name}] for family instance [{familyInstance.Id}]", Utils.WPF.Stores.MessageTypes.Warning);
                         continue;
                     }
 
@@ -108,12 +108,12 @@ namespace duHastNet.PushIt.Utilities.Revit
                         if (currentValue != property.Value)
                         {
                             bool flag = duHastNet.RevitUtils.Parameters.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, property.ParameterGUID, property.Value);
-                            AddMessage($"Updated shared parameter property [{property.Name}] with value [{property.Value}] from [{currentValue}] for family instance [{familyInstance.Id}] with status: {flag}", Utils.WPF.Stores.MessageTypes.Log);
+                            AddMessage($"Updated shared parameter property [{property.Name}] with value [{property.Value}] from [{currentValue}] for family instance [{familyInstance.Id}] with status: {flag}", Utils.WPF.Stores.MessageTypes.Information);
                             flagOtherProperties = flagOtherProperties && flag;
                         }
                         else
                         {
-                            AddMessage($"Property [{property.Name}] value does not need updating: current value [{currentValue}] equals SoA value [{property.Value}]", Utils.WPF.Stores.MessageTypes.Log);
+                            AddMessage($"Property [{property.Name}] value does not need updating: current value [{currentValue}] equals SoA value [{property.Value}]", Utils.WPF.Stores.MessageTypes.Information);
                         }
                     }
                     else
@@ -124,12 +124,12 @@ namespace duHastNet.PushIt.Utilities.Revit
                         if (currentValue != property.Value)
                         {
                             bool flag = duHastNet.RevitUtils.Parameters.ParaUtils.SetParameterValueByName(familyInstance, property.Name, property.Value);
-                            AddMessage($"Updated non shared parameter property [{property.Name}] with value [{property.Value}] for family instance [{familyInstance.Id}] with status: {flag}", Utils.WPF.Stores.MessageTypes.Log);
+                            AddMessage($"Updated non shared parameter property [{property.Name}] with value [{property.Value}] for family instance [{familyInstance.Id}] with status: {flag}", Utils.WPF.Stores.MessageTypes.Information);
                             flagOtherProperties = flagOtherProperties && flag;
                         }
                         else
                         {
-                            AddMessage($"Property [{property.Name}] value does not need updating: current value [{currentValue}] equals SoA value [{property.Value}]", Utils.WPF.Stores.MessageTypes.Log);
+                            AddMessage($"Property [{property.Name}] value does not need updating: current value [{currentValue}] equals SoA value [{property.Value}]", Utils.WPF.Stores.MessageTypes.Information);
                         }
                     }
                 }

@@ -205,7 +205,10 @@ namespace duHastNet.PushIt.ViewModels
             //there are only 2 columns to display and they are always visible
             foreach (KeyValuePair<string, string> columnName in Models.Constants.ColumnCategoriesInfo)
             {
-                AddSelectedColumn(columnName.Key);
+                // Step 8: Use the generated command instead of calling the internal method directly.
+                // AddSelectedColumn() is marked internal in the base class assembly and is not
+                // accessible from this assembly. AddSelectedColumnCommand is public.
+                AddSelectedColumnCommand.Execute(columnName.Key);
             }
         }
 
@@ -264,8 +267,10 @@ namespace duHastNet.PushIt.ViewModels
         }
 
         /// <summary>
-        /// Sets up a property changed event handler to automatically sync data
-        /// Call this from constructor after initializing the data
+        /// Sets up a property changed event handler to automatically sync data.
+        /// Call this from constructor after initializing the data.
+        /// Step 7: The CollectionChanged handler is now a named method so it can be
+        /// unsubscribed in DisposeManaged to prevent memory leaks.
         /// </summary>
         private void SetupDataSynchronization()
         {
@@ -280,25 +285,32 @@ namespace duHastNet.PushIt.ViewModels
                     }
                 }
 
-                // Also monitor when new rows are added
-                Data.CollectionChanged += (s, e) =>
-                {
-                    if (e.NewItems != null)
-                    {
-                        foreach (var newItem in e.NewItems.OfType<INotifyPropertyChanged>())
-                        {
-                            newItem.PropertyChanged += OnGridRowPropertyChanged;
-                        }
-                    }
+                // Subscribe using a named method so it can be unsubscribed in DisposeManaged
+                Data.CollectionChanged += OnDataCollectionChanged;
+            }
+        }
 
-                    if (e.OldItems != null)
-                    {
-                        foreach (var oldItem in e.OldItems.OfType<INotifyPropertyChanged>())
-                        {
-                            oldItem.PropertyChanged -= OnGridRowPropertyChanged;
-                        }
-                    }
-                };
+        /// <summary>
+        /// Step 7: Named handler for Data.CollectionChanged — subscribes new rows and
+        /// unsubscribes removed rows from OnGridRowPropertyChanged.
+        /// Must be a named method (not a lambda) so it can be unsubscribed in DisposeManaged.
+        /// </summary>
+        private void OnDataCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (var newItem in e.NewItems.OfType<INotifyPropertyChanged>())
+                {
+                    newItem.PropertyChanged += OnGridRowPropertyChanged;
+                }
+            }
+
+            if (e.OldItems != null)
+            {
+                foreach (var oldItem in e.OldItems.OfType<INotifyPropertyChanged>())
+                {
+                    oldItem.PropertyChanged -= OnGridRowPropertyChanged;
+                }
             }
         }
 
@@ -329,6 +341,30 @@ namespace duHastNet.PushIt.ViewModels
         }
 
         #endregion
+
+        /// <summary>
+        /// Step 7: Override DisposeManaged to unsubscribe all event subscriptions set up
+        /// in SetupDataSynchronization, preventing memory leaks.
+        /// </summary>
+        protected override void DisposeManaged()
+        {
+            if (Data != null)
+            {
+                // Unsubscribe the collection changed handler
+                Data.CollectionChanged -= OnDataCollectionChanged;
+
+                // Unsubscribe from all individual row property changed events
+                foreach (var row in Data)
+                {
+                    if (row is INotifyPropertyChanged notifyRow)
+                    {
+                        notifyRow.PropertyChanged -= OnGridRowPropertyChanged;
+                    }
+                }
+            }
+
+            base.DisposeManaged();
+        }
 
         public SupportedCatgeoriesDataGridViewModel(Models.RevitDataModel revitDataModel)
         {

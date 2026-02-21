@@ -22,6 +22,7 @@
 //
 
 
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.PushIt.RevitActions;
 using duHastNet.PushIt.Utilities;
 using duHastNet.Utils.WPF.Stores;
@@ -29,17 +30,24 @@ using Revit.Async;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Input;
 
 namespace duHastNet.PushIt.Commands
 {
-    public class UpdateFromChangedCategoriesAsyncCommand : Utils.WPF.Commands.CommandBase
+    public class UpdateFromChangedCategoriesAsyncCommand
     {
-
         private readonly ViewModels.RoomsMainViewModel _roomsMainViewModel;
-        //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitDataModel _revitDataModel;
+        private readonly AsyncRelayCommand _command;
 
-        public override async void Execute(object parameter)
+        public ICommand Command => _command;
+
+        private bool CanExecute()
+        {
+            return !_roomsMainViewModel.IsWaitingForRevitCommandToFinish;
+        }
+
+        private async System.Threading.Tasks.Task Execute()
         {
             //deactivate the ui
             _roomsMainViewModel.IsWaitingForRevitCommandToFinish = true;
@@ -54,12 +62,11 @@ namespace duHastNet.PushIt.Commands
                         Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
                         try
                         {
-                            // before invoking the action, check if the category selection is changed in compared to the settings stored in the data model
-                            // if so, update the data model and invoke the action
-                            // otherwise pop message to user that no changes were made
+                            // before invoking the action, check if the category selection has changed compared to
+                            // the settings stored in the data model. If so, update the data model and invoke the action.
+                            // Otherwise pop a message to the user that no changes were made.
 
-
-                            //this list is automatically updated by the view model managing the categorie
+                            //this list is automatically updated by the view model managing the categories
                             var allAvailableCategories = _revitDataModel.GetAllCategories();
 
                             // get the current category selection from the data model
@@ -126,7 +133,7 @@ namespace duHastNet.PushIt.Commands
 
                             //add new rooms to the data model first
                             UpdateRoomDataModelWithNewRooms actionUpdate = new(
-                                _revitDataModel, 
+                                _revitDataModel,
                                 _roomsMainViewModel
                             );
 
@@ -180,27 +187,11 @@ namespace duHastNet.PushIt.Commands
             }
         }
 
-        /// <summary>
-        /// this command is always available
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        public override bool CanExecute(object parameter)
+        private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            // check if IsWaitingForRevitCommandToFinish is true
-            if (_roomsMainViewModel.IsWaitingForRevitCommandToFinish)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // check if the property that changed is the one that we are interested in
             if (e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish))
             {
-                OnCanExecutedChanged();
+                _command.NotifyCanExecuteChanged();
             }
         }
 
@@ -211,6 +202,7 @@ namespace duHastNet.PushIt.Commands
         {
             _revitDataModel = revitDataModel;
             _roomsMainViewModel = roomsMainViewModel;
+            _command = new AsyncRelayCommand(Execute, CanExecute);
             _roomsMainViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
     }

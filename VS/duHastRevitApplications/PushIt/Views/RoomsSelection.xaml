@@ -54,7 +54,7 @@
             </Style.Triggers>
         </Style>
         <!--converters-->
-        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
+        <converters:InverseBoolToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <pushItConverter:CountConverter x:Key="CountConverter"/>
@@ -89,7 +89,7 @@
         </Grid>
         <!-- message banner -->
         <Grid Grid.Row="1">
-            <utilsViews:GlobalMessageBanner DataContext="{Binding GlobalMessageViewModel}"/>
+            <utilsViews:GlobalMessageView DataContext="{Binding GlobalMessageViewModel}"/>
         </Grid>
         
         <!-- dynamic grid view of room data -->
@@ -137,20 +137,17 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0"
                 Margin="0 5 5 5" 
-                Command="{Binding RefreshGUICommand}" 
-                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+                Command="{Binding RefreshGUICommand}">
                 <TextBlock Text="Refresh rooms from model" TextWrapping="Wrap" TextAlignment="Center"/>
             </Button>
             <Button Grid.Column="1"
                 Margin="0 5 5 5" 
-                Command="{Binding WipeSelectedRoomDataCommand}" 
-                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+                Command="{Binding WipeSelectedRoomDataCommand}">
                 <TextBlock Text="Wipe selected rooms in model" TextWrapping="Wrap" TextAlignment="Center"/>
              </Button>  
             <Button Grid.Column="2"
                 Margin="0 5 5 5" 
-                Command="{Binding HighLightRoomCommand}"
-                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+                Command="{Binding HighLightRoomCommand}">
                 <TextBlock Text="Highlight rooms in model" TextWrapping="Wrap" TextAlignment="Center"/>
             </Button>
             <TextBlock 
@@ -183,15 +180,13 @@
                             Grid.Column="0"
                             Margin="0 10 5 10" 
                             Content="Update rooms in model"
-                            Command="{Binding UpdateAllRoomsCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+                            Command="{Binding UpdateAllRoomsCommand}"/>
                         <Button 
                             Grid.Row="0"
                             Grid.Column="1"
                             Margin="5 10 5 10" 
                             Content="Wipe stale data from rooms in model"
-                            Command="{Binding WipeStaleRoomsDataCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+                            Command="{Binding WipeStaleRoomsDataCommand}"/>
                         <!-- save data as stack panel so the file path can be stored in a hidden text box (MVVM pattern) -->
                         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="2">
                             <Button 
@@ -242,8 +237,7 @@
                             Padding="20 0 20 0"
                             Margin="5 10 5 10" 
                             Content="Load"
-                            Command="{Binding ReloadDataCommand}" 
-                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+                            Command="{Binding ReloadDataCommand}" />
                     </Grid>
                     <Border CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
                         <Expander  Header="Settings" Margin="5 5 5 5">
@@ -270,8 +264,7 @@
                                      Padding="20 0 20 0"
                                      Margin="5 10 5 10" 
                                      Content="Apply"
-                                    Command="{Binding UpdateFromChangedCategoriesCommand}" 
-                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>     
+                                    Command="{Binding UpdateFromChangedCategoriesCommand}" />
                             </Grid>
                         </Expander>
                     </Border>
@@ -288,8 +281,8 @@
             <!--- operation modus radio buttons -->
             <Border Grid.Row="0" Grid.RowSpan="3" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
             </Border>
-            <customControls:ThreeWaySwitch Grid.Row="0" Width="Auto" 
-                Height="Auto"
+            <customControls:ThreeWaySwitch 
+                Grid.Row="0"
                 Margin="10 2 10 2"
                 LabelLeft="Push It" LabelCenter="Split It" LabelRight="New Room" DisplayName="Mode"
                 Value="{Binding SwitchState, Mode=TwoWay}"/>
@@ -297,8 +290,7 @@
                 Margin="5 10 5 10" 
                 Content = "{Binding  PushItButtonText}"  
                 FontSize="24"
-                Command="{Binding PushSingleRoomCommand}" 
-                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+                Command="{Binding PushSingleRoomCommand}" />
         </Grid>
     </Grid>
 </UserControl>

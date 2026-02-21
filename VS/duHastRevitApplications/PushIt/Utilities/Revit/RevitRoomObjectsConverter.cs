@@ -168,7 +168,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                 }
 
             }
-            AddMessage($"Converted {revitRooms.Count} family instances to revit rooms.", Utils.WPF.Stores.MessageTypes.Log);
+            AddMessage($"Converted {revitRooms.Count} family instances to revit rooms.", Utils.WPF.Stores.MessageTypes.Information);
             return revitRooms;
         }
     }

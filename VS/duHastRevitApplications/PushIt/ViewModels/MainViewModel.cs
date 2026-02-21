@@ -21,32 +21,44 @@
 //
 //
 
+using CommunityToolkit.Mvvm.ComponentModel;
+using duHastNet.Utils.WPF.ViewModels;
+using System.ComponentModel;
+
 namespace duHastNet.PushIt.ViewModels
 {
     public class MainViewModel : Utils.WPF.ViewModels.ViewModelBase
     {
-
         private readonly Utils.WPF.Stores.NavigationStore _navigationStore;
-        public Utils.WPF.ViewModels.ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
+
+        // Step 3: Return type updated from ViewModelBase to ObservableObject?
+        // to match the updated NavigationStore.CurrentViewModel property type
+        public ObservableObject? CurrentViewModel => _navigationStore.CurrentViewModel;
 
         public MainViewModel(Utils.WPF.Stores.NavigationStore navigationStore)
         {
             _navigationStore = navigationStore;
-            _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
+
+            // Step 5: Subscribe to PropertyChanged instead of the removed CurrentViewModelChanged event
+            _navigationStore.PropertyChanged += OnNavigationStorePropertyChanged;
         }
 
-        private void OnCurrentViewModelChanged()
+        // Step 5: Filter PropertyChanged events from the NavigationStore by property name
+        private void OnNavigationStorePropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            OnPropertyChanged(nameof(CurrentViewModel));
+            if (e.PropertyName == nameof(_navigationStore.CurrentViewModel))
+            {
+                OnPropertyChanged(nameof(CurrentViewModel));
+            }
         }
 
         public override void OnClosing()
         {
-            // Notify the navigation store to close current view model
+            // Notify the navigation store to close the current view model
             _navigationStore.NotifyClosing();
 
-            // Custom closing logic for RoomsSelectionViewModel
-            _navigationStore.CurrentViewModelChanged -= OnCurrentViewModelChanged;
+            // Step 5: Unsubscribe from PropertyChanged instead of the removed CurrentViewModelChanged event
+            _navigationStore.PropertyChanged -= OnNavigationStorePropertyChanged;
 
             base.OnClosing();
         }

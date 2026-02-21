@@ -22,26 +22,48 @@
 //
 
 
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.PushIt.RevitActions;
 using duHastNet.PushIt.ViewModels;
 using duHastNet.Utils.WPF.Stores;
 using Revit.Async;
 using System;
 using System.ComponentModel;
+using System.Windows.Input;
 
 namespace duHastNet.PushIt.Commands
 {
-    public class HighlightRoomsInRevitAsyncCommand : Utils.WPF.Commands.CommandBase
+    public class HighlightRoomsInRevitAsyncCommand
     {
-        
         private readonly ViewModels.RoomsMainViewModel _roomsMainViewModel;
         private readonly ViewModels.RoomsDataGridViewModel _roomsDataGridViewModel;
-
-        //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitDataModel _revitDataModel;
+        private readonly AsyncRelayCommand _command;
 
+        public ICommand Command => _command;
 
-        public override async void Execute(object parameter)
+        private bool CanExecute()
+        {
+            if (_roomsDataGridViewModel == null || _roomsMainViewModel == null)
+            {
+                return false;
+            }
+
+            if (_roomsMainViewModel.IsWaitingForRevitCommandToFinish)
+            {
+                return false;
+            }
+
+            // check if no room and no split room is associated with this entry
+            if (_roomsDataGridViewModel.IsMatchingRevitRoomsEmpty && _roomsDataGridViewModel.IsMatchingSplitRoomsEmpty)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private async System.Threading.Tasks.Task Execute()
         {
             //deactivate the ui
             _roomsMainViewModel.IsWaitingForRevitCommandToFinish = true;
@@ -108,37 +130,13 @@ namespace duHastNet.PushIt.Commands
             }
         }
 
-        public override bool CanExecute(object parameter)
+        private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-
-            // if any view model is null return false
-            if (_roomsDataGridViewModel ==  null || _roomsMainViewModel == null)
-            {
-                return false;
-            }
-
-            // check if IsWaitingForRevitCommandToFinish is true
-            if (_roomsMainViewModel.IsWaitingForRevitCommandToFinish)
-            {
-                return false;
-            }
-            //check if no room but and no split room is associated with this entry
-            else if (_roomsDataGridViewModel.IsMatchingRevitRoomsEmpty && _roomsDataGridViewModel.IsMatchingSplitRoomsEmpty)
-            {
-                return false;
-            }
-
-            return base.CanExecute(parameter);
-        }
-
-        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // check if the property that changed is the one that we are interested in
             if (e.PropertyName == nameof(ViewModels.RoomsDataGridViewModel.IsMatchingRevitRoomsEmpty) ||
                 e.PropertyName == nameof(ViewModels.RoomsDataGridViewModel.IsMatchingSplitRoomsEmpty) ||
                 e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish))
             {
-                OnCanExecutedChanged();
+                _command.NotifyCanExecuteChanged();
             }
         }
 
@@ -151,7 +149,7 @@ namespace duHastNet.PushIt.Commands
             _revitDataModel = revitDataModel;
             _roomsMainViewModel = roomsMainViewModel;
             _roomsDataGridViewModel = roomsDataGridViewModel;
-
+            _command = new AsyncRelayCommand(Execute, CanExecute);
             _roomsMainViewModel.PropertyChanged += OnViewModelPropertyChanged;
             _roomsDataGridViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }

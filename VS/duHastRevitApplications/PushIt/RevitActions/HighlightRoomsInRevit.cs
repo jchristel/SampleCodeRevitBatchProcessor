@@ -53,7 +53,7 @@ namespace duHastNet.PushIt.RevitActions
                 }
 
                 // log the action
-                AddMessage($"Highlighting {elementIds.Count} rooms in Revit", Utils.WPF.Stores.MessageTypes.Log);
+                AddMessage($"Highlighting {elementIds.Count} rooms in Revit", Utils.WPF.Stores.MessageTypes.Information);
 
                 // attempt to highlight and zoom to selected elements
                 try

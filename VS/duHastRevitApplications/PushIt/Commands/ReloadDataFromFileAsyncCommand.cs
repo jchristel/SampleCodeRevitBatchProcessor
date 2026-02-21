@@ -22,6 +22,7 @@
 //
 
 
+using CommunityToolkit.Mvvm.Input;
 using duHastNet.PushIt.RevitActions;
 using duHastNet.PushIt.Utilities;
 using duHastNet.Utils.WPF.Stores;
@@ -29,18 +30,25 @@ using Revit.Async;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Input;
 
 namespace duHastNet.PushIt.Commands
 {
-    public class ReloadDataFromFileAsyncCommand : Utils.WPF.Commands.CommandBase
+    public class ReloadDataFromFileAsyncCommand
     {
-
         private readonly ViewModels.RoomsMainViewModel _roomsMainViewModel;
-        //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitDataModel _revitDataModel;
+        private readonly AsyncRelayCommand _command;
 
+        public ICommand Command => _command;
 
-        public override async void Execute(object parameter)
+        private bool CanExecute()
+        {
+            return !_roomsMainViewModel.IsWaitingForRevitCommandToFinish
+                && _roomsMainViewModel.DataFilePathValid;
+        }
+
+        private async System.Threading.Tasks.Task Execute()
         {
             //deactivate the ui
             _roomsMainViewModel.IsWaitingForRevitCommandToFinish = true;
@@ -58,16 +66,13 @@ namespace duHastNet.PushIt.Commands
                             //clear out all rooms from the data model
                             _revitDataModel.ClearAllRooms();
 
-                            // reset the column order in the view model in case it was changed
-                            //_roomsSelectionViewModel.ColumnOrder = new List<string>();
-
                             // reload data from the file path
                             _revitDataModel.LoadRoomsData();
 
-                            //clear parmeter data
+                            //clear parameter data
                             _revitDataModel.ClearParameters();
 
-                            //load parmeter data
+                            //load parameter data
                             _revitDataModel.LoadParameterData();
 
                             //check all parameters still exist before reading data
@@ -85,7 +90,7 @@ namespace duHastNet.PushIt.Commands
 
                             //add new rooms to the data model first
                             UpdateRoomDataModelWithNewRooms actionUpdate = new(
-                                _revitDataModel, 
+                                _revitDataModel,
                                 _roomsMainViewModel
                             );
 
@@ -138,28 +143,14 @@ namespace duHastNet.PushIt.Commands
             }
         }
 
-
-        public override bool CanExecute(object parameter)
+        private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            // check if IsWaitingForRevitCommandToFinish is true
-            if (_roomsMainViewModel.IsWaitingForRevitCommandToFinish)
-            {
-                return false;
-            }
-            return _roomsMainViewModel.DataFilePathValid && base.CanExecute(parameter);
-        }
-
-
-        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // check if the property that changed is the one that we are interested in
             if (e.PropertyName == nameof(ViewModels.RoomsMainViewModel.DataFilePath) ||
                 e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish))
             {
-                OnCanExecutedChanged();
+                _command.NotifyCanExecuteChanged();
             }
         }
-
 
         public ReloadDataFromFileAsyncCommand(
             ViewModels.RoomsMainViewModel roomsMainViewModel,
@@ -168,7 +159,7 @@ namespace duHastNet.PushIt.Commands
         {
             _revitDataModel = revitDataModel;
             _roomsMainViewModel = roomsMainViewModel;
-
+            _command = new AsyncRelayCommand(Execute, CanExecute);
             _roomsMainViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
     }

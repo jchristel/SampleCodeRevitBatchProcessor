@@ -29,7 +29,7 @@ This is required since the dll's used have a version number in their file name.
 #
 #
 
-DLL_VERSION = ".25.0.0.3"
+DLL_VERSION = ".25.0.1.0"
 
 # family reloader ui
 FAMILY_RELOADER_UI = "FamilyReloaderUI{}.dll".format(DLL_VERSION)

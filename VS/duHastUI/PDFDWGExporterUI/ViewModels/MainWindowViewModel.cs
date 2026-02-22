@@ -50,9 +50,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
         public override void OnClosing()
         {
             System.Diagnostics.Debug.WriteLine("MainWindowViewModel.OnClosing() called");
-            // Notify the navigation store to close current view model
             _navigationStore.NotifyClosing();
-            // Event cleanup moved to Dispose()
             base.OnClosing();
         }
 

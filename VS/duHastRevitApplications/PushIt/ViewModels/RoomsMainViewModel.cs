@@ -58,7 +58,7 @@ namespace duHastNet.PushIt.ViewModels
         public duHastNet.PushIt.ViewModels.RoomsDataGridViewModel RoomsDataGridViewModel { get; }
 
         #region loading datagrid overlay properties
-        
+
         [ObservableProperty]
         private bool _isGridBusy;
 
@@ -67,8 +67,7 @@ namespace duHastNet.PushIt.ViewModels
 
         #endregion loading datagrid overlay properties
 
-        private string _activeDesignSetName = duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME;
-        private string _activeDesignOptionName = duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME;
+        // default values set inline on [ObservableProperty] declarations below
 
         //command to raise an event to refresh the gui
         private readonly Commands.RefreshUIFromRevitModelAsyncCommand _raiseRefreshGUICommand;
@@ -84,8 +83,6 @@ namespace duHastNet.PushIt.ViewModels
         private readonly Commands.UpdateFromChangedCategoriesAsyncCommand _updateFromChangedCategoriesCommand;
         //command to update all rooms in revit from data model
         private readonly Commands.PushAllRoomsInRevitAsyncCommand _updateAllRoomsCommand;
-        //command to update the view model if the column order changes
-
         //command to wipe selected rooms in revit
         private readonly Commands.WipeSelectedRevitRoomInstancesAsyncCommand _wipeSelectedRoomDataCommand;
         //command to save data to csv file
@@ -96,231 +93,148 @@ namespace duHastNet.PushIt.ViewModels
         // event handler for errors changed
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
+        #region observable properties
+
         // flag indicating whether the view model is waiting for a Revit command to finish
+        [ObservableProperty]
         private bool _isWaitingForRevitCommandToFinish;
-        public bool IsWaitingForRevitCommandToFinish
+
+        /// <summary>
+        /// Side effect: also drives the loading overlay via IsGridBusy.
+        /// </summary>
+        partial void OnIsWaitingForRevitCommandToFinishChanged(bool value)
         {
-            get => _isWaitingForRevitCommandToFinish;
-            set
-            {
-                _isWaitingForRevitCommandToFinish = value;
-                IsGridBusy = value; // also set the IsGridBusy property to show the loading overlay
-                OnPropertyChanged(nameof(IsWaitingForRevitCommandToFinish));
-            }
+            IsGridBusy = value;
         }
 
         #region push modus
 
-        //three way control setting the operation modus
+        /// <summary>
+        /// Property containing the three possible operation modi.
+        /// Side effects: updates PushItButtonText and PushOperationMode.
+        /// </summary>
+        [ObservableProperty]
         private ThreeWaySwitch.SwitchState _switchState;
 
-        /// <summary>
-        /// property containing the three possible operation modi
-        /// </summary>
-        public ThreeWaySwitch.SwitchState SwitchState
+        partial void OnSwitchStateChanged(ThreeWaySwitch.SwitchState value)
         {
-            get => _switchState;
-            set
+            if (value == ThreeWaySwitch.SwitchState.Left)
             {
-                if (_switchState != value)
-                {
-                    _switchState = value;
-
-                    if (_switchState == ThreeWaySwitch.SwitchState.Left)
-                    {
-                        PushItButtonText = "Push It";
-                        PushOperationMode = PushIt.Utilities.PushMode.Push;
-                    }
-                    else if (_switchState == ThreeWaySwitch.SwitchState.Centre)
-                    {
-                        PushItButtonText = "Split It";
-                        PushOperationMode = PushMode.Split;
-                    }
-                    else
-                    {
-                        PushItButtonText = "Create New";
-                        PushOperationMode = PushIt.Utilities.PushMode.New;
-                    }
-
-                    OnPropertyChanged(nameof(SwitchState));
-                }
+                PushItButtonText = "Push It";
+                PushOperationMode = PushIt.Utilities.PushMode.Push;
+            }
+            else if (value == ThreeWaySwitch.SwitchState.Centre)
+            {
+                PushItButtonText = "Split It";
+                PushOperationMode = PushMode.Split;
+            }
+            else
+            {
+                PushItButtonText = "Create New";
+                PushOperationMode = PushIt.Utilities.PushMode.New;
             }
         }
 
-        /// the mode of operation for the push it command (push, push and split, push and  new)
+        /// <summary>
+        /// The mode of operation for the push it command (push, push and split, push and new).
+        /// Some commands check this value to determine whether they can execute.
+        /// </summary>
+        [ObservableProperty]
         private PushIt.Utilities.PushMode _pushOperationMode;
 
         /// <summary>
-        /// property to set the push operation mode through the three way switch
-        /// some commands are checking this value to work out whether they can exceute!
+        /// Button text reflecting the current push operation mode.
         /// </summary>
-        public PushIt.Utilities.PushMode PushOperationMode
-        {
-            get => _pushOperationMode;
-
-            set
-            {
-                _pushOperationMode = value;
-
-                //notify commands of change
-                OnPropertyChanged(nameof(PushOperationMode));
-            }
-        }
-
-        //default button text for push it mode
-        string _pushItButtonText = "Push It";
-
-        //button text for push it mode
-        public string PushItButtonText
-        {
-            get => _pushItButtonText;
-            set
-            {
-                _pushItButtonText = value;
-                OnPropertyChanged(nameof(PushItButtonText));
-            }
-        }
+        [ObservableProperty]
+        private string _pushItButtonText = "Push It";
 
         #endregion push modus
 
         #region settings
 
+        /// <summary>
+        /// Path to the data file. Validates on set and updates the data model settings.
+        /// </summary>
+        [ObservableProperty]
         private string _dataFilePath;
-        public string DataFilePath
-        {
-            get => _dataFilePath;
-            set
-            {
-                _dataFilePath = value;
 
+        partial void OnDataFilePathChanged(string value)
+        {
+            _errorsViewModel.ClearErrors(nameof(DataFilePath));
+
+            if (string.IsNullOrEmpty(value))
+            {
+                DataFilePathValid = false;
+                // triggers data validation, which in turn calls OnPropertyChanged(nameof(DataFilePathValid))
+                // via ErrorsViewModel_ErrorsChanged
+                _errorsViewModel.AddError(nameof(DataFilePath), "Data file path cannot be empty");
+            }
+            else if (!System.IO.File.Exists(value))
+            {
+                DataFilePathValid = false;
+                _errorsViewModel.AddError(nameof(DataFilePath), "Data file path does not exist");
+            }
+            else
+            {
+                DataFilePathValid = true;
                 _errorsViewModel.ClearErrors(nameof(DataFilePath));
-
-                // check if the file path is valid, if not add an error
-                if (string.IsNullOrEmpty(value))
-                {
-                    // set the data path to invalid
-                    DataFilePathValid = false;
-                    // this will trigger data validation, which in turn will eventually call OnPropertyChanged(nameof(DataFilePathValid))
-                    // from the eventhandler ErrorsViewModel_ErrorsChanged
-                    _errorsViewModel.AddError(nameof(DataFilePath), "Data file path cannot be empty");
-                }
-                else if (!System.IO.File.Exists(value))
-                {
-                    // set the data path to invalid
-                    DataFilePathValid = false;
-                    // this will trigger data validation, which in turn will eventually call OnPropertyChanged(nameof(DataFilePathValid))
-                    // from the eventhandler ErrorsViewModel_ErrorsChanged
-                    _errorsViewModel.AddError(nameof(DataFilePath), "Data file path does not exist");
-                }
-                else
-                {
-                    // set the data path to valid
-                    DataFilePathValid = true;
-                    // this will trigger data validation, which in turn will eventually call OnPropertyChanged(nameof(DataFilePathValid))
-                    // from the eventhandler ErrorsViewModel_ErrorsChanged
-                    _errorsViewModel.ClearErrors(nameof(DataFilePath));
-
-                    // update the data path in the settings
-                    _revitDataModel.Settings.DataPath = value;
-                }
-
-                // call ui update
-                OnPropertyChanged(nameof(DataFilePath));
-
+                _revitDataModel.Settings.DataPath = value;
             }
         }
 
+        [ObservableProperty]
         private bool _dataFilePathValid;
-        public bool DataFilePathValid
-        {
-            get => _dataFilePathValid;
-            set
-            {
-                _dataFilePathValid = value;
-                // call ui update
-                OnPropertyChanged(nameof(DataFilePathValid));
-            }
-        }
 
+        /// <summary>
+        /// The currently active design set name.
+        /// </summary>
+        [ObservableProperty]
+        private string _activeDesignSetName = duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME;
 
-        // the currently active design set name
-        public string ActiveDesignSetName
-        {
-            get => _activeDesignSetName;
-            set
-            {
-                _activeDesignSetName = value;
-                OnPropertyChanged(nameof(ActiveDesignSetName));
-            }
-        }
-
-        // the currently active design option name
-        public string ActiveDesignOptionName
-        {
-            get => _activeDesignOptionName;
-            set
-            {
-                _activeDesignOptionName = value;
-                OnPropertyChanged(nameof(ActiveDesignOptionName));
-            }
-        }
+        /// <summary>
+        /// The currently active design option name.
+        /// </summary>
+        [ObservableProperty]
+        private string _activeDesignOptionName = duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME;
 
         #endregion settings
 
         #region user selection
 
-
+        [ObservableProperty]
         private bool _saveFilePathValid;
-        public bool SaveFilePathValid
-        {
-            get => _saveFilePathValid;
-            set
-            {
-                _saveFilePathValid = value;
-                OnPropertyChanged(nameof(SaveFilePathValid));
-            }
-        }
 
+        /// <summary>
+        /// Path to the save file. Validates on set and triggers save command if valid.
+        /// </summary>
+        [ObservableProperty]
         private string _saveFilePath;
-        public string SaveFilePath
-        {
-            get => _saveFilePath;
-            set
-            {
-                _saveFilePath = value;
-                // check if the file path is valid, if not add an error
-                if (string.IsNullOrEmpty(value))
-                {
-                    // set the data path to invalid
-                    SaveFilePathValid = false;
-                    // this will trigger data validation, which in turn will eventually call OnPropertyChanged(nameof(SaveFilePathValid))
-                    // from the eventhandler ErrorsViewModel_ErrorsChanged
-                    _errorsViewModel.AddError(nameof(SaveFilePath), "Save file path cannot be empty");
-                    AddMessage($"Save file path cannot be empty: {value}", Utils.WPF.Stores.MessageTypes.Error);
-                }
-                else
-                {
-                    // set the data path to valid
-                    SaveFilePathValid = true;
-                    // this will trigger data validation, which in turn will eventually call OnPropertyChanged(nameof(SaveFilePathValid))
-                    // from the eventhandler ErrorsViewModel_ErrorsChanged
-                    _errorsViewModel.ClearErrors(nameof(SaveFilePath));
-                    //execute the command to save data if set up
-                    if (_saveDataCommand != null)
-                    {
-                        _saveDataCommand.Command.Execute(null);
-                    }
-                }
 
-                OnPropertyChanged(nameof(SaveFilePath));
+        partial void OnSaveFilePathChanged(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                SaveFilePathValid = false;
+                _errorsViewModel.AddError(nameof(SaveFilePath), "Save file path cannot be empty");
+                AddMessage($"Save file path cannot be empty: {value}", Utils.WPF.Stores.MessageTypes.Error);
+            }
+            else
+            {
+                SaveFilePathValid = true;
+                _errorsViewModel.ClearErrors(nameof(SaveFilePath));
+                if (_saveDataCommand != null)
+                {
+                    _saveDataCommand.Command.Execute(null);
+                }
             }
         }
 
         #endregion user selection
 
+        #endregion observable properties
+
         #region Commands
 
-        // Step 6: Command properties now expose the ICommand from each wrapper's .Command property
         public ICommand RefreshGUICommand => _raiseRefreshGUICommand.Command;
         public ICommand PushSingleRoomCommand => _raisePushSingleRoomCommand.Command;
         public ICommand ReloadDataCommand => _raiseReloadDataCommand.Command;
@@ -341,7 +255,6 @@ namespace duHastNet.PushIt.ViewModels
         /// <param name="messageType"></param>
         public void AddMessage(string message, Utils.WPF.Stores.MessageTypes messageType)
         {
-
             if (messageType == duHastNet.Utils.WPF.Stores.MessageTypes.Error)
             {
                 //let user dismiss the message themselves for error messages, since they might want to copy the message text for further use, and errors are more important to see for a longer time
@@ -360,9 +273,6 @@ namespace duHastNet.PushIt.ViewModels
         }
 
 
-        // not sure whether this is actually required or not
-        // when on closing, dispose of the event manager
-        // and remove the event handler
         public override void Dispose()
         {
             base.Dispose();
@@ -370,9 +280,8 @@ namespace duHastNet.PushIt.ViewModels
 
 
         /// <summary>
-        /// Custom closing logic for RoomsSelectionViewModel
-        /// Disposes all external events from the event manager
-        /// save grid states to settings
+        /// Custom closing logic for RoomsMainViewModel.
+        /// Unsubscribes from events, saves column IDs and grid states to settings.
         /// </summary>
         public override void OnClosing()
         {
@@ -380,9 +289,7 @@ namespace duHastNet.PushIt.ViewModels
             _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
 
             //update the column ids in settings.
-            // clear list first
             _revitDataModel.Settings.ColumnIds.Clear();
-            // add current list
             foreach (var columnId in RoomsDataGridViewModel.ColumnDefinitions)
             {
                 _revitDataModel.Settings.ColumnIds.Add(columnId.PropertyName);
@@ -423,11 +330,9 @@ namespace duHastNet.PushIt.ViewModels
 
 
         /// <summary>
-        /// Data validation for text input fields
+        /// Data validation for text input fields.
         /// </summary>
-        /// <param name="propertyName">The name of the property of which to get any errors, if they exist, for.</param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <param name="propertyName">The name of the property to get errors for.</param>
         public IEnumerable GetErrors(string propertyName)
         {
             return _errorsViewModel.GetErrors(propertyName);
@@ -437,19 +342,16 @@ namespace duHastNet.PushIt.ViewModels
         private void ErrorsViewModel_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
         {
             ErrorsChanged?.Invoke(this, e);
-            // update the data file path valid property
             OnPropertyChanged(nameof(DataFilePathValid));
         }
 
         /// <summary>
-        /// loads any existing states from settings into the state store
+        /// Loads any existing states from settings into the state store.
         /// </summary>
         private void ApplyStateFromSettings()
         {
-            // Load StateStore states if they exist
             if (_revitDataModel.Settings.NavigationStates != null && _revitDataModel.Settings.NavigationStates.Count > 0)
             {
-                // Create a factory for DataGridState instances
                 _stateStore.LoadStatesFromSettings(_revitDataModel.Settings.NavigationStates, () => new DataGridState());
                 System.Diagnostics.Debug.WriteLine($"Loaded {_revitDataModel.Settings.NavigationStates.Count} states from settings into StateStore");
             }
@@ -461,8 +363,9 @@ namespace duHastNet.PushIt.ViewModels
         /// </summary>
         /// <param name="revitDataModel">The underlying revit data model</param>
         /// <param name="navigationStore">A navigation store for the UI</param>
+        /// <param name="stateStore">A state store for grid state persistence</param>
         /// <param name="messageStore">A message store used to display messages to the user</param>
-        /// <param name="globalMessageViewModel">A message view model, the message store uses to display messages to the user.</param>
+        /// <param name="globalMessageViewModel">A message view model the message store uses to display messages to the user.</param>
         public RoomsMainViewModel(
             Models.RevitDataModel revitDataModel,
             Utils.WPF.Stores.NavigationStore navigationStore,
@@ -484,7 +387,7 @@ namespace duHastNet.PushIt.ViewModels
 
             //store the global message view model
             GlobalMessageViewModel = globalMessageViewModel;
-            RegisterChild(GlobalMessageViewModel); // Register as child
+            RegisterChild(GlobalMessageViewModel);
 
             //load settings first
             ApplyStateFromSettings();
@@ -492,69 +395,55 @@ namespace duHastNet.PushIt.ViewModels
             // supported categories data grid view model
             SupportedCategoriesDataGridViewModel = new SupportedCatgeoriesDataGridViewModel(
                 revitDataModel: revitDataModel);
-
-            // register as child view model to ensure disposal
             RegisterChild(SupportedCategoriesDataGridViewModel);
 
             //push it data grid view model
             RoomsDataGridViewModel = new RoomsDataGridViewModel(
                 revitDataModel: revitDataModel,
                 stateStore: stateStore);
-
-            // register as child view model to ensure disposal
             RegisterChild(RoomsDataGridViewModel);
 
-            //set the data file path
+            //set the data file path (triggers OnDataFilePathChanged for validation)
             DataFilePath = _revitDataModel.Settings.DataPath;
 
             // set up commands
-            // refresh gui with data from model
             _raiseRefreshGUICommand = new Commands.RefreshUIFromRevitModelAsyncCommand(
                 roomsMainViewModel: this,
                 revitDataModel: _revitDataModel);
-            // push single room to revit
+
             _raisePushSingleRoomCommand = new Commands.PushSingleRoomInRevitAsyncCommand(
                 roomsMainViewModel: this,
                 roomsDataGridViewModel: RoomsDataGridViewModel,
-                revitDataModel: _revitDataModel
-             );
-            //load data from file path
+                revitDataModel: _revitDataModel);
+
             _raiseReloadDataCommand = new Commands.ReloadDataFromFileAsyncCommand(
                 roomsMainViewModel: this,
-                revitDataModel: _revitDataModel
-            );
-            //highlight room in Revit
+                revitDataModel: _revitDataModel);
+
             _highLightRoomCommand = new Commands.HighlightRoomsInRevitAsyncCommand(
                 roomsMainViewModel: this,
                 roomsDataGridViewModel: RoomsDataGridViewModel,
-                revitDataModel: _revitDataModel
-            );
-            //wipe stale rooms data
+                revitDataModel: _revitDataModel);
+
             _wipeStaleRoomsDataCommand = new Commands.WipeStaleDataRevitAsyncCommand(
                 roomsSelectionViewModel: this,
-                revitDataModel: _revitDataModel
-            );
-            //update from changed categories
+                revitDataModel: _revitDataModel);
+
             _updateFromChangedCategoriesCommand = new Commands.UpdateFromChangedCategoriesAsyncCommand(
                 roomsMainViewModel: this,
-                revitDataModel: _revitDataModel
-            );
-            //update all rooms in revit from data model
+                revitDataModel: _revitDataModel);
+
             _updateAllRoomsCommand = new Commands.PushAllRoomsInRevitAsyncCommand(
                 roomsMainViewModel: this,
-                revitDataModel: _revitDataModel
-            );
+                revitDataModel: _revitDataModel);
 
-            //wipe selected rooms in revit
             _wipeSelectedRoomDataCommand = new Commands.WipeSelectedRevitRoomInstancesAsyncCommand(
                 roomsMainViewModel: this,
-                revitDataModel: _revitDataModel
-            );
-            //save data to file command
+                revitDataModel: _revitDataModel);
+
             _saveDataCommand = new Commands.SaveRoomDataAsyncCommand(
                 roomsMainViewModel: this,
-                revitDataModel: _revitDataModel
-            );
+                revitDataModel: _revitDataModel);
 
             // set the default push operation mode to push
             _pushOperationMode = PushIt.Utilities.PushMode.Push;

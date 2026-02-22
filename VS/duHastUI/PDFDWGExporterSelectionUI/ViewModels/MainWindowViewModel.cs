@@ -41,7 +41,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
         private void OnNavigationStorePropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(NavigationStore.CurrentViewModel))
+            if (e.PropertyName == nameof(_navigationStore.CurrentViewModel))
             {
                 OnPropertyChanged(nameof(CurrentViewModel));
             }
@@ -54,7 +54,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             // Notify the navigation store to close current view model
             _navigationStore.NotifyClosing();
 
-            // Event cleanup moved to DisposeManaged()
             base.OnClosing();
         }
 

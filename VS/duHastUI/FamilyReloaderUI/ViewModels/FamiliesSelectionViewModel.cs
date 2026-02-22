@@ -22,7 +22,7 @@
 //
 
 
-
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
 using duHastNet.Utils.WPF.Stores;
@@ -33,29 +33,24 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Interop;
 
 namespace duHastNet.UI.FamilyReloaderUI.ViewModels
 {
     public partial class FamiliesSelectionViewModel : AppViewModelBase, INotifyDataErrorInfo
     {
         /// <summary>
-        /// Global message view model for displaying messages to the user
+        /// Global message view model for displaying messages to the user.
         /// </summary>
         public GlobalMessageViewModel GlobalMessageViewModel { get; }
 
-
         /// <summary>
-        /// errors view model used for data validation ( export directory )
+        /// Errors view model used for data validation (library directory path).
         /// </summary>
         private readonly ErrorsViewModel _errorsViewModel;
-
 
         //property to check if there are any errors
         public bool HasErrors => _errorsViewModel.HasErrors;
 
-
-        // event handler for errors changed
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged
         {
             add { _errorsViewModel.ErrorsChanged += value; }
@@ -63,39 +58,37 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
         }
 
         /// <summary>
-        /// message store for storing messages
+        /// Message store for storing messages.
         /// </summary>
         private readonly MessageStore _messageStore;
 
         /// <summary>
-        /// store the navigation store for the application
+        /// Navigation store for the application.
         /// </summary>
         private readonly NavigationStore _navigationStore;
 
         /// <summary>
-        /// store the state store for the application
+        /// State store for the application.
         /// </summary>
         private readonly StateStore _stateStore;
 
         /// <summary>
-        /// View model managing the view selection data grid.
+        /// View model managing the families selection data grid.
         /// </summary>
         public FamiliesSelectionDataGridViewModel FamiliesSelectionDataGridViewModel { get; }
 
-
         /// <summary>
-        /// The data model for the export settings
+        /// The data model for the families settings.
         /// </summary>
         private readonly Models.FamiliesDataModel _familiesDataModel;
 
-
         /// <summary>
-        /// command to save the settings and close the window
+        /// Command to save the settings and close the window.
         /// </summary>
         private RelayCommand? _saveAndCloseCommand;
 
         /// <summary>
-        /// command to refresh match status of families in UI
+        /// Command to refresh match status of families in the UI.
         /// </summary>
         private readonly Commands.RefreshFamilyFileMatchDataCommand _updateCommand;
 
@@ -104,187 +97,159 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
 
 
         /// <summary>
-        /// Adds a message to the global message store which will then be displayed in the UI
+        /// Adds a message to the global message store which will then be displayed in the UI.
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="messageType"></param>
         public void AddMessage(string message, duHastNet.Utils.WPF.Stores.MessageTypes messageType)
         {
             if (messageType == duHastNet.Utils.WPF.Stores.MessageTypes.Error)
             {
-                //let user dismiss the message themselves for error messages, since they might want to copy the message text for further use, and errors are more important to see for a longer time
                 _messageStore.EnqueueMessage(message, messageType);
             }
             else if (messageType == duHastNet.Utils.WPF.Stores.MessageTypes.Information)
             {
-                //just flash message to user for information messages, since they are less important and user might not need to copy the message text, and it is better to dismiss them after a short time to avoid too many messages building up in the UI
-                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds:2);
+                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds: 2);
             }
             else
             {
-                //default to short display time for other message types
-                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds:5);
+                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds: 5);
             }
         }
 
 
         private void LoadSettings()
         {
-            //load settings first
             var settings = duHastNet.UI.FamilyReloaderUI.Utils.SettingsUtils.LoadSettings(AddMessage: AddMessage);
-
-            //cant simply replace the settings object in the data model...since it is used else where....need to update instead
             _familiesDataModel.Settings.UpdateSettingsFromSettings(settings);
 
-            // Load StateStore states if they exist
             if (settings.NavigationStates != null && settings.NavigationStates.Count > 0)
             {
-                // Create a factory for DataGridState instances
                 _stateStore.LoadStatesFromSettings(settings.NavigationStates, () => new DataGridState());
                 System.Diagnostics.Debug.WriteLine($"Loaded {settings.NavigationStates.Count} states from settings into StateStore");
             }
         }
 
-        /// <summary>
-        /// The file path for the exports to be saved to
-        /// </summary>
-        private string _selectedLibraryFilePath;
+        #region observable properties
 
         /// <summary>
-        /// property handling file path changes
+        /// The library directory path.
+        /// Side effects: validates path, updates error state and settings.
+        /// Equality guard handled automatically by [ObservableProperty].
         /// </summary>
-        public string LibraryFilePath
+        [ObservableProperty]
+        private string _libraryFilePath;
+
+        partial void OnLibraryFilePathChanged(string value)
         {
-            get => _selectedLibraryFilePath;
-            set
+            _errorsViewModel.ClearErrors(nameof(LibraryFilePath));
+
+            if (string.IsNullOrEmpty(value))
             {
-                if (_selectedLibraryFilePath != value)
-                {
-                    _selectedLibraryFilePath = value;
-
-
-                    _errorsViewModel.ClearErrors(nameof(LibraryFilePath));
-
-                    // check if the file path is valid, if not add an error
-                    if (string.IsNullOrEmpty(value))
-                    {
-                        // set the data path to invalid
-                        LibraryDirectoryPathValid = false;
-                        // this will trigger data validation
-                        // from the eventhandler ErrorsViewModel_ErrorsChanged
-                        _errorsViewModel.AddError(nameof(LibraryFilePath), "Library path path cannot be empty");
-                    }
-                    else if (!System.IO.Directory.Exists(value))
-                    {
-                        // set the data path to invalid
-                        LibraryDirectoryPathValid = false;
-                        // this will trigger data validation
-                        // from the eventhandler ErrorsViewModel_ErrorsChanged
-                        _errorsViewModel.AddError(nameof(LibraryFilePath), "Library path does not exist");
-                    }
-                    else
-                    {
-                        // set the data path to valid
-                        LibraryDirectoryPathValid = true;
-                        // this will trigger data validation
-                        // from the eventhandler ErrorsViewModel_ErrorsChanged
-                        _errorsViewModel.ClearErrors(nameof(LibraryFilePath));
-
-                        //save in settings
-                        _familiesDataModel.Settings.TargetDirectory = value;
-                    }
-
-                    OnPropertyChanged(nameof(LibraryFilePath));
-                }
+                LibraryDirectoryPathValid = false;
+                _errorsViewModel.AddError(nameof(LibraryFilePath), "Library path cannot be empty");
+            }
+            else if (!System.IO.Directory.Exists(value))
+            {
+                LibraryDirectoryPathValid = false;
+                _errorsViewModel.AddError(nameof(LibraryFilePath), "Library path does not exist");
+            }
+            else
+            {
+                LibraryDirectoryPathValid = true;
+                _errorsViewModel.ClearErrors(nameof(LibraryFilePath));
+                _familiesDataModel.Settings.TargetDirectory = value;
             }
         }
 
         /// <summary>
-        /// if true only existing types will be rleoaded
+        /// If true, only existing types will be reloaded.
         /// </summary>
+        [ObservableProperty]
         private bool _updateExistingTypesOnly;
-        public bool UpdateExistingTypesOnly
-        {
-            get => _updateExistingTypesOnly;
-            set
-            {
-                _updateExistingTypesOnly = value;
-                OnPropertyChanged(nameof(UpdateExistingTypesOnly));
-            }
-        }
 
         /// <summary>
-        /// if true all family types will be loaded into the project
+        /// If true, all family types will be loaded into the project.
+        /// Side effect: updates settings.
         /// </summary>
+        [ObservableProperty]
         private bool _loadAllFamilyTypes;
-        public bool LoadAllFamilyTypes
+
+        partial void OnLoadAllFamilyTypesChanged(bool value)
         {
-            get => _loadAllFamilyTypes;
-            set
-            {
-                _loadAllFamilyTypes = value;
-                //store in settings
-                _familiesDataModel.Settings.LoadAllFamilyTypesOnReload = value;
-                OnPropertyChanged(nameof(LoadAllFamilyTypes));
-            }
+            _familiesDataModel.Settings.LoadAllFamilyTypesOnReload = value;
         }
 
         /// <summary>
-        /// property indicating as to whether any subdirectories are to be included in search for matching family
+        /// Indicates whether subdirectories are included in the search for matching families.
+        /// Side effects: updates settings and triggers a refresh of the family match data.
         /// </summary>
-        private bool _includeSudDirectoriesInSearch;
-        public bool IncludeSubDirectoriesInSearch
-        {
-            get => _includeSudDirectoriesInSearch;
-            set
-            {
-                _includeSudDirectoriesInSearch = value;
-                _familiesDataModel.Settings.IncludeSubdirectories = value;
-                OnPropertyChanged(nameof(IncludeSubDirectoriesInSearch));
+        [ObservableProperty]
+        private bool _includeSubDirectoriesInSearch;
 
-                //refresh the view model data if command is available
-                if (UpdateCommand != null)
-                {
-                    UpdateCommand.Execute(null);
-                }
+        partial void OnIncludeSubDirectoriesInSearchChanged(bool value)
+        {
+            _familiesDataModel.Settings.IncludeSubdirectories = value;
+
+            if (UpdateCommand != null)
+            {
+                UpdateCommand.Execute(null);
             }
         }
 
+        #endregion observable properties
+
+        #region data validation
 
         /// <summary>
-        /// Custom closing logic for RoomsSelectionViewModel
-        /// Disposes all external events from the event manager
+        /// Indicates whether the library directory path is valid.
+        /// </summary>
+        [ObservableProperty]
+        private bool _libraryDirectoryPathValid;
+
+        /// <summary>
+        /// Data validation for text input fields.
+        /// </summary>
+        public IEnumerable GetErrors(string propertyName)
+        {
+            return _errorsViewModel.GetErrors(propertyName);
+        }
+
+        private void ErrorsViewModel_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(HasErrors));
+            OnPropertyChanged(nameof(LibraryDirectoryPathValid));
+
+            _saveAndCloseCommand?.NotifyCanExecuteChanged();
+        }
+
+        #endregion data validation
+
+        /// <summary>
+        /// Custom closing logic. Unsubscribes from events before base cleanup.
         /// </summary>
         public override void OnClosing()
         {
-            //unsubscribe from errors changed event
             _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
 
-            // close any child view models (base handles GlobalMessageViewModel cleanup)
+            // base handles GlobalMessageViewModel and FamiliesSelectionDataGridViewModel cleanup
             base.OnClosing();
         }
 
         public override void Dispose()
         {
-            // Call base to handle disposal of child ViewModels
             base.Dispose();
         }
 
         /// <summary>
-        /// closes the window
+        /// Saves settings and closes the window.
         /// </summary>
         private void SaveSettingsAndClose()
         {
-            //update the column ids in settings.
-            // clear list first
             _familiesDataModel.Settings.ColumnIds.Clear();
-            // add current list
             foreach (var columnId in FamiliesSelectionDataGridViewModel.ColumnDefinitions)
             {
                 _familiesDataModel.Settings.ColumnIds.Add(columnId.PropertyName);
             }
 
-            // FORCE save current grid state to StateStore before getting states for settings
             if (FamiliesSelectionDataGridViewModel != null && _stateStore != null)
             {
                 try
@@ -303,57 +268,12 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
                 }
             }
 
-
-            // Get states from StateStore for settings persistence
             var statesForSettings = _stateStore.GetStatesForSettings();
-
-            // Update the settings with the grid states
             _familiesDataModel.Settings.NavigationStates = statesForSettings;
 
-            //store settings
             Utils.SettingsUtils.SaveSettings(_familiesDataModel.Settings);
-
-            // Close the application main window
             Application.Current.MainWindow?.Close();
         }
-
-        #region data validation
-
-        private bool _libraryDirectoryPathValid;
-        public bool LibraryDirectoryPathValid
-        {
-            get => _libraryDirectoryPathValid;
-            set
-            {
-                _libraryDirectoryPathValid = value;
-                // call ui update
-                OnPropertyChanged(nameof(LibraryDirectoryPathValid));
-            }
-        }
-
-        /// <summary>
-        /// Data validation for text input fields
-        /// </summary>
-        /// <param name="propertyName">The name of the property of which to get any errors, if they exist, for.</param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public IEnumerable GetErrors(string propertyName)
-        {
-            return _errorsViewModel.GetErrors(propertyName);
-        }
-
-
-        private void ErrorsViewModel_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
-        {
-            // The ErrorsChanged event will be automatically raised through the interface
-            OnPropertyChanged(nameof(HasErrors));
-            OnPropertyChanged(nameof(LibraryDirectoryPathValid));
-
-            // Trigger the command to re-evaluate its CanExecute state
-            _saveAndCloseCommand?.NotifyCanExecuteChanged();
-        }
-
-        #endregion data validation
 
         public FamiliesSelectionViewModel(
             Models.FamiliesDataModel familiesDataModel,
@@ -363,63 +283,44 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
             duHastNet.Utils.WPF.Stores.MessageStore messageStore
             )
         {
-
-            //store the export data model
             _familiesDataModel = familiesDataModel;
-
-            //store the navigation store
             _navigationStore = navigationStore;
-
-            //store the state store
             _stateStore = stateStore;
-
-            //store the message store
             _messageStore = messageStore;
 
-            //store the global message view model
             GlobalMessageViewModel = globalMessageViewModel;
-
-            // Register GlobalMessageViewModel as a child for automatic cleanup
             RegisterChild(GlobalMessageViewModel);
 
-            // initialize the errors view model
             _errorsViewModel = new duHastNet.Utils.WPF.ViewModels.ErrorsViewModel();
-            //subscribe to errors changed event
             _errorsViewModel.ErrorsChanged += ErrorsViewModel_ErrorsChanged;
 
-            //load settings first
             LoadSettings();
 
-            //set the data file path
+            // Setting LibraryFilePath triggers OnLibraryFilePathChanged for validation
             LibraryFilePath = _familiesDataModel.Settings.TargetDirectory;
 
-            //update load method readio buttons
+            // Setting load mode flags — OnLoadAllFamilyTypesChanged updates settings
             UpdateExistingTypesOnly = !_familiesDataModel.Settings.LoadAllFamilyTypesOnReload;
             LoadAllFamilyTypes = _familiesDataModel.Settings.LoadAllFamilyTypesOnReload;
 
-            //update the include sub dirs in seach checkbox
-            IncludeSubDirectoriesInSearch = _familiesDataModel.Settings.IncludeSubdirectories;
+            // Setting IncludeSubDirectoriesInSearch triggers OnIncludeSubDirectoriesInSearchChanged
+            // which calls UpdateCommand.Execute — command not yet created, so set backing field directly
+            // to avoid a null reference; the initial Execute() at the end of the constructor covers this.
+            _includeSubDirectoriesInSearch = _familiesDataModel.Settings.IncludeSubdirectories;
 
-            //initialise the families grid view model
             FamiliesSelectionDataGridViewModel = new FamiliesSelectionDataGridViewModel(
                _familiesDataModel,
                _stateStore);
-
-            // Register the child so it gets cleaned up properly
             RegisterChild(FamiliesSelectionDataGridViewModel);
 
-            //commands
-            //refresh family match status
             _updateCommand = new Commands.RefreshFamilyFileMatchDataCommand(this, _familiesDataModel);
 
-            //save and exit
-            //only if there are no errors
             _saveAndCloseCommand = new RelayCommand(
                 SaveSettingsAndClose,
-                () => !HasErrors // Only enabled when there are no errors
+                () => !HasErrors
             );
 
-            //refresh the view model data
+            // Initial data refresh
             UpdateCommand.Execute(null);
         }
     }

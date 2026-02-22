@@ -22,7 +22,6 @@
 //
 
 using CommunityToolkit.Mvvm.ComponentModel;
-using duHastNet.Utils.WPF.ViewModels;
 using System.ComponentModel;
 
 namespace duHastNet.PushIt.ViewModels

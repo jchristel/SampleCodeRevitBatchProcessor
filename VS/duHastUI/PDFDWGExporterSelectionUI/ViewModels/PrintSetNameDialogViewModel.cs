@@ -21,6 +21,7 @@
 //
 //
 
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.Utils.WPF.ViewModels;
 using System;
@@ -34,49 +35,56 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 {
     public partial class PrintSetNameDialogViewModel : AppViewModelBase, INotifyDataErrorInfo
     {
-
-        private string _printSetName;
-
         /// <summary>
-        /// Represents a collection of unique names that are used to track existing entries.
+        /// Represents a collection of unique names used to track existing entries.
         /// </summary>
-        /// <remarks>This field is intended for internal use to ensure that names are not
-        /// duplicated.</remarks>
         private readonly HashSet<string> _existingNames;
 
         /// <summary>
-        /// contains the dialog result
-        /// </summary> 
-        private bool _dialogResult;
-
-        /// <summary>
-        /// errors view model used for data validation ( export directory )
+        /// Errors view model used for data validation.
         /// </summary>
         private readonly ErrorsViewModel _errorsViewModel;
 
+        #region observable properties
+
+        /// <summary>
+        /// The name of the print set being created.
+        /// Side effects: triggers validation and notifies CreateCommand.CanExecute.
+        /// </summary>
+        [ObservableProperty]
+        private string _printSetName;
+
+        partial void OnPrintSetNameChanged(string value)
+        {
+            ValidatePrintSetName();
+            ((RelayCommand)CreateCommand).NotifyCanExecuteChanged();
+        }
+
+        /// <summary>
+        /// Indicates whether the print set name is valid.
+        /// </summary>
+        [ObservableProperty]
+        private bool _printSetNameValid;
+
+        /// <summary>
+        /// The dialog result indicating whether the operation was successful.
+        /// Uses SetProperty with a private setter since [ObservableProperty] only generates public setters.
+        /// </summary>
+        private bool _dialogResult;
+        public bool DialogResult
+        {
+            get => _dialogResult;
+            private set => SetProperty(ref _dialogResult, value);
+        }
+
+        #endregion observable properties
 
         #region data validation
 
         /// <summary>
-        /// Indicates whether the print set name is valid
+        /// Data validation for text input fields.
         /// </summary>
-        private bool _printSetNameValid;
-        public bool PrintSetNameValid
-        {
-            get => _printSetNameValid;
-            set
-            {
-                _printSetNameValid = value;
-                // call ui update
-                OnPropertyChanged(nameof(PrintSetNameValid));
-            }
-        }
-
-        /// <summary>
-        /// Data validation for text input fields
-        /// </summary>
-        /// <param name="propertyName">The name of the property of which to get any errors, if they exist, for.</param>
-        /// <returns></returns>
+        /// <param name="propertyName">The name of the property to get errors for.</param>
         public IEnumerable GetErrors(string propertyName)
         {
             return _errorsViewModel.GetErrors(propertyName);
@@ -84,7 +92,6 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
         private void ErrorsViewModel_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
         {
-            // The ErrorsChanged event will be automatically raised through the interface
             OnPropertyChanged(nameof(HasErrors));
 
             // Trigger the command to re-evaluate its CanExecute state
@@ -94,13 +101,11 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             }
         }
 
-
         /// <summary>
         /// Validates the current print set name and updates the validation state.
         /// </summary>
         private void ValidatePrintSetName()
         {
-
             var name = _printSetName?.Trim();
 
             // Clear previous errors
@@ -109,86 +114,48 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             // Check if empty or null
             if (string.IsNullOrWhiteSpace(name))
             {
-                // Add error
                 _errorsViewModel.AddError(nameof(PrintSetName), "Print set name cannot be empty.");
-
-                // set the print set name to invalid
                 PrintSetNameValid = false;
-
                 return;
             }
 
             // Check if name already exists
             if (_existingNames.Contains(name))
             {
-                // Add error
                 _errorsViewModel.AddError(nameof(PrintSetName), "A print set with this name already exists.");
-
-                // set the print set name to invalid
                 PrintSetNameValid = false;
-
                 return;
             }
 
-            // Check length (optional)
+            // Check length
             if (name.Length > 100)
             {
-                // Add error
                 _errorsViewModel.AddError(nameof(PrintSetName), "Print set name is too long (maximum 100 characters).");
-
-                // set the print set name to invalid
                 PrintSetNameValid = false;
-
                 return;
             }
 
             if (name.IndexOfAny(System.IO.Path.GetInvalidFileNameChars()) >= 0)
             {
-                // Add error
                 _errorsViewModel.AddError(nameof(PrintSetName), "Print set name contains invalid characters.");
-                // set the print set name to invalid
                 PrintSetNameValid = false;
                 return;
             }
 
-            //ok all good
+            // All validation passed
             PrintSetNameValid = true;
-            // this will trigger data validation
-            // from the eventhandler ErrorsViewModel_ErrorsChanged
             _errorsViewModel.ClearErrors(nameof(PrintSetName));
-
         }
 
         #endregion
 
-        /// <summary>
-        /// Gets or sets the name of the print set.
-        /// </summary>
-        public string PrintSetName
-        {
-            get => _printSetName;
-            set
-            {
-                _printSetName = value;
-                OnPropertyChanged(nameof(PrintSetName));
-                ValidatePrintSetName();
+        // INotifyDataErrorInfo implementation
+        public bool HasErrors => _errorsViewModel.HasErrors;
 
-                // Notify that CanExecute may have changed
-                ((RelayCommand)CreateCommand).NotifyCanExecuteChanged();
-            }
-        }
-
-        /// <summary>
-        /// The dialog result indicating whether the operation was successful.
-        /// </summary>
-        public bool DialogResult
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged
         {
-            get => _dialogResult;
-            private set
-            {
-                _dialogResult = value;
-                OnPropertyChanged(nameof(DialogResult));
-            }
+            add { _errorsViewModel.ErrorsChanged += value; }
+            remove { _errorsViewModel.ErrorsChanged -= value; }
         }
 
         #region commands
@@ -196,21 +163,8 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         public ICommand CreateCommand { get; }
         public ICommand CancelCommand { get; }
 
-        #endregion
-
-        // INotifyDataErrorInfo implementation
-        public bool HasErrors => _errorsViewModel.HasErrors;
-
-        // event handler for errors changed
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged
-        {
-            add { _errorsViewModel.ErrorsChanged += value; }
-            remove { _errorsViewModel.ErrorsChanged -= value; }
-        }
-
-
         /// <summary>
-        /// Check if the create command can be executed
+        /// Checks if the create command can be executed.
         /// </summary>
         private bool CanExecuteCreate()
         {
@@ -218,7 +172,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         }
 
         /// <summary>
-        /// Executes the create operation if the conditions are met.
+        /// Executes the create operation if conditions are met.
         /// </summary>
         private void ExecuteCreate()
         {
@@ -229,16 +183,20 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         }
 
         /// <summary>
-        /// Execute the cancel operation
+        /// Executes the cancel operation.
         /// </summary>
         private void ExecuteCancel()
         {
             DialogResult = false;
         }
 
+        #endregion
+
         /// <summary>
-        /// Class constructor
+        /// Class constructor.
         /// </summary>
+        /// <param name="defaultName">The default name to pre-populate the input field.</param>
+        /// <param name="existingNames">Collection of names already in use, for duplicate validation.</param>
         public PrintSetNameDialogViewModel(string defaultName, IEnumerable<string> existingNames)
         {
             _existingNames = new HashSet<string>(existingNames ?? Enumerable.Empty<string>(), StringComparer.OrdinalIgnoreCase);
@@ -256,22 +214,20 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             ValidatePrintSetName();
         }
 
-        #region Lifecycle Methods
+        #region lifecycle methods
 
         public override void OnClosing()
         {
-            // UI-related cleanup
             base.OnClosing();
         }
 
         /// <summary>
-        /// Dispose of managed resources including event subscriptions
+        /// Disposes managed resources including event subscriptions.
         /// </summary>
         public override void Dispose()
         {
             System.Diagnostics.Debug.WriteLine("PrintSetNameDialogViewModel.Dispose() called");
 
-            // Unsubscribe from events to prevent memory leaks
             if (_errorsViewModel != null)
             {
                 _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;

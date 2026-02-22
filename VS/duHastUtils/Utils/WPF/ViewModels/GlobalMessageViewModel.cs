@@ -22,7 +22,6 @@
 //
 
 
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.Utils.WPF.Interfaces;
 using duHastNet.Utils.WPF.Stores;
@@ -32,7 +31,7 @@ using System;
 
 namespace duHastNet.Utils.WPF.ViewModels;
 
-public partial class GlobalMessageViewModel : ObservableObject, ICloseable, IDisposable
+public partial class GlobalMessageViewModel : ViewModelBase
 {
     private readonly IMessageStore _messageStore;
 

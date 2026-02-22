@@ -33,7 +33,7 @@ using System.Linq;
 
 namespace duHastNet.PushIt.ViewModels
 {
-    public class RoomsDataGridViewModel : duHastNet.Utils.WPF.ViewModels.BaseDynamicGridViewModel<DynamicRowData>
+    public class RoomsDataGridViewModel : BaseDynamicGridViewModel<DynamicRowData>
     {
 
         private Models.RevitDataModel RevitDataModel { get; set; }

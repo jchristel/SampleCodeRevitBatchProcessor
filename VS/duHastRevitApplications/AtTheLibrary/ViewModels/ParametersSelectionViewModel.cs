@@ -41,7 +41,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
         public Utils.WPF.ViewModels.GlobalMessageViewModel GlobalMessageViewModel { get; }
 
         /// <summary>
-        /// View model managing push it data grid
+        /// View model managing the parameters data grid.
         /// </summary>
         public ViewModels.ParametersDataGridViewModel ParametersDataGridViewModel { get; }
 
@@ -58,34 +58,32 @@ namespace duHastNet.AtTheLibrary.ViewModels
         //command to navigate back to families selection view model
         private readonly Commands.LeaveParameterSelectionCommand _navigateCommand;
 
-
-        // flag indicating whether the view model is waiting for a Revit command to finish
+        /// <summary>
+        /// Flag indicating whether the view model is waiting for a Revit command to finish.
+        /// Side effect: also drives the loading overlay via IsGridBusy.
+        /// </summary>
+        [ObservableProperty]
         private bool _isWaitingForRevitCommandToFinish;
-        public bool IsWaitingForRevitCommandToFinish
+
+        partial void OnIsWaitingForRevitCommandToFinishChanged(bool value)
         {
-            get => _isWaitingForRevitCommandToFinish;
-            set
-            {
-                _isWaitingForRevitCommandToFinish = value;
-                IsGridBusy = value; // also set IsGridBusy to show loading overlay when waiting for Revit command
-                OnPropertyChanged(nameof(IsWaitingForRevitCommandToFinish));
-            }
+            IsGridBusy = value;
         }
 
         #region Commands
 
-        // Command property now delegates to the .Command property on the command object,
-        // since the command class no longer inherits ICommand directly (it wraps RelayCommand internally).
+        // Command property delegates to the .Command property on the command object,
+        // since the command class wraps RelayCommand internally rather than implementing ICommand directly.
         public ICommand SelectFamilies => _navigateCommand.Command;
 
         #endregion Commands
 
 
         /// <summary>
-        /// Adds a message to the global message store which will then be displayed in the UI
+        /// Adds a message to the global message store which will then be displayed in the UI.
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="messageType"></param>
+        /// <param name="message">The message text.</param>
+        /// <param name="messageType">The type/severity of the message.</param>
         public void AddMessage(string message, Utils.WPF.Stores.MessageTypes messageType)
         {
             if (messageType == duHastNet.Utils.WPF.Stores.MessageTypes.Error)
@@ -106,10 +104,6 @@ namespace duHastNet.AtTheLibrary.ViewModels
         }
 
 
-        // not sure whether this is actually required or not
-        // when on closing, dispose of the event manager
-        // and remove the event handler
-
         /// <summary>
         /// Custom closing logic for ParametersSelectionViewModel.
         /// Saves grid and navigation state before handing off to base cleanup.
@@ -117,9 +111,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
         public override void OnClosing()
         {
             //update the column ids in settings.
-            // clear list first
             _revitDataModel.Settings.ColumnIds.Clear();
-            // add current list
             foreach (var columnId in ParametersDataGridViewModel.ColumnDefinitions)
             {
                 _revitDataModel.Settings.ColumnIds.Add(columnId.PropertyName);
@@ -128,7 +120,6 @@ namespace duHastNet.AtTheLibrary.ViewModels
             //save the state of the data grid view model
             if (ParametersDataGridViewModel != null && _stateStore != null)
             {
-                //save the state
                 try
                 {
                     var currentState = ParametersDataGridViewModel.CreateStateFromViewModel();
@@ -148,34 +139,33 @@ namespace duHastNet.AtTheLibrary.ViewModels
             var statesForSettings = _stateStore.GetStatesForSettings();
             _revitDataModel.Settings.NavigationStates = statesForSettings;
 
-            // GlobalMessageViewModel.Dispose() removed — it is registered via RegisterChild()
-            // and will be disposed automatically by base.OnClosing().
-
+            // GlobalMessageViewModel and ParametersDataGridViewModel are registered via RegisterChild()
+            // and will be disposed automatically by base.OnClosing() — do not dispose manually here.
             base.OnClosing();
         }
 
 
         /// <summary>
-        /// loads any existing states from settings into the state store
+        /// Loads any existing states from settings into the state store.
         /// </summary>
         private void ApplyStateFromSettings()
         {
-            // Load StateStore states if they exist
             if (_revitDataModel.Settings.NavigationStates != null && _revitDataModel.Settings.NavigationStates.Count > 0)
             {
-                // Create a factory for DataGridState instances
                 _stateStore.LoadStatesFromSettings(_revitDataModel.Settings.NavigationStates, () => new DataGridState());
                 System.Diagnostics.Debug.WriteLine($"Loaded {_revitDataModel.Settings.NavigationStates.Count} states from settings into StateStore");
             }
         }
 
         /// <summary>
-        /// The rooms selection view model class constructor.
+        /// The parameters selection view model constructor.
         /// </summary>
-        /// <param name="revitDataModel">The underlying revit data model</param>
-        /// <param name="navigationStore">A navigation store for the UI</param>
-        /// <param name="messageStore">A message store used to display messages to the user</param>
-        /// <param name="globalMessageViewModel">A message view model, the message store uses to display messages to the user.</param>
+        /// <param name="revitDataModel">The underlying revit data model.</param>
+        /// <param name="navigationStore">A navigation store for the UI.</param>
+        /// <param name="stateStore">A state store for grid state persistence.</param>
+        /// <param name="messageStore">A message store used to display messages to the user.</param>
+        /// <param name="globalMessageViewModel">A message view model the message store uses to display messages to the user.</param>
+        /// <param name="createViewModel">Factory function to create the FamiliesSelectionViewModel for navigation.</param>
         public ParametersSelectionViewModel(
             Models.RevitFamiliesDataModel revitDataModel,
             Utils.WPF.Stores.NavigationStore navigationStore,
@@ -193,16 +183,16 @@ namespace duHastNet.AtTheLibrary.ViewModels
 
             //store the global message view model
             GlobalMessageViewModel = globalMessageViewModel;
-            RegisterChild(GlobalMessageViewModel); // Register as child
+            RegisterChild(GlobalMessageViewModel);
 
             //load settings first
             ApplyStateFromSettings();
 
-            //push it data grid view model
+            //parameters data grid view model
             ParametersDataGridViewModel = new ParametersDataGridViewModel(revitDataModel: revitDataModel);
             RegisterChild(ParametersDataGridViewModel);
 
-            //view model switch to families selection view model
+            //command to navigate back to families selection view model
             _navigateCommand = new Commands.LeaveParameterSelectionCommand(
                 navigationStore: _navigationStore,
                 stateStore: _stateStore,

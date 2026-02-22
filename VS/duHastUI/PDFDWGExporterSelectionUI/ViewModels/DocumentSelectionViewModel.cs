@@ -22,6 +22,7 @@
 //
 
 
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.UI.CustomControls;
 using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
@@ -33,7 +34,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
@@ -41,19 +41,18 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
     public partial class DocumentSelectionViewModel : AppViewModelBase, INotifyDataErrorInfo
     {
         /// <summary>
-        /// Global message view model for displaying messages to the user
+        /// Global message view model for displaying messages to the user.
         /// </summary>
         public GlobalMessageViewModel GlobalMessageViewModel { get; }
 
         /// <summary>
-        /// errors view model used for data validation ( export directory )
+        /// Errors view model used for data validation (export directory).
         /// </summary>
         private readonly ErrorsViewModel _errorsViewModel;
 
         //property to check if there are any errors
         public bool HasErrors => _errorsViewModel.HasErrors;
 
-        // event handler for errors changed
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged
         {
             add { _errorsViewModel.ErrorsChanged += value; }
@@ -61,17 +60,17 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         }
 
         /// <summary>
-        /// message store for storing messages
+        /// Message store for storing messages.
         /// </summary>
         private readonly MessageStore _messageStore;
 
         /// <summary>
-        /// store the navigation store for the application
+        /// Navigation store for the application.
         /// </summary>
         private readonly NavigationStore _navigationStore;
 
         /// <summary>
-        /// store the state store for the application
+        /// State store for the application.
         /// </summary>
         private readonly StateStore _stateStore;
 
@@ -81,60 +80,52 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         public ViewSelectionDataGridViewModel ViewSelectionDataGridViewModel { get; }
 
         /// <summary>
-        /// The data model for the export settings
+        /// The data model for the export settings.
         /// </summary>
         private readonly Models.SheetsDataModel _sheetsDataModel;
 
         /// <summary>
-        /// Settings build in UI and to be returned to caller
+        /// Settings built in UI and to be returned to caller.
         /// </summary>
-        public Utils.Settings Settings
-        {
-            get { return _sheetsDataModel.Settings; }
-
-        }
+        public Utils.Settings Settings => _sheetsDataModel.Settings;
 
         /// <summary>
-        /// command to save the settings and close the window
+        /// Command to save the settings and close the window.
         /// </summary>
         private readonly RelayCommand _saveAndCloseCommand;
 
         private readonly Commands.PrintSetDeleteCommand _printSetDeleteCommand;
-
         private readonly Commands.PrintSetUpdateCommand _printSetUpdateCommand;
-
         private readonly Commands.PrintSetDuplicateCommand _printSetDuplicateCommand;
 
-        public ICommand SaveAndCloseCommand { get { return _saveAndCloseCommand; } }
+        public ICommand SaveAndCloseCommand => _saveAndCloseCommand;
 
-        // Expose command objects directly (not as ICommand) so XAML can bind to generated DeleteCommand property
-        public Commands.PrintSetDeleteCommand PrintSetDeleteCommand { get { return _printSetDeleteCommand; } }
-        public Commands.PrintSetUpdateCommand PrintSetUpdateCommand { get { return _printSetUpdateCommand; } }
-        public Commands.PrintSetDuplicateCommand PrintSetDuplicateCommand { get { return _printSetDuplicateCommand; } }
+        // Expose command objects directly (not as ICommand) so XAML can bind to generated command properties
+        public Commands.PrintSetDeleteCommand PrintSetDeleteCommand => _printSetDeleteCommand;
+        public Commands.PrintSetUpdateCommand PrintSetUpdateCommand => _printSetUpdateCommand;
+        public Commands.PrintSetDuplicateCommand PrintSetDuplicateCommand => _printSetDuplicateCommand;
 
 
         #region event handlers
 
         /// <summary>
-        /// On window closing, perform UI-related cleanup
+        /// On window closing, perform UI-related cleanup.
         /// </summary>
         public override void OnClosing()
         {
             System.Diagnostics.Debug.WriteLine("DocumentSelectionViewModel.OnClosing() called");
 
-            // Event cleanup now handled by DisposeManaged()
             // Call base to handle registered child ViewModels
             base.OnClosing();
         }
 
         /// <summary>
-        /// Dispose of managed resources including event subscriptions
+        /// Dispose of managed resources including event subscriptions.
         /// </summary>
         public override void Dispose()
         {
-            System.Diagnostics.Debug.WriteLine("DocumentSelectionViewModel.DisposeManaged() called");
+            System.Diagnostics.Debug.WriteLine("DocumentSelectionViewModel.Dispose() called");
 
-            // Unsubscribe from events to prevent memory leaks
             if (_errorsViewModel != null)
             {
                 _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
@@ -146,8 +137,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             }
 
             // Note: GlobalMessageViewModel and ViewSelectionDataGridViewModel are registered
-            // as children, so they will be automatically disposed by base.Dispose()
-
+            // as children and will be automatically disposed by base.Dispose()
             base.Dispose();
         }
 
@@ -155,92 +145,60 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
         #region print set filter
 
-        // Field to return a default list of print set  names
+        // Backing collection mutated in place by PopulateAvailablePrintSets(); the property
+        // notifies via OnPropertyChanged(nameof(PrintSetNamesDefaultList)) in that method.
+        [ObservableProperty]
         private ObservableCollection<string> _printSetNamesDefaultList = new ObservableCollection<string>();
 
-        // Property to expose the default list of print sets
-        public ObservableCollection<string> PrintSetNamesDefaultList
-        {
-            get => _printSetNamesDefaultList;
-            set
-            {
-                _printSetNamesDefaultList = value;
-                OnPropertyChanged(nameof(PrintSetNamesDefaultList));
-            }
-        }
-
-
-        // field to store the selected Revit print set
+        /// <summary>
+        /// The selected Revit print set.
+        /// Side effects: updates settings and triggers data grid sheet selection.
+        /// </summary>
+        [ObservableProperty]
         private string _selectedPrintSet;
-        public string SelectedPrintSet
+
+        partial void OnSelectedPrintSetChanged(string value)
         {
-            get => _selectedPrintSet;
-            set
-            {
-                _selectedPrintSet = value;
-
-                //store print set in settings
-                _sheetsDataModel.Settings.Printset = value;
-
-                // Update the data grid selection
-                ViewSelectionDataGridViewModel.UpdateSheetSelectionByPrintSet(value);
-
-                //update UI
-                OnPropertyChanged(nameof(SelectedPrintSet));
-            }
+            _sheetsDataModel.Settings.Printset = value;
+            ViewSelectionDataGridViewModel.UpdateSheetSelectionByPrintSet(value);
         }
 
         /// <summary>
-        /// set the print set at the end of the GUI ini phase
-        /// just setting it to None to avoid filtering issues
+        /// Sets the print set filter from settings at the end of the GUI init phase.
         /// </summary>
         private void SetPrintSetFilterFromSettings()
         {
             SelectedPrintSet = Models.Constants.DefaultPrintSetName;
-            //update the print set in settings
             _sheetsDataModel.Settings.Printset = Models.Constants.DefaultPrintSetName;
-
         }
-
 
         #endregion print set filter
 
         #region schedule filter
 
-        // Field to return a default list of print set  names
+        // Get-only: backing list is mutated in place by PopulateAvailableSchedules()
         private readonly List<string> _sheetScheduleNamesDefaultList = new List<string>();
-
-        // Property to expose the default list of print sets
         public List<string> SheetScheduleNamesDefaultList => _sheetScheduleNamesDefaultList;
 
-        // field to store the selected schedule set
+        /// <summary>
+        /// The selected schedule set.
+        /// Side effects: updates settings and triggers data grid sheet selection.
+        /// </summary>
+        [ObservableProperty]
         private string _selectedScheduleSet;
-        public string SelectedScheduleSet
+
+        partial void OnSelectedScheduleSetChanged(string value)
         {
-            get => _selectedScheduleSet;
-            set
-            {
-                _selectedScheduleSet = value;
-
-                //store print set in settings
-                _sheetsDataModel.Settings.Schedule = value;
-
-                // Update the data grid selection
-                ViewSelectionDataGridViewModel.UpdateSheetSelectionBySchedule(value);
-
-                //update UI
-                OnPropertyChanged(nameof(SelectedScheduleSet));
-            }
+            _sheetsDataModel.Settings.Schedule = value;
+            ViewSelectionDataGridViewModel.UpdateSheetSelectionBySchedule(value);
         }
 
         /// <summary>
-        /// set the schedule at the end of the GUI ini phase
-        /// just setting it to None to avoid filtering issues
+        /// Sets the schedule filter from settings at the end of the GUI init phase.
         /// </summary>
         private void SetSheetSetScheduleFilterFromSettings()
         {
             SelectedScheduleSet = Models.Constants.DefaultPrintSetName;
-            //update the print set in settings
             _sheetsDataModel.Settings.Schedule = Models.Constants.DefaultPrintSetName;
         }
 
@@ -248,72 +206,54 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
 
         /// <summary>
-        /// Adds a message to the global message store which will then be displayed in the UI
+        /// Adds a message to the global message store which will then be displayed in the UI.
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="messageType"></param>
         public void AddMessage(string message, duHastNet.Utils.WPF.Stores.MessageTypes messageType)
         {
             if (messageType == duHastNet.Utils.WPF.Stores.MessageTypes.Error)
             {
-                //let user dismiss the message themselves for error messages, since they might want to copy the message text for further use, and errors are more important to see for a longer time
                 _messageStore.EnqueueMessage(message, messageType);
             }
             else if (messageType == duHastNet.Utils.WPF.Stores.MessageTypes.Information)
             {
-                //just flash message to user for information messages, since they are less important and user might not need to copy the message text, and it is better to dismiss them after a short time to avoid too many messages building up in the UI
-                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds:2);
+                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds: 2);
             }
             else
             {
-                //default to short display time for other message types
-                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds:5);
+                _messageStore.EnqueueMessage(message, messageType, dismissAfterSeconds: 5);
             }
         }
 
 
         /// <summary>
-        /// used to catch property changed events from the underlying model in order to update the ui
+        /// Catches property changed events from the underlying model to update the UI.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            // check which property changed in the underlying model
             switch (e.PropertyName)
             {
                 case Utils.PropertyChangedEventNames.DATA_MODEL_PRINTSETS_UPDATED:
-                    //update rooms in the view model
                     PopulateAvailablePrintSets();
                     break;
 
-                // Add more cases for other properties as needed
-
                 default:
-                    // Handle changes for properties not explicitly handled
                     break;
             }
         }
 
 
         /// <summary>
-        /// updates the default print set list with default value and any print sets in the sheet data model
+        /// Updates the default print set list with the default value and any print sets in the sheet data model.
         /// </summary>
         private void PopulateAvailablePrintSets()
         {
-            //clear just in case
             _printSetNamesDefaultList.Clear();
-
-            //populate the available filters list with print set names
-            //add the default (None)
             _printSetNamesDefaultList.Add(Models.Constants.DefaultPrintSetName);
 
-            // add from model
             if (_sheetsDataModel.PrintSets != null && _sheetsDataModel.PrintSets.Count > 0)
             {
                 foreach (Models.RevitPrintSet pSet in _sheetsDataModel.PrintSets)
                 {
-                    //only add if not marked for deletion
                     if (pSet.UpdateAction != Models.PrintSetUpdateType.Delete)
                     {
                         _printSetNamesDefaultList.Add(pSet.Name);
@@ -321,24 +261,19 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                 }
             }
 
-            // trigger the property changed event
+            // Notify UI since the collection is mutated in place, not replaced
             OnPropertyChanged(nameof(PrintSetNamesDefaultList));
         }
 
 
         /// <summary>
-        /// update the default schedules list with the default value and any schedules in the data model
+        /// Updates the default schedules list with the default value and any schedules in the data model.
         /// </summary>
         private void PopulateAvailableSchedules()
         {
-            //clear just ion case
             _sheetScheduleNamesDefaultList.Clear();
-
-            //populate the available filters list with print set names
-            //add the default (None)
             _sheetScheduleNamesDefaultList.Add(Models.Constants.DefaultPrintSetName);
 
-            // add from model
             if (_sheetsDataModel.Schedules != null && _sheetsDataModel.Schedules.Count > 0)
             {
                 foreach (Models.RevitSchedule rSchedule in _sheetsDataModel.Schedules)
@@ -347,128 +282,85 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                 }
             }
 
-            // trigger the property changed event
             OnPropertyChanged(nameof(SheetScheduleNamesDefaultList));
         }
 
         #region export types
 
-        //three way control setting the operation modus
+        /// <summary>
+        /// The three-way switch state representing the export mode (PDF / DWG / PDF+DWG).
+        /// Side effects: updates ExportButtonText and settings export modus.
+        /// Equality guard is handled automatically by [ObservableProperty].
+        /// </summary>
+        [ObservableProperty]
         private ThreeWaySwitch.SwitchState _exportTypes;
 
-        /// <summary>
-        /// property containing the three possible export modi
-        /// </summary>
-        public ThreeWaySwitch.SwitchState ExportTypes
+        partial void OnExportTypesChanged(ThreeWaySwitch.SwitchState value)
         {
-            get => _exportTypes;
-            set
+            if (value == ThreeWaySwitch.SwitchState.Left)
             {
-                if (_exportTypes != value)
-                {
-                    _exportTypes = value;
-
-                    if (_exportTypes == ThreeWaySwitch.SwitchState.Left)
-                    {
-                        ExportButtonText = $"Export {Models.Constants.ExportModusPDF}s";
-                        _sheetsDataModel.Settings.ExportModus = Models.Constants.ExportModusPDF;
-                    }
-                    else if (_exportTypes == ThreeWaySwitch.SwitchState.Centre)
-                    {
-                        ExportButtonText = $"Export {Models.Constants.ExportModusDWG}s";
-                        _sheetsDataModel.Settings.ExportModus = Models.Constants.ExportModusDWG;
-                    }
-                    else
-                    {
-                        ExportButtonText = $"Export {Models.Constants.ExportModusPDFandDWG}s";
-                        _sheetsDataModel.Settings.ExportModus = Models.Constants.ExportModusPDFandDWG;
-                    }
-
-                    OnPropertyChanged(nameof(ExportTypes));
-                }
+                ExportButtonText = $"Export {Models.Constants.ExportModusPDF}s";
+                _sheetsDataModel.Settings.ExportModus = Models.Constants.ExportModusPDF;
+            }
+            else if (value == ThreeWaySwitch.SwitchState.Centre)
+            {
+                ExportButtonText = $"Export {Models.Constants.ExportModusDWG}s";
+                _sheetsDataModel.Settings.ExportModus = Models.Constants.ExportModusDWG;
+            }
+            else
+            {
+                ExportButtonText = $"Export {Models.Constants.ExportModusPDFandDWG}s";
+                _sheetsDataModel.Settings.ExportModus = Models.Constants.ExportModusPDFandDWG;
             }
         }
+
         #endregion export types
 
         #region button underlying functions
 
-        //default button text for export mode
-        string _exportButtonText = $"Export {Models.Constants.ExportModusPDF}s";
+        /// <summary>
+        /// Button text reflecting the current export mode.
+        /// </summary>
+        [ObservableProperty]
+        private string _exportButtonText = $"Export {Models.Constants.ExportModusPDF}s";
 
-        //button text for export button
-        public string ExportButtonText
+        /// <summary>
+        /// The directory path for exports.
+        /// Side effects: validates path, updates error state and settings.
+        /// Equality guard is handled automatically by [ObservableProperty].
+        /// </summary>
+        [ObservableProperty]
+        private string _exportSheetsFilePath;
+
+        partial void OnExportSheetsFilePathChanged(string value)
         {
-            get => _exportButtonText;
-            set
+            _errorsViewModel.ClearErrors(nameof(ExportSheetsFilePath));
+
+            if (string.IsNullOrEmpty(value))
             {
-                _exportButtonText = value;
-                OnPropertyChanged(nameof(ExportButtonText));
+                ExportDirectoryPathValid = false;
+                _errorsViewModel.AddError(nameof(ExportSheetsFilePath), "Export path cannot be empty");
+            }
+            else if (!System.IO.Directory.Exists(value))
+            {
+                ExportDirectoryPathValid = false;
+                _errorsViewModel.AddError(nameof(ExportSheetsFilePath), "Export path does not exist");
+            }
+            else
+            {
+                ExportDirectoryPathValid = true;
+                _errorsViewModel.ClearErrors(nameof(ExportSheetsFilePath));
+                _sheetsDataModel.Settings.ExportFolderPath = value;
             }
         }
 
         /// <summary>
-        /// The file path for the exports to be saved to
-        /// </summary>
-        private string _selectedSheetsExportFilePath;
-
-        /// <summary>
-        /// property handling file path changes
-        /// </summary>
-        public string ExportSheetsFilePath
-        {
-            get => _selectedSheetsExportFilePath;
-            set
-            {
-                if (_selectedSheetsExportFilePath != value)
-                {
-                    _selectedSheetsExportFilePath = value;
-
-
-                    _errorsViewModel.ClearErrors(nameof(ExportSheetsFilePath));
-
-                    // check if the file path is valid, if not add an error
-                    if (string.IsNullOrEmpty(value))
-                    {
-                        // set the data path to invalid
-                        ExportDirectoryPathValid = false;
-                        // this will trigger data validation
-                        // from the eventhandler ErrorsViewModel_ErrorsChanged
-                        _errorsViewModel.AddError(nameof(ExportSheetsFilePath), "Export path path cannot be empty");
-                    }
-                    else if (!System.IO.Directory.Exists(value))
-                    {
-                        // set the data path to invalid
-                        ExportDirectoryPathValid = false;
-                        // this will trigger data validation
-                        // from the eventhandler ErrorsViewModel_ErrorsChanged
-                        _errorsViewModel.AddError(nameof(ExportSheetsFilePath), "Export path does not exist");
-                    }
-                    else
-                    {
-                        // set the data path to valid
-                        ExportDirectoryPathValid = true;
-                        // this will trigger data validation
-                        // from the eventhandler ErrorsViewModel_ErrorsChanged
-                        _errorsViewModel.ClearErrors(nameof(ExportSheetsFilePath));
-
-                        //save in settings
-                        _sheetsDataModel.Settings.ExportFolderPath = value;
-                    }
-
-
-                    OnPropertyChanged(nameof(ExportSheetsFilePath));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Updates the settings and closes the window - Forces state save before closing
+        /// Updates the settings and closes the window. Forces state save before closing.
         /// </summary>
         private void SaveSettingsAndClose()
         {
             try
             {
-                // Update the column ids in settings (existing logic)
                 if (ViewSelectionDataGridViewModel?.ColumnDefinitions != null)
                 {
                     _sheetsDataModel.Settings.ColumnIds.Clear();
@@ -478,7 +370,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                     }
                 }
 
-                // FORCE save current grid state to StateStore before getting states for settings
+                // Force save current grid state to StateStore before getting states for settings
                 if (ViewSelectionDataGridViewModel != null && _stateStore != null)
                 {
                     try
@@ -497,18 +389,13 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                     }
                 }
 
-                // Get states from StateStore for settings persistence
                 var statesForSettings = _stateStore.GetStatesForSettings();
-
-                // Update the settings with the grid states
                 _sheetsDataModel.Settings.NavigationStates = statesForSettings;
 
-                // Save the application settings
                 duHastNet.UI.PDFDWGExporterSelectionUI.Utils.SettingsUtils.SaveSettings(
                     settings: _sheetsDataModel.Settings,
                     AddMessage: AddMessage);
 
-                // Close the window
                 Application.Current.MainWindow?.Close();
             }
             catch (Exception ex)
@@ -519,39 +406,30 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
         private void LoadSettings()
         {
-            //load settings first
             var settings = duHastNet.UI.PDFDWGExporterSelectionUI.Utils.SettingsUtils.LoadSettings(AddMessage: AddMessage);
-
-            //cant simply replace the settings object in the data model...since it is used else where....need to update instead
             _sheetsDataModel.Settings.UpdateSettingsFromSettings(settings);
 
-            // Load StateStore states if they exist
             if (settings.NavigationStates != null && settings.NavigationStates.Count > 0)
             {
-                // Create a factory for DataGridState instances
                 _stateStore.LoadStatesFromSettings(settings.NavigationStates, () => new DataGridState());
                 System.Diagnostics.Debug.WriteLine($"Loaded {settings.NavigationStates.Count} states from settings into StateStore");
             }
         }
 
-
         /// <summary>
-        /// Set the export type selector depending on string from settings
+        /// Sets the export type selector from the settings string.
         /// </summary>
         private void SetExportTypeFromSettings()
         {
             string exportType = _sheetsDataModel.Settings.ExportModus;
-            //check if dwg modus
             if (exportType == Models.Constants.ExportModusDWG)
             {
                 ExportTypes = ThreeWaySwitch.SwitchState.Centre;
             }
-            //check if pdf and dwg
             else if (exportType == Models.Constants.ExportModusPDFandDWG)
             {
                 ExportTypes = ThreeWaySwitch.SwitchState.Right;
             }
-            //assume it is pdf
             else
             {
                 ExportTypes = ThreeWaySwitch.SwitchState.Left;
@@ -563,41 +441,26 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 
         #region data validation
 
+        /// <summary>
+        /// Indicates whether the export directory path is valid.
+        /// </summary>
+        [ObservableProperty]
         private bool _exportDirectoryPathValid;
-        public bool ExportDirectoryPathValid
-        {
-            get => _exportDirectoryPathValid;
-            set
-            {
-                _exportDirectoryPathValid = value;
-                // call ui update
-                OnPropertyChanged(nameof(ExportDirectoryPathValid));
-            }
-        }
 
         /// <summary>
-        /// Data validation for text input fields
+        /// Data validation for text input fields.
         /// </summary>
-        /// <param name="propertyName">The name of the property of which to get any errors, if they exist, for.</param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public IEnumerable GetErrors(string propertyName)
         {
             return _errorsViewModel.GetErrors(propertyName);
         }
 
-
         private void ErrorsViewModel_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
         {
-            // The ErrorsChanged event will be automatically raised through the interface
             OnPropertyChanged(nameof(HasErrors));
             OnPropertyChanged(nameof(ExportDirectoryPathValid));
 
-            // Trigger the command to re-evaluate its CanExecute state
-            if (_saveAndCloseCommand != null)
-            {
-                _saveAndCloseCommand.NotifyCanExecuteChanged();
-            }
+            _saveAndCloseCommand?.NotifyCanExecuteChanged();
         }
 
         #endregion data validation
@@ -606,11 +469,11 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// <summary>
         /// Constructor for the DocumentSelectionViewModel class.
         /// </summary>
-        /// <param name="sheetDataModel">The sheet data model</param>
-        /// <param name="navigationStore">Navigation store for ViewModel management</param>
-        /// <param name="stateStore">State store for grid state persistence</param>
-        /// <param name="globalMessageViewModel">Global message view model</param>
-        /// <param name="messageStore">Message store</param>
+        /// <param name="sheetDataModel">The sheet data model.</param>
+        /// <param name="navigationStore">Navigation store for ViewModel management.</param>
+        /// <param name="stateStore">State store for grid state persistence.</param>
+        /// <param name="globalMessageViewModel">Global message view model.</param>
+        /// <param name="messageStore">Message store.</param>
         public DocumentSelectionViewModel(
             Models.SheetsDataModel sheetDataModel,
             duHastNet.Utils.WPF.Stores.NavigationStore navigationStore,
@@ -619,95 +482,50 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
             duHastNet.Utils.WPF.Stores.MessageStore messageStore
             )
         {
-
-            //store the export data model
             _sheetsDataModel = sheetDataModel;
-
-            //store the navigation store
             _navigationStore = navigationStore;
-
-            //store the state store
             _stateStore = stateStore;
-
-            //store the message store
             _messageStore = messageStore;
 
-            //store the global message view model
             GlobalMessageViewModel = globalMessageViewModel;
-
-            // Register GlobalMessageViewModel for automatic cleanup
             RegisterChild(GlobalMessageViewModel);
 
-            //initialize the errors view model
             _errorsViewModel = new duHastNet.Utils.WPF.ViewModels.ErrorsViewModel();
-            //subscribe to errors changed event
             _errorsViewModel.ErrorsChanged += ErrorsViewModel_ErrorsChanged;
 
-            //load settings first
             LoadSettings();
 
-            //set up the views data model - now pass StateStore instead of NavigationStore
             ViewSelectionDataGridViewModel = new ViewSelectionDataGridViewModel(
                 _sheetsDataModel,
-                _stateStore        // Pass StateStore for state management
+                _stateStore
              );
-
-            // Register the child so it gets cleaned up properly
             RegisterChild(ViewSelectionDataGridViewModel);
 
-            //save and exit
-            //only if there are no errors
             _saveAndCloseCommand = new RelayCommand(
                 SaveSettingsAndClose,
-                () => !HasErrors // Only enabled when there are no errors
+                () => !HasErrors
             );
 
-            //command to delete a print set
-            _printSetDeleteCommand = new Commands.PrintSetDeleteCommand(
-                this,
-                _sheetsDataModel
-                );
-            // Register command for automatic cleanup
+            _printSetDeleteCommand = new Commands.PrintSetDeleteCommand(this, _sheetsDataModel);
             RegisterChild(_printSetDeleteCommand);
 
-            //command to update a print set
-            _printSetUpdateCommand = new Commands.PrintSetUpdateCommand(
-                this,
-                _sheetsDataModel
-                );
-            // Register command for automatic cleanup
+            _printSetUpdateCommand = new Commands.PrintSetUpdateCommand(this, _sheetsDataModel);
             RegisterChild(_printSetUpdateCommand);
 
-            //command to duplicate a print set
-            _printSetDuplicateCommand = new Commands.PrintSetDuplicateCommand(
-                this,
-                _sheetsDataModel
-                );
-            // Register command for automatic cleanup
+            _printSetDuplicateCommand = new Commands.PrintSetDuplicateCommand(this, _sheetsDataModel);
             RegisterChild(_printSetDuplicateCommand);
 
-            //set the export file path from settings:
+            // Setting ExportSheetsFilePath triggers OnExportSheetsFilePathChanged for validation
             ExportSheetsFilePath = _sheetsDataModel.Settings.ExportFolderPath;
 
-            // set the default export operation from the settings
             SetExportTypeFromSettings();
-
-            //populate the available print set list from the model
             PopulateAvailablePrintSets();
-
-            //populate available schedule names from the model
             PopulateAvailableSchedules();
 
-            //set the filter to display sheets selected depending on print exports set
-            //this will be trigger a view change to show the selected data table, hence last thing in the constructor
+            // These set filter state — called last as they trigger view changes
             SetPrintSetFilterFromSettings();
-
-            //set the filter to select sheets from schedule ( in theory only one, print set or schedule ) should have a 
-            //selection 
             SetSheetSetScheduleFilterFromSettings();
 
-            // subscribe to underlying model changes
-            // required to update the print set list if changes occur
             _sheetsDataModel.PropertyChanged += Model_PropertyChanged;
         }
     }

@@ -22,6 +22,7 @@
 //
 
 
+using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,7 @@ using duHastNet.Utils.WPF.Stores;
 
 namespace duHastNet.AtTheLibrary.ViewModels
 {
-    public class TypeCatalogueViewModel : AppViewModelBase
+    public partial class TypeCatalogueViewModel : AppViewModelBase
     {
         private readonly NavigationStore _navigationStore;
         private readonly MessageStore _messageStore;
@@ -46,103 +47,62 @@ namespace duHastNet.AtTheLibrary.ViewModels
         private Models.RevitFamiliesDataModel RevitDataModel { get; set; }
 
         /// <summary>
+        /// As read from type catalogue file but with unit data removed.
+        /// </summary>
+        private List<string> _catalogueFileHeadersOriginal;
+
+        public List<string> CatalogueFileHeadersOriginal => _catalogueFileHeadersOriginal;
+
+        /// <summary>
+        /// As read from type catalogue file (unformatted).
+        /// </summary>
+        private List<string> _catalogueFileHeadersOriginalUnformatted;
+
+        public List<string> CatalogueFileHeadersOriginalUnformatted => _catalogueFileHeadersOriginalUnformatted;
+
+        private List<List<string>> _catalogueFileDataOriginal;
+
+        #region observable properties
+
+        /// <summary>
         /// The family of which to display the catalogue file.
         /// Raises PropertyChanged so SaveCatalogueTextFileDataCommand.CanExecute
         /// re-evaluates when the selection changes.
         /// </summary>
+        [ObservableProperty]
         private Models.FamilyDataModel _selectedFamily;
-        public Models.FamilyDataModel SelectedFamily
-        {
-            get => _selectedFamily;
-            set
-            {
-                _selectedFamily = value;
-                OnPropertyChanged(nameof(SelectedFamily));
-            }
-        }
 
         /// <summary>
-        /// As read from type catalogue file but with unit data removed
+        /// Contains the header row.
         /// </summary>
-        private List<string> _catalogueFileHeadersOriginal;
-
-        //make these accessible
-        public List<string> CatalogueFileHeadersOriginal
-        {
-            get => _catalogueFileHeadersOriginal;
-        }
-
-        /// <summary>
-        /// As read from type catalogue file
-        /// </summary>
-        private List<string> _catalogueFileHeadersOriginalUnformatted;
-
-        //make these accessible
-        public List<string> CatalogueFileHeadersOriginalUnformatted
-        {
-            get => _catalogueFileHeadersOriginalUnformatted;
-        }
-
-        private List<List<string>> _catalogueFileDataOriginal;
-
-        #region data Properties
-
+        [ObservableProperty]
         private List<string> _headerRow;
+
+        /// <summary>
+        /// Contains the data rows.
+        /// </summary>
+        [ObservableProperty]
         private List<List<object>> _dataRows;
+
+        /// <summary>
+        /// Contains read only columns (none in this case).
+        /// </summary>
+        [ObservableProperty]
         private List<string> _readOnlyColumns;
 
-        /// <summary>
-        /// contains the header row
-        /// </summary>
-        public List<string> HeaderRow
-        {
-            get => _headerRow;
-            set
-            {
-                _headerRow = value;
-                OnPropertyChanged(nameof(HeaderRow));
-            }
-        }
-
-        /// <summary>
-        /// contains the data rows
-        /// </summary>
-        public List<List<object>> DataRows
-        {
-            get => _dataRows;
-            set
-            {
-                _dataRows = value;
-                OnPropertyChanged(nameof(DataRows));
-            }
-        }
-
-        /// <summary>
-        /// contains read only columns ( which there are none in this case )
-        /// </summary>
-        public List<string> ReadOnlyColumns
-        {
-            get => _readOnlyColumns;
-            set
-            {
-                _readOnlyColumns = value;
-                OnPropertyChanged(nameof(ReadOnlyColumns));
-            }
-        }
-
-        #endregion
+        #endregion observable properties
 
         #region Commands
 
         // Command properties delegate to the .Command property on each command object,
-        // since the command classes no longer inherit ICommand directly.
+        // since the command classes wrap RelayCommand internally rather than implementing ICommand directly.
         public ICommand SelectFamiliesCommand => _navigateCommand.Command;
         public ICommand SaveCatalogueTextFileDataCommand => _saveCatalogueTextFileDataCommand.Command;
 
         #endregion Commands
 
         /// <summary>
-        /// Called when navigating away. Unsubscribes from any external events.
+        /// Called when navigating away.
         /// GlobalMessageViewModel is a registered child and cleaned up automatically by base.
         /// </summary>
         public override void OnClosing()
@@ -162,13 +122,12 @@ namespace duHastNet.AtTheLibrary.ViewModels
         }
 
         /// <summary>
-        /// Adds a message to the global message store which will then be displayed in the UI
+        /// Adds a message to the global message store which will then be displayed in the UI.
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="messageType"></param>
+        /// <param name="message">The message text.</param>
+        /// <param name="messageType">The type/severity of the message.</param>
         public void AddMessage(string message, Utils.WPF.Stores.MessageTypes messageType)
         {
-
             if (messageType == duHastNet.Utils.WPF.Stores.MessageTypes.Error)
             {
                 //let user dismiss the message themselves for error messages, since they might want to copy the message text for further use, and errors are more important to see for a longer time
@@ -188,10 +147,8 @@ namespace duHastNet.AtTheLibrary.ViewModels
 
         #region load data
 
-
         private object GetCellValue(string cellEntryAsstring, int cellColumnIndex)
         {
-
             if (cellColumnIndex == 0)
             {
                 //family type name is always a string
@@ -208,18 +165,17 @@ namespace duHastNet.AtTheLibrary.ViewModels
 
             //convert value to type
             return duHastNet.Utils.DataConversion.TypeConverter.ConvertStringToType(cellEntryAsstring, property.StorageType);
-
         }
 
         /// <summary>
-        /// Loads the catalogue text file data from file
+        /// Loads the catalogue text file data from file.
         /// </summary>
         private void LoadData()
         {
-            // read catalogue file and get header data ( formatted and unformatted ) and row data
+            // read catalogue file and get header data (formatted and unformatted) and row data
             (_catalogueFileHeadersOriginal, _catalogueFileHeadersOriginalUnformatted, _catalogueFileDataOriginal) = Utilities.Revit.TypeCatalogueFileUtils.GetCatalogueFileData(SelectedFamily.FamilyFilePath.Value, this);
 
-            //check for null values indicating falure to read
+            //check for null values indicating failure to read
             if (_catalogueFileDataOriginal == null || _catalogueFileHeadersOriginal == null)
             {
                 return;
@@ -227,11 +183,11 @@ namespace duHastNet.AtTheLibrary.ViewModels
 
             // Create header row
             var defaultHeaderRow = _catalogueFileHeadersOriginal.ToList();
-            //insert "Family Type Name" as first column ( by default this is an empty field )
+            //insert "Family Type Name" as first column (by default this is an empty field)
             defaultHeaderRow[0] = Models.Constants.ColumnHeaderTypeCatalogueFamilyTypeName;
             HeaderRow = defaultHeaderRow;
 
-            // populate data rows ( assumes that headers and data rows are aligned in terms of index and value )
+            // populate data rows (assumes headers and data rows are aligned in terms of index and value)
             var dataRows = new List<List<object>>();
 
             foreach (var row in _catalogueFileDataOriginal)
@@ -242,7 +198,6 @@ namespace duHastNet.AtTheLibrary.ViewModels
                     var rowEntry = row[i];
                     if (rowEntry != null)
                     {
-                        // convert the row entry depending on the data type stored in the matching family property
                         var rowEntryConverted = GetCellValue(
                             cellEntryAsstring: rowEntry,
                             cellColumnIndex: i);
@@ -252,7 +207,6 @@ namespace duHastNet.AtTheLibrary.ViewModels
                 }
                 dataRows.Add(rowEntries);
             }
-            ;
 
             //update data rows
             DataRows = dataRows;
@@ -263,16 +217,17 @@ namespace duHastNet.AtTheLibrary.ViewModels
 
         #endregion
 
-        public TypeCatalogueViewModel(Models.RevitFamiliesDataModel revitDataModel, Utils.WPF.Stores.NavigationStore navigationStore,
+        public TypeCatalogueViewModel(
+            Models.RevitFamiliesDataModel revitDataModel,
+            Utils.WPF.Stores.NavigationStore navigationStore,
             Utils.WPF.Stores.MessageStore messageStore,
             Utils.WPF.ViewModels.GlobalMessageViewModel globalMessageViewModel,
             Func<ViewModels.FamiliesSelectionViewModel> createViewModel,
             Models.FamilyDataModel selectedFamily
             )
         {
-
-            this.RevitDataModel = revitDataModel;
-            this.SelectedFamily = selectedFamily;
+            RevitDataModel = revitDataModel;
+            SelectedFamily = selectedFamily;
 
             //store services
             _navigationStore = navigationStore;
@@ -281,21 +236,21 @@ namespace duHastNet.AtTheLibrary.ViewModels
 
             //store the global message view model
             GlobalMessageViewModel = globalMessageViewModel;
-            RegisterChild(GlobalMessageViewModel); // Register as child
+            RegisterChild(GlobalMessageViewModel);
 
-            //view model switch to families selection view model
+            //command to navigate back to families selection view model
             _navigateCommand = new Commands.NavigateCommand(
                 navigationStore: _navigationStore,
                 createViewModel: createViewModel
             );
 
-            //command to save type catlogue text file
+            //command to save type catalogue text file
             _saveCatalogueTextFileDataCommand = new Commands.SaveCatalogueTextFileDataCommand(
                 typeDataViewModel: this,
                 selectedFamily: selectedFamily
              );
 
-            // load data and ini cell editor
+            // load data
             LoadData();
         }
     }

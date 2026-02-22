@@ -19,5 +19,6 @@ namespace duHastNet.UI.CustomControls
         public static Uri ThreeWaySwitchStyle => new Uri(GetPackUri("ThreeWaySwitch/ThreeWaySwitchStyle.xaml"), UriKind.Absolute);
         public static Uri DynamicDataGridStyle => new Uri(GetPackUri("CustomDataGrid/DynamicDataGridStyle.xaml"), UriKind.Absolute);
         public static Uri CellEditorStyle => new Uri(GetPackUri("CellEditor/CellEditorStyle.xaml"), UriKind.Absolute);
+        public static Uri LoadingOverlayStyle => new Uri(GetPackUri("LoadingOverlay/LoadingOverlayStyle.xaml"), UriKind.Absolute);
     }
 }

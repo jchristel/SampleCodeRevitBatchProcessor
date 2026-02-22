@@ -1,0 +1,117 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:duHastNet.UI.CustomControls">
+
+    <Style TargetType="{x:Type local:LoadingOverlay}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:LoadingOverlay}">
+                    <Grid>
+                        <!-- The wrapped content (DataGrid, etc.) -->
+                        <ContentPresenter />
+                        
+                        <!-- Loading Overlay -->
+                        <Border x:Name="PART_Overlay">
+                            <Border.Background>
+                                <SolidColorBrush Color="White" 
+                                                 Opacity="{TemplateBinding OverlayOpacity}"/>
+                            </Border.Background>
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsBusy, RelativeSource={RelativeSource TemplatedParent}}" 
+                                                     Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            
+                            <StackPanel HorizontalAlignment="Center" 
+                                        VerticalAlignment="Center">
+                                <!-- Loading text -->
+                                <TextBlock Text="{TemplateBinding LoadingMessage}" 
+                                           FontSize="16" 
+                                           FontWeight="SemiBold"
+                                           Foreground="#333333"
+                                           HorizontalAlignment="Center" 
+                                           Margin="0,0,0,10"/>
+                                
+                                <!-- Animated barcode container -->
+                                <Border Width="200" 
+                                        Height="40" 
+                                        BorderBrush="#666666" 
+                                        BorderThickness="1"
+                                        Background="White"
+                                        CornerRadius="2"
+                                        ClipToBounds="True">
+                                    <Canvas Width="400" Height="40">
+                                        <Canvas.RenderTransform>
+                                            <TranslateTransform x:Name="PART_BarcodeTransform"/>
+                                        </Canvas.RenderTransform>
+                                        <Canvas.Triggers>
+                                            <EventTrigger RoutedEvent="Loaded">
+                                                <BeginStoryboard>
+                                                    <Storyboard RepeatBehavior="Forever">
+                                                        <DoubleAnimation Storyboard.TargetName="PART_BarcodeTransform"
+                                                                         Storyboard.TargetProperty="X"
+                                                                         From="0" 
+                                                                         To="-200"
+                                                                         Duration="0:0:2"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+                                        </Canvas.Triggers>
+                                        
+                                        <!-- Barcode pattern - repeats for seamless loop -->
+                                        <!-- Pattern 1 -->
+                                        <Rectangle Fill="Black" Width="8" Height="40" Canvas.Left="0"/>
+                                        <Rectangle Fill="Black" Width="4" Height="40" Canvas.Left="12"/>
+                                        <Rectangle Fill="Black" Width="12" Height="40" Canvas.Left="20"/>
+                                        <Rectangle Fill="Black" Width="4" Height="40" Canvas.Left="36"/>
+                                        <Rectangle Fill="Black" Width="8" Height="40" Canvas.Left="44"/>
+                                        <Rectangle Fill="Black" Width="4" Height="40" Canvas.Left="56"/>
+                                        <Rectangle Fill="Black" Width="12" Height="40" Canvas.Left="64"/>
+                                        <Rectangle Fill="Black" Width="8" Height="40" Canvas.Left="80"/>
+                                        
+                                        <!-- Pattern 2 -->
+                                        <Rectangle Fill="Black" Width="8" Height="40" Canvas.Left="100"/>
+                                        <Rectangle Fill="Black" Width="4" Height="40" Canvas.Left="112"/>
+                                        <Rectangle Fill="Black" Width="12" Height="40" Canvas.Left="120"/>
+                                        <Rectangle Fill="Black" Width="4" Height="40" Canvas.Left="136"/>
+                                        <Rectangle Fill="Black" Width="8" Height="40" Canvas.Left="144"/>
+                                        <Rectangle Fill="Black" Width="4" Height="40" Canvas.Left="156"/>
+                                        <Rectangle Fill="Black" Width="12" Height="40" Canvas.Left="164"/>
+                                        <Rectangle Fill="Black" Width="8" Height="40" Canvas.Left="180"/>
+                                        
+                                        <!-- Pattern 3 (repeat of pattern 1) -->
+                                        <Rectangle Fill="Black" Width="8" Height="40" Canvas.Left="200"/>
+                                        <Rectangle Fill="Black" Width="4" Height="40" Canvas.Left="212"/>
+                                        <Rectangle Fill="Black" Width="12" Height="40" Canvas.Left="220"/>
+                                        <Rectangle Fill="Black" Width="4" Height="40" Canvas.Left="236"/>
+                                        <Rectangle Fill="Black" Width="8" Height="40" Canvas.Left="244"/>
+                                        <Rectangle Fill="Black" Width="4" Height="40" Canvas.Left="256"/>
+                                        <Rectangle Fill="Black" Width="12" Height="40" Canvas.Left="264"/>
+                                        <Rectangle Fill="Black" Width="8" Height="40" Canvas.Left="280"/>
+                                        
+                                        <!-- Pattern 4 (repeat of pattern 2) -->
+                                        <Rectangle Fill="Black" Width="8" Height="40" Canvas.Left="300"/>
+                                        <Rectangle Fill="Black" Width="4" Height="40" Canvas.Left="312"/>
+                                        <Rectangle Fill="Black" Width="12" Height="40" Canvas.Left="320"/>
+                                        <Rectangle Fill="Black" Width="4" Height="40" Canvas.Left="336"/>
+                                        <Rectangle Fill="Black" Width="8" Height="40" Canvas.Left="344"/>
+                                        <Rectangle Fill="Black" Width="4" Height="40" Canvas.Left="356"/>
+                                        <Rectangle Fill="Black" Width="12" Height="40" Canvas.Left="364"/>
+                                        <Rectangle Fill="Black" Width="8" Height="40" Canvas.Left="380"/>
+                                    </Canvas>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+</ResourceDictionary>

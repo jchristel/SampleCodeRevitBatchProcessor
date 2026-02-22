@@ -49,5 +49,15 @@
 	<ItemGroup>
 		<!-- Project references -->
 		<ProjectReference Include="..\duHastNet.DocManager.Core\duHastNet.DocManager.Core.csproj" />
+    <!-- utility dll reference -->
+    <Reference Include="Utils.25.0.1.0">
+      <HintPath>..\\..\\..\\_References\\duHast\\Utils.25.0.1.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Interfaces\" />
+	  <Folder Include="Stores\" />
 	</ItemGroup>
 </Project>

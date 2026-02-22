@@ -22,8 +22,8 @@ using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.Core.Models.Database;
 using duHastNet.DocManager.Core.Services.Api;
-using duHastNet.DocManager.UI.Shared.Interfaces;
-using duHastNet.DocManager.UI.Shared.Stores;
+using duHastNet.Utils.WPF.Interfaces;
+using duHastNet.Utils.WPF.Stores;
 using duHastNet.DocManager.UI.Shared.ViewModels.Merge.MatchedDocs;
 
 namespace duHastNet.DocManager.UI.Shared.Tests.ViewModels.Merge.MatchedDocs;

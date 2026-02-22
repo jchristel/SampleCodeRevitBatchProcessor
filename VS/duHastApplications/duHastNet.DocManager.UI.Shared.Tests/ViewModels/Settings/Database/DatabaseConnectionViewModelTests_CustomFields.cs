@@ -22,8 +22,8 @@ using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.Database;
 using duHastNet.DocManager.Core.Models.Results;
-using duHastNet.DocManager.UI.Shared.Interfaces;
-using duHastNet.DocManager.UI.Shared.Stores;
+using duHastNet.Utils.WPF.Interfaces;
+using duHastNet.Utils.WPF.Stores;
 using duHastNet.DocManager.UI.Shared.ViewModels.Settings.Database;
 
 namespace duHastNet.DocManager.UI.Shared.Tests.ViewModels.Settings.Database;

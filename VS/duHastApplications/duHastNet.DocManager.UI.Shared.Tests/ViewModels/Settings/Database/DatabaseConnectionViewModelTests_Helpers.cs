@@ -19,8 +19,8 @@
 using NUnit.Framework;
 using Moq;
 using duHastNet.DocManager.Core.Interfaces;
-using duHastNet.DocManager.UI.Shared.Interfaces;
-using duHastNet.DocManager.UI.Shared.Stores;
+using duHastNet.Utils.WPF.Interfaces;
+using duHastNet.Utils.WPF.Stores;
 using duHastNet.DocManager.UI.Shared.ViewModels.Settings.Database;
 using System.IO;
 

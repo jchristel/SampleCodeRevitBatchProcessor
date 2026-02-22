@@ -23,8 +23,8 @@ using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.Results;
 using duHastNet.DocManager.Core.Models.CloudDocManager;
 using duHastNet.DocManager.Core.Models.CloudDocManager.MetaData;
-using duHastNet.DocManager.UI.Shared.Interfaces;
-using duHastNet.DocManager.UI.Shared.Stores;
+using duHastNet.Utils.WPF.Interfaces;
+using duHastNet.Utils.WPF.Stores;
 using duHastNet.DocManager.UI.Shared.ViewModels.Settings.CloudDocManager.CloudProviderControls;
 using System.IO;
 

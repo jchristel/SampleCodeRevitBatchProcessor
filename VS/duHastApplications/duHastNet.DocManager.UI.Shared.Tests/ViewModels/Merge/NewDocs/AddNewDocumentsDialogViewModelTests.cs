@@ -21,7 +21,7 @@ using Moq;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.Core.Models.Database;
-using duHastNet.DocManager.UI.Shared.Interfaces;
+using duHastNet.Utils.WPF.Interfaces;
 using duHastNet.DocManager.UI.Shared.ViewModels.Merge.NewDocs;
 
 namespace duHastNet.DocManager.UI.Shared.Tests.ViewModels.Merge.NewDocs;

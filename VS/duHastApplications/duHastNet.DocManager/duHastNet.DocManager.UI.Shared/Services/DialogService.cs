@@ -17,7 +17,7 @@
 //
 
 
-using duHastNet.DocManager.UI.Shared.Interfaces;
+using duHastNet.Utils.WPF.Interfaces;
 using System.IO;
 using System.Windows;
 

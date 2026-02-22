@@ -26,8 +26,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.DocManager.Core.Models;
-using duHastNet.DocManager.UI.Shared.Interfaces;
-using duHastNet.DocManager.UI.Shared.Stores;
+using duHastNet.Utils.WPF.Interfaces;
+using duHastNet.Utils.WPF.Stores;
 using duHastNet.DocManager.UI.Shared.Validators;
 using System.ComponentModel.DataAnnotations;
 

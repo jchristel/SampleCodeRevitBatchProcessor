@@ -23,7 +23,7 @@
 
 
 using duHastNet.DocManager.Core.Models.CurrentFolder;
-using duHastNet.DocManager.UI.Shared.Stores;
+using duHastNet.Utils.WPF.Stores;
 using duHastNet.DocManager.UI.Shared.ViewModels.Merge.MergeLog;
 using System;
 using System.IO;

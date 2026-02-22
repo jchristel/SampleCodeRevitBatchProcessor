@@ -19,8 +19,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using duHastNet.DocManager.Core.Models;
-using duHastNet.DocManager.UI.Shared.Stores;
-using duHastNet.DocManager.UI.Shared.Interfaces;
+using duHastNet.Utils.WPF.Stores;
+using duHastNet.Utils.WPF.Interfaces;
 using duHastNet.DocManager.Core.Models.CloudDocManager.MetaData;
 using duHastNet.DocManager.Core.Interfaces;
 

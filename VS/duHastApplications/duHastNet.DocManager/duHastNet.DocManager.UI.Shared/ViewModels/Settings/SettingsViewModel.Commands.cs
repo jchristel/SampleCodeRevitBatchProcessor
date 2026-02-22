@@ -17,7 +17,7 @@
 //
 
 using CommunityToolkit.Mvvm.Input;
-using duHastNet.DocManager.UI.Shared.Stores;
+using duHastNet.Utils.WPF.Stores;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.Database;
 using System;

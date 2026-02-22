@@ -27,7 +27,7 @@ using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.Core.Models.Database;
 using duHastNet.DocManager.Core.Services;
-using duHastNet.DocManager.UI.Shared.Stores;
+using duHastNet.Utils.WPF.Stores;
 using System.IO;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels.Merge;

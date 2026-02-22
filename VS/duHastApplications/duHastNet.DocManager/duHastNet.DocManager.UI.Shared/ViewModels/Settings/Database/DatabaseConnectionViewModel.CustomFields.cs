@@ -25,7 +25,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models;
-using duHastNet.DocManager.UI.Shared.Stores;
+using duHastNet.Utils.WPF.Stores;
 using System.Collections.ObjectModel;
 using System.Text;
 

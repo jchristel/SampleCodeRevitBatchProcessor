@@ -22,7 +22,7 @@ using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.Core.Models.CurrentFolder.DocumentNumberModifiers;
 using duHastNet.DocManager.Core.Models.CurrentFolder.FilingRules;
-using duHastNet.DocManager.UI.Shared.Interfaces;
+using duHastNet.Utils.WPF.Interfaces;
 using duHastNet.DocManager.UI.Shared.ViewModels.Settings.CurrentFolder;
 using System.IO;
 

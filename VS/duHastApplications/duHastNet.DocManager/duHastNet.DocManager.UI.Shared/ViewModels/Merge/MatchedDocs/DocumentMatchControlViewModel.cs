@@ -23,14 +23,12 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.Core.Models.Database;
-using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.Utils.WPF.Interfaces;
 using duHastNet.Utils.WPF.Stores;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -40,7 +38,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Merge.MatchedDocs;
 /// ViewModel for the DocumentMatchControl
 /// Manages the display and interaction with matched document results
 /// </summary>
-public partial class DocumentMatchControlViewModel : ObservableObject, ICloseable, IDisposable
+public partial class DocumentMatchControlViewModel : AppViewModelBase
 {
     #region Private Fields
 
@@ -455,17 +453,17 @@ public partial class DocumentMatchControlViewModel : ObservableObject, ICloseabl
     /// Called when the ViewModel is being closed.
     /// No child ViewModels or event subscriptions to clean up.
     /// </summary>
-    public void OnClosing()
+    public override void OnClosing()
     {
-        // No child ViewModels or cross-VM event subscriptions to clean up
+        base.OnClosing();
     }
 
     /// <summary>
     /// Disposes resources used by this ViewModel.
     /// </summary>
-    public void Dispose()
+    public override void Dispose()
     {
-        // No unmanaged resources to dispose
+        base.Dispose();
     }
 
     #endregion

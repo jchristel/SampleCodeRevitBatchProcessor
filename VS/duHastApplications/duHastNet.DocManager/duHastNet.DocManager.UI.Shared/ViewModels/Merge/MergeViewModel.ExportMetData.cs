@@ -27,6 +27,7 @@ using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.Core.Models.Database;
 using duHastNet.DocManager.Core.Services;
+using duHastNet.Utils.WPF.Interfaces;
 using duHastNet.Utils.WPF.Stores;
 using System.IO;
 
@@ -35,7 +36,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Merge;
 /// <summary>
 /// Main ViewModel for the Document Manager application
 /// </summary>
-public partial class MergeViewModel : ObservableObject
+public partial class MergeViewModel : AppViewModelBase, IActivatable
 {
     
     /// <summary>

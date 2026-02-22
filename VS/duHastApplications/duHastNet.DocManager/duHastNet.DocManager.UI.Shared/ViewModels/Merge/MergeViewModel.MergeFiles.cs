@@ -23,8 +23,9 @@
 
 
 using duHastNet.DocManager.Core.Models.CurrentFolder;
-using duHastNet.Utils.WPF.Stores;
 using duHastNet.DocManager.UI.Shared.ViewModels.Merge.MergeLog;
+using duHastNet.Utils.WPF.Interfaces;
+using duHastNet.Utils.WPF.Stores;
 using System;
 using System.IO;
 using System.Linq;
@@ -35,7 +36,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Merge;
 /// <summary>
 /// Partial class for MergeViewModel containing file merging logic
 /// </summary>
-public partial class MergeViewModel
+public partial class MergeViewModel : AppViewModelBase, IActivatable
 {
     /// <summary>
     /// Merges incoming files with red and yellow status into their target locations

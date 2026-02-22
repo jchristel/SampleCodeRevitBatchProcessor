@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings
 {
-    public partial class SettingsViewModel
+    public partial class SettingsViewModel : AppViewModelBase
     {
         #region Commands
 

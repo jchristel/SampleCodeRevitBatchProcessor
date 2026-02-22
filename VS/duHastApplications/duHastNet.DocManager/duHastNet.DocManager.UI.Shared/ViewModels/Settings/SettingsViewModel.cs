@@ -22,7 +22,6 @@ using duHastNet.DocManager.Core.Models;
 using duHastNet.Utils.WPF.Interfaces;
 using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
-using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings;
@@ -31,7 +30,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings;
 /// Main ViewModel for the Settings view - handles database configuration and management
 /// Aggregates validation state from child ViewModels to control Save button
 /// </summary>
-public partial class SettingsViewModel : ObservableObject, ICloseable, IDisposable
+public partial class SettingsViewModel : AppViewModelBase
 {
     #region Private Fields
 
@@ -47,9 +46,6 @@ public partial class SettingsViewModel : ObservableObject, ICloseable, IDisposab
 
     //settings service
     private readonly ISettingsService _settingsService;
-
-    // Child ViewModels for lifecycle management
-    private readonly List<ICloseable> _childViewModels = new();
 
     #endregion
 
@@ -248,43 +244,24 @@ public partial class SettingsViewModel : ObservableObject, ICloseable, IDisposab
     #region Lifecycle
 
     /// <summary>
-    /// Registers a child ViewModel for automatic cleanup when this ViewModel closes.
-    /// Mirrors ViewModelBase.RegisterChild() for cross-assembly compatibility.
-    /// </summary>
-    private void RegisterChild(ICloseable child)
-    {
-        _childViewModels.Add(child);
-    }
-
-    /// <summary>
     /// Called when the ViewModel is being navigated away from or closed.
-    /// Unsubscribes from cross-ViewModel error events, then propagates to registered children.
+    /// Unsubscribes from cross-ViewModel error events, then propagates to registered children via base.
     /// </summary>
-    public void OnClosing()
+    public override void OnClosing()
     {
         // Unsubscribe from ObservableValidator children before they go out of scope
         UnsubscribeChildErrors();
 
         // Propagate to registered ICloseable children (GlobalMessageViewModel)
-        foreach (var child in _childViewModels)
-        {
-            child.OnClosing();
-        }
-        _childViewModels.Clear();
+        base.OnClosing();
     }
 
     /// <summary>
     /// Disposes resources used by this ViewModel and its registered children.
     /// </summary>
-    public void Dispose()
+    public override void Dispose()
     {
-        foreach (var child in _childViewModels)
-        {
-            if (child is IDisposable disposable)
-            {
-                disposable.Dispose();
-            }
-        }
+        base.Dispose();
     }
 
     #endregion

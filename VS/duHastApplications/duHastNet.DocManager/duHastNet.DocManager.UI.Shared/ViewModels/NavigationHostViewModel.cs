@@ -17,16 +17,15 @@
 //
 
 using CommunityToolkit.Mvvm.ComponentModel;
-
-using duHastNet.DocManager.Core.Models;
-using duHastNet.Utils.WPF.Stores;
-using duHastNet.Utils.WPF.Interfaces;
-using duHastNet.DocManager.Core.Models.CloudDocManager.MetaData;
 using duHastNet.DocManager.Core.Interfaces;
+using duHastNet.DocManager.Core.Models;
+using duHastNet.DocManager.Core.Models.CloudDocManager.MetaData;
+using duHastNet.Utils.WPF.Interfaces;
+using duHastNet.Utils.WPF.Stores;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels
 {
-    public partial class NavigationHostViewModel : ObservableObject, ICloseable, IDisposable
+    public partial class NavigationHostViewModel : AppViewModelBase
     {
         private readonly IDocManagerApi _docManagerApi;
         private readonly IManager _manager;
@@ -118,19 +117,22 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             );
         }
 
-        public void OnClosing()
+        public override void OnClosing()
         {
             // Unsubscribe from NavigationStore before notifying it to close
             _navigationStore.PropertyChanged -= OnNavigationStorePropertyChanged;
 
             // Notify the navigation store to close the current ViewModel
             _navigationStore.NotifyClosing();
+
+            base.OnClosing();
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             // No unmanaged resources — NavigationStore is an injected dependency,
             // not owned by this ViewModel
+            base.Dispose();
         }
     }
 }

@@ -30,7 +30,6 @@ using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.Utils.WPF.Interfaces;
 using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 
@@ -39,7 +38,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Merge;
 /// <summary>
 /// Main ViewModel for the Document Manager application
 /// </summary>
-public partial class MergeViewModel : ObservableObject, IActivatable, ICloseable, IDisposable
+public partial class MergeViewModel : AppViewModelBase, IActivatable
 {
     #region Private Fields
 
@@ -52,9 +51,6 @@ public partial class MergeViewModel : ObservableObject, IActivatable, ICloseable
 
     //function used to navigate to settings view model
     private readonly Func<Settings.SettingsViewModel> _createViewModel;
-
-    // Child ViewModels for lifecycle management
-    private readonly List<ICloseable> _childViewModels = new();
 
     #endregion
 
@@ -370,43 +366,24 @@ public partial class MergeViewModel : ObservableObject, IActivatable, ICloseable
     #region Lifecycle
 
     /// <summary>
-    /// Registers a child ViewModel for automatic cleanup when this ViewModel closes.
-    /// Mirrors ViewModelBase.RegisterChild() for cross-assembly compatibility.
-    /// </summary>
-    private void RegisterChild(ICloseable child)
-    {
-        _childViewModels.Add(child);
-    }
-
-    /// <summary>
     /// Called when the ViewModel is being navigated away from or closed.
-    /// Unsubscribes from cross-ViewModel events then propagates to child ViewModels.
+    /// Unsubscribes from cross-ViewModel events then propagates to child ViewModels via base.
     /// </summary>
-    public void OnClosing()
+    public override void OnClosing()
     {
         // Unsubscribe from DocumentMatchViewModel event before disposing it
         DocumentMatchViewModel.MatchedDocumentsChanged -= OnMatchedDocumentsChanged;
 
         // Propagate to all registered children
-        foreach (var child in _childViewModels)
-        {
-            child.OnClosing();
-        }
-        _childViewModels.Clear();
+        base.OnClosing();
     }
 
     /// <summary>
     /// Disposes resources used by this ViewModel and its registered children.
     /// </summary>
-    public void Dispose()
+    public override void Dispose()
     {
-        foreach (var child in _childViewModels)
-        {
-            if (child is IDisposable disposable)
-            {
-                disposable.Dispose();
-            }
-        }
+        base.Dispose();
     }
 
     #endregion

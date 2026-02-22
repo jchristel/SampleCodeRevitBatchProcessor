@@ -26,13 +26,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using duHastNet.Utils.WPF.Stores;
 
 namespace duHastNet.AtTheLibrary.ViewModels
 {
-    public class TypeCatalogueViewModel : Utils.WPF.ViewModels.ViewModelBase
+    public class TypeCatalogueViewModel : AppViewModelBase
     {
-        private readonly Utils.WPF.Stores.NavigationStore _navigationStore;
-        private readonly Utils.WPF.Stores.MessageStore _messageStore;
+        private readonly NavigationStore _navigationStore;
+        private readonly MessageStore _messageStore;
         private readonly Models.RevitFamiliesDataModel _revitDataModel;
 
         public Utils.WPF.ViewModels.GlobalMessageViewModel GlobalMessageViewModel { get; }

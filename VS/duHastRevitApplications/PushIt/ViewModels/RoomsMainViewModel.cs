@@ -21,7 +21,7 @@
 //
 //
 
-
+using CommunityToolkit.Mvvm.ComponentModel;
 using duHastNet.PushIt.Utilities;
 using duHastNet.UI.CustomControls;
 using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
@@ -36,7 +36,7 @@ using System.Windows.Input;
 
 namespace duHastNet.PushIt.ViewModels
 {
-    public class RoomsMainViewModel : Utils.WPF.ViewModels.ViewModelBase, INotifyDataErrorInfo
+    public partial class RoomsMainViewModel : AppViewModelBase, INotifyDataErrorInfo
     {
         private readonly Utils.WPF.Stores.NavigationStore _navigationStore;
         private readonly Utils.WPF.Stores.StateStore _stateStore;
@@ -57,6 +57,15 @@ namespace duHastNet.PushIt.ViewModels
         /// </summary>
         public duHastNet.PushIt.ViewModels.RoomsDataGridViewModel RoomsDataGridViewModel { get; }
 
+        #region loading datagrid overlay properties
+        
+        [ObservableProperty]
+        private bool _isGridBusy;
+
+        [ObservableProperty]
+        private string _loadingMessage = "Busy...";
+
+        #endregion loading datagrid overlay properties
 
         private string _activeDesignSetName = duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME;
         private string _activeDesignOptionName = duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME;
@@ -95,6 +104,7 @@ namespace duHastNet.PushIt.ViewModels
             set
             {
                 _isWaitingForRevitCommandToFinish = value;
+                IsGridBusy = value; // also set the IsGridBusy property to show the loading overlay
                 OnPropertyChanged(nameof(IsWaitingForRevitCommandToFinish));
             }
         }

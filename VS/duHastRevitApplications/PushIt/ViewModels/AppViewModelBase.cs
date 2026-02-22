@@ -5,7 +5,7 @@
 // Revit Batch Processor Sample Code
 //
 // BSD License
-// Copyright 2025, Jan Christel
+// Copyright 2026, Jan Christel
 // All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -21,46 +21,17 @@
 //
 //
 
-using CommunityToolkit.Mvvm.ComponentModel;
 using duHastNet.Utils.WPF.ViewModels;
-using System.ComponentModel;
 
 namespace duHastNet.PushIt.ViewModels
 {
-    public partial class MainViewModel : AppViewModelBase
+    /// <summary>
+    /// This class intentionally has no members - it exists solely to bridge the
+    /// assembly boundary so source generators can target the correct assembly.
+    /// Need one per project that uses source generators that target a base class, and the base class is in a different assembly than the one with the source generator.
+    /// </summary>
+    public abstract partial class AppViewModelBase : ViewModelBase
     {
-        private readonly Utils.WPF.Stores.NavigationStore _navigationStore;
-
-        // Step 3: Return type updated from ViewModelBase to ObservableObject?
-        // to match the updated NavigationStore.CurrentViewModel property type
-        public ObservableObject? CurrentViewModel => _navigationStore.CurrentViewModel;
-
-        public MainViewModel(Utils.WPF.Stores.NavigationStore navigationStore)
-        {
-            _navigationStore = navigationStore;
-
-            // Step 5: Subscribe to PropertyChanged instead of the removed CurrentViewModelChanged event
-            _navigationStore.PropertyChanged += OnNavigationStorePropertyChanged;
-        }
-
-        // Step 5: Filter PropertyChanged events from the NavigationStore by property name
-        private void OnNavigationStorePropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(_navigationStore.CurrentViewModel))
-            {
-                OnPropertyChanged(nameof(CurrentViewModel));
-            }
-        }
-
-        public override void OnClosing()
-        {
-            // Notify the navigation store to close the current view model
-            _navigationStore.NotifyClosing();
-
-            // Step 5: Unsubscribe from PropertyChanged instead of the removed CurrentViewModelChanged event
-            _navigationStore.PropertyChanged -= OnNavigationStorePropertyChanged;
-
-            base.OnClosing();
-        }
+        // Intentionally empty
     }
 }

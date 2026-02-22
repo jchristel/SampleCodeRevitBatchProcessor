@@ -22,7 +22,7 @@
 //
 
 
-using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 using duHastNet.AtTheLibrary.Commands;
 using duHastNet.UI.CustomControls.CustomDataGrid.GridState;
 using duHastNet.Utils.WPF.Stores;
@@ -33,11 +33,11 @@ using System.Windows.Input;
 
 namespace duHastNet.AtTheLibrary.ViewModels
 {
-    public class FamiliesSelectionViewModel : Utils.WPF.ViewModels.ViewModelBase, INotifyDataErrorInfo
+    public partial class FamiliesSelectionViewModel : AppViewModelBase, INotifyDataErrorInfo
     {
-        private readonly Utils.WPF.Stores.NavigationStore _navigationStore;
-        private readonly Utils.WPF.Stores.StateStore _stateStore;
-        private readonly Utils.WPF.Stores.MessageStore _messageStore;
+        private readonly NavigationStore _navigationStore;
+        private readonly StateStore _stateStore;
+        private readonly MessageStore _messageStore;
         private readonly Models.RevitFamiliesDataModel _revitDataModel;
         private readonly Utils.WPF.ViewModels.ErrorsViewModel _errorsViewModel;
 
@@ -49,6 +49,15 @@ namespace duHastNet.AtTheLibrary.ViewModels
         /// </summary>
         public ViewModels.FamiliesDataGridViewModel FamiliesDataGridViewModel { get; }
 
+        #region loading datagrid overlay properties
+
+        [ObservableProperty]
+        private bool _isGridBusy;
+
+        [ObservableProperty]
+        private string _loadingMessage = "Busy...";
+
+        #endregion loading datagrid overlay properties
 
         //command to raise an event to refresh the gui
         private readonly Commands.RefreshUIFromRevitModelAsyncCommand _raiseRefreshGUICommand;
@@ -76,6 +85,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
             set
             {
                 _isWaitingForRevitCommandToFinish = value;
+                IsGridBusy = value; // also set the IsGridBusy property to show/hide the loading overlay
                 OnPropertyChanged(nameof(IsWaitingForRevitCommandToFinish));
             }
         }

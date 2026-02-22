@@ -117,8 +117,8 @@ Copy-ProjectFiles -sourcePath $project3Path -projectName "Project3" -destination
 Write-Host "`nCopying files from Project 7..." -ForegroundColor White
 Copy-ProjectFiles -sourcePath $project7Path -projectName "Project7" -destination $tempFolder
 
-#Write-Host "`nCopying files from Project 8..." -ForegroundColor White
-#Copy-ProjectFiles -sourcePath $project8Path -projectName "Project8" -destination $tempFolder
+Write-Host "`nCopying files from Project 8..." -ForegroundColor White
+Copy-ProjectFiles -sourcePath $project8Path -projectName "Project8" -destination $tempFolder
 
 #Write-Host "`nCopying files from Project 9..." -ForegroundColor White
 #Copy-ProjectFiles -sourcePath $project9Path -projectName "Project9" -destination $tempFolder

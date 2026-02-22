@@ -79,7 +79,7 @@ public class MergeViewModelTests
         Assert.Multiple(() =>
         {
             Assert.That(viewModel, Is.Not.Null);
-            Assert.That(viewModel.MessageViewModel, Is.Not.Null);
+            Assert.That(viewModel.GlobalMessageViewModel, Is.Not.Null);
             Assert.That(viewModel.DocumentMatchViewModel, Is.Not.Null);
             Assert.That(viewModel.FilteredRevisionDescriptions, Is.Not.Null);
             Assert.That(viewModel.StatusMessage, Is.EqualTo("Ready"));

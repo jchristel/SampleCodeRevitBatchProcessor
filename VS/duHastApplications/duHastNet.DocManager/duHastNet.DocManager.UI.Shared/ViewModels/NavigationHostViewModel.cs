@@ -26,7 +26,7 @@ using duHastNet.DocManager.Core.Interfaces;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels
 {
-    public partial class NavigationHostViewModel : ObservableObject, ICloseable
+    public partial class NavigationHostViewModel : ObservableObject, ICloseable, IDisposable
     {
         private readonly IDocManagerApi _docManagerApi;
         private readonly IManager _manager;
@@ -46,8 +46,8 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         #endregion
 
         public NavigationHostViewModel(
-            IDocManagerApi docManagerApi, 
-            IManager manager, 
+            IDocManagerApi docManagerApi,
+            IManager manager,
             ICurrentFolderManager currentFolderManager,
             IMessageStore messageStore,
             NavigationStore navigationStore,
@@ -63,17 +63,23 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             _settingsService = settingsService;
             _dialogService = dialogService;
 
-            // Subscribe to navigation changes
-            _navigationStore.PropertyChanged += (s, e) =>
-            {
-                if (e.PropertyName == nameof(NavigationStore.CurrentViewModel))
-                {
-                    OnPropertyChanged(nameof(CurrentViewModel));
-                }
-            };
+            // Subscribe to navigation changes via named handler so it can be unsubscribed
+            _navigationStore.PropertyChanged += OnNavigationStorePropertyChanged;
 
             // Navigate to initial view
             _navigationStore.NavigateTo(CreateMergeViewModel);
+        }
+
+        /// <summary>
+        /// Handles PropertyChanged from NavigationStore to forward CurrentViewModel changes to the View.
+        /// Named method (not lambda) so it can be unsubscribed in OnClosing().
+        /// </summary>
+        private void OnNavigationStorePropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(NavigationStore.CurrentViewModel))
+            {
+                OnPropertyChanged(nameof(CurrentViewModel));
+            }
         }
 
         /// <summary>
@@ -114,8 +120,17 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
 
         public void OnClosing()
         {
-            // Notify the navigation store to close current view model
+            // Unsubscribe from NavigationStore before notifying it to close
+            _navigationStore.PropertyChanged -= OnNavigationStorePropertyChanged;
+
+            // Notify the navigation store to close the current ViewModel
             _navigationStore.NotifyClosing();
+        }
+
+        public void Dispose()
+        {
+            // No unmanaged resources — NavigationStore is an injected dependency,
+            // not owned by this ViewModel
         }
     }
 }

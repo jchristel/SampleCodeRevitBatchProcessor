@@ -82,7 +82,7 @@ public class SettingsViewModelTests
         Assert.Multiple(() =>
         {
             Assert.That(viewModel, Is.Not.Null);
-            Assert.That(viewModel.MessageViewModel, Is.Not.Null);
+            Assert.That(viewModel.GlobalMessageViewModel, Is.Not.Null);
             Assert.That(viewModel.DatabaseConnectionViewModel, Is.Not.Null);
             Assert.That(viewModel.AconexMetadataViewModel, Is.Not.Null);
             Assert.That(viewModel.CurrentFolderViewModel, Is.Not.Null);

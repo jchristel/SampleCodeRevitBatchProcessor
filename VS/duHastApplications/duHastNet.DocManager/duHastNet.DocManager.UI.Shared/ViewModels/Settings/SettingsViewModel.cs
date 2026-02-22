@@ -17,12 +17,12 @@
 //
 
 using CommunityToolkit.Mvvm.ComponentModel;
-using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Interfaces;
-
+using duHastNet.DocManager.Core.Models;
 using duHastNet.Utils.WPF.Interfaces;
 using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings;
@@ -31,7 +31,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings;
 /// Main ViewModel for the Settings view - handles database configuration and management
 /// Aggregates validation state from child ViewModels to control Save button
 /// </summary>
-public partial class SettingsViewModel : ObservableObject
+public partial class SettingsViewModel : ObservableObject, ICloseable, IDisposable
 {
     #region Private Fields
 
@@ -48,19 +48,22 @@ public partial class SettingsViewModel : ObservableObject
     //settings service
     private readonly ISettingsService _settingsService;
 
+    // Child ViewModels for lifecycle management
+    private readonly List<ICloseable> _childViewModels = new();
+
     #endregion
 
     // Expose message ViewModel for the view
-    public GlobalMessageViewModel MessageViewModel { get; }
+    public GlobalMessageViewModel GlobalMessageViewModel { get; }
 
     // Expose Aconex Metadata ViewModel for the view
     public CloudDocManager.CloudDocumentManagerViewModel AconexMetadataViewModel { get; }
 
     // Expose current folder ViewModel for the view
-    public Settings.CurrentFolder.CurrentFolderViewModel CurrentFolderViewModel { get;}
+    public Settings.CurrentFolder.CurrentFolderViewModel CurrentFolderViewModel { get; }
 
     // Expose the database connection ViewModel for the view
-    public Database.DatabaseConnectionViewModel DatabaseConnectionViewModel { get;}
+    public Database.DatabaseConnectionViewModel DatabaseConnectionViewModel { get; }
 
 
     #region Observable Properties
@@ -76,9 +79,9 @@ public partial class SettingsViewModel : ObservableObject
     #region Constructor
 
     public SettingsViewModel(
-        IDocManagerApi docManagerApi, 
-        IManager manager, 
-        IMessageStore messageStore, 
+        IDocManagerApi docManagerApi,
+        IManager manager,
+        IMessageStore messageStore,
         ICurrentFolderManager currentFolderManager,
         NavigationStore navigationStore,
         IDialogService dialogService,
@@ -96,16 +99,20 @@ public partial class SettingsViewModel : ObservableObject
         //store settings service
         _settingsService = settingsService;
 
-        MessageViewModel = new GlobalMessageViewModel(_messageStore);
+        GlobalMessageViewModel = new GlobalMessageViewModel(_messageStore);
+
+        // Register GlobalMessageViewModel for automatic lifecycle management
+        // (ObservableValidator children are managed manually via UnsubscribeChildErrors)
+        RegisterChild(GlobalMessageViewModel);
 
         DatabaseConnectionViewModel = new Settings.Database.DatabaseConnectionViewModel(
             _docManagerApi,
             _messageStore,
             _manager,
             _dialogService);
-        
+
         AconexMetadataViewModel = new CloudDocManager.CloudDocumentManagerViewModel(
-            _messageStore, 
+            _messageStore,
             _manager,
             _manager.CloudDocManager,
             _dialogService);
@@ -143,6 +150,17 @@ public partial class SettingsViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Unsubscribes from all child ViewModel error state events.
+    /// Must be called before child ViewModels are disposed.
+    /// </summary>
+    private void UnsubscribeChildErrors()
+    {
+        CurrentFolderViewModel.ErrorsChanged -= OnChildErrorsChanged;
+        DatabaseConnectionViewModel.ErrorsChanged -= OnChildErrorsChanged;
+        AconexMetadataViewModel.PropertyChanged -= OnCloudDocumentManagerPropertyChanged;
+    }
+
+    /// <summary>
     /// Handles ErrorsChanged from child ViewModels with validation attributes
     /// </summary>
     private void OnChildErrorsChanged(object? sender, DataErrorsChangedEventArgs e)
@@ -150,7 +168,7 @@ public partial class SettingsViewModel : ObservableObject
         // Notify that validation summary properties have changed
         OnPropertyChanged(nameof(HasAnyErrors));
         OnPropertyChanged(nameof(ErrorSummary));
-        
+
         // Notify Save command that CanExecute state may have changed
         SaveCommand.NotifyCanExecuteChanged();
     }
@@ -167,7 +185,7 @@ public partial class SettingsViewModel : ObservableObject
         {
             OnPropertyChanged(nameof(HasAnyErrors));
             OnPropertyChanged(nameof(ErrorSummary));
-            
+
             // Notify Save command that CanExecute state may have changed
             SaveCommand.NotifyCanExecuteChanged();
         }
@@ -226,5 +244,49 @@ public partial class SettingsViewModel : ObservableObject
     }
 
     #endregion Error Aggregation
+
+    #region Lifecycle
+
+    /// <summary>
+    /// Registers a child ViewModel for automatic cleanup when this ViewModel closes.
+    /// Mirrors ViewModelBase.RegisterChild() for cross-assembly compatibility.
+    /// </summary>
+    private void RegisterChild(ICloseable child)
+    {
+        _childViewModels.Add(child);
+    }
+
+    /// <summary>
+    /// Called when the ViewModel is being navigated away from or closed.
+    /// Unsubscribes from cross-ViewModel error events, then propagates to registered children.
+    /// </summary>
+    public void OnClosing()
+    {
+        // Unsubscribe from ObservableValidator children before they go out of scope
+        UnsubscribeChildErrors();
+
+        // Propagate to registered ICloseable children (GlobalMessageViewModel)
+        foreach (var child in _childViewModels)
+        {
+            child.OnClosing();
+        }
+        _childViewModels.Clear();
+    }
+
+    /// <summary>
+    /// Disposes resources used by this ViewModel and its registered children.
+    /// </summary>
+    public void Dispose()
+    {
+        foreach (var child in _childViewModels)
+        {
+            if (child is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
+        }
+    }
+
+    #endregion
 
 }

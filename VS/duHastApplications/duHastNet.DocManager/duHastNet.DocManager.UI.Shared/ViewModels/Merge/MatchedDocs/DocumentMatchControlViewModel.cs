@@ -40,7 +40,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Merge.MatchedDocs;
 /// ViewModel for the DocumentMatchControl
 /// Manages the display and interaction with matched document results
 /// </summary>
-public partial class DocumentMatchControlViewModel : ObservableObject
+public partial class DocumentMatchControlViewModel : ObservableObject, ICloseable, IDisposable
 {
     #region Private Fields
 
@@ -185,8 +185,8 @@ public partial class DocumentMatchControlViewModel : ObservableObject
             if (RevisionNotSequentialCount > 0)
                 warningDetails.Add($"{RevisionNotSequentialCount} non-sequential");
 
-            var warningText = warningDetails.Count > 0 
-                ? $" ({string.Join(", ", warningDetails)})" 
+            var warningText = warningDetails.Count > 0
+                ? $" ({string.Join(", ", warningDetails)})"
                 : string.Empty;
 
             // Build error message (missing revision, duplicates, no match)
@@ -246,7 +246,7 @@ public partial class DocumentMatchControlViewModel : ObservableObject
         // Get documents with NoMatch status only (third priority error)
         // Exclude documents with RevisionError (first priority) and DuplicateError (second priority)
         var unknownDocuments = _currentFolderManager.MatchedDocuments
-            .Where(d => !d.MatchedDocumentId.HasValue && 
+            .Where(d => !d.MatchedDocumentId.HasValue &&
                        d.GetHighestPriorityError() == ProcessingErrorType.DocumentNotFoundError)
             .ToList();
 
@@ -286,7 +286,7 @@ public partial class DocumentMatchControlViewModel : ObservableObject
             unknownDocuments: supportedUnknownDocuments,
             dialogService: _dialogService,
             customFieldDefinitions: customFieldDefinitions);
-        
+
         var result = _dialogService.ShowDialog(dialogViewModel);
 
         if (result == true && dialogViewModel.DialogConfirmed)
@@ -320,12 +320,12 @@ public partial class DocumentMatchControlViewModel : ObservableObject
                     if (insertedCount > 0 && customFieldDefinitions.Any())
                     {
                         var customPropertiesToAdd = new List<CustomProperty>();
-                        
+
                         for (int i = 0; i < documentsToAdd.Count; i++)
                         {
                             var docRow = documentsToAdd[i];
                             var document = documents[i];
-                            
+
                             // Create custom properties for each custom field value
                             foreach (var customFieldValue in docRow.CustomFieldValues)
                             {
@@ -339,7 +339,7 @@ public partial class DocumentMatchControlViewModel : ObservableObject
                                 customPropertiesToAdd.Add(customProperty);
                             }
                         }
-                        
+
                         // Batch insert custom properties
                         if (customPropertiesToAdd.Any())
                         {
@@ -351,7 +351,7 @@ public partial class DocumentMatchControlViewModel : ObservableObject
                     {
                         // Reload the manager to include the newly added documents
                         var reloadResult = await _docManagerApi.ReloadDataIntoManagerAsync(_manager);
-                        
+
                         if (!reloadResult.Success)
                         {
                             _messageStore.EnqueueMessage(
@@ -381,7 +381,7 @@ public partial class DocumentMatchControlViewModel : ObservableObject
                 finally
                 {
                     IsBusy = false;
-                    
+
                     // Refresh the document matching after adding documents and releasing IsBusy
                     // This must be done after IsBusy = false, otherwise RefreshMatchingAsync will exit early
                     if (documentsToAdd.Any())
@@ -445,6 +445,27 @@ public partial class DocumentMatchControlViewModel : ObservableObject
 
         // Raise event to notify subscribers that matched documents have changed
         MatchedDocumentsChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    #endregion
+
+    #region Lifecycle
+
+    /// <summary>
+    /// Called when the ViewModel is being closed.
+    /// No child ViewModels or event subscriptions to clean up.
+    /// </summary>
+    public void OnClosing()
+    {
+        // No child ViewModels or cross-VM event subscriptions to clean up
+    }
+
+    /// <summary>
+    /// Disposes resources used by this ViewModel.
+    /// </summary>
+    public void Dispose()
+    {
+        // No unmanaged resources to dispose
     }
 
     #endregion

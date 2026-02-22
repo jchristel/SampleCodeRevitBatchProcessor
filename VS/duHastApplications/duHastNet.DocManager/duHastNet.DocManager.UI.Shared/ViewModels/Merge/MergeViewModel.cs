@@ -24,12 +24,13 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Models.CurrentFolder;
-using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.Utils.WPF.Interfaces;
 using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 
@@ -38,7 +39,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels.Merge;
 /// <summary>
 /// Main ViewModel for the Document Manager application
 /// </summary>
-public partial class MergeViewModel : ObservableObject, IActivatable
+public partial class MergeViewModel : ObservableObject, IActivatable, ICloseable, IDisposable
 {
     #region Private Fields
 
@@ -52,10 +53,13 @@ public partial class MergeViewModel : ObservableObject, IActivatable
     //function used to navigate to settings view model
     private readonly Func<Settings.SettingsViewModel> _createViewModel;
 
+    // Child ViewModels for lifecycle management
+    private readonly List<ICloseable> _childViewModels = new();
+
     #endregion
 
     // Expose message ViewModel for the view
-    public GlobalMessageViewModel MessageViewModel { get; }
+    public GlobalMessageViewModel GlobalMessageViewModel { get; }
 
     // Expose document match control ViewModel for the view
     public Merge.MatchedDocs.DocumentMatchControlViewModel DocumentMatchViewModel { get; }
@@ -80,8 +84,12 @@ public partial class MergeViewModel : ObservableObject, IActivatable
         _currentFolderManager = currentFolderManager ?? throw new ArgumentNullException(nameof(currentFolderManager));
         _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
-        MessageViewModel = new GlobalMessageViewModel(_messageStore);
-        DocumentMatchViewModel = new Merge.MatchedDocs.DocumentMatchControlViewModel(_currentFolderManager, _manager,  _messageStore, _dialogService, _docManagerApi);
+        GlobalMessageViewModel = new GlobalMessageViewModel(_messageStore);
+        DocumentMatchViewModel = new Merge.MatchedDocs.DocumentMatchControlViewModel(_currentFolderManager, _manager, _messageStore, _dialogService, _docManagerApi);
+
+        // Register child ViewModels for automatic lifecycle management
+        RegisterChild(GlobalMessageViewModel);
+        RegisterChild(DocumentMatchViewModel);
 
         // Subscribe to document match changes to update merge button state
         DocumentMatchViewModel.MatchedDocumentsChanged += OnMatchedDocumentsChanged;
@@ -89,7 +97,7 @@ public partial class MergeViewModel : ObservableObject, IActivatable
         // Initialize collections
         FilteredRevisionDescriptions = new ObservableCollection<string>();
 
-        
+
     }
 
     #endregion
@@ -355,6 +363,50 @@ public partial class MergeViewModel : ObservableObject, IActivatable
     private void OnMatchedDocumentsChanged(object? sender, EventArgs e)
     {
         MergeDocumentsCommand.NotifyCanExecuteChanged();
+    }
+
+    #endregion
+
+    #region Lifecycle
+
+    /// <summary>
+    /// Registers a child ViewModel for automatic cleanup when this ViewModel closes.
+    /// Mirrors ViewModelBase.RegisterChild() for cross-assembly compatibility.
+    /// </summary>
+    private void RegisterChild(ICloseable child)
+    {
+        _childViewModels.Add(child);
+    }
+
+    /// <summary>
+    /// Called when the ViewModel is being navigated away from or closed.
+    /// Unsubscribes from cross-ViewModel events then propagates to child ViewModels.
+    /// </summary>
+    public void OnClosing()
+    {
+        // Unsubscribe from DocumentMatchViewModel event before disposing it
+        DocumentMatchViewModel.MatchedDocumentsChanged -= OnMatchedDocumentsChanged;
+
+        // Propagate to all registered children
+        foreach (var child in _childViewModels)
+        {
+            child.OnClosing();
+        }
+        _childViewModels.Clear();
+    }
+
+    /// <summary>
+    /// Disposes resources used by this ViewModel and its registered children.
+    /// </summary>
+    public void Dispose()
+    {
+        foreach (var child in _childViewModels)
+        {
+            if (child is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
+        }
     }
 
     #endregion

@@ -28,7 +28,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.UI.DocManagerSettingsUI.Models;
 using duHastNet.Utils.WPF.Stores;
-using duHastNet.Utils.WPF.ViewModels;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Windows;
@@ -36,7 +35,7 @@ using System.Windows.Controls;
 
 namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
 {
-    public partial class SettingsViewModel : ViewModelBase
+    public partial class SettingsViewModel : AppViewModelBase
     {
         /// <summary>
         /// Global message view model for displaying messages to the user

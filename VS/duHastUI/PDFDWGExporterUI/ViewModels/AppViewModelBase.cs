@@ -5,7 +5,7 @@
 // Revit Batch Processor Sample Code
 //
 // BSD License
-// Copyright 2025, Jan Christel
+// Copyright 2026, Jan Christel
 // All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -21,50 +21,17 @@
 //
 //
 
-
-using CommunityToolkit.Mvvm.ComponentModel;
-using duHastNet.Utils.WPF.Stores;
-using System.ComponentModel;
+using duHastNet.Utils.WPF.ViewModels;
 
 namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
 {
-    public partial class MainWindowViewModel : AppViewModelBase
+    /// <summary>
+    /// This class intentionally has no members - it exists solely to bridge the
+    /// assembly boundary so source generators can target the correct assembly.
+    /// Need one per project that uses source generators that target a base class, and the base class is in a different assembly than the one with the source generator.
+    /// </summary>
+    public abstract partial class AppViewModelBase : ViewModelBase
     {
-        private readonly NavigationStore _navigationStore;
-        public ObservableObject? CurrentViewModel => _navigationStore.CurrentViewModel;
-
-        public MainWindowViewModel(NavigationStore navigationStore)
-        {
-            _navigationStore = navigationStore;
-            _navigationStore.PropertyChanged += OnNavigationStorePropertyChanged;
-        }
-
-        private void OnNavigationStorePropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(_navigationStore.CurrentViewModel))
-            {
-                OnPropertyChanged(nameof(CurrentViewModel));
-            }
-        }
-
-        public override void OnClosing()
-        {
-            System.Diagnostics.Debug.WriteLine("MainWindowViewModel.OnClosing() called");
-            // Notify the navigation store to close current view model
-            _navigationStore.NotifyClosing();
-            // Event cleanup moved to Dispose()
-            base.OnClosing();
-        }
-
-        public override void Dispose()
-        {
-            System.Diagnostics.Debug.WriteLine("MainWindowViewModel.Dispose() called");
-            // Unsubscribe from navigation store events
-            if (_navigationStore != null)
-            {
-                _navigationStore.PropertyChanged -= OnNavigationStorePropertyChanged;
-            }
-            base.Dispose();
-        }
+        // Intentionally empty
     }
 }

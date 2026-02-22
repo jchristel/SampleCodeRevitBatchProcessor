@@ -32,7 +32,7 @@ using System.Windows.Input;
 
 namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
 {
-    public class PrintSetNameDialogViewModel : ViewModelBase, INotifyDataErrorInfo
+    public partial class PrintSetNameDialogViewModel : AppViewModelBase, INotifyDataErrorInfo
     {
 
         private string _printSetName;
@@ -52,7 +52,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// <summary>
         /// errors view model used for data validation ( export directory )
         /// </summary>
-        private readonly duHastNet.Utils.WPF.ViewModels.ErrorsViewModel _errorsViewModel;
+        private readonly ErrorsViewModel _errorsViewModel;
 
 
         #region data validation

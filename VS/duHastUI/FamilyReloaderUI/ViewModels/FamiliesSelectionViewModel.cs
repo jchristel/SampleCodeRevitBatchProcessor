@@ -37,18 +37,18 @@ using System.Windows.Interop;
 
 namespace duHastNet.UI.FamilyReloaderUI.ViewModels
 {
-    public class FamiliesSelectionViewModel : ViewModelBase, INotifyDataErrorInfo
+    public partial class FamiliesSelectionViewModel : AppViewModelBase, INotifyDataErrorInfo
     {
         /// <summary>
         /// Global message view model for displaying messages to the user
         /// </summary>
-        public duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel GlobalMessageViewModel { get; }
+        public GlobalMessageViewModel GlobalMessageViewModel { get; }
 
 
         /// <summary>
         /// errors view model used for data validation ( export directory )
         /// </summary>
-        private readonly duHastNet.Utils.WPF.ViewModels.ErrorsViewModel _errorsViewModel;
+        private readonly ErrorsViewModel _errorsViewModel;
 
 
         //property to check if there are any errors
@@ -65,22 +65,22 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
         /// <summary>
         /// message store for storing messages
         /// </summary>
-        private readonly duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
+        private readonly MessageStore _messageStore;
 
         /// <summary>
         /// store the navigation store for the application
         /// </summary>
-        private readonly duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
+        private readonly NavigationStore _navigationStore;
 
         /// <summary>
         /// store the state store for the application
         /// </summary>
-        private readonly duHastNet.Utils.WPF.Stores.StateStore _stateStore;
+        private readonly StateStore _stateStore;
 
         /// <summary>
         /// View model managing the view selection data grid.
         /// </summary>
-        public duHastNet.UI.FamilyReloaderUI.ViewModels.FamiliesSelectionDataGridViewModel FamiliesSelectionDataGridViewModel { get; }
+        public FamiliesSelectionDataGridViewModel FamiliesSelectionDataGridViewModel { get; }
 
 
         /// <summary>

@@ -34,7 +34,7 @@ using System.Linq;
 
 namespace duHastNet.UI.FamilyReloaderUI.ViewModels
 {
-    public class FamiliesSelectionDataGridViewModel : duHastNet.Utils.WPF.ViewModels.BaseDynamicGridViewModel<DynamicRowData>
+    public class FamiliesSelectionDataGridViewModel : BaseDynamicGridViewModel<DynamicRowData>
     {
 
         //field storing the families data model

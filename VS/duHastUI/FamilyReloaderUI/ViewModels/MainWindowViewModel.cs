@@ -23,12 +23,11 @@
 
 
 using CommunityToolkit.Mvvm.ComponentModel;
-using duHastNet.Utils.WPF.ViewModels;
 using System.ComponentModel;
 
 namespace duHastNet.UI.FamilyReloaderUI.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+    public partial class MainWindowViewModel : AppViewModelBase
     {
         private readonly duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
 

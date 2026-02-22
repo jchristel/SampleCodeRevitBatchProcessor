@@ -38,17 +38,17 @@ using System.Windows.Input;
 
 namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
 {
-    public class SettingsViewModel : ViewModelBase
+    public partial class SettingsViewModel : AppViewModelBase
     {
         /// <summary>
         /// Global message view model for displaying messages to the user
         /// </summary>
-        public duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel GlobalMessageViewModel { get; }
+        public GlobalMessageViewModel GlobalMessageViewModel { get; }
 
         /// <summary>
         /// message store for storing messages
         /// </summary>
-        private readonly duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
+        private readonly MessageStore _messageStore;
 
         /// <summary>
         /// The data model for the export settings

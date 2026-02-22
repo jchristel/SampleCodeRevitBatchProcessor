@@ -1,4 +1,4 @@
-//
+﻿//
 //License:
 //
 //
@@ -21,34 +21,17 @@
 //
 //
 
+using duHastNet.Utils.WPF.ViewModels;
 
-using CommunityToolkit.Mvvm.ComponentModel;
-
-namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
+namespace duHastNet.UI.DocManagerUI.ViewModels
 {
-    internal partial class MainWindowViewModel : AppViewModelBase
+    /// <summary>
+    /// This class intentionally has no members - it exists solely to bridge the
+    /// assembly boundary so source generators can target the correct assembly.
+    /// Need one per project that uses source generators that target a base class, and the base class is in a different assembly than the one with the source generator.
+    /// </summary>
+    public abstract partial class AppViewModelBase : ViewModelBase
     {
-        [ObservableProperty]
-        private ObservableObject _currentViewModel;
-
-        public MainWindowViewModel(ViewModels.SettingsViewModel settingsViewModel)
-        {
-            _currentViewModel = settingsViewModel;
-
-            // Register the child ViewModel for lifecycle management
-            RegisterChild(settingsViewModel);
-        }
-
-        public override void OnClosing()
-        {
-            // Call base to handle child ViewModels cleanup
-            base.OnClosing();
-        }
-
-        public override void Dispose()
-        {
-            // Call base to handle disposal
-            base.Dispose();
-        }
+        // Intentionally empty
     }
 }

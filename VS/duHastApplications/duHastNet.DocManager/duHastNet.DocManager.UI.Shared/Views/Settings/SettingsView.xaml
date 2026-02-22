@@ -7,6 +7,7 @@
              xmlns:localcurrentfolder="clr-namespace:duHastNet.DocManager.UI.Shared.Views.Settings.CurrentFolder"
              xmlns:localdatabaseconnection="clr-namespace:duHastNet.DocManager.UI.Shared.Views.Settings.Database"
              xmlns:localclouddocumentmanager="clr-namespace:duHastNet.DocManager.UI.Shared.Views.Settings.CloudDocManager"
+             xmlns:utilsViews ="clr-namespace:duHastNet.Utils.WPF.Views;assembly=Utils.25.0.1.0"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -66,13 +67,7 @@
             </Border>
             <!-- message banner -->
         <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <!-- banner row -->
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
-            <local:GlobalMessageView Grid.Row="1" 
-                              DataContext="{Binding MessageViewModel}"
-                              Margin="0 5 0 5"/>
+                <utilsViews:GlobalMessageView DataContext="{Binding GlobalMessageViewModel}"/>
         </Grid>
         <!-- settings path -->
         <Border Grid.Row="2" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">

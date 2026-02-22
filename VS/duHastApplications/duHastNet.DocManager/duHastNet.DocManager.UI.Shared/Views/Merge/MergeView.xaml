@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:duHastNet.DocManager.UI.Shared.Views"
              xmlns:localmergematcheddocs="clr-namespace:duHastNet.DocManager.UI.Shared.Views.Merge.MatchedDocs"
+             xmlns:utilsViews ="clr-namespace:duHastNet.Utils.WPF.Views;assembly=Utils.25.0.1.0"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="1000">
 
@@ -72,15 +73,8 @@
         </Border>
         <!-- message banner -->
         <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <!-- banner row -->
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
-            <local:GlobalMessageView Grid.Row="1" 
-                  DataContext="{Binding MessageViewModel}"
-                  Margin="0 5 0 5"/>
+            <utilsViews:GlobalMessageView DataContext="{Binding GlobalMessageViewModel}"/>
         </Grid>
-        
         <!-- merger date picker -->
         <Grid Grid.Row="2">
             <Grid.RowDefinitions>

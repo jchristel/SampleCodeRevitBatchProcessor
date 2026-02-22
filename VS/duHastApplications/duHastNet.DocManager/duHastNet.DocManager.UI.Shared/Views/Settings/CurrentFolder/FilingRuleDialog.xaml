@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:converters="clr-namespace:duHastNet.DocManager.UI.Shared.Converters"
+        xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.25.0.1.0"
+        xmlns:docManagerConverters="clr-namespace:duHastNet.DocManager.UI.Shared.Converters"
         mc:Ignorable="d"
         Title="{Binding DialogTitle}"
         Width="550" 
@@ -14,7 +15,7 @@
 
     <Window.Resources>
         <converters:ValidationErrorConverter x:Key="ValidationErrorConverter"/>
-        <converters:RuleTypeDisplayConverter x:Key="RuleTypeDisplayConverter"/>
+        <docManagerConverters:RuleTypeDisplayConverter x:Key="RuleTypeDisplayConverter"/>
         <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
     </Window.Resources>
 

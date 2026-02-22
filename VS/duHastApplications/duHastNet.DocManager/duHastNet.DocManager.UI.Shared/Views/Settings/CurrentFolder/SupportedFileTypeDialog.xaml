@@ -7,7 +7,7 @@
         xmlns:vm="clr-namespace:duHastNet.DocManager.UI.Shared.ViewModels.Settings.CurrentFolder"
         xmlns:modifierVm="clr-namespace:duHastNet.DocManager.UI.Shared.ViewModels.Settings.CurrentFolder.ModifierControls"
         xmlns:modifierControls="clr-namespace:duHastNet.DocManager.UI.Shared.Controls.ModifierControls"
-        xmlns:converters="clr-namespace:duHastNet.DocManager.UI.Shared.Converters"
+        xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.25.0.1.0"
         mc:Ignorable="d"
         Title="{Binding DialogTitle}"
         WindowStartupLocation="CenterOwner"

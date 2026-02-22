@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:duHastNet.DocManager.UI.Shared.Views"
         xmlns:vm="clr-namespace:duHastNet.DocManager.UI.Shared.ViewModels.Settings.Database"
-        xmlns:converters="clr-namespace:duHastNet.DocManager.UI.Shared.Converters"
+        xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.25.0.1.0"
         mc:Ignorable="d"
         Title="{Binding DialogTitle}"
         WindowStartupLocation="CenterOwner"

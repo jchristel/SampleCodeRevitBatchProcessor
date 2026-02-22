@@ -22,6 +22,7 @@ using duHastNet.DocManager.Core.Interfaces;
 
 using duHastNet.Utils.WPF.Interfaces;
 using duHastNet.Utils.WPF.Stores;
+using duHastNet.Utils.WPF.ViewModels;
 using System.ComponentModel;
 
 namespace duHastNet.DocManager.UI.Shared.ViewModels.Settings;

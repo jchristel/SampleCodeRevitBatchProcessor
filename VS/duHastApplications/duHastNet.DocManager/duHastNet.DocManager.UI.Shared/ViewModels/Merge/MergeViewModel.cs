@@ -29,6 +29,7 @@ using duHastNet.DocManager.Core.Models.CurrentFolder;
 using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.Utils.WPF.Interfaces;
 using duHastNet.Utils.WPF.Stores;
+using duHastNet.Utils.WPF.ViewModels;
 using System.Collections.ObjectModel;
 
 

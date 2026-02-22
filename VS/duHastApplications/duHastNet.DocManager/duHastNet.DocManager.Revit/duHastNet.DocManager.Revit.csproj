@@ -43,6 +43,11 @@
 			<HintPath>..\\..\\..\\_References\\Autodesk\\RevitAPIUI.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
+    <!-- utility dll reference -->
+    <Reference Include="Utils.25.0.1.0">
+      <HintPath>..\\..\\..\\_References\\duHast\\Utils.25.0.1.0.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
 	</ItemGroup>
 
 	<ItemGroup>

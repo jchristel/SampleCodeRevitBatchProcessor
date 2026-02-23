@@ -32,6 +32,7 @@ import Autodesk.Revit.DB as rdb
 from duHast.Revit.Common import worksets as rWork
 from duHast.Utilities import utility as util
 from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
+from duHast.Revit.Common.element_id import get_el_id_int
 
 
 def get_level_report_data(doc, revitFilePath):
@@ -46,16 +47,41 @@ def get_level_report_data(doc, revitFilePath):
     """
 
     data = []
-    for p in rdb.FilteredElementCollector(doc).OfClass(rdb.Level):
+    try:
+        for p in rdb.FilteredElementCollector(doc).OfClass(rdb.Level):
+
+            element_id_value = -1
+            try:
+                element_id_value = get_el_id_int(p)
+            except Exception :
+                pass
+
+            # workset still seem to use an integer value??
+            work_set_id_value = -1
+            try:
+                work_set_id_value = get_el_id_int(p.WorksetId)
+            except Exception :
+                pass
+
+            data.append(
+                [
+                    revitFilePath,
+                    str(element_id_value),
+                    util.encode_ascii(p.Name),
+                    util.encode_ascii(
+                        rWork.get_workset_name_by_id(doc, work_set_id_value)
+                    ),
+                    str(convert_imperial_feet_to_metric_mm(p.Elevation)),
+                ]
+            )
+    except Exception as ex:
         data.append(
             [
-                revitFilePath,
-                str(p.Id.Value),
-                util.encode_ascii(p.Name),
-                util.encode_ascii(
-                    rWork.get_workset_name_by_id(doc, p.WorksetId.Value)
-                ),
-                str(convert_imperial_feet_to_metric_mm(p.Elevation)),
+                "{}".format(revitFilePath),
+                "Error: {}".format(str(ex)),
+                "ERROR",
+                "ERROR",
+                "ERROR"
             ]
         )
     return data

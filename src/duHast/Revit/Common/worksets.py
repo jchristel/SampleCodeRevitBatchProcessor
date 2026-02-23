@@ -44,6 +44,7 @@ from duHast.Revit.Common import transaction as rTran
 from duHast.Utilities import utility as util
 from duHast.Utilities import files_io as filesIO
 from duHast.Utilities.files_csv import read_csv_file
+from duHast.Revit.Common.element_id import get_el_id_int
 
 # import Autodesk
 from Autodesk.Revit.DB import (
@@ -103,7 +104,11 @@ def get_workset_name_by_id(doc, id_integer):
 
     name = "unknown"
     for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
-        if p.Id.Value == id_integer:
+
+        # workset Id still seems to use .Integer value instead of Value like ElementId?
+        p_id_int =  get_el_id_int(p)
+
+        if p_id_int == id_integer:
             name = p.Name
             break
     return name

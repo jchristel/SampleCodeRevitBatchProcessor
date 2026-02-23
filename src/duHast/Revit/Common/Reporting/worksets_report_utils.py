@@ -28,7 +28,7 @@ This module contains utility function(s) for workset reports.
 
 from duHast.Utilities import utility as util
 from duHast.Revit.Common.worksets import get_worksets_from_collector
-
+from duHast.Revit.Common.element_id import get_el_id_int
 
 def get_workset_report_data(doc, revit_file_path):
     """
@@ -48,10 +48,19 @@ def get_workset_report_data(doc, revit_file_path):
     data = []
     worksets = get_worksets_from_collector(doc)
     for ws in worksets:
+
+
+        # workset still seem to use an integer value??
+        work_set_id_value = -1
+        try:
+            work_set_id_value = get_el_id_int(ws.WorksetId)
+        except Exception :
+           pass
+
         data.append(
             [
                 revit_file_path,
-                str(ws.Id.Value),
+                str(work_set_id_value),
                 util.encode_ascii(ws.Name),
                 str(ws.IsVisibleByDefault),
             ]

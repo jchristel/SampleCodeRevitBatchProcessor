@@ -30,6 +30,7 @@ from Autodesk.Revit.DB import FilteredElementCollector, Grid
 from duHast.Revit.Common import worksets as rWork
 from duHast.Utilities import utility as util
 from duHast.Revit.Grids import grids as rGrid
+from duHast.Revit.Common.element_id import get_el_id_int
 
 
 def get_grid_report_data(doc, revit_file_path):
@@ -44,16 +45,44 @@ def get_grid_report_data(doc, revit_file_path):
     """
 
     data = []
-    for grid in FilteredElementCollector(doc).OfClass(Grid):
+    try:
+        for grid in FilteredElementCollector(doc).OfClass(Grid):
+
+
+            element_id_value = -1
+            try:
+                element_id_value = get_el_id_int(grid)
+            except Exception :
+                pass
+
+            # workset still seem to use an integer value??
+            work_set_id_value = -1
+            try:
+                work_set_id_value = get_el_id_int(grid.WorksetId)
+            except Exception :
+                pass
+
+            data.append(
+                [
+                    revit_file_path,
+                    str(element_id_value),
+                    util.encode_ascii(grid.Name),
+                    rWork.get_workset_name_by_id(doc, work_set_id_value),
+                    rGrid.get_max_extent_as_string(grid),
+                    rGrid.get_min_extent_as_string(grid),
+                    str(grid.IsCurved),
+                ]
+            )
+    except Exception as ex:
         data.append(
             [
-                revit_file_path,
-                str(grid.Id.Value),
-                util.encode_ascii(grid.Name),
-                rWork.get_workset_name_by_id(doc, grid.WorksetId.Value),
-                rGrid.get_max_extent_as_string(grid),
-                rGrid.get_min_extent_as_string(grid),
-                str(grid.IsCurved),
+                "path: {}".format(revit_file_path),
+                "ERROR",
+                "ERROR: {}".format(ex),
+                "ERROR",
+                "ERROR",
+                "ERROR",
+                "ERROR",
             ]
         )
     return data

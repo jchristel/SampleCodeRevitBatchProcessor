@@ -53,9 +53,10 @@ def get_workset_report_data(doc, revit_file_path):
         # workset still seem to use an integer value??
         work_set_id_value = -1
         try:
-            work_set_id_value = get_el_id_int(ws.WorksetId)
-        except Exception :
-           pass
+            work_set_id_value = get_el_id_int(ws.Id)
+        except Exception as ex :
+            import traceback
+            work_set_id_value = "ERROR: {} | {}".format(ex, traceback.format_exc()),
 
         data.append(
             [

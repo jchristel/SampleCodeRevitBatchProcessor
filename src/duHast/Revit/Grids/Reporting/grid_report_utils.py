@@ -74,11 +74,12 @@ def get_grid_report_data(doc, revit_file_path):
                 ]
             )
     except Exception as ex:
+        import traceback
         data.append(
             [
                 "path: {}".format(revit_file_path),
                 "ERROR",
-                "ERROR: {}".format(ex),
+                "ERROR: {} | {}".format(ex, traceback.format_exc()),
                 "ERROR",
                 "ERROR",
                 "ERROR",

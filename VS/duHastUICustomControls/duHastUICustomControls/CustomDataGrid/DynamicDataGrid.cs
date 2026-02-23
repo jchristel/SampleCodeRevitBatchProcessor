@@ -54,20 +54,6 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
                 typeof(DynamicDataGrid),
                 new PropertyMetadata(null));
 
-        public static DependencyProperty IsBusyProperty =
-            DependencyProperty.Register(
-                nameof(IsBusy),
-                typeof(bool),
-                typeof(DynamicDataGrid),
-                new PropertyMetadata(false));
-
-        public static DependencyProperty LoadingMessageProperty =
-            DependencyProperty.Register(
-                nameof(LoadingMessage),
-                typeof(string),
-                typeof(DynamicDataGrid),
-                new PropertyMetadata("Loading..."));
-
         public ObservableCollection<DynamicColumnDefinition> ColumnDefinitions
         {
             get => (ObservableCollection<DynamicColumnDefinition>)GetValue(ColumnDefinitionsProperty);
@@ -84,18 +70,6 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
         {
             get => (Style)GetValue(ReadOnlyHeaderStyleProperty);
             set => SetValue(ReadOnlyHeaderStyleProperty, value);
-        }
-
-        public bool IsBusy
-        {
-            get => (bool)GetValue(IsBusyProperty);
-            set => SetValue(IsBusyProperty, value);
-        }
-
-        public string LoadingMessage
-        {
-            get => (string)GetValue(LoadingMessageProperty);
-            set => SetValue(LoadingMessageProperty, value);
         }
 
         static DynamicDataGrid()

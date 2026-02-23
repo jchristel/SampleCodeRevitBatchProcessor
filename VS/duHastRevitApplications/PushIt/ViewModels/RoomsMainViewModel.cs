@@ -57,16 +57,6 @@ namespace duHastNet.PushIt.ViewModels
         /// </summary>
         public duHastNet.PushIt.ViewModels.RoomsDataGridViewModel RoomsDataGridViewModel { get; }
 
-        #region loading datagrid overlay properties
-
-        [ObservableProperty]
-        private bool _isGridBusy;
-
-        [ObservableProperty]
-        private string _loadingMessage = "Busy...";
-
-        #endregion loading datagrid overlay properties
-
         // default values set inline on [ObservableProperty] declarations below
 
         //command to raise an event to refresh the gui
@@ -98,14 +88,6 @@ namespace duHastNet.PushIt.ViewModels
         // flag indicating whether the view model is waiting for a Revit command to finish
         [ObservableProperty]
         private bool _isWaitingForRevitCommandToFinish;
-
-        /// <summary>
-        /// Side effect: also drives the loading overlay via IsGridBusy.
-        /// </summary>
-        partial void OnIsWaitingForRevitCommandToFinishChanged(bool value)
-        {
-            IsGridBusy = value;
-        }
 
         #region push modus
 

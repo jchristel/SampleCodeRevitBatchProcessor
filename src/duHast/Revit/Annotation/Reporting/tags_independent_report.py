@@ -27,6 +27,8 @@ This module contains a Revit tag instances report function.
 #
 #
 
+from System import Int64
+
 import json
 
 from duHast.Revit.Annotation.independent_tags import get_all_independent_tags
@@ -45,6 +47,22 @@ from duHast.Revit.Common.revit_version import get_revit_version_number
 
 from Autodesk.Revit.DB import ElementId
 
+def _convert_int64_to_int(data):
+    """
+    Recursively converts any Int64 values in a nested data structure to Python int.
+    
+    :param data: A nested data structure containing potential Int64 values
+    :type data: dict, list, or scalar value
+    :return: The same structure with Int64 values converted to int
+    """
+    if isinstance(data, dict):
+        return {k: _convert_int64_to_int(v) for k, v in data.items()}
+    elif isinstance(data, list):
+        return [_convert_int64_to_int(item) for item in data]
+    elif isinstance(data, Int64):
+        return int(data)
+    return data
+
 
 def _convert_tagged_element_ids_to_int(data):
     """
@@ -59,7 +77,7 @@ def _convert_tagged_element_ids_to_int(data):
     for tag_dic in data:
         for id_entry in tag_dic:
             if type(tag_dic[id_entry]) == ElementId:
-                tag_dic[id_entry] = str(int(tag_dic[id_entry].Value)) # attempt conversion to int for json output, since ironpython json cant deal with Int64
+                tag_dic[id_entry] = int(tag_dic[id_entry].Value) # attempt conversion to int for json output, since ironpython json cant deal with Int64
     return data
 
 
@@ -106,6 +124,8 @@ def get_tag_instances_report_data(doc, revit_file_path, custom_element_filter):
                         elbow_properties = get_elbow_properties(
                             doc=doc, tag=tag_instance, points_as_double=True
                         )
+                        # convert in64 to int for serialisation down the line
+                        elbow_properties = _convert_int64_to_int(elbow_properties)
 
                     # leader end condition (need to check if there is a leader)
                     leader_end_condition = str(None)
@@ -115,14 +135,14 @@ def get_tag_instances_report_data(doc, revit_file_path, custom_element_filter):
                     # base line revit data
                     row = {
                         props.HOST_FILE: revit_file_path,
-                        props.TAG_ID: str(int(tag_instance.Id.Value)), # attempt conversion to int for json output, since ironpython json cant deal with Int64
+                        props.TAG_ID: int(tag_instance.Id.Value), # attempt conversion to int for json output, since ironpython json cant deal with Int64
                         props.TAG_HAS_LEADER: tag_instance.HasLeader,  # leader flag
                         props.TAG_IS_ORPHANED: tag_instance.IsOrphaned,  # is orphaned tag?
                         props.TAG_IS_MATERIAL_TAG: tag_instance.IsMaterialTag,  # is a material tag
                         props.IS_MULTICATEGORY_TAG: tag_instance.IsMulticategoryTag,  # is is multi category tag
                         props.LEADER_END_CONDITION: leader_end_condition,  # attached or free
                         props.LEADER_PROPERTIES: elbow_properties,  # elbow properties
-                        props.MULTI_REFERENCE_ANNOTATION_ID: tag_instance.MultiReferenceAnnotationId.Value,
+                        props.MULTI_REFERENCE_ANNOTATION_ID: int(tag_instance.MultiReferenceAnnotationId.Value),
                         props.TAG_TEXT: tag_text,  # tag text
                         props.TAGGED_ELEMENT_IDS: tagged_element_data,  # tagged element ids as integers
                         props.TAG_HEAD_LOCATION: get_point_as_doubles(

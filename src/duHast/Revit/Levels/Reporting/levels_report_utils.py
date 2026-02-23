@@ -75,10 +75,11 @@ def get_level_report_data(doc, revitFilePath):
                 ]
             )
     except Exception as ex:
+        import traceback
         data.append(
             [
                 "{}".format(revitFilePath),
-                "Error: {}".format(str(ex)),
+                "ERROR: {} | {}".format(ex, traceback.format_exc()),
                 "ERROR",
                 "ERROR",
                 "ERROR"

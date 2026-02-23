@@ -59,7 +59,7 @@ def _convert_tagged_element_ids_to_int(data):
     for tag_dic in data:
         for id_entry in tag_dic:
             if type(tag_dic[id_entry]) == ElementId:
-                tag_dic[id_entry] = tag_dic[id_entry].Value
+                tag_dic[id_entry] = str(int(tag_dic[id_entry].Value)) # attempt conversion to int for json output, since ironpython json cant deal with Int64
     return data
 
 
@@ -115,7 +115,7 @@ def get_tag_instances_report_data(doc, revit_file_path, custom_element_filter):
                     # base line revit data
                     row = {
                         props.HOST_FILE: revit_file_path,
-                        props.TAG_ID: tag_instance.Id.Value,
+                        props.TAG_ID: str(int(tag_instance.Id.Value)), # attempt conversion to int for json output, since ironpython json cant deal with Int64
                         props.TAG_HAS_LEADER: tag_instance.HasLeader,  # leader flag
                         props.TAG_IS_ORPHANED: tag_instance.IsOrphaned,  # is orphaned tag?
                         props.TAG_IS_MATERIAL_TAG: tag_instance.IsMaterialTag,  # is a material tag

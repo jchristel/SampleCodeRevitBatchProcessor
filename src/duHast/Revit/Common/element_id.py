@@ -60,9 +60,12 @@ def get_el_id_int(el):
     else:
         el_id = el
 
-    if getattr(el_id, "IntegerValue", None):
+    # WorksetId.IntegerValue is likely returning 0 for some workset (Workset1 it appears), and 0 is falsy in Python - so the condition fails and falls through to the elif and then the raise
+    # The fix is to use is not None:
+
+    if getattr(el_id, "IntegerValue", None) is not None:
         return int(el_id.IntegerValue)
-    elif getattr(el_id, "Value", None):
+    elif getattr(el_id, "Value", None) is not None:
         return int(el_id.Value)
     else:
         raise ValueError("Element id property: {} does not have an IntegerValue or Value attribute.".format(type(el_id)))

@@ -115,7 +115,7 @@ def write_report_data(
             writer = csv.writer(
                 f,
                 delimiter=delimiter,
-                escapechar="\\",
+                escapechar="\\" if quoting == csv.QUOTE_NONE else None, # only use an escape character if there is no quoting, otherwise the csv writer will handle escaping
                 quoting=quoting,
                 lineterminator="\n",
             )

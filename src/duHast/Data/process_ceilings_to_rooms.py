@@ -84,62 +84,6 @@ def _read_data(file_path):
     return dataReader
 
 
-# --------------- writing out data ------------------
-
-
-def _write_report_data(
-    file_name,
-    header,
-    data,
-):
-    """
-    Method writing out report information to csv file.
-
-    :param file_name: Fully qualified file path to data file.
-    :type file_name: str
-    :param header: List of column headers, provide empty list if not required!
-    :type header: list[str]
-    :param data: List of list of strings representing row data
-    :type data: list[list[str]]
-
-    :return:
-        Result class instance.
-
-        - result.status False if an exception occurred, otherwise True.
-        - result.message will contain file name of file written.
-        - result.result: empty list
-
-        On exception:
-
-        - result.status (bool) will be False.
-        - result.message will contain the exception message.
-        - result.result: will be an empty list
-
-    :rtype: :class:`.Result`
-    """
-
-    return_value = res.Result()
-    try:
-        # open the file in the write mode
-        with codecs.open(file_name, "w", encoding="utf-8") as f:
-            # create the csv writer
-            writer = csv.writer(f)
-            # check header
-            if len(header) > 0:
-                writer.writerow(header)
-            if len(data) > 0:
-                for d in data:
-                    # write a row to the csv file
-                    writer.writerow(d)
-            f.close()
-        return_value.update_sep(
-            True, "Successfully wrote data to: {}".format(file_name)
-        )
-    except Exception as e:
-        return_value.update_sep(False, "Failed to write data to: {}".format(file_name))
-    return return_value
-
-
 # --------------- data processing ------------------
 
 
@@ -485,7 +429,6 @@ def write_data_to_file(
         # write data to file
         return_value.update(
             write_report_data_as_csv(output_file_path, data_header, converted_data)
-            #_write_report_data(output_file_path, data_header, converted_data)
         )
 
     except Exception as e:

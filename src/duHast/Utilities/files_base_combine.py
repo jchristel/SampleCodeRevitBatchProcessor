@@ -182,6 +182,7 @@ def combine_files_header_independent(
     output_file_name="result.txt",
     overwrite_existing=False,
     delimiter=",",
+    quoting=csv.QUOTE_MINIMAL,
 ):
     """
     Used to combine report files into one file, files may have different number / named columns.
@@ -289,6 +290,7 @@ def combine_files_header_independent(
                 data=lines_to_be_transferred,
                 write_type=write_type,
                 delimiter=delimiter,
+                quoting=quoting,
             )
             # keep track of what happened
             return_value.update(result_write)

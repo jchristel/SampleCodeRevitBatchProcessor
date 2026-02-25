@@ -203,6 +203,46 @@ def get_field_column_index_from_schedule_by_parameter_id(schedule, parameter_id)
     return column_index
 
 
+def get_field_from_schedule_by_field_name(schedule, field_name):
+    """
+    Returns the field matching the given name.
+
+    :param schedule: The Revit schedule object from which to extract the field index.
+    :type schedule: Autodesk.Revit.DB.ViewSchedule
+    :param  field_name: The human readable field name
+    :type  field_name: str
+
+    :return: The field or None if no match was found.
+    :rtype: Autodesk.Revit.DB.ScheduleField
+    """
+
+
+    # get the schedule definition
+    schedule_definition = schedule.Definition
+
+    # get the number of fields in the schedule
+    num_fields = schedule_definition.GetFieldCount()
+    
+    # ordered field list:
+    sorted_field_ids = schedule_definition.GetFieldOrder()
+
+    # field place holder
+    schedule_field = None
+
+    # loop through the fields in order of appearance in schedule to find the column index for the specified parameter ID
+    for i in range(num_fields):
+        field_id = sorted_field_ids[i]
+        
+        # get the field by field ID
+        field_by_field_id = schedule_definition.GetField(field_id)
+
+        # check if the field parameter ID matches the specified parameter ID
+        if field_by_field_id.GetName() == field_name:
+            #print(field_by_field_id)
+            return field_by_field_id
+    return schedule_field
+
+
 def get_field_values_from_schedule_by_parameter_id(schedule, parameter_id=None):
     """
     Get a list of all field values from a Revit schedule based on the parameter id.

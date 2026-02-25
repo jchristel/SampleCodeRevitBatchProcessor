@@ -192,3 +192,56 @@ def get_title_block_from_sheet(doc, sheet):
     
     # no title block?
     return None
+
+
+def get_titleblock_bounding_box(doc, sheet):
+    """
+    Returns the bounding box of the titleblock on a sheet, or None if not found.
+    """
+    collector = FilteredElementCollector(doc, sheet.Id)\
+        .OfCategory(BuiltInCategory.OST_TitleBlocks)\
+        .WhereElementIsNotElementType()
+    
+    titleblock = collector.FirstElement()
+    if titleblock is None:
+        return None
+    
+    return titleblock.get_BoundingBox(sheet)
+
+
+def get_sheets_from_schedule_instances(doc, schedules):
+    """
+    Returns a list of sheets that contain schedule sheet instances of the provided schedules.
+
+    Args:
+        doc (Autodesk.Revit.DB.Document): Current Revit model document.
+        schedules (list of Autodesk.Revit.DB.ViewSchedule): List of schedules to check for instances on sheets.
+
+    Returns:
+        list of Autodesk.Revit.DB.ViewSheet: List of sheets that contain schedule sheet instances of the provided schedules.
+    """
+
+    sheet_ids = set()  # use a set to avoid duplicates
+    sheets = []
+
+    for s in schedules:
+        if s.IsSplit():
+            segment_count = s.GetSegmentCount()
+            for i in range(segment_count):
+                instance_ids = s.GetScheduleInstances(i)
+                for instance_id in instance_ids:
+                    instance = doc.GetElement(instance_id)
+                    owner_sheet = doc.GetElement(instance.OwnerViewId)
+                    if owner_sheet.Id.IntegerValue not in sheet_ids:
+                        sheets.append(owner_sheet)
+                        sheet_ids.add(owner_sheet.Id.IntegerValue)
+        else:
+            instance_ids = s.GetScheduleInstances(0)
+            for instance_id in instance_ids:
+                instance = doc.GetElement(instance_id)
+                owner_sheet = doc.GetElement(instance.OwnerViewId)
+                if owner_sheet.Id.IntegerValue not in sheet_ids:
+                    sheets.append(owner_sheet)
+                    sheet_ids.add(owner_sheet.Id.IntegerValue)
+    
+    return sheets

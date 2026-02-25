@@ -215,7 +215,7 @@ function start-batchProcessor {
         $settings = $settings_file_names[$i]
         Write-ToLogAndConsole -Message "Starting Revit Batch Processor with settings: $settings_directory$settings"
         Start-Process $batch_processor_path -ArgumentList "--settings_file `"$settings_directory$settings`""
-        if ($i -ne $settings_file_names.Length) {
+        if ($i -lt ($settings_file_names.Length - 1)) {
             #This won't execute on the final iteration
             wait-seconds
         }

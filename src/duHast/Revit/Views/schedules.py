@@ -80,6 +80,34 @@ def get_schedules_not_on_sheets(doc):
     return schedules_not_on_sheets
 
 
+def get_all_schedules_placed_on_sheets(doc, filter_revision_schedules = True):
+    """
+    Gets all schedules with an instance placed on a sheet. Optionally filter out revision schedules.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param filter_revision_schedules: If true, titleblock revision schedules will be filtered out. Default is True.
+    :type filter_revision_schedules: bool
+    :return: list of schedules with a sheet schedule instance.
+    :rtype: list of Autodesk.Revit.DB.View
+    """
+
+    schedules_on_sheets = []
+
+    # get all schedule ids with instances on sheets ( this returns a unique list of schedule ids)
+    ids_on_sheets = get_schedule_ids_on_sheets(doc)
+
+    # loop over schedule ids and get schedule element, filter out revision schedules if required and add to list
+    for schedule_sheet_instance_id in ids_on_sheets:
+        schedule = doc.GetElement(schedule_sheet_instance_id)
+        
+        # filter out revision schedules if required
+        if (schedule.IsTitleblockRevisionSchedule and filter_revision_schedules):
+            continue
+        schedules_on_sheets.append(schedule)
+    return schedules_on_sheets
+
+
 def get_schedule_instance_on_sheet(doc, sheet):
     """
     Returns a list containing all schedule sheet instances on a sheet.
@@ -195,3 +223,19 @@ def get_all_sheet_schedules(doc):
     )
     
     return sheet_schedules
+
+
+def filter_split_schedules(schedules):
+    """
+    Returns only schedules which are split on sheet
+
+    :param schedules: a list of view schedule instances
+
+    :return: A list of schedules which are split on sheet or an empty list if none are split
+    """
+
+    split_schedules = []
+    for s in schedules:
+        if (s.IsSplit()):
+            split_schedules.append(s)
+    return split_schedules

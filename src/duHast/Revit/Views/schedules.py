@@ -100,7 +100,7 @@ def get_all_schedules_placed_on_sheets(doc, filter_revision_schedules = True):
     # loop over schedule ids and get schedule element, filter out revision schedules if required and add to list
     for schedule_sheet_instance_id in ids_on_sheets:
         schedule = doc.GetElement(schedule_sheet_instance_id)
-		
+        
         # filter out revision schedules if required
         if (schedule.IsTitleblockRevisionSchedule and filter_revision_schedules):
             continue
@@ -223,3 +223,19 @@ def get_all_sheet_schedules(doc):
     )
     
     return sheet_schedules
+
+
+def filter_split_schedules(schedules):
+    """
+    Returns only schedules which are split on sheet
+
+    :param schedules: a list of view schedule instances
+
+    :return: A list of schedules which are split on sheet or an empty list if none are split
+    """
+
+    split_schedules = []
+    for s in schedules:
+        if (s.IsSplit()):
+            split_schedules.append(s)
+    return split_schedules

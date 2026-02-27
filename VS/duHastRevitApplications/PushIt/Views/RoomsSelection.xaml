@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:duHastNet.PushIt.Views"
+             xmlns:dataSourceViews="clr-namespace:duHastNet.PushIt.Views.DataSource"
              xmlns:utilsViews ="clr-namespace:duHastNet.Utils.WPF.Views;assembly=Utils.25.0.1.0"
              xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.25.0.1.0"
              xmlns:pushItConverter ="clr-namespace:duHastNet.PushIt.Converters"
@@ -12,7 +13,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="650" d:DesignWidth="800">
     <UserControl.Resources>
-        <!-- a style for the text box if it contains a validation error-->
+        <!-- Validation error style for TextBox fields -->
         <Style TargetType="TextBox">
             <Setter Property="Validation.ErrorTemplate">
                 <Setter.Value>
@@ -60,14 +61,14 @@
         <pushItConverter:CountConverter x:Key="CountConverter"/>
         <pushItConverter:EnumToBooleanConverter x:Key="ModusConverter" />
     </UserControl.Resources>
+
     <Grid Margin="10 10 10 10">
-        <!-- Add your UI elements here -->
         <Grid.RowDefinitions>
             <!-- header row -->
             <RowDefinition Height="auto"/>
             <!-- message banner -->
             <RowDefinition Height="auto"/>
-            <!-- data -->
+            <!-- data grid -->
             <RowDefinition Height="*"/>
             <!-- refresh / model status -->
             <RowDefinition Height="auto"/>
@@ -76,7 +77,8 @@
             <!-- push it buttons -->
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <!-- header row content -->
+
+        <!-- header -->
         <Border 
             Grid.Row="0" 
             Background="#2196F3" 
@@ -93,16 +95,17 @@
                     Opacity="0.9"/>
             </StackPanel>
         </Border>
+
         <!-- message banner -->
         <Grid Grid.Row="1">
             <utilsViews:GlobalMessageView DataContext="{Binding GlobalMessageViewModel}"/>
         </Grid>
-        
-        <!-- dynamic grid view of room data -->
+
+        <!-- rooms data grid -->
         <dynamicDataGrid:DynamicDataGrid  
             x:Name="dataGrid" 
             Grid.Row="2"
-            DataContext="{Binding  RoomsDataGridViewModel}"
+            DataContext="{Binding RoomsDataGridViewModel}"
             ItemsSource="{Binding Data}"
             ColumnDefinitions="{Binding ColumnDefinitions}"
             SelectionMode="Single"
@@ -112,28 +115,22 @@
             dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="False"
             IsEnabled="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource InverseBooleanConverter}}"
             Loaded="RoomSelectionGrid_Loaded">
-
-            <!-- Add Row Style for conditional formatting -->
             <dynamicDataGrid:DynamicDataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
-                    <!-- Default background -->
                     <Setter Property="Background" Value="Red" />
                     <Style.Triggers>
-                        
-                        <!-- Color rows based on a "Count" column -->
                         <DataTrigger Binding="{Binding Values[Count]}" Value="0">
                             <Setter Property="Background" Value="White"/>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding Values[Count]}" Value="1">
                             <Setter Property="Background" Value="LightGray"/>
                         </DataTrigger>
-
                     </Style.Triggers>
                 </Style>
             </dynamicDataGrid:DynamicDataGrid.RowStyle>
         </dynamicDataGrid:DynamicDataGrid>
 
-        <!-- button row content -->
+        <!-- model action buttons row -->
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -141,24 +138,16 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0"
-                Margin="0 5 5 5" 
-                Command="{Binding RefreshGUICommand}">
+            <Button Grid.Column="0" Margin="0 5 5 5" Command="{Binding RefreshGUICommand}">
                 <TextBlock Text="Refresh rooms from model" TextWrapping="Wrap" TextAlignment="Center"/>
             </Button>
-            <Button Grid.Column="1"
-                Margin="0 5 5 5" 
-                Command="{Binding WipeSelectedRoomDataCommand}">
+            <Button Grid.Column="1" Margin="0 5 5 5" Command="{Binding WipeSelectedRoomDataCommand}">
                 <TextBlock Text="Wipe selected rooms in model" TextWrapping="Wrap" TextAlignment="Center"/>
-             </Button>  
-            <Button Grid.Column="2"
-                Margin="0 5 5 5" 
-                Command="{Binding HighLightRoomCommand}">
+            </Button>
+            <Button Grid.Column="2" Margin="0 5 5 5" Command="{Binding HighLightRoomCommand}">
                 <TextBlock Text="Highlight rooms in model" TextWrapping="Wrap" TextAlignment="Center"/>
             </Button>
-            <TextBlock 
-                Grid.Column="3" 
-                Margin="5 5 0 5" >
+            <TextBlock Grid.Column="3" Margin="5 5 0 5">
                 <Run Text="Design Set: " />
                 <Run Text="{Binding ActiveDesignSetName}" />
                 <LineBreak />
@@ -166,14 +155,14 @@
                 <Run Text="{Binding ActiveDesignOptionName}" />
             </TextBlock>
         </Grid>
-        <!-- admin model data expander -->
-        <Border Grid.Row="4" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
-            <Expander  Header="Data Admin" Margin="5 5 5 5">
+
+        <!-- admin expander -->
+        <Border Grid.Row="4" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+            <Expander Header="Data Admin" Margin="5 5 5 5">
                 <StackPanel>
+                    <!-- Admin action buttons -->
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
@@ -181,122 +170,103 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Button 
-                            Grid.Row="0" 
-                            Grid.Column="0"
-                            Margin="0 10 5 10" 
-                            Content="Update rooms in model"
-                            Command="{Binding UpdateAllRoomsCommand}"/>
-                        <Button 
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Margin="5 10 5 10" 
-                            Content="Wipe stale data from rooms in model"
-                            Command="{Binding WipeStaleRoomsDataCommand}"/>
-                        <!-- save data as stack panel so the file path can be stored in a hidden text box (MVVM pattern) -->
-                        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="2">
-                            <Button 
-                                Grid.Row="0" 
-                                Grid.Column="2"
-                                Margin="5 10 5 10" 
-                                Content="Save room data"
-                                Click="SaveFile_OnClick"/>
-                            <TextBox 
-                                x:Name="SaveAsPathTextBox" 
-                                Visibility="Collapsed" 
-                                Width="200" 
-                                Height="30"
-                                Text="{Binding SaveFilePath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <Button Grid.Column="0" Margin="0 10 5 10"
+                                Content="Update rooms in model"
+                                Command="{Binding UpdateAllRoomsCommand}"/>
+
+                        <Button Grid.Column="1" Margin="5 10 5 10"
+                                Content="Wipe stale data from rooms in model"
+                                Command="{Binding WipeStaleRoomsDataCommand}"/>
+
+                        <!-- Save data — hidden TextBox stores the path (MVVM pattern) -->
+                        <StackPanel Orientation="Vertical" Grid.Column="2">
+                            <Button Margin="5 10 5 10"
+                                    Content="Save room data"
+                                    Click="SaveFile_OnClick"/>
+                            <TextBox x:Name="SaveAsPathTextBox"
+                                     Visibility="Collapsed"
+                                     Width="200" Height="30"
+                                     Text="{Binding SaveFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
                     </Grid>
+
+                    <!--
+                        Data source configuration.
+                        Previously this was an inline row with a TextBox, Browse button
+                        and Load button hard-coded to CSV. It is now replaced by
+                        DataSourceControl which owns its own provider dropdown and
+                        provider-specific child control, then a separate Load button.
+                    -->
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Row="0"
-                            Grid.Column="0"
-                            Margin="0 10 5 10"
-                            Padding="0 0 5 0"
-                            Text="Path to SoA:" />
-                        <TextBox
-                            x:Name="FilePathTextBox"
+
+                        <!-- Data source selector + provider config control -->
+                        <dataSourceViews:DataSourceControl
                             Grid.Row="0"
-                            Grid.Column="1"
-                            Margin="5 10 5 10"
-                            Text="{Binding DataFilePath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                        <Button 
-                            Grid.Row="0" 
-                            Grid.Column="2" 
-                            Padding="20 0 20 0"
-                            Margin="5 10 0 10" 
-                            Content="Browse"
-                            Click="PickFile_OnClick"/>
-                        <Button 
-                            Grid.Row="0" 
-                            Grid.Column="3" 
-                            Padding="20 0 20 0"
-                            Margin="5 10 5 10" 
-                            Content="Load"
-                            Command="{Binding ReloadDataCommand}" />
+                            Margin="0 5 0 5"
+                            DataContext="{Binding DataSourceViewModel}"/>
+
+                        <!-- Load button — sits below the provider control -->
+                        <Button Grid.Row="1"
+                                HorizontalAlignment="Right"
+                                Padding="20 4"
+                                Margin="0 5 0 5"
+                                Content="Load"
+                                Command="{Binding ReloadDataCommand}"/>
                     </Grid>
-                    <Border CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
-                        <Expander  Header="Settings" Margin="5 5 5 5">
+
+                    <!-- Settings expander (categories) -->
+                    <Border CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+                        <Expander Header="Settings" Margin="5 5 5 5">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-
-                                <!-- dynamic grid view of supported categories -->
                                 <dynamicDataGrid:DynamicDataGrid  
                                     x:Name="dataGridSupportedCategories" 
                                     Grid.Row="0"
-                                    DataContext="{Binding  SupportedCategoriesDataGridViewModel}"
+                                    DataContext="{Binding SupportedCategoriesDataGridViewModel}"
                                     ItemsSource="{Binding Data}"
                                     ColumnDefinitions="{Binding ColumnDefinitions}"
                                     SelectionMode="Extended"
                                     Margin="5 10 5 10" 
                                     dynamicDataGrid:DataGridColumnHeaderBehavior.EnableColumnManagement="False"
                                     dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="True"/>
-                                <Button 
-                                     Grid.Row="1" 
-                                     Grid.Column="2" 
-                                     Padding="20 0 20 0"
-                                     Margin="5 10 5 10" 
-                                     Content="Apply"
-                                    Command="{Binding UpdateFromChangedCategoriesCommand}" />
+                                <Button Grid.Row="1"
+                                        Padding="20 0 20 0"
+                                        Margin="5 10 5 10"
+                                        Content="Apply"
+                                        Command="{Binding UpdateFromChangedCategoriesCommand}"/>
                             </Grid>
                         </Expander>
                     </Border>
                 </StackPanel>
             </Expander>
         </Border>
-        <!-- push it button row content -->
+
+        <!-- push it buttons -->
         <Grid Grid.Row="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="70"/>
             </Grid.RowDefinitions>
-
-            <!--- operation modus radio buttons -->
-            <Border Grid.Row="0" Grid.RowSpan="3" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
-            </Border>
+            <Border Grid.Row="0" Grid.RowSpan="3" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2"/>
             <customControls:ThreeWaySwitch 
                 Grid.Row="0"
                 Margin="10 2 10 2"
                 LabelLeft="Push It" LabelCenter="Split It" LabelRight="New Room" DisplayName="Mode"
                 Value="{Binding SwitchState, Mode=TwoWay}"/>
-            <Button  Grid.Row="1"
-                Margin="5 10 5 10" 
-                Content = "{Binding  PushItButtonText}"  
-                FontSize="24"
-                Command="{Binding PushSingleRoomCommand}" />
+            <Button Grid.Row="1"
+                    Margin="5 10 5 10"
+                    Content="{Binding PushItButtonText}"
+                    FontSize="24"
+                    Command="{Binding PushSingleRoomCommand}"/>
         </Grid>
+
     </Grid>
 </UserControl>

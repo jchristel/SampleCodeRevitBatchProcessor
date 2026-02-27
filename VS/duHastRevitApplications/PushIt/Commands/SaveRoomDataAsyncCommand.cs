@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -44,7 +44,7 @@ namespace duHastNet.PushIt.Commands
         private bool CanExecute()
         {
             return !_roomsMainViewModel.IsWaitingForRevitCommandToFinish
-                && _roomsMainViewModel.DataFilePathValid;
+                && !_roomsMainViewModel.DataSourceViewModel.HasValidationErrors;
         }
 
         private async System.Threading.Tasks.Task Execute()
@@ -57,8 +57,6 @@ namespace duHastNet.PushIt.Commands
                 (string message, Utils.WPF.Stores.MessageTypes messageType) = await RevitTask.RunAsync(
                     app =>
                     {
-                        //Run Revit API code here
-
                         Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
                         try
                         {
@@ -67,30 +65,33 @@ namespace duHastNet.PushIt.Commands
                                 _revitDataModel,
                                 _roomsMainViewModel
                             );
-                            (string messageActionUpdate, Utils.WPF.Stores.MessageTypes messageActionTypeUpdate) = actionUpdate.Execute(doc);
-
-                            //write messages to log...
+                            (string messageActionUpdate, Utils.WPF.Stores.MessageTypes messageActionTypeUpdate) =
+                                actionUpdate.Execute(doc);
                             _revitDataModel.LogMessages(actionUpdate.GetLogMessagesAndLogTypes());
 
-                            // Execute the action to refresh the room data with the Revit data
+                            // Refresh room data with current Revit model state
                             RefreshRoomDataWithRevitData action = new(
                                 revitModel: _revitDataModel,
                                 roomsMainViewModel: _roomsMainViewModel,
-                                revitMockRooms: actionUpdate.CurrentMockRoomsData //re-use mock room data to speed things up
+                                revitMockRooms: actionUpdate.CurrentMockRoomsData
                             );
-
-                            (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
-
-                            //write messages to log...
+                            (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) =
+                                action.Execute(doc);
                             _revitDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
 
-                            //get data properties from the current soa file
-                            var properties = duHastNet.PushIt.Utilities.ReadRoomsData.GetRoomsDataHeaderRows(_revitDataModel.Settings.DataPath);
+                            // Get column-header properties from the data model.
+                            // RevitDataModel.LoadParameterData() already loaded these via
+                            // IDataSource.GetHeaderProperties() so we read them from the
+                            // model rather than calling ReadRoomsData directly. This means
+                            // SaveRoomDataAsyncCommand works for any data source provider,
+                            // not just CSV.
+                            var properties = _revitDataModel.GetAllParameters();
 
-                            // check if the properties are null
-                            if (properties == null)
+                            if (properties == null || properties.Count == 0)
                             {
-                                return ("Failed to read properties from data file.", MessageTypes.Error);
+                                return ("Failed to read column properties from the data model. " +
+                                        "Ensure data has been loaded before saving.",
+                                        MessageTypes.Error);
                             }
 
                             //build data rows
@@ -104,72 +105,61 @@ namespace duHastNet.PushIt.Commands
 
                             var writer = new duHastNet.FileIOWrapper.WriteToColumnBasedTextFile();
 
-                            //write the data to the file, start with the header rows
+                            // Write header rows first
                             writer.WriteToTextFile(
                                 filePath: _roomsMainViewModel.SaveFilePath,
-                                header: [], //write empty header since this supports single line headers only
+                                header: [],
                                 data: headerRows
                             );
 
-                            //check if any probs
                             if (writer.GetErrorHistory().Count > 0)
                             {
                                 List<(string, Utils.WPF.Stores.MessageTypes)> errorsToLog = [];
                                 foreach (var error in writer.GetErrorHistory())
-                                {
                                     errorsToLog.Add((error, Utils.WPF.Stores.MessageTypes.Error));
-                                }
-                                //log error messages
                                 _revitDataModel.LogMessages(errorsToLog);
-                                //pop message to user
                                 return ("Failed to write data header. Check log for details.", MessageTypes.Error);
                             }
 
-                            //write the data to the file
+                            // Append data rows
                             writer.WriteToTextFile(
                                 filePath: _roomsMainViewModel.SaveFilePath,
-                                header: [], //write empty header since this supports single line headers only
+                                header: [],
                                 data: roomData,
                                 writeType: "a"
                             );
 
-                            //check if any probs
                             if (writer.GetErrorHistory().Count > 0)
                             {
                                 List<(string, Utils.WPF.Stores.MessageTypes)> errorsToLog = [];
                                 foreach (var error in writer.GetErrorHistory())
-                                {
                                     errorsToLog.Add((error, Utils.WPF.Stores.MessageTypes.Error));
-                                }
-                                //log error messages
                                 _revitDataModel.LogMessages(errorsToLog);
-                                //pop message to user
                                 return ("Failed to write data. Check log for details.", MessageTypes.Error);
                             }
 
-                            //set a successful file saved message
                             (string messageActionSave, Utils.WPF.Stores.MessageTypes messageActionTypeSafe) =
-                                ($"Saved {roomData.Count} rooms to file: {_roomsMainViewModel.SaveFilePath}", MessageTypes.Information);
+                                ($"Saved {roomData.Count} rooms to file: {_roomsMainViewModel.SaveFilePath}",
+                                 MessageTypes.Information);
 
-                            // return the messages to the caller
                             return (
                                 $"{messageActionUpdate}\n{messageAction}\n{messageActionSave}",
-                                Utilities.MessageActionTypesUtils.CombineMessageActionType([messageActionTypeUpdate, messageActionType, messageActionTypeSafe])
+                                Utilities.MessageActionTypesUtils.CombineMessageActionType(
+                                    [messageActionTypeUpdate, messageActionType, messageActionTypeSafe])
                             );
                         }
                         catch (Exception ex)
                         {
-                            return ($"An exception occurred within the external event handler update after reload data event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+                            return ($"An exception occurred within the save handler: {ex.Message}",
+                                    Utils.WPF.Stores.MessageTypes.Error);
                         }
                     });
 
                 if (messageType == MessageTypes.Information)
                 {
-                    // raise event to notify the view model that the model has been updated
                     _revitDataModel.RaisePropertyChanged(PropertyChangedEventNames.DATA_MODEL_ROOMS_UPDATED);
                 }
 
-                //pop message to user
                 _roomsMainViewModel.AddMessage(message, messageType);
             }
             catch (Exception ex)
@@ -185,7 +175,6 @@ namespace duHastNet.PushIt.Commands
 
         private List<List<string>> BuildHeaderRows(List<Models.RoomDataProperty> properties)
         {
-            //build header rows
             List<List<string>> headerRows = [];
             List<string> headerRow0 = [];
             List<string> headerRow1 = [];
@@ -199,7 +188,8 @@ namespace duHastNet.PushIt.Commands
                 headerRow2.Add(property.IsReadOnly.ToString());
                 headerRow3.Add(property.ShowInUI.ToString());
             }
-            //add the count values
+
+            // Append synthetic count columns
             headerRow0.Add("Count");
             headerRow1.Add(string.Empty);
             headerRow2.Add(string.Empty);
@@ -218,8 +208,8 @@ namespace duHastNet.PushIt.Commands
         }
 
         /// <summary>
-        /// builds a list of property values from a Room data model room.
-        /// order of properties is defined by properties list passed in.
+        /// Builds a single data row from a room's properties in the order defined
+        /// by <paramref name="properties"/>.
         /// </summary>
         private List<string> BuildDataRowFromRoom(
             Models.RoomBase room,
@@ -232,17 +222,9 @@ namespace duHastNet.PushIt.Commands
             foreach (var property in properties)
             {
                 string propertyValue = room.GetPropertyValueByGUID(property.ParameterGUID);
-                if (propertyValue == null)
-                {
-                    dataRow.Add(string.Empty);
-                }
-                else
-                {
-                    dataRow.Add(propertyValue);
-                }
+                dataRow.Add(propertyValue ?? string.Empty);
             }
 
-            // add count and split count
             dataRow.Add(countPushed.ToString());
             dataRow.Add(countSplit.ToString());
 
@@ -250,57 +232,38 @@ namespace duHastNet.PushIt.Commands
         }
 
         /// <summary>
-        /// Build the data rows for the rooms
+        /// Builds all data rows for the provided room list.
         /// </summary>
-        private List<List<string>> BuildDataRows(List<Models.RoomDataModel> rooms,
-            List<Models.RoomDataProperty> properties
-        )
+        private List<List<string>> BuildDataRows(
+            List<Models.RoomDataModel> rooms,
+            List<Models.RoomDataProperty> properties)
         {
             List<List<string>> dataRows = [];
 
             foreach (Models.RoomDataModel room in rooms)
             {
-                //build data for non pushed room (no matching room or split room in revit)
                 if (room.MatchingRevitRooms.Count == 0 &&
                     room.MatchingSplitRevitRooms.Count == 0)
                 {
-                    List<string> dataRow = BuildDataRowFromRoom(room, properties);
-                    dataRows.Add(dataRow);
+                    dataRows.Add(BuildDataRowFromRoom(room, properties));
                 }
                 else
                 {
-                    // add 1 entry for each matching pushed room
-                    for (int i = 0; i < room.MatchingRevitRooms.Count; i++)
-                    {
-                        List<string> dataRow = BuildDataRowFromRoom(
-                            room: room.MatchingRevitRooms[i],
-                            properties: properties,
-                            countPushed: 1,
-                            countSplit: 0
-                        );
-                        dataRows.Add(dataRow);
-                    }
+                    foreach (var matched in room.MatchingRevitRooms)
+                        dataRows.Add(BuildDataRowFromRoom(matched, properties, countPushed: 1));
 
-                    // loop over any split rooms
-                    for (int i = 0; i < room.MatchingSplitRevitRooms.Count; i++)
-                    {
-                        List<string> dataRow = BuildDataRowFromRoom(
-                            room: room.MatchingSplitRevitRooms[i],
-                            properties: properties,
-                            countPushed: 0,
-                            countSplit: 1
-                        );
-                        dataRows.Add(dataRow);
-                    }
+                    foreach (var split in room.MatchingSplitRevitRooms)
+                        dataRows.Add(BuildDataRowFromRoom(split, properties, countSplit: 1));
                 }
             }
+
             return dataRows;
         }
 
         private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(ViewModels.RoomsMainViewModel.DataFilePath) ||
-                e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish))
+            if (e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish) ||
+                e.PropertyName == nameof(ViewModels.RoomsMainViewModel.HasErrors))
             {
                 _command.NotifyCanExecuteChanged();
             }
@@ -308,8 +271,7 @@ namespace duHastNet.PushIt.Commands
 
         public SaveRoomDataAsyncCommand(
             ViewModels.RoomsMainViewModel roomsMainViewModel,
-            Models.RevitDataModel revitDataModel
-            )
+            Models.RevitDataModel revitDataModel)
         {
             _revitDataModel = revitDataModel;
             _roomsMainViewModel = roomsMainViewModel;

@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -23,61 +23,94 @@
 
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace duHastNet.PushIt.Utilities
 {
     public static class SettingsUtils
     {
-        public static string settingsDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "duHast");
+        public static string settingsDirectory = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "duHast");
+
         private static string settingsFilePath = Path.Combine(settingsDirectory, "pushIt_settings.json");
 
-        // Load settings from the settings file
+        /// <summary>
+        /// Loads settings from the settings file.
+        /// If the file does not exist a safe default is returned.
+        /// <para>
+        /// If the file was written before the DataSource refactor (i.e. it
+        /// contains a plain <c>DataPath</c> string but no <c>DataSource</c>
+        /// object), the legacy value is automatically migrated into
+        /// <see cref="Models.DataSourceSettings.CsvConfig"/> so the rest of
+        /// the application never needs to read <c>DataPath</c> again.
+        /// The migration is transparent — no manual file editing is required.
+        /// </para>
+        /// </summary>
         public static Models.Settings LoadSettings()
         {
             try
             {
-
-                // return a default settings object if the settings file does not exist
+                // No settings file yet — return a safe default
                 if (!File.Exists(settingsFilePath))
                 {
-                    //initialize settings default
-                    Models.Settings settingsDefault = new()
+                    return new Models.Settings
                     {
-                        DataPath = string.Empty,
-                        //enable walls by default
+                        DataSource = new Models.DataSourceSettings(),
                         EnabledCategoryNames = ["Walls"]
                     };
-                    return settingsDefault;
                 }
 
-                //read the settings file
                 string jsonString = File.ReadAllText(settingsFilePath);
                 Models.Settings settings = JsonConvert.DeserializeObject<Models.Settings>(jsonString);
 
-                // safety  fall back for now make sure at least wall category is set
-                if (settings.EnabledCategoryNames.Count == 0)
+                // Safety fallback: at least one category must always be present
+                if (settings.EnabledCategoryNames == null || settings.EnabledCategoryNames.Count == 0)
                 {
                     settings.EnabledCategoryNames = ["Walls"];
                 }
+
+                // ── Migration: legacy DataPath → DataSource.CsvConfig ─────────────
+                // Old settings files contain a non-empty DataPath string and no
+                // DataSource object. Promote the path into the nested CSV config
+                // so all downstream code works exclusively through DataSource.
+                if (settings.DataSource == null ||
+                    settings.DataSource.SourceType == Models.DataSourceType.None)
+                {
+                    if (!string.IsNullOrEmpty(settings.DataPath))
+                    {
+                        // Carry the legacy file path forward as a CSV config
+                        settings.DataSource = new Models.DataSourceSettings(
+                            Models.DataSourceType.Csv,
+                            settings.DataPath);
+                    }
+                    else
+                    {
+                        // No legacy path either — leave as None so the user is
+                        // prompted to configure a source via the new UI
+                        settings.DataSource = new Models.DataSourceSettings();
+                    }
+                }
+                // ── End migration ─────────────────────────────────────────────────
 
                 return settings;
             }
             catch (Exception ex)
             {
-                // Handle exceptions (e.g., file not found, JSON deserialization errors)
                 Console.WriteLine($"Error loading settings: {ex.Message}");
                 return null;
             }
         }
 
-        // Save settings to the settings file
+        /// <summary>
+        /// Serialises <paramref name="settings"/> to the settings file.
+        /// The legacy <c>DataPath</c> field is cleared before saving so it is
+        /// silently dropped from the JSON on the first save after migration,
+        /// without requiring any manual file editing.
+        /// </summary>
         public static void SaveSettings(Models.Settings settings)
         {
             try
             {
-                // Ensure the settings directory exists
                 if (!Directory.Exists(settingsDirectory))
                 {
                     try
@@ -87,26 +120,29 @@ namespace duHastNet.PushIt.Utilities
                     catch (Exception ex)
                     {
                         System.Windows.Forms.MessageBox.Show(
-                            $"failed to save settings with exception {ex.Message}",
+                            $"Failed to save settings with exception {ex.Message}",
                             "Exception at save",
-                            System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                            System.Windows.Forms.MessageBoxButtons.OK,
+                            System.Windows.Forms.MessageBoxIcon.Error);
                         return;
                     }
                 }
 
-                // Serialize the settings object to JSON
-                string jsonString = JsonConvert.SerializeObject(settings, Formatting.None);
+                // Clear the legacy field before serialising so it is not written
+                // back once the migration has run. NullValueHandling.Ignore on
+                // the property means null is omitted from the JSON entirely.
+                settings.DataPath = null;
 
-                // Write the JSON string to the settings file
+                string jsonString = JsonConvert.SerializeObject(settings, Formatting.None);
                 File.WriteAllText(settingsFilePath, jsonString);
             }
             catch (Exception ex)
             {
-                // Handle exceptions (e.g., file write errors)
                 System.Windows.Forms.MessageBox.Show(
-                            $"failed to save settings with exception {ex.Message}",
-                            "Exception at save",
-                            System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                    $"Failed to save settings with exception {ex.Message}",
+                    "Exception at save",
+                    System.Windows.Forms.MessageBoxButtons.OK,
+                    System.Windows.Forms.MessageBoxIcon.Error);
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -21,24 +21,42 @@
 //
 //
 
-
+using Newtonsoft.Json;
 using System.Collections.Generic;
-
 
 namespace duHastNet.PushIt.Models
 {
     public class Settings
     {
-        // path to the data file containing the schedule of accommodations
+        // ── Legacy field ──────────────────────────────────────────────────────────
+        // Kept solely for JSON deserialisation compatibility with settings files
+        // written before the DataSource refactor. SettingsUtils.LoadSettings()
+        // migrates any non-empty DataPath value into DataSource.CsvConfig
+        // automatically on first load. Do NOT use DataPath in new code.
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string DataPath { get; set; }
 
-        // list of enabled Revit categories names only
-        // these are not all the categories pushit supports...just the one enabled
-        public List<string> EnabledCategoryNames { get; set; }
+        // ── Data source ───────────────────────────────────────────────────────────
 
         /// <summary>
-        /// field containing all the column ids (room properties) to be displayed
-        /// and id is the same as the property name but without any spaces!
+        /// Configuration for the active data source.
+        /// Replaces the legacy <see cref="DataPath"/> string.
+        /// Populated on load by <see cref="Utilities.SettingsUtils.LoadSettings"/>,
+        /// which migrates old settings files transparently.
+        /// </summary>
+        public DataSourceSettings DataSource { get; set; }
+
+        // ── Category settings ─────────────────────────────────────────────────────
+
+        // List of enabled Revit category names.
+        // These are not all the categories PushIt supports, just the ones enabled.
+        public List<string> EnabledCategoryNames { get; set; }
+
+        // ── Column / UI state ─────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Column ids (room properties) to be displayed.
+        /// The id matches the property name with all spaces removed.
         /// </summary>
         private readonly List<string> _columnIds;
 
@@ -48,24 +66,23 @@ namespace duHastNet.PushIt.Models
         }
 
         /// <summary>
-        /// states of the navigation controls (e.g. DataGrid) in the UI
+        /// Serialised state of navigation controls (e.g. DataGrid columns,
+        /// filters, sorting). Preserved between sessions.
         /// </summary>
         private Dictionary<string, string> _navigationStates;
 
-        // <summary>
-        /// Stores the serialized DataGrid state (columns, filters, sorting, etc.)
-        /// This allows the grid layout to be preserved between sessions
-        /// </summary>
         public Dictionary<string, string> NavigationStates
         {
             get => _navigationStates;
             set => _navigationStates = value;
         }
 
-        public Settings() {
+        public Settings()
+        {
             EnabledCategoryNames = [];
             _columnIds = [];
             DataPath = string.Empty;
+            DataSource = new DataSourceSettings();
             _navigationStates = new Dictionary<string, string>();
         }
     }

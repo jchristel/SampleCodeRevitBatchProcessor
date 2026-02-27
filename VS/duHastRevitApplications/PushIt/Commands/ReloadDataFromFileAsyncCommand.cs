@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -21,19 +21,29 @@
 //
 //
 
-
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.PushIt.RevitActions;
 using duHastNet.PushIt.Utilities;
+using duHastNet.PushIt.ViewModels.DataSource;
 using duHastNet.Utils.WPF.Stores;
 using Revit.Async;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Input;
 
 namespace duHastNet.PushIt.Commands
 {
+    /// <summary>
+    /// Clears the room data model and reloads it from the currently configured
+    /// data source, then refreshes the Revit model to match.
+    /// <para>
+    /// Previously this command keyed its <c>CanExecute</c> on
+    /// <c>RoomsMainViewModel.DataFilePathValid</c>. That property no longer
+    /// exists; the guard is now
+    /// <c>!DataSourceViewModel.HasValidationErrors</c>, which works for any
+    /// data source provider — not just CSV files.
+    /// </para>
+    /// </summary>
     public class ReloadDataFromFileAsyncCommand
     {
         private readonly ViewModels.RoomsMainViewModel _roomsMainViewModel;
@@ -45,12 +55,17 @@ namespace duHastNet.PushIt.Commands
         private bool CanExecute()
         {
             return !_roomsMainViewModel.IsWaitingForRevitCommandToFinish
-                && _roomsMainViewModel.DataFilePathValid;
+                && !_roomsMainViewModel.DataSourceViewModel.HasValidationErrors;
         }
 
         private async System.Threading.Tasks.Task Execute()
         {
-            //deactivate the ui
+            // Flush any in-progress edits in the DataSourceViewModel back to the
+            // settings model before loading, so the correct path / connection
+            // details are in place when RevitDataModel.LoadRoomsData() is called.
+            _roomsMainViewModel.DataSourceViewModel.SaveToSettings(
+                _revitDataModel.Settings.DataSource);
+
             _roomsMainViewModel.IsWaitingForRevitCommandToFinish = true;
 
             try
@@ -58,78 +73,59 @@ namespace duHastNet.PushIt.Commands
                 (string message, Utils.WPF.Stores.MessageTypes messageType) = await RevitTask.RunAsync(
                     app =>
                     {
-                        //Run Revit API code here
-
                         Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
                         try
                         {
-                            //clear out all rooms from the data model
                             _revitDataModel.ClearAllRooms();
-
-                            // reload data from the file path
                             _revitDataModel.LoadRoomsData();
 
-                            //clear parameter data
                             _revitDataModel.ClearParameters();
-
-                            //load parameter data
                             _revitDataModel.LoadParameterData();
 
-                            //check all parameters still exist before reading data
                             VerifyParametersInModel actionVerify = new(_revitDataModel);
-                            (string messageActionVerify, Utils.WPF.Stores.MessageTypes messageActionTypeVerify) = actionVerify.Execute(doc);
-
-                            //write messages to log...
+                            (string messageActionVerify, Utils.WPF.Stores.MessageTypes messageActionTypeVerify) =
+                                actionVerify.Execute(doc);
                             _revitDataModel.LogMessages(actionVerify.GetLogMessagesAndLogTypes());
 
-                            //only proceed if all parameters are verified
                             if (messageActionTypeVerify == MessageTypes.Error)
                             {
                                 return (messageActionVerify, messageActionTypeVerify);
                             }
 
-                            //add new rooms to the data model first
                             UpdateRoomDataModelWithNewRooms actionUpdate = new(
                                 _revitDataModel,
-                                _roomsMainViewModel
-                            );
-
-                            (string messageActionUpdate, Utils.WPF.Stores.MessageTypes messageActionTypeUpdate) = actionUpdate.Execute(doc);
-
-                            //write messages to log...
+                                _roomsMainViewModel);
+                            (string messageActionUpdate, Utils.WPF.Stores.MessageTypes messageActionTypeUpdate) =
+                                actionUpdate.Execute(doc);
                             _revitDataModel.LogMessages(actionUpdate.GetLogMessagesAndLogTypes());
 
-                            // Execute the action to refresh the room data with the Revit data
                             RefreshRoomDataWithRevitData action = new(
                                 revitModel: _revitDataModel,
                                 roomsMainViewModel: _roomsMainViewModel,
-                                revitMockRooms: actionUpdate.CurrentMockRoomsData //re-use mock room data to speed things up
-                            );
-
-                            (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
-
-                            //write messages to log...
+                                revitMockRooms: actionUpdate.CurrentMockRoomsData);
+                            (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) =
+                                action.Execute(doc);
                             _revitDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
 
-                            // return the message to the caller
                             return (
-                                $"{messageActionTypeUpdate}\n{messageAction}",
-                                Utilities.MessageActionTypesUtils.CombineMessageActionType([messageActionTypeUpdate, messageActionType])
+                                $"{messageActionUpdate}\n{messageAction}",
+                                Utilities.MessageActionTypesUtils.CombineMessageActionType(
+                                    [messageActionTypeUpdate, messageActionType])
                             );
                         }
                         catch (Exception ex)
                         {
-                            return ($"An exception occurred within the external event handler update after reload data event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+                            return (
+                                $"An exception occurred within the reload handler: {ex.Message}",
+                                Utils.WPF.Stores.MessageTypes.Error);
                         }
                     });
 
                 if (messageType == MessageTypes.Information)
                 {
-                    // raise event to notify the view model that the model has been updated
                     _revitDataModel.RaisePropertyChanged(PropertyChangedEventNames.DATA_MODEL_ROOMS_UPDATED);
                 }
 
-                //pop message to user
                 _roomsMainViewModel.AddMessage(message, messageType);
             }
             catch (Exception ex)
@@ -138,15 +134,16 @@ namespace duHastNet.PushIt.Commands
             }
             finally
             {
-                //activate the ui
                 _roomsMainViewModel.IsWaitingForRevitCommandToFinish = false;
             }
         }
 
         private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(ViewModels.RoomsMainViewModel.DataFilePath) ||
-                e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish))
+            // Re-evaluate CanExecute when the waiting flag or data source
+            // validation state changes.
+            if (e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish) ||
+                e.PropertyName == nameof(ViewModels.RoomsMainViewModel.HasErrors))
             {
                 _command.NotifyCanExecuteChanged();
             }
@@ -154,8 +151,7 @@ namespace duHastNet.PushIt.Commands
 
         public ReloadDataFromFileAsyncCommand(
             ViewModels.RoomsMainViewModel roomsMainViewModel,
-            Models.RevitDataModel revitDataModel
-            )
+            Models.RevitDataModel revitDataModel)
         {
             _revitDataModel = revitDataModel;
             _roomsMainViewModel = roomsMainViewModel;

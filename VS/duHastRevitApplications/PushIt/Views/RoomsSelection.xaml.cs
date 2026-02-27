@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -21,20 +21,15 @@
 //
 //
 
-
 using duHastNet.UI.CustomControls.CustomDataGrid;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-
 
 namespace duHastNet.PushIt.Views
 {
     /// <summary>
-    /// Interaction logic for UserControl1.xaml
+    /// Interaction logic for RoomsSelection.xaml
     /// </summary>
     public partial class RoomsSelection : UserControl
     {
@@ -43,33 +38,17 @@ namespace duHastNet.PushIt.Views
             InitializeComponent();
         }
 
-        /// <summary>
-        /// used when browsing SoA data file.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void PickFile_OnClick(object sender, EventArgs e)
-        {
-            var dialog = new System.Windows.Forms.OpenFileDialog();
-            dialog.Filter = "csv Files (*.csv)|*.csv|All Files (*.*)|*.*";
-            var dialogResult = dialog.ShowDialog();
-            if (dialogResult == System.Windows.Forms.DialogResult.OK)
-            {
-                FilePathTextBox.Text = dialog.FileName;
-
-                // Since setting the property explicitly bypasses the data binding, 
-                // we must explicitly update it by calling BindingExpression.UpdateSource()
-                this.FilePathTextBox
-                  .GetBindingExpression(TextBox.TextProperty)
-                  .UpdateSource();
-            }
-        }
+        // PickFile_OnClick has been removed. The Browse button for the data
+        // source file is now handled entirely by
+        // CsvDataSourceControlViewModel.BrowseCommand — no code-behind needed.
 
         /// <summary>
-        /// used to store dave file path when saving push it room data to disk
+        /// Opens a save-file dialog and feeds the chosen path back into the
+        /// SaveFilePath binding on RoomsMainViewModel.
+        /// The hidden SaveAsPathTextBox is used as the binding intermediary
+        /// (setting Text + calling UpdateSource) because WPF file dialogs do
+        /// not support direct ViewModel binding out of the box.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void SaveFile_OnClick(object sender, EventArgs e)
         {
             var dialog = new System.Windows.Forms.SaveFileDialog
@@ -81,19 +60,16 @@ namespace duHastNet.PushIt.Views
             {
                 SaveAsPathTextBox.Text = dialog.FileName;
 
-                // Since setting the property explicitly bypasses the data binding, 
-                // we must explicitly update it by calling BindingExpression.UpdateSource()
                 this.SaveAsPathTextBox
-                  .GetBindingExpression(TextBox.TextProperty)
-                  .UpdateSource();
+                    .GetBindingExpression(TextBox.TextProperty)
+                    .UpdateSource();
             }
         }
 
         /// <summary>
-        /// register the data grid with the view model when the grid is loaded.
+        /// Registers the rooms data grid with its ViewModel when the grid is
+        /// loaded so column management and state persistence work correctly.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void RoomSelectionGrid_Loaded(object sender, RoutedEventArgs e)
         {
             if (sender is DynamicDataGrid grid &&

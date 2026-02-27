@@ -1,0 +1,90 @@
+<UserControl x:Class="duHastNet.PushIt.Views.DataSource.DataSourceControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dataSourceVm="clr-namespace:duHastNet.PushIt.ViewModels.DataSource"
+             xmlns:dataSourceViews="clr-namespace:duHastNet.PushIt.Views.DataSource"
+             mc:Ignorable="d"
+             d:DesignHeight="120" d:DesignWidth="600">
+
+    <!--
+        DataContext: DataSourceViewModel
+        Equivalent of CloudDocumentManagerView.xaml in the DocManager namespace.
+
+        Layout:
+          Row 0 — provider type ComboBox
+          Row 1 — provider-specific configuration control (dynamic, via DataTemplates)
+
+        To add a new provider:
+          1. Add a DataTemplate below mapping its ViewModel type to its View.
+          2. That is the only change required in this file.
+    -->
+
+    <UserControl.Resources>
+
+        <!-- CSV provider control -->
+        <DataTemplate DataType="{x:Type dataSourceVm:CsvDataSourceControlViewModel}">
+            <dataSourceViews:CsvDataSourceControl/>
+        </DataTemplate>
+
+        <!-- Future providers — add DataTemplates here:
+        <DataTemplate DataType="{x:Type dataSourceVm:DrofusDataSourceControlViewModel}">
+            <dataSourceViews:DrofusDataSourceControl/>
+        </DataTemplate>
+        -->
+
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Provider type selector -->
+            <RowDefinition Height="Auto"/>
+            <!-- Provider-specific configuration control -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Row 0: provider type dropdown -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       Margin="0 0 8 0"
+                       VerticalAlignment="Center"
+                       Text="Data Source:"/>
+
+            <ComboBox Grid.Column="1"
+                      Margin="0 5 0 5"
+                      Width="200"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Center"
+                      ItemsSource="{Binding AvailableSourceTypes}"
+                      SelectedItem="{Binding SelectedSourceType, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
+
+        <!-- Row 1: provider-specific control, shown only when a provider is selected -->
+        <Border Grid.Row="1"
+                BorderBrush="LightGray"
+                BorderThickness="1"
+                CornerRadius="3"
+                Margin="0 5 0 5"
+                Padding="8">
+            <ContentControl Content="{Binding CurrentSourceControlViewModel}">
+                <ContentControl.Style>
+                    <Style TargetType="ContentControl">
+                        <Style.Triggers>
+                            <!-- Collapse when no provider is selected -->
+                            <DataTrigger Binding="{Binding CurrentSourceControlViewModel}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ContentControl.Style>
+            </ContentControl>
+        </Border>
+
+    </Grid>
+</UserControl>

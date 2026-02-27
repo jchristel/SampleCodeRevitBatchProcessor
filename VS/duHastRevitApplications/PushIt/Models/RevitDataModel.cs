@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -21,10 +21,8 @@
 //
 //
 
-
 using System.Collections.Generic;
 using System.ComponentModel;
-
 
 namespace duHastNet.PushIt.Models
 {
@@ -44,22 +42,20 @@ namespace duHastNet.PushIt.Models
             {
                 _settings = value;
 
-                //load category data
+                // Load category data from the new settings
                 LoadCategoryDataFromSettings();
 
-                //read out all parameters and their data
+                // Read column-header metadata from the data source
                 LoadParameterData();
             }
         }
 
-        //event handlers for property changed
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
 
         public void RaisePropertyChanged(string name)
         {
@@ -80,25 +76,22 @@ namespace duHastNet.PushIt.Models
 
         public List<Models.RoomDataModel> GetAllRooms()
         {
-            // returns the SoA rooms as well as the new rooms from the data model
+            // Returns SoA rooms combined with any new rooms added through the UI
             return _roomsContainer.GetAllRoomsCombined();
         }
 
         public void ClearAllRooms()
         {
-            // clears SoA rooms and new rooms from the data model
             _roomsContainer.ClearAllRooms();
         }
 
         public void ClearNewRooms()
         {
-            // clears new rooms from the data model
             _roomsContainer.ClearNewRooms();
         }
 
         public void ClearRooms()
         {
-            // clears SoA rooms from the data model
             _roomsContainer.ClearRooms();
         }
 
@@ -106,7 +99,6 @@ namespace duHastNet.PushIt.Models
         {
             _roomsContainer.RemovePlacedRevitRoom(revitElementId);
         }
-
 
         public void RemovePlacedNewRevitRoom(string roomId, long revitElementId)
         {
@@ -126,12 +118,24 @@ namespace duHastNet.PushIt.Models
             _roomsContainer.AddPlacedNewRevitRoom(roomId, revitRoom);
         }
 
+        /// <summary>
+        /// Loads room records from the active data source into the model.
+        /// The provider is resolved via <see cref="Utilities.DataSourceFactory"/>
+        /// based on <see cref="Settings.DataSource"/>.<see cref="DataSourceSettings.SourceType"/>.
+        /// No caller needs to change when a new provider is added.
+        /// </summary>
         public void LoadRoomsData()
         {
-            // add rooms to RevitDataModel
-            List<Models.RoomDataModel> rooms = Utilities.ReadRoomsData.GetRoomsData(_settings.DataPath);
+            if (_settings?.DataSource == null ||
+                _settings.DataSource.SourceType == DataSourceType.None)
+            {
+                // No data source configured yet — nothing to load
+                return;
+            }
 
-            // TODO: if no rooms return (need to pop message to user...)
+            var dataSource = Utilities.DataSourceFactory.Create(_settings.DataSource.SourceType);
+            List<Models.RoomDataModel> rooms = dataSource.GetRoomsData(_settings.DataSource);
+
             if (rooms == null) return;
 
             foreach (Models.RoomDataModel room in rooms)
@@ -139,20 +143,19 @@ namespace duHastNet.PushIt.Models
                 AddRoom(room);
             }
         }
-        #endregion 
+
+        #endregion
 
         #region categories
 
         /// <summary>
-        /// Adds categories to the categories container only if they not already exists
-        /// Used to add supported categories to the container. Container may already contain enabled categories
+        /// Adds Revit categories to the container, skipping any that are already present.
+        /// Used to register all categories supported by the current Revit model.
         /// </summary>
-        /// <param name="revitCategories"></param>
         public void LoadSupportedCategoryData(List<Models.CategoryDataModel> revitCategories)
         {
             foreach (Models.CategoryDataModel category in revitCategories)
             {
-                //only add this category if not already in categories by its name
                 if (!_categoriesContainer.CategoryExists(category))
                 {
                     AddCategory(category);
@@ -162,18 +165,14 @@ namespace duHastNet.PushIt.Models
 
         public void LoadCategoryDataFromSettings()
         {
-            //check if we got settings
             if (Settings == null) return;
-
-            //check if we got enabled category names
             if (Settings.EnabledCategoryNames == null) return;
 
-            // update supported catgeories from settings
             ClearCategories();
 
             foreach (var cat in Settings.EnabledCategoryNames)
             {
-                // all categories in settings are enabled categories
+                // All categories stored in settings are treated as enabled
                 AddCategory(new Models.CategoryDataModel(cat, true));
             }
         }
@@ -203,26 +202,29 @@ namespace duHastNet.PushIt.Models
             return _categoriesContainer.GetEnabledCategoryNames();
         }
 
-
         #endregion
 
         #region parameters
 
+        /// <summary>
+        /// Loads column-header metadata (parameter definitions) from the active
+        /// data source without reading all room records.
+        /// Used to populate the parameter list shown in the UI.
+        /// The provider is resolved via <see cref="Utilities.DataSourceFactory"/>.
+        /// </summary>
         public void LoadParameterData()
         {
-            //check if there is a settings object
-            if (_settings == null) return;
+            if (_settings?.DataSource == null ||
+                _settings.DataSource.SourceType == DataSourceType.None)
+            {
+                return;
+            }
 
-            //check if data file path is valid
-            if (_settings.DataPath == null) return;
+            var dataSource = Utilities.DataSourceFactory.Create(_settings.DataSource.SourceType);
+            var parameters = dataSource.GetHeaderProperties(_settings.DataSource);
 
-            //load parameter data
-            var parameters = Utilities.ReadRoomsData.GetRoomsDataHeaderRows(_settings.DataPath);
-
-            //check if valid data came back
             if (parameters == null) return;
 
-            //clear parameters before adding them again
             ClearParameters();
 
             foreach (var parameter in parameters)
@@ -255,14 +257,10 @@ namespace duHastNet.PushIt.Models
 
         public void LogMessages(List<(string, Utils.WPF.Stores.MessageTypes)> messages)
         {
-            if (_logger == null)
-            {
-                return;
-            }
+            if (_logger == null) return;
 
             _logger.LogMessagesFireAndForget(messages);
         }
-
 
         public RevitDataModel()
         {

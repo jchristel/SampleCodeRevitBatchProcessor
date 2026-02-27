@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -43,7 +43,7 @@ namespace duHastNet.PushIt.Commands
         private bool CanExecute()
         {
             return !_roomsMainViewModel.IsWaitingForRevitCommandToFinish
-                && _roomsMainViewModel.DataFilePathValid;
+                && !_roomsMainViewModel.DataSourceViewModel.HasValidationErrors;
         }
 
         private async System.Threading.Tasks.Task Execute()
@@ -56,14 +56,10 @@ namespace duHastNet.PushIt.Commands
                 (string message, Utils.WPF.Stores.MessageTypes messageType) = await RevitTask.RunAsync(
                     app =>
                     {
-                        //Run Revit API code here
-
                         Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
                         try
                         {
                             // TODO: implement push selected rooms logic here
-
-                            // return the messages to the caller
                             return ("", MessageTypes.Information);
                         }
                         catch (Exception ex)
@@ -94,7 +90,8 @@ namespace duHastNet.PushIt.Commands
 
         private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish))
+            if (e.PropertyName == nameof(ViewModels.RoomsMainViewModel.IsWaitingForRevitCommandToFinish) ||
+                e.PropertyName == nameof(ViewModels.RoomsMainViewModel.HasErrors))
             {
                 _command.NotifyCanExecuteChanged();
             }

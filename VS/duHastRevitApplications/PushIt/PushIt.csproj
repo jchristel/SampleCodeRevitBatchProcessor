@@ -81,6 +81,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="DataSources\Drofus\Interfaces\" />
+    <Folder Include="DataSources\Drofus\Models\" />
+    <Folder Include="DataSources\Drofus\Services\" />
     <Folder Include="Interfaces\" />
     <Folder Include="ViewModels\DataSource\" />
   </ItemGroup>

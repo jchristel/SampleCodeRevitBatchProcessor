@@ -96,6 +96,45 @@ namespace duHastNet.PushIt.ViewModels
         [ObservableProperty]
         private bool _isWaitingForRevitCommandToFinish;
 
+        /// <summary>
+        /// The active Revit document title, read from <see cref="Models.RevitDataModel.RevitDocumentTitle"/>.
+        /// Long titles are split into lines of at most 16 characters so the blue
+        /// header row can display them without overflowing.
+        /// </summary>
+        public string RevitDocumentTitle =>
+            WrapAtWidth(_revitDataModel.RevitDocumentTitle, 16);
+
+        /// <summary>
+        /// Splits <paramref name="text"/> into lines of at most
+        /// <paramref name="maxChars"/> characters, breaking on whole words where
+        /// possible, and joins them with a newline so WPF TextBlock can render them.
+        /// </summary>
+        private static string WrapAtWidth(string text, int maxChars)
+        {
+            if (string.IsNullOrEmpty(text) || text.Length <= maxChars)
+                return text;
+
+            var lines = new System.Collections.Generic.List<string>();
+            int start = 0;
+            while (start < text.Length)
+            {
+                if (start + maxChars >= text.Length)
+                {
+                    lines.Add(text.Substring(start));
+                    break;
+                }
+
+                // Try to break on a space within the window
+                int breakAt = text.LastIndexOf(' ', start + maxChars, maxChars);
+                if (breakAt <= start)
+                    breakAt = start + maxChars; // hard break
+
+                lines.Add(text.Substring(start, breakAt - start).TrimEnd());
+                start = breakAt + (text[breakAt] == ' ' ? 1 : 0);
+            }
+            return string.Join("\n", lines);
+        }
+
         #region push modus
 
         [ObservableProperty]
@@ -213,6 +252,12 @@ namespace duHastNet.PushIt.ViewModels
             OnPropertyChanged(nameof(HasErrors));
         }
 
+        private void OnRevitDataModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Models.RevitDataModel.RevitDocumentTitle))
+                OnPropertyChanged(nameof(RevitDocumentTitle));
+        }
+
         /// <summary>
         /// Handles PropertyChanged from <see cref="DataSourceViewModel"/>.
         /// When its <see cref="DataSourceViewModel.HasValidationErrors"/> changes,
@@ -248,6 +293,7 @@ namespace duHastNet.PushIt.ViewModels
             // Unsubscribe from child error events
             _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
             DataSourceViewModel.PropertyChanged -= OnDataSourceViewModelPropertyChanged;
+            _revitDataModel.PropertyChanged -= OnRevitDataModelPropertyChanged;
 
             // Persist current data source config back to settings before closing.
             // Must be called before base.OnClosing() which triggers DataSourceViewModel.OnClosing().
@@ -311,6 +357,9 @@ namespace duHastNet.PushIt.ViewModels
             _messageStore = messageStore;
             _revitDataModel = revitDataModel;
             _stateStore = stateStore;
+
+            // Forward RevitDocumentTitle changes from the data model to the UI
+            _revitDataModel.PropertyChanged += OnRevitDataModelPropertyChanged;
 
             // Errors ViewModel for local validation (SaveFilePath, etc.)
             _errorsViewModel = new Utils.WPF.ViewModels.ErrorsViewModel();

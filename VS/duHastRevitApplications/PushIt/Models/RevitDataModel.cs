@@ -21,6 +21,7 @@
 //
 //
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -34,6 +35,23 @@ namespace duHastNet.PushIt.Models
         private Models.Settings _settings;
 
         private Utils.Logging.SimpleLogger _logger;
+        private string _revitDocumentTitle = string.Empty;
+
+        /// <summary>
+        /// The title of the active Revit document, set during initialisation in
+        /// <see cref="Main.ExecuteInternal"/> and surfaced in the UI via
+        /// <see cref="ViewModels.RoomsMainViewModel.RevitDocumentTitle"/>.
+        /// </summary>
+        public string RevitDocumentTitle
+        {
+            get => _revitDocumentTitle;
+            set
+            {
+                if (_revitDocumentTitle == value) return;
+                _revitDocumentTitle = value;
+                OnPropertyChanged(nameof(RevitDocumentTitle));
+            }
+        }
 
         public Settings Settings
         {
@@ -124,6 +142,12 @@ namespace duHastNet.PushIt.Models
         /// based on <see cref="Settings.DataSource"/>.<see cref="DataSourceSettings.SourceType"/>.
         /// No caller needs to change when a new provider is added.
         /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// Re-thrown from the data source provider (e.g. missing drofus credentials,
+        /// HTTP error) with a user-readable message. The caller —
+        /// <see cref="Commands.ReloadDataFromFileAsyncCommand"/> — catches this and
+        /// surfaces it in the UI message banner.
+        /// </exception>
         public void LoadRoomsData()
         {
             if (_settings?.DataSource == null ||
@@ -134,7 +158,19 @@ namespace duHastNet.PushIt.Models
             }
 
             var dataSource = Utilities.DataSourceFactory.Create(_settings.DataSource.SourceType);
-            List<Models.RoomDataModel> rooms = dataSource.GetRoomsData(_settings.DataSource);
+
+            List<Models.RoomDataModel>? rooms;
+            try
+            {
+                rooms = dataSource.GetRoomsData(_settings.DataSource);
+            }
+            catch (Exception ex)
+            {
+                // Wrap and re-throw so the message reaches the UI banner via
+                // ReloadDataFromFileAsyncCommand's catch block, without crashing Revit.
+                throw new InvalidOperationException(
+                    $"Failed to load room data: {ex.Message}", ex);
+            }
 
             if (rooms == null) return;
 
@@ -212,6 +248,10 @@ namespace duHastNet.PushIt.Models
         /// Used to populate the parameter list shown in the UI.
         /// The provider is resolved via <see cref="Utilities.DataSourceFactory"/>.
         /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// Re-thrown from the data source provider with a user-readable message.
+        /// Surfaced in the UI banner by the calling command.
+        /// </exception>
         public void LoadParameterData()
         {
             if (_settings?.DataSource == null ||
@@ -221,7 +261,17 @@ namespace duHastNet.PushIt.Models
             }
 
             var dataSource = Utilities.DataSourceFactory.Create(_settings.DataSource.SourceType);
-            var parameters = dataSource.GetHeaderProperties(_settings.DataSource);
+
+            List<Models.RoomDataProperty>? parameters;
+            try
+            {
+                parameters = dataSource.GetHeaderProperties(_settings.DataSource);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(
+                    $"Failed to load parameter data: {ex.Message}", ex);
+            }
 
             if (parameters == null) return;
 

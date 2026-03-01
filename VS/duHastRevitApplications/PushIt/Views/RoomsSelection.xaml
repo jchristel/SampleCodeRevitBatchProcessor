@@ -84,16 +84,31 @@
             Background="#2196F3" 
             Padding="15,10" 
             Margin="0,0,0,10">
-            <StackPanel>
-                <TextBlock Text="Push It...Real Good!" 
-                    FontSize="20" 
-                    FontWeight="Bold" 
-                    Foreground="White"/>
-                <TextBlock Text="Rapid layout development in Revit" 
-                    FontSize="12" 
-                    Foreground="White" 
-                    Opacity="0.9"/>
-            </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Push It...Real Good!" 
+                        FontSize="20" 
+                        FontWeight="Bold" 
+                        Foreground="White"/>
+                    <TextBlock Text="Rapid layout development in Revit" 
+                        FontSize="12" 
+                        Foreground="White" 
+                        Opacity="0.9"/>
+                </StackPanel>
+                <TextBlock 
+                    Grid.Column="1"
+                    Text="{Binding RevitDocumentTitle}"
+                    FontSize="11"
+                    Foreground="White"
+                    Opacity="0.85"
+                    TextAlignment="Right"
+                    VerticalAlignment="Center"
+                    Margin="10,0,0,0"/>
+            </Grid>
         </Border>
 
         <!-- message banner -->

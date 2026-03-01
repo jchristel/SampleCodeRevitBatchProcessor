@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -24,6 +24,7 @@
 
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using duHastNet.PushIt.Utilities;
 using duHastNet.PushIt.Views;
@@ -89,12 +90,28 @@ namespace duHastNet.PushIt
             //Get document
             Document doc = uiapp.ActiveUIDocument.Document;
 
+            // store the document title so the UI can display it
+            _revitDataModel.RevitDocumentTitle = doc.Title;
+
             // load settings from file
             Models.Settings settings = SettingsUtils.LoadSettings();
             _revitDataModel.Settings = settings;
 
-            //load room data into model
-            _revitDataModel.LoadRoomsData();
+            // load room data into model
+            // Wrapped in try/catch so a data source error (e.g. incomplete drofus
+            // credentials, missing CSV file) does not prevent the window from opening.
+            // The error is queued into the message store and shown in the banner once
+            // the UI is displayed.
+            try
+            {
+                _revitDataModel.LoadRoomsData();
+            }
+            catch (Exception ex)
+            {
+                _messageStore.EnqueueMessage(
+                    $"Could not load room data on startup: {ex.Message}",
+                    duHastNet.Utils.WPF.Stores.MessageTypes.Error);
+            }
 
             //get all supported categories
             List<Models.CategoryDataModel> supportedCategories =

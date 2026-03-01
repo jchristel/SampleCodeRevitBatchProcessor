@@ -249,7 +249,8 @@ namespace duHastNet.PushIt.ViewModels
             _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
             DataSourceViewModel.PropertyChanged -= OnDataSourceViewModelPropertyChanged;
 
-            // Persist current data source config back to settings before closing
+            // Persist current data source config back to settings before closing.
+            // Must be called before base.OnClosing() which triggers DataSourceViewModel.OnClosing().
             DataSourceViewModel.SaveToSettings(_revitDataModel.Settings.DataSource);
 
             // Update column ids
@@ -336,9 +337,10 @@ namespace duHastNet.PushIt.ViewModels
             // Create host ViewModel, load current settings into it, and subscribe
             // to its validation changes so HasErrors and command CanExecute stay
             // in sync. This replaces the old DataFilePath / DataFilePathValid pair.
-            DataSourceViewModel = new DataSourceViewModel();
+            DataSourceViewModel = new DataSourceViewModel(_revitDataModel.Settings.DataSource);
             DataSourceViewModel.LoadFromSettings(_revitDataModel.Settings.DataSource);
             DataSourceViewModel.PropertyChanged += OnDataSourceViewModelPropertyChanged;
+            RegisterChild(DataSourceViewModel);
 
             // ── Commands ──────────────────────────────────────────────────────────
             _raiseRefreshGUICommand = new Commands.RefreshUIFromRevitModelAsyncCommand(

@@ -27,12 +27,9 @@
         <DataTemplate DataType="{x:Type dataSourceVm:CsvDataSourceControlViewModel}">
             <dataSourceViews:CsvDataSourceControl/>
         </DataTemplate>
-
-        <!-- Future providers — add DataTemplates here:
         <DataTemplate DataType="{x:Type dataSourceVm:DrofusDataSourceControlViewModel}">
             <dataSourceViews:DrofusDataSourceControl/>
         </DataTemplate>
-        -->
 
     </UserControl.Resources>
 

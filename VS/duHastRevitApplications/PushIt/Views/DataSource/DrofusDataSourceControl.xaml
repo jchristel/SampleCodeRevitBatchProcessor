@@ -1,0 +1,91 @@
+<UserControl x:Class="duHastNet.PushIt.Views.DataSource.DrofusDataSourceControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="160" d:DesignWidth="500">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid Margin="0 4 0 4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>  <!-- API token -->
+            <RowDefinition Height="Auto"/>  <!-- Database name -->
+            <RowDefinition Height="Auto"/>  <!-- Connect button + connecting indicator -->
+            <RowDefinition Height="Auto"/>  <!-- Status message -->
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="110"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- API Token -->
+        <TextBlock Grid.Row="0" Grid.Column="0"
+                   Text="API token:"
+                   VerticalAlignment="Center"
+                   Margin="0 4 8 4"/>
+        <TextBox Grid.Row="0" Grid.Column="1"
+                 Margin="0 4 0 4"
+                 Text="{Binding ApiToken, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 ToolTip="Paste your drofus API token here"/>
+
+        <!-- Database name -->
+        <TextBlock Grid.Row="1" Grid.Column="0"
+                   Text="Database name:"
+                   VerticalAlignment="Center"
+                   Margin="0 4 8 4"/>
+        <TextBox Grid.Row="1" Grid.Column="1"
+                 Margin="0 4 0 4"
+                 Text="{Binding DatabaseName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 ToolTip="Your drofus database identifier"/>
+
+        <!-- Connect button + connecting indicator -->
+        <StackPanel Grid.Row="2" Grid.Column="1"
+                    Orientation="Horizontal"
+                    Margin="0 6 0 4">
+
+            <Button Content="Connect"
+                    Padding="16 4"
+                    Command="{Binding ConnectCommand}"/>
+
+            <!-- Shown only while the HTTP call is in progress -->
+            <TextBlock Text="Connecting…"
+                       Margin="10 0 0 0"
+                       VerticalAlignment="Center"
+                       Foreground="#555555"
+                       Visibility="{Binding IsConnecting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        </StackPanel>
+
+        <!-- Status message — own row so it has full width and is never clipped -->
+        <!-- Green on success, red on error, hidden while connecting -->
+        <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                   Margin="0 2 0 4"
+                   TextWrapping="Wrap"
+                   Text="{Binding StatusMessage}">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Foreground" Value="#CC0000"/>
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <!-- Green when connected successfully -->
+                        <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                            <Setter Property="Foreground" Value="#007700"/>
+                        </DataTrigger>
+                        <!-- Hide during the connect call — the "Connecting…" text above covers it -->
+                        <DataTrigger Binding="{Binding IsConnecting}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                        <!-- Hide when there is nothing to show yet -->
+                        <DataTrigger Binding="{Binding StatusMessage}" Value="">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+
+    </Grid>
+</UserControl>

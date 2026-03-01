@@ -3,7 +3,7 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
-    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
     <RootNamespace>duHastNet.PushIt</RootNamespace>
     <AssemblyName>PushIt.25.0.1.0</AssemblyName>
     <OutputType>Library</OutputType>
@@ -83,7 +83,8 @@
   <ItemGroup>
     <Folder Include="DataSources\Drofus\Interfaces\" />
     <Folder Include="DataSources\Drofus\Models\" />
-    <Folder Include="DataSources\Drofus\Services\" />
+    <Folder Include="DataSources\Drofus\ViewModels\" />
+    <Folder Include="DataSources\Drofus\Views\" />
     <Folder Include="Interfaces\" />
     <Folder Include="ViewModels\DataSource\" />
   </ItemGroup>

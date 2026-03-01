@@ -23,6 +23,8 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using duHastNet.PushIt.Models;
+using duHastNet.Utils.WPF.Interfaces;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
@@ -40,9 +42,25 @@ namespace duHastNet.PushIt.ViewModels.DataSource
     /// <see cref="ObservableObject.PropertyChanged"/> and forwarding
     /// <see cref="HasValidationErrors"/> changes up the chain.
     /// </para>
+    /// <para>
+    /// Implements <see cref="ICloseable"/> so it can be registered with
+    /// <c>ViewModelBase.RegisterChild</c> and have <see cref="OnClosing"/>
+    /// called automatically when <see cref="RoomsMainViewModel"/> closes.
+    /// </para>
     /// </summary>
-    public partial class DataSourceViewModel : ObservableValidator
+    public partial class DataSourceViewModel : ObservableValidator, ICloseable
     {
+        #region Private Fields
+
+        /// <summary>
+        /// The live settings object shared with the rest of the application.
+        /// Passed into child control ViewModels so they can read and write their
+        /// provider-specific config directly (e.g. DrofusDataSourceSettings).
+        /// </summary>
+        private readonly DataSourceSettings _settings;
+
+        #endregion
+
         #region Observable Properties
 
         /// <summary>
@@ -116,12 +134,10 @@ namespace duHastNet.PushIt.ViewModels.DataSource
             // Create the appropriate child ViewModel for the selected type
             CurrentSourceControlViewModel = value switch
             {
+                DataSourceType.None => null,
                 DataSourceType.Csv => new CsvDataSourceControlViewModel(),
-
-                // Future providers – add cases here:
-                // DataSourceType.Drofus => new DrofusDataSourceControlViewModel(),
-
-                _ => null
+                DataSourceType.Drofus => new DrofusDataSourceControlViewModel(_settings),
+                _ => throw new ArgumentException($"Unknown source type: {value}")
             };
 
             // Subscribe to the new child's error notifications
@@ -165,6 +181,20 @@ namespace duHastNet.PushIt.ViewModels.DataSource
 
         #endregion
 
+        #region ICloseable
+
+        /// <summary>
+        /// Called by <see cref="RoomsMainViewModel.OnClosing"/> via the
+        /// <c>RegisterChild</c> mechanism. Unsubscribes from the current child's
+        /// error events to prevent memory leaks after the window closes.
+        /// </summary>
+        public void OnClosing()
+        {
+            UnsubscribeFromChildErrors();
+        }
+
+        #endregion
+
         #region Settings Round-trip
 
         /// <summary>
@@ -189,10 +219,10 @@ namespace duHastNet.PushIt.ViewModels.DataSource
                     csvVm.LoadFromConfig(settings.CsvConfig);
                     break;
 
-                // Future providers:
-                // case DrofusDataSourceControlViewModel drofusVm:
-                //     drofusVm.LoadFromConfig(settings.DrofusConfig);
-                //     break;
+                case DrofusDataSourceControlViewModel:
+                    // DrofusDataSourceControlViewModel reads directly from _settings
+                    // in its constructor, so no additional call is needed here.
+                    break;
             }
         }
 
@@ -215,10 +245,9 @@ namespace duHastNet.PushIt.ViewModels.DataSource
                     csvVm.SaveToSettings(target);
                     break;
 
-                // Future providers:
-                // case DrofusDataSourceControlViewModel drofusVm:
-                //     drofusVm.SaveToSettings(target);
-                //     break;
+                case DrofusDataSourceControlViewModel drofusVm:
+                    drofusVm.SaveToSettings();
+                    break;
             }
         }
 
@@ -226,14 +255,23 @@ namespace duHastNet.PushIt.ViewModels.DataSource
 
         #region Constructor
 
-        public DataSourceViewModel()
+        /// <summary>
+        /// Creates the host ViewModel.
+        /// </summary>
+        /// <param name="settings">
+        /// The live <see cref="DataSourceSettings"/> from the application model.
+        /// Must not be null — <see cref="SettingsUtils.LoadSettings"/> guarantees
+        /// this. Passed into provider child ViewModels that need direct access to
+        /// their config (e.g. <see cref="DrofusDataSourceControlViewModel"/>).
+        /// </param>
+        public DataSourceViewModel(DataSourceSettings settings)
         {
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+
             AvailableSourceTypes = new ObservableCollection<DataSourceType>
             {
-                DataSourceType.Csv
-
-                // Future providers – add entries here:
-                // DataSourceType.Drofus,
+                DataSourceType.Csv,
+                DataSourceType.Drofus,
             };
         }
 

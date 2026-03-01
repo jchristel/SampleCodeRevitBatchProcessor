@@ -39,7 +39,7 @@ namespace duHastNet.PushIt.Utilities
         /// If the file does not exist a safe default is returned.
         /// <para>
         /// If the file was written before the DataSource refactor (i.e. it
-        /// contains a plain <c>DataPath</c> string but no <c>DataSource</c>
+        /// contains a plain <c>rooms_data_file_path</c> string but no <c>DataSource</c>
         /// object), the legacy value is automatically migrated into
         /// <see cref="Models.DataSourceSettings.CsvConfig"/> so the rest of
         /// the application never needs to read <c>DataPath</c> again.
@@ -61,7 +61,17 @@ namespace duHastNet.PushIt.Utilities
                 }
 
                 string jsonString = File.ReadAllText(settingsFilePath);
-                Models.Settings settings = JsonConvert.DeserializeObject<Models.Settings>(jsonString);
+                Models.Settings? settings = JsonConvert.DeserializeObject<Models.Settings>(jsonString);
+
+                // Safety fallback: deserialisation returned null (empty/corrupt file)
+                if (settings == null)
+                {
+                    return new Models.Settings
+                    {
+                        DataSource = new Models.DataSourceSettings(),
+                        EnabledCategoryNames = ["Walls"]
+                    };
+                }
 
                 // Safety fallback: at least one category must always be present
                 if (settings.EnabledCategoryNames == null || settings.EnabledCategoryNames.Count == 0)
@@ -69,35 +79,62 @@ namespace duHastNet.PushIt.Utilities
                     settings.EnabledCategoryNames = ["Walls"];
                 }
 
-                // ── Migration: legacy DataPath → DataSource.CsvConfig ─────────────
-                // Old settings files contain a non-empty DataPath string and no
-                // DataSource object. Promote the path into the nested CSV config
-                // so all downstream code works exclusively through DataSource.
-                if (settings.DataSource == null ||
-                    settings.DataSource.SourceType == Models.DataSourceType.None)
+                // ── Migration: legacy rooms_data_file_path → DataSource.CsvConfig ──
+                // Conditions that indicate migration is needed:
+                //   1. DataSource is null — old file had no DataSource object at all.
+                //   2. SourceType is None — default-constructed with no real data.
+                //   3. SourceType is Csv but CsvConfig is null — DataSource was
+                //      default-constructed by Newtonsoft from an absent JSON property,
+                //      giving SourceType its C# default (None → now Csv before fix,
+                //      None after fix) but leaving CsvConfig unpopulated.
+                //      This guard future-proofs against partially written JSON files.
+                bool needsMigration =
+                    settings.DataSource == null ||
+                    settings.DataSource.SourceType == Models.DataSourceType.None ||
+                    (settings.DataSource.SourceType == Models.DataSourceType.Csv &&
+                     settings.DataSource.CsvConfig == null);
+
+                if (needsMigration)
                 {
                     if (!string.IsNullOrEmpty(settings.DataPath))
                     {
                         // Carry the legacy file path forward as a CSV config
-                        settings.DataSource = new Models.DataSourceSettings(
-                            Models.DataSourceType.Csv,
-                            settings.DataPath);
+                        settings.DataSource = new Models.DataSourceSettings
+                        {
+                            SourceType = Models.DataSourceType.Csv,
+                            CsvConfig = new Models.CsvDataSourceConfig
+                            {
+                                FilePath = settings.DataPath
+                            }
+                        };
                     }
                     else
                     {
                         // No legacy path either — leave as None so the user is
-                        // prompted to configure a source via the new UI
+                        // prompted to configure a source via the new UI.
+                        // Still ensure DataSource is never null.
                         settings.DataSource = new Models.DataSourceSettings();
                     }
                 }
                 // ── End migration ─────────────────────────────────────────────────
+
+                // Final null-safety guard: DataSource must never be null when
+                // returned, as RoomsMainViewModel passes it directly into
+                // DataSourceViewModel's constructor.
+                settings.DataSource ??= new Models.DataSourceSettings();
 
                 return settings;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error loading settings: {ex.Message}");
-                return null;
+                // Return a safe default rather than null so callers never
+                // have to null-check the return value.
+                return new Models.Settings
+                {
+                    DataSource = new Models.DataSourceSettings(),
+                    EnabledCategoryNames = ["Walls"]
+                };
             }
         }
 

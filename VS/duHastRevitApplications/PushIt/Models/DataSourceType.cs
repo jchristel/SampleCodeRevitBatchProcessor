@@ -41,11 +41,11 @@ namespace duHastNet.PushIt.Models
         /// Room data is loaded from a comma-separated value (.csv) file.
         /// Requires <see cref="DataSourceSettings.CsvConfig"/> to be populated.
         /// </summary>
-        Csv
+        Csv,
 
         // Future providers – add entries here and register them in
         // DataSourceFactory and DataSourceViewModel without changing anything else:
         //
-        // Drofus,
+        Drofus
     }
 }

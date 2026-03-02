@@ -1,58 +1,45 @@
 // BSD License - Copyright 2025, Jan Christel
 
+using duHastNet.PushIt.Interfaces;
 using duHastNet.PushIt.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using duHastNet.PushIt.Interfaces;
 
 namespace duHastNet.PushIt.Utilities
 {
     /// <summary>
-    /// PoC data source that connects to the drofus REST API using an API-key token.
+    /// PoC IDataSource implementation for the drofus REST API.
     ///
-    /// REVIT CONTEXT NOTE: All HTTP calls use synchronous WebClient / HttpWebRequest
-    /// rather than HttpClient.GetAsync, because RevitTask.RunAsync already provides
-    /// a background thread and .GetAwaiter().GetResult() on top of that would risk
-    /// a deadlock.  The synchronous path is safe and simple here.
+    /// Connection test: GET {BaseUrl}/api/{DatabaseName}/{ProjectNumber}/rooms
+    /// Authentication:  Authorization: Reference {ApiToken}
     ///
-    /// PoC scope: GetRoomsData returns an EMPTY list — the only outcome surfaced to
-    /// the user is the room count stored on DrofusDataSourceSettings.LastRoomCount.
-    /// Full room mapping is a future step.
+    /// REVIT CONTEXT: All HTTP calls are synchronous (HttpWebRequest.GetResponse).
+    /// RevitTask.RunAsync already provides a background thread — using async on top
+    /// of that risks a deadlock, so the blocking WebRequest path is intentional.
+    ///
+    /// PoC scope: GetRoomsData returns an empty list after a successful auth check.
+    /// The room count is stored on DrofusDataSourceSettings.LastRoomCount for the
+    /// ViewModel to display. Full room mapping is the next step after PoC sign-off.
     /// </summary>
     public class DrofusDataSource : IDataSource
     {
-        // drofus REST API base — token is sent as "Reference {token}" per their docs.
-        // The room list endpoint is GET /api/{database}/rooms
-        private const string BaseUrl = "https://api.drofus.com";
-
         /// <inheritdoc/>
-        /// <remarks>
-        /// Makes a synchronous GET /api/{database}/rooms call.
-        /// On success stores the count in settings.DataSource.Drofus.LastRoomCount.
-        /// Always returns an empty list (PoC — mapping not implemented).
-        /// Throws <see cref="InvalidOperationException"/> if credentials are missing.
-        /// </remarks>
         public List<RoomDataModel> GetRoomsData(DataSourceSettings settings)
         {
             var drofus = settings?.Drofus
                 ?? throw new InvalidOperationException(
                     "drofus data source selected but no credentials are configured.");
 
-            if (string.IsNullOrWhiteSpace(drofus.ApiToken))
-                throw new InvalidOperationException("drofus API token is empty.");
+            ValidateSettings(drofus);
 
-            if (string.IsNullOrWhiteSpace(drofus.DatabaseName))
-                throw new InvalidOperationException("drofus database name is empty.");
-
-            string url = $"{BaseUrl}/api/{drofus.DatabaseName}/rooms";
+            // Build URL: {BaseUrl}/api/{DatabaseName}/{ProjectNumber}/rooms
+            string url = BuildUrl(drofus);
 
             try
             {
-                // Synchronous HTTP call — safe inside RevitTask.RunAsync background thread.
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "GET";
                 request.Accept = "application/json";
@@ -61,21 +48,11 @@ namespace duHastNet.PushIt.Utilities
 
                 using HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
-                if (response.StatusCode != HttpStatusCode.OK &&
-                    response.StatusCode != HttpStatusCode.PartialContent)
-                {
-                    throw new InvalidOperationException(
-                        $"drofus returned HTTP {(int)response.StatusCode} {response.StatusDescription}.");
-                }
-
-                // Read body and count rooms
-                using var reader = new System.IO.StreamReader(response.GetResponseStream());
+                using var reader = new StreamReader(response.GetResponseStream());
                 string json = reader.ReadToEnd();
                 var array = JArray.Parse(json);
-                int count = array.Count;
 
-                // Store count for the ViewModel to display
-                drofus.LastRoomCount = count;
+                drofus.LastRoomCount = array.Count;
                 drofus.IsConnected = true;
 
                 // PoC: return empty — full mapping is the next step
@@ -85,10 +62,10 @@ namespace duHastNet.PushIt.Utilities
             {
                 drofus.IsConnected = false;
                 int code = (int)errResp.StatusCode;
-                string detail = code == 401 ? "Invalid token."
-                              : code == 403 ? "Token has no access to this database."
-                              : code == 404 ? "Database not found."
-                              : errResp.StatusDescription;
+                string detail = code == 401 ? "Invalid API token (401 Unauthorised)."
+                              : code == 403 ? "Token has no access to this project (403 Forbidden)."
+                              : code == 404 ? $"Project not found (404). Check database name '{drofus.DatabaseName}' and project number '{drofus.ProjectNumber}'."
+                              : $"{code} {errResp.StatusDescription}";
                 throw new InvalidOperationException($"drofus connection failed: {detail}", webEx);
             }
             catch (WebException webEx)
@@ -100,7 +77,7 @@ namespace duHastNet.PushIt.Utilities
         }
 
         /// <inheritdoc/>
-        /// <remarks>PoC: drofus does not provide CSV-style header rows. Returns empty list.</remarks>
+        /// <remarks>PoC: drofus has no CSV-style header rows. Returns empty list.</remarks>
         public List<RoomDataProperty> GetHeaderProperties(DataSourceSettings settings)
             => new List<RoomDataProperty>();
 
@@ -108,18 +85,59 @@ namespace duHastNet.PushIt.Utilities
         public bool Validate(DataSourceSettings settings, out string errorMessage)
         {
             var drofus = settings?.Drofus;
-            if (drofus == null || string.IsNullOrWhiteSpace(drofus.ApiToken))
+            if (drofus == null)
             {
-                errorMessage = "API token is required.";
+                errorMessage = "drofus settings are not configured.";
                 return false;
             }
+
+            if (string.IsNullOrWhiteSpace(drofus.BaseUrl))
+            {
+                errorMessage = "Base URL is required.";
+                return false;
+            }
+
             if (string.IsNullOrWhiteSpace(drofus.DatabaseName))
             {
                 errorMessage = "Database name is required.";
                 return false;
             }
+
+            if (string.IsNullOrWhiteSpace(drofus.ProjectNumber))
+            {
+                errorMessage = "Project number is required.";
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(drofus.ApiToken))
+            {
+                errorMessage = "API token is required.";
+                return false;
+            }
+
             errorMessage = string.Empty;
             return true;
+        }
+
+        // ── Private helpers ───────────────────────────────────────────────────
+
+        private static void ValidateSettings(DrofusDataSourceSettings drofus)
+        {
+            if (string.IsNullOrWhiteSpace(drofus.BaseUrl))
+                throw new InvalidOperationException("drofus base URL is empty.");
+            if (string.IsNullOrWhiteSpace(drofus.DatabaseName))
+                throw new InvalidOperationException("drofus database name is empty.");
+            if (string.IsNullOrWhiteSpace(drofus.ProjectNumber))
+                throw new InvalidOperationException("drofus project number is empty.");
+            if (string.IsNullOrWhiteSpace(drofus.ApiToken))
+                throw new InvalidOperationException("drofus API token is empty.");
+        }
+
+        private static string BuildUrl(DrofusDataSourceSettings drofus)
+        {
+            // Trim trailing slash from base URL so we don't get double slashes
+            string baseUrl = drofus.BaseUrl.TrimEnd('/');
+            return $"{baseUrl}/api/{drofus.DatabaseName}/{drofus.ProjectNumber}/rooms";
         }
     }
 }

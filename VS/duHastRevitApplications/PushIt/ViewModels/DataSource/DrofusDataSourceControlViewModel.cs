@@ -11,17 +11,12 @@ namespace duHastNet.PushIt.ViewModels.DataSource
     /// <summary>
     /// Child ViewModel for the drofus PoC data source panel.
     ///
-    /// Responsibilities:
-    ///   - Hold ApiToken and DatabaseName entered by the user.
-    ///   - Run a synchronous connection test via <see cref="DrofusDataSource"/> when
-    ///     the user clicks Connect (synchronous because we may be inside a Revit context).
-    ///   - Surface a plain-text status message showing the room count or an error.
-    ///   - Write the result back to <see cref="DrofusDataSourceSettings"/> so
-    ///     RevitDataModel picks it up automatically on the next Load.
+    /// Holds the four fields the user must supply (BaseUrl, DatabaseName,
+    /// ProjectNumber, ApiToken) and runs a synchronous connection test via
+    /// DrofusDataSource when the user clicks Connect.
     ///
-    /// The Connect command deliberately does NOT call RevitTask.RunAsync — it is
-    /// triggered from the UI thread by a button click, not from inside a Revit event.
-    /// The HTTP call itself is synchronous (WebRequest), so no async machinery is needed.
+    /// The Connect command is synchronous — the HTTP call uses blocking
+    /// WebRequest so no async machinery is needed or wanted here.
     /// </summary>
     public partial class DrofusDataSourceControlViewModel : ObservableObject
     {
@@ -30,10 +25,16 @@ namespace duHastNet.PushIt.ViewModels.DataSource
         // ── Observable properties ─────────────────────────────────────────────
 
         [ObservableProperty]
-        private string _apiToken = string.Empty;
+        private string _baseUrl = string.Empty;
 
         [ObservableProperty]
         private string _databaseName = string.Empty;
+
+        [ObservableProperty]
+        private string _projectNumber = string.Empty;
+
+        [ObservableProperty]
+        private string _apiToken = string.Empty;
 
         [ObservableProperty]
         private string _statusMessage = string.Empty;
@@ -46,20 +47,18 @@ namespace duHastNet.PushIt.ViewModels.DataSource
 
         // ── Constructor ───────────────────────────────────────────────────────
 
-        /// <param name="settings">
-        /// The live <see cref="DataSourceSettings"/> object from the model.
-        /// Populated from persisted values on construction; written back on Connect.
-        /// </param>
         public DrofusDataSourceControlViewModel(DataSourceSettings settings)
         {
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
 
-            // Restore previously saved values so the user does not have to re-enter them
+            // Restore previously saved values
             var d = settings.Drofus;
             if (d != null)
             {
-                _apiToken = d.ApiToken;
+                _baseUrl = d.BaseUrl;
                 _databaseName = d.DatabaseName;
+                _projectNumber = d.ProjectNumber;
+                _apiToken = d.ApiToken;
                 _isConnected = d.IsConnected;
                 _statusMessage = d.IsConnected
                     ? $"Connected — {d.LastRoomCount} rooms found."
@@ -69,18 +68,16 @@ namespace duHastNet.PushIt.ViewModels.DataSource
 
         // ── Connect command ───────────────────────────────────────────────────
 
-        /// <summary>
-        /// Tests the connection synchronously.  Safe to call from the UI thread —
-        /// the HTTP call uses WebRequest.GetResponse() (blocking, no async).
-        /// </summary>
         [RelayCommand(CanExecute = nameof(CanConnect))]
         private void Connect()
         {
-            // Write current UI values into settings so DrofusDataSource reads them
+            // Write current UI values into settings before calling the data source
             _settings.Drofus ??= new DrofusDataSourceSettings();
-            _settings.Drofus.ApiToken    = ApiToken.Trim();
+            _settings.Drofus.BaseUrl = BaseUrl.Trim();
             _settings.Drofus.DatabaseName = DatabaseName.Trim();
-            _settings.Drofus.IsConnected  = false;
+            _settings.Drofus.ProjectNumber = ProjectNumber.Trim();
+            _settings.Drofus.ApiToken = ApiToken.Trim();
+            _settings.Drofus.IsConnected = false;
 
             IsConnecting = true;
             StatusMessage = "Connecting…";
@@ -96,7 +93,7 @@ namespace duHastNet.PushIt.ViewModels.DataSource
                     return;
                 }
 
-                // Synchronous call — returns empty list (PoC), but sets LastRoomCount
+                // Synchronous — returns empty list (PoC) but sets LastRoomCount
                 dataSource.GetRoomsData(_settings);
 
                 int count = _settings.Drofus.LastRoomCount;
@@ -107,7 +104,7 @@ namespace duHastNet.PushIt.ViewModels.DataSource
             {
                 IsConnected = false;
                 _settings.Drofus.IsConnected = false;
-                StatusMessage = ex.Message; // InvalidOperationException messages are user-readable
+                StatusMessage = ex.Message;
             }
             finally
             {
@@ -118,25 +115,29 @@ namespace duHastNet.PushIt.ViewModels.DataSource
 
         private bool CanConnect()
             => !IsConnecting
-            && !string.IsNullOrWhiteSpace(ApiToken)
-            && !string.IsNullOrWhiteSpace(DatabaseName);
+            && !string.IsNullOrWhiteSpace(BaseUrl)
+            && !string.IsNullOrWhiteSpace(DatabaseName)
+            && !string.IsNullOrWhiteSpace(ProjectNumber)
+            && !string.IsNullOrWhiteSpace(ApiToken);
 
-        // Re-evaluate CanExecute when the text fields change
-        partial void OnApiTokenChanged(string value)     => ConnectCommand.NotifyCanExecuteChanged();
+        // Re-evaluate CanExecute when any field changes
+        partial void OnBaseUrlChanged(string value) => ConnectCommand.NotifyCanExecuteChanged();
         partial void OnDatabaseNameChanged(string value) => ConnectCommand.NotifyCanExecuteChanged();
+        partial void OnProjectNumberChanged(string value) => ConnectCommand.NotifyCanExecuteChanged();
+        partial void OnApiTokenChanged(string value) => ConnectCommand.NotifyCanExecuteChanged();
 
         // ── SaveToSettings ────────────────────────────────────────────────────
 
         /// <summary>
-        /// Called by the host ViewModel before saving settings to disk.
-        /// Ensures the latest UI values are written back even if Connect was not pressed.
+        /// Called by the host DataSourceViewModel before saving settings to disk.
         /// </summary>
         public void SaveToSettings()
         {
             _settings.Drofus ??= new DrofusDataSourceSettings();
-            _settings.Drofus.ApiToken    = ApiToken.Trim();
+            _settings.Drofus.BaseUrl = BaseUrl.Trim();
             _settings.Drofus.DatabaseName = DatabaseName.Trim();
-            // IsConnected and LastRoomCount are already kept in sync by Connect()
+            _settings.Drofus.ProjectNumber = ProjectNumber.Trim();
+            _settings.Drofus.ApiToken = ApiToken.Trim();
         }
     }
 }

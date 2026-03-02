@@ -38,7 +38,7 @@ namespace duHastNet.PushIt.Models
         // settings file ("rooms_data_file_path") so old files are migrated
         // correctly. NullValueHandling.Ignore ensures the field is omitted from
         // JSON on the first save after migration.
-        [JsonProperty("rooms_data_file_path", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string? DataPath { get; set; }
 
         // ── Data source ───────────────────────────────────────────────────────────

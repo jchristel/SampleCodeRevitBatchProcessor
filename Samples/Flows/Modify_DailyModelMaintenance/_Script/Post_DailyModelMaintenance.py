@@ -51,6 +51,7 @@ from duHast.Utilities.console_out import output_with_time_stamp as output
 from duHast.Utilities.files_io import (
     file_exist,
     get_file_name_without_ext,
+    copy_file
 )
 
 from duHast.Utilities.files_csv import combine_csv_files_header_independent, append_csv_file, combine_csv_files,  write_report_data_as_csv
@@ -58,6 +59,7 @@ from duHast.Utilities.files_json import combine_files_json
 
 from duHast.Utilities.files_get import get_files_with_filter, get_files_single_directory
 from duHast.Utilities.date_stamps import FILE_DATE_STAMP_YYYY_MM_DD
+from duHast.Utilities.directory_io import get_current_user_local_app_data_directory, create_temp_directory
 from duHast.Revit.ModelHealth.Reporting import report_file_names as rFns
 from utils.view_templates import (
     combine_vt_reports,
@@ -70,6 +72,8 @@ from utils.view_templates import (
 # my code here:
 # -------------
 
+# place holder for local temp folder path
+LOCAL_TEMP_FOLDER = None
 
 def get_file_name_from_temp(file_name, filter):
     """
@@ -113,7 +117,7 @@ def merge_files():
         + rFns.PARAM_ACTIONS_FILENAME_MOTHER
         + settings.LOG_FILE_NAME_EXTENSION
     )
-    data_file_name = os.path.join(settings.OUTPUT_FOLDER, log_file_name)
+    data_file_name = os.path.join(LOCAL_TEMP_FOLDER, log_file_name)
     if file_exist(data_file_name) == False:
         output("Need to create data file: {}".format(data_file_name))
         try:
@@ -143,7 +147,7 @@ def merge_files():
     failed_files = []
     for file_name_filter in rFns.PARAM_ACTIONS_FILENAMES:
         files_matching = get_files_with_filter(
-            settings.OUTPUT_FOLDER,
+            LOCAL_TEMP_FOLDER,
             settings.TEMP_FILE_NAME_EXTENSION,
             "*" + file_name_filter,
         )
@@ -199,7 +203,7 @@ def append_files_wrapper(
         return
     
     # build fully qualified out put file name
-    full_out_file_name = os.path.join(settings.OUTPUT_FOLDER, output_file_name)
+    full_out_file_name = os.path.join(LOCAL_TEMP_FOLDER, output_file_name)
 
     for file in file_list:
         append_result = append_csv_file(
@@ -210,6 +214,7 @@ def append_files_wrapper(
                 file, full_out_file_name, append_result.status
             )
         )
+
 
 def combine_csv_files_header_independent_wrapper(folder_path, file_prefix, file_suffix, file_extension, output_file_name,  overwrite_existing, **kwargs):
     """
@@ -329,7 +334,7 @@ def combine_data_files():
     for file_to_combine in FILE_DATA_TO_COMBINE:
         output("Combining {} report files.".format(file_to_combine[0]))
         file_to_combine[2](
-            folder_path=settings.OUTPUT_FOLDER,
+            folder_path=LOCAL_TEMP_FOLDER,
             file_prefix="",
             file_suffix=file_to_combine[0],
             file_extension=settings.REPORT_FILE_NAME_EXTENSION,
@@ -417,11 +422,99 @@ FILE_DATA_TO_COMBINE = [
     ]
 ]
 
+
+# flow: move output files to a temp folder in users \duHast folder
+# - this is to avoid processing ( access issues ) on files on a networks server which might be open or locked by other processes ( like excel when users open the files for review) or simply brittle network connections which can cause file access issues and failed processing runs
+# - check if tem folder is empty ( if not delete all files and folders in temp folder) they are most likely left overs from previous runs and did not get cleaned up properly
+# - create a new temp folder for this run
+# - copy all output files to temp folder
+# - merge / append files in temp folder into overall log file in output folder as per script
+# - move the overall log files back to output folder
+# - delete temp folder with all files in it
+# - delete all temp files in output folder ( just to be sure)
+
+
 # exit code for this script
 # 0 all is ok
 # 1 something went wrong
 
 exit_code = 0
+
+# set up temp folder for processing files
+try:
+    local_temp_folder_root = os.path.join(get_current_user_local_app_data_directory(), settings.TEMP_FOLDER_OUT_FILES_PROCESSING)
+    LOCAL_TEMP_FOLDER = create_temp_directory(local_temp_folder_root)
+    output("Setting up temp folder: {}".format(LOCAL_TEMP_FOLDER))
+except Exception as e:
+    output("Failed to setup temp folder: {}".format(e))
+    exit_code = 1
+    sys.exit(exit_code)
+
+# copy temp files from output folder to temp folder for processing
+try:
+    # get .temp files in output folder
+    temp_files = get_files_with_filter(
+        settings.OUTPUT_FOLDER, settings.TEMP_FILE_NAME_EXTENSION, "*"
+    )
+
+    all_files_copied = True
+    # copy files to temp folder
+    for temp_file in temp_files:
+
+        # new file name in temp folder is the same as in output folder, just different path
+        new_file_name =  os.path.join(LOCAL_TEMP_FOLDER, os.path.basename(temp_file))
+
+        # copy file to temp folder
+        copy_result = copy_file(temp_file, new_file_name)
+        if copy_result:
+            output("Copied file: {} to temp folder for processing.".format(temp_file))
+        else:
+            all_files_copied = False
+            output(
+                "Failed to copy file: {} to temp folder for processing.".format(
+                    temp_file
+                )
+            )
+
+    if not all_files_copied:
+        raise ValueError("Not all files were copied to temp folder for processing.")
+except Exception as e:
+    output("Failed to copy files to temp folder: {}".format(e))
+    exit_code = 1
+    sys.exit(exit_code)
+
+# copy overall log file to temp folder for processing
+try:
+    # create overall log file
+    log_file_name = (
+        settings.LOG_FILE_NAME_PREFIX
+        + rFns.PARAM_ACTIONS_FILENAME_MOTHER
+        + settings.LOG_FILE_NAME_EXTENSION
+    )
+
+    # log file name in output folder
+    data_file_name = os.path.join(settings.OUTPUT_FOLDER, log_file_name)
+
+    # new file name in temp folder is the same as in output folder, just different path
+    new_file_name =  os.path.join(LOCAL_TEMP_FOLDER, log_file_name)
+    copy_result = copy_file(data_file_name, new_file_name)
+
+    if copy_result:
+        output("Copied file: {} to temp folder for processing.".format(log_file_name))
+    else:
+        output(
+            "Failed to copy file: {} to temp folder for processing".format(
+                log_file_name
+            )
+        )
+        exit_code = 1
+        sys.exit(exit_code)
+except Exception as e:
+    output("Failed to copy overall log file to temp folder: {}".format(e))
+    exit_code = 1
+    sys.exit(exit_code)
+
+
 try:
     # merge revit model health data files into overall .log file
     failed_files_ = merge_files()
@@ -437,10 +530,11 @@ except Exception as e:
     output("Failed to combine report files: [{}]".format(e))
     exit_code = 1
 
+
 try:
     # create view template hash table files
     output("Creating view template hash table:")
-    combine_vt_data_result = combine_vt_reports(settings.OUTPUT_FOLDER)
+    combine_vt_data_result = combine_vt_reports(LOCAL_TEMP_FOLDER)
     output(
         "Combined view template data files:{} [{}]".format(
             combine_vt_data_result.message, combine_vt_data_result.status
@@ -456,7 +550,7 @@ try:
     # this required python 3.10or higher and cant be run in the same post process script as the other tasks
     # TODO: move into separate script
     output("Converting view template hash table files to parquet file format:")
-    convert_to_parquet_result = convert_vt_reports_to_parquet(settings.OUTPUT_FOLDER)
+    convert_to_parquet_result = convert_vt_reports_to_parquet(LOCAL_TEMP_FOLDER)
     output(
         "Converted view template data files:{} [{}]".format(
             convert_to_parquet_result.message, convert_to_parquet_result.status
@@ -467,7 +561,7 @@ try:
             "Deleting no longer required view template hash table files in json format:"
         )
         delete_json_hash_files_status = delete_hash_table_vt_json_reports(
-            settings.OUTPUT_FOLDER
+            LOCAL_TEMP_FOLDER
         )
         output(
             "Deleted no longer required view template hash table files in json format:{} [{}]".format(
@@ -478,6 +572,112 @@ try:
 except Exception as e:
     output("Failed to convert VT hash files to parquet format: [{}]".format(e))
     exit_code = 1
+
+
+# delete temp files in temp folder
+try:
+    # get .temp files in output folder
+    temp_files = get_files_with_filter(
+       LOCAL_TEMP_FOLDER, settings.TEMP_FILE_NAME_EXTENSION, "*"
+    )
+
+    all_files_deleted = True
+    for temp_file in temp_files:
+        try:
+            os.remove(temp_file)
+            output("Deleted temp file: {} in temp folder.".format(temp_file))
+        except Exception as e:
+            all_files_deleted = False
+            output(
+                "Failed to delete temp file: {} in temp folder with exception: {}".format(
+                    temp_file, e
+                )
+            )
+
+except Exception as e:
+    output("Failed to delete temp files in output folder: {}".format(e))
+    exit_code = 1
+    sys.exit(exit_code)
+
+
+# copy files back to output folder
+try:
+    # get .log file in temp folder
+    log_file_name = (
+        settings.LOG_FILE_NAME_PREFIX
+        + rFns.PARAM_ACTIONS_FILENAME_MOTHER
+        + settings.LOG_FILE_NAME_EXTENSION
+    )
+    temp_log_file = os.path.join(LOCAL_TEMP_FOLDER, log_file_name)
+    output_log_file = os.path.join(settings.OUTPUT_FOLDER, log_file_name)
+
+    copy_result = copy_file(temp_log_file, output_log_file)
+    if copy_result:
+        output("Copied file: {} back to output folder.".format(log_file_name))
+    else:
+        output(
+            "Failed to copy file: {} back to output folder.".format(
+                log_file_name
+            )
+        )
+        exit_code = 1
+except Exception as e:
+    output("Failed to copy overall log file back to output folder: {}".format(e))
+    exit_code = 1
+
+
+# copy .csv files back to output folder
+try:
+    # get .csv files in temp folder
+    csv_files = get_files_with_filter(
+       LOCAL_TEMP_FOLDER, settings.CSV_FILE_NAME_EXTENSION, "*"
+    )
+
+    all_files_copied = True
+    for csv_file in csv_files:
+        file_name = os.path.basename(csv_file)
+        output_csv_file = os.path.join(settings.OUTPUT_FOLDER, file_name)
+
+        copy_result = copy_file(csv_file, output_csv_file)
+        if copy_result:
+            output("Copied file: {} back to output folder.".format(file_name))
+        else:
+            all_files_copied = False
+            output(
+                "Failed to copy file: {} back to output folder.".format(
+                    file_name
+                )
+            )
+    if not all_files_copied:
+        exit_code = 1
+except Exception as e:
+    output("Failed to copy csv files back to output folder: {}".format(e))
+    exit_code = 1
+
+
+# delete temp files in output folder ( just to be sure)
+try:
+    # get .temp files in output folder
+    temp_files = get_files_with_filter(
+       settings.OUTPUT_FOLDER, settings.TEMP_FILE_NAME_EXTENSION, "*"
+    )
+
+    all_files_deleted = True
+    for temp_file in temp_files:
+        try:
+            os.remove(temp_file)
+            output("Deleted temp file: {} in output folder.".format(temp_file))
+        except Exception as e:
+            all_files_deleted = False
+            output(
+                "Failed to delete temp file: {} in output folder with exception: {}".format(
+                    temp_file, e
+                )
+            )
+except Exception as e:
+    output("Failed to delete temp files in output folder: {}".format(e))
+    exit_code = 1
+
 
 # return the exit code
 sys.exit(exit_code)

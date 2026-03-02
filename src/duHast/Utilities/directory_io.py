@@ -258,7 +258,6 @@ def directory_exists(directory_path):
         return False
 
 
-
 def get_current_user_documents_directory():
     """
     Get the current user's documents directory.
@@ -273,6 +272,24 @@ def get_current_user_documents_directory():
 
     # Get the user's Documents folder path
     documents_path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+
+    return documents_path
+
+
+def get_current_user_local_app_data_directory():
+    """
+    Get the current user's documents directory.
+
+    :return: Path to the user's documents directory.
+    :rtype: str
+    """
+    
+    import clr
+    clr.AddReference("System")
+    from System import Environment
+
+    # Get the user's Documents folder path
+    documents_path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
 
     return documents_path
 

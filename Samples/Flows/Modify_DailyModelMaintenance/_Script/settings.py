@@ -273,4 +273,4 @@ def filter_xml_data(data):
 
 
 # temp folder for file combine operations
-TEMP_FOLDER_OUT_FILES_PROCESSING = "duHast"
+TEMP_FOLDER_OUT_FILES_PROCESSING = r"duHast\temp"

@@ -51,7 +51,6 @@ from duHast.Utilities.console_out import output_with_time_stamp as output
 from duHast.Utilities.files_io import (
     file_exist,
     get_file_name_without_ext,
-    copy_file
 )
 
 from duHast.Utilities.files_csv import combine_csv_files_header_independent, append_csv_file, combine_csv_files,  write_report_data_as_csv
@@ -66,6 +65,13 @@ from utils.view_templates import (
     convert_vt_reports_to_parquet,
     delete_hash_table_vt_json_reports,
 )
+
+from utils.temp_file_ops import (
+    copy_all_to_temp,
+    copy_all_files_from_temp,
+    clean_temp_folder,
+)
+
 
 
 # -------------
@@ -440,77 +446,31 @@ FILE_DATA_TO_COMBINE = [
 
 exit_code = 0
 
+
 # set up temp folder for processing files
 try:
     local_temp_folder_root = os.path.join(get_current_user_local_app_data_directory(), settings.TEMP_FOLDER_OUT_FILES_PROCESSING)
     LOCAL_TEMP_FOLDER = create_temp_directory(local_temp_folder_root)
-    output("Setting up temp folder: {}".format(LOCAL_TEMP_FOLDER))
+    output("Successfully set up temp folder: {}".format(LOCAL_TEMP_FOLDER))
 except Exception as e:
     output("Failed to setup temp folder: {}".format(e))
     exit_code = 1
-    sys.exit(exit_code)
+    sys.exit( exit_code )
 
-# copy temp files from output folder to temp folder for processing
 try:
-    # get .temp files in output folder
-    temp_files = get_files_with_filter(
-        settings.OUTPUT_FOLDER, settings.TEMP_FILE_NAME_EXTENSION, "*"
+    exit_code = copy_all_to_temp(
+        output_to_console=output, 
+        temp_folder=LOCAL_TEMP_FOLDER, 
+        output_folder=settings.OUTPUT_FOLDER, 
+        temp_file_extension=settings.TEMP_FILE_NAME_EXTENSION, 
+        report_file_extension=settings.REPORT_FILE_NAME_EXTENSION, 
+        log_file_extension=settings.LOG_FILE_NAME_EXTENSION,
     )
-
-    all_files_copied = True
-    # copy files to temp folder
-    for temp_file in temp_files:
-
-        # new file name in temp folder is the same as in output folder, just different path
-        new_file_name =  os.path.join(LOCAL_TEMP_FOLDER, os.path.basename(temp_file))
-
-        # copy file to temp folder
-        copy_result = copy_file(temp_file, new_file_name)
-        if copy_result:
-            output("Copied file: {} to temp folder for processing.".format(temp_file))
-        else:
-            all_files_copied = False
-            output(
-                "Failed to copy file: {} to temp folder for processing.".format(
-                    temp_file
-                )
-            )
-
-    if not all_files_copied:
-        raise ValueError("Not all files were copied to temp folder for processing.")
-except Exception as e:
-    output("Failed to copy files to temp folder: {}".format(e))
-    exit_code = 1
-    sys.exit(exit_code)
-
-# copy overall log file to temp folder for processing
-try:
-    # create overall log file
-    log_file_name = (
-        settings.LOG_FILE_NAME_PREFIX
-        + rFns.PARAM_ACTIONS_FILENAME_MOTHER
-        + settings.LOG_FILE_NAME_EXTENSION
-    )
-
-    # log file name in output folder
-    data_file_name = os.path.join(settings.OUTPUT_FOLDER, log_file_name)
-
-    # new file name in temp folder is the same as in output folder, just different path
-    new_file_name =  os.path.join(LOCAL_TEMP_FOLDER, log_file_name)
-    copy_result = copy_file(data_file_name, new_file_name)
-
-    if copy_result:
-        output("Copied file: {} to temp folder for processing.".format(log_file_name))
-    else:
-        output(
-            "Failed to copy file: {} to temp folder for processing".format(
-                log_file_name
-            )
-        )
-        exit_code = 1
+    if exit_code != 0:
+        output("Failed to copy temp files from output folder to temp folder for processing.")
         sys.exit(exit_code)
 except Exception as e:
-    output("Failed to copy overall log file to temp folder: {}".format(e))
+    output("Failed to setup temp folder: {}".format(e))
     exit_code = 1
     sys.exit(exit_code)
 
@@ -574,109 +534,40 @@ except Exception as e:
     exit_code = 1
 
 
-# delete temp files in temp folder
+# copy all files back to output folder
 try:
-    # get .temp files in output folder
-    temp_files = get_files_with_filter(
-       LOCAL_TEMP_FOLDER, settings.TEMP_FILE_NAME_EXTENSION, "*"
+    exit_code = copy_all_files_from_temp(
+        output_to_console=output, 
+        temp_folder=LOCAL_TEMP_FOLDER, 
+        output_folder=settings.OUTPUT_FOLDER, 
+        report_file_extension=settings.REPORT_FILE_NAME_EXTENSION, 
+        log_file_extension=settings.LOG_FILE_NAME_EXTENSION,
     )
-
-    all_files_deleted = True
-    for temp_file in temp_files:
-        try:
-            os.remove(temp_file)
-            output("Deleted temp file: {} in temp folder.".format(temp_file))
-        except Exception as e:
-            all_files_deleted = False
-            output(
-                "Failed to delete temp file: {} in temp folder with exception: {}".format(
-                    temp_file, e
-                )
-            )
-
+    if exit_code != 0:
+        output("Failed to copy files from temp to output folder after processing.")
+        sys.exit(exit_code)
 except Exception as e:
-    output("Failed to delete temp files in output folder: {}".format(e))
+    output("Failed to setup temp folder: {}".format(e))
     exit_code = 1
     sys.exit(exit_code)
 
 
-# copy files back to output folder
+# clean up temp folder
 try:
-    # get .log file in temp folder
-    log_file_name = (
-        settings.LOG_FILE_NAME_PREFIX
-        + rFns.PARAM_ACTIONS_FILENAME_MOTHER
-        + settings.LOG_FILE_NAME_EXTENSION
+    exit_code = clean_temp_folder(
+        output_to_console=output, 
+        temp_folder=LOCAL_TEMP_FOLDER, 
+        temp_file_extension=settings.TEMP_FILE_NAME_EXTENSION, 
+        report_file_extension=settings.REPORT_FILE_NAME_EXTENSION, 
+        log_file_extension=settings.LOG_FILE_NAME_EXTENSION,
     )
-    temp_log_file = os.path.join(LOCAL_TEMP_FOLDER, log_file_name)
-    output_log_file = os.path.join(settings.OUTPUT_FOLDER, log_file_name)
-
-    copy_result = copy_file(temp_log_file, output_log_file)
-    if copy_result:
-        output("Copied file: {} back to output folder.".format(log_file_name))
-    else:
-        output(
-            "Failed to copy file: {} back to output folder.".format(
-                log_file_name
-            )
-        )
-        exit_code = 1
+    if exit_code != 0:
+        output("Failed to clean temp folder after processing.")
+        sys.exit(exit_code)
 except Exception as e:
-    output("Failed to copy overall log file back to output folder: {}".format(e))
+    output("Failed to clean temp folder: {}".format(e))
     exit_code = 1
-
-
-# copy .csv files back to output folder
-try:
-    # get .csv files in temp folder
-    csv_files = get_files_with_filter(
-       LOCAL_TEMP_FOLDER, settings.CSV_FILE_NAME_EXTENSION, "*"
-    )
-
-    all_files_copied = True
-    for csv_file in csv_files:
-        file_name = os.path.basename(csv_file)
-        output_csv_file = os.path.join(settings.OUTPUT_FOLDER, file_name)
-
-        copy_result = copy_file(csv_file, output_csv_file)
-        if copy_result:
-            output("Copied file: {} back to output folder.".format(file_name))
-        else:
-            all_files_copied = False
-            output(
-                "Failed to copy file: {} back to output folder.".format(
-                    file_name
-                )
-            )
-    if not all_files_copied:
-        exit_code = 1
-except Exception as e:
-    output("Failed to copy csv files back to output folder: {}".format(e))
-    exit_code = 1
-
-
-# delete temp files in output folder ( just to be sure)
-try:
-    # get .temp files in output folder
-    temp_files = get_files_with_filter(
-       settings.OUTPUT_FOLDER, settings.TEMP_FILE_NAME_EXTENSION, "*"
-    )
-
-    all_files_deleted = True
-    for temp_file in temp_files:
-        try:
-            os.remove(temp_file)
-            output("Deleted temp file: {} in output folder.".format(temp_file))
-        except Exception as e:
-            all_files_deleted = False
-            output(
-                "Failed to delete temp file: {} in output folder with exception: {}".format(
-                    temp_file, e
-                )
-            )
-except Exception as e:
-    output("Failed to delete temp files in output folder: {}".format(e))
-    exit_code = 1
+    sys.exit(exit_code)
 
 
 # return the exit code

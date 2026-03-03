@@ -70,6 +70,7 @@ from utils.temp_file_ops import (
     copy_all_to_temp,
     copy_all_files_from_temp,
     clean_temp_folder,
+    clean_temp_parent_directory,
 )
 
 
@@ -564,6 +565,14 @@ try:
     if exit_code != 0:
         output("Failed to clean temp folder after processing.")
         sys.exit(exit_code)
+    
+    # remove any dirs from previous runs
+    left_over_cleanup = clean_temp_parent_directory(LOCAL_TEMP_FOLDER)
+    if left_over_cleanup != 0:
+        output("Failed to clean overall temp folder after processing.")
+        sys.exit(exit_code)
+
+
 except Exception as e:
     output("Failed to clean temp folder: {}".format(e))
     exit_code = 1

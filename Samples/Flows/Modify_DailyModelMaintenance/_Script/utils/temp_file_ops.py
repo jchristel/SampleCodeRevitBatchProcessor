@@ -42,6 +42,55 @@ from duHast.Utilities.files_io import (
 )
 
 from duHast.Utilities.files_get import get_files_with_filter
+from duHast.Utilities.directory_io import directory_delete_with_fallback, get_child_directories, get_parent_directory, directory_exists
+
+
+def clean_temp_parent_directory(output_to_console, temp_folder):
+    """
+    Assumes that the temp folder sits within a temp folder itself
+    i.e. \\temp\\my_temp
+
+    This function will delete all content in \\temp
+
+    :param output_to_console: function to output messages to console
+    :param temp_folder: folder where files should be copied to for processing
+
+    """
+
+    exit_code = 0
+
+    temp_exists = directory_exists(temp_folder)
+
+    if (not(temp_exists)):
+        output_to_console("Invalid directory: {}".format(temp_folder))
+        exit_code = 1
+        return exit_code
+
+    # get the parent directory
+    parent_dir = get_parent_directory (temp_folder)
+
+    if parent_dir:
+        output_to_console("Cleaning up directory: {}".format(parent_dir))
+
+        # get any nested dirs
+        child_directories =  get_child_directories (parent_dir)
+
+        # check if we got anything and if so start deleting
+        if child_directories and len(child_directories):
+            for child_dir in child_directories:
+                delete_result = directory_delete_with_fallback(child_dir)
+                if not(delete_result):
+                    exit_code = 1
+        else:
+            output_to_console ("{} contains no child directories.".format(parent_dir))
+            return exit_code
+    else:
+        output_to_console("Failed to retrieve parent directory of: {}".format(temp_folder))
+        exit_code = 1
+        return exit_code
+    return exit_code
+
+
 
 
 def copy_files_from_output_to_temp(file_extension, output_to_console, output_folder,temp_folder):

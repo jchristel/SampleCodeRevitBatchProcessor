@@ -1,6 +1,7 @@
 // BSD License - Copyright 2025, Jan Christel
 
 using duHastNet.PushIt.Models;
+using duHastNet.PushIt.Utilities.Drofus;
 using duHastNet.PushIt.Interfaces;
 using System;
 

@@ -388,6 +388,16 @@ namespace duHastNet.PushIt.ViewModels
             // in sync. This replaces the old DataFilePath / DataFilePathValid pair.
             DataSourceViewModel = new DataSourceViewModel(_revitDataModel.Settings.DataSource);
             DataSourceViewModel.LoadFromSettings(_revitDataModel.Settings.DataSource);
+
+            // Wire the Revit parameter list into the drofus control ViewModel so the
+            // Add/Edit mapping dialog can populate its parameter ComboBox.
+            if (DataSourceViewModel.CurrentSourceControlViewModel
+                    is ViewModels.DataSource.DrofusDataSourceControlViewModel drofusVm)
+            {
+                drofusVm.AvailableRevitParameters = _revitDataModel.GetAllParameters();
+            }
+
+
             DataSourceViewModel.PropertyChanged += OnDataSourceViewModelPropertyChanged;
             RegisterChild(DataSourceViewModel);
 

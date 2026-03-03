@@ -1,0 +1,108 @@
+<Window x:Class="duHastNet.PushIt.Views.DataSource.Drofus.DrofusPropertyMappingDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        Title="{Binding DialogTitle}"
+        Width="460"
+        SizeToContent="Height"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False">
+
+    <!--
+        DataContext: DrofusPropertyMappingDialogViewModel
+        Add / Edit dialog for a single drofus to Revit property mapping.
+    -->
+
+    <Window.Resources>
+        <Style TargetType="TextBlock" x:Key="LabelStyle">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0 6 8 6"/>
+        </Style>
+        <Style TargetType="ComboBox" x:Key="ComboStyle">
+            <Setter Property="Margin" Value="0 6 0 6"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="TextBox" x:Key="ReadOnlyStyle">
+            <Setter Property="Margin" Value="0 6 0 6"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="Background" Value="#F4F4F4"/>
+            <Setter Property="Foreground" Value="#666666"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>  <!-- drofus field -->
+            <RowDefinition Height="Auto"/>  <!-- Revit parameter -->
+            <RowDefinition Height="Auto"/>  <!-- GUID (read-only) -->
+            <RowDefinition Height="Auto"/>  <!-- Flow direction -->
+            <RowDefinition Height="Auto"/>  <!-- Buttons -->
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="130"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- drofus field -->
+        <TextBlock Grid.Row="0" Grid.Column="0"
+                   Text="drofus field:"
+                   Style="{StaticResource LabelStyle}"/>
+        <ComboBox Grid.Row="0" Grid.Column="1"
+                  Style="{StaticResource ComboStyle}"
+                  ItemsSource="{Binding AvailableDrofusFields}"
+                  SelectedItem="{Binding SelectedDrofusField, Mode=TwoWay}"
+                  ToolTip="Select the drofus room JSON field to map"/>
+
+        <!-- Revit parameter (ComboBox) -->
+        <TextBlock Grid.Row="1" Grid.Column="0"
+                   Text="Revit parameter:"
+                   Style="{StaticResource LabelStyle}"/>
+        <ComboBox Grid.Row="1" Grid.Column="1"
+                  Style="{StaticResource ComboStyle}"
+                  ItemsSource="{Binding AvailableRevitParameterNames}"
+                  SelectedItem="{Binding SelectedRevitParameterName, Mode=TwoWay}"
+                  ToolTip="Select the Revit shared parameter to map to"/>
+
+        <!-- GUID (read-only, auto-populated) -->
+        <TextBlock Grid.Row="2" Grid.Column="0"
+                   Text="GUID:"
+                   Style="{StaticResource LabelStyle}"/>
+        <TextBox Grid.Row="2" Grid.Column="1"
+                 Style="{StaticResource ReadOnlyStyle}"
+                 Text="{Binding RevitParameterGuid, Mode=OneWay}"
+                 ToolTip="Auto-populated from the selected Revit shared parameter"/>
+
+        <!-- Flow direction -->
+        <TextBlock Grid.Row="3" Grid.Column="0"
+                   Text="Direction:"
+                   Style="{StaticResource LabelStyle}"/>
+        <ComboBox Grid.Row="3" Grid.Column="1"
+                  Style="{StaticResource ComboStyle}"
+                  ItemsSource="{Binding AvailableFlowDirections}"
+                  SelectedItem="{Binding SelectedFlowDirection, Mode=TwoWay}"
+                  ToolTip="drofus to Revit writes drofus data into Revit. Revit to drofus is reserved for future use."/>
+
+        <!-- OK / Cancel -->
+        <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0 12 0 0">
+
+            <Button Content="OK"
+                    Padding="20 4"
+                    Margin="0 0 8 0"
+                    IsDefault="True"
+                    Command="{Binding OkCommand}"/>
+
+            <Button Content="Cancel"
+                    Padding="20 4"
+                    IsCancel="True"
+                    Command="{Binding CancelCommand}"/>
+
+        </StackPanel>
+    </Grid>
+</Window>

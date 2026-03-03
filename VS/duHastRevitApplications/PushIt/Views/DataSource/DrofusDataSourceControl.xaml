@@ -4,10 +4,56 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="200" d:DesignWidth="500">
+             d:DesignHeight="420" d:DesignWidth="500">
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+        <!--
+            Row template for the mapping ListView.
+            Three text columns plus a warning indicator that appears when either
+            RevitParameterMissing or DrofusFieldMissing is true.
+        -->
+        <DataTemplate x:Key="MappingRowTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="16"/>   <!-- warning indicator -->
+                    <ColumnDefinition Width="*"/>    <!-- drofus field -->
+                    <ColumnDefinition Width="*"/>    <!-- Revit parameter -->
+                    <ColumnDefinition Width="90"/>   <!-- direction -->
+                </Grid.ColumnDefinitions>
+
+                <!-- Warning indicator — visible when any validation flag is set -->
+                <TextBlock Grid.Column="0"
+                           Text="⚠"
+                           Foreground="#CC7700"
+                           FontSize="11"
+                           VerticalAlignment="Center"
+                           ToolTip="This mapping has a validation warning. Check drofus field name and Revit parameter GUID."
+                           Visibility="{Binding HasWarning, Converter={StaticResource BoolToVis}}"/>
+
+                <TextBlock Grid.Column="1"
+                           Text="{Binding DrofusFieldName}"
+                           VerticalAlignment="Center"
+                           Margin="4 2 8 2"
+                           TextTrimming="CharacterEllipsis"
+                           ToolTip="{Binding DrofusFieldName}"/>
+
+                <TextBlock Grid.Column="2"
+                           Text="{Binding RevitParameterName}"
+                           VerticalAlignment="Center"
+                           Margin="0 2 8 2"
+                           TextTrimming="CharacterEllipsis"
+                           ToolTip="{Binding RevitParameterName}"/>
+
+                <TextBlock Grid.Column="3"
+                           Text="{Binding FlowDirectionDisplay}"
+                           VerticalAlignment="Center"
+                           Margin="0 2 0 2"
+                           TextTrimming="CharacterEllipsis"
+                           ToolTip="{Binding FlowDirectionDisplay}"/>
+            </Grid>
+        </DataTemplate>
     </UserControl.Resources>
 
     <Grid Margin="0 4 0 4">
@@ -17,13 +63,14 @@
             <RowDefinition Height="Auto"/>  <!-- Project number -->
             <RowDefinition Height="Auto"/>  <!-- API token -->
             <RowDefinition Height="Auto"/>  <!-- Connect + status -->
+            <RowDefinition Height="Auto"/>  <!-- Mapping panel (visible when connected) -->
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="110"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Base URL -->
+        <!-- ── Base URL ──────────────────────────────────────────────────── -->
         <TextBlock Grid.Row="0" Grid.Column="0"
                    Text="Base URL:"
                    VerticalAlignment="Center"
@@ -33,7 +80,7 @@
                  Text="{Binding BaseUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  ToolTip="e.g. https://api.hidd.health.nsw.gov.au or https://apiau.drofus.com"/>
 
-        <!-- Database name -->
+        <!-- ── Database name ─────────────────────────────────────────────── -->
         <TextBlock Grid.Row="1" Grid.Column="0"
                    Text="Database:"
                    VerticalAlignment="Center"
@@ -43,7 +90,7 @@
                  Text="{Binding DatabaseName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  ToolTip="e.g. hi-alburycr"/>
 
-        <!-- Project number -->
+        <!-- ── Project number ───────────────────────────────────────────── -->
         <TextBlock Grid.Row="2" Grid.Column="0"
                    Text="Project number:"
                    VerticalAlignment="Center"
@@ -53,7 +100,7 @@
                  Text="{Binding ProjectNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  ToolTip="e.g. 01"/>
 
-        <!-- API token -->
+        <!-- ── API token ─────────────────────────────────────────────────── -->
         <TextBlock Grid.Row="3" Grid.Column="0"
                    Text="API token:"
                    VerticalAlignment="Center"
@@ -63,7 +110,7 @@
                  Text="{Binding ApiToken, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  ToolTip="Paste your API token from the drofus Power Query credentials dialog"/>
 
-        <!-- Connect button + status -->
+        <!-- ── Connect button + status ──────────────────────────────────── -->
         <StackPanel Grid.Row="4" Grid.Column="1"
                     Orientation="Horizontal"
                     Margin="0 8 0 0">
@@ -101,5 +148,105 @@
             </TextBlock>
 
         </StackPanel>
+
+        <!-- ── Mapping panel — visible only when connected ──────────────── -->
+        <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                Margin="0 12 0 0"
+                BorderBrush="#CCCCCC"
+                BorderThickness="0 1 0 0"
+                Visibility="{Binding IsConnected, Converter={StaticResource BoolToVis}}">
+
+            <StackPanel Margin="0 8 0 0">
+
+                <!-- Section header + validation warning badge -->
+                <StackPanel Orientation="Horizontal" Margin="0 0 0 6">
+                    <TextBlock Text="Property Mappings"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center"/>
+
+                    <!-- Warning badge — shown when any mapping has a validation issue -->
+                    <Border Background="#FFF3CD"
+                            BorderBrush="#FFEAA7"
+                            BorderThickness="1"
+                            CornerRadius="3"
+                            Margin="8 0 0 0"
+                            Padding="6 2"
+                            VerticalAlignment="Center"
+                            Visibility="{Binding HasValidationWarnings, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="⚠ Some mappings have validation warnings"
+                                   Foreground="#856404"
+                                   FontSize="11"/>
+                    </Border>
+                </StackPanel>
+
+                <!-- Column headers -->
+                <Grid Margin="0 0 0 2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="90"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="1"
+                               Text="drofus Field"
+                               FontWeight="SemiBold"
+                               FontSize="11"
+                               Margin="4 0 8 0"
+                               Foreground="#555"/>
+                    <TextBlock Grid.Column="2"
+                               Text="Revit Parameter"
+                               FontWeight="SemiBold"
+                               FontSize="11"
+                               Margin="0 0 8 0"
+                               Foreground="#555"/>
+                    <TextBlock Grid.Column="3"
+                               Text="Direction"
+                               FontWeight="SemiBold"
+                               FontSize="11"
+                               Foreground="#555"/>
+                </Grid>
+
+                <!-- Mapping ListView -->
+                <ListView ItemsSource="{Binding MappingRows}"
+                          SelectedItem="{Binding SelectedMappingRow, Mode=TwoWay}"
+                          ItemTemplate="{StaticResource MappingRowTemplate}"
+                          MinHeight="60"
+                          MaxHeight="200"
+                          BorderThickness="1"
+                          BorderBrush="#CCCCCC"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          HorizontalContentAlignment="Stretch">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Padding" Value="4 2"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+
+                <!-- Add / Edit / Remove buttons -->
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            Margin="0 6 0 0">
+
+                    <Button Content="Add"
+                            Padding="14 3"
+                            Margin="0 0 6 0"
+                            Command="{Binding AddMappingCommand}"/>
+
+                    <Button Content="Edit"
+                            Padding="14 3"
+                            Margin="0 0 6 0"
+                            Command="{Binding EditMappingCommand}"/>
+
+                    <Button Content="Remove"
+                            Padding="14 3"
+                            Command="{Binding RemoveMappingCommand}"/>
+
+                </StackPanel>
+
+            </StackPanel>
+        </Border>
+
     </Grid>
 </UserControl>

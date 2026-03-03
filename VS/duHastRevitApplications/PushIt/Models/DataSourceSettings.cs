@@ -1,5 +1,7 @@
 // BSD License - Copyright 2025, Jan Christel
 
+using duHastNet.PushIt.Models.Drofus;
+
 namespace duHastNet.PushIt.Models
 {
     /// <summary>

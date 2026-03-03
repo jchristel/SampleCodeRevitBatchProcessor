@@ -31,6 +31,7 @@ using Revit.Async;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace duHastNet.PushIt.Commands
@@ -56,6 +57,14 @@ namespace duHastNet.PushIt.Commands
 
         private async System.Threading.Tasks.Task Execute()
         {
+
+            // check if modus is csv or drofus and if drofus if mapping is setup
+            if (_revitDataModel.Settings.DataSource.Drofus != null && _revitDataModel.Settings.DataSource.Drofus.PropertyMappings.Count==0)
+            {
+                _roomsMainViewModel.AddMessage("dRofus data mapping is not set up", MessageTypes.Error);
+                return; 
+            }
+
             //deactivate the ui
             _roomsMainViewModel.IsWaitingForRevitCommandToFinish = true;
 

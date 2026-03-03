@@ -270,3 +270,7 @@ def filter_xml_data(data):
         print("Failed to filter data with error: {}".format(e))
 
     return filter_data
+
+
+# temp folder for file combine operations
+TEMP_FOLDER_OUT_FILES_PROCESSING = r"duHast\temp"

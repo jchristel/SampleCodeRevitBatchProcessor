@@ -58,6 +58,7 @@ from duHast.Utilities.files_json import combine_files_json
 
 from duHast.Utilities.files_get import get_files_with_filter, get_files_single_directory
 from duHast.Utilities.date_stamps import FILE_DATE_STAMP_YYYY_MM_DD
+from duHast.Utilities.directory_io import get_current_user_local_app_data_directory, create_temp_directory
 from duHast.Revit.ModelHealth.Reporting import report_file_names as rFns
 from utils.view_templates import (
     combine_vt_reports,
@@ -65,11 +66,20 @@ from utils.view_templates import (
     delete_hash_table_vt_json_reports,
 )
 
+from utils.temp_file_ops import (
+    copy_all_to_temp,
+    copy_all_files_from_temp,
+    clean_temp_folder,
+)
+
+
 
 # -------------
 # my code here:
 # -------------
 
+# place holder for local temp folder path
+LOCAL_TEMP_FOLDER = None
 
 def get_file_name_from_temp(file_name, filter):
     """
@@ -113,7 +123,7 @@ def merge_files():
         + rFns.PARAM_ACTIONS_FILENAME_MOTHER
         + settings.LOG_FILE_NAME_EXTENSION
     )
-    data_file_name = os.path.join(settings.OUTPUT_FOLDER, log_file_name)
+    data_file_name = os.path.join(LOCAL_TEMP_FOLDER, log_file_name)
     if file_exist(data_file_name) == False:
         output("Need to create data file: {}".format(data_file_name))
         try:
@@ -143,7 +153,7 @@ def merge_files():
     failed_files = []
     for file_name_filter in rFns.PARAM_ACTIONS_FILENAMES:
         files_matching = get_files_with_filter(
-            settings.OUTPUT_FOLDER,
+            LOCAL_TEMP_FOLDER,
             settings.TEMP_FILE_NAME_EXTENSION,
             "*" + file_name_filter,
         )
@@ -199,7 +209,7 @@ def append_files_wrapper(
         return
     
     # build fully qualified out put file name
-    full_out_file_name = os.path.join(settings.OUTPUT_FOLDER, output_file_name)
+    full_out_file_name = os.path.join(LOCAL_TEMP_FOLDER, output_file_name)
 
     for file in file_list:
         append_result = append_csv_file(
@@ -210,6 +220,7 @@ def append_files_wrapper(
                 file, full_out_file_name, append_result.status
             )
         )
+
 
 def combine_csv_files_header_independent_wrapper(folder_path, file_prefix, file_suffix, file_extension, output_file_name,  overwrite_existing, **kwargs):
     """
@@ -329,7 +340,7 @@ def combine_data_files():
     for file_to_combine in FILE_DATA_TO_COMBINE:
         output("Combining {} report files.".format(file_to_combine[0]))
         file_to_combine[2](
-            folder_path=settings.OUTPUT_FOLDER,
+            folder_path=LOCAL_TEMP_FOLDER,
             file_prefix="",
             file_suffix=file_to_combine[0],
             file_extension=settings.REPORT_FILE_NAME_EXTENSION,
@@ -417,11 +428,53 @@ FILE_DATA_TO_COMBINE = [
     ]
 ]
 
+
+# flow: move output files to a temp folder in users \duHast folder
+# - this is to avoid processing ( access issues ) on files on a networks server which might be open or locked by other processes ( like excel when users open the files for review) or simply brittle network connections which can cause file access issues and failed processing runs
+# - check if tem folder is empty ( if not delete all files and folders in temp folder) they are most likely left overs from previous runs and did not get cleaned up properly
+# - create a new temp folder for this run
+# - copy all output files to temp folder
+# - merge / append files in temp folder into overall log file in output folder as per script
+# - move the overall log files back to output folder
+# - delete temp folder with all files in it
+# - delete all temp files in output folder ( just to be sure)
+
+
 # exit code for this script
 # 0 all is ok
 # 1 something went wrong
 
 exit_code = 0
+
+
+# set up temp folder for processing files
+try:
+    local_temp_folder_root = os.path.join(get_current_user_local_app_data_directory(), settings.TEMP_FOLDER_OUT_FILES_PROCESSING)
+    LOCAL_TEMP_FOLDER = create_temp_directory(local_temp_folder_root)
+    output("Successfully set up temp folder: {}".format(LOCAL_TEMP_FOLDER))
+except Exception as e:
+    output("Failed to setup temp folder: {}".format(e))
+    exit_code = 1
+    sys.exit( exit_code )
+
+try:
+    exit_code = copy_all_to_temp(
+        output_to_console=output, 
+        temp_folder=LOCAL_TEMP_FOLDER, 
+        output_folder=settings.OUTPUT_FOLDER, 
+        temp_file_extension=settings.TEMP_FILE_NAME_EXTENSION, 
+        report_file_extension=settings.REPORT_FILE_NAME_EXTENSION, 
+        log_file_extension=settings.LOG_FILE_NAME_EXTENSION,
+    )
+    if exit_code != 0:
+        output("Failed to copy temp files from output folder to temp folder for processing.")
+        sys.exit(exit_code)
+except Exception as e:
+    output("Failed to setup temp folder: {}".format(e))
+    exit_code = 1
+    sys.exit(exit_code)
+
+
 try:
     # merge revit model health data files into overall .log file
     failed_files_ = merge_files()
@@ -437,10 +490,11 @@ except Exception as e:
     output("Failed to combine report files: [{}]".format(e))
     exit_code = 1
 
+
 try:
     # create view template hash table files
     output("Creating view template hash table:")
-    combine_vt_data_result = combine_vt_reports(settings.OUTPUT_FOLDER)
+    combine_vt_data_result = combine_vt_reports(LOCAL_TEMP_FOLDER)
     output(
         "Combined view template data files:{} [{}]".format(
             combine_vt_data_result.message, combine_vt_data_result.status
@@ -456,7 +510,7 @@ try:
     # this required python 3.10or higher and cant be run in the same post process script as the other tasks
     # TODO: move into separate script
     output("Converting view template hash table files to parquet file format:")
-    convert_to_parquet_result = convert_vt_reports_to_parquet(settings.OUTPUT_FOLDER)
+    convert_to_parquet_result = convert_vt_reports_to_parquet(LOCAL_TEMP_FOLDER)
     output(
         "Converted view template data files:{} [{}]".format(
             convert_to_parquet_result.message, convert_to_parquet_result.status
@@ -467,7 +521,7 @@ try:
             "Deleting no longer required view template hash table files in json format:"
         )
         delete_json_hash_files_status = delete_hash_table_vt_json_reports(
-            settings.OUTPUT_FOLDER
+            LOCAL_TEMP_FOLDER
         )
         output(
             "Deleted no longer required view template hash table files in json format:{} [{}]".format(
@@ -478,6 +532,43 @@ try:
 except Exception as e:
     output("Failed to convert VT hash files to parquet format: [{}]".format(e))
     exit_code = 1
+
+
+# copy all files back to output folder
+try:
+    exit_code = copy_all_files_from_temp(
+        output_to_console=output, 
+        temp_folder=LOCAL_TEMP_FOLDER, 
+        output_folder=settings.OUTPUT_FOLDER, 
+        report_file_extension=settings.REPORT_FILE_NAME_EXTENSION, 
+        log_file_extension=settings.LOG_FILE_NAME_EXTENSION,
+    )
+    if exit_code != 0:
+        output("Failed to copy files from temp to output folder after processing.")
+        sys.exit(exit_code)
+except Exception as e:
+    output("Failed to setup temp folder: {}".format(e))
+    exit_code = 1
+    sys.exit(exit_code)
+
+
+# clean up temp folder
+try:
+    exit_code = clean_temp_folder(
+        output_to_console=output, 
+        temp_folder=LOCAL_TEMP_FOLDER, 
+        temp_file_extension=settings.TEMP_FILE_NAME_EXTENSION, 
+        report_file_extension=settings.REPORT_FILE_NAME_EXTENSION, 
+        log_file_extension=settings.LOG_FILE_NAME_EXTENSION,
+    )
+    if exit_code != 0:
+        output("Failed to clean temp folder after processing.")
+        sys.exit(exit_code)
+except Exception as e:
+    output("Failed to clean temp folder: {}".format(e))
+    exit_code = 1
+    sys.exit(exit_code)
+
 
 # return the exit code
 sys.exit(exit_code)

@@ -52,5 +52,18 @@ namespace duHastNet.PushIt.Models.Drofus
         /// Defaults to <see cref="MappingFlowDirection.DrofusToRevit"/>.
         /// </summary>
         public MappingFlowDirection FlowDirection { get; set; } = MappingFlowDirection.DrofusToRevit;
+
+        /// <summary>
+        /// <c>true</c> when this mapping supplies the unique identifier used to
+        /// match drofus room records to data model rooms.
+        /// <para>
+        /// Exactly one mapping in the list must carry this flag. It corresponds
+        /// to the <c>"id"</c> field in the drofus API response by default, but
+        /// the user may nominate a different field via the mapping dialog.
+        /// The value is persisted to settings so PushIt can resolve the id field
+        /// on startup without requiring user interaction.
+        /// </para>
+        /// </summary>
+        public bool IsUniqueId { get; set; } = false;
     }
 }

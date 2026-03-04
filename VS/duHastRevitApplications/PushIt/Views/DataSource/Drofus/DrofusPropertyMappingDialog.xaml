@@ -40,6 +40,7 @@
             <RowDefinition Height="Auto"/>  <!-- Revit parameter -->
             <RowDefinition Height="Auto"/>  <!-- GUID (read-only) -->
             <RowDefinition Height="Auto"/>  <!-- Flow direction -->
+            <RowDefinition Height="Auto"/>  <!-- Is Id -->
             <RowDefinition Height="Auto"/>  <!-- Buttons -->
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -86,8 +87,19 @@
                   SelectedItem="{Binding SelectedFlowDirection, Mode=TwoWay}"
                   ToolTip="drofus to Revit writes drofus data into Revit. Revit to drofus is reserved for future use."/>
 
+        <!-- Is Id -->
+        <TextBlock Grid.Row="4" Grid.Column="0"
+                   Text="Is Id:"
+                   Style="{StaticResource LabelStyle}"/>
+        <CheckBox Grid.Row="4" Grid.Column="1"
+                  IsChecked="{Binding IsUniqueId, Mode=TwoWay}"
+                  IsEnabled="{Binding IsUniqueIdEnabled}"
+                  VerticalAlignment="Center"
+                  Margin="0 6 0 6"
+                  ToolTip="Check to nominate this mapping as the unique identifier. Only one mapping may be the Id."/>
+
         <!-- OK / Cancel -->
-        <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+        <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
                     Orientation="Horizontal"
                     HorizontalAlignment="Right"
                     Margin="0 12 0 0">

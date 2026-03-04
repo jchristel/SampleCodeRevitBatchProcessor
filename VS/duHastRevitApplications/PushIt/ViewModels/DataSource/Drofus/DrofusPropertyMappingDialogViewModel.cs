@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
+
 namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
 {
     /// <summary>
@@ -25,10 +26,17 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
         private readonly DrofusPropertyMap? _existingMapping;
 
         /// <summary>
-        /// Lookup from parameter Name -> RoomDataProperty so that selecting a
+        /// <c>true</c> when another mapping already carries <c>IsUniqueId = true</c>
+        /// and this dialog is not editing that mapping. Used to disable the Is Id
+        /// checkbox so only one mapping can hold the unique-id flag at a time.
+        /// </summary>
+        private readonly bool _anotherMappingIsAlreadyId;
+
+        /// <summary>
+        /// Lookup from parameter Name -> AvailableParameter so that selecting a
         /// parameter name in the ComboBox can immediately resolve its GUID.
         /// </summary>
-        private readonly Dictionary<string, RoomDataProperty> _revitParamsByName;
+        private readonly Dictionary<string, AvailableParameter> _revitParamsByName;
 
         // ── Observable collections ────────────────────────────────────────────
 
@@ -79,6 +87,23 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
         private MappingFlowDirection _selectedFlowDirection = MappingFlowDirection.DrofusToRevit;
 
         /// <summary>
+        /// Whether this mapping is nominated as the unique identifier.
+        /// Only one mapping in the list may carry this flag — the checkbox is
+        /// disabled when another mapping already holds it (unless this dialog is
+        /// editing that exact mapping).
+        /// </summary>
+        [ObservableProperty]
+        private bool _isUniqueId;
+
+        /// <summary>
+        /// <c>true</c> when the Is Id checkbox should be interactive.
+        /// <c>false</c> when another mapping already holds the unique-id flag
+        /// and this dialog is not editing that mapping — prevents a second mapping
+        /// from being nominated as the unique identifier.
+        /// </summary>
+        public bool IsUniqueIdEnabled => !_anotherMappingIsAlreadyId;
+
+        /// <summary>
         /// The mapping produced on OK. Null until OK fires, and null after Cancel.
         /// </summary>
         [ObservableProperty]
@@ -97,9 +122,17 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
         // ── Constructors ──────────────────────────────────────────────────────
 
         /// <summary>Add mode constructor.</summary>
+        /// <param name="availableFields">drofus JSON field names from the live API response.</param>
+        /// <param name="availableRevitParameters">Revit shared parameters available in the document.</param>
+        /// <param name="hasExistingId">
+        /// <c>true</c> when another mapping in the list already carries
+        /// <c>IsUniqueId = true</c>. Disables the Is Id checkbox so only one
+        /// mapping can be the unique identifier at a time.
+        /// </param>
         public DrofusPropertyMappingDialogViewModel(
             IReadOnlyList<string> availableFields,
-            IReadOnlyList<RoomDataProperty> availableRevitParameters)
+            IReadOnlyList<AvailableParameter> availableRevitParameters,
+            bool hasExistingId = false)
         {
             if (availableFields is null)
                 throw new ArgumentNullException(nameof(availableFields));
@@ -108,13 +141,14 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
 
             _isEditMode  = false;
             _existingMapping = null;
+            _anotherMappingIsAlreadyId = hasExistingId;
 
             AvailableDrofusFields       = new ObservableCollection<string>(availableFields);
             AvailableRevitParameterNames = new ObservableCollection<string>(
-                availableRevitParameters.Select(p => p.Name));
+                availableRevitParameters.Select(p => p.ParameterName));
 
             _revitParamsByName = availableRevitParameters
-                .GroupBy(p => p.Name)
+                .GroupBy(p => p.ParameterName)
                 .ToDictionary(g => g.Key, g => g.First());
 
             // Pre-select first items via the property setters so WPF bindings
@@ -128,11 +162,20 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
         }
 
         /// <summary>Edit mode constructor.</summary>
+        /// <param name="availableFields">drofus JSON field names from the live API response.</param>
+        /// <param name="availableRevitParameters">Revit shared parameters available in the document.</param>
+        /// <param name="existingMapping">The mapping being edited.</param>
+        /// <param name="hasExistingId">
+        /// <c>true</c> when another mapping (not this one) already carries
+        /// <c>IsUniqueId = true</c>. Pass <c>false</c> when editing the mapping
+        /// that is itself the current unique identifier so its checkbox stays enabled.
+        /// </param>
         public DrofusPropertyMappingDialogViewModel(
             IReadOnlyList<string> availableFields,
-            IReadOnlyList<RoomDataProperty> availableRevitParameters,
-            DrofusPropertyMap existingMapping)
-            : this(availableFields, availableRevitParameters)
+            IReadOnlyList<AvailableParameter> availableRevitParameters,
+            DrofusPropertyMap existingMapping,
+            bool hasExistingId = false)
+            : this(availableFields, availableRevitParameters, hasExistingId)
         {
             _isEditMode      = true;
             _existingMapping = existingMapping
@@ -144,6 +187,7 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
             SelectedRevitParameterName = existingMapping.RevitParameterName;
             _revitParameterGuid        = existingMapping.RevitParameterGuid; // GUID is read-only so set backing field directly
             SelectedFlowDirection      = existingMapping.FlowDirection;
+            IsUniqueId                 = existingMapping.IsUniqueId;
         }
 
         // ── Partial property callbacks ────────────────────────────────────────
@@ -154,8 +198,8 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
         partial void OnSelectedRevitParameterNameChanged(string? value)
         {
             // Auto-populate GUID from the parameter lookup.
-            if (value != null && _revitParamsByName.TryGetValue(value, out RoomDataProperty? param))
-                RevitParameterGuid = param.ParameterGUID;
+            if (value != null && _revitParamsByName.TryGetValue(value, out AvailableParameter? param))
+                RevitParameterGuid = param.ParameterGuid;
             else
                 RevitParameterGuid = string.Empty;
 
@@ -173,6 +217,7 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
                 RevitParameterName   = SelectedRevitParameterName!.Trim(),
                 RevitParameterGuid   = RevitParameterGuid.Trim(),
                 FlowDirection        = SelectedFlowDirection,
+                IsUniqueId           = IsUniqueId,
             };
 
             RequestClose?.Invoke(this, EventArgs.Empty);

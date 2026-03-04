@@ -60,6 +60,21 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
             _ => Model.FlowDirection.ToString()
         };
 
+        /// <summary>
+        /// <c>true</c> when this mapping is the nominated unique identifier.
+        /// Passed through directly from the underlying model.
+        /// </summary>
+        public bool IsUniqueId => Model.IsUniqueId;
+
+        /// <summary>
+        /// Returns <c>Bold</c> for the unique-id mapping so it stands out in the
+        /// ListView, and <c>Normal</c> for all other rows.
+        /// </summary>
+        public System.Windows.FontWeight RowFontWeight =>
+            Model.IsUniqueId
+                ? System.Windows.FontWeights.Bold
+                : System.Windows.FontWeights.Normal;
+
         // ── Validation state properties ───────────────────────────────────────
 
         /// <summary>

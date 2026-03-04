@@ -21,14 +21,26 @@ namespace duHastNet.PushIt.Utilities.Drofus
     /// REVIT CONTEXT: All HTTP calls are synchronous (HttpWebRequest.GetResponse).
     /// RevitTask.RunAsync already provides a background thread — using async on top
     /// of that risks a deadlock, so the blocking WebRequest path is intentional.
-    ///
-    /// PoC scope: GetRoomsData returns an empty list after a successful auth check.
-    /// The room count is stored on DrofusDataSourceSettings.LastRoomCount for the
-    /// ViewModel to display. Full room mapping is the next step after PoC sign-off.
     /// </summary>
     public class DrofusDataSource : IDataSource
     {
         /// <inheritdoc/>
+        /// <summary>
+        /// Queries the drofus rooms endpoint and translates each room object in
+        /// the JSON response into a <see cref="RoomDataModel"/> using the
+        /// <see cref="DrofusDataSourceSettings.PropertyMappings"/> list.
+        /// <para>
+        /// Each mapping entry describes one drofus JSON field and the Revit shared
+        /// parameter it maps to. The mapping flagged with
+        /// <see cref="DrofusPropertyMap.IsUniqueId"/> provides the value for
+        /// <see cref="RoomDataModel.Id"/>; all other mappings become entries in
+        /// <see cref="RoomBase.Properties"/>.
+        /// </para>
+        /// <para>
+        /// Rooms whose unique-id field is absent or null in the JSON response are
+        /// skipped — they cannot be matched to Revit rooms.
+        /// </para>
+        /// </summary>
         public List<RoomDataModel> GetRoomsData(DataSourceSettings settings)
         {
             var drofus = settings?.Drofus
@@ -36,6 +48,22 @@ namespace duHastNet.PushIt.Utilities.Drofus
                     "drofus data source selected but no credentials are configured.");
 
             ValidateSettings(drofus);
+
+            // The caller (Main / ValidateDrofusMappingsOnStartup) guarantees that
+            // exactly one mapping carries IsUniqueId before GetRoomsData is called.
+            // We guard here as a belt-and-braces check.
+            DrofusPropertyMap? idMapping = drofus.PropertyMappings
+                .FirstOrDefault(m => m.IsUniqueId);
+
+            if (idMapping is null)
+                throw new InvalidOperationException(
+                    "drofus GetRoomsData: no mapping is nominated as the unique " +
+                    "identifier (IsUniqueId). Validate mappings before loading rooms.");
+
+            // Non-id mappings become regular RoomDataProperty entries.
+            List<DrofusPropertyMap> otherMappings = drofus.PropertyMappings
+                .Where(m => !m.IsUniqueId)
+                .ToList();
 
             string url = BuildUrl(drofus);
 
@@ -47,8 +75,59 @@ namespace duHastNet.PushIt.Utilities.Drofus
                 drofus.LastRoomCount = array.Count;
                 drofus.IsConnected = true;
 
-                // PoC: return empty — full room mapping is the next step.
-                return new List<RoomDataModel>();
+                var rooms = new List<RoomDataModel>(array.Count);
+                int skippedCount = 0;
+
+                foreach (JToken token in array)
+                {
+                    if (token is not JObject roomObj)
+                        continue;
+
+                    // ── Unique-id field ───────────────────────────────────────
+                    string? idRaw = roomObj[idMapping.DrofusFieldName]?.ToString();
+
+                    if (string.IsNullOrWhiteSpace(idRaw))
+                    {
+                        // Room has no usable id value — skip it.
+                        skippedCount++;
+                        continue;
+                    }
+
+                    var idProperty = new RoomDataProperty(
+                        name:          idMapping.RevitParameterName,
+                        parameterGUID: idMapping.RevitParameterGuid,
+                        parameterName: idMapping.RevitParameterName,
+                        value:         idRaw,
+                        showInUI:      true,
+                        isReadOnly:    false,
+                        isUniqueId:    true);
+
+                    // ── Other mapped fields ───────────────────────────────────
+                    var properties = new List<RoomDataProperty>(otherMappings.Count);
+
+                    foreach (DrofusPropertyMap mapping in otherMappings)
+                    {
+                        string fieldValue = roomObj[mapping.DrofusFieldName]?.ToString()
+                            ?? string.Empty;
+
+                        properties.Add(new RoomDataProperty(
+                            name:          mapping.RevitParameterName,
+                            parameterGUID: mapping.RevitParameterGuid,
+                            parameterName: mapping.RevitParameterName,
+                            value:         fieldValue,
+                            showInUI:      true,
+                            isReadOnly:    false,
+                            isUniqueId:    false));
+                    }
+
+                    rooms.Add(new RoomDataModel(idProperty, properties));
+                }
+
+                // Surface the skip count as a non-fatal warning via the settings
+                // object so the caller can relay it to the message store if desired.
+                drofus.LastSkippedRoomCount = skippedCount;
+
+                return rooms;
             }
             catch (WebException webEx) when (webEx.Response is HttpWebResponse errResp)
             {
@@ -138,9 +217,38 @@ namespace duHastNet.PushIt.Utilities.Drofus
         }
 
         /// <inheritdoc/>
-        /// <remarks>PoC: drofus has no CSV-style header rows. Returns empty list.</remarks>
+        /// <summary>
+        /// Builds a <see cref="RoomDataProperty"/> for each entry in
+        /// <see cref="DrofusDataSourceSettings.PropertyMappings"/> so that
+        /// <c>VerifyParametersInModel</c> can check that every mapped Revit shared
+        /// parameter still exists and is bound in the active document.
+        /// <para>
+        /// Returns an empty list when no mappings are configured — the caller
+        /// treats an empty list as "nothing to verify" rather than an error.
+        /// </para>
+        /// </summary>
         public List<RoomDataProperty> GetHeaderProperties(DataSourceSettings settings)
-            => new List<RoomDataProperty>();
+        {
+            var drofus = settings?.Drofus;
+            if (drofus == null || drofus.PropertyMappings.Count == 0)
+                return new List<RoomDataProperty>();
+
+            var properties = new List<RoomDataProperty>(drofus.PropertyMappings.Count);
+
+            foreach (DrofusPropertyMap mapping in drofus.PropertyMappings)
+            {
+                properties.Add(new RoomDataProperty(
+                    name:          mapping.RevitParameterName,
+                    parameterGUID: mapping.RevitParameterGuid,
+                    parameterName: mapping.RevitParameterName,
+                    value:         string.Empty,
+                    showInUI:      true,
+                    isReadOnly:    false,
+                    isUniqueId:    mapping.IsUniqueId));
+            }
+
+            return properties;
+        }
 
         /// <inheritdoc/>
         public bool Validate(DataSourceSettings settings, out string errorMessage)

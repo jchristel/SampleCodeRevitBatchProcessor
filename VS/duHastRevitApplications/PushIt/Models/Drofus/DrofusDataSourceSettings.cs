@@ -1,5 +1,6 @@
 // BSD License - Copyright 2025, Jan Christel
 
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace duHastNet.PushIt.Models.Drofus
@@ -44,6 +45,17 @@ namespace duHastNet.PushIt.Models.Drofus
         /// Room count returned by the last successful connection test.
         /// </summary>
         public int LastRoomCount { get; set; }
+
+        /// <summary>
+        /// Number of rooms skipped during the last <c>GetRoomsData</c> call because
+        /// their unique-id field was absent or null in the JSON response.
+        /// <para>
+        /// Runtime-only — never written to the settings JSON file.
+        /// Reset to zero at the start of each <c>GetRoomsData</c> call.
+        /// </para>
+        /// </summary>
+        [JsonIgnore]
+        public int LastSkippedRoomCount { get; set; }
 
         /// <summary>
         /// Saved drofus → Revit (and reverse) property mappings.

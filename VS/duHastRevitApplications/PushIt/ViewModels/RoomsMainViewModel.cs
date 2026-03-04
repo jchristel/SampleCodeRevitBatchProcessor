@@ -394,7 +394,7 @@ namespace duHastNet.PushIt.ViewModels
             if (DataSourceViewModel.CurrentSourceControlViewModel
                     is ViewModels.DataSource.DrofusDataSourceControlViewModel drofusVm)
             {
-                drofusVm.AvailableRevitParameters = _revitDataModel.GetAllParameters();
+                drofusVm.AvailableRevitParameters = _revitDataModel.GetAllAvailableParameters();
             }
 
 

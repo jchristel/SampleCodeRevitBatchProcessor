@@ -18,9 +18,10 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="16"/>   <!-- warning indicator -->
+                    <ColumnDefinition Width="20"/>   <!-- id indicator -->
                     <ColumnDefinition Width="*"/>    <!-- drofus field -->
                     <ColumnDefinition Width="*"/>    <!-- Revit parameter -->
-                    <ColumnDefinition Width="90"/>   <!-- direction -->
+                    <ColumnDefinition Width="Auto"/> <!-- direction — never clipped -->
                 </Grid.ColumnDefinitions>
 
                 <!-- Warning indicator — visible when any validation flag is set -->
@@ -32,25 +33,35 @@
                            ToolTip="This mapping has a validation warning. Check drofus field name and Revit parameter GUID."
                            Visibility="{Binding HasWarning, Converter={StaticResource BoolToVis}}"/>
 
+                <!-- Id indicator — visible when this mapping is the unique identifier -->
                 <TextBlock Grid.Column="1"
+                           Text="🔑"
+                           FontSize="11"
+                           VerticalAlignment="Center"
+                           ToolTip="This mapping is the unique identifier used to match drofus rooms."
+                           Visibility="{Binding IsUniqueId, Converter={StaticResource BoolToVis}}"/>
+
+                <TextBlock Grid.Column="2"
                            Text="{Binding DrofusFieldName}"
+                           FontWeight="{Binding RowFontWeight}"
                            VerticalAlignment="Center"
                            Margin="4 2 8 2"
                            TextTrimming="CharacterEllipsis"
                            ToolTip="{Binding DrofusFieldName}"/>
 
-                <TextBlock Grid.Column="2"
+                <TextBlock Grid.Column="3"
                            Text="{Binding RevitParameterName}"
+                           FontWeight="{Binding RowFontWeight}"
                            VerticalAlignment="Center"
                            Margin="0 2 8 2"
                            TextTrimming="CharacterEllipsis"
                            ToolTip="{Binding RevitParameterName}"/>
 
-                <TextBlock Grid.Column="3"
+                <TextBlock Grid.Column="4"
                            Text="{Binding FlowDirectionDisplay}"
+                           FontWeight="{Binding RowFontWeight}"
                            VerticalAlignment="Center"
-                           Margin="0 2 0 2"
-                           TextTrimming="CharacterEllipsis"
+                           Margin="0 2 8 2"
                            ToolTip="{Binding FlowDirectionDisplay}"/>
             </Grid>
         </DataTemplate>
@@ -182,36 +193,38 @@
                 <!-- Column headers -->
                 <Grid Margin="0 0 0 2">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="16"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="90"/>
+                        <ColumnDefinition Width="16"/>   <!-- warning indicator -->
+                        <ColumnDefinition Width="20"/>   <!-- id indicator -->
+                        <ColumnDefinition Width="*"/>    <!-- drofus field -->
+                        <ColumnDefinition Width="*"/>    <!-- Revit parameter -->
+                        <ColumnDefinition Width="Auto"/> <!-- direction -->
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="1"
+                    <TextBlock Grid.Column="2"
                                Text="drofus Field"
                                FontWeight="SemiBold"
                                FontSize="11"
                                Margin="4 0 8 0"
                                Foreground="#555"/>
-                    <TextBlock Grid.Column="2"
+                    <TextBlock Grid.Column="3"
                                Text="Revit Parameter"
                                FontWeight="SemiBold"
                                FontSize="11"
                                Margin="0 0 8 0"
                                Foreground="#555"/>
-                    <TextBlock Grid.Column="3"
+                    <TextBlock Grid.Column="4"
                                Text="Direction"
                                FontWeight="SemiBold"
                                FontSize="11"
+                               Margin="0 0 4 0"
                                Foreground="#555"/>
                 </Grid>
 
-                <!-- Mapping ListView -->
+                <!-- Mapping ListView — scrolls after 10 rows -->
                 <ListView ItemsSource="{Binding MappingRows}"
                           SelectedItem="{Binding SelectedMappingRow, Mode=TwoWay}"
                           ItemTemplate="{StaticResource MappingRowTemplate}"
                           MinHeight="60"
-                          MaxHeight="200"
+                          MaxHeight="240"
                           BorderThickness="1"
                           BorderBrush="#CCCCCC"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"

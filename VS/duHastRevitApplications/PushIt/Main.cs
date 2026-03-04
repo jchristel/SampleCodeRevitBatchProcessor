@@ -150,22 +150,32 @@ namespace duHastNet.PushIt
         // ── Private helpers ───────────────────────────────────────────────────
 
         /// <summary>
-        /// Reads all shared parameters bound in the Revit document and loads them
-        /// into <see cref="Models.RevitDataModel"/> via
-        /// <see cref="Models.RevitDataModel.AddParameter"/>.
+        /// Reads all shared parameters bound in the Revit document and registers
+        /// them in <see cref="Models.RevitDataModel"/> as
+        /// <see cref="Models.AvailableParameter"/> entries via
+        /// <see cref="Models.RevitDataModel.AddAvailableParameter"/>.
+        /// <para>
+        /// Only parameters that are bound to every currently-enabled category are
+        /// registered — parameters bound only to categories the user has not
+        /// enabled are not relevant for matching or mapping.
+        /// </para>
         /// <para>
         /// Called synchronously on the Revit API thread before the main window
-        /// opens, so the parameter list is always available regardless of which
-        /// data source is selected.
+        /// opens, so the available-parameter list is always populated regardless
+        /// of which data source is active.
         /// </para>
         /// </summary>
         private void LoadSharedParametersFromDocument(Autodesk.Revit.DB.Document doc)
         {
             try
             {
+                // Ensure the list is empty before populating — guards against
+                // the method being called more than once in a session.
+                _revitDataModel.ClearAvailableParameters();
+
                 // GetSharedParameterIdsByGUID returns Dictionary<GUID string, ElementId>.
                 // Each ElementId resolves to a SharedParameterElement whose Name
-                // gives the display name used in the mapping dialog ComboBox.
+                // gives the human-readable display name.
                 var sharedParamIds = duHastNet.RevitUtils.Parameters.SharedParaUtils
                     .GetSharedParameterIdsByGUID(doc);
 
@@ -181,52 +191,40 @@ namespace duHastNet.PushIt
 
                     if (spElem == null) continue;
 
-                    // Only register parameters that are actually bound to at
-                    // least one enabled category — parameters bound only to
-                    // categories the user has not enabled are not relevant.
+                    // Only register parameters that are bound to every enabled
+                    // category — parameters bound only to disabled categories
+                    // cannot be used in any push or mapping operation.
                     List<string>? bindingsId =
                         duHastNet.RevitUtils.Parameters.SharedParaUtils
                             .ParameterBindingsByGUID(doc, guid);
 
-                    //check if any bindings found, there should be some
-                    if (bindingsId == null)
-                    {
-                        continue;
-                    }
+                    if (bindingsId == null) continue;
 
-                    bool isBoundToEnabledCategory = true;
-                    // check if parameter is bound to enabled categories
-                    foreach (var supportedCategory in _revitDataModel.GetAllEnabledCategories())
+                    bool isBoundToAllEnabledCategories = true;
+                    foreach (var enabledCategory in _revitDataModel.GetAllEnabledCategories())
                     {
-                        if (supportedCategory.Enabled)
+                        if (!bindingsId.Contains(enabledCategory.Name))
                         {
-                            if (!bindingsId.Contains(supportedCategory.Name))
-                            {
-                                isBoundToEnabledCategory = false;
-                            }
+                            isBoundToAllEnabledCategories = false;
+                            break;
                         }
                     }
 
-                    // if the parameter is not bound to any enabled category, skip it
-                    if (!isBoundToEnabledCategory)
-                    {
-                        continue;
-                    }
+                    if (!isBoundToAllEnabledCategories) continue;
 
-                    // if we get here, the parameter is shared and bound to categories, so we add it to the model
-                    _revitDataModel.AddParameter(new Models.RoomDataProperty(
-                        name: spElem.Name,
-                        parameterGUID: guid,
-                        parameterName: spElem.Name,
-                        value: string.Empty,
-                        showInUI: true,
-                        isReadOnly: false,
-                        isUniqueId: false));
+                    // Register as a lightweight AvailableParameter — name and
+                    // GUID only. No value, no UI flags, no read-only state.
+                    _revitDataModel.AddAvailableParameter(
+                        new Models.AvailableParameter(
+                            parameterName: spElem.Name,
+                            parameterGuid: guid));
                 }
             }
             catch (Exception ex)
             {
-                // Non-fatal — parameters will be empty but the app still opens.
+                // Non-fatal — available parameters will be empty but the app
+                // still opens. The source-specific startup steps will fail
+                // gracefully when they find no parameters to match against.
                 _messageStore.EnqueueMessage(
                     $"Could not read shared parameters from Revit document: {ex.Message}",
                     duHastNet.Utils.WPF.Stores.MessageTypes.Warning);
@@ -234,15 +232,27 @@ namespace duHastNet.PushIt
         }
 
         /// <summary>
-        /// Fires a fire-and-forget <c>RevitTask.RunAsync</c> block that validates
-        /// existing drofus property mappings against the live Revit document and
-        /// drofus API. Skipped when the active source is not drofus, no mappings
-        /// are configured, or credentials are incomplete.
+        /// Fires a fire-and-forget <c>RevitTask.RunAsync</c> block for the drofus
+        /// startup path. Two distinct branches run depending on whether mappings
+        /// are already configured in settings:
         /// <para>
-        /// Messages generated by the action are written to
-        /// <see cref="Models.RevitDataModel.AddStartupMessage"/> inside the action
-        /// itself, and are also forwarded to <c>_messageStore</c> here so they
-        /// appear in the UI banner.
+        /// <b>No-mappings branch:</b> queries the drofus API to populate
+        /// <see cref="DrofusPropertyMapper.AvailableFields"/> so the user can
+        /// set up mappings in the UI immediately. The "id" field is always present
+        /// in the drofus response and serves as the implicit unique identifier —
+        /// no mapping is required for it. On success, calls
+        /// <see cref="DrofusDataSourceControlViewModel.OnStartupFieldsLoaded"/>
+        /// so the UI enables the Add Mapping button.
+        /// </para>
+        /// <para>
+        /// <b>Has-mappings branch:</b> validates all existing mappings against
+        /// both the live Revit document and the live drofus API. If every mapping
+        /// is valid the rooms are loaded into the data model. If any mapping fails
+        /// validation a message is surfaced via the banner and rooms are not loaded.
+        /// </para>
+        /// <para>
+        /// Skipped entirely when the active source is not drofus, credentials fail
+        /// basic validation, or the drofus control ViewModel cannot be resolved.
         /// </para>
         /// </summary>
         private void FireDrofusStartupValidationIfRequired(
@@ -259,55 +269,149 @@ namespace duHastNet.PushIt
             if (drofusControlVm is null)
                 return;
 
-            // Shared parameters were loaded into _revitDataModel synchronously
+            // Available parameters were loaded into _revitDataModel synchronously
             // before the window opened. Inject them into the control ViewModel
             // now so the Add/Edit dialog ComboBox is populated.
-            drofusControlVm.AvailableRevitParameters = _revitDataModel.GetAllParameters();
-
-            DrofusDataSourceSettings? drofusSettings = settings.DataSource.Drofus;
-            if (drofusSettings is null || drofusSettings.PropertyMappings.Count == 0)
-                return;
+            drofusControlVm.AvailableRevitParameters = _revitDataModel.GetAllAvailableParameters();
+            drofusControlVm.RevitDataModel = _revitDataModel;
 
             var dataSource = new DrofusDataSource();
             if (!dataSource.Validate(settings.DataSource, out _))
                 return;
 
-            _ = RevitTask.RunAsync(app =>
+            DrofusDataSourceSettings? drofusSettings = settings.DataSource.Drofus;
+            if (drofusSettings is null)
+                return;
+
+            if (drofusSettings.PropertyMappings.Count == 0)
             {
-                Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
-
-                try
+                // ── No-mappings branch ────────────────────────────────────────
+                // Query the API to populate AvailableFields so the user can
+                // configure mappings. No validation or room load runs here.
+                _ = RevitTask.RunAsync(app =>
                 {
-                    var action = new ValidateDrofusMappingsOnStartup(
-                        drofusControlVm.Mapper,
-                        settings.DataSource);
-
-                    (string message, duHastNet.Utils.WPF.Stores.MessageTypes messageType) =
-                        action.Execute(doc);
-
-                    _revitDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
-
-                    // Forward detail messages into the durable startup list
-                    foreach (var entry in action.GetLogMessagesAndLogTypes())
+                    try
                     {
-                        _revitDataModel.AddStartupMessage(entry.Item1, entry.Item2);
+                        List<string> fields = dataSource.GetAvailableFields(settings.DataSource);
+                        drofusControlVm.Mapper.UpdateAvailableFields(fields);
+
+                        string infoMsg = fields.Count > 0
+                            ? $"drofus startup: {fields.Count} room properties loaded. " +
+                              $"Configure mappings to begin loading rooms. " +
+                              $"The 'id' field is the default unique identifier."
+                            : "drofus startup: connected but no room properties were returned. " +
+                              "Check that the project contains rooms.";
+
+                        _revitDataModel.AddStartupMessage(
+                            infoMsg, duHastNet.Utils.WPF.Stores.MessageTypes.Information);
+                        _messageStore.EnqueueMessage(
+                            infoMsg, duHastNet.Utils.WPF.Stores.MessageTypes.Information);
+
+                        System.Windows.Application.Current?.Dispatcher.Invoke(
+                            () => drofusControlVm.OnStartupFieldsLoaded());
+                    }
+                    catch (Exception ex)
+                    {
+                        string errMsg =
+                            $"drofus startup: could not retrieve room properties — {ex.Message}";
+                        _revitDataModel.AddStartupMessage(
+                            errMsg, duHastNet.Utils.WPF.Stores.MessageTypes.Warning);
+                        _messageStore.EnqueueMessage(
+                            errMsg, duHastNet.Utils.WPF.Stores.MessageTypes.Warning);
                     }
 
-                    if (messageType != duHastNet.Utils.WPF.Stores.MessageTypes.Information)
-                        _messageStore.EnqueueMessage(message, messageType);
-
-                    System.Windows.Application.Current?.Dispatcher.Invoke(
-                        () => drofusControlVm.OnStartupValidationCompleted());
-                }
-                catch (Exception ex)
+                    return (string.Empty, duHastNet.Utils.WPF.Stores.MessageTypes.Information);
+                });
+            }
+            else
+            {
+                // ── Has-mappings branch ───────────────────────────────────────
+                // Validate all mappings. Load rooms only if all are valid.
+                _ = RevitTask.RunAsync(app =>
                 {
-                    string errMsg = $"drofus mapping validation failed unexpectedly: {ex.Message}";
-                    _revitDataModel.AddStartupMessage(errMsg, duHastNet.Utils.WPF.Stores.MessageTypes.Warning);
-                    _messageStore.EnqueueMessage(errMsg, duHastNet.Utils.WPF.Stores.MessageTypes.Warning);
-                }
+                    Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
 
-                return (string.Empty, duHastNet.Utils.WPF.Stores.MessageTypes.Information);
-            });
+                    try
+                    {
+                        var action = new ValidateDrofusMappingsOnStartup(
+                            drofusControlVm.Mapper,
+                            settings.DataSource);
+
+                        (string message, duHastNet.Utils.WPF.Stores.MessageTypes messageType) =
+                            action.Execute(doc);
+
+                        _revitDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
+
+                        foreach (var entry in action.GetLogMessagesAndLogTypes())
+                            _revitDataModel.AddStartupMessage(entry.Item1, entry.Item2);
+
+                        if (messageType != duHastNet.Utils.WPF.Stores.MessageTypes.Information)
+                        {
+                            // At least one mapping is invalid — surface the problem
+                            // and do not load rooms.
+                            _messageStore.EnqueueMessage(message, messageType);
+                        }
+                        else
+                        {
+                            // All mappings valid — load rooms from drofus into the data model.
+                            _revitDataModel.ClearAllRooms();
+                            _revitDataModel.LoadRoomsData();
+
+                            // Match the loaded rooms against Revit room families and
+                            // raise DATA_MODEL_ROOMS_UPDATED so the data grid refreshes.
+                            // This mirrors exactly what the Load button does.
+                            UpdateRoomDataModelWithNewRooms actionUpdate = new(
+                                _revitDataModel,
+                                roomsVm);
+                            actionUpdate.Execute(doc);
+                            _revitDataModel.LogMessages(actionUpdate.GetLogMessagesAndLogTypes());
+
+                            RefreshRoomDataWithRevitData actionRefresh = new(
+                                revitModel: _revitDataModel,
+                                roomsMainViewModel: roomsVm,
+                                revitMockRooms: actionUpdate.CurrentMockRoomsData);
+                            actionRefresh.Execute(doc);
+                            _revitDataModel.LogMessages(actionRefresh.GetLogMessagesAndLogTypes());
+
+                            string loadedMsg = "drofus startup: all mappings valid — rooms loaded.";
+                            _revitDataModel.AddStartupMessage(
+                                loadedMsg, duHastNet.Utils.WPF.Stores.MessageTypes.Information);
+
+                            // If any rooms were skipped (null id field) surface a warning.
+                            int skipped = settings.DataSource.Drofus?.LastSkippedRoomCount ?? 0;
+                            if (skipped > 0)
+                            {
+                                string skipMsg = skipped == 1
+                                    ? "drofus startup: 1 room was skipped because its unique-id field was empty or null."
+                                    : $"drofus startup: {skipped} rooms were skipped because their unique-id field was empty or null.";
+                                _revitDataModel.AddStartupMessage(
+                                    skipMsg, duHastNet.Utils.WPF.Stores.MessageTypes.Warning);
+                                _messageStore.EnqueueMessage(
+                                    skipMsg, duHastNet.Utils.WPF.Stores.MessageTypes.Warning);
+                            }
+
+                            // Notify the UI on the dispatcher thread so the data grid binds.
+                            System.Windows.Application.Current?.Dispatcher.Invoke(
+                                () => _revitDataModel.RaisePropertyChanged(
+                                    PropertyChangedEventNames.DATA_MODEL_ROOMS_UPDATED));
+                        }
+
+                        System.Windows.Application.Current?.Dispatcher.Invoke(
+                            () => drofusControlVm.OnStartupValidationCompleted());
+                    }
+                    catch (Exception ex)
+                    {
+                        string errMsg =
+                            $"drofus mapping validation failed unexpectedly: {ex.Message}";
+                        _revitDataModel.AddStartupMessage(
+                            errMsg, duHastNet.Utils.WPF.Stores.MessageTypes.Warning);
+                        _messageStore.EnqueueMessage(
+                            errMsg, duHastNet.Utils.WPF.Stores.MessageTypes.Warning);
+                    }
+
+                    return (string.Empty, duHastNet.Utils.WPF.Stores.MessageTypes.Information);
+                });
+            }
         }
 
         /// <summary>

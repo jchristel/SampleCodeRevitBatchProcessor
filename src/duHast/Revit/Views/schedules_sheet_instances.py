@@ -27,7 +27,11 @@ This module contains a number of helper functions relating to Revit sheet schedu
 #
 
 
-from duHast.Revit.Views.schedules_sheet_instances_overlap import check_schedules_overlap_titleblock, check_schedules_outside_titleblock, check_schedules_overlap_viewports
+from duHast.Revit.Views.schedules_sheet_instances_overlap import (
+    check_schedules_overlap_titleblock, 
+    check_schedules_outside_titleblock, 
+    check_schedules_overlap_viewports
+)
 
 
 def get_sheets_with_overlapping_schedules(doc, sheets):

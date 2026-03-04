@@ -4,6 +4,7 @@ using Autodesk.Revit.DB;
 using duHastNet.PushIt.Models;
 using duHastNet.PushIt.Utilities;
 using System;
+using System.Collections.Generic;
 
 namespace duHastNet.PushIt.RevitActions
 {
@@ -13,16 +14,22 @@ namespace duHastNet.PushIt.RevitActions
     /// <para>
     /// The three steps run in order and abort on the first failure:
     /// <list type="number">
-    ///   <item>Load header parameters from the CSV file.</item>
-    ///   <item>Verify those parameters exist and are bound in the active Revit document.</item>
+    ///   <item>Read header parameters from the CSV file into the parameter store.</item>
+    ///   <item>
+    ///     Cross-reference each CSV parameter GUID against the pre-built
+    ///     <see cref="RevitDataModel.GetAllAvailableParameters"/> list. This list
+    ///     was populated at startup from the live Revit document by
+    ///     <c>Main.LoadSharedParametersFromDocument</c>, so no further Revit API
+    ///     call is required here.
+    ///   </item>
     ///   <item>Load all room records into the model.</item>
     /// </list>
     /// </para>
     /// <para>
-    /// Must be executed inside <c>RevitTask.RunAsync</c> — step 2 requires the
-    /// Revit API. Steps 1 and 3 only perform file I/O but are included here so
-    /// the entire sequence runs on the same background thread without blocking
-    /// the UI.
+    /// Must be executed inside <c>RevitTask.RunAsync</c> so that it runs on a
+    /// background thread and the UI remains responsive. The Revit API
+    /// <paramref name="doc"/> argument is accepted to satisfy the
+    /// <c>IRevitAction</c> contract but is not used by this action.
     /// </para>
     /// <para>
     /// All messages are written to both the action's own log (via
@@ -55,9 +62,6 @@ namespace duHastNet.PushIt.RevitActions
         {
             _revitDataModel = revitDataModel
                 ?? throw new ArgumentNullException(nameof(revitDataModel));
-
-            // RevitActionBase exposes RevitModel for VerifyParametersInModel
-            RevitModel = revitDataModel;
         }
 
         // ── IRevitAction ──────────────────────────────────────────────────────
@@ -65,13 +69,16 @@ namespace duHastNet.PushIt.RevitActions
         /// <summary>
         /// Runs the three-step CSV startup sequence.
         /// </summary>
-        /// <param name="doc">The active Revit document.</param>
+        /// <param name="doc">
+        /// The active Revit document. Accepted to satisfy the
+        /// <c>IRevitAction</c> contract; not used by this action.
+        /// </param>
         /// <returns>
         /// A tuple containing a human-readable summary message and a
         /// <see cref="Utils.WPF.Stores.MessageTypes"/> value:
         /// <list type="bullet">
         ///   <item><c>Information</c> — all steps passed; rooms are loaded.</item>
-        ///   <item><c>Error</c> — a step failed; rooms may not be loaded.</item>
+        ///   <item><c>Error</c> — a step failed; rooms are not loaded.</item>
         /// </list>
         /// </returns>
         public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(
@@ -79,55 +86,104 @@ namespace duHastNet.PushIt.RevitActions
         {
             try
             {
-                // ── Step A: load header parameters ────────────────────────────
+                // ── Step A: read CSV header parameters ────────────────────────
+                // Replaces any parameters left over from a previous load attempt.
                 _revitDataModel.ClearParameters();
                 _revitDataModel.LoadParameterData();
 
-                if (_revitDataModel.GetAllParameters().Count == 0)
+                var csvParameters = _revitDataModel.GetAllParameters();
+
+                if (csvParameters.Count == 0)
                 {
-                    string noParamsMsg = "CSV startup: no parameters were read from the CSV file headers. " +
-                                        "Check that the CSV file is present and correctly formatted.";
+                    string noParamsMsg =
+                        "CSV startup: no parameters were read from the CSV file headers. " +
+                        "Check that the CSV file is present and correctly formatted.";
                     AddMessage(noParamsMsg, Utils.WPF.Stores.MessageTypes.Error);
                     _revitDataModel.AddStartupMessage(noParamsMsg, Utils.WPF.Stores.MessageTypes.Error);
-                    return GetReturnValue("CSV startup: parameters loaded.");
+                    return GetReturnValue("CSV startup: aborted — no CSV parameters.");
                 }
 
-                // ── Step B: verify parameters against Revit document ──────────
-                VerifyParametersInModel actionVerify = new(_revitDataModel);
-                (string messageActionVerify, Utils.WPF.Stores.MessageTypes messageActionTypeVerify) =
-                    actionVerify.Execute(doc);
+                // ── Step B: cross-reference against available parameters ───────
+                // Available parameters were read from the live Revit document by
+                // Main.LoadSharedParametersFromDocument before this action ran.
+                // Each CSV parameter that carries a GUID must match an entry in
+                // that list. Parameters without a GUID (standard non-shared
+                // parameters) are checked by name only.
+                IReadOnlyList<AvailableParameter> availableParameters =
+                    _revitDataModel.GetAllAvailableParameters();
 
-                _revitDataModel.LogMessages(actionVerify.GetLogMessagesAndLogTypes());
-
-                // Forward each verification message into the startup message store
-                // so Main can relay them to the UI banner after the window opens.
-                foreach (var entry in actionVerify.GetLogMessagesAndLogTypes())
+                if (availableParameters.Count == 0)
                 {
-                    _revitDataModel.AddStartupMessage(entry.Item1, entry.Item2);
+                    string noAvailMsg =
+                        "CSV startup: no shared parameters are registered as available in the " +
+                        "Revit document. Ensure shared parameters are bound to all enabled " +
+                        "categories before loading.";
+                    AddMessage(noAvailMsg, Utils.WPF.Stores.MessageTypes.Error);
+                    _revitDataModel.AddStartupMessage(noAvailMsg, Utils.WPF.Stores.MessageTypes.Error);
+                    return GetReturnValue("CSV startup: aborted — no available parameters.");
                 }
 
-                if (messageActionTypeVerify == Utils.WPF.Stores.MessageTypes.Error)
+                bool allMatched = true;
+
+                foreach (var csvParam in csvParameters)
                 {
-                    // Parameter check failed — do not load rooms against an invalid
-                    // parameter set. The error detail is already in the log and the
-                    // startup message list.
-                    AddMessage(messageActionVerify, Utils.WPF.Stores.MessageTypes.Error);
-                    return (messageActionVerify, messageActionTypeVerify);
+                    if (!string.IsNullOrWhiteSpace(csvParam.ParameterGUID))
+                    {
+                        // GUID-based match: authoritative, order-independent.
+                        if (!_revitDataModel.AvailableParameterExistsByGuid(csvParam.ParameterGUID))
+                        {
+                            string missMsg =
+                                $"CSV startup: parameter '{csvParam.Name}' " +
+                                $"(GUID: {csvParam.ParameterGUID}) is specified in the CSV " +
+                                $"but was not found as a shared parameter bound to all " +
+                                $"enabled categories in the Revit document.";
+                            AddMessage(missMsg, Utils.WPF.Stores.MessageTypes.Error);
+                            _revitDataModel.AddStartupMessage(
+                                missMsg, Utils.WPF.Stores.MessageTypes.Error);
+                            allMatched = false;
+                        }
+                    }
+                    else
+                    {
+                        // Name-based fallback for standard (non-shared) parameters.
+                        if (!_revitDataModel.AvailableParameterExistsByName(csvParam.Name))
+                        {
+                            string missMsg =
+                                $"CSV startup: parameter '{csvParam.Name}' is specified in " +
+                                $"the CSV but was not found in the available parameters list " +
+                                $"for the Revit document.";
+                            AddMessage(missMsg, Utils.WPF.Stores.MessageTypes.Error);
+                            _revitDataModel.AddStartupMessage(
+                                missMsg, Utils.WPF.Stores.MessageTypes.Error);
+                            allMatched = false;
+                        }
+                    }
+                }
+
+                if (!allMatched)
+                {
+                    // One or more parameters are missing — do not load rooms
+                    // against an invalid parameter set.
+                    return GetReturnValue("CSV startup: aborted — parameter mismatch.");
                 }
 
                 // ── Step C: load rooms ────────────────────────────────────────
                 _revitDataModel.ClearAllRooms();
                 _revitDataModel.LoadRoomsData();
 
-                string successMsg = "CSV startup: parameters verified and rooms loaded successfully.";
-                _revitDataModel.AddStartupMessage(successMsg, Utils.WPF.Stores.MessageTypes.Information);
+                string successMsg =
+                    "CSV startup: all parameters matched and rooms loaded successfully.";
+                _revitDataModel.AddStartupMessage(
+                    successMsg, Utils.WPF.Stores.MessageTypes.Information);
                 return GetReturnValue(successMsg);
             }
             catch (Exception ex)
             {
-                string errorMsg = $"CSV startup: an unexpected error occurred: {ex.Message}";
+                string errorMsg =
+                    $"CSV startup: an unexpected error occurred: {ex.Message}";
                 AddMessage(errorMsg, Utils.WPF.Stores.MessageTypes.Error);
-                _revitDataModel.AddStartupMessage(errorMsg, Utils.WPF.Stores.MessageTypes.Error);
+                _revitDataModel.AddStartupMessage(
+                    errorMsg, Utils.WPF.Stores.MessageTypes.Error);
                 return GetReturnValue("CSV startup: completed with errors.");
             }
         }

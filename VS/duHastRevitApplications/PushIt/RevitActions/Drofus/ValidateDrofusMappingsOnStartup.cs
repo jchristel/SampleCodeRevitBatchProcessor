@@ -16,6 +16,27 @@ namespace duHastNet.PushIt.RevitActions.Drofus
     /// property mappings against both the live Revit document and the live
     /// drofus API.
     /// <para>
+    /// Three checks run in order. The first two are independent — a failure in
+    /// one does not prevent the other from running. The third (unique-id check)
+    /// runs first and returns <c>Error</c> immediately if it fails, because
+    /// without a valid unique identifier rooms cannot be loaded.
+    /// <list type="number">
+    ///   <item>
+    ///     Unique-id check — exactly one mapping must carry
+    ///     <see cref="DrofusPropertyMap.IsUniqueId"/>. Returns <c>Error</c> if
+    ///     zero or more than one mapping carries the flag.
+    ///   </item>
+    ///   <item>
+    ///     Revit parameter check — each mapping's GUID must resolve to a shared
+    ///     parameter bound in the active document.
+    ///   </item>
+    ///   <item>
+    ///     drofus field check — each mapping's drofus field name must appear in
+    ///     the live API response.
+    ///   </item>
+    /// </list>
+    /// </para>
+    /// <para>
     /// Must be executed inside <c>RevitTask.RunAsync</c> — the Revit-side check
     /// requires the Revit API, and the drofus-side check makes a synchronous
     /// HTTP call that must not block the UI thread.
@@ -40,6 +61,14 @@ namespace duHastNet.PushIt.RevitActions.Drofus
         private int _revitMissingCount;
         private int _drofusMissingCount;
         private bool _drofusConnectionFailed;
+
+        /// <summary>
+        /// Set when the unique-identifier check fails — either no mapping carries
+        /// <c>IsUniqueId = true</c>, or more than one does. Causes the return
+        /// value to be <c>Error</c> rather than <c>Warning</c> so the caller can
+        /// block the room load.
+        /// </summary>
+        private bool _uniqueIdError;
 
         // ── Constructor ───────────────────────────────────────────────────────
 
@@ -94,11 +123,55 @@ namespace duHastNet.PushIt.RevitActions.Drofus
             _revitMissingCount = 0;
             _drofusMissingCount = 0;
             _drofusConnectionFailed = false;
+            _uniqueIdError = false;
 
+            // Check 0 runs first — without a valid unique identifier the remaining
+            // checks are still useful for surfacing other problems, so we do not
+            // short-circuit here. The caller (Main) gates the room load on
+            // Information, so an Error from this check will prevent loading.
+            RunUniqueIdCheck();
             RunRevitParameterCheck(doc);
             RunDrofusFieldCheck();
 
             return BuildReturnValue();
+        }
+
+        // ── Check 0: unique-identifier mapping ───────────────────────────────
+
+        /// <summary>
+        /// Verifies that exactly one mapping in the list carries
+        /// <see cref="DrofusPropertyMap.IsUniqueId"/>. Sets <c>_uniqueIdError</c>
+        /// and logs a message when zero or more than one mapping holds the flag.
+        /// <para>
+        /// Zero id mappings means rooms can never be matched — this is an
+        /// unrecoverable configuration problem for the load path. More than one
+        /// id mapping would produce ambiguous matches and indicates settings
+        /// file corruption.
+        /// </para>
+        /// </summary>
+        private void RunUniqueIdCheck()
+        {
+            int idCount = _mapper.Mappings.Count(m => m.IsUniqueId);
+
+            if (idCount == 0)
+            {
+                _uniqueIdError = true;
+                AddMessage(
+                    "drofus mapping validation: no mapping is nominated as the unique " +
+                    "identifier (Is Id). Rooms cannot be loaded until exactly one mapping " +
+                    "has Is Id checked. Edit the mapping that corresponds to the drofus " +
+                    "'id' field (or your chosen identifier) and check Is Id.",
+                    Utils.WPF.Stores.MessageTypes.Error);
+            }
+            else if (idCount > 1)
+            {
+                _uniqueIdError = true;
+                AddMessage(
+                    $"drofus mapping validation: {idCount} mappings are nominated as the " +
+                    $"unique identifier (Is Id). Exactly one mapping may hold this flag. " +
+                    $"Edit the mappings and uncheck Is Id on all but one.",
+                    Utils.WPF.Stores.MessageTypes.Error);
+            }
         }
 
         // ── Check 1: Revit shared parameter existence ─────────────────────────
@@ -214,12 +287,14 @@ namespace duHastNet.PushIt.RevitActions.Drofus
 
         /// <summary>
         /// Builds the top-level return tuple from the counters accumulated during
-        /// the two checks. Returns <c>Warning</c> if any problem was found or if
-        /// the drofus connection failed; <c>Information</c> if everything passed.
+        /// the three checks. Returns <c>Error</c> when the unique-id check failed
+        /// (rooms cannot be loaded); <c>Warning</c> when Revit or drofus field
+        /// issues exist; <c>Information</c> when everything passed.
         /// </summary>
         private (string message, Utils.WPF.Stores.MessageTypes messageType) BuildReturnValue()
         {
-            bool hasIssues = _revitMissingCount > 0
+            bool hasIssues = _uniqueIdError
+                          || _revitMissingCount > 0
                           || _drofusMissingCount > 0
                           || _drofusConnectionFailed;
 
@@ -231,6 +306,12 @@ namespace duHastNet.PushIt.RevitActions.Drofus
             }
 
             var parts = new List<string>();
+
+            // Unique-id error is listed first — it is blocking.
+            if (_uniqueIdError)
+            {
+                parts.Add("Unique identifier (Is Id) is not correctly configured — rooms will not be loaded.");
+            }
 
             if (_revitMissingCount > 0)
             {
@@ -251,9 +332,12 @@ namespace duHastNet.PushIt.RevitActions.Drofus
                 parts.Add("Could not connect to drofus at startup — drofus field validity is unknown until Connect is pressed.");
             }
 
-            return (
-                string.Join(" ", parts),
-                Utils.WPF.Stores.MessageTypes.Warning);
+            // Unique-id failure is Error; everything else is Warning.
+            var severity = _uniqueIdError
+                ? Utils.WPF.Stores.MessageTypes.Error
+                : Utils.WPF.Stores.MessageTypes.Warning;
+
+            return (string.Join(" ", parts), severity);
         }
     }
 }

@@ -32,6 +32,7 @@ namespace duHastNet.PushIt.Models
         public Models.RoomsDataModelContainer _roomsContainer;
         public Models.CategoryDataModelContainer _categoriesContainer;
         public Models.ParameterDataModelContainer _parameterDataContainer;
+        private readonly Models.AvailableParameterContainer _availableParameterContainer;
         private Models.Settings _settings;
 
         private Utils.Logging.SimpleLogger _logger;
@@ -345,6 +346,63 @@ namespace duHastNet.PushIt.Models
 
         #endregion
 
+        #region available parameters
+
+        /// <summary>
+        /// Adds a shared parameter to the available-parameters list.
+        /// <para>
+        /// Call this from <c>Main.LoadSharedParametersFromDocument</c> for every
+        /// shared parameter that is bound in the active Revit document. Duplicate
+        /// GUIDs are silently ignored by the container.
+        /// </para>
+        /// </summary>
+        /// <param name="parameter">The parameter to register. Must not be <c>null</c>.</param>
+        public void AddAvailableParameter(Models.AvailableParameter parameter)
+        {
+            _availableParameterContainer.AddParameter(parameter);
+        }
+
+        /// <summary>
+        /// Returns a read-only snapshot of all shared parameters currently
+        /// registered as available in the active Revit document.
+        /// </summary>
+        public IReadOnlyList<Models.AvailableParameter> GetAllAvailableParameters()
+        {
+            return _availableParameterContainer.GetAll();
+        }
+
+        /// <summary>
+        /// Removes all entries from the available-parameters list.
+        /// Call this before re-reading parameters from the document to avoid
+        /// accumulating stale entries across reloads.
+        /// </summary>
+        public void ClearAvailableParameters()
+        {
+            _availableParameterContainer.Clear();
+        }
+
+        /// <summary>
+        /// Returns <c>true</c> when a parameter with the supplied GUID exists in
+        /// the available-parameters list (case-insensitive).
+        /// </summary>
+        /// <param name="guid">The GUID string to look up.</param>
+        public bool AvailableParameterExistsByGuid(string guid)
+        {
+            return _availableParameterContainer.ContainsGuid(guid);
+        }
+
+        /// <summary>
+        /// Returns <c>true</c> when a parameter with the supplied display name
+        /// exists in the available-parameters list (case-insensitive).
+        /// </summary>
+        /// <param name="name">The display name to look up.</param>
+        public bool AvailableParameterExistsByName(string name)
+        {
+            return _availableParameterContainer.ContainsName(name);
+        }
+
+        #endregion
+
         public void InitialiseLogger(string filePath)
         {
             _logger = new Utils.Logging.SimpleLogger(filePath);
@@ -362,6 +420,7 @@ namespace duHastNet.PushIt.Models
             _roomsContainer = new Models.RoomsDataModelContainer();
             _categoriesContainer = new Models.CategoryDataModelContainer();
             _parameterDataContainer = new ParameterDataModelContainer();
+            _availableParameterContainer = new Models.AvailableParameterContainer();
         }
     }
 }

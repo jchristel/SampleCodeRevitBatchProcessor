@@ -1,0 +1,14 @@
+layout:
+  - Export Column Width
+  - ----------------
+  - Resize Column Width By Name And Value
+  - Resize Column Width From Export
+
+
+# bundle tooltip
+tooltip: Schedules column width related scripts
+
+
+# bundle author
+author: 
+  - Jan Christel

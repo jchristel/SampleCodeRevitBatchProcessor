@@ -39,6 +39,7 @@ from duHast.Revit.Common import parameter_get_utils as rParaGet
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities import files_csv as filesCSV
 from duHast.Revit.Views.Reporting.view_property_utils import convert_view_data_to_list
+from duHast.Revit.Views.schedules_fields import get_schedules_column_widths
 
 #: list of schedule types to be reported on.
 SCHEDULE_TYPES = [
@@ -212,6 +213,80 @@ def write_schedule_data_by_property_names(
         return_value.update_sep(
             True, "Successfully wrote data file at {}".format(file_name)
         )
+    except Exception as e:
+        return_value.update_sep(False, str(e))
+    return return_value
+
+
+def export_schedules_column_widths(doc, file_name, schedules, field_names_of_interest):
+    """
+    Writes to file the column widths of the fields of interest for the schedules passed in.
+
+    file type: csv
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param file_name: The fully qualified file path of the report file.
+    :type file_name: str
+    :param schedules: list of schedule views to report on.
+    :type schedules: list of Autodesk.Revit.DB.ViewSchedule
+
+    :param field_names_of_interest: list of field names to report on.
+    :type field_names_of_interest: list of str
+    :return:
+        Result class instance.
+        - .status True if data was written successfully. Otherwise False.
+        - .message will contain write status.
+    :rtype: :class:`.Result`
+    """
+
+    return_value = res.Result()
+    try:
+        # get the schedule column widths for the schedules and field names of interest
+        result_schedules_column_widths = get_schedules_column_widths(doc, schedules, field_names_of_interest)
+
+        # get out if the get column widths was  not successful
+        if result_schedules_column_widths.status == False:
+            raise ValueError(result_schedules_column_widths.message)
+        
+        # convert the data to a list of lists of strings for writing to csv
+        converted_data = []
+
+        for schedule_entry in result_schedules_column_widths.result:
+            
+            # the first entry is the schedule id any subsequent entries are the field name and column width pairs as tuples
+            schedule_id = schedule_entry[0]
+            row_entry = [str(schedule_id)]
+            # get the pairs only
+            field_name_width_pairs = schedule_entry[1:]
+
+            # loop over all column entries and get the field name and column width pairs and add to row entry as strings
+            for field_name_width_pair in field_name_width_pairs:
+                # get the field name and column width and add to row entry as strings
+                field_name = field_name_width_pair[0]
+                row_entry.append(field_name)
+
+                column_width = field_name_width_pair[1]
+                row_entry.append(str(column_width))
+                
+            converted_data.append(row_entry)
+
+        # write data out to file
+        write_result = filesCSV.write_report_data_as_csv(
+            file_name=file_name, 
+            header=[], 
+            data=converted_data,
+            enforce_ascii=True,
+            encoding="utf-8",
+            bom=None,
+            quoting=QUOTE_MINIMAL,
+        )
+
+        if write_result.status == False:
+            raise ValueError(write_result.message)
+        
+        return_value.append_message("Successfully wrote data file at {}".format(file_name))
+        
     except Exception as e:
         return_value.update_sep(False, str(e))
     return return_value

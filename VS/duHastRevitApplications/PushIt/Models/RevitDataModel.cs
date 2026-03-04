@@ -37,6 +37,51 @@ namespace duHastNet.PushIt.Models
         private Utils.Logging.SimpleLogger _logger;
         private string _revitDocumentTitle = string.Empty;
 
+        // ── Startup messages ──────────────────────────────────────────────────
+
+        /// <summary>
+        /// Durable record of messages generated during the startup sequence
+        /// (settings validation, parameter load, room load). Written by Revit
+        /// actions and startup helpers; read by <c>Main.ExecuteInternal</c> to
+        /// forward entries to the UI message store once the window is visible.
+        /// <para>
+        /// This list is never serialised. It is runtime-only and is cleared at
+        /// the start of each startup or manual reload sequence via
+        /// <see cref="ClearStartupMessages"/>.
+        /// </para>
+        /// </summary>
+        private readonly List<(string Message, Utils.WPF.Stores.MessageTypes Type)> _startupMessages
+            = new List<(string, Utils.WPF.Stores.MessageTypes)>();
+
+        /// <summary>
+        /// Appends a message to the startup message list.
+        /// Called by Revit actions and startup helpers during the startup sequence.
+        /// </summary>
+        public void AddStartupMessage(string message, Utils.WPF.Stores.MessageTypes type)
+        {
+            _startupMessages.Add((message, type));
+        }
+
+        /// <summary>
+        /// Clears all previously recorded startup messages.
+        /// Call this at the beginning of any startup or reload sequence so that
+        /// stale messages from a prior run are not re-surfaced.
+        /// </summary>
+        public void ClearStartupMessages()
+        {
+            _startupMessages.Clear();
+        }
+
+        /// <summary>
+        /// Returns a read-only view of the startup messages accumulated so far.
+        /// </summary>
+        public IReadOnlyList<(string Message, Utils.WPF.Stores.MessageTypes Type)> GetStartupMessages()
+        {
+            return _startupMessages.AsReadOnly();
+        }
+
+        // ── Document title ────────────────────────────────────────────────────
+
         /// <summary>
         /// The title of the active Revit document, set during initialisation in
         /// <see cref="Main.ExecuteInternal"/> and surfaced in the UI via

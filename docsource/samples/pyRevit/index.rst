@@ -4,4 +4,4 @@ pyRevit
 .. toctree::
    :maxdepth: 2
 
-   ../../../Samples/pyRevit/readme.md
+   ../../../Samples/pyRevit/readme

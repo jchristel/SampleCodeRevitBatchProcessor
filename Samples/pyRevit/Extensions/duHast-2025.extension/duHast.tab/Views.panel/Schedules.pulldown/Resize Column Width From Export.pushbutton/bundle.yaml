@@ -1,0 +1,19 @@
+# bundle title
+title: "Resize Column Width From Export"
+
+# bundle tooltip
+tooltip: Imports the column width to schedules from a prior export. Useful when adding fields to schedules triggers a resizing of the existing schedule columns. The csv file must be generated using the 'Export Column Width' script and the column names in the csv file must match the column names in the schedule for the width to be applied to the correct column.
+
+# bundle author
+author: 
+  - Jan Christel
+
+
+# bundle highlighting ('new' or 'updated')
+# Revit UI will show a orange marker on the button and a border around the tooltip
+highlight: new      # highlight as new
+##highlight: updated  # highlight as updated
+
+
+# bundle help url
+help_url: "https://www.youtube.com/watch?v=H7b8hjHbauE&t=8s&list=PLc_1PNcpnV57FWI6G8Cd09umHpSOzvamf"

@@ -16,7 +16,7 @@
 //
 // This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
 // In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
-// or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+// or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, even if advised of the possibility of such damage.
 //
 //
 //
@@ -27,6 +27,7 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using duHastNet.PushIt.Models;
 using duHastNet.PushIt.Models.Drofus;
+using duHastNet.PushIt.RevitActions;
 using duHastNet.PushIt.RevitActions.Drofus;
 using duHastNet.PushIt.Utilities;
 using duHastNet.PushIt.Utilities.Drofus;
@@ -108,21 +109,10 @@ namespace duHastNet.PushIt
             Models.Settings settings = SettingsUtils.LoadSettings();
             _revitDataModel.Settings = settings;
 
-            // load room data into model.
-            // Wrapped in try/catch so a data source error (e.g. incomplete drofus
-            // credentials, missing CSV file) does not prevent the window from opening.
-            // The error is queued into the message store and shown in the banner once
-            // the UI is displayed.
-            try
-            {
-                _revitDataModel.LoadRoomsData();
-            }
-            catch (Exception ex)
-            {
-                _messageStore.EnqueueMessage(
-                    $"Could not load room data on startup: {ex.Message}",
-                    duHastNet.Utils.WPF.Stores.MessageTypes.Error);
-            }
+            // Clear any startup messages left from a previous run before the
+            // startup sequence begins. Each source-specific helper writes its own
+            // messages; Main forwards them to the banner after Show().
+            _revitDataModel.ClearStartupMessages();
 
             //get all supported categories
             List<Models.CategoryDataModel> supportedCategories =
@@ -135,11 +125,9 @@ namespace duHastNet.PushIt
             // so we always read them regardless of which source is selected.
             LoadSharedParametersFromDocument(doc);
 
-
             //set up the navigation store
             ViewModels.RoomsMainViewModel roomsVm = CreateRoomsSelectionViewModel();
             _navigationStore.CurrentViewModel = roomsVm;
-
 
             //show the main window
             MainWindow mainWindow = new MainWindow(settings)
@@ -149,11 +137,12 @@ namespace duHastNet.PushIt
 
             mainWindow.Show();
 
-            // ── Phase 2: drofus mapping validation (fire-and-forget) ─────────
-            // Runs after Show() so the window is visible when warnings appear.
-            // Only performs mapping validation — shared parameter injection has
-            // already happened synchronously above.
+            // ── Phase 2: source-specific startup (fire-and-forget) ───────────
+            // Both helpers guard on their own SourceType so only one executes.
+            // Each writes results to _revitDataModel.StartupMessages; the
+            // message store relay happens inside each helper after Execute().
             FireDrofusStartupValidationIfRequired(settings, roomsVm);
+            FireCsvStartupLoadIfRequired(settings);
 
             return Result.Succeeded;
         }
@@ -180,18 +169,24 @@ namespace duHastNet.PushIt
                 var sharedParamIds = duHastNet.RevitUtils.Parameters.SharedParaUtils
                     .GetSharedParameterIdsByGUID(doc);
 
-                _revitDataModel.ClearParameters();
+                if (sharedParamIds == null) return;
 
                 foreach (var kvp in sharedParamIds)
                 {
                     string guid = kvp.Key;
-                    var spElem = doc.GetElement(kvp.Value)
+                    Autodesk.Revit.DB.ElementId elemId = kvp.Value;
+
+                    var spElem = doc.GetElement(elemId)
                         as Autodesk.Revit.DB.SharedParameterElement;
-                    if (spElem is null) continue;
 
+                    if (spElem == null) continue;
 
-                    // get all bindings for this parameter
-                    List<string> bindingsId = duHastNet.RevitUtils.Parameters.SharedParaUtils.ParameterBindingsByGUID(doc, guid);
+                    // Only register parameters that are actually bound to at
+                    // least one enabled category — parameters bound only to
+                    // categories the user has not enabled are not relevant.
+                    List<string>? bindingsId =
+                        duHastNet.RevitUtils.Parameters.SharedParaUtils
+                            .ParameterBindingsByGUID(doc, guid);
 
                     //check if any bindings found, there should be some
                     if (bindingsId == null)
@@ -203,9 +198,12 @@ namespace duHastNet.PushIt
                     // check if parameter is bound to enabled categories
                     foreach (var supportedCategory in _revitDataModel.GetAllEnabledCategories())
                     {
-                        if (!bindingsId.Contains(supportedCategory.Name))
+                        if (supportedCategory.Enabled)
                         {
-                            isBoundToEnabledCategory = false;
+                            if (!bindingsId.Contains(supportedCategory.Name))
+                            {
+                                isBoundToEnabledCategory = false;
+                            }
                         }
                     }
 
@@ -238,8 +236,14 @@ namespace duHastNet.PushIt
         /// <summary>
         /// Fires a fire-and-forget <c>RevitTask.RunAsync</c> block that validates
         /// existing drofus property mappings against the live Revit document and
-        /// drofus API. Skipped when no mappings are configured or credentials are
-        /// incomplete.
+        /// drofus API. Skipped when the active source is not drofus, no mappings
+        /// are configured, or credentials are incomplete.
+        /// <para>
+        /// Messages generated by the action are written to
+        /// <see cref="Models.RevitDataModel.AddStartupMessage"/> inside the action
+        /// itself, and are also forwarded to <c>_messageStore</c> here so they
+        /// appear in the UI banner.
+        /// </para>
         /// </summary>
         private void FireDrofusStartupValidationIfRequired(
             Models.Settings settings,
@@ -283,6 +287,12 @@ namespace duHastNet.PushIt
 
                     _revitDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
 
+                    // Forward detail messages into the durable startup list
+                    foreach (var entry in action.GetLogMessagesAndLogTypes())
+                    {
+                        _revitDataModel.AddStartupMessage(entry.Item1, entry.Item2);
+                    }
+
                     if (messageType != duHastNet.Utils.WPF.Stores.MessageTypes.Information)
                         _messageStore.EnqueueMessage(message, messageType);
 
@@ -291,9 +301,66 @@ namespace duHastNet.PushIt
                 }
                 catch (Exception ex)
                 {
-                    _messageStore.EnqueueMessage(
-                        $"drofus mapping validation failed unexpectedly: {ex.Message}",
-                        duHastNet.Utils.WPF.Stores.MessageTypes.Warning);
+                    string errMsg = $"drofus mapping validation failed unexpectedly: {ex.Message}";
+                    _revitDataModel.AddStartupMessage(errMsg, duHastNet.Utils.WPF.Stores.MessageTypes.Warning);
+                    _messageStore.EnqueueMessage(errMsg, duHastNet.Utils.WPF.Stores.MessageTypes.Warning);
+                }
+
+                return (string.Empty, duHastNet.Utils.WPF.Stores.MessageTypes.Information);
+            });
+        }
+
+        /// <summary>
+        /// Fires a fire-and-forget <c>RevitTask.RunAsync</c> block that validates
+        /// CSV settings and — if valid — loads header parameters, verifies them
+        /// against the Revit document, and loads all room records into the model.
+        /// Skipped when the active source is not CSV, or when CSV settings fail
+        /// basic validation (missing or non-existent file path).
+        /// <para>
+        /// Mirrors the drofus startup pattern: validation first, then data load,
+        /// all on the RevitTask background thread so the window is visible when
+        /// any error banner appears.
+        /// </para>
+        /// </summary>
+        private void FireCsvStartupLoadIfRequired(Models.Settings settings)
+        {
+            if (settings.DataSource?.SourceType != Models.DataSourceType.Csv)
+                return;
+
+            // Validate settings synchronously before firing the async block.
+            // A missing or invalid file path is reported immediately without
+            // entering RevitTask.RunAsync.
+            var csvDataSource = new Utilities.CsvDataSource();
+            if (!csvDataSource.Validate(settings.DataSource, out string validationError))
+            {
+                string errMsg = $"CSV startup: {validationError}";
+                _revitDataModel.AddStartupMessage(errMsg, duHastNet.Utils.WPF.Stores.MessageTypes.Error);
+                _messageStore.EnqueueMessage(errMsg, duHastNet.Utils.WPF.Stores.MessageTypes.Error);
+                return;
+            }
+
+            _ = RevitTask.RunAsync(app =>
+            {
+                Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
+
+                try
+                {
+                    var action = new ValidateCsvOnStartup(_revitDataModel);
+                    (string message, duHastNet.Utils.WPF.Stores.MessageTypes messageType) =
+                        action.Execute(doc);
+
+                    _revitDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
+
+                    // Non-information results (warnings or errors) are surfaced
+                    // in the banner. Information is silent — rooms loaded cleanly.
+                    if (messageType != duHastNet.Utils.WPF.Stores.MessageTypes.Information)
+                        _messageStore.EnqueueMessage(message, messageType);
+                }
+                catch (Exception ex)
+                {
+                    string errMsg = $"CSV startup failed unexpectedly: {ex.Message}";
+                    _revitDataModel.AddStartupMessage(errMsg, duHastNet.Utils.WPF.Stores.MessageTypes.Error);
+                    _messageStore.EnqueueMessage(errMsg, duHastNet.Utils.WPF.Stores.MessageTypes.Error);
                 }
 
                 return (string.Empty, duHastNet.Utils.WPF.Stores.MessageTypes.Information);

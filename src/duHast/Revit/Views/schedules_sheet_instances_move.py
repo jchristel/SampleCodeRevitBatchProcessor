@@ -30,6 +30,7 @@ from duHast.Utilities.Objects.result import Result
 
 from duHast.Revit.Common.transaction import in_transaction
 from duHast.Revit.Views.schedules import filter_split_schedules
+from duHast.Revit.Views.schedules_sheet_instances_overlap import check_schedule_sheet_instances_are_overlapping
 
 from Autodesk.Revit.DB import (
     Element,
@@ -80,71 +81,6 @@ def move_schedule_instance_along_x(doc, segments_to_move, schedule_name):
             return_value.update_sep(False, "Failed to move schedule segment: {} with exception: {}".format(segment_id, tranny_result.message))
     return return_value
 
-
-def check_schedule_sheet_instances_are_overlapping(doc, schedule):
-    """
-    Checks if any segments of a split schedule overlap on their respective sheets.
-
-    Returns a dictionary mapping segment instance IDs (int) to the distance in feet
-    they need to move in the X direction to resolve the overlap. If the schedule is
-    not split or no overlaps are found, an empty dictionary is returned.
-
-    :param doc: The Revit document object.
-    :type doc: Autodesk.Revit.DB.Document
-    :param schedule: The Revit schedule object from which to extract the field index.
-    :type schedule: Autodesk.Revit.DB.ViewSchedule
-
-    :return: a dictionary where key is the schedule sheet instance Id as integer and the distance it has to move to avoid overlap with the previous segment.
-    :rtype: { instance_id_int: delta_x_in_feet }
-    
-    """
-
-    SCHEDULE_MARGIN = 0.00695
-
-    if not schedule.IsSplit():
-        return {}
-
-    segment_count = schedule.GetSegmentCount()
-    bounding_boxes_by_sheet = {}
-
-    for i in range(segment_count):
-        instance_ids = schedule.GetScheduleInstances(i)
-        for instance_id in instance_ids:
-            instance = doc.GetElement(instance_id)
-            owner_sheet = doc.GetElement(instance.OwnerViewId)
-            sheet_key = instance.OwnerViewId.IntegerValue
-
-            bb = instance.get_BoundingBox(owner_sheet)
-            min_x = bb.Min.X + SCHEDULE_MARGIN
-            min_y = bb.Min.Y + SCHEDULE_MARGIN
-            max_x = bb.Max.X - SCHEDULE_MARGIN
-            max_y = bb.Max.Y - SCHEDULE_MARGIN
-
-            if sheet_key not in bounding_boxes_by_sheet:
-                bounding_boxes_by_sheet[sheet_key] = []
-            bounding_boxes_by_sheet[sheet_key].append((min_x, min_y, max_x, max_y, instance_id))
-
-    segments_to_move = {}  # { instance_id_int: delta_x_in_feet }
-
-    for sheet_id, instances in bounding_boxes_by_sheet.items():
-        for i in range(len(instances)):
-            for j in range(i + 1, len(instances)):
-                i_min_x, i_min_y, i_max_x, i_max_y, i_id = instances[i]
-                j_min_x, j_min_y, j_max_x, j_max_y, j_id = instances[j]
-
-                overlap_x = i_min_x < j_max_x and i_max_x > j_min_x
-                overlap_y = i_min_y < j_max_y and i_max_y > j_min_y
-
-                if overlap_x and overlap_y:
-                    # move the rightmost segment out of the way
-                    if j_min_x >= i_min_x:
-                        delta = i_max_x - j_min_x + SCHEDULE_MARGIN
-                        segments_to_move[j_id.IntegerValue] = delta
-                    else:
-                        delta = j_max_x - i_min_x + SCHEDULE_MARGIN
-                        segments_to_move[i_id.IntegerValue] = delta
-
-    return segments_to_move
 
 
 def resolve_overlaps(doc, schedule, schedule_name, max_iterations=10):

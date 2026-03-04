@@ -27,61 +27,7 @@ This module contains a number of helper functions relating to Revit sheet schedu
 #
 
 
-from duHast.Revit.Views.sheets import get_titleblock_bounding_box
-
-from Autodesk.Revit.DB import (
-    FilteredElementCollector,
-    ScheduleSheetInstance,
-)
-
-def check_schedules_overlap_titleblock(doc, sheet):
-    """
-    Checks if any schedule sheet instances on a given sheet overlap with the titleblock.
-
-    Returns a dictionary mapping schedule sheet instance IDs (int) to the distance
-    in feet they need to move in the X direction to clear the titleblock.
-
-    Args:
-        doc: The Revit document.
-        sheet: The ViewSheet to check.
-
-    Returns:
-        dict: { instance_id (int): delta_x (float) } for each overlapping schedule instance.
-    """
-    SCHEDULE_MARGIN = 0.00695
-
-    # get titleblock bb
-    tb_bb = get_titleblock_bounding_box(doc, sheet)
-    if tb_bb is None:
-        return {}
-
-    # get all schedule sheet instances on the sheet
-    instances = FilteredElementCollector(doc, sheet.Id)\
-        .OfClass(ScheduleSheetInstance)\
-        .WhereElementIsNotElementType()\
-        .ToElements()
-
-    segments_to_move = {}
-
-    for instance in instances:
-        if instance.IsTitleblockRevisionSchedule:
-            continue
-
-        s_bb = instance.get_BoundingBox(sheet)
-        s_min_x = s_bb.Min.X + SCHEDULE_MARGIN
-        s_min_y = s_bb.Min.Y + SCHEDULE_MARGIN
-        s_max_x = s_bb.Max.X - SCHEDULE_MARGIN
-        s_max_y = s_bb.Max.Y - SCHEDULE_MARGIN
-
-        overlap_x = s_min_x < tb_bb.Max.X and s_max_x > tb_bb.Min.X
-        overlap_y = s_min_y < tb_bb.Max.Y and s_max_y > tb_bb.Min.Y
-
-        if overlap_x and overlap_y:
-            delta = tb_bb.Max.X - s_min_x + SCHEDULE_MARGIN
-            segments_to_move[instance.Id.IntegerValue] = delta
-
-    return segments_to_move
-
+from duHast.Revit.Views.schedules_sheet_instances_overlap import check_schedules_overlap_titleblock, check_schedules_outside_titleblock, check_schedules_overlap_viewports
 
 
 def get_sheets_with_overlapping_schedules(doc, sheets):
@@ -99,5 +45,45 @@ def get_sheets_with_overlapping_schedules(doc, sheets):
     for sheet in sheets:
         overlaps = check_schedules_overlap_titleblock(doc, sheet)
         if len(overlaps)>0:
+            sheets_with_overlaps.append((sheet, overlaps))
+    return sheets_with_overlaps
+
+
+def get_sheets_with_schedules_outside_titleblock(doc, sheets):
+    """
+    Checks all provided sheets for schedule instances extending outside the titleblock boundary.
+
+    :param doc: The Revit document object.
+    :type doc: Autodesk.Revit.DB.Document
+    :param sheets: A list of ViewSheet objects to check.
+    :type sheets: list of Autodesk.Revit.DB.ViewSheet
+
+    :return: A list of tuples containing the sheet and a dictionary of schedule instance IDs and the edges they violate.
+    :rtype: list of (Autodesk.Revit.DB.ViewSheet, { instance_id_int: [edge_strings] })
+    """
+    sheets_with_issues = []
+    for sheet in sheets:
+        outside = check_schedules_outside_titleblock(doc, sheet)
+        if len(outside) > 0:
+            sheets_with_issues.append((sheet, outside))
+    return sheets_with_issues
+
+
+def get_sheets_with_schedules_overlapping_viewports(doc, sheets):
+    """
+    Checks all provided sheets for schedule instances overlapping any viewport.
+
+    :param doc: The Revit document object.
+    :type doc: Autodesk.Revit.DB.Document
+    :param sheets: A list of ViewSheet objects to check.
+    :type sheets: list of Autodesk.Revit.DB.ViewSheet
+
+    :return: A list of tuples containing the sheet and a dictionary of overlapping schedule instance IDs and their required X movement.
+    :rtype: list of (Autodesk.Revit.DB.ViewSheet, { instance_id_int: delta_x_in_feet })
+    """
+    sheets_with_overlaps = []
+    for sheet in sheets:
+        overlaps = check_schedules_overlap_viewports(doc, sheet)
+        if len(overlaps) > 0:
             sheets_with_overlaps.append((sheet, overlaps))
     return sheets_with_overlaps

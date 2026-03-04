@@ -567,7 +567,7 @@ try:
         sys.exit(exit_code)
     
     # remove any dirs from previous runs
-    left_over_cleanup = clean_temp_parent_directory(LOCAL_TEMP_FOLDER)
+    left_over_cleanup = clean_temp_parent_directory(output_to_console=output,temp_folder=LOCAL_TEMP_FOLDER)
     if left_over_cleanup != 0:
         output("Failed to clean overall temp folder after processing.")
         sys.exit(exit_code)

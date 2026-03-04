@@ -22,6 +22,7 @@
 //
 
 using CommunityToolkit.Mvvm.Input;
+using duHastNet.PushIt.Models;
 using duHastNet.PushIt.RevitActions;
 using duHastNet.PushIt.Utilities;
 using duHastNet.PushIt.ViewModels.DataSource;
@@ -42,6 +43,13 @@ namespace duHastNet.PushIt.Commands
     /// exists; the guard is now
     /// <c>!DataSourceViewModel.HasValidationErrors</c>, which works for any
     /// data source provider — not just CSV files.
+    /// </para>
+    /// <para>
+    /// Parameter reload (<c>ClearParameters</c> / <c>LoadParameterData</c>) is
+    /// only performed for the CSV source. For drofus the parameter list is owned
+    /// by the mapping configuration and kept in sync by the connect flow —
+    /// calling <c>GetHeaderProperties</c> on the drofus source is not meaningful
+    /// here and would return an empty list.
     /// </para>
     /// </summary>
     public class ReloadDataFromFileAsyncCommand
@@ -66,6 +74,9 @@ namespace duHastNet.PushIt.Commands
             _roomsMainViewModel.DataSourceViewModel.SaveToSettings(
                 _revitDataModel.Settings.DataSource);
 
+            // Clear stale startup messages so the new reload sequence starts clean.
+            _revitDataModel.ClearStartupMessages();
+
             _roomsMainViewModel.IsWaitingForRevitCommandToFinish = true;
 
             try
@@ -79,8 +90,15 @@ namespace duHastNet.PushIt.Commands
                             _revitDataModel.ClearAllRooms();
                             _revitDataModel.LoadRoomsData();
 
-                            _revitDataModel.ClearParameters();
-                            _revitDataModel.LoadParameterData();
+                            // Parameter reload is CSV-only. For drofus, parameters
+                            // come from the mapping configuration — not from
+                            // GetHeaderProperties() — so we leave them untouched.
+                            if (_revitDataModel.Settings?.DataSource?.SourceType
+                                    == DataSourceType.Csv)
+                            {
+                                _revitDataModel.ClearParameters();
+                                _revitDataModel.LoadParameterData();
+                            }
 
                             VerifyParametersInModel actionVerify = new(_revitDataModel);
                             (string messageActionVerify, Utils.WPF.Stores.MessageTypes messageActionTypeVerify) =

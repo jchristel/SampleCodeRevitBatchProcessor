@@ -3,6 +3,10 @@ layout:
   - ----------------
   - Resize Column Width By Name And Value
   - Resize Column Width From Export
+  - ----------------
+  - Fix Schedule Segments Overlaps
+  - ----------------
+  - Report Schedules Overlaps
 
 
 # bundle tooltip

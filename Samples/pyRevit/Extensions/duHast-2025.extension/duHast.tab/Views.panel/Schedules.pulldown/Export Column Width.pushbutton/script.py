@@ -6,5 +6,8 @@ output = script.get_output()
 # get the revit document
 doc = revit.doc
 
-
+from views.Schedules.export_schedule_column_width import export_schedules_column_width_entry
 print ("Exporting schedule column widths to file...")
+
+
+export_result = export_schedules_column_width_entry(doc, output, forms)

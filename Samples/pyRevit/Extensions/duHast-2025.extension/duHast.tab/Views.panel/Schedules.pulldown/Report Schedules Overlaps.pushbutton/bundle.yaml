@@ -1,0 +1,29 @@
+# bundle title
+title: "Report Overlaps"
+
+# bundle tooltip
+
+tooltip: |
+  Will specifically look for schedule segments that overlap with the title block 
+  or other view ports on the sheet. 
+  Note that this script will not look for schedule segments that overlap with other schedule segments. 
+  
+  The script will generate two reports.
+  The first report will list all schedule segments that overlap with the title block and the second report will list all schedule segments that overlap with other view ports on the sheet.
+
+  The second report may contain false positives. Some schedule segments may overlap with other view ports on the sheet 
+  but that viewport might be empty and therefore not cause any issues. It is up to the user to review the report and determine if any action is needed.
+
+# bundle author
+author: 
+  - Jan Christel
+
+
+# bundle highlighting ('new' or 'updated')
+# Revit UI will show a orange marker on the button and a border around the tooltip
+highlight: new      # highlight as new
+##highlight: updated  # highlight as updated
+
+
+# bundle help url
+help_url: "https://www.youtube.com/watch?v=H7b8hjHbauE&t=8s&list=PLc_1PNcpnV57FWI6G8Cd09umHpSOzvamf"

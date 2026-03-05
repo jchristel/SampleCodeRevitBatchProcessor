@@ -1,0 +1,27 @@
+# bundle title
+title: "Fig Segment Overlaps"
+
+# bundle tooltip
+tooltip: |
+  Will specifically look for schedule segments that overlap horizontally and will try to fix them by moving the segments to the right. 
+  
+  The script will look for the first segment that overlaps and will move it to the right until it no longer overlaps. 
+  It will then move on to the next segment until all segments have been checked and fixed if necessary. 
+  
+  This can lead to schedule segments being moved outside the extends of the title block!
+  Use the Report Schedule Overlaps script to check for any remaining overlaps after running this script.
+
+
+# bundle author
+author: 
+  - Jan Christel
+
+
+# bundle highlighting ('new' or 'updated')
+# Revit UI will show a orange marker on the button and a border around the tooltip
+highlight: new      # highlight as new
+##highlight: updated  # highlight as updated
+
+
+# bundle help url
+help_url: "https://www.youtube.com/watch?v=H7b8hjHbauE&t=8s&list=PLc_1PNcpnV57FWI6G8Cd09umHpSOzvamf"

@@ -27,7 +27,13 @@ This module contains the Revit view schedule report functionality.
 #
 
 from csv import QUOTE_MINIMAL
-from Autodesk.Revit.DB import ViewType, WorksharingUtils
+
+from Autodesk.Revit.DB import (
+    UnitUtils,
+    UnitTypeId,
+    ViewType, 
+    WorksharingUtils
+    )
 
 from duHast.Revit.Views.Reporting.views_report_header import (
     REPORT_SCHEDULES_HEADER,
@@ -267,7 +273,8 @@ def export_schedules_column_widths(doc, file_name, schedules, field_names_of_int
                 row_entry.append(field_name)
 
                 column_width = field_name_width_pair[1]
-                row_entry.append(str(column_width))
+                column_width_in_mm = UnitUtils.ConvertFromInternalUnits(column_width, UnitTypeId.Millimeters)
+                row_entry.append(str(column_width_in_mm))
                 
             converted_data.append(row_entry)
 

@@ -26,10 +26,15 @@ This module contains a number of helper functions relating to fields in Revit vi
 #
 #
 
-from Autodesk.Revit.DB import ElementId, SectionType
+from duHast.Utilities.Objects.result import Result
+from duHast.Revit.Common.element_id import get_el_id_int
+
+from System import Int64 # revit element Id expects 64 bit integer
+
+from Autodesk.Revit.DB import Element, ElementId, SectionType
 
 # the sheet number parameter id
-SHEET_NUMBER_PARAMETER_ID = ElementId(-1007401)
+SHEET_NUMBER_PARAMETER_ID = ElementId(Int64(-1007401))
 
 def schedule_contains_field_by_parameter_id(schedule, parameter_id, ignore_hidden_field=False):
     """
@@ -82,7 +87,7 @@ def schedule_contains_sheet_number_field(schedule, ignore_hidden_field=False):
     """
 
     return schedule_contains_field_by_parameter_id(schedule, SHEET_NUMBER_PARAMETER_ID, ignore_hidden_field=ignore_hidden_field)
-   
+
 
 def get_field_names_from_schedule(schedule):
     """
@@ -270,25 +275,14 @@ def get_field_values_from_schedule_by_parameter_id(schedule, parameter_id=None):
     # loop through the fields in order of appearance in schedule to find the column index for the specified parameter ID
     for i in range(num_fields):
         field_id = sorted_field_ids[i]
-        # print("Field ID: {field_id}, Parameter ID: {parameter_id}".format(
-        #     field_id=field_id,
-        #     parameter_id=parameter_id
-        # ))
 
         field_by_field_id = schedule_definition.GetField(field_id)
         #print("field by field ID",field_by_field_id.GetName())
 
         field_index = schedule_definition.GetField(i)
-        #print("field by index",field_index.GetName())
 
         if field_by_field_id.ParameterId == parameter_id and field_by_field_id.IsHidden == False:
             column_index = i
-
-            # print("Found column index: {column_index} for parameter ID: {parameter_id} for schedule {schedule_name}".format(
-            #     column_index=column_index,
-            #     parameter_id=parameter_id,
-            #     schedule_name=schedule.Name
-            # ))
             break
 
     if column_index == -1:
@@ -320,3 +314,82 @@ def get_field_values_from_schedule_by_parameter_id(schedule, parameter_id=None):
     
     print (field_values)
     return field_values
+
+
+def get_schedules_column_widths (schedules, field_names_of_interest=[]):
+    """
+    Returns a list of lists with schedule id and column data for the specified field names of interest. If no field names of interest are provided, will return column data for all fields in the schedule.
+
+    Each row starts with the schedule id followed by tuples of field name and column width in inches for each field of interest.
+
+    :param schedules: A list of Revit schedule objects to extract column width data from.
+    :type schedules: list of Autodesk.Revit.DB.ViewSchedule
+    :param field_names_of_interest: A list of field names to extract column width data for. If empty, will extract column width data for all fields in the schedule.
+    :type field_names_of_interest: list of str, optional
+
+    :return: A Result object containing a list of lists with schedule id and column data for the specified field names of interest, or an error message if the operation fails.
+    :rtype: duHast.Utilities.Objects.result.Result
+    """
+
+    return_value = Result()
+
+    schedules_data = []
+    try:
+        for s in schedules:
+            row_data = [int(get_el_id_int(s.Id))]
+            schedule_name = Element.Name.GetValue(s)
+            return_value.append_message ("Getting columns: {}".format(schedule_name))
+            field_names = get_field_names_from_schedule(s)
+
+            # check if we need to filter schedules based on field names of interest:
+            if len(field_names_of_interest) > 0:
+                message = "Filtering schedule {} based on field names of interest: \n...{}".format(schedule_name, ",".join(field_names_of_interest))
+                #print(message)
+                return_value.append_message (message=message)
+                # do we have all  fields of interest in the schedule?
+                for field_of_interest_name in field_names_of_interest:
+                    if field_of_interest_name not in field_names:
+                        return_value.append_message ("{} not in schedule...skipping schedule: {}".format(field_of_interest_name, schedule_name))
+                        continue
+
+            # check if we have any field names of interest in the schedule, if not assume we want all fields:
+            if len(field_names_of_interest) == 0:
+                # assume we want all fields if no field names of interest were provided
+                field_names_of_interest_updated = field_names
+            else:
+                # if we have field names of interest, filter the list of field names to only include those that are in the schedule
+                field_names_of_interest_updated = [field_name for field_name in field_names_of_interest if field_name in field_names]
+
+            # get the column width for each field of interest:
+            for field_of_interest_name in field_names_of_interest_updated:
+                # get the field of interest
+                field_of_interest =  get_field_from_schedule_by_field_name(s, field_of_interest_name)
+            
+                # check if we got something...we definitely should have since we checked the field names but just in case
+                if field_of_interest is None:
+                    return_value.append_message ("{} not in schedule...skipping it".format(field_of_interest_name))
+                    
+                    # skip to next field of interest if we can't find the field in the schedule
+                    continue
+                
+                # get the column width in inches for the field of interest
+                column_width = field_of_interest.SheetColumnWidth
+               
+                # store the column data as a tuple of field name and column width
+                column_data = (field_of_interest_name, column_width)
+
+                # append the column data to the row data
+                row_data.append(column_data)
+            
+            # if there are no fields do not export
+            if len(row_data) > 1:
+                schedules_data.append(row_data)
+            else:
+                return_value.append_message ("No fields of interest found in schedule: {}".format(schedule_name))
+    except Exception as e:
+        return_value.append_message("Error getting column data: {}".format(str(e)))
+        return_value.status = False
+        return return_value
+
+    return_value.result = schedules_data
+    return return_value

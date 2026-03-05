@@ -81,6 +81,8 @@ def copy_annotation_to_views(
         raise ValueError("active_view is not a View")
     if isinstance(source_dims_by_view_name, dict) == False:
         raise ValueError("source_dims_by_view_name is not a dict")
+    if isinstance(callback_progress, ProgressBase) == False and callback_progress is not None:
+        raise ValueError("callback_progress is not a ProgressBase")
 
     return_value = res.Result()
 
@@ -146,6 +148,10 @@ def copy_annotation_to_views(
                     ),
                 )
             return action_return_value
+        
+        if callback_progress and callback_progress.is_cancelled() == True:
+            return_value.append_message("Cancelled by user")
+            break
 
         transaction = Transaction(
             doc,

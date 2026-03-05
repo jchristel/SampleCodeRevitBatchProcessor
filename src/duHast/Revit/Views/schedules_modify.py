@@ -30,6 +30,7 @@ from duHast.Utilities.Objects.result import Result
 
 from duHast.Revit.Views.schedules_fields import get_field_names_from_schedule, get_field_from_schedule_by_field_name
 from duHast.Revit.Common.transaction import in_transaction
+from duHast.UI.Objects.ProgressBase import ProgressBase
 
 from Autodesk.Revit.DB import (
     Element,
@@ -39,7 +40,7 @@ from Autodesk.Revit.DB import (
     )
 
 
-def adjust_column_width(doc, schedules, field_name, column_width_in_mm=6.35):
+def adjust_column_width(doc, schedules, field_data, callback_progress=None,):
 	"""
 	Adjusts the column width of a specified field in a list of schedules.
 
@@ -47,8 +48,8 @@ def adjust_column_width(doc, schedules, field_name, column_width_in_mm=6.35):
 	:type doc: Autodesk.Revit.DB.Document
 	:param schedules: A list of Revit schedule objects to adjust.
 	:type schedules: list of Autodesk.Revit.DB.ViewSchedule
-	:param field_name: The human readable name of the field to adjust the column width for.
-	:type field_name: str
+	:param field_name: The human readable list of field names of the field to adjust the column width for.
+	:type field_name: [str]
 	:param column_width_in_inches: The desired column width in inches (default is 0.25 inches).
 	:type column_width_in_inches: float
 
@@ -58,34 +59,54 @@ def adjust_column_width(doc, schedules, field_name, column_width_in_mm=6.35):
 
 	return_value = Result()
 	irregular_schedules = []
+
+	if isinstance(callback_progress, ProgressBase) == False and callback_progress is not None:
+		raise ValueError("callback_progress is not a ProgressBase")
 	
-	column_width_in_feet = UnitUtils.ConvertToInternalUnits(column_width_in_mm, UnitTypeId.Millimeters)
+
+	# progress bar data
+	max = len(schedules)
+	counter = 1
 
 	for s in schedules:
+		# update the progress bar
+		counter += 1
+		if callback_progress:
+			callback_progress.update(counter, max)
+
 		schedule_name = Element.Name.GetValue(s)
 		return_value.append_message ("Adjusting schedule: {}".format(schedule_name))
-		field_names = get_field_names_from_schedule(s)
+		field_names_in_schedule = get_field_names_from_schedule(s)
 		
-		# check if field is in schedule
-		if field_name not in field_names:
-			#print(",".join(field_names))
-			return_value.append_message ("{} not in schedule...skipping schedule: {}".format(field_name, schedule_name))
-			irregular_schedules.append(s)
-			continue
-		
-		# get the field of interest
-		field_of_interest =  get_field_from_schedule_by_field_name(s, field_name)
-		
-		# check if we got something...we definitely should have since we checked the field names but just in case
-		if field_of_interest is None:
-			return_value.append_message ("{} not in schedule...skipping it".format(field_name))
-		
+
+		# set all field widths within one transaction
 		# set the width in an action
 		def action():
 			action_return_value = Result()
 			try:
-				# set the desired column width in inches
-				field_of_interest.SheetColumnWidth = column_width_in_feet
+				# loop over all fields and widths to set for the schedule
+				for field_name, field_width in field_data.items():
+
+					# check if field is in schedule
+					if field_name not in field_names_in_schedule:
+						#print(",".join(field_names))
+						action_return_value.append_message ("{} not in schedule...skipping schedule: {}".format(field_name, schedule_name))
+						irregular_schedules.append(s)
+						continue
+				
+					# get the field of interest
+					field_of_interest =  get_field_from_schedule_by_field_name(s, field_name)
+				
+					# check if we got something...we definitely should have since we checked the field names but just in case
+					if field_of_interest is None:
+						action_return_value.append_message ("{} not in schedule...skipping it".format(field_name))
+
+					#convert mm to internal units (feet) since the API expects the width to be set in feet, even though we want to work with mm
+					column_width_in_feet = UnitUtils.ConvertToInternalUnits(field_width, UnitTypeId.Millimeters)
+					# set the desired column width in inches
+					field_of_interest.SheetColumnWidth = column_width_in_feet
+					# all good, report back what we did
+					action_return_value.append_message ("Set column width for field {} to {} mm in schedule {}".format(field_name, field_width, schedule_name))
 
 			except Exception as e:
 				action_return_value.update_sep(False, "Failed to set column width: {}".format(e))
@@ -93,14 +114,18 @@ def adjust_column_width(doc, schedules, field_name, column_width_in_mm=6.35):
 			return action_return_value
 		
 		# set up a transaction to set the width
-		tranny = Transaction(doc, "Schedule {} Set field {} width to: {}".format(schedule_name, field_name, column_width_in_mm))
+		tranny = Transaction(doc, "Schedule {} Set fields".format(schedule_name))
 		tranny_result = in_transaction(tranny, action)
-		
+	
 		# check what came back
 		if tranny_result.status:
 			return_value.append_message ("...Set column width successfully")
 		else:
 			return_value.update_sep(False,"Failed to set column schedule width:{}".format(tranny_result.message))
+
+		if callback_progress and callback_progress.is_cancelled() == True:
+			return_value.append_message("Cancelled by user")
+			break
 	
 	return_value.result = irregular_schedules
 	return return_value

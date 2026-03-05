@@ -23,6 +23,7 @@
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Views.schedules import get_schedules
 from duHast.Revit.Views.schedules_fields import get_field_names_from_schedule
+from duHast.Revit.Common.element_id import get_el_id_int
 
 from Autodesk.Revit.DB import Element
 
@@ -66,8 +67,8 @@ def get_schedules_from_user(doc, forms, button_name="Select Schedules To Export"
     :type doc: Autodesk.Revit.DB.Document
     :param forms: pyRevit forms module
     :type forms: module
-    :param source_view_template_name: The name of the source view template to exclude from the list of target view templates.
-    :type source_view_template_name: str
+    :param button_name: The name of the button to show in the selection window
+    :type button_name: str
 
     :return: target_view_templates
     :rtype: [Autodesk.Revit.DB.View]
@@ -99,6 +100,89 @@ def get_schedules_from_user(doc, forms, button_name="Select Schedules To Export"
             )
         return schedules_selected
     
+
+def get_schedules_to_import_for_ui(doc, schedule_data):
+    """
+    Returns all schedules in the model
+
+    :param doc: The current model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: view_filter_names, view_filters_by_name
+    :rtype: [str], {str: Autodesk.Revit.DB.View}
+    """
+
+    # set up return values
+    schedule_names = []
+    schedules_by_name = {}
+
+    # get the list of keys from the schedule data representing the schedule ids for which we have data in the csv file
+    schedule_ids_to_import = schedule_data.keys()
+    
+    # get all view templates
+    schedules = get_schedules(doc=doc)
+    for schedule in schedules:
+        
+        # check if this schedule is in the list of schedules to import based on the schedule id, if not skip it and don't show it to the user for selection, 
+        # as we only want to show schedules for which we have data in the csv file to import
+        if get_el_id_int(schedule.Id) not in schedule_ids_to_import:
+            continue
+
+        key = Element.Name.GetValue(schedule)
+        schedule_names.append(key)
+        schedules_by_name[key] = schedule
+
+    return schedule_names, schedules_by_name
+
+
+def get_schedules_from_user_to_import(doc, forms, button_name="Select Schedules To Import Column Widths For", schedule_data = None):
+    """
+    returns the schedules by user selection
+
+    :param doc: The current model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param forms: pyRevit forms module
+    :type forms: module
+    :param button_name: The name of the button to show in the selection window
+    :type button_name: str
+    :param schedule_data: the schedule data read from the csv file, used to filter the schedules that are shown to the user for selection
+    :type schedule_data: dict[int, dict[str, int]]
+
+    :return: target_view_templates
+    :rtype: [Autodesk.Revit.DB.View]
+    """
+
+    schedules_selected = []
+
+    # get view filter in the model
+    schedule_names, schedules_by_name = get_schedules_to_import_for_ui(doc, schedule_data)
+
+    if len(schedule_names) == 0:
+        print("No schedules found in the model matching the schedule data read from the csv file. Exiting...")
+        return schedules_selected
+
+    # check if we got any?
+    if len(schedule_names) == 0:
+        return schedules_selected
+
+    # get the user to select the source ( returns a string)
+    selection = forms.SelectFromList.show(
+        sorted(schedule_names),
+        button_name=button_name,
+        multiselect=True,
+    )
+
+    if selection is None or len(selection) == 0:
+        return schedules_selected
+    else:
+        for source_view_filter_name in selection:
+            schedules_selected.append(
+                schedules_by_name[source_view_filter_name]
+            )
+        return schedules_selected
+
+
+
 
 
 def get_user_fields_export_options(forms):

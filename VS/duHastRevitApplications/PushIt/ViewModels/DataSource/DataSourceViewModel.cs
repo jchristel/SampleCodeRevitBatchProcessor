@@ -135,7 +135,7 @@ namespace duHastNet.PushIt.ViewModels.DataSource
             CurrentSourceControlViewModel = value switch
             {
                 DataSourceType.None => null,
-                DataSourceType.Csv => new CsvDataSourceControlViewModel(),
+                DataSourceType.Csv => new CsvDataSourceControlViewModel(_settings),
                 DataSourceType.Drofus => new DrofusDataSourceControlViewModel(_settings),
                 _ => throw new ArgumentException($"Unknown source type: {value}")
             };
@@ -209,21 +209,11 @@ namespace duHastNet.PushIt.ViewModels.DataSource
         {
             if (settings == null) return;
 
-            // Setting the type triggers child creation via OnSelectedSourceTypeChanged
+            // Setting the type triggers child creation via OnSelectedSourceTypeChanged.
+            // Both CsvDataSourceControlViewModel and DrofusDataSourceControlViewModel
+            // now receive _settings in their constructors and self-populate, so no
+            // additional call is needed here for either provider.
             SelectedSourceType = settings.SourceType;
-
-            // Populate the child with its saved config
-            switch (CurrentSourceControlViewModel)
-            {
-                case CsvDataSourceControlViewModel csvVm:
-                    csvVm.LoadFromConfig(settings.CsvConfig);
-                    break;
-
-                case DrofusDataSourceControlViewModel:
-                    // DrofusDataSourceControlViewModel reads directly from _settings
-                    // in its constructor, so no additional call is needed here.
-                    break;
-            }
         }
 
         /// <summary>
@@ -239,16 +229,14 @@ namespace duHastNet.PushIt.ViewModels.DataSource
 
             target.SourceType = SelectedSourceType;
 
-            switch (CurrentSourceControlViewModel)
-            {
-                case CsvDataSourceControlViewModel csvVm:
-                    csvVm.SaveToSettings(target);
-                    break;
+            // DrofusDataSourceControlViewModel writes back to _settings.Drofus
+            // directly; call SaveToSettings() here only to flush any in-flight
+            // mapper state (e.g. newly added mappings) before serialisation.
+            if (CurrentSourceControlViewModel is DrofusDataSourceControlViewModel drofusVm)
+                drofusVm.SaveToSettings();
 
-                case DrofusDataSourceControlViewModel drofusVm:
-                    drofusVm.SaveToSettings();
-                    break;
-            }
+            // CsvDataSourceControlViewModel writes through to _settings.CsvConfig
+            // on every FilePath change, so no explicit flush is required here.
         }
 
         #endregion

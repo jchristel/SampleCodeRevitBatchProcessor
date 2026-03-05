@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -27,5 +27,10 @@ namespace duHastNet.PushIt.Utilities
     {
         // default name for rooms in model change
         public const string DATA_MODEL_ROOMS_UPDATED = "model rooms updated";
+
+        // raised when the parameter store is rebuilt (e.g. after a drofus mapping
+        // is added, edited, or removed) so the data grid can refresh its
+        // available column list without requiring a full restart
+        public const string DATA_MODEL_PARAMETERS_UPDATED = "model parameters updated";
     }
 }

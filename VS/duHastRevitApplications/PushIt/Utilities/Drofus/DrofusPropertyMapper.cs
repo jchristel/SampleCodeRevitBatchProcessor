@@ -103,6 +103,34 @@ namespace duHastNet.PushIt.Utilities.Drofus
         // ── Mapping mutations ─────────────────────────────────────────────────
 
         /// <summary>
+        /// Replaces the entire mapping list with a defensive copy of
+        /// <paramref name="mappings"/> and clears any previously stored
+        /// Revit validation results (since they relate to the old list).
+        /// <para>
+        /// Used when a settings file is loaded at runtime so the mapper's
+        /// internal state is fully replaced without constructing a new instance.
+        /// </para>
+        /// </summary>
+        /// <param name="mappings">
+        /// The new mappings list. Must not be <c>null</c>; may be empty.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="mappings"/> is <c>null</c>.
+        /// </exception>
+        public void ReplaceMappings(List<DrofusPropertyMap> mappings)
+        {
+            if (mappings is null)
+                throw new ArgumentNullException(nameof(mappings));
+
+            _mappings.Clear();
+            _mappings.AddRange(mappings);
+
+            // Validation results belong to the old mapping set — clear them so
+            // the UI does not show stale warning indicators against new mappings.
+            _revitValidationResults.Clear();
+        }
+
+        /// <summary>
         /// Adds a new mapping to the list.
         /// </summary>
         /// <param name="map">The mapping to add. Must not be <c>null</c>.</param>

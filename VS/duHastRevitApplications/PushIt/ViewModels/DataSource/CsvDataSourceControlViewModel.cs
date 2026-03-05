@@ -36,14 +36,26 @@ namespace duHastNet.PushIt.ViewModels.DataSource
     /// Displayed inside <see cref="DataSourceViewModel.CurrentSourceControlViewModel"/>
     /// when <see cref="DataSourceType.Csv"/> is selected.
     /// <para>
-    /// Mirrors <c>AconexMetadataControlViewModel</c> — uses
-    /// <see cref="ObservableValidator"/> with <c>[CustomValidation]</c> on the
-    /// observable property and calls <see cref="ObservableValidator.ValidateProperty"/>
-    /// in the partial changed handler.
+    /// Mirrors <c>DrofusDataSourceControlViewModel</c> — receives the live
+    /// <see cref="DataSourceSettings"/> reference and writes directly to
+    /// <see cref="DataSourceSettings.CsvConfig"/> on every change, so CSV
+    /// settings survive a provider type switch without requiring an external
+    /// <c>SaveToSettings</c> / <c>LoadFromConfig</c> round-trip.
     /// </para>
     /// </summary>
     public partial class CsvDataSourceControlViewModel : ObservableValidator
     {
+        #region Private Fields
+
+        /// <summary>
+        /// The live settings object shared with the rest of the application.
+        /// Written to directly whenever <see cref="FilePath"/> changes so that
+        /// CSV config is always in sync without an external save call.
+        /// </summary>
+        private readonly DataSourceSettings _settings;
+
+        #endregion
+
         #region Observable Properties
 
         /// <summary>
@@ -75,6 +87,11 @@ namespace duHastNet.PushIt.ViewModels.DataSource
 
             // Keep the convenience flag in sync
             FilePathValid = !HasErrors;
+
+            // Write through to the live settings object so CSV config is always
+            // persisted regardless of whether SaveToSettings is called explicitly.
+            _settings.CsvConfig ??= new CsvDataSourceConfig();
+            _settings.CsvConfig.FilePath = value;
         }
 
         #endregion
@@ -142,42 +159,27 @@ namespace duHastNet.PushIt.ViewModels.DataSource
 
         #endregion
 
-        #region Settings Round-trip
-
-        /// <summary>
-        /// Populates this ViewModel from an existing
-        /// <see cref="CsvDataSourceConfig"/> on startup or when settings are loaded.
-        /// </summary>
-        public void LoadFromConfig(CsvDataSourceConfig config)
-        {
-            if (config == null) return;
-
-            // Setting FilePath triggers OnFilePathChanged → ValidateProperty
-            FilePath = config.FilePath ?? string.Empty;
-        }
-
-        /// <summary>
-        /// Writes the current ViewModel state back into the provided
-        /// <see cref="DataSourceSettings"/>. Called by
-        /// <see cref="DataSourceViewModel.SaveToSettings"/> before serialisation.
-        /// </summary>
-        public void SaveToSettings(DataSourceSettings target)
-        {
-            if (target == null) return;
-
-            target.SourceType = DataSourceType.Csv;
-            target.CsvConfig = new CsvDataSourceConfig
-            {
-                FilePath = FilePath ?? string.Empty
-            };
-        }
-
-        #endregion
-
         #region Constructor
 
-        public CsvDataSourceControlViewModel()
+        /// <summary>
+        /// Creates the ViewModel and pre-populates <see cref="FilePath"/> from
+        /// any existing <see cref="CsvDataSourceConfig"/> already present in
+        /// <paramref name="settings"/>, mirroring the pattern used by
+        /// <see cref="DrofusDataSourceControlViewModel"/>.
+        /// </summary>
+        /// <param name="settings">
+        /// The live <see cref="DataSourceSettings"/> from the application model.
+        /// Must not be null.
+        /// </param>
+        public CsvDataSourceControlViewModel(DataSourceSettings settings)
         {
+            _settings = settings ?? throw new System.ArgumentNullException(nameof(settings));
+
+            // Pre-populate from any previously saved config so switching back to
+            // CSV after selecting another provider restores the last-used path.
+            if (_settings.CsvConfig != null)
+                FilePath = _settings.CsvConfig.FilePath ?? string.Empty;
+
             // Run initial validation so HasErrors is correct from the start
             ValidateAllProperties();
         }

@@ -286,6 +286,95 @@ namespace duHastNet.PushIt.ViewModels.DataSource
             Mapper.SaveMappingsToSettings(_settings.Drofus);
         }
 
+        /// <summary>
+        /// Serialises the full live settings object to a user-chosen .json file
+        /// so that team members can share drofus project configurations.
+        /// The file format is identical to the default startup settings file.
+        /// </summary>
+        [RelayCommand]
+        private void SaveSettingsToFile()
+        {
+            // Flush current UI state into _settings before serialising.
+            SaveToSettings();
+
+            using var dialog = new System.Windows.Forms.SaveFileDialog
+            {
+                Title       = "Save drofus settings",
+                Filter      = "JSON settings files (*.json)|*.json|All files (*.*)|*.*",
+                FilterIndex = 1,
+                DefaultExt  = "json",
+                FileName    = "pushIt_drofus_settings.json",
+            };
+
+            if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+
+            // Build a full Settings wrapper so the file is valid for LoadSettings too.
+            var wrapper = new Models.Settings
+            {
+                DataSource = new Models.DataSourceSettings
+                {
+                    SourceType = Models.DataSourceType.Drofus,
+                    Drofus     = _settings.Drofus,
+                }
+            };
+
+            Utilities.SettingsUtils.SaveSettingsToPath(wrapper, dialog.FileName);
+        }
+
+        /// <summary>
+        /// Loads the drofus block from a user-chosen .json file and applies it
+        /// to the live settings, replacing only the drofus configuration.
+        /// All other settings (categories, column layout, CSV config) are untouched.
+        /// </summary>
+        [RelayCommand]
+        private void LoadSettingsFromFile()
+        {
+            using var dialog = new System.Windows.Forms.OpenFileDialog
+            {
+                Title       = "Load drofus settings",
+                Filter      = "JSON settings files (*.json)|*.json|All files (*.*)|*.*",
+                FilterIndex = 1,
+                CheckFileExists = true,
+            };
+
+            if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+
+            Models.Drofus.DrofusDataSourceSettings? loaded =
+                Utilities.SettingsUtils.LoadDrofusSettingsFromPath(dialog.FileName);
+
+            if (loaded is null) return; // error already shown by LoadDrofusSettingsFromPath
+
+            ApplyDrofusSettings(loaded);
+        }
+
+        /// <summary>
+        /// Replaces the live drofus configuration with <paramref name="drofus"/>
+        /// and refreshes all observable properties and the mapping list.
+        /// Used by <see cref="LoadSettingsFromFile"/> and could be reused for
+        /// any future path that injects a new drofus config at runtime.
+        /// </summary>
+        private void ApplyDrofusSettings(Models.Drofus.DrofusDataSourceSettings drofus)
+        {
+            // Write the loaded block into the shared settings object so that
+            // the default-path save picks it up correctly on close.
+            _settings.Drofus = drofus;
+
+            // Refresh the four observable text fields.
+            BaseUrl       = drofus.BaseUrl;
+            DatabaseName  = drofus.DatabaseName;
+            ProjectNumber = drofus.ProjectNumber;
+            ApiToken      = drofus.ApiToken;
+
+            // Reset connection state — the user must connect explicitly to
+            // verify credentials and populate available fields.
+            IsConnected   = false;
+            StatusMessage = "Settings loaded — click Connect to verify.";
+
+            // Rebuild the mapper from the loaded mappings list.
+            Mapper.ReplaceMappings(drofus.PropertyMappings);
+            PersistAndRefresh();
+        }
+
         private void RebuildMappingRows()
         {
             MappingRows.Clear();
@@ -332,6 +421,11 @@ namespace duHastNet.PushIt.ViewModels.DataSource
                     isReadOnly:    false,
                     isUniqueId:    mapping.IsUniqueId));
             }
+
+            // Notify the grid that available columns have changed so it rebuilds
+            // its column picker without requiring a restart.
+            RevitDataModel.RaisePropertyChanged(
+                Utilities.PropertyChangedEventNames.DATA_MODEL_PARAMETERS_UPDATED);
         }
 
         protected virtual bool ShowMappingDialog(DrofusPropertyMappingDialogViewModel dialogVm)

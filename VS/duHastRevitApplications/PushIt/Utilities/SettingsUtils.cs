@@ -139,6 +139,72 @@ namespace duHastNet.PushIt.Utilities
         }
 
         /// <summary>
+        /// Serialises <paramref name="settings"/> to a user-chosen file path.
+        /// Uses identical JSON formatting to <see cref="SaveSettings"/> so the
+        /// resulting file can be loaded back by <see cref="LoadSettings"/> or
+        /// <see cref="LoadDrofusSettingsFromPath"/>.
+        /// </summary>
+        /// <param name="settings">The settings object to serialise.</param>
+        /// <param name="filePath">Full path to the destination .json file.</param>
+        public static void SaveSettingsToPath(Models.Settings settings, string filePath)
+        {
+            try
+            {
+                string? directory = Path.GetDirectoryName(filePath);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
+
+                settings.DataPath = null;
+                string jsonString = JsonConvert.SerializeObject(settings, Formatting.None);
+                File.WriteAllText(filePath, jsonString);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(
+                    $"Failed to save settings to '{filePath}': {ex.Message}",
+                    "Save Settings",
+                    System.Windows.Forms.MessageBoxButtons.OK,
+                    System.Windows.Forms.MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Reads a settings file from <paramref name="filePath"/> and returns
+        /// only the <see cref="Models.DrofusDataSourceSettings"/> block.
+        /// Returns <c>null</c> when the file cannot be read, cannot be
+        /// deserialised, or contains no drofus configuration.
+        /// </summary>
+        /// <param name="filePath">Full path to the source .json file.</param>
+        public static Models.Drofus.DrofusDataSourceSettings? LoadDrofusSettingsFromPath(string filePath)
+        {
+            try
+            {
+                if (!File.Exists(filePath))
+                {
+                    System.Windows.Forms.MessageBox.Show(
+                        $"Settings file not found: {filePath}",
+                        "Load Settings",
+                        System.Windows.Forms.MessageBoxButtons.OK,
+                        System.Windows.Forms.MessageBoxIcon.Warning);
+                    return null;
+                }
+
+                string jsonString = File.ReadAllText(filePath);
+                Models.Settings? settings = JsonConvert.DeserializeObject<Models.Settings>(jsonString);
+                return settings?.DataSource?.Drofus;
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(
+                    $"Failed to load settings from '{filePath}': {ex.Message}",
+                    "Load Settings",
+                    System.Windows.Forms.MessageBoxButtons.OK,
+                    System.Windows.Forms.MessageBoxIcon.Error);
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Serialises <paramref name="settings"/> to the settings file.
         /// The legacy <c>DataPath</c> field is cleared before saving so it is
         /// silently dropped from the JSON on the first save after migration,

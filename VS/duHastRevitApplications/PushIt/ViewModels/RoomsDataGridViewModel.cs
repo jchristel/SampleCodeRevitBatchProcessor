@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -270,6 +270,14 @@ namespace duHastNet.PushIt.ViewModels
                 case duHastNet.PushIt.Utilities.PropertyChangedEventNames.DATA_MODEL_ROOMS_UPDATED:
                     //update rooms in the view model
                     LoadDataFromRevitDataModel();
+                    break;
+
+                case duHastNet.PushIt.Utilities.PropertyChangedEventNames.DATA_MODEL_PARAMETERS_UPDATED:
+                    // Mappings have changed — rebuild the available column list and
+                    // the column defaults dict so the new parameters appear in the
+                    // column picker immediately without requiring a restart.
+                    InitializeAvailableColumns();
+                    InitializeColumnDefaults();
                     break;
 
                 // Add more cases for other properties as needed

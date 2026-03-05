@@ -73,6 +73,7 @@
             <RowDefinition Height="Auto"/>  <!-- Database name -->
             <RowDefinition Height="Auto"/>  <!-- Project number -->
             <RowDefinition Height="Auto"/>  <!-- API token -->
+            <RowDefinition Height="Auto"/>  <!-- Save / Load settings -->
             <RowDefinition Height="Auto"/>  <!-- Connect + status -->
             <RowDefinition Height="Auto"/>  <!-- Mapping panel (visible when connected) -->
         </Grid.RowDefinitions>
@@ -121,8 +122,26 @@
                  Text="{Binding ApiToken, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  ToolTip="Paste your API token from the drofus Power Query credentials dialog"/>
 
-        <!-- ── Connect button + status ──────────────────────────────────── -->
+        <!-- ── Save / Load settings ──────────────────────────────────────── -->
         <StackPanel Grid.Row="4" Grid.Column="1"
+                    Orientation="Horizontal"
+                    Margin="0 4 0 4">
+
+            <Button Content="Save Settings"
+                    Padding="14 3"
+                    Margin="0 0 6 0"
+                    Command="{Binding SaveSettingsToFileCommand}"
+                    ToolTip="Save current drofus settings to a file for sharing with team members"/>
+
+            <Button Content="Load Settings"
+                    Padding="14 3"
+                    Command="{Binding LoadSettingsFromFileCommand}"
+                    ToolTip="Load drofus settings from a file — only the drofus block is applied"/>
+
+        </StackPanel>
+
+        <!-- ── Connect button + status ──────────────────────────────────── -->
+        <StackPanel Grid.Row="5" Grid.Column="1"
                     Orientation="Horizontal"
                     Margin="0 8 0 0">
 
@@ -161,7 +180,7 @@
         </StackPanel>
 
         <!-- ── Mapping panel — visible only when connected ──────────────── -->
-        <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+        <Border Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
                 Margin="0 12 0 0"
                 BorderBrush="#CCCCCC"
                 BorderThickness="0 1 0 0"

@@ -110,13 +110,18 @@ namespace duHastNet.PushIt.Utilities.Drofus
                         string fieldValue = roomObj[mapping.DrofusFieldName]?.ToString()
                             ?? string.Empty;
 
+                        // RevitToDrofus: Revit is the source — the property must be
+                        // read-only in PushIt so it is read from Revit and written to
+                        // drofus, never edited manually in the grid.
+                        bool isReadOnly = mapping.FlowDirection == MappingFlowDirection.RevitToDrofus;
+
                         properties.Add(new RoomDataProperty(
                             name:          mapping.RevitParameterName,
                             parameterGUID: mapping.RevitParameterGuid,
                             parameterName: mapping.RevitParameterName,
                             value:         fieldValue,
                             showInUI:      true,
-                            isReadOnly:    false,
+                            isReadOnly:    isReadOnly,
                             isUniqueId:    false));
                     }
 
@@ -237,13 +242,17 @@ namespace duHastNet.PushIt.Utilities.Drofus
 
             foreach (DrofusPropertyMap mapping in drofus.PropertyMappings)
             {
+                // Mirror the same read-only logic as GetRoomsData: RevitToDrofus
+                // mappings are read-only because Revit is the source of truth.
+                bool isReadOnly = mapping.FlowDirection == MappingFlowDirection.RevitToDrofus;
+
                 properties.Add(new RoomDataProperty(
                     name:          mapping.RevitParameterName,
                     parameterGUID: mapping.RevitParameterGuid,
                     parameterName: mapping.RevitParameterName,
                     value:         string.Empty,
                     showInUI:      true,
-                    isReadOnly:    false,
+                    isReadOnly:    isReadOnly,
                     isUniqueId:    mapping.IsUniqueId));
             }
 

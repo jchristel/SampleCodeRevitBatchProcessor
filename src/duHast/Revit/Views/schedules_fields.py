@@ -27,6 +27,7 @@ This module contains a number of helper functions relating to fields in Revit vi
 #
 
 from duHast.Utilities.Objects.result import Result
+from duHast.Revit.Common.element_id import get_el_id_int
 
 from System import Int64 # revit element Id expects 64 bit integer
 
@@ -335,14 +336,16 @@ def get_schedules_column_widths (schedules, field_names_of_interest=[]):
     schedules_data = []
     try:
         for s in schedules:
-            row_data = [s.Id.IntegerValue]
+            row_data = [int(get_el_id_int(s.Id))]
             schedule_name = Element.Name.GetValue(s)
             return_value.append_message ("Getting columns: {}".format(schedule_name))
             field_names = get_field_names_from_schedule(s)
 
             # check if we need to filter schedules based on field names of interest:
             if len(field_names_of_interest) > 0:
-
+                message = "Filtering schedule {} based on field names of interest: \n...{}".format(schedule_name, ",".join(field_names_of_interest))
+                #print(message)
+                return_value.append_message (message=message)
                 # do we have all  fields of interest in the schedule?
                 for field_of_interest_name in field_names_of_interest:
                     if field_of_interest_name not in field_names:
@@ -352,16 +355,22 @@ def get_schedules_column_widths (schedules, field_names_of_interest=[]):
             # check if we have any field names of interest in the schedule, if not assume we want all fields:
             if len(field_names_of_interest) == 0:
                 # assume we want all fields if no field names of interest were provided
-                field_names_of_interest = field_names
+                field_names_of_interest_updated = field_names
+            else:
+                # if we have field names of interest, filter the list of field names to only include those that are in the schedule
+                field_names_of_interest_updated = [field_name for field_name in field_names_of_interest if field_name in field_names]
 
             # get the column width for each field of interest:
-            for field_of_interest_name in field_names_of_interest:
+            for field_of_interest_name in field_names_of_interest_updated:
                 # get the field of interest
                 field_of_interest =  get_field_from_schedule_by_field_name(s, field_of_interest_name)
             
                 # check if we got something...we definitely should have since we checked the field names but just in case
                 if field_of_interest is None:
                     return_value.append_message ("{} not in schedule...skipping it".format(field_of_interest_name))
+                    
+                    # skip to next field of interest if we can't find the field in the schedule
+                    continue
                 
                 # get the column width in inches for the field of interest
                 column_width = field_of_interest.SheetColumnWidth
@@ -372,7 +381,11 @@ def get_schedules_column_widths (schedules, field_names_of_interest=[]):
                 # append the column data to the row data
                 row_data.append(column_data)
             
-            schedules_data.append(row_data)
+            # if there are no fields do not export
+            if len(row_data) > 1:
+                schedules_data.append(row_data)
+            else:
+                return_value.append_message ("No fields of interest found in schedule: {}".format(schedule_name))
     except Exception as e:
         return_value.append_message("Error getting column data: {}".format(str(e)))
         return_value.status = False

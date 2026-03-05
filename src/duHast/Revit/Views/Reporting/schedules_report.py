@@ -243,7 +243,7 @@ def export_schedules_column_widths(doc, file_name, schedules, field_names_of_int
     return_value = res.Result()
     try:
         # get the schedule column widths for the schedules and field names of interest
-        result_schedules_column_widths = get_schedules_column_widths(doc, schedules, field_names_of_interest)
+        result_schedules_column_widths = get_schedules_column_widths(schedules, field_names_of_interest)
 
         # get out if the get column widths was  not successful
         if result_schedules_column_widths.status == False:

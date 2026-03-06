@@ -35,7 +35,7 @@ from Autodesk.Revit.DB import (
     UnitTypeId,
 )
 
-def check_schedule_sheet_instances_are_overlapping(doc, schedule):
+def check_schedule_sheet_instances_are_overlapping(doc, schedule, sheet_id=None):
     """
     Checks if any segments of a split schedule overlap on their respective sheets.
 
@@ -67,6 +67,10 @@ def check_schedule_sheet_instances_are_overlapping(doc, schedule):
             instance = doc.GetElement(instance_id)
             owner_sheet = doc.GetElement(instance.OwnerViewId)
             sheet_key = instance.OwnerViewId.IntegerValue
+
+            # skip if only interested in particular sheet and this instance is not on that sheet
+            if sheet_id and sheet_key != sheet_id.IntegerValue:
+                continue
 
             bb = instance.get_BoundingBox(owner_sheet)
             min_x = bb.Min.X + SCHEDULE_MARGIN

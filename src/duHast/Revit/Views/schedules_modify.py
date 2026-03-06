@@ -30,6 +30,7 @@ from duHast.Utilities.Objects.result import Result
 
 from duHast.Revit.Views.schedules_fields import get_field_names_from_schedule, get_field_from_schedule_by_field_name
 from duHast.Revit.Common.transaction import in_transaction
+from duHast.Revit.Common.element_id import get_el_id_int
 from duHast.UI.Objects.ProgressBase import ProgressBase
 
 from Autodesk.Revit.DB import (
@@ -40,7 +41,7 @@ from Autodesk.Revit.DB import (
     )
 
 
-def adjust_column_width(doc, schedules, field_data, callback_progress=None,):
+def adjust_column_width(doc, schedules, field_data, callback_progress=None):
 	"""
 	Adjusts the column width of a specified field in a list of schedules.
 
@@ -48,11 +49,11 @@ def adjust_column_width(doc, schedules, field_data, callback_progress=None,):
 	:type doc: Autodesk.Revit.DB.Document
 	:param schedules: A list of Revit schedule objects to adjust.
 	:type schedules: list of Autodesk.Revit.DB.ViewSchedule
-	:param field_name: The human readable list of field names of the field to adjust the column width for.
-	:type field_name: [str]
-	:param column_width_in_inches: The desired column width in inches (default is 0.25 inches).
-	:type column_width_in_inches: float
-
+	:param field_data: A dictionary where the key is the schedule id and the values are another dictionary with the field name (key) and column width (value) to set.
+	:type field_data: dict[int, dict[str, int]]
+	:param callback_progress: An optional callback function to update the progress of the operation. The function should accept two parameters: the current progress (int) and the maximum progress (int).
+	:type callback_progress: function, optional
+	
 	:return: A Result object containing a list of schedules that were skipped because they did not contain the specified field.
 	:rtype: duHast.Utilities.Objects.result.Result
 	"""
@@ -61,7 +62,7 @@ def adjust_column_width(doc, schedules, field_data, callback_progress=None,):
 	irregular_schedules = []
 
 	if isinstance(callback_progress, ProgressBase) == False and callback_progress is not None:
-		raise ValueError("callback_progress is not a ProgressBase")
+		raise ValueError("callback_progress is not a ProgressBase: {}".format(type(callback_progress)))
 	
 
 	# progress bar data
@@ -78,6 +79,12 @@ def adjust_column_width(doc, schedules, field_data, callback_progress=None,):
 		return_value.append_message ("Adjusting schedule: {}".format(schedule_name))
 		field_names_in_schedule = get_field_names_from_schedule(s)
 		
+		schedule_field_data = field_data.get(int(get_el_id_int(s.Id)), None)
+
+		if schedule_field_data is None:
+			return_value.append_message ("No field data found for schedule {}...skipping it".format(schedule_name))
+			irregular_schedules.append(s)
+			continue
 
 		# set all field widths within one transaction
 		# set the width in an action
@@ -85,7 +92,7 @@ def adjust_column_width(doc, schedules, field_data, callback_progress=None,):
 			action_return_value = Result()
 			try:
 				# loop over all fields and widths to set for the schedule
-				for field_name, field_width in field_data.items():
+				for field_name, field_width in schedule_field_data.items():
 
 					# check if field is in schedule
 					if field_name not in field_names_in_schedule:

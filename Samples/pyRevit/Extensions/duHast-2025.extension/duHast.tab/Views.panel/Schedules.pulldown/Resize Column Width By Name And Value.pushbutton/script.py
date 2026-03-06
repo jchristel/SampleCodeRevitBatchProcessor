@@ -8,3 +8,9 @@ doc = revit.doc
 
 
 print ("Resizes a specific column in selected schedules by a given value")
+
+from views.Schedules.adjust_specific_schedule_field_width import import_schedules_column_width_entry
+
+
+
+import_result = import_schedules_column_width_entry(doc, output, forms)

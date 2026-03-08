@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -43,47 +43,52 @@ namespace duHastNet.PushIt.RevitActions
                 // refresh the rooms data model rooms from the SoA with the rooms from the revit model
                 List<Models.RoomDataModel> updatedSoARooms = RefreshRoomData(
                     doc,
-                    RevitModel._roomsContainer.GetAllRooms(), // returns SoA rooms only
+                    RevitModel._roomsContainer.GetAllRooms(),
                     RevitModel.GetEnabledCategoryNames()
                  );
 
-                // refresh the rooms data model with the new rooms from the revit model
+                // refresh new rooms
                 List<Models.RoomDataModel> updatedNewRooms = RefreshRoomData(
                     doc,
-                    RevitModel._roomsContainer.GetAllNewRooms(), // returns new rooms only
+                    RevitModel._roomsContainer.GetAllNewRooms(),
                     RevitModel.GetEnabledCategoryNames()
                 );
 
-                // do not remove any new room with 0 placed revit rooms in case the new room is placed in a non primary design option...
+                // refresh split rooms — same pattern as new rooms
+                List<Models.RoomDataModel> updatedSplitRooms = RefreshRoomData(
+                    doc,
+                    RevitModel._roomsContainer.GetAllSplitRooms(),
+                    RevitModel.GetEnabledCategoryNames()
+                );
 
-                // clear all rooms in the data model (SoA and new rooms)
-                // this will also clear all rooms if shared parameter setup in project file is wrong.
+                // clear all rooms (SoA, new, and split) then re-add the refreshed lists
                 RevitModel.ClearAllRooms();
 
                 int countSoARooms = 0;
-                // add updated SoA rooms to the data model if there are any
                 if (updatedSoARooms != null)
                 {
-                    // add updated rooms
-                    foreach (var rooms in updatedSoARooms)
-                    {
-                        RevitModel.AddRoom(rooms);
-                    }
+                    foreach (var room in updatedSoARooms)
+                        RevitModel.AddRoom(room);
                     countSoARooms = updatedSoARooms.Count;
                 }
 
                 int countNewRooms = 0;
                 if (updatedNewRooms != null && updatedNewRooms.Count > 0)
                 {
-                    // add updated rooms
                     foreach (var room in updatedNewRooms)
-                    {
                         RevitModel.AddNewRoom(room);
-                    }
                     countNewRooms = updatedNewRooms.Count;
                 }
 
-                return ($"{countSoARooms} SoA rooms and {countNewRooms} new rooms in data model updated with rooms from the Revit model.", Utils.WPF.Stores.MessageTypes.Information);
+                int countSplitRooms = 0;
+                if (updatedSplitRooms != null && updatedSplitRooms.Count > 0)
+                {
+                    foreach (var room in updatedSplitRooms)
+                        RevitModel.AddSplitRoom(room);
+                    countSplitRooms = updatedSplitRooms.Count;
+                }
+
+                return ($"{countSoARooms} SoA rooms, {countNewRooms} new rooms and {countSplitRooms} split rooms updated from the Revit model.", Utils.WPF.Stores.MessageTypes.Information);
 
 
             }

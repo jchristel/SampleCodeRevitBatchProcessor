@@ -29,7 +29,7 @@ namespace duHastNet.PushIt.ViewModels.DataSource
 
         /// <summary>
         /// The mapper service instance. Exposed publicly so that
-        /// ValidateDrofusOnStartup can receive it from Main.ExecuteInternal.
+        /// ValidateDrofusMappingsOnStartup can receive it from Main.ExecuteInternal.
         /// </summary>
         public DrofusPropertyMapper Mapper { get; }
 
@@ -282,6 +282,21 @@ namespace duHastNet.PushIt.ViewModels.DataSource
             _settings.Drofus.ProjectNumber = ProjectNumber.Trim();
             _settings.Drofus.ApiToken = ApiToken.Trim();
             Mapper.SaveMappingsToSettings(_settings.Drofus);
+            SaveRevitPrecedenceToSettings();
+        }
+
+        /// <summary>
+        /// Persists the current per-row RevitTakesPrecedenceAfterInitialPush checkboxes
+        /// into <see cref="DrofusDataSourceSettings.RevitPrecedencePropertyNames"/>.
+        /// Called by <see cref="SaveToSettings"/> and <see cref="PersistAndRefresh"/>.
+        /// </summary>
+        private void SaveRevitPrecedenceToSettings()
+        {
+            _settings.Drofus ??= new DrofusDataSourceSettings();
+            _settings.Drofus.RevitPrecedencePropertyNames = MappingRows
+                .Where(r => r.RevitTakesPrecedenceAfterInitialPush)
+                .Select(r => r.Model.RevitParameterName)
+                .ToList();
         }
 
         /// <summary>
@@ -375,9 +390,17 @@ namespace duHastNet.PushIt.ViewModels.DataSource
 
         private void RebuildMappingRows()
         {
+            var precedenceSet = new HashSet<string>(
+                _settings.Drofus?.RevitPrecedencePropertyNames ?? new List<string>(),
+                StringComparer.OrdinalIgnoreCase);
+
             MappingRows.Clear();
             foreach (DrofusPropertyMap mapping in Mapper.Mappings)
-                MappingRows.Add(new DrofusPropertyMapViewModel(mapping, Mapper));
+            {
+                var row = new DrofusPropertyMapViewModel(mapping, Mapper);
+                row.RevitTakesPrecedenceAfterInitialPush = precedenceSet.Contains(mapping.RevitParameterName);
+                MappingRows.Add(row);
+            }
             HasValidationWarnings = Mapper.HasValidationWarnings;
         }
 
@@ -390,6 +413,7 @@ namespace duHastNet.PushIt.ViewModels.DataSource
         private void PersistAndRefresh()
         {
             Mapper.SaveMappingsToSettings(_settings.Drofus!);
+            SaveRevitPrecedenceToSettings();
             SyncParametersToDataModel();
             RebuildMappingRows();
         }

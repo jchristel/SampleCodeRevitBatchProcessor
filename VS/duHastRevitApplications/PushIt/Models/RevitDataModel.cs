@@ -182,6 +182,36 @@ namespace duHastNet.PushIt.Models
             _roomsContainer.AddPlacedNewRevitRoom(roomId, revitRoom);
         }
 
+        public void AddPlacedSplitRevitRoom(string splitRoomId, Models.RoomRevit revitRoom)
+        {
+            _roomsContainer.AddPlacedSplitRevitRoom(splitRoomId, revitRoom);
+        }
+
+        public void RemovePlacedSplitRevitRoom(string splitRoomId, long revitElementId)
+        {
+            _roomsContainer.RemovePlacedSplitRevitRoom(splitRoomId, revitElementId);
+        }
+
+        public void AddSplitRoom(Models.RoomDataModel room)
+        {
+            _roomsContainer.AddSplitRoom(room);
+        }
+
+        public List<Models.RoomDataModel> GetAllSplitRooms()
+        {
+            return _roomsContainer.GetAllSplitRooms();
+        }
+
+        public void ClearSplitRooms()
+        {
+            _roomsContainer.ClearSplitRooms();
+        }
+
+        public int GetNextSplitCounter(string parentRoomId)
+        {
+            return _roomsContainer.GetNextSplitCounter(parentRoomId);
+        }
+
         /// <summary>
         /// Loads room records from the active data source into the model.
         /// The provider is resolved via <see cref="Utilities.DataSourceFactory"/>

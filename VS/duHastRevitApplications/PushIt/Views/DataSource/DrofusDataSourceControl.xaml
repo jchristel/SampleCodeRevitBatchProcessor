@@ -22,9 +22,10 @@
                     <ColumnDefinition Width="*"/>    <!-- drofus field -->
                     <ColumnDefinition Width="*"/>    <!-- Revit parameter -->
                     <ColumnDefinition Width="Auto"/> <!-- direction — never clipped -->
+                    <ColumnDefinition Width="80"/>   <!-- Revit precedence checkbox -->
                 </Grid.ColumnDefinitions>
 
-                <!-- Warning indicator — visible when any validation flag is set -->
+                <!-- Warning indicator -->
                 <TextBlock Grid.Column="0"
                            Text="⚠"
                            Foreground="#CC7700"
@@ -33,7 +34,7 @@
                            ToolTip="This mapping has a validation warning. Check drofus field name and Revit parameter GUID."
                            Visibility="{Binding HasWarning, Converter={StaticResource BoolToVis}}"/>
 
-                <!-- Id indicator — visible when this mapping is the unique identifier -->
+                <!-- Id indicator -->
                 <TextBlock Grid.Column="1"
                            Text="🔑"
                            FontSize="11"
@@ -63,6 +64,13 @@
                            VerticalAlignment="Center"
                            Margin="0 2 8 2"
                            ToolTip="{Binding FlowDirectionDisplay}"/>
+
+                <!-- Revit takes precedence after initial split push -->
+                <CheckBox Grid.Column="5"
+                          IsChecked="{Binding RevitTakesPrecedenceAfterInitialPush, Mode=TwoWay}"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          ToolTip="When checked, after the first push to a split room Revit's value is used on all subsequent pushes (SoA value is ignored for this property)."/>
             </Grid>
         </DataTemplate>
     </UserControl.Resources>
@@ -217,6 +225,7 @@
                         <ColumnDefinition Width="*"/>    <!-- drofus field -->
                         <ColumnDefinition Width="*"/>    <!-- Revit parameter -->
                         <ColumnDefinition Width="Auto"/> <!-- direction -->
+                        <ColumnDefinition Width="80"/>   <!-- Revit precedence -->
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="2"
                                Text="drofus Field"
@@ -236,6 +245,15 @@
                                FontSize="11"
                                Margin="0 0 4 0"
                                Foreground="#555"/>
+                    <TextBlock Grid.Column="5"
+                               FontWeight="SemiBold"
+                               FontSize="11"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center"
+                               Foreground="#555"
+                               ToolTip="Revit takes precedence after initial push to a split room">
+                        <Run Text="Revit"/><LineBreak/><Run Text="Precedence"/>
+                    </TextBlock>
                 </Grid>
 
                 <!-- Mapping ListView — scrolls after 10 rows -->

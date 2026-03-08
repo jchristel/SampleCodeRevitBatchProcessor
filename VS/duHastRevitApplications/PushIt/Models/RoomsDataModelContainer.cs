@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -41,6 +41,13 @@ namespace duHastNet.PushIt.Models
         /// The room ID is not unique, but the combined values of room properties marked as write are unique
         /// </summary>
         public List<Models.RoomDataModel> _newRooms;
+
+        /// <summary>
+        /// Rooms added through the Push It UI which are the result of a split operation.
+        /// Each entry is a standalone RoomDataModel with a split-suffixed ID
+        /// ({parentId}::SPLIT::{counter}). Revit is the source of truth after the first push.
+        /// </summary>
+        public List<Models.RoomDataModel> _splitRooms;
 
         public void AddRoom(Models.RoomDataModel room)
         {
@@ -97,11 +104,11 @@ namespace duHastNet.PushIt.Models
         }
 
         /// <summary>
-        /// Returns all rooms from the Schedule Of Accomodation and all new rooms added through the Push It UI
+        /// Returns all rooms from the Schedule Of Accomodation, all new rooms, and all split rooms.
         /// </summary>
         public List<Models.RoomDataModel> GetAllRoomsCombined()
         {
-            return [.. _rooms, .. _newRooms];
+            return [.. _rooms, .. _newRooms, .. _splitRooms];
         }
 
         /// <summary>
@@ -121,12 +128,21 @@ namespace duHastNet.PushIt.Models
         }
 
         /// <summary>
-        /// Clears the list of new rooms added through the Push It UI and the list of rooms from the Schedule Of Accomodation
+        /// Clears the list of split rooms
+        /// </summary>
+        public void ClearSplitRooms()
+        {
+            _splitRooms = [];
+        }
+
+        /// <summary>
+        /// Clears all room lists: SoA rooms, new rooms, and split rooms.
         /// </summary>
         public void ClearAllRooms()
         {
             ClearRooms();
             ClearNewRooms();
+            ClearSplitRooms();
         }
 
         /// <summary>
@@ -136,27 +152,10 @@ namespace duHastNet.PushIt.Models
         {
             foreach (var room in _rooms)
             {
-                // need to update the area designed value...
-                // check if the room has the placed room
                 if (room.MatchingRevitRooms.Any(x => x.RevitElementId == revitElementId))
                 {
-                    // remove the placed room from the data model
                     room.MatchingRevitRooms.RemoveAll(x => x.RevitElementId == revitElementId);
-
-                    // update rooms read-only properties from revit room
                     room.UpdateReadProperties();
-
-                    break;
-                }
-                //check if any matching split rooms...
-                else if (room.MatchingSplitRevitRooms.Any(x => x.RevitElementId == revitElementId))
-                {
-                    // remove the placed room from the data model
-                    room.MatchingSplitRevitRooms.RemoveAll(x => x.RevitElementId == revitElementId);
-
-                    // update rooms read-only properties from revit room
-                    room.UpdateReadProperties();
-
                     break;
                 }
             }
@@ -202,37 +201,143 @@ namespace duHastNet.PushIt.Models
         }
 
         /// <summary>
-        /// Adds the placed room to the list of rooms from the Schedule Of Accomodation
+        /// Adds the placed room to the list of rooms from the Schedule Of Accomodation.
+        /// Only handles standard (non-split, non-new) room IDs.
         /// </summary>
-        /// <param name="roomId"></param>
-        /// <param name="revitRoom"></param>
         public void AddPlacedRevitRoom(string roomId, Models.RoomRevit revitRoom)
         {
-            //get the room id without the split mode indicator
-            string roomIdWithoutSplit = Utilities.PushModeUtils.GetIdWithoutSplitModeIndicator(roomId);
-
             foreach (var room in _rooms)
             {
-                // check if the room id is the same as the one in the data model
-                if (room.Id.Value == roomIdWithoutSplit)
+                if (room.Id.Value == roomId)
                 {
-                    //check if this is a standard room ( room id is the same as the id without split mode indicator)
-                    if (roomId == roomIdWithoutSplit)
-                    {
-                        // add the placed room to the data model
-                        room.AddMatchingRevitRoom(revitRoom);
-                    }
-                    else
-                    {
-                        //must be a split room
-                        // add the placed room to the data model
-                        room.AddMatchingSplitRevitRoom(revitRoom);
-                    }
-
-                    // update rooms read-only properties from revit room
+                    room.AddMatchingRevitRoom(revitRoom);
                     room.UpdateReadProperties();
                 }
             }
+        }
+
+        /// <summary>
+        /// Adds or updates a split room entry in _splitRooms from a Revit read-back.
+        /// If a split room with the given splitRoomId already exists, its MatchingRevitRooms
+        /// list is updated. Otherwise a new RoomDataModel is created and added.
+        /// </summary>
+        public void AddPlacedSplitRevitRoom(string splitRoomId, Models.RoomRevit revitRoom)
+        {
+            // look for an existing split room entry with this exact split ID
+            var existing = _splitRooms.Find(r => r.Id.Value == splitRoomId);
+            if (existing != null)
+            {
+                existing.AddMatchingRevitRoom(revitRoom);
+                existing.UpdateReadProperties();
+            }
+            else
+            {
+                // build a new standalone RoomDataModel from the Revit read-back
+                List<Models.RoomDataProperty> properties = [];
+                foreach (var property in revitRoom.Properties)
+                {
+                    properties.Add(new Models.RoomDataProperty(
+                        name: property.Name,
+                        parameterGUID: property.ParameterGUID,
+                        parameterName: property.ParameterName,
+                        value: property.Value,
+                        showInUI: property.ShowInUI,
+                        isReadOnly: property.IsReadOnly,
+                        isUniqueId: property.IsUniqueId,
+                        revitTakesPrecedenceAfterInitialPush: property.RevitTakesPrecedenceAfterInitialPush
+                    ));
+                }
+
+                Models.RoomDataProperty idProperty = new(
+                    name: revitRoom.Id.Name,
+                    parameterGUID: revitRoom.Id.ParameterGUID,
+                    parameterName: revitRoom.Id.ParameterName,
+                    value: revitRoom.Id.Value,
+                    showInUI: revitRoom.Id.ShowInUI,
+                    isReadOnly: revitRoom.Id.IsReadOnly,
+                    isUniqueId: true);
+
+                Models.RoomDataModel splitRoom = new(id: idProperty, otherProperties: properties);
+                splitRoom.AddMatchingRevitRoom(revitRoom);
+                splitRoom.UpdateReadProperties();
+
+                _splitRooms.Add(splitRoom);
+            }
+        }
+
+        /// <summary>
+        /// Removes a split room from _splitRooms when its Revit family instance has been wiped.
+        /// If the split room has no remaining MatchingRevitRooms after removal, the entry is deleted.
+        /// </summary>
+        public void RemovePlacedSplitRevitRoom(string splitRoomId, long revitElementId)
+        {
+            bool removeSplitRoom = false;
+            RoomDataModel roomToRemove = null;
+
+            foreach (var room in _splitRooms)
+            {
+                if (room.Id.Value == splitRoomId)
+                {
+                    room.MatchingRevitRooms.RemoveAll(x => x.RevitElementId == revitElementId);
+                    room.UpdateReadProperties();
+
+                    if (room.MatchingRevitRooms.Count == 0)
+                    {
+                        removeSplitRoom = true;
+                        roomToRemove = room;
+                    }
+                    break;
+                }
+            }
+
+            if (removeSplitRoom)
+                _splitRooms.Remove(roomToRemove);
+        }
+
+        /// <summary>
+        /// Adds a new split room to _splitRooms with ID-conflict checking.
+        /// </summary>
+        public void AddSplitRoom(Models.RoomDataModel room)
+        {
+            foreach (var existingRoom in _splitRooms)
+            {
+                if (existingRoom.ConflictsById(room))
+                {
+                    throw new Exceptions.RoomConflictException(existingRoom, room);
+                }
+            }
+            _splitRooms.Add(room);
+        }
+
+        /// <summary>
+        /// Returns all split rooms.
+        /// </summary>
+        public List<Models.RoomDataModel> GetAllSplitRooms()
+        {
+            return _splitRooms;
+        }
+
+        /// <summary>
+        /// Returns the next available split counter for the given parent room ID.
+        /// Scans _splitRooms for existing splits of the same parent and returns max + 1.
+        /// </summary>
+        public int GetNextSplitCounter(string parentRoomId)
+        {
+            // Always work from the base (non-split) ID so that selecting a split
+            // room and splitting again still finds all siblings correctly.
+            string baseParentId = Utilities.PushModeUtils.GetIdWithoutSplitModeIndicator(parentRoomId);
+
+            int max = 0;
+            foreach (var room in _splitRooms)
+            {
+                string baseId = Utilities.PushModeUtils.GetIdWithoutSplitModeIndicator(room.Id.Value);
+                if (baseId == baseParentId)
+                {
+                    int counter = Utilities.PushModeUtils.GetSplitCounterFromId(room.Id.Value);
+                    if (counter > max) max = counter;
+                }
+            }
+            return max + 1;
         }
 
         /// <summary>
@@ -305,6 +410,7 @@ namespace duHastNet.PushIt.Models
         {
             _rooms = [];
             _newRooms = [];
+            _splitRooms = [];
         }
     }
 }

@@ -72,16 +72,16 @@ namespace duHastNet.PushIt.ViewModels
 
             if (HasSelection)
             {
-                //get the selected row item
                 var selectedRow = SelectedItem;
                 var roomId = selectedRow[Models.Constants.ColumnHeaderRoomId.Replace(" ", "")].ToString();
                 SelectedRoom = RevitDataModel.GetAllRooms().FirstOrDefault(r => r.Id.Value == roomId);
 
-                //check matching revit rooms
                 if (SelectedRoom != null)
                 {
                     IsMatchingRevitRoomsEmpty = SelectedRoom.MatchingRevitRooms.Count == 0;
-                    IsMatchingSplitRoomsEmpty = SelectedRoom.MatchingSplitRevitRooms.Count == 0;
+                    // a split already exists if _splitRooms contains any entry whose parent ID matches
+                    IsMatchingSplitRoomsEmpty = !RevitDataModel.GetAllSplitRooms()
+                        .Any(r => Utilities.PushModeUtils.GetIdWithoutSplitModeIndicator(r.Id.Value) == SelectedRoom.Id.Value);
                 }
                 else
                 {
@@ -167,7 +167,6 @@ namespace duHastNet.PushIt.ViewModels
                 // Basic revit category Info
                 new(Models.Constants.ColumnHeaderRoomId.Replace(" ", "") , Models.Constants.ColumnHeaderRoomId, typeof(string)),
                 new(Models.Constants.ColumnHeaderRoomCount.Replace(" ", "") , Models.Constants.ColumnHeaderRoomCount, typeof(int)),
-                new(Models.Constants.ColumnHeaderRoomSplit.Replace(" ",""), Models.Constants.ColumnHeaderRoomSplit, typeof(int)),
 
             ];
 
@@ -238,15 +237,11 @@ namespace duHastNet.PushIt.ViewModels
         {
             var rowData = new DynamicRowData();
 
-            // Set the standard column values
             rowData[Models.Constants.ColumnHeaderRoomId.Replace(" ", "")] = roomEntry.Id.Value;
             rowData[Models.Constants.ColumnHeaderRoomCount.Replace(" ", "")] = roomEntry.MatchingRevitRooms.Count;
-            rowData[Models.Constants.ColumnHeaderRoomSplit.Replace(" ", "")] = roomEntry.MatchingSplitRevitRooms.Count;
-
 
             foreach (var property in roomEntry.Properties)
             {
-                // add all other property values
                 rowData[property.Name.Replace(" ", "")] = property.Value;
             }
 
@@ -316,7 +311,6 @@ namespace duHastNet.PushIt.ViewModels
             {
                 {Models.Constants.ColumnHeaderRoomId.Replace(" ", ""), vm => "NEW" },
                 {Models.Constants.ColumnHeaderRoomCount.Replace(" ", ""), vm =>  0},
-                {Models.Constants.ColumnHeaderRoomSplit.Replace(" ",""), vm => 0},
             };
 
             //add other properties
@@ -363,7 +357,6 @@ namespace duHastNet.PushIt.ViewModels
                 var room = rooms[i];
                 var rowData = Data[i];
 
-                // Set the value based on the property name
                 if (propertyName == Constants.ColumnHeaderRoomId.Replace(" ", ""))
                 {
                     rowData[propertyName] = room.Id.Value;
@@ -372,13 +365,8 @@ namespace duHastNet.PushIt.ViewModels
                 {
                     rowData[propertyName] = room.MatchingRevitRooms.Count;
                 }
-                else if (propertyName == Constants.ColumnHeaderRoomSplit.Replace(" ", ""))
-                {
-                    rowData[propertyName] = room.MatchingSplitRevitRooms.Count;
-                }
                 else
                 {
-                    // Handle custom properties
                     var property = room.Properties.FirstOrDefault(p => p.Name.Replace(" ", "") == propertyName);
                     if (property != null)
                     {
@@ -386,7 +374,6 @@ namespace duHastNet.PushIt.ViewModels
                     }
                     else
                     {
-                        // Fallback to default value
                         rowData[propertyName] = GetDefaultValueForColumn(availableColumn);
                     }
                 }

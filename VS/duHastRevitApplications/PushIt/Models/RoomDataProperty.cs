@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -25,7 +25,15 @@
 
 namespace duHastNet.PushIt.Models
 {
-    public class RoomDataProperty(string name, string parameterGUID, string parameterName, string value, bool showInUI, bool isReadOnly, bool isUniqueId) : Utilities.IRoomProperty
+    public class RoomDataProperty(
+        string name,
+        string parameterGUID,
+        string parameterName,
+        string value,
+        bool showInUI,
+        bool isReadOnly,
+        bool isUniqueId,
+        bool revitTakesPrecedenceAfterInitialPush = false) : Utilities.IRoomProperty
     {
         private readonly string _name = name;
         private readonly string _parameterGUID = parameterGUID;
@@ -34,6 +42,7 @@ namespace duHastNet.PushIt.Models
         private readonly bool _showInUI = showInUI;
         private readonly bool _isReadOnly = isReadOnly;
         private readonly bool _isUniqueId = isUniqueId;
+        private readonly bool _revitTakesPrecedenceAfterInitialPush = revitTakesPrecedenceAfterInitialPush;
 
         public string Value { get => _value; set => _value = value; }
         public string Name { get => _name; }
@@ -42,5 +51,13 @@ namespace duHastNet.PushIt.Models
         public bool ShowInUI { get => _showInUI; }
         public bool IsReadOnly { get => _isReadOnly; }
         public bool IsUniqueId { get => _isUniqueId; }
+
+        /// <summary>
+        /// When true, the data source value is written only on the first push to a split room.
+        /// On all subsequent pushes the value read back from Revit takes precedence,
+        /// preserving any changes made directly in Revit (e.g. a user-edited area).
+        /// Defaults to false. Must not be combined with IsReadOnly = true.
+        /// </summary>
+        public bool RevitTakesPrecedenceAfterInitialPush { get => _revitTakesPrecedenceAfterInitialPush; }
     }
 }

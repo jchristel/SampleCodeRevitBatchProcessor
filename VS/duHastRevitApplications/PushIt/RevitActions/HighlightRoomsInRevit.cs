@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -42,12 +42,6 @@ namespace duHastNet.PushIt.RevitActions
             {
                 // get the selected elements
                 foreach (var room in _roomToPush.MatchingRevitRooms)
-                {
-                    elementIds.Add(new ElementId(room.RevitElementId));
-                }
-
-                // add any split room
-                foreach (var room in _roomToPush.MatchingSplitRevitRooms)
                 {
                     elementIds.Add(new ElementId(room.RevitElementId));
                 }

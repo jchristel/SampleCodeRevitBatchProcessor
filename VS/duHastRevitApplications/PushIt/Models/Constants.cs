@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -40,13 +40,11 @@ namespace duHastNet.PushIt.Models
 
         public const string ColumnHeaderRoomId = "Id";
         public const string ColumnHeaderRoomCount = "Count";
-        public const string ColumnHeaderRoomSplit = "Split";
 
         public static readonly Dictionary<string, string> ColumnRoomsInfo = new()
         {
             {ColumnHeaderRoomId.Replace(" ",""), ColumnHeaderRoomId},
             {ColumnHeaderRoomCount.Replace(" ",""), ColumnHeaderRoomCount},
-            {ColumnHeaderRoomSplit.Replace(" ",""), ColumnHeaderRoomSplit},
         };
     }
 }

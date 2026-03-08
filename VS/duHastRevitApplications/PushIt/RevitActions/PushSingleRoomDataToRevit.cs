@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -52,11 +52,40 @@ namespace duHastNet.PushIt.RevitActions
                     sharedParameterIdsByGUIDs: sharedParameterIdsByGUIDs
                 );
 
+                // For split mode: compute the final split ID now, before writing to Revit,
+                // so the Revit parameter is stamped with the correct counter-based value.
+                // We pass PushMode.Push to UpdateSingleFamilyInstance so it writes the ID
+                // as-is (no further mangling), after overriding it on the room data.
+                string overrideSplitId = null;
+                Models.RoomDataModel roomDataToWrite = _roomToPush;
+
+                if (_roomsMainViewModel.PushOperationMode == duHastNet.PushIt.Utilities.PushMode.Split)
+                {
+                    string baseParentId = Utilities.PushModeUtils.GetIdWithoutSplitModeIndicator(_roomToPush.Id.Value);
+                    int counter = RevitModel.GetNextSplitCounter(baseParentId);
+                    overrideSplitId = Utilities.PushModeUtils.GetSplitModeIdValue(baseParentId, counter);
+
+                    // Build a shallow copy with the split ID pre-set so FamilyUpdate
+                    // writes the correct value to Revit without appending ::SPLIT again.
+                    var splitIdProp = new Models.RoomDataProperty(
+                        name: _roomToPush.Id.Name,
+                        parameterGUID: _roomToPush.Id.ParameterGUID,
+                        parameterName: _roomToPush.Id.ParameterName,
+                        value: overrideSplitId,
+                        showInUI: _roomToPush.Id.ShowInUI,
+                        isReadOnly: _roomToPush.Id.IsReadOnly,
+                        isUniqueId: true);
+
+                    roomDataToWrite = new Models.RoomDataModel(id: splitIdProp, otherProperties: _roomToPush.Properties);
+                }
+
                 bool updateFamily = Utilities.Revit.FamilyUpdate.UpdateSingleFamilyInstance(
                     doc: doc,
                     familyInstance: _pushTarget as Autodesk.Revit.DB.FamilyInstance,
-                    roomData: _roomToPush,
-                    pushOperationMode: _roomsMainViewModel.PushOperationMode,
+                    roomData: roomDataToWrite,
+                    pushOperationMode: overrideSplitId != null
+                        ? duHastNet.PushIt.Utilities.PushMode.Push  // ID already set; write it as-is
+                        : _roomsMainViewModel.PushOperationMode,
                     AddMessage: AddMessage
                 );
 
@@ -82,11 +111,14 @@ namespace duHastNet.PushIt.RevitActions
                 if (modelDataPrevious != null)
                 {
 
-                    //check if the previous room was a pushed room ,split room or a new room
+                    //check if the previous room was a pushed room, split room or a new room
                     if (Utilities.PushModeUtils.IsSplitRoomMode(modelDataPrevious.Id.Value))
                     {
-                        // remove the previous Revit room from the data model before adding it back in with new data
-                        RevitModel.RemovePlacedRevitRoom(modelDataPrevious.RevitElementId);
+                        // remove the previous split room from the split rooms list
+                        RevitModel.RemovePlacedSplitRevitRoom(
+                            splitRoomId: modelDataPrevious.Id.Value,
+                            revitElementId: modelDataPrevious.RevitElementId
+                        );
                     }
                     else if (Utilities.PushModeUtils.IsNewRoomMode(modelDataPrevious.Id.Value))
                     {
@@ -111,9 +143,9 @@ namespace duHastNet.PushIt.RevitActions
                 }
                 else if (_roomsMainViewModel.PushOperationMode == duHastNet.PushIt.Utilities.PushMode.Split)
                 {
-                    // add the updated Revit room to the data model but mkae sure its added as a split room
-                    var splitId = Utilities.PushModeUtils.GetSplitModeIdValue(_roomToPush.Id.Value);
-                    RevitModel.AddPlacedRevitRoom(splitId, modelDataUpdated);
+                    // overrideSplitId was computed before the Revit write and is already
+                    // stamped in the Revit parameter — register the same ID in _splitRooms.
+                    RevitModel.AddPlacedSplitRevitRoom(overrideSplitId, modelDataUpdated);
                 }
                 else if (_roomsMainViewModel.PushOperationMode == duHastNet.PushIt.Utilities.PushMode.New)
                 {

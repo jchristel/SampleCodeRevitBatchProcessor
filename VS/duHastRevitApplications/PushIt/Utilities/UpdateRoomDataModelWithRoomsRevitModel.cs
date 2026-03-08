@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -69,13 +69,16 @@ namespace duHastNet.PushIt.Utilities
         }
 
         /// <summary>
-        /// Attach the rooms from the revit model to the rooms in the data model based on the room id property
+        /// Attach the rooms from the revit model to the rooms in the data model based on the room id property.
+        /// Split rooms (IDs containing ::SPLIT::) are routed to the revitDataModel's _splitRooms list
+        /// as standalone records rather than being attached to the parent room.
         /// <\summary>
         public static List<Models.RoomDataModel> UpdateRoomDataModelWithRoomsRevitModel(
             List<Models.RoomDataModel> roomsDataModel,
             List<Models.RoomRevit> roomsRevit,
             string revitModelActiveDesignSetName,
-            string revitModelActiveDesignOptionName
+            string revitModelActiveDesignOptionName,
+            Models.RevitDataModel revitDataModel = null
         )
         {
             // build a dictionary of room revit id to store all rooms with the same id
@@ -96,20 +99,10 @@ namespace duHastNet.PushIt.Utilities
             {
                 // clear the list of matching rooms in revit from the room in the data model
                 roomDataModel.ClearMatchingRevitRooms();
-                roomDataModel.ClearMatchingSplitRevitRooms();
-
-                // check if the room id exists in the revit model or a split room
-                if (!roomsRevitById.ContainsKey(roomDataModel.Id.Value) &&
-                    !roomsRevitById.ContainsKey(Utilities.PushModeUtils.GetSplitModeIdValue(roomDataModel.Id.Value)))
-                {
-                    continue;
-                }
 
                 // check if the room id exists in the revit model
                 if (roomsRevitById.TryGetValue(roomDataModel.Id.Value, out List<Models.RoomRevit> matchingRooms))
                 {
-                    // iterate over all rooms with the same id and check if they match the active design set and design option
-                    // if they do, add them to the list of matching rooms in the data model
                     foreach (Models.RoomRevit revitRoom in matchingRooms)
                     {
                         if (AddRoom(
@@ -121,43 +114,37 @@ namespace duHastNet.PushIt.Utilities
                         }
                     }
 
-                    //Remove the matched families from the dictionary to speed up the search
                     roomsRevitById.Remove(roomDataModel.Id.Value);
-
                 }
+            }
 
-                //get the split room id 
-                string splitRoomId = Utilities.PushModeUtils.GetSplitModeIdValue(roomDataModel.Id.Value);
-
-                //check if there is an entry for the split room id in the dictionary
-                // if not, continue
-                if (roomsRevitById.TryGetValue(splitRoomId, out List<Models.RoomRevit> value))
+            // route any remaining split-suffixed Revit rooms into _splitRooms
+            if (revitDataModel != null)
+            {
+                foreach (var kvp in roomsRevitById)
                 {
-                    // check if the room id exists in the revit model as a split room
-                    foreach (Models.RoomRevit revitRoom in value)
+                    if (!Utilities.PushModeUtils.IsSplitRoomMode(kvp.Key))
+                        continue;
+
+                    foreach (Models.RoomRevit revitRoom in kvp.Value)
                     {
                         if (AddRoom(
                             revitRoom: revitRoom,
                             revitModelActiveDesignSetName: revitModelActiveDesignSetName,
                             revitModelActiveDesignOptionName: revitModelActiveDesignOptionName))
                         {
-                            roomDataModel.AddMatchingSplitRevitRoom(revitRoom);
+                            revitDataModel.AddPlacedSplitRevitRoom(kvp.Key, revitRoom);
                         }
                     }
-
-                    //Remove the matched families from the dictionary to speed up the search
-                    roomsRevitById.Remove(splitRoomId);
                 }
             }
 
-
-            // loop over all rooms in the data model and update the read only properties from matched Revit rooms
+            // update read-only properties for all SoA/new rooms
             foreach (Models.RoomDataModel roomDataModel in roomsDataModel)
             {
                 roomDataModel.UpdateReadProperties();
             }
 
-            // return the updated data model
             return roomsDataModel;
         }
     }

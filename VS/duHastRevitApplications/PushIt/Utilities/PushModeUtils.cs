@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -70,17 +70,35 @@ namespace duHastNet.PushIt.Utilities
         }
 
 
-        public static string GetSplitModeIdValue(string idValue)
+        public static string GetSplitModeIdValue(string idValue, int counter)
         {
             //check if the id value is empty
             if (string.IsNullOrEmpty(idValue))
             {
-                return SplitIDentifier;
+                return $"{SplitIDentifier}{Separator}{counter}";
             }
             else
             {
-                return $"{idValue}{Separator}{SplitIDentifier}";
+                return $"{idValue}{Separator}{SplitIDentifier}{Separator}{counter}";
             }
+        }
+
+        /// <summary>
+        /// Parses and returns the integer counter embedded in a split room ID.
+        /// e.g. "A.1.01::SPLIT::2" returns 2.
+        /// Returns 0 if the ID is not a valid split ID or the counter cannot be parsed.
+        /// </summary>
+        public static int GetSplitCounterFromId(string idValue)
+        {
+            if (string.IsNullOrEmpty(idValue)) return 0;
+            string[] parts = idValue.Split([Separator], StringSplitOptions.None);
+            // expected format: {parentId}::SPLIT::{counter}  → parts[0], parts[1]=="SPLIT", parts[2]==counter
+            if (parts.Length >= 3 && parts[parts.Length - 2] == SplitIDentifier)
+            {
+                if (int.TryParse(parts[parts.Length - 1], out int counter))
+                    return counter;
+            }
+            return 0;
         }
 
         public static string GetIdWithoutSplitModeIndicator(string idValue)

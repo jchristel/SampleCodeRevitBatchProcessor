@@ -69,6 +69,15 @@ namespace duHastNet.PushIt.Commands
                                 actionUpdate.Execute(doc);
                             _revitDataModel.LogMessages(actionUpdate.GetLogMessagesAndLogTypes());
 
+                            // sync split rooms from Revit into _splitRooms
+                            UpdateRoomDataModelWithSplitRooms actionSplit = new(
+                                _revitDataModel,
+                                _roomsMainViewModel
+                            );
+                            (string messageActionSplit, Utils.WPF.Stores.MessageTypes messageActionTypeSplit) =
+                                actionSplit.Execute(doc);
+                            _revitDataModel.LogMessages(actionSplit.GetLogMessagesAndLogTypes());
+
                             // Refresh room data with current Revit model state
                             RefreshRoomDataWithRevitData action = new(
                                 revitModel: _revitDataModel,
@@ -180,6 +189,7 @@ namespace duHastNet.PushIt.Commands
             List<string> headerRow1 = [];
             List<string> headerRow2 = [];
             List<string> headerRow3 = [];
+            List<string> headerRow4 = [];
 
             foreach (var property in properties)
             {
@@ -187,23 +197,21 @@ namespace duHastNet.PushIt.Commands
                 headerRow1.Add(property.ParameterGUID);
                 headerRow2.Add(property.IsReadOnly.ToString());
                 headerRow3.Add(property.ShowInUI.ToString());
+                headerRow4.Add(property.RevitTakesPrecedenceAfterInitialPush.ToString());
             }
 
-            // Append synthetic count columns
+            // Append synthetic count column
             headerRow0.Add("Count");
             headerRow1.Add(string.Empty);
             headerRow2.Add(string.Empty);
             headerRow3.Add(string.Empty);
-
-            headerRow0.Add("Split Count");
-            headerRow1.Add(string.Empty);
-            headerRow2.Add(string.Empty);
-            headerRow3.Add(string.Empty);
+            headerRow4.Add(string.Empty);
 
             headerRows.Add(headerRow0);
             headerRows.Add(headerRow1);
             headerRows.Add(headerRow2);
             headerRows.Add(headerRow3);
+            headerRows.Add(headerRow4);
             return headerRows;
         }
 
@@ -214,8 +222,7 @@ namespace duHastNet.PushIt.Commands
         private List<string> BuildDataRowFromRoom(
             Models.RoomBase room,
             List<Models.RoomDataProperty> properties,
-            int countPushed = 0,
-            int countSplit = 0)
+            int countPushed = 0)
         {
             List<string> dataRow = [];
 
@@ -226,7 +233,6 @@ namespace duHastNet.PushIt.Commands
             }
 
             dataRow.Add(countPushed.ToString());
-            dataRow.Add(countSplit.ToString());
 
             return dataRow;
         }
@@ -242,8 +248,7 @@ namespace duHastNet.PushIt.Commands
 
             foreach (Models.RoomDataModel room in rooms)
             {
-                if (room.MatchingRevitRooms.Count == 0 &&
-                    room.MatchingSplitRevitRooms.Count == 0)
+                if (room.MatchingRevitRooms.Count == 0)
                 {
                     dataRows.Add(BuildDataRowFromRoom(room, properties));
                 }
@@ -251,9 +256,6 @@ namespace duHastNet.PushIt.Commands
                 {
                     foreach (var matched in room.MatchingRevitRooms)
                         dataRows.Add(BuildDataRowFromRoom(matched, properties, countPushed: 1));
-
-                    foreach (var split in room.MatchingSplitRevitRooms)
-                        dataRows.Add(BuildDataRowFromRoom(split, properties, countSplit: 1));
                 }
             }
 

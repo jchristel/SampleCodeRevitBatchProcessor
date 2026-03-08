@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -142,11 +142,18 @@ namespace duHastNet.PushIt.Commands
                             //write messages to log...
                             _revitDataModel.LogMessages(actionUpdateTwo.GetLogMessagesAndLogTypes());
 
+                            // sync split rooms after wipe
+                            UpdateRoomDataModelWithSplitRooms actionSplit = new(_revitDataModel, _roomsMainViewModel);
+                            (string messageActionSplit, Utils.WPF.Stores.MessageTypes messageActionTypeSplit) = actionSplit.Execute(doc);
+
+                            //write messages to log...
+                            _revitDataModel.LogMessages(actionSplit.GetLogMessagesAndLogTypes());
+
                             // refresh the rooms data model with the rooms from the revit model
                             RefreshRoomDataWithRevitData refreshRoomDataWithRevitData = new(
                                 revitModel: _revitDataModel,
                                 roomsMainViewModel: _roomsMainViewModel,
-                                revitMockRooms: actionUpdateTwo.CurrentMockRoomsData //re-use mock room data to speed things up
+                                revitMockRooms: actionSplit.CurrentMockRoomsData //re-use mock room data to speed things up
                             );
 
                             //execute the refresh action
@@ -157,9 +164,9 @@ namespace duHastNet.PushIt.Commands
 
                             // return the message to the caller
                             return (
-                                $"{messageActionWipe}\n{messageActionUpdateTwo}\n{messageActionRefresh}",
+                                $"{messageActionWipe}\n{messageActionUpdateTwo}\n{messageActionSplit}\n{messageActionRefresh}",
                                 Utilities.MessageActionTypesUtils.CombineMessageActionType(
-                                    [messageActionTypeWipe, messageActionTypeUpdateTwo, messageActionTypeRefresh]
+                                    [messageActionTypeWipe, messageActionTypeUpdateTwo, messageActionTypeSplit, messageActionTypeRefresh]
                                 )
                             );
                         }

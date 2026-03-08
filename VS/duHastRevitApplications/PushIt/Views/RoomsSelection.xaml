@@ -60,6 +60,7 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <pushItConverter:CountConverter x:Key="CountConverter"/>
         <pushItConverter:EnumToBooleanConverter x:Key="ModusConverter" />
+        <pushItConverter:RoomRowBackgroundConverter x:Key="RoomRowBackgroundConverter"/>
     </UserControl.Resources>
 
     <Grid Margin="10 10 10 10">
@@ -152,6 +153,22 @@
                         </DataTrigger>
                         <DataTrigger Binding="{Binding Values[Count]}" Value="1">
                             <Setter Property="Background" Value="LightGray"/>
+                        </DataTrigger>
+                        <!-- New room rows: light green (fires after Count triggers) -->
+                        <DataTrigger Value="NewRoom">
+                            <DataTrigger.Binding>
+                                <Binding Path="Values[Id]"
+                                         Converter="{StaticResource RoomRowBackgroundConverter}"/>
+                            </DataTrigger.Binding>
+                            <Setter Property="Background" Value="#DFF0D8"/>
+                        </DataTrigger>
+                        <!-- Split room rows: amber (fires after new room trigger) -->
+                        <DataTrigger Value="SplitRoom">
+                            <DataTrigger.Binding>
+                                <Binding Path="Values[Id]"
+                                         Converter="{StaticResource RoomRowBackgroundConverter}"/>
+                            </DataTrigger.Binding>
+                            <Setter Property="Background" Value="#FFF3CD"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>

@@ -73,5 +73,18 @@ namespace duHastNet.PushIt.Models.Drofus
         /// </para>
         /// </summary>
         public List<DrofusPropertyMap> PropertyMappings { get; set; } = new List<DrofusPropertyMap>();
+
+        /// <summary>
+        /// Names of properties for which <c>RevitTakesPrecedenceAfterInitialPush</c> is <c>true</c>.
+        /// The user sets these via checkboxes in the drofus data source UI panel.
+        /// On the first push to a split room, the source-of-accommodation value is written.
+        /// On every subsequent push the value stored in Revit takes precedence and the
+        /// SoA value is ignored for that property.
+        /// <para>
+        /// Serialised to the PushIt settings JSON alongside the connection fields.
+        /// Defaults to an empty list — all properties follow SoA by default.
+        /// </para>
+        /// </summary>
+        public List<string> RevitPrecedencePropertyNames { get; set; } = new List<string>();
     }
 }

@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -33,13 +33,7 @@ namespace duHastNet.PushIt.Models
         /// </summary>
         private List<RoomRevit> _matchingRevitRooms;
 
-        /// <summary>
-        /// List of matching rooms which are result of a split operation
-        /// </summary>
-        private List<RoomRevit> _matchingSplitRevitRooms;
-
         public List<RoomRevit> MatchingRevitRooms { get => _matchingRevitRooms; set => _matchingRevitRooms = value; }
-        public List<RoomRevit> MatchingSplitRevitRooms { get => _matchingSplitRevitRooms; set => _matchingSplitRevitRooms = value; }
 
         /// <summary>
         /// Clears the list of matching rooms
@@ -50,36 +44,11 @@ namespace duHastNet.PushIt.Models
         }
 
         /// <summary>
-        /// Clears the list of matching rooms which are result of a split operation
-        /// </summary>
-        public void ClearMatchingSplitRevitRooms()
-        {
-            _matchingSplitRevitRooms.Clear();
-        }
-
-        /// <summary>
-        /// Clears the list of matching rooms and matching split rooms
-        /// </summary>
-        public void ClearAllMatchingRevitRooms()
-        {
-            ClearMatchingRevitRooms();
-            ClearMatchingSplitRevitRooms();
-        }
-
-        /// <summary>
         /// Adds a matching room to the list of matching rooms
         /// </summary>
         public void AddMatchingRevitRoom(RoomRevit revitRoom)
         {
             _matchingRevitRooms.Add(revitRoom);
-        }
-
-        /// <summary>
-        /// Adds a matching room to the list of matching split rooms
-        /// </summary>
-        public void AddMatchingSplitRevitRoom(RoomRevit revitRoom)
-        {
-            _matchingSplitRevitRooms.Add(revitRoom);
         }
 
         /// <summary>
@@ -101,102 +70,45 @@ namespace duHastNet.PushIt.Models
         }
 
         /// <summary>
-        /// Returns a list of unique values for a given property from each matching split room
+        /// Updates property values that are sourced from Revit rather than the data source.
+        /// This covers two cases:
+        /// <list type="bullet">
+        ///   <item><description>
+        ///     <see cref="RoomDataProperty.IsReadOnly"/> — always read from Revit (e.g. computed
+        ///     values like area that Revit owns entirely).
+        ///   </description></item>
+        ///   <item><description>
+        ///     <see cref="RoomDataProperty.RevitTakesPrecedenceAfterInitialPush"/> — written from
+        ///     the data source on the first push, but thereafter the value stored in Revit is
+        ///     treated as authoritative and overrides the data-source value on every refresh.
+        ///   </description></item>
+        /// </list>
+        /// If one matching Revit room exists, both property kinds are updated from it.
+        /// If no match exists, both property kinds are cleared to empty string.
+        /// Split rooms are standalone <see cref="RoomDataModel"/> records and use this same logic.
         /// </summary>
-        public List<string> GetUniquePropertyValueFromEachMatchingSplitRevitRoom(string propertyName)
-        {
-            List<string> values = [];
-            foreach (Models.RoomRevit revitRoom in MatchingSplitRevitRooms)
-            {
-                Models.RoomDataProperty property = revitRoom.Properties.Find(x => x.Name == propertyName);
-                if (property != null)
-                {
-                    if (!values.Contains(property.Value))
-                        values.Add(property.Value);
-                }
-            }
-            return values;
-        }
-
-        /// <summary>
-        /// Returns a list of unique values for a given property from all matching rooms and matching split rooms
-        /// </summary>
-        public List<string> GetUniquePropertyValueFromAllMatchingRevitRoom(string propertyName)
-        {
-            List<string> valuesMatchingRooms = GetUniquePropertyValueFromEachMatchingRevitRoom(propertyName);
-            List<string> valuesMatchingSplitRooms = GetUniquePropertyValueFromEachMatchingSplitRevitRoom(propertyName);
-            List<string> values = [];
-
-            // add the values from the matching rooms
-            foreach (string value in valuesMatchingRooms)
-            {
-                if (!values.Contains(value))
-                    values.Add(value);
-            }
-
-            // add the values from the matching split rooms
-            foreach (string value in valuesMatchingSplitRooms)
-            {
-                if (!values.Contains(value))
-                    values.Add(value);
-            }
-
-            return values;
-        }
-
-        /// <summary>
-        /// Update a read property
-        /// </summary>
-        /// <param name="propertyName"></param>
-        /// <param name="value"></param>
         public void UpdateReadProperties()
         {
-            // if there is only one matching room and no matching split rooms, update the read only properties from the matching room
-            if (MatchingRevitRooms.Count == 1 && MatchingSplitRevitRooms.Count == 0)
+            if (MatchingRevitRooms.Count == 1)
             {
                 Models.RoomRevit revitRoom = MatchingRevitRooms[0];
                 foreach (Models.RoomDataProperty property in Properties)
                 {
-                    if (property.IsReadOnly)
+                    if (property.IsReadOnly || property.RevitTakesPrecedenceAfterInitialPush)
                     {
-                        property.Value = revitRoom.Properties.Find(x => x.Name == property.Name).Value;
+                        Models.RoomDataProperty revitProperty = revitRoom.Properties.Find(x => x.Name == property.Name);
+                        if (revitProperty != null)
+                            property.Value = revitProperty.Value;
                     }
                 }
             }
-            // if ther are no matching rooms there cant (should not be ?? )be any matching split rooms
-            else if (MatchingRevitRooms.Count == 0 && MatchingSplitRevitRooms.Count == 0)
+            else if (MatchingRevitRooms.Count == 0)
             {
-                // if there is no matching room, clear the read only properties
                 foreach (Models.RoomDataProperty property in Properties)
                 {
-                    if (property.IsReadOnly)
+                    if (property.IsReadOnly || property.RevitTakesPrecedenceAfterInitialPush)
                     {
                         property.Value = "";
-                    }
-                }
-            }
-            else
-            // if there are multiple matching rooms, put 'varies' into read only properties iv values are different between matching rooms
-            {
-                foreach (Models.RoomDataProperty property in Properties)
-                {
-                    if (property.IsReadOnly)
-                    {
-                        // get the value of this property from each matching room...if its the same for each display that value
-                        // otherwise display 'varies'
-
-                        // get the unique values for this property from each matching room
-                        List<string> propertyValues = GetUniquePropertyValueFromAllMatchingRevitRoom(property.Name);
-
-                        //check if more than one value
-                        if (propertyValues.Count == 1)
-                        {
-                            property.Value = propertyValues[0];
-                        }
-                        else
-                        {
-                            property.Value = "varies";
-                        }
                     }
                 }
             }
@@ -266,8 +178,6 @@ namespace duHastNet.PushIt.Models
         {
             // initialize the list of matching rooms
             _matchingRevitRooms = [];
-            // initialize the list of matching split rooms
-            _matchingSplitRevitRooms = [];
             //initialise the ID value
             Id = new RoomDataProperty("Id", string.Empty, string.Empty, string.Empty, false, false, true);
         }
@@ -280,9 +190,6 @@ namespace duHastNet.PushIt.Models
 
             // initialize the list of matching rooms
             _matchingRevitRooms = [];
-
-            // initialize the list of matching split rooms
-            _matchingSplitRevitRooms = [];
         }
     }
 }

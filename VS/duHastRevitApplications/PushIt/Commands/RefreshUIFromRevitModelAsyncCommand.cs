@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -102,6 +102,17 @@ namespace duHastNet.PushIt.Commands
                             //write messages to log...
                             _revitDataModel.LogMessages(actionUpdate.GetLogMessagesAndLogTypes());
 
+                            // sync split rooms from Revit into _splitRooms
+                            UpdateRoomDataModelWithSplitRooms actionSplit = new(
+                                _revitDataModel,
+                                _roomsMainViewModel
+                            );
+
+                            (string messageActionSplit, Utils.WPF.Stores.MessageTypes messageActionTypeSplit) = actionSplit.Execute(doc);
+
+                            //write messages to log...
+                            _revitDataModel.LogMessages(actionSplit.GetLogMessagesAndLogTypes());
+
                             // Execute the action to refresh the room data with the Revit data
                             RefreshRoomDataWithRevitData action = new(
                                 revitModel: _revitDataModel,
@@ -116,8 +127,8 @@ namespace duHastNet.PushIt.Commands
 
                             // return the message to the caller
                             return (
-                                $"{messageActionUpdate}\n{messageAction}",
-                                Utilities.MessageActionTypesUtils.CombineMessageActionType([messageActionTypeUpdate, messageActionType])
+                                $"{messageActionUpdate}\n{messageActionSplit}\n{messageAction}",
+                                Utilities.MessageActionTypesUtils.CombineMessageActionType([messageActionTypeUpdate, messageActionTypeSplit, messageActionType])
                             );
                         }
                         catch (Exception ex)

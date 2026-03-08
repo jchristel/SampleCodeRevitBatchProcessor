@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -38,7 +38,7 @@ namespace duHastNet.PushIt.RevitActions
         /// <param name="revitRooms">push it mock room intances</param>
         /// <param name="doc">Revit document</param>
         /// <returns></returns>
-        public Dictionary<string, (RoomDataModel, List<FamilyInstance>)> GetFamilyInstancesWithIdInDataModel(List<Models.RoomDataModel> roomsDataModel, List<duHastNet.PushIt.Models.RoomRevit> revitRooms, Document doc)
+        public Dictionary<string, (RoomDataModel, List<FamilyInstance>)> GetFamilyInstancesWithIdInDataModel(List<Models.RoomDataModel> roomsDataModel, List<duHastNet.PushIt.Models.RoomRevit> revitRooms, Document doc, Models.RevitDataModel RevitModel)
         {
             // build a dictioanry of family instances that contain valid data ( valid data is a family instance where the room id has a match in the rooms data model)
             // the dictionary key is the room id and the value is a tuple of the room data model and a list of revit family instances
@@ -49,10 +49,11 @@ namespace duHastNet.PushIt.RevitActions
                 // check a pushed room ( id matches the room data model id )
                 if (roomsDataModel.Exists(x => x.Id.Value == revitRoomInstance.Id.Value))
                 {
-                    //if match check if any parameter needs updating 
                     var room = roomsDataModel.Find(x => x.Id.Value == revitRoomInstance.Id.Value);
 
                     // compare the two and if different update
+                    // note: properties with RevitTakesPrecedenceAfterInitialPush are skipped
+                    // during the actual write in FamilyUpdate.UpdateProperties
                     if (!room.IsEqualInPropertNameAndValue(revitRoomInstance))
                     {
                         if (currentFamilyInstances.TryGetValue(revitRoomInstance.Id.Value, out (RoomDataModel, List<FamilyInstance>) value))
@@ -62,7 +63,7 @@ namespace duHastNet.PushIt.RevitActions
                         else
                         {
                             currentFamilyInstances[revitRoomInstance.Id.Value] = (
-                                roomsDataModel.Find(x => x.Id.Value == revitRoomInstance.Id.Value),
+                                room,
                                 [doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance]
                             );
                         }
@@ -83,39 +84,34 @@ namespace duHastNet.PushIt.RevitActions
                 }
                 else if (Utilities.PushModeUtils.IsSplitRoomMode(revitRoomInstance.Id.Value))
                 {
-                    //a split room, remove the split from the id value
-                    string idValue = Utilities.PushModeUtils.GetIdWithoutSplitModeIndicator(revitRoomInstance.Id.Value);
+                    string parentIdValue = Utilities.PushModeUtils.GetIdWithoutSplitModeIndicator(revitRoomInstance.Id.Value);
+                    var parentRoom = roomsDataModel.Find(x => x.Id.Value == parentIdValue);
 
-                    if (roomsDataModel.Exists(x => x.Id.Value == idValue))
+                    if (parentRoom == null) continue;
+
+                    // compare parent SoA data against current Revit instance
+                    // note: properties with RevitTakesPrecedenceAfterInitialPush are skipped
+                    // during the actual write in FamilyUpdate.UpdateProperties
+                    if (!parentRoom.IsEqualInPropertNameAndValue(revitRoomInstance))
                     {
-
-                        // get the data model of the original room
-                        var originalRoom = roomsDataModel.Find(x => x.Id.Value == idValue);
-
-                        // compare the two and if different update
-                        if (!originalRoom.IsEqualInPropertNameAndValue(revitRoomInstance))
+                        if (currentFamilyInstances.TryGetValue(revitRoomInstance.Id.Value, out (RoomDataModel, List<FamilyInstance>) value))
                         {
-                            // add the split room to the family instances
-                            if (currentFamilyInstances.TryGetValue(idValue, out (RoomDataModel, List<FamilyInstance>) value))
-                            {
-                                value.Item2.Add(doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance);
-                            }
-                            else
-                            {
-                                currentFamilyInstances[idValue] = (
-                                    roomsDataModel.Find(x => x.Id.Value == idValue),
-                                    [doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance]
-                                );
-                            }
+                            value.Item2.Add(doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance);
                         }
                         else
                         {
-                            // add log message
-                            AddMessage(
-                                $"Element with Revit id [{revitRoomInstance.RevitElementId}] and push it id [{revitRoomInstance.Id.Value}] has no properties requiring updates. Skipping it",
-                                Utils.WPF.Stores.MessageTypes.Information
+                            currentFamilyInstances[revitRoomInstance.Id.Value] = (
+                                parentRoom,
+                                [doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance]
                             );
                         }
+                    }
+                    else
+                    {
+                        AddMessage(
+                            $"Element with Revit id [{revitRoomInstance.RevitElementId}] and push it id [{revitRoomInstance.Id.Value}] has no properties requiring updates. Skipping it",
+                            Utils.WPF.Stores.MessageTypes.Information
+                        );
                     }
                 }
             }
@@ -277,7 +273,8 @@ namespace duHastNet.PushIt.RevitActions
             Dictionary<string, (RoomDataModel, List<FamilyInstance>)> currentFamilyInstances = GetFamilyInstancesWithIdInDataModel(
                 roomsDataModel,
                 revitRooms,
-                doc);
+                doc,
+                RevitModel);
 
             // check if any family instances with id's were found in the model
             if (currentFamilyInstances.Count == 0)

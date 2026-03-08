@@ -107,6 +107,17 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
         /// </summary>
         public bool HasWarning => _validationState.HasWarning;
 
+        /// <summary>
+        /// When <c>true</c>, the value written to Revit on the first split-room push
+        /// is treated as authoritative on all subsequent pushes. The SoA/drofus value
+        /// is ignored for this property from that point forward.
+        /// <para>
+        /// Bound to the checkbox in the per-parameter row of the drofus UI panel.
+        /// Persisted via <see cref="DrofusDataSourceSettings.RevitPrecedencePropertyNames"/>.
+        /// </para>
+        /// </summary>
+        public bool RevitTakesPrecedenceAfterInitialPush { get; set; }
+
         // ── Constructor ───────────────────────────────────────────────────────
 
         /// <summary>

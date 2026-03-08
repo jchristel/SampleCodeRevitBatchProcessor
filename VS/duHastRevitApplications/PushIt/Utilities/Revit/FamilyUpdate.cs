@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -48,7 +48,8 @@ namespace duHastNet.PushIt.Utilities.Revit
             Models.RoomDataModel roomData,
             duHastNet.PushIt.Utilities.PushMode pushMode,
             Action<string, Utils.WPF.Stores.MessageTypes> AddMessage,
-            bool updateId = true)
+            bool updateId = true,
+            bool overrideRevitPrecedence = false)
         {
 
             // set up a variable to store the name of the property that is being updated in case of an exception
@@ -61,12 +62,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                 if (updateId)
                 {
                     string room_id = roomData.Id.Value;
-                    if (pushMode == PushMode.Split)
-                    {
-
-                        room_id = PushModeUtils.GetSplitModeIdValue(idValue: room_id);
-                    }
-                    else if (pushMode == PushMode.New)
+                    if (pushMode == PushMode.New)
                     {
                         room_id = PushModeUtils.GetNewModeIdValue();
                     }
@@ -93,6 +89,15 @@ namespace duHastNet.PushIt.Utilities.Revit
                     if (property.IsReadOnly)
                     {
                         AddMessage($"Skipping read only property [{property.Name}] for family instance [{familyInstance.Id}]", Utils.WPF.Stores.MessageTypes.Warning);
+                        continue;
+                    }
+
+                    // skip properties where Revit takes precedence — UNLESS this is an explicit
+                    // push operation (overrideRevitPrecedence = true), in which case the user
+                    // intention is to overwrite Revit with the data-source value.
+                    if (property.RevitTakesPrecedenceAfterInitialPush && !overrideRevitPrecedence)
+                    {
+                        AddMessage($"Skipping property [{property.Name}] for family instance [{familyInstance.Id}] — Revit takes precedence after initial push", Utils.WPF.Stores.MessageTypes.Information);
                         continue;
                     }
 
@@ -161,8 +166,10 @@ namespace duHastNet.PushIt.Utilities.Revit
             {
                 try
                 {
-                    //update single family instance
-                    return UpdateProperties(doc, familyInstance, roomData, pushOperationMode, AddMessage);
+                    // overrideRevitPrecedence = true: the user explicitly pressed Push,
+                    // so the data-source value always wins — even for properties marked
+                    // RevitTakesPrecedenceAfterInitialPush.
+                    return UpdateProperties(doc, familyInstance, roomData, pushOperationMode, AddMessage, overrideRevitPrecedence: true);
                 }
                 catch (Exception ex)
                 {

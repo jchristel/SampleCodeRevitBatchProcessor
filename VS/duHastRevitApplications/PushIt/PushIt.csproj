@@ -86,7 +86,6 @@
     <Folder Include="DataSources\Drofus\ViewModels\" />
     <Folder Include="DataSources\Drofus\Views\" />
     <Folder Include="Interfaces\" />
-    <Folder Include="RevitActions\Drofus\" />
     <Folder Include="ViewModels\DataSource\Drofus\" />
   </ItemGroup>
 </Project>

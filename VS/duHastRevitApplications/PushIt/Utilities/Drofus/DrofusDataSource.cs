@@ -49,7 +49,7 @@ namespace duHastNet.PushIt.Utilities.Drofus
 
             ValidateSettings(drofus);
 
-            // The caller (Main / ValidateDrofusOnStartup) guarantees that
+            // The caller (Main / ValidateDrofusMappingsOnStartup) guarantees that
             // exactly one mapping carries IsUniqueId before GetRoomsData is called.
             // We guard here as a belt-and-braces check.
             DrofusPropertyMap? idMapping = drofus.PropertyMappings
@@ -114,6 +114,12 @@ namespace duHastNet.PushIt.Utilities.Drofus
                         // drofus, never edited manually in the grid.
                         bool isReadOnly = mapping.FlowDirection == MappingFlowDirection.RevitToDrofus;
 
+                        // Carry through the RevitTakesPrecedenceAfterInitialPush flag
+                        // from the persisted mapping settings so that RefreshRoomDataWithRevitData
+                        // can overwrite these property values with the current Revit value.
+                        bool revitTakesPrecedence = drofus.RevitPrecedencePropertyNames != null
+                            && drofus.RevitPrecedencePropertyNames.Contains(mapping.RevitParameterName);
+
                         properties.Add(new RoomDataProperty(
                             name: mapping.RevitParameterName,
                             parameterGUID: mapping.RevitParameterGuid,
@@ -121,7 +127,8 @@ namespace duHastNet.PushIt.Utilities.Drofus
                             value: fieldValue,
                             showInUI: true,
                             isReadOnly: isReadOnly,
-                            isUniqueId: false));
+                            isUniqueId: false,
+                            revitTakesPrecedenceAfterInitialPush: revitTakesPrecedence));
                     }
 
                     rooms.Add(new RoomDataModel(idProperty, properties));
@@ -228,9 +235,13 @@ namespace duHastNet.PushIt.Utilities.Drofus
 
             foreach (DrofusPropertyMap mapping in drofus.PropertyMappings)
             {
-                // Mirror the same read-only logic as GetRoomsData: RevitToDrofus
-                // mappings are read-only because Revit is the source of truth.
+                // RevitToDrofus mappings are read-only: Revit is the source of truth.
                 bool isReadOnly = mapping.FlowDirection == MappingFlowDirection.RevitToDrofus;
+
+                // Check whether the user has flagged this property to use the stored
+                // Revit value on subsequent split-room pushes rather than the SoA value.
+                bool revitTakesPrecedence = drofus.RevitPrecedencePropertyNames != null
+                    && drofus.RevitPrecedencePropertyNames.Contains(mapping.RevitParameterName);
 
                 properties.Add(new RoomDataProperty(
                     name: mapping.RevitParameterName,
@@ -239,7 +250,8 @@ namespace duHastNet.PushIt.Utilities.Drofus
                     value: string.Empty,
                     showInUI: true,
                     isReadOnly: isReadOnly,
-                    isUniqueId: mapping.IsUniqueId));
+                    isUniqueId: mapping.IsUniqueId,
+                    revitTakesPrecedenceAfterInitialPush: revitTakesPrecedence));
             }
 
             return properties;

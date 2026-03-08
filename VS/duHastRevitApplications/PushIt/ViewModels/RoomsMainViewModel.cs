@@ -72,6 +72,7 @@ namespace duHastNet.PushIt.ViewModels
         private readonly Commands.PushAllRoomsInRevitAsyncCommand _updateAllRoomsCommand;
         private readonly Commands.WipeSelectedRevitRoomInstancesAsyncCommand _wipeSelectedRoomDataCommand;
         private readonly Commands.SaveRoomDataAsyncCommand _saveDataCommand;
+        private readonly CommunityToolkit.Mvvm.Input.RelayCommand _navigateToSettingsCommand;
 
         // ── INotifyDataErrorInfo ──────────────────────────────────────────────────
 
@@ -98,11 +99,11 @@ namespace duHastNet.PushIt.ViewModels
 
         /// <summary>
         /// The active Revit document title, read from <see cref="Models.RevitDataModel.RevitDocumentTitle"/>.
-        /// Long titles are split into lines of at most 16 characters so the blue
+        /// Long titles are split into lines of at most 30 characters so the blue
         /// header row can display them without overflowing.
         /// </summary>
         public string RevitDocumentTitle =>
-            WrapAtWidth(_revitDataModel.RevitDocumentTitle, 16);
+            WrapAtWidth(_revitDataModel.RevitDocumentTitle, 30);
 
         /// <summary>
         /// Splits <paramref name="text"/> into lines of at most
@@ -215,6 +216,7 @@ namespace duHastNet.PushIt.ViewModels
 
         // ── ICommand Wrappers ─────────────────────────────────────────────────────
 
+        public ICommand NavigateToSettingsCommand => _navigateToSettingsCommand;
         public ICommand RefreshGUICommand => _raiseRefreshGUICommand.Command;
         public ICommand PushSingleRoomCommand => _raisePushSingleRoomCommand.Command;
         public ICommand ReloadDataCommand => _raiseReloadDataCommand.Command;
@@ -386,17 +388,11 @@ namespace duHastNet.PushIt.ViewModels
             // Create host ViewModel, load current settings into it, and subscribe
             // to its validation changes so HasErrors and command CanExecute stay
             // in sync. This replaces the old DataFilePath / DataFilePathValid pair.
-            DataSourceViewModel = new DataSourceViewModel(_revitDataModel.Settings.DataSource);
+            DataSourceViewModel = new DataSourceViewModel(
+                _revitDataModel.Settings.DataSource,
+                _revitDataModel,
+                _revitDataModel.GetAllAvailableParameters());
             DataSourceViewModel.LoadFromSettings(_revitDataModel.Settings.DataSource);
-
-            // Wire the Revit parameter list into the drofus control ViewModel so the
-            // Add/Edit mapping dialog can populate its parameter ComboBox.
-            if (DataSourceViewModel.CurrentSourceControlViewModel
-                    is ViewModels.DataSource.DrofusDataSourceControlViewModel drofusVm)
-            {
-                drofusVm.AvailableRevitParameters = _revitDataModel.GetAllAvailableParameters();
-            }
-
 
             DataSourceViewModel.PropertyChanged += OnDataSourceViewModelPropertyChanged;
             RegisterChild(DataSourceViewModel);
@@ -441,6 +437,20 @@ namespace duHastNet.PushIt.ViewModels
                 revitDataModel: _revitDataModel);
 
             _pushOperationMode = PushIt.Utilities.PushMode.Push;
+
+            // Navigate-to-settings command.
+            _navigateToSettingsCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(
+                () =>
+                {
+                    var globalMsgVm = new duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);
+                    var settingsVm = new SettingsViewModel(
+                        _revitDataModel,
+                        _navigationStore,
+                        _stateStore,
+                        _messageStore,
+                        globalMsgVm);
+                    _navigationStore.CurrentViewModel = settingsVm;
+                });
 
             // Trigger initial Revit model refresh
             _raiseRefreshGUICommand.Command.Execute(null);

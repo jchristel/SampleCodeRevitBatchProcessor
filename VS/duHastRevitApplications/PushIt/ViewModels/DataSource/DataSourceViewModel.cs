@@ -25,6 +25,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using duHastNet.PushIt.Models;
 using duHastNet.Utils.WPF.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
@@ -58,6 +59,19 @@ namespace duHastNet.PushIt.ViewModels.DataSource
         /// provider-specific config directly (e.g. DrofusDataSourceSettings).
         /// </summary>
         private readonly DataSourceSettings _settings;
+
+        /// <summary>
+        /// Passed through to <see cref="DrofusDataSourceControlViewModel"/> at
+        /// construction so it can keep the parameter store in sync with mappings.
+        /// </summary>
+        private readonly RevitDataModel? _revitDataModel;
+
+        /// <summary>
+        /// Revit shared parameters available in the current document.
+        /// Passed through to <see cref="DrofusDataSourceControlViewModel"/> at
+        /// construction so the Add/Edit mapping dialog can populate its ComboBox.
+        /// </summary>
+        private readonly IReadOnlyList<AvailableParameter> _availableRevitParameters;
 
         #endregion
 
@@ -136,7 +150,10 @@ namespace duHastNet.PushIt.ViewModels.DataSource
             {
                 DataSourceType.None => null,
                 DataSourceType.Csv => new CsvDataSourceControlViewModel(_settings),
-                DataSourceType.Drofus => new DrofusDataSourceControlViewModel(_settings),
+                DataSourceType.Drofus => new DrofusDataSourceControlViewModel(
+                    _settings,
+                    _revitDataModel,
+                    _availableRevitParameters),
                 _ => throw new ArgumentException($"Unknown source type: {value}")
             };
 
@@ -248,13 +265,27 @@ namespace duHastNet.PushIt.ViewModels.DataSource
         /// </summary>
         /// <param name="settings">
         /// The live <see cref="DataSourceSettings"/> from the application model.
-        /// Must not be null — <see cref="SettingsUtils.LoadSettings"/> guarantees
-        /// this. Passed into provider child ViewModels that need direct access to
-        /// their config (e.g. <see cref="DrofusDataSourceControlViewModel"/>).
+        /// Must not be null.
         /// </param>
-        public DataSourceViewModel(DataSourceSettings settings)
+        /// <param name="revitDataModel">
+        /// Passed through to <see cref="DrofusDataSourceControlViewModel"/> so it
+        /// can keep the parameter store in sync when mappings change.
+        /// </param>
+        /// <param name="availableRevitParameters">
+        /// Shared parameters available in the current Revit document. Passed
+        /// through to <see cref="DrofusDataSourceControlViewModel"/> so the
+        /// Add/Edit dialog ComboBox is always populated. Pass
+        /// <see cref="Array.Empty{T}"/> when not yet known.
+        /// </param>
+        public DataSourceViewModel(
+            DataSourceSettings settings,
+            RevitDataModel? revitDataModel,
+            IReadOnlyList<AvailableParameter> availableRevitParameters)
         {
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            _revitDataModel = revitDataModel;
+            _availableRevitParameters = availableRevitParameters
+                ?? Array.Empty<AvailableParameter>();
 
             AvailableSourceTypes = new ObservableCollection<DataSourceType>
             {

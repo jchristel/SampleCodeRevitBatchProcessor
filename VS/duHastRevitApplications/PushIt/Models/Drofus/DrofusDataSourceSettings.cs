@@ -36,17 +36,6 @@ namespace duHastNet.PushIt.Models.Drofus
         public string ApiToken { get; set; } = string.Empty;
 
         /// <summary>
-        /// <c>true</c> once a Connect attempt has succeeded in the current session.
-        /// Reset to <c>false</c> if credentials are changed.
-        /// </summary>
-        public bool IsConnected { get; set; }
-
-        /// <summary>
-        /// Room count returned by the last successful connection test.
-        /// </summary>
-        public int LastRoomCount { get; set; }
-
-        /// <summary>
         /// Number of rooms skipped during the last <c>GetRoomsData</c> call because
         /// their unique-id field was absent or null in the JSON response.
         /// <para>
@@ -56,6 +45,19 @@ namespace duHastNet.PushIt.Models.Drofus
         /// </summary>
         [JsonIgnore]
         public int LastSkippedRoomCount { get; set; }
+
+        /// <summary>
+        /// Room properties available from the drofus API, populated during
+        /// startup by <c>ValidateDrofusOnStartup</c> before the window opens.
+        /// <para>
+        /// Runtime-only — never written to the settings JSON file.
+        /// Read by <c>DrofusDataSourceControlViewModel</c> on construction to
+        /// pre-populate <see cref="DrofusPropertyMapper.AvailableFields"/>
+        /// without requiring a second API call.
+        /// </para>
+        /// </summary>
+        [JsonIgnore]
+        public List<string> StartupAvailableFields { get; set; } = new List<string>();
 
         /// <summary>
         /// Saved drofus → Revit (and reverse) property mappings.

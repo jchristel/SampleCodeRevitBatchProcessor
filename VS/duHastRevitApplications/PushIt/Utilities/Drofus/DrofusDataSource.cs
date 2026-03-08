@@ -49,7 +49,7 @@ namespace duHastNet.PushIt.Utilities.Drofus
 
             ValidateSettings(drofus);
 
-            // The caller (Main / ValidateDrofusMappingsOnStartup) guarantees that
+            // The caller (Main / ValidateDrofusOnStartup) guarantees that
             // exactly one mapping carries IsUniqueId before GetRoomsData is called.
             // We guard here as a belt-and-braces check.
             DrofusPropertyMap? idMapping = drofus.PropertyMappings
@@ -72,8 +72,7 @@ namespace duHastNet.PushIt.Utilities.Drofus
                 string json = ExecuteGet(url, drofus.ApiToken);
                 var array = JArray.Parse(json);
 
-                drofus.LastRoomCount = array.Count;
-                drofus.IsConnected = true;
+                drofus.LastSkippedRoomCount = 0;
 
                 var rooms = new List<RoomDataModel>(array.Count);
                 int skippedCount = 0;
@@ -94,13 +93,13 @@ namespace duHastNet.PushIt.Utilities.Drofus
                     }
 
                     var idProperty = new RoomDataProperty(
-                        name:          idMapping.RevitParameterName,
+                        name: idMapping.RevitParameterName,
                         parameterGUID: idMapping.RevitParameterGuid,
                         parameterName: idMapping.RevitParameterName,
-                        value:         idRaw,
-                        showInUI:      true,
-                        isReadOnly:    false,
-                        isUniqueId:    true);
+                        value: idRaw,
+                        showInUI: true,
+                        isReadOnly: false,
+                        isUniqueId: true);
 
                     // ── Other mapped fields ───────────────────────────────────
                     var properties = new List<RoomDataProperty>(otherMappings.Count);
@@ -116,13 +115,13 @@ namespace duHastNet.PushIt.Utilities.Drofus
                         bool isReadOnly = mapping.FlowDirection == MappingFlowDirection.RevitToDrofus;
 
                         properties.Add(new RoomDataProperty(
-                            name:          mapping.RevitParameterName,
+                            name: mapping.RevitParameterName,
                             parameterGUID: mapping.RevitParameterGuid,
                             parameterName: mapping.RevitParameterName,
-                            value:         fieldValue,
-                            showInUI:      true,
-                            isReadOnly:    isReadOnly,
-                            isUniqueId:    false));
+                            value: fieldValue,
+                            showInUI: true,
+                            isReadOnly: isReadOnly,
+                            isUniqueId: false));
                     }
 
                     rooms.Add(new RoomDataModel(idProperty, properties));
@@ -136,13 +135,11 @@ namespace duHastNet.PushIt.Utilities.Drofus
             }
             catch (WebException webEx) when (webEx.Response is HttpWebResponse errResp)
             {
-                drofus.IsConnected = false;
                 throw new InvalidOperationException(
                     $"drofus connection failed: {BuildHttpErrorDetail(drofus, errResp)}", webEx);
             }
             catch (WebException webEx)
             {
-                drofus.IsConnected = false;
                 throw new InvalidOperationException(
                     $"drofus connection failed: {webEx.Message}", webEx);
             }
@@ -152,15 +149,9 @@ namespace duHastNet.PushIt.Utilities.Drofus
         /// Queries the drofus rooms endpoint and returns the JSON property names
         /// present on the first room object in the response.
         /// <para>
-        /// Used by <c>ValidateDrofusMappingsOnStartup</c> and by the Connect flow
+        /// Used by <c>ValidateDrofusOnStartup</c> and by the Connect flow
         /// to populate <c>DrofusPropertyMapper.AvailableFields</c> without
         /// duplicating the HTTP logic.
-        /// </para>
-        /// <para>
-        /// Also updates <see cref="DrofusDataSourceSettings.LastRoomCount"/> and
-        /// <see cref="DrofusDataSourceSettings.IsConnected"/> as a side-effect of
-        /// the successful call, mirroring the behaviour of
-        /// <see cref="GetRoomsData"/>.
         /// </para>
         /// </summary>
         /// <param name="settings">
@@ -191,9 +182,6 @@ namespace duHastNet.PushIt.Utilities.Drofus
                 string json = ExecuteGet(url, drofus.ApiToken);
                 var array = JArray.Parse(json);
 
-                drofus.LastRoomCount = array.Count;
-                drofus.IsConnected = true;
-
                 if (array.Count == 0)
                     return new List<string>();
 
@@ -209,13 +197,11 @@ namespace duHastNet.PushIt.Utilities.Drofus
             }
             catch (WebException webEx) when (webEx.Response is HttpWebResponse errResp)
             {
-                drofus.IsConnected = false;
                 throw new InvalidOperationException(
                     $"drofus connection failed: {BuildHttpErrorDetail(drofus, errResp)}", webEx);
             }
             catch (WebException webEx)
             {
-                drofus.IsConnected = false;
                 throw new InvalidOperationException(
                     $"drofus connection failed: {webEx.Message}", webEx);
             }
@@ -247,13 +233,13 @@ namespace duHastNet.PushIt.Utilities.Drofus
                 bool isReadOnly = mapping.FlowDirection == MappingFlowDirection.RevitToDrofus;
 
                 properties.Add(new RoomDataProperty(
-                    name:          mapping.RevitParameterName,
+                    name: mapping.RevitParameterName,
                     parameterGUID: mapping.RevitParameterGuid,
                     parameterName: mapping.RevitParameterName,
-                    value:         string.Empty,
-                    showInUI:      true,
-                    isReadOnly:    isReadOnly,
-                    isUniqueId:    mapping.IsUniqueId));
+                    value: string.Empty,
+                    showInUI: true,
+                    isReadOnly: isReadOnly,
+                    isUniqueId: mapping.IsUniqueId));
             }
 
             return properties;

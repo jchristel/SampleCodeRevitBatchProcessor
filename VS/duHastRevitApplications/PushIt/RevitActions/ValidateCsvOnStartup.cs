@@ -1,6 +1,5 @@
 // BSD License - Copyright 2025, Jan Christel
 
-using Autodesk.Revit.DB;
 using duHastNet.PushIt.Models;
 using duHastNet.PushIt.Utilities;
 using System;
@@ -26,21 +25,13 @@ namespace duHastNet.PushIt.RevitActions
     /// </list>
     /// </para>
     /// <para>
-    /// Must be executed inside <c>RevitTask.RunAsync</c> so that it runs on a
-    /// background thread and the UI remains responsive. The Revit API
-    /// <paramref name="doc"/> argument is accepted to satisfy the
-    /// <c>IRevitAction</c> contract but is not used by this action.
-    /// </para>
-    /// <para>
-    /// All messages are written to both the action's own log (via
-    /// <c>AddMessage</c>) and to
-    /// <see cref="RevitDataModel.AddStartupMessage"/> so they survive the async
-    /// boundary and can be forwarded to the UI message store by
-    /// <c>Main.ExecuteInternal</c> after the action completes.
+    /// Runs synchronously on the Revit API thread in <c>Main.ExecuteInternal</c>
+    /// before the main window opens. No Revit API access is required — the
+    /// available-parameter list was already populated by
+    /// <c>Main.LoadSharedParametersFromDocument</c>.
     /// </para>
     /// </summary>
-    public class ValidateCsvOnStartup : RevitActionBase,
-        duHastNet.RevitUtils.RevitActions.IRevitAction
+    public class ValidateCsvOnStartup : RevitActionBase
     {
         // ── Dependencies ──────────────────────────────────────────────────────
 
@@ -69,10 +60,6 @@ namespace duHastNet.PushIt.RevitActions
         /// <summary>
         /// Runs the three-step CSV startup sequence.
         /// </summary>
-        /// <param name="doc">
-        /// The active Revit document. Accepted to satisfy the
-        /// <c>IRevitAction</c> contract; not used by this action.
-        /// </param>
         /// <returns>
         /// A tuple containing a human-readable summary message and a
         /// <see cref="Utils.WPF.Stores.MessageTypes"/> value:
@@ -81,8 +68,7 @@ namespace duHastNet.PushIt.RevitActions
         ///   <item><c>Error</c> — a step failed; rooms are not loaded.</item>
         /// </list>
         /// </returns>
-        public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(
-            Document doc)
+        public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute()
         {
             try
             {

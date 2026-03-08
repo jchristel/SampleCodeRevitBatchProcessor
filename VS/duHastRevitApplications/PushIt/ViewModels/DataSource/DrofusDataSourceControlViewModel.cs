@@ -24,29 +24,14 @@ namespace duHastNet.PushIt.ViewModels.DataSource
     public partial class DrofusDataSourceControlViewModel : ObservableObject
     {
         private readonly DataSourceSettings _settings;
-
-        /// <summary>
-        /// Reference to the data model used to keep the parameter store in sync
-        /// with the current mappings list. Set by Main after construction.
-        /// When non-null, <c>PersistAndRefresh</c> rebuilds the parameter store
-        /// from the active mappings so <c>VerifyParametersInModel</c> always
-        /// sees the latest set of mapped Revit parameters.
-        /// </summary>
-        public RevitDataModel? RevitDataModel { get; set; }
+        private readonly RevitDataModel? _revitDataModel;
+        private readonly IReadOnlyList<AvailableParameter> _availableRevitParameters;
 
         /// <summary>
         /// The mapper service instance. Exposed publicly so that
-        /// ValidateDrofusMappingsOnStartup can receive it from Main.ExecuteInternal.
+        /// ValidateDrofusOnStartup can receive it from Main.ExecuteInternal.
         /// </summary>
         public DrofusPropertyMapper Mapper { get; }
-
-        /// <summary>
-        /// Revit shared parameters available in the current document.
-        /// Set by Main after construction from RevitDataModel.GetAllAvailableParameters().
-        /// Passed into the Add/Edit dialog for the parameter ComboBox.
-        /// </summary>
-        public IReadOnlyList<AvailableParameter> AvailableRevitParameters { get; set; }
-            = Array.Empty<AvailableParameter>();
 
         /// <summary>
         /// <c>true</c> when the mapper has at least one available drofus field —
@@ -71,20 +56,33 @@ namespace duHastNet.PushIt.ViewModels.DataSource
         [ObservableProperty] private DrofusPropertyMapViewModel? _selectedMappingRow;
         [ObservableProperty] private bool _hasValidationWarnings;
 
-        public DrofusDataSourceControlViewModel(DataSourceSettings settings)
+        public DrofusDataSourceControlViewModel(
+            DataSourceSettings settings,
+            RevitDataModel? revitDataModel,
+            IReadOnlyList<AvailableParameter> availableRevitParameters)
         {
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            _revitDataModel = revitDataModel;
+            _availableRevitParameters = availableRevitParameters
+                ?? Array.Empty<AvailableParameter>();
+
             _settings.Drofus ??= new DrofusDataSourceSettings();
             var d = _settings.Drofus;
 
-            _baseUrl       = d.BaseUrl;
-            _databaseName  = d.DatabaseName;
+            _baseUrl = d.BaseUrl;
+            _databaseName = d.DatabaseName;
             _projectNumber = d.ProjectNumber;
-            _apiToken      = d.ApiToken;
-            _isConnected   = d.IsConnected;
-            _statusMessage = d.IsConnected ? $"Connected - {d.LastRoomCount} rooms found." : string.Empty;
+            _apiToken = d.ApiToken;
+            _statusMessage = string.Empty;
 
             Mapper = new DrofusPropertyMapper(d.PropertyMappings);
+
+            // If startup validation has already run (before the window opened),
+            // the available fields were cached in StartupAvailableFields so the
+            // Add Mapping button is enabled immediately on first show.
+            if (d.StartupAvailableFields.Count > 0)
+                Mapper.UpdateAvailableFields(d.StartupAvailableFields);
+
             RebuildMappingRows();
         }
 
@@ -92,13 +90,12 @@ namespace duHastNet.PushIt.ViewModels.DataSource
         private void Connect()
         {
             _settings.Drofus ??= new DrofusDataSourceSettings();
-            _settings.Drofus.BaseUrl       = BaseUrl.Trim();
-            _settings.Drofus.DatabaseName  = DatabaseName.Trim();
+            _settings.Drofus.BaseUrl = BaseUrl.Trim();
+            _settings.Drofus.DatabaseName = DatabaseName.Trim();
             _settings.Drofus.ProjectNumber = ProjectNumber.Trim();
-            _settings.Drofus.ApiToken      = ApiToken.Trim();
-            _settings.Drofus.IsConnected   = false;
+            _settings.Drofus.ApiToken = ApiToken.Trim();
 
-            IsConnecting  = true;
+            IsConnecting = true;
             StatusMessage = "Connecting...";
 
             try
@@ -108,20 +105,26 @@ namespace duHastNet.PushIt.ViewModels.DataSource
                 if (!dataSource.Validate(_settings, out string validationError))
                 {
                     StatusMessage = validationError;
-                    IsConnected   = false;
+                    IsConnected = false;
                     return;
                 }
 
                 List<string> fields = dataSource.GetAvailableFields(_settings);
-                int count = _settings.Drofus.LastRoomCount;
                 IsConnected = true;
 
                 Mapper.UpdateAvailableFields(fields);
+
+                // Cache fields so a fresh DrofusDataSourceControlViewModel
+                // (constructed after Load Data navigates) has them immediately.
+                if (_settings.Drofus != null)
+                    _settings.Drofus.StartupAvailableFields = fields;
+
                 List<string> removed = Mapper.CleanupStaleMappings();
                 Mapper.SaveMappingsToSettings(_settings.Drofus);
                 RebuildMappingRows();
+                AddMappingCommand.NotifyCanExecuteChanged();
 
-                string baseStatus = $"Connected - {count} rooms found.";
+                string baseStatus = "Connected.";
                 StatusMessage = removed.Count == 0
                     ? baseStatus
                     : $"{baseStatus} {removed.Count} stale mapping(s) removed: {string.Join(", ", removed)}.";
@@ -129,7 +132,6 @@ namespace duHastNet.PushIt.ViewModels.DataSource
             catch (Exception ex)
             {
                 IsConnected = false;
-                _settings.Drofus!.IsConnected = false;
                 StatusMessage = ex.Message;
             }
             finally
@@ -146,10 +148,10 @@ namespace duHastNet.PushIt.ViewModels.DataSource
             && !string.IsNullOrWhiteSpace(ProjectNumber)
             && !string.IsNullOrWhiteSpace(ApiToken);
 
-        partial void OnBaseUrlChanged(string value)       => ConnectCommand.NotifyCanExecuteChanged();
-        partial void OnDatabaseNameChanged(string value)  => ConnectCommand.NotifyCanExecuteChanged();
+        partial void OnBaseUrlChanged(string value) => ConnectCommand.NotifyCanExecuteChanged();
+        partial void OnDatabaseNameChanged(string value) => ConnectCommand.NotifyCanExecuteChanged();
         partial void OnProjectNumberChanged(string value) => ConnectCommand.NotifyCanExecuteChanged();
-        partial void OnApiTokenChanged(string value)      => ConnectCommand.NotifyCanExecuteChanged();
+        partial void OnApiTokenChanged(string value) => ConnectCommand.NotifyCanExecuteChanged();
 
         [RelayCommand(CanExecute = nameof(CanAddMapping))]
         private void AddMapping()
@@ -168,7 +170,7 @@ namespace duHastNet.PushIt.ViewModels.DataSource
             var usedParams = new HashSet<string>(
                 Mapper.Mappings.Select(m => m.RevitParameterName),
                 StringComparer.OrdinalIgnoreCase);
-            var availableParams = AvailableRevitParameters
+            var availableParams = _availableRevitParameters
                 .Where(p => !usedParams.Contains(p.ParameterName))
                 .ToList();
 
@@ -195,14 +197,16 @@ namespace duHastNet.PushIt.ViewModels.DataSource
         }
 
         /// <summary>
-        /// Called by Main after the no-mappings startup path has successfully
-        /// queried the drofus API and populated AvailableFields on the mapper.
-        /// Sets IsConnected so the UI reflects the live connection state and
-        /// notifies commands that depend on HasAvailableFields.
+        /// Called by <c>Main</c> on the dispatcher thread after
+        /// <see cref="ValidateDrofusOnStartup"/> completes — whether or not
+        /// rooms were loaded. Refreshes mapping-row validation indicators and
+        /// notifies the Add Mapping command that <see cref="HasAvailableFields"/>
+        /// may now be true.
         /// </summary>
-        public void OnStartupFieldsLoaded()
+        public void OnStartupCompleted()
         {
-            IsConnected = true;
+            RefreshMappingRowValidationState();
+            HasValidationWarnings = Mapper.HasValidationWarnings;
             AddMappingCommand.NotifyCanExecuteChanged();
         }
 
@@ -230,7 +234,7 @@ namespace duHastNet.PushIt.ViewModels.DataSource
                     .Where(m => m != SelectedMappingRow.Model)
                     .Select(m => m.RevitParameterName),
                 StringComparer.OrdinalIgnoreCase);
-            var availableParams = AvailableRevitParameters
+            var availableParams = _availableRevitParameters
                 .Where(p => !usedParams.Contains(p.ParameterName))
                 .ToList();
 
@@ -244,11 +248,11 @@ namespace duHastNet.PushIt.ViewModels.DataSource
             if (dialogVm.CreatedMapping is null) return;
 
             DrofusPropertyMap target = SelectedMappingRow.Model;
-            target.DrofusFieldName    = dialogVm.CreatedMapping.DrofusFieldName;
+            target.DrofusFieldName = dialogVm.CreatedMapping.DrofusFieldName;
             target.RevitParameterName = dialogVm.CreatedMapping.RevitParameterName;
             target.RevitParameterGuid = dialogVm.CreatedMapping.RevitParameterGuid;
-            target.FlowDirection      = dialogVm.CreatedMapping.FlowDirection;
-            target.IsUniqueId         = dialogVm.CreatedMapping.IsUniqueId;
+            target.FlowDirection = dialogVm.CreatedMapping.FlowDirection;
+            target.IsUniqueId = dialogVm.CreatedMapping.IsUniqueId;
 
             PersistAndRefresh();
         }
@@ -262,7 +266,7 @@ namespace duHastNet.PushIt.ViewModels.DataSource
         }
 
         private bool CanEditOrRemoveMapping()
-            => IsConnected && SelectedMappingRow is not null;
+            => SelectedMappingRow is not null;
 
         partial void OnSelectedMappingRowChanged(DrofusPropertyMapViewModel? value)
         {
@@ -270,19 +274,13 @@ namespace duHastNet.PushIt.ViewModels.DataSource
             RemoveMappingCommand.NotifyCanExecuteChanged();
         }
 
-        public void OnStartupValidationCompleted()
-        {
-            RefreshMappingRowValidationState();
-            HasValidationWarnings = Mapper.HasValidationWarnings;
-        }
-
         public void SaveToSettings()
         {
             _settings.Drofus ??= new DrofusDataSourceSettings();
-            _settings.Drofus.BaseUrl       = BaseUrl.Trim();
-            _settings.Drofus.DatabaseName  = DatabaseName.Trim();
+            _settings.Drofus.BaseUrl = BaseUrl.Trim();
+            _settings.Drofus.DatabaseName = DatabaseName.Trim();
             _settings.Drofus.ProjectNumber = ProjectNumber.Trim();
-            _settings.Drofus.ApiToken      = ApiToken.Trim();
+            _settings.Drofus.ApiToken = ApiToken.Trim();
             Mapper.SaveMappingsToSettings(_settings.Drofus);
         }
 
@@ -299,11 +297,11 @@ namespace duHastNet.PushIt.ViewModels.DataSource
 
             using var dialog = new System.Windows.Forms.SaveFileDialog
             {
-                Title       = "Save drofus settings",
-                Filter      = "JSON settings files (*.json)|*.json|All files (*.*)|*.*",
+                Title = "Save drofus settings",
+                Filter = "JSON settings files (*.json)|*.json|All files (*.*)|*.*",
                 FilterIndex = 1,
-                DefaultExt  = "json",
-                FileName    = "pushIt_drofus_settings.json",
+                DefaultExt = "json",
+                FileName = "pushIt_drofus_settings.json",
             };
 
             if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
@@ -314,7 +312,7 @@ namespace duHastNet.PushIt.ViewModels.DataSource
                 DataSource = new Models.DataSourceSettings
                 {
                     SourceType = Models.DataSourceType.Drofus,
-                    Drofus     = _settings.Drofus,
+                    Drofus = _settings.Drofus,
                 }
             };
 
@@ -331,8 +329,8 @@ namespace duHastNet.PushIt.ViewModels.DataSource
         {
             using var dialog = new System.Windows.Forms.OpenFileDialog
             {
-                Title       = "Load drofus settings",
-                Filter      = "JSON settings files (*.json)|*.json|All files (*.*)|*.*",
+                Title = "Load drofus settings",
+                Filter = "JSON settings files (*.json)|*.json|All files (*.*)|*.*",
                 FilterIndex = 1,
                 CheckFileExists = true,
             };
@@ -360,14 +358,14 @@ namespace duHastNet.PushIt.ViewModels.DataSource
             _settings.Drofus = drofus;
 
             // Refresh the four observable text fields.
-            BaseUrl       = drofus.BaseUrl;
-            DatabaseName  = drofus.DatabaseName;
+            BaseUrl = drofus.BaseUrl;
+            DatabaseName = drofus.DatabaseName;
             ProjectNumber = drofus.ProjectNumber;
-            ApiToken      = drofus.ApiToken;
+            ApiToken = drofus.ApiToken;
 
             // Reset connection state — the user must connect explicitly to
             // verify credentials and populate available fields.
-            IsConnected   = false;
+            IsConnected = false;
             StatusMessage = "Settings loaded — click Connect to verify.";
 
             // Rebuild the mapper from the loaded mappings list.
@@ -407,25 +405,20 @@ namespace duHastNet.PushIt.ViewModels.DataSource
         /// </summary>
         private void SyncParametersToDataModel()
         {
-            if (RevitDataModel is null) return;
+            if (_revitDataModel is null) return;
 
-            RevitDataModel.ClearParameters();
+            _revitDataModel.ClearParameters();
             foreach (DrofusPropertyMap mapping in Mapper.Mappings)
             {
-                RevitDataModel.AddParameter(new Models.RoomDataProperty(
-                    name:          mapping.RevitParameterName,
+                _revitDataModel.AddParameter(new Models.RoomDataProperty(
+                    name: mapping.RevitParameterName,
                     parameterGUID: mapping.RevitParameterGuid,
                     parameterName: mapping.RevitParameterName,
-                    value:         string.Empty,
-                    showInUI:      true,
-                    isReadOnly:    false,
-                    isUniqueId:    mapping.IsUniqueId));
+                    value: string.Empty,
+                    showInUI: true,
+                    isReadOnly: false,
+                    isUniqueId: mapping.IsUniqueId));
             }
-
-            // Notify the grid that available columns have changed so it rebuilds
-            // its column picker without requiring a restart.
-            RevitDataModel.RaisePropertyChanged(
-                Utilities.PropertyChangedEventNames.DATA_MODEL_PARAMETERS_UPDATED);
         }
 
         protected virtual bool ShowMappingDialog(DrofusPropertyMappingDialogViewModel dialogVm)

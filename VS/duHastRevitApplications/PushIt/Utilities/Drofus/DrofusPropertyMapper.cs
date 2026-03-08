@@ -236,7 +236,7 @@ namespace duHastNet.PushIt.Utilities.Drofus
         /// <summary>
         /// Stores the outcome of the Revit-side shared parameter existence check.
         /// <para>
-        /// Called by <c>ValidateDrofusMappingsOnStartup</c> after querying
+        /// Called by <c>ValidateDrofusOnStartup</c> after querying
         /// <c>SharedParaUtils.ParameterBindingsByGUID</c> for each mapping GUID.
         /// Also called after a successful Connect to refresh the state.
         /// </para>

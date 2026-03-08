@@ -1,6 +1,7 @@
 // BSD License - Copyright 2025, Jan Christel
 
 using duHastNet.PushIt.Models.Drofus;
+using Newtonsoft.Json;
 
 namespace duHastNet.PushIt.Models
 {
@@ -35,5 +36,16 @@ namespace duHastNet.PushIt.Models
         /// Null for any other active provider.
         /// </summary>
         public DrofusDataSourceSettings? Drofus { get; set; }
+        /// <summary>
+        /// Returns a deep copy of this instance using JSON round-trip serialisation.
+        /// Safe to use for snapshot/restore because all property types are already
+        /// JSON-serialisable (they are persisted to disk by <see cref="Utilities.SettingsUtils"/>).
+        /// </summary>
+        public DataSourceSettings DeepCopy()
+        {
+            string json = JsonConvert.SerializeObject(this);
+            return JsonConvert.DeserializeObject<DataSourceSettings>(json)
+                ?? new DataSourceSettings();
+        }
     }
 }

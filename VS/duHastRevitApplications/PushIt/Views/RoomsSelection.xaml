@@ -88,6 +88,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0">
                     <TextBlock Text="Push It...Real Good!" 
@@ -102,12 +103,24 @@
                 <TextBlock 
                     Grid.Column="1"
                     Text="{Binding RevitDocumentTitle}"
-                    FontSize="11"
+                    FontSize="20"
                     Foreground="White"
                     Opacity="0.85"
                     TextAlignment="Right"
                     VerticalAlignment="Center"
-                    Margin="10,0,0,0"/>
+                    Margin="10,0,10,0"/>
+                <!-- Settings navigation button -->
+                <Button
+                    Grid.Column="2"
+                    VerticalAlignment="Center"
+                    Padding="10,4"
+                    Background="Transparent"
+                    Foreground="White"
+                    BorderBrush="White"
+                    BorderThickness="1"
+                    FontSize="12"
+                    Content="⚙ Settings"
+                    Command="{Binding NavigateToSettingsCommand}"/>
             </Grid>
         </Border>
 
@@ -205,61 +218,6 @@
                                      Text="{Binding SaveFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
                     </Grid>
-
-                    <!--
-                        Data source configuration.
-                        Previously this was an inline row with a TextBox, Browse button
-                        and Load button hard-coded to CSV. It is now replaced by
-                        DataSourceControl which owns its own provider dropdown and
-                        provider-specific child control, then a separate Load button.
-                    -->
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <!-- Data source selector + provider config control -->
-                        <dataSourceViews:DataSourceControl
-                            Grid.Row="0"
-                            Margin="0 5 0 5"
-                            DataContext="{Binding DataSourceViewModel}"/>
-
-                        <!-- Load button — sits below the provider control -->
-                        <Button Grid.Row="1"
-                                HorizontalAlignment="Right"
-                                Padding="20 4"
-                                Margin="0 5 0 5"
-                                Content="Load"
-                                Command="{Binding ReloadDataCommand}"/>
-                    </Grid>
-
-                    <!-- Settings expander (categories) -->
-                    <Border CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
-                        <Expander Header="Settings" Margin="5 5 5 5">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <dynamicDataGrid:DynamicDataGrid  
-                                    x:Name="dataGridSupportedCategories" 
-                                    Grid.Row="0"
-                                    DataContext="{Binding SupportedCategoriesDataGridViewModel}"
-                                    ItemsSource="{Binding Data}"
-                                    ColumnDefinitions="{Binding ColumnDefinitions}"
-                                    SelectionMode="Extended"
-                                    Margin="5 10 5 10" 
-                                    dynamicDataGrid:DataGridColumnHeaderBehavior.EnableColumnManagement="False"
-                                    dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="True"/>
-                                <Button Grid.Row="1"
-                                        Padding="20 0 20 0"
-                                        Margin="5 10 5 10"
-                                        Content="Apply"
-                                        Command="{Binding UpdateFromChangedCategoriesCommand}"/>
-                            </Grid>
-                        </Expander>
-                    </Border>
                 </StackPanel>
             </Expander>
         </Border>

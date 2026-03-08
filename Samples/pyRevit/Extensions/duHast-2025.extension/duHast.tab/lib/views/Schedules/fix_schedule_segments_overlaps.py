@@ -23,23 +23,21 @@
 
 from duHast.pyRevit.Objects.ProgressPyRevit import ProgressPyRevit
 from duHast.pyRevit.console_output import print_error, print_header
-from duHast.pyRevit.file_picker import get_file_path_from_user
-
 from duHast.Utilities.Objects.result import Result
-from duHast.Revit.Views.Import.schedules_width_read_from_file import read_column_width_data_file
-from duHast.Revit.Views.schedules_modify import adjust_column_width
+from schedules_ui import (
+    get_split_schedules_from_user_dialogue, 
+)
 
-from schedules_ui import get_schedules_from_user_to_import
-
+from duHast.Revit.Views.schedules_sheet_instances_move import  move_schedule_sheet_instances_in_x_until_no_overlap
 
 from pyrevit.framework import Forms
 
-DEBUG = False
+DEBUG = True
 
 
-def import_schedules_column_width_entry(doc, output, forms, debug=DEBUG):
+def fix_schedule_segments_overlap_entry(doc, output, forms, debug=DEBUG):
     """
-    Allows the user to set the column width of schedules based on a csv file which contains the schedule names, field names and column widths to set. The user can select which schedules to import the column widths for.
+    Allows the user to select schedules which have segments with overlapping fields and fixes the overlaps by moving schedule segments horizontally until there are no more overlaps.
     
     :return:
         Result class instance.
@@ -60,73 +58,47 @@ def import_schedules_column_width_entry(doc, output, forms, debug=DEBUG):
     return_value = Result()
 
     try:
-        print_header("Importing schedule column widths...")
+        print_header("Adjusting schedule overlaps...")
 
-        # let the user select the csf file to import schedules column width from
-        # let the user select the schedules to which to import the column widths
-        # update the column widths of the selected schedules based on the csv file
+        # let the user select the schedules which may have split segments and are on sheets to update
+        # update the segment locations of the selected schedules to fix the overlaps
 
-        # get the file path of the csv file to import from the user
-        file_path = get_file_path_from_user(
-            forms=forms, title="Select schedule width file", file_extension="csv"
-        )
-        if file_path is None:
-            print("No file selected. Exiting.")
-            return_value.update_sep(False, "No file selected. Exiting.")
-            return return_value
-    
-        # read data from the csv file
-        read_result = read_column_width_data_file(file_path)
-        schedule_data_from_file = read_result.result[0]
-
-        if not read_result.status:
-            raise Exception(read_result.message)
-        
-        # get the user to select the schedules to update the column widths for, based on the schedules available in the file
-        schedules_to_update = get_schedules_from_user_to_import(
-            doc, 
-            forms, 
-            button_name="Select Schedules To Import Column Widths For",
-            schedule_data=schedule_data_from_file)
-
+        # get the user to select which schedules to fix the overlaps for
+        schedules_to_update = get_split_schedules_from_user_dialogue(doc, forms, button_name="Select Split Schedules to Fix Possible Overlaps")
         if len(schedules_to_update) == 0:
             return_value.update_sep(
                 status=False,
-                message="No schedules selected for import."
+                message="No schedules selected for modification."
             )
-            print_error("No schedules selected for import. Exiting...")
+            print_error("No schedules selected for modification. Exiting...")
             return return_value
 
-        if DEBUG:
-            print("Schedules selected for import: {}".format(schedules_to_update))
-            
+
         # set up a pyrevit progress bar
         with forms.ProgressBar(
-            title="Importing schedule column width: {value} of {max_value}", cancellable=True
+            title="Adjusting schedules: {value} of {max_value}", cancellable=True
         ) as pb:
             
             progress_bar = ProgressPyRevit(pb)
 
-            adjust_result = adjust_column_width(
-                doc, 
-                schedules_to_update, 
-                schedule_data_from_file, 
+            adjust_result =  move_schedule_sheet_instances_in_x_until_no_overlap(
+                doc=doc,
+                schedules=schedules_to_update,
                 callback_progress=progress_bar
             )
     
             return_value.update(adjust_result)
 
-            #list schedules that were skipped because they did not contain the specified field
+            # list schedules that were skipped because they did not contain the specified field
             if len(adjust_result.result) > 0:
                 print("The following schedules were skipped because they did not contain the specified field: {}".format(adjust_result.result))
             else:
                 print("All schedules were updated successfully.")
 
-
     except Exception as e:
         return_value.update_sep(
             status=False,
-            message="Failed to import schedules column widths: {}".format(e)
+            message="Failed to modify specific column widths: {}".format(e)
         )
         
 

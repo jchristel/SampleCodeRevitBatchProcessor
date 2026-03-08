@@ -8,3 +8,7 @@ doc = revit.doc
 
 
 print ("Fixing overlaps...")
+
+from views.Schedules.fix_schedule_segments_overlaps import fix_schedule_segments_overlap_entry
+
+result = fix_schedule_segments_overlap_entry(doc, output, forms)

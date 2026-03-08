@@ -31,6 +31,7 @@ from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Common.transaction import in_transaction
 from duHast.Revit.Views.schedules import filter_split_schedules
 from duHast.Revit.Views.schedules_sheet_instances_overlap import check_schedule_sheet_instances_are_overlapping
+from duHast.UI.Objects.ProgressBase import ProgressBase
 
 from Autodesk.Revit.DB import (
     Element,
@@ -132,19 +133,27 @@ def resolve_overlaps(doc, schedule, schedule_name, max_iterations=10):
     return return_value
 
 
-def move_schedule_sheet_instances_in_x_until_no_overlap(doc, schedules):
+def move_schedule_sheet_instances_in_x_until_no_overlap(doc, schedules, callback_progress=None):
     """
     Finds any split schedule in the model and moves segments 1 to n (skips 0) by a given distance (the overlap) to the right.
 
     :param doc: The Revit document object.
     :type doc: Autodesk.Revit.DB.Document
+    :param schedules: A list of Revit schedule objects to check for overlaps and move if necessary.
+    :type schedules: list of Autodesk.Revit.DB.ViewSchedule
+    :param callback_progress: An optional callback function to update the progress of the operation. The function should accept two parameters: the current progress (int) and the maximum progress (int).
+    :type callback_progress: function, optional
 
-    :return: None
+    :return: A Result object containing the move status and message for each schedule processed.
+    :rtype: duHast.Utilities.Objects.result.Result
     """
 
     return_value = Result()
 
-    # get all splitr schedules in model and move segments 1 to n by a given distance to the right to resolve overlaps
+    if isinstance(callback_progress, ProgressBase) == False and callback_progress is not None:
+        raise ValueError("callback_progress is not a ProgressBase: {}".format(type(callback_progress)))
+
+    # get all split schedules in model and move segments 1 to n by a given distance to the right to resolve overlaps
     split_schedules = filter_split_schedules(schedules)
 
     # check if any split schedules were found
@@ -152,8 +161,18 @@ def move_schedule_sheet_instances_in_x_until_no_overlap(doc, schedules):
         return_value.append_message("No split schedules in model")
         return return_value
     
+    # progress bar data
+    max = len(schedules)
+    counter = 1
+
     # loop and resolve overlaps for each split schedule
     for split_schedule in split_schedules:
+
+        # update the progress bar
+        counter += 1
+        if callback_progress:
+            callback_progress.update(counter, max)
+
         schedule_name = Element.Name.GetValue(split_schedule)
         return_value.append_message("Processing schedule {}".format(schedule_name))
 
@@ -167,4 +186,10 @@ def move_schedule_sheet_instances_in_x_until_no_overlap(doc, schedules):
             return_value.append_message("Successfully resolved overlaps for schedule {}".format(schedule_name))
         else:
             return_value.update_sep(False, "Failed to resolve overlaps for schedule {}: {}".format(schedule_name, resolve_result.message))
+        
+        # Check the progress bar for cancellation after each schedule is processed since this is a pretty slow process and the user may want to cancel it if they see it is taking too long
+        if callback_progress and callback_progress.is_cancelled() == True:
+            return_value.append_message("Cancelled by user")
+            break
+
     return return_value

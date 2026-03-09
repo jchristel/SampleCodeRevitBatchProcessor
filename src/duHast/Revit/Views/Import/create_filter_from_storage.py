@@ -58,12 +58,30 @@ def import_rules_from_data(doc, data_rules):
     # container for new rules
     element_parameter_filters = List[ElementFilter]()
 
+    if DEBUG:
+        print("Importing rules for filter: {}\n".format(data_rules))
+        print("...Number of rules to import: {}\n".format(len(data_rules.view_filter_rules)))
+
     # loop over filters in logic container and convert to revit filter rules
     for filter in  data_rules.view_filter_rules:
-
+        
+        if DEBUG:
+                print("...Importing filter: {}\n".format(filter))
+        
         return_value.append_message("...Importing filter: {}".format(filter.parameter_name))
 
-        conversion_result = convert_data_to_rule(doc, filter)
+        # this will be overriden if successfull otherwise it will be skipped if epic failure in conversion function
+        conversion_result = Result()
+        try:
+            conversion_result = convert_data_to_rule(doc, filter)
+        except Exception as e:
+            return_value.update_sep(False, "...Failed to convert filter: {}. Error: {}".format(filter.parameter_name, e))
+            if DEBUG:
+                print("......Failed to convert filter: {}. Error: {}\n".format(filter.parameter_name, e))
+            continue
+        
+        if DEBUG:
+            print("......Conversion result for filter: {}. Status: {}. Message: {}\n".format(filter.parameter_name, conversion_result.status, conversion_result.message))
         
         if conversion_result.status:
             return_value.append_message("...Successfully converted filter: {}".format(filter.parameter_name))
@@ -83,7 +101,8 @@ def import_rules_from_data(doc, data_rules):
             
         else:
             return_value.update_sep(False, "...Failed to convert filter: {}. Error: {}".format(filter.parameter_name, conversion_result.message))
-
+            if DEBUG:
+                print("......bombing out")
 
     return_value.result.append(element_parameter_filters)
     return return_value
@@ -282,9 +301,11 @@ def import_root_logic_container_from_data(doc, view_filter_json):
             
             try:
                 rules_result = import_rules_from_data(doc, logic_filter_root_container)
-
+                if not rules_result.status:
+                    raise Exception( rules_result.message)
+                
                 if DEBUG:
-                    print("here2 {}\n".format(view_filter_json.name),rules_result.result)
+                    print("View filter name {}\nresult:{}\nstatus:{}".format(view_filter_json.name,rules_result.result, rules_result.status))
 
                 # add filters to main container
                 for entry in rules_result.result[0]:
@@ -324,7 +345,7 @@ def create_filter_from_json(doc, view_filter_json, element_filters):
             return return_value
 
         # create the filter
-        filter_element = create_filter(
+        filter_element_result = create_filter(
             doc, 
             view_filter_json.name,
             category_ids,
@@ -332,18 +353,23 @@ def create_filter_from_json(doc, view_filter_json, element_filters):
         )
 
         # check result
-        if not filter_element:
-            return_value.update_sep(False, "Failed to create filter: {}.".format(view_filter_json.name))
+        if not filter_element_result.status:
+            return_value.update_sep(False, "Failed to create filter: {}. Exception {}".format(view_filter_json.name, filter_element_result.message))
             return return_value
 
         # add success message
         return_value.append_message("Successfully created filter: {}".format(view_filter_json.name))
 
         # return created filter
-        return_value.result.append(filter_element)
+        if filter_element_result.result and len(filter_element_result.result)>0:
+            return_value.result.append(filter_element_result.result[0])
+        else:
+            return_value.update_sep(False, "Failed to create filter: {}. No filter element returned.".format(view_filter_json.name))
+
     except Exception as e:
         
         return_value.update_sep(False, "Failed to create filter: {}. Error: {}".format(view_filter_json.name, e))
+    
     return return_value
 
 
@@ -364,12 +390,11 @@ def update_filter_from_json(doc, existing_filter, view_filter_json, element_filt
             return return_value
 
         # update the filter
-        updated_filter_element = create_filter(
+        updated_filter_element = update_filter(
             doc, 
             view_filter_json.name,
             category_ids,
             element_filters,
-            existing_filter,
         )
 
         # check result

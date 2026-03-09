@@ -8,8 +8,8 @@ The drofus data source connects PushIt directly to a drofus REST API to retrieve
 
 ## Accessing the drofus Configuration
 
-1. In the main PushIt window, expand the **Data Admin** panel.
-2. In the **Data Source** dropdown, select **drofus**.
+1. In the main PushIt window, click **⚙ Settings** in the header banner.
+2. The Settings view opens. In the **Data Source** dropdown, select **drofus**.
 3. The drofus configuration panel appears below the dropdown.
 
 ---
@@ -56,7 +56,7 @@ The **Property Mappings** section becomes visible only after a successful connec
 
 ## Property Mappings
 
-Property mappings define the relationship between drofus room data fields and Revit shared parameters. At least one mapping must be designated as the **unique identifier** so PushIt can match drofus rooms to Revit rooms.
+Property mappings define the relationship between drofus room data fields and Revit shared parameters. At least one mapping must be designated as the **unique identifier** so PushIt can match drofus rooms to mock room families in the Revit model.
 
 ### Mapping List Columns
 
@@ -66,7 +66,8 @@ Property mappings define the relationship between drofus room data fields and Re
 | Key icon | Marks the mapping that is used as the unique identifier |
 | drofus Field | The JSON field name from the drofus API room response |
 | Revit Parameter | The Revit shared parameter name that receives the data |
-| Direction | Data flow: currently always **drofus → Revit** |
+| Direction | Data flow direction for this mapping |
+| Revit Precedence | Checkbox — when ticked, Revit parameter values take precedence over drofus values after the initial push |
 
 ### Warning Badge
 
@@ -109,7 +110,7 @@ The Add / Edit Mapping dialog has the following fields.
 | Revit Parameter | Dropdown of available Revit shared parameters in the current document. Parameters already mapped are excluded when adding. |
 | GUID | Read-only. Auto-populated from the selected Revit shared parameter. No action required. |
 | Direction | Dropdown — select the data flow direction. Currently only **drofus → Revit** is active; *Revit → drofus* is reserved for future use. |
-| Is unique identifier | Checkbox — tick to nominate this mapping as the unique match key between drofus rooms and Revit rooms. Only one mapping in the list may be the unique identifier. |
+| Is unique identifier | Checkbox — tick to nominate this mapping as the unique match key between drofus rooms and mock room families. Only one mapping in the list may be the unique identifier. |
 
 Click **OK** to save or **Cancel** to discard changes.
 
@@ -119,21 +120,21 @@ Click **OK** to save or **Cancel** to discard changes.
 
 After configuring and connecting:
 
-1. Return to the main Data Admin panel.
-2. Click **Load**.
-3. PushIt queries the drofus API, retrieves room data, and populates the rooms grid using the configured mappings.
+1. Click **Load Data** at the bottom of the Settings view.
+2. PushIt queries the drofus API, retrieves room data, populates the mock rooms grid using the configured mappings, and returns to the main window.
 
-If there are validation errors (e.g., missing mappings or connection fields), the Load button remains disabled until the issues are resolved.
+If there are validation errors (e.g., missing mappings or connection fields), the Load Data button remains disabled until the issues are resolved.
 
 ---
 
 ## Typical drofus Setup Workflow
 
-1. Select **drofus** in the Data Source dropdown.
-2. Enter Base URL, Database, Project number, and API token.
-3. Click **Save Settings** to persist the credentials.
-4. Click **Connect** and confirm the success message.
-5. Click **Add** to create at least one mapping, designating one as the unique identifier.
-6. Add further mappings for each parameter you want to push into Revit.
-7. Review the mapping list for any ⚠ warnings and resolve them.
-8. Click **Load** in the Data Admin panel to populate the rooms grid.
+1. Click **⚙ Settings** in the main window header.
+2. Select **drofus** in the Data Source dropdown.
+3. Enter Base URL, Database, Project number, and API token.
+4. Click **Save Settings** to persist the credentials.
+5. Click **Connect** and confirm the success message.
+6. Click **Add** to create at least one mapping, designating one as the unique identifier.
+7. Add further mappings for each parameter you want to push into mock rooms.
+8. Review the mapping list for any ⚠ warnings and resolve them.
+9. Click **Load Data** to populate the mock rooms grid and return to the main window.

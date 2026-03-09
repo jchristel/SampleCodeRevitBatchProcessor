@@ -245,7 +245,11 @@ def get_rule_parameter_id(doc, rule_data_instance, parameter ):
     elif rule_data_instance.parameter_id > 0:
         # use the past in parameter
         parameter_id = parameter.Id
-    
+
+        # TODO:
+        # need to check if this parameter is bound to the category of the filter, otherwise the rule will not work. 
+        # If the parameter is not bound to the category, we need to flag the issue and return an invalid parameter id, which will cause the rule creation to fail and the user will get feedback on the issue.
+
     return parameter_id
 
 
@@ -279,7 +283,10 @@ def convert_data_to_rule(doc, rule_data_instance):
     
     # decide on which parameter id to use
     parameter_id = get_rule_parameter_id(doc, rule_data_instance, parameter)
-    #print(parameter_id)
+    
+    if parameter_id == ElementId.InvalidElementId:
+        return_value.update_sep(False, "Failed to get valid parameter id for rule: {}. Parameter name: {}".format(rule_data_instance.parameter_name, rule_data_instance.parameter_name))
+        return return_value
 
     # get the value provider class
     value_provider_class = get_value_provider_class(rule_data_instance.value_provider)

@@ -87,14 +87,23 @@ namespace duHastNet.PushIt.Models
         /// If no match exists, both property kinds are cleared to empty string.
         /// Split rooms are standalone <see cref="RoomDataModel"/> records and use this same logic.
         /// </summary>
-        public void UpdateReadProperties()
+        /// <param name="isSplitRoom">
+        /// When <c>true</c> the room is a split room and properties marked
+        /// <see cref="RoomDataProperty.RevitTakesPrecedenceAfterInitialPush"/> will be read back
+        /// from Revit.  For regular SoA and new rooms this flag should be <c>false</c> so that
+        /// only <see cref="RoomDataProperty.IsReadOnly"/> properties are refreshed from Revit.
+        /// </param>
+        public void UpdateReadProperties(bool isSplitRoom = false)
         {
             if (MatchingRevitRooms.Count == 1)
             {
                 Models.RoomRevit revitRoom = MatchingRevitRooms[0];
                 foreach (Models.RoomDataProperty property in Properties)
                 {
-                    if (property.IsReadOnly || property.RevitTakesPrecedenceAfterInitialPush)
+                    bool shouldReadFromRevit = property.IsReadOnly
+                        || (property.RevitTakesPrecedenceAfterInitialPush && isSplitRoom);
+
+                    if (shouldReadFromRevit)
                     {
                         Models.RoomDataProperty revitProperty = revitRoom.Properties.Find(x => x.Name == property.Name);
                         if (revitProperty != null)
@@ -106,10 +115,11 @@ namespace duHastNet.PushIt.Models
             {
                 foreach (Models.RoomDataProperty property in Properties)
                 {
-                    if (property.IsReadOnly || property.RevitTakesPrecedenceAfterInitialPush)
-                    {
+                    bool shouldClear = property.IsReadOnly
+                        || (property.RevitTakesPrecedenceAfterInitialPush && isSplitRoom);
+
+                    if (shouldClear)
                         property.Value = "";
-                    }
                 }
             }
         }

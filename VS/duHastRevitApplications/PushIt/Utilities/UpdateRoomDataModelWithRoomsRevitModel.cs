@@ -139,10 +139,11 @@ namespace duHastNet.PushIt.Utilities
                 }
             }
 
-            // update read-only properties for all SoA/new rooms
+            // update read-only properties; RevitTakesPrecedence only applies to split rooms
             foreach (Models.RoomDataModel roomDataModel in roomsDataModel)
             {
-                roomDataModel.UpdateReadProperties();
+                bool isSplitRoom = Utilities.PushModeUtils.IsSplitRoomMode(roomDataModel.Id.Value);
+                roomDataModel.UpdateReadProperties(isSplitRoom);
             }
 
             return roomsDataModel;

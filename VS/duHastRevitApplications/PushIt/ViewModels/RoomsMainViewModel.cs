@@ -99,42 +99,8 @@ namespace duHastNet.PushIt.ViewModels
 
         /// <summary>
         /// The active Revit document title, read from <see cref="Models.RevitDataModel.RevitDocumentTitle"/>.
-        /// Long titles are split into lines of at most 30 characters so the blue
-        /// header row can display them without overflowing.
         /// </summary>
-        public string RevitDocumentTitle =>
-            WrapAtWidth(_revitDataModel.RevitDocumentTitle, 30);
-
-        /// <summary>
-        /// Splits <paramref name="text"/> into lines of at most
-        /// <paramref name="maxChars"/> characters, breaking on whole words where
-        /// possible, and joins them with a newline so WPF TextBlock can render them.
-        /// </summary>
-        private static string WrapAtWidth(string text, int maxChars)
-        {
-            if (string.IsNullOrEmpty(text) || text.Length <= maxChars)
-                return text;
-
-            var lines = new System.Collections.Generic.List<string>();
-            int start = 0;
-            while (start < text.Length)
-            {
-                if (start + maxChars >= text.Length)
-                {
-                    lines.Add(text.Substring(start));
-                    break;
-                }
-
-                // Try to break on a space within the window
-                int breakAt = text.LastIndexOf(' ', start + maxChars, maxChars);
-                if (breakAt <= start)
-                    breakAt = start + maxChars; // hard break
-
-                lines.Add(text.Substring(start, breakAt - start).TrimEnd());
-                start = breakAt + (text[breakAt] == ' ' ? 1 : 0);
-            }
-            return string.Join("\n", lines);
-        }
+        public string RevitDocumentTitle => _revitDataModel.RevitDocumentTitle;
 
         #region push modus
 

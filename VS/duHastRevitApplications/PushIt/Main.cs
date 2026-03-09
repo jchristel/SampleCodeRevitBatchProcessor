@@ -97,6 +97,20 @@ namespace duHastNet.PushIt
                     ("Starting duHastNet.PushIt.", duHastNet.Utils.WPF.Stores.MessageTypes.Information)
                 });
 
+            //delete old log files
+            duHastNet.Utils.Logging.LogFileCleanup cleaner = new();
+            cleaner.DeleteOldLogFilesFireAndForget(directoryPath: Utilities.SettingsUtils.settingsDirectory,olderThanDays: 5,fileNamePrefix: "log_pushit_", fileExtension: "*.txt");
+            if (cleaner.ErrorMessages.Count > 0)
+            {
+                // Log any errors encountered during log file cleanup, but do not fail startup — the main window still opens and the user can see the messages in the banner.
+                List<(string, duHastNet.Utils.WPF.Stores.MessageTypes)> e = [];
+                foreach (var err in cleaner.ErrorMessages)
+                {
+                    e.Add(($"Error during log file cleanup: {err}", duHastNet.Utils.WPF.Stores.MessageTypes.Warning));
+                }
+                _revitDataModel.LogMessages(e);
+            }
+
             //Get document
             Autodesk.Revit.DB.Document doc = uiapp.ActiveUIDocument.Document;
 

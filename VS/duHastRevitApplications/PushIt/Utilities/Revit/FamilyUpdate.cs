@@ -310,13 +310,16 @@ namespace duHastNet.PushIt.Utilities.Revit
                         }
 
                         // update the family instance
+                        // For split rooms Revit takes precedence after the initial push, so we do NOT
+                        // override it. For all other rooms the data-source value always wins.
                         bool flag_update = UpdateProperties(
                             doc: doc,
                             familyInstance: familyInstance,
                             roomData: roomData,
                             pushMode: duHastNet.PushIt.Utilities.PushMode.Push,
                             AddMessage: AddMessage,
-                            updateId: updateId
+                            updateId: updateId,
+                            overrideRevitPrecedence: !duHastNet.PushIt.Utilities.PushModeUtils.IsSplitRoomMode(roomData.Id.Value)
                         );
 
                         //log the overall success of the update

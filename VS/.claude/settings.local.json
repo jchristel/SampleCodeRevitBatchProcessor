@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -d C:/Users/janchristel/Documents/GitHub/SampleCodeRevitBatchProcessor-NET8/VS/duHastUI/*/)",
+      "Bash(dir /b /ad \"C:\\\\Users\\\\janchristel\\\\Documents\\\\GitHub\\\\SampleCodeRevitBatchProcessor-NET8\\\\VS\\\\duHastUI\")"
+    ]
+  }
+}

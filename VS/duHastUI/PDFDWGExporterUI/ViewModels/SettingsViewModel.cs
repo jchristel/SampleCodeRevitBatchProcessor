@@ -684,18 +684,11 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
             if (settingsDictionary != null)
             {
                 var missingKeys = new List<string>();
-                var values = new Dictionary<string, object>();
 
                 foreach (var key in new[] { _documentTypePDFName, _documentTypeDWGName, _dwgExportSchemeNameProperty })
                 {
-                    if (settingsDictionary.TryGetValue(key, out var settingsValue))
-                    {
-                        values[key] = settingsValue;
-                    }
-                    else
-                    {
+                    if (!settingsDictionary.ContainsKey(key))
                         missingKeys.Add(key);
-                    }
                 }
 
                 if (missingKeys.Count != 0)
@@ -704,7 +697,14 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
                     return;
                 }
 
+                // Write imported values into the data model before repopulating
+                _exportDataModel.Settings.PDFRenameString = settingsDictionary[_documentTypePDFName];
+                _exportDataModel.Settings.DWGRenameString = settingsDictionary[_documentTypeDWGName];
+                _exportDataModel.Settings.DWGExportScheme = settingsDictionary[_dwgExportSchemeNameProperty];
+
                 _documentSettingsTables.Clear();
+                _documentSettingsDictionary[_documentTypePDFName].Clear();
+                _documentSettingsDictionary[_documentTypeDWGName].Clear();
                 PopulatePDFSettingsDataTable();
                 PopualateDWGSettingsDataTable();
                 SetSelectedDWGExportScheme();

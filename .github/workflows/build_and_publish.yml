@@ -113,6 +113,43 @@ jobs:
         pip install sphinx-adc-theme==0.1.7
         pip install sphinx myst-parser
 
+    - name: Copy Revit app UI documentation into docsource
+      shell: pwsh
+      run: |
+        # Revit add-ins
+        New-Item -ItemType Directory -Force -Path "docsource/revit_apps/pushit"
+        Copy-Item "VS/duHastRevitApplications/PushIt/docs/*.md" `
+                  "docsource/revit_apps/pushit/"
+
+        New-Item -ItemType Directory -Force -Path "docsource/revit_apps/athelibrary"
+        Copy-Item "VS/duHastRevitApplications/AtTheLibrary/docs/*.md" `
+                  "docsource/revit_apps/athelibrary/"
+
+        # WPF UI libraries
+        New-Item -ItemType Directory -Force -Path "docsource/revit_apps/docmanagersettingsui"
+        Copy-Item "VS/duHastUI/DocManagerSettingsUI/docs/*.md" `
+                  "docsource/revit_apps/docmanagersettingsui/"
+
+        New-Item -ItemType Directory -Force -Path "docsource/revit_apps/docmanagerui"
+        Copy-Item "VS/duHastUI/DocManagerUI/docs/*.md" `
+                  "docsource/revit_apps/docmanagerui/"
+
+        New-Item -ItemType Directory -Force -Path "docsource/revit_apps/familyreloaderui"
+        Copy-Item "VS/duHastUI/FamilyReloaderUI/docs/*.md" `
+                  "docsource/revit_apps/familyreloaderui/"
+
+        New-Item -ItemType Directory -Force -Path "docsource/revit_apps/pdfdwgexporterui"
+        Copy-Item "VS/duHastUI/PDFDWGExporterUI/docs/*.md" `
+                  "docsource/revit_apps/pdfdwgexporterui/"
+
+        New-Item -ItemType Directory -Force -Path "docsource/revit_apps/pdfdwgexporterselectionui"
+        Copy-Item "VS/duHastUI/PDFDWGExporterSelectionUI/docs/*.md" `
+                  "docsource/revit_apps/pdfdwgexporterselectionui/"
+
+        New-Item -ItemType Directory -Force -Path "docsource/revit_apps/selectfiles"
+        Copy-Item "VS/duHastUI/SelectFiles/docs/*.md" `
+                  "docsource/revit_apps/selectfiles/"
+
     - name: Create .rst files
       run: |
         sphinx-apidoc -f -o docsource/duHast src/duHast/

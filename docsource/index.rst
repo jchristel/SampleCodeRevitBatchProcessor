@@ -14,6 +14,7 @@ Welcome to duHast's documentation!
 
    duHast/modules
    samples/index
+   revit_apps/index
 
 Indices and tables
 ==================

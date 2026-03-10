@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -92,7 +92,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// <summary>
         /// Command to save the settings and close the window.
         /// </summary>
-        private readonly RelayCommand _saveAndCloseCommand;
+        private readonly RelayCommand<Window> _saveAndCloseCommand;
 
         private readonly Commands.PrintSetDeleteCommand _printSetDeleteCommand;
         private readonly Commands.PrintSetUpdateCommand _printSetUpdateCommand;
@@ -357,7 +357,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
         /// <summary>
         /// Updates the settings and closes the window. Forces state save before closing.
         /// </summary>
-        private void SaveSettingsAndClose()
+        private void SaveSettingsAndClose(Window window)
         {
             try
             {
@@ -396,7 +396,7 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
                     settings: _sheetsDataModel.Settings,
                     AddMessage: AddMessage);
 
-                Application.Current.MainWindow?.Close();
+                window?.Close();
             }
             catch (Exception ex)
             {
@@ -501,9 +501,9 @@ namespace duHastNet.UI.PDFDWGExporterSelectionUI.ViewModels
              );
             RegisterChild(ViewSelectionDataGridViewModel);
 
-            _saveAndCloseCommand = new RelayCommand(
+            _saveAndCloseCommand = new RelayCommand<Window>(
                 SaveSettingsAndClose,
-                () => !HasErrors
+                (window) => !HasErrors
             );
 
             _printSetDeleteCommand = new Commands.PrintSetDeleteCommand(this, _sheetsDataModel);

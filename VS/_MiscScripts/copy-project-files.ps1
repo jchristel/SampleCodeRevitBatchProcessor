@@ -8,7 +8,7 @@ $project4Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProces
 $project5Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager\duHastNet.docs"
 $project6Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastUI\DocManagerSettingsUI"
 
-$project7Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastUtils\Utils"
+$project7Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastUI"
 $project8Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager"
 $project9Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastRevitApplications\PushIt"
 

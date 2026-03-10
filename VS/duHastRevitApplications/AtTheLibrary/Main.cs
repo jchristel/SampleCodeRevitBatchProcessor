@@ -77,8 +77,22 @@ namespace duHastNet.AtTheLibrary
             string logFilePath = Path.Combine(Utilities.SettingsUtils.settingsDirectory, "log_atTheLib_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt");
             _revitDataModel.InitialiseLogger(logFilePath);
 
+            //delete old log files
+            duHastNet.Utils.Logging.LogFileCleanup cleaner = new();
+            cleaner.DeleteOldLogFilesFireAndForget(directoryPath: Utilities.SettingsUtils.settingsDirectory, olderThanDays: 5, fileNamePrefix: "log_atTheLib_", fileExtension: "*.txt");
+            if (cleaner.ErrorMessages.Count > 0)
+            {
+                // Log any errors encountered during log file cleanup, but do not fail startup — the main window still opens and the user can see the messages in the banner.
+                List<(string, duHastNet.Utils.WPF.Stores.MessageTypes)> e = [];
+                foreach (var err in cleaner.ErrorMessages)
+                {
+                    e.Add(($"Error during log file cleanup: {err}", duHastNet.Utils.WPF.Stores.MessageTypes.Warning));
+                }
+                _revitDataModel.LogMessages(e);
+            }
+
             // Example log entry
-            _revitDataModel.LogMessages(new List<(string, duHastNet.Utils.WPF.Stores.MessageTypes)> { ("Starting duHastNet.AtTheLirbary.", duHastNet.Utils.WPF.Stores.MessageTypes.Information) });
+            _revitDataModel.LogMessages(new List<(string, duHastNet.Utils.WPF.Stores.MessageTypes)> { ("Starting duHastNet.AtTheLibrary.", duHastNet.Utils.WPF.Stores.MessageTypes.Information) });
 
             // load settings from file
             Models.Settings settings = Utilities.SettingsUtils.LoadSettings();

@@ -27,13 +27,20 @@ This module contains a number of helper functions relating to Revit view schedul
 #
 
 import os
+import datetime
 
 from duHast.Revit.Views.schedules import  get_all_sheet_schedules
 from duHast.Revit.Views.schedules_fields import schedule_contains_sheet_number_field, get_field_column_index_from_schedule_by_parameter_id, SHEET_NUMBER_PARAMETER_ID 
 from duHast.Revit.Views.schedules_export import export_schedule_to_file
 
 from duHast.Utilities.Objects.result import Result
-from duHast.Utilities.directory_io import directory_exists, create_temp_directory, directory_delete_with_fallback
+from duHast.Utilities.directory_io import (
+    directory_exists, 
+    create_temp_directory, 
+    directory_delete_with_fallback,  
+    get_current_user_local_app_data_duHast_temp_directory,
+    delete_old_guid_folders
+)
 from duHast.Utilities.files_get import get_files_single_directory
 from duHast.Utilities.files_io import get_file_name_without_ext
 from duHast.Utilities.file_base_read_net import read_from_delimited_text_file
@@ -127,8 +134,25 @@ def export_all_sheet_schedules_and_read_data_back(doc, export_if_number_is_hidde
     return_value = Result()
 
     try:
-        # set up a temporary directory to export the schedules to
-        directory_path = create_temp_directory()
+        # delete old temp dirs
+
+        # get the local duhast temp directory
+        local_temp_dir = get_current_user_local_app_data_duHast_temp_directory ()
+
+        # remove any old files if present older then 10 days
+        cutoff = datetime.datetime.now() - datetime.timedelta(days=10)
+       
+        delete_old_folders_result = delete_old_guid_folders(
+            root_path=local_temp_dir, 
+            cutoff_date=cutoff, 
+            dry_run=False, 
+            use_modified_time=False # use created time to determine age of folder, as modified time may be updated when files are added to the folder, but the created time will remain the same
+        )
+       
+        return_value.append_message("Deleted old temp folders with result: {result}".format(result=delete_old_folders_result.message))
+
+        # set up a temporary directory to export the schedules to in local duhast temp directory
+        directory_path = create_temp_directory(local_temp_dir)
         
         # export all sheet schedules to file
         export_result = export_all_sheet_schedules_to_file(doc=doc, directory_path=directory_path, export_if_number_is_hidden=export_if_number_is_hidden)

@@ -31,6 +31,9 @@ from os import path
 import os.path
 import shutil
 import uuid
+import datetime
+from duHast.Utilities.Objects.result import Result
+from duHast.Utilities.guids import is_guid
 
 # net import for directory delete with fall back
 from System.IO import Directory, IOException
@@ -318,3 +321,96 @@ def create_temp_directory(root_directory=None):
         
     
     return temp_directory
+
+
+def get_current_user_local_app_data_duHast_temp_directory ():
+    """
+    Get the current user's local app data duHast temp directory. Creates it if it does not exist.
+
+    :return: Path to the duHast temp directory in the user's local app data folder.
+    :rtype: str
+    """
+
+    local_app_data = get_current_user_local_app_data_directory()
+    duHast_temp_directory = os.path.join(local_app_data, r"duHast\temp")
+    
+    if not os.path.exists(duHast_temp_directory):
+        os.makedirs(duHast_temp_directory)
+    
+    return duHast_temp_directory
+
+
+def delete_old_guid_folders(root_path, cutoff_date, dry_run=False, use_modified_time=True):
+    """
+    Deletes GUID-named folders (and their contents) in root_path older than cutoff_date.
+
+    Args:
+        root_path         (str):      Path to the directory containing folders to evaluate.
+        cutoff_date       (datetime): Folders older than this date will be deleted.
+        dry_run           (bool):     If True, only prints what would be deleted.
+        use_modified_time (bool):     If True, uses last-modified time; False uses creation time.
+
+    Returns:
+        Result: Object containing lists of deleted folders, skipped non-GUID folders, and failed deletions.
+    """
+
+    return_value =Result()
+
+    deleted = []
+    skipped_non_guid=[]
+    failed_to_delete = []
+    skipped_non_guid = 0
+
+    try:
+        if not os.path.isdir(root_path):
+            raise ValueError("root_path does not exist or is not a directory: {}".format(root_path))
+
+        if not isinstance(cutoff_date, datetime.datetime):
+            raise TypeError("cutoff_date must be a datetime.datetime object")
+
+        for folder_name in os.listdir(root_path):
+            folder_path = os.path.join(root_path, folder_name)
+
+            if not os.path.isdir(folder_path):
+                continue
+
+            # Skip anything that isn't a GUID-named folder
+            if not is_guid(folder_name):
+                skipped_non_guid += 1
+                skipped_non_guid.append(folder_name)
+                continue
+
+            try:
+                stat = os.stat(folder_path)
+                timestamp = stat.st_mtime if use_modified_time else stat.st_ctime
+                folder_date = datetime.datetime.fromtimestamp(timestamp)
+
+                if folder_date < cutoff_date:
+                    if dry_run:
+                        return_value.append_message("[DRY RUN] Would delete: {} (date: {})".format(
+                            folder_path, folder_date.strftime("%Y-%m-%d %H:%M:%S")))
+                    else:
+                        delete_flag = directory_delete_with_fallback(folder_path)
+
+                        if delete_flag:
+                            return_value.append_message("Deleted: {} (date: {})".format(
+                                folder_path, folder_date.strftime("%Y-%m-%d %H:%M:%S")))
+                            deleted.append(folder_name)
+                        else:
+                            return_value.update_sep("Failed to delete: {} (date: {})".format(
+                                    folder_path, folder_date.strftime("%Y-%m-%d %H:%M:%S")))
+                            failed_to_delete.append(folder_name)
+                       
+            except Exception as e:
+                return_value.update_sep(False, "Error processing {}: {}".format(folder_path, str(e)))
+
+        return_value.append_message("Done. Deleted: {}, Skipped (non-GUID): {}, failed to delete: {}".format(len(deleted), skipped_non_guid, len(failed_to_delete)))
+    except Exception as e:
+        return_value.update_sep(False, "Error in delete_old_guid_folders: {}".format(str(e)))
+    
+    # Append results to return value
+    return_value.result.append(deleted)
+    return_value.result.append(skipped_non_guid)
+    return_value.result.append(failed_to_delete)
+
+    return return_value

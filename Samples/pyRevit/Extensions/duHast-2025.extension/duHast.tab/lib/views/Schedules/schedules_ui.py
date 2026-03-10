@@ -546,3 +546,31 @@ def get_column_width_dialogue():
         return float_width_input
     except:
         return None
+
+
+# -------------------------------------------------------------------  column prefix function -------------------------------------------------------------------
+
+def get_schedule_name_prefix_dialogue():
+    """
+    Get the user to input a schedule name prefix
+
+    :return: the column width input by the user in mm, or None if the user input is invalid
+    :rtype: float or None
+    """
+
+    text_box_column_name_prefix_key = "schedule_name_prefix_input"
+    # Define the form layout
+    components = [
+        Label("Enter schedule name prefix:"),
+        TextBox(text_box_column_name_prefix_key),  # TextBox with a key to retrieve the input
+        Button("Submit")
+    ]
+
+    # Create and show the form
+    form = FlexForm("Text Input Form", components)
+    form.show()
+
+    # Retrieve the user input
+    prefix_input = form.values.get(text_box_column_name_prefix_key)
+
+    return prefix_input

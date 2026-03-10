@@ -7,6 +7,11 @@ layout:
   - Fix Schedule Segments Overlaps
   - ----------------
   - Report Schedules Overlaps
+  - ----------------
+  - Export Room Number Filter Value
+  - Import Room Number Filter Value
+  - ----------------
+  - Extract Room Number Filter Value From Schedule Name
 
 
 # bundle tooltip

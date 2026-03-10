@@ -1,0 +1,23 @@
+# bundle title
+title: "Extract Room Number Filter Value"
+
+# bundle tooltip
+tooltip: |
+  Extracts the room number filter value from a schedules name and applies it to the room namber filter. 
+  This can be used to quickly apply the correct filter value to the room number filter after a template update including the filter tab. 
+  The user can specify the schedule name prefix after which the filter value is expected.
+
+
+# bundle author
+author: 
+  - Jan Christel
+
+
+# bundle highlighting ('new' or 'updated')
+# Revit UI will show a orange marker on the button and a border around the tooltip
+highlight: new      # highlight as new
+##highlight: updated  # highlight as updated
+
+
+# bundle help url
+help_url: "https://www.youtube.com/watch?v=H7b8hjHbauE&t=8s&list=PLc_1PNcpnV57FWI6G8Cd09umHpSOzvamf"

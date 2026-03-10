@@ -1,0 +1,22 @@
+# bundle title
+title: "Import Room Number Filter Value"
+
+# bundle tooltip
+tooltip: |
+  Imports the room number filter value from a text file. This can be used if the value was wiped by a template update including the filter tab. 
+  The text file needs to be in the same format as the one exported by the "Export Room Number Filter Value" button.
+
+
+# bundle author
+author: 
+  - Jan Christel
+
+
+# bundle highlighting ('new' or 'updated')
+# Revit UI will show a orange marker on the button and a border around the tooltip
+highlight: new      # highlight as new
+##highlight: updated  # highlight as updated
+
+
+# bundle help url
+help_url: "https://www.youtube.com/watch?v=H7b8hjHbauE&t=8s&list=PLc_1PNcpnV57FWI6G8Cd09umHpSOzvamf"

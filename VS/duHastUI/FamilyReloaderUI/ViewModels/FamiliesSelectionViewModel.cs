@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -85,7 +85,7 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
         /// <summary>
         /// Command to save the settings and close the window.
         /// </summary>
-        private RelayCommand? _saveAndCloseCommand;
+        private RelayCommand<Window>? _saveAndCloseCommand;
 
         /// <summary>
         /// Command to refresh match status of families in the UI.
@@ -242,7 +242,7 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
         /// <summary>
         /// Saves settings and closes the window.
         /// </summary>
-        private void SaveSettingsAndClose()
+        private void SaveSettingsAndClose(Window window)
         {
             _familiesDataModel.Settings.ColumnIds.Clear();
             foreach (var columnId in FamiliesSelectionDataGridViewModel.ColumnDefinitions)
@@ -272,7 +272,7 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
             _familiesDataModel.Settings.NavigationStates = statesForSettings;
 
             Utils.SettingsUtils.SaveSettings(_familiesDataModel.Settings);
-            Application.Current.MainWindow?.Close();
+            window?.Close();
         }
 
         public FamiliesSelectionViewModel(
@@ -315,9 +315,9 @@ namespace duHastNet.UI.FamilyReloaderUI.ViewModels
 
             _updateCommand = new Commands.RefreshFamilyFileMatchDataCommand(this, _familiesDataModel);
 
-            _saveAndCloseCommand = new RelayCommand(
+            _saveAndCloseCommand = new RelayCommand<Window>(
                 SaveSettingsAndClose,
-                () => !HasErrors
+                (window) => !HasErrors
             );
 
             // Initial data refresh

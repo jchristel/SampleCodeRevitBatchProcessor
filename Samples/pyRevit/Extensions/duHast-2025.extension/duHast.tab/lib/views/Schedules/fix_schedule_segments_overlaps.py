@@ -73,6 +73,10 @@ def fix_schedule_segments_overlap_entry(doc, output, forms, debug=DEBUG):
             print_error("No schedules selected for modification. Exiting...")
             return return_value
 
+        if DEBUG:
+            print("Schedules selected for modification:")
+            for schedule in schedules_to_update:
+                print(schedule.Name)
 
         # set up a pyrevit progress bar
         with forms.ProgressBar(

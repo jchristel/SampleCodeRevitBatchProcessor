@@ -22,7 +22,9 @@
 
 
 from duHast.Utilities.Objects.result import Result
+from duHast.pyRevit.console_output import print_error, print_header
 from duHast.Revit.Common.transaction import in_transaction
+from duHast.Revit.Views.schedules_element_filters import get_schedule_filters_by_field_name
 from duHast.Utilities.files_csv import read_csv_file
 from duHast.pyRevit.file_picker import get_file_path_from_user
 
@@ -90,7 +92,10 @@ def import_room_filter_values_to_schedules_entry(doc, output, forms):
         csv_data = csv_data_result.result
         print("Found {} rows in csv file".format(len(csv_data)))
 
+        # progress tracking
         counter = 1
+        max_count = len(csv_data)-1 # skipping header row
+
         # set up a pyRevit progress bar
         with forms.ProgressBar(
             title="Importing: {value} of {max_value}",
@@ -101,44 +106,60 @@ def import_room_filter_values_to_schedules_entry(doc, output, forms):
             for schedule_data in csv_data [1:]:
 
                 # format csv data into variables
-                filter_index = int(schedule_data[2])
+                field_index = int(schedule_data[2])
                 new_value = schedule_data[3]
-                filter_id = ElementId(Int64(schedule_data[1]))
+                schedule_id = ElementId(Int64(schedule_data[1]))
                 
                 # update progress
-                pb.update_progress(counter, len(csv_data))
+                pb.update_progress(counter,  max_count)
 
                 # get the schedule from revit
-                schedule = doc.GetElement(filter_id)
+                schedule = doc.GetElement(schedule_id)
+
+                print_header("Processing schedule with id: {} ({} of {})".format(schedule.Name, counter, max_count))
                 
                 # make sure schedule exists
                 if not schedule:
-                    print("Failed to get schedule with id: {} from revit".format(schedule_data[1]))
+                    print_error("Failed to get schedule with id: {} from revit".format(schedule_data[1]))
                     continue
                 
                 # get schedule name
                 schedule_name = schedule.Name
-                print("Processing schedule: {}".format(schedule_name))
                 
                 # get schedule filter
-                schedule_filter = schedule.Definition.GetFilter(filter_index)
-                if not schedule_filter:
-                    print("Failed to get filter at index {} for schedule: {}".format(filter_index ,schedule_name))
+                schedule_filters = get_schedule_filters_by_field_name(schedule, SCHEDULE_FILTER_FIELD_NAME)
+                if len(schedule_filters) == 0:
+                    print_error("Schedule {} has no filters for field: {}".format(schedule_name, SCHEDULE_FILTER_FIELD_NAME))
                     continue
 
+                schedule_filter = schedule_filters[0]
+                if not schedule_filter:
+                    print_error("Failed to get filter at index {} for schedule: {}".format(field_index ,schedule_name))
+                    continue
+
+                
+                all_filters = schedule.Definition.GetFilters()
+                filter_index = 0
+                for filter in all_filters:
+                    if filter.Equals(schedule_filter):
+                        break
+                    filter_index = filter_index + 1
+                print("Found filter at index {} for schedule: {}".format(filter_index, schedule_name))
+
                 # get schedule field
-                schedule_field = schedule.Definition.GetField(schedule_filter.FieldId)
-                schedule_field_name = schedule_field.GetName()
+                #schedule_field = schedule.Definition.GetField(schedule_filter.FieldId)
+                #schedule_field_name = schedule_field.GetName()
                 
                 # set up an action to change the filter value
                 def action():
                     action_return_value = Result()
                     try:
+                        action_return_value.append_message("Attempting filter to value {} at filter index {} for schedule: {}".format(new_value, field_index, schedule_name))
                         # set filter value
                         schedule_filter.SetValue(new_value)
                         # update the filter in the schedule
-                        schedule.Definition.SetFilter(filter_index,schedule_filter)
-                        action_return_value.append_message("Set filter value {} for field {} in schedule: {}".format(schedule_data[3], schedule_field_name, schedule_name))
+                        schedule.Definition.SetFilter(field_index,schedule_filter)
+                        action_return_value.append_message("Set filter value {} at index {} for field {} in schedule: {}".format(schedule_data[3], field_index, SCHEDULE_FILTER_FIELD_NAME, schedule_name))
                     except Exception as e:
                         action_return_value.update_sep(
                             False, "Failed to write filter value with exception: {}".format(e)
@@ -165,8 +186,10 @@ def import_room_filter_values_to_schedules_entry(doc, output, forms):
                     break
 
     except Exception as e:
+        message =  "Failed to write filter values with exception: {}".format(e)
+        print_error(message)
         return_value.update_sep(
-            False, "Failed to write filter values with exception: {}".format(e)
+            False, message
         )
 
     #print("\n{}".format(return_value.message))

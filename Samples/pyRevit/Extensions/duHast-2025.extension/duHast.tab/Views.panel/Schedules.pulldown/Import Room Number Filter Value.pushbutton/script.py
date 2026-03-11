@@ -6,7 +6,7 @@ output = script.get_output()
 # get the revit document
 doc = revit.doc
 
-from views.import_room_filters_to_schedules import import_room_filter_values_to_schedules_entry
+from views.Schedules.import_room_filters_to_schedules import import_room_filter_values_to_schedules_entry
 print ("Importing Room Number filter value...")
 
 

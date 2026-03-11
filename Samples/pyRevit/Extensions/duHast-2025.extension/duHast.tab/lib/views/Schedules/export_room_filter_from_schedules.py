@@ -25,8 +25,10 @@ import csv
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.files_csv import write_report_data_as_csv
+from duHast.Revit.Views.schedules_element_filters import get_schedule_filters_by_field_name
 from schedules_ui import get_schedules_from_user
 from families.util.print_table import print_result_table
+from duHast.pyRevit.console_output import print_error, print_header
 
 from Autodesk.Revit.DB import ElementId
 
@@ -85,37 +87,34 @@ def export_room_filter_values_from_schedules_entry(doc, output, forms):
             cancellable=True,
         ) as pb:
             
-            print("Gathering schedule values:")
+            print_header("Gathering schedule values:")
 
             data = []
 
             max_count = len(schedule_of_interest)
             schedule_counter = 1
             # get room filter values from schedules
-            for schedule_id in schedule_of_interest:
+            for schedule in schedule_of_interest:
 
-
+                print_header("Processing schedule: {} ({} of {})".format(schedule.Name, schedule_counter, max_count))
                 pb.update_progress(schedule_counter, max_count)
 
-                schedule = doc.GetElement(schedule_id)
-                if schedule.Definition.GetFilterCount() > 0:
-                   
-                    filters = schedule.Definition.GetFilters()
-
-                    for filter in filters:
-                        schedule_field = schedule.Definition.GetField(filter.FieldId)
-                        schedule_filed_name = schedule_field.GetName()
-                        if schedule_filed_name == SCHEDULE_FILTER_FIELD_NAME:
-                        
-                            if filter.IsStringValue:
-
-                                data.append([schedule.Name, str(int(schedule.Id.Value)), str(schedule_field.FieldIndex), filter.GetStringValue()])
-                            else:
-                                print("filter is not a string value")
+                # get all filters for the schedule for the field name "Room: Number"
+                filters_for_room_number = get_schedule_filters_by_field_name(schedule, SCHEDULE_FILTER_FIELD_NAME)
+                
+                if len(filters_for_room_number) > 0:
+                    for filter in filters_for_room_number:
+                        if filter.IsStringValue:
+                            print("Found filter for field {} with value: {}".format(SCHEDULE_FILTER_FIELD_NAME, filter.GetStringValue()))
+                            data.append([schedule.Name, str(int(schedule.Id.Value)), str(schedule.Definition.GetField(filter.FieldId).FieldIndex), filter.GetStringValue()])
                             
+                            # only export one filter value per schedule, if there are multiple filters for the same field, only the first one will be exported. 
+                            # This is to avoid confusion and to keep the export simple. 
                             break
+                        else:
+                            print("filter is not a string value")
                 else:
-                    print("Schedule {} has no filters".format(schedule.Name))
+                    print_error("Schedule {} has no filters".format(schedule.Name))
                 
                 # update schedule counter
                 schedule_counter += 1
@@ -145,8 +144,10 @@ def export_room_filter_values_from_schedules_entry(doc, output, forms):
                 print("No file path selected")
 
     except Exception as e:
+        message = "An exception occurred while exporting filter values from schedules: {}".format(e)
+        print_error(message)
         return_value.update_sep(
-            False, "Failed to write filter values with exception: {}".format(e)
+            False, message
         )
 
     print("\n{}".format(return_value.message))

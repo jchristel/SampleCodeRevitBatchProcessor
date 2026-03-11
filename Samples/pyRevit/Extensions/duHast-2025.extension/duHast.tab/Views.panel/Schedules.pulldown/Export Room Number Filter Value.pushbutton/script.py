@@ -6,8 +6,8 @@ output = script.get_output()
 # get the revit document
 doc = revit.doc
 
-#from views.Schedules.export_schedule_column_width import export_schedules_column_width_entry
-print ("Importing Room Number filter value...")
+from views.Schedules.export_room_filter_from_schedules import export_room_filter_values_from_schedules_entry
+print ("Exporting Room Number filter value...")
 
 
-#export_result = export_schedules_column_width_entry(doc, output, forms)
+export_result = export_room_filter_values_from_schedules_entry(doc, output, forms)

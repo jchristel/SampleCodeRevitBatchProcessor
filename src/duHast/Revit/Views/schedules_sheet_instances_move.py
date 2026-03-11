@@ -32,6 +32,7 @@ from duHast.Revit.Common.transaction import in_transaction
 from duHast.Revit.Views.schedules import filter_split_schedules
 from duHast.Revit.Views.schedules_sheet_instances_overlap import check_schedule_sheet_instances_are_overlapping
 from duHast.UI.Objects.ProgressBase import ProgressBase
+from duHast.Revit.Common.element_id import get_element_id_from_int
 
 from Autodesk.Revit.DB import (
     Element,
@@ -41,6 +42,7 @@ from Autodesk.Revit.DB import (
     XYZ
     )
 
+from System import Int64
 
 def move_schedule_instance_along_x(doc, segments_to_move, schedule_name):
     """
@@ -63,18 +65,19 @@ def move_schedule_instance_along_x(doc, segments_to_move, schedule_name):
             action_return_value = Result()
             desired_Gap = distance 
             try:
-                view_schedule_instance = doc.GetElement(ElementId(segment_id))
+                revit_id = get_element_id_from_int(segment_id)
+                view_schedule_instance = doc.GetElement(revit_id)
                 current_pos = view_schedule_instance.Point
                 target_pos = XYZ(view_schedule_instance.Point.X + desired_Gap, current_pos.Y, 0)
                 translation = target_pos - current_pos
                 ElementTransformUtils.MoveElement(doc, view_schedule_instance.Id, translation)
             except Exception as e:
                 action_return_value.update_sep(False, "{}".format(e))
+            return action_return_value
 
         # set up a transaction to move the schedule segment
         tranny = Transaction(doc, "Moving segment of schedule {}".format( schedule_name))
         tranny_result = in_transaction(tranny, action)
-        
         # check what came back
         if tranny_result.status:
             return_value.append_message("...Moved schedule segment with id: {} successfully".format(segment_id))
@@ -109,7 +112,6 @@ def resolve_overlaps(doc, schedule, schedule_name, max_iterations=10):
         
         # check for segments that are overlapping and need to be moved
         segments_to_move = check_schedule_sheet_instances_are_overlapping(doc, schedule)
-        
         # if no segments need to be moved then we are done
         if not segments_to_move:
             return_value.append_message("No more overlaps detected after {} iterations.".format(iteration))
@@ -118,7 +120,6 @@ def resolve_overlaps(doc, schedule, schedule_name, max_iterations=10):
 
         # lets start moving them one by one since moving them all at once can cause new overlaps to be detected that would not have been if we had moved them sequentially
         move_result = move_schedule_instance_along_x(doc, segments_to_move, schedule_name)
-        
         # check if move was successful
         if not move_result.status:
             return_value.update_sep(False, "Failed to move schedule segments during overlap resolution: {}".format(move_result.message))

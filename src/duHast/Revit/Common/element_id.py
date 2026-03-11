@@ -69,3 +69,28 @@ def get_el_id_int(el):
         return int(el_id.Value)
     else:
         raise ValueError("Element id property: {} does not have an IntegerValue or Value attribute.".format(type(el_id)))
+    
+
+def get_element_id_from_int(value):
+    """
+    Creates an ElementId from an integer value, handling both Int32 and Int64 constructors.
+    
+    :param value: The integer value to convert to ElementId.
+    :type value: int
+    :return: An ElementId object.
+    :rtype: ElementId
+    
+    """
+    from System import Int64
+    if not isinstance(value, int):
+        raise ValueError("Value must be an integer to create an ElementId.")
+    
+    # Check which constructor is available
+    if getattr(ElementId.InvalidElementId, "IntegerValue", None) is not None:
+        # Int32 constructor available (older Revit versions)
+        return ElementId(value)
+    elif getattr(ElementId.InvalidElementId, "Value", None) is not None:
+        # Int64 constructor required (newer Revit versions)
+        return ElementId(Int64(value))
+    else:
+        raise ValueError("Cannot determine ElementId constructor type (neither IntegerValue nor Value attribute found).")

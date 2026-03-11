@@ -106,8 +106,9 @@ def import_room_filter_values_to_schedules_entry(doc, output, forms):
             for schedule_data in csv_data [1:]:
 
                 # format csv data into variables
-                field_index = int(schedule_data[2])
-                new_value = schedule_data[3]
+                field_index = int(schedule_data[2]) # not used at the moment
+                filter_index = int(schedule_data[3])
+                new_value = schedule_data[4]
                 schedule_id = ElementId(Int64(schedule_data[1]))
                 
                 # update progress
@@ -134,32 +135,19 @@ def import_room_filter_values_to_schedules_entry(doc, output, forms):
 
                 schedule_filter = schedule_filters[0]
                 if not schedule_filter:
-                    print_error("Failed to get filter at index {} for schedule: {}".format(field_index ,schedule_name))
+                    print_error("Failed to get filter at index {} for schedule: {}".format(filter_index ,schedule_name))
                     continue
-
-                
-                all_filters = schedule.Definition.GetFilters()
-                filter_index = 0
-                for filter in all_filters:
-                    if filter.Equals(schedule_filter):
-                        break
-                    filter_index = filter_index + 1
-                print("Found filter at index {} for schedule: {}".format(filter_index, schedule_name))
-
-                # get schedule field
-                #schedule_field = schedule.Definition.GetField(schedule_filter.FieldId)
-                #schedule_field_name = schedule_field.GetName()
                 
                 # set up an action to change the filter value
                 def action():
                     action_return_value = Result()
                     try:
-                        action_return_value.append_message("Attempting filter to value {} at filter index {} for schedule: {}".format(new_value, field_index, schedule_name))
+                        action_return_value.append_message("Attempting filter to value {} at filter index {} for schedule: {}".format(new_value, filter_index, schedule_name))
                         # set filter value
                         schedule_filter.SetValue(new_value)
                         # update the filter in the schedule
-                        schedule.Definition.SetFilter(field_index,schedule_filter)
-                        action_return_value.append_message("Set filter value {} at index {} for field {} in schedule: {}".format(schedule_data[3], field_index, SCHEDULE_FILTER_FIELD_NAME, schedule_name))
+                        schedule.Definition.SetFilter(filter_index,schedule_filter)
+                        action_return_value.append_message("Set filter value {} at index {} for field {} in schedule: {}".format(schedule_data[3], filter_index, SCHEDULE_FILTER_FIELD_NAME, schedule_name))
                     except Exception as e:
                         action_return_value.update_sep(
                             False, "Failed to write filter value with exception: {}".format(e)

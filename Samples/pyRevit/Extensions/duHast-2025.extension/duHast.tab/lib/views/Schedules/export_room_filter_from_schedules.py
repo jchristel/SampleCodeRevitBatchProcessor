@@ -25,7 +25,7 @@ import csv
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.files_csv import write_report_data_as_csv
-from duHast.Revit.Views.schedules_element_filters import get_schedule_filters_by_field_name
+from duHast.Revit.Views.schedules_element_filters import get_schedule_filters_and_index_by_field_name
 from schedules_ui import get_schedules_from_user
 from families.util.print_table import print_result_table
 from duHast.pyRevit.console_output import print_error, print_header
@@ -100,13 +100,15 @@ def export_room_filter_values_from_schedules_entry(doc, output, forms):
                 pb.update_progress(schedule_counter, max_count)
 
                 # get all filters for the schedule for the field name "Room: Number"
-                filters_for_room_number = get_schedule_filters_by_field_name(schedule, SCHEDULE_FILTER_FIELD_NAME)
+                filters_for_room_number =get_schedule_filters_and_index_by_field_name(schedule, SCHEDULE_FILTER_FIELD_NAME)
                 
                 if len(filters_for_room_number) > 0:
-                    for filter in filters_for_room_number:
+                    for filter_tuple in filters_for_room_number:
+                        filter = filter_tuple[0]
+                        filter_index = filter_tuple[1]
                         if filter.IsStringValue:
                             print("Found filter for field {} with value: {}".format(SCHEDULE_FILTER_FIELD_NAME, filter.GetStringValue()))
-                            data.append([schedule.Name, str(int(schedule.Id.Value)), str(schedule.Definition.GetField(filter.FieldId).FieldIndex), filter.GetStringValue()])
+                            data.append([schedule.Name, str(int(schedule.Id.Value)), str(schedule.Definition.GetField(filter.FieldId).FieldIndex), str(filter_index), filter.GetStringValue()])
                             
                             # only export one filter value per schedule, if there are multiple filters for the same field, only the first one will be exported. 
                             # This is to avoid confusion and to keep the export simple. 
@@ -126,7 +128,7 @@ def export_room_filter_values_from_schedules_entry(doc, output, forms):
                     return return_value
                         
 
-            header = ["Schedule Name", "Schedule Id", "Filter index", "Room Filter Value"]
+            header = ["Schedule Name", "Schedule Id", "Field Index", "Filter index", "Room Filter Value"]
 
             print_result_table(output, data, header, "Schedule Filter Values")
 

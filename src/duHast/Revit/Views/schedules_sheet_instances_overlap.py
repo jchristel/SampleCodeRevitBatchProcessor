@@ -27,6 +27,7 @@ This module contains a number of helper functions relating to moving of Revit sh
 #
 
 from duHast.Revit.Views.sheets import get_titleblock_bounding_box
+from duHast.Revit.Common.element_id import get_el_id_int
 
 from Autodesk.Revit.DB import (
     FilteredElementCollector,
@@ -66,10 +67,10 @@ def check_schedule_sheet_instances_are_overlapping(doc, schedule, sheet_id=None)
         for instance_id in instance_ids:
             instance = doc.GetElement(instance_id)
             owner_sheet = doc.GetElement(instance.OwnerViewId)
-            sheet_key = instance.OwnerViewId.IntegerValue
+            sheet_key =  get_el_id_int(instance.OwnerViewId)
 
             # skip if only interested in particular sheet and this instance is not on that sheet
-            if sheet_id and sheet_key != sheet_id.IntegerValue:
+            if sheet_id and sheet_key != get_el_id_int(sheet_id):
                 continue
 
             bb = instance.get_BoundingBox(owner_sheet)
@@ -97,10 +98,10 @@ def check_schedule_sheet_instances_are_overlapping(doc, schedule, sheet_id=None)
                     # move the rightmost segment out of the way
                     if j_min_x >= i_min_x:
                         delta = i_max_x - j_min_x + SCHEDULE_MARGIN
-                        segments_to_move[j_id.IntegerValue] = delta
+                        segments_to_move[get_el_id_int(j_id)] = delta
                     else:
                         delta = j_max_x - i_min_x + SCHEDULE_MARGIN
-                        segments_to_move[i_id.IntegerValue] = delta
+                        segments_to_move[get_el_id_int(i_id)] = delta
 
     return segments_to_move
 
@@ -149,7 +150,7 @@ def check_schedules_overlap_titleblock(doc, sheet):
 
         if overlap_x and overlap_y:
             delta = tb_bb.Max.X - s_min_x + SCHEDULE_MARGIN
-            segments_to_move[instance.Id.IntegerValue] = delta
+            segments_to_move[get_el_id_int(instance.Id)] = delta
 
     return segments_to_move
 
@@ -201,7 +202,7 @@ def check_schedules_outside_titleblock(doc, sheet):
             issues.append("top")
 
         if issues:
-            segments_outside[instance.Id.IntegerValue] = issues
+            segments_outside[get_el_id_int(instance.Id)] = issues
 
     return segments_outside
 
@@ -267,7 +268,7 @@ def check_schedules_overlap_viewports(doc, sheet):
             if overlap_x and overlap_y:
                 # take the worst case delta if multiple viewports overlap
                 delta = vp_max_x - s_min_x
-                instance_key = instance.Id.IntegerValue
+                instance_key = get_el_id_int(instance.Id)
                 if instance_key not in segments_to_move or delta > segments_to_move[instance_key]:
                     segments_to_move[instance_key] = delta
 

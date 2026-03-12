@@ -31,9 +31,7 @@ import System
 
 # import common library modules
 from duHast.Revit.Common.revit_version import get_revit_version_number
-from duHast.Revit.SharedParameters.shared_parameter_add import (
-    load_shared_parameter_file,
-)
+from duHast.Revit.SharedParameters.shared_parameter_load_def_file import load_shared_parameter_file
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

@@ -15,27 +15,14 @@ from duHast.Utilities.Objects import result as res
 
 # import InTransaction from common module
 from duHast.Revit.Common import transaction as rTran
+from duHast.Revit.Common.parameter_grouping import PARAMETER_GROUPING_TO_GROUP_TYPE_ID
 
+from duHast.Revit.SharedParameters.shared_parameters import (
+    check_whether_shared_parameters_by_name_is_family_parameter,
+)
 
-def load_shared_parameter_file(doc, path=None):
-    """
-    Loads a shared parameter file.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :param path: (Optional) Fully qualified file path to shared parameter text file.
-    :type path: str
-
-    :return: The opened shared parameter file.
-    :rtype: Autodesk.Revit.DB.DefinitionFile
-    """
-
-    app = doc.Application
-    if path:
-        app.SharedParametersFilename = path
-
-    return app.OpenSharedParameterFile()
-
+from duHast.Revit.SharedParameters.Objects.shared_parameter_data import ParameterModel
+from duHast.Revit.SharedParameters.shared_parameter_load_def_file import load_shared_parameter_file
 
 def bind_shared_parameter(
     doc,
@@ -246,18 +233,20 @@ def bind_shared_parameter(
     return return_value
 
 
-def add_shared_parameter_to_family(para, mgr, doc, def_file):
+def add_shared_parameter_to_family(para, mgr, doc, def_file, parameter_modifier=None):
     """
     Adds a shared parameter definition to a family document.
 
-    :param para: Tuple containing parameter info
-    :type para: tuple (refer module RevitSharedParametersTuple)
+    :param para: shared parameter object containing parameter info
+    :type para: :class:`.ParameterModel`
     :param mgr: The family manager object
     :type mgr: Autodesk.Revit.DB.FamilyManager
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param def_file: The shared parameter definition file.
     :type def_file: _type_
+    :param parameter_modifier: (Optional) A function that takes the family manager, the parameter and the parameter value as input and modifies the parameter value after it has been added to the family. Can be used to set a default value, formula, or other modifications to the parameter value after it has been added to the family.
+    :type parameter_modifier: function
 
     :return:
         Result class instance.
@@ -277,6 +266,23 @@ def add_shared_parameter_to_family(para, mgr, doc, def_file):
     return_value = res.Result()
     found_para = False
     try:
+
+        if isinstance(para, ParameterModel) == False:
+            raise TypeError("para must be of type ParameterModel. Got {} instead.".format(type(para)))
+        
+        # check if a parameter with the same name already exists in the family, if so, return and do not add parameter
+        family_shared_parameter = (
+            check_whether_shared_parameters_by_name_is_family_parameter(doc, para.name)
+        )
+
+        if family_shared_parameter != None:
+            # return existing parameter in result.result 
+            return_value.result.append(family_shared_parameter)
+            return_value.append_message (
+                para.name + " : parameter already exists in family: " + family_shared_parameter.Definition.Name
+            )
+            return return_value
+        
         # loop through parameters and try to find matching one to be added from parameter file
         # loop through all definition groups
         for group in def_file.Groups:
@@ -287,14 +293,32 @@ def add_shared_parameter_to_family(para, mgr, doc, def_file):
                     # jump to next parameter
                     continue
 
+                # check if we have a valid group type id:
+                group_type_id = PARAMETER_GROUPING_TO_GROUP_TYPE_ID.get(para.group_type_id,None)
+                if group_type_id == None:
+                    raise ValueError("Invalid group type id: {}. Please provide one of the following: {}".format(
+                        para.group_type_id, list(PARAMETER_GROUPING_TO_GROUP_TYPE_ID.keys())
+                    ))
+                
                 # set up an action to add parameter
                 def action():
                     action_return_value = res.Result()
                     try:
-                        # add parameter depending on name, forge type id using the group type id and isInstance
+                        # add parameter depending on name, forge type id using the group type id and is_type_parameter
                         fam_para = mgr.AddParameter(
-                            def_para, para.GroupTypeId, para.isInstance
+                            def_para, group_type_id, not(para.is_type_parameter)
                         )
+
+                        # check if anything needs to be modified on the parameter (value, formula, etc.) using the parameter_modifier function, if provided
+                        if parameter_modifier != None:
+                            try:
+                                modify_result = parameter_modifier(mgr, fam_para, para.parameter_value)
+                                action_return_value.update(modify_result)
+                            except Exception as e:
+                                action_return_value.update_sep(False, "Failed to modify parameter value with exception: {}".format(e))
+                        else:
+                            action_return_value.append_message("No parameter modifier provided, skipping parameter value modification.")
+
                         action_return_value.append_message(
                             para.name + " : parameter successfully added."
                         )
@@ -317,6 +341,7 @@ def add_shared_parameter_to_family(para, mgr, doc, def_file):
             if found_para:
                 # get out of outer loop
                 break
+
     except Exception as e:
         return_value.status = False
         return_value.append_message (
@@ -329,6 +354,94 @@ def add_shared_parameter_to_family(para, mgr, doc, def_file):
             para.name + " : No match for parameter found in shared parameter file."
         )
 
+    return return_value
+
+
+def add_multiple_shared_parameters_to_family(doc, parameter_data):
+    """
+    Adds multiple shared parameters to a family document.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param parameter_data: List of ParameterModel objects containing parameter info for parameters to be added.
+    :type parameter_data: list[tuple]
+
+    :return:
+        Result class instance.
+
+        - True if added successfully. False if an exception occurred.
+        - result.message will contain the name of the shared parameter.
+        - .result.result will contain the family parameter object.
+
+        On exception (handled by optimizer itself!):
+    
+    """
+
+    return_value = res.Result()
+
+    try:
+        # check if parameter data is in correct format
+        if isinstance(parameter_data, list) == False:
+            raise TypeError("parameter_data must be of type list. Got {} instead.".format(type(parameter_data)))
+        if all(isinstance(x, ParameterModel) for x in parameter_data) == False:
+            raise TypeError("All items in parameter_data must be of type ParameterModel.")
+        
+        # check this is a family document
+        if doc.IsFamilyDocument == False:
+            return_value.update_sep(False, "Document is not a family document.")
+            return return_value
+        
+        # get the family manager
+        family_manager = doc.FamilyManager
+
+        # add parameters and values
+        for single_para in parameter_data:
+            # get the shard parameter file definition ( there can be a different file for each parameter )
+            return_value.append_message("Atempting to open share parameter file at: <{}>".format(single_para.shared_parameter_file_path))
+            shared_parameter_definition_file = load_shared_parameter_file(doc=doc, path=single_para.shared_parameter_file_path)
+            if shared_parameter_definition_file == None:
+                raise Exception("Shared parameter file not found")
+            
+            return_value.append_message("Found shared parameter file: {}".format(single_para.shared_parameter_file_path))
+
+            # check if the value of the parameter is set or if it is a formula, if so, set up a parameter modifier function to modify the parameter value after it has been added to the family
+            parameter_modifier = None
+            if single_para.parameter_value != None and single_para.value_is_formula == True:
+                def parameter_modifier(mgr, parameter, parameter_value):
+                    modifier_return_value = res.Result()
+                    try:
+                        mgr.SetFormula( parameter, parameter_value)
+                    except Exception as e:
+                        modifier_return_value.status = False
+                        modifier_return_value.append_message("Failed to set parameter value as formula with exception: {}".format(e))
+                    return modifier_return_value
+            elif single_para.parameter_value != None and single_para.value_is_formula == False:
+                def parameter_modifier(mgr, parameter, parameter_value):
+                    modifier_return_value = res.Result()
+                    try:
+                        mgr.Set(parameter, parameter_value)
+                    except Exception as e:
+                        modifier_return_value.status = False
+                        modifier_return_value.append_message("Failed to set parameter value with exception: {}".format(e))
+                    return modifier_return_value
+            else:  
+                parameter_modifier = None
+
+            # add the parameter to the family
+            add_para_result = add_shared_parameter_to_family(
+                para=single_para, 
+                mgr=family_manager, 
+                doc=doc, 
+                def_file=shared_parameter_definition_file,
+                parameter_modifier=parameter_modifier
+            )
+            
+            return_value.update(add_para_result)
+
+    except Exception as e:
+        return_value.update_sep(False,
+            "Failed to add multiple shared parameters to family with exception: " + str(e)
+        )
     return return_value
 
 

@@ -193,6 +193,44 @@ def copy_new_families_to_library(output_path, library_path, output):
         return return_value
     
 
+def move_directives_to_library(output_path, library_path, output):
+    """
+    Moves directive files from the output path to the library path.
+
+    :param output_path: Path where directive files are located.
+    :type output_path: str
+    :param library_path: Path to the library where directive files will be moved.
+    :type library_path: str
+    :param output: Output function to log messages.
+    :type output: function
+
+    :return: Result object indicating success or failure of the operation.
+    :rtype: Result
+    """
+
+    return_value = Result()
+
+    try:
+        # get all directive files
+        files = get_files_single_directory(output_path, "", "", ".csv")
+        if len(files) == 0:
+            return_value.update_sep(False, "No directive files found in output directory: {}".format(output_path))
+            return return_value
+
+        # move directive files to library path
+        move_flag = move_files(files, library_path, output)
+        
+        if not move_flag:
+            return_value.update_sep(False, "Failed to move directive files to library: {}".format(library_path))
+            return return_value
+        else:
+            return_value.update_sep(True, "Moved directive files to library: {}".format(library_path))
+        return return_value
+    except Exception as e:
+        return_value.update_sep(False, "Failed to move directive files to library: {}".format(str(e)))
+        return return_value
+
+
 def post_process_family(output_path, library_path, backup_directory_path, output):
     """
     Post-process function to handle the final steps after family processing.
@@ -240,6 +278,19 @@ def post_process_family(output_path, library_path, backup_directory_path, output
                 "Successfully moved original families to backup directory: {}".format(backup_directory_path)
             )
             output("Successfully moved original families to backup directory: {}".format(backup_directory_path))
+        
+        move_directives_result = move_directives_to_library(output_path, library_path, output)
+        if move_directives_result.status is False:
+            return_value.update_sep(
+                False,
+                "Failed to move directive files to library: {}".format(move_directives_result.message),
+            )
+            output("Failed to move directive files to library: {}".format(move_directives_result.message))
+        else:
+            return_value.append_message(
+                "Successfully moved directive files to library: {}".format(library_path)
+            )
+            output("Successfully moved directive files to library: {}".format(library_path))
 
     except Exception as e:
         return_value.update_sep(

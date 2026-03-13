@@ -63,7 +63,7 @@ def get_family_data_from_file(libraryPath):
         return family_data_result.result
     
 
-def pre_process(library_path, output_path, task_list_directory_path, code_descriptor_path, output):
+def pre_process(library_path, output_path, task_list_directory_path, code_descriptor_path, output, number_of_task_lists=3):
     """
     Pre-process function to prepare for the family type data extraction.
     
@@ -204,7 +204,7 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
         write_task_lists_result = write_task_lists(
             family_directory=output_path, 
             task_list_directory = task_list_directory_path, 
-            number_of_task_lists=3)
+            number_of_task_lists=number_of_task_lists)
         
         output(write_task_lists_result)
 

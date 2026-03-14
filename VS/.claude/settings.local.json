@@ -3,7 +3,9 @@
     "allow": [
       "Bash(ls -d C:/Users/janchristel/Documents/GitHub/SampleCodeRevitBatchProcessor-NET8/VS/duHastUI/*/)",
       "Bash(dir /b /ad \"C:\\\\Users\\\\janchristel\\\\Documents\\\\GitHub\\\\SampleCodeRevitBatchProcessor-NET8\\\\VS\\\\duHastUI\")",
-      "Bash(dir \"C:\\\\Users\\\\janchristel\\\\Documents\\\\GitHub\\\\SampleCodeRevitBatchProcessor-NET8\\\\Samples\\\\pyRevit\\\\*.md\" /b)"
+      "Bash(dir \"C:\\\\Users\\\\janchristel\\\\Documents\\\\GitHub\\\\SampleCodeRevitBatchProcessor-NET8\\\\Samples\\\\pyRevit\\\\*.md\" /b)",
+      "Bash(grep -iE '\\(views?/\\)|\\(views?\\\\\\\\\\)')",
+      "Bash(ls -d \"C:\\\\Users\\\\janchristel\\\\Documents\\\\GitHub\\\\SampleCodeRevitBatchProcessor-NET8\\\\Samples\\\\pyRevit\\\\Extensions\\\\duHast-2025.extension\\\\duHast.tab\"/*)"
     ]
   }
 }

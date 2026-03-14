@@ -146,11 +146,11 @@ Tools for working with cloud-hosted Revit models.
 
 ### Views — Schedules
 
-Tools for managing schedule column widths.
+Tools for managing Revit schedules on sheets and in views.
 
 | Button Group | Description |
 |---|---|
-| [Schedule Column Widths](views_schedules.md) | Export column widths to file, restore from file, or set widths by column name |
+| [Schedules](views_schedules.md) | Manage column widths; report and fix schedule segment overlaps on sheets; export, extract, and import Room: Number filter values |
 
 ---
 

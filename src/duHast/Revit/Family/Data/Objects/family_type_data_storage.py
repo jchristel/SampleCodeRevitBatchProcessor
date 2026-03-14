@@ -367,7 +367,6 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
         """
 
         data = []
-        
         if parameter_names is None:
             for param in self.parameters:
                 # get the report data for the parameter
@@ -376,7 +375,9 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
                 data.append(para_report_data)
         else:
             for parameter_name in parameter_names:
-                param = self.get_parameter_by_name(parameter_name)
+                # note: parameter with spaces in name have the spaces replaced with underscores in the parameter names list for the catalogue file, so we need to replace them back when looking for the parameter in the family type data storage object
+                parameter_name_without_spaces = parameter_name.replace(" ", "_")
+                param = self.get_parameter_by_name(parameter_name_without_spaces)
                 if param is not None:
                     # get the report data for the parameter
                     para_report_data = param.get_catalogue_file_data()
@@ -385,6 +386,7 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
                 else:
                     # add no data for the parameter
                     pass
+                
                 
         # add the type name to the front
         data.insert(0, self.family_type_name)
@@ -406,11 +408,12 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
         # add the header row based on the parameter names
         if parameter_names is not None:
             for parameter_name in parameter_names:
-
-                para_storage = self.get_parameter_by_name(parameter_name)
+                # note: parameter with spaces in name have the spaces replaced with underscores in the parameter names list for the catalogue file, so we need to replace them back when looking for the parameter in the family type data storage object
+                parameter_name_without_spaces = parameter_name.replace(" ", "_")
+                para_storage = self.get_parameter_by_name(parameter_name_without_spaces)
                 if para_storage is not None:
                     # get the header row for the parameter
-                    para_header_row = para_storage.get_catalogue_file_header_row()
+                    para_header_row = para_storage.get_catalogue_file_header_row(parameter_name)
                     # append the data to the list
                     header_row.append(para_header_row)
                 else:

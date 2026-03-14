@@ -191,6 +191,8 @@ class FamilyTypeDataStorageManager(Base):
                 family_type_data_storage.get_catalogue_file_data(parameter_names)
             )
 
+        # sort the catalogue file data by family type name to ensure consistent order when name is displayed in progress
+        catalogue_file_data.sort(key=lambda x: x[0])
 
         return catalogue_file_data
 

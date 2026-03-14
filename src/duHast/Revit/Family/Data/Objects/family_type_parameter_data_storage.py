@@ -33,6 +33,7 @@ Used to store values of family parameters by family type.
 
 # note this module is not utf-8 encoded as it contains special characters representing units of measurement that are not utf-8 encoded 
 
+import System
 
 from duHast.Utilities.Objects.base import Base
 from duHast.Revit.Family.Data.Objects import ifamily_data_storage as IFamDataStorage
@@ -218,6 +219,11 @@ class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
             )
         )
 
+    def str_to_bytes(self,s):
+        enc = System.Text.Encoding.GetEncoding("iso-8859-1")
+        net_bytes = enc.GetBytes(s)
+        return bytes(bytearray(net_bytes))  # Convert to Python bytes
+
     def get_difference(self, other):
         """
         get the difference between this object and another object
@@ -285,15 +291,16 @@ class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
         return self.value
     
 
-    def get_catalogue_file_header_row(self):
+    def get_catalogue_file_header_row(self, parameter_name=None):
         """
         Get the catalogue file header row for this object sample ParameterName##LENGTH##MILLIMETERS
 
+        :param parameter_name: the name of the parameter (sometimes the parameter name in the family type data storage object has spaces replaced with underscores, so the parameter name from the catalogue file header row is passed in to ensure the correct parameter is used in the header row generation)
+        :type parameter_name: str
         :return: the catalogue file header row entry for this parameter
         :rtype: str
         """
 
-        
         # check if the type of parameter is in the mapper
         if self.type_of_parameter not in PARAMETER_STORAGE_TYPE_MAPPER:
             raise ValueError("Unknown parameter type: {} for parameter: {}".format(self.type_of_parameter, self.name))
@@ -303,11 +310,17 @@ class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
 
         # check if the units are in the mapper
         # dictionary uses as keys byte strings due to non unicode characters!
-        if self.units not in PARAMETER_UNITS_MAPPER:
+        # check if the units in this parameter are in byte string format, if so, decode them to strings for comparison with the mapper keys ( which are byte strings due to non unicode characters)
+        unit_as_byte_string = self.units
+        if isinstance(self.units, bytes) == False:
+            unit_as_byte_string = self.str_to_bytes(self.units)
+        
+        # get the unit names for the catalogue file based on the units of the parameter and the type of parameter
+        if unit_as_byte_string not in PARAMETER_UNITS_MAPPER:
             raise ValueError("Unknown parameter unit: {} for parameter: {}".format( self.units, self.name))
         
         # get the mapper name for the units
-        unit_names_lists_for_catalogue_file = PARAMETER_UNITS_MAPPER[self.units]
+        unit_names_lists_for_catalogue_file = PARAMETER_UNITS_MAPPER[unit_as_byte_string]
 
         found_unit_match = False
         unit_names_for_catalogue_file=""
@@ -328,6 +341,10 @@ class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
         if not found_unit_match:
             raise ValueError("Unknown parameter unit: {} for parameter: {}".format(self.units, self.name))
 
-
+        # check if a parameter name was passed in, if not use the name from the family type data storage object 
+        # ( sometimes the parameter name in the family type data storage object has spaces replaced with underscores, 
+        # so the parameter name from the catalogue file header row is passed in to ensure the correct parameter is used in the header row generation)
+        return_name_for_file = parameter_name if parameter_name is not None else self.name
+        
         # return the catalogue file header row entry for this parameter
-        return "{}##{}##{}".format(self.name, type_name_revised_for_file, unit_names_for_catalogue_file)
+        return "{}##{}##{}".format(return_name_for_file, type_name_revised_for_file, unit_names_for_catalogue_file)

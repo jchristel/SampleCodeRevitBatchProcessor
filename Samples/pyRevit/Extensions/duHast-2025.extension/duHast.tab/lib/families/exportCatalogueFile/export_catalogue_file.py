@@ -19,62 +19,11 @@
 #
 #
 #
+import os
 
 from duHast.Utilities.Objects.result import Result
-from duHast.Revit.Family.family_types_get_data_from_xml import (
-    get_type_data_via_XML_from_family_file,
-)
 from duHast.Utilities.files_io import get_file_name_without_ext
-
-from families.util.family_on_disc_selection import get_families, get_user_selection
-
-
-def report_data(fam_type_data, output):
-    """
-    Prints family type data to the pyRevit output as a table.
-
-    :param fam_type_data: The family type data.
-    :type fam_type_data: list[FamilyTypeData]
-    :param output: pyRevit output
-    :type output: pyRevit output module
-    """
-
-    rows_data = []
-    for fam_type in fam_type_data:
-        for p in fam_type.parameters:
-            row = [
-                fam_type.root_name_path,
-                fam_type.root_category_path,
-                fam_type.family_file_path,
-                fam_type.family_type_name,
-                p.name,
-                p.value,
-                p.type,
-                p.units,
-                p.type_of_parameter,
-            ]
-            rows_data.append(row)
-
-    columns = [
-        "Family Name",
-        "Family Category",
-        "family File Path",
-        "Type Name",
-        "Parameter Name",
-        "Parameter Value",
-        "Parameter Type",
-        "Parameter Units",
-        "Parameter Type Of",
-    ]
-
-    format_by_columns = [""] * len(columns)
-
-    output.print_table(
-        table_data=rows_data,
-        title="Family Catalogue Data",
-        columns=columns,
-        formats=format_by_columns,
-    )
+from duHast.Revit.Family.family_types_catalogue import export_catalogue_file
 
 
 def export_catalogue_file(doc, output, forms):
@@ -118,59 +67,26 @@ def export_catalogue_file(doc, output, forms):
 
     else:
         print("Saving family type data to directory: {}".format(family_out_folder_path))
+    
+    file_name = get_file_name_without_ext(doc.Title)
+    output_file_name = os.path.join(family_out_folder_path, "{}.txt".format(file_name))
 
-    # get all families in that directory and discard any family that occurs more than once
-    families_to_process = get_families(family_out_folder_path)
-
-    # show user a list of families to load
-    families_to_process_filtered = get_user_selection(forms, families_to_process)
-    if families_to_process_filtered is None:
-        message = "No families selected to process. Exiting."
+    export_result = export_catalogue_file(
+        doc=doc,
+        file_path = output_file_name, 
+        filters = None, 
+        parameter_order = None, 
+        override_existing = True,
+    )
+    
+    return_value.update(export_result)
+    
+    # give user some feedback
+    if not export_result.status:
+        message = "Family type data export failed. Exiting."
         print(message)
-        return_value.update_sep(False, message=message)
-        return return_value
-
-    counter = 0
-    max_counter = len(families_to_process_filtered)
-    # set up a pyRevit progress bar
-    with forms.ProgressBar(
-        title="Exporting family type data families: {value} of {max_value}",
-        cancellable=True,
-    ) as pb:
-        # set up data container
-        all_data = []
-        # loop over selection and get data
-        for family_path in families_to_process_filtered:
-            # update progress
-            pb.update_progress(counter, max_counter)
-            # get the family name
-            family_name = get_file_name_without_ext(family_path)
-            # extract the data
-            data_result = get_type_data_via_XML_from_family_file(
-                application=doc.Application,
-                family_name=family_name,
-                family_path=family_path,
-            )
-            # logging
-            return_value.update_sep(data_result.status, data_result.message)
-            # some user feedback
-            print(
-                "data extraction result for: {} {}".format(
-                    family_name, data_result.message
-                )
-            )
-            if data_result.status:
-                all_data = all_data + data_result.result[0]
-
-            # check for cancel
-            if pb.cancelled:
-                return_value.update_sep(False, "User cancelled.")
-                # get out of loop
-                break
-
-            counter += 1
-
-    # print all_data
-    report_data(all_data, output)
-
+    else:
+        message = "Family type data export successful."
+        print(message)
+    
     return return_value

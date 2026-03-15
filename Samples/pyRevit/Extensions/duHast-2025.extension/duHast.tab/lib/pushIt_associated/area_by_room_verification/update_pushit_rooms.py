@@ -42,6 +42,9 @@ from duHast.pyRevit.console_output import print_error
 
 from Autodesk.Revit.DB import ElementId, Solid, UV, XYZ
 
+# get parameter names from settings
+from pushIt_associated.utils.settings import AREA_BY_REVIT_ROOM_PARAMETER_NAME, WALL_THICKNESS_PARAMETER_NAME, AREA_DESIGNED_PARAMETER_NAME
+
 
 DEBUG = True
 
@@ -186,7 +189,7 @@ def update_push_it_instance(doc, push_it_family_instance,room):
             print("Room perimeter: {}".format(room_perimeter))
 
         #get the wall thickness parameter value from the push it family instance
-        half_wall_thickness_parameter_value = get_parameter_value_by_name(doc.GetElement(ElementId(Int64(push_it_family_instance.revit_element_id_integer_value))).Symbol , "HSL_WALL_THICKNESS", getter_double_as_double_converted_to_metric)
+        half_wall_thickness_parameter_value = get_parameter_value_by_name(doc.GetElement(ElementId(Int64(push_it_family_instance.revit_element_id_integer_value))).Symbol , WALL_THICKNESS_PARAMETER_NAME, getter_double_as_double_converted_to_metric)
 
         # make sure there is a fallback if no parameter is set
         half_wall_thickness = half_wall_thickness_parameter_value/2 /1000 if half_wall_thickness_parameter_value is not None else 0.06 # default to 60mm if not set
@@ -197,13 +200,14 @@ def update_push_it_instance(doc, push_it_family_instance,room):
         calculated_area = (room_perimeter * half_wall_thickness) + room_area
         print("Calculated area: {}".format(calculated_area))
 
-         # get the push it instance area stored in Area_Calc ( if that parameter does not exist, pop message and move on )
-        push_it_area = get_parameter_value_by_name(doc.GetElement(ElementId(Int64(push_it_family_instance.revit_element_id_integer_value))) , "Area_Calc", getter_double_as_double_converted_to_metric)
+        # get the push it instance area stored in Area_Calc ( if that parameter does not exist, pop message and move on )
+        push_it_area = get_parameter_value_by_name(doc.GetElement(ElementId(Int64(push_it_family_instance.revit_element_id_integer_value))) , AREA_DESIGNED_PARAMETER_NAME, getter_double_as_double_converted_to_metric)
         print("Push it area: {}".format(push_it_area))
 
         if push_it_area is None:
-            return_value.append_message("Push it instance {} {} does not have Area_Calc parameter. Cannot update area.".format(push_it_family_instance.get_ui_name(), push_it_family_instance.revit_element_id_integer_value))
-            print_error("Push it instance {} {} does not have Area_Calc parameter. Cannot update area.".format(push_it_family_instance.get_ui_name(), push_it_family_instance.revit_element_id_integer_value))
+            message = ("Push it instance {} {} does not have {} parameter. Cannot update area.".format(push_it_family_instance.get_ui_name(), push_it_family_instance.revit_element_id_integer_value, AREA_DESIGNED_PARAMETER_NAME))
+            print_error(message)
+            return_value.append_message(message)
             return return_value
         
         # in general the calculated area should not be any larger than the push it room area (assume 5% tolerance for the push it room area)
@@ -211,24 +215,26 @@ def update_push_it_instance(doc, push_it_family_instance,room):
         # if smaller than check if 20% smaller...as a sanity check threshold
 
         if calculated_area < ( push_it_area * 0.8):
-            return_value.update_sep(False, "Calculated area {} is less than 80% of push it area {}. Cannot update push it instance {} area.".format(calculated_area, push_it_area, push_it_family_instance.get_ui_name()))
-            print_error("Calculated area {} is less than 80% of push it area {}. Cannot update push it instance {} area.".format(calculated_area, push_it_area, push_it_family_instance.get_ui_name()))
-            set_area_override_result = set_parameter_value_by_name(doc.GetElement(ElementId(Int64(push_it_family_instance.revit_element_id_integer_value))), "HSL_AREA_BY_REVIT_ROOM", "0.0")
+            message = "Calculated area {} is less than 80% of push it area {}. Cannot update push it instance {} area.".format(calculated_area, push_it_area, push_it_family_instance.get_ui_name())
+            return_value.update_sep(False, message)
+            print_error(message)
+            set_area_override_result = set_parameter_value_by_name(doc.GetElement(ElementId(Int64(push_it_family_instance.revit_element_id_integer_value))), AREA_BY_REVIT_ROOM_PARAMETER_NAME, "0.0")
             print("Setting push it instance {} area override to 0.0".format(push_it_family_instance.get_ui_name()))
             print(set_area_override_result.message)
             return_value.update(set_area_override_result)
             return return_value
         if calculated_area > ( push_it_area * 1.05):
-            return_value.append_message("Calculated area {} is greater then push it area {}. Will not update push it instance {} area.".format(calculated_area,  push_it_area, push_it_family_instance.get_ui_name()))
-            print("Calculated area {} is greater then push it area {}. Will not update push it instance {} area.".format(calculated_area,  push_it_area, push_it_family_instance.get_ui_name()))
-            set_area_override_result = set_parameter_value_by_name(doc.GetElement(ElementId(Int64(push_it_family_instance.revit_element_id_integer_value))), "HSL_AREA_BY_REVIT_ROOM", "0.0")
+            message = "Calculated area {} is greater then push it area {}. Will not update push it instance {} area.".format(calculated_area,  push_it_area, push_it_family_instance.get_ui_name())
+            return_value.append_message(message)
+            print(message)
+            set_area_override_result = set_parameter_value_by_name(doc.GetElement(ElementId(Int64(push_it_family_instance.revit_element_id_integer_value))), AREA_BY_REVIT_ROOM_PARAMETER_NAME, "0.0")
             print("Setting push it instance {} area override to 0.0".format(push_it_family_instance.get_ui_name()))
             print(set_area_override_result.message)
             return_value.update(set_area_override_result)
             return return_value
 
         # get the push it override area
-        push_it_override_area = get_parameter_value_by_name(doc.GetElement(ElementId(Int64(push_it_family_instance.revit_element_id_integer_value))) , "HSL_AREA_BY_REVIT_ROOM", getter_double_as_double_converted_to_metric)
+        push_it_override_area = get_parameter_value_by_name(doc.GetElement(ElementId(Int64(push_it_family_instance.revit_element_id_integer_value))) , AREA_BY_REVIT_ROOM_PARAMETER_NAME, getter_double_as_double_converted_to_metric)
         print("Push it override area: {}".format(push_it_override_area))
         
         # compare to one decimal place, if identical do not take any action
@@ -239,13 +245,13 @@ def update_push_it_instance(doc, push_it_family_instance,room):
             # check if a previous override needs re-setting
             if push_it_override_area is not None and push_it_override_area != 0.0:
                 print("Push it override area needs updating from {} to 0.0".format(push_it_override_area))
-                set_area_override_result = set_parameter_value_by_name(doc.GetElement(ElementId(Int64(push_it_family_instance.revit_element_id_integer_value))), "HSL_AREA_BY_REVIT_ROOM", "0.0")
+                set_area_override_result = set_parameter_value_by_name(doc.GetElement(ElementId(Int64(push_it_family_instance.revit_element_id_integer_value))), AREA_BY_REVIT_ROOM_PARAMETER_NAME, "0.0")
                 return_value.update(set_area_override_result)
             return return_value
         
         print("Updating push it instance area to: {} from {}".format(calculated_area,  push_it_area ))
 
-        set_result = set_parameter_value_by_name(doc.GetElement(ElementId(Int64(push_it_family_instance.revit_element_id_integer_value))), "HSL_AREA_BY_REVIT_ROOM", str(calculated_area))
+        set_result = set_parameter_value_by_name(doc.GetElement(ElementId(Int64(push_it_family_instance.revit_element_id_integer_value))), AREA_BY_REVIT_ROOM_PARAMETER_NAME, str(calculated_area))
         return_value.update(set_result)
 
         print(set_result.message)

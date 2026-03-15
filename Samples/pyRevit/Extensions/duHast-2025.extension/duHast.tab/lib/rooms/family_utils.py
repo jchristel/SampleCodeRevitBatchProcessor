@@ -6,6 +6,8 @@ from Autodesk.Revit.DB import (BuiltInCategory, ElementCategoryFilter, FamilyIns
 from duHast.Revit.Common.parameter_get_utils import get_parameter_value_by_name, getter_double_as_double
 from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
+PARAMETER_NAME_WINDOW_WIDTH = "sample_width"
+PARAMETER_NAME_WINDOW_HEIGHT = "sample_height"
 
 def get_window_families_by_host_id(doc, filter_by_family_name=None):
     """
@@ -58,8 +60,8 @@ def window_area_instance(doc, family_instance):
 
     try:
        
-        window_width= get_parameter_value_by_name(family_instance, "HSL_WIDTH", getter_double_as_double)
-        window_height= get_parameter_value_by_name(family_instance, "HSL_HEIGHT", getter_double_as_double)
+        window_width= get_parameter_value_by_name(family_instance, PARAMETER_NAME_WINDOW_WIDTH, getter_double_as_double)
+        window_height= get_parameter_value_by_name(family_instance, PARAMETER_NAME_WINDOW_HEIGHT, getter_double_as_double)
 
         #print("Width: {}, Height: {}".format(window_width, window_height))
         
@@ -87,8 +89,8 @@ def window_area_type (doc, family_instance):
     """
 
     try:
-        window_width= get_parameter_value_by_name(family_instance.Symbol, "HSL_WIDTH", getter_double_as_double)
-        window_height= get_parameter_value_by_name(family_instance.Symbol, "HSL_HEIGHT", getter_double_as_double)
+        window_width= get_parameter_value_by_name(family_instance.Symbol, PARAMETER_NAME_WINDOW_WIDTH, getter_double_as_double)
+        window_height= get_parameter_value_by_name(family_instance.Symbol, PARAMETER_NAME_WINDOW_HEIGHT, getter_double_as_double)
 
         #print("Width: {}, Height: {}".format(window_width, window_height))
         

@@ -35,7 +35,7 @@ from rooms.Objects.wall_storage import wall_storage
 from Autodesk.Revit.DB import BuiltInCategory, ElementId,  FilteredElementCollector, Transaction, Wall
 
 
-WALL_PROPERTY_TO_SAVE_ROOM_NUMBER = "HSL_ID_HOST"
+WALL_PROPERTY_TO_SAVE_ROOM_NUMBER = "sample_wall_room_number"
 
 
 def get_wall_segments_of_room(doc, room, room_number=None, room_name=None):

@@ -215,7 +215,7 @@ def update_overall_dimension_parameter_values(family_doc, family_config):
                     formula="2700", #2.7m height
                 )
                 return_value.update(set_parameter_formula_result)
-            elif host_family_parameter.Definition.Name == settings.AREA_PARAMETER_NAME:
+            elif host_family_parameter.Definition.Name == settings.AREA_DESIGNED_PARAMETER_NAME:
                 # set area
                 set_parameter_formula_result = set_parameter_formula(
                     doc=family_doc, 

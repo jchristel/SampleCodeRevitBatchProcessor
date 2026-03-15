@@ -35,7 +35,7 @@ from Autodesk.Revit.DB import Element
 
 
 # parameter pairs to swap values for
-PARAMETER_VALUE_SWAP_MAPPING = [["HSL_WIDTH", "HSL_DEPTH"]]
+PARAMETER_VALUE_SWAP_MAPPING = [["duHast_width", "duHast_depth"]]
 
 # categories to be supported by the command ( should b read from settings in future version!)
 SUPPORTED_CATEGORIES = ["Walls","Columns"]

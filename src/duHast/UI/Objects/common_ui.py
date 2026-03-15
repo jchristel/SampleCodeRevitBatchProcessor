@@ -31,7 +31,7 @@ from Autodesk.Revit.UI import TaskDialog
 
 class AlertDialog(TaskDialog):
     def __init__(self, content):
-        self.Title = "BVN"
+        self.Title = "Company"
         TaskDialog.__init__(self.Title)
         self.MainContent = content
 

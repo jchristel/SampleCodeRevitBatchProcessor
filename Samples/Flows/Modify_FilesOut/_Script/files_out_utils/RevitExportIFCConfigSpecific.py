@@ -50,7 +50,7 @@ def ifc_get_third_party_export_config_by_view_2022(doc):
     :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
     """
 
-    name = "BVN New Bundaberg Hospital"
+    name = "Sample Project Name"
     ifcVersion = "IFC4DTV"
     spaceBoundaries = 1
     activePhaseId = -1
@@ -80,8 +80,8 @@ def ifc_get_third_party_export_config_by_view_2022(doc):
     )
     useOnlyTriangulation = False  # as per BIM exec plan
     includeSteelElements = True  # not defined in BIM exec
-    cOBieCompanyInfo = "BVN"
-    cOBieProjectInfo = "New Bundaberg Hospital"
+    cOBieCompanyInfo = "Your Company"
+    cOBieProjectInfo = "Sample Project Name"
     useTypeNameOnlyForIfcType = True
     useVisibleRevitNameAsEntityName = True
     sitePlacement = "SiteTransformBasis.Shared"

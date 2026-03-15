@@ -21,8 +21,8 @@ Setting Up - The Chain
 
 - change file path to Revit library in python util files:
     
-    - Report (utilModifyBVN.py), Modify (utilModifyBVN.py) & Reload (utilReloadBVN.py):
+    - Report (utilModify.py), Modify (utilModify.py) & Reload (utilReload.py):
 
-        - REVIT_LIBRARY_PATH = r'\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship'
+        - REVIT_LIBRARY_PATH = r'path to your Revit family library'
 
 - run setupUser.bat located in ___A0_TheChain to create a user specific folder in each flow. Note: without a user specific folder the flow will not work.

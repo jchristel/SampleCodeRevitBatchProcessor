@@ -48,7 +48,7 @@ Setup
 Script
 ^^^^^^^^^^^^^
 
-utilDataBVN.py
+utilData.py
 
 - REVIT_LIBRARY_PATH : root directory of Revit family library to be processed
 

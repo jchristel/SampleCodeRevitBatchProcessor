@@ -36,9 +36,9 @@ It contains
 
 
 # path to Common library modules
-COMMON_LIBRARY_DEBUG_PATH = r'\\bvn\Data\studio\infotech\standards\Scripts\Revit Python\RBP\SampleCodeRevitBatchProcessor\Library'
-COMMON_LIBRARY_UI_DEBUG_PATH = r'\\bvn\Data\studio\infotech\standards\Scripts\Revit Python\RBP\SampleCodeRevitBatchProcessor\UI'
-#SCRIPT_LOCATION = r'P:\19\1903020.000\Design\BIM\_Revit\5.0 Project Resources\01 Scripts\04 BatchP\_01_ModifyFamilyChange\_Script'
+COMMON_LIBRARY_DEBUG_PATH = r'\\code library path'
+COMMON_LIBRARY_UI_DEBUG_PATH = r'\\code UI code path'
+
 # set path to common library
 import sys
 sys.path += [COMMON_LIBRARY_DEBUG_PATH, COMMON_LIBRARY_UI_DEBUG_PATH]
@@ -59,15 +59,14 @@ ROOT_SCRIPT_DIRECTORY_USER = FLOW_DIRECTORY + r'\_Users'+ '\\' + util.GetCurrent
 DEBUG_REVIT_FILE_NAME = r'C:\temp\Test_Files.rvt'
 
 # revit library location
-REVIT_LIBRARY_PATH = r'\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\Temporary Families\Families Not Upgraded'
-#REVIT_LIBRARY_PATH = r'\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship'
+REVIT_LIBRARY_PATH = r'\\family library path'
 REVIT_LIBRARY_INCLUDE_SUB_DIRS_IN_SEARCH = True
 FILE_EXTENSION_OF_FILES_TO_PROCESS = '.rfa'
 
 # all reports are of this file type
 REPORT_FILE_EXTENSION = '.csv'
 
-# this is where families will be saved temporarily after succesfull reload
+# this is where families will be saved temporarily after successfull reload
 WORKING_DIRECTORY = ROOT_SCRIPT_DIRECTORY_USER + r'\_Output'
 
 # log marker file location

@@ -1,2 +1,0 @@
-current shared parameter name,new shared parameter name,fully qualified file path of shared parameter file,Is parameter instance,parameter grouping name
-NewTestParameter,OtherTestParameter,C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\Samples\Flows\TheChain\_01_ModifyFamilyChange\_Users\jchristel\_Input\Shared_Parameters_Sample.txt,True,Data

@@ -40,7 +40,7 @@ Setup
 Script
 ^^^^^^^^^^^^^
 
-utilModifyBVN.py
+utilModify.py
 
 - REVIT_LIBRARY_PATH : root directory of Revit family library to be processed
 

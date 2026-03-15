@@ -57,7 +57,7 @@ def get_code_to_use(full_code, group_code, code_to_descriptor_map):
     code_to_use  = code_description[0]
     return code_to_use, code_description
 
-def get_unique_group_codes_from_family(family_storage_data):
+def get_unique_group_codes_from_family(family_storage_data, group_code_parameter_name=GROUPING_CODE_PARAMETER_NAME):
     """
     Get unique group codes from the family storage data.
 
@@ -85,11 +85,11 @@ def get_unique_group_codes_from_family(family_storage_data):
         if (isinstance(family_type_storage, FamilyTypeDataStorage)==False):
             raise TypeError("family_type_storage must be an instance of FamilyTypeDataStorage. Got instead: {}".format(type(family_type_storage)))
         
-        grouping_code_parameter = family_type_storage.get_parameter_by_name(GROUPING_CODE_PARAMETER_NAME)
+        grouping_code_parameter = family_type_storage.get_parameter_by_name(group_code_parameter_name)
 
         # check if successful
         if (grouping_code_parameter is None):
-            raise ValueError("Grouping code parameter '{}' not found in family type data storage.".format(GROUPING_CODE_PARAMETER_NAME))
+            raise ValueError("Grouping code parameter '{}' not found in family type data storage.".format(group_code_parameter_name))
         
         # remove any sub codes 
         group_code_cleaned = clean_code(grouping_code_parameter.value)
@@ -224,7 +224,7 @@ def create_copy_directives(family_storage_data, unique_group_codes, output_direc
     return copy_directives
 
 
-def create_type_maintained_lists(family_storage_data, unique_group_codes, copy_directives, code_to_descriptor_map):
+def create_type_maintained_lists(family_storage_data, unique_group_codes, copy_directives, code_to_descriptor_map, group_code_parameter_name=GROUPING_CODE_PARAMETER_NAME):
 
     """
     Create lists of family types to be maintained in the new family based on unique group codes.
@@ -272,7 +272,7 @@ def create_type_maintained_lists(family_storage_data, unique_group_codes, copy_d
             for family_type_storage in family_storage_data.family_type_data_storage:
 
                 # get the grouping code parameter from the family type storage
-                grouping_code_parameter = family_type_storage.get_parameter_by_name(GROUPING_CODE_PARAMETER_NAME)
+                grouping_code_parameter = family_type_storage.get_parameter_by_name(group_code_parameter_name)
                 
                 # check if we have a grouping code parameter and if it matches the group code 
                 if grouping_code_parameter :
@@ -292,7 +292,7 @@ def create_type_maintained_lists(family_storage_data, unique_group_codes, copy_d
     return type_keep_lists
 
 
-def create_swap_directives(family_storage_data, unique_group_codes, copy_directives, code_to_descriptor_map, output=None):
+def create_swap_directives(family_storage_data, unique_group_codes, copy_directives, code_to_descriptor_map, output=None, group_code_parameter_name=GROUPING_CODE_PARAMETER_NAME):
     """
     Create swap directives for each unique group code in the family storage data.
 
@@ -329,7 +329,7 @@ def create_swap_directives(family_storage_data, unique_group_codes, copy_directi
         if copy_directive is not None:
             # loop over family types and create swap directives
             for family_type_storage in family_storage_data.family_type_data_storage:
-                grouping_code_parameter = family_type_storage.get_parameter_by_name(GROUPING_CODE_PARAMETER_NAME)
+                grouping_code_parameter = family_type_storage.get_parameter_by_name(group_code_parameter_name)
                 
                 
                 if grouping_code_parameter:
@@ -363,7 +363,7 @@ def create_swap_directives(family_storage_data, unique_group_codes, copy_directi
     return swap_directives
 
 
-def create_directives(family_storage_data_list, output_directory, code_descriptor_path, output):
+def create_directives(family_storage_data_list, output_directory, code_descriptor_path, output, group_code_parameter_name=GROUPING_CODE_PARAMETER_NAME):
     """
     Create directives based on family storage data.
 
@@ -426,7 +426,7 @@ def create_directives(family_storage_data_list, output_directory, code_descripto
             try:
                 # get the unique group codes from the family storage data
                 # this function will raise an exception if the family storage data is not valid or does not contain types
-                unique_group_codes_in_family = get_unique_group_codes_from_family(family_data_storage_instance)
+                unique_group_codes_in_family = get_unique_group_codes_from_family(family_data_storage_instance, group_code_parameter_name=group_code_parameter_name)
 
                 # if no codes found move on to the next family
                 if len(unique_group_codes_in_family) == 0:
@@ -495,7 +495,8 @@ def create_directives(family_storage_data_list, output_directory, code_descripto
                     family_data_storage_instance, 
                     unique_group_codes_in_family, 
                     copy_directives, 
-                    code_to_descriptor_map
+                    code_to_descriptor_map,
+                    group_code_parameter_name=group_code_parameter_name,
                 )
             except Exception as e:
                 return_value.append_message(
@@ -520,6 +521,7 @@ def create_directives(family_storage_data_list, output_directory, code_descripto
                     copy_directives, 
                     code_to_descriptor_map,
                     output=output,
+                    group_code_parameter_name=group_code_parameter_name,
                 )
             except Exception as e:
                 return_value.append_message(

@@ -38,11 +38,8 @@ from duHast.Utilities.Objects.file_encoding_bom import BOMValue
 
 
 # if a default family type is created, these parameters will be reset to their default values
-PARAMETERS_TO_RESET = [
-    "parameter_name_1",
-    "parameter_name_2",
-    "parameter_name_3",
-]
+# this is an empty backup list, since it should be up to the user to decide which parameters should be reset in the default type, if any. 
+PARAMETERS_TO_RESET = []
 
 def update_type_catalogue_file(doc,  maintain_types_list):
     """

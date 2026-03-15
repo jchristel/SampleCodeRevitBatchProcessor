@@ -37,7 +37,7 @@ from duHast.Revit.Common.file_io import save_as_family
 DEBUG = True
 
 
-def in_process_family(doc, library_path, output, additional_modifier_function=None):
+def in_process_family(doc, library_path, output, additional_modifier_function=None, parameters_to_reset = []):
     """
     
     """
@@ -72,7 +72,7 @@ def in_process_family(doc, library_path, output, additional_modifier_function=No
         output("{} maintain types read from file.".format(len(main_tain_types)))
 
         # attempt to delete non-conforming types
-        delete_non_conforming_types_result = delete_non_conforming_types(doc, main_tain_types)
+        delete_non_conforming_types_result = delete_non_conforming_types(doc, main_tain_types, parameters_to_reset)
         if not delete_non_conforming_types_result.status:
             return_value.update_sep(False, "Failed to delete non-conforming types: {}".format(delete_non_conforming_types_result.message))
             return return_value

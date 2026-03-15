@@ -31,6 +31,7 @@ from duHast.Revit.Family.LibraryCleanUp.Utility.directives_write_to_file import 
 from duHast.Revit.Family.LibraryCleanUp.Utility.directives_execute import execute_copy_directives_for_library_families
 from duHast.Revit.Family.LibraryCleanUp.Utility.directives_checks import  check_directives
 from duHast.Revit.Family.LibraryCleanUp.Utility.write_task_lists import write_task_lists
+from duHast.Revit.Family.LibraryCleanUp.Utility.defaults import GROUPING_CODE_PARAMETER_NAME
 
 def get_family_data_from_file(libraryPath):
     """
@@ -63,7 +64,7 @@ def get_family_data_from_file(libraryPath):
         return family_data_result.result
     
 
-def pre_process(library_path, output_path, task_list_directory_path, code_descriptor_path, output, number_of_task_lists=3):
+def pre_process(library_path, output_path, task_list_directory_path, code_descriptor_path, output, number_of_task_lists=3, group_code_parameter_name=GROUPING_CODE_PARAMETER_NAME):
     """
     Pre-process function to prepare for the family type data extraction.
     
@@ -75,7 +76,7 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
     :type output_path: str
     :param task_list_directory_path: Path where the task lists for RBP will be written.
     :type task_list_directory_path: str
-    :param code_descriptor_path: Path to the code descriptor file. (AUSHFG)
+    :param code_descriptor_path: Path to the code descriptor file.
     :type code_descriptor_path: str
 
     :param output: Output object to write messages to.
@@ -104,7 +105,7 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
         directives_result = None
         try:
             # built copy file directives / swap file directives
-            directives_result = create_directives(family_data, output_path,  code_descriptor_path, output)
+            directives_result = create_directives(family_data, output_path,  code_descriptor_path, output, group_code_parameter_name)
         except Exception as e:
             return_value.update_sep(
                 False,

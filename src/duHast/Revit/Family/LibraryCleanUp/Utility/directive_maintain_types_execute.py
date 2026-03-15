@@ -133,7 +133,7 @@ def get_names_of_types_to_keep(family_name, maintain_types_list):
     return types_to_keep
 
 
-def create_default_type(doc, types_to_delete):
+def create_default_type(doc, types_to_delete, parameters_to_reset = PARAMETERS_TO_RESET):
     """
     Creates a default family type in the family document if a catalogue file is in use...
 
@@ -170,7 +170,7 @@ def create_default_type(doc, types_to_delete):
         family_manager = doc.FamilyManager
 
         # reset parameters
-        for para_name in PARAMETERS_TO_RESET:
+        for para_name in parameters_to_reset:
             # Get the parameter
             parameter = family_manager.get_Parameter(para_name)
             if parameter:
@@ -188,7 +188,7 @@ def create_default_type(doc, types_to_delete):
     return return_value
 
 
-def delete_non_conforming_types(doc, maintain_types_list):
+def delete_non_conforming_types(doc, maintain_types_list, parameters_to_reset = PARAMETERS_TO_RESET):
     """
     Delete non-conforming types in a family document based on a list of types to maintain.
 
@@ -246,7 +246,7 @@ def delete_non_conforming_types(doc, maintain_types_list):
         # check if we are deleting all types in a family... if that is the case we will need to create a default type first
         if len(types_to_delete) == len(all_type_names):
             print("Deleting all types in family '{}'. Creating default type first.".format(family_name))
-            create_default_result = create_default_type(doc, types_to_delete)
+            create_default_result = create_default_type(doc, types_to_delete, parameters_to_reset)
             if not create_default_result.status:
                 return_value.update_sep(
                     False,

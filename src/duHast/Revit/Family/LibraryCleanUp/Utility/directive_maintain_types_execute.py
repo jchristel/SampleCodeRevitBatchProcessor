@@ -39,14 +39,9 @@ from duHast.Utilities.Objects.file_encoding_bom import BOMValue
 
 # if a default family type is created, these parameters will be reset to their default values
 PARAMETERS_TO_RESET = [
-    "HSL_AHFG_CODE",
-    "HSL_AHFG_DESCRIPTION",
-    "HSL_BUDGET_GROUP",
-    "Description",
-    "HSL_ID_TYPE",
-    "Uniclass2015Code",
-    "Uniclass2015Title",
-    "Uniclass2015Version",
+    "parameter_name_1",
+    "parameter_name_2",
+    "parameter_name_3",
 ]
 
 def update_type_catalogue_file(doc,  maintain_types_list):

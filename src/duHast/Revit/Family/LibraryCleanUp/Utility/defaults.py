@@ -27,7 +27,7 @@ from duHast.Revit.Family.Data.Objects.family_directive_copy import FamilyDirecti
 from duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type import FamilyDirectiveSwap
 
 # the parameter containing the grouping code in each family
-GROUPING_CODE_PARAMETER_NAME = "HSL_AHFG_CODE"
+GROUPING_CODE_PARAMETER_NAME = "sample_grouping_code"
 
 # file name of swap directives
 SWAP_DIRECTIVE_FILE_NAME = "{} {}{}".format(

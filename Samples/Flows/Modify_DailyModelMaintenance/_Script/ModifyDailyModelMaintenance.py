@@ -38,7 +38,7 @@ Module executed as the task script in Revit batch processor.
 # - levels, grids, sheets, worksets
 # modifies:
 # - worksets of levels, grids, scope boxes, reference planes
-# - deletes duplicate BVN line patterns
+# - deletes duplicate line patterns
 # - deletes 'IMPORT' line patterns
 # syncs to central with compact central file option enabled
 

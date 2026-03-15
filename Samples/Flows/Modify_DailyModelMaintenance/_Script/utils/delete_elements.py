@@ -4,7 +4,7 @@ Module containing delete elements functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - delete line pattern starting with IMPORT
-- delete duplicate BVN line patterns
+- delete duplicate company prefix line patterns
 - delete unused elevation markers
 - delete unwanted shared parameters
 

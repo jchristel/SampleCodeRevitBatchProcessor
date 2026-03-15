@@ -88,7 +88,7 @@ def get_file_name_from_temp(file_name, filter):
 
     sample:
 
-    21_08_29NHR-BVN-MOD-ARC-EBL-00M-NL00001 - EASTBLOCK_FileSize
+    21_08_29NHR-MOD-ARC-EBL-00M-NL00001 - Something_FileSize
 
     :param file_name: file name without path and extension
     :type file_name: str

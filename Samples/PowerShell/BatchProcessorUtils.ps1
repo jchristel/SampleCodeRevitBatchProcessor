@@ -209,8 +209,8 @@ function start-batchProcessor {
     )
 
     # Define batch processor path
-    #$batch_processor_path = "$env:LOCALAPPDATA\RevitBatchProcessor\BatchRvt.exe"
-    $batch_processor_path = "C:\Program Files\BVN\RevitBatchProcessor\BatchRvt.exe"
+    
+    $batch_processor_path = "C:\Path_To_\BatchRvt.exe"
     for ($i = 0; $i -lt $settings_file_names.Length; $i++) {
         $settings = $settings_file_names[$i]
         Write-ToLogAndConsole -Message "Starting Revit Batch Processor with settings: $settings_directory$settings"

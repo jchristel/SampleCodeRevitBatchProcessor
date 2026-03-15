@@ -1,7 +1,0 @@
-﻿Family Type Name,Test_URL,Test_YES_NO,Test_Volumne,Test_Time,Test_Speed,Test_Slope,Test_Rotation_Angle,Test_Number,Test_Multi_Line_Text,Test_Material,Test_Integer,Test_Image,Test_Fill_Pattern,Test_Distance,Test_Currency,Test_Cost_Per_Area,Test_Area,Test_Angle,HSL_ID_INSTANCE,Default Elevation
-Type 2,,1,12,1,2,3,4,0,,,0,,,0,0,0,0,0,,0
-Type 2a,,1,12,1,2,3,4,0,,,0,,,0,0,0,0,0,,0
-Type 2b,,1,12,1,2,3,4,0,,,0,,,0,0,0,0,0,,0
-Type 2c,,1,12,1,2,3,4,0,,,0,,,0,0,0,0,0,,0
-Type 2d,,1,12,1,2,3,4,0,,,0,,,0,0,0,0,0,,0
-Type 2e,,1,12,1,2,3,4,0,,,0,,,0,0,0,0,0,,0

@@ -44,7 +44,7 @@ from duHast.Utilities.Objects import result as res
 from duHast.Revit.Family.Data.Objects.family_directive_rename_type import (
     FamilyDirectiveRenameType,
 )
-
+from duHast.Revit.Family.Data.Objects.family_directive_rename import FamilyDirectiveRename
 
 def _read_rename_directives(files):
     """

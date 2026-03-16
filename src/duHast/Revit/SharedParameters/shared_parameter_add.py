@@ -405,21 +405,54 @@ def add_multiple_shared_parameters_to_family(doc, parameter_data):
             return_value.append_message("Found shared parameter file: {}".format(single_para.shared_parameter_file_path))
 
             # check if the value of the parameter is set or if it is a formula, if so, set up a parameter modifier function to modify the parameter value after it has been added to the family
+            # check if the parameter value is a function which needs to be evaluated, if so run that function first
+            parameter_value_is_derived_from_function = False
+            parameter_value_from_function = None
+            if callable(single_para.parameter_value):
+                return_value.append_message("Parameter value is a function, attempting to evaluate function to get parameter value.")
+                parameter_value_is_derived_from_function = True
+                try:
+                    parameter_value_from_function = single_para.parameter_value(doc)
+                    # check if the value is a string, is so add quotes around it to be able to set it as a formula later if needed
+                    if isinstance(parameter_value_from_function, str):
+                        parameter_value_from_function = '"{}"'.format(parameter_value_from_function)
+                    return_value.append_message("Function evaluated successfully, got value: {}".format(parameter_value_from_function))
+                except Exception as e:
+                    return_value.update_sep(False, "Failed to evaluate parameter value function with exception: {}".format(e))
+                    return return_value
+
             parameter_modifier = None
             if single_para.parameter_value != None and single_para.value_is_formula == True:
-                def parameter_modifier(mgr, parameter, parameter_value):
+               
+                # set up inline function to set parameter value as formula, this is needed to be able to pass the parameter value from the outer scope into the function which will be run in the transaction
+                def parameter_modifier(mgr, parameter, parameter_value_original):
                     modifier_return_value = res.Result()
+                    parameter_value_to_set=parameter_value_original
+                    
+                    # check if the parameter value is the result of a function call
+                    if parameter_value_is_derived_from_function:
+                        parameter_value_to_set = parameter_value_from_function
+                   
+                    modifier_return_value.append_message("Setting parameter value as formula: {}, {}".format(parameter_value_to_set, type(parameter_value_to_set)))
                     try:
-                        mgr.SetFormula( parameter, parameter_value)
+                        mgr.SetFormula(parameter,parameter_value_to_set)
                     except Exception as e:
                         modifier_return_value.status = False
                         modifier_return_value.append_message("Failed to set parameter value as formula with exception: {}".format(e))
                     return modifier_return_value
             elif single_para.parameter_value != None and single_para.value_is_formula == False:
-                def parameter_modifier(mgr, parameter, parameter_value):
+               
+                # setup inline function to set parameter value as a simple value, this is needed to be able to pass the parameter value from the outer scope into the function which will be run in the transaction
+                def parameter_modifier(mgr, parameter, parameter_value_original):
+                    parameter_value_to_set=parameter_value_original
+
+                    # check if the parameter value is the result of a function call
+                    if parameter_value_is_derived_from_function:
+                        parameter_value_to_set = parameter_value_from_function
+                    modifier_return_value.append_message("Setting parameter value as value: {}, {}".format(parameter_value_to_set, type(parameter_value_to_set)))
                     modifier_return_value = res.Result()
                     try:
-                        mgr.Set(parameter, parameter_value)
+                        mgr.Set(parameter, parameter_value_to_set)
                     except Exception as e:
                         modifier_return_value.status = False
                         modifier_return_value.append_message("Failed to set parameter value with exception: {}".format(e))

@@ -60,6 +60,7 @@ PARAMETER_STORAGE_TYPE_MAPPER = {
     "URL":"OTHER",
     "Volume":"VOLUME",
     "Yes/No":"OTHER",
+    "Family type: Generic Annotations":"OTHER", # hmm there are most likely other family types that can be used as storage types, but for now this is the only one I have seen in the part atom export
 }
 
 # map the units as reported in the part atom export to the units used in the catalogue file header row (depending on the storage type)

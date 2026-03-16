@@ -24,6 +24,16 @@ namespace duHastNet.PushIt.Utilities.Drofus
     /// </summary>
     public class DrofusDataSource : IDataSource
     {
+        /// <summary>
+        /// Number of rooms requested per API call when paginating.
+        /// The drofus API supports <c>$top</c> and <c>$skip</c> query parameters.
+        /// A value of 500 is a safe default that keeps individual response payloads
+        /// small while requiring only a handful of calls for typical projects.
+        /// Raising this toward the API's ceiling of 10 000 reduces round-trips but
+        /// increases per-call memory and latency.
+        /// </summary>
+        private const int PageSize = 500;
+
         /// <inheritdoc/>
         /// <summary>
         /// Queries the drofus rooms endpoint and translates each room object in
@@ -65,12 +75,11 @@ namespace duHastNet.PushIt.Utilities.Drofus
                 .Where(m => !m.IsUniqueId)
                 .ToList();
 
-            string url = BuildUrl(drofus);
+            string baseUrl = BuildUrl(drofus);
 
             try
             {
-                string json = ExecuteGet(url, drofus.ApiToken);
-                var array = JArray.Parse(json);
+                JArray array = FetchAllPages(baseUrl, drofus.ApiToken);
 
                 drofus.LastSkippedRoomCount = 0;
 
@@ -182,7 +191,10 @@ namespace duHastNet.PushIt.Utilities.Drofus
 
             ValidateSettings(drofus);
 
-            string url = BuildUrl(drofus);
+            // Request only the first room — we only need the field names, not the data.
+            // Appending $top=1 avoids fetching the entire project room list for what
+            // is essentially a schema discovery call.
+            string url = BuildUrl(drofus) + "?$top=1";
 
             try
             {
@@ -298,11 +310,42 @@ namespace duHastNet.PushIt.Utilities.Drofus
         // ── Private helpers ───────────────────────────────────────────────────
 
         /// <summary>
+        /// Pages through the drofus rooms endpoint using <c>$top</c> / <c>$skip</c>
+        /// query parameters and returns all rooms as a single <see cref="JArray"/>.
+        /// <para>
+        /// Termination: when a page contains fewer items than <see cref="PageSize"/>
+        /// the last page has been reached. There is no total-count header to rely on.
+        /// </para>
+        /// </summary>
+        private static JArray FetchAllPages(string baseUrl, string apiToken)
+        {
+            var all = new JArray();
+            int skip = 0;
+
+            while (true)
+            {
+                string url = $"{baseUrl}?$top={PageSize}&$skip={skip}";
+                string json = ExecuteGet(url, apiToken);
+                JArray page = JArray.Parse(json);
+
+                foreach (JToken token in page)
+                    all.Add(token);
+
+                // A page shorter than PageSize means we have reached the end.
+                if (page.Count < PageSize)
+                    break;
+
+                skip += PageSize;
+            }
+
+            return all;
+        }
+
+        /// <summary>
         /// Executes a synchronous GET against <paramref name="url"/> using the
         /// given <paramref name="apiToken"/> and returns the raw response body.
-        /// Centralises the WebRequest construction so that both
-        /// <see cref="GetRoomsData"/> and <see cref="GetAvailableFields"/> share
-        /// identical HTTP behaviour.
+        /// Centralises the WebRequest construction so that <see cref="FetchAllPages"/>
+        /// and <see cref="GetAvailableFields"/> share identical HTTP behaviour.
         /// </summary>
         private static string ExecuteGet(string url, string apiToken)
         {

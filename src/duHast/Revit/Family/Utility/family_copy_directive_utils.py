@@ -126,7 +126,7 @@ def get_copy_directives(files):
         # read rows in tuples ignoring the header row
         for i in range(0, len(rows)):
             data = None
-            if len(rows[i]) == 5:
+            if len(rows[i]) == 6:
                 data = FamilyDirectiveCopy(
                     name=rows[i][
                         FamilyDirectiveCopy. COPY_DIRECTIVE_LIST_INDEX_CURRENT_FAMILY_NAME
@@ -142,6 +142,9 @@ def get_copy_directives(files):
                     ],
                     target_directory=rows[i][
                         FamilyDirectiveCopy.COPY_DIRECTIVE_LIST_INDEX_NEW_DIRECTORY
+                    ],
+                    code_used=rows[i][
+                        FamilyDirectiveCopy.COPY_DIRECTIVE_INDEX_CODE_USED
                     ],
                 )
             else:
@@ -243,6 +246,7 @@ def write_copy_directives_to_file(copy_directives, file_path):
                 directive.category,
                 directive.new_name,
                 directive.target_directory,
+                directive.code_used,
             ])
 
         # write the directives to the file

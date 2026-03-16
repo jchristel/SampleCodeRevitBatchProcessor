@@ -37,6 +37,7 @@ class FamilyDirectiveCopy(FamilyDirectiveBase):
     COPY_DIRECTIVE_INDEX_CATEGORY = 2
     COPY_DIRECTIVE_LIST_INDEX_NEW_FAMILY_NAME = 3
     COPY_DIRECTIVE_LIST_INDEX_NEW_DIRECTORY = 4
+    COPY_DIRECTIVE_INDEX_CODE_USED = 5
 
     # file name identifiers for rename directives
     COPY_DIRECTIVE_FILE_NAME_PREFIX = "CopyDirective"
@@ -46,10 +47,11 @@ class FamilyDirectiveCopy(FamilyDirectiveBase):
     EXCEPTION_EMPTY_COPY_DIRECTIVE_FILES = "Empty copy directive file!"
 
     def __init__(
-        self, name, category, source_file_path, target_directory, new_name
+        self, name, category, source_file_path, target_directory, new_name, code_used 
     ):
         super(FamilyDirectiveCopy, self).__init__(name=name, category=category)
 
         self.source_file_path = source_file_path
         self.target_directory = target_directory
         self.new_name = new_name
+        self.code_used = code_used

@@ -192,6 +192,7 @@ def create_copy_directives(family_storage_data, unique_group_codes, output_direc
             source_file_path = family_storage_data.family_file_path, 
             target_directory =  output_directory, 
             new_name = new_file_name_revit,
+            code_used = code_to_use,
         )
 
         #output("...Created copy directive, new name: {}".format(copy_directive.new_name))

@@ -97,6 +97,30 @@ namespace duHastNet.PushIt.ViewModels
         [ObservableProperty]
         private bool _isWaitingForRevitCommandToFinish;
 
+        partial void OnIsWaitingForRevitCommandToFinishChanged(bool value)
+        {
+            OnPropertyChanged(nameof(IsGridEnabled));
+            OnPropertyChanged(nameof(IsPushEnabled));
+        }
+
+        /// <summary>
+        /// <c>true</c> when the room data grid should accept interaction.
+        /// <c>false</c> when a Revit command is running
+        /// (<see cref="IsWaitingForRevitCommandToFinish"/>) OR when drofus could not
+        /// be reached at startup (<see cref="DataSourceViewModel.IsDrofusOffline"/>).
+        /// Bound to the <c>IsEnabled</c> property of the rooms <c>DynamicDataGrid</c>.
+        /// </summary>
+        public bool IsGridEnabled =>
+            !IsWaitingForRevitCommandToFinish && !DataSourceViewModel.IsDrofusOffline;
+
+        /// <summary>
+        /// <c>true</c> when the Push / Split / New button should be interactive.
+        /// Mirrors <see cref="IsGridEnabled"/> — both conditions that disable the
+        /// grid also disable the push button.
+        /// </summary>
+        public bool IsPushEnabled =>
+            !IsWaitingForRevitCommandToFinish && !DataSourceViewModel.IsDrofusOffline;
+
         /// <summary>
         /// The active Revit document title, read from <see cref="Models.RevitDataModel.RevitDocumentTitle"/>.
         /// </summary>
@@ -241,6 +265,13 @@ namespace duHastNet.PushIt.ViewModels
                 // The reload command watches IsWaitingForRevitCommandToFinish and
                 // HasValidationErrors via RoomsMainViewModel.PropertyChanged, so
                 // raising HasErrors is sufficient to trigger re-evaluation.
+            }
+
+            if (e.PropertyName == nameof(DataSourceViewModel.IsDrofusOffline) ||
+                string.IsNullOrEmpty(e.PropertyName))
+            {
+                OnPropertyChanged(nameof(IsGridEnabled));
+                OnPropertyChanged(nameof(IsPushEnabled));
             }
         }
 

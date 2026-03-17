@@ -103,6 +103,20 @@ namespace duHastNet.PushIt.ViewModels.DataSource
 
         #endregion
 
+        #region Drofus Degraded State
+
+        /// <summary>
+        /// <c>true</c> when drofus could not be reached at startup and the room
+        /// data grid and Push button should be disabled until the user reconnects.
+        /// Forwards the value from <see cref="DrofusDataSourceControlViewModel.IsDrofusOffline"/>
+        /// when drofus is the active provider; always <c>false</c> for other providers.
+        /// </summary>
+        public bool IsDrofusOffline =>
+            CurrentSourceControlViewModel is DrofusDataSourceControlViewModel drofusVm
+            && drofusVm.IsDrofusOffline;
+
+        #endregion
+
         #region Validation Aggregation
 
         /// <summary>
@@ -179,6 +193,10 @@ namespace duHastNet.PushIt.ViewModels.DataSource
             {
                 childValidator.ErrorsChanged += OnChildErrorsChanged;
             }
+            if (CurrentSourceControlViewModel is DrofusDataSourceControlViewModel drofusVm)
+            {
+                drofusVm.PropertyChanged += OnDrofusVmPropertyChanged;
+            }
         }
 
         private void UnsubscribeFromChildErrors()
@@ -187,6 +205,10 @@ namespace duHastNet.PushIt.ViewModels.DataSource
             {
                 childValidator.ErrorsChanged -= OnChildErrorsChanged;
             }
+            if (CurrentSourceControlViewModel is DrofusDataSourceControlViewModel drofusVm)
+            {
+                drofusVm.PropertyChanged -= OnDrofusVmPropertyChanged;
+            }
         }
 
         private void OnChildErrorsChanged(object? sender, DataErrorsChangedEventArgs e)
@@ -194,6 +216,12 @@ namespace duHastNet.PushIt.ViewModels.DataSource
             // Propagate child error state changes to the parent via PropertyChanged
             // so RoomsMainViewModel can re-evaluate its own HasErrors / CanExecute
             OnPropertyChanged(nameof(HasValidationErrors));
+        }
+
+        private void OnDrofusVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(DrofusDataSourceControlViewModel.IsDrofusOffline))
+                OnPropertyChanged(nameof(IsDrofusOffline));
         }
 
         #endregion

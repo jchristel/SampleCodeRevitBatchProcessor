@@ -43,7 +43,7 @@
                            Visibility="{Binding IsUniqueId, Converter={StaticResource BoolToVis}}"/>
 
                 <TextBlock Grid.Column="2"
-                           Text="{Binding DrofusFieldName}"
+                           Text="{Binding DrofusFieldLabel}"
                            FontWeight="{Binding RowFontWeight}"
                            VerticalAlignment="Center"
                            Margin="4 2 8 2"
@@ -83,6 +83,7 @@
             <RowDefinition Height="Auto"/>  <!-- API token -->
             <RowDefinition Height="Auto"/>  <!-- Save / Load settings -->
             <RowDefinition Height="Auto"/>  <!-- Connect + status -->
+            <RowDefinition Height="Auto"/>  <!-- Configuration selector (visible when connected + HasConfigurations) -->
             <RowDefinition Height="Auto"/>  <!-- Mapping panel (visible when connected) -->
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -187,8 +188,48 @@
 
         </StackPanel>
 
+        <!-- ── Attribute configuration selector ─────────────────────────── -->
+        <!--
+            Shown only when connected AND at least one room attribute configuration
+            is available (HasConfigurations). When HasConfigurations is false the
+            entire selector collapses — the mapping interface is also disabled in
+            that state (Scenario 1 / Gap 2).
+        -->
+        <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
+              Margin="0 8 0 0">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding IsConnected}" Value="True"/>
+                                <Condition Binding="{Binding HasConfigurations}" Value="True"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="110"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0"
+                       Text="Configuration:"
+                       VerticalAlignment="Center"
+                       Margin="0 4 8 4"
+                       ToolTip="Select the drofus room attribute configuration to use as the field source for mappings"/>
+            <ComboBox Grid.Column="1"
+                      Margin="0 4 0 4"
+                      ItemsSource="{Binding AvailableConfigurations}"
+                      SelectedItem="{Binding SelectedConfiguration, Mode=TwoWay}"
+                      DisplayMemberPath="Name"
+                      ToolTip="The active configuration determines which drofus fields are available in the mapping dialog"/>
+        </Grid>
+
         <!-- ── Mapping panel — visible only when connected ──────────────── -->
-        <Border Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
+        <Border Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
                 Margin="0 12 0 0"
                 BorderBrush="#CCCCCC"
                 BorderThickness="0 1 0 0"
@@ -232,7 +273,8 @@
                                FontWeight="SemiBold"
                                FontSize="11"
                                Margin="4 0 8 0"
-                               Foreground="#555"/>
+                               Foreground="#555"
+                               ToolTip="Human-readable field name from the drofus catalogue. Hover a row to see the raw JSON field id."/>
                     <TextBlock Grid.Column="3"
                                Text="Revit Parameter"
                                FontWeight="SemiBold"
@@ -265,7 +307,8 @@
                           BorderThickness="1"
                           BorderBrush="#CCCCCC"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
-                          HorizontalContentAlignment="Stretch">
+                          HorizontalContentAlignment="Stretch"
+                          IsEnabled="{Binding HasConfigurations}">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -287,10 +330,12 @@
                     <Button Content="Edit"
                             Padding="14 3"
                             Margin="0 0 6 0"
+                            IsEnabled="{Binding HasConfigurations}"
                             Command="{Binding EditMappingCommand}"/>
 
                     <Button Content="Remove"
                             Padding="14 3"
+                            IsEnabled="{Binding HasConfigurations}"
                             Command="{Binding RemoveMappingCommand}"/>
 
                 </StackPanel>

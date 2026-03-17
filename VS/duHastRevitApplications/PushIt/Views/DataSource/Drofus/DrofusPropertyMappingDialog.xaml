@@ -56,7 +56,8 @@
                   Style="{StaticResource ComboStyle}"
                   ItemsSource="{Binding AvailableDrofusFields}"
                   SelectedItem="{Binding SelectedDrofusField, Mode=TwoWay}"
-                  ToolTip="Select the drofus room JSON field to map"/>
+                  DisplayMemberPath="Name"
+                  ToolTip="Select the drofus room field to map"/>
 
         <!-- Revit parameter (ComboBox) -->
         <TextBlock Grid.Row="1" Grid.Column="0"

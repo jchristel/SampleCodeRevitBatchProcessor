@@ -142,7 +142,7 @@
             Margin="5 10 5 10"
             dynamicDataGrid:DataGridColumnHeaderBehavior.EnableColumnManagement="True"
             dynamicDataGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="False"
-            IsEnabled="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource InverseBooleanConverter}}"
+            IsEnabled="{Binding IsGridEnabled}"
             Loaded="RoomSelectionGrid_Loaded">
             <dynamicDataGrid:DynamicDataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
@@ -255,6 +255,7 @@
                     Margin="5 10 5 10"
                     Content="{Binding PushItButtonText}"
                     FontSize="24"
+                    IsEnabled="{Binding IsPushEnabled}"
                     Command="{Binding PushSingleRoomCommand}"/>
         </Grid>
 

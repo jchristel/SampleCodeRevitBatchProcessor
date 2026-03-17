@@ -36,6 +36,18 @@ namespace duHastNet.PushIt.Models.Drofus
         public string ApiToken { get; set; } = string.Empty;
 
         /// <summary>
+        /// The integer id of the attribute configuration last selected by the user
+        /// in the settings panel. <c>null</c> means no configuration has been chosen
+        /// and the full field catalogue is shown in the mapping dialog.
+        /// <para>
+        /// Serialised to the PushIt settings JSON. Restored on startup so the user's
+        /// configuration selection persists across sessions without requiring a
+        /// manual re-selection after reconnecting.
+        /// </para>
+        /// </summary>
+        public int? SelectedAttributeConfigurationId { get; set; } = null;
+
+        /// <summary>
         /// Number of rooms skipped during the last <c>GetRoomsData</c> call because
         /// their unique-id field was absent or null in the JSON response.
         /// <para>
@@ -47,8 +59,9 @@ namespace duHastNet.PushIt.Models.Drofus
         public int LastSkippedRoomCount { get; set; }
 
         /// <summary>
-        /// Room properties available from the drofus API, populated during
-        /// startup by <c>ValidateDrofusOnStartup</c> before the window opens.
+        /// The complete room field catalogue fetched from
+        /// <c>OPTIONS /api/{db}/{pr}/rooms</c> during startup by
+        /// <c>ValidateDrofusOnStartup</c>, before the window opens.
         /// <para>
         /// Runtime-only — never written to the settings JSON file.
         /// Read by <c>DrofusDataSourceControlViewModel</c> on construction to
@@ -57,7 +70,21 @@ namespace duHastNet.PushIt.Models.Drofus
         /// </para>
         /// </summary>
         [JsonIgnore]
-        public List<string> StartupAvailableFields { get; set; } = new List<string>();
+        public List<DrofusRoomField> StartupFieldCatalogue { get; set; } = new List<DrofusRoomField>();
+
+        /// <summary>
+        /// The attribute configurations fetched from
+        /// <c>GET /api/{db}/{pr}/attributeconfigurations</c> during startup,
+        /// filtered to <c>config_type == "room"</c>.
+        /// <para>
+        /// Runtime-only — never written to the settings JSON file.
+        /// Read by <c>DrofusDataSourceControlViewModel.OnStartupCompleted</c> to
+        /// populate the configuration selector without requiring a second API call.
+        /// </para>
+        /// </summary>
+        [JsonIgnore]
+        public List<DrofusAttributeConfiguration> StartupAttributeConfigurations { get; set; }
+            = new List<DrofusAttributeConfiguration>();
 
         /// <summary>
         /// Saved drofus → Revit (and reverse) property mappings.

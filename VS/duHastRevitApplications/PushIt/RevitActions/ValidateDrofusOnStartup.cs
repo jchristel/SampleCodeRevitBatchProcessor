@@ -23,30 +23,29 @@ namespace duHastNet.PushIt.RevitActions.Drofus
     ///     immediately if any are missing.
     ///   </item>
     ///   <item>
-    ///     <b>Connection test / available fields</b> — calls
-    ///     <see cref="DrofusDataSource.GetAvailableFields"/> which queries the
-    ///     first room from the API. On success, stores the field list on the
-    ///     <see cref="DrofusPropertyMapper"/> via
-    ///     <see cref="DrofusPropertyMapper.UpdateAvailableFields"/>.
-    ///     Returns <c>Error</c> on connection failure.
+    ///     <b>Connection test / field catalogue / configurations</b> — calls
+    ///     <see cref="DrofusDataSource.GetFieldCatalogue"/> (OPTIONS endpoint) and
+    ///     <see cref="DrofusDataSource.GetAttributeConfigurations"/>. On success,
+    ///     populates the <see cref="DrofusPropertyMapper"/> and caches both results
+    ///     on the settings object for the ViewModel to consume without a second
+    ///     API call. Returns <c>Error</c> if the catalogue fetch fails (Gap 1).
+    ///     Returns <c>Warning</c> and skips Steps 3–4 if the configurations fetch
+    ///     fails or returns no room configurations (Gap 2 / Scenario 1).
+    ///     Checks for a deleted configuration (Scenario 3) and clears mappings if
+    ///     detected — only when the connection succeeded (Gap 9).
     ///   </item>
     ///   <item>
     ///     <b>Mapping validation</b> — skipped when no mappings are configured.
-    ///     Otherwise cross-references each mapping's drofus field name against
-    ///     <see cref="DrofusPropertyMapper.AvailableFields"/> and each Revit
-    ///     parameter GUID against
-    ///     <see cref="RevitDataModel.GetAllAvailableParameters"/> (populated
-    ///     synchronously by <c>Main.LoadSharedParametersFromDocument</c> before
-    ///     this action runs). Failed mappings are flagged and excluded from the
-    ///     room load.
+    ///     Cross-references each mapping's drofus field name against the field
+    ///     catalogue and each Revit parameter GUID against
+    ///     <see cref="RevitDataModel.GetAllAvailableParameters"/>. Failed mappings
+    ///     are flagged (not removed) and excluded from the room load.
     ///   </item>
     ///   <item>
     ///     <b>Room data load</b> — calls <see cref="RevitDataModel.LoadRoomsData"/>
-    ///     with the validated mapping set. The Revit-side room matching
-    ///     (<c>UpdateRoomDataModelWithNewRooms</c> + <c>RefreshRoomDataWithRevitData</c>)
-    ///     is handled separately by <c>RefreshUIFromRevitModelAsyncCommand</c>
-    ///     which fires from the <c>RoomsMainViewModel</c> constructor after the
-    ///     window opens — by that point rooms are already in the model.
+    ///     with the validated mapping set. The Revit-side room matching is handled
+    ///     separately by <c>RefreshUIFromRevitModelAsyncCommand</c> after the
+    ///     window opens.
     ///   </item>
     /// </list>
     /// </para>
@@ -70,8 +69,8 @@ namespace duHastNet.PushIt.RevitActions.Drofus
         /// </param>
         /// <param name="mapper">
         /// The <see cref="DrofusPropertyMapper"/> owned by the drofus control
-        /// ViewModel. Available fields and validation results are written back to
-        /// this instance. Must not be <c>null</c>.
+        /// ViewModel. Field catalogue, configurations, and validation results are
+        /// written back to this instance. Must not be <c>null</c>.
         /// </param>
         public ValidateDrofusOnStartup(
             RevitDataModel revitDataModel,
@@ -95,13 +94,15 @@ namespace duHastNet.PushIt.RevitActions.Drofus
         ///   <item><c>Information</c> — connection succeeded and rooms loaded
         ///     (or no mappings yet configured).</item>
         ///   <item><c>Warning</c> — connection succeeded but some mappings are
-        ///     invalid; valid mappings loaded rooms.</item>
-        ///   <item><c>Error</c> — credentials invalid or connection failed;
-        ///     grid will be empty.</item>
+        ///     invalid, or no room attribute configurations are available.</item>
+        ///   <item><c>Error</c> — credentials invalid, connection failed, or the
+        ///     field catalogue could not be retrieved; grid will be empty.</item>
         /// </list>
         /// </returns>
         public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute()
         {
+            var drofusSettings = _revitDataModel.Settings.DataSource.Drofus;
+
             // ── Step 1: credential check ──────────────────────────────────────
             var dataSource = new DrofusDataSource();
             if (!dataSource.Validate(_revitDataModel.Settings.DataSource, out string credError))
@@ -112,34 +113,105 @@ namespace duHastNet.PushIt.RevitActions.Drofus
                 return GetReturnValue("drofus startup: aborted — credentials incomplete.");
             }
 
-            // ── Step 2: connection test / available fields ────────────────────
-            List<string> availableFields;
+            // ── Step 2: field catalogue, configurations, scenario checks ──────
+
+            // 2a — Field catalogue (OPTIONS endpoint). Fatal on failure (Gap 1).
+            List<DrofusRoomField> fieldCatalogue;
             try
             {
-                availableFields = dataSource.GetAvailableFields(_revitDataModel.Settings.DataSource);
-                _mapper.UpdateAvailableFields(availableFields);
+                fieldCatalogue = dataSource.GetFieldCatalogue(
+                    _revitDataModel.Settings.DataSource);
 
-                // Cache for DrofusDataSourceControlViewModel construction.
-                if (_revitDataModel.Settings.DataSource.Drofus != null)
-                    _revitDataModel.Settings.DataSource.Drofus.StartupAvailableFields = availableFields;
+                _mapper.UpdateAvailableFields(fieldCatalogue);
 
-                string connMsg = availableFields.Count > 0
-                    ? $"drofus startup: connected — {availableFields.Count} room properties available."
-                    : "drofus startup: connected but no room properties were returned. " +
-                      "Check that the project contains rooms.";
-                AddMessage(connMsg, Utils.WPF.Stores.MessageTypes.Information);
-                _revitDataModel.AddStartupMessage(connMsg, Utils.WPF.Stores.MessageTypes.Information);
+                if (drofusSettings != null)
+                    drofusSettings.StartupFieldCatalogue = fieldCatalogue;
+
+                string catalogueMsg = fieldCatalogue.Count > 0
+                    ? $"drofus startup: connected — {fieldCatalogue.Count} room fields available in catalogue."
+                    : "drofus startup: connected but field catalogue is empty. " +
+                      "Check that the project contains room fields.";
+                AddMessage(catalogueMsg, Utils.WPF.Stores.MessageTypes.Information);
+                _revitDataModel.AddStartupMessage(catalogueMsg, Utils.WPF.Stores.MessageTypes.Information);
             }
             catch (Exception ex)
             {
-                string msg = $"drofus startup: connection failed — {ex.Message}";
+                // Gap 1: catalogue failure is fatal — disable everything.
+                string msg = "Could not retrieve the room field catalogue from drofus. " +
+                             $"Check your connection and reconnect. Detail: {ex.Message}";
                 AddMessage(msg, Utils.WPF.Stores.MessageTypes.Error);
                 _revitDataModel.AddStartupMessage(msg, Utils.WPF.Stores.MessageTypes.Error);
-                return GetReturnValue("drofus startup: aborted — connection failed.");
+                return GetReturnValue("drofus startup: aborted — field catalogue unavailable.");
+            }
+
+            // 2b — Attribute configurations. Fatal to mapping interface on failure (Gap 2).
+            List<DrofusAttributeConfiguration> configurations;
+            try
+            {
+                configurations = dataSource.GetAttributeConfigurations(
+                    _revitDataModel.Settings.DataSource);
+
+                _mapper.UpdateAvailableConfigurations(configurations);
+
+                if (drofusSettings != null)
+                    drofusSettings.StartupAttributeConfigurations = configurations;
+            }
+            catch (Exception ex)
+            {
+                // Gap 2: treat identically to Scenario 1 — no room configurations.
+                string msg = "No room attribute configurations are set up in drofus. " +
+                             "At least one is required to configure mappings. " +
+                             "Please create a room attribute configuration in drofus and reconnect. " +
+                             $"Detail: {ex.Message}";
+                AddMessage(msg, Utils.WPF.Stores.MessageTypes.Warning);
+                _revitDataModel.AddStartupMessage(msg, Utils.WPF.Stores.MessageTypes.Warning);
+                return GetReturnValue("drofus startup: completed — mapping interface unavailable.");
+            }
+
+            // 2c — Scenario 1: no room configurations returned.
+            if (configurations.Count == 0)
+            {
+                string noConfigMsg = "No room attribute configurations are set up in drofus. " +
+                    "At least one is required to configure mappings. " +
+                    "Please create a room attribute configuration in drofus and reconnect.";
+                AddMessage(noConfigMsg, Utils.WPF.Stores.MessageTypes.Warning);
+                _revitDataModel.AddStartupMessage(noConfigMsg, Utils.WPF.Stores.MessageTypes.Warning);
+                return GetReturnValue("drofus startup: completed — mapping interface unavailable.");
+            }
+
+            // 2d — Restore selected configuration id from persisted settings.
+            if (drofusSettings != null)
+            {
+                _mapper.SelectConfiguration(
+                    drofusSettings.SelectedAttributeConfigurationId,
+                    drofusSettings);
+            }
+
+            // 2e — Scenario 3: previously selected configuration was deleted in drofus.
+            // Only checked when the connection succeeded and we have a positive list.
+            // Must NOT be called on connection failure — absence of data is not evidence
+            // of deletion (Gap 9).
+            if (drofusSettings?.SelectedAttributeConfigurationId != null)
+            {
+                bool configStillExists = configurations.Any(
+                    c => c.Id == drofusSettings.SelectedAttributeConfigurationId.Value);
+
+                if (!configStillExists)
+                {
+                    string deletedMsg = _mapper.HandleDeletedConfiguration();
+                    _mapper.SaveMappingsToSettings(drofusSettings);
+                    _mapper.SelectConfiguration(null, drofusSettings);
+
+                    AddMessage(deletedMsg, Utils.WPF.Stores.MessageTypes.Warning);
+                    _revitDataModel.AddStartupMessage(deletedMsg, Utils.WPF.Stores.MessageTypes.Warning);
+
+                    // Mappings have been cleared — nothing left to validate or load.
+                    return GetReturnValue("drofus startup: completed — configuration deleted, mappings cleared.");
+                }
             }
 
             // ── Step 3: mapping validation ────────────────────────────────────
-            var persistedMappings = _revitDataModel.Settings.DataSource.Drofus?.PropertyMappings
+            var persistedMappings = drofusSettings?.PropertyMappings
                 ?? new List<DrofusPropertyMap>();
 
             if (persistedMappings.Count == 0)
@@ -158,10 +230,20 @@ namespace duHastNet.PushIt.RevitActions.Drofus
             IReadOnlyList<AvailableParameter> availableRevitParams =
                 _revitDataModel.GetAllAvailableParameters();
 
+            // Build a set of field ids from the catalogue for O(1) lookup.
+            // Using the full catalogue (not scoped to the selected configuration)
+            // so that the flag-only behaviour at startup is lenient — stale detection
+            // against the configuration scope happens at Connect time via
+            // CleanupStaleMappings (Scenario 4).
+            var catalogueIds = new HashSet<string>(
+                fieldCatalogue.Select(f => f.Id),
+                StringComparer.OrdinalIgnoreCase);
+
             foreach (DrofusPropertyMap mapping in persistedMappings)
             {
-                bool drofusOk = availableFields.Contains(
-                    mapping.DrofusFieldName, StringComparer.OrdinalIgnoreCase);
+                // Catalogue id lookup replaces the old availableFields.Contains string
+                // comparison — the source of truth is now the OPTIONS catalogue.
+                bool drofusOk = catalogueIds.Contains(mapping.DrofusFieldName);
 
                 bool revitOk = availableRevitParams.Any(p =>
                     string.Equals(p.ParameterGuid, mapping.RevitParameterGuid,
@@ -173,7 +255,11 @@ namespace duHastNet.PushIt.RevitActions.Drofus
                 {
                     var reasons = new List<string>();
                     if (!drofusOk)
-                        reasons.Add($"drofus field '{mapping.DrofusFieldName}' not found in API response");
+                    {
+                        // Report human-readable label when available.
+                        string label = _mapper.GetFieldLabel(mapping.DrofusFieldName);
+                        reasons.Add($"drofus field '{label}' not found in field catalogue");
+                    }
                     if (!revitOk)
                         reasons.Add($"Revit parameter '{mapping.RevitParameterName}' " +
                                     $"(GUID: {mapping.RevitParameterGuid}) not bound in document");
@@ -181,7 +267,9 @@ namespace duHastNet.PushIt.RevitActions.Drofus
                     string reason = string.Join("; ", reasons);
                     invalidMappings.Add((mapping, reason));
 
-                    string warnMsg = $"drofus startup: mapping excluded — {reason}.";
+                    // Flag only — do not remove at startup (consistent with existing
+                    // startup philosophy; removal happens at Connect via CleanupStaleMappings).
+                    string warnMsg = $"drofus startup: mapping flagged — {reason}.";
                     AddMessage(warnMsg, Utils.WPF.Stores.MessageTypes.Warning);
                     _revitDataModel.AddStartupMessage(warnMsg, Utils.WPF.Stores.MessageTypes.Warning);
                 }
@@ -221,7 +309,7 @@ namespace duHastNet.PushIt.RevitActions.Drofus
                 _revitDataModel.ClearAllRooms();
                 _revitDataModel.LoadRoomsData();
 
-                int skipped = _revitDataModel.Settings.DataSource.Drofus?.LastSkippedRoomCount ?? 0;
+                int skipped = drofusSettings?.LastSkippedRoomCount ?? 0;
                 if (skipped > 0)
                 {
                     string skipMsg = skipped == 1
@@ -233,7 +321,7 @@ namespace duHastNet.PushIt.RevitActions.Drofus
 
                 string successMsg = invalidMappings.Count == 0
                     ? "drofus startup: all mappings valid — rooms loaded."
-                    : $"drofus startup: rooms loaded with {invalidMappings.Count} invalid mapping(s) excluded.";
+                    : $"drofus startup: rooms loaded with {invalidMappings.Count} invalid mapping(s) flagged.";
                 AddMessage(successMsg, Utils.WPF.Stores.MessageTypes.Information);
                 _revitDataModel.AddStartupMessage(successMsg, Utils.WPF.Stores.MessageTypes.Information);
                 return GetReturnValue(successMsg);

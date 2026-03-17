@@ -24,6 +24,13 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
 
         private MappingValidationState _validationState;
 
+        /// <summary>
+        /// Resolves the human-readable display label for a drofus field id.
+        /// Backed by <see cref="DrofusPropertyMapper.GetFieldLabel"/> — returns
+        /// the catalogue <c>Name</c> when available, or the raw field id as fallback.
+        /// </summary>
+        private readonly Func<string, string> _fieldLabelResolver;
+
         // ── Public model reference ────────────────────────────────────────────
 
         /// <summary>
@@ -37,8 +44,18 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
         // ── ListView column display properties ────────────────────────────────
 
         /// <summary>
-        /// The drofus JSON field name shown in the first ListView column.
-        /// e.g. <c>"room_func_no"</c>, <c>"programmed_area"</c>.
+        /// The human-readable drofus field label shown in the first ListView column.
+        /// Resolved via <see cref="_fieldLabelResolver"/> from the catalogue —
+        /// e.g. <c>"Room Function Number"</c> instead of <c>"room_func_no"</c>.
+        /// Falls back to the raw <see cref="DrofusPropertyMap.DrofusFieldName"/> JSON
+        /// key when the catalogue has not been loaded or the id is not found.
+        /// </summary>
+        public string DrofusFieldLabel => _fieldLabelResolver(Model.DrofusFieldName);
+
+        /// <summary>
+        /// The raw drofus JSON field id stored in the mapping model.
+        /// Not displayed in the primary ListView column (use <see cref="DrofusFieldLabel"/>
+        /// for display) but retained for tooltip or debug use.
         /// </summary>
         public string DrofusFieldName => Model.DrofusFieldName;
 
@@ -89,8 +106,9 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
         public bool RevitParameterMissing => _validationState.RevitParameterMissing;
 
         /// <summary>
-        /// <c>true</c> when the drofus field name referenced by this mapping was
-        /// not present in the API response during the most recent validation pass.
+        /// <c>true</c> when the drofus field referenced by this mapping was not
+        /// found in the field catalogue (or the active configuration's fields)
+        /// during the most recent validation pass.
         /// <para>
         /// Drives the warning indicator in the ListView row template.
         /// Remains <c>false</c> when no successful drofus connection has been made
@@ -121,15 +139,16 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
         // ── Constructor ───────────────────────────────────────────────────────
 
         /// <summary>
-        /// Constructs the row ViewModel and immediately resolves the initial
-        /// validation state from the mapper.
+        /// Constructs the row ViewModel, resolves the initial validation state,
+        /// and captures the field-label resolver from the mapper.
         /// </summary>
         /// <param name="model">
         /// The underlying mapping model. Must not be <c>null</c>.
         /// </param>
         /// <param name="mapper">
         /// The active <see cref="DrofusPropertyMapper"/> instance. Used to derive
-        /// the initial <see cref="MappingValidationState"/> for this row.
+        /// the initial <see cref="MappingValidationState"/> for this row and to
+        /// supply the <see cref="DrofusFieldLabel"/> resolver.
         /// Must not be <c>null</c>.
         /// </param>
         /// <exception cref="ArgumentNullException">
@@ -141,6 +160,10 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
 
             if (mapper is null)
                 throw new ArgumentNullException(nameof(mapper));
+
+            // Capture the label resolver as a delegate so this ViewModel has no
+            // direct dependency on the mapper beyond construction time.
+            _fieldLabelResolver = mapper.GetFieldLabel;
 
             _validationState = mapper.GetValidationState(model);
         }
@@ -175,12 +198,12 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
 
         /// <summary>
         /// Returns a concise string representation for use in debugger watch
-        /// windows and log output.
+        /// windows and log output. Uses the human-readable label where available.
         /// </summary>
         public override string ToString()
         {
             string warning = HasWarning ? " [WARNING]" : string.Empty;
-            return $"{DrofusFieldName} → {RevitParameterName} ({FlowDirectionDisplay}){warning}";
+            return $"{DrofusFieldLabel} → {RevitParameterName} ({FlowDirectionDisplay}){warning}";
         }
     }
 }

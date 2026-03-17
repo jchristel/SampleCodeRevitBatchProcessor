@@ -4,11 +4,11 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.PushIt.Models;
 using duHastNet.PushIt.Models.Drofus;
+using duHastNet.PushIt.Utilities.Drofus;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-
 
 namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
 {
@@ -38,17 +38,36 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
         /// </summary>
         private readonly Dictionary<string, AvailableParameter> _revitParamsByName;
 
+        /// <summary>
+        /// The mapper service, used to call <see cref="DrofusPropertyMapper.GetElementForField"/>
+        /// for direction pre-population when a field is selected. May be <c>null</c>
+        /// when no mapper is available (legacy construction path).
+        /// </summary>
+        private readonly DrofusPropertyMapper? _mapper;
+
+        /// <summary>
+        /// The id of the currently active attribute configuration, passed in from
+        /// the parent ViewModel. Used together with <see cref="_mapper"/> to resolve
+        /// the <see cref="DrofusAttributeConfigurationElement"/> for a selected field
+        /// and pre-populate direction and IsUniqueId automatically.
+        /// <c>null</c> means no configuration is active — no auto-population.
+        /// </summary>
+        private readonly int? _activeConfigurationId;
+
         // ── Observable collections ────────────────────────────────────────────
 
         /// <summary>
-        /// drofus JSON field names available for the first ComboBox.
-        /// Populated from DrofusPropertyMapper.AvailableFields at construction.
+        /// drofus room fields available for the first ComboBox, scoped to the
+        /// currently selected attribute configuration (or the full catalogue when
+        /// no configuration is selected). The ComboBox binds
+        /// <c>DisplayMemberPath="Name"</c> so the user sees the human-readable label;
+        /// the selected item is a <see cref="DrofusRoomField"/> instance.
         /// </summary>
-        public ObservableCollection<string> AvailableDrofusFields { get; }
+        public ObservableCollection<DrofusRoomField> AvailableDrofusFields { get; }
 
         /// <summary>
         /// Revit shared parameter names available for the second ComboBox.
-        /// Populated from RevitDataModel.GetAllParameters() at construction.
+        /// Populated from the available parameters at construction.
         /// </summary>
         public ObservableCollection<string> AvailableRevitParameterNames { get; }
 
@@ -61,10 +80,12 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
         // ── Observable properties ─────────────────────────────────────────────
 
         /// <summary>
-        /// Selected drofus field name. Required for OK to be enabled.
+        /// The selected drofus room field. Required for OK to be enabled.
+        /// When changed, triggers direction and IsUniqueId pre-population from
+        /// the active configuration element (if available).
         /// </summary>
         [ObservableProperty]
-        private string? _selectedDrofusField;
+        private DrofusRoomField? _selectedDrofusField;
 
         /// <summary>
         /// Selected Revit parameter name from the ComboBox.
@@ -81,7 +102,8 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
         private string _revitParameterGuid = string.Empty;
 
         /// <summary>
-        /// Selected flow direction.
+        /// Selected flow direction. May be auto-populated from the active
+        /// configuration element when a drofus field is selected.
         /// </summary>
         [ObservableProperty]
         private MappingFlowDirection _selectedFlowDirection = MappingFlowDirection.DrofusToRevit;
@@ -90,7 +112,8 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
         /// Whether this mapping is nominated as the unique identifier.
         /// Only one mapping in the list may carry this flag — the checkbox is
         /// disabled when another mapping already holds it (unless this dialog is
-        /// editing that exact mapping).
+        /// editing that exact mapping). May be auto-populated from the active
+        /// configuration element when a drofus field is selected.
         /// </summary>
         [ObservableProperty]
         private bool _isUniqueId;
@@ -121,29 +144,48 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
 
         // ── Constructors ──────────────────────────────────────────────────────
 
-        /// <summary>Add mode constructor.</summary>
-        /// <param name="availableFields">drofus JSON field names from the live API response.</param>
-        /// <param name="availableRevitParameters">Revit shared parameters available in the document.</param>
+        /// <summary>
+        /// Add mode constructor.
+        /// </summary>
+        /// <param name="availableFields">
+        /// drofus room fields scoped to the active configuration (or the full
+        /// catalogue when no configuration is selected). Supplied by
+        /// <c>DrofusPropertyMapper.GetFieldsForSelectedConfiguration()</c>.
+        /// </param>
+        /// <param name="availableRevitParameters">
+        /// Revit shared parameters available in the document.
+        /// </param>
         /// <param name="hasExistingId">
         /// <c>true</c> when another mapping in the list already carries
-        /// <c>IsUniqueId = true</c>. Disables the Is Id checkbox so only one
-        /// mapping can be the unique identifier at a time.
+        /// <c>IsUniqueId = true</c>. Disables the Is Id checkbox.
+        /// </param>
+        /// <param name="mapper">
+        /// The mapper service, used for direction pre-population. May be <c>null</c>.
+        /// </param>
+        /// <param name="activeConfigurationId">
+        /// The id of the active attribute configuration, used to look up the
+        /// <see cref="DrofusAttributeConfigurationElement"/> for a selected field.
+        /// <c>null</c> when no configuration is active.
         /// </param>
         public DrofusPropertyMappingDialogViewModel(
-            IReadOnlyList<string> availableFields,
+            IReadOnlyList<DrofusRoomField> availableFields,
             IReadOnlyList<AvailableParameter> availableRevitParameters,
-            bool hasExistingId = false)
+            bool hasExistingId = false,
+            DrofusPropertyMapper? mapper = null,
+            int? activeConfigurationId = null)
         {
             if (availableFields is null)
                 throw new ArgumentNullException(nameof(availableFields));
             if (availableRevitParameters is null)
                 throw new ArgumentNullException(nameof(availableRevitParameters));
 
-            _isEditMode  = false;
+            _isEditMode = false;
             _existingMapping = null;
             _anotherMappingIsAlreadyId = hasExistingId;
+            _mapper = mapper;
+            _activeConfigurationId = activeConfigurationId;
 
-            AvailableDrofusFields       = new ObservableCollection<string>(availableFields);
+            AvailableDrofusFields = new ObservableCollection<DrofusRoomField>(availableFields);
             AvailableRevitParameterNames = new ObservableCollection<string>(
                 availableRevitParameters.Select(p => p.ParameterName));
 
@@ -161,39 +203,94 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
                 SelectedRevitParameterName = AvailableRevitParameterNames[0];
         }
 
-        /// <summary>Edit mode constructor.</summary>
-        /// <param name="availableFields">drofus JSON field names from the live API response.</param>
-        /// <param name="availableRevitParameters">Revit shared parameters available in the document.</param>
+        /// <summary>
+        /// Edit mode constructor.
+        /// </summary>
+        /// <param name="availableFields">
+        /// drofus room fields scoped to the active configuration (or the full
+        /// catalogue). Supplied by
+        /// <c>DrofusPropertyMapper.GetFieldsForSelectedConfiguration()</c>.
+        /// </param>
+        /// <param name="availableRevitParameters">
+        /// Revit shared parameters available in the document.
+        /// </param>
         /// <param name="existingMapping">The mapping being edited.</param>
         /// <param name="hasExistingId">
         /// <c>true</c> when another mapping (not this one) already carries
         /// <c>IsUniqueId = true</c>. Pass <c>false</c> when editing the mapping
         /// that is itself the current unique identifier so its checkbox stays enabled.
         /// </param>
+        /// <param name="mapper">
+        /// The mapper service, used for direction pre-population. May be <c>null</c>.
+        /// </param>
+        /// <param name="activeConfigurationId">
+        /// The id of the active attribute configuration. <c>null</c> when none active.
+        /// </param>
         public DrofusPropertyMappingDialogViewModel(
-            IReadOnlyList<string> availableFields,
+            IReadOnlyList<DrofusRoomField> availableFields,
             IReadOnlyList<AvailableParameter> availableRevitParameters,
             DrofusPropertyMap existingMapping,
-            bool hasExistingId = false)
-            : this(availableFields, availableRevitParameters, hasExistingId)
+            bool hasExistingId = false,
+            DrofusPropertyMapper? mapper = null,
+            int? activeConfigurationId = null)
+            : this(availableFields, availableRevitParameters, hasExistingId, mapper, activeConfigurationId)
         {
-            _isEditMode      = true;
+            _isEditMode = true;
             _existingMapping = existingMapping
                 ?? throw new ArgumentNullException(nameof(existingMapping));
 
-            // Override defaults with existing mapping values — again via property
-            // setters so PropertyChanged fires and WPF ComboBoxes resolve correctly.
-            SelectedDrofusField        = existingMapping.DrofusFieldName;
+            // Override defaults with existing mapping values — via property setters
+            // so PropertyChanged fires and WPF ComboBoxes resolve correctly.
+            // Look up the DrofusRoomField by Id so the ComboBox selected-item binding
+            // resolves to the correct object reference rather than a string comparison.
+            SelectedDrofusField = AvailableDrofusFields
+                .FirstOrDefault(f => string.Equals(
+                    f.Id, existingMapping.DrofusFieldName,
+                    StringComparison.OrdinalIgnoreCase));
+
             SelectedRevitParameterName = existingMapping.RevitParameterName;
-            _revitParameterGuid        = existingMapping.RevitParameterGuid; // GUID is read-only so set backing field directly
+            _revitParameterGuid        = existingMapping.RevitParameterGuid; // read-only; set backing field directly
             SelectedFlowDirection      = existingMapping.FlowDirection;
             IsUniqueId                 = existingMapping.IsUniqueId;
         }
 
         // ── Partial property callbacks ────────────────────────────────────────
 
-        partial void OnSelectedDrofusFieldChanged(string? value)
-            => OkCommand.NotifyCanExecuteChanged();
+        partial void OnSelectedDrofusFieldChanged(DrofusRoomField? value)
+        {
+            OkCommand.NotifyCanExecuteChanged();
+
+            // Direction / IsUniqueId pre-population from the active configuration
+            // element. Only fires when a mapper and active configuration are present.
+            // In edit mode the existing mapping values are already loaded by the
+            // constructor — we still allow the auto-population to fire so that if the
+            // user changes the field selection the direction updates accordingly.
+            if (value is null || _mapper is null || _activeConfigurationId is null)
+                return;
+
+            DrofusAttributeConfigurationElement? element =
+                _mapper.GetElementForField(_activeConfigurationId.Value, value.Id);
+
+            if (element is null)
+            {
+                // Field is from the full catalogue with no active configuration
+                // element — leave direction and IsUniqueId at their current values.
+                return;
+            }
+
+            // Map the raw direction string to PushIt concepts and update both
+            // observable properties so the UI reflects the pre-populated state.
+            MappingFlowDirection direction =
+                DrofusPropertyMapper.MapDirection(element.Direction, out bool isUniqueId);
+
+            SelectedFlowDirection = direction;
+
+            // Only override IsUniqueId when the checkbox is not locked.
+            // If _anotherMappingIsAlreadyId is true the checkbox is disabled anyway,
+            // but we should not silently set IsUniqueId = true on a locked dialog.
+            if (!_anotherMappingIsAlreadyId)
+                IsUniqueId = isUniqueId;
+        }
 
         partial void OnSelectedRevitParameterNameChanged(string? value)
         {
@@ -211,20 +308,22 @@ namespace duHastNet.PushIt.ViewModels.DataSource.Drofus
         [RelayCommand(CanExecute = nameof(CanExecuteOk))]
         private void Ok()
         {
+            // Write the field Id (not Name) into DrofusFieldName so the persisted
+            // format is the stable JSON key, not the human-readable label.
             CreatedMapping = new DrofusPropertyMap
             {
-                DrofusFieldName      = SelectedDrofusField!.Trim(),
-                RevitParameterName   = SelectedRevitParameterName!.Trim(),
-                RevitParameterGuid   = RevitParameterGuid.Trim(),
-                FlowDirection        = SelectedFlowDirection,
-                IsUniqueId           = IsUniqueId,
+                DrofusFieldName    = SelectedDrofusField!.Id.Trim(),
+                RevitParameterName = SelectedRevitParameterName!.Trim(),
+                RevitParameterGuid = RevitParameterGuid.Trim(),
+                FlowDirection      = SelectedFlowDirection,
+                IsUniqueId         = IsUniqueId,
             };
 
             RequestClose?.Invoke(this, EventArgs.Empty);
         }
 
         private bool CanExecuteOk()
-            => !string.IsNullOrWhiteSpace(SelectedDrofusField)
+            => SelectedDrofusField is not null
             && !string.IsNullOrWhiteSpace(SelectedRevitParameterName);
 
         [RelayCommand]

@@ -25,7 +25,8 @@ namespace duHastNet.PushIt.Utilities.Drofus
         // ── Private state ─────────────────────────────────────────────────────
 
         private readonly List<DrofusPropertyMap> _mappings;
-        private readonly List<string> _availableFields;
+        private readonly List<DrofusRoomField> _availableFields;
+        private readonly List<DrofusAttributeConfiguration> _availableConfigurations;
 
         /// <summary>
         /// Keyed on <see cref="DrofusPropertyMap.RevitParameterGuid"/>.
@@ -44,12 +45,26 @@ namespace duHastNet.PushIt.Utilities.Drofus
         public IReadOnlyList<DrofusPropertyMap> Mappings => _mappings;
 
         /// <summary>
-        /// The live drofus field names derived from the most recent successful
-        /// API response. Empty until <see cref="UpdateAvailableFields"/> has been
-        /// called at least once (either from the Connect button or from the
-        /// startup validation pass).
+        /// The complete room field catalogue fetched from the drofus OPTIONS endpoint.
+        /// Empty until <see cref="UpdateAvailableFields"/> has been called at least
+        /// once (either from the Connect button or from the startup validation pass).
         /// </summary>
-        public IReadOnlyList<string> AvailableFields => _availableFields;
+        public IReadOnlyList<DrofusRoomField> AvailableFields => _availableFields;
+
+        /// <summary>
+        /// The list of room attribute configurations fetched from drofus.
+        /// Empty until <see cref="UpdateAvailableConfigurations"/> has been called.
+        /// </summary>
+        public IReadOnlyList<DrofusAttributeConfiguration> AvailableConfigurations
+            => _availableConfigurations;
+
+        /// <summary>
+        /// The id of the currently selected attribute configuration, or <c>null</c>
+        /// when no configuration is selected (the full catalogue is used).
+        /// Synced to <see cref="DrofusDataSourceSettings.SelectedAttributeConfigurationId"/>
+        /// via <see cref="SelectConfiguration"/>.
+        /// </summary>
+        public int? SelectedConfigurationId { get; private set; }
 
         // ── Constructor ───────────────────────────────────────────────────────
 
@@ -70,34 +85,256 @@ namespace duHastNet.PushIt.Utilities.Drofus
 
             // Defensive copy — we own our list; callers own theirs.
             _mappings = new List<DrofusPropertyMap>(persistedMappings);
-            _availableFields = new List<string>();
+            _availableFields = new List<DrofusRoomField>();
+            _availableConfigurations = new List<DrofusAttributeConfiguration>();
             _revitValidationResults = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
         }
 
-        // ── Field management ──────────────────────────────────────────────────
+        // ── Field catalogue management ────────────────────────────────────────
 
         /// <summary>
-        /// Replaces the internal available-fields list with the field names
-        /// extracted from the first room object in a live drofus API response.
+        /// Replaces the internal available-fields list with the full room field
+        /// catalogue fetched from the drofus OPTIONS endpoint.
         /// <para>
         /// Called after every successful HTTP connection — both from the Connect
         /// button and from the startup validation pass.
         /// </para>
         /// </summary>
-        /// <param name="fieldNames">
-        /// The JSON property names present on the first room returned by the
-        /// drofus rooms endpoint. Must not be <c>null</c>.
+        /// <param name="fields">
+        /// The complete catalogue of room fields returned by
+        /// <c>DrofusDataSource.GetFieldCatalogue</c>. Must not be <c>null</c>.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="fieldNames"/> is <c>null</c>.
+        /// Thrown when <paramref name="fields"/> is <c>null</c>.
         /// </exception>
-        public void UpdateAvailableFields(List<string> fieldNames)
+        public void UpdateAvailableFields(List<DrofusRoomField> fields)
         {
-            if (fieldNames is null)
-                throw new ArgumentNullException(nameof(fieldNames));
+            if (fields is null)
+                throw new ArgumentNullException(nameof(fields));
 
             _availableFields.Clear();
-            _availableFields.AddRange(fieldNames);
+            _availableFields.AddRange(fields);
+        }
+
+        // ── Configuration management ──────────────────────────────────────────
+
+        /// <summary>
+        /// Replaces the internal available-configurations list with those fetched
+        /// from <c>GET /attributeconfigurations</c>, filtered to <c>config_type == "room"</c>.
+        /// <para>
+        /// Called after every successful HTTP connection and at startup.
+        /// </para>
+        /// </summary>
+        /// <param name="configurations">
+        /// The room attribute configurations returned by
+        /// <c>DrofusDataSource.GetAttributeConfigurations</c>. Must not be <c>null</c>.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="configurations"/> is <c>null</c>.
+        /// </exception>
+        public void UpdateAvailableConfigurations(List<DrofusAttributeConfiguration> configurations)
+        {
+            if (configurations is null)
+                throw new ArgumentNullException(nameof(configurations));
+
+            _availableConfigurations.Clear();
+            _availableConfigurations.AddRange(configurations);
+        }
+
+        /// <summary>
+        /// Sets the active attribute configuration and syncs the id back to the
+        /// provided settings object so it is persisted on the next save.
+        /// </summary>
+        /// <param name="configurationId">
+        /// The <see cref="DrofusAttributeConfiguration.Id"/> of the configuration
+        /// to select, or <c>null</c> to deselect (full catalogue shown).
+        /// </param>
+        /// <param name="settings">
+        /// The settings object to sync the selection to. Must not be <c>null</c>.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="settings"/> is <c>null</c>.
+        /// </exception>
+        public void SelectConfiguration(int? configurationId, DrofusDataSourceSettings settings)
+        {
+            if (settings is null)
+                throw new ArgumentNullException(nameof(settings));
+
+            SelectedConfigurationId = configurationId;
+            settings.SelectedAttributeConfigurationId = configurationId;
+        }
+
+        /// <summary>
+        /// Returns the fields that should appear in the mapping dialog dropdown,
+        /// scoped to the currently selected attribute configuration.
+        /// <para>
+        /// When a configuration is selected, only catalogue fields whose
+        /// <see cref="DrofusRoomField.Id"/> appears as a
+        /// <see cref="DrofusAttributeConfigurationElement.DrofusAttributeId"/>
+        /// in that configuration's elements are returned.
+        /// </para>
+        /// <para>
+        /// When no configuration is selected (<see cref="SelectedConfigurationId"/>
+        /// is <c>null</c>), the full catalogue is returned.
+        /// </para>
+        /// </summary>
+        /// <returns>
+        /// A read-only snapshot of the fields available for mapping under the
+        /// current configuration. Changes to the returned list do not affect
+        /// internal state.
+        /// </returns>
+        public IReadOnlyList<DrofusRoomField> GetFieldsForSelectedConfiguration()
+        {
+            if (SelectedConfigurationId is null)
+                return _availableFields;
+
+            DrofusAttributeConfiguration? config = _availableConfigurations
+                .FirstOrDefault(c => c.Id == SelectedConfigurationId.Value);
+
+            if (config is null)
+                return _availableFields;
+
+            var configFieldIds = new HashSet<string>(
+                config.Elements.Select(e => e.DrofusAttributeId),
+                StringComparer.OrdinalIgnoreCase);
+
+            return _availableFields
+                .Where(f => configFieldIds.Contains(f.Id))
+                .ToList();
+        }
+
+        /// <summary>
+        /// Returns the <see cref="DrofusAttributeConfigurationElement"/> from the
+        /// specified configuration whose
+        /// <see cref="DrofusAttributeConfigurationElement.DrofusAttributeId"/>
+        /// matches <paramref name="fieldId"/>, or <c>null</c> if no match is found.
+        /// <para>
+        /// Used by <c>DrofusPropertyMappingDialogViewModel</c> to pre-populate
+        /// <see cref="DrofusPropertyMap.FlowDirection"/> and
+        /// <see cref="DrofusPropertyMap.IsUniqueId"/> when the user selects a field
+        /// that originates from a configuration element, saving manual entry.
+        /// </para>
+        /// </summary>
+        /// <param name="configurationId">The id of the configuration to search within.</param>
+        /// <param name="fieldId">The <see cref="DrofusRoomField.Id"/> to look up.</param>
+        /// <returns>
+        /// The matching element, or <c>null</c> when the configuration is not found
+        /// or the field is not part of it.
+        /// </returns>
+        public DrofusAttributeConfigurationElement? GetElementForField(int configurationId, string fieldId)
+        {
+            if (string.IsNullOrWhiteSpace(fieldId))
+                return null;
+
+            DrofusAttributeConfiguration? config = _availableConfigurations
+                .FirstOrDefault(c => c.Id == configurationId);
+
+            if (config is null)
+                return null;
+
+            return config.Elements.FirstOrDefault(e =>
+                string.Equals(e.DrofusAttributeId, fieldId, StringComparison.OrdinalIgnoreCase));
+        }
+
+        /// <summary>
+        /// Maps a raw <see cref="DrofusAttributeConfigurationElement.Direction"/>
+        /// string from the drofus API to the corresponding
+        /// <see cref="MappingFlowDirection"/> and <c>IsUniqueId</c> flag.
+        /// </summary>
+        /// <param name="direction">
+        /// The raw direction string from the API element:
+        /// <c>"Key"</c>, <c>"ToExternalApplication"</c>, or <c>"ToDrofus"</c>.
+        /// </param>
+        /// <param name="isUniqueId">
+        /// Set to <c>true</c> when <paramref name="direction"/> is <c>"Key"</c>;
+        /// <c>false</c> otherwise.
+        /// </param>
+        /// <returns>
+        /// The <see cref="MappingFlowDirection"/> for this element.
+        /// Unknown direction values default to
+        /// <see cref="MappingFlowDirection.DrofusToRevit"/> with
+        /// <c>isUniqueId = false</c> — this is intentional future-proofing
+        /// against new API direction values (Gap 4 / Gap 8).
+        /// </returns>
+        public static MappingFlowDirection MapDirection(string direction, out bool isUniqueId)
+        {
+            switch (direction)
+            {
+                case "Key":
+                    isUniqueId = true;
+                    return MappingFlowDirection.DrofusToRevit;
+
+                case "ToExternalApplication":
+                    isUniqueId = false;
+                    return MappingFlowDirection.DrofusToRevit;
+
+                case "ToDrofus":
+                    isUniqueId = false;
+                    return MappingFlowDirection.RevitToDrofus;
+
+                default:
+                    // Intentional future-proofing: any direction value not recognised
+                    // above defaults to DrofusToRevit with IsUniqueId = false.
+                    // This is the safe, non-destructive fallback — data flows into
+                    // Revit rather than overwriting drofus (Gap 4 / Gap 8).
+                    isUniqueId = false;
+                    return MappingFlowDirection.DrofusToRevit;
+            }
+        }
+
+        /// <summary>
+        /// Resolves the human-readable display label for a drofus field id by
+        /// looking it up in the current field catalogue.
+        /// </summary>
+        /// <param name="fieldId">
+        /// The <see cref="DrofusRoomField.Id"/> (JSON key) to resolve.
+        /// </param>
+        /// <returns>
+        /// The <see cref="DrofusRoomField.Name"/> for the matching catalogue entry,
+        /// or the raw <paramref name="fieldId"/> string as a fallback when the
+        /// catalogue has not been loaded or the id is not found.
+        /// </returns>
+        public string GetFieldLabel(string fieldId)
+        {
+            if (string.IsNullOrWhiteSpace(fieldId))
+                return fieldId ?? string.Empty;
+
+            DrofusRoomField? field = _availableFields
+                .FirstOrDefault(f => string.Equals(f.Id, fieldId, StringComparison.OrdinalIgnoreCase));
+
+            return field?.Name ?? fieldId;
+        }
+
+        /// <summary>
+        /// Handles the case where the previously selected attribute configuration
+        /// has been deleted from drofus (Scenario 3).
+        /// <para>
+        /// Clears all current mappings, resets
+        /// <see cref="SelectedConfigurationId"/> to <c>null</c>, and returns a
+        /// warning message for the caller to surface in the UI. The caller is
+        /// responsible for immediately calling
+        /// <see cref="SaveMappingsToSettings"/> and
+        /// <see cref="SelectConfiguration"/> with <c>null</c> to persist the reset.
+        /// </para>
+        /// <para>
+        /// This method must only be called when a Connect or startup sequence has
+        /// <b>successfully</b> retrieved the configuration list and positively
+        /// confirmed the previously selected id is absent. It must <b>not</b> be
+        /// called on connection failure — absence of data is not evidence of
+        /// deletion (Gap 9).
+        /// </para>
+        /// </summary>
+        /// <returns>
+        /// A warning message string ready to surface in the UI.
+        /// </returns>
+        public string HandleDeletedConfiguration()
+        {
+            _mappings.Clear();
+            SelectedConfigurationId = null;
+
+            return "The previously selected attribute configuration no longer exists " +
+                   "in drofus. All mappings have been cleared. Please select a " +
+                   "configuration and reconfigure your mappings.";
         }
 
         // ── Mapping mutations ─────────────────────────────────────────────────
@@ -179,7 +416,14 @@ namespace duHastNet.PushIt.Utilities.Drofus
 
         /// <summary>
         /// Removes all mappings whose <see cref="DrofusPropertyMap.DrofusFieldName"/>
-        /// is not present in <see cref="AvailableFields"/>.
+        /// does not match any <see cref="DrofusRoomField.Id"/> in
+        /// <see cref="GetFieldsForSelectedConfiguration"/>.
+        /// <para>
+        /// When a configuration is active, this method compares against that
+        /// configuration's field ids — so a field removed from the configuration
+        /// will be caught even if it still exists in the full catalogue (Scenario 4).
+        /// When no configuration is active, the full catalogue is used.
+        /// </para>
         /// <para>
         /// This method is only called after a successful explicit Connect — never
         /// during the startup validation pass (where stale mappings are flagged,
@@ -188,9 +432,10 @@ namespace duHastNet.PushIt.Utilities.Drofus
         /// </summary>
         /// <returns>
         /// The list of <see cref="DrofusPropertyMap.DrofusFieldName"/> values that
-        /// were removed, so the caller can report them to the user.
-        /// Returns an empty list if <see cref="AvailableFields"/> is empty (i.e.
-        /// no connection has been made yet) or if no stale mappings existed.
+        /// were removed (as human-readable labels via <see cref="GetFieldLabel"/>),
+        /// so the caller can report them to the user.
+        /// Returns an empty list when the available field set is empty (i.e. no
+        /// connection has been made yet) or if no stale mappings existed.
         /// </returns>
         public List<string> CleanupStaleMappings()
         {
@@ -198,19 +443,26 @@ namespace duHastNet.PushIt.Utilities.Drofus
             if (_availableFields.Count == 0)
                 return new List<string>();
 
+            IReadOnlyList<DrofusRoomField> scopedFields = GetFieldsForSelectedConfiguration();
+
+            var scopedIds = new HashSet<string>(
+                scopedFields.Select(f => f.Id),
+                StringComparer.OrdinalIgnoreCase);
+
             var stale = _mappings
-                .Where(m => !_availableFields.Contains(
-                    m.DrofusFieldName, StringComparer.OrdinalIgnoreCase))
+                .Where(m => !scopedIds.Contains(m.DrofusFieldName))
                 .ToList();
 
-            var removedNames = new List<string>();
+            var removedLabels = new List<string>();
             foreach (var mapping in stale)
             {
                 _mappings.Remove(mapping);
-                removedNames.Add(mapping.DrofusFieldName);
+                // Report human-readable label so the caller can surface a meaningful
+                // message rather than raw JSON field ids.
+                removedLabels.Add(GetFieldLabel(mapping.DrofusFieldName));
             }
 
-            return removedNames;
+            return removedLabels;
         }
 
         // ── Filtering ─────────────────────────────────────────────────────────
@@ -292,7 +544,7 @@ namespace duHastNet.PushIt.Utilities.Drofus
         /// <summary>
         /// <c>true</c> when at least one mapping has a known validation problem —
         /// either a Revit parameter confirmed missing, or a drofus field confirmed
-        /// absent from the live API response.
+        /// absent from the catalogue (or the active configuration's fields).
         /// <para>
         /// Returns <c>false</c> when no validation pass has run yet (i.e. both
         /// <see cref="AvailableFields"/> is empty and no Revit results have been
@@ -312,11 +564,17 @@ namespace duHastNet.PushIt.Utilities.Drofus
 
                     // Check drofus-side: only flag as missing when we have live
                     // field data — an empty AvailableFields means unknown, not absent.
-                    if (_availableFields.Count > 0 &&
-                        !_availableFields.Contains(
-                            mapping.DrofusFieldName, StringComparer.OrdinalIgnoreCase))
+                    if (_availableFields.Count > 0)
                     {
-                        return true;
+                        IReadOnlyList<DrofusRoomField> scopedFields =
+                            GetFieldsForSelectedConfiguration();
+
+                        bool fieldPresent = scopedFields.Any(f =>
+                            string.Equals(f.Id, mapping.DrofusFieldName,
+                                StringComparison.OrdinalIgnoreCase));
+
+                        if (!fieldPresent)
+                            return true;
                     }
                 }
 
@@ -351,11 +609,17 @@ namespace duHastNet.PushIt.Utilities.Drofus
                 revitMissing = true;
 
             bool drofusMissing = false;
-            if (_availableFields.Count > 0 &&
-                !_availableFields.Contains(
-                    map.DrofusFieldName, StringComparer.OrdinalIgnoreCase))
+            if (_availableFields.Count > 0)
             {
-                drofusMissing = true;
+                IReadOnlyList<DrofusRoomField> scopedFields =
+                    GetFieldsForSelectedConfiguration();
+
+                bool fieldPresent = scopedFields.Any(f =>
+                    string.Equals(f.Id, map.DrofusFieldName,
+                        StringComparison.OrdinalIgnoreCase));
+
+                if (!fieldPresent)
+                    drofusMissing = true;
             }
 
             return new MappingValidationState

@@ -3,7 +3,7 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <RootNamespace>duHastNet.Utils</RootNamespace>
-    <AssemblyName>Utils.25.0.1.0</AssemblyName>
+    <AssemblyName>Utils.25.0.1.1</AssemblyName>
     <OutputType>Library</OutputType>
     <Platforms>AnyCPU;x64</Platforms>
     <!-- Match your build script's expected path -->

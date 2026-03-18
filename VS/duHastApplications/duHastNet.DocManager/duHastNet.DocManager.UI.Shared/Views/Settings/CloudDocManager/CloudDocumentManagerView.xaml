@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:duHastNet.DocManager.UI.Shared.Views"
              xmlns:providerVm="clr-namespace:duHastNet.DocManager.UI.Shared.ViewModels.Settings.CloudDocManager.CloudProviderControls"
              xmlns:providerControls="clr-namespace:duHastNet.DocManager.UI.Shared.Controls.CloudProviderControls"
-             xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.25.0.1.0"
+             xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.25.0.1.1"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 

@@ -6,7 +6,7 @@ namespace duHastNet.UI.CustomControls
     {
         // Assembly info - change VERSION when versioning
         private const string ASSEMBLY_BASE = "duHastUICustomControls";
-        private const string VERSION = "25.0.1.0";
+        private const string VERSION = "25.0.1.1";
         private const string ASSEMBLY_NAME = ASSEMBLY_BASE + "." + VERSION;
 
         // Base URI pattern

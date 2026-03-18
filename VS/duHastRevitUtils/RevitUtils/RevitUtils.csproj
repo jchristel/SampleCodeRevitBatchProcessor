@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
     <RootNamespace>duHastNet.RevitUtils</RootNamespace>
-    <AssemblyName>RevitUtils.25.0.1.0</AssemblyName>
+    <AssemblyName>RevitUtils.25.0.1.1</AssemblyName>
     <OutputType>Library</OutputType>
     <Platforms>AnyCPU;x64</Platforms>
     <OutputPath>bin\x64\$(Configuration)\</OutputPath>
@@ -31,12 +31,12 @@
 
   <!-- Reference to your converted Utils library -->
   <ItemGroup>
-    <Reference Include="Utils.25.0.1.0">
-      <HintPath>..\\..\\_References\\duHast\\Utils.25.0.1.0.dll</HintPath>
+    <Reference Include="Utils.25.0.1.1">
+      <HintPath>..\\..\\_References\\duHast\\Utils.25.0.1.1.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="FileIOWrapper.25.0.1.0">
-      <HintPath>..\\..\\_References\\duHast\\FileIOWrapper.25.0.1.0.dll</HintPath>
+    <Reference Include="FileIOWrapper.25.0.1.1">
+      <HintPath>..\\..\\_References\\duHast\\FileIOWrapper.25.0.1.1.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

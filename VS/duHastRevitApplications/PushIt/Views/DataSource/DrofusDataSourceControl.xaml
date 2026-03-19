@@ -150,27 +150,35 @@
         </StackPanel>
 
         <!-- ── Connect button + status ──────────────────────────────────── -->
-        <StackPanel Grid.Row="5" Grid.Column="1"
-                    Orientation="Horizontal"
-                    Margin="0 8 0 0">
+        <Grid Grid.Row="5" Grid.Column="1"
+              Margin="0 8 0 0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>  <!-- button + connecting indicator -->
+                <RowDefinition Height="Auto"/>  <!-- status message (wraps) -->
+            </Grid.RowDefinitions>
 
-            <Button Content="Connect"
-                    Padding="16 4"
-                    Command="{Binding ConnectCommand}"/>
+            <!-- Row 0: button and connecting spinner -->
+            <StackPanel Grid.Row="0"
+                        Orientation="Horizontal">
 
-            <!-- Shown while connecting -->
-            <TextBlock Text="Connecting…"
-                       Margin="10 0 0 0"
-                       VerticalAlignment="Center"
-                       Foreground="#555"
-                       Visibility="{Binding IsConnecting, Converter={StaticResource BoolToVis}}"/>
+                <Button Content="Connect"
+                        Padding="16 4"
+                        Command="{Binding ConnectCommand}"/>
 
-            <!-- Status: green on success, red on failure, hidden while connecting -->
-            <TextBlock Margin="10 0 0 0"
-                       VerticalAlignment="Center"
+                <!-- Shown while connecting -->
+                <TextBlock Text="Connecting…"
+                           Margin="10 0 0 0"
+                           VerticalAlignment="Center"
+                           Foreground="#555"
+                           Visibility="{Binding IsConnecting, Converter={StaticResource BoolToVis}}"/>
+
+            </StackPanel>
+
+            <!-- Row 1: status message — full width, wraps, hidden while connecting -->
+            <TextBlock Grid.Row="1"
+                       Margin="0 4 0 0"
                        Text="{Binding StatusMessage}"
-                       TextTrimming="CharacterEllipsis"
-                       MaxWidth="260">
+                       TextWrapping="Wrap">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
                         <Setter Property="Foreground" Value="#CC0000"/>
@@ -186,7 +194,7 @@
                 </TextBlock.Style>
             </TextBlock>
 
-        </StackPanel>
+        </Grid>
 
         <!-- ── Attribute configuration selector ─────────────────────────── -->
         <!--

@@ -293,22 +293,20 @@ namespace duHastNet.PushIt.Utilities.Drofus
 
             ValidateSettings(drofus);
 
-            string baseUrl = BuildAttributeConfigurationsUrl(drofus);
+            // Server-side filter to room configurations only. Using $filter avoids
+            // $skip=0 which triggers a 500 on some drofus project instances, and is
+            // more efficient than fetching all config types and filtering client-side.
+            string url = $"{BuildAttributeConfigurationsUrl(drofus)}?$filter=config_type eq 'room'";
 
             try
             {
-                JArray array = FetchAllPages(baseUrl, drofus.ApiToken);
+                JArray array = JArray.Parse(ExecuteGet(url, drofus.ApiToken));
 
                 var configurations = new List<DrofusAttributeConfiguration>();
 
                 foreach (JToken token in array)
                 {
                     if (token is not JObject configObj)
-                        continue;
-
-                    // Client-side filter: only room configurations are relevant to PushIt.
-                    string configType = configObj["config_type"]?.ToString() ?? string.Empty;
-                    if (!string.Equals(configType, "room", StringComparison.OrdinalIgnoreCase))
                         continue;
 
                     var elements = new List<DrofusAttributeConfigurationElement>();

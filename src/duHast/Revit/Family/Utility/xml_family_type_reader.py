@@ -393,7 +393,12 @@ def read_xml_into_storage(doc_xml, family_name, family_path, root_category_path 
             last_updated_date = dt.date().isoformat()  # Convert to date-only string
             last_updated_time = dt.time().isoformat()  # Convert to time-only string
         except ValueError as e:
-            print("Error parsing date-time: {}".format(e))
+            pass
+            # try:
+            #     error_msg = str(e).encode('ascii', 'replace').decode('ascii')
+            #     print("Error parsing date-time: {}".format(error_msg))
+            # except:
+            #     print("Error parsing date-time (encoding error in message)")
     else:
         print("updated_node not found")
 

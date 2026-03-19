@@ -33,6 +33,7 @@ from duHast.Revit.Family.LibraryCleanUp.Utility.directives_checks import  check_
 from duHast.Revit.Family.LibraryCleanUp.Utility.write_task_lists import write_task_lists
 from duHast.Revit.Family.LibraryCleanUp.Utility.defaults import GROUPING_CODE_PARAMETER_NAME
 
+
 def get_family_data_from_file(libraryPath):
     """
     Extracts family type data from XML files in the specified library path.
@@ -52,16 +53,31 @@ def get_family_data_from_file(libraryPath):
 
     :rtype: :class:`.Result`
     """
-    xml_files =  get_all_xml_files_from_directories([libraryPath])
 
-    if len(xml_files) == 0:
-        return None
+    return_value = Result()
+
+    try:
+        xml_files =  get_all_xml_files_from_directories([libraryPath])
+
+        if len(xml_files) == 0:
+            return_value.update_sep(False, "No XML files found in library path: {}".format(libraryPath))
+            return return_value
+        return_value.append_message("Found {} XML files in library path.".format(len(xml_files)))
+        
+        family_data_result = get_family_type_data_from_library(xml_files)
+
+        return_value.update(family_data_result)
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "Failed to get family type data from xml files with exception",
+        )
     
-    family_data_result = get_family_type_data_from_library(xml_files)
-    if (family_data_result.status is False):
-        return None
-    else:
-        return family_data_result.result
+    return return_value
+    # if (family_data_result.status is False):
+    #     return None
+    # else:
+    #     return family_data_result.result
     
 
 def pre_process(library_path, output_path, task_list_directory_path, code_descriptor_path, output, number_of_task_lists=3, group_code_parameter_name=GROUPING_CODE_PARAMETER_NAME):
@@ -91,12 +107,17 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
         output("Processing family data from library path: {}".format(library_path))
 
         # get type data from library as [:class:`.FamilyTypeDataStorageManager`]
-        family_data = get_family_data_from_file(library_path)
-        if (family_data is None):
-            return_value.update_sep(False, "No family data found in the specified library path.")
-            output("No family data found in the specified library path.")
+        family_data_result = get_family_data_from_file(library_path)
+        if (family_data_result.status == False):
+            output("decoding error" )
+            error_msg = str(family_data_result.message).encode('ascii', 'replace').decode('ascii')
+            output("decoded error message:")
+            return_value.update_sep(False, error_msg)
+            output("No family data found in the specified library path. \n>>{}\n<<".format(error_msg))
             return return_value
         
+        family_data = family_data_result.result
+
         output("Families {} loaded from library path.".format(len(family_data)))
             
         # do some logging to user
@@ -213,9 +234,9 @@ def pre_process(library_path, output_path, task_list_directory_path, code_descri
     except Exception as e:
         return_value.update_sep(
             False,
-            "Failed to get family data with exception: {}".format(e),
+            "Failed to get family data with exception__here_09: {}".format(e),
         )
-        output("Failed to get family data with exception: {}".format(e))
+        output("Failed to get family data with exception__here6: {}".format(e))
     
     output("Finished!")
     return return_value

@@ -165,52 +165,75 @@ def get_family_type_data_from_library(xml_files_in_libraries, progress_callback=
 
         # get the type data from the library
         for xml_file in sorted_file_paths:
+            return_value.append_message("Processing xml file: {}".format(xml_file.name))
+            try:
+                # get a file name without extension to report progress
+                file_name_progress = get_file_name_without_ext(xml_file.name)
+                # update progress
+                if progress_callback:
+                    progress_callback.update(counter, max_value_xml, file_name_progress)
 
-            # get a file name without extension to report progress
-            file_name_progress = get_file_name_without_ext(xml_file.name)
-            # update progress
-            if progress_callback:
-                progress_callback.update(counter, max_value_xml, file_name_progress)
+                # read xml file
+                xml_doc_status = read_xml_file(xml_file.name)
+                if xml_doc_status == False:
+                    return_value.update_sep(
+                        False,
+                        "Failed to read xml file: {} with exception: {}".format(
+                            xml_file.name, xml_doc_status.message
+                        ),
+                    )
+                    # update progress
+                    counter = counter + 1
+                    continue
+                else:
+                    return_value.append_message("Read xml file: {}".format(xml_file.name))
 
-            # read xml file
-            xml_doc_status = read_xml_file(xml_file.name)
-            if xml_doc_status == False:
+                # get the xml document
+                xml_doc = xml_doc_status.result
+                if xml_doc is None:
+                    return_value.update_sep(
+                        False, "Failed to read xml file: {}".format(xml_file.name)
+                    )
+                    # update progress
+                    counter = counter + 1
+                    continue
+                else:
+                    return_value.append_message("Retrieved xml document object")
+            
+                # build the family path (required for xml data)
+                # assume the xml file is in the same directory as the family file
+                fam_name = get_file_name_without_ext(xml_file.name)
+                fam_directory = get_directory_path_from_file_path(xml_file.name)
+                fam_path = os.path.join(fam_directory, fam_name + ".rfa")
+
+            
+                try:
+                    # load xml data into storage
+                    return_value.append_message("loading family: {}".format(fam_name))
+                
+                    xml_data_family = read_xml_into_storage(xml_doc, fam_name, fam_path)
+
+                    # add storage to global list
+                    type_data.append(xml_data_family)
+
+                except UnicodeEncodeError as ue:
+                    # Handle encoding errors at the top level
+                    error_msg = str(ue).encode('ascii', 'replace').decode('ascii')
+                    print("Unicode encoding error: {}".format(error_msg))
+                    return_value.update_sep(False, "Unicode encoding error in XML processing")
+
+                except Exception as e:
+                    return_value.update_sep(
+                        False,
+                        "Failed to read xml file: {} with exception: {}".format(
+                            xml_file.name, repr(e)
+                        ),
+                    )
+            except Exception as e:
                 return_value.update_sep(
                     False,
-                    "Failed to read xml file: {} with exception: {}".format(
-                        xml_file.name, xml_doc_status.message
-                    ),
-                )
-                # update progress
-                counter = counter + 1
-                continue
-            else:
-                return_value.append_message("Read xml file: {}".format(xml_file.name))
-
-            # get the xml document
-            xml_doc = xml_doc_status.result
-            if xml_doc is None:
-                return_value.update_sep(
-                    False, "Failed to read xml file: {}".format(xml_file.name)
-                )
-                # update progress
-                counter = counter + 1
-                continue
-            else:
-                return_value.append_message("Retrieved xml document object")
-
-            # build the family path (required for xml data)
-            # assume the xml file is in the same directory as the family file
-            fam_name = get_file_name_without_ext(xml_file.name)
-            fam_directory = get_directory_path_from_file_path(xml_file.name)
-            fam_path = os.path.join(fam_directory, fam_name + ".rfa")
-
-            # load xml data into storage
-            return_value.append_message("loading family: {}".format(fam_name))
-            xml_data_family = read_xml_into_storage(xml_doc, fam_name, fam_path)
-
-            # add storage to global list
-            type_data.append(xml_data_family)
+                    "Failed to process xml file: with exception:")
+                
 
             # update progress
             counter = counter + 1
@@ -223,7 +246,7 @@ def get_family_type_data_from_library(xml_files_in_libraries, progress_callback=
 
     except Exception as e:
         return_value.update_sep(
-            False, "Failed to gather family data with exception: {}".format(e)
+            False, "Failed to gather family data with exception_hereh2: {}".format("ggr")
         )
 
     # store data to be returned

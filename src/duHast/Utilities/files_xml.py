@@ -60,20 +60,23 @@ def read_xml_file(file_path):
 
     return_value = Result()
 
-    read_result = read_non_column_based_text_file(file_path)
-    return_value.update(read_result)
+    #read_result = read_non_column_based_text_file(file_path)
+    #return_value.update(read_result)
 
-    if read_result.status is False:
-        return return_value
+    #if read_result.status is False:
+    #    return return_value
 
     try:
         # Load the XML content
         doc_xml = XmlDocument()
-        doc_xml.LoadXml(read_result.result)
+        doc_xml.Load(file_path)
+        #doc_xml.LoadXml(read_result.result)
         return_value.result = doc_xml
 
     except Exception as e:
-        return_value.update_sep(False, "Error while reading the XML file: {}".format(e))
+        # encode in case its a non ascii related error message, to avoid issues with non ascii characters in the log
+        error_msg = str(e).encode('ascii', 'replace').decode('ascii')
+        return_value.update_sep(False, "Error while reading the XML file: {}".format(error_msg))
 
     return return_value
 

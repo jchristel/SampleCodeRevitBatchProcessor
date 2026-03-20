@@ -444,13 +444,14 @@ def add_multiple_shared_parameters_to_family(doc, parameter_data):
                
                 # setup inline function to set parameter value as a simple value, this is needed to be able to pass the parameter value from the outer scope into the function which will be run in the transaction
                 def parameter_modifier(mgr, parameter, parameter_value_original):
+                    modifier_return_value = res.Result()
                     parameter_value_to_set=parameter_value_original
 
                     # check if the parameter value is the result of a function call
                     if parameter_value_is_derived_from_function:
                         parameter_value_to_set = parameter_value_from_function
                     modifier_return_value.append_message("Setting parameter value as value: {}, {}".format(parameter_value_to_set, type(parameter_value_to_set)))
-                    modifier_return_value = res.Result()
+                    
                     try:
                         mgr.Set(parameter, parameter_value_to_set)
                     except Exception as e:

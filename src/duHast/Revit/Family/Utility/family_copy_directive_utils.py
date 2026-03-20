@@ -49,7 +49,7 @@ from duHast.Utilities.Objects import result as res
 from duHast.Revit.Family.Data.Objects.family_directive_copy import FamilyDirectiveCopy
 
 
-def get_copy_directives(directory_path):
+def get_copy_directives_from_directory(directory_path):
     """
     Retrieves file rename  directives from a given folder location.
 
@@ -84,14 +84,14 @@ def get_copy_directives(directory_path):
     # check whether any files where found?
     if len(rename_directive_files) > 0:
         # attempt to re rename directives from files
-        rename_directives =get_copy_directives(rename_directive_files)
+        copy_directives = get_copy_directives_from_files(rename_directive_files)
         # check whether any rename directives where found in files
-        if len(rename_directives) > 0:
+        if len(copy_directives) > 0:
             return_value.update_sep(
-                True, "Found copy directives: {}".format(len(rename_directives))
+                True, "Found copy directives: {}".format(len(copy_directives))
             )
             # store rename directives in result object
-            return_value.result = rename_directives
+            return_value.result = copy_directives
         else:
             return_value.update_sep(
                 False, FamilyDirectiveCopy.EXCEPTION_EMPTY_COPY_DIRECTIVE_FILES
@@ -103,7 +103,8 @@ def get_copy_directives(directory_path):
 
     return return_value
 
-def get_copy_directives(files):
+
+def get_copy_directives_from_files(files):
     """
     Reads list of copy directives from files.
 

@@ -24,7 +24,7 @@ import os
 from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.files_io import file_move, get_file_name_without_ext
 
-from duHast.Revit.Family.Utility.family_copy_directive_utils import get_copy_directives
+from duHast.Revit.Family.Utility.family_copy_directive_utils import  get_copy_directives_from_files
 
 from duHast.Revit.Family.Data.Objects.family_directive_copy import FamilyDirectiveCopy
 from duHast.Utilities.files_get import get_files_single_directory
@@ -120,7 +120,7 @@ def move_original_families_to_backup_directory(family_copy_directive_directory, 
     output("Found copy directives files: {}".format(len(files)))
 
     # get copy directives
-    copy_directives = get_copy_directives(files)
+    copy_directives =  get_copy_directives_from_files(files)
     if copy_directives is None or len(copy_directives) == 0:
         return_value.update_sep(False, "Failed to get copy directives from files: {}".format(files))
         return return_value

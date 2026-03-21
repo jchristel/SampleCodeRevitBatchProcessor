@@ -425,6 +425,7 @@ def add_multiple_shared_parameters_to_family(doc, parameter_data):
             if single_para.parameter_value != None and single_para.value_is_formula == True:
                
                 # set up inline function to set parameter value as formula, this is needed to be able to pass the parameter value from the outer scope into the function which will be run in the transaction
+                # since this is a formula, we will not need to cycle of all types in the family and set the formula, as formulas are applicable on both type and instance parameters 
                 def parameter_modifier(mgr, parameter, parameter_value_original):
                     modifier_return_value = res.Result()
                     parameter_value_to_set=parameter_value_original
@@ -440,9 +441,10 @@ def add_multiple_shared_parameters_to_family(doc, parameter_data):
                         modifier_return_value.status = False
                         modifier_return_value.append_message("Failed to set parameter value as formula with exception: {}".format(e))
                     return modifier_return_value
-            elif single_para.parameter_value != None and single_para.value_is_formula == False:
+            elif single_para.parameter_value != None and single_para.value_is_formula == False and single_para.is_type_parameter == False:
                
                 # setup inline function to set parameter value as a simple value, this is needed to be able to pass the parameter value from the outer scope into the function which will be run in the transaction
+                # since this is an instance parameter there is no need to cycle of all types in the family and set the value
                 def parameter_modifier(mgr, parameter, parameter_value_original):
                     modifier_return_value = res.Result()
                     parameter_value_to_set=parameter_value_original
@@ -457,6 +459,34 @@ def add_multiple_shared_parameters_to_family(doc, parameter_data):
                     except Exception as e:
                         modifier_return_value.status = False
                         modifier_return_value.append_message("Failed to set parameter value with exception: {}".format(e))
+                    return modifier_return_value
+            elif single_para.parameter_value != None and single_para.value_is_formula == False and single_para.is_type_parameter == True:
+                
+                # setup inline function to set parameter value as a simple value, this is needed to be able to pass the parameter value from the outer scope into the function which will be run in the transaction
+                # since this is a type parameter we need to cycle of all types in the family and set the value for each type
+                def parameter_modifier(mgr, parameter, parameter_value_original):
+                    modifier_return_value = res.Result()
+                    parameter_value_to_set=parameter_value_original
+
+                    # get all the types in the family
+                    family_types = mgr.Types
+                    modifier_return_value.append_message("Got family types, count: {}".format(family_types.Size))
+                    
+                    # check if the parameter value is the result of a function call
+                    if parameter_value_is_derived_from_function:
+                        parameter_value_to_set = parameter_value_from_function
+                    modifier_return_value.append_message("Setting type parameter value as value: {}, {}".format(parameter_value_to_set, type(parameter_value_to_set)))
+                    
+                    try:
+                        # iterate over family types
+                        family_types_iterator = family_types.ForwardIterator()
+                        family_types_iterator.Reset()
+                        while (family_types_iterator.MoveNext()):
+                            mgr.CurrentType = family_types_iterator.Current
+                            mgr.Set(parameter, parameter_value_to_set)
+                            modifier_return_value.append_message("Set parameter value: {} for type: {}".format(parameter_value_to_set, mgr.CurrentType.Name))
+                    except Exception as e:
+                        modifier_return_value.update_sep(False, "Failed to set type parameter value with exception: {}".format(e))
                     return modifier_return_value
             else:  
                 parameter_modifier = None

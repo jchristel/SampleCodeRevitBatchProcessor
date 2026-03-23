@@ -66,6 +66,15 @@ namespace duHastNet.PushIt.ViewModels.DataSource
         public bool HasConfigurations => AvailableConfigurations.Count > 0;
 
         /// <summary>
+        /// <c>true</c> when a real configuration (not the "None" sentinel) is
+        /// currently selected. Gates the mapping interface — Add/Edit/Remove buttons
+        /// and the mapping list are disabled while this is <c>false</c>.
+        /// </summary>
+        public bool HasSelectedConfiguration
+            => SelectedConfiguration != null
+            && SelectedConfiguration.Id != DrofusAttributeConfiguration.NoneId;
+
+        /// <summary>
         /// <c>true</c> when drofus could not be reached at startup and existing
         /// mappings are in a degraded (preserved-but-unverified) state.
         /// Drives the disabled state of the room grid and the Push button.
@@ -296,67 +305,136 @@ namespace duHastNet.PushIt.ViewModels.DataSource
 
             int? newId = value?.Id;
 
+            // Normalise the sentinel to null so the no-op check below compares
+            // correctly against Mapper.SelectedConfigurationId (which is always null
+            // when None is active — the sentinel id is never stored in the mapper).
+            bool switchingToNone = newId == DrofusAttributeConfiguration.NoneId;
+            if (switchingToNone)
+                newId = null;
+
             // No-op if the selection didn't actually change.
             if (newId == Mapper.SelectedConfigurationId) return;
 
-            // Scenario 5: check whether switching would drop any existing mappings.
-            if (newId != null && Mapper.Mappings.Count > 0)
+            // Snapshot the currently active id NOW, before any confirmation dialog or
+            // state change, so the cancel-revert always returns to the config that was
+            // visibly selected when the user opened the dropdown.
+            _previousConfigurationId = Mapper.SelectedConfigurationId;
+
+            // Confirmation required whenever existing mappings would be dropped.
+            // This covers two cases:
+            //   A) Switching to a real config whose field set doesn't cover all
+            //      current mappings (original Scenario 5).
+            //   B) Switching to None — all mappings will always be dropped.
+            if (Mapper.Mappings.Count > 0)
             {
-                // Compute which current mappings reference field ids that are NOT
-                // in the new configuration's elements.
-                DrofusAttributeConfiguration? newConfig =
-                    Mapper.AvailableConfigurations.FirstOrDefault(c => c.Id == newId.Value);
+                bool needsConfirmation;
+                string confirmConfigName;
+                IReadOnlyList<string> dropLabels;
+                int keepCount;
 
-                if (newConfig != null)
+                if (switchingToNone)
                 {
-                    var newConfigIds = new HashSet<string>(
-                        newConfig.Elements.Select(e => e.DrofusAttributeId),
-                        StringComparer.OrdinalIgnoreCase);
-
-                    var wouldDrop = Mapper.Mappings
-                        .Where(m => !newConfigIds.Contains(m.DrofusFieldName))
+                    // Switching to None always drops every mapping.
+                    needsConfirmation = true;
+                    confirmConfigName = DrofusAttributeConfiguration.None.Name;
+                    dropLabels = Mapper.Mappings
+                        .Select(m => Mapper.GetFieldLabel(m.DrofusFieldName))
                         .ToList();
+                    keepCount = 0;
+                }
+                else if (newId != null)
+                {
+                    // Switching to a real config: compute which mappings would be lost.
+                    DrofusAttributeConfiguration? newConfig =
+                        Mapper.AvailableConfigurations.FirstOrDefault(c => c.Id == newId.Value);
 
-                    if (wouldDrop.Count > 0)
+                    if (newConfig != null)
                     {
-                        int wouldKeep = Mapper.Mappings.Count - wouldDrop.Count;
-                        var dropLabels = wouldDrop
-                            .Select(m => Mapper.GetFieldLabel(m.DrofusFieldName))
+                        var newConfigIds = new HashSet<string>(
+                            newConfig.Elements.Select(e => e.DrofusAttributeId),
+                            StringComparer.OrdinalIgnoreCase);
+
+                        var wouldDrop = Mapper.Mappings
+                            .Where(m => !newConfigIds.Contains(m.DrofusFieldName))
                             .ToList();
 
-                        bool confirmed = ShowConfigurationChangeConfirmation(
-                            newConfig.Name,
-                            dropLabels,
-                            wouldKeep);
+                        needsConfirmation = wouldDrop.Count > 0;
+                        confirmConfigName = newConfig.Name;
+                        dropLabels = wouldDrop
+                            .Select(m => Mapper.GetFieldLabel(m.DrofusFieldName))
+                            .ToList();
+                        keepCount = Mapper.Mappings.Count - wouldDrop.Count;
+                    }
+                    else
+                    {
+                        needsConfirmation = false;
+                        confirmConfigName = string.Empty;
+                        dropLabels = new List<string>();
+                        keepCount = 0;
+                    }
+                }
+                else
+                {
+                    needsConfirmation = false;
+                    confirmConfigName = string.Empty;
+                    dropLabels = new List<string>();
+                    keepCount = 0;
+                }
 
-                        if (!confirmed)
+                if (needsConfirmation)
+                {
+                    bool confirmed = ShowConfigurationChangeConfirmation(
+                        confirmConfigName, dropLabels, keepCount);
+
+                    if (!confirmed)
+                    {
+                        // Revert the selector back to the previously active configuration.
+                        // Use suppress flag to avoid re-entering this handler, then fire
+                        // OnPropertyChanged explicitly so WPF repaints the ComboBox (Bug 1 fix).
+                        _suppressConfigurationChangeHandler = true;
+                        try
                         {
-                            // Revert the selector to the previous configuration.
-                            _suppressConfigurationChangeHandler = true;
-                            try
-                            {
-                                SelectedConfiguration = _previousConfigurationId == null
-                                    ? null
-                                    : AvailableConfigurations.FirstOrDefault(
-                                        c => c.Id == _previousConfigurationId.Value);
-                            }
-                            finally
-                            {
-                                _suppressConfigurationChangeHandler = false;
-                            }
-                            return;
+                            SelectedConfiguration = _previousConfigurationId == null
+                                ? DrofusAttributeConfiguration.None
+                                : AvailableConfigurations.FirstOrDefault(
+                                    c => c.Id == _previousConfigurationId.Value)
+                                  ?? DrofusAttributeConfiguration.None;
                         }
+                        finally
+                        {
+                            _suppressConfigurationChangeHandler = false;
+                        }
+                        // Explicit notification so the ComboBox redraws to the reverted value.
+                        OnPropertyChanged(nameof(SelectedConfiguration));
+                        return;
                     }
                 }
             }
 
             // Confirmed (or no mappings would be dropped): apply the switch.
-            _previousConfigurationId = Mapper.SelectedConfigurationId;
             Mapper.SelectConfiguration(newId, d);
-            List<string> removed = Mapper.CleanupStaleMappings();
+
+            // When switching to None every mapping must be dropped unconditionally.
+            // CleanupStaleMappings cannot be used here because with SelectedConfigurationId
+            // set to null it falls back to the full catalogue and removes nothing.
+            List<string> removed = switchingToNone
+                ? Mapper.ClearAllMappings()
+                : Mapper.CleanupStaleMappings();
             Mapper.SaveMappingsToSettings(d);
             RebuildMappingRows();
+
+            // When None is selected all previously loaded room data must be cleared
+            // from the data model and the rooms grid notified so it shows empty.
+            if (switchingToNone && _revitDataModel != null)
+            {
+                _revitDataModel.ClearAllRooms();
+                _revitDataModel.RaisePropertyChanged(
+                    Utilities.PropertyChangedEventNames.DATA_MODEL_ROOMS_UPDATED);
+            }
+            OnPropertyChanged(nameof(HasSelectedConfiguration));
             AddMappingCommand.NotifyCanExecuteChanged();
+            EditMappingCommand.NotifyCanExecuteChanged();
+            RemoveMappingCommand.NotifyCanExecuteChanged();
 
             if (removed.Count > 0)
                 StatusMessage = $"{removed.Count} mapping(s) removed after configuration change: " +
@@ -395,16 +473,9 @@ namespace duHastNet.PushIt.ViewModels.DataSource
         {
             bool hasExistingId = Mapper.Mappings.Any(m => m.IsUniqueId);
 
-            // Exclude drofus fields already claimed by an existing mapping.
-            var usedFields = new HashSet<string>(
-                Mapper.Mappings.Select(m => m.DrofusFieldName),
-                StringComparer.OrdinalIgnoreCase);
-
-            // Use the configuration-scoped field list so the dialog only shows
-            // fields relevant to the active configuration.
-            var availableFields = Mapper.GetFieldsForSelectedConfiguration()
-                .Where(f => !usedFields.Contains(f.Id))
-                .ToList();
+            // All configuration-scoped fields are available — a drofus field may be
+            // mapped more than once (fan-out to multiple Revit parameters).
+            var availableFields = Mapper.GetFieldsForSelectedConfiguration().ToList();
 
             // Exclude Revit parameters already claimed by an existing mapping.
             var usedParams = new HashSet<string>(
@@ -428,7 +499,7 @@ namespace duHastNet.PushIt.ViewModels.DataSource
             PersistAndRefresh();
         }
 
-        private bool CanAddMapping() => HasAvailableFields && HasConfigurations;
+        private bool CanAddMapping() => HasAvailableFields && HasSelectedConfiguration;
 
         partial void OnIsConnectedChanged(bool value)
         {
@@ -481,16 +552,9 @@ namespace duHastNet.PushIt.ViewModels.DataSource
             bool hasExistingId = Mapper.Mappings
                 .Any(m => m.IsUniqueId && m != SelectedMappingRow.Model);
 
-            // Exclude fields claimed by other mappings (not the one being edited).
-            var usedFields = new HashSet<string>(
-                Mapper.Mappings
-                    .Where(m => m != SelectedMappingRow.Model)
-                    .Select(m => m.DrofusFieldName),
-                StringComparer.OrdinalIgnoreCase);
-
-            var availableFields = Mapper.GetFieldsForSelectedConfiguration()
-                .Where(f => !usedFields.Contains(f.Id))
-                .ToList();
+            // All configuration-scoped fields are available — a drofus field may be
+            // mapped more than once (fan-out to multiple Revit parameters).
+            var availableFields = Mapper.GetFieldsForSelectedConfiguration().ToList();
 
             // Exclude Revit parameters claimed by other mappings (not the one being edited).
             var usedParams = new HashSet<string>(
@@ -662,12 +726,20 @@ namespace duHastNet.PushIt.ViewModels.DataSource
             try
             {
                 AvailableConfigurations.Clear();
+
+                // Always insert the None sentinel first so WPF always has a visible
+                // item to display when no real configuration is selected.
+                AvailableConfigurations.Add(DrofusAttributeConfiguration.None);
+
                 foreach (var config in Mapper.AvailableConfigurations)
                     AvailableConfigurations.Add(config);
 
+                // Resolve the stored id: null (or an id that no longer exists) maps
+                // to the None sentinel; a known id maps to the matching real config.
                 SelectedConfiguration = selectedId == null
-                    ? null
-                    : AvailableConfigurations.FirstOrDefault(c => c.Id == selectedId.Value);
+                    ? DrofusAttributeConfiguration.None
+                    : AvailableConfigurations.FirstOrDefault(c => c.Id == selectedId.Value)
+                      ?? DrofusAttributeConfiguration.None;
 
                 _previousConfigurationId = selectedId;
             }
@@ -675,6 +747,7 @@ namespace duHastNet.PushIt.ViewModels.DataSource
             {
                 _suppressConfigurationChangeHandler = false;
             }
+            OnPropertyChanged(nameof(HasSelectedConfiguration));
         }
 
         private void RebuildMappingRows()

@@ -25,6 +25,28 @@ namespace duHastNet.PushIt.Models.Drofus
     public class DrofusAttributeConfiguration
     {
         /// <summary>
+        /// Reserved id used by the <see cref="None"/> sentinel.
+        /// No real drofus configuration will ever have this id.
+        /// </summary>
+        public const int NoneId = -1;
+
+        /// <summary>
+        /// Singleton sentinel that represents "no configuration selected".
+        /// Inserted as the first item in the configuration ComboBox so WPF can
+        /// always display "None" rather than a blank when nothing is chosen.
+        /// The mapper and settings layers treat <see cref="NoneId"/> identically
+        /// to <c>null</c> — it is never persisted to the settings file.
+        /// </summary>
+        public static readonly DrofusAttributeConfiguration None =
+            new DrofusAttributeConfiguration
+            {
+                Id = NoneId,
+                Name = "None",
+                IsDefault = false,
+                Elements = new List<DrofusAttributeConfigurationElement>(),
+            };
+
+        /// <summary>
         /// The integer id of this configuration.
         /// This value is stable across renames — it is the identifier persisted
         /// to settings as <c>SelectedAttributeConfigurationId</c>.

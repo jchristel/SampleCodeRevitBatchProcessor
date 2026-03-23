@@ -316,7 +316,7 @@
                           BorderBrush="#CCCCCC"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           HorizontalContentAlignment="Stretch"
-                          IsEnabled="{Binding HasConfigurations}">
+                          IsEnabled="{Binding HasSelectedConfiguration}">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -338,12 +338,12 @@
                     <Button Content="Edit"
                             Padding="14 3"
                             Margin="0 0 6 0"
-                            IsEnabled="{Binding HasConfigurations}"
+                            IsEnabled="{Binding HasSelectedConfiguration}"
                             Command="{Binding EditMappingCommand}"/>
 
                     <Button Content="Remove"
                             Padding="14 3"
-                            IsEnabled="{Binding HasConfigurations}"
+                            IsEnabled="{Binding HasSelectedConfiguration}"
                             Command="{Binding RemoveMappingCommand}"/>
 
                 </StackPanel>

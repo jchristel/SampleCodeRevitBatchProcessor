@@ -160,6 +160,11 @@ namespace duHastNet.PushIt.Utilities.Drofus
             if (settings is null)
                 throw new ArgumentNullException(nameof(settings));
 
+            // The UI sentinel (NoneId) must never reach the mapper or settings —
+            // normalise it to null so all downstream logic treats it as "no selection".
+            if (configurationId == DrofusAttributeConfiguration.NoneId)
+                configurationId = null;
+
             SelectedConfigurationId = configurationId;
             settings.SelectedAttributeConfigurationId = configurationId;
         }
@@ -340,6 +345,29 @@ namespace duHastNet.PushIt.Utilities.Drofus
         // ── Mapping mutations ─────────────────────────────────────────────────
 
         /// <summary>
+        /// Removes all mappings unconditionally.
+        /// <para>
+        /// Called when the user confirms switching to the "None" sentinel
+        /// configuration, where every mapping must be dropped regardless of
+        /// whether the field still exists in the catalogue.
+        /// </para>
+        /// </summary>
+        /// <returns>
+        /// The human-readable labels of all mappings that were removed, so the
+        /// caller can surface a meaningful status message.
+        /// </returns>
+        public List<string> ClearAllMappings()
+        {
+            var removedLabels = _mappings
+                .Select(m => GetFieldLabel(m.DrofusFieldName))
+                .ToList();
+
+            _mappings.Clear();
+            _revitValidationResults.Clear();
+            return removedLabels;
+        }
+
+        /// <summary>
         /// Replaces the entire mapping list with a defensive copy of
         /// <paramref name="mappings"/> and clears any previously stored
         /// Revit validation results (since they relate to the old list).
@@ -369,12 +397,20 @@ namespace duHastNet.PushIt.Utilities.Drofus
 
         /// <summary>
         /// Adds a new mapping to the list.
+        /// <para>
+        /// A drofus field may appear in more than one mapping (fan-out) — the same
+        /// field value will be written to each mapped Revit parameter on push.
+        /// The uniqueness constraint is therefore on the <b>(drofus field, Revit
+        /// parameter)</b> pair: the identical combination twice would produce
+        /// redundant writes with no useful effect.
+        /// </para>
         /// </summary>
         /// <param name="map">The mapping to add. Must not be <c>null</c>.</param>
         /// <returns>
         /// <c>true</c> if the mapping was added; <c>false</c> if a mapping with
-        /// the same <see cref="DrofusPropertyMap.DrofusFieldName"/> already exists
-        /// (case-insensitive comparison).
+        /// the same <see cref="DrofusPropertyMap.DrofusFieldName"/> <b>and</b>
+        /// <see cref="DrofusPropertyMap.RevitParameterName"/> pair already exists
+        /// (case-insensitive comparison on both).
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="map"/> is <c>null</c>.
@@ -386,6 +422,8 @@ namespace duHastNet.PushIt.Utilities.Drofus
 
             bool duplicate = _mappings.Any(m =>
                 string.Equals(m.DrofusFieldName, map.DrofusFieldName,
+                    StringComparison.OrdinalIgnoreCase)
+                && string.Equals(m.RevitParameterName, map.RevitParameterName,
                     StringComparison.OrdinalIgnoreCase));
 
             if (duplicate)

@@ -397,7 +397,7 @@ def add_multiple_shared_parameters_to_family(doc, parameter_data):
         # add parameters and values
         for single_para in parameter_data:
             # get the shard parameter file definition ( there can be a different file for each parameter )
-            return_value.append_message("Atempting to open share parameter file at: <{}>".format(single_para.shared_parameter_file_path))
+            return_value.append_message("Attempting to open share parameter file at: <{}>".format(single_para.shared_parameter_file_path))
             shared_parameter_definition_file = load_shared_parameter_file(doc=doc, path=single_para.shared_parameter_file_path)
             if shared_parameter_definition_file == None:
                 raise Exception("Shared parameter file not found")

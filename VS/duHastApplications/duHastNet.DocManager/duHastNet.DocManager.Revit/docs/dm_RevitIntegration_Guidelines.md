@@ -40,10 +40,21 @@ The integration provides the following capabilities:
 pyRevit Button
     â†"
 Python Script (Entry Point)
+    Reads database path from Revit extensible storage
+    Collects sheets and revisions via Revit API
     â†"
-.NET DLLs (Document Manager Core)
+Main.cs (ExecuteInternal)
+    Connects to database (happy/unhappy path handled here)
+    Reads existing documents and revisions from database
+    Compares Revit data against database data
+    Enqueues startup messages (errors/warnings)
+    â†"
+WPF Window Constructor
+    Receives: revit sheets, revit revisions, database path,
+              existing documents, existing revisions, message store
     â†"
 WPF UI (MVVM Pattern)
+    Presents filtered results (new/changed items)
     â†"
 DocManagerApi (Sync Methods)
     â†"
@@ -53,22 +64,35 @@ SQLite Database
 ### Integration Layers
 
 #### Layer 1: pyRevit Python Script
-- **Purpose**: Entry point and Revit API interaction
+- **Purpose**: Entry point and Revit API data collection
 - **Responsibilities**:
   - Initialize .NET runtime and load assemblies
-  - Access Revit API for document, sheet, and revision data
-  - Launch WPF UI
+  - Read database path from Revit extensible storage
+  - Access Revit API to collect sheet and revision data
+  - Invoke `Main.ExecuteInternal()` passing the Revit application context
   - Handle Revit threading context
 
-#### Layer 2: WPF User Interface
+#### Layer 2: Main.cs (ExecuteInternal)
+- **Purpose**: Startup orchestration and pre-flight data loading
+- **Responsibilities**:
+  - Set up stores (`MessageStore`, etc.)
+  - Connect to database using path from extensible storage
+  - Read existing documents and revisions from database (synchronous)
+  - Compare Revit data against database data to determine new/changed items
+  - Enqueue startup errors or warnings to `MessageStore` (happy/unhappy path)
+  - Pass all collected data into the WPF window constructor
+  - Open the WPF window — window always opens, errors surface in the message banner
+
+#### Layer 3: WPF User Interface
 - **Purpose**: User interaction and data presentation
 - **Responsibilities**:
-  - Display Revit revisions and sheets
+  - Display pre-filtered Revit revisions and sheets (new or changed items only)
   - Provide import/update controls
-  - Show progress and validation feedback
+  - Show startup messages, progress, and validation feedback
   - Handle user commands
+  - Disable operations if database connection failed at startup
 
-#### Layer 3: Document Manager API
+#### Layer 4: Document Manager API
 - **Purpose**: Business logic and data persistence
 - **Responsibilities**:
   - Database operations (CRUD)
@@ -107,34 +131,51 @@ The WPF interface is divided into two distinct functional areas:
 - Mode change triggers sheet filtering (Import shows new sheets, Update shows existing)
 - Single "Execute" button performs operation based on selected mode
 
+### Startup Sequence
+
+#### Happy Path
+1. Python reads database path from Revit extensible storage
+2. Python collects sheets and revisions from Revit API
+3. `Main.ExecuteInternal()` connects to database successfully
+4. Existing documents and revisions are read from database
+5. Revit data is compared against database data — new/changed items identified
+6. WPF window opens with filtered results ready for user action
+
+#### Unhappy Path
+The window always opens regardless of startup failures. Errors surface in the message banner.
+
+| Failure | Behaviour |
+|---|---|
+| Database path not set | Error enqueued; window opens with all operations disabled |
+| Database file not found at path | Error enqueued; window opens with all operations disabled |
+| Database read fails | Error enqueued; window opens with all operations disabled |
+
 ### User Workflow
 
 #### Import Revisions Workflow
-1. User clicks pyRevit button
-2. WPF UI loads and displays Revit revisions not in database
-3. User reviews revision list and checks revisions to import
-4. User clicks "Import Revisions"
-5. System validates and imports selected revisions to database
-6. User receives success/failure feedback
+1. Window opens with Revit revisions not already in the database pre-loaded
+2. User reviews revision list and checks revisions to import
+3. User clicks "Import Revisions"
+4. System validates and imports selected revisions to database
+5. User receives success/failure feedback
 
 #### Import Sheets Workflow
-1. User navigates to Sheets panel
-2. User selects "Import" mode via radio button
-3. System displays Revit sheets NOT in database
+1. Window opens with sheet data already collected
+2. User navigates to Sheets panel and selects "Import" mode via radio button
+3. System displays Revit sheets NOT already in the database
 4. User reviews and checks sheets to import
 5. User clicks "Execute"
 6. System validates and imports selected sheets as documents
 7. User receives success/failure feedback
 
 #### Update Document Names Workflow
-1. User navigates to Sheets panel
-2. User selects "Update" mode via radio button
-3. System matches Revit sheets with database documents by sheet number
-4. System displays only matched sheets that require updating
-5. User reviews and checks sheets to update
-6. User clicks "Execute"
-7. System updates selected document names from Revit sheet names
-8. User receives update summary (matched, updated, errors)
+1. Window opens with sheet data already collected
+2. User navigates to Sheets panel and selects "Update" mode via radio button
+3. System displays only matched sheets where the name differs from the database
+4. User reviews and checks sheets to update
+5. User clicks "Execute"
+6. System updates selected document names from Revit sheet names
+7. User receives update summary (matched, updated, errors)
 
 ---
 
@@ -149,6 +190,7 @@ All UI code MUST follow the MVVM (Model-View-ViewModel) pattern using the MVVM C
 ```csharp
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Core.Services.Api;
 using duHastNet.DocManager.UI.Shared.Interfaces;
 using duHastNet.DocManager.UI.Shared.Stores;
@@ -160,43 +202,60 @@ public partial class RevitIntegrationViewModel : ObservableObject
 {
     private readonly DocManagerApi _docManagerApi;
     private readonly IMessageStore _messageStore;
-    
-    public RevitIntegrationViewModel(IMessageStore messageStore)
+    private readonly IList<RevisionData> _revitRevisions;
+    private readonly IList<SheetData> _revitSheets;
+
+    public RevitIntegrationViewModel(
+        IMessageStore messageStore,
+        IList<RevisionData> revitRevisions,
+        IList<SheetData> revitSheets,
+        IList<Revision> existingRevisions,
+        IList<Document> existingDocuments,
+        bool isDatabaseConnected)
     {
-        _docManagerApi = new DocManagerApi();
         _messageStore = messageStore ?? throw new ArgumentNullException(nameof(messageStore));
+        _revitRevisions = revitRevisions ?? throw new ArgumentNullException(nameof(revitRevisions));
+        _revitSheets = revitSheets ?? throw new ArgumentNullException(nameof(revitSheets));
+        _docManagerApi = new DocManagerApi();
+        IsDatabaseConnected = isDatabaseConnected;
+
+        if (isDatabaseConnected)
+        {
+            LoadRevisions(existingRevisions);
+            LoadSheets(existingDocuments);
+        }
     }
-    
+
     [ObservableProperty]
     private ObservableCollection<RevisionViewModel> _revisions = new();
-    
+
     [ObservableProperty]
     private ObservableCollection<SheetViewModel> _sheets = new();
-    
+
     [ObservableProperty]
     private SheetOperationMode _selectedSheetMode = SheetOperationMode.Import;
-    
+
     [ObservableProperty]
     private bool _isLoading = false;
-    
+
     [ObservableProperty]
     private bool _isDatabaseConnected = false;
-    
+
     // Property changed handler for mode selection
     partial void OnSelectedSheetModeChanged(SheetOperationMode value)
     {
         FilterSheets();
         _messageStore.EnqueueMessage(
-            value == SheetOperationMode.Import 
-                ? "Mode: Import new sheets" 
+            value == SheetOperationMode.Import
+                ? "Mode: Import new sheets"
                 : "Mode: Update existing sheet names",
             MessageTypes.Information,
             dismissAfterSeconds: 3);
     }
-    
+
     [RelayCommand]
     private void ImportRevisions() { /* Implementation */ }
-    
+
     [RelayCommand]
     private void ExecuteSheetOperation()
     {
@@ -205,14 +264,121 @@ public partial class RevitIntegrationViewModel : ObservableObject
         else
             UpdateDocumentNames();
     }
+
+    private void LoadRevisions(IList<Revision> existingRevisions)
+    {
+        // Filter to revisions not already in the database
+        foreach (var revit in _revitRevisions)
+        {
+            if (!existingRevisions.Any(r => r.Date == revit.Date && r.Description == revit.Description))
+                Revisions.Add(new RevisionViewModel(revit));
+        }
+    }
+
+    private void LoadSheets(IList<Document> existingDocuments)
+    {
+        FilterSheets(existingDocuments);
+    }
+
+    private void FilterSheets(IList<Document>? existingDocuments = null)
+    {
+        // Filtering logic depends on selected mode — Import shows new sheets,
+        // Update shows matched sheets where name has changed
+    }
 }
 ```
 
 **Key Points:**
-- Include `IMessageStore` field for user feedback
-- Use `partial void OnSelectedSheetModeChanged()` to react to mode changes
+- Constructor receives Revit data, existing database data, and connection state from `Main.cs`
+- `IsDatabaseConnected` gates all operations — commands are disabled if startup failed
+- Filtering of revisions and sheets happens at construction time, not lazily
+- `IMessageStore` receives per-operation feedback; startup messages are enqueued before the window opens
 - Single `ExecuteSheetOperation` command handles both Import and Update
-- Filter sheets display based on selected mode
+
+### 2. Main.cs Startup Pattern
+
+#### Startup Orchestration
+`Main.ExecuteInternal()` runs all pre-flight work synchronously on the Revit API thread before the window opens. The window always opens — errors surface in the message banner rather than blocking launch.
+
+```csharp
+public Result ExecuteInternal(UIApplication uiapp)
+{
+    _messageStore = new MessageStore();
+
+    // Read database path from extensible storage (handled elsewhere)
+    string databasePath = ReadDatabasePathFromExtensibleStorage(uiapp.ActiveUIDocument.Document);
+
+    // Collect Revit data on the API thread
+    var revitSheets = CollectRevitSheets(uiapp.ActiveUIDocument.Document);
+    var revitRevisions = CollectRevitRevisions(uiapp.ActiveUIDocument.Document);
+
+    // Connect to database and read existing data
+    bool isDatabaseConnected = false;
+    IList<Revision> existingRevisions = new List<Revision>();
+    IList<Document> existingDocuments = new List<Document>();
+
+    if (string.IsNullOrEmpty(databasePath))
+    {
+        _messageStore.EnqueueMessage(
+            "No database path configured. Use the setup utility to configure the database.",
+            MessageTypes.Error);
+    }
+    else
+    {
+        (isDatabaseConnected, existingRevisions, existingDocuments) =
+            LoadDatabaseData(databasePath);
+    }
+
+    // Open window — always opens regardless of startup failures
+    var window = new RevitIntegrationWindow(
+        _messageStore,
+        revitRevisions,
+        revitSheets,
+        existingRevisions,
+        existingDocuments,
+        isDatabaseConnected);
+
+    window.Show();
+    return Result.Succeeded;
+}
+
+private (bool connected, IList<Revision> revisions, IList<Document> documents)
+    LoadDatabaseData(string databasePath)
+{
+    var api = new DocManagerApi();
+    try
+    {
+        var connectionResult = api.ConnectDatabase(databasePath);
+        if (!connectionResult.Success)
+        {
+            _messageStore.EnqueueMessage(
+                $"Could not connect to database: {connectionResult.Message}",
+                MessageTypes.Error);
+            return (false, new List<Revision>(), new List<Document>());
+        }
+
+        var revisions = api.GetAllRevisions();
+        var documents = api.GetAllDocuments();
+
+        return (true, revisions, documents);
+    }
+    catch (Exception ex)
+    {
+        _messageStore.EnqueueMessage(
+            $"Failed to read database: {ex.Message}",
+            MessageTypes.Error);
+        return (false, new List<Revision>(), new List<Document>());
+    }
+}
+```
+
+**Key Points:**
+- All database and Revit API calls happen before `window.Show()`
+- Happy path: database connects and data reads → `isDatabaseConnected = true`, data passed in
+- Unhappy path: any failure → error enqueued, `isDatabaseConnected = false`, empty lists passed in
+- Window always opens; the ViewModel disables operations when `isDatabaseConnected` is false
+- Database path comes from extensible storage — no file-based settings required
+- User-specific settings are reserved for future use
 
 #### View (XAML) Structure
 ```xml
@@ -286,7 +452,7 @@ namespace duHastNet.DocManager.Revit.Converters
 }
 ```
 
-### 2. Use Synchronous Core Functionality
+### 3. Use Synchronous Core Functionality
 
 #### Critical Requirement: Avoid Async in Revit Context
 
@@ -380,7 +546,7 @@ var revisionsByDate = docManagerApi.GetRevisionsByDate(date);
 - No threading issues will occur
 - These are the methods demonstrated in the PyRevit proof of concept
 
-### 3. Direct DocManagerApi Usage
+### 4. Direct DocManagerApi Usage
 
 #### Instantiation Pattern
 For PyRevit/Revit integration, instantiate DocManagerApi directly in the ViewModel constructor:
@@ -402,7 +568,7 @@ public RevitIntegrationViewModel()
 
 **Note:** For standalone WPF applications (non-Revit), continue using interface-based dependency injection as per project standards.
 
-### 4. Constructor Validation
+### 5. Constructor Validation
 
 Apply constructor validation for any injected dependencies:
 
@@ -416,9 +582,20 @@ public DocumentViewModel(Document document)
 
 **Note:** For ViewModels using parameterless constructors (like the PyRevit proof of concept), validation is applied when assigning properties or working with external data.
 
-### 5. Line Endings
+### 6. Line Endings
 
 All code files MUST use Windows line endings (CRLF) for consistency with the Document Manager project.
+
+### 7. Nullable Reference Types
+
+The project MUST enable nullable reference types in the `.csproj` file:
+
+```xml
+<!-- Enable nullable reference types -->
+<Nullable>enable</Nullable>
+```
+
+This means all code must correctly annotate nullability — use `?` for types that may be null and ensure non-nullable references are always initialised. Constructor validation (see section 5) is the primary mechanism for enforcing non-null guarantees on injected dependencies.
 
 ---
 
@@ -546,31 +723,157 @@ clr.AddReference('WindowsBase')
 clr.AddReferenceToFileAndPath(r"C:\path\to\duHastNet.DocManager.Core.dll")
 clr.AddReferenceToFileAndPath(r"C:\path\to\duHastNet.DocManager.Revit.dll")
 
-from duHastNet.DocManager.Revit import PyRevitDocumentWindow
+from duHastNet.DocManager.Revit import DocManagerMain
 ```
 
-### Launching WPF UI
+### Launching via Main.cs
 ```python
-def main():
+from duHastNet.DocManager.Revit import DocManagerMain
+
+def main(uiapp):
     try:
-        window = PyRevitDocumentWindow()
-        window.ShowDialog()
+        entry = DocManagerMain()
+        entry.ExecuteInternal(uiapp)
     except Exception as ex:
         print("Error: " + str(ex))
 
-if __name__ == "__main__":
-    main()
+# pyRevit passes the UIApplication as __revit__
+main(__revit__)
 ```
 
-**Note:** See Complete Proof of Concept Example for passing Revit data to .NET if needed.
+**Key Points:**
+- Python invokes `DocManagerMain.ExecuteInternal()` directly, passing the Revit `UIApplication`
+- All Revit data collection, database loading, and window construction happens inside `ExecuteInternal()`
+- Python does not need to collect or pass any data itself — `Main.cs` handles the full startup sequence
 
 ---
 
 ## Complete Proof of Concept Example
 
-Based on the PyRevit proof of concept, here's a complete working example:
+The proof of concept demonstrates the full startup sequence: Revit data collected in Python, database loaded in `Main.cs`, everything passed into the window constructor.
 
-### ViewModel (PyRevitDocumentListViewModel.cs)
+### Main.cs (DocManagerMain.cs)
+```csharp
+using Autodesk.Revit.Attributes;
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using duHastNet.DocManager.Core.Models;
+using duHastNet.DocManager.Core.Services.Api;
+using duHastNet.DocManager.Revit.Views;
+using duHastNet.DocManager.UI.Shared.Stores;
+
+namespace duHastNet.DocManager.Revit
+{
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class DocManagerMain : IExternalCommand
+    {
+        private MessageStore _messageStore;
+
+        static DocManagerMain()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolver.ResolveAssembly;
+        }
+
+        public Result ExecuteInternal(UIApplication uiapp)
+        {
+            _messageStore = new MessageStore();
+
+            var doc = uiapp.ActiveUIDocument.Document;
+
+            // Read database path from extensible storage (handled elsewhere)
+            string databasePath = ReadDatabasePathFromExtensibleStorage(doc);
+
+            // Collect Revit data on the API thread before window opens
+            var revitSheets = CollectRevitSheets(doc);
+            var revitRevisions = CollectRevitRevisions(doc);
+
+            // Connect to database and read existing data
+            bool isDatabaseConnected = false;
+            IList<Revision> existingRevisions = new List<Revision>();
+            IList<Document> existingDocuments = new List<Document>();
+
+            if (string.IsNullOrEmpty(databasePath))
+            {
+                _messageStore.EnqueueMessage(
+                    "No database path configured. Use the setup utility to configure the database.",
+                    MessageTypes.Error);
+            }
+            else
+            {
+                (isDatabaseConnected, existingRevisions, existingDocuments) =
+                    LoadDatabaseData(databasePath);
+            }
+
+            // Window always opens regardless of startup failures
+            var window = new RevitIntegrationWindow(
+                _messageStore,
+                revitRevisions,
+                revitSheets,
+                existingRevisions,
+                existingDocuments,
+                isDatabaseConnected);
+
+            window.Show();
+            return Result.Succeeded;
+        }
+
+        private (bool connected, IList<Revision> revisions, IList<DocManagerDocument> documents)
+            LoadDatabaseData(string databasePath)
+        {
+            var api = new DocManagerApi();
+            try
+            {
+                var connectionResult = api.ConnectDatabase(databasePath);
+                if (!connectionResult.Success)
+                {
+                    _messageStore.EnqueueMessage(
+                        $"Could not connect to database: {connectionResult.Message}",
+                        MessageTypes.Error);
+                    return (false, new List<Revision>(), new List<DocManagerDocument>());
+                }
+
+                var revisions = api.GetAllRevisions();
+                var documents = api.GetAllDocuments();
+
+                return (true, revisions, documents);
+            }
+            catch (Exception ex)
+            {
+                _messageStore.EnqueueMessage(
+                    $"Failed to read database: {ex.Message}",
+                    MessageTypes.Error);
+                return (false, new List<Revision>(), new List<DocManagerDocument>());
+            }
+        }
+
+        private string ReadDatabasePathFromExtensibleStorage(Autodesk.Revit.DB.Document doc)
+        {
+            // Implementation handled elsewhere
+            return string.Empty;
+        }
+
+        private IList<SheetData> CollectRevitSheets(Autodesk.Revit.DB.Document doc)
+        {
+            // Collect sheets via Revit API
+            return new List<SheetData>();
+        }
+
+        private IList<RevisionData> CollectRevitRevisions(Autodesk.Revit.DB.Document doc)
+        {
+            // Collect revisions via Revit API
+            return new List<RevisionData>();
+        }
+
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            return ExecuteInternal(commandData.Application);
+        }
+    }
+}
+```
+
+### ViewModel (RevitIntegrationViewModel.cs)
 ```csharp
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -582,188 +885,142 @@ using System.Collections.ObjectModel;
 
 namespace duHastNet.DocManager.Revit.ViewModels
 {
-    public partial class PyRevitDocumentListViewModel : ObservableObject
+    public partial class RevitIntegrationViewModel : ObservableObject
     {
         private readonly DocManagerApi _docManagerApi;
         private readonly IMessageStore _messageStore;
-        private const string DATABASE_PATH = @"C:\path\to\your\database.db";
+        private readonly IList<RevisionData> _revitRevisions;
+        private readonly IList<SheetData> _revitSheets;
 
-        public PyRevitDocumentListViewModel(IMessageStore messageStore)
+        public RevitIntegrationViewModel(
+            IMessageStore messageStore,
+            IList<RevisionData> revitRevisions,
+            IList<SheetData> revitSheets,
+            IList<Revision> existingRevisions,
+            IList<DocManagerDocument> existingDocuments,
+            bool isDatabaseConnected)
         {
-            _docManagerApi = new DocManagerApi();
             _messageStore = messageStore ?? throw new ArgumentNullException(nameof(messageStore));
-            Documents = new ObservableCollection<DocumentViewModel>();
+            _revitRevisions = revitRevisions ?? throw new ArgumentNullException(nameof(revitRevisions));
+            _revitSheets = revitSheets ?? throw new ArgumentNullException(nameof(revitSheets));
+            _docManagerApi = new DocManagerApi();
+            IsDatabaseConnected = isDatabaseConnected;
+
+            if (isDatabaseConnected)
+            {
+                LoadRevisions(existingRevisions);
+                LoadSheets(existingDocuments);
+            }
         }
 
         [ObservableProperty]
-        private ObservableCollection<DocumentViewModel> _documents;
+        private ObservableCollection<RevisionViewModel> _revisions = new();
+
+        [ObservableProperty]
+        private ObservableCollection<SheetViewModel> _sheets = new();
+
+        [ObservableProperty]
+        private SheetOperationMode _selectedSheetMode = SheetOperationMode.Import;
 
         [ObservableProperty]
         private bool _isLoading = false;
 
         [ObservableProperty]
-        private int _totalDocuments = 0;
-
-        [ObservableProperty]
-        private string _databasePath = DATABASE_PATH;
-
-        [ObservableProperty]
         private bool _isDatabaseConnected = false;
 
-        [RelayCommand]
-        private void LoadDocuments()
+        partial void OnSelectedSheetModeChanged(SheetOperationMode value)
         {
-            try
+            FilterSheets();
+            _messageStore.EnqueueMessage(
+                value == SheetOperationMode.Import
+                    ? "Mode: Import new sheets"
+                    : "Mode: Update existing sheet names",
+                MessageTypes.Information,
+                dismissAfterSeconds: 3);
+        }
+
+        [RelayCommand(CanExecute = nameof(CanImportRevisions))]
+        private void ImportRevisions() { /* Implementation */ }
+
+        private bool CanImportRevisions() => IsDatabaseConnected && !IsLoading;
+
+        [RelayCommand(CanExecute = nameof(CanExecuteSheetOperation))]
+        private void ExecuteSheetOperation()
+        {
+            if (SelectedSheetMode == SheetOperationMode.Import)
+                ImportSheets();
+            else
+                UpdateDocumentNames();
+        }
+
+        private bool CanExecuteSheetOperation() => IsDatabaseConnected && !IsLoading;
+
+        private void LoadRevisions(IList<Revision> existingRevisions)
+        {
+            foreach (var revit in _revitRevisions)
             {
-                IsLoading = true;
-                _messageStore.EnqueueMessage(
-                    $"Connecting to database: {DatabasePath}",
-                    MessageTypes.Information,
-                    dismissAfterSeconds: 3);
-                Documents.Clear();
-
-                // Connect using synchronous method
-                var connectionResult = _docManagerApi.ConnectDatabase(DatabasePath);
-
-                if (!connectionResult.Success)
-                {
-                    _messageStore.EnqueueMessage(
-                        $"Failed to connect: {connectionResult.Message}",
-                        MessageTypes.Error);
-                    IsDatabaseConnected = false;
-                    return;
-                }
-
-                IsDatabaseConnected = true;
-                _messageStore.EnqueueMessage(
-                    "Database connected. Loading documents...",
-                    MessageTypes.Information,
-                    dismissAfterSeconds: 3);
-
-                // Get documents using synchronous method
-                var documents = _docManagerApi.GetActiveDocuments();
-
-                // Convert to ViewModels
-                foreach (var doc in documents)
-                {
-                    Documents.Add(new DocumentViewModel(doc));
-                }
-
-                TotalDocuments = Documents.Count;
-                _messageStore.EnqueueMessage(
-                    $"Loaded {TotalDocuments} documents successfully",
-                    MessageTypes.Information,
-                    dismissAfterSeconds: 3);
-            }
-            catch (Exception ex)
-            {
-                _messageStore.EnqueueMessage(
-                    $"Error: {ex.Message}",
-                    MessageTypes.Error);
-                IsDatabaseConnected = false;
-            }
-            finally
-            {
-                IsLoading = false;
+                if (!existingRevisions.Any(r => r.Date == revit.Date && r.Description == revit.Description))
+                    Revisions.Add(new RevisionViewModel(revit));
             }
         }
 
-        [RelayCommand(CanExecute = nameof(CanRefresh))]
-        private void Refresh()
+        private void LoadSheets(IList<DocManagerDocument> existingDocuments)
         {
-            LoadDocuments();
+            FilterSheets(existingDocuments);
         }
 
-        private bool CanRefresh() => IsDatabaseConnected && !IsLoading;
-
-        [RelayCommand]
-        private void Close()
+        private void FilterSheets(IList<DocManagerDocument>? existingDocuments = null)
         {
-            try
-            {
-                if (IsDatabaseConnected)
-                {
-                    _docManagerApi.Close();
-                    IsDatabaseConnected = false;
-                    Documents.Clear();
-                    TotalDocuments = 0;
-                    _messageStore.EnqueueMessage(
-                        "Database connection closed",
-                        MessageTypes.Information,
-                        dismissAfterSeconds: 3);
-                }
-            }
-            catch (Exception ex)
-            {
-                _messageStore.EnqueueMessage(
-                    $"Error closing database: {ex.Message}",
-                    MessageTypes.Error);
-            }
-        }
-    }
-
-    public partial class DocumentViewModel : ObservableObject
-    {
-        private readonly Document _document;
-
-        public DocumentViewModel(Document document)
-        {
-            _document = document ?? throw new ArgumentNullException(nameof(document));
+            // Import mode: show sheets not in database
+            // Update mode: show matched sheets where name differs
         }
 
-        public int Id => _document.Id;
-        public string Number => _document.Number;
-        public string Name => _document.Name;
-        public string Revision => _document.Revision;
-        public int RevisionId => _document.RevisionId;
-        public bool IsActive => _document.IsActive;
-        public string DisplayText => $"{Number} - {Name}";
-        public string Status => IsActive ? "Active" : "Inactive";
+        private void ImportSheets() { /* Implementation */ }
+        private void UpdateDocumentNames() { /* Implementation */ }
     }
 }
 ```
 
-### View Code-Behind (PyRevitDocumentListView.xaml.cs)
-```csharp
-using System.Windows.Controls;
-using duHastNet.DocManager.Revit.ViewModels;
-
-namespace duHastNet.DocManager.Revit.Views
-{
-    public partial class PyRevitDocumentListView : UserControl
-    {
-        public PyRevitDocumentListView()
-        {
-            InitializeComponent();
-            DataContext = new PyRevitDocumentListViewModel();
-        }
-    }
-}
-```
-
-### Window Host (PyRevitDocumentWindow.cs)
+### Window Host (RevitIntegrationWindow.cs)
 ```csharp
 using System.Windows;
+using duHastNet.DocManager.Core.Models;
+using duHastNet.DocManager.UI.Shared.Interfaces;
+using duHastNet.DocManager.Revit.ViewModels;
 using duHastNet.DocManager.Revit.Views;
 
 namespace duHastNet.DocManager.Revit
 {
-    public class PyRevitDocumentWindow : Window
+    public class RevitIntegrationWindow : Window
     {
-        public PyRevitDocumentWindow()
+        public RevitIntegrationWindow(
+            IMessageStore messageStore,
+            IList<RevisionData> revitRevisions,
+            IList<SheetData> revitSheets,
+            IList<Revision> existingRevisions,
+            IList<DocManagerDocument> existingDocuments,
+            bool isDatabaseConnected)
         {
-            Title = "Document Manager - PyRevit";
+            Title = "Document Manager - Revit Integration";
             Width = 1000;
             Height = 600;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            
-            Content = new PyRevitDocumentListView();
+
+            var viewModel = new RevitIntegrationViewModel(
+                messageStore,
+                revitRevisions,
+                revitSheets,
+                existingRevisions,
+                existingDocuments,
+                isDatabaseConnected);
+
+            Content = new RevitIntegrationView { DataContext = viewModel };
         }
     }
 }
 ```
 
-### Python Script (ListDocuments.py)
+### Python Script (script.py)
 ```python
 # -*- coding: utf-8 -*-
 import clr
@@ -781,30 +1038,31 @@ doc_manager_revit_path = r"C:\path\to\duHastNet.DocManager.Revit.dll"
 clr.AddReferenceToFileAndPath(doc_manager_core_path)
 clr.AddReferenceToFileAndPath(doc_manager_revit_path)
 
-from duHastNet.DocManager.Revit import PyRevitDocumentWindow
+from Autodesk.Revit.UI import UIApplication
+from duHastNet.DocManager.Revit import DocManagerMain
 
-def main():
+def main(uiapp):
     try:
-        window = PyRevitDocumentWindow()
-        window.ShowDialog()
+        entry = DocManagerMain()
+        entry.ExecuteInternal(uiapp)
     except Exception as ex:
         print("Error: " + str(ex))
 
-if __name__ == "__main__":
-    main()
+# pyRevit passes the UIApplication as __revit__
+main(__revit__)
 ```
 
 **Key Patterns Demonstrated:**
-1. ✅ Direct DocManagerApi instantiation in constructor
-2. ✅ IMessageStore injection for user feedback
-3. ✅ All synchronous method calls (ConnectDatabase, GetActiveDocuments, Close)
-4. ✅ ObservableProperty for UI binding
-5. ✅ RelayCommand for button actions
-6. ✅ IMessageStore.EnqueueMessage() for user feedback with MessageTypes
-7. ✅ IsLoading for UI state management
-8. ✅ Try-catch-finally error handling
-9. ✅ Constructor validation in DocumentViewModel
-10. ✅ Python script loads WPF window with .NET DLLs
+1. ✅ Revit data collected in Python/Main.cs before window opens
+2. ✅ Database path read from extensible storage (stub shown)
+3. ✅ Database connection and read in `Main.cs`, not in the ViewModel
+4. ✅ Happy path: data passed in, `isDatabaseConnected = true`
+5. ✅ Unhappy path: errors enqueued, `isDatabaseConnected = false`, window still opens
+6. ✅ ViewModel receives all data via constructor — no lazy loading
+7. ✅ `CanExecute` guards on commands enforce `IsDatabaseConnected`
+8. ✅ Constructor validation on all injected dependencies
+9. ✅ All synchronous method calls throughout
+10. ✅ IMessageStore.EnqueueMessage() for all user feedback
 
 ---
 
@@ -938,32 +1196,33 @@ public class DocumentViewModelTests
 
 ```
 duHastNet.DocManager.Revit/
-â"œâ"€â"€ Views/
-â"‚   â""â"€â"€ RevitIntegrationView.xaml
-â"‚   â""â"€â"€ RevitIntegrationView.xaml.cs
-â"œâ"€â"€ ViewModels/
-â"‚   â""â"€â"€ RevitIntegrationViewModel.cs
-â"‚   â""â"€â"€ RevisionViewModel.cs
-â"‚   â""â"€â"€ SheetViewModel.cs
-â"œâ"€â"€ Models/
-â"‚   â""â"€â"€ RevisionData.cs
-â"‚   â""â"€â"€ SheetData.cs
-â"œâ"€â"€ Services/
-â"‚   â""â"€â"€ RevitDataService.cs
-â"œâ"€â"€ Tests/
-â"‚   â""â"€â"€ ViewModels/
-â"‚       â""â"€â"€ RevitIntegrationViewModelTests.cs
-â""â"€â"€ duHastNet.DocManager.Revit.csproj
+├── DocManagerMain.cs
+├── Views/
+│   └── RevitIntegrationView.xaml
+│   └── RevitIntegrationView.xaml.cs
+├── ViewModels/
+│   └── RevitIntegrationViewModel.cs
+│   └── RevisionViewModel.cs
+│   └── SheetViewModel.cs
+├── Models/
+│   └── RevisionData.cs
+│   └── SheetData.cs
+├── Converters/
+│   └── EnumToBooleanConverter.cs
+├── Tests/
+│   └── ViewModels/
+│       └── RevitIntegrationViewModelTests.cs
+└── duHastNet.DocManager.Revit.csproj
 
 pyRevit/
-â"œâ"€â"€ DocManager.extension/
-â"‚   â""â"€â"€ DocManager.tab/
-â"‚       â""â"€â"€ Revit Integration.panel/
-â"‚           â""â"€â"€ Import Data.pushbutton/
-â"‚               â""â"€â"€ script.py
-â""â"€â"€ lib/
-    â""â"€â"€ duHastNet.DocManager.Core.dll
-    â""â"€â"€ duHastNet.DocManager.Revit.dll
+├── DocManager.extension/
+│   └── DocManager.tab/
+│       └── Revit Integration.panel/
+│           └── Import Data.pushbutton/
+│               └── script.py
+└── lib/
+    └── duHastNet.DocManager.Core.dll
+    └── duHastNet.DocManager.Revit.dll
 ```
 
 ---
@@ -974,13 +1233,13 @@ pyRevit/
 1. pyRevit installed in Revit
 2. .NET 8 or higher
 3. Document Manager Core DLLs
-4. SQLite database file (or path to create one)
+4. Database path configured via setup utility and stored in Revit extensible storage
 
 ### Installation Steps
 1. Copy .NET DLLs to pyRevit lib folder
 2. Copy Python script to pyRevit extension folder
 3. Reload pyRevit in Revit
-4. Configure database path in settings
+4. Run setup utility to configure database path (stored in Revit extensible storage)
 
 ---
 
@@ -990,17 +1249,24 @@ When developing the Revit integration:
 
 - ✅ Use WPF with MVVM pattern and MVVM Community Toolkit
 - ✅ Use ONLY synchronous DocManagerApi methods (no async/await)
+- ✅ Collect Revit sheets and revisions in `Main.cs` before window opens
+- ✅ Read database path from Revit extensible storage in `Main.cs`
+- ✅ Connect to database and read existing documents and revisions in `Main.cs`
+- ✅ Pass all collected data (Revit data, database data, connection state) into window constructor
+- ✅ Window always opens regardless of startup failures — errors surface in message banner
+- ✅ ViewModel receives pre-loaded data via constructor — no lazy loading of Revit or database data
+- ✅ Use `IsDatabaseConnected` to gate all commands via `CanExecute`
 - ✅ Instantiate DocManagerApi directly in ViewModel constructor
-- ✅ Use synchronous methods: ConnectDatabase(), GetActiveDocuments(), CreateDocument(), etc.
-- ✅ Validate constructor parameters for wrapper ViewModels (DocumentViewModel, etc.)
+- ✅ Validate all constructor parameters
 - ✅ Use Windows line endings (CRLF)
+- ✅ Enable nullable reference types (`<Nullable>enable</Nullable>` in .csproj) and annotate all types correctly
 - ✅ Follow test style guide from testStyles.md
 - ✅ Handle errors gracefully with user feedback via IMessageStore.EnqueueMessage()
-- ✅ Keep UI responsive (all operations on UI thread)
+- ✅ Keep all operations on UI thread
 - ✅ Validate input data before database operations
-- ✅ Provide clear status messages to users using MessageTypes (Information, Warning, Error)
+- ✅ Provide clear status messages using MessageTypes (Information, Warning, Error)
 - ✅ Include IsSelected property on ViewModels for user selection
-- ✅ Filter items shown to users (e.g., only revisions not in database)
+- ✅ Filter items shown to users (new revisions only, new or changed sheets by mode)
 - ✅ Write unit tests for ViewModels and integration tests for database operations
 - ✅ Document public APIs and complex logic
 
@@ -1023,3 +1289,4 @@ When developing the Revit integration:
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2025-01-26 | Initial | Initial guideline document created |
+| 1.1 | 2026-03-22 | Update | Revit data (sheets, revisions) collected by Python and passed via constructor; database connection and existing data read in Main.cs before window opens; happy/unhappy path startup sequence defined; ViewModel receives all data at construction time; IsDatabaseConnected gates all commands |

@@ -86,9 +86,6 @@ def build_revision_data(rev_dictionary, number_of_revs_on_sheet):
  
 	data = []
 	
-	# start getting data in order of revisions on sheet
-	index_counter = 0
-	
 	# loop over all revisions on a sheet by index
 	for i in range(0, number_of_revs_on_sheet):
 		
@@ -128,8 +125,7 @@ def build_revision_data(rev_dictionary, number_of_revs_on_sheet):
 			
 			if found_match:
 				break
-			# increase index counter
-			index_counter = index_counter +1
+			
 	return data
 
 
@@ -153,7 +149,7 @@ def get_revisions_from_sheet(doc, sheet):
 	# note: Autodesk docs say: "The Revisions are ordered according to the revision sequence in the project." I have had cases where this was not true.
 	revision_ids_on_sheet = sheet.GetAllRevisionIds()
 	
- 	# Convert .NET IList to Python list, then sort by SequenceNumber to be sure of order
+	# Convert .NET IList to Python list, then sort by SequenceNumber to be sure of order
 	revision_ids_on_sheet = sorted(
     	list(revision_ids_on_sheet),
     	key=lambda rev_id: doc.GetElement(rev_id).SequenceNumber
@@ -162,8 +158,6 @@ def get_revisions_from_sheet(doc, sheet):
 	# check if any revisions on sheet
 	if (len(revision_ids_on_sheet) == 0):
 		return None
-	
-	revision_data = []
 	
 	# revision index counter
 	rev_index_on_sheet = 0

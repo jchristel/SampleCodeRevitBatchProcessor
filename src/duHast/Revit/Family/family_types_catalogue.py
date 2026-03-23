@@ -292,6 +292,8 @@ def export_catalogue_file(doc, file_path = None, filters = None, parameter_order
         # get the family name
         family_name = doc.Title
 
+        return_value.append_message("Processing family: {}".format(family_name))
+
         # remove the file extension
         if family_name.lower().endswith(".rfa"):
             family_name = family_name[:-4]
@@ -318,9 +320,10 @@ def export_catalogue_file(doc, file_path = None, filters = None, parameter_order
             return_value.update_sep(False, "No family type data was extracted.")
             return return_value
         
-        
         # get the family type data
         fam_type_manager = family_type_data_result.result[0]
+
+        return_value.append_message("Successfully extracted family type data. Found {} types.".format(len(fam_type_manager.family_type_data_storage)))
 
         if not isinstance(fam_type_manager, FamilyTypeDataStorageManager):
             return_value.update_sep(False, "Failed to get the family type manager. Got {} instead.".format(type(fam_type_manager)))
@@ -334,6 +337,7 @@ def export_catalogue_file(doc, file_path = None, filters = None, parameter_order
         # go over filters and remove types that do not pass the filter
         if filters is not None:
 
+            return_value.append_message("Applying filters to family types. {} filters provided.".format(len(filters)))
             # attempt to pass family types through filters
             fam_type_manager_filter_result = pass_fam_types_through_filters(fam_type_manager, filters)
 
@@ -342,7 +346,8 @@ def export_catalogue_file(doc, file_path = None, filters = None, parameter_order
                 # if not get out
                 return_value.update_sep(False, "Failed to pass family types through filters: {}".format(fam_type_manager_filter_result.message))
                 return return_value
-        
+        else:
+            return_value.append_message("No family type filters provided, skipping filter step.")
 
         # get the parameter order for the catalogue file
         # this will also remove any type parameters that are formula driven
@@ -365,6 +370,8 @@ def export_catalogue_file(doc, file_path = None, filters = None, parameter_order
         if catalogue_file_data is None or len(catalogue_file_data) == 0:
             return_value.update_sep(False, "Failed to get the catalogue file data.")
             return return_value
+        
+        return_value.append_message("Successfully got the catalogue file data for {} types.".format(len(catalogue_file_data)))
 
         # build the header
         catalogue_file_header = fam_type_manager.get_catalogue_file_header_row(type_parameter_order)
@@ -376,6 +383,8 @@ def export_catalogue_file(doc, file_path = None, filters = None, parameter_order
         if catalogue_file_header is None or len(catalogue_file_header) == 0:
             return_value.update_sep(False, "Failed to get the catalogue file header.")
             return return_value
+        
+        return_value.append_message("Successfully got the catalogue file header with {} columns.".format(len(catalogue_file_header)))
 
         # write the catalogue file to file
         write_catalogue_file_result = write_catalogue_file_to_csv(

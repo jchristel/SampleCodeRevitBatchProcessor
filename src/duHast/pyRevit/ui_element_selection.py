@@ -28,7 +28,7 @@ This module contains a number of helper functions relating to py Revit element s
 
 
 
-from Autodesk.Revit.DB import ElementId
+from Autodesk.Revit.DB import ElementId, FilteredElementCollector
 
 
 def default_name_builder (element):
@@ -67,9 +67,17 @@ def get_element_selection_from_user(doc, forms, element_getter, element_selectio
     # get all elements from the getter
     elements = element_getter(doc=doc)
     
-    # check if we got any?
-    if elements is None or len(elements) == 0:
+
+    if (isinstance(elements, list)):
+        # check if we got any?
+        if len(elements) == 0:
+            return None
+    elif (elements == None):
         return None
+    elif (isinstance(elements, FilteredElementCollector)):
+        # get the elements from the collector
+        if elements.GetElementCount() == 0:
+            return None
 
     for element in elements:
         # check if this is an element id rather than an element

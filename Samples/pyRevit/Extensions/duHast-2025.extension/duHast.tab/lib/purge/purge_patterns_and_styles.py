@@ -125,7 +125,13 @@ def purge_line_patterns_by_selection(doc, output, forms):
             doc=doc,
             element_ids=None,
         )
-        return result_action
+        # convert to elements
+        elements = []
+        for element_id in result_action:
+            element = doc.GetElement(element_id)
+            if element is not None:
+                elements.append(element)
+        return elements
 
     # get user to select which fill patterns to purge
     selected_line_pattern_ids = get_element_selection_from_user(
@@ -258,7 +264,16 @@ def purge_line_styles_by_selection(doc, output, forms):
             doc=doc,
             element_ids=None,
         )
-        return result_action
+        print("got line styles from model: {}".format(result_action))
+        # convert to elements
+        elements = []
+        for element_id in result_action:
+            element = doc.GetElement(element_id)
+            if element is not None:
+                elements.append(element)
+                
+        print("converted line styles to elements: {}".format(elements))
+        return elements
 
     # get user to select which fill patterns to purge
     selected_line_styles_ids = get_element_selection_from_user(

@@ -76,7 +76,7 @@ def get_all_line_style_ids(doc):
     """
 
     lc = doc.Settings.Categories[BuiltInCategory.OST_Lines]
-    ids = list(c.Id for c in lc.SubCategories).ToList[ElementId]()
+    ids = list(c.Id for c in lc.SubCategories)
     return ids
 
 

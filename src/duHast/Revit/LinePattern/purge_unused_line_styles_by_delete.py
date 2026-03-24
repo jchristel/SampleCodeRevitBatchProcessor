@@ -51,9 +51,8 @@ def get_line_style_ids(doc, element_ids=None, element_ids_list_is_inclusive_filt
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    line_pattern_col = get_all_line_style_ids(doc)
-    ids = get_ids_from_element_collector(line_pattern_col)
-
+    ids = get_all_line_style_ids(doc)
+    
     # check if filtering is required
     if (element_ids is None):
         return ids

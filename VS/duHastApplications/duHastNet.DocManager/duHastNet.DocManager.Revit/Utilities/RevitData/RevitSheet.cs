@@ -27,8 +27,14 @@ namespace duHastNet.DocManager.Revit.Utilities.RevitData
 {
     public class RevitSheet
     {
-        public string SheetNumber { get; set; }
-        public string SheetName { get; set; }
+        public RevitDocumentProperty SheetNumber { get; set; }
+        public RevitDocumentProperty SheetName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the unique identifier assigned to the document in docManager database. This identifier is used to link the sheet to its corresponding document in the database.
+        /// This may be different from the sheet number that is stored in the Revit model, as the sheet number in the Revit model may only be a part of the full document number that is used in the database. 
+        /// The document number in the database may include additional properties such as a prefix, suffix, or separator that is not part of the sheet number in the Revit model
+        public string DocumentNumber { get; set; }
 
 
         private List<RevitRevisionOnSheet> _revisionsOnSheet;
@@ -43,10 +49,11 @@ namespace duHastNet.DocManager.Revit.Utilities.RevitData
             string sheetName)
         {
             
-            SheetNumber = sheetNumber;
-            SheetName = sheetName;
+            SheetNumber = new(Constants.PropertyValueSheetNumber, sheetNumber);
+            SheetName = new(Constants.PropertyNameSheetName, sheetName);
             _revisionsOnSheet = [];
             _documentProperties = [];
+            DocumentNumber = string.Empty;
         }
 
         public void AddRevisionOnSheet(RevitRevisionOnSheet revisionOnSheet)

@@ -136,6 +136,7 @@ $uiPDFDWGExporterSelectionBasePath = "$basePath\VS\duHastUI\PDFDWGExporterSelect
 $uiFamilyReloaderBasePath = "$basePath\VS\duHastUI\FamilyReloaderUI"
 $uiDocManagerSettingsBasePath = "$basePath\VS\duHastUI\DocManagerSettingsUI"
 $uiDocManagerRevitBasePath = "$basePath\VS\duHastApplications\duHastNet.DocManager\duHastNet.DocManager.Revit"
+$uiDocManagerCoreBasePath = "$basePath\VS\duHastApplications\duHastNet.DocManager\duHastNet.DocManager.Core"
 
 # Determine correct build paths using user-selected configuration
 $pushItBuildPath = Get-BuildType $pushItBasePath $buildConfig
@@ -145,6 +146,7 @@ $uiPDFDWGExporterSelectionBuildPath = Get-BuildType $uiPDFDWGExporterSelectionBa
 $uiFamilyReloaderBuildPath = Get-BuildType $uiFamilyReloaderBasePath $buildConfig
 $uiDocManagerSettingsBuildPath = Get-BuildType $uiDocManagerSettingsBasePath $buildConfig
 $uiDocManagerRevitBuildPath = Get-BuildType $uiDocManagerRevitBasePath $buildConfig
+$uiDocManagerCoreBuildPath = Get-BuildType $uiDocManagerCoreBasePath $buildConfig
 
 # Define source and destination paths for PushIt (using dynamic extension name)
 $sourceFilePushIt = "$pushItBuildPath\PushIt$dllVersion.dll"
@@ -203,6 +205,12 @@ $destinationFileDocManagerRevitUI = "$basePath\VS\_References\duHast\DocManagerR
 # Copy Doc Manager Revit UI DLL
 Copy-Item -Path $sourceFileDocManagerRevitUI -Destination $destinationFileDocManagerRevitUI -Force
 Write-Output "File copied successfully from $sourceFileDocManagerRevitUI to $destinationFileDocManagerRevitUI"
+
+$sourceFileDocManagerCore = "$uiDocManagerCoreBuildPath\duHastNet.DocManager.Core.dll"
+$destinationFileDocManagerCore = "$basePath\VS\_References\duHast\duHastNet.DocManager.Core.dll"
+# Copy Doc Manager Core DLL
+Copy-Item -Path $sourceFileDocManagerCore -Destination $destinationFileDocManagerCore -Force
+Write-Output "File copied successfully from $sourceFileDocManagerCore to $destinationFileDocManagerCore"
 
 # copy community toolkit DLL to reference folder from where it will get copied to other locations
 $sourceFileCommunityToolkit = "$uiDocManagerSettingsBuildPath\CommunityToolkit.Mvvm.dll"

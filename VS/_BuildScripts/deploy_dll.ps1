@@ -135,7 +135,7 @@ $uiPDFDWGExporterBasePath = "$basePath\VS\duHastUI\PDFDWGExporterUI"
 $uiPDFDWGExporterSelectionBasePath = "$basePath\VS\duHastUI\PDFDWGExporterSelectionUI"
 $uiFamilyReloaderBasePath = "$basePath\VS\duHastUI\FamilyReloaderUI"
 $uiDocManagerSettingsBasePath = "$basePath\VS\duHastUI\DocManagerSettingsUI"
-$uiDocManagerRevitBasePath = "$basePath\VS\duHastUI\DocManagerUI"
+$uiDocManagerRevitBasePath = "$basePath\VS\duHastApplications\duHastNet.DocManager\duHastNet.DocManager.Revit"
 
 # Determine correct build paths using user-selected configuration
 $pushItBuildPath = Get-BuildType $pushItBasePath $buildConfig
@@ -198,8 +198,8 @@ $destinationFileDocManagerSettingsUI = "$basePath\VS\_References\duHast\DocManag
 Copy-Item -Path $sourceFileDocManagerSettingsUI -Destination $destinationFileDocManagerSettingsUI -Force
 Write-Output "File copied successfully from $sourceFileDocManagerSettingsUI to $destinationFileDocManagerSettingsUI"
 
-$sourceFileDocManagerRevitUI = "$uiDocManagerRevitBuildPath\DocManagerUI$dllVersion.dll"
-$destinationFileDocManagerRevitUI = "$basePath\VS\_References\duHast\DocManagerUI$dllVersion.dll"
+$sourceFileDocManagerRevitUI = "$uiDocManagerRevitBuildPath\DocManagerRevit$dllVersion.dll"
+$destinationFileDocManagerRevitUI = "$basePath\VS\_References\duHast\DocManagerRevit$dllVersion.dll"
 # Copy Doc Manager Revit UI DLL
 Copy-Item -Path $sourceFileDocManagerRevitUI -Destination $destinationFileDocManagerRevitUI -Force
 Write-Output "File copied successfully from $sourceFileDocManagerRevitUI to $destinationFileDocManagerRevitUI"

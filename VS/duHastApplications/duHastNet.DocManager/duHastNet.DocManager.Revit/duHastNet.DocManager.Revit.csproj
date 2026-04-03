@@ -18,6 +18,17 @@
 		<!-- Copy NuGet dependencies to output -->
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 
+		<!-- Assembly metadata (optional - customize as needed) -->
+		<AssemblyName>DocManagerRevit.25.0.1.1</AssemblyName>
+		<AssemblyVersion>25.0.1.1</AssemblyVersion>
+		<FileVersion>25.0.1.1</FileVersion>
+		<AssemblyTitle>docManager Revit Integration</AssemblyTitle>
+		<Product>DocManager Revit</Product>
+		<Company>duHast</Company>
+
+		<!-- Match your build script's expected path -->
+		<OutputPath>bin\x64\$(Configuration)\</OutputPath>
+
 		<!-- Prevent the target framework folder (net8.0-windows) from being appended -->
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<!-- Keep runtime identifier out of the output path but select win-x64 assets -->

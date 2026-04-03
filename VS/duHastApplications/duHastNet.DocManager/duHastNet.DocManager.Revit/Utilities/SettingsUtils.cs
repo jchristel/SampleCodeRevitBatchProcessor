@@ -42,5 +42,15 @@ namespace duHastNet.DocManager.Revit.Utilities
         {
             return new Models.Settings();
         }
-     }
+
+        /// <summary>
+        /// Will eventually load the settings stored in the Revit model, if they exist. For now, this is a placeholder that returns an empty string.
+        /// </summary>
+        /// <param name="doc">The Revit document from which to load the settings.</param>
+        /// <returns></returns>
+        public static string LoadSettingsFromRevitModel(Autodesk.Revit.DB.Document doc)
+        {
+            return string.Empty;
+        }
+    }
 }

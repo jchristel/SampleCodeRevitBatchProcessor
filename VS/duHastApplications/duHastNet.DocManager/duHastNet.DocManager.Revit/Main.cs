@@ -37,8 +37,8 @@ namespace duHastNet.DocManager.Revit
         duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
         duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
         duHastNet.Utils.WPF.Stores.StateStore _stateStore;
-        IList<Utilities.RevitData.RevitRevision> _revisions = [];
-        IList<Utilities.RevitData.RevitSheet> _sheets =[];
+
+        Revit.Models.Settings _settings;
 
         static Main()
         {
@@ -46,90 +46,45 @@ namespace duHastNet.DocManager.Revit
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolver.ResolveAssembly);
         }
 
-
-        /// <summary>
-        /// Store revisions from revit in the main class so that they can be used in the view model. 
-        /// </summary>
-        /// <param name="revisions"></param>
-        public void SetRevisionsFromRevit (IList<Utilities.RevitData.RevitRevision> revisions)
-        {
-            _revisions = revisions;
-        }
-
-        /// <summary>
-        /// Store sheets from revit in the main class so that they can be used in the view model. 
-        /// </summary>
-        /// <param name="sheets"></param>
-        public void SetSheetsFromRevit(IList<Utilities.RevitData.RevitSheet> sheets)
-        {
-            _sheets = sheets;
-        }
-
-        public Result ExecuteInternal(UIApplication uiapp)
+        public Result ExecuteInternal(UIApplication uiapp, Models.Revit.RevitDataModel revitDataModel)
         {
             //set up stores
             _navigationStore = new duHastNet.Utils.WPF.Stores.NavigationStore();
             _messageStore = new duHastNet.Utils.WPF.Stores.MessageStore();
             _stateStore = new duHastNet.Utils.WPF.Stores.StateStore();
 
-            // Get document
-            Autodesk.Revit.DB.Document doc = uiapp.ActiveUIDocument.Document;
-
             // set up the revit data model
-            _revitDataModel = new Models.Revit.RevitDataModel(doc.Title);
-
+            // check if this is called from the Execute method ( there is a data model allready) or if the data model is already created and passed in (e.g. from pyRevit) and set it accordingly
+            _revitDataModel ??= revitDataModel;
+               
             //setup logger and delete old log files 
             //needs to happen after data model is created so that we can display log messages in the banner
             SetupLog();
 
-            // load settings from file
-            Models.Settings settings = duHastNet.DocManager.Revit.Utilities.SettingsUtils.LoadSettings();
+            // log the start of the command execution
+            // log the loaded revisions and sheets counts
+            _revitDataModel.LogMessages(
+                [
+                    ("Starting duHastNet.DocManager.Revit.", duHastNet.Utils.WPF.Stores.MessageTypes.Information),
+                    ($"Loaded {_revitDataModel.GetRevisions().Count} revision(s) from Revit model: {_revitDataModel.ModelName}.", duHastNet.Utils.WPF.Stores.MessageTypes.Information),
+                    ($"Loaded {_revitDataModel.GetSheets().Count} sheet(s) from Revit model: {_revitDataModel.ModelName}.", duHastNet.Utils.WPF.Stores.MessageTypes.Information)
+                ]);
 
-            // add revisions and sheets to the data model
-            for (int i = 0; i < _revisions.Count; i++)
-            {
-                List<(string, duHastNet.Utils.WPF.Stores.MessageTypes)> e = [];
-                try
-                {
-                    _revitDataModel.AddRevision(_revisions[i]);
-                }
-                catch (Exception ex)
-                {
-                    e.Add(($"Error during revision adding: {ex}", duHastNet.Utils.WPF.Stores.MessageTypes.Error));
-                }
-                if (e.Count > 0)
-                {
-                    _revitDataModel.LogMessages(e);
-                }
-            }
 
-            for (int i = 0; i < _sheets.Count; i++)
-            {
-                List<(string, duHastNet.Utils.WPF.Stores.MessageTypes)> e = [];
-                try
-                {
-                    _revitDataModel.AddSheet(_sheets[i]);
-                }
-                catch (Exception ex)
-                {
-                    e.Add(($"Error during sheet adding: {ex}", duHastNet.Utils.WPF.Stores.MessageTypes.Error));
-                }
-                if (e.Count > 0)
-                {
-                    _revitDataModel.LogMessages(e);
-                }
-            }
+            // load settings from file, these are purely UI related and not the same as the settings stored in the revit model which are part of the data model, but we need them to set up the main window
+            _settings = duHastNet.DocManager.Revit.Utilities.SettingsUtils.LoadSettings();
+            //store the json string from the data model in the settings for now, so that we can pass it to the main window and then to the viewmodels
+            _settings.JsonString = _revitDataModel.SettingsAsJson;
 
+            //process each sheet: build the document number as per past in settings
+            _revitDataModel.AddFullDocumentNumber(_settings.DocumentNumberingJsonString);
 
             //set up the navigation store
             ViewModels.PyRevitDocumentListViewModel pocVm = CreatePOCViewModel();
             _navigationStore.CurrentViewModel = pocVm;
 
-
-
-
             //show the main window
-            duHastNet.DocManager.Revit.Views.MainWindow mainWindow = new duHastNet.DocManager.Revit.Views.MainWindow(settings)
+            duHastNet.DocManager.Revit.Views.MainWindow mainWindow = new(_settings)
             {
                 DataContext = new ViewModels.MainViewModel(_navigationStore)
             };
@@ -157,10 +112,47 @@ namespace duHastNet.DocManager.Revit
         /// <returns>A <see cref="Result"/> value indicating the outcome of the command execution.</returns>
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            return ExecuteInternal(commandData.Application);
+            //get the active document
+            Autodesk.Revit.DB.Document doc = commandData.Application.ActiveUIDocument.Document;
+
+            // check if we have an active document, if not, we cannot proceed and should inform the user
+            if (doc == null)
+            {
+                message = "No active document found.";
+                return Result.Failed;
+            }
+
+            // load settings from the revit model a json string and create the data model
+            string settingsAsJson = Utilities.SettingsUtils.LoadSettingsFromRevitModel(doc);
+            _revitDataModel = new Models.Revit.RevitDataModel(doc.Title, settingsAsJson);
+
+            // get the revision and sheet data from the revit model using the utility method and store it in the data model
+            // stubs for now only
+            bool revisionsLoaded = Utilities.RevitDataFactory.GetRevisionDataFromRevitModel(doc, _revitDataModel);
+
+            // if loading the revisions failed, we cannot proceed, so we should inform the user and not open the main window
+            if (!revisionsLoaded)
+            {
+                message = "Failed to load revisions from model.";
+                return Result.Failed;
+            }
+
+            // get the sheet data from the revit model using the utility method and store it in the data model
+            bool sheetsLoaded = Utilities.RevitDataFactory.GetSheetDataFromRevitModel(doc, _revitDataModel);
+
+            // if loading the sheets failed, we cannot proceed, so we should inform the user and not open the main window
+            if (!sheetsLoaded)
+            {
+                message = "Failed to load sheets from model.";
+                return Result.Failed;
+            }
+
+            // execute the main logic of the command in a separate method, passing the application and the data model
+            return ExecuteInternal(commandData.Application, _revitDataModel);
         }
 
         #region viewmodel setup
+
         /// <summary>
         /// Creates the <see cref="ViewModels.RoomsMainViewModel"/> used as the
         /// initial navigation target.
@@ -186,10 +178,10 @@ namespace duHastNet.DocManager.Revit
             {
                 _revitDataModel.InitialiseLogger(logFilePath);
 
-                _revitDataModel.LogMessages(new List<(string, duHastNet.Utils.WPF.Stores.MessageTypes)>
-                    {
+                _revitDataModel.LogMessages(
+                    [
                         ("Starting duHastNet.PushIt.", duHastNet.Utils.WPF.Stores.MessageTypes.Information)
-                    });
+                    ]);
             }
 
             //delete old log files

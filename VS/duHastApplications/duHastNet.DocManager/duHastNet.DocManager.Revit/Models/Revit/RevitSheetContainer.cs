@@ -30,11 +30,25 @@ namespace duHastNet.DocManager.Revit.Models.Revit
     public class RevitSheetContainer
     {
         private List<RevitSheet> _sheets { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the RevitSheetContainer class.
+        /// </summary>
+        /// <remarks>This constructor creates an empty container for RevitSheet objects. After
+        /// initialization, sheets can be added to the container as needed.</remarks>
         public RevitSheetContainer()
         {
             _sheets = new List<RevitSheet>();
         }
 
+        #region sheets
+
+        /// <summary>
+        /// Adds a sheet to the container. Checks for null and duplicate sheet numbers before adding.
+        /// </summary>
+        /// <param name="sheet">The RevitSheet object to add to the container.</param>
+        /// <exception cref="ArgumentNullException">Thrown if the sheet is null.</exception>
+        /// <exception cref="ArgumentException">Thrown if a sheet with the same sheet number already exists.</exception>
         public void AddSheet(RevitSheet sheet)
         {
             if (sheet == null)
@@ -52,5 +66,42 @@ namespace duHastNet.DocManager.Revit.Models.Revit
 
             _sheets.Add(sheet);
         }
+
+        /// <summary>
+        /// Gets a list of all sheets currently managed by this instance.
+        /// </summary>
+        /// <returns>A list of <see cref="RevitSheet"/> objects representing the available sheets. The list may be empty if no
+        /// sheets are present.</returns>
+        public List<RevitSheet> GetSheets()
+        {
+            return _sheets;
+        }
+
+        #endregion sheets
+
+        #region sheet properties
+
+        public List<string> GetSheetPropertyNames()
+        {
+            List<string> propertyNames = [];
+            foreach (var sheet in _sheets)
+            {
+                foreach (var property in sheet.DocumentProperties)
+                {
+                    if (!propertyNames.Contains(property.Name))
+                    {
+                        propertyNames.Add(property.Name);
+                    }
+                }
+                // sort the property names alphabetically
+                propertyNames.Sort();
+                // get out after the first sheet
+                break;
+            }
+            return propertyNames;   
+        }
+
+        #endregion sheet properties
+
     }
 }

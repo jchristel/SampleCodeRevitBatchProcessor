@@ -22,6 +22,7 @@
 //
 
 using duHastNet.DocManager.Revit.Utilities.RevitData;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace duHastNet.DocManager.Revit.Models.Revit
@@ -32,6 +33,13 @@ namespace duHastNet.DocManager.Revit.Models.Revit
         private RevitRevisionContainer _revitRevisionContainer;
 
         private duHastNet.Utils.Logging.SimpleLogger _logger;
+
+        /// <summary>
+        /// sheet number settings
+        /// </summary>
+        private ObservableCollection<Utilities.DocumentSetting> _sheetSettings;
+        public ObservableCollection<Utilities.DocumentSetting> SheetSettings
+        { get => _sheetSettings; }
 
         public string ModelName { get; private set; }
 
@@ -50,9 +58,7 @@ namespace duHastNet.DocManager.Revit.Models.Revit
         /// <see cref="ClearStartupMessages"/>.
         /// </para>
         /// </summary>
-        private readonly List<(string Message, duHastNet.Utils.WPF.Stores.MessageTypes Type)> _startupMessages
-            = new List<(string, duHastNet.Utils.WPF.Stores.MessageTypes)>();
-
+        private readonly List<(string Message, duHastNet.Utils.WPF.Stores.MessageTypes Type)> _startupMessages = [];
         /// <summary>
         /// Appends a message to the startup message list.
         /// Called by Revit actions and startup helpers during the startup sequence.
@@ -114,8 +120,13 @@ namespace duHastNet.DocManager.Revit.Models.Revit
             SettingsAsJson = settingsAsJson;
             _revitSheetContainer = new RevitSheetContainer();
             _revitRevisionContainer = new RevitRevisionContainer();
+
+            _sheetSettings = [];
+
+
         }
 
+        #region add data
         public void AddSheet(RevitSheet sheet)
         {
             _revitSheetContainer.AddSheet(sheet);
@@ -126,9 +137,62 @@ namespace duHastNet.DocManager.Revit.Models.Revit
             _revitRevisionContainer.AddRevision(revision);
         }
 
+        #endregion add data
+
+        #region get data
+
+        /// <summary>
+        /// Retrieves the revision associated with the specified Revit element identifier.
+        /// </summary>
+        /// <param name="revisionId">The unique identifier of the Revit revision element to retrieve.</param>
+        /// <returns>A RevitRevision object representing the revision with the specified identifier, or null if no matching
+        /// revision is found.</returns>
         public RevitRevision GetRevisionByRevitElementId(Int64 revisionId)
         {
             return _revitRevisionContainer.GetRevisionByRevitId(revisionId);
         }
+
+        public List<RevitSheet> GetSheets()
+        {
+            return _revitSheetContainer.GetSheets();
+        }
+
+        public List<RevitRevision> GetRevisions()
+        {
+            return _revitRevisionContainer.GetRevisions();
+        }
+
+        #endregion get data
+
+        #region update data
+        
+        /// <summary>
+        /// adds the preview names for pdf and dwg export to each sheet
+        /// </summary>
+        public void AddFullDocumentNumber(string DocumentNumberingJsonString)
+        {
+            // get the pdf name settings
+            _sheetSettings = Utilities.SettingsStringParser.ParseRevitSheetNumberSettingsString(
+                settingsString: DocumentNumberingJsonString,
+                availableParameters: _revitSheetContainer.GetSheetPropertyNames());
+
+
+            int successfullyUpdatedSheets = 0;
+            // update sheets
+            foreach (var sheet in _revitSheetContainer.GetSheets())
+            {
+                // get the doc manager doc number
+                sheet.DocumentNumber = Utilities.DocumentNumberBuilder.GetDocumentNumber(sheet, _sheetSettings);
+                successfullyUpdatedSheets++;
+            }
+
+            // log the update
+            LogMessages(
+                [
+                    ($"Added document numbers to {successfullyUpdatedSheets} sheet(s).", duHastNet.Utils.WPF.Stores.MessageTypes.Information),
+
+                ]);
+        }
+        #endregion update data
     }
 }

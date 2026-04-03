@@ -1,11 +1,11 @@
-//
+﻿//
 //License:
 //
 //
 // Revit Batch Processor Sample Code
 //
 // BSD License
-// Copyright 2025, Jan Christel
+// Copyright 2026, Jan Christel
 // All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -21,23 +21,38 @@
 //
 //
 
-using Newtonsoft.Json;
-using System.Collections.Generic;
-
-namespace duHastNet.DocManager.Revit.Models
+namespace duHastNet.DocManager.Revit.Utilities
 {
-    public class Settings
+    public class DocumentSetting
     {
-        /// <summary>
-        /// TODO: update to include separation from document numbering settings
-        /// </summary>
-        public string JsonString { get; set; }
+        public string Prefix { get; set; }
+        public string Suffix { get; set; }
+        public string Separator { get; set; }
+        public string PropertyName { get; set; }
 
-        public string DocumentNumberingJsonString { get; set; }
-        public Settings()
+
+        public DocumentSetting() 
+        { 
+            Prefix = string.Empty;
+            Suffix = string.Empty;
+            Separator = string.Empty;
+            PropertyName = string.Empty;
+        }
+
+        public DocumentSetting(string propertyName)
         {
-            JsonString = string.Empty;
-            DocumentNumberingJsonString = string.Empty;
+            PropertyName = propertyName;
+            Prefix = string.Empty;
+            Suffix = string.Empty;
+            Separator = string.Empty;
+        }
+
+        public DocumentSetting(string prefix, string suffix, string separator, string propertyName)
+        {
+            Prefix = prefix;
+            Suffix = suffix;
+            Separator = separator;
+            PropertyName = propertyName;
         }
     }
 }

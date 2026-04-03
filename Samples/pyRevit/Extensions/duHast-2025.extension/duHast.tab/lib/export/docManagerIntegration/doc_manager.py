@@ -28,7 +28,7 @@ from System.Collections.Generic import List
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.ExtensibleSchemas.extensible_schemas import does_schema_exist
-from duHast.Revit.NetSupport.dll_names import UTILITY,COMMUNITY_TOOLKIT_MVVM,DOC_MANAGER_UI
+from duHast.Revit.NetSupport.dll_names import UTILITY,COMMUNITY_TOOLKIT_MVVM,DOC_MANAGER_CORE, DOC_MANAGER_UI
 
 from duHast.pyRevit.net_dll_loader import load_net_dll_path, get_bin_path_from_script_path_within_extension
 from duHast.pyRevit.console_output import print_header, print_error
@@ -38,10 +38,13 @@ from export.docManagerIntegration.docIntutils.revision_data_factory import get_r
 from export.docManagerIntegration.docIntutils.sheet_data_factory import get_sheet_data
 from export.docManagerIntegration import settings
 
+
+from Autodesk.Revit.UI import Result as RevitResult
+
 DEBUG = True
 
 # .net dlls to load for this script, these need to be in the bin folder of the extension
-DLL_LIST = [UTILITY,COMMUNITY_TOOLKIT_MVVM,DOC_MANAGER_UI]
+DLL_LIST = [UTILITY,COMMUNITY_TOOLKIT_MVVM,DOC_MANAGER_CORE, DOC_MANAGER_UI]
 
 
 def doc_manager_entry(doc, uiapp, output, forms):
@@ -110,7 +113,7 @@ def doc_manager_entry(doc, uiapp, output, forms):
                 print("... settings: [{}]".format(doc_manager_settings))
 
         # import the UI class from the DocManagerSettingsUI namespace
-        from duHastNet.UI.DocManagerUI.Models.Revit import RevitDataModel
+        from duHastNet.DocManager.Revit.Models.Revit import RevitDataModel
               
         revit_data_model = RevitDataModel(doc.Title, doc_manager_settings)
 
@@ -140,7 +143,28 @@ def doc_manager_entry(doc, uiapp, output, forms):
         
         # get the updated data model with sheets added
         revit_data_model = sheet_data_status.result[0]
-
+        
+        # fire up the UI and pass the data model to it
+        from duHastNet.DocManager.Revit import Main
+        
+        # create an instance of the Main class
+        main = Main()
+        
+        # fire up the UI and pass the data model to it, this will return a result object with the status of the export and any messages
+        result = main.ExecuteInternal(uiapp, revit_data_model)
+        
+        if result == RevitResult.Failed:
+            message = "An error occurred while running doc manager. See output for details."
+            return_value.update_sep(False, message)
+            print_error(message)
+        elif result == RevitResult.Cancelled:
+            message = "Doc manager was cancelled by the user."
+            return_value.update_sep(False, message)
+            print(message)
+        else:
+            message = "Doc manager completed successfully."
+            return_value.update_sep(True, message)
+            print(message)
 
     except Exception as e:
         # handle any exceptions that occur during the export process

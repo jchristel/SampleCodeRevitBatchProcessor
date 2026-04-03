@@ -47,7 +47,7 @@ def get_sheet_properties(doc, revit_sheet, revit_sheet_data):
     
     try:
         # import the UI class from the DocManagerSettingsUI namespace
-        from  duHastNet.UI.DocManagerUI.Utils.RevitData import RevitDocumentProperty
+        from  duHastNet.DocManager.Revit.Utilities.RevitData import RevitDocumentProperty
 
         # get all parameters attached to sheet
         paras = revit_sheet.GetOrderedParameters()
@@ -99,7 +99,7 @@ def get_sheet_revisions(doc, revit_sheet, revit_sheet_data, revit_data_model):
     
     try:
         # import the UI class from the DocManagerSettingsUI namespace
-        from  duHastNet.UI.DocManagerUI.Utils.RevitData import  RevitRevisionOnSheet
+        from  duHastNet.DocManager.Revit.Utilities.RevitData import  RevitRevisionOnSheet
 
         # get revsions on sheet data
         revit_revisions = get_revisions_from_sheet(doc, revit_sheet)
@@ -156,7 +156,7 @@ def get_sheet_data(doc,  revit_data_model):
         
         # import the UI class from the DocManagerSettingsUI namespace
         # do this in this function to allow the caller to register the UI dll before this code is executed
-        from  duHastNet.UI.DocManagerUI.Utils.RevitData import RevitSheet
+        from  duHastNet.DocManager.Revit.Utilities.RevitData import RevitSheet
 
         # get all sheets in the document
         sheets = get_all_sheets(doc)

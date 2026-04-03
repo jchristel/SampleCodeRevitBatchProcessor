@@ -37,7 +37,7 @@ def get_revision_data(doc, revit_data_model):
     :param revit_data_model: The data model to add the revision data to.
     :type revit_data_model: RevitDataModel
     
-    :return: Result object with status, message, and the data model with revision data.
+    :return:Result object with status, message, and the data model with revision data.
     :rtype: Result
     
     """
@@ -47,7 +47,7 @@ def get_revision_data(doc, revit_data_model):
         
         # import the UI class from the DocManagerSettingsUI namespace
         # do this in this function to allow the caller to register the UI dll before this code is executed
-        from  duHastNet.UI.DocManagerUI.Utils.RevitData import RevitRevision
+        from  duHastNet.DocManager.Revit.Utilities.RevitData import RevitRevision
 
         # get the revision from the model
         all_revision_ids =  Revision.GetAllRevisionIds(doc)
@@ -64,9 +64,9 @@ def get_revision_data(doc, revit_data_model):
             # add the revision to the data model
             revit_data_model.AddRevision(rev)
 
-
-        return_value.update_sep(True, "Successfully retrieved revision data from model.")
+        # add the data model with revisions to the result object
         return_value.result.append(revit_data_model)
+        return_value.update_sep(True, "Successfully retrieved revision data from model.")
         return return_value
     except Exception as e:
         message = "Error getting revision from file: {}".format( e)

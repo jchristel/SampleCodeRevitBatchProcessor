@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -21,13 +21,13 @@
 //
 //
 
+using CommunityToolkit.Mvvm.ComponentModel;
 using duHastNet.DocManager.Revit.Utilities.RevitData;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 
 namespace duHastNet.DocManager.Revit.Models.Revit
 {
-    public class RevitDataModel : INotifyPropertyChanged
+    public partial class RevitDataModel : ObservableObject
     {
         private RevitSheetContainer _revitSheetContainer;
         private RevitRevisionContainer _revitRevisionContainer;
@@ -35,7 +35,7 @@ namespace duHastNet.DocManager.Revit.Models.Revit
         private duHastNet.Utils.Logging.SimpleLogger _logger;
 
         /// <summary>
-        /// sheet number settings
+        /// Sheet number settings derived from the Revit model settings JSON string.
         /// </summary>
         private ObservableCollection<duHastNet.UI.DocManagerSettingsUI.Utils.DocumentSetting> _sheetSettings;
         public ObservableCollection<duHastNet.UI.DocManagerSettingsUI.Utils.DocumentSetting> SheetSettings
@@ -59,6 +59,7 @@ namespace duHastNet.DocManager.Revit.Models.Revit
         /// </para>
         /// </summary>
         private readonly List<(string Message, duHastNet.Utils.WPF.Stores.MessageTypes Type)> _startupMessages = [];
+
         /// <summary>
         /// Appends a message to the startup message list.
         /// Called by Revit actions and startup helpers during the startup sequence.
@@ -86,7 +87,8 @@ namespace duHastNet.DocManager.Revit.Models.Revit
             return _startupMessages.AsReadOnly();
         }
 
-        // ── logging ──────────────────────────────────────────────────
+        // ── Logging ──────────────────────────────────────────────────
+
         public void InitialiseLogger(string filePath)
         {
             _logger = new duHastNet.Utils.Logging.SimpleLogger(filePath);
@@ -99,34 +101,19 @@ namespace duHastNet.DocManager.Revit.Models.Revit
             _logger.LogMessagesFireAndForget(messages);
         }
 
-        // ── INotifyPropertyChanged implementation ────────────────────────────────────────────────────
+        // ── Constructor ──────────────────────────────────────────────────
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public void RaisePropertyChanged(string name)
-        {
-            OnPropertyChanged(name);
-        }
-
-
-        public RevitDataModel(string modelName, string settingsAsJson="")
+        public RevitDataModel(string modelName, string settingsAsJson = "")
         {
             ModelName = modelName;
             SettingsAsJson = settingsAsJson;
             _revitSheetContainer = new RevitSheetContainer();
             _revitRevisionContainer = new RevitRevisionContainer();
-
             _sheetSettings = [];
-
-
         }
 
-        #region add data
+        #region Add Data
+
         public void AddSheet(RevitSheet sheet)
         {
             _revitSheetContainer.AddSheet(sheet);
@@ -137,16 +124,15 @@ namespace duHastNet.DocManager.Revit.Models.Revit
             _revitRevisionContainer.AddRevision(revision);
         }
 
-        #endregion add data
+        #endregion Add Data
 
-        #region get data
+        #region Get Data
 
         /// <summary>
         /// Retrieves the revision associated with the specified Revit element identifier.
         /// </summary>
         /// <param name="revisionId">The unique identifier of the Revit revision element to retrieve.</param>
-        /// <returns>A RevitRevision object representing the revision with the specified identifier, or null if no matching
-        /// revision is found.</returns>
+        /// <returns>A <see cref="RevitRevision"/> with the specified identifier.</returns>
         public RevitRevision GetRevisionByRevitElementId(Int64 revisionId)
         {
             return _revitRevisionContainer.GetRevisionByRevitId(revisionId);
@@ -162,37 +148,32 @@ namespace duHastNet.DocManager.Revit.Models.Revit
             return _revitRevisionContainer.GetRevisions();
         }
 
-        #endregion get data
+        #endregion Get Data
 
-        #region update data
-        
+        #region Update Data
+
         /// <summary>
-        /// adds the preview names for pdf and dwg export to each sheet
+        /// Builds the full document number for each sheet using the provided numbering settings JSON string.
         /// </summary>
         public void AddFullDocumentNumber(string DocumentNumberingJsonString)
         {
-            // get the pdf name settings
             _sheetSettings = duHastNet.UI.DocManagerSettingsUI.Utils.SettingsStringParser.ParseRevitSheetNumberSettingsString(
                 settingsString: DocumentNumberingJsonString,
                 availableParameters: _revitSheetContainer.GetSheetPropertyNames());
 
-
             int successfullyUpdatedSheets = 0;
-            // update sheets
             foreach (var sheet in _revitSheetContainer.GetSheets())
             {
-                // get the doc manager doc number
                 sheet.DocumentNumber = Utilities.DocumentNumberBuilder.GetDocumentNumber(sheet, _sheetSettings);
                 successfullyUpdatedSheets++;
             }
 
-            // log the update
             LogMessages(
                 [
                     ($"Added document numbers to {successfullyUpdatedSheets} sheet(s).", duHastNet.Utils.WPF.Stores.MessageTypes.Information),
-
                 ]);
         }
-        #endregion update data
+
+        #endregion Update Data
     }
 }

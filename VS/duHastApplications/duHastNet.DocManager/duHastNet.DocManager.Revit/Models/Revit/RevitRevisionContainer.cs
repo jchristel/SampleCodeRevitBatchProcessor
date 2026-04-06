@@ -1,4 +1,4 @@
-﻿
+
 //
 //License:
 //
@@ -22,6 +22,7 @@
 //
 //
 
+using duHastNet.DocManager.Revit.Exceptions;
 using duHastNet.DocManager.Revit.Utilities.RevitData;
 
 namespace duHastNet.DocManager.Revit.Models.Revit
@@ -41,12 +42,12 @@ namespace duHastNet.DocManager.Revit.Models.Revit
             {
                 throw new ArgumentNullException(nameof(revision), "Revision cannot be null.");
             }
-            // check if a revision with this ID already exists
+
             foreach (var existingRevision in _revisions)
             {
-                if (existingRevision.RevitRevisionElementId == revision.RevitRevisionElementId)
+                if (existingRevision.Conflicts(revision))
                 {
-                    throw new ArgumentException($"A revision with the ID '{revision.RevitRevisionElementId}' already exists.", nameof(revision));
+                    throw new RevitRevisionDuplicateException(existingRevision, revision);
                 }
             }
 
@@ -59,6 +60,7 @@ namespace duHastNet.DocManager.Revit.Models.Revit
             {
                 throw new ArgumentException("Revision ID must be positive.", nameof(revisionId));
             }
+
             foreach (var revision in _revisions)
             {
                 if (revision.RevitRevisionElementId == revisionId)
@@ -66,8 +68,10 @@ namespace duHastNet.DocManager.Revit.Models.Revit
                     return revision;
                 }
             }
+
             throw new KeyNotFoundException($"No revision found with the ID '{revisionId}'.");
         }
+
         public List<RevitRevision> GetRevisions()
         {
             return _revisions;

@@ -21,40 +21,18 @@
 //
 //
 
-namespace duHastNet.DocManager.Revit.Utilities.RevitData
+using System.Windows.Controls;
+
+namespace duHastNet.DocManager.Revit.Views
 {
     /// <summary>
-    /// A simple class to represent a Revit revision, with a date and description.
+    /// Interaction logic for SheetsPanelView.xaml
     /// </summary>
-    public class RevitRevision
+    public partial class SheetsPanelView : UserControl
     {
-        public Int64 RevitRevisionElementId { get; set; }
-        public string RevisionDate { get; set; }
-        public string RevisionDescription { get; set; }
-
-        public RevitRevision(Int64 revitRevisionElementId, string revisionDate, string revisionDescription)
+        public SheetsPanelView()
         {
-            RevitRevisionElementId = revitRevisionElementId;
-            RevisionDate = revisionDate ?? throw new ArgumentNullException(nameof(revisionDate));
-            RevisionDescription = revisionDescription ?? throw new ArgumentNullException(nameof(revisionDescription));
-        }
-
-        public RevitRevision()
-        {
-            RevitRevisionElementId = 0;
-            RevisionDate = string.Empty;
-            RevisionDescription = string.Empty;
-        }
-
-        public bool Conflicts(RevitRevision other)
-        {
-            //check for conflict by element id, as there cannot be two revisions with the same element id in Revit.
-            return RevitRevisionElementId == other.RevitRevisionElementId;
-        }
-
-        public override string ToString()
-        {
-            return $"Revision Element Id: {RevitRevisionElementId}, Revision Date: {RevisionDate}, Revision Description: {RevisionDescription}";
+            InitializeComponent();
         }
     }
 }

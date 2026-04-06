@@ -30,12 +30,15 @@ using System.IO;
 using duHastNet.Utils;
 using duHastNet.DocManager.Revit.Utilities.UISettings;
 using duHastNet.DocManager.Revit.Utilities.RevitSettings;
+using duHastNet.DocManager.Core.Services.Api;
+using duHastNet.DocManager.Revit.Models.Database;
 
 namespace duHastNet.DocManager.Revit
 {
     public class Main : IExternalCommand
     {
         Models.Revit.RevitDataModel _revitDataModel;
+        Models.Database.DatabaseDataModel _databaseDataModel;
         duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
         duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
         duHastNet.Utils.WPF.Stores.StateStore _stateStore;
@@ -46,7 +49,7 @@ namespace duHastNet.DocManager.Revit
 
         static Main()
         {
-            //assembly resolver in order for this plugin to be used form pyRevit invoke.button
+            //assembly resolver in order for this plugin to be used from pyRevit invoke.button
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolver.ResolveAssembly);
         }
 
@@ -58,10 +61,10 @@ namespace duHastNet.DocManager.Revit
             _stateStore = new duHastNet.Utils.WPF.Stores.StateStore();
 
             // set up the revit data model
-            // check if this is called from the Execute method ( there is a data model allready) or if the data model is already created and passed in (e.g. from pyRevit) and set it accordingly
+            // check if this is called from the Execute method (there is a data model already) or if the data model is already created and passed in (e.g. from pyRevit) and set it accordingly
             _revitDataModel ??= revitDataModel;
-               
-            //setup logger and delete old log files 
+
+            //setup logger and delete old log files
             //needs to happen after data model is created so that we can display log messages in the banner
             SetupLog();
 
@@ -74,7 +77,6 @@ namespace duHastNet.DocManager.Revit
                     ($"Loaded {_revitDataModel.GetSheets().Count} sheet(s) from Revit model: {_revitDataModel.ModelName}.", duHastNet.Utils.WPF.Stores.MessageTypes.Information)
                 ]);
 
-
             // load settings from file, these are purely UI related and not the same as the settings stored in the revit model which are part of the data model, but we need them to set up the main window
             _uiSettings = UISettingsUtils.LoadSettings();
 
@@ -83,12 +85,15 @@ namespace duHastNet.DocManager.Revit
             //so that they can access the settings as needed
             _revitSettings = RevitSettingsUtils.InitialiseRevitSettings(_revitDataModel.SettingsAsJson);
 
-            //process each sheet: build the document number as per past in settings
+            //process each sheet: build the document number as per passed in settings
             _revitDataModel.AddFullDocumentNumber(_revitSettings.DocumentNumberString);
 
-            //set up the navigation store
-            ViewModels.PyRevitDocumentListViewModel pocVm = CreatePOCViewModel();
-            _navigationStore.CurrentViewModel = pocVm;
+            // load existing documents and revisions from the database;
+            // happy/unhappy path is resolved here — the window always opens regardless of outcome
+            _databaseDataModel = LoadDatabaseData();
+
+            //set up the navigation store with the main integration view model
+            _navigationStore.CurrentViewModel = CreateRevitIntegrationViewModel();
 
             //show the main window
             duHastNet.DocManager.Revit.Views.MainWindow mainWindow = new(_uiSettings)
@@ -129,7 +134,7 @@ namespace duHastNet.DocManager.Revit
                 return Result.Failed;
             }
 
-            // load settings from the revit model a json string and create the data model
+            // load settings from the revit model as a json string and create the data model
             string settingsAsJson = RevitSettingsUtils.LoadSettingsFromRevitModel(doc);
             _revitDataModel = new Models.Revit.RevitDataModel(doc.Title, settingsAsJson);
 
@@ -161,8 +166,22 @@ namespace duHastNet.DocManager.Revit
         #region viewmodel setup
 
         /// <summary>
-        /// Creates the <see cref="ViewModels.RoomsMainViewModel"/> used as the
-        /// initial navigation target.
+        /// Creates the <see cref="ViewModels.RevitIntegrationViewModel"/> used as the
+        /// navigation target in <see cref="ExecuteInternal"/>.
+        /// All required data has been collected and loaded before this method is called.
+        /// </summary>
+        private ViewModels.RevitIntegrationViewModel CreateRevitIntegrationViewModel()
+        {
+            return new ViewModels.RevitIntegrationViewModel(
+                _revitDataModel,
+                _databaseDataModel,
+                _messageStore,
+                _revitSettings);
+        }
+
+        /// <summary>
+        /// Creates the proof of concept <see cref="ViewModels.PyRevitDocumentListViewModel"/>.
+        /// Retained for future reference — not used in the main startup sequence.
         /// </summary>
         private ViewModels.PyRevitDocumentListViewModel CreatePOCViewModel()
         {
@@ -171,7 +190,77 @@ namespace duHastNet.DocManager.Revit
 
             return new ViewModels.PyRevitDocumentListViewModel(_revitSettings, _uiSettings);
         }
+
         #endregion
+
+        #region database
+
+        /// <summary>
+        /// Connects to the Document Manager database and reads existing documents and revisions.
+        /// <para>
+        /// The database path is read from <see cref="_revitSettings"/>. All failures are
+        /// enqueued to <see cref="_messageStore"/> so they surface in the UI message banner.
+        /// A <see cref="DatabaseDataModel"/> is always returned — on failure it is disconnected
+        /// with empty lists, allowing the window to open with operations disabled.
+        /// </para>
+        /// </summary>
+        /// <returns>
+        /// A populated <see cref="DatabaseDataModel"/> on success, or a disconnected one on failure.
+        /// </returns>
+        private DatabaseDataModel LoadDatabaseData()
+        {
+            string databasePath = _revitSettings?.DatabasePath ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(databasePath))
+            {
+                _messageStore.EnqueueMessage(
+                    "No database path configured. Use the setup utility to configure the database path.",
+                    duHastNet.Utils.WPF.Stores.MessageTypes.Error);
+
+                _revitDataModel.LogMessages(
+                    [("Database path is not configured.", duHastNet.Utils.WPF.Stores.MessageTypes.Error)]);
+
+                return DatabaseDataModel.CreateDisconnected();
+            }
+
+            var api = new DocManagerApi();
+            try
+            {
+                var connectionResult = api.ConnectDatabase(databasePath);
+
+                if (!connectionResult.Success)
+                {
+                    string errorMessage = $"Could not connect to database: {connectionResult.Message}";
+
+                    _messageStore.EnqueueMessage(errorMessage, duHastNet.Utils.WPF.Stores.MessageTypes.Error);
+                    _revitDataModel.LogMessages([(errorMessage, duHastNet.Utils.WPF.Stores.MessageTypes.Error)]);
+
+                    return DatabaseDataModel.CreateDisconnected();
+                }
+
+                var documents = api.GetActiveDocuments();
+                var revisions = api.GetAllRevisions();
+
+                _revitDataModel.LogMessages(
+                    [
+                        ($"Loaded {documents.Count} document(s) from database.", duHastNet.Utils.WPF.Stores.MessageTypes.Information),
+                        ($"Loaded {revisions.Count} revision(s) from database.", duHastNet.Utils.WPF.Stores.MessageTypes.Information)
+                    ]);
+
+                return new DatabaseDataModel(true, documents, revisions);
+            }
+            catch (Exception ex)
+            {
+                string errorMessage = $"Failed to read database: {ex.Message}";
+
+                _messageStore.EnqueueMessage(errorMessage, duHastNet.Utils.WPF.Stores.MessageTypes.Error);
+                _revitDataModel.LogMessages([(errorMessage, duHastNet.Utils.WPF.Stores.MessageTypes.Error)]);
+
+                return DatabaseDataModel.CreateDisconnected();
+            }
+        }
+
+        #endregion database
 
         #region utility
 
@@ -194,9 +283,9 @@ namespace duHastNet.DocManager.Revit
             //delete old log files
             duHastNet.Utils.Logging.LogFileCleanup cleaner = new();
             cleaner.DeleteOldLogFilesFireAndForget(
-                directoryPath: UISettingsUtils.settingsDirectory, 
-                olderThanDays: 5, 
-                fileNamePrefix: UISettingsUtils.settingsFileNamePrefix, 
+                directoryPath: UISettingsUtils.settingsDirectory,
+                olderThanDays: 5,
+                fileNamePrefix: UISettingsUtils.settingsFileNamePrefix,
                 fileExtension: "*.txt");
 
             if (_revitDataModel != null)

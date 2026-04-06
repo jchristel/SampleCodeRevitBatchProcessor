@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -31,24 +31,27 @@ namespace duHastNet.DocManager.Revit.Utilities.RevitData
         public RevitDocumentProperty SheetName { get; set; }
 
         /// <summary>
-        /// Gets or sets the unique identifier assigned to the document in docManager database. This identifier is used to link the sheet to its corresponding document in the database.
-        /// This may be different from the sheet number that is stored in the Revit model, as the sheet number in the Revit model may only be a part of the full document number that is used in the database. 
-        /// The document number in the database may include additional properties such as a prefix, suffix, or separator that is not part of the sheet number in the Revit model
+        /// Gets or sets the unique identifier assigned to the document in the DocManager database.
+        /// This identifier is used to link the sheet to its corresponding document in the database.
+        /// This may be different from the sheet number stored in the Revit model, as the sheet number
+        /// in the Revit model may only be a part of the full document number used in the database.
+        /// The document number in the database may include additional properties such as a prefix,
+        /// suffix, or separator that is not part of the sheet number in the Revit model.
+        /// </summary>
         public string DocumentNumber { get; set; }
 
 
         private List<RevitRevisionOnSheet> _revisionsOnSheet;
         public List<RevitRevisionOnSheet> RevisionsOnSheet { get { return _revisionsOnSheet; } }
-        
-        
+
+
         private List<RevitDocumentProperty> _documentProperties;
         public List<RevitDocumentProperty> DocumentProperties { get { return _documentProperties; } }
 
         public RevitSheet(
-            string sheetNumber, 
+            string sheetNumber,
             string sheetName)
         {
-            
             SheetNumber = new(Constants.PropertyValueSheetNumber, sheetNumber);
             SheetName = new(Constants.PropertyNameSheetName, sheetName);
             _revisionsOnSheet = [];
@@ -84,7 +87,7 @@ namespace duHastNet.DocManager.Revit.Utilities.RevitData
                 throw new ArgumentNullException(nameof(documentProperty), "Property cannot be null.");
             }
 
-            //check if a property with this name allready exists
+            //check if a property with this name already exists
             foreach (var existingProperty in _documentProperties)
             {
                 if (existingProperty.Conflicts(documentProperty))
@@ -96,7 +99,7 @@ namespace duHastNet.DocManager.Revit.Utilities.RevitData
             //no conflict found - add property to list
             _documentProperties.Add(documentProperty);
         }
-        
+
         public override string ToString()
         {
             return $"Sheet Number: {SheetNumber}, Sheet Name: {SheetName}, Revisions on Sheet: {string.Join("; \n", RevisionsOnSheet)}, Document Properties: {string.Join("; \n", DocumentProperties)}";

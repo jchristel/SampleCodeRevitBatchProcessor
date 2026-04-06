@@ -21,40 +21,31 @@
 //
 //
 
-namespace duHastNet.DocManager.Revit.Utilities.RevitData
+using duHastNet.DocManager.Revit.Utilities.RevitData;
+
+namespace duHastNet.DocManager.Revit.Exceptions
 {
-    /// <summary>
-    /// A simple class to represent a Revit revision, with a date and description.
-    /// </summary>
-    public class RevitRevision
+    public class RevitRevisionDuplicateException : Exception
     {
-        public Int64 RevitRevisionElementId { get; set; }
-        public string RevisionDate { get; set; }
-        public string RevisionDescription { get; set; }
+        public RevitRevision ExistingRevision { get; }
+        public RevitRevision NewRevision { get; }
 
-        public RevitRevision(Int64 revitRevisionElementId, string revisionDate, string revisionDescription)
+        public RevitRevisionDuplicateException(RevitRevision existingRevision, RevitRevision newRevision)
         {
-            RevitRevisionElementId = revitRevisionElementId;
-            RevisionDate = revisionDate ?? throw new ArgumentNullException(nameof(revisionDate));
-            RevisionDescription = revisionDescription ?? throw new ArgumentNullException(nameof(revisionDescription));
+            ExistingRevision = existingRevision;
+            NewRevision = newRevision;
         }
 
-        public RevitRevision()
+        public RevitRevisionDuplicateException(string message, RevitRevision existingRevision, RevitRevision newRevision) : base(message)
         {
-            RevitRevisionElementId = 0;
-            RevisionDate = string.Empty;
-            RevisionDescription = string.Empty;
+            ExistingRevision = existingRevision;
+            NewRevision = newRevision;
         }
 
-        public bool Conflicts(RevitRevision other)
+        public RevitRevisionDuplicateException(string message, Exception innerException, RevitRevision existingRevision, RevitRevision newRevision) : base(message, innerException)
         {
-            //check for conflict by element id, as there cannot be two revisions with the same element id in Revit.
-            return RevitRevisionElementId == other.RevitRevisionElementId;
-        }
-
-        public override string ToString()
-        {
-            return $"Revision Element Id: {RevitRevisionElementId}, Revision Date: {RevisionDate}, Revision Description: {RevisionDescription}";
+            ExistingRevision = existingRevision;
+            NewRevision = newRevision;
         }
     }
 }

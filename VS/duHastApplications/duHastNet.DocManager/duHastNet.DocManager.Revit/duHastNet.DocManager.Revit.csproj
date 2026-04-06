@@ -5,6 +5,8 @@
 
 		<!-- Include WPF -->
 		<UseWPF>true</UseWPF>
+    <!-- Set supported OS platform version to Windows 7 -->
+    <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
 		<!-- Enable implicit usings -->
 		<ImplicitUsings>enable</ImplicitUsings>
 		<!-- Enable nullable reference types -->
@@ -54,6 +56,11 @@
 			<HintPath>..\\..\\..\\_References\\Autodesk\\RevitAPIUI.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
+    <!-- doc manager settings dll reference -->
+    <Reference Include="DocManagerSettingsUI.25.0.1.1">
+      <HintPath>..\\..\\..\\_References\\duHast\\DocManagerSettingsUI.25.0.1.1.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <!-- utility dll reference -->
     <Reference Include="Utils.25.0.1.1">
       <HintPath>..\\..\\..\\_References\\duHast\\Utils.25.0.1.1.dll</HintPath>

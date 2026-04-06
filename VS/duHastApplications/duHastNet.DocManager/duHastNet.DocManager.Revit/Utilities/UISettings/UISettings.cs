@@ -21,36 +21,18 @@
 //
 //
 
-using System.IO;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace duHastNet.DocManager.Revit.Utilities
+namespace duHastNet.DocManager.Revit.Utilities.UISettings
 {
-    public static class SettingsUtils
+    /// <summary>
+    /// just a placeholder for now
+    /// </summary>
+    public class UISettings
     {
-        public static string settingsDirectory = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "duHast");
-
-        public static string settingsFileNamePrefix = "docManagerRevit_settings_";
-        private static string settingsFilePath = Path.Combine(settingsDirectory, "docManagerRevit_settings.json");
-
-        public static void SaveSettings(Models.Settings settings)
-        {
-
-        }
-
-        public static Models.Settings LoadSettings()
-        {
-            return new Models.Settings();
-        }
-
-        /// <summary>
-        /// Will eventually load the settings stored in the Revit model, if they exist. For now, this is a placeholder that returns an empty string.
-        /// </summary>
-        /// <param name="doc">The Revit document from which to load the settings.</param>
-        /// <returns></returns>
-        public static string LoadSettingsFromRevitModel(Autodesk.Revit.DB.Document doc)
-        {
-            return string.Empty;
-        }
     }
 }

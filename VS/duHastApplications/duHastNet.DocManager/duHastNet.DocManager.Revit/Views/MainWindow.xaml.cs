@@ -21,6 +21,7 @@
 //
 //
 
+using duHastNet.DocManager.Revit.Utilities.UISettings;
 using System.Windows;
 
 namespace duHastNet.DocManager.Revit.Views
@@ -30,13 +31,13 @@ namespace duHastNet.DocManager.Revit.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        Models.Settings _settings;
-        public MainWindow(Models.Settings settings)
+        UISettings _uiSettings;
+        public MainWindow(UISettings settings)
         {
             InitializeComponent();
             this.Closing += MainWindow_Closing;
 
-            _settings = settings;
+            _uiSettings = settings;
 
         }
 
@@ -48,7 +49,7 @@ namespace duHastNet.DocManager.Revit.Views
             }
 
             // store settings
-            Utilities.SettingsUtils.SaveSettings(_settings);
+            UISettingsUtils.SaveSettings(_uiSettings);
         }
     }
 }

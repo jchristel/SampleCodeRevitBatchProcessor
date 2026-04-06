@@ -28,40 +28,43 @@ namespace duHastNet.DocManager.Revit.Utilities
 {
     public static class DocumentNumberBuilder
     {
-        public static string GetDocumentNumber(Utilities.RevitData.RevitSheet sheet, ObservableCollection<duHastNet.DocManager.Revit.Utilities.DocumentSetting> settings)
+        public static string GetDocumentNumber(Utilities.RevitData.RevitSheet sheet, ObservableCollection<duHastNet.UI.DocManagerSettingsUI.Utils.DocumentSetting> settings)
         {
 
             StringBuilder docNumber = new();
 
-            foreach (var setting in settings)
+            // check if settings are available, if not return empty string
+            if (settings != null)
             {
-                // add the prefix
-                docNumber.Append(setting.Prefix);
-
-                //get the sheet property and its value
-                //check for sheet number ( works in english only??)
-                if (setting.PropertyName == RevitData.Constants.PropertyValueSheetNumber)
-                    docNumber.Append(sheet.SheetNumber.Value);
-                else if (setting.PropertyName == RevitData.Constants.PropertyNameSheetName)
-                    // sheet name check
-                    docNumber.Append(sheet.SheetName.Value);
-                else
+                foreach (var setting in settings)
                 {
-                    // must be another property
-                    if (sheet.DocumentProperties.Exists(x => x.Name == setting.PropertyName))
+                    // add the prefix
+                    docNumber.Append(setting.Prefix);
+
+                    //get the sheet property and its value
+                    //check for sheet number ( works in english only??)
+                    if (setting.PropertyName == RevitData.Constants.PropertyValueSheetNumber)
+                        docNumber.Append(sheet.SheetNumber.Value);
+                    else if (setting.PropertyName == RevitData.Constants.PropertyNameSheetName)
+                        // sheet name check
+                        docNumber.Append(sheet.SheetName.Value);
+                    else
                     {
-                        var prop = sheet.DocumentProperties.Find(x => x.Name == setting.PropertyName);
-                        docNumber.Append(prop.Value);
+                        // must be another property
+                        if (sheet.DocumentProperties.Exists(x => x.Name == setting.PropertyName))
+                        {
+                            var prop = sheet.DocumentProperties.Find(x => x.Name == setting.PropertyName);
+                            docNumber.Append(prop.Value);
+                        }
                     }
+
+
+                    //add the suffix
+                    docNumber.Append(setting.Suffix);
+                    //add the separator
+                    docNumber.Append(setting.Separator);
                 }
-
-
-                //add the suffix
-                docNumber.Append(setting.Suffix);
-                //add the separator
-                docNumber.Append(setting.Separator);
             }
-
             return docNumber.ToString();
         }
     }

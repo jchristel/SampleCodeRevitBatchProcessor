@@ -21,7 +21,6 @@
 //
 //
 
-using System.Collections.Generic;
 
 namespace duHastNet.DocManager.Revit.Utilities.RevitData
 {

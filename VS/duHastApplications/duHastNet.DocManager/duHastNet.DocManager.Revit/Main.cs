@@ -28,6 +28,8 @@ using Autodesk.Revit.UI;
 using System.Reflection;
 using System.IO;
 using duHastNet.Utils;
+using duHastNet.DocManager.Revit.Utilities.UISettings;
+using duHastNet.DocManager.Revit.Utilities.RevitSettings;
 
 namespace duHastNet.DocManager.Revit
 {
@@ -38,7 +40,9 @@ namespace duHastNet.DocManager.Revit
         duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
         duHastNet.Utils.WPF.Stores.StateStore _stateStore;
 
-        Revit.Models.Settings _settings;
+        duHastNet.UI.DocManagerSettingsUI.Utils.Settings _revitSettings;
+        Utilities.UISettings.UISettings _uiSettings;
+
 
         static Main()
         {
@@ -72,19 +76,22 @@ namespace duHastNet.DocManager.Revit
 
 
             // load settings from file, these are purely UI related and not the same as the settings stored in the revit model which are part of the data model, but we need them to set up the main window
-            _settings = duHastNet.DocManager.Revit.Utilities.SettingsUtils.LoadSettings();
-            //store the json string from the data model in the settings for now, so that we can pass it to the main window and then to the viewmodels
-            _settings.JsonString = _revitDataModel.SettingsAsJson;
+            _uiSettings = UISettingsUtils.LoadSettings();
+
+            //initialise the settings from the revit model settings json string,
+            //this will be used in the main window and passed to the view models via the constructor,
+            //so that they can access the settings as needed
+            _revitSettings = RevitSettingsUtils.InitialiseRevitSettings(_revitDataModel.SettingsAsJson);
 
             //process each sheet: build the document number as per past in settings
-            _revitDataModel.AddFullDocumentNumber(_settings.DocumentNumberingJsonString);
+            _revitDataModel.AddFullDocumentNumber(_revitSettings.DocumentNumberString);
 
             //set up the navigation store
             ViewModels.PyRevitDocumentListViewModel pocVm = CreatePOCViewModel();
             _navigationStore.CurrentViewModel = pocVm;
 
             //show the main window
-            duHastNet.DocManager.Revit.Views.MainWindow mainWindow = new(_settings)
+            duHastNet.DocManager.Revit.Views.MainWindow mainWindow = new(_uiSettings)
             {
                 DataContext = new ViewModels.MainViewModel(_navigationStore)
             };
@@ -123,7 +130,7 @@ namespace duHastNet.DocManager.Revit
             }
 
             // load settings from the revit model a json string and create the data model
-            string settingsAsJson = Utilities.SettingsUtils.LoadSettingsFromRevitModel(doc);
+            string settingsAsJson = RevitSettingsUtils.LoadSettingsFromRevitModel(doc);
             _revitDataModel = new Models.Revit.RevitDataModel(doc.Title, settingsAsJson);
 
             // get the revision and sheet data from the revit model using the utility method and store it in the data model
@@ -160,9 +167,9 @@ namespace duHastNet.DocManager.Revit
         private ViewModels.PyRevitDocumentListViewModel CreatePOCViewModel()
         {
             duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel globalMsgVm =
-                new duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);
+                new(_messageStore);
 
-            return new ViewModels.PyRevitDocumentListViewModel();
+            return new ViewModels.PyRevitDocumentListViewModel(_revitSettings, _uiSettings);
         }
         #endregion
 
@@ -171,8 +178,8 @@ namespace duHastNet.DocManager.Revit
         private void SetupLog()
         {
             //set up the logger
-            string logFilePath = Path.Combine(Utilities.SettingsUtils.settingsDirectory,
-                Utilities.SettingsUtils.settingsFileNamePrefix + DateTime.Now.ToString("yyyy-MM-dd") + ".txt");
+            string logFilePath = Path.Combine(UISettingsUtils.settingsDirectory,
+                UISettingsUtils.settingsFileNamePrefix + DateTime.Now.ToString("yyyy-MM-dd") + ".txt");
 
             if (_revitDataModel != null)
             {
@@ -187,9 +194,9 @@ namespace duHastNet.DocManager.Revit
             //delete old log files
             duHastNet.Utils.Logging.LogFileCleanup cleaner = new();
             cleaner.DeleteOldLogFilesFireAndForget(
-                directoryPath: Utilities.SettingsUtils.settingsDirectory, 
+                directoryPath: UISettingsUtils.settingsDirectory, 
                 olderThanDays: 5, 
-                fileNamePrefix: Utilities.SettingsUtils.settingsFileNamePrefix, 
+                fileNamePrefix: UISettingsUtils.settingsFileNamePrefix, 
                 fileExtension: "*.txt");
 
             if (_revitDataModel != null)

@@ -39,6 +39,9 @@ namespace duHastNet.DocManager.Revit.ViewModels
 
         private readonly DocManagerApi _docManagerApi;
         private const string HARDCODED_DATABASE_PATH = @"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager.Standalone.Tests\DataBaseTests\20251201_02.db";
+        private duHastNet.UI.DocManagerSettingsUI.Utils.Settings? _revitSettings;
+        private Utilities.UISettings.UISettings? _uiSettings;
+
 
         #endregion Private Fields
 
@@ -47,10 +50,21 @@ namespace duHastNet.DocManager.Revit.ViewModels
         /// <summary>
         /// Initializes the ViewModel with DocManager API
         /// </summary>
-        public PyRevitDocumentListViewModel()
+        public PyRevitDocumentListViewModel(duHastNet.UI.DocManagerSettingsUI.Utils.Settings revitSettings, Utilities.UISettings.UISettings uiSettings)
         {
             _docManagerApi = new DocManagerApi();
             Documents = new ObservableCollection<DocumentViewModel>();
+            _revitSettings = revitSettings;
+            _uiSettings = uiSettings;
+
+            //populate database path from settings if available, otherwise use hardcoded path
+            if (_revitSettings != null && !string.IsNullOrEmpty( _revitSettings.DatabasePath))
+            {
+                _databasePath = _revitSettings.DatabasePath;
+            }
+            else            {
+                _databasePath = HARDCODED_DATABASE_PATH;
+            }
         }
 
         #endregion Constructor
@@ -70,7 +84,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
         private int _totalDocuments = 0;
 
         [ObservableProperty]
-        private string _databasePath = HARDCODED_DATABASE_PATH;
+        private string _databasePath;
 
         [ObservableProperty]
         private bool _isDatabaseConnected = false;

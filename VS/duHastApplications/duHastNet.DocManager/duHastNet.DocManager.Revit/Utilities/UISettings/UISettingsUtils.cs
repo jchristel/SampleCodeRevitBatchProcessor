@@ -1,11 +1,11 @@
-//
+﻿//
 //License:
 //
 //
 // Revit Batch Processor Sample Code
 //
 // BSD License
-// Copyright 2025, Jan Christel
+// Copyright 2026, Jan Christel
 // All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -21,23 +21,25 @@
 //
 //
 
-using Newtonsoft.Json;
-using System.Collections.Generic;
+using System.IO;
 
-namespace duHastNet.DocManager.Revit.Models
+namespace duHastNet.DocManager.Revit.Utilities.UISettings
 {
-    public class Settings
+    public static class UISettingsUtils
     {
-        /// <summary>
-        /// TODO: update to include separation from document numbering settings
-        /// </summary>
-        public string JsonString { get; set; }
+        public static string settingsDirectory = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "duHast");
 
-        public string DocumentNumberingJsonString { get; set; }
-        public Settings()
+        public static string settingsFileNamePrefix = "docManagerRevit_settings_";
+        private static string settingsFilePath = Path.Combine(settingsDirectory, "docManagerRevit_settings.json");
+
+        public static void SaveSettings(UISettings settings)
         {
-            JsonString = string.Empty;
-            DocumentNumberingJsonString = string.Empty;
+        }
+
+        public static UISettings LoadSettings()
+        {
+            return new UISettings();
         }
     }
 }

@@ -37,8 +37,8 @@ namespace duHastNet.DocManager.Revit.Models.Revit
         /// <summary>
         /// sheet number settings
         /// </summary>
-        private ObservableCollection<Utilities.DocumentSetting> _sheetSettings;
-        public ObservableCollection<Utilities.DocumentSetting> SheetSettings
+        private ObservableCollection<duHastNet.UI.DocManagerSettingsUI.Utils.DocumentSetting> _sheetSettings;
+        public ObservableCollection<duHastNet.UI.DocManagerSettingsUI.Utils.DocumentSetting> SheetSettings
         { get => _sheetSettings; }
 
         public string ModelName { get; private set; }
@@ -172,7 +172,7 @@ namespace duHastNet.DocManager.Revit.Models.Revit
         public void AddFullDocumentNumber(string DocumentNumberingJsonString)
         {
             // get the pdf name settings
-            _sheetSettings = Utilities.SettingsStringParser.ParseRevitSheetNumberSettingsString(
+            _sheetSettings = duHastNet.UI.DocManagerSettingsUI.Utils.SettingsStringParser.ParseRevitSheetNumberSettingsString(
                 settingsString: DocumentNumberingJsonString,
                 availableParameters: _revitSheetContainer.GetSheetPropertyNames());
 

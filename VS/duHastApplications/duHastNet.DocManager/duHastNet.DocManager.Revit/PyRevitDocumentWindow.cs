@@ -21,8 +21,9 @@
 //
 //
 
-using System.Windows;
+using duHastNet.DocManager.Revit.ViewModels;
 using duHastNet.DocManager.Revit.Views;
+using System.Windows;
 
 namespace duHastNet.DocManager.Revit
 {
@@ -32,7 +33,7 @@ namespace duHastNet.DocManager.Revit
     /// </summary>
     public class PyRevitDocumentWindow : Window
     {
-        public PyRevitDocumentWindow()
+        public PyRevitDocumentWindow(duHastNet.UI.DocManagerSettingsUI.Utils.Settings revitSettings, Utilities.UISettings.UISettings uiSettings)
         {
             //InitializeComponent();
             
@@ -41,9 +42,11 @@ namespace duHastNet.DocManager.Revit
             Width = 1000;
             Height = 600;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            
+
+            var view = new PyRevitDocumentListView();
+            view.DataContext = new PyRevitDocumentListViewModel(revitSettings, uiSettings);
             // Add UserControl to window
-            Content = new PyRevitDocumentListView();
+            Content = view;
         }
     }
 }

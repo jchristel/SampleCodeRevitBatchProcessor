@@ -34,7 +34,6 @@ namespace duHastNet.DocManager.Revit.Views
         public PyRevitDocumentListView()
         {
             InitializeComponent();
-            DataContext = new PyRevitDocumentListViewModel();
         }
     }
 }

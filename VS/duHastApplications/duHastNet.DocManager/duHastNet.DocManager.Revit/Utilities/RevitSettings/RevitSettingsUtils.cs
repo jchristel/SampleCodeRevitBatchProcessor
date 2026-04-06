@@ -21,38 +21,45 @@
 //
 //
 
-namespace duHastNet.DocManager.Revit.Utilities
+using Autodesk.Revit.DB;
+using duHastNet.DocManager.Core.Models.Database;
+using duHastNet.UI.DocManagerSettingsUI.Utils;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace duHastNet.DocManager.Revit.Utilities.RevitSettings
 {
-    public class DocumentSetting
+    public static class RevitSettingsUtils
     {
-        public string Prefix { get; set; }
-        public string Suffix { get; set; }
-        public string Separator { get; set; }
-        public string PropertyName { get; set; }
-
-
-        public DocumentSetting() 
-        { 
-            Prefix = string.Empty;
-            Suffix = string.Empty;
-            Separator = string.Empty;
-            PropertyName = string.Empty;
+        public static string LoadSettingsFromRevitModel(Document doc)
+        {
+            // load settings from Revit model, e.g. from extensible storage
+            return string.Empty;
         }
 
-        public DocumentSetting(string propertyName)
+
+        public static void SaveSettingsToRevitModel(Document doc, string settingsJson)
         {
-            PropertyName = propertyName;
-            Prefix = string.Empty;
-            Suffix = string.Empty;
-            Separator = string.Empty;
+            // save settings to Revit model, e.g. to extensible storage
+
         }
 
-        public DocumentSetting(string prefix, string suffix, string separator, string propertyName)
+
+        /// <summary>
+        /// Initialises the settings object for the UI from a JSON string loaded from the Revit model.
+        /// </summary>
+        /// <param name="settingsJson">JSON string containing the settings loaded from the Revit model.</param>
+        /// <returns>Initialised settings object for the UI.</returns>
+        public static duHastNet.UI.DocManagerSettingsUI.Utils.Settings InitialiseRevitSettings(string settingsJson)
         {
-            Prefix = prefix;
-            Suffix = suffix;
-            Separator = separator;
-            PropertyName = propertyName;
+            // initialise settings from json, e.g. by deserialisation
+            // use function from settings utils to convert from json to settings object
+            duHastNet.UI.DocManagerSettingsUI.Utils.Settings deserializedSettings = duHastNet.UI.DocManagerSettingsUI.Utils.SettingsFromRevit.InitialiseSettingsFromRevitJson(settingsJson);
+            return deserializedSettings;
         }
     }
 }

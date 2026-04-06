@@ -34,19 +34,32 @@ namespace duHastNet.UI.DocManagerSettingsUI.Utils
         /// parse the settings string for PDF export
         /// <paramref name="settingsString"/> is the settings string to parse 
         /// </summary>
-        public static ObservableCollection<DocumentSetting> ParseDocumentNumberSettingsString(string settingsString, List<string> availableParameters)
+        public static ObservableCollection<DocumentSetting> ParseRevitSheetNumberSettingsString(string settingsString, List<string> availableParameters)
         {
-            List<DocumentSetting> deserializedSettings = JsonConvert.DeserializeObject<List<DocumentSetting>>(settingsString);
-
+            
             // Create a new ObservableCollection to hold the valid settings
             ObservableCollection<DocumentSetting> settings = [];
 
-            // Check if the settings are valid (e.g., if the parameters are available)
-            foreach (DocumentSetting setting in deserializedSettings)
+            // Check if the input string is null or empty
+            if (string.IsNullOrEmpty(settingsString))
             {
-                if (availableParameters.Contains(setting.PropertyName))
+                return settings; // Return an empty collection if the input string is null or empty
+            }
+
+            // Deserialize the JSON string into a list of DocumentSetting objects
+            List<DocumentSetting> deserializedSettings = JsonConvert.DeserializeObject<List<DocumentSetting>>(settingsString);
+
+
+            // Check if the deserialization was successful and if there are any settings
+            if (deserializedSettings != null && deserializedSettings.Count > 0)
+            {
+                // Check if the settings are valid (e.g., if the parameters are available)
+                foreach (DocumentSetting setting in deserializedSettings)
                 {
-                    settings.Add(setting);
+                    if (availableParameters.Contains(setting.PropertyName))
+                    {
+                        settings.Add(setting);
+                    }
                 }
             }
 
@@ -56,7 +69,7 @@ namespace duHastNet.UI.DocManagerSettingsUI.Utils
         }
 
         /// <summary>
-        /// Convert the settings to a string for PDF export
+        /// Convert the settings to a string for json export
         /// </summary>
         /// <param name="settings"></param>
         /// <returns></returns>

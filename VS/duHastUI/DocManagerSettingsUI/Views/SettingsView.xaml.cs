@@ -57,7 +57,7 @@ namespace duHastNet.UI.DocManagerSettingsUI.Views
         private void PickFile_OnClick(object sender, EventArgs e)
         {
             var dialog = new Microsoft.Win32.OpenFileDialog();
-            dialog.Filter = "csv Files (*.csv)|*.csv|All Files (*.*)|*.*";
+            dialog.Filter = "db Files (*.db)|*.db|All Files (*.*)|*.*";
             var dialogResult = dialog.ShowDialog();
             if (dialogResult == true)
             {

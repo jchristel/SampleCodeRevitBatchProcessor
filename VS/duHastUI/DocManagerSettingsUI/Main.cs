@@ -47,11 +47,8 @@ namespace duHastNet.UI.DocManagerSettingsUI
             _messageStore = new MessageStore();
 
             //set up a setting object
-            _settings = new Utils.Settings(
-                documentNumberString: currentDocumentNumberString,
-                databasePath: string.Empty
-            );
-
+            _settings = Utils.SettingsFromRevit.InitialiseSettingsFromRevitJson(currentDocumentNumberString);
+                
             //set up the export data model
             _exportDataModel = new Models.ExportDataModel
             {

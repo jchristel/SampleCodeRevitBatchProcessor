@@ -4,6 +4,9 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <!-- Set supported OS platform version to Windows 7 -->
+    <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+    
     <RootNamespace>duHastNet.UI.DocManagerSettingsUI</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     

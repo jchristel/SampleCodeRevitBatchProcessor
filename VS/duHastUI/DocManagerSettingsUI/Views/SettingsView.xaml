@@ -58,7 +58,7 @@
             <TextBox 
                 x:Name="DatabaseFilePathTextBox"
                 Grid.Column="1" 
-                Text="{Binding DatabasePath, 
+                Text="{Binding DatabaseFilePath, 
                 Mode=TwoWay, 
                 UpdateSourceTrigger=PropertyChanged}" 
                 IsReadOnly="True"

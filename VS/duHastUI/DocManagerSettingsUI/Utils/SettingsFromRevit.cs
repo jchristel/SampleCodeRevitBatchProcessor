@@ -1,4 +1,5 @@
-﻿//
+﻿
+//
 //License:
 //
 //
@@ -21,32 +22,36 @@
 //
 //
 
-
 using Newtonsoft.Json;
 
 namespace duHastNet.UI.DocManagerSettingsUI.Utils
 {
-    public class Settings
+    public static class SettingsFromRevit
     {
-        public string DocumentNumberString { get; set; }
-
-        public string DatabasePath { get; set; }
-
-        public Settings()
+        public static Settings InitialiseSettingsFromRevitJson(string jsonString)
         {
-            DocumentNumberString = string.Empty;
-            DatabasePath = string.Empty;
-        }
+            Settings settings;
 
-        public Settings(string documentNumberString, string databasePath)
-        {
-            DocumentNumberString = documentNumberString;
-            DatabasePath = databasePath;
-        }
+            var trimmed = jsonString.TrimStart();
 
-        public override string ToString()
-        {
-            return $"DocumentNumberString: {DocumentNumberString}\nDatabasePath: {DatabasePath}";
+            // this will take care of both formats - if it starts with [ it's the old format, otherwise it's the new format
+            if (trimmed.StartsWith("["))
+            {
+                // Old format - JSON array of DocumentNumberPart
+                var parts = JsonConvert.DeserializeObject<List<DocumentSetting>>(jsonString) ?? new List<DocumentSetting>();
+                settings = new Settings
+                {
+                    DocumentNumberString = JsonConvert.SerializeObject(parts),
+                    DatabasePath = string.Empty
+                };
+            }
+            else
+            {
+                // New format - Settings object
+                settings = JsonConvert.DeserializeObject<Settings>(jsonString) ?? new Settings();
+            }
+
+            return settings;
         }
     }
 }

@@ -348,7 +348,7 @@ namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
             }
 
             //parse the settings string and add the values
-            ObservableCollection<Utils.DocumentSetting> documentSettings = Utils.SettingsStringParser.ParseDocumentNumberSettingsString(
+            ObservableCollection<Utils.DocumentSetting> documentSettings = Utils.SettingsStringParser.ParseRevitSheetNumberSettingsString(
                 _exportDataModel.Settings.DocumentNumberString,
                 _exportDataModel.ParameterNames
             );
@@ -540,7 +540,8 @@ namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
 
             // save the settings to the export data model
             _exportDataModel.Settings.DocumentNumberString = Utils.SettingsStringParser.ConvertSettingsToDocumentNumberString(_documentSettings);
-
+            _exportDataModel.Settings.DatabasePath = DatabaseFilePath;
+            
             if (window != null)
             {
                 window.Close(); // Closes the window

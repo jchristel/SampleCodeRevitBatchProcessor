@@ -633,3 +633,17 @@ Samples/Flows/TheChain/_00_ReportFamilyData/_Users/*
 
 #include any .msi files in the /Samples/Apps folder
 !Samples/Apps/**/*.msi
+VS/duHastUI/DocManagerUI/DocManagerUI.csproj
+VS/duHastUI/DocManagerUI/docs/01_overview.md
+VS/duHastUI/DocManagerUI/Exceptions/DocumentPropertyDuplicateException.cs
+VS/duHastUI/DocManagerUI/Exceptions/RevisionDuplicateException.cs
+VS/duHastUI/DocManagerUI/Exceptions/RevisionOnSheetDuplicateException.cs
+VS/duHastUI/DocManagerUI/Main.cs
+VS/duHastUI/DocManagerUI/Models/Revit/RevitDataModel.cs
+VS/duHastUI/DocManagerUI/Models/Revit/RevitRevisionContainer.cs
+VS/duHastUI/DocManagerUI/Models/Revit/RevitSheetContainer.cs
+VS/duHastUI/DocManagerUI/Utils/RevitData/RevitDocumentProperty.cs
+VS/duHastUI/DocManagerUI/Utils/RevitData/RevitRevision.cs
+VS/duHastUI/DocManagerUI/Utils/RevitData/RevitRevisionOnSheet.cs
+VS/duHastUI/DocManagerUI/Utils/RevitData/RevitSheet.cs
+VS/duHastUI/DocManagerUI/ViewModels/AppViewModelBase.cs

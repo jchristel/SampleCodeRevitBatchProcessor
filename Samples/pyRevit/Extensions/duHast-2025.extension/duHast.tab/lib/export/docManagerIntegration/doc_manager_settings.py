@@ -23,6 +23,7 @@
 import clr
 import os
 import sys
+import json
 
 from System.Collections.Generic import List
 
@@ -164,18 +165,18 @@ def doc_manager_settings_entry(doc, uiapp, output, forms):
         stored_entity = data_storage.GetEntity(schema)
         
         if DEBUG:
-            print("...stored entity: [{}]".format(stored_entity))
+            print("...stored entity: >>{}<<".format(stored_entity))
         
         if stored_entity.IsValid():
             # get the docManager settings from the entity
             doc_manager_settings = stored_entity.Get[str](settings.DU_HAST_DOC_MANAGER_SETTINGS_FIELD_NAME )
             if DEBUG:
-                print("...docManager settings from storage: [{}]".format( doc_manager_settings))
+                print("...docManager settings from storage: >>{}<<".format( doc_manager_settings))
             
         else:
-            print_error("...invalid Entity: [{}]".format(stored_entity))
+            print_error("...invalid Entity: >>{}<<".format(stored_entity))
             return_value.update_sep(
-                False, "Invalid entity: [{}]".format(stored_entity)
+                False, "Invalid entity: >>{}<<".format(stored_entity)
             )
             return return_value
 
@@ -183,7 +184,7 @@ def doc_manager_settings_entry(doc, uiapp, output, forms):
         parameter_names = get_sheet_parameter_names(doc)
         
         if DEBUG:
-            print("...parameter names assigned to sheets: [{}]".format(parameter_names))
+            print("...parameter names assigned to sheets: >>{}<<".format(parameter_names))
         
         # check if the parameters are empty
         if parameter_names.Count == 0:
@@ -204,19 +205,27 @@ def doc_manager_settings_entry(doc, uiapp, output, forms):
 
         if DEBUG:
             # get the settings from the UI
-            print("Document number string: [{}]".format(
-                export_settings.DocumentNumberString
+            print("settings: >>{}<<".format(
+                export_settings
                 ))
         
         settings_string = export_settings.DocumentNumberString if export_settings.DocumentNumberString else ""
+        database_string = export_settings.DatabasePath if export_settings.DatabasePath else ""
+        
+        # store as json object which can be deserialized later to retrieve the individual settings values in c#
+        # property names need to match 
+        combined = json.dumps({"DocumentNumberString": settings_string, "DatabasePath": database_string})
+        
+        if DEBUG:
+            print("Combined settings string: >>{}<<".format(combined))
         
         # save the settings in the file
         # Set the fields for docManager settings
-        stored_entity.Set(settings.DU_HAST_DOC_MANAGER_SETTINGS_FIELD_NAME, settings_string)
+        stored_entity.Set(settings.DU_HAST_DOC_MANAGER_SETTINGS_FIELD_NAME, combined)
         
 
         if DEBUG:
-            print("...stored pdf settings: [{}]".format(settings_string))
+            print("...stored pdf settings: >>{}<<".format(combined))
             
         # update the data storage with the new entity and save it to the project information object
         update_entity_result = update_entity_on_data_storage(doc, data_storage, stored_entity)
@@ -228,27 +237,27 @@ def doc_manager_settings_entry(doc, uiapp, output, forms):
             return_value.update_sep(False, message)
         else:
             if DEBUG:
-                print("...updated data storage: [{}]".format(update_entity_result.message))
+                print("...updated data storage: >>{}<<".format(update_entity_result.message))
         
         settings_verify = stored_entity.Get[str](settings.DU_HAST_DOC_MANAGER_SETTINGS_FIELD_NAME)
 
         # check if the settings have been stored successfully
-        if settings_verify != settings_string:
-            message = "Failed to verify settings: [{}]".format(settings_verify)
+        if settings_verify != combined:
+            message = "Failed to verify settings: >>{}<<".format(settings_verify)
             print_error(message)
             return_value.update_sep(False, message)
         else:
-            message = "Verified settings: [{}]".format(settings_verify)
+            message = "Verified settings: >>{}<<".format(settings_verify)
             return_value.append_message(message)
             if DEBUG:
-                print("...verified settings: [{}]".format(settings_verify))
+                print("...verified settings: >>{}<<".format(settings_verify))
 
         if DEBUG:
-            print("...export settings updated successfully.")
+            print("...doc manager settings updated successfully.")
 
     except Exception as e:
         # handle any exceptions that occur during the export process
-        message = "An error occurred while processing export settings: {}".format(e)
+        message = "An error occurred while processing doc manager settings: {}".format(e)
         return_value.update_sep(
             False, message
         )

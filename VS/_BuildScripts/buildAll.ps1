@@ -229,14 +229,15 @@ Copy-DLLs $solution2 @($commonDir)
 # Build Revit Applications only
 Build-Solution $solution3
 
-# Build doc manager applications
-Build-Solution $solution4
-# copy to common for Revit integration
-Copy-DLLs $solution4 @($commonDir)
-
 # Build and copy DLLs for UI → Target 3
 Build-Solution $solution5
 Copy-DLLs $solution5 @($targetDirSolution5)
+Copy-DLLs $solution5 @($commonDir)
+
+# Build doc manager applications last to ensure all dependencies are in place
+Build-Solution $solution4
+# copy to common for Revit integration
+Copy-DLLs $solution4 @($commonDir)
 
 Write-Host "Build and copy process completed for branch: $currentBranch!" -ForegroundColor Green
 Write-Host "Base path used: $basePath" -ForegroundColor Green

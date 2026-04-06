@@ -11,6 +11,7 @@ $project6Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProces
 $project7Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastUI"
 $project8Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager"
 $project9Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastRevitApplications\PushIt"
+$project10Path ="C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor-NET8\VS\duHastApplications\duHastNet.DocManager\duHastNet.DocManager.Revit"
 
 # Define the temp folder destination
 $tempFolder = "$env:TEMP\ProjectFilesCopy"
@@ -75,8 +76,8 @@ function Copy-ProjectFiles {
 }
 
 # Copy files from both projects
-# Write-Host "`nCopying files from Project 1..." -ForegroundColor White
-# Copy-ProjectFiles -sourcePath $project1Path -projectName "Project1" -destination $tempFolder
+Write-Host "`nCopying files from Project 1..." -ForegroundColor White
+Copy-ProjectFiles -sourcePath $project1Path -projectName "Project1" -destination $tempFolder
 
 # Write-Host "`nCopying files from Project 2..." -ForegroundColor White
 # Copy-ProjectFiles -sourcePath $project2Path -projectName "Project2" -destination $tempFolder
@@ -99,8 +100,11 @@ function Copy-ProjectFiles {
 #Write-Host "`nCopying files from Project 8..." -ForegroundColor White
 #Copy-ProjectFiles -sourcePath $project8Path -projectName "Project8" -destination $tempFolder
 
-Write-Host "`nCopying files from Project 9..." -ForegroundColor White
-Copy-ProjectFiles -sourcePath $project9Path -projectName "Project9" -destination $tempFolder
+#Write-Host "`nCopying files from Project 9..." -ForegroundColor White
+#Copy-ProjectFiles -sourcePath $project9Path -projectName "Project9" -destination $tempFolder
+
+Write-Host "`nCopying files from Project 10..." -ForegroundColor White
+Copy-ProjectFiles -sourcePath $project10Path -projectName "Project10" -destination $tempFolder
 
 Write-Host "`nAll files copied successfully to: $tempFolder" -ForegroundColor Green
 Write-Host "Opening destination folder..." -ForegroundColor Gray

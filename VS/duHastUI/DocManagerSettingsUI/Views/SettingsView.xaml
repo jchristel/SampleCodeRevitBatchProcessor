@@ -19,6 +19,8 @@
             <RowDefinition Height="Auto"/>
             <!--database path-->
             <RowDefinition Height="Auto"/>
+            <!-- document property selection -->
+            <RowDefinition Height="Auto"/>
             <!-- data -->
             <RowDefinition Height="*"/>
             <!-- buttons export import-->
@@ -71,8 +73,26 @@
                 Content="Browse"
                 Click="PickFile_OnClick"/>
         </Grid>
+        <!-- document property combo box -->
+        <Grid Grid.Row="3" Margin="0 0 0 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                Text="Document Property:"
+                VerticalAlignment="Center"
+                Margin="0 0 5 0"/>
+            <ComboBox
+                Grid.Column="1"
+                ItemsSource="{Binding DocumentPropertyOptions}"
+                SelectedIndex="{Binding SelectedIndexDocumentProperty, Mode=TwoWay}"
+                DisplayMemberPath="DisplayName"
+                Margin="5 5 5 5"/>
+        </Grid>
         <!-- grid view -->
-        <Border Grid.Row="3" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+        <Border Grid.Row="4" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
             <Grid Margin="5 5 5 5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -177,7 +197,7 @@
             </Grid>
         </Border>
         <!-- export and import buttons -->
-        <Border Grid.Row="4" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+        <Border Grid.Row="5" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
             <Grid Margin="5 2 5 2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -211,7 +231,7 @@
             </Grid>
         </Border>
         <!-- save row content -->
-        <Border Grid.Row="5" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+        <Border Grid.Row="6" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
             <Grid Margin="5 2 5 2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

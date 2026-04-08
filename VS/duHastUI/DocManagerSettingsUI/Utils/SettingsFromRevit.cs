@@ -1,4 +1,4 @@
-﻿
+
 //
 //License:
 //
@@ -41,13 +41,15 @@ namespace duHastNet.UI.DocManagerSettingsUI.Utils
                 var parts = JsonConvert.DeserializeObject<List<DocumentSetting>>(jsonString) ?? new List<DocumentSetting>();
                 settings = new Settings
                 {
-                    DocumentNumberString = JsonConvert.SerializeObject(parts),
+                    DocumentNumberBuilderString = JsonConvert.SerializeObject(parts),
                     DatabasePath = string.Empty
                 };
             }
             else
             {
                 // New format - Settings object
+                // DocumentNumberBuilderString is populated from JSON if present;
+                // defaults to string.Empty for files written before this property existed.
                 settings = JsonConvert.DeserializeObject<Settings>(jsonString) ?? new Settings();
             }
 

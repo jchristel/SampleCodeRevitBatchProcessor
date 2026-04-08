@@ -5,7 +5,7 @@
 // Revit Batch Processor Sample Code
 //
 // BSD License
-// Copyright 2025, Jan Christel
+// Copyright 2026, Jan Christel
 // All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -21,36 +21,34 @@
 //
 //
 
-
-using Newtonsoft.Json;
-
 namespace duHastNet.UI.DocManagerSettingsUI.Utils
 {
-    public class Settings
+    /// <summary>
+    /// Represents a selectable document property available in the document property combo box.
+    /// </summary>
+    public class DocumentPropertyOption
     {
         /// <summary>
-        /// JSON-serialised list of DocumentSetting objects that define the document number builder rule.
-        /// Renamed from DocumentNumberString for clarity.
+        /// The internal key identifying this property (e.g. "DocumentNumber", "DocumentName").
         /// </summary>
-        public string DocumentNumberBuilderString { get; set; }
+        public string Key { get; }
 
-        public string DatabasePath { get; set; }
+        /// <summary>
+        /// The label shown to the user in the combo box.
+        /// </summary>
+        public string DisplayName { get; }
 
-        public Settings()
+        /// <summary>
+        /// Constructor for the DocumentPropertyOption class.
+        /// </summary>
+        /// <param name="key">The internal key identifying this property.</param>
+        /// <param name="displayName">The label shown to the user in the combo box.</param>
+        public DocumentPropertyOption(string key, string displayName)
         {
-            DocumentNumberBuilderString = string.Empty;
-            DatabasePath = string.Empty;
+            Key = key;
+            DisplayName = displayName;
         }
 
-        public Settings(string documentNumberBuilderString, string databasePath)
-        {
-            DocumentNumberBuilderString = documentNumberBuilderString;
-            DatabasePath = databasePath;
-        }
-
-        public override string ToString()
-        {
-            return $"DocumentNumberBuilderString: {DocumentNumberBuilderString}\nDatabasePath: {DatabasePath}";
-        }
+        public override string ToString() => DisplayName;
     }
 }

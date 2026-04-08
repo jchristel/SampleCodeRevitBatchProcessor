@@ -21,36 +21,47 @@
 //
 //
 
-
-using Newtonsoft.Json;
-
 namespace duHastNet.UI.DocManagerSettingsUI.Utils
 {
-    public class Settings
+    public static class Constants
     {
+        #region sheet property names
+
         /// <summary>
-        /// JSON-serialised list of DocumentSetting objects that define the document number builder rule.
-        /// Renamed from DocumentNumberString for clarity.
+        /// The property name used to identify the sheet name in Revit.
+        /// Used as the key in the document number builder rule and in sheet property lookups.
         /// </summary>
-        public string DocumentNumberBuilderString { get; set; }
+        public const string PropertyNameSheetName = "Sheet Name";
 
-        public string DatabasePath { get; set; }
+        /// <summary>
+        /// The property name used to identify the sheet number in Revit.
+        /// Used as the key in the document number builder rule and in sheet property lookups.
+        /// </summary>
+        public const string PropertyNameSheetNumber = "Sheet Number";
 
-        public Settings()
-        {
-            DocumentNumberBuilderString = string.Empty;
-            DatabasePath = string.Empty;
-        }
+        /// <summary>
+        /// The property name used to identify the Revit element id of the sheet.
+        /// </summary>
+        public const string PropertyNameSheetRevitId = "SheetRevitId";
 
-        public Settings(string documentNumberBuilderString, string databasePath)
-        {
-            DocumentNumberBuilderString = documentNumberBuilderString;
-            DatabasePath = databasePath;
-        }
+        #endregion sheet property names
 
-        public override string ToString()
-        {
-            return $"DocumentNumberBuilderString: {DocumentNumberBuilderString}\nDatabasePath: {DatabasePath}";
-        }
+        #region document property keys
+
+        /// <summary>
+        /// The key used in the DocumentProperties dictionary on a sheet to store
+        /// the built document number value. Must match the Key on the corresponding
+        /// DocumentPropertyOption in ExportDataModel.
+        /// </summary>
+        public const string DocumentPropertyKeyDocumentNumber = "DocumentNumber";
+
+        /// <summary>
+        /// The key used in the DocumentProperties dictionary on a sheet to store
+        /// the built document name value. Must match the Key on the corresponding
+        /// DocumentPropertyOption in ExportDataModel.
+        /// </summary>
+        public const string DocumentPropertyKeyDocumentName = "DocumentName";
+
+        #endregion document property keys
     }
 }

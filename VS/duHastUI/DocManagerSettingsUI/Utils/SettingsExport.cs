@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -36,11 +36,11 @@ namespace duHastNet.UI.DocManagerSettingsUI.Utils
         {
             try
             {
-                // Convert the collection to a JSON string (the DocumentNumberString format)
-                string documentNumberString = SettingsStringParser.ConvertSettingsToDocumentNumberString(settings);
+                // Convert the collection to a JSON string (the DocumentNumberBuilderString format)
+                string documentNumberBuilderString = SettingsStringParser.ConvertSettingsToDocumentNumberString(settings);
 
                 // Create a Settings object with the serialized string
-                Settings settingsObject = new Settings(documentNumberString, string.Empty);
+                Settings settingsObject = new Settings(documentNumberBuilderString, string.Empty);
 
                 // Serialize the Settings object to JSON
                 string json = Newtonsoft.Json.JsonConvert.SerializeObject(settingsObject, Newtonsoft.Json.Formatting.Indented);

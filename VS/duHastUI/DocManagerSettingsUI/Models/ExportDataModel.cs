@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -36,6 +36,13 @@ namespace duHastNet.UI.DocManagerSettingsUI.Models
         /// </summary>
         public List<string> ParameterNames { get; }
 
+        /// <summary>
+        /// The document property options available for selection in the combo box.
+        /// Pre-populated with the two standard options. Additional options (e.g. custom
+        /// database properties) may be appended via AddDocumentPropertyOption() before
+        /// the view model is constructed.
+        /// </summary>
+        public List<DocumentPropertyOption> DocumentPropertyOptions { get; }
 
         /// <summary>
         /// Add a parameter name to the list of available parameters
@@ -43,9 +50,18 @@ namespace duHastNet.UI.DocManagerSettingsUI.Models
         /// <param name="parameterName"> name of the parameter to add</param>
         public void AddParameterName(string parameterName)
         {
-
             if (!ParameterNames.Contains(parameterName))
                 ParameterNames.Add(parameterName);
+        }
+
+        /// <summary>
+        /// Adds a document property option to the available options list if it is not already present.
+        /// </summary>
+        /// <param name="option">The document property option to add.</param>
+        public void AddDocumentPropertyOption(DocumentPropertyOption option)
+        {
+            if (option != null && !DocumentPropertyOptions.Any(o => o.Key == option.Key))
+                DocumentPropertyOptions.Add(option);
         }
 
         /// <summary>
@@ -57,6 +73,16 @@ namespace duHastNet.UI.DocManagerSettingsUI.Models
             _settings = new Utils.Settings();
 
             ParameterNames = [];
+
+            // Initialize the document property options with the two standard options.
+            // Document Number is first so index 0 always maps to it.
+            // Keys must match the constants in Utils.Constants to ensure consistency
+            // with the DocumentProperties dictionary populated on each RevitSheet.
+            DocumentPropertyOptions =
+            [
+                new Utils.DocumentPropertyOption(Utils.Constants.DocumentPropertyKeyDocumentNumber, "Document Number"),
+                new Utils.DocumentPropertyOption(Utils.Constants.DocumentPropertyKeyDocumentName,   "Document Name")
+            ];
         }
     }
 }

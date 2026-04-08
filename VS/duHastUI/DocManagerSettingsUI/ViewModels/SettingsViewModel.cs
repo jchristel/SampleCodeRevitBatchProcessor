@@ -98,6 +98,28 @@ namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
 
         #endregion column names
 
+        #region document property combo box
+
+        /// <summary>
+        /// The list of document property options available for selection.
+        /// Sourced from the export data model so it can be expanded externally.
+        /// </summary>
+        private readonly List<Utils.DocumentPropertyOption> _documentPropertyOptions;
+
+        /// <summary>
+        /// The collection bound to the combo box ItemsSource.
+        /// </summary>
+        public ObservableCollection<Utils.DocumentPropertyOption> DocumentPropertyOptions { get; }
+
+        /// <summary>
+        /// The zero-based index of the currently selected document property option.
+        /// Always initialised to 0 (Document Number). Not persisted.
+        /// </summary>
+        [ObservableProperty]
+        private int _selectedIndexDocumentProperty;
+
+        #endregion document property combo box
+
         #region user selection
 
         /// <summary>
@@ -236,7 +258,7 @@ namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
                 if (settingsString != null)
                 {
                     // Update the settings in the export data model
-                    _exportDataModel.Settings.DocumentNumberString = settingsString[nameof(Settings.DocumentNumberString)];
+                    _exportDataModel.Settings.DocumentNumberBuilderString = settingsString[nameof(Utils.Settings.DocumentNumberBuilderString)];
 
                     // Clear the settings table so it can be repopulated
                     _documentSettingsTable.Clear();
@@ -336,7 +358,7 @@ namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
             DataTable dataTable = CreateEmptySettingsDataTable();
 
             //check if the current settings contain a settings string
-            if (_exportDataModel.Settings.DocumentNumberString == null || _exportDataModel.Settings.DocumentNumberString == "")
+            if (_exportDataModel.Settings.DocumentNumberBuilderString == null || _exportDataModel.Settings.DocumentNumberBuilderString == "")
             {
                 //store the table in global
                 _documentSettingsTable = dataTable;
@@ -349,7 +371,7 @@ namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
 
             //parse the settings string and add the values
             ObservableCollection<Utils.DocumentSetting> documentSettings = Utils.SettingsStringParser.ParseRevitSheetNumberSettingsString(
-                _exportDataModel.Settings.DocumentNumberString,
+                _exportDataModel.Settings.DocumentNumberBuilderString,
                 _exportDataModel.ParameterNames
             );
 
@@ -539,9 +561,9 @@ namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
             SynchronizeDocumentNameTable();
 
             // save the settings to the export data model
-            _exportDataModel.Settings.DocumentNumberString = Utils.SettingsStringParser.ConvertSettingsToDocumentNumberString(_documentSettings);
+            _exportDataModel.Settings.DocumentNumberBuilderString = Utils.SettingsStringParser.ConvertSettingsToDocumentNumberString(_documentSettings);
             _exportDataModel.Settings.DatabasePath = DatabaseFilePath;
-            
+
             if (window != null)
             {
                 window.Close(); // Closes the window
@@ -687,6 +709,13 @@ namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
 
             //initialize the document settings collection
             _documentSettings = new ObservableCollection<Utils.DocumentSetting>();
+
+            // initialize the document property options from the export data model
+            _documentPropertyOptions = _exportDataModel.DocumentPropertyOptions;
+            DocumentPropertyOptions = new ObservableCollection<Utils.DocumentPropertyOption>(_documentPropertyOptions);
+
+            // always default to Document Number (index 0) — not persisted across sessions
+            SelectedIndexDocumentProperty = 0;
 
             //populate the data table containing the available parameters
             PopulateParameterDataTable();

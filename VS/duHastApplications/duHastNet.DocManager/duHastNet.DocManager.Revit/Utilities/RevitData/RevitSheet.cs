@@ -21,7 +21,7 @@
 //
 //
 
-using System.Reflection.Metadata;
+using System.Linq;
 
 namespace duHastNet.DocManager.Revit.Utilities.RevitData
 {
@@ -31,19 +31,17 @@ namespace duHastNet.DocManager.Revit.Utilities.RevitData
         public RevitDocumentProperty SheetName { get; set; }
 
         /// <summary>
-        /// Gets or sets the unique identifier assigned to the document in the DocManager database.
-        /// This identifier is used to link the sheet to its corresponding document in the database.
-        /// This may be different from the sheet number stored in the Revit model, as the sheet number
-        /// in the Revit model may only be a part of the full document number used in the database.
-        /// The document number in the database may include additional properties such as a prefix,
-        /// suffix, or separator that is not part of the sheet number in the Revit model.
+        /// Holds built document property values keyed by the document property keys defined in
+        /// duHastNet.UI.DocManagerSettingsUI.Utils.Constants (e.g. DocumentPropertyKeyDocumentNumber,
+        /// DocumentPropertyKeyDocumentName). Both keys are always present; values default to
+        /// string.Empty until AddFullDocumentNumber is called on the containing RevitDataModel.
+        /// When no builder rule is configured for a key, the value falls back to the raw Revit
+        /// sheet number or sheet name respectively.
         /// </summary>
-        public string DocumentNumber { get; set; }
-
+        public Dictionary<string, string> BuiltDocumentProperties { get; }
 
         private List<RevitRevisionOnSheet> _revisionsOnSheet;
         public List<RevitRevisionOnSheet> RevisionsOnSheet { get { return _revisionsOnSheet; } }
-
 
         private List<RevitDocumentProperty> _documentProperties;
         public List<RevitDocumentProperty> DocumentProperties { get { return _documentProperties; } }
@@ -56,7 +54,13 @@ namespace duHastNet.DocManager.Revit.Utilities.RevitData
             SheetName = new(Constants.PropertyNameSheetName, sheetName);
             _revisionsOnSheet = [];
             _documentProperties = [];
-            DocumentNumber = string.Empty;
+
+            // Both keys are always present so consumers can rely on TryGetValue without null checks.
+            BuiltDocumentProperties = new Dictionary<string, string>
+            {
+                [duHastNet.UI.DocManagerSettingsUI.Utils.Constants.DocumentPropertyKeyDocumentNumber] = string.Empty,
+                [duHastNet.UI.DocManagerSettingsUI.Utils.Constants.DocumentPropertyKeyDocumentName]   = string.Empty
+            };
         }
 
         public void AddRevisionOnSheet(RevitRevisionOnSheet revisionOnSheet)
@@ -102,7 +106,8 @@ namespace duHastNet.DocManager.Revit.Utilities.RevitData
 
         public override string ToString()
         {
-            return $"Sheet Number: {SheetNumber}, Sheet Name: {SheetName}, Revisions on Sheet: {string.Join("; \n", RevisionsOnSheet)}, Document Properties: {string.Join("; \n", DocumentProperties)}";
+            string builtProps = string.Join(", ", BuiltDocumentProperties.Select(kvp => $"{kvp.Key}={kvp.Value}"));
+            return $"Sheet Number: {SheetNumber}, Sheet Name: {SheetName}, Built Properties: [{builtProps}], Revisions on Sheet: {string.Join("; \n", RevisionsOnSheet)}, Document Properties: {string.Join("; \n", DocumentProperties)}";
         }
     }
 }

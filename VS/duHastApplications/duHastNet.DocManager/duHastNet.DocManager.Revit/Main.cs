@@ -86,7 +86,7 @@ namespace duHastNet.DocManager.Revit
             _revitSettings = RevitSettingsUtils.InitialiseRevitSettings(_revitDataModel.SettingsAsJson);
 
             //process each sheet: build the document number as per passed in settings
-            _revitDataModel.AddFullDocumentNumber(_revitSettings.DocumentNumberString);
+            _revitDataModel.AddFullDocumentNumber(_revitSettings.DocumentNumberBuilderString);
 
             // load existing documents and revisions from the database;
             // happy/unhappy path is resolved here — the window always opens regardless of outcome

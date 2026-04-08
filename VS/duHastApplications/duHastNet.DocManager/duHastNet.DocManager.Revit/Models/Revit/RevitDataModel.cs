@@ -153,24 +153,54 @@ namespace duHastNet.DocManager.Revit.Models.Revit
         #region Update Data
 
         /// <summary>
-        /// Builds the full document number for each sheet using the provided numbering settings JSON string.
+        /// Builds the document number and document name for each sheet using the provided
+        /// numbering settings JSON string, and stores both in the sheet's BuiltDocumentProperties
+        /// dictionary.
+        /// <para>
+        /// The builder string is parsed once and used to build the document number value
+        /// (keyed by <see cref="duHastNet.UI.DocManagerSettingsUI.Utils.Constants.DocumentPropertyKeyDocumentNumber"/>).
+        /// The document name value
+        /// (keyed by <see cref="duHastNet.UI.DocManagerSettingsUI.Utils.Constants.DocumentPropertyKeyDocumentName"/>)
+        /// always falls back to the raw Revit sheet name because there is no separate builder
+        /// rule for it at this stage.
+        /// </para>
+        /// <para>
+        /// If the builder string is empty or produces no valid settings, the document number
+        /// falls back to the raw Revit sheet number and the document name falls back to the
+        /// raw Revit sheet name.
+        /// </para>
         /// </summary>
-        public void AddFullDocumentNumber(string DocumentNumberingJsonString)
+        public void AddFullDocumentNumber(string documentNumberingJsonString)
         {
             _sheetSettings = duHastNet.UI.DocManagerSettingsUI.Utils.SettingsStringParser.ParseRevitSheetNumberSettingsString(
-                settingsString: DocumentNumberingJsonString,
+                settingsString: documentNumberingJsonString,
                 availableParameters: _revitSheetContainer.GetSheetPropertyNames());
+
+            string docNumberKey = duHastNet.UI.DocManagerSettingsUI.Utils.Constants.DocumentPropertyKeyDocumentNumber;
+            string docNameKey   = duHastNet.UI.DocManagerSettingsUI.Utils.Constants.DocumentPropertyKeyDocumentName;
 
             int successfullyUpdatedSheets = 0;
             foreach (var sheet in _revitSheetContainer.GetSheets())
             {
-                sheet.DocumentNumber = Utilities.DocumentNumberBuilder.GetDocumentNumber(sheet, _sheetSettings);
+                // Build document number from the settings rule; fall back to raw sheet number
+                // if no rule is configured or no settings matched available parameters.
+                string builtDocumentNumber = _sheetSettings != null && _sheetSettings.Count > 0
+                    ? Utilities.DocumentNumberBuilder.GetDocumentNumber(sheet, _sheetSettings)
+                    : sheet.SheetNumber.Value;
+
+                // Document name always falls back to the raw Revit sheet name — there is no
+                // separate builder rule for it at this stage.
+                string builtDocumentName = sheet.SheetName.Value;
+
+                sheet.BuiltDocumentProperties[docNumberKey] = builtDocumentNumber;
+                sheet.BuiltDocumentProperties[docNameKey]   = builtDocumentName;
+
                 successfullyUpdatedSheets++;
             }
 
             LogMessages(
                 [
-                    ($"Added document numbers to {successfullyUpdatedSheets} sheet(s).", duHastNet.Utils.WPF.Stores.MessageTypes.Information),
+                    ($"Built document properties for {successfullyUpdatedSheets} sheet(s).", duHastNet.Utils.WPF.Stores.MessageTypes.Information),
                 ]);
         }
 

@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -21,19 +21,26 @@
 //
 //
 
-
 namespace duHastNet.DocManager.Revit.Utilities.RevitData
 {
-    public class Constants
+    /// <summary>
+    /// Forwards shared property name constants from the canonical location in
+    /// duHastNet.UI.DocManagerSettingsUI.Utils.Constants.
+    /// Do not add new constants here — add them to the shared class instead.
+    /// </summary>
+    public static class Constants
     {
-
         #region sheet property names
 
-        public const string PropertyNameSheetName = "Sheet Name";
-        public const string PropertyValueSheetNumber = "Sheet Number";
-        public const string PropertyValueSheetRevitId = "SheetRevitId";
+        public const string PropertyNameSheetName =
+            duHastNet.UI.DocManagerSettingsUI.Utils.Constants.PropertyNameSheetName;
 
-        #endregion
+        public const string PropertyValueSheetNumber =
+            duHastNet.UI.DocManagerSettingsUI.Utils.Constants.PropertyNameSheetNumber;
 
+        public const string PropertyValueSheetRevitId =
+            duHastNet.UI.DocManagerSettingsUI.Utils.Constants.PropertyNameSheetRevitId;
+
+        #endregion sheet property names
     }
 }

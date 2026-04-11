@@ -209,12 +209,12 @@ def doc_manager_settings_entry(doc, uiapp, output, forms):
                 export_settings
                 ))
         
-        settings_string = export_settings.DocumentNumberString if export_settings.DocumentNumberString else ""
+        settings_string = export_settings.DocumentNumberBuilderString if export_settings.DocumentNumberBuilderString else ""
         database_string = export_settings.DatabasePath if export_settings.DatabasePath else ""
         
         # store as json object which can be deserialized later to retrieve the individual settings values in c#
         # property names need to match 
-        combined = json.dumps({"DocumentNumberString": settings_string, "DatabasePath": database_string})
+        combined = json.dumps({"DocumentNumberBuilderString": settings_string, "DatabasePath": database_string})
         
         if DEBUG:
             print("Combined settings string: >>{}<<".format(combined))

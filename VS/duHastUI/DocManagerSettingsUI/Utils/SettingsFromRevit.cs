@@ -32,16 +32,31 @@ namespace duHastNet.UI.DocManagerSettingsUI.Utils
         {
             Settings settings;
 
-            var trimmed = jsonString.TrimStart();
+            var trimmed = jsonString?.TrimStart() ?? string.Empty;
 
-            // this will take care of both formats - if it starts with [ it's the old format, otherwise it's the new format
+            if (string.IsNullOrEmpty(trimmed))
+            {
+                return new Settings();
+            }
+
+            // this will take care of both formats:
+            // "[" = old format (bare JSON array) — migrated to dictionary with DocumentNumber key only
+            // "{" = new format (JSON dictionary keyed by document property key)
+            // anything else / empty = return empty Settings
             if (trimmed.StartsWith("["))
             {
-                // Old format - JSON array of DocumentNumberPart
+                // Old format — bare JSON array of DocumentSetting objects.
+                // Wrap it under the DocumentNumber key so it is compatible with the new dictionary format.
                 var parts = JsonConvert.DeserializeObject<List<DocumentSetting>>(jsonString) ?? new List<DocumentSetting>();
+                string bareArrayString = JsonConvert.SerializeObject(parts);
+                string dictionaryString = JsonConvert.SerializeObject(
+                    new Dictionary<string, string>
+                    {
+                        [Constants.DocumentPropertyKeyDocumentNumber] = bareArrayString
+                    });
                 settings = new Settings
                 {
-                    DocumentNumberBuilderString = JsonConvert.SerializeObject(parts),
+                    DocumentNumberBuilderString = dictionaryString,
                     DatabasePath = string.Empty
                 };
             }

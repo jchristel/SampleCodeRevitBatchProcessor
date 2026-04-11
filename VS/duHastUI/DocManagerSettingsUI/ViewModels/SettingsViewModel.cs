@@ -112,11 +112,48 @@ namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
         public ObservableCollection<Utils.DocumentPropertyOption> DocumentPropertyOptions { get; }
 
         /// <summary>
+        /// Tracks the document property key that was active before the most recent combo box
+        /// selection change. Used by OnSelectedIndexDocumentPropertyChanged to save the
+        /// outgoing grid state under the correct key.
+        /// </summary>
+        private string _lastSelectedPropertyKey;
+
+        /// <summary>
         /// The zero-based index of the currently selected document property option.
         /// Always initialised to 0 (Document Number). Not persisted.
         /// </summary>
         [ObservableProperty]
         private int _selectedIndexDocumentProperty;
+
+        partial void OnSelectedIndexDocumentPropertyChanged(int value)
+        {
+            if (value < 0 || value >= DocumentPropertyOptions.Count)
+                return;
+
+            // Save the current grid state back into the dictionary under the outgoing key
+            // before switching, so edits are not lost.
+            SynchronizeDocumentNameTable();
+            _exportDataModel.Settings.DocumentNumberBuilderString =
+                Utils.SettingsStringParser.UpdateSettingsForKey(
+                    _exportDataModel.Settings.DocumentNumberBuilderString,
+                    _lastSelectedPropertyKey,
+                    _documentSettings);
+
+            // Track the key that is now becoming active
+            _lastSelectedPropertyKey = DocumentPropertyOptions[value].Key;
+
+            // Reload the grid for the newly selected key
+            _documentSettings = new ObservableCollection<Utils.DocumentSetting>();
+            PopulateDocumentSettingsDataTable();
+        }
+
+        /// <summary>
+        /// Returns the document property key for the currently selected combo box option.
+        /// </summary>
+        private string GetCurrentPropertyKey()
+        {
+            return _lastSelectedPropertyKey;
+        }
 
         #endregion document property combo box
 
@@ -230,10 +267,18 @@ namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
         {
             if (!string.IsNullOrEmpty(value))
             {
-                //export settings to given file path
+                // Flush current grid state into the dictionary before exporting
+                SynchronizeDocumentNameTable();
+                _exportDataModel.Settings.DocumentNumberBuilderString =
+                    Utils.SettingsStringParser.UpdateSettingsForKey(
+                        _exportDataModel.Settings.DocumentNumberBuilderString,
+                        _lastSelectedPropertyKey,
+                        _documentSettings);
+
+                //export the full settings (all keys) to the given file path
                 Utils.SettingsExport.ExportSettingsToJson(
                     filePath: value,
-                    settings: _documentSettings,
+                    builderDictionaryString: _exportDataModel.Settings.DocumentNumberBuilderString,
                     AddMessage: AddMessage);
             }
         }
@@ -257,13 +302,15 @@ namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
                 //check if the settings string is not null
                 if (settingsString != null)
                 {
-                    // Update the settings in the export data model
-                    _exportDataModel.Settings.DocumentNumberBuilderString = settingsString[nameof(Utils.Settings.DocumentNumberBuilderString)];
+                    // Update the full builder dictionary in the export data model
+                    _exportDataModel.Settings.DocumentNumberBuilderString =
+                        settingsString[nameof(Utils.Settings.DocumentNumberBuilderString)];
 
-                    // Clear the settings table so it can be repopulated
+                    // Clear the settings collection so it can be repopulated for the current key
+                    _documentSettings = new ObservableCollection<Utils.DocumentSetting>();
                     _documentSettingsTable.Clear();
 
-                    //populate data table with the settings string
+                    //populate data table with the settings for the currently selected key
                     PopulateDocumentSettingsDataTable();
                 }
             }
@@ -358,22 +405,22 @@ namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
             DataTable dataTable = CreateEmptySettingsDataTable();
 
             //check if the current settings contain a settings string
-            if (_exportDataModel.Settings.DocumentNumberBuilderString == null || _exportDataModel.Settings.DocumentNumberBuilderString == "")
+            if (string.IsNullOrEmpty(_exportDataModel.Settings.DocumentNumberBuilderString))
             {
                 //store the table in global
                 _documentSettingsTable = dataTable;
                 //setup a new data view based on the table created
                 DvDocumentSettings = new DataView(dataTable);
-
-                // get out of the function
                 return;
             }
 
-            //parse the settings string and add the values
-            ObservableCollection<Utils.DocumentSetting> documentSettings = Utils.SettingsStringParser.ParseRevitSheetNumberSettingsString(
-                _exportDataModel.Settings.DocumentNumberBuilderString,
-                _exportDataModel.ParameterNames
-            );
+            //parse the settings for the currently selected document property key
+            ObservableCollection<Utils.DocumentSetting> documentSettings =
+                Utils.SettingsStringParser.ParseSettingsForKey(
+                    _exportDataModel.Settings.DocumentNumberBuilderString,
+                    _lastSelectedPropertyKey,
+                    _exportDataModel.ParameterNames
+                );
 
             //update the global collection with the parsed values
             _documentSettings = documentSettings;
@@ -560,13 +607,18 @@ namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
             //sync the document name table with the document settings
             SynchronizeDocumentNameTable();
 
-            // save the settings to the export data model
-            _exportDataModel.Settings.DocumentNumberBuilderString = Utils.SettingsStringParser.ConvertSettingsToDocumentNumberString(_documentSettings);
+            // save the current grid state into the dictionary under the currently selected key
+            _exportDataModel.Settings.DocumentNumberBuilderString =
+                Utils.SettingsStringParser.UpdateSettingsForKey(
+                    _exportDataModel.Settings.DocumentNumberBuilderString,
+                    _lastSelectedPropertyKey,
+                    _documentSettings);
+
             _exportDataModel.Settings.DatabasePath = DatabaseFilePath;
 
             if (window != null)
             {
-                window.Close(); // Closes the window
+                window.Close();
             }
         }
 
@@ -714,7 +766,9 @@ namespace duHastNet.UI.DocManagerSettingsUI.ViewModels
             _documentPropertyOptions = _exportDataModel.DocumentPropertyOptions;
             DocumentPropertyOptions = new ObservableCollection<Utils.DocumentPropertyOption>(_documentPropertyOptions);
 
-            // always default to Document Number (index 0) — not persisted across sessions
+            // always default to Document Number (index 0) — not persisted across sessions.
+            // Set _lastSelectedPropertyKey first so PopulateDocumentSettingsDataTable has a valid key.
+            _lastSelectedPropertyKey = DocumentPropertyOptions[0].Key;
             SelectedIndexDocumentProperty = 0;
 
             //populate the data table containing the available parameters

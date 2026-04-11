@@ -21,26 +21,31 @@
 //
 //
 
-
-using System.Collections.ObjectModel;
-
 namespace duHastNet.UI.DocManagerSettingsUI.Utils
 {
     public static class SettingsExport
     {
+        /// <summary>
+        /// Exports the full settings to a JSON file. The builder dictionary string (which contains
+        /// the builder rules for all property keys) is stored as-is in the Settings object and
+        /// serialised to the file.
+        /// </summary>
+        /// <param name="filePath">The full file path to write the exported JSON to.</param>
+        /// <param name="builderDictionaryString">
+        /// The full DocumentNumberBuilderString value — a JSON dictionary keyed by document
+        /// property keys (e.g. "DocumentNumber", "DocumentName") whose values are bare JSON
+        /// array strings of DocumentSetting objects.
+        /// </param>
+        /// <param name="AddMessage">Callback for surfacing status or error messages to the UI.</param>
         public static void ExportSettingsToJson(
             string filePath,
-            ObservableCollection<DocumentSetting> settings,
-            Action<string, duHastNet.Utils.WPF.Stores.MessageTypes> AddMessage
-            )
+            string builderDictionaryString,
+            Action<string, duHastNet.Utils.WPF.Stores.MessageTypes> AddMessage)
         {
             try
             {
-                // Convert the collection to a JSON string (the DocumentNumberBuilderString format)
-                string documentNumberBuilderString = SettingsStringParser.ConvertSettingsToDocumentNumberString(settings);
-
-                // Create a Settings object with the serialized string
-                Settings settingsObject = new Settings(documentNumberBuilderString, string.Empty);
+                // Create a Settings object carrying the full builder dictionary string
+                Settings settingsObject = new Settings(builderDictionaryString, string.Empty);
 
                 // Serialize the Settings object to JSON
                 string json = Newtonsoft.Json.JsonConvert.SerializeObject(settingsObject, Newtonsoft.Json.Formatting.Indented);

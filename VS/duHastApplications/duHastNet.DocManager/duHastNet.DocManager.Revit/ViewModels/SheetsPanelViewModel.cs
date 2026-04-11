@@ -60,8 +60,6 @@ namespace duHastNet.DocManager.Revit.ViewModels
         private readonly RevitDataModel _revitDataModel;
         private readonly DatabaseDataModel _databaseDataModel;
         private readonly MessageStore _messageStore;
-        private readonly DocManagerApi _docManagerApi;
-
         /// <summary>
         /// Active custom field definitions sourced from <see cref="DatabaseDataModel.CustomFieldDefinitions"/>.
         /// Loaded once before the window opens in <c>Main.LoadDatabaseData()</c>.
@@ -79,18 +77,15 @@ namespace duHastNet.DocManager.Revit.ViewModels
         /// <param name="revitDataModel">Revit data collected before the window opened. Must not be null.</param>
         /// <param name="databaseDataModel">Shared database data model. Must not be null.</param>
         /// <param name="messageStore">Message store for surfacing status to the UI banner. Must not be null.</param>
-        /// <param name="docManagerApi">API instance used for database writes. Must not be null.</param>
         /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
         public SheetsPanelViewModel(
             RevitDataModel revitDataModel,
             DatabaseDataModel databaseDataModel,
-            MessageStore messageStore,
-            DocManagerApi docManagerApi)
+            MessageStore messageStore)
         {
             _revitDataModel = revitDataModel ?? throw new ArgumentNullException(nameof(revitDataModel));
             _databaseDataModel = databaseDataModel ?? throw new ArgumentNullException(nameof(databaseDataModel));
             _messageStore = messageStore ?? throw new ArgumentNullException(nameof(messageStore));
-            _docManagerApi = docManagerApi ?? throw new ArgumentNullException(nameof(docManagerApi));
 
             _displayedSheets = new ObservableCollection<RevitSheetRowViewModel>();
             _customFieldDefinitions = _databaseDataModel.CustomFieldDefinitions;
@@ -319,7 +314,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
             IsBusy = true;
             try
             {
-                var unitOfWork = _docManagerApi.GetUnitOfWorkSync();
+                var unitOfWork = _databaseDataModel.Api.GetUnitOfWorkSync();
                 var documentsToInsert = rowsToImport
                     .Select(r => new Document(
                         r.BuiltDocumentNumber.Trim(),
@@ -396,7 +391,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
             IsBusy = true;
             try
             {
-                var unitOfWork = _docManagerApi.GetUnitOfWorkSync();
+                var unitOfWork = _databaseDataModel.Api.GetUnitOfWorkSync();
                 int updatedCount = 0;
 
                 foreach (var row in rowsToUpdate)

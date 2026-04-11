@@ -249,7 +249,7 @@ namespace duHastNet.DocManager.Revit
                         ($"Loaded {customFieldDefinitions.Count} custom field definition(s) from database.", duHastNet.Utils.WPF.Stores.MessageTypes.Information)
                     ]);
 
-                return new DatabaseDataModel(true, documents, revisions, customFieldDefinitions);
+                return new DatabaseDataModel(true, documents, revisions, customFieldDefinitions, api);
             }
             catch (Exception ex)
             {

@@ -83,6 +83,18 @@ namespace duHastNet.DocManager.Revit.Models.Database
         /// </summary>
         public IReadOnlyList<CustomFieldDefinition> CustomFieldDefinitions { get; }
 
+        /// <summary>
+        /// Gets the connected <see cref="DocManagerApi"/> instance used for all database
+        /// reads and writes for the lifetime of the window.
+        /// <para>
+        /// Created and connected in <c>Main.LoadDatabaseData()</c> before the window opens,
+        /// so it is guaranteed to have an active sync connection. On <see cref="Reload"/>
+        /// the stored instance is replaced with the one used to reconnect, keeping this
+        /// reference current.
+        /// </para>
+        /// </summary>
+        public DocManagerApi Api { get; private set; }
+
         #endregion Collections
 
         #region Constructor
@@ -97,27 +109,33 @@ namespace duHastNet.DocManager.Revit.Models.Database
         /// <param name="documents">Existing active documents from the database. Must not be null.</param>
         /// <param name="revisions">Existing revisions from the database. Must not be null.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="documents"/>, <paramref name="revisions"/>, or
-        /// <paramref name="customFieldDefinitions"/> is null.
+        /// Thrown when <paramref name="documents"/>, <paramref name="revisions"/>,
+        /// <paramref name="customFieldDefinitions"/>, or <paramref name="api"/> is null.
         /// </exception>
         /// <param name="customFieldDefinitions">
         /// Active custom field definitions. Must not be null. Pass an empty list when
         /// the database has none or the connection failed.
         /// </param>
+        /// <param name="api">
+        /// The connected <see cref="DocManagerApi"/> instance. Must not be null.
+        /// </param>
         public DatabaseDataModel(
             bool isConnected,
             IList<Document> documents,
             IList<Revision> revisions,
-            IList<CustomFieldDefinition> customFieldDefinitions)
+            IList<CustomFieldDefinition> customFieldDefinitions,
+            DocManagerApi api)
         {
             _ = documents ?? throw new ArgumentNullException(nameof(documents));
             _ = revisions ?? throw new ArgumentNullException(nameof(revisions));
             _ = customFieldDefinitions ?? throw new ArgumentNullException(nameof(customFieldDefinitions));
+            _ = api ?? throw new ArgumentNullException(nameof(api));
 
             _isConnected = isConnected;
             Documents = new ObservableCollection<Document>(documents);
             Revisions = new ObservableCollection<Revision>(revisions);
             CustomFieldDefinitions = customFieldDefinitions.AsReadOnly();
+            Api = api;
         }
 
         #endregion Constructor
@@ -135,7 +153,8 @@ namespace duHastNet.DocManager.Revit.Models.Database
                 false,
                 new List<Document>(),
                 new List<Revision>(),
-                new List<CustomFieldDefinition>());
+                new List<CustomFieldDefinition>(),
+                new DocManagerApi());
         }
 
         #endregion Factory
@@ -195,6 +214,8 @@ namespace duHastNet.DocManager.Revit.Models.Database
                 foreach (var revision in docManagerApi.GetAllRevisions())
                     Revisions.Add(revision);
 
+                // Keep the stored Api reference current after reconnection.
+                Api = docManagerApi;
                 IsConnected = true;
             }
             catch (Exception ex)

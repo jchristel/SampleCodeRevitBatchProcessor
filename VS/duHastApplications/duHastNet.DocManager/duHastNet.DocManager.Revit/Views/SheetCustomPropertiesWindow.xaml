@@ -50,7 +50,7 @@
                 Margin="0,0,0,10"
                 CornerRadius="3">
             <TextBlock>
-                <Run Text="{Binding SummaryLabel}" FontWeight="SemiBold"/>
+                <Run Text="{Binding SummaryLabel, Mode=OneWay}" FontWeight="SemiBold"/>
                 <Run Text=" — custom field values left blank will be stored as empty strings."/>
             </TextBlock>
         </Border>

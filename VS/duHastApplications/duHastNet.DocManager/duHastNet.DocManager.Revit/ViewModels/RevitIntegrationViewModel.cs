@@ -55,8 +55,6 @@ namespace duHastNet.DocManager.Revit.ViewModels
         private readonly DatabaseDataModel _databaseDataModel;
         private readonly duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
         private readonly duHastNet.UI.DocManagerSettingsUI.Utils.Settings _revitSettings;
-        private readonly DocManagerApi _docManagerApi;
-
         private readonly SheetsPanelViewModel _sheetsPanelViewModel;
         private readonly RevisionsPanelViewModel _revisionsPanelViewModel;
 
@@ -86,13 +84,10 @@ namespace duHastNet.DocManager.Revit.ViewModels
             _messageStore = messageStore ?? throw new ArgumentNullException(nameof(messageStore));
             _revitSettings = revitSettings ?? throw new ArgumentNullException(nameof(revitSettings));
 
-            _docManagerApi = new DocManagerApi();
-
             _sheetsPanelViewModel = new SheetsPanelViewModel(
                 _revitDataModel,
                 _databaseDataModel,
-                _messageStore,
-                _docManagerApi);
+                _messageStore);
 
             _revisionsPanelViewModel = new RevisionsPanelViewModel(
                 _revitDataModel,
@@ -188,7 +183,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
         private void OnPanelRefreshRequested(object? sender, EventArgs e)
         {
             _databaseDataModel.Reload(
-                _docManagerApi,
+                _databaseDataModel.Api,
                 _revitSettings.DatabasePath ?? string.Empty,
                 _messageStore);
 

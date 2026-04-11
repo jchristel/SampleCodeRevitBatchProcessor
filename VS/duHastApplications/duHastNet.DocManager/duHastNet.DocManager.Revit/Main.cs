@@ -240,14 +240,16 @@ namespace duHastNet.DocManager.Revit
 
                 var documents = api.GetActiveDocuments();
                 var revisions = api.GetAllRevisions();
+                var customFieldDefinitions = api.GetActiveCustomFieldDefinitions();
 
                 _revitDataModel.LogMessages(
                     [
                         ($"Loaded {documents.Count} document(s) from database.", duHastNet.Utils.WPF.Stores.MessageTypes.Information),
-                        ($"Loaded {revisions.Count} revision(s) from database.", duHastNet.Utils.WPF.Stores.MessageTypes.Information)
+                        ($"Loaded {revisions.Count} revision(s) from database.", duHastNet.Utils.WPF.Stores.MessageTypes.Information),
+                        ($"Loaded {customFieldDefinitions.Count} custom field definition(s) from database.", duHastNet.Utils.WPF.Stores.MessageTypes.Information)
                     ]);
 
-                return new DatabaseDataModel(true, documents, revisions);
+                return new DatabaseDataModel(true, documents, revisions, customFieldDefinitions);
             }
             catch (Exception ex)
             {

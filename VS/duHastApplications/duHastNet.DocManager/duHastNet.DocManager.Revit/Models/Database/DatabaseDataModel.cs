@@ -23,6 +23,7 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using duHastNet.DocManager.Core.Models;
+using duHastNet.DocManager.Core.Models.Database;
 using duHastNet.DocManager.Core.Services.Api;
 using System.Collections.ObjectModel;
 
@@ -39,6 +40,10 @@ namespace duHastNet.DocManager.Revit.Models.Database
     /// <see cref="Documents"/> and <see cref="Revisions"/> are <see cref="ObservableCollection{T}"/>
     /// so that panel ViewModels bound to them automatically reflect changes when
     /// <see cref="Reload"/> clears and repopulates the collections.
+    /// </para>
+    /// <para>
+    /// <see cref="CustomFieldDefinitions"/> is an <see cref="IReadOnlyList{T}"/> loaded once at
+    /// startup and never changes while the application is running.
     /// </para>
     /// </summary>
     public partial class DatabaseDataModel : ObservableObject
@@ -68,6 +73,16 @@ namespace duHastNet.DocManager.Revit.Models.Database
         /// </summary>
         public ObservableCollection<Revision> Revisions { get; }
 
+        /// <summary>
+        /// Gets the active custom field definitions configured in the database.
+        /// <para>
+        /// Loaded once at startup in <c>Main.LoadDatabaseData()</c> and does not change
+        /// while the application is running. Empty when <see cref="IsConnected"/> is
+        /// <c>false</c> or the database has no active custom field definitions.
+        /// </para>
+        /// </summary>
+        public IReadOnlyList<CustomFieldDefinition> CustomFieldDefinitions { get; }
+
         #endregion Collections
 
         #region Constructor
@@ -82,16 +97,27 @@ namespace duHastNet.DocManager.Revit.Models.Database
         /// <param name="documents">Existing active documents from the database. Must not be null.</param>
         /// <param name="revisions">Existing revisions from the database. Must not be null.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="documents"/> or <paramref name="revisions"/> is null.
+        /// Thrown when <paramref name="documents"/>, <paramref name="revisions"/>, or
+        /// <paramref name="customFieldDefinitions"/> is null.
         /// </exception>
-        public DatabaseDataModel(bool isConnected, IList<Document> documents, IList<Revision> revisions)
+        /// <param name="customFieldDefinitions">
+        /// Active custom field definitions. Must not be null. Pass an empty list when
+        /// the database has none or the connection failed.
+        /// </param>
+        public DatabaseDataModel(
+            bool isConnected,
+            IList<Document> documents,
+            IList<Revision> revisions,
+            IList<CustomFieldDefinition> customFieldDefinitions)
         {
             _ = documents ?? throw new ArgumentNullException(nameof(documents));
             _ = revisions ?? throw new ArgumentNullException(nameof(revisions));
+            _ = customFieldDefinitions ?? throw new ArgumentNullException(nameof(customFieldDefinitions));
 
             _isConnected = isConnected;
             Documents = new ObservableCollection<Document>(documents);
             Revisions = new ObservableCollection<Revision>(revisions);
+            CustomFieldDefinitions = customFieldDefinitions.AsReadOnly();
         }
 
         #endregion Constructor
@@ -105,7 +131,11 @@ namespace duHastNet.DocManager.Revit.Models.Database
         /// <returns>A disconnected <see cref="DatabaseDataModel"/> with empty collections.</returns>
         public static DatabaseDataModel CreateDisconnected()
         {
-            return new DatabaseDataModel(false, new List<Document>(), new List<Revision>());
+            return new DatabaseDataModel(
+                false,
+                new List<Document>(),
+                new List<Revision>(),
+                new List<CustomFieldDefinition>());
         }
 
         #endregion Factory

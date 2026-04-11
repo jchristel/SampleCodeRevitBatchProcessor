@@ -3,15 +3,283 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:duHastNet.DocManager.Revit.Views"
+             xmlns:vms="clr-namespace:duHastNet.DocManager.Revit.ViewModels"
+             xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.25.0.1.1"
              mc:Ignorable="d"
-             d:DesignHeight="400" d:DesignWidth="800">
-    <Grid Margin="10">
-        <TextBlock Text="Sheets Panel — stub"
-                   FontSize="16"
-                   FontStyle="Italic"
-                   Foreground="#888888"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
+             d:DesignHeight="500" d:DesignWidth="900"
+             d:DataContext="{d:DesignInstance Type=vms:SheetsPanelViewModel, IsDesignTimeCreatable=False}">
+
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:InverseBooleanConverter x:Key="InverseBoolConverter"/>
+
+        <Style x:Key="ActionButtonStyle" TargetType="Button">
+            <Setter Property="Padding" Value="14,5"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="MinWidth" Value="100"/>
+        </Style>
+        <Style x:Key="SmallButtonStyle" TargetType="Button">
+            <Setter Property="Padding" Value="8,3"/>
+            <Setter Property="MinWidth" Value="80"/>
+        </Style>
+        <Style x:Key="SheetsGridStyle" TargetType="DataGrid">
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="CanUserReorderColumns" Value="False"/>
+            <Setter Property="CanUserSortColumns" Value="True"/>
+            <Setter Property="CanUserResizeColumns" Value="True"/>
+            <Setter Property="SelectionMode" Value="Extended"/>
+            <Setter Property="SelectionUnit" Value="FullRow"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#E0E0E0"/>
+            <Setter Property="AlternatingRowBackground" Value="#F9F9F9"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="ColumnHeaderHeight" Value="32"/>
+            <Setter Property="RowHeight" Value="28"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Selection helpers toolbar -->
+            <RowDefinition Height="Auto"/>
+            <!-- Separator -->
+            <RowDefinition Height="1"/>
+            <!-- Count summary + legend -->
+            <RowDefinition Height="Auto"/>
+            <!-- DataGrid -->
+            <RowDefinition Height="*"/>
+            <!-- Execute bar -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- ══ Row 0: Selection helpers ══ -->
+        <Border Grid.Row="0" Background="#F5F5F5" Padding="12,8">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button Content="Select All"
+                        Style="{StaticResource SmallButtonStyle}"
+                        Command="{Binding SelectAllCommand}"
+                        Margin="0,0,6,0"/>
+                <Button Content="Select None"
+                        Style="{StaticResource SmallButtonStyle}"
+                        Command="{Binding SelectNoneCommand}"/>
+            </StackPanel>
+        </Border>
+
+        <!-- ══ Row 1: Separator ══ -->
+        <Rectangle Grid.Row="1" Fill="#CCCCCC"/>
+
+        <!-- ══ Row 2: Count summary + colour legend ══ -->
+        <Border Grid.Row="2" Padding="12,6">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Counts -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock FontSize="12" Foreground="#555555" VerticalAlignment="Center">
+                        <Run Text="Total:"/>
+                        <Run Text="{Binding TotalCount, Mode=OneWay}" FontWeight="SemiBold"/>
+                    </TextBlock>
+                    <TextBlock FontSize="12" Foreground="#555555" VerticalAlignment="Center" Margin="14,0,0,0">
+                        <Run Text="To import:"/>
+                        <Run Text="{Binding ToImportCount, Mode=OneWay}" FontWeight="SemiBold" Foreground="#CC0000"/>
+                    </TextBlock>
+                    <TextBlock FontSize="12" Foreground="#555555" VerticalAlignment="Center" Margin="14,0,0,0">
+                        <Run Text="To update:"/>
+                        <Run Text="{Binding ToUpdateCount, Mode=OneWay}" FontWeight="SemiBold" Foreground="#B8860B"/>
+                    </TextBlock>
+                    <TextBlock FontSize="12" Foreground="#555555" VerticalAlignment="Center" Margin="14,0,0,0">
+                        <Run Text="Selected:"/>
+                        <Run Text="{Binding SelectedCount, Mode=OneWay}" FontWeight="SemiBold"/>
+                    </TextBlock>
+
+                    <!-- Busy badge -->
+                    <Border Background="#FFF9C4"
+                            BorderBrush="#F9A825"
+                            BorderThickness="1"
+                            CornerRadius="3"
+                            Padding="8,2"
+                            Margin="14,0,0,0"
+                            Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <TextBlock Text="Working…" FontSize="11" FontWeight="SemiBold" Foreground="#7B6200"/>
+                    </Border>
+                </StackPanel>
+
+                <!-- Colour legend -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Ellipse Width="10" Height="10" Fill="Red" VerticalAlignment="Center"/>
+                    <TextBlock Text="Not in database" FontSize="11" Foreground="#555555"
+                               VerticalAlignment="Center" Margin="4,0,14,0"/>
+                    <Ellipse Width="10" Height="10" Fill="Yellow" VerticalAlignment="Center"
+                             Stroke="#B8860B" StrokeThickness="1"/>
+                    <TextBlock Text="Name differs" FontSize="11" Foreground="#555555"
+                               VerticalAlignment="Center" Margin="4,0,14,0"/>
+                    <Ellipse Width="10" Height="10" Fill="Green" VerticalAlignment="Center"/>
+                    <TextBlock Text="Up to date" FontSize="11" Foreground="#555555"
+                               VerticalAlignment="Center" Margin="4,0,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ══ Row 3: DataGrid — all sheets, always visible ══ -->
+        <DataGrid Grid.Row="3"
+                  Style="{StaticResource SheetsGridStyle}"
+                  ItemsSource="{Binding DisplayedSheets}"
+                  Margin="12,0,12,4">
+            <DataGrid.Columns>
+
+                <!-- Checkbox — IsReadOnly=False so two-way binding works -->
+                <DataGridTemplateColumn Header="Select" Width="55" IsReadOnly="False">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay,
+                                                          UpdateSourceTrigger=PropertyChanged}"
+                                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Status colour dot -->
+                <DataGridTemplateColumn Header="" Width="28" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Ellipse Width="10" Height="10"
+                                     HorizontalAlignment="Center" VerticalAlignment="Center"
+                                     ToolTip="{Binding StatusMessage}">
+                                <Ellipse.Style>
+                                    <Style TargetType="Ellipse">
+                                        <!-- Default: Red — not in database -->
+                                        <Setter Property="Fill" Value="Red"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding StatusColor}" Value="Yellow">
+                                                <Setter Property="Fill" Value="Yellow"/>
+                                                <Setter Property="Stroke" Value="#B8860B"/>
+                                                <Setter Property="StrokeThickness" Value="1"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding StatusColor}" Value="Green">
+                                                <Setter Property="Fill" Value="Green"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn Header="Sheet Number" Binding="{Binding SheetNumber}"
+                                    Width="120" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Padding" Value="4,0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <DataGridTextColumn Header="Sheet Name" Binding="{Binding SheetName}"
+                                    Width="*" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Padding" Value="4,0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <DataGridTextColumn Header="Doc Number" Binding="{Binding BuiltDocumentNumber}"
+                                    Width="140" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Padding" Value="4,0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <DataGridTextColumn Header="Doc Name" Binding="{Binding BuiltDocumentName}"
+                                    Width="*" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Padding" Value="4,0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <DataGridTextColumn Header="Current Rev." Binding="{Binding CurrentRevision}"
+                                    Width="100" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="Padding" Value="4,0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <DataGridTextColumn Header="DB Name" Binding="{Binding DatabaseDocumentName}"
+                                    Width="*" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Padding" Value="4,0"/>
+                            <Setter Property="Foreground" Value="#777777"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <DataGridTextColumn Header="Status" Binding="{Binding StatusMessage}"
+                                    Width="200" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Foreground" Value="#666666"/>
+                            <Setter Property="FontSize" Value="11"/>
+                            <Setter Property="Padding" Value="4,0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- ══ Row 4: Execute bar ══ -->
+        <Border Grid.Row="4"
+                Background="#F5F5F5"
+                BorderBrush="#CCCCCC"
+                BorderThickness="0,1,0,0"
+                Padding="12,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                           Text="Select sheets to import (red) or update (yellow), then click Update."
+                           VerticalAlignment="Center"
+                           FontSize="11"
+                           Foreground="#777777"/>
+                <Button Grid.Column="1"
+                        Content="Update"
+                        Style="{StaticResource ActionButtonStyle}"
+                        Command="{Binding UpdateCommand}"
+                        Background="#2196F3"
+                        Foreground="White"
+                        BorderThickness="0"/>
+            </Grid>
+        </Border>
+
     </Grid>
 </UserControl>

@@ -88,8 +88,16 @@ namespace duHastNet.DocManager.Revit.ViewModels
 
             _docManagerApi = new DocManagerApi();
 
-            _sheetsPanelViewModel = new SheetsPanelViewModel(_revitDataModel, _databaseDataModel, _messageStore);
-            _revisionsPanelViewModel = new RevisionsPanelViewModel(_revitDataModel, _databaseDataModel, _messageStore);
+            _sheetsPanelViewModel = new SheetsPanelViewModel(
+                _revitDataModel,
+                _databaseDataModel,
+                _messageStore,
+                _docManagerApi);
+
+            _revisionsPanelViewModel = new RevisionsPanelViewModel(
+                _revitDataModel,
+                _databaseDataModel,
+                _messageStore);
 
             // subscribe to refresh events from both panels
             _sheetsPanelViewModel.RefreshRequested += OnPanelRefreshRequested;
@@ -174,13 +182,21 @@ namespace duHastNet.DocManager.Revit.ViewModels
         /// <see cref="RevisionsPanelViewModel.RefreshRequested"/>.
         /// Delegates to <see cref="DatabaseDataModel.Reload"/> which clears and repopulates
         /// the shared collections in place, triggering downstream UI updates automatically.
+        /// After the reload, notifies <see cref="SheetsPanelViewModel"/> so it can rebuild
+        /// its filtered row list from the refreshed data.
         /// </summary>
         private void OnPanelRefreshRequested(object? sender, EventArgs e)
         {
-            _databaseDataModel.Reload(_docManagerApi, _revitSettings.DatabasePath ?? string.Empty, _messageStore);
+            _databaseDataModel.Reload(
+                _docManagerApi,
+                _revitSettings.DatabasePath ?? string.Empty,
+                _messageStore);
 
-            // IsDatabaseConnected is derived from the model so notify the view in case it changed
+            // IsDatabaseConnected is derived from the model so notify the view in case it changed.
             OnPropertyChanged(nameof(IsDatabaseConnected));
+
+            // Let the sheets panel rebuild its filtered view from the refreshed database data.
+            _sheetsPanelViewModel.OnDatabaseRefreshed();
         }
 
         #endregion Database Refresh

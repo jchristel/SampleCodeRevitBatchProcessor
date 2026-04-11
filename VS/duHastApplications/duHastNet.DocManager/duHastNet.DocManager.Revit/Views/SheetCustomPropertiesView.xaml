@@ -1,0 +1,168 @@
+<UserControl x:Class="duHastNet.DocManager.Revit.Views.SheetCustomPropertiesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vms="clr-namespace:duHastNet.DocManager.Revit.ViewModels"
+             mc:Ignorable="d"
+             d:DesignHeight="500" d:DesignWidth="900"
+             d:DataContext="{d:DesignInstance Type=vms:SheetCustomPropertiesViewModel, IsDesignTimeCreatable=False}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Header bar -->
+            <RowDefinition Height="Auto"/>
+            <!-- Separator -->
+            <RowDefinition Height="1"/>
+            <!-- Summary label -->
+            <RowDefinition Height="Auto"/>
+            <!-- DataGrid -->
+            <RowDefinition Height="*"/>
+            <!-- Action bar -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- ══ Row 0: Header ══ -->
+        <Border Grid.Row="0"
+                Background="#E3F2FD"
+                BorderBrush="#90CAF9"
+                BorderThickness="0,0,0,1"
+                Padding="12,8">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="Custom Properties — "
+                           FontWeight="SemiBold"
+                           FontSize="13"
+                           VerticalAlignment="Center"/>
+                <TextBlock Text="Enter values for each sheet before confirming the import."
+                           FontSize="13"
+                           Foreground="#1565C0"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <!-- ══ Row 1: Separator ══ -->
+        <Rectangle Grid.Row="1" Fill="#CCCCCC"/>
+
+        <!-- ══ Row 2: Summary ══ -->
+        <Border Grid.Row="2" Padding="12,6">
+            <TextBlock Text="{Binding SummaryLabel}"
+                       FontSize="12"
+                       Foreground="#555555"/>
+        </Border>
+
+        <!-- ══ Row 3: DataGrid ══
+             Columns for DocumentNumber and DocumentName are static.
+             Custom field columns are generated in code-behind because WPF DataGrid
+             does not support dynamic column binding in XAML alone. -->
+        <DataGrid Grid.Row="3"
+                  x:Name="CustomPropertiesGrid"
+                  ItemsSource="{Binding SheetRows}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserReorderColumns="False"
+                  SelectionMode="Single"
+                  SelectionUnit="FullRow"
+                  GridLinesVisibility="Horizontal"
+                  HorizontalGridLinesBrush="#E0E0E0"
+                  AlternatingRowBackground="#F9F9F9"
+                  RowBackground="White"
+                  BorderBrush="#CCCCCC"
+                  BorderThickness="1"
+                  HeadersVisibility="Column"
+                  ColumnHeaderHeight="32"
+                  RowHeight="28"
+                  FontSize="12"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Auto"
+                  Margin="12,0,12,4">
+
+            <DataGrid.Columns>
+
+                <!-- Document Number — read-only display -->
+                <DataGridTextColumn Header="Document Number"
+                                    Binding="{Binding DocumentNumber}"
+                                    Width="160"
+                                    IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Padding" Value="4,0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <!-- Document Name — read-only display -->
+                <DataGridTextColumn Header="Document Name"
+                                    Binding="{Binding DocumentName}"
+                                    Width="*"
+                                    IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Padding" Value="4,0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <!-- Current Revision — read-only display -->
+                <DataGridTextColumn Header="Current Rev."
+                                    Binding="{Binding CurrentRevision}"
+                                    Width="100"
+                                    IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="Padding" Value="4,0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <!-- Custom field columns are added programmatically in code-behind
+                     (SheetCustomPropertiesView.xaml.cs) because WPF DataGrid does not
+                     support dynamic binding of column count from XAML alone. -->
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- ══ Row 4: Action bar ══ -->
+        <Border Grid.Row="4"
+                Background="#F5F5F5"
+                BorderBrush="#CCCCCC"
+                BorderThickness="0,1,0,0"
+                Padding="12,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Text="Custom field values left blank will be stored as empty strings."
+                           VerticalAlignment="Center"
+                           FontSize="11"
+                           Foreground="#777777"/>
+
+                <Button Grid.Column="1"
+                        Content="Cancel"
+                        Command="{Binding CancelCommand}"
+                        Padding="14,5"
+                        MinWidth="90"
+                        Margin="0,0,8,0"/>
+
+                <Button Grid.Column="2"
+                        Content="Confirm Import"
+                        Command="{Binding ConfirmCommand}"
+                        Padding="14,5"
+                        MinWidth="130"
+                        FontWeight="SemiBold"
+                        Background="#2196F3"
+                        Foreground="White"
+                        BorderThickness="0"/>
+            </Grid>
+        </Border>
+
+    </Grid>
+</UserControl>

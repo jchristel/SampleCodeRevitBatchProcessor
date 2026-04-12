@@ -267,10 +267,21 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
-                           Text="Select sheets to import (red) or update (yellow), then click Update."
+                           Text="{Binding HintText, Mode=OneWay}"
                            VerticalAlignment="Center"
-                           FontSize="11"
-                           Foreground="#777777"/>
+                           FontSize="11">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="#777777"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsDatabaseConnected}" Value="False">
+                                    <Setter Property="Foreground" Value="#CC0000"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
                 <Button Grid.Column="1"
                         Content="Update"
                         Style="{StaticResource ActionButtonStyle}"

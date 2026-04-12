@@ -22,6 +22,7 @@
 //
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using duHastNet.DocManager.UI.Shared.ViewModels;
 using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Models.Database;
 using System.Collections.ObjectModel;
@@ -41,7 +42,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
     /// <see cref="DialogConfirmed"/> to determine whether to proceed.
     /// </para>
     /// </summary>
-    public partial class SheetCustomPropertiesViewModel : ObservableObject
+    public partial class SheetCustomPropertiesViewModel : AppViewModelBase
     {
         #region Events
 

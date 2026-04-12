@@ -23,6 +23,7 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using duHastNet.DocManager.Revit.Utilities.RevitData;
+using duHastNet.DocManager.UI.Shared.ViewModels;
 
 namespace duHastNet.DocManager.Revit.ViewModels
 {
@@ -47,7 +48,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
     /// every row.
     /// </para>
     /// </summary>
-    public partial class RevitSheetRowViewModel : ObservableObject
+    public partial class RevitSheetRowViewModel : AppViewModelBase
     {
         #region Private Fields
 

@@ -90,6 +90,9 @@ namespace duHastNet.DocManager.Revit.ViewModels
             _displayedSheets = new ObservableCollection<RevitSheetRowViewModel>();
             _customFieldDefinitions = _databaseDataModel.CustomFieldDefinitions;
 
+            // Re-evaluate command states whenever the database connection state changes.
+            _databaseDataModel.PropertyChanged += OnDatabaseDataModelPropertyChanged;
+
             BuildSheetRows();
         }
 
@@ -147,6 +150,20 @@ namespace duHastNet.DocManager.Revit.ViewModels
         /// <summary>Gets the number of sheets currently selected by the user.</summary>
         public int SelectedCount => DisplayedSheets?.Count(r => r.IsSelected) ?? 0;
 
+        /// <summary>
+        /// Gets whether the database is currently connected.
+        /// Exposed on this ViewModel so the panel view can bind to it directly.
+        /// </summary>
+        public bool IsDatabaseConnected => _databaseDataModel.IsConnected;
+
+        /// <summary>
+        /// Gets the hint text shown in the execute bar.
+        /// Switches to a warning when the database is not connected.
+        /// </summary>
+        public string HintText => _databaseDataModel.IsConnected
+            ? "Select sheets to import (red) or update (yellow), then click Update."
+            : "No database connection. Cannot import or update any sheets.";
+
         #endregion Derived Properties
 
         #region Commands
@@ -163,7 +180,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
             UpdateCounts();
         }
 
-        private bool CanSelectAll() => !IsBusy && DisplayedSheets != null && DisplayedSheets.Any();
+        private bool CanSelectAll() => _databaseDataModel.IsConnected && !IsBusy && DisplayedSheets != null && DisplayedSheets.Any();
 
         /// <summary>
         /// Deselects all rows in the DataGrid.
@@ -177,7 +194,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
             UpdateCounts();
         }
 
-        private bool CanSelectNone() => !IsBusy && DisplayedSheets != null && DisplayedSheets.Any();
+        private bool CanSelectNone() => _databaseDataModel.IsConnected && !IsBusy && DisplayedSheets != null && DisplayedSheets.Any();
 
         /// <summary>
         /// Processes all selected rows in a single pass:
@@ -229,10 +246,14 @@ namespace duHastNet.DocManager.Revit.ViewModels
             {
                 CommitNameUpdates(rowsToUpdate);
             }
+
+            // Single refresh after all operations complete.
+            OnRefreshRequested();
         }
 
         private bool CanUpdate()
         {
+            if (!_databaseDataModel.IsConnected) return false;
             if (IsBusy) return false;
             if (DisplayedSheets == null) return false;
             return DisplayedSheets.Any(r => r.IsSelected && (r.CanImport || r.CanUpdate));
@@ -363,8 +384,6 @@ namespace duHastNet.DocManager.Revit.ViewModels
                     $"Successfully imported {inserted} sheet(s) into the database.",
                     MessageTypes.Information,
                     dismissAfterSeconds: 5);
-
-                OnRefreshRequested();
             }
             catch (Exception ex)
             {
@@ -431,8 +450,6 @@ namespace duHastNet.DocManager.Revit.ViewModels
                         $"Successfully updated {updatedCount} document name(s).",
                         MessageTypes.Information,
                         dismissAfterSeconds: 5);
-
-                    OnRefreshRequested();
                 }
             }
             catch (Exception ex)
@@ -451,15 +468,31 @@ namespace duHastNet.DocManager.Revit.ViewModels
 
         #region Lifecycle
 
+        /// <summary>
+        /// Handles <see cref="DatabaseDataModel.PropertyChanged"/> to re-evaluate command
+        /// can-execute states whenever <see cref="DatabaseDataModel.IsConnected"/> changes.
+        /// </summary>
+        private void OnDatabaseDataModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(DatabaseDataModel.IsConnected))
+            {
+                UpdateCounts();
+                OnPropertyChanged(nameof(IsDatabaseConnected));
+                OnPropertyChanged(nameof(HintText));
+            }
+        }
+
         /// <inheritdoc/>
         public override void OnClosing()
         {
+            _databaseDataModel.PropertyChanged -= OnDatabaseDataModelPropertyChanged;
             base.OnClosing();
         }
 
         /// <inheritdoc/>
         public override void Dispose()
         {
+            _databaseDataModel.PropertyChanged -= OnDatabaseDataModelPropertyChanged;
             base.Dispose();
         }
 

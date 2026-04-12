@@ -22,6 +22,7 @@
 //
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using duHastNet.DocManager.UI.Shared.ViewModels;
 using duHastNet.DocManager.Core.Models.Database;
 using duHastNet.DocManager.UI.Shared.ViewModels.Settings.Database;
 using System.Collections.ObjectModel;
@@ -36,7 +37,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
     /// definition — that the user fills in before confirming the import.
     /// </para>
     /// </summary>
-    public partial class SheetImportRowViewModel : ObservableObject
+    public partial class SheetImportRowViewModel : AppViewModelBase
     {
         #region Properties
 

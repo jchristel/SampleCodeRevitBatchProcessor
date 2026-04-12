@@ -26,6 +26,8 @@ using CommunityToolkit.Mvvm.Input;
 using duHastNet.DocManager.Core.Services.Api;
 using duHastNet.DocManager.Revit.Models.Database;
 using duHastNet.DocManager.Revit.Models.Revit;
+using System.Diagnostics;
+using System.IO;
 
 namespace duHastNet.DocManager.Revit.ViewModels
 {
@@ -149,6 +151,21 @@ namespace duHastNet.DocManager.Revit.ViewModels
         public bool IsDatabaseConnected => _databaseDataModel.IsConnected;
 
         /// <summary>
+        /// Gets whether the folder containing the database file exists on disk.
+        /// Used to gate the Open Folder button.
+        /// </summary>
+        public bool IsDatabaseFolderValid
+        {
+            get
+            {
+                string? path = _revitSettings.DatabasePath;
+                if (string.IsNullOrWhiteSpace(path)) return false;
+                string? folder = Path.GetDirectoryName(path);
+                return !string.IsNullOrWhiteSpace(folder) && Directory.Exists(folder);
+            }
+        }
+
+        /// <summary>
         /// Gets the ViewModel for the global message banner.
         /// </summary>
         public duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel GlobalMessageViewModel { get; }
@@ -168,6 +185,23 @@ namespace duHastNet.DocManager.Revit.ViewModels
                 : _sheetsPanelViewModel;
         }
 
+        /// <summary>
+        /// Opens the folder containing the database file in Windows Explorer.
+        /// </summary>
+        [RelayCommand(CanExecute = nameof(IsDatabaseFolderValid))]
+        private void OpenFolder()
+        {
+            string? folder = Path.GetDirectoryName(_revitSettings.DatabasePath);
+            if (!string.IsNullOrWhiteSpace(folder) && Directory.Exists(folder))
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = folder,
+                    UseShellExecute = true
+                });
+            }
+        }
+
         #endregion Commands
 
         #region Database Refresh
@@ -177,9 +211,17 @@ namespace duHastNet.DocManager.Revit.ViewModels
         /// <see cref="RevisionsPanelViewModel.RefreshRequested"/>.
         /// Delegates to <see cref="DatabaseDataModel.Reload"/> which clears and repopulates
         /// the shared collections in place, triggering downstream UI updates automatically.
-        /// After the reload, notifies <see cref="SheetsPanelViewModel"/> so it can rebuild
-        /// its filtered row list from the refreshed data.
         /// </summary>
+        /// <remarks>
+        /// After the reload, <see cref="SheetsPanelViewModel.OnDatabaseRefreshed"/> is called
+        /// directly. This is a deliberate pragmatic deviation from the pure
+        /// <see cref="System.Collections.ObjectModel.ObservableCollection{T}"/> propagation
+        /// pattern: the Sheets panel maintains its own <c>DisplayedSheets</c> collection of
+        /// <see cref="RevitSheetRowViewModel"/> wrappers rather than binding directly to
+        /// <see cref="DatabaseDataModel.Documents"/>. Those wrappers must have their
+        /// database-status flags re-evaluated after each reload, which requires an explicit
+        /// call. The pattern is intentional and acceptable given the wrapping design.
+        /// </remarks>
         private void OnPanelRefreshRequested(object? sender, EventArgs e)
         {
             _databaseDataModel.Reload(
@@ -195,5 +237,20 @@ namespace duHastNet.DocManager.Revit.ViewModels
         }
 
         #endregion Database Refresh
+
+        #region Lifecycle
+
+        /// <summary>
+        /// Called when the main window is closing.
+        /// Closes the database connection held in <see cref="DatabaseDataModel.Api"/> so
+        /// the SQLite file lock is released before the window is destroyed.
+        /// </summary>
+        public override void OnClosing()
+        {
+            _databaseDataModel.Api.Close();
+            base.OnClosing();
+        }
+
+        #endregion Lifecycle
     }
 }

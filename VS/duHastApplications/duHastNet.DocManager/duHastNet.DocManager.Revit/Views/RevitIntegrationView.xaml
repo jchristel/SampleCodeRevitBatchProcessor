@@ -102,6 +102,13 @@
                                FontSize="11"
                                FontWeight="SemiBold"/>
                 </Border>
+                <!-- Open Folder button -->
+                <Button Content="Open Folder"
+                        Command="{Binding OpenFolderCommand}"
+                        Padding="8,2"
+                        Margin="12,0,0,0"
+                        VerticalAlignment="Center"
+                        FontSize="11"/>
             </StackPanel>
         </Border>
 

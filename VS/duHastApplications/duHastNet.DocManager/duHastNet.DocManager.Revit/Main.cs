@@ -41,9 +41,7 @@ namespace duHastNet.DocManager.Revit
         Models.Database.DatabaseDataModel _databaseDataModel;
         duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
         duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
-        duHastNet.Utils.WPF.Stores.StateStore _stateStore;
-
-        duHastNet.UI.DocManagerSettingsUI.Utils.Settings _revitSettings;
+            duHastNet.UI.DocManagerSettingsUI.Utils.Settings _revitSettings;
         Utilities.UISettings.UISettings _uiSettings;
 
 
@@ -58,8 +56,6 @@ namespace duHastNet.DocManager.Revit
             //set up stores
             _navigationStore = new duHastNet.Utils.WPF.Stores.NavigationStore();
             _messageStore = new duHastNet.Utils.WPF.Stores.MessageStore();
-            _stateStore = new duHastNet.Utils.WPF.Stores.StateStore();
-
             // set up the revit data model
             // check if this is called from the Execute method (there is a data model already) or if the data model is already created and passed in (e.g. from pyRevit) and set it accordingly
             _revitDataModel ??= revitDataModel;

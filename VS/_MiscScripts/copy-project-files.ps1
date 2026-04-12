@@ -79,8 +79,8 @@ function Copy-ProjectFiles {
 Write-Host "`nCopying files from Project 1..." -ForegroundColor White
 Copy-ProjectFiles -sourcePath $project1Path -projectName "Project1" -destination $tempFolder
 
-# Write-Host "`nCopying files from Project 2..." -ForegroundColor White
-# Copy-ProjectFiles -sourcePath $project2Path -projectName "Project2" -destination $tempFolder
+Write-Host "`nCopying files from Project 2..." -ForegroundColor White
+Copy-ProjectFiles -sourcePath $project2Path -projectName "Project2" -destination $tempFolder
 
 # Write-Host "`nCopying files from Project 3..." -ForegroundColor White
 # Copy-ProjectFiles -sourcePath $project3Path -projectName "Project3" -destination $tempFolder

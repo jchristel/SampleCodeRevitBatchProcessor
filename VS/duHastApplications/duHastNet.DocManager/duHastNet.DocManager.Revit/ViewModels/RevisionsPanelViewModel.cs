@@ -21,25 +21,73 @@
 //
 //
 
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using duHastNet.DocManager.Core.Models;
 using duHastNet.DocManager.Revit.Models.Database;
 using duHastNet.DocManager.Revit.Models.Revit;
+using duHastNet.DocManager.Revit.Utilities.RevitData;
+using duHastNet.Utils.WPF.Stores;
+using System.Collections.ObjectModel;
 
 namespace duHastNet.DocManager.Revit.ViewModels
 {
     /// <summary>
     /// ViewModel for the Revisions panel.
-    /// Displays Revit revisions and allows importing them into the Document Manager database.
+    /// <para>
+    /// Displays all Revit sheets that have a matching document in the database, showing their
+    /// revision synchronisation status. The user can select sheets and click "Update" to push
+    /// their Revit revision history into the database.
+    /// </para>
+    /// <para>
+    /// Status colour rules (Red takes precedence over Yellow):
+    /// </para>
+    /// <list type="bullet">
+    ///   <item>
+    ///     <term>Green</term>
+    ///     <description>
+    ///       All revisions on the sheet exist in the database, all are recorded in the
+    ///       document's revision indicator history, and the document's current revision
+    ///       indicator matches the latest sheet revision indicator.
+    ///     </description>
+    ///   </item>
+    ///   <item>
+    ///     <term>Yellow</term>
+    ///     <description>
+    ///       All revisions on the sheet exist in the database, but at least one is not yet
+    ///       applied to the document's revision indicator history, or the document's current
+    ///       revision indicator does not match the latest sheet revision indicator.
+    ///     </description>
+    ///   </item>
+    ///   <item>
+    ///     <term>Red</term>
+    ///     <description>
+    ///       At least one revision on the sheet has no matching <see cref="Revision"/> in the
+    ///       database (matched by date and description, case-sensitive).
+    ///     </description>
+    ///   </item>
+    /// </list>
+    /// <para>
+    /// The Update workflow:
+    /// 1. Any revision on a selected sheet with no database counterpart is created first.
+    /// 2. For each selected document, <see cref="Document.Revision"/> and
+    ///    <see cref="Document.RevisionId"/> are updated to reflect the latest sheet revision,
+    ///    and <see cref="Document.RevisionIndicatorHistory"/> is populated for all revisions.
+    /// 3. Bidirectional: <see cref="Revision.DocumentIds"/> updated for every affected revision.
+    /// 4. <see cref="RefreshRequested"/> is raised so <see cref="RevitIntegrationViewModel"/>
+    ///    reloads the database collections in place.
+    /// </para>
     /// </summary>
-    /// <remarks>
-    /// Stub implementation — full revision import logic to be added in a future step.
-    /// </remarks>
     public partial class RevisionsPanelViewModel : AppViewModelBase
     {
         #region Private Fields
 
         private readonly RevitDataModel _revitDataModel;
         private readonly DatabaseDataModel _databaseDataModel;
-        private readonly duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
+        private readonly MessageStore _messageStore;
+
+        // Lookup from built document number → RevitSheet, built once and reused on refresh.
+        private readonly Dictionary<string, RevitSheet> _sheetByDocumentNumber;
 
         #endregion Private Fields
 
@@ -49,19 +97,27 @@ namespace duHastNet.DocManager.Revit.ViewModels
         /// Initializes a new instance of <see cref="RevisionsPanelViewModel"/>.
         /// </summary>
         /// <param name="revitDataModel">Revit data collected before the window opened. Must not be null.</param>
-        /// <param name="databaseDataModel">Database data model whose collections are observed directly. Must not be null.</param>
+        /// <param name="databaseDataModel">Shared database data model whose collections are observed directly. Must not be null.</param>
         /// <param name="messageStore">Message store for surfacing errors and status to the UI banner. Must not be null.</param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when any parameter is null.
-        /// </exception>
+        /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
         public RevisionsPanelViewModel(
             RevitDataModel revitDataModel,
             DatabaseDataModel databaseDataModel,
-            duHastNet.Utils.WPF.Stores.MessageStore messageStore)
+            MessageStore messageStore)
         {
             _revitDataModel = revitDataModel ?? throw new ArgumentNullException(nameof(revitDataModel));
             _databaseDataModel = databaseDataModel ?? throw new ArgumentNullException(nameof(databaseDataModel));
             _messageStore = messageStore ?? throw new ArgumentNullException(nameof(messageStore));
+
+            _displayedSheets = new ObservableCollection<RevitSheetRevisionRowViewModel>();
+
+            // Build lookup once — Revit sheet data never changes while the window is open.
+            _sheetByDocumentNumber = BuildSheetLookup();
+
+            // Re-evaluate command states whenever the database connection state changes.
+            _databaseDataModel.PropertyChanged += OnDatabaseDataModelPropertyChanged;
+
+            BuildSheetRows();
         }
 
         #endregion Constructor
@@ -69,20 +125,472 @@ namespace duHastNet.DocManager.Revit.ViewModels
         #region Events
 
         /// <summary>
-        /// Raised after a successful database write operation to signal that
-        /// <see cref="RevitIntegrationViewModel"/> should reload the database collections.
+        /// Raised after a successful database write to signal <see cref="RevitIntegrationViewModel"/>
+        /// to reload the database collections.
         /// </summary>
         public event EventHandler? RefreshRequested;
 
-        /// <summary>
-        /// Raises <see cref="RefreshRequested"/>.
-        /// Call this from a command after a successful write to the database.
-        /// </summary>
+        /// <summary>Raises <see cref="RefreshRequested"/>.</summary>
         protected void OnRefreshRequested()
         {
             RefreshRequested?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion Events
+
+        #region Observable Properties
+
+        /// <summary>
+        /// All matched sheet rows, filtered to sheets that have a database document counterpart.
+        /// </summary>
+        [ObservableProperty]
+        private ObservableCollection<RevitSheetRevisionRowViewModel> _displayedSheets;
+
+        /// <summary>
+        /// Gets or sets whether the panel is busy performing a database write.
+        /// All commands are disabled while this is <c>true</c>.
+        /// </summary>
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(UpdateCommand))]
+        [NotifyCanExecuteChangedFor(nameof(SelectAllCommand))]
+        [NotifyCanExecuteChangedFor(nameof(SelectNoneCommand))]
+        private bool _isBusy;
+
+        #endregion Observable Properties
+
+        #region Derived Properties
+
+        /// <summary>Gets the total number of matched sheet rows.</summary>
+        public int TotalCount => DisplayedSheets?.Count ?? 0;
+
+        /// <summary>Gets the number of rows with Red status (revision missing from database).</summary>
+        public int MissingRevisionCount => DisplayedSheets?.Count(r => r.HasUnknownRevisions) ?? 0;
+
+        /// <summary>Gets the number of rows with Yellow status (revision exists but not applied).</summary>
+        public int UnrecordedRevisionCount => DisplayedSheets?.Count(r => r.HasUnrecordedRevisions) ?? 0;
+
+        /// <summary>Gets the number of rows currently selected by the user.</summary>
+        public int SelectedCount => DisplayedSheets?.Count(r => r.IsSelected) ?? 0;
+
+        /// <summary>
+        /// Gets whether the database is currently connected.
+        /// Exposed on this ViewModel so the panel view can bind to it directly without
+        /// reaching up to <see cref="RevitIntegrationViewModel"/>.
+        /// </summary>
+        public bool IsDatabaseConnected => _databaseDataModel.IsConnected;
+
+        /// <summary>
+        /// Gets a hint text shown in the execute bar.
+        /// Displays a disconnected warning when the database is not connected.
+        /// </summary>
+        public string HintText => _databaseDataModel.IsConnected
+            ? $"{TotalCount} matched sheets | {MissingRevisionCount} missing revisions | {UnrecordedRevisionCount} unrecorded | {SelectedCount} selected"
+            : "Database not connected — all operations disabled";
+
+        #endregion Derived Properties
+
+        #region Commands
+
+        /// <summary>
+        /// Selects all displayed sheet rows.
+        /// </summary>
+        [RelayCommand(CanExecute = nameof(CanSelectAll))]
+        private void SelectAll()
+        {
+            foreach (var row in DisplayedSheets)
+                row.IsSelected = true;
+        }
+
+        private bool CanSelectAll()
+        {
+            if (!_databaseDataModel.IsConnected) return false;
+            if (IsBusy) return false;
+            return DisplayedSheets != null && DisplayedSheets.Any();
+        }
+
+        /// <summary>
+        /// Deselects all displayed sheet rows.
+        /// </summary>
+        [RelayCommand(CanExecute = nameof(CanSelectNone))]
+        private void SelectNone()
+        {
+            foreach (var row in DisplayedSheets)
+                row.IsSelected = false;
+        }
+
+        private bool CanSelectNone()
+        {
+            if (!_databaseDataModel.IsConnected) return false;
+            if (IsBusy) return false;
+            return DisplayedSheets != null && DisplayedSheets.Any(r => r.IsSelected);
+        }
+
+        /// <summary>
+        /// Pushes revision history from the selected sheets into the database.
+        /// <para>
+        /// Step 1: Creates any missing <see cref="Revision"/> records in the database for
+        /// revisions present on selected sheets but absent from the database.
+        /// </para>
+        /// <para>
+        /// Step 2: Updates each selected document — sets <see cref="Document.Revision"/> to the
+        /// latest revision indicator, <see cref="Document.RevisionId"/> to the latest revision's
+        /// database ID, and populates <see cref="Document.RevisionIndicatorHistory"/> for all
+        /// revisions on the sheet.
+        /// </para>
+        /// <para>
+        /// Step 3: Maintains bidirectional consistency — adds the document ID to each affected
+        /// <see cref="Revision.DocumentIds"/> collection, and removes from any previous revision
+        /// that is being superseded as the current revision.
+        /// </para>
+        /// </summary>
+        [RelayCommand(CanExecute = nameof(CanUpdate))]
+        private async Task UpdateAsync()
+        {
+            if (!CanUpdate()) return;
+
+            IsBusy = true;
+
+            try
+            {
+                var selectedRows = DisplayedSheets.Where(r => r.IsSelected).ToList();
+                var api = _databaseDataModel.Api;
+                var dbRevisions = _databaseDataModel.Revisions.ToList();
+
+                // ── Step 1: Create missing revisions ──────────────────────────────────
+
+                // Collect all distinct Revit revisions across selected sheets that have no
+                // database counterpart (matched by date + description, case-sensitive).
+                var revisionsToCreate = new List<(string Date, string Description)>();
+
+                foreach (var row in selectedRows)
+                {
+                    if (!_sheetByDocumentNumber.TryGetValue(row.DocumentNumber, out var sheet))
+                        continue;
+
+                    foreach (var revOnSheet in sheet.RevisionsOnSheet)
+                    {
+                        bool existsInDb = dbRevisions.Any(dbRev =>
+                            dbRev.RevisionDate.ToString("yyyy-MM-dd") == revOnSheet.RevitRevision.RevisionDate &&
+                            dbRev.Description == revOnSheet.RevitRevision.RevisionDescription);
+
+                        if (!existsInDb)
+                        {
+                            var key = (revOnSheet.RevitRevision.RevisionDate, revOnSheet.RevitRevision.RevisionDescription);
+                            if (!revisionsToCreate.Contains(key))
+                                revisionsToCreate.Add(key);
+                        }
+                    }
+                }
+
+                foreach (var (dateStr, description) in revisionsToCreate)
+                {
+                    if (!DateTime.TryParse(dateStr, out DateTime revDate))
+                    {
+                        _messageStore.EnqueueMessage(
+                            $"Could not parse revision date '{dateStr}' — skipping revision '{description}'.",
+                            MessageTypes.Warning,
+                            dismissAfterSeconds: 10);
+                        continue;
+                    }
+
+                    var newRevision = new Revision(revDate, description);
+                    await api.CreateRevisionAsync(newRevision);
+
+                    _messageStore.EnqueueMessage(
+                        $"Created database revision: {description} ({dateStr})",
+                        MessageTypes.Information,
+                        dismissAfterSeconds: 5);
+                }
+
+                // Raise RefreshRequested so the database collections are reloaded before
+                // we read them again in Step 2. RevitIntegrationViewModel will call
+                // OnDatabaseRefreshed() after the reload completes.
+                // However, since we need the refreshed revisions immediately below, we
+                // reload the revision list directly from the API before proceeding.
+                var refreshedRevisions = await api.GetAllRevisionsAsync();
+
+                // ── Step 2 & 3: Update documents ──────────────────────────────────────
+
+                var updateErrors = new List<string>();
+                int documentsUpdated = 0;
+
+                foreach (var row in selectedRows)
+                {
+                    if (!_sheetByDocumentNumber.TryGetValue(row.DocumentNumber, out var sheet))
+                    {
+                        updateErrors.Add($"Sheet '{row.DocumentNumber}' not found in Revit data — skipped.");
+                        continue;
+                    }
+
+                    // Find the matching database document by document number.
+                    var dbDocument = _databaseDataModel.Documents
+                        .FirstOrDefault(d => string.Equals(d.Number, row.DocumentNumber, StringComparison.Ordinal));
+
+                    if (dbDocument == null)
+                    {
+                        updateErrors.Add($"Document '{row.DocumentNumber}' not found in database — skipped.");
+                        continue;
+                    }
+
+                    // Reload the document from the API to get the latest persisted state
+                    // (including any changes made by earlier iterations in this loop).
+                    var document = await api.GetDocumentByIdAsync(dbDocument.Id);
+                    if (document == null)
+                    {
+                        updateErrors.Add($"Document ID {dbDocument.Id} ('{row.DocumentNumber}') could not be loaded — skipped.");
+                        continue;
+                    }
+
+                    int previousRevisionId = document.RevisionId;
+                    bool documentChanged = false;
+
+                    // Process every revision on the sheet in order.
+                    Revision? latestDbRevision = null;
+
+                    foreach (var revOnSheet in sheet.RevisionsOnSheet)
+                    {
+                        var matchedDbRevision = refreshedRevisions.FirstOrDefault(dbRev =>
+                            dbRev.RevisionDate.ToString("yyyy-MM-dd") == revOnSheet.RevitRevision.RevisionDate &&
+                            dbRev.Description == revOnSheet.RevitRevision.RevisionDescription);
+
+                        if (matchedDbRevision == null)
+                        {
+                            // Should not happen after Step 1, but guard defensively.
+                            updateErrors.Add(
+                                $"Revision '{revOnSheet.RevitRevision.RevisionDescription}' ({revOnSheet.RevitRevision.RevisionDate}) " +
+                                $"still not found in database after creation attempt — skipped for document '{row.DocumentNumber}'.");
+                            continue;
+                        }
+
+                        // Record revision indicator in the document's history if not already present.
+                        if (!document.HasRevisionIndicator(matchedDbRevision.Id))
+                        {
+                            document.SetRevisionIndicator(matchedDbRevision.Id, revOnSheet.RevisionIndicator);
+                            documentChanged = true;
+
+                            // Bidirectional: add this document to the revision's document list.
+                            await api.AddDocumentToRevisionAsync(matchedDbRevision.Id, document.Id);
+                        }
+
+                        latestDbRevision = matchedDbRevision;
+                    }
+
+                    // Update the document's current revision to the latest sheet revision.
+                    if (latestDbRevision != null)
+                    {
+                        var lastRevOnSheet = sheet.RevisionsOnSheet.LastOrDefault();
+                        string latestIndicator = lastRevOnSheet?.RevisionIndicator ?? string.Empty;
+
+                        if (document.Revision != latestIndicator || document.RevisionId != latestDbRevision.Id)
+                        {
+                            document.Revision = latestIndicator;
+                            document.RevisionId = latestDbRevision.Id;
+                            documentChanged = true;
+
+                            // Bidirectional: remove document from old revision if it has changed.
+                            if (previousRevisionId != 0 && previousRevisionId != latestDbRevision.Id)
+                            {
+                                await api.RemoveDocumentFromRevisionAsync(previousRevisionId, document.Id);
+                            }
+
+                            // Ensure the document is listed under its new current revision.
+                            await api.AddDocumentToRevisionAsync(latestDbRevision.Id, document.Id);
+                        }
+                    }
+
+                    if (documentChanged)
+                    {
+                        await api.UpdateDocumentAsync(document);
+                        documentsUpdated++;
+                    }
+                }
+
+                // ── Report results ────────────────────────────────────────────────────
+
+                if (updateErrors.Any())
+                {
+                    foreach (var error in updateErrors)
+                    {
+                        _messageStore.EnqueueMessage(error, MessageTypes.Warning, dismissAfterSeconds: 20);
+                    }
+                }
+
+                if (documentsUpdated > 0)
+                {
+                    _messageStore.EnqueueMessage(
+                        $"Updated revision history for {documentsUpdated} document(s).",
+                        MessageTypes.Information,
+                        dismissAfterSeconds: 5);
+                }
+
+                // Trigger full database reload so all panels reflect the new state.
+                OnRefreshRequested();
+            }
+            catch (Exception ex)
+            {
+                _messageStore.EnqueueMessage(
+                    $"Update failed: {ex.Message}",
+                    MessageTypes.Error);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        private bool CanUpdate()
+        {
+            if (!_databaseDataModel.IsConnected) return false;
+            if (IsBusy) return false;
+            return DisplayedSheets != null && DisplayedSheets.Any(r => r.IsSelected);
+        }
+
+        #endregion Commands
+
+        #region Database Refresh
+
+        /// <summary>
+        /// Called by <see cref="RevitIntegrationViewModel"/> after every
+        /// <see cref="DatabaseDataModel.Reload"/> to re-evaluate each row's revision status
+        /// against the refreshed database collections.
+        /// Resets all selections.
+        /// </summary>
+        public void OnDatabaseRefreshed()
+        {
+            var dbRevisions = _databaseDataModel.Revisions.ToList();
+
+            foreach (var row in DisplayedSheets)
+            {
+                if (!_sheetByDocumentNumber.TryGetValue(row.DocumentNumber, out var sheet))
+                    continue;
+
+                var dbDocument = _databaseDataModel.Documents
+                    .FirstOrDefault(d => string.Equals(d.Number, row.DocumentNumber, StringComparison.Ordinal));
+
+                if (dbDocument == null)
+                    continue;
+
+                row.IsSelected = false;
+                row.Refresh(sheet, dbDocument, dbRevisions);
+            }
+
+            UpdateCounts();
+        }
+
+        #endregion Database Refresh
+
+        #region Private Helpers
+
+        /// <summary>
+        /// Builds the sheet lookup dictionary from built document number to <see cref="RevitSheet"/>.
+        /// Sheets with an empty built document number are excluded.
+        /// </summary>
+        private Dictionary<string, RevitSheet> BuildSheetLookup()
+        {
+            var lookup = new Dictionary<string, RevitSheet>(StringComparer.Ordinal);
+
+            foreach (var sheet in _revitDataModel.GetSheets())
+            {
+                sheet.BuiltDocumentProperties.TryGetValue(
+                    duHastNet.UI.DocManagerSettingsUI.Utils.Constants.DocumentPropertyKeyDocumentNumber,
+                    out string? docNumber);
+
+                if (string.IsNullOrWhiteSpace(docNumber))
+                    continue;
+
+                // In the unlikely event of a duplicate built number, keep the first.
+                if (!lookup.ContainsKey(docNumber))
+                    lookup[docNumber] = sheet;
+            }
+
+            return lookup;
+        }
+
+        /// <summary>
+        /// Builds <see cref="DisplayedSheets"/> from scratch.
+        /// Only sheets whose built document number matches a document in the database are included.
+        /// </summary>
+        private void BuildSheetRows()
+        {
+            DisplayedSheets.Clear();
+
+            var dbDocumentsByNumber = _databaseDataModel.Documents
+                .ToDictionary(d => d.Number, d => d, StringComparer.Ordinal);
+
+            var dbRevisions = _databaseDataModel.Revisions.ToList();
+
+            foreach (var (docNumber, sheet) in _sheetByDocumentNumber)
+            {
+                if (!dbDocumentsByNumber.TryGetValue(docNumber, out var dbDocument))
+                    continue;
+
+                var row = new RevitSheetRevisionRowViewModel(
+                    sheet,
+                    dbDocument,
+                    dbRevisions,
+                    onSelectionChanged: UpdateCounts);
+
+                DisplayedSheets.Add(row);
+            }
+
+            UpdateCounts();
+        }
+
+        /// <summary>
+        /// Refreshes all count-derived properties and notifies commands to re-evaluate
+        /// their CanExecute state. Called whenever a row's IsSelected changes or after
+        /// any data reload.
+        /// </summary>
+        private void UpdateCounts()
+        {
+            OnPropertyChanged(nameof(TotalCount));
+            OnPropertyChanged(nameof(MissingRevisionCount));
+            OnPropertyChanged(nameof(UnrecordedRevisionCount));
+            OnPropertyChanged(nameof(SelectedCount));
+            OnPropertyChanged(nameof(HintText));
+            OnPropertyChanged(nameof(IsDatabaseConnected));
+            UpdateCommand.NotifyCanExecuteChanged();
+            SelectAllCommand.NotifyCanExecuteChanged();
+            SelectNoneCommand.NotifyCanExecuteChanged();
+        }
+
+        #endregion Private Helpers
+
+        #region Database Connection Change Handler
+
+        private void OnDatabaseDataModelPropertyChanged(
+            object? sender,
+            System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(DatabaseDataModel.IsConnected))
+            {
+                UpdateCounts();
+            }
+        }
+
+        #endregion Database Connection Change Handler
+
+        #region Lifecycle
+
+        /// <summary>
+        /// Unsubscribes from <see cref="DatabaseDataModel.PropertyChanged"/> to prevent
+        /// memory leaks when the window is closing.
+        /// </summary>
+        public override void OnClosing()
+        {
+            _databaseDataModel.PropertyChanged -= OnDatabaseDataModelPropertyChanged;
+            base.OnClosing();
+        }
+
+        /// <summary>
+        /// Unsubscribes from <see cref="DatabaseDataModel.PropertyChanged"/> on disposal.
+        /// </summary>
+        public override void Dispose()
+        {
+            _databaseDataModel.PropertyChanged -= OnDatabaseDataModelPropertyChanged;
+            base.Dispose();
+        }
+
+        #endregion Lifecycle
     }
 }

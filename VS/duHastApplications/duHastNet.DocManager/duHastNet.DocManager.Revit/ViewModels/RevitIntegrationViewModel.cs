@@ -96,14 +96,14 @@ namespace duHastNet.DocManager.Revit.ViewModels
                 _databaseDataModel,
                 _messageStore);
 
-            // subscribe to refresh events from both panels
+            // Subscribe to refresh events from both panels.
             _sheetsPanelViewModel.RefreshRequested += OnPanelRefreshRequested;
             _revisionsPanelViewModel.RefreshRequested += OnPanelRefreshRequested;
 
-            // wire global message banner
+            // Wire global message banner.
             GlobalMessageViewModel = new duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);
 
-            // sheets panel is the default
+            // Sheets panel is the default.
             _currentPanelViewModel = _sheetsPanelViewModel;
         }
 
@@ -211,17 +211,10 @@ namespace duHastNet.DocManager.Revit.ViewModels
         /// <see cref="RevisionsPanelViewModel.RefreshRequested"/>.
         /// Delegates to <see cref="DatabaseDataModel.Reload"/> which clears and repopulates
         /// the shared collections in place, triggering downstream UI updates automatically.
+        /// After the reload, calls <see cref="SheetsPanelViewModel.OnDatabaseRefreshed"/> and
+        /// <see cref="RevisionsPanelViewModel.OnDatabaseRefreshed"/> so both panels re-evaluate
+        /// their row-level status flags from the refreshed data.
         /// </summary>
-        /// <remarks>
-        /// After the reload, <see cref="SheetsPanelViewModel.OnDatabaseRefreshed"/> is called
-        /// directly. This is a deliberate pragmatic deviation from the pure
-        /// <see cref="System.Collections.ObjectModel.ObservableCollection{T}"/> propagation
-        /// pattern: the Sheets panel maintains its own <c>DisplayedSheets</c> collection of
-        /// <see cref="RevitSheetRowViewModel"/> wrappers rather than binding directly to
-        /// <see cref="DatabaseDataModel.Documents"/>. Those wrappers must have their
-        /// database-status flags re-evaluated after each reload, which requires an explicit
-        /// call. The pattern is intentional and acceptable given the wrapping design.
-        /// </remarks>
         private void OnPanelRefreshRequested(object? sender, EventArgs e)
         {
             _databaseDataModel.Reload(
@@ -232,8 +225,9 @@ namespace duHastNet.DocManager.Revit.ViewModels
             // IsDatabaseConnected is derived from the model so notify the view in case it changed.
             OnPropertyChanged(nameof(IsDatabaseConnected));
 
-            // Let the sheets panel rebuild its filtered view from the refreshed database data.
+            // Let each panel rebuild its view from the refreshed database data.
             _sheetsPanelViewModel.OnDatabaseRefreshed();
+            _revisionsPanelViewModel.OnDatabaseRefreshed();
         }
 
         #endregion Database Refresh

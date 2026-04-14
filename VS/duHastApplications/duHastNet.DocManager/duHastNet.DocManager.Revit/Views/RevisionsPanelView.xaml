@@ -110,6 +110,10 @@
 
                 <!-- Colour legend -->
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Ellipse Width="10" Height="10" Fill="#AAAAAA" VerticalAlignment="Center"
+                             Stroke="#888888" StrokeThickness="1"/>
+                    <TextBlock Text="Invalid date" FontSize="11" Foreground="#555555"
+                               VerticalAlignment="Center" Margin="4,0,14,0"/>
                     <Ellipse Width="10" Height="10" Fill="Red" VerticalAlignment="Center"/>
                     <TextBlock Text="Revision not in DB" FontSize="11" Foreground="#555555"
                                VerticalAlignment="Center" Margin="4,0,14,0"/>
@@ -131,18 +135,22 @@
                   Margin="12,0,12,4">
             <DataGrid.Columns>
 
-                <!-- Col 0: Checkbox — IsReadOnly=False so two-way binding works -->
+                <!-- Col 0: Checkbox — IsReadOnly=False so two-way binding works.
+                     Disabled for grey rows (invalid revision date). -->
                 <DataGridTemplateColumn Header="Select" Width="55" IsReadOnly="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay,
                                                           UpdateSourceTrigger=PropertyChanged}"
+                                      IsEnabled="{Binding IsSelectable}"
                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <!-- Col 1: Status colour dot -->
+                <!-- Col 1: Status colour dot.
+                     Grey = invalid date (highest precedence), Red = missing from DB,
+                     Yellow = not applied to document, Green = up to date. -->
                 <DataGridTemplateColumn Header="" Width="28" IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -154,6 +162,11 @@
                                         <!-- Default: Red — revision missing from database -->
                                         <Setter Property="Fill" Value="Red"/>
                                         <Style.Triggers>
+                                            <DataTrigger Binding="{Binding StatusColor}" Value="Grey">
+                                                <Setter Property="Fill" Value="#AAAAAA"/>
+                                                <Setter Property="Stroke" Value="#888888"/>
+                                                <Setter Property="StrokeThickness" Value="1"/>
+                                            </DataTrigger>
                                             <DataTrigger Binding="{Binding StatusColor}" Value="Yellow">
                                                 <Setter Property="Fill" Value="Yellow"/>
                                                 <Setter Property="Stroke" Value="#B8860B"/>

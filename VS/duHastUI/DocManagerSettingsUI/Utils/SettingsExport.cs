@@ -36,16 +36,21 @@ namespace duHastNet.UI.DocManagerSettingsUI.Utils
         /// property keys (e.g. "DocumentNumber", "DocumentName") whose values are bare JSON
         /// array strings of DocumentSetting objects.
         /// </param>
+        /// <param name="dateFormatOrder">
+        /// The revision date format order to persist alongside the builder string.
+        /// </param>
         /// <param name="AddMessage">Callback for surfacing status or error messages to the UI.</param>
         public static void ExportSettingsToJson(
             string filePath,
             string builderDictionaryString,
+            DateFormatOrder dateFormatOrder,
             Action<string, duHastNet.Utils.WPF.Stores.MessageTypes> AddMessage)
         {
             try
             {
                 // Create a Settings object carrying the full builder dictionary string
-                Settings settingsObject = new Settings(builderDictionaryString, string.Empty);
+                // and the configured revision date format order.
+                Settings settingsObject = new Settings(builderDictionaryString, string.Empty, dateFormatOrder);
 
                 // Serialize the Settings object to JSON
                 string json = Newtonsoft.Json.JsonConvert.SerializeObject(settingsObject, Newtonsoft.Json.Formatting.Indented);
@@ -59,6 +64,24 @@ namespace duHastNet.UI.DocManagerSettingsUI.Utils
             {
                 AddMessage($"Error exporting settings: {ex.Message}", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
             }
+        }
+
+        /// <summary>
+        /// Exports the full settings to a JSON file using the default
+        /// <see cref="DateFormatOrder.DayMonthYear"/> revision date format order.
+        /// Provided for backward compatibility with callers that do not yet supply a format order.
+        /// </summary>
+        /// <param name="filePath">The full file path to write the exported JSON to.</param>
+        /// <param name="builderDictionaryString">
+        /// The full DocumentNumberBuilderString value.
+        /// </param>
+        /// <param name="AddMessage">Callback for surfacing status or error messages to the UI.</param>
+        public static void ExportSettingsToJson(
+            string filePath,
+            string builderDictionaryString,
+            Action<string, duHastNet.Utils.WPF.Stores.MessageTypes> AddMessage)
+        {
+            ExportSettingsToJson(filePath, builderDictionaryString, DateFormatOrder.DayMonthYear, AddMessage);
         }
     }
 }

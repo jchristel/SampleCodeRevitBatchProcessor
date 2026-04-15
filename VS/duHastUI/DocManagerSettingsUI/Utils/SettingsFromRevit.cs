@@ -1,4 +1,3 @@
-
 //
 //License:
 //
@@ -47,6 +46,7 @@ namespace duHastNet.UI.DocManagerSettingsUI.Utils
             {
                 // Old format — bare JSON array of DocumentSetting objects.
                 // Wrap it under the DocumentNumber key so it is compatible with the new dictionary format.
+                // DateFormatOrder is not present in old-format files — default to DayMonthYear.
                 var parts = JsonConvert.DeserializeObject<List<DocumentSetting>>(jsonString) ?? new List<DocumentSetting>();
                 string bareArrayString = JsonConvert.SerializeObject(parts);
                 string dictionaryString = JsonConvert.SerializeObject(
@@ -57,15 +57,20 @@ namespace duHastNet.UI.DocManagerSettingsUI.Utils
                 settings = new Settings
                 {
                     DocumentNumberBuilderString = dictionaryString,
-                    DatabasePath = string.Empty
+                    DatabasePath = string.Empty,
+                    DateFormatOrder = DateFormatOrder.DayMonthYear
                 };
             }
             else
             {
-                // New format - Settings object
-                // DocumentNumberBuilderString is populated from JSON if present;
-                // defaults to string.Empty for files written before this property existed.
+                // New format — Settings object.
+                // DocumentNumberBuilderString and DatabasePath are populated from JSON if present.
+                // DateFormatOrder defaults to DayMonthYear when absent or unrecognised
+                // (e.g. files written before this property existed).
                 settings = JsonConvert.DeserializeObject<Settings>(jsonString) ?? new Settings();
+
+                // Newtonsoft.Json deserialises unknown enum string values as the default (0),
+                // which is DayMonthYear — correct behaviour. No additional guard needed.
             }
 
             return settings;

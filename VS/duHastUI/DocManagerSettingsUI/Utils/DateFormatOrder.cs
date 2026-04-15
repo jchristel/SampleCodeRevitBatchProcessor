@@ -5,7 +5,7 @@
 // Revit Batch Processor Sample Code
 //
 // BSD License
-// Copyright 2025, Jan Christel
+// Copyright 2026, Jan Christel
 // All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -21,51 +21,36 @@
 //
 //
 
-using Newtonsoft.Json;
-
 namespace duHastNet.UI.DocManagerSettingsUI.Utils
 {
-    public class Settings
+    /// <summary>
+    /// Specifies the order of day and month components in revision date strings sourced from Revit.
+    /// </summary>
+    /// <remarks>
+    /// Revit stores revision dates as free-text strings entered by the user. The separator
+    /// character and zero-padding of day/month digits are handled automatically by the parser —
+    /// this enum only controls whether the first numeric component is the day or the month,
+    /// which is the only genuine ambiguity in strings such as "03/04/2026".
+    /// <para>
+    /// Stored in the Revit project settings JSON under the key
+    /// <c>"DateFormatOrder"</c> as the string <c>"DayMonthYear"</c> or
+    /// <c>"MonthDayYear"</c>. Defaults to <see cref="DayMonthYear"/> when the key is
+    /// absent or unrecognised.
+    /// </para>
+    /// </remarks>
+    public enum DateFormatOrder
     {
         /// <summary>
-        /// JSON-serialised list of DocumentSetting objects that define the document number builder rule.
-        /// Renamed from DocumentNumberString for clarity.
+        /// The first component is the day, the second is the month.
+        /// Example: "03/04/2026" is interpreted as 3 April 2026.
+        /// This is the default and covers most non-US locales.
         /// </summary>
-        public string DocumentNumberBuilderString { get; set; }
-
-        public string DatabasePath { get; set; }
+        DayMonthYear,
 
         /// <summary>
-        /// Controls how the first and second numeric components of a Revit revision date string
-        /// are interpreted. Defaults to <see cref="DateFormatOrder.DayMonthYear"/> which covers
-        /// most non-US locales (e.g. "03/04/2026" = 3 April 2026).
+        /// The first component is the month, the second is the day.
+        /// Example: "03/04/2026" is interpreted as 4 March 2026.
         /// </summary>
-        public DateFormatOrder DateFormatOrder { get; set; }
-
-        public Settings()
-        {
-            DocumentNumberBuilderString = string.Empty;
-            DatabasePath = string.Empty;
-            DateFormatOrder = DateFormatOrder.DayMonthYear;
-        }
-
-        public Settings(string documentNumberBuilderString, string databasePath)
-        {
-            DocumentNumberBuilderString = documentNumberBuilderString;
-            DatabasePath = databasePath;
-            DateFormatOrder = DateFormatOrder.DayMonthYear;
-        }
-
-        public Settings(string documentNumberBuilderString, string databasePath, DateFormatOrder dateFormatOrder)
-        {
-            DocumentNumberBuilderString = documentNumberBuilderString;
-            DatabasePath = databasePath;
-            DateFormatOrder = dateFormatOrder;
-        }
-
-        public override string ToString()
-        {
-            return $"DocumentNumberBuilderString: {DocumentNumberBuilderString}\nDatabasePath: {DatabasePath}\nDateFormatOrder: {DateFormatOrder}";
-        }
+        MonthDayYear
     }
 }

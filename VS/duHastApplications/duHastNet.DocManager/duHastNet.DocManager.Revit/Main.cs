@@ -41,7 +41,7 @@ namespace duHastNet.DocManager.Revit
         Models.Database.DatabaseDataModel _databaseDataModel;
         duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
         duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
-            duHastNet.UI.DocManagerSettingsUI.Utils.Settings _revitSettings;
+        duHastNet.UI.DocManagerSettingsUI.Utils.Settings _revitSettings;
         Utilities.UISettings.UISettings _uiSettings;
 
 
@@ -84,6 +84,16 @@ namespace duHastNet.DocManager.Revit
             //process each sheet: build the document number as per passed in settings
             _revitDataModel.AddFullDocumentNumber(_revitSettings.DocumentNumberBuilderString);
 
+            // parse each revision's raw date string into a DateTime using the configured format order.
+            // must run after AddFullDocumentNumber so all startup data is available, and before
+            // LoadDatabaseData so that ParsedDate is set before any UI or comparison logic runs.
+            Utilities.RevisionDateNormaliser.NormaliseRevisionDates(_revitDataModel, _revitSettings.DateFormatOrder);
+
+            _revitDataModel.LogMessages(
+                [
+                    ($"Normalised revision dates using format order: {_revitSettings.DateFormatOrder}.", duHastNet.Utils.WPF.Stores.MessageTypes.Information)
+                ]);
+
             // load existing documents and revisions from the database;
             // happy/unhappy path is resolved here — the window always opens regardless of outcome
             _databaseDataModel = LoadDatabaseData();
@@ -105,19 +115,6 @@ namespace duHastNet.DocManager.Revit
         /// <summary>
         /// Executes the external command using the provided command data and element set.
         /// </summary>
-        /// <param name="commandData">
-        /// An object that contains contextual information about the external command, including
-        /// access to the application and active document.
-        /// </param>
-        /// <param name="message">
-        /// A message that can be set by the command to provide additional information to the user
-        /// if execution fails.
-        /// </param>
-        /// <param name="elements">
-        /// A set of elements that can be used to highlight or select elements in the user interface
-        /// if the command fails.
-        /// </param>
-        /// <returns>A <see cref="Result"/> value indicating the outcome of the command execution.</returns>
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             //get the active document
@@ -200,9 +197,6 @@ namespace duHastNet.DocManager.Revit
         /// with empty lists, allowing the window to open with operations disabled.
         /// </para>
         /// </summary>
-        /// <returns>
-        /// A populated <see cref="DatabaseDataModel"/> on success, or a disconnected one on failure.
-        /// </returns>
         private DatabaseDataModel LoadDatabaseData()
         {
             string databasePath = _revitSettings?.DatabasePath ?? string.Empty;
@@ -290,7 +284,6 @@ namespace duHastNet.DocManager.Revit
             {
                 if (cleaner.ErrorMessages.Count > 0)
                 {
-                    // Log any errors encountered during log file cleanup, but do not fail startup — the main window still opens and the user can see the messages in the banner.
                     List<(string, duHastNet.Utils.WPF.Stores.MessageTypes)> e = [];
                     foreach (var err in cleaner.ErrorMessages)
                     {

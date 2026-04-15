@@ -275,11 +275,11 @@ namespace duHastNet.DocManager.Revit.ViewModels
 
                     foreach (var revOnSheet in sheet.RevisionsOnSheet)
                     {
-                        // Use TryGetDate to parse the raw Revit date string to a DateTime so the
-                        // comparison against the database DateTime is locale-format safe.
-                        // IsDateValid is guaranteed true for all selected rows (grey rows are never
-                        // selectable), but TryGetDate is called defensively regardless.
-                        revOnSheet.RevitRevision.TryGetDate(out DateTime revitDate);
+                        // ParsedDate is guaranteed non-null for all selected rows —
+                        // grey rows (IsDateValid == false) are never selectable.
+                        // Compare DateTime.Date directly against the database DateTime.Date —
+                        // no string formatting, locale-format safe.
+                        DateTime revitDate = revOnSheet.RevitRevision.ParsedDate!.Value.Date;
 
                         bool existsInDb = dbRevisions.Any(dbRev =>
                             dbRev.RevisionDate.Date == revitDate &&
@@ -294,14 +294,29 @@ namespace duHastNet.DocManager.Revit.ViewModels
                     }
                 }
 
+                // revisionsToCreate holds the raw RevisionDate strings — look up the
+                // ParsedDate from the sheet revision to create the Revision with a proper DateTime.
+                // Build a lookup from raw date string + description to ParsedDate for efficiency.
+                var parsedDateLookup = new Dictionary<(string, string), DateTime>();
+                foreach (var row in selectedRows)
+                {
+                    if (!_sheetByDocumentNumber.TryGetValue(row.DocumentNumber, out var lookupSheet))
+                        continue;
+                    foreach (var revOnSheet in lookupSheet.RevisionsOnSheet)
+                    {
+                        var lookupKey = (revOnSheet.RevitRevision.RevisionDate, revOnSheet.RevitRevision.RevisionDescription);
+                        if (!parsedDateLookup.ContainsKey(lookupKey) && revOnSheet.RevitRevision.ParsedDate.HasValue)
+                            parsedDateLookup[lookupKey] = revOnSheet.RevitRevision.ParsedDate.Value.Date;
+                    }
+                }
+
                 foreach (var (dateStr, description) in revisionsToCreate)
                 {
-                    // IsDateValid is guaranteed true for all selected rows — grey rows
-                    // are never selectable — but parse defensively anyway.
-                    if (!DateTime.TryParse(dateStr, out DateTime revDate))
+                    var lookupKey = (dateStr, description);
+                    if (!parsedDateLookup.TryGetValue(lookupKey, out DateTime revDate))
                     {
                         _messageStore.EnqueueMessage(
-                            $"Could not parse revision date '{dateStr}' — skipping revision '{description}'.",
+                            $"Could not retrieve parsed date for revision '{description}' ({dateStr}) — skipped.",
                             MessageTypes.Warning,
                             dismissAfterSeconds: 10);
                         continue;
@@ -349,9 +364,8 @@ namespace duHastNet.DocManager.Revit.ViewModels
                     // Process every revision on the sheet in order.
                     foreach (var revOnSheet in sheet.RevisionsOnSheet)
                     {
-                        // Parse the Revit date string to DateTime for a locale-format safe
-                        // comparison against the database Revision.RevisionDate DateTime value.
-                        revOnSheet.RevitRevision.TryGetDate(out DateTime revitDate);
+                        // ParsedDate is guaranteed non-null — grey rows never reach Update().
+                        DateTime revitDate = revOnSheet.RevitRevision.ParsedDate!.Value.Date;
 
                         var matchedDbRevision = refreshedRevisions.FirstOrDefault(dbRev =>
                             dbRev.RevisionDate.Date == revitDate &&
@@ -442,7 +456,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
         {
             if (!_databaseDataModel.IsConnected) return false;
             if (IsBusy) return false;
-            return DisplayedSheets != null && DisplayedSheets.Any(r => r.IsSelected);
+            return DisplayedSheets != null && DisplayedSheets.Any(r => r.IsSelected && r.NeedsUpdate);
         }
 
         #endregion Commands

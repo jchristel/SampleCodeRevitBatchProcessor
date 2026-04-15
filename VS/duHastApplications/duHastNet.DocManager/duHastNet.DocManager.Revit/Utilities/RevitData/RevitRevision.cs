@@ -24,24 +24,25 @@
 namespace duHastNet.DocManager.Revit.Utilities.RevitData
 {
     /// <summary>
-    /// Represents a Revit revision with a date string and description.
+    /// Represents a Revit revision with a raw date string and description.
     /// </summary>
     /// <remarks>
     /// <para>
     /// Revit stores revision dates as free-text strings in whatever format the user entered them.
-    /// The string is not guaranteed to be parseable as a date value, and even when parseable it
-    /// may be in a locale-specific format such as "12/01/2026" or "10/04/26".
+    /// The string is not guaranteed to be parseable or to follow a consistent locale format.
     /// </para>
     /// <para>
-    /// Use <see cref="IsDateValid"/> to check parseability and <see cref="TryGetDate"/> to obtain
-    /// a parsed <see cref="DateTime"/> value. All date-matching logic must go through
-    /// <see cref="TryGetDate"/> so that locale-format differences between the Revit string and
-    /// the database <see cref="global::duHastNet.DocManager.Core.Models.Revision.RevisionDate"/>
-    /// DateTime are handled correctly in one place.
+    /// <see cref="ParsedDate"/> is populated by
+    /// <see cref="Utilities.RevisionDateNormaliser.NormaliseRevisionDates"/> in <c>Main.cs</c>
+    /// immediately after document numbers are built. Once set it is a locale-independent
+    /// <see cref="DateTime"/> value suitable for direct comparison against
+    /// <see cref="global::duHastNet.DocManager.Core.Models.Revision.RevisionDate"/>.
     /// </para>
     /// <para>
-    /// Revisions where <see cref="IsDateValid"/> is <c>false</c> must not be imported into the
-    /// database and are shown with a grey indicator in the UI.
+    /// Use <see cref="IsDateValid"/> to check whether parsing succeeded and
+    /// <see cref="TryGetDate"/> to obtain the parsed value via an out parameter.
+    /// Revisions where <see cref="IsDateValid"/> is <c>false</c> must not be imported into
+    /// the database and are shown with a grey indicator in the UI.
     /// </para>
     /// </remarks>
     public class RevitRevision
@@ -55,8 +56,7 @@ namespace duHastNet.DocManager.Revit.Utilities.RevitData
 
         /// <summary>
         /// Gets or sets the revision date as a raw string sourced directly from Revit.
-        /// This value is not guaranteed to be in a specific format — see <see cref="IsDateValid"/>
-        /// and <see cref="TryGetDate"/>.
+        /// Kept for display purposes only. Use <see cref="ParsedDate"/> for all date comparisons.
         /// </summary>
         public string RevisionDate { get; set; }
 
@@ -66,10 +66,20 @@ namespace duHastNet.DocManager.Revit.Utilities.RevitData
         public string RevisionDescription { get; set; }
 
         /// <summary>
-        /// Gets whether <see cref="RevisionDate"/> can be parsed as a valid <see cref="DateTime"/>.
-        /// Delegates to <see cref="TryGetDate"/> so parsing logic exists in one place.
+        /// Gets or sets the parsed date value produced by
+        /// <see cref="Utilities.RevisionDateNormaliser.NormaliseRevisionDates"/>.
+        /// <c>null</c> when <see cref="RevisionDate"/> could not be parsed.
+        /// The time component is always midnight — only the date portion is meaningful.
         /// </summary>
-        public bool IsDateValid => TryGetDate(out _);
+        public DateTime? ParsedDate { get; set; }
+
+        /// <summary>
+        /// Gets whether <see cref="ParsedDate"/> has been successfully populated.
+        /// <c>false</c> when the raw <see cref="RevisionDate"/> string could not be parsed,
+        /// or before <see cref="Utilities.RevisionDateNormaliser.NormaliseRevisionDates"/>
+        /// has been called.
+        /// </summary>
+        public bool IsDateValid => ParsedDate.HasValue;
 
         #endregion Properties
 
@@ -77,12 +87,12 @@ namespace duHastNet.DocManager.Revit.Utilities.RevitData
 
         /// <summary>
         /// Initializes a new instance of <see cref="RevitRevision"/> with the supplied values.
+        /// <see cref="ParsedDate"/> is <c>null</c> until
+        /// <see cref="Utilities.RevisionDateNormaliser.NormaliseRevisionDates"/> is called.
         /// </summary>
         /// <param name="revitRevisionElementId">The Revit element ID of the revision.</param>
         /// <param name="revisionDate">
         /// The date string as supplied by Revit. May be in any locale format.
-        /// Use <see cref="IsDateValid"/> and <see cref="TryGetDate"/> before performing
-        /// any date operations.
         /// </param>
         /// <param name="revisionDescription">The revision description. Must not be null.</param>
         /// <exception cref="ArgumentNullException">
@@ -98,7 +108,7 @@ namespace duHastNet.DocManager.Revit.Utilities.RevitData
 
         /// <summary>
         /// Initializes a new default instance of <see cref="RevitRevision"/> with zeroed/empty values.
-        /// <see cref="IsDateValid"/> will return <c>false</c> for instances created via this constructor.
+        /// <see cref="IsDateValid"/> returns <c>false</c> for instances created via this constructor.
         /// </summary>
         public RevitRevision()
         {
@@ -112,35 +122,20 @@ namespace duHastNet.DocManager.Revit.Utilities.RevitData
         #region Public Methods
 
         /// <summary>
-        /// Attempts to parse <see cref="RevisionDate"/> into a <see cref="DateTime"/>.
+        /// Attempts to retrieve the parsed date value.
         /// </summary>
         /// <param name="date">
-        /// When this method returns <c>true</c>, contains the date portion of the parsed value
-        /// with the time component set to midnight. When <c>false</c>, contains
-        /// <see cref="DateTime.MinValue"/>.
+        /// When this method returns <c>true</c>, contains the parsed date with time set to midnight.
+        /// When <c>false</c>, contains <see cref="DateTime.MinValue"/>.
         /// </param>
         /// <returns>
-        /// <c>true</c> if <see cref="RevisionDate"/> is non-empty and parseable by
-        /// <see cref="DateTime.TryParse(string, out DateTime)"/>; otherwise <c>false</c>.
+        /// <c>true</c> if <see cref="ParsedDate"/> has a value; otherwise <c>false</c>.
         /// </returns>
-        /// <remarks>
-        /// All callers that need to match a Revit revision date against a database
-        /// <see cref="global::duHastNet.DocManager.Core.Models.Revision.RevisionDate"/> must use
-        /// this method to obtain a <see cref="DateTime"/> and compare date portions directly,
-        /// rather than comparing formatted strings, to avoid locale-format mismatches such as
-        /// "12/01/2026" vs "2026-01-12".
-        /// </remarks>
         public bool TryGetDate(out DateTime date)
         {
-            if (string.IsNullOrWhiteSpace(RevisionDate))
+            if (ParsedDate.HasValue)
             {
-                date = DateTime.MinValue;
-                return false;
-            }
-
-            if (DateTime.TryParse(RevisionDate, out DateTime parsed))
-            {
-                date = parsed.Date;
+                date = ParsedDate.Value;
                 return true;
             }
 
@@ -166,7 +161,7 @@ namespace duHastNet.DocManager.Revit.Utilities.RevitData
         public override string ToString()
         {
             string dateInfo = IsDateValid
-                ? RevisionDate
+                ? ParsedDate!.Value.ToString("yyyy-MM-dd")
                 : $"{RevisionDate} [INVALID DATE]";
 
             return $"Revision Element Id: {RevitRevisionElementId}, Revision Date: {dateInfo}, Revision Description: {RevisionDescription}";

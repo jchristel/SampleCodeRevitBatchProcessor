@@ -40,34 +40,32 @@ namespace duHastNet.DocManager.Revit.ViewModels
     ///   <item>
     ///     <term>Grey</term>
     ///     <description>
-    ///       At least one revision on the sheet has an unparseable date string
-    ///       (<see cref="RevitRevision.IsDateValid"/> is <c>false</c>). The row cannot be
-    ///       selected or imported. Status message: "Revision(s) with invalid date".
+    ///       At least one revision on the sheet has <see cref="RevitRevision.IsDateValid"/>
+    ///       equal to <c>false</c> (i.e. <see cref="RevitRevision.ParsedDate"/> is null).
+    ///       The row cannot be selected. The revision date must be corrected in Revit first.
+    ///       Status message: "Revision(s) with invalid date".
     ///     </description>
     ///   </item>
     ///   <item>
     ///     <term>Red</term>
     ///     <description>
-    ///       Every revision date is valid, but at least one revision has no matching
-    ///       <see cref="Revision"/> in the database (date + description, case-sensitive).
+    ///       All dates are valid but at least one revision has no matching
+    ///       <see cref="Revision"/> in the database. Matching compares
+    ///       <see cref="RevitRevision.ParsedDate"/> directly against
+    ///       <see cref="Revision.RevisionDate"/> — locale-format safe.
     ///     </description>
     ///   </item>
     ///   <item>
     ///     <term>Yellow</term>
     ///     <description>
-    ///       Every revision date is valid and every revision has a database counterpart, but
-    ///       at least one is not yet recorded in the document's revision indicator history,
-    ///       or the document's current revision indicator does not match the latest sheet
-    ///       revision indicator.
+    ///       All revisions match database entries but at least one is not recorded in the
+    ///       document's revision indicator history, or the document's current revision
+    ///       indicator does not match the latest sheet revision indicator.
     ///     </description>
     ///   </item>
     ///   <item>
     ///     <term>Green</term>
-    ///     <description>
-    ///       Every revision on the sheet is valid, exists in the database, is recorded in the
-    ///       document's revision indicator history, and the document's current revision indicator
-    ///       matches the latest sheet revision indicator.
-    ///     </description>
+    ///     <description>All revisions are valid, exist in the database, and are fully applied.</description>
     ///   </item>
     /// </list>
     /// </remarks>
@@ -83,8 +81,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
 
         /// <summary>
         /// Gets or sets whether this row is selected by the user for the Update operation.
-        /// Grey rows (invalid revision date) cannot be selected — setting this property
-        /// has no effect when <see cref="HasInvalidRevisionDate"/> is <c>true</c>.
+        /// Grey rows (invalid revision date) cannot be selected.
         /// </summary>
         [ObservableProperty]
         private bool _isSelected;
@@ -97,17 +94,11 @@ namespace duHastNet.DocManager.Revit.ViewModels
         [ObservableProperty]
         private string _sheetName = string.Empty;
 
-        /// <summary>
-        /// Gets the built document number derived from the sheet number builder rules.
-        /// Falls back to the raw sheet number when no builder rule is configured.
-        /// </summary>
+        /// <summary>Gets the built document number.</summary>
         [ObservableProperty]
         private string _documentNumber = string.Empty;
 
-        /// <summary>
-        /// Gets the built document name derived from the sheet name builder rules.
-        /// Falls back to the raw sheet name when no builder rule is configured.
-        /// </summary>
+        /// <summary>Gets the built document name.</summary>
         [ObservableProperty]
         private string _documentName = string.Empty;
 
@@ -118,34 +109,29 @@ namespace duHastNet.DocManager.Revit.ViewModels
         [ObservableProperty]
         private string _currentRevitRevision = string.Empty;
 
-        /// <summary>
-        /// Gets the current revision indicator stored on the database document.
-        /// </summary>
+        /// <summary>Gets the current revision indicator stored on the database document.</summary>
         [ObservableProperty]
         private string _currentDatabaseRevision = string.Empty;
 
         /// <summary>
         /// Gets whether at least one revision on the sheet has an unparseable date string.
         /// Grey status — takes precedence over all other status values.
-        /// When <c>true</c> the row cannot be selected for database update.
         /// </summary>
         [ObservableProperty]
         private bool _hasInvalidRevisionDate;
 
         /// <summary>
-        /// Gets whether at least one revision on the sheet has no matching database revision
-        /// (date + description, case-sensitive). Red status — only evaluated when
-        /// <see cref="HasInvalidRevisionDate"/> is <c>false</c>.
+        /// Gets whether at least one revision on the sheet has no matching database revision.
+        /// Red status — only evaluated when <see cref="HasInvalidRevisionDate"/> is <c>false</c>.
         /// </summary>
         [ObservableProperty]
         private bool _hasUnknownRevisions;
 
         /// <summary>
-        /// Gets whether every revision on the sheet exists in the database but at least one
-        /// is not recorded in the document's revision indicator history, or the current
-        /// revision indicator on the document does not match the latest sheet revision indicator.
-        /// Yellow status — only evaluated when both <see cref="HasInvalidRevisionDate"/> and
-        /// <see cref="HasUnknownRevisions"/> are <c>false</c>.
+        /// Gets whether every revision exists in the database but at least one is not recorded
+        /// in the document's revision indicator history, or the current revision indicator does
+        /// not match the latest sheet revision indicator.
+        /// Yellow status — only evaluated when both grey and red flags are <c>false</c>.
         /// </summary>
         [ObservableProperty]
         private bool _hasUnrecordedRevisions;
@@ -169,9 +155,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
             }
         }
 
-        /// <summary>
-        /// Gets a human-readable status description shown in the DataGrid status column and tooltip.
-        /// </summary>
+        /// <summary>Gets a human-readable status description.</summary>
         public string StatusMessage
         {
             get
@@ -188,13 +172,12 @@ namespace duHastNet.DocManager.Revit.ViewModels
 
         /// <summary>
         /// Gets whether this row can be selected and updated.
-        /// Grey rows (invalid revision date) are never selectable.
+        /// Grey rows are never selectable.
         /// </summary>
         public bool IsSelectable => !HasInvalidRevisionDate;
 
         /// <summary>
         /// Gets whether this row requires any database update (Yellow or Red, not Grey).
-        /// Grey rows require the revision date to be corrected in Revit first.
         /// </summary>
         public bool NeedsUpdate => !HasInvalidRevisionDate && (HasUnknownRevisions || HasUnrecordedRevisions);
 
@@ -203,18 +186,13 @@ namespace duHastNet.DocManager.Revit.ViewModels
         #region Constructor
 
         /// <summary>
-        /// Initializes a new <see cref="RevitSheetRevisionRowViewModel"/> from a matched sheet
-        /// and its corresponding database document.
+        /// Initializes a new <see cref="RevitSheetRevisionRowViewModel"/>.
         /// </summary>
         /// <param name="sheet">The Revit sheet. Must not be null.</param>
         /// <param name="document">The matching database document. Must not be null.</param>
-        /// <param name="databaseRevisions">
-        /// All revisions currently in the database, used to match sheet revisions by date and
-        /// description (case-sensitive). Must not be null.
-        /// </param>
+        /// <param name="databaseRevisions">All revisions currently in the database. Must not be null.</param>
         /// <param name="onSelectionChanged">
         /// Optional callback invoked whenever <see cref="IsSelected"/> changes.
-        /// Pass the parent panel's <c>UpdateCounts</c> so commands re-evaluate on every tick.
         /// </param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="sheet"/>, <paramref name="document"/>, or
@@ -231,8 +209,6 @@ namespace duHastNet.DocManager.Revit.ViewModels
             _ = databaseRevisions ?? throw new ArgumentNullException(nameof(databaseRevisions));
 
             _onSelectionChanged = onSelectionChanged;
-
-            // ── Populate display properties ───────────────────────────────────────────
 
             SheetNumber = sheet.SheetNumber?.Value ?? string.Empty;
             SheetName = sheet.SheetName?.Value ?? string.Empty;
@@ -251,8 +227,6 @@ namespace duHastNet.DocManager.Revit.ViewModels
             CurrentRevitRevision = lastRevisionOnSheet?.RevisionIndicator ?? string.Empty;
             CurrentDatabaseRevision = document.Revision;
 
-            // ── Evaluate revision status ──────────────────────────────────────────────
-
             EvaluateStatus(sheet.RevisionsOnSheet, document, databaseRevisions);
         }
 
@@ -261,17 +235,14 @@ namespace duHastNet.DocManager.Revit.ViewModels
         #region Private Helpers
 
         /// <summary>
-        /// Evaluates <see cref="HasInvalidRevisionDate"/>, <see cref="HasUnknownRevisions"/>,
-        /// and <see cref="HasUnrecordedRevisions"/>.
+        /// Evaluates all status flags.
         /// <para>
-        /// If any revision on the sheet has an invalid date (<see cref="RevitRevision.IsDateValid"/>
-        /// is <c>false</c>), sets <see cref="HasInvalidRevisionDate"/> to <c>true</c> and returns
-        /// immediately — no red/yellow evaluation is performed for grey rows.
+        /// Grey check runs first: if any revision has <see cref="RevitRevision.IsDateValid"/>
+        /// equal to <c>false</c> the method sets <see cref="HasInvalidRevisionDate"/> and returns
+        /// immediately. All date comparisons use <see cref="RevitRevision.ParsedDate"/> directly
+        /// against <see cref="Revision.RevisionDate"/> — no string formatting involved.
         /// </para>
         /// </summary>
-        /// <param name="revisionsOnSheet">Revisions applied to the sheet in Revit.</param>
-        /// <param name="document">The matched database document.</param>
-        /// <param name="databaseRevisions">All revisions in the database.</param>
         private void EvaluateStatus(
             IEnumerable<RevitRevisionOnSheet> revisionsOnSheet,
             Document document,
@@ -279,9 +250,8 @@ namespace duHastNet.DocManager.Revit.ViewModels
         {
             var sheetRevisionList = revisionsOnSheet.ToList();
 
-            // ── Grey check: invalid date takes full precedence ────────────────────────
-            bool invalidDateFound = sheetRevisionList.Any(r => !r.RevitRevision.IsDateValid);
-            if (invalidDateFound)
+            // ── Grey: invalid date takes full precedence ──────────────────────
+            if (sheetRevisionList.Any(r => !r.RevitRevision.IsDateValid))
             {
                 HasInvalidRevisionDate = true;
                 HasUnknownRevisions = false;
@@ -291,46 +261,40 @@ namespace duHastNet.DocManager.Revit.ViewModels
 
             HasInvalidRevisionDate = false;
 
-            // ── Red / Yellow checks ───────────────────────────────────────────────────
+            // ── Red / Yellow ──────────────────────────────────────────────────
             var dbRevisionList = databaseRevisions.ToList();
             bool unknownFound = false;
             bool unrecordedFound = false;
 
             foreach (var revOnSheet in sheetRevisionList)
             {
-                // Match by date and description — case-sensitive as specified.
-                // IsDateValid is confirmed true for all entries at this point.
+                // ParsedDate is guaranteed non-null here — grey check passed.
+                DateTime revitDate = revOnSheet.RevitRevision.ParsedDate!.Value.Date;
+
                 var matchedDbRevision = dbRevisionList.FirstOrDefault(dbRev =>
-                    dbRev.RevisionDate.ToString("yyyy-MM-dd") == revOnSheet.RevitRevision.RevisionDate &&
+                    dbRev.RevisionDate.Date == revitDate &&
                     dbRev.Description == revOnSheet.RevitRevision.RevisionDescription);
 
                 if (matchedDbRevision == null)
                 {
-                    // Revision does not exist in the database at all — Red.
                     unknownFound = true;
                     continue;
                 }
 
-                // Revision exists in the database — check whether it is recorded on this document.
                 if (!document.HasRevisionIndicator(matchedDbRevision.Id))
-                {
                     unrecordedFound = true;
-                }
             }
 
-            // Also flag yellow if the document's current revision indicator does not match
-            // the latest revision indicator on the sheet (and we haven't already gone red).
+            // Yellow also fires if the document's current revision indicator does not match
+            // the latest revision indicator on the sheet.
             if (!unknownFound && sheetRevisionList.Count > 0)
             {
                 var lastRevOnSheet = sheetRevisionList[sheetRevisionList.Count - 1];
                 if (document.Revision != lastRevOnSheet.RevisionIndicator)
-                {
                     unrecordedFound = true;
-                }
             }
 
             HasUnknownRevisions = unknownFound;
-            // Yellow only applies when there are no unknown (red) revisions.
             HasUnrecordedRevisions = !unknownFound && unrecordedFound;
         }
 
@@ -340,7 +304,6 @@ namespace duHastNet.DocManager.Revit.ViewModels
 
         partial void OnIsSelectedChanged(bool value)
         {
-            // Grey rows must never be selected — guard defensively against programmatic sets.
             if (value && HasInvalidRevisionDate)
             {
                 _isSelected = false;
@@ -377,16 +340,10 @@ namespace duHastNet.DocManager.Revit.ViewModels
         #region Re-evaluation
 
         /// <summary>
-        /// Re-evaluates the revision status of this row using a refreshed set of database
-        /// revisions and the updated document. Called by the panel after a database reload.
+        /// Re-evaluates the revision status from refreshed database data.
+        /// Called by the panel after a database reload.
         /// </summary>
-        /// <param name="sheet">The original Revit sheet (revision-on-sheet data does not change at runtime).</param>
-        /// <param name="document">The refreshed database document. Must not be null.</param>
-        /// <param name="databaseRevisions">Refreshed database revisions. Must not be null.</param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="sheet"/>, <paramref name="document"/>, or
-        /// <paramref name="databaseRevisions"/> is null.
-        /// </exception>
+        /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
         public void Refresh(RevitSheet sheet, Document document, IEnumerable<Revision> databaseRevisions)
         {
             _ = sheet ?? throw new ArgumentNullException(nameof(sheet));

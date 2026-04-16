@@ -41,8 +41,9 @@ namespace duHastNet.DocManager.Revit.Utilities.RevitData
 
         public bool Conflicts(RevitRevisionOnSheet other)
         {
-            //check for conflict by revision indicator, as there cannot be two revisions with the same revision indicator on a sheet in Revit.
-            return RevisionIndicator == other.RevisionIndicator;
+            //check for conflict by revision indicator, as there cannot be two revisions with the same revision indicator and description on a sheet in Revit.
+            //the revision indicator can be the same for different revisions, if the revision numbering type is None
+            return RevisionIndicator == other.RevisionIndicator && RevitRevision.RevisionDescription == other.RevitRevision.RevisionDescription;
         }
 
         public override string ToString()

@@ -43,7 +43,9 @@ namespace duHastNet.DocManager.Revit.ViewModels
     ///       At least one revision on the sheet has <see cref="RevitRevision.IsDateValid"/>
     ///       equal to <c>false</c> (i.e. <see cref="RevitRevision.ParsedDate"/> is null).
     ///       The row cannot be selected. The revision date must be corrected in Revit first.
-    ///       Status message: "Revision(s) with invalid date".
+    ///       Status message: "Revision(s) with invalid date". When valid-date revisions on the
+    ///       same sheet are also unrecorded, <see cref="HasUnrecordedRevisionsWithInvalidDate"/>
+    ///       is additionally set and the message reflects both problems.
     ///     </description>
     ///   </item>
     ///   <item>
@@ -136,6 +138,15 @@ namespace duHastNet.DocManager.Revit.ViewModels
         [ObservableProperty]
         private bool _hasUnrecordedRevisions;
 
+        /// <summary>
+        /// Gets whether the sheet has at least one revision with an invalid date AND at least
+        /// one valid revision that is not yet recorded in the document's revision indicator history.
+        /// When <c>true</c>, the row remains Grey (invalid date takes precedence) but the status
+        /// message includes the unrecorded-revision detail alongside the invalid-date warning.
+        /// </summary>
+        [ObservableProperty]
+        private bool _hasUnrecordedRevisionsWithInvalidDate;
+
         #endregion Observable Properties
 
         #region Computed Properties
@@ -161,7 +172,9 @@ namespace duHastNet.DocManager.Revit.ViewModels
             get
             {
                 if (HasInvalidRevisionDate)
-                    return "Revision(s) with invalid date";
+                    return HasUnrecordedRevisionsWithInvalidDate
+                        ? "Revision(s) with invalid date and revision(s) with valid date not yet applied to this document"
+                        : "Revision(s) with invalid date";
                 if (HasUnknownRevisions)
                     return "One or more revisions on this sheet do not exist in the database";
                 if (HasUnrecordedRevisions)
@@ -238,9 +251,12 @@ namespace duHastNet.DocManager.Revit.ViewModels
         /// Evaluates all status flags.
         /// <para>
         /// Grey check runs first: if any revision has <see cref="RevitRevision.IsDateValid"/>
-        /// equal to <c>false</c> the method sets <see cref="HasInvalidRevisionDate"/> and returns
-        /// immediately. All date comparisons use <see cref="RevitRevision.ParsedDate"/> directly
-        /// against <see cref="Revision.RevisionDate"/> — no string formatting involved.
+        /// equal to <c>false</c>, <see cref="HasInvalidRevisionDate"/> is set. The method then
+        /// continues to check whether any of the valid-date revisions on the sheet are also
+        /// unrecorded in the database, setting <see cref="HasUnrecordedRevisionsWithInvalidDate"/>
+        /// so the status message can reflect both problems simultaneously. All date comparisons
+        /// use <see cref="RevitRevision.ParsedDate"/> directly against
+        /// <see cref="Revision.RevisionDate"/> — no string formatting involved.
         /// </para>
         /// </summary>
         private void EvaluateStatus(
@@ -249,26 +265,22 @@ namespace duHastNet.DocManager.Revit.ViewModels
             IEnumerable<Revision> databaseRevisions)
         {
             var sheetRevisionList = revisionsOnSheet.ToList();
-
-            // ── Grey: invalid date takes full precedence ──────────────────────
-            if (sheetRevisionList.Any(r => !r.RevitRevision.IsDateValid))
-            {
-                HasInvalidRevisionDate = true;
-                HasUnknownRevisions = false;
-                HasUnrecordedRevisions = false;
-                return;
-            }
-
-            HasInvalidRevisionDate = false;
-
-            // ── Red / Yellow ──────────────────────────────────────────────────
             var dbRevisionList = databaseRevisions.ToList();
+
+            // ── Grey: check for invalid dates first ───────────────────────────
+            bool invalidDateFound = sheetRevisionList.Any(r => !r.RevitRevision.IsDateValid);
+            HasInvalidRevisionDate = invalidDateFound;
+
+            // ── Red / Yellow: evaluate valid-date revisions ───────────────────
             bool unknownFound = false;
             bool unrecordedFound = false;
 
             foreach (var revOnSheet in sheetRevisionList)
             {
-                // ParsedDate is guaranteed non-null here — grey check passed.
+                // Skip revisions with invalid dates — they cannot be matched.
+                if (!revOnSheet.RevitRevision.IsDateValid)
+                    continue;
+
                 DateTime revitDate = revOnSheet.RevitRevision.ParsedDate!.Value.Date;
 
                 var matchedDbRevision = dbRevisionList.FirstOrDefault(dbRev =>
@@ -286,16 +298,29 @@ namespace duHastNet.DocManager.Revit.ViewModels
             }
 
             // Yellow also fires if the document's current revision indicator does not match
-            // the latest revision indicator on the sheet.
-            if (!unknownFound && sheetRevisionList.Count > 0)
+            // the latest valid revision indicator on the sheet.
+            var validRevisions = sheetRevisionList.Where(r => r.RevitRevision.IsDateValid).ToList();
+            if (!unknownFound && validRevisions.Count > 0)
             {
-                var lastRevOnSheet = sheetRevisionList[sheetRevisionList.Count - 1];
-                if (document.Revision != lastRevOnSheet.RevisionIndicator)
+                var lastValidRevOnSheet = validRevisions[validRevisions.Count - 1];
+                if (document.Revision != lastValidRevOnSheet.RevisionIndicator)
                     unrecordedFound = true;
             }
 
-            HasUnknownRevisions = unknownFound;
-            HasUnrecordedRevisions = !unknownFound && unrecordedFound;
+            if (invalidDateFound)
+            {
+                // Grey takes precedence for colour — store unrecorded state in the mixed flag
+                // so StatusMessage can surface both problems.
+                HasUnrecordedRevisionsWithInvalidDate = unrecordedFound;
+                HasUnknownRevisions = false;
+                HasUnrecordedRevisions = false;
+            }
+            else
+            {
+                HasUnrecordedRevisionsWithInvalidDate = false;
+                HasUnknownRevisions = unknownFound;
+                HasUnrecordedRevisions = !unknownFound && unrecordedFound;
+            }
         }
 
         #endregion Private Helpers
@@ -333,6 +358,11 @@ namespace duHastNet.DocManager.Revit.ViewModels
             OnPropertyChanged(nameof(StatusColor));
             OnPropertyChanged(nameof(StatusMessage));
             OnPropertyChanged(nameof(NeedsUpdate));
+        }
+
+        partial void OnHasUnrecordedRevisionsWithInvalidDateChanged(bool value)
+        {
+            OnPropertyChanged(nameof(StatusMessage));
         }
 
         #endregion Property Change Handlers

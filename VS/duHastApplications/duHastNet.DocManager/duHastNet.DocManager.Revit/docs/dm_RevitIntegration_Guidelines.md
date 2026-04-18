@@ -208,6 +208,7 @@ public partial class DatabaseDataModel : ObservableObject
 
 #### Sheets Panel Controls
 - DataGrid showing ALL Revit sheets colour-coded by status (red = not in database, yellow = name differs, green = up to date)
+- Rows sorted by sheet number (ordinal, case-insensitive) on initial build — sort order is preserved on refresh
 - Checkbox column for row selection
 - Count summary: Total, To import, To update, Selected
 - Colour legend
@@ -216,9 +217,38 @@ public partial class DatabaseDataModel : ObservableObject
 - When custom field definitions are present, importing red rows opens `SheetCustomPropertiesWindow` as a modal dialog first
 
 #### Revisions Panel Controls
-- DataGrid showing Revit revisions (Select, Date, Description, In Database)
-- "Import Revisions" button
-- Revision count display
+- DataGrid showing all Revit sheets that have a matching document in the database, colour-coded by revision synchronisation status
+- Checkbox column for row selection (disabled for grey rows)
+- Colour legend
+- "Select All" / "Select None" buttons
+- "Update" button — pushes revision history from selected sheets into the database
+
+##### Revision Synchronisation Status Colours
+
+Status is evaluated per sheet row. Precedence order (highest to lowest): **Grey > Red > Yellow > Green**.
+
+| Colour | Condition | Row Selectable |
+|--------|-----------|----------------|
+| **Grey** | At least one revision on the sheet has an invalid (unparseable) date. The date must be corrected in Revit before the row can be acted on. | ❌ No |
+| **Red** | All revision dates are valid, but at least one revision on the sheet has no matching `Revision` record in the database (matched by date + description, case-sensitive). The row can be selected; clicking Update will import missing revisions first. | ✅ Yes |
+| **Yellow** | All revision dates are valid and every revision has a database counterpart, but at least one revision on the sheet is not yet recorded in the document's revision indicator history (checked by revision ID). | ✅ Yes |
+| **Green** | Either there are no revisions on the sheet, or all revisions on the sheet are valid, exist in the database, and are fully applied to the document's revision history. | — N/A |
+
+##### Revision Status Evaluation Rules (Implementation)
+
+When computing the status for a sheet row, all revisions are evaluated in a single loop. Invalid-date revisions are skipped in the loop rather than causing an early return, so valid revisions are still evaluated for Red/Yellow status even when invalid-date revisions are present.
+
+1. **Grey flag**: set to `true` if any revision on the sheet has `IsDateValid == false`. Invalid-date revisions are skipped in subsequent checks via `continue`.
+2. **Red flag** (`HasUnknownRevisions`): set to `true` if any valid-date revision has no matching `Revision` in the database (date + description, case-sensitive). Unmatched revisions are skipped for Yellow evaluation via `continue`.
+3. **Yellow flag** (`HasUnrecordedRevisions`): set to `true` if any valid-date, database-matched revision is not recorded in `Document.RevisionIndicatorHistory` (checked by revision ID via `HasRevisionIndicator`).
+4. **Mixed flag** (`HasUnrecordedRevisionsWithInvalidDate`): set to `true` when `invalidDateFound` is `true`, regardless of `unrecordedFound`. Used by `StatusMessage` to surface both problems when Grey applies.
+5. **Flag assignment**:
+   - If `invalidDateFound`: `HasUnrecordedRevisionsWithInvalidDate = true`, `HasUnknownRevisions = false`, `HasUnrecordedRevisions = false`
+   - Otherwise: `HasUnrecordedRevisionsWithInvalidDate = false`, `HasUnknownRevisions = unknownFound`, `HasUnrecordedRevisions = unrecordedFound`
+6. **`StatusColor`** applies precedence: Grey → Red → Yellow → Green via the flag chain.
+7. **Green**: falls through when all three flags are false — covers both "no revisions on sheet" and "all revisions fully applied".
+
+> **Note:** The current-revision-indicator comparison (`document.Revision != lastRevOnSheet.RevisionIndicator`) was removed. `HasRevisionIndicator` by ID is the sole Yellow trigger.
 
 ### Navigation Pattern
 
@@ -251,6 +281,11 @@ Each panel ViewModel MUST implement a public `OnDatabaseRefreshed()` method.
 panel can re-evaluate its row-level database-status flags. Without this call, row colour
 coding and command states would not update after an import or name update.
 
+Panel ViewModels may implement `OnDatabaseRefreshed()` differently depending on whether their row set is fixed or dynamic:
+
+- **`SheetsPanelViewModel`**: row set is fixed (all Revit sheets always exist). `OnDatabaseRefreshed` updates status flags on existing rows in-place — no rebuild needed.
+- **`RevisionsPanelViewModel`**: row set is dynamic — it only shows sheets that have a matching document in the database. Importing a sheet from the Sheets panel adds a new document, so `OnDatabaseRefreshed` calls `BuildSheetRows` to rebuild from scratch and pick up newly matched sheets.
+
 ### Startup Sequence
 
 #### Happy Path
@@ -275,14 +310,16 @@ The window always opens regardless of startup failures. Errors surface in the me
 
 ### User Workflow
 
-#### Import Revisions Workflow
-1. Window opens showing Revisions panel (or user navigates to it)
-2. Panel shows all Revit revisions colour-coded (new = actionable, already in database = greyed)
-3. User reviews and selects revisions to import
-4. User clicks "Import Revisions"
-5. System validates and imports selected revisions to database
-6. `RefreshRequested` raised — database collections reloaded in place
-7. Panel re-evaluates which revisions are still new — list updates automatically
+#### Revisions Panel — Update Workflow
+1. Window opens on Sheets panel; user navigates to Revisions panel
+2. Panel shows all Revit sheets that have a matching database document, colour-coded by revision synchronisation status (Grey / Red / Yellow / Green — see status rules above)
+3. Grey rows are not selectable; user corrects invalid dates in Revit first
+4. User selects Red and/or Yellow rows to synchronise
+5. User clicks "Update"
+6. For each selected row, any revisions missing from the database are created first (Step 1)
+7. Each selected document's `Revision`, `RevisionId`, and `RevisionIndicatorHistory` are updated (Step 2)
+8. Bidirectional consistency maintained — `Revision.DocumentIds` updated for every affected revision (Step 3)
+9. `RefreshRequested` raised — database collections reloaded in place; row statuses re-evaluated
 
 #### Import Sheets / Update Names Workflow
 1. Window opens showing Sheets panel
@@ -771,6 +808,16 @@ public void Reload(DocManagerApi docManagerApi, string databasePath, MessageStor
 }
 ```
 
+#### Document Construction on Sheet Import
+
+When importing a Revit sheet as a new `Document`, use the two-parameter constructor that accepts only `number` and `name`:
+
+```csharp
+new Document(r.BuiltDocumentNumber.Trim(), r.BuiltDocumentName.Trim())
+```
+
+Do NOT use the parameterised constructor with `revision` and `revisionId` arguments at import time. Passing `revisionId = 0` and `revision = ""` causes the constructor to call `SetRevisionIndicator(0, "")`, writing a spurious `{"0":""}` ghost entry into `RevisionIndicatorHistory` that will incorrectly cause Yellow status on every subsequent evaluation. Revision history is populated separately by the Revisions panel Update command.
+
 ### 7. Line Endings
 
 All code files MUST use Windows line endings (CRLF).
@@ -926,3 +973,5 @@ When developing the Revit integration:
 | 1.2 | 2026-04-06 | Update | Architecture updated to reflect implemented design: RevitDataModel and DatabaseDataModel as separate data carriers; DatabaseDataModel uses ObservableCollections with in-place Reload(); RevitIntegrationViewModel owns panel switching and refresh cycle; MainWindow shell with NavigationStore; RevitIntegrationView UserControl with five-row layout; SheetsPanelViewModel and RevisionsPanelViewModel stubs with RefreshRequested event; AppViewModelBase required for all ViewModels; domain exceptions for duplicate detection; POC view retained for reference |
 | 1.3 | 2026-04-12 | Update | DocManagerApi ownership moved to DatabaseDataModel.Api — created in Main.LoadDatabaseData() and passed into DatabaseDataModel constructor; RevitIntegrationViewModel no longer creates DocManagerApi; panel ViewModels access API via _databaseDataModel.Api; CustomFieldDefinitions added to DatabaseDataModel as IReadOnlyList loaded once at startup; AppViewModelBase requirement extended to all ViewModels including row and dialog ViewModels; IsDatabaseConnected gating requirement clarified; Sheets panel design updated to show all sheets with colour coding and single Update button; StateStore removed from Main.cs |
 | 1.4 | 2026-04-12 | Update | Panel ViewModel pattern fully documented: PropertyChanged subscription for reactive IsDatabaseConnected gating, OnDatabaseRefreshed() public method required on all panel ViewModels, row ViewModel onSelectionChanged callback pattern, IsDatabaseConnected and HintText exposed as derived properties on panel ViewModels; RevitIntegrationViewModel.OnClosing() closes database connection via _databaseDataModel.Api.Close(); Section 4a added documenting row ViewModel callback pattern |
+| 1.5 | 2026-04-17 | Update | Revisions panel status colour rules corrected and fully specified: Grey (invalid date, not selectable) > Red (valid dates, missing database revision) > Yellow (all matched but not yet applied to document) > Green (no revisions on sheet, OR all revisions valid, matched, and fully applied). Import Revisions Workflow replaced with Revisions Panel Update Workflow reflecting actual implemented behaviour. Status evaluation algorithm documented. |
+| 1.6 | 2026-04-18 | Update | Status evaluation algorithm updated to reflect single-loop implementation with invalidDateFound flag and HasUnrecordedRevisionsWithInvalidDate mixed flag; current-revision-indicator Yellow check removed; OnDatabaseRefreshed behaviour documented per panel (in-place for Sheets, BuildSheetRows rebuild for Revisions); Sheets panel row sorting documented; Document two-parameter constructor guidance added to prevent ghost RevisionIndicatorHistory entries on sheet import. |

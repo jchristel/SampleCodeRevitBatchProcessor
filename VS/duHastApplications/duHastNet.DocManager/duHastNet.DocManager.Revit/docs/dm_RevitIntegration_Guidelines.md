@@ -241,9 +241,9 @@ When computing the status for a sheet row, all revisions are evaluated in a sing
 1. **Grey flag**: set to `true` if any revision on the sheet has `IsDateValid == false`. Invalid-date revisions are skipped in subsequent checks via `continue`.
 2. **Red flag** (`HasUnknownRevisions`): set to `true` if any valid-date revision has no matching `Revision` in the database (date + description, case-sensitive). Unmatched revisions are skipped for Yellow evaluation via `continue`.
 3. **Yellow flag** (`HasUnrecordedRevisions`): set to `true` if any valid-date, database-matched revision is not recorded in `Document.RevisionIndicatorHistory` (checked by revision ID via `HasRevisionIndicator`).
-4. **Mixed flag** (`HasUnrecordedRevisionsWithInvalidDate`): set to `true` when `invalidDateFound` is `true`, regardless of `unrecordedFound`. Used by `StatusMessage` to surface both problems when Grey applies.
+4. **Mixed flag** (`HasUnrecordedRevisionsWithInvalidDate`): set to `true` when `invalidDateFound` is `true`, regardless of `unrecordedFound`. The invalid date itself is treated as the dominant problem, and the status message always surfaces the invalid-date warning. Valid-date revisions on the same sheet may or may not be unrecorded, but the row remains Grey (not selectable) either way, so the finer distinction is not actionable. Used by `StatusMessage` to communicate that the row has an invalid date.
 5. **Flag assignment**:
-   - If `invalidDateFound`: `HasUnrecordedRevisionsWithInvalidDate = true`, `HasUnknownRevisions = false`, `HasUnrecordedRevisions = false`
+   - If `invalidDateFound`: `HasUnrecordedRevisionsWithInvalidDate = true` (always, the invalid date is the dominant problem), `HasUnknownRevisions = false`, `HasUnrecordedRevisions = false`
    - Otherwise: `HasUnrecordedRevisionsWithInvalidDate = false`, `HasUnknownRevisions = unknownFound`, `HasUnrecordedRevisions = unrecordedFound`
 6. **`StatusColor`** applies precedence: Grey → Red → Yellow → Green via the flag chain.
 7. **Green**: falls through when all three flags are false — covers both "no revisions on sheet" and "all revisions fully applied".

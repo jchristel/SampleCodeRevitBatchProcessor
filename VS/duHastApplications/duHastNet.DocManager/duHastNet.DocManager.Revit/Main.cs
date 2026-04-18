@@ -58,7 +58,7 @@ namespace duHastNet.DocManager.Revit
             _messageStore = new duHastNet.Utils.WPF.Stores.MessageStore();
             // set up the revit data model
             // check if this is called from the Execute method (there is a data model already) or if the data model is already created and passed in (e.g. from pyRevit) and set it accordingly
-            _revitDataModel ??= revitDataModel;
+            _revitDataModel ??= revitDataModel ?? throw new ArgumentNullException(nameof(revitDataModel));
 
             //setup logger and delete old log files
             //needs to happen after data model is created so that we can display log messages in the banner
@@ -268,7 +268,7 @@ namespace duHastNet.DocManager.Revit
 
                 _revitDataModel.LogMessages(
                     [
-                        ("Starting duHastNet.PushIt.", duHastNet.Utils.WPF.Stores.MessageTypes.Information)
+                        ("Starting duHastNet.DocManager.Revit.", duHastNet.Utils.WPF.Stores.MessageTypes.Information)
                     ]);
             }
 

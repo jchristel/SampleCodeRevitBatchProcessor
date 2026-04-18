@@ -319,6 +319,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
             OnPropertyChanged(nameof(ToImportCount));
             OnPropertyChanged(nameof(ToUpdateCount));
             OnPropertyChanged(nameof(SelectedCount));
+            OnPropertyChanged(nameof(HintText));
             UpdateCommand.NotifyCanExecuteChanged();
             SelectAllCommand.NotifyCanExecuteChanged();
             SelectNoneCommand.NotifyCanExecuteChanged();

@@ -466,12 +466,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
         /// <summary>
         /// Called by <see cref="RevitIntegrationViewModel"/> after every
         /// <see cref="DatabaseDataModel.Reload"/> to re-evaluate each row's revision status
-        /// against the refreshed database collections.
-        /// <para>
-        /// Rebuilds <see cref="DisplayedSheets"/> from scratch so that documents newly imported
-        /// via the Sheets panel appear here after a database reload — not only rows that existed
-        /// when the panel was first constructed.
-        /// </para>
+        /// against the refreshed database collections. Resets all selections.
         /// </summary>
         public void OnDatabaseRefreshed()
         {
@@ -525,13 +520,11 @@ namespace duHastNet.DocManager.Revit.ViewModels
                 if (!dbDocumentsByNumber.TryGetValue(docNumber, out var dbDocument))
                     continue;
 
-                var row = new RevitSheetRevisionRowViewModel(
+                DisplayedSheets.Add(new RevitSheetRevisionRowViewModel(
                     sheet,
                     dbDocument,
                     dbRevisions,
-                    onSelectionChanged: UpdateCounts);
-
-                DisplayedSheets.Add(row);
+                    onSelectionChanged: UpdateCounts));
             }
 
             UpdateCounts();

@@ -260,9 +260,9 @@ namespace duHastNet.DocManager.Revit.ViewModels
         /// </para>
         /// </summary>
         private void EvaluateStatus(
-            IEnumerable<RevitRevisionOnSheet> revisionsOnSheet,
-            Document document,
-            IEnumerable<Revision> databaseRevisions)
+    IEnumerable<RevitRevisionOnSheet> revisionsOnSheet,
+    Document document,
+    IEnumerable<Revision> databaseRevisions)
         {
             var sheetRevisionList = revisionsOnSheet.ToList();
             var dbRevisionList = databaseRevisions.ToList();
@@ -272,7 +272,9 @@ namespace duHastNet.DocManager.Revit.ViewModels
             HasInvalidRevisionDate = invalidDateFound;
 
             // ── Red / Yellow: evaluate valid-date revisions ───────────────────
+            // revision on sheet but not in database
             bool unknownFound = false;
+            // revision exists in database, is assigned to sheet in Revit, but is not assigned to sheet in database
             bool unrecordedFound = false;
 
             foreach (var revOnSheet in sheetRevisionList)
@@ -299,19 +301,20 @@ namespace duHastNet.DocManager.Revit.ViewModels
 
             // Yellow also fires if the document's current revision indicator does not match
             // the latest valid revision indicator on the sheet.
-            var validRevisions = sheetRevisionList.Where(r => r.RevitRevision.IsDateValid).ToList();
-            if (!unknownFound && validRevisions.Count > 0)
-            {
-                var lastValidRevOnSheet = validRevisions[validRevisions.Count - 1];
-                if (document.Revision != lastValidRevOnSheet.RevisionIndicator)
-                    unrecordedFound = true;
-            }
+            // the code below is not required and will cause issues with None type revisions
+            //var validRevisions = sheetRevisionList.Where(r => r.RevitRevision.IsDateValid).ToList();
+            //if (!unknownFound && validRevisions.Count > 0)
+            //{
+            //    var lastValidRevOnSheet = validRevisions[validRevisions.Count - 1];
+            //    if (document.Revision != lastValidRevOnSheet.RevisionIndicator)
+            //        unrecordedFound = true;
+            //}
 
             if (invalidDateFound)
             {
-                // Grey takes precedence for colour — store unrecorded state in the mixed flag
-                // so StatusMessage can surface both problems.
-                HasUnrecordedRevisionsWithInvalidDate = unrecordedFound;
+                // Grey takes precedence for colour. The mixed flag is always true here —
+                // the invalid date itself is the problem regardless of unrecordedFound.
+                HasUnrecordedRevisionsWithInvalidDate = true;
                 HasUnknownRevisions = false;
                 HasUnrecordedRevisions = false;
             }
@@ -319,7 +322,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
             {
                 HasUnrecordedRevisionsWithInvalidDate = false;
                 HasUnknownRevisions = unknownFound;
-                HasUnrecordedRevisions = !unknownFound && unrecordedFound;
+                HasUnrecordedRevisions = unrecordedFound;
             }
         }
 

@@ -293,12 +293,17 @@ namespace duHastNet.DocManager.Revit.ViewModels
             DisplayedSheets.Clear();
 
             var documents = _databaseDataModel.Documents.ToList();
-            foreach (var sheet in _revitDataModel.GetSheets())
-            {
-                var row = new RevitSheetRowViewModel(sheet, onSelectionChanged: UpdateCounts);
-                row.UpdateDatabaseStatus(documents);
+            var rows = _revitDataModel.GetSheets()
+                .Select(sheet =>
+                {
+                    var row = new RevitSheetRowViewModel(sheet, onSelectionChanged: UpdateCounts);
+                    row.UpdateDatabaseStatus(documents);
+                    return row;
+                })
+                .OrderBy(r => r.SheetNumber, StringComparer.OrdinalIgnoreCase);
+
+            foreach (var row in rows)
                 DisplayedSheets.Add(row);
-            }
 
             UpdateCounts();
         }
@@ -339,9 +344,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
                 var documentsToInsert = rowsToImport
                     .Select(r => new Document(
                         r.BuiltDocumentNumber.Trim(),
-                        r.BuiltDocumentName.Trim(),
-                        r.CurrentRevision,
-                        0))
+                        r.BuiltDocumentName.Trim()))
                     .ToList();
 
                 int inserted = unitOfWork.Documents.InsertAll(documentsToInsert);

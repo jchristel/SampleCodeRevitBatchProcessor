@@ -170,6 +170,12 @@ public class Document
     {
     }
 
+    public Document(string number, string name)
+    {
+        Number = number;
+        Name = name;
+    }
+
     /// <summary>
     /// Creates a new document with specified details
     /// </summary>
@@ -325,12 +331,9 @@ public class Document
     /// <param name="indicator">Revision indicator string</param>
     public void SetRevisionIndicator(int revisionId, string indicator)
     {
-        if (!string.IsNullOrWhiteSpace(indicator))
-        {
-            var history = RevisionIndicatorHistory;
-            history[revisionId] = indicator;
-            RevisionIndicatorHistory = history; // Trigger serialization
-        }
+        var history = RevisionIndicatorHistory;
+        history[revisionId] = indicator ?? string.Empty;
+        RevisionIndicatorHistory = history;
     }
 
     /// <summary>

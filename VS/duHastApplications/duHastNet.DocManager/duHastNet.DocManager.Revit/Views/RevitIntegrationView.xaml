@@ -39,6 +39,8 @@
             <RowDefinition Height="Auto"/>
             <!-- Navigation bar -->
             <RowDefinition Height="Auto"/>
+            <!-- Revision hint (Sheets panel only) -->
+            <RowDefinition Height="Auto"/>
             <!-- Panel content area -->
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -125,8 +127,27 @@
             </StackPanel>
         </Border>
 
-        <!-- Row 4: Panel content area -->
-        <ContentControl Grid.Row="4"
+        <!-- Row 4: Revision hint (visible on Sheets panel only when revisions need attention) -->
+        <Border Grid.Row="4"
+                Background="#FFF8E1"
+                BorderBrush="#FFE082"
+                BorderThickness="0,0,0,1"
+                Padding="15,6"
+                Visibility="{Binding IsRevisionHintVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="⚠ "
+                           Foreground="#F57F17"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding RevisionHintText}"
+                           Foreground="#F57F17"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Row 5: Panel content area -->
+        <ContentControl Grid.Row="5"
                         Content="{Binding CurrentPanelViewModel}"/>
     </Grid>
 </UserControl>

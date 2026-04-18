@@ -117,6 +117,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
         /// </summary>
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(NavigationButtonLabel))]
+        [NotifyPropertyChangedFor(nameof(IsRevisionHintVisible))]
         private ObservableObject _currentPanelViewModel;
 
         #endregion Observable Properties
@@ -164,6 +165,32 @@ namespace duHastNet.DocManager.Revit.ViewModels
                 return !string.IsNullOrWhiteSpace(folder) && Directory.Exists(folder);
             }
         }
+
+        /// <summary>
+        /// Gets a hint shown on the Sheets panel when one or more matched sheets have
+        /// revisions that are missing from the database or not yet applied to the document.
+        /// Returns an empty string when no revision attention is needed, which also
+        /// suppresses the hint row in the view.
+        /// </summary>
+        public string RevisionHintText
+        {
+            get
+            {
+                int count = _revisionsPanelViewModel.MissingRevisionCount
+                    + _revisionsPanelViewModel.UnrecordedRevisionCount;
+                return count > 0
+                    ? $"{count} sheet(s) have revisions that need updating — go to the Revisions panel."
+                    : string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Gets whether the revision hint should be visible.
+        /// True only when the Sheets panel is active and <see cref="RevisionHintText"/> is non-empty.
+        /// </summary>
+        public bool IsRevisionHintVisible =>
+            CurrentPanelViewModel is SheetsPanelViewModel
+            && !string.IsNullOrEmpty(RevisionHintText);
 
         /// <summary>
         /// Gets the ViewModel for the global message banner.
@@ -228,6 +255,10 @@ namespace duHastNet.DocManager.Revit.ViewModels
             // Let each panel rebuild its view from the refreshed database data.
             _sheetsPanelViewModel.OnDatabaseRefreshed();
             _revisionsPanelViewModel.OnDatabaseRefreshed();
+
+            // Revision hint depends on counts from the Revisions panel — notify after both panels refresh.
+            OnPropertyChanged(nameof(RevisionHintText));
+            OnPropertyChanged(nameof(IsRevisionHintVisible));
         }
 
         #endregion Database Refresh

@@ -16,7 +16,8 @@
         <Style x:Key="ActionButtonStyle" TargetType="Button">
             <Setter Property="Padding" Value="14,5"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="MinWidth" Value="100"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="MinWidth" Value="120"/>
         </Style>
         <Style x:Key="SmallButtonStyle" TargetType="Button">
             <Setter Property="Padding" Value="8,3"/>
@@ -285,10 +286,7 @@
                 <Button Grid.Column="1"
                         Content="Update"
                         Style="{StaticResource ActionButtonStyle}"
-                        Command="{Binding UpdateCommand}"
-                        Background="#2196F3"
-                        Foreground="White"
-                        BorderThickness="0"/>
+                        Command="{Binding UpdateCommand}"/>
             </Grid>
         </Border>
 

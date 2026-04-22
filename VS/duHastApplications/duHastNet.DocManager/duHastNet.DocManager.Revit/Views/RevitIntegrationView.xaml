@@ -23,13 +23,14 @@
 
         <!-- Shared button style -->
         <Style x:Key="NavButtonStyle" TargetType="Button">
-            <Setter Property="Margin" Value="0"/>
-            <Setter Property="Padding" Value="20,6"/>
+            <Setter Property="Margin" Value="5,10,5,10"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
         </Style>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid Margin="10,10,10,10">
         <Grid.RowDefinitions>
             <!-- App name header -->
             <RowDefinition Height="Auto"/>
@@ -48,7 +49,8 @@
         <!-- Row 0: App name header -->
         <Border Grid.Row="0"
                 Background="#2196F3"
-                Padding="15,10">
+                Padding="15,10"
+                Margin="0,0,0,10">
             <TextBlock Text="Document Manager — Revit Integration"
                        FontSize="20"
                        FontWeight="Bold"
@@ -62,8 +64,10 @@
 
         <!-- Row 2: Database path and connection status -->
         <Border Grid.Row="2"
-                BorderBrush="#CCCCCC"
-                BorderThickness="0,0,0,1"
+                CornerRadius="1"
+                BorderBrush="Gray"
+                BorderThickness="1"
+                Margin="0,2,0,2"
                 Padding="15,8">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Database:"
@@ -78,6 +82,7 @@
                         Padding="6,2"
                         CornerRadius="3"
                         Margin="12,0,0,0"
+                        VerticalAlignment="Center"
                         Visibility="{Binding IsDatabaseConnected, Converter={StaticResource BoolToVisibilityConverter}}">
                     <TextBlock Text="Connected"
                                Foreground="White"
@@ -88,7 +93,8 @@
                 <Border Background="#F44336"
                         Padding="6,2"
                         CornerRadius="3"
-                        Margin="12,0,0,0">
+                        Margin="12,0,0,0"
+                        VerticalAlignment="Center">
                     <Border.Style>
                         <Style TargetType="Border">
                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -107,18 +113,19 @@
                 <!-- Open Folder button -->
                 <Button Content="Open Folder"
                         Command="{Binding OpenFolderCommand}"
-                        Padding="8,2"
+                        Padding="5"
                         Margin="12,0,0,0"
-                        VerticalAlignment="Center"
-                        FontSize="11"/>
+                        VerticalAlignment="Center"/>
             </StackPanel>
         </Border>
 
         <!-- Row 3: Navigation bar -->
         <Border Grid.Row="3"
                 Background="#F5F5F5"
-                BorderBrush="#CCCCCC"
-                BorderThickness="0,0,0,1"
+                CornerRadius="1"
+                BorderBrush="Gray"
+                BorderThickness="1"
+                Margin="0,2,0,2"
                 Padding="15,8">
             <StackPanel Orientation="Horizontal">
                 <Button Content="{Binding NavigationButtonLabel}"

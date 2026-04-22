@@ -310,10 +310,7 @@
                 <Button Grid.Column="1"
                         Content="Update"
                         Style="{StaticResource ActionButtonStyle}"
-                        Command="{Binding UpdateCommand}"
-                        Background="#2196F3"
-                        Foreground="White"
-                        BorderThickness="0"/>
+                        Command="{Binding UpdateCommand}"/>
             </Grid>
         </Border>
 

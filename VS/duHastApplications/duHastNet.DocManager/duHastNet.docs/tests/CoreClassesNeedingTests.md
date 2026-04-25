@@ -1,9 +1,10 @@
-CORE NAMESPACE CLASSES WITHOUT TESTS
-Generated: 2026-01-07
+CORE NAMESPACE CLASSES WITHOUT TESTS (OR WITH INCOMPLETE COVERAGE)
+Generated: 2026-01-07 | Last reviewed: 2026-04-25
 Project: duHastNet.DocManager
 
-This document lists classes in the .Core namespace that do not have corresponding test files.
-Classes are organized by priority and category.
+This document lists classes in the .Core namespace that do not have corresponding
+test files, or that have partial coverage with identified gaps. Classes are
+organised by priority and category.
 
 ================================================================================
 SERVICES (High Priority for Testing)
@@ -18,20 +19,54 @@ SERVICES (High Priority for Testing)
    - Location: duHastNet.DocManager.Core.Models.CurrentFolder
    - Complexity: Very High (partial class with multiple files)
    - Dependencies: ICurrentFolderManager, CurrentFolderManagerSettings
-   - Files: CurrentFolderManager.cs, CurrentFolderManager_GetMatched.cs, 
-     CurrentFolderManager_MoveFiles.cs, CurrentFolderManager_Settings.cs, 
+   - Files: CurrentFolderManager.cs, CurrentFolderManager_GetMatched.cs,
+     CurrentFolderManager_MoveFiles.cs, CurrentFolderManager_Settings.cs,
      CurrentFolderManager_Supersede.cs
 
-3. CustomFieldDefinitionRepository
+3. CustomFieldDefinitionRepository (async)
    - Location: duHastNet.DocManager.Core.Services.Repositories
    - Complexity: Medium (Repository pattern)
    - Dependencies: SQLiteAsyncConnection, BaseRepository
+   - Note: Verify whether CustomFieldDefinitionRepositoryTests.cs exists
+     alongside the sync equivalent. If so, remove this item.
 
 4. DatabaseService
    - Location: duHastNet.DocManager.Core.Services
    - Complexity: Very High (Critical database operations)
-   - Status: Has partial tests but may need more coverage
-   - Dependencies: IDataBaseService, SQLiteAsyncConnection
+   - Dependencies: IDataBaseService, SQLiteAsyncConnection, SQLiteConnection
+
+   ASYNC PATH — Substantial coverage exists across:
+     DatabaseServiceTests_Initialization.cs
+     DatabaseServiceTests_ConnectionManagement.cs
+     DatabaseServiceTests_TablesAndIndexes.cs
+     DatabaseServiceTests_SqlOperations.cs
+     DatabaseServiceTests_MaintenanceOperations.cs
+     DatabaseServiceTests_Dispose.cs
+     DatabaseServiceTests_AdditionalScenarios.cs
+
+   ASYNC PATH GAPS (missing tests, to be added):
+   - GetDataVersionAsync_AfterInitialization_ReturnsNonNegativeValue
+   - GetDataVersionAsync_AfterWrite_ReturnsIncrementedValue
+   - GetDataVersionAsync_AfterReadOnly_ReturnsSameValue
+   - InitializeAsync_ConfiguresBusyTimeout (verifies PRAGMA busy_timeout = 5000)
+
+   SYNC PATH — No coverage exists. A new test file is required:
+     DatabaseServiceTests_Sync.cs
+   
+   Required sync tests:
+   - Initialize_WithValidPath_InitializesSuccessfully
+   - Initialize_WithNullPath_ThrowsArgumentNullException
+   - Initialize_WithEmptyPath_ThrowsArgumentException
+   - Initialize_WithWhitespacePath_ThrowsArgumentException
+   - Initialize_ConfiguresBusyTimeout (verifies BusyTimeout = TimeSpan.FromSeconds(5))
+   - Initialize_WithNonExistentDirectory_CreatesDirectory
+   - CreateTables_CreatesAllRequiredTables
+   - Close_AfterInitialization_ClosesConnection
+   - Close_WithoutInitialization_DoesNotThrow
+   - CheckDatabaseIntegrity_AfterInitialization_ReturnsTrue
+   - GetDataVersion_AfterInitialization_ReturnsNonNegativeValue
+   - GetDataVersion_AfterWrite_ReturnsIncrementedValue
+   - GetDataVersion_AfterReadOnly_ReturnsSameValue
 
 5. DocumentExportService
    - Location: duHastNet.DocManager.Core.Services
@@ -51,7 +86,7 @@ SERVICES (High Priority for Testing)
 8. Manager
    - Location: duHastNet.DocManager.Core.Models
    - Complexity: High (Core business logic manager)
-   - Dependencies: IManager, DocumentContainer, RevisionContainer, 
+   - Dependencies: IManager, DocumentContainer, RevisionContainer,
      CustomFieldsContainer, CloudDocumentManager
 
 9. MetaDataTemplateService
@@ -75,40 +110,69 @@ SERVICES (High Priority for Testing)
     - Dependencies: ISettingsService
 
 ================================================================================
+UNIT OF WORK — TRANSACTION COVERAGE GAPS (High Priority)
+================================================================================
+
+These classes exist in test files but have incomplete coverage for the
+transaction hardening methods added during the SQLite concurrency implementation.
+
+13. UnitOfWork (async)
+    - Test file: UnitOfWorkTests.cs
+    - Status: PARTIALLY COVERED — transaction tests are stale and missing
+
+    STALE TESTS TO REMOVE:
+    - BeginTransactionAsync_CompletesSuccessfully
+    - CommitTransactionAsync_CompletesSuccessfully
+    - RollbackTransactionAsync_CompletesSuccessfully
+    These test methods that no longer exist on IUnitOfWork or UnitOfWork.
+
+    MISSING TESTS TO ADD:
+    - RunInTransactionAsync_OnSuccess_CommitsAllWrites
+    - RunInTransactionAsync_OnException_RollsBackAllWrites
+
+14. UnitOfWorkSync
+    - Test file: UnitOfWorkSyncTests.cs
+    - Status: PARTIALLY COVERED — RunInTransaction has no tests
+
+    MISSING TESTS TO ADD:
+    - RunInTransaction_OnSuccess_CommitsAllWrites
+    - RunInTransaction_OnException_RollsBackAllWrites
+
+================================================================================
 MODELS - BUSINESS LOGIC (Medium Priority)
 ================================================================================
 
-13. CloudDocumentManager
+15. CloudDocumentManager
     - Location: duHastNet.DocManager.Core.Models.CloudDocManager
     - Complexity: Medium (Event handling, metadata mapping)
     - Dependencies: ICloudMetaData
 
-14. CustomFieldsContainer
+16. CustomFieldsContainer
     - Location: duHastNet.DocManager.Core.Models.Database
     - Complexity: Low-Medium (Container logic)
     - Dependencies: CustomFieldDefinition
 
-15. DocumentContainer
+17. DocumentContainer
     - Location: duHastNet.DocManager.Core.Models
     - Complexity: Medium (Collection management)
     - Dependencies: Document
 
-16. IncomingDocumentProcessingStatus
+18. IncomingDocumentProcessingStatus
     - Location: duHastNet.DocManager.Core.Models.CurrentFolder
     - Complexity: Medium (Status tracking)
     - Dependencies: Document
 
-17. MetaDataMapperAconex
+19. MetaDataMapperAconex
     - Location: duHastNet.DocManager.Core.Models.CloudDocManager.MetaData
     - Complexity: High (Metadata mapping logic)
     - Dependencies: ICloudMetaData, MetaDataMap
 
-18. RevisionContainer
+20. RevisionContainer
     - Location: duHastNet.DocManager.Core.Models
     - Complexity: Medium (Collection management)
     - Dependencies: Revision
 
-19. ResultBase
+21. ResultBase
     - Location: duHastNet.DocManager.Core.Models.Results
     - Complexity: Low (Abstract base class)
     - Note: Abstract class with error/warning collections
@@ -118,36 +182,36 @@ MODELS - FILING RULES (Medium Priority)
 ================================================================================
 
 Document Number Modifiers:
-20. AddAtIndex
+22. AddAtIndex
     - Location: duHastNet.DocManager.Core.Models.CurrentFolder.DocumentNumberModifiers
     - Dependencies: IDocumentNumberModifier
 
-21. AddToEnd
+23. AddToEnd
     - Location: duHastNet.DocManager.Core.Models.CurrentFolder.DocumentNumberModifiers
     - Dependencies: IDocumentNumberModifier
 
-22. Replace
+24. Replace
     - Location: duHastNet.DocManager.Core.Models.CurrentFolder.DocumentNumberModifiers
     - Dependencies: IDocumentNumberModifier
 
 Filing Rules:
-23. BeginsWith
+25. BeginsWith
     - Location: duHastNet.DocManager.Core.Models.CurrentFolder.FilingRules
     - Dependencies: IFilingRule
 
-24. CatchAll
+26. CatchAll
     - Location: duHastNet.DocManager.Core.Models.CurrentFolder.FilingRules
     - Dependencies: IFilingRule
 
-25. Contains
+27. Contains
     - Location: duHastNet.DocManager.Core.Models.CurrentFolder.FilingRules
     - Dependencies: IFilingRule
 
-26. NotBeginsWith
+28. NotBeginsWith
     - Location: duHastNet.DocManager.Core.Models.CurrentFolder.FilingRules
     - Dependencies: IFilingRule
 
-27. NotContains
+29. NotContains
     - Location: duHastNet.DocManager.Core.Models.CurrentFolder.FilingRules
     - Dependencies: IFilingRule
 
@@ -155,39 +219,39 @@ Filing Rules:
 MODELS - CONFIGURATION/DATA (Lower Priority)
 ================================================================================
 
-28. CustomFieldDefinition
+30. CustomFieldDefinition
     - Location: duHastNet.DocManager.Core.Models.Database
     - Complexity: Low (Data model with SQLite attributes)
 
-29. DatabaseConnectionSettings
+31. DatabaseConnectionSettings
     - Location: duHastNet.DocManager.Core.Models.Database
     - Complexity: Low (Configuration model)
 
-30. DatabaseSetupConfig
+32. DatabaseSetupConfig
     - Location: duHastNet.DocManager.Core.Models.Config
     - Complexity: Low (Configuration model)
 
-31. DatabaseStatistics
+33. DatabaseStatistics
     - Location: duHastNet.DocManager.Core.Models.Database
     - Complexity: Low (Data model)
 
-32. DocumentImportConfig
+34. DocumentImportConfig
     - Location: duHastNet.DocManager.Core.Models.Config
     - Complexity: Low (Configuration model)
 
-33. DocumentImportData
+35. DocumentImportData
     - Location: duHastNet.DocManager.Core.Models
     - Complexity: Low (Data transfer object)
 
-34. MetaDataMap
+36. MetaDataMap
     - Location: duHastNet.DocManager.Core.Models.CloudDocManager.MetaData
     - Complexity: Low (Data model)
 
-35. MetaDataTemplateResult
+37. MetaDataTemplateResult
     - Location: duHastNet.DocManager.Core.Models.Results
     - Complexity: Low (Result model)
 
-36. SupportedFileType
+38. SupportedFileType
     - Location: duHastNet.DocManager.Core.Models.CurrentFolder
     - Complexity: Low (Configuration model)
 
@@ -195,15 +259,15 @@ MODELS - CONFIGURATION/DATA (Lower Priority)
 RESULT CLASSES (Lower Priority - Simple DTOs)
 ================================================================================
 
-37. ImportResult
+39. ImportResult
     - Location: duHastNet.DocManager.Core.Models.Results
     - Complexity: Low (Result DTO)
 
-38. SaveResult
+40. SaveResult
     - Location: duHastNet.DocManager.Core.Models.Results
     - Complexity: Low (Result DTO)
 
-39. SetupResult
+41. SetupResult
     - Location: duHastNet.DocManager.Core.Models.Results
     - Complexity: Low (Result DTO)
 
@@ -211,54 +275,54 @@ RESULT CLASSES (Lower Priority - Simple DTOs)
 ENUMS/SIMPLE TYPES (Lowest Priority)
 ================================================================================
 
-40. CloudProviderType
+42. CloudProviderType
     - Location: duHastNet.DocManager.Core.Models.CloudDocManager
     - Type: Enum
 
-41. DocumentMatchStatus
+43. DocumentMatchStatus
     - Location: duHastNet.DocManager.Core.Models.CurrentFolder
     - Type: Enum
 
-42. FilingRuleType
+44. FilingRuleType
     - Location: duHastNet.DocManager.Core.Models.CurrentFolder
     - Type: Enum
 
-43. ProcessMessageType
+45. ProcessMessageType
     - Location: duHastNet.DocManager.Core.Models
     - Type: Enum
 
 ================================================================================
-EXCEPTION CLASSES (Lower Priority - Can be tested but simpler)
+EXCEPTION CLASSES (Lower Priority)
 ================================================================================
 
-44. CustomFieldDuplicateException
+46. CustomFieldDuplicateException
     - Location: duHastNet.DocManager.Core.Models.Database
 
-45. DocumentDuplicateException
+47. DocumentDuplicateException
     - Location: duHastNet.DocManager.Core.Models
 
-46. DocumentNotFoundException
+48. DocumentNotFoundException
     - Location: duHastNet.DocManager.Core.Models
 
-47. FileLockedException
+49. FileLockedException
     - Location: duHastNet.DocManager.Core.Services
 
-48. FolderDoesNotExistException
+50. FolderDoesNotExistException
     - Location: duHastNet.DocManager.Core.Models.CurrentFolder
 
-49. IncomingFileDuplicateException
+51. IncomingFileDuplicateException
     - Location: duHastNet.DocManager.Core.Models.CurrentFolder
 
-50. IncomingFolderEmptyException
+52. IncomingFolderEmptyException
     - Location: duHastNet.DocManager.Core.Models.CurrentFolder
 
-51. InvalidRevisionFormatException
+53. InvalidRevisionFormatException
     - Location: duHastNet.DocManager.Core.Models
 
-52. MetaMapperDuplicateException
+54. MetaMapperDuplicateException
     - Location: duHastNet.DocManager.Core.Models.CloudDocManager.MetaData
 
-53. RevisionDuplicateException
+55. RevisionDuplicateException
     - Location: duHastNet.DocManager.Core.Models
 
 ================================================================================
@@ -275,11 +339,13 @@ TESTING NOTES
 - Apply interface implementations per InterfaceBestPractices.md
 
 PRIORITY RECOMMENDATIONS:
-1. Start with Services (items 1-12) as they contain critical business logic
-2. Then test Models with Business Logic (items 13-19)
-3. Filing Rules (items 20-27) are self-contained and easier to test
-4. Configuration/Data models (items 28-36) are lower priority
-5. Enums and exceptions can be tested last if at all
+1. Resolve the hardening gaps first (items 4, 13, 14) — these are regressions
+   against implemented production code, not new work
+2. Then address high-priority services (items 1, 2, 5, 6, 8, 11, 12)
+3. Then models with business logic (items 15-21)
+4. Filing rules (items 22-29) are self-contained and straightforward to test
+5. Configuration/data models (items 30-38) are lower priority
+6. Enums and exceptions can be tested last if at all
 
 ================================================================================
 END OF DOCUMENT

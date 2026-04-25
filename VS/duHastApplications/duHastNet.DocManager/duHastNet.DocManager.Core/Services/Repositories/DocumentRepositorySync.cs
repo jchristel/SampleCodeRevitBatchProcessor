@@ -112,11 +112,16 @@ public class DocumentRepositorySync : BaseRepositorySync<Document>, IDocumentRep
     /// <returns>Number of records affected</returns>
     public int UpdateActiveStatus(int documentId, bool isActive)
     {
-        var document = GetById(documentId);
-        if (document == null) return 0;
+        var count = 0;
+        _connection.RunInTransaction(() =>
+        {
+            var document = _connection.Find<Document>(documentId);
+            if (document == null) return;
 
-        document.IsActive = isActive;
-        return Update(document);
+            document.IsActive = isActive;
+            count = _connection.Update(document);
+        });
+        return count;
     }
 
     #endregion
@@ -145,14 +150,14 @@ public class DocumentRepositorySync : BaseRepositorySync<Document>, IDocumentRep
     /// <returns>List of documents that have this number in their history</returns>
     public List<Document> GetDocumentsByHistoryNumber(string documentNumber)
     {
-        // Since DocumentNumberHistory is stored as JSON, we need to search the JSON text
-        // This is a simple LIKE search - for more complex queries, consider using FTS
+        // DocumentNumberHistoryJson stores keys as quoted strings e.g. {"A-101-OLD":"2024-01-01"}.
+        // We pre-filter using a LIKE search on the raw number, then apply the accurate
+        // in-memory check on the deserialized dictionary to eliminate any false positives.
         var documents = _connection.Table<Document>()
-            .Where(d => d.DocumentNumberHistoryJson.Contains($"\"{documentNumber}\""))
+            .Where(d => d.DocumentNumberHistoryJson.Contains(documentNumber))
             .ToList();
 
-        // Filter results by actually checking the deserialized dictionary
-        // to ensure accurate matching
+        // In-memory filter ensures accurate matching via the deserialized dictionary
         return documents.Where(d => d.DocumentNumberHistory.ContainsKey(documentNumber)).ToList();
     }
 

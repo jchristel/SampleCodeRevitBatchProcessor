@@ -1,4 +1,4 @@
-﻿//
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -16,6 +16,8 @@
 //
 //
 
+using SQLite;
+
 namespace duHastNet.DocManager.Core.Interfaces
 {
     /// <summary>
@@ -28,8 +30,13 @@ namespace duHastNet.DocManager.Core.Interfaces
         ICustomPropertyRepository CustomProperties { get; }
         ICustomFieldDefinitionRepository CustomFieldDefinitions { get; }
         Task<int> SaveChangesAsync();
-        Task BeginTransactionAsync();
-        Task CommitTransactionAsync();
-        Task RollbackTransactionAsync();
+
+        /// <summary>
+        /// Executes the given action inside a single SQLite transaction.
+        /// If the action throws, the transaction is rolled back automatically.
+        /// Use this to wrap any multi-step write operation that must be atomic.
+        /// </summary>
+        /// <param name="action">The write operations to execute atomically</param>
+        Task RunInTransactionAsync(Action<SQLiteConnection> action);
     }
 }

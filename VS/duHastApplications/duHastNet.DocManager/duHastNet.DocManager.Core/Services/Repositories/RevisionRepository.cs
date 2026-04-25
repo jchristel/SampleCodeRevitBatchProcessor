@@ -69,19 +69,21 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
     /// <returns>Number of records affected</returns>
     public async Task<int> AddDocumentToRevisionAsync(int revisionId, int documentId)
     {
-        var revision = await GetByIdAsync(revisionId);
-        if (revision == null) return 0;
-
-        // Avoid duplicates
-        if (!revision.DocumentIds.Contains(documentId))
+        var count = 0;
+        await _connection.RunInTransactionAsync(conn =>
         {
-            var currentIds = revision.DocumentIds;
-            currentIds.Add(documentId);
-            revision.DocumentIds = currentIds; // Trigger serialization
-            return await UpdateAsync(revision);
-        }
+            var revision = conn.Find<Revision>(revisionId);
+            if (revision == null) return;
 
-        return 0; // No change needed
+            if (!revision.DocumentIds.Contains(documentId))
+            {
+                var currentIds = revision.DocumentIds;
+                currentIds.Add(documentId);
+                revision.DocumentIds = currentIds;
+                count = conn.Update(revision);
+            }
+        });
+        return count;
     }
 
     /// <summary>
@@ -92,17 +94,20 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
     /// <returns>Number of records affected</returns>
     public async Task<int> RemoveDocumentFromRevisionAsync(int revisionId, int documentId)
     {
-        var revision = await GetByIdAsync(revisionId);
-        if (revision == null) return 0;
-
-        var currentIds = revision.DocumentIds;
-        if (currentIds.Remove(documentId))
+        var count = 0;
+        await _connection.RunInTransactionAsync(conn =>
         {
-            revision.DocumentIds = currentIds; // Trigger serialization
-            return await UpdateAsync(revision);
-        }
+            var revision = conn.Find<Revision>(revisionId);
+            if (revision == null) return;
 
-        return 0; // Document wasn't in the list
+            var currentIds = revision.DocumentIds;
+            if (currentIds.Remove(documentId))
+            {
+                revision.DocumentIds = currentIds;
+                count = conn.Update(revision);
+            }
+        });
+        return count;
     }
 
     /// <summary>
@@ -113,27 +118,31 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
     /// <returns>Number of records affected</returns>
     public async Task<int> AddDocumentsToRevisionAsync(int revisionId, IEnumerable<int> documentIds)
     {
-        var revision = await GetByIdAsync(revisionId);
-        if (revision == null) return 0;
-
-        var currentIds = revision.DocumentIds;
-        bool changed = false;
-        foreach (var documentId in documentIds)
+        var idList = documentIds.ToList();
+        var count = 0;
+        await _connection.RunInTransactionAsync(conn =>
         {
-            if (!currentIds.Contains(documentId))
+            var revision = conn.Find<Revision>(revisionId);
+            if (revision == null) return;
+
+            var currentIds = revision.DocumentIds;
+            bool changed = false;
+            foreach (var documentId in idList)
             {
-                currentIds.Add(documentId);
-                changed = true;
+                if (!currentIds.Contains(documentId))
+                {
+                    currentIds.Add(documentId);
+                    changed = true;
+                }
             }
-        }
 
-        if (changed)
-        {
-            revision.DocumentIds = currentIds; // Trigger serialization
-            return await UpdateAsync(revision);
-        }
-
-        return 0;
+            if (changed)
+            {
+                revision.DocumentIds = currentIds;
+                count = conn.Update(revision);
+            }
+        });
+        return count;
     }
 
     /// <summary>
@@ -144,26 +153,30 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
     /// <returns>Number of records affected</returns>
     public async Task<int> RemoveDocumentsFromRevisionAsync(int revisionId, IEnumerable<int> documentIds)
     {
-        var revision = await GetByIdAsync(revisionId);
-        if (revision == null) return 0;
-
-        var currentIds = revision.DocumentIds;
-        bool changed = false;
-        foreach (var documentId in documentIds)
+        var idList = documentIds.ToList();
+        var count = 0;
+        await _connection.RunInTransactionAsync(conn =>
         {
-            if (currentIds.Remove(documentId))
+            var revision = conn.Find<Revision>(revisionId);
+            if (revision == null) return;
+
+            var currentIds = revision.DocumentIds;
+            bool changed = false;
+            foreach (var documentId in idList)
             {
-                changed = true;
+                if (currentIds.Remove(documentId))
+                {
+                    changed = true;
+                }
             }
-        }
 
-        if (changed)
-        {
-            revision.DocumentIds = currentIds; // Trigger serialization
-            return await UpdateAsync(revision);
-        }
-
-        return 0;
+            if (changed)
+            {
+                revision.DocumentIds = currentIds;
+                count = conn.Update(revision);
+            }
+        });
+        return count;
     }
 
     /// <summary>
@@ -174,11 +187,17 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
     /// <returns>Number of records affected</returns>
     public async Task<int> SetRevisionDocumentsAsync(int revisionId, IEnumerable<int> documentIds)
     {
-        var revision = await GetByIdAsync(revisionId);
-        if (revision == null) return 0;
+        var idList = documentIds.Distinct().ToList();
+        var count = 0;
+        await _connection.RunInTransactionAsync(conn =>
+        {
+            var revision = conn.Find<Revision>(revisionId);
+            if (revision == null) return;
 
-        revision.DocumentIds = documentIds.Distinct().ToList();
-        return await UpdateAsync(revision);
+            revision.DocumentIds = idList;
+            count = conn.Update(revision);
+        });
+        return count;
     }
 
     /// <summary>

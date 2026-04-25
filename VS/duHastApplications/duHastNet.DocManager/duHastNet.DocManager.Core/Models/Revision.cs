@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -19,8 +19,8 @@
 //
 //
 
+using Newtonsoft.Json;
 using SQLite;
-using System.Text.Json;
 
 namespace duHastNet.DocManager.Core.Models;
 
@@ -77,7 +77,7 @@ public class Revision
                 if (string.IsNullOrEmpty(DocumentIdsJson))
                     return new List<int>();
 
-                var result = JsonSerializer.Deserialize<List<int>>(DocumentIdsJson)
+                var result = JsonConvert.DeserializeObject<List<int>>(DocumentIdsJson)
                     ?? new List<int>();
 
                 return result;
@@ -91,7 +91,7 @@ public class Revision
         {
             try
             {
-                DocumentIdsJson = JsonSerializer.Serialize(value ?? new List<int>());
+                DocumentIdsJson = JsonConvert.SerializeObject(value ?? new List<int>());
             }
             catch
             {

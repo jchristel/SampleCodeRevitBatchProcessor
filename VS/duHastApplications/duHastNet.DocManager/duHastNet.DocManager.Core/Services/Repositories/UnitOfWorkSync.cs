@@ -53,6 +53,15 @@ namespace duHastNet.DocManager.Core.Services.Repositories
             return 0;
         }
 
+        /// <summary>
+        /// Executes the given action inside a single SQLite transaction.
+        /// If the action throws, the transaction is rolled back automatically.
+        /// </summary>
+        public void RunInTransaction(Action action)
+        {
+            _connection.RunInTransaction(action);
+        }
+
         public void Dispose()
         {
             // Connection is managed by DatabaseService

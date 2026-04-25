@@ -30,5 +30,13 @@ namespace duHastNet.DocManager.Core.Interfaces
         ICustomFieldDefinitionRepositorySync CustomFieldDefinitions { get; }
         
         int SaveChanges();
+
+        /// <summary>
+        /// Executes the given action inside a single SQLite transaction.
+        /// If the action throws, the transaction is rolled back automatically.
+        /// Use this to wrap any multi-step write operation that must be atomic.
+        /// </summary>
+        /// <param name="action">The write operations to execute atomically</param>
+        void RunInTransaction(Action action);
     }
 }

@@ -71,6 +71,13 @@ public interface IDatabaseService : IDisposable
     /// </summary>
     Task<bool> CheckDatabaseIntegrityAsync();
 
+    /// <summary>
+    /// Returns the current data_version pragma value for this connection.
+    /// The value increments whenever any connection writes to the database,
+    /// making it suitable for detecting external changes via polling.
+    /// </summary>
+    Task<int> GetDataVersionAsync();
+
     #endregion
 
     #region Sync Methods
@@ -98,6 +105,13 @@ public interface IDatabaseService : IDisposable
     /// Returns true if the database appears to be functional.
     /// </summary>
     bool CheckDatabaseIntegrity();
+
+    /// <summary>
+    /// Returns the current data_version pragma value for this connection.
+    /// The value increments whenever any connection writes to the database,
+    /// making it suitable for detecting external changes via polling.
+    /// </summary>
+    int GetDataVersion();
 
     #endregion
 }

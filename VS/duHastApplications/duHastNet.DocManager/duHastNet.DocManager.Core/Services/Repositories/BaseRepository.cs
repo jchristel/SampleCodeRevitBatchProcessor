@@ -1,4 +1,4 @@
-﻿//
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -102,11 +102,15 @@ public abstract class BaseRepository<T> : IRepository<T> where T : class, new()
 
     public virtual async Task<int> DeleteAllAsync(IEnumerable<T> entities)
     {
+        var list = entities.ToList();
         var count = 0;
-        foreach (var entity in entities)
+        await _connection.RunInTransactionAsync(conn =>
         {
-            count += await DeleteAsync(entity);
-        }
+            foreach (var entity in list)
+            {
+                count += conn.Delete(entity);
+            }
+        });
         return count;
     }
 }

@@ -1,11 +1,11 @@
-﻿//
+//
 //License: BSD License
 // Copyright 2025, Jan Christel
 //
 
 using duHastNet.DocManager.Core.Models.Database;
+using Newtonsoft.Json;
 using SQLite;
-using System.Text.Json;
 
 namespace duHastNet.DocManager.Core.Models;
 
@@ -90,7 +90,7 @@ public class Document
                 if (string.IsNullOrEmpty(DocumentNumberHistoryJson))
                     return new Dictionary<string, DateOnly>();
 
-                var stringDict = JsonSerializer.Deserialize<Dictionary<string, string>>(DocumentNumberHistoryJson)
+                var stringDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(DocumentNumberHistoryJson)
                     ?? new Dictionary<string, string>();
 
                 var result = new Dictionary<string, DateOnly>();
@@ -113,7 +113,7 @@ public class Document
             try
             {
                 var stringDict = value.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToString("yyyy-MM-dd"));
-                DocumentNumberHistoryJson = JsonSerializer.Serialize(stringDict);
+                DocumentNumberHistoryJson = JsonConvert.SerializeObject(stringDict);
             }
             catch
             {
@@ -137,7 +137,7 @@ public class Document
                 if (string.IsNullOrEmpty(RevisionIndicatorHistoryJson))
                     return new Dictionary<int, string>();
 
-                var result = JsonSerializer.Deserialize<Dictionary<int, string>>(RevisionIndicatorHistoryJson)
+                var result = JsonConvert.DeserializeObject<Dictionary<int, string>>(RevisionIndicatorHistoryJson)
                     ?? new Dictionary<int, string>();
 
                 return result;
@@ -151,7 +151,7 @@ public class Document
         {
             try
             {
-                RevisionIndicatorHistoryJson = JsonSerializer.Serialize(value ?? new Dictionary<int, string>());
+                RevisionIndicatorHistoryJson = JsonConvert.SerializeObject(value ?? new Dictionary<int, string>());
             }
             catch
             {

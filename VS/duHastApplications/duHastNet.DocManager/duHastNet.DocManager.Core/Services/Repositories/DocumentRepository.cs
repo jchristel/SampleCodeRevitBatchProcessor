@@ -1,4 +1,4 @@
-﻿//
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -111,11 +111,16 @@ public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
     /// <returns>Number of records affected</returns>
     public async Task<int> UpdateActiveStatusAsync(int documentId, bool isActive)
     {
-        var document = await GetByIdAsync(documentId);
-        if (document == null) return 0;
+        var count = 0;
+        await _connection.RunInTransactionAsync(conn =>
+        {
+            var document = conn.Find<Document>(documentId);
+            if (document == null) return;
 
-        document.IsActive = isActive;
-        return await UpdateAsync(document);
+            document.IsActive = isActive;
+            count = conn.Update(document);
+        });
+        return count;
     }
 
     #endregion

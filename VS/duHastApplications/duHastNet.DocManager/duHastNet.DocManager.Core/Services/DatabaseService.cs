@@ -83,6 +83,15 @@ public class DatabaseService : IDatabaseService
         _connection = new SQLiteAsyncConnection(databasePath);
         DatabasePath = databasePath;
 
+        // Set busy timeout so SQLite waits and retries rather than immediately
+        // throwing SQLiteBusyException when a second writer hits a locked file.
+        // SQLiteAsyncConnection does not expose a BusyTimeout setter (only GetBusyTimeout),
+        // so the PRAGMA is the correct approach for the async connection.
+        // ExecuteScalarAsync is used rather than ExecuteAsync because PRAGMA busy_timeout
+        // returns a value, and ExecuteAsync (which uses the write lock path) raises
+        // SQLiteException "not an error" (SQLITE_OK) when used for statements that return rows.
+        await _connection.ExecuteScalarAsync<int>("PRAGMA busy_timeout = 5000");
+
         // Create tables
         await CreateTablesAsync();
     }
@@ -119,6 +128,11 @@ public class DatabaseService : IDatabaseService
         {
             return false;
         }
+    }
+
+    public async Task<int> GetDataVersionAsync()
+    {
+        return await Connection.ExecuteScalarAsync<int>("PRAGMA data_version");
     }
 
     #endregion
@@ -158,6 +172,11 @@ public class DatabaseService : IDatabaseService
         _syncConnection = new SQLiteConnection(databasePath);
         DatabasePath = databasePath;
 
+        // Set busy timeout so SQLite waits and retries rather than immediately
+        // throwing SQLiteBusyException when a second writer hits a locked file.
+        // SQLiteConnection exposes BusyTimeout directly as a TimeSpan property.
+        _syncConnection.BusyTimeout = TimeSpan.FromSeconds(5);
+
         // Create tables
         CreateTables();
     }
@@ -196,6 +215,11 @@ public class DatabaseService : IDatabaseService
         {
             return false;
         }
+    }
+
+    public int GetDataVersion()
+    {
+        return SyncConnection.ExecuteScalar<int>("PRAGMA data_version");
     }
 
     #endregion

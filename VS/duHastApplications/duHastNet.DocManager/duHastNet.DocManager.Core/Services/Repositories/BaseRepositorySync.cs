@@ -103,11 +103,15 @@ public abstract class BaseRepositorySync<T> : IRepositorySync<T> where T : class
 
     public virtual int DeleteAll(IEnumerable<T> entities)
     {
+        var list = entities.ToList();
         var count = 0;
-        foreach (var entity in entities)
+        _connection.RunInTransaction(() =>
         {
-            count += Delete(entity);
-        }
+            foreach (var entity in list)
+            {
+                count += Delete(entity);
+            }
+        });
         return count;
     }
 }

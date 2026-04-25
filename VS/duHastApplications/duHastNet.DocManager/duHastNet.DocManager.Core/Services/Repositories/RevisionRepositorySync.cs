@@ -70,19 +70,21 @@ public class RevisionRepositorySync : BaseRepositorySync<Revision>, IRevisionRep
     /// <returns>Number of records affected</returns>
     public int AddDocumentToRevision(int revisionId, int documentId)
     {
-        var revision = GetById(revisionId);
-        if (revision == null) return 0;
-
-        // Avoid duplicates
-        if (!revision.DocumentIds.Contains(documentId))
+        var count = 0;
+        _connection.RunInTransaction(() =>
         {
-            var currentIds = revision.DocumentIds;
-            currentIds.Add(documentId);
-            revision.DocumentIds = currentIds; // Trigger serialization
-            return Update(revision);
-        }
+            var revision = _connection.Find<Revision>(revisionId);
+            if (revision == null) return;
 
-        return 0; // No change needed
+            if (!revision.DocumentIds.Contains(documentId))
+            {
+                var currentIds = revision.DocumentIds;
+                currentIds.Add(documentId);
+                revision.DocumentIds = currentIds;
+                count = _connection.Update(revision);
+            }
+        });
+        return count;
     }
 
     /// <summary>
@@ -93,17 +95,20 @@ public class RevisionRepositorySync : BaseRepositorySync<Revision>, IRevisionRep
     /// <returns>Number of records affected</returns>
     public int RemoveDocumentFromRevision(int revisionId, int documentId)
     {
-        var revision = GetById(revisionId);
-        if (revision == null) return 0;
-
-        var currentIds = revision.DocumentIds;
-        if (currentIds.Remove(documentId))
+        var count = 0;
+        _connection.RunInTransaction(() =>
         {
-            revision.DocumentIds = currentIds; // Trigger serialization
-            return Update(revision);
-        }
+            var revision = _connection.Find<Revision>(revisionId);
+            if (revision == null) return;
 
-        return 0; // Document wasn't in the list
+            var currentIds = revision.DocumentIds;
+            if (currentIds.Remove(documentId))
+            {
+                revision.DocumentIds = currentIds;
+                count = _connection.Update(revision);
+            }
+        });
+        return count;
     }
 
     /// <summary>
@@ -114,27 +119,31 @@ public class RevisionRepositorySync : BaseRepositorySync<Revision>, IRevisionRep
     /// <returns>Number of records affected</returns>
     public int AddDocumentsToRevision(int revisionId, IEnumerable<int> documentIds)
     {
-        var revision = GetById(revisionId);
-        if (revision == null) return 0;
-
-        var currentIds = revision.DocumentIds;
-        bool changed = false;
-        foreach (var documentId in documentIds)
+        var idList = documentIds.ToList();
+        var count = 0;
+        _connection.RunInTransaction(() =>
         {
-            if (!currentIds.Contains(documentId))
+            var revision = _connection.Find<Revision>(revisionId);
+            if (revision == null) return;
+
+            var currentIds = revision.DocumentIds;
+            bool changed = false;
+            foreach (var documentId in idList)
             {
-                currentIds.Add(documentId);
-                changed = true;
+                if (!currentIds.Contains(documentId))
+                {
+                    currentIds.Add(documentId);
+                    changed = true;
+                }
             }
-        }
 
-        if (changed)
-        {
-            revision.DocumentIds = currentIds; // Trigger serialization
-            return Update(revision);
-        }
-
-        return 0;
+            if (changed)
+            {
+                revision.DocumentIds = currentIds;
+                count = _connection.Update(revision);
+            }
+        });
+        return count;
     }
 
     /// <summary>
@@ -145,26 +154,30 @@ public class RevisionRepositorySync : BaseRepositorySync<Revision>, IRevisionRep
     /// <returns>Number of records affected</returns>
     public int RemoveDocumentsFromRevision(int revisionId, IEnumerable<int> documentIds)
     {
-        var revision = GetById(revisionId);
-        if (revision == null) return 0;
-
-        var currentIds = revision.DocumentIds;
-        bool changed = false;
-        foreach (var documentId in documentIds)
+        var idList = documentIds.ToList();
+        var count = 0;
+        _connection.RunInTransaction(() =>
         {
-            if (currentIds.Remove(documentId))
+            var revision = _connection.Find<Revision>(revisionId);
+            if (revision == null) return;
+
+            var currentIds = revision.DocumentIds;
+            bool changed = false;
+            foreach (var documentId in idList)
             {
-                changed = true;
+                if (currentIds.Remove(documentId))
+                {
+                    changed = true;
+                }
             }
-        }
 
-        if (changed)
-        {
-            revision.DocumentIds = currentIds; // Trigger serialization
-            return Update(revision);
-        }
-
-        return 0;
+            if (changed)
+            {
+                revision.DocumentIds = currentIds;
+                count = _connection.Update(revision);
+            }
+        });
+        return count;
     }
 
     /// <summary>
@@ -175,11 +188,17 @@ public class RevisionRepositorySync : BaseRepositorySync<Revision>, IRevisionRep
     /// <returns>Number of records affected</returns>
     public int SetRevisionDocuments(int revisionId, IEnumerable<int> documentIds)
     {
-        var revision = GetById(revisionId);
-        if (revision == null) return 0;
+        var idList = documentIds.Distinct().ToList();
+        var count = 0;
+        _connection.RunInTransaction(() =>
+        {
+            var revision = _connection.Find<Revision>(revisionId);
+            if (revision == null) return;
 
-        revision.DocumentIds = documentIds.Distinct().ToList();
-        return Update(revision);
+            revision.DocumentIds = idList;
+            count = _connection.Update(revision);
+        });
+        return count;
     }
 
     /// <summary>
@@ -190,18 +209,18 @@ public class RevisionRepositorySync : BaseRepositorySync<Revision>, IRevisionRep
     /// <returns>List of revisions containing this document</returns>
     public List<Revision> GetRevisionsByDocumentId(int documentId)
     {
-        // Since DocumentIds is stored as JSON, we need to search the JSON text
-        // This is a simple LIKE search - for more complex queries, consider using FTS
+        // DocumentIdsJson stores integers without quotes e.g. [100,101,102].
+        // A reliable broad LIKE pre-filter is to search for the raw number surrounded
+        // by any JSON delimiter (bracket, comma, or space). We then apply the accurate
+        // in-memory check on the deserialized list to guarantee correctness.
+        var searchTerm = documentId.ToString();
         var revisions = _connection.Table<Revision>()
-            .Where(r => r.DocumentIdsJson.Contains($"\"{documentId}\"") ||
-                       r.DocumentIdsJson.Contains($"{documentId},") ||
-                       r.DocumentIdsJson.Contains($"[{documentId}") ||
-                       r.DocumentIdsJson.Contains($",{documentId}]"))
+            .Where(r => r.DocumentIdsJson.Contains(searchTerm))
             .OrderByDescending(r => r.RevisionDate)
             .ToList();
 
-        // Filter results by actually checking the deserialized list
-        // to ensure accurate matching
+        // In-memory filter eliminates any false positives from the LIKE pre-filter
+        // (e.g. documentId=1 matching against [10,11,12])
         return revisions.Where(r => r.DocumentIds.Contains(documentId)).ToList();
     }
 

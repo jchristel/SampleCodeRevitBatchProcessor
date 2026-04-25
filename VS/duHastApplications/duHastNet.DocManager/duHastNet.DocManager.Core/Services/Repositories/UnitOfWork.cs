@@ -1,4 +1,4 @@
-﻿//
+//
 // BSD License
 // Copyright 2025, Jan Christel
 // All rights reserved.
@@ -52,22 +52,13 @@ namespace duHastNet.DocManager.Core.Services.Repositories
             return await Task.FromResult(0);
         }
 
-        public async Task BeginTransactionAsync()
+        /// <summary>
+        /// Executes the given action inside a single SQLite transaction.
+        /// If the action throws, the transaction is rolled back automatically.
+        /// </summary>
+        public async Task RunInTransactionAsync(Action<SQLiteConnection> action)
         {
-            // Transactions are handled by RunInTransactionAsync
-            await Task.CompletedTask;
-        }
-
-        public async Task CommitTransactionAsync()
-        {
-            // Transactions are handled automatically by RunInTransactionAsync
-            await Task.CompletedTask;
-        }
-
-        public async Task RollbackTransactionAsync()
-        {
-            // Rollback is handled automatically if exception occurs
-            await Task.CompletedTask;
+            await _connection.RunInTransactionAsync(action);
         }
 
         public void Dispose()

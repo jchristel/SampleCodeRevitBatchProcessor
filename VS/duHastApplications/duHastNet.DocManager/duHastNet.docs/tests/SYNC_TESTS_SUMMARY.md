@@ -1,18 +1,22 @@
-# Synchronous Database Tests - Complete Coverage Summary
+# Synchronous Database Tests - Coverage Summary
 
 ## Overview
-Complete test suite for all synchronous database access functions in the `.Core` namespace. All tests follow the project's test style guidelines and database testing best practices.
 
-## Test Files Created
+Test suite for synchronous database access in the `.Core` namespace. All tests follow the project's test style guidelines and database testing best practices. This document reflects the current state of coverage including known gaps.
 
-### 1. **BaseRepositorySyncTests.cs** (442 lines)
-Tests for the base `BaseRepositorySync<T>` class providing foundational CRUD operations.
+---
+
+## Completed Test Files
+
+### 1. BaseRepositorySyncTests.cs (442 lines)
+
+Tests for `BaseRepositorySync<T>` providing foundational CRUD operations.
 
 **Coverage:**
-- ✅ Insert/InsertAll operations
-- ✅ GetById/GetAll operations
-- ✅ Update/UpdateAll operations
-- ✅ Delete/DeleteAll operations (by entity and by ID)
+- ✅ Insert / InsertAll operations
+- ✅ GetById / GetAll operations
+- ✅ Update / UpdateAll operations
+- ✅ Delete / DeleteAll operations (by entity and by ID)
 - ✅ Find with predicates
 - ✅ FirstOrDefault queries
 - ✅ Count (with and without predicates)
@@ -20,29 +24,35 @@ Tests for the base `BaseRepositorySync<T>` class providing foundational CRUD ope
 
 ---
 
-### 2. **UnitOfWorkSyncTests.cs** (341 lines)
-Tests for the `UnitOfWorkSync` class managing repository coordination.
+### 2. UnitOfWorkSyncTests.cs (341 lines)
+
+Tests for `UnitOfWorkSync` managing repository coordination.
 
 **Coverage:**
-- ✅ Constructor initialization of all repositories
+- ✅ Constructor initialisation of all repositories
 - ✅ SaveChanges compatibility
 - ✅ Repository instances sharing same connection
 - ✅ Cross-repository operations
 - ✅ Immediate persistence verification
-- ✅ Dispose behavior
+- ✅ Dispose behaviour
 - ✅ Multiple repository method calls
 - ✅ Complex workflows using all repositories
 
+**Known gaps — see Gaps section:**
+- ❌ `RunInTransaction` commit path not tested
+- ❌ `RunInTransaction` rollback path not tested
+
 ---
 
-### 3. **CustomFieldDefinitionRepositorySyncTests.cs** (929 lines)
-Tests for `CustomFieldDefinitionRepositorySync` managing custom field definitions.
+### 3. CustomFieldDefinitionRepositorySyncTests.cs (929 lines)
+
+Tests for `CustomFieldDefinitionRepositorySync`.
 
 **Coverage:**
-- ✅ **GetByPropertyName** - Finding definitions by name
-- ✅ **GetActive/GetInactive** - Active/inactive filtering with ordering
-- ✅ **PropertyNameExists** - Case-insensitive existence checking
-- ✅ **UpdateIsActive** - Toggling active status
+- ✅ GetByPropertyName — finding definitions by name
+- ✅ GetActive / GetInactive — active/inactive filtering with ordering
+- ✅ PropertyNameExists — case-insensitive existence checking
+- ✅ UpdateIsActive — toggling active status
 - ✅ All inherited BaseRepositorySync methods
 - ✅ Bulk operations (InsertAll, UpdateAll, DeleteAll)
 - ✅ Integration tests for complete lifecycle
@@ -50,12 +60,13 @@ Tests for `CustomFieldDefinitionRepositorySync` managing custom field definition
 
 ---
 
-### 4. **CustomPropertyRepositorySyncTests.cs** (504 lines)
-Tests for `CustomPropertyRepositorySync` managing document custom properties.
+### 4. CustomPropertyRepositorySyncTests.cs (504 lines)
+
+Tests for `CustomPropertyRepositorySync`.
 
 **Coverage:**
-- ✅ **GetPropertiesByDocument** - Retrieving properties with ordering
-- ✅ **GetDistinctPropertyNames** - Unique property name extraction
+- ✅ GetPropertiesByDocument — retrieving properties with ordering
+- ✅ GetDistinctPropertyNames — unique property name extraction
 - ✅ Empty result handling
 - ✅ Non-existent document scenarios
 - ✅ All inherited BaseRepositorySync methods
@@ -65,53 +76,55 @@ Tests for `CustomPropertyRepositorySync` managing document custom properties.
 
 ---
 
-### 5. **DocumentRepositorySyncTests.cs** (801 lines)
-Tests for `DocumentRepositorySync` managing document entities with active/inactive status.
+### 5. DocumentRepositorySyncTests.cs (801 lines)
+
+Tests for `DocumentRepositorySync`.
 
 **Coverage:**
-- ✅ **GetDocumentsByRevision** - Revision filtering (active-only)
-- ✅ **GetDocumentsByNumber** - All revisions of a document
-- ✅ **GetLatestDocumentRevision** - Most recent active revision
-- ✅ **GetDistinctDocumentNumbers** - Unique document numbers
-- ✅ **SearchDocuments** - Case-insensitive search
-- ✅ **DocumentExists** - Active document checking
-- ✅ **GetActiveDocuments/GetInactiveDocuments** - Status filtering
-- ✅ **UpdateActiveStatus** - Status toggling
-- ✅ **GetDocumentsByHistoryNumber** - Historical number search
-- ✅ **DocumentNumberExistsAnywhere** - Current + historical check
-- ✅ **GetAllDocumentNumbersEverUsed** - Complete number history
-- ✅ **GetAllDocumentsByRevision/Number** - Including inactive
-- ✅ **AnyDocumentExists** - Existence with inactive included
+- ✅ GetDocumentsByRevision — revision filtering (active-only)
+- ✅ GetDocumentsByNumber — all revisions of a document
+- ✅ GetLatestDocumentRevision — most recent active revision
+- ✅ GetDistinctDocumentNumbers — unique document numbers
+- ✅ SearchDocuments — case-insensitive search
+- ✅ DocumentExists — active document checking
+- ✅ GetActiveDocuments / GetInactiveDocuments — status filtering
+- ✅ UpdateActiveStatus — status toggling
+- ✅ GetDocumentsByHistoryNumber — historical number search
+- ✅ DocumentNumberExistsAnywhere — current + historical check
+- ✅ GetAllDocumentNumbersEverUsed — complete number history
+- ✅ GetAllDocumentsByRevision / Number — including inactive
+- ✅ AnyDocumentExists — existence with inactive included
 - ✅ Integration tests for complete document lifecycle
 
 ---
 
-### 6. **RevisionRepositorySyncTests.cs** (791 lines)
-Tests for `RevisionRepositorySync` managing revision entities and document relationships.
+### 6. RevisionRepositorySyncTests.cs (791 lines)
+
+Tests for `RevisionRepositorySync`.
 
 **Coverage:**
-- ✅ **GetRevisionsByDateRange** - Date range filtering with ordering
-- ✅ **GetLatestRevision** - Most recent revision
-- ✅ **GetRevisionsByDate** - Specific date queries (time-agnostic)
-- ✅ **AddDocumentToRevision** - Single document association
-- ✅ **RemoveDocumentFromRevision** - Single document removal
-- ✅ **AddDocumentsToRevision** - Bulk document association
-- ✅ **RemoveDocumentsFromRevision** - Bulk document removal
-- ✅ **SetRevisionDocuments** - Complete replacement
-- ✅ **GetRevisionsByDocumentId** - Finding revisions containing document
-- ✅ **GetDocumentCount** - Document count per revision
-- ✅ **RevisionContainsDocument** - Document membership check
-- ✅ **GetEmptyRevisions** - Revisions with no documents
-- ✅ **GetRevisionStatistics** - Comprehensive statistics
+- ✅ GetRevisionsByDateRange — date range filtering with ordering
+- ✅ GetLatestRevision — most recent revision
+- ✅ GetRevisionsByDate — specific date queries (time-agnostic)
+- ✅ AddDocumentToRevision — single document association
+- ✅ RemoveDocumentFromRevision — single document removal
+- ✅ AddDocumentsToRevision — bulk document association
+- ✅ RemoveDocumentsFromRevision — bulk document removal
+- ✅ SetRevisionDocuments — complete replacement
+- ✅ GetRevisionsByDocumentId — finding revisions containing a document
+- ✅ GetDocumentCount — document count per revision
+- ✅ RevisionContainsDocument — document membership check
+- ✅ GetEmptyRevisions — revisions with no documents
+- ✅ GetRevisionStatistics — comprehensive statistics
 - ✅ All inherited BaseRepositorySync methods
 - ✅ Integration tests for complete revision lifecycle
 
 ---
 
-## Test Coverage Statistics
+## Coverage Statistics
 
-| Repository | Test File | Lines | Test Methods | Integration Tests |
-|------------|-----------|-------|--------------|-------------------|
+| Class | Test File | Lines | Tests | Integration Tests |
+|---|---|---|---|---|
 | BaseRepositorySync | BaseRepositorySyncTests.cs | 442 | 18 | N/A |
 | UnitOfWorkSync | UnitOfWorkSyncTests.cs | 341 | 9 | 1 |
 | CustomFieldDefinitionRepositorySync | CustomFieldDefinitionRepositorySyncTests.cs | 929 | 35 | 2 |
@@ -122,10 +135,70 @@ Tests for `RevisionRepositorySync` managing revision entities and document relat
 
 ---
 
-## Key Features
+## Known Gaps
 
-### ✅ Follows Test Style Guidelines
-- Uses NUnit framework with proper attributes (`[TestFixture]`, `[Test]`, `[SetUp]`, `[TearDown]`)
+The following sync-path features have no test coverage. These gaps were introduced during the SQLite hardening implementation and must be addressed.
+
+### GAP 1 — `DatabaseService` Sync Path (No coverage)
+
+`DatabaseService` has a complete synchronous surface (`Initialize`, `CreateTables`, `Close`, `CheckDatabaseIntegrity`, `GetDataVersion`) used by the Revit plugin via IronPython. None of these methods have tests. All existing `DatabaseServiceTests_*` files cover the async path only.
+
+A new test file `DatabaseServiceTests_Sync.cs` is required. Minimum coverage:
+
+- `Initialize_WithValidPath_InitializesSuccessfully`
+- `Initialize_WithNullPath_ThrowsArgumentNullException`
+- `Initialize_WithEmptyPath_ThrowsArgumentException`
+- `Initialize_WithWhitespacePath_ThrowsArgumentException`
+- `Initialize_ConfiguresBusyTimeout` — verifies `SyncConnection.BusyTimeout` is `TimeSpan.FromSeconds(5)`
+- `Initialize_WithNonExistentDirectory_CreatesDirectory`
+- `CreateTables_CreatesAllRequiredTables`
+- `Close_AfterInitialization_ClosesConnection`
+- `Close_WithoutInitialization_DoesNotThrow`
+- `CheckDatabaseIntegrity_AfterInitialization_ReturnsTrue`
+- `GetDataVersion_AfterInitialization_ReturnsNonNegativeValue`
+- `GetDataVersion_AfterWrite_ReturnsIncrementedValue`
+- `GetDataVersion_AfterReadOnly_ReturnsSameValue`
+
+---
+
+### GAP 2 — `UnitOfWorkSync.RunInTransaction` (No coverage)
+
+`UnitOfWorkSyncTests.cs` does not contain any test for `RunInTransaction`. This is the method callers use for all atomic multi-step write operations. Two tests are required:
+
+- `RunInTransaction_OnSuccess_CommitsAllWrites` — verifies all rows inside the transaction are visible after completion
+- `RunInTransaction_OnException_RollsBackAllWrites` — verifies no rows persist if the action throws
+
+These should be added to `UnitOfWorkSyncTests.cs`.
+
+---
+
+### GAP 3 — `UnitOfWork.RunInTransactionAsync` (No coverage, async path)
+
+The async `UnitOfWorkTests.cs` file tests `BeginTransactionAsync`, `CommitTransactionAsync`, and `RollbackTransactionAsync` — methods that **no longer exist** on `IUnitOfWork` or `UnitOfWork`. These tests are testing a removed API and must be replaced.
+
+The current `IUnitOfWork` interface exposes `RunInTransactionAsync(Action<SQLiteConnection> action)`. Tests required:
+
+- `RunInTransactionAsync_OnSuccess_CommitsAllWrites`
+- `RunInTransactionAsync_OnException_RollsBackAllWrites`
+
+The three stale tests (`BeginTransactionAsync_CompletesSuccessfully`, `CommitTransactionAsync_CompletesSuccessfully`, `RollbackTransactionAsync_CompletesSuccessfully`) must be removed.
+
+---
+
+### GAP 4 — `GetDataVersionAsync` (No coverage, async path)
+
+`IDatabaseService.GetDataVersionAsync()` is implemented in `DatabaseService` but has no tests in any of the `DatabaseServiceTests_*` files. Three tests are required, to be added to `DatabaseServiceTests_SqlOperations.cs` or a dedicated `DatabaseServiceTests_Hardening.cs`:
+
+- `GetDataVersionAsync_AfterInitialization_ReturnsNonNegativeValue`
+- `GetDataVersionAsync_AfterWrite_ReturnsIncrementedValue`
+- `GetDataVersionAsync_AfterReadOnly_ReturnsSameValue`
+
+---
+
+## Key Implementation Standards
+
+### ✅ Test Style Guidelines
+- NUnit framework with `[TestFixture]`, `[Test]`, `[SetUp]`, `[TearDown]`
 - AAA (Arrange-Act-Assert) pattern with clear section comments
 - Test naming: `MethodName_Scenario_ExpectedBehavior`
 - `Assert.Multiple()` for related assertions
@@ -133,46 +206,44 @@ Tests for `RevisionRepositorySync` managing revision entities and document relat
 
 ### ✅ Database Test Best Practices
 - ORM-first approach using sqlite-net-pcl
-- Uses `SQLiteConnection` (not async version)
 - Unique test database paths with GUIDs
 - Proper Setup/TearDown with resource cleanup
 - All tests are independent and can run in any order
+- No mocking — tests use real SQLite connections
 
-### ✅ Synchronous Implementation
+### ✅ Synchronous Implementation Standards
 - All methods are synchronous (no `async`/`await`)
-- Mirrors functionality of async tests exactly
 - Uses `SQLiteConnection` instead of `SQLiteAsyncConnection`
 - Method naming without "Async" suffix
 
-### ✅ Comprehensive Coverage
-- Tests all public methods
-- Edge cases: null, empty, non-existent entities
-- Data ordering and filtering verification
-- Integration tests for complex scenarios
-- Realistic, meaningful test data
-
 ### ✅ Windows Line Endings
-- All files created with CRLF line endings
+- All files use CRLF line endings
 
 ---
 
-## Usage
-
-Add these test files to your test project alongside the existing async tests:
+## File Location
 
 ```
 duHastNet.DocManager.Core.Tests/
 ├── Services/
+│   ├── DatabaseServiceTests_Initialization.cs
+│   ├── DatabaseServiceTests_ConnectionManagement.cs
+│   ├── DatabaseServiceTests_TablesAndIndexes.cs
+│   ├── DatabaseServiceTests_SqlOperations.cs
+│   ├── DatabaseServiceTests_MaintenanceOperations.cs
+│   ├── DatabaseServiceTests_Dispose.cs
+│   ├── DatabaseServiceTests_AdditionalScenarios.cs
+│   └── DatabaseServiceTests_Sync.cs          ← TO BE CREATED
+│
 │   └── Repositories/
 │       ├── BaseRepositorySyncTests.cs
-│       ├── UnitOfWorkSyncTests.cs
+│       ├── UnitOfWorkTests.cs                 ← NEEDS UPDATES (stale + missing)
+│       ├── UnitOfWorkSyncTests.cs             ← NEEDS UPDATES (missing)
 │       ├── CustomFieldDefinitionRepositorySyncTests.cs
 │       ├── CustomPropertyRepositorySyncTests.cs
 │       ├── DocumentRepositorySyncTests.cs
 │       └── RevisionRepositorySyncTests.cs
 ```
-
-All tests should pass immediately and provide complete coverage of the synchronous database access layer for IronPython/PyRevit compatibility.
 
 ---
 
@@ -181,13 +252,4 @@ All tests should pass immediately and provide complete coverage of the synchrono
 - NUnit Framework
 - sqlite-net-pcl
 - System.IO
-- All sync repository implementations in duHastNet.DocManager.Core
-
----
-
-## Notes
-
-- These tests complement the existing async tests
-- They follow the same patterns and test the same functionality
-- They provide confidence that sync methods work identically to async versions
-- No mocking is used - tests use real SQLite connections for accurate testing
+- All sync and async repository and service implementations in duHastNet.DocManager.Core

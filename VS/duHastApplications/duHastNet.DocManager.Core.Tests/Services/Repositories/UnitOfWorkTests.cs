@@ -17,17 +17,22 @@ public class UnitOfWorkTests
     [SetUp]
     public async Task Setup()
     {
-        // Create a temporary database file for testing
-        _databasePath = Path.GetTempFileName();
+        _databasePath = Path.Combine(
+            Path.GetTempPath(),
+            "UnitOfWorkTests",
+            Guid.NewGuid().ToString(),
+            "test.db");
 
-        var connectionString = new SQLiteConnectionString(_databasePath,
+        Directory.CreateDirectory(Path.GetDirectoryName(_databasePath)!);
+
+        var connectionString = new SQLiteConnectionString(
+            _databasePath,
             storeDateTimeAsTicks: false,
             openFlags: SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create,
             key: null);
 
         _connection = new SQLiteAsyncConnection(connectionString);
 
-        // Create tables
         await _connection.CreateTableAsync<Revision>();
         await _connection.CreateTableAsync<Document>();
         await _connection.CreateTableAsync<CustomFieldDefinition>();
@@ -42,14 +47,11 @@ public class UnitOfWorkTests
         _unitOfWork?.Dispose();
 
         if (_connection != null)
-        {
             await _connection.CloseAsync();
-        }
 
-        if (File.Exists(_databasePath))
-        {
-            File.Delete(_databasePath);
-        }
+        var dir = Path.GetDirectoryName(_databasePath);
+        if (Directory.Exists(dir))
+            Directory.Delete(dir, true);
     }
 
     [Test]
@@ -81,36 +83,6 @@ public class UnitOfWorkTests
 
         // Assert
         Assert.That(result, Is.EqualTo(0));
-    }
-
-    [Test]
-    public async Task BeginTransactionAsync_CompletesSuccessfully()
-    {
-        // With sqlite-net-pcl, transactions are handled by RunInTransactionAsync
-        // This method exists for interface compatibility
-
-        // Act & Assert - Should not throw
-        await _unitOfWork.BeginTransactionAsync();
-    }
-
-    [Test]
-    public async Task CommitTransactionAsync_CompletesSuccessfully()
-    {
-        // With sqlite-net-pcl, transactions are handled automatically
-        // This method exists for interface compatibility
-
-        // Act & Assert - Should not throw
-        await _unitOfWork.CommitTransactionAsync();
-    }
-
-    [Test]
-    public async Task RollbackTransactionAsync_CompletesSuccessfully()
-    {
-        // With sqlite-net-pcl, rollback is handled automatically if exception occurs
-        // This method exists for interface compatibility
-
-        // Act & Assert - Should not throw
-        await _unitOfWork.RollbackTransactionAsync();
     }
 
     [Test]

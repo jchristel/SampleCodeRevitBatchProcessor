@@ -17,17 +17,22 @@ public class UnitOfWorkSyncTests
     [SetUp]
     public void Setup()
     {
-        // Create a temporary database file for testing
-        _databasePath = Path.GetTempFileName();
+        _databasePath = Path.Combine(
+            Path.GetTempPath(),
+            "UnitOfWorkSyncTests",
+            Guid.NewGuid().ToString(),
+            "test.db");
 
-        var connectionString = new SQLiteConnectionString(_databasePath,
+        Directory.CreateDirectory(Path.GetDirectoryName(_databasePath)!);
+
+        var connectionString = new SQLiteConnectionString(
+            _databasePath,
             storeDateTimeAsTicks: false,
             openFlags: SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create,
             key: null);
 
         _connection = new SQLiteConnection(connectionString);
 
-        // Create tables
         _connection.CreateTable<Revision>();
         _connection.CreateTable<Document>();
         _connection.CreateTable<CustomFieldDefinition>();
@@ -42,10 +47,9 @@ public class UnitOfWorkSyncTests
         _unitOfWorkSync?.Dispose();
         _connection?.Close();
 
-        if (File.Exists(_databasePath))
-        {
-            File.Delete(_databasePath);
-        }
+        var dir = Path.GetDirectoryName(_databasePath);
+        if (Directory.Exists(dir))
+            Directory.Delete(dir, true);
     }
 
     [Test]

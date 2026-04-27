@@ -208,18 +208,16 @@ public class RevisionRepository : BaseRepository<Revision>, IRevisionRepository
     /// <returns>List of revisions containing this document</returns>
     public async Task<List<Revision>> GetRevisionsByDocumentIdAsync(int documentId)
     {
-        // Since DocumentIds is stored as JSON, we need to search the JSON text
-        // This is a simple LIKE search - for more complex queries, consider using FTS
+        // DocumentIdsJson stores integers without quotes e.g. [100,101,102].
+        // A simple broad pre-filter on the raw number is used here; the accurate
+        // in-memory check on the deserialized list eliminates any false positives
+        // (e.g. documentId=1 matching against [10,11,12]).
+        var searchTerm = documentId.ToString();
         var revisions = await _connection.Table<Revision>()
-            .Where(r => r.DocumentIdsJson.Contains($"\"{documentId}\"") ||
-                       r.DocumentIdsJson.Contains($"{documentId},") ||
-                       r.DocumentIdsJson.Contains($"[{documentId}") ||
-                       r.DocumentIdsJson.Contains($",{documentId}]"))
+            .Where(r => r.DocumentIdsJson.Contains(searchTerm))
             .OrderByDescending(r => r.RevisionDate)
             .ToListAsync();
 
-        // Filter results by actually checking the deserialized list
-        // to ensure accurate matching
         return revisions.Where(r => r.DocumentIds.Contains(documentId)).ToList();
     }
 

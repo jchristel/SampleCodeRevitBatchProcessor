@@ -289,6 +289,50 @@ public class DatabaseServiceTests_Sync
 
 ---
 
+## SQLiteAsyncConnection Connection Pooling
+
+sqlite-net-pcl pools `SQLiteAsyncConnection` instances by database path. Opening a second `SQLiteAsyncConnection` to the same path returns the same underlying connection object — it does **not** create a new OS-level connection.
+
+### Why this matters in tests
+
+Any test that needs to simulate an **external writer** (a second, genuinely independent connection) must use `SQLiteConnection` (sync), not `SQLiteAsyncConnection`. If `SQLiteAsyncConnection` is used, SQLite sees only one connection and behaviours that depend on cross-connection state — such as `PRAGMA data_version` — will not work as expected.
+
+**Affected scenarios:**
+- Testing `GetDataVersionAsync` / `GetDataVersion` increment after an external write
+- Testing busy timeout / locking behaviour under concurrent access
+- Any test that asserts state visible only to a different connection
+
+**Correct pattern — second writer in an async test:**
+
+```csharp
+// SQLiteAsyncConnection pools by path — use SQLiteConnection for the second
+// writer so SQLite sees a genuinely separate connection.
+var secondConnection = new SQLiteConnection(_testDatabasePath);
+try
+{
+    secondConnection.CreateTable<Revision>(); // schema required on fresh connection
+    secondConnection.Insert(new Revision(DateTime.Today, "External write"));
+}
+finally
+{
+    secondConnection.Close();
+}
+```
+
+**Wrong pattern — does not create a separate connection:**
+
+```csharp
+// This reuses the pooled connection — SQLite sees no second writer.
+var secondConnection = new SQLiteAsyncConnection(_testDatabasePath);
+await secondConnection.InsertAsync(revision); // data_version will NOT increment
+```
+
+### Production impact
+
+This pooling behaviour has no impact on production code. `DatabaseService` creates exactly one connection per instance (either async or sync, never both), and no two `SQLiteAsyncConnection` instances ever target the same path simultaneously. The pool is effectively transparent in the production use case.
+
+---
+
 ## General Reminders
 
 - Use `Assert.Multiple()` for related assertions

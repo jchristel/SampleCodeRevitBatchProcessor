@@ -193,6 +193,47 @@ public class UnitOfWorkSyncTests
     }
 
     [Test]
+    public void RunInTransaction_OnSuccess_CommitsAllWrites()
+    {
+        // Arrange
+        var revision = new Revision(new DateTime(2024, 2, 15), "Test Revision");
+        _unitOfWorkSync.Revisions.Insert(revision);
+
+        // Act
+        _unitOfWorkSync.RunInTransaction(() =>
+        {
+            _unitOfWorkSync.Documents.Insert(new Document("A-101", "Floor Plan", "1", revision.Id));
+            _unitOfWorkSync.Documents.Insert(new Document("A-102", "Ceiling Plan", "1", revision.Id));
+        });
+
+        // Assert - both documents written inside the transaction are visible
+        var allDocs = _unitOfWorkSync.Documents.GetAll();
+        Assert.That(allDocs, Has.Count.EqualTo(2));
+    }
+
+    [Test]
+    public void RunInTransaction_OnException_RollsBackAllWrites()
+    {
+        // Arrange
+        var revision = new Revision(new DateTime(2024, 2, 15), "Test Revision");
+        _unitOfWorkSync.Revisions.Insert(revision);
+
+        // Act - transaction throws part way through
+        Assert.Throws<InvalidOperationException>(() =>
+        {
+            _unitOfWorkSync.RunInTransaction(() =>
+            {
+                _unitOfWorkSync.Documents.Insert(new Document("A-101", "Floor Plan", "1", revision.Id));
+                throw new InvalidOperationException("Simulated failure");
+            });
+        });
+
+        // Assert - no documents were committed
+        var allDocs = _unitOfWorkSync.Documents.GetAll();
+        Assert.That(allDocs, Has.Count.EqualTo(0));
+    }
+
+    [Test]
     public void Dispose_DoesNotThrow()
     {
         // The UnitOfWorkSync.Dispose() method doesn't manage the connection directly

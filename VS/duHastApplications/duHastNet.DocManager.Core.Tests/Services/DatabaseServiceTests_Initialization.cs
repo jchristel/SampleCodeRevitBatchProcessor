@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using duHastNet.DocManager.Core.Services;
 using duHastNet.DocManager.Core.Models;
 using System.IO;
@@ -49,6 +49,19 @@ public class DatabaseServiceTests_Initialization
             Assert.That(_databaseService.Connection, Is.Not.Null);
             Assert.That(File.Exists(_testDatabasePath), Is.True);
         });
+    }
+
+    [Test]
+    public async Task InitializeAsync_ConfiguresBusyTimeout()
+    {
+        // Arrange & Act
+        await _databaseService.InitializeAsync(_testDatabasePath);
+
+        // Assert - PRAGMA busy_timeout returns the configured value in milliseconds
+        var busyTimeout = await _databaseService.Connection
+            .ExecuteScalarAsync<int>("PRAGMA busy_timeout");
+
+        Assert.That(busyTimeout, Is.EqualTo(5000));
     }
 
     [Test]

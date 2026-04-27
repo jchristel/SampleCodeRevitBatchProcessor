@@ -97,6 +97,37 @@ public class DocumentRepositorySyncTests
     }
 
     [Test]
+    public void GetDocumentsByRevision_WithDocumentsFromDifferentRevisions_OnlyReturnsCorrectRevision()
+    {
+        // Arrange
+        var secondRevision = new Revision(new DateTime(2024, 3, 1), "Second Revision");
+        _revisionRepository.Insert(secondRevision);
+
+        var documents = new[]
+        {
+            new Document("A-101", "Plan from Revision 1", "1", _testRevisionId),
+            new Document("A-102", "Plan from Revision 1", "1", _testRevisionId),
+            new Document("B-101", "Plan from Revision 2", "1", secondRevision.Id)
+        };
+
+        foreach (var document in documents)
+        {
+            _documentRepository.Insert(document);
+        }
+
+        // Act
+        var result = _documentRepository.GetDocumentsByRevision(_testRevisionId);
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Has.Count.EqualTo(2));
+            Assert.That(result.All(d => d.RevisionId == _testRevisionId), Is.True);
+            Assert.That(result.All(d => d.Name.Contains("Revision 1")), Is.True);
+        });
+    }
+
+    [Test]
     public void GetDocumentsByRevision_OnlyReturnsActiveDocuments()
     {
         // Arrange
@@ -379,6 +410,82 @@ public class DocumentRepositorySyncTests
     }
 
     [Test]
+    public void SearchDocuments_ByRevision_ReturnsMatchingDocuments()
+    {
+        // Arrange
+        var documents = new[]
+        {
+            new Document("A-101", "Floor Plan", "2B", _testRevisionId),
+            new Document("A-102", "Ceiling Plan", "1", _testRevisionId),
+            new Document("S-201", "Structural Plan", "2B", _testRevisionId)
+        };
+
+        foreach (var doc in documents)
+        {
+            _documentRepository.Insert(doc);
+        }
+
+        // Act
+        var result = _documentRepository.SearchDocuments("2B");
+
+        // Assert
+        Assert.That(result, Has.Count.EqualTo(2));
+        Assert.That(result.All(d => d.Revision.Contains("2B")), Is.True);
+    }
+
+    [Test]
+    public void SearchDocuments_OrdersByNumberThenByIdDescending()
+    {
+        // Arrange
+        var secondRevision = new Revision(new DateTime(2024, 3, 1), "Second Revision");
+        _revisionRepository.Insert(secondRevision);
+
+        // Insert older revisions first so higher IDs represent newer revisions
+        var document1 = new Document("A-101", "Plan A Rev 1", "1", _testRevisionId);
+        _documentRepository.Insert(document1);
+
+        var document2 = new Document("B-101", "Plan B Rev 1", "1", _testRevisionId);
+        _documentRepository.Insert(document2);
+
+        var document3 = new Document("A-101", "Plan A Rev 2", "2", secondRevision.Id);
+        _documentRepository.Insert(document3);
+
+        var document4 = new Document("B-101", "Plan B Rev 2", "2", secondRevision.Id);
+        _documentRepository.Insert(document4);
+
+        // Act
+        var result = _documentRepository.SearchDocuments("Plan");
+
+        // Assert
+        Assert.That(result, Has.Count.EqualTo(4));
+
+        var aDocuments = result.Where(d => d.Number == "A-101").ToList();
+        var bDocuments = result.Where(d => d.Number == "B-101").ToList();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(aDocuments, Has.Count.EqualTo(2));
+            Assert.That(bDocuments, Has.Count.EqualTo(2));
+
+            // Within each number group, higher ID (newer) comes first
+            Assert.That(aDocuments[0].Id, Is.GreaterThan(aDocuments[1].Id), "First A-101 should have higher ID");
+            Assert.That(bDocuments[0].Id, Is.GreaterThan(bDocuments[1].Id), "First B-101 should have higher ID");
+
+            // Overall ordering: A-101 group first, then B-101 group
+            Assert.That(result[0].Number, Is.EqualTo("A-101"));
+            Assert.That(result[1].Number, Is.EqualTo("A-101"));
+            Assert.That(result[2].Number, Is.EqualTo("B-101"));
+            Assert.That(result[3].Number, Is.EqualTo("B-101"));
+
+            // Newest (higher ID) document first within each group
+            Assert.That(result[0].Id, Is.EqualTo(document3.Id), "First A-101 should be Rev 2 (higher ID)");
+            Assert.That(result[1].Id, Is.EqualTo(document1.Id), "Second A-101 should be Rev 1 (lower ID)");
+            Assert.That(result[2].Id, Is.EqualTo(document4.Id), "First B-101 should be Rev 2 (higher ID)");
+            Assert.That(result[3].Id, Is.EqualTo(document2.Id), "Second B-101 should be Rev 1 (lower ID)");
+        });
+    }
+
+    [Test]
     public void SearchDocuments_OnlyReturnsActiveDocuments()
     {
         // Arrange
@@ -423,6 +530,34 @@ public class DocumentRepositorySyncTests
         _documentRepository.Insert(doc);
 
         // Act
+        var result = _documentRepository.DocumentExists("A-102", "1");
+
+        // Assert
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public void DocumentExists_ExistingNumberDifferentRevision_ReturnsFalse()
+    {
+        // Arrange
+        var doc = new Document("A-101", "Floor Plan", "1", _testRevisionId);
+        _documentRepository.Insert(doc);
+
+        // Act — same number but a revision that does not exist
+        var result = _documentRepository.DocumentExists("A-101", "3");
+
+        // Assert
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public void DocumentExists_DifferentNumberSameRevision_ReturnsFalse()
+    {
+        // Arrange
+        var doc = new Document("A-101", "Floor Plan", "1", _testRevisionId);
+        _documentRepository.Insert(doc);
+
+        // Act — different number, same revision indicator
         var result = _documentRepository.DocumentExists("A-102", "1");
 
         // Assert

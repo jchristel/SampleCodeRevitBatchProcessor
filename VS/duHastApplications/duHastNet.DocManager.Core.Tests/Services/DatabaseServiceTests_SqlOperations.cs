@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using duHastNet.DocManager.Core.Services;
 using duHastNet.DocManager.Core.Models;
 using System.IO;
@@ -159,4 +159,68 @@ public class DatabaseServiceTests_SqlOperations
             //Assert.That(properties[0].DocumentId, Is.EqualTo(documents[0].Id));
         });
     }
+
+    #region GetDataVersionAsync Tests
+
+    [Test]
+    public async Task GetDataVersionAsync_AfterInitialization_ReturnsNonNegativeValue()
+    {
+        // Arrange & Act
+        await _databaseService.InitializeAsync(_testDatabasePath);
+        var version = await _databaseService.GetDataVersionAsync();
+
+        // Assert
+        Assert.That(version, Is.GreaterThanOrEqualTo(0));
+    }
+
+    [Test]
+    public async Task GetDataVersionAsync_AfterWrite_ReturnsIncrementedValue()
+    {
+        // Arrange
+        await _databaseService.InitializeAsync(_testDatabasePath);
+        var versionBefore = await _databaseService.GetDataVersionAsync();
+
+        // Act - SQLiteAsyncConnection pools connections by path, so a second
+        // SQLiteAsyncConnection to the same file reuses the same underlying
+        // connection and does not increment data_version. A sync SQLiteConnection
+        // bypasses the pool and creates a genuinely separate connection.
+        var secondConnection = new SQLite.SQLiteConnection(_testDatabasePath);
+        try
+        {
+            secondConnection.CreateTable<Revision>();
+            var revision = new Revision(new DateTime(2024, 2, 15), "Test Revision");
+            secondConnection.Insert(revision);
+        }
+        finally
+        {
+            secondConnection.Close();
+        }
+
+        var versionAfter = await _databaseService.GetDataVersionAsync();
+
+        // Assert
+        Assert.That(versionAfter, Is.GreaterThan(versionBefore));
+    }
+
+    [Test]
+    public async Task GetDataVersionAsync_AfterReadOnly_ReturnsSameValue()
+    {
+        // Arrange
+        await _databaseService.InitializeAsync(_testDatabasePath);
+
+        var revision = new Revision(new DateTime(2024, 2, 15), "Test Revision");
+        await _databaseService.Connection.InsertAsync(revision);
+
+        var versionBefore = await _databaseService.GetDataVersionAsync();
+
+        // Act - read only operation
+        await _databaseService.Connection.Table<Revision>().ToListAsync();
+
+        var versionAfter = await _databaseService.GetDataVersionAsync();
+
+        // Assert
+        Assert.That(versionAfter, Is.EqualTo(versionBefore));
+    }
+
+    #endregion
 }

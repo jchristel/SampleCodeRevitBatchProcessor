@@ -195,6 +195,49 @@ public class UnitOfWorkTests
     }
 
     [Test]
+    public async Task RunInTransactionAsync_OnSuccess_CommitsAllWrites()
+    {
+        // Arrange
+        var revision = new Revision(new DateTime(2024, 2, 15), "Test Revision");
+        await _unitOfWork.Revisions.InsertAsync(revision);
+
+        // Act
+        await _unitOfWork.RunInTransactionAsync(conn =>
+        {
+            var doc1 = new Document("A-101", "Floor Plan", "1", revision.Id);
+            var doc2 = new Document("A-102", "Ceiling Plan", "1", revision.Id);
+            conn.Insert(doc1);
+            conn.Insert(doc2);
+        });
+
+        // Assert - both documents written inside the transaction are visible
+        var allDocs = await _unitOfWork.Documents.GetAllAsync();
+        Assert.That(allDocs, Has.Count.EqualTo(2));
+    }
+
+    [Test]
+    public async Task RunInTransactionAsync_OnException_RollsBackAllWrites()
+    {
+        // Arrange
+        var revision = new Revision(new DateTime(2024, 2, 15), "Test Revision");
+        await _unitOfWork.Revisions.InsertAsync(revision);
+
+        // Act - transaction throws part way through
+        Assert.ThrowsAsync<InvalidOperationException>(async () =>
+        {
+            await _unitOfWork.RunInTransactionAsync(conn =>
+            {
+                conn.Insert(new Document("A-101", "Floor Plan", "1", revision.Id));
+                throw new InvalidOperationException("Simulated failure");
+            });
+        });
+
+        // Assert - no documents were committed
+        var allDocs = await _unitOfWork.Documents.GetAllAsync();
+        Assert.That(allDocs, Has.Count.EqualTo(0));
+    }
+
+    [Test]
     public void Dispose_DoesNotThrow()
     {
         // The UnitOfWork.Dispose() method doesn't manage the connection directly

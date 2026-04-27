@@ -425,6 +425,56 @@ public class CustomPropertyRepositorySyncTests
         Assert.That(allProperties, Has.Count.EqualTo(3));
     }
 
+    [Test]
+    public void UpdateAll_WithMultipleProperties_UpdatesAll()
+    {
+        // Arrange
+        var properties = new[]
+        {
+            new CustomProperty(_testDocumentId1, _fieldDefId1, "Value1"),
+            new CustomProperty(_testDocumentId1, _fieldDefId2, "Value2"),
+            new CustomProperty(_testDocumentId2, _fieldDefId1, "Value3")
+        };
+
+        _customPropertyRepository.InsertAll(properties);
+
+        // Act — append suffix to all values
+        foreach (var prop in properties)
+        {
+            prop.PropertyValue = prop.PropertyValue + "_Updated";
+        }
+        var result = _customPropertyRepository.UpdateAll(properties);
+
+        // Assert
+        Assert.That(result, Is.EqualTo(3));
+
+        var allProperties = _customPropertyRepository.GetAll();
+        Assert.That(allProperties.All(p => p.PropertyValue.EndsWith("_Updated")), Is.True);
+    }
+
+    [Test]
+    public void DeleteAll_WithMultipleProperties_DeletesAll()
+    {
+        // Arrange
+        var properties = new[]
+        {
+            new CustomProperty(_testDocumentId1, _fieldDefId1, "Value1"),
+            new CustomProperty(_testDocumentId1, _fieldDefId2, "Value2"),
+            new CustomProperty(_testDocumentId2, _fieldDefId1, "Value3")
+        };
+
+        _customPropertyRepository.InsertAll(properties);
+
+        // Act
+        var result = _customPropertyRepository.DeleteAll(properties);
+
+        // Assert
+        Assert.That(result, Is.EqualTo(3));
+
+        var finalCount = _customPropertyRepository.Count();
+        Assert.That(finalCount, Is.EqualTo(0));
+    }
+
     #endregion
 
     #region Integration Tests

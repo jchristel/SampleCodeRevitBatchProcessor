@@ -46,6 +46,7 @@ public class MergeViewModelTests_UpdateDataBase
     private CurrentFolderManager _currentFolderManager;
     private Mock<IDialogService> _mockDialogService;
     private Mock<Func<duHastNet.DocManager.UI.Shared.ViewModels.Settings.SettingsViewModel>> _mockCreateViewModel;
+    private Mock<Func<duHastNet.DocManager.UI.Shared.ViewModels.Transmittal.TransmittalViewModel>> _mockCreateTransmittalViewModel;
 
     [SetUp]
     public void Setup()
@@ -62,6 +63,7 @@ public class MergeViewModelTests_UpdateDataBase
         
         _mockDialogService = new Mock<IDialogService>();
         _mockCreateViewModel = new Mock<Func<duHastNet.DocManager.UI.Shared.ViewModels.Settings.SettingsViewModel>>();
+        _mockCreateTransmittalViewModel = new Mock<Func<duHastNet.DocManager.UI.Shared.ViewModels.Transmittal.TransmittalViewModel>>();
     }
 
     [TearDown]
@@ -113,7 +115,8 @@ public class MergeViewModelTests_UpdateDataBase
             _manager,
             _currentFolderManager,
             _mockDialogService.Object,
-            _mockCreateViewModel.Object);
+            _mockCreateViewModel.Object,
+            _mockCreateTransmittalViewModel.Object);
     }
 
     #endregion

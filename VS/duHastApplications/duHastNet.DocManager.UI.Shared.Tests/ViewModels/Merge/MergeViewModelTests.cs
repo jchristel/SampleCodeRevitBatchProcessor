@@ -43,6 +43,7 @@ public class MergeViewModelTests
     private CurrentFolderManager _currentFolderManager;
     private Mock<IDialogService> _mockDialogService;
     private Mock<Func<duHastNet.DocManager.UI.Shared.ViewModels.Settings.SettingsViewModel>> _mockCreateViewModel;
+    private Mock<Func<duHastNet.DocManager.UI.Shared.ViewModels.Transmittal.TransmittalViewModel>> _mockCreateTransmittalViewModel;
 
     [SetUp]
     public void Setup()
@@ -59,6 +60,7 @@ public class MergeViewModelTests
         
         _mockDialogService = new Mock<IDialogService>();
         _mockCreateViewModel = new Mock<Func<duHastNet.DocManager.UI.Shared.ViewModels.Settings.SettingsViewModel>>();
+        _mockCreateTransmittalViewModel = new Mock<Func<duHastNet.DocManager.UI.Shared.ViewModels.Transmittal.TransmittalViewModel>>();
     }
 
     [TearDown]
@@ -99,7 +101,8 @@ public class MergeViewModelTests
             null,
             _currentFolderManager,
             _mockDialogService.Object,
-            _mockCreateViewModel.Object));
+            _mockCreateViewModel.Object,
+            _mockCreateTransmittalViewModel.Object));
     }
 
     [Test]
@@ -113,7 +116,8 @@ public class MergeViewModelTests
             _manager,
             null,
             _mockDialogService.Object,
-            _mockCreateViewModel.Object));
+            _mockCreateViewModel.Object,
+            _mockCreateTransmittalViewModel.Object));
     }
 
     [Test]
@@ -127,7 +131,8 @@ public class MergeViewModelTests
             _manager,
             _currentFolderManager,
             null,
-            _mockCreateViewModel.Object));
+            _mockCreateViewModel.Object,
+            _mockCreateTransmittalViewModel.Object));
     }
 
     #endregion
@@ -432,7 +437,8 @@ public class MergeViewModelTests
             _manager,
             _currentFolderManager,
             _mockDialogService.Object,
-            _mockCreateViewModel.Object);
+            _mockCreateViewModel.Object,
+            _mockCreateTransmittalViewModel.Object);
     }
 
     #endregion

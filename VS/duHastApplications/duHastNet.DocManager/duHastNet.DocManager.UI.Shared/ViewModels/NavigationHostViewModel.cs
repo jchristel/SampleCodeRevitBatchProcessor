@@ -82,11 +82,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         }
 
         /// <summary>
-        /// Creates and initializes a new instance of the <see cref="SettingsViewModel"/> with the required
+        /// Creates and initializes a new instance of <see cref="Settings.SettingsViewModel"/> with the required
         /// dependencies.
         /// </summary>
-        /// <returns>A fully constructed <see cref="SettingsViewModel"/> instance configured with the current application
-        /// services and state.</returns>
         private Settings.SettingsViewModel CreateSettingsViewModel()
         {
             return new Settings.SettingsViewModel(
@@ -102,7 +100,7 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="MergeViewModel"/> with the required dependencies.
+        /// Creates a new instance of <see cref="Merge.MergeViewModel"/> with the required dependencies.
         /// </summary>
         private Merge.MergeViewModel CreateMergeViewModel()
         {
@@ -113,7 +111,20 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
                 _manager!,
                 _currentFolderManager!,
                 _dialogService!,
-                CreateSettingsViewModel
+                CreateSettingsViewModel,
+                CreateTransmittalViewModel
+            );
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="Transmittal.TransmittalViewModel"/> with the required dependencies.
+        /// </summary>
+        private Transmittal.TransmittalViewModel CreateTransmittalViewModel()
+        {
+            return new Transmittal.TransmittalViewModel(
+                _navigationStore!,
+                _messageStore!,
+                CreateMergeViewModel
             );
         }
 

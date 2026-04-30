@@ -42,6 +42,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0">
                     <TextBlock Text="Document Manager" 
@@ -54,8 +55,25 @@
                         Opacity="0.9"/>
                 </StackPanel>
 
-                <Button Grid.Column="1" Grid.Row="0"
-                    Margin="10,5,10,5"
+                <!-- Transmittal button -->
+                <Button Grid.Column="1"
+                    Margin="10,5,4,5"
+                    Padding="10,5,10,5"
+                    Command="{Binding OpenTransmittalCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE8A1;"
+                                   FontFamily="Segoe MDL2 Assets"
+                                   FontSize="16"
+                                   Foreground="White"
+                                   Margin="0,0,5,0"/>
+                        <TextBlock Text="Transmittal"
+                                   Foreground="White"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Settings button -->
+                <Button Grid.Column="2" Grid.Row="0"
+                    Margin="4,5,10,5"
                     Padding="10,5,10,5"
                     Command="{Binding NavigateToSettingsCommand}">
                         <StackPanel Orientation="Horizontal">

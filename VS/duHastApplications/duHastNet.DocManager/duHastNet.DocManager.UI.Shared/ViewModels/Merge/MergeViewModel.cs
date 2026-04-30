@@ -52,6 +52,9 @@ public partial class MergeViewModel : AppViewModelBase, IActivatable
     //function used to navigate to settings view model
     private readonly Func<Settings.SettingsViewModel> _createViewModel;
 
+    // function used to navigate to transmittal view model
+    private readonly Func<Transmittal.TransmittalViewModel> _createTransmittalViewModel;
+
     #endregion
 
     // Expose message ViewModel for the view
@@ -62,6 +65,18 @@ public partial class MergeViewModel : AppViewModelBase, IActivatable
 
     #region Constructor
 
+    /// <summary>
+    /// Creates a new instance of MergeViewModel.
+    /// </summary>
+    /// <param name="docManagerApi">Document manager API.</param>
+    /// <param name="messageStore">Message store for global messages.</param>
+    /// <param name="navigationStore">Navigation store for view navigation.</param>
+    /// <param name="manager">Document manager.</param>
+    /// <param name="currentFolderManager">Current folder manager.</param>
+    /// <param name="dialogService">Dialog service.</param>
+    /// <param name="createViewModel">Factory function to create SettingsViewModel.</param>
+    /// <param name="createTransmittalViewModel">Factory function to create TransmittalViewModel.</param>
+    /// <exception cref="ArgumentNullException">Thrown when any required parameter is null.</exception>
     public MergeViewModel(
         IDocManagerApi docManagerApi,
         IMessageStore messageStore,
@@ -69,7 +84,8 @@ public partial class MergeViewModel : AppViewModelBase, IActivatable
         IManager manager,
         ICurrentFolderManager currentFolderManager,
         IDialogService dialogService,
-        Func<Settings.SettingsViewModel> createViewModel
+        Func<Settings.SettingsViewModel> createViewModel,
+        Func<Transmittal.TransmittalViewModel> createTransmittalViewModel
         )
     {
         _docManagerApi = docManagerApi;
@@ -79,6 +95,7 @@ public partial class MergeViewModel : AppViewModelBase, IActivatable
         _manager = manager ?? throw new ArgumentNullException(nameof(manager));
         _currentFolderManager = currentFolderManager ?? throw new ArgumentNullException(nameof(currentFolderManager));
         _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+        _createTransmittalViewModel = createTransmittalViewModel ?? throw new ArgumentNullException(nameof(createTransmittalViewModel));
 
         GlobalMessageViewModel = new GlobalMessageViewModel(_messageStore);
         DocumentMatchViewModel = new Merge.MatchedDocs.DocumentMatchControlViewModel(_currentFolderManager, _manager, _messageStore, _dialogService, _docManagerApi);
@@ -92,8 +109,6 @@ public partial class MergeViewModel : AppViewModelBase, IActivatable
 
         // Initialize collections
         FilteredRevisionDescriptions = new ObservableCollection<string>();
-
-
     }
 
     #endregion
@@ -182,6 +197,15 @@ public partial class MergeViewModel : AppViewModelBase, IActivatable
     }
 
     /// <summary>
+    /// Command to navigate to the Transmittal view
+    /// </summary>
+    [RelayCommand]
+    private void OpenTransmittal()
+    {
+        _navigationStore.NavigateTo(() => _createTransmittalViewModel());
+    }
+
+    /// <summary>
     /// Command to select a revision description from the suggestions
     /// </summary>
     [RelayCommand]
@@ -201,8 +225,6 @@ public partial class MergeViewModel : AppViewModelBase, IActivatable
     [RelayCommand(CanExecute = nameof(CanMerge))]
     private async Task MergeDocumentsAsync()
     {
-        //if (!CanMerge) return;
-
         IsBusy = true;
         try
         {
@@ -211,9 +233,6 @@ public partial class MergeViewModel : AppViewModelBase, IActivatable
             // Step 2: Load matched documents into the control
             var matchedDocs = _currentFolderManager.GetMatchedDocuments();
             DocumentMatchViewModel.LoadMatchedDocuments(matchedDocs, currentDocuments);
-
-            // Notify that unknown documents may have changed
-            //OnPropertyChanged(nameof(HasUnknownDocuments));
 
             _messageStore.EnqueueMessage(
                 $"Document matching complete. {DocumentMatchViewModel.MatchedCount} matched, " +
@@ -226,7 +245,6 @@ public partial class MergeViewModel : AppViewModelBase, IActivatable
             bool databaseUpdateSuccessful = await UpdateDatabaseAsync();
 
             // Step 3.5: Reload Manager after database update to reflect changes
-            // This is critical for all documents (especially newly added ones) to show updated revision in the UI
             if (databaseUpdateSuccessful)
             {
                 var reloadResult = await _docManagerApi.ReloadDataIntoManagerAsync(_manager);
@@ -245,7 +263,6 @@ public partial class MergeViewModel : AppViewModelBase, IActivatable
             }
 
             // Step 5: Merge incoming files with red and yellow status into their target locations
-            // This happens regardless of database update success, as file operations are independent
             await MergeFilesAsync();
 
             // Step 6: Show merge log dialog with all process messages
@@ -253,7 +270,6 @@ public partial class MergeViewModel : AppViewModelBase, IActivatable
 
             // refresh the document list after merge
             await DocumentMatchViewModel.RefreshMatchingAsync();
-
         }
         catch (Exception ex)
         {
@@ -275,7 +291,6 @@ public partial class MergeViewModel : AppViewModelBase, IActivatable
     /// </summary>
     partial void OnIsConnectedChanged(bool value)
     {
-        // Update dependent properties
         UpdateButtonStates();
         OnPropertyChanged(nameof(IsDatabaseReady));
         MergeDocumentsCommand.NotifyCanExecuteChanged();
@@ -286,7 +301,6 @@ public partial class MergeViewModel : AppViewModelBase, IActivatable
     /// </summary>
     partial void OnIsBusyChanged(bool value)
     {
-        // Update button states during operations
         UpdateButtonStates();
         MergeDocumentsCommand.NotifyCanExecuteChanged();
     }
@@ -296,11 +310,8 @@ public partial class MergeViewModel : AppViewModelBase, IActivatable
     /// </summary>
     partial void OnRevisionDescriptionChanged(string value)
     {
-
-        // Update merge button state
         MergeDocumentsCommand.NotifyCanExecuteChanged();
 
-        // Clear suggestions if input is empty
         if (string.IsNullOrWhiteSpace(value))
         {
             FilteredRevisionDescriptions.Clear();
@@ -308,26 +319,22 @@ public partial class MergeViewModel : AppViewModelBase, IActivatable
             return;
         }
 
-        // Get all revisions from the manager
         var allRevisions = _manager.GetAllRevisions();
 
-        // Filter revisions that have a description starting with the input text (case-insensitive)
         var matches = allRevisions
             .Where(r => !string.IsNullOrEmpty(r.Description) &&
                        r.Description.StartsWith(value, StringComparison.OrdinalIgnoreCase))
             .Select(r => r.Description)
             .Distinct()
             .OrderBy(d => d)
-            .Take(10); // Limit to 10 suggestions for performance
+            .Take(10);
 
-        // Update the filtered collection
         FilteredRevisionDescriptions.Clear();
         foreach (var match in matches)
         {
             FilteredRevisionDescriptions.Add(match!);
         }
 
-        // Show popup if there are suggestions
         IsRevisionSuggestionsPopupOpen = FilteredRevisionDescriptions.Count > 0;
     }
 
@@ -336,7 +343,6 @@ public partial class MergeViewModel : AppViewModelBase, IActivatable
     /// </summary>
     partial void OnRevisionDateChanged(DateTime? value)
     {
-        // Update merge button state
         MergeDocumentsCommand.NotifyCanExecuteChanged();
     }
 
@@ -354,7 +360,6 @@ public partial class MergeViewModel : AppViewModelBase, IActivatable
 
     /// <summary>
     /// Event handler for when matched documents collection changes
-    /// Updates the merge button enabled state
     /// </summary>
     private void OnMatchedDocumentsChanged(object? sender, EventArgs e)
     {
@@ -367,14 +372,10 @@ public partial class MergeViewModel : AppViewModelBase, IActivatable
 
     /// <summary>
     /// Called when the ViewModel is being navigated away from or closed.
-    /// Unsubscribes from cross-ViewModel events then propagates to child ViewModels via base.
     /// </summary>
     public override void OnClosing()
     {
-        // Unsubscribe from DocumentMatchViewModel event before disposing it
         DocumentMatchViewModel.MatchedDocumentsChanged -= OnMatchedDocumentsChanged;
-
-        // Propagate to all registered children
         base.OnClosing();
     }
 

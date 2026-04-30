@@ -283,10 +283,18 @@
                         </Style>
                     </TextBlock.Style>
                 </TextBlock>
-                <Button Grid.Column="1"
-                        Content="Update"
-                        Style="{StaticResource ActionButtonStyle}"
-                        Command="{Binding UpdateCommand}"/>
+
+                <!-- Button group -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Content="Update Existing Document"
+                            Style="{StaticResource ActionButtonStyle}"
+                            Command="{Binding UpdateExistingDocumentCommand}"
+                            Margin="0,0,8,0"
+                            ToolTip="Assign selected sheets (not in database) to existing database documents whose number has changed."/>
+                    <Button Content="Update"
+                            Style="{StaticResource ActionButtonStyle}"
+                            Command="{Binding UpdateCommand}"/>
+                </StackPanel>
             </Grid>
         </Border>
 

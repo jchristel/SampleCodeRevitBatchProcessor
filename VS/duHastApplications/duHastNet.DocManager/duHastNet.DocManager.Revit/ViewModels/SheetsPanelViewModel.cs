@@ -48,6 +48,12 @@ namespace duHastNet.DocManager.Revit.ViewModels
     /// Name updates (yellow rows) never require the custom properties window.
     /// </para>
     /// <para>
+    /// Red rows whose document number has changed in the source system (rather than being
+    /// entirely new documents) can instead be linked to an existing database document via
+    /// <see cref="UpdateExistingDocumentCommand"/>, which opens
+    /// <see cref="duHastNet.DocManager.Revit.Views.UpdateExistingDocumentWindow"/>.
+    /// </para>
+    /// <para>
     /// After a successful write the panel raises <see cref="RefreshRequested"/> so
     /// <see cref="RevitIntegrationViewModel"/> reloads the database collections in place.
     /// The panel then re-evaluates every row's status from the refreshed data.
@@ -130,6 +136,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
         /// </summary>
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(UpdateCommand))]
+        [NotifyCanExecuteChangedFor(nameof(UpdateExistingDocumentCommand))]
         [NotifyCanExecuteChangedFor(nameof(SelectAllCommand))]
         [NotifyCanExecuteChangedFor(nameof(SelectNoneCommand))]
         private bool _isBusy;
@@ -259,6 +266,47 @@ namespace duHastNet.DocManager.Revit.ViewModels
             return DisplayedSheets.Any(r => r.IsSelected && (r.CanImport || r.CanUpdate));
         }
 
+        /// <summary>
+        /// Opens the Update Existing Document modal window for all selected red rows.
+        /// Each sheet is assigned to an existing database document whose number has changed,
+        /// and that document's number and name are updated on confirmation.
+        /// </summary>
+        [RelayCommand(CanExecute = nameof(CanUpdateExistingDocument))]
+        private void UpdateExistingDocument()
+        {
+            var selectedRedRows = DisplayedSheets
+                .Where(r => r.IsSelected && r.CanImport)
+                .ToList();
+
+            if (!selectedRedRows.Any()) return;
+
+            var vm = new UpdateExistingDocumentViewModel(selectedRedRows, _databaseDataModel);
+
+            var window = new duHastNet.DocManager.Revit.Views.UpdateExistingDocumentWindow(vm);
+
+            window.Owner = System.Windows.Application.Current?.Windows
+                .OfType<System.Windows.Window>()
+                .FirstOrDefault(w => w.IsActive)
+                ?? System.Windows.Application.Current?.MainWindow;
+
+            bool? result = window.ShowDialog();
+
+            if (result != true || !vm.DialogConfirmed)
+                return;
+
+            CommitExistingDocumentUpdates(vm.Rows.ToList());
+
+            OnRefreshRequested();
+        }
+
+        private bool CanUpdateExistingDocument()
+        {
+            if (!_databaseDataModel.IsConnected) return false;
+            if (IsBusy) return false;
+            if (DisplayedSheets == null) return false;
+            return DisplayedSheets.Any(r => r.IsSelected && r.CanImport);
+        }
+
         #endregion Commands
 
         #region Public Methods
@@ -311,7 +359,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
         /// <summary>
         /// Notifies all count-derived properties and re-evaluates command can-execute states.
         /// Also registered as the per-row <c>onSelectionChanged</c> callback so every
-        /// manual checkbox tick triggers a re-evaluation of <c>UpdateCommand</c>.
+        /// manual checkbox tick triggers a re-evaluation of commands.
         /// </summary>
         private void UpdateCounts()
         {
@@ -321,6 +369,7 @@ namespace duHastNet.DocManager.Revit.ViewModels
             OnPropertyChanged(nameof(SelectedCount));
             OnPropertyChanged(nameof(HintText));
             UpdateCommand.NotifyCanExecuteChanged();
+            UpdateExistingDocumentCommand.NotifyCanExecuteChanged();
             SelectAllCommand.NotifyCanExecuteChanged();
             SelectNoneCommand.NotifyCanExecuteChanged();
         }
@@ -469,6 +518,90 @@ namespace duHastNet.DocManager.Revit.ViewModels
         }
 
         #endregion Private Methods — Name Update
+
+        #region Private Methods — Existing Document Update
+
+        /// <summary>
+        /// Updates each selected existing database document's number and name to match the
+        /// corresponding Revit sheet's built document properties.
+        /// <para>
+        /// The document's primary key and all related records (custom properties, revisions)
+        /// are preserved. Only <see cref="Document.Number"/> and <see cref="Document.Name"/>
+        /// are changed. The old number is added to the document's number history before saving.
+        /// </para>
+        /// </summary>
+        /// <param name="rows">
+        /// Assignment rows from the confirmed dialog. Each row carries a
+        /// <see cref="UpdateExistingDocumentRowViewModel.SelectedDocument"/> that is not null
+        /// (validated before dialog confirmation) and is unique across rows.
+        /// </param>
+        private void CommitExistingDocumentUpdates(List<UpdateExistingDocumentRowViewModel> rows)
+        {
+            IsBusy = true;
+            try
+            {
+                var unitOfWork = _databaseDataModel.Api.GetUnitOfWorkSync();
+                int updatedCount = 0;
+
+                foreach (var row in rows)
+                {
+                    // SelectedDocument is guaranteed non-null by dialog validation,
+                    // but we fetch a fresh copy from the unit of work to avoid stale state.
+                    var documents = unitOfWork.Documents.GetDocumentsByNumber(
+                        row.SelectedDocument!.Number);
+                    var document = documents.FirstOrDefault();
+
+                    if (document == null)
+                    {
+                        _messageStore.EnqueueMessage(
+                            $"Document '{row.SelectedDocument.Number}' not found in database — skipped.",
+                            MessageTypes.Warning,
+                            dismissAfterSeconds: 15);
+                        continue;
+                    }
+
+                    // Record the old number in the document history before overwriting it.
+                    document.AddToHistory(document.Number);
+
+                    document.Number = row.BuiltDocumentNumber.Trim();
+                    document.Name = row.BuiltDocumentName.Trim();
+
+                    int rowsAffected = unitOfWork.Documents.Update(document);
+
+                    if (rowsAffected > 0)
+                    {
+                        updatedCount++;
+                    }
+                    else
+                    {
+                        _messageStore.EnqueueMessage(
+                            $"Failed to update document '{row.SelectedDocument.Number}'.",
+                            MessageTypes.Warning,
+                            dismissAfterSeconds: 15);
+                    }
+                }
+
+                if (updatedCount > 0)
+                {
+                    _messageStore.EnqueueMessage(
+                        $"Successfully updated {updatedCount} existing document(s).",
+                        MessageTypes.Information,
+                        dismissAfterSeconds: 5);
+                }
+            }
+            catch (Exception ex)
+            {
+                _messageStore.EnqueueMessage(
+                    $"Error updating existing documents: {ex.Message}",
+                    MessageTypes.Error);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        #endregion Private Methods — Existing Document Update
 
         #region Lifecycle
 

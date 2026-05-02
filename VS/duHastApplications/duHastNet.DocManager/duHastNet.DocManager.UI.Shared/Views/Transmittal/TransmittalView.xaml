@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:utilsViews="clr-namespace:duHastNet.Utils.WPF.Views;assembly=Utils.25.0.1.1"
+             xmlns:customGrid="clr-namespace:duHastNet.UI.CustomControls.CustomDataGrid;assembly=duHastUICustomControls.25.0.1.1"
              xmlns:viewmodels="clr-namespace:duHastNet.DocManager.UI.Shared.ViewModels.Transmittal"
              mc:Ignorable="d"
              d:DesignHeight="800" d:DesignWidth="1200"
@@ -59,22 +60,17 @@
                 Margin="0,0,0,6">
             <Grid>
                 <Grid.RowDefinitions>
-                    <!-- section header -->
                     <RowDefinition Height="Auto"/>
-                    <!-- status message -->
                     <RowDefinition Height="Auto"/>
-                    <!-- placeholder / future datagrid -->
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- section header -->
                 <TextBlock Grid.Row="0"
                            Text="Revisions"
                            FontWeight="SemiBold"
                            FontSize="13"
                            Margin="8,6,8,4"/>
 
-                <!-- status message — collapses when empty -->
                 <TextBlock Grid.Row="1"
                            Text="{Binding RevisionsStatusMessage}"
                            FontSize="12"
@@ -92,19 +88,18 @@
                     </TextBlock.Style>
                 </TextBlock>
 
-                <!-- placeholder for revisions DataGrid -->
-                <Border Grid.Row="2"
-                        Background="#F5F5F5"
-                        BorderBrush="#CCCCCC"
-                        BorderThickness="1"
-                        Margin="8,4,8,8">
-                    <TextBlock Text="[Revisions DataGrid — placeholder]"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
-                               Foreground="#AAAAAA"
-                               FontStyle="Italic"
-                               FontSize="12"/>
-                </Border>
+                <customGrid:DynamicDataGrid
+                    Grid.Row="2"
+                    Margin="8,0,8,8"
+                    ItemsSource="{Binding RevisionRows}"
+                    ColumnDefinitions="{Binding RevisionColumnDefinitions}"
+                    CanUserReorderColumns="False"
+                    CanUserSortColumns="False"
+                    SelectionMode="Single"
+                    SelectionUnit="FullRow"
+                    GridLinesVisibility="Horizontal"
+                    HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollBarVisibility="Auto"/>
             </Grid>
         </Border>
 
@@ -124,11 +119,11 @@
                     <RowDefinition Height="Auto"/>
                     <!-- status message -->
                     <RowDefinition Height="Auto"/>
-                    <!-- placeholder / future datagrid -->
+                    <!-- documents datagrid -->
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- section header + mode toggle -->
+                <!-- section header + mode toggle (toggle binding added in Step 2) -->
                 <Grid Grid.Row="0" Margin="8,6,8,4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -142,17 +137,18 @@
                                FontSize="13"
                                VerticalAlignment="Center"/>
 
-                    <!-- mode toggle placeholder -->
+                    <!-- mode toggle -->
                     <StackPanel Grid.Column="2"
                                 Orientation="Horizontal"
                                 VerticalAlignment="Center">
                         <RadioButton Content="Show All"
                                      GroupName="DocumentMode"
-                                     IsChecked="True"
+                                     IsChecked="{Binding IsShowAllMode, Mode=TwoWay}"
                                      Margin="0,0,10,0"
                                      VerticalContentAlignment="Center"/>
                         <RadioButton Content="By Revisions Only"
                                      GroupName="DocumentMode"
+                                     IsChecked="{Binding IsByRevisionMode, Mode=TwoWay}"
                                      VerticalContentAlignment="Center"/>
                     </StackPanel>
                 </Grid>
@@ -162,13 +158,15 @@
                             Orientation="Horizontal"
                             Margin="8,0,8,6">
                     <CheckBox Content="Show inactive documents"
+                              IsChecked="{Binding ShowInactiveDocuments, Mode=TwoWay}"
                               Margin="0,0,20,0"
                               VerticalContentAlignment="Center"/>
                     <CheckBox Content="Include document history"
+                              IsChecked="{Binding IncludeDocumentHistory, Mode=TwoWay}"
                               VerticalContentAlignment="Center"/>
                 </StackPanel>
 
-                <!-- status message — collapses when empty -->
+                <!-- status message -->
                 <TextBlock Grid.Row="2"
                            Text="{Binding DocumentsStatusMessage}"
                            FontSize="12"
@@ -186,19 +184,32 @@
                     </TextBlock.Style>
                 </TextBlock>
 
-                <!-- placeholder for documents DataGrid -->
-                <Border Grid.Row="3"
-                        Background="#F5F5F5"
-                        BorderBrush="#CCCCCC"
-                        BorderThickness="1"
-                        Margin="8,0,8,8">
-                    <TextBlock Text="[Documents DataGrid — placeholder]"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
-                               Foreground="#AAAAAA"
-                               FontStyle="Italic"
-                               FontSize="12"/>
-                </Border>
+                <!-- documents DynamicDataGrid -->
+                <customGrid:DynamicDataGrid
+                    Grid.Row="3"
+                    Margin="8,0,8,8"
+                    ItemsSource="{Binding DocumentRows}"
+                    ColumnDefinitions="{Binding DocumentColumnDefinitions}"
+                    IsReadOnly="True"
+                    CanUserReorderColumns="False"
+                    CanUserSortColumns="False"
+                    SelectionMode="Single"
+                    SelectionUnit="FullRow"
+                    GridLinesVisibility="Horizontal"
+                    HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollBarVisibility="Auto">
+                    <customGrid:DynamicDataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding [IsInactive]}" Value="True">
+                                    <Setter Property="Foreground" Value="#AAAAAA"/>
+                                    <Setter Property="FontStyle" Value="Italic"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </customGrid:DynamicDataGrid.RowStyle>
+                </customGrid:DynamicDataGrid>
+
             </Grid>
         </Border>
 
@@ -217,14 +228,12 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- left — export status hint -->
                 <TextBlock Grid.Column="0"
                            Text="{Binding ExportStatusMessage}"
                            VerticalAlignment="Center"
                            FontSize="12"
                            Foreground="#555555"/>
 
-                <!-- export button -->
                 <Button Grid.Column="1"
                         Content="Export to CSV"
                         Command="{Binding ExportToCsvCommand}"
@@ -235,7 +244,6 @@
                         Padding="14,7"
                         Margin="0,0,8,0"/>
 
-                <!-- close button -->
                 <Button Grid.Column="2"
                         Content="Close"
                         Command="{Binding CloseCommand}"

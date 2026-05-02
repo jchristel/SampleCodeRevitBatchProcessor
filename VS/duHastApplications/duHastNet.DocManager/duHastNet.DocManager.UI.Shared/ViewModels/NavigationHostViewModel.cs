@@ -19,7 +19,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using duHastNet.DocManager.Core.Interfaces;
 using duHastNet.DocManager.Core.Models;
-using duHastNet.DocManager.Core.Models.CloudDocManager.MetaData;
 using duHastNet.Utils.WPF.Interfaces;
 using duHastNet.Utils.WPF.Stores;
 
@@ -124,7 +123,9 @@ namespace duHastNet.DocManager.UI.Shared.ViewModels
             return new Transmittal.TransmittalViewModel(
                 _navigationStore!,
                 _messageStore!,
-                CreateMergeViewModel
+                CreateMergeViewModel,
+                _docManagerApi!,
+                _dialogService!
             );
         }
 

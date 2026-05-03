@@ -320,11 +320,22 @@ public partial class TransmittalViewModel : AppViewModelBase, IActivatable
                 row[nameof(TransmittalRevisionRowViewModel.RevisionDate)] = rowVm.RevisionDate;
                 row[nameof(TransmittalRevisionRowViewModel.RevisionDescription)] = rowVm.RevisionDescription;
 
-                // Keep row data in sync when IsChecked changes
+                // rowVm → row: keep grid in sync when IsChecked changes via ViewModel
                 rowVm.PropertyChanged += (_, e) =>
                 {
                     if (e.PropertyName == nameof(TransmittalRevisionRowViewModel.IsChecked))
                         row[nameof(TransmittalRevisionRowViewModel.IsChecked)] = rowVm.IsChecked;
+                };
+
+                // row → rowVm: keep ViewModel in sync when user clicks checkbox in grid
+                row.PropertyChanged += (_, e) =>
+                {
+                    if (e.PropertyName == nameof(TransmittalRevisionRowViewModel.IsChecked) &&
+                        row[nameof(TransmittalRevisionRowViewModel.IsChecked)] is bool isChecked &&
+                        rowVm.IsChecked != isChecked)
+                    {
+                        rowVm.IsChecked = isChecked;
+                    }
                 };
 
                 RevisionRows.Add(row);

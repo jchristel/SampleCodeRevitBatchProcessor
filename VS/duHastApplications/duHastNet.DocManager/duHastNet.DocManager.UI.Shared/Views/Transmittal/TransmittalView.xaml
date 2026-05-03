@@ -95,11 +95,14 @@
                     ColumnDefinitions="{Binding RevisionColumnDefinitions}"
                     CanUserReorderColumns="False"
                     CanUserSortColumns="False"
-                    SelectionMode="Single"
+                    SelectionMode="Extended"
                     SelectionUnit="FullRow"
                     GridLinesVisibility="Horizontal"
                     HorizontalScrollBarVisibility="Auto"
-                    VerticalScrollBarVisibility="Auto"/>
+                    VerticalScrollBarVisibility="Auto"
+                    customGrid:DataGridColumnHeaderBehavior.EnableColumnManagement="True"
+                    customGrid:DataGridColumnHeaderBehavior.EnableBulkSelection="True"
+                    customGrid:DataGridColumnHeaderBehavior.BulkSelectionColumn="IsChecked"/>
             </Grid>
         </Border>
 

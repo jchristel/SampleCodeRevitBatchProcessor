@@ -378,6 +378,7 @@ public partial class TransmittalViewModel : AppViewModelBase, IActivatable
             dataType: typeof(string))
         {
             Width = 160,
+            MinWidth = 100,
             IsReadOnly = true
         });
 
@@ -387,6 +388,7 @@ public partial class TransmittalViewModel : AppViewModelBase, IActivatable
             dataType: typeof(string))
         {
             Width = 0,      // star-sized — DynamicDataGrid treats 0 as DataGridLength.Star
+            MinWidth = 120,
             IsReadOnly = true
         });
 
@@ -404,6 +406,8 @@ public partial class TransmittalViewModel : AppViewModelBase, IActivatable
     /// Rebuilds the dynamic revision columns on the documents grid.
     /// Preserves the three static columns and replaces all dynamic entries
     /// (PropertyName starting with "Rev_") with one column per checked revision.
+    /// Column width is calculated from the header text so the column is always
+    /// wide enough to display its label without truncation.
     /// Called whenever a revision IsChecked state changes.
     /// </summary>
     private void RebuildDocumentColumns()
@@ -432,10 +436,26 @@ public partial class TransmittalViewModel : AppViewModelBase, IActivatable
                 displayName: header,
                 dataType: typeof(string))
             {
-                Width = 100,
+                Width = CalculateColumnWidth(header),
                 IsReadOnly = true
             });
         }
+    }
+
+    /// <summary>
+    /// Estimates a comfortable column width in device-independent pixels from a header string.
+    /// Uses an average character width of 7px at the default grid font size, plus padding.
+    /// Clamped to a minimum of 80px and a maximum of 300px.
+    /// </summary>
+    private static double CalculateColumnWidth(string header)
+    {
+        const double charWidth = 7.0;
+        const double padding = 24.0;
+        const double minWidth = 80.0;
+        const double maxWidth = 300.0;
+
+        var raw = header.Length * charWidth + padding;
+        return Math.Clamp(raw, minWidth, maxWidth);
     }
 
     /// <summary>

@@ -1,46 +1,51 @@
 # Transmittal View — Implementation Guidelines
 
+> **Status: As-built.** This document reflects the implemented state of the Transmittal view as of the current codebase upload.
+
 ---
 
 ## 1. Overview
 
-The Transmittal view displays revision history per sheet. It is opened from `MergeView` via a dedicated button (position TBD). It is a standalone `Window` (not a `UserControl`) styled consistently with the rest of the application.
+The Transmittal view displays revision history per document. It is opened from `MergeView` via the **Transmittal** button in the header toolbar. Navigation uses the existing `NavigationStore` pattern — the view is a `UserControl` hosted inside `NavigationHostView`, not a separate window.
 
-The view has two main sections — **Revisions** and **Documents** — each backed by a custom DataGrid base class defined in this project.
+The view has two main sections — **Revisions** and **Documents** — both backed by the existing `DynamicDataGrid` control.
 
 ---
 
 ## 2. DataGrid Controls
 
-Both the Revisions grid and the Documents grid use the existing `DynamicDataGrid` control from `duHastNet.UI.CustomControls.CustomDataGrid`. No new base classes are required.
+Both grids use `DynamicDataGrid` and `DynamicRowData` from `duHastNet.UI.CustomControls.CustomDataGrid`.
 
-### 2.1 Existing control summary
-
-`DynamicDataGrid` derives from `DataGrid` and is driven by an `ObservableCollection<DynamicColumnDefinition>` bound to its `ColumnDefinitions` dependency property. It already sets `AutoGenerateColumns = false` and `CanUserAddRows = false` in its constructor. Columns are fully regenerated whenever the `ColumnDefinitions` collection changes or an individual definition's `IsReadOnly` property changes.
-
-Row data uses `DynamicRowData`, which stores all cell values in a `Dictionary<string, object>` indexed by the column's `PropertyName`. Binding inside the generated columns uses the indexer syntax `[PropertyName]`.
-
-### 2.2 Grid locking requirements
-
-The following must be set on every `DynamicDataGrid` instance used in the Transmittal view in XAML:
-
-| Property | Revisions grid | Documents grid | Action needed |
-|---|---|---|---|
-| `CanUserAddRows` | `False` | `False` | Already set in control constructor ✓ |
-| `CanUserDeleteRows` | `False` | `False` | Already set in control constructor ✓ |
-| `CanUserReorderColumns` | `False` | `False` | **Set in XAML per instance** |
-| `CanUserSortColumns` | `False` | `False` | **Set in XAML per instance** |
-
-> **Column-level `IsReadOnly`:** `DynamicDataGrid.CreateColumn` sets `column.IsReadOnly` and the binding mode directly from `DynamicColumnDefinition.IsReadOnly`. This is the only mechanism needed. The Documents grid sets all column definitions to `IsReadOnly = true`. The Revisions grid sets `IsReadOnly = false` on the `IsChecked` column and `IsReadOnly = true` on all others — no grid-level override is required in either case.
-
-> **Note on `CanUserReorderColumns`:** The `DynamicDataGrid` constructor does not currently set this. It must be set explicitly in XAML for each instance.
-
-### 2.3 Inactive row styling
-
-The Documents grid must visually distinguish inactive documents (grey, italic). Since `DynamicDataGrid` uses generated columns and `DynamicRowData`, the inactive style is applied via a `DataGrid.RowStyle` in XAML, triggering on a well-known key in the row's data dictionary:
+### 2.1 XAML namespace
 
 ```xml
-<DynamicDataGrid.RowStyle>
+xmlns:customGrid="clr-namespace:duHastNet.UI.CustomControls.CustomDataGrid;assembly=duHastUICustomControls.25.0.1.1"
+```
+
+### 2.2 Existing control summary
+
+`DynamicDataGrid` derives from `DataGrid`. It is driven by an `ObservableCollection<DynamicColumnDefinition>` bound to its `ColumnDefinitions` dependency property. It already sets `AutoGenerateColumns = false` and `CanUserAddRows = false` in its constructor. Columns are fully regenerated whenever the `ColumnDefinitions` collection changes.
+
+`DynamicRowData` stores all cell values in a `Dictionary<string, object>` indexed by the column's `PropertyName`. Binding inside generated columns uses the indexer syntax `[PropertyName]`. `DynamicRowData` implements `INotifyPropertyChanged` — the indexer setter fires `PropertyChanged` when a value changes.
+
+### 2.3 Grid locking
+
+| Property | Revisions grid | Documents grid | How |
+|---|---|---|---|
+| `CanUserAddRows` | `False` | `False` | Control constructor ✓ |
+| `CanUserDeleteRows` | `False` | `False` | Control constructor ✓ |
+| `CanUserReorderColumns` | `False` | `False` | Set in XAML |
+| `CanUserSortColumns` | `False` | `False` | Set in XAML |
+| `IsReadOnly` | Not set | `True` | Set in XAML — Documents grid only |
+
+Column-level read-only is controlled via `DynamicColumnDefinition.IsReadOnly`. `CreateColumn` sets `column.IsReadOnly` and the binding mode (`TwoWay` / `OneWay`) directly from the definition. The Revisions grid relies entirely on per-column `IsReadOnly` — no grid-level `IsReadOnly` is set so the checkbox column remains interactive.
+
+### 2.4 Inactive row styling (Documents grid)
+
+Applied via `DataGrid.RowStyle` in XAML. The ViewModel writes `row[KeyIsInactive] = true/false` on each `DynamicRowData`. The key is never added to `DocumentColumnDefinitions` so it is invisible as a column.
+
+```xml
+<customGrid:DynamicDataGrid.RowStyle>
     <Style TargetType="DataGridRow">
         <Style.Triggers>
             <DataTrigger Binding="{Binding [IsInactive]}" Value="True">
@@ -49,258 +54,221 @@ The Documents grid must visually distinguish inactive documents (grey, italic). 
             </DataTrigger>
         </Style.Triggers>
     </Style>
-</DynamicDataGrid.RowStyle>
+</customGrid:DynamicDataGrid.RowStyle>
 ```
 
-The ViewModel sets `row["IsInactive"] = true/false` on each `DynamicRowData` row. The `IsInactive` key is never added as a `DynamicColumnDefinition`, so it does not appear as a visible column.
+### 2.5 Two-way checkbox sync (Revisions grid)
+
+`DynamicDataGrid` binds the `IsChecked` column `TwoWay` to `row["IsChecked"]` on `DynamicRowData`. The ViewModel maintains a parallel `TransmittalRevisionRowViewModel` per row. Two `PropertyChanged` handlers are wired in `LoadRevisionsAsync` to keep both in sync:
+
+- `rowVm.PropertyChanged` → writes `row["IsChecked"]` (ViewModel → grid)
+- `row.PropertyChanged` → writes `rowVm.IsChecked` (grid → ViewModel), guarded against infinite loops
+
+`OnIsCheckedChanged` on `TransmittalRevisionRowViewModel` fires the `onCheckedChanged` callback, which calls `OnRevisionCheckedChanged` on the parent ViewModel.
 
 ---
 
-## 3. Transmittal Window
+## 3. View Layout
 
-### 3.1 Class Names
+### 3.1 Class names
 
 | Artefact | Name |
 |---|---|
-| Window XAML | `TransmittalView.xaml` |
-| Window code-behind | `TransmittalView.xaml.cs` |
+| View XAML | `TransmittalView.xaml` |
+| View code-behind | `TransmittalView.xaml.cs` (standard, empty) |
 | ViewModel | `TransmittalViewModel.cs` |
+| Row ViewModel | `TransmittalRevisionRowViewModel.cs` |
+| Enum | `DocumentDisplayMode.cs` |
 
-### 3.2 Namespace
-
-Follow the existing pattern:
-`duHastNet.DocManager.UI.Shared.Views.Transmittal`
-
-### 3.3 Window Layout (rows, top to bottom)
+### 3.2 Namespaces
 
 ```
-Row 0  — Blue header banner (matches MergeView style: "Document Manager" / "Transmittal")
-Row 1  — GlobalMessageView (bound to GlobalMessageViewModel — same pattern as MergeView)
-Row 2  — Revisions section  (fixed height or proportional split — see §4)
-Row 3  — Documents section  (fills remaining space — see §5)
-Row 4  — Bottom action bar  (Export to CSV | Close)
+duHastNet.DocManager.UI.Shared.Views.Transmittal
+duHastNet.DocManager.UI.Shared.ViewModels.Transmittal
 ```
 
-`Row 2` and `Row 3` share the available space. Suggested split: `Row 2 = 2*`, `Row 3 = 3*`. Both sections are inside bordered panels matching the style of `DocumentMatchControl` in `MergeView` (`BorderBrush="Gray"`, `BorderThickness="1"`, `CornerRadius="3"`).
+### 3.3 Layout (rows, top to bottom)
+
+```
+Row 0  — Blue header banner ("Document Manager" / "Transmittal — Revision History")
+Row 1  — GlobalMessageView
+Row 2  — Revisions section  (Height="2*")
+Row 3  — Documents section  (Height="3*")
+Row 4  — Action bar         (Export to CSV | Close)
+```
+
+Both sections are inside `Border` panels (`BorderBrush="Gray"`, `BorderThickness="1"`, `CornerRadius="3"`).
+
+### 3.4 Navigation registration
+
+`TransmittalView` is registered in `NavigationHostView.xaml` as a `DataTemplate` for `TransmittalViewModel`:
+
+```xml
+<DataTemplate DataType="{x:Type viewmodelstransmittal:TransmittalViewModel}">
+    <localtransmittal:TransmittalView/>
+</DataTemplate>
+```
 
 ---
 
 ## 4. Revisions Section
 
-### 4.1 Layout (within its bordered panel)
+### 4.1 Internal layout
 
 ```
-Row 0  — Section header: "Revisions"  (SemiBold label, left-aligned, padding 8,6)
-Row 1  — Status message TextBlock      (see §7 for status message conventions)
-Row 2  — DmDataGrid (revisions list)   (fills remaining height)
+Row 0  — Section header: "Revisions" (SemiBold, Margin 8,6,8,4)
+Row 1  — Status message TextBlock (collapses when empty)
+Row 2  — DynamicDataGrid (fills remaining height)
 ```
 
-### 4.2 Control
+### 4.2 Column definitions
 
-Use `DynamicDataGrid` with `CanUserReorderColumns="False"` and `CanUserSortColumns="False"` set in XAML. Column interactivity is controlled entirely through `DynamicColumnDefinition.IsReadOnly` — no grid-level `IsReadOnly` is required or set. `CreateColumn` sets `column.IsReadOnly` and the binding mode (`TwoWay` / `OneWay`) directly from the column definition, so setting `IsReadOnly = false` on the checkbox column and `IsReadOnly = true` on the remaining columns is sufficient.
-
-### 4.3 Column Definitions (`DynamicColumnDefinition`)
-
-| `PropertyName` | `DisplayName` | `DataType` | Width | `IsReadOnly` |
+| `PropertyName` | `DisplayName` | `DataType` | `Width` | `IsReadOnly` |
 |---|---|---|---|---|
-| `IsChecked` | _(empty string)_ | `typeof(bool)` | `44` | `false` |
+| `IsChecked` | _(empty)_ | `typeof(bool)` | `44` | `false` |
 | `RevisionDate` | `Date` | `typeof(DateTime)` | `110` | `true` |
-| `RevisionDescription` | `Description` | `typeof(string)` | `0` (star) | `true` |
+| `RevisionDescription` | `Description` | `typeof(string)` | `400` | `true` |
 
-### 4.4 Edge Cases
+Built once in `BuildRevisionColumnDefinitions()`, called from the constructor. Never rebuilt.
+
+### 4.3 Data source
+
+`ObservableCollection<DynamicRowData> RevisionRows` — loaded in `LoadRevisionsAsync()` on activation. Sorted newest-first by `RevisionDate` then `Id` descending.
+
+### 4.4 Edge cases
 
 | Condition | Behaviour |
 |---|---|
-| No revisions in database | Show empty grid; status message row displays: _"No revisions in database."_ |
+| Database not ready | `RevisionsStatusMessage = "No database connected."` |
+| No revisions | `RevisionsStatusMessage = "No revisions in database."` |
+| Load exception | `RevisionsStatusMessage = "Error loading revisions: {message}"` |
 
-### 4.5 ViewModel — Revisions
+### 4.5 `TransmittalRevisionRowViewModel`
 
-Expose:
+| Property | Type | Notes |
+|---|---|---|
+| `RevisionId` | `int` | Internal — not displayed |
+| `RevisionDate` | `DateTime` | Displayed in Date column |
+| `RevisionDescription` | `string` | Displayed in Description column |
+| `DocumentIds` | `IReadOnlyList<int>` | Used to filter documents in ByRevision mode |
+| `IsChecked` | `bool` | `[ObservableProperty]` — fires `onCheckedChanged` callback on change |
 
-- `ObservableCollection<TransmittalRevisionRowViewModel> Revisions`
-- `string RevisionsStatusMessage` — drives the status message row; empty string = row collapses (via `BoolToVisibilityConverter` on `string.IsNullOrEmpty`)
-- `IEnumerable<TransmittalRevisionRowViewModel> CheckedRevisions` — derived from `Revisions` where `IsChecked == true`; used by Documents section
-
-`TransmittalRevisionRowViewModel` properties:
-
-- `bool IsChecked` — `[ObservableProperty]`, on change calls `RebuildDocumentColumns` on the parent ViewModel
-- `DateTime RevisionDate`
-- `string RevisionDescription`
-- `int RevisionId` — internal, not displayed
+Constructor: `(int revisionId, DateTime revisionDate, string revisionDescription, IReadOnlyList<int> documentIds, Action onCheckedChanged)`. `onCheckedChanged` validated against null.
 
 ---
 
 ## 5. Documents Section
 
-### 5.1 Layout (within its bordered panel)
+### 5.1 Internal layout
 
 ```
-Row 0  — Section header + toggle control  (see §5.2)
+Row 0  — Section header ("Documents") + mode toggle RadioButtons (right-aligned)
 Row 1  — Options row: "Show inactive documents" checkbox | "Include document history" checkbox
-Row 2  — Status message TextBlock
-Row 3  — DmDynamicDataGrid (documents list)  (fills remaining height)
+Row 2  — Status message TextBlock (collapses when empty)
+Row 3  — DynamicDataGrid (fills remaining height, IsReadOnly="True")
 ```
 
-### 5.2 Mode Toggle
+### 5.2 Mode toggle
 
-Use a `ToggleButton` (or two `RadioButton`s styled as a segmented control) to switch between:
+Two `RadioButton`s bound to `IsShowAllMode` and `IsByRevisionMode` (both `Mode=TwoWay`). These are computed bool properties on the ViewModel backed by `DocumentDisplayMode` (enum). Setting either bool sets `DocumentDisplayMode`, which triggers `OnDocumentDisplayModeChanged`.
 
-- **Show All Documents** (`DocumentDisplayMode.All`)
-- **By Revisions Only** (`DocumentDisplayMode.ByRevision`)
+### 5.3 Static column definitions
 
-Bind to `DocumentDisplayMode` property on the ViewModel (enum). Default: `All`.
+Built once in `BuildDocumentColumnDefinitions()`, called from the constructor.
 
-### 5.3 Control
-
-Use `DynamicDataGrid` bound to `ColumnDefinitions` and `ItemsSource` (both on the ViewModel). Set `IsReadOnly="True"`, `CanUserReorderColumns="False"`, and `CanUserSortColumns="False"` in XAML. Apply the inactive row style from §2.3.
-
-### 5.4 Data loading strategy — pre-load all revision data into rows
-
-All revision indicator data is loaded into `DynamicRowData` rows **once** when the Documents collection is first built (on load, on mode change, on filter change, or on `IncludeDocumentHistory` toggle). Each row carries indicator values for **every revision in the database**, stored in the `DynamicRowData` dictionary using the revision's `PropertyName` key (see §5.5).
-
-When the user checks or unchecks a revision in the Revisions grid, **only `ColumnDefinitions` is updated** — rows are not rebuilt. This is efficient because `DynamicDataGrid` regenerates columns from `ColumnDefinitions` without touching `ItemsSource`.
-
-**Rebuild triggers:**
-
-| Trigger | Action |
-|---|---|
-| Initial load | Build rows + all `ColumnDefinitions` (static + all checked revisions) |
-| Revision `IsChecked` toggled on | Add one `DynamicColumnDefinition` to `ColumnDefinitions` |
-| Revision `IsChecked` toggled off | Remove one `DynamicColumnDefinition` from `ColumnDefinitions` |
-| `DocumentDisplayMode` changed | Rebuild rows; rebuild `ColumnDefinitions` |
-| `ShowInactiveDocuments` changed | Rebuild rows; rebuild `ColumnDefinitions` |
-| `IncludeDocumentHistory` changed | Rebuild rows; rebuild `ColumnDefinitions` |
-
-### 5.5 Column definitions
-
-**Static columns** — always present, added first to `ColumnDefinitions`:
-
-| `PropertyName` | `DisplayName` | `DataType` | Width | `IsReadOnly` |
+| `PropertyName` | `DisplayName` | `DataType` | `Width` | `IsReadOnly` |
 |---|---|---|---|---|
 | `DocumentNumber` | `Doc Number` | `string` | `160` | `true` |
-| `DocumentName` | `Doc Name` | `string` | `*` (use `0` and set `Width` as star via `DataGridLength`) | `true` |
+| `DocumentName` | `Doc Name` | `string` | `0` (star) | `true` |
 | `CurrentRevision` | `Current Rev.` | `string` | `90` | `true` |
 
-**Dynamic revision columns** — one per checked revision in `CheckedRevisions`, appended after static columns:
+### 5.4 Dynamic revision columns
+
+One `DynamicColumnDefinition` per checked revision appended after the static columns:
 
 | Field | Value |
 |---|---|
-| `PropertyName` | `"Rev_{RevisionId}"` — unique, stable key |
-| `DisplayName` | `"{RevisionDate:d} — {RevisionDescription}"` (truncated to 40 chars if needed) |
-| `DataType` | `string` |
+| `PropertyName` | `"Rev_{RevisionId}"` |
+| `DisplayName` | `"{RevisionDate:d} — {RevisionDescription}"` (truncated to 40 chars + "…") |
+| `DataType` | `typeof(string)` |
 | `Width` | `100` |
 | `IsReadOnly` | `true` |
 
-### 5.6 Row data — `DynamicRowData` population
+Managed by `RebuildDocumentColumns()` — called on every revision `IsChecked` change and after every `RebuildDocumentRows()`.
 
-For each document row, set the following keys in `DynamicRowData.Values`:
+### 5.5 Data loading strategy
 
-```csharp
-row["DocumentNumber"]  = document.Number;           // or historical number
-row["DocumentName"]    = document.Name;
-row["CurrentRevision"] = document.Revision;
-row["IsInactive"]      = !document.IsActive;        // used by row style, not shown as column
+Documents are loaded once per activation into `_allDocuments` via `unitOfWork.Documents.GetAllAsync()`. All revision indicator data is pre-loaded into every `DynamicRowData` row at build time using `Rev_{id}` keys for every revision in `_allRevisions`. Checking/unchecking a revision only adds or removes a `DynamicColumnDefinition` — rows are never rebuilt solely for that action.
 
-// For every revision in the database (not just checked ones):
-foreach (var revision in allRevisions)
-{
-    string key = $"Rev_{revision.Id}";
-    string indicator = document.GetRevisionIndicator(revision.Id) ?? string.Empty;
-    row[key] = indicator;
-}
+`RebuildDocumentRows()` is called on activation and whenever mode, filter, or history options change.
 
-// For history rows additionally:
-row["IsHistoryRow"]    = true;
-row["NumberActiveFrom"] = numberActiveFrom;         // DateOnly?, stored as string for display
-row["NumberActiveTo"]   = numberActiveTo;           // DateOnly?, stored as string for display
-```
+### 5.6 Hidden row keys
 
-`IsHistoryRow`, `NumberActiveFrom`, and `NumberActiveTo` are never added to `ColumnDefinitions` and are never visible in the grid. They are available for export logic and tooltip binding if needed.
+These keys are written into every `DynamicRowData` but never added to `DocumentColumnDefinitions`:
 
-### 5.7 Edge Cases
+| Key constant | Purpose |
+|---|---|
+| `KeyIsInactive` | Drives inactive row style (grey/italic) |
+| `KeyIsHistoryRow` | `true` for document history rows |
+| `KeyNumberActiveFrom` | Inferred start date of historical number (string, may be empty) |
+| `KeyNumberActiveTo` | Change date of historical number (string) |
+| `KeyHistoryDateRangeLabel` | Formatted label e.g. `"until 2023-06-15"` |
+
+### 5.7 Edge cases
 
 | Condition | Mode | Behaviour |
 |---|---|---|
-| No documents in database | Both | Empty grid; status: _"No documents in database."_ |
-| No revisions checked | All | Static columns only; no dynamic columns; no status message |
-| No revisions checked | By Revision | Empty grid; status: _"No revisions selected. Switch to 'Show All Documents' or select a revision above."_ |
-| Checked revision(s) have no documents assigned | All | Dynamic column(s) shown; all revision indicator cells empty |
-| Checked revision(s) have no documents assigned | By Revision | Empty grid; status: _"The selected revision(s) have no documents assigned."_ |
-| No revisions in database | By Revision | Empty grid; status: _"No revisions available. Use 'Show All Documents' instead."_ |
+| No documents | Both | `DocumentsStatusMessage = "No documents in database."` |
+| No revisions checked | ByRevision | `"No revisions selected. Switch to 'Show All Documents' or select a revision above."` |
+| No revisions exist | ByRevision | `"No revisions available. Use 'Show All Documents' instead."` |
+| Checked revisions have no document IDs | ByRevision | `"The selected revision(s) have no documents assigned."` |
+| Database not ready | Both | `DocumentsStatusMessage = "No database connected."` |
+| Load exception | Both | `DocumentsStatusMessage = "Error loading documents: {message}"` |
 
-### 5.8 "Show Inactive Documents" Checkbox
+### 5.8 Show Inactive Documents
 
-Bound to `bool ShowInactiveDocuments` on the ViewModel. When `false`, filter out rows where `IsInactive == true` before populating `Documents`. Default: `false`.
+`bool ShowInactiveDocuments` (default `false`). `OnShowInactiveDocumentsChanged` calls `RebuildDocumentRows()`. Filter: `ShowInactiveDocuments || d.IsActive`, applied in both Show All and ByRevision paths.
 
-### 5.9 "Include Document History" Checkbox
+### 5.9 Include Document History
 
-Bound to `bool IncludeDocumentHistory` on the ViewModel. When `true`, include additional rows per document where the document number has changed — one row per historical number. These rows have `IsHistoryRow = true`.
+`bool IncludeDocumentHistory` (default `false`). `OnIncludeDocumentHistoryChanged` calls `RebuildDocumentRows()`. When on, `BuildHistoryRows(document)` is called after each primary document row and its results appended to `DocumentRows`.
 
-#### Document History — Revision Inference Approach
+#### Inference algorithm
 
-The database does not store an explicit link between a historical document number and the revisions that were issued while that number was active. However, this can be inferred from the data that is available:
+The database stores `DocumentNumberHistory: Dictionary<string, DateOnly>` (key = old number, value = date number was changed away from it) and `RevisionIndicatorHistory: Dictionary<int, string>` (key = RevisionId, value = indicator). `_revisionDateLookup` maps RevisionId to RevisionDate.
 
-**Data available per `Document`:**
-- `DocumentNumberHistory`: `Dictionary<string, DateOnly>` — key = old document number, value = date the number was changed away from it.
-- `RevisionIndicatorHistory`: `Dictionary<int, string>` — key = `RevisionId`, value = revision indicator string issued for this document under that revision.
+1. Order `DocumentNumberHistory` entries by change date ascending. Same-date entries ordered by key as a stable fallback.
+2. Reconstruct active date range: `activeFrom = previousChangedDate` (null for first entry), `activeTo = currentChangeDate`.
+3. For each revision in `_allRevisions`, check if `DateOnly.FromDateTime(revision.RevisionDate)` falls within `[activeFrom, activeTo]`.
+4. Populate `Rev_{id}` for matching revisions; empty string for non-matching.
 
-**Data available per `Revision`:**
-- `RevisionDate`: `DateTime` — the date the revision was issued.
-
-**Inference algorithm:**
-
-1. Order all entries in `DocumentNumberHistory` by their change date ascending. This gives a chronological list of number changes.
-2. Reconstruct the active date range for each historical number:
-   - The first historical number was active from the beginning of time (or the document's creation) until its change date.
-   - Each subsequent historical number was active from the previous change date until its own change date.
-   - The current number is active from the last change date onward.
-3. For each `RevisionId` in `RevisionIndicatorHistory`, look up the corresponding `Revision.RevisionDate`.
-4. Assign each revision to the document number that was active on that revision date by comparing `RevisionDate` against the reconstructed date ranges.
-5. Populate `RevisionIndicators` on the history row with only the indicators that fall within the active date range for that historical number. Cells outside the range are left empty.
-
-**Assumptions and limitations:**
-- Change dates are recorded as `DateOnly` using `DateTime.Now` at the time of import. If a document number was changed with a backdated revision, the inference may assign the revision to the wrong number. This is an edge case and is considered acceptable.
-- If two number changes occurred on the same date, ordering is ambiguous. In this case, order by dictionary insertion order as a fallback and note the ambiguity in the row's tooltip.
-
-**`TransmittalDocumentRowViewModel` additions for history rows:**
-
-- `DateOnly? NumberActiveFrom` — inferred start date; `null` for the earliest known number
-- `DateOnly? NumberActiveTo` — the change date from `DocumentNumberHistory`; `null` for the current number
-- `string HistoryDateRangeLabel` — formatted display e.g. `"until 2023-06-15"` or `"2021-03-01 – 2023-06-15"`; shown as a suffix in the Doc Number cell or as a tooltip
+History rows always have `IsInactive = true` and `IsHistoryRow = true`.
 
 ---
 
-## 6. Bottom Action Bar
+## 6. Action Bar
 
-Single `Border` row, `Background="#F5F5F5"`, `BorderThickness="0,1,0,0"`, `BorderBrush="#CCCCCC"`, `Padding="12,8"`.
+`Border` row, `Background="#F5F5F5"`, `BorderThickness="0,1,0,0"`, `BorderBrush="#CCCCCC"`, `Padding="12,8"`.
 
-Left side: status/hint text (e.g. export confirmation).
-Right side: two buttons.
-
-| Button | Content | Command | Notes |
-|---|---|---|---|
-| Export | `Export to CSV` | `ExportToCsvCommand` | Exports the Documents DataGrid only (all rows currently shown, respecting active mode and filters) |
-| Close | `Close` | `CloseCommand` | Closes the window; no dialog result |
-
-Button styling matches `MergeView` action buttons. Export button has `FontWeight="SemiBold"`, `Background="#2196F3"`, `Foreground="White"`, `BorderThickness="0"`.
+| Element | Details |
+|---|---|
+| Left `TextBlock` | `{Binding ExportStatusMessage}` — shows export result or empty |
+| Export button | `ExportToCsvCommand`, `Background="#2196F3"`, `Foreground="White"`, `FontWeight="SemiBold"` |
+| Close button | `CloseCommand` — navigates back to MergeView via `NavigationStore` |
 
 ---
 
 ## 7. Status Message Conventions
 
-Each section has its own `TextBlock` for status messages. Follow this pattern consistently:
-
-- Binding: `{Binding RevisionsStatusMessage}` / `{Binding DocumentsStatusMessage}`
-- Visibility: collapse when empty via `BoolToVisibilityConverter` on a helper bool, or use a `StringToVisibilityConverter`
-- Style: `FontSize="12"`, `Foreground="#CC0000"` for warnings/errors, `Foreground="#555555"` for neutral messages
-- Margin: `"8,4,8,4"`
-- Located directly above the DataGrid header in its section
+- `RevisionsStatusMessage` and `DocumentsStatusMessage` are `[ObservableProperty]` strings initialised to `string.Empty`.
+- `TextBlock` visibility collapses via `Style.Trigger` when `Text == ""`.
+- `Foreground="#555555"`, `FontSize="12"`, `TextWrapping="Wrap"`, `Margin="8,4,8,4"`.
 
 ---
 
 ## 8. GlobalMessageView
 
-Placed at `Row 1` of the window grid, identical to `MergeView`:
+Row 1 of the main grid, identical to MergeView:
 
 ```xml
 <Grid Grid.Row="1">
@@ -308,65 +276,81 @@ Placed at `Row 1` of the window grid, identical to `MergeView`:
 </Grid>
 ```
 
-`GlobalMessageViewModel` is initialised in the constructor, wired to a `MessageStore` passed in from the caller.
-
 ---
 
 ## 9. ViewModel — `TransmittalViewModel`
 
-Inherits `AppViewModelBase`.
+Inherits `AppViewModelBase`, implements `IActivatable`.
 
-### Constructor signature
+### Constructor
 
 ```csharp
 public TransmittalViewModel(
-    IDocumentRepositorySync documentRepository,
-    IRevisionRepositorySync revisionRepository,
-    MessageStore messageStore)
+    NavigationStore navigationStore,
+    IMessageStore messageStore,
+    Func<Merge.MergeViewModel> createMergeViewModel,
+    IDocManagerApi docManagerApi,
+    IDialogService dialogService)
 ```
 
-All parameters validated against null per `ConstructorValidationBestPractices.md`.
+All five parameters validated with `ArgumentNullException.ThrowIfNull`. Column definitions built in constructor. Data loaded in `OnActivatedAsync()`.
 
-### Key observable properties
+### Observable properties
 
-| Property | Type | Notes |
+| Property | Type | Default | Notes |
+|---|---|---|---|
+| `RevisionRows` | `ObservableCollection<DynamicRowData>` | — | Revisions grid ItemsSource |
+| `RevisionColumnDefinitions` | `ObservableCollection<DynamicColumnDefinition>` | — | Revisions grid ColumnDefinitions |
+| `DocumentRows` | `ObservableCollection<DynamicRowData>` | — | Documents grid ItemsSource |
+| `DocumentColumnDefinitions` | `ObservableCollection<DynamicColumnDefinition>` | — | Documents grid ColumnDefinitions |
+| `DocumentDisplayMode` | `DocumentDisplayMode` | `All` | Triggers row + column rebuild |
+| `IsShowAllMode` | `bool` (computed) | `true` | Bound to "Show All" RadioButton |
+| `IsByRevisionMode` | `bool` (computed) | `false` | Bound to "By Revisions Only" RadioButton |
+| `ShowInactiveDocuments` | `bool` | `false` | Triggers row rebuild |
+| `IncludeDocumentHistory` | `bool` | `false` | Triggers row rebuild |
+| `RevisionsStatusMessage` | `string` | `""` | |
+| `DocumentsStatusMessage` | `string` | `""` | |
+| `ExportStatusMessage` | `string` | `""` | |
+| `IsBusy` | `bool` | `false` | Set during `OnActivatedAsync` |
+| `GlobalMessageViewModel` | `GlobalMessageViewModel` | — | Registered child |
+
+### Private fields
+
+| Field | Type | Purpose |
 |---|---|---|
-| `Revisions` | `ObservableCollection<TransmittalRevisionRowViewModel>` | Loaded on construction |
-| `DocumentColumnDefinitions` | `ObservableCollection<DynamicColumnDefinition>` | Static + dynamic columns; dynamic portion rebuilt on check/uncheck |
-| `DocumentRows` | `ObservableCollection<DynamicRowData>` | All document rows with full revision data pre-loaded; rebuilt on mode/filter change only |
-| `DocumentDisplayMode` | `DocumentDisplayMode` (enum) | `All` or `ByRevision`; change triggers full row rebuild |
-| `ShowInactiveDocuments` | `bool` | Default `false`; change triggers full row rebuild |
-| `IncludeDocumentHistory` | `bool` | Default `false`; change triggers full row rebuild |
-| `RevisionsStatusMessage` | `string` | |
-| `DocumentsStatusMessage` | `string` | |
-| `GlobalMessageViewModel` | `GlobalMessageViewModel` | |
+| `_revisionViewModels` | `List<TransmittalRevisionRowViewModel>` | Tracks checked state; not bound to grid |
+| `_allDocuments` | `List<Document>` | In-memory document cache |
+| `_allRevisions` | `List<Revision>` | In-memory revision cache (newest-first) |
+| `_revisionDateLookup` | `Dictionary<int, DateTime>` | RevisionId → RevisionDate for history inference |
 
-### Rebuild strategy
+### Rebuild triggers
 
-Two separate rebuild methods are used:
+| Trigger | Action |
+|---|---|
+| `OnActivatedAsync` | `LoadRevisionsAsync()` then `LoadDocumentsAsync()` (which calls `RebuildDocumentRows()`) |
+| Revision `IsChecked` toggled | `RebuildDocumentRows()` (ByRevision only) + `RebuildDocumentColumns()` (always) |
+| `DocumentDisplayMode` changed | `RebuildDocumentRows()` + `RebuildDocumentColumns()` |
+| `ShowInactiveDocuments` changed | `RebuildDocumentRows()` |
+| `IncludeDocumentHistory` changed | `RebuildDocumentRows()` |
 
-**`RebuildDocumentColumns()`** — called only when a revision `IsChecked` changes:
-1. Preserve the three static `DynamicColumnDefinition` entries.
-2. Remove all dynamic entries (`PropertyName` starts with `"Rev_"`).
-3. For each revision in `Revisions` where `IsChecked == true`, append a new `DynamicColumnDefinition` using `PropertyName = "Rev_{RevisionId}"`.
-4. Update `DocumentsStatusMessage`.
+### Commands
 
-**`RebuildDocumentRows()`** — called on load, mode change, filter change, or history toggle:
-1. Load all documents from the repository (respecting `ShowInactiveDocuments` and `DocumentDisplayMode`).
-2. For each document, create a `DynamicRowData` and populate all keys including `Rev_{id}` for every revision in the database.
-3. If `IncludeDocumentHistory` is on, apply the inference algorithm (see §5.9) and append history rows.
-4. Replace `DocumentRows` with the new collection.
-5. Call `RebuildDocumentColumns()` to ensure dynamic columns match current check state.
-6. Update `DocumentsStatusMessage`.
+| Command | Action |
+|---|---|
+| `CloseCommand` | `_navigationStore.NavigateTo(_createMergeViewModel)` |
+| `ExportToCsvCommand` | Save dialog → write `DocumentRows` to CSV via CsvHelper |
+
+### CSV export details
+
+Columns written: three static columns + one per visible dynamic revision column (those with `PropertyName` starting with `"Rev_"`). When `IncludeDocumentHistory` is on, three extra columns appended: `History` (Yes/blank), `Active From`, `Active To`. `ExportStatusMessage` updated on success or failure. Uses `CsvHelper` with `CsvConfiguration(CultureInfo.InvariantCulture)` and `StreamWriter`.
 
 ---
 
 ## 10. Entry Point from MergeView
 
-- Add a button to `MergeView.xaml` (position TBD by designer).
-- Add `OpenTransmittalCommand` to `MergeViewModel`.
-- The command instantiates `TransmittalViewModel` with the required repositories and opens `TransmittalView` as a non-modal window (or modal — TBD).
-- The `TransmittalView` window receives the ViewModel via its constructor and sets `DataContext` in code-behind.
+`MergeViewModel` receives `Func<Transmittal.TransmittalViewModel>` as its eighth constructor parameter. `OpenTransmittalCommand` calls `_navigationStore.NavigateTo(() => _createTransmittalViewModel())`.
+
+`NavigationHostViewModel.CreateTransmittalViewModel()` constructs the ViewModel with all five dependencies from its own fields.
 
 ---
 
@@ -374,25 +358,19 @@ Two separate rebuild methods are used:
 
 ```
 duHastNet.DocManager.UI.Shared/
-└── Views/
-    └── Transmittal/
-        ├── TransmittalView.xaml
-        ├── TransmittalView.xaml.cs
-        └── ViewModels/
-            ├── TransmittalViewModel.cs
-            ├── TransmittalRevisionRowViewModel.cs
-            └── DocumentDisplayMode.cs          (enum)
+├── Views/Transmittal/
+│   ├── TransmittalView.xaml
+│   └── TransmittalView.xaml.cs
+└── ViewModels/Transmittal/
+    ├── TransmittalViewModel.cs
+    ├── TransmittalRevisionRowViewModel.cs
+    └── DocumentDisplayMode.cs
 ```
 
-> No new control classes are required. The existing `DynamicDataGrid` and `DynamicRowData` from `duHastNet.UI.CustomControls.CustomDataGrid` are used directly.
+**Modified files:**
 
----
-
-## 12. Build Order
-
-1. `DocumentDisplayMode.cs` (enum)
-2. `TransmittalRevisionRowViewModel.cs`
-3. `TransmittalViewModel.cs`
-4. `TransmittalView.xaml` + code-behind
-5. `OpenTransmittalCommand` on `MergeViewModel`
-6. Button on `MergeView.xaml`
+- `MergeViewModel.cs` — added `createTransmittalViewModel` parameter + `OpenTransmittalCommand`
+- `MergeView.xaml` — added Transmittal button to header toolbar
+- `NavigationHostViewModel.cs` — added `CreateTransmittalViewModel()` factory
+- `NavigationHostView.xaml` — added `TransmittalViewModel` DataTemplate
+- `MergeViewModelTests.cs` / `_ExportMetData` / `_MergeFiles` / `_UpdateDataBase` — added `_mockCreateTransmittalViewModel` field and argument to all `MergeViewModel` constructor calls

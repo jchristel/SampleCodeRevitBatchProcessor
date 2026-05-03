@@ -20,8 +20,8 @@
 	<ItemGroup>
 		<ProjectReference Include="..\duHastNet.DocManager.UI.Shared\duHastNet.DocManager.UI.Shared.csproj" />
     <!-- utility dll reference -->
-    <Reference Include="Utils.25.0.1.0">
-      <HintPath>..\\..\\..\\_References\\duHast\\Utils.25.0.1.0.dll</HintPath>
+    <Reference Include="Utils.25.0.1.1">
+      <HintPath>..\\..\\..\\_References\\duHast\\Utils.25.0.1.1.dll</HintPath>
       <Private>True</Private>
     </Reference>
 	</ItemGroup>

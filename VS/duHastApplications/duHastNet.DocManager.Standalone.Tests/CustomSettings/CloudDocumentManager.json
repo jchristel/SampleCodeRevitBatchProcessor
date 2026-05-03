@@ -29,36 +29,30 @@
       },
       {
         "$id": "5",
-        "MetaFieldName": "Type",
-        "DocumentPropertyName": "DocumentType",
-        "CloudServiceProviderName": "Aconex"
-      },
-      {
-        "$id": "6",
         "MetaFieldName": "Company",
         "MetaFieldValue": "TEST COMPANY",
         "CloudServiceProviderName": "Aconex"
       },
       {
-        "$id": "7",
+        "$id": "6",
         "MetaFieldName": "Revision",
         "DocumentPropertyName": "Revision",
         "CloudServiceProviderName": "Aconex"
       },
       {
-        "$id": "8",
+        "$id": "7",
         "MetaFieldName": "RevisionDate",
         "DocumentPropertyName": "RevisionDate",
         "CloudServiceProviderName": "Aconex"
       },
       {
-        "$id": "9",
+        "$id": "8",
         "MetaFieldName": "Status",
         "DocumentPropertyName": "RevisionDescription",
         "CloudServiceProviderName": "Aconex"
       },
       {
-        "$id": "10",
+        "$id": "9",
         "MetaFieldName": "File",
         "FilePropertyName": "FileName",
         "CloudServiceProviderName": "Aconex"

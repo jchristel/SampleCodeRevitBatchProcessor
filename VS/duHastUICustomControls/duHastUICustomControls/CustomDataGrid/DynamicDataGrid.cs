@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -164,7 +164,12 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
 
             // Set common properties
             column.Header = columnDef.DisplayName;
-            column.Width = new DataGridLength(columnDef.Width);
+            // Width == 0 is the convention for "fill remaining space" (star sizing)
+            column.Width = columnDef.Width == 0
+                ? new DataGridLength(1, DataGridLengthUnitType.Star)
+                : new DataGridLength(columnDef.Width);
+            if (columnDef.MinWidth > 0)
+                column.MinWidth = columnDef.MinWidth;
             column.IsReadOnly = columnDef.IsReadOnly;
 
             // Apply read-only styling

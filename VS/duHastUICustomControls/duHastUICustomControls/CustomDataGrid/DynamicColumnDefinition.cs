@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -35,6 +35,11 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
         public string DisplayName { get; set; }
         public Type DataType { get; set; }
         public double Width { get; set; } = 100;
+
+        /// <summary>
+        /// Minimum column width in device-independent pixels. Zero means no minimum is enforced.
+        /// </summary>
+        public double MinWidth { get; set; } = 0;
 
         public bool IsReadOnly
         {

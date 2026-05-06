@@ -376,8 +376,8 @@
             "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
             {
             "Enabled" = "11:TRUE"
-            "PromptEnabled" = "11:TRUE"
-            "PrerequisitesLocation" = "2:1"
+            "PromptEnabled" = "11:FALSE"
+            "PrerequisitesLocation" = "2:0"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
                 "Items"
@@ -413,8 +413,8 @@
             "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
             {
             "Enabled" = "11:TRUE"
-            "PromptEnabled" = "11:TRUE"
-            "PrerequisitesLocation" = "2:1"
+            "PromptEnabled" = "11:FALSE"
+            "PrerequisitesLocation" = "2:0"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
                 "Items"

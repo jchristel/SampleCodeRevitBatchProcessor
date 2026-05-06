@@ -376,8 +376,8 @@
             "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
             {
             "Enabled" = "11:TRUE"
-            "PromptEnabled" = "11:FALSE"
-            "PrerequisitesLocation" = "2:0"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
                 "Items"
@@ -386,11 +386,6 @@
                     {
                     "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
                     "ProductCode" = "8:.NETFramework,Version=v4.7.2"
-                    }
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.DesktopRuntime.8.0.x64"
-                    {
-                    "Name" = "8:.NET Desktop Runtime 8.0.20 (x64)"
-                    "ProductCode" = "8:Microsoft.NetCore.DesktopRuntime.8.0.x64"
                     }
                 }
             }
@@ -413,8 +408,8 @@
             "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
             {
             "Enabled" = "11:TRUE"
-            "PromptEnabled" = "11:FALSE"
-            "PrerequisitesLocation" = "2:0"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
                 "Items"
@@ -423,11 +418,6 @@
                     {
                     "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
                     "ProductCode" = "8:.NETFramework,Version=v4.7.2"
-                    }
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.DesktopRuntime.8.0.x64"
-                    {
-                    "Name" = "8:.NET Desktop Runtime 8.0.20 (x64)"
-                    "ProductCode" = "8:Microsoft.NetCore.DesktopRuntime.8.0.x64"
                     }
                 }
             }

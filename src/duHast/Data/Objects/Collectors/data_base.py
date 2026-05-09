@@ -48,24 +48,13 @@ class DataBase(Base):
                 "data_type must be a string, got {} instead.".format(type(data_type))
             )
 
-    @property
-    def DataType(self):
-        """
-        Property: returns the data type of this class.
-
-        :return:  A string representing the data type
-        :rtype: str
-        """
-
-        return self.data_type
-
     def __eq__(self, other):
         if not isinstance(other, DataBase):
             return NotImplemented
-        return self.DataType == other.DataType
+        return self.data_type == other.data_type
 
     def __ne__(self, other):
         return not self.__eq__(other)
-    
+
     def __hash__(self):
-        return hash(self.DataType)
+        return hash(self.data_type)

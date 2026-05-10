@@ -1,6 +1,7 @@
 layout:
   - Ceilings
   - Levels
+  - Floors
   - Rooms
   - Sheets
 

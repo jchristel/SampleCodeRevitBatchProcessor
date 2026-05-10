@@ -98,7 +98,7 @@ def write_report_data(
 
     # if no encoding is provided set the encoding to ascii (default)
     encoding_file_open = encoding if encoding is not None else "ascii"
-    
+
     # Open the file with the codecs.open method to specify encoding
     with codecs.open(file_name, write_type, encoding=encoding_file_open) as f:
         try:
@@ -111,6 +111,7 @@ def write_report_data(
                 f.write(bom.decode(encoding))
 
             # Create the CSV writer
+
             # line terminator is set to '\n' to avoid double newlines on Windows
             writer = csv.writer(
                 f,

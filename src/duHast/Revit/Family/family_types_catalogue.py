@@ -225,8 +225,8 @@ def write_catalogue_file_to_csv(catalogue_file_data, family_file_path, header, o
 
     try:
         # build the catalogue file path
-        catalogue_file_directory = get_directory_path_from_file_path( family_file_path)
-        catalogue_file_path_name = "{}.txt".format(get_file_name_without_ext( family_file_path))
+        catalogue_file_directory = get_directory_path_from_file_path(family_file_path)
+        catalogue_file_path_name = "{}.txt".format(get_file_name_without_ext(family_file_path))
         catalogue_file_full_path = os.path.join(catalogue_file_directory, catalogue_file_path_name)
         
         if DEBUG:

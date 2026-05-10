@@ -26,6 +26,7 @@ from duHast.Utilities.Objects.result import Result
 from duHast.pyRevit.file_picker import get_file_path_from_user
 
 from duHast.Revit.Common import transaction as rTran
+from duHast.Revit.Family.family_types_catalogue import write_catalogue_file_to_csv
 from duHast.pyRevit.console_output import print_header
 from duHast.Utilities.files_csv import read_csv_file, write_report_data_as_csv
 from duHast.Utilities.files_io import (
@@ -529,6 +530,17 @@ def clean_up_catalogue_file(doc, output, forms):
         sorted_data = reorder_columns(
             data=filtered_catalogue_file_data, desired_order=DESIRED_COLUMN_ORDER
         )
+        
+        # before printing the sorted data check BOM
+        # remove byte order mark if present since it will be written out again when writing the cleaned data to file and would otherwise be duplicated
+        header_row = sorted_data[:1][0]
+        if check_utf16le_bom(file_selected):
+            print("UTF-16 LE BOM detected. Removing BOM from header.")
+            header_row[0] = "" # remove the BOM from the first header cell
+        
+        # update the header row in the sorted data with the cleaned header row (without BOM)
+        sorted_data[0] = header_row
+        
         _print_clean_data(sorted_data, output)
 
         # build new file name:
@@ -537,13 +549,11 @@ def clean_up_catalogue_file(doc, output, forms):
         new_full_file_name = os.path.join(target_dir, new_file_name + "__.txt")
 
         # write new data to file
-        write_result = write_report_data_as_csv(
-            file_name=new_full_file_name,
-            header=sorted_data[:1][0],
-            data=sorted_data[1:],
-            encoding="utf-16-le",
-            quoting=2,  # quoting all values to ensure that special characters are preserved and not misinterpreted as delimiters
-            bom=BOMValue.UTF_16_LITTLE_ENDIAN,
+        write_result = write_catalogue_file_to_csv(
+            catalogue_file_data=sorted_data[1:],
+            family_file_path=new_full_file_name,
+            header=header_row ,
+            override_existing = False,
         )
         if write_result.status is False:
             raise ValueError(write_result.message)

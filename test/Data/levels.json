@@ -1,0 +1,1 @@
+{"building level": [{"name": "Level 0", "id": 311, "data_type": "level", "elevation": 0.0, "revit_model": {"data_type": "revit_model", "name": "Project1"}}, {"name": "Level 1", "id": 694, "data_type": "level", "elevation": 3999.9999999999995, "revit_model": {"data_type": "revit_model", "name": "Project1"}}], "file name": "Project1", "date processed": "2026_05_09_11_13_34"}

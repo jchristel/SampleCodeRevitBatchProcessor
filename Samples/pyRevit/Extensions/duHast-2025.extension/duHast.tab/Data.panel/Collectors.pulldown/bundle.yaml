@@ -3,6 +3,8 @@ layout:
   - Levels
   - Floors
   - Rooms
+  - Items
+  - -------
   - Sheets
 
 # bundle tooltip

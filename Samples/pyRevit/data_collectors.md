@@ -46,6 +46,28 @@ Use the exported data to verify level setup against a project brief or to popula
 
 ---
 
+## Floors
+
+Exports floor data from the current Revit model.
+
+**Exported data includes:** Floor type, level, offset from level, area, design set/option membership, phasing, and all available floor instance and type parameters.
+
+Use the exported data for floor finish schedules, quantity take-offs, or to cross-reference floor layouts against room data.
+
+---
+
+## Items
+
+Exports placed family instance data (furniture, equipment, and similar items) from the current Revit model.
+
+**Exported data includes:** Family type, instance parameters, level, offset from level derived from solid geometry, placement location (x/y/z in mm), facing direction (rotation matrix), room associations across all project phases, design set/option membership, and phasing.
+
+By default the following categories are collected: Furniture, Furniture Systems, Mechanical Equipment, Electrical Equipment, Electrical Fixtures, Plumbing Fixtures, Specialty Equipment, and Generic Model.
+
+Use the exported data for FF&E schedules, room content reports, or to verify item placement against a room data sheet.
+
+---
+
 ## Notes
 
 - All collectors write to a destination file you choose via a save dialog; ensure the destination folder exists and is writable.

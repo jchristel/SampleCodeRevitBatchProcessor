@@ -62,6 +62,8 @@ class DataPropertyNames():
     SEGMENTS = "segments"
     SET_NAME = "set_name"
     SHEET_SIZE = "sheet_size"
+    LOCATION_POINT = "location_point"
+    ROOMS = "rooms"
     ROTATION_COORDINATES = "rotation_coord"
     TAGS = "tags"
     TAG_ELBOW_LOCATION = "elbow_location"

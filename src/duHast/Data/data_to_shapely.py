@@ -50,6 +50,7 @@ except ImportError:
     np = None
     
 from duHast.Data.Objects.Collectors import data_ceiling as dc
+from duHast.Data.Objects.Collectors import data_floor as df
 from duHast.Data.Objects.Collectors import data_room as dr
 
 from duHast.Data.Objects.Collectors.Properties.Geometry import geometry_polygon_2
@@ -268,6 +269,7 @@ def get_shapely_polygons_from_data_instance(data_instance):
 GEOMETRY_CONVERTER = {
     dr.DataRoom.data_type: get_shapely_polygons_from_data_instance,
     dc.DataCeiling.data_type: get_shapely_polygons_from_data_instance,
+    df.DataFloor.data_type: get_shapely_polygons_from_data_instance,
 }
 
 

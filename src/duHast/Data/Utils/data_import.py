@@ -34,6 +34,8 @@ Data storage reader class.
 # clr.ImportExtensions(Linq)
 
 from duHast.Data.Objects.Collectors import data_ceiling as dc
+from duHast.Data.Objects.Collectors import data_floor as df
+from duHast.Data.Objects.Collectors import data_item as di
 from duHast.Data.Objects.Collectors import data_room as dr
 from duHast.Data.Utils.data_to_file import CONSTANT_DATA_FIELDS
 from duHast.Utilities.files_json import read_json_data_from_file
@@ -68,6 +70,8 @@ class ReadDataFromFile:
     SUPPORTED_DATA_TYPES = {
         dr.DataRoom.data_type: dr.DataRoom,
         dc.DataCeiling.data_type: dc.DataCeiling,
+        df.DataFloor.data_type: df.DataFloor,
+        di.DataItem.data_type: di.DataItem,
     }
 
     def _load_data_type(self, json_object, data_type_name):

@@ -41,13 +41,10 @@ This module:
 #
 #
 
-import codecs
-import csv
-
-
 from duHast.Utilities.Objects import result as res
 from duHast.Data.Objects.Collectors import data_ceiling as dc
 from duHast.Data.Objects.Collectors import data_room as dr
+from duHast.Data.Objects.Collectors.data_ceiling_in_room import DataCeilingInRoom
 from duHast.Data.Utils import data_import as dReader
 from duHast.Data import data_to_shapely as dToS
 
@@ -118,21 +115,26 @@ def _build_dictionary_by_level_and_data_type(data_reader):
 
 def _get_property_values_as_list(properties, property_keys):
     """
-    _summary_
+    Returns a list of property values in the order defined by property_keys.
 
-    :param properties: _description_
-    :type properties: _type_
-    :param property_keys: _description_
-    :type property_keys: _type_
+    Looks up each key by name against a list of :class:`.DataProperty` objects.
+    Returns the string ``"null"`` for any key not found in the list.
 
-    :return: _description_
-    :rtype: _type_
+    :param properties: A list of DataProperty instances.
+    :type properties: list[:class:`.DataProperty`]
+    :param property_keys: Names of the properties to extract, in order.
+    :type property_keys: list[str]
+
+    :return: Extracted values as strings, one entry per key.
+    :rtype: list[str]
     """
 
+    # build a name→value lookup once so we don't scan the list repeatedly
+    props_dict = {p.name: p.value for p in properties}
     values = []
     for property_key in property_keys:
-        if property_key in properties:
-            values.append(str(properties[property_key]))
+        if property_key in props_dict:
+            values.append(str(props_dict[property_key]))
         else:
             values.append("null")
     return values
@@ -173,36 +175,26 @@ def _convert_object_data_into_report_data(
 
             # data.append (data_row)
 
-            associated_data_rows = []
-            for associated_element in room.associated_elements:
-                # only add ceiling data for now
-                if associated_element.data_type == dc.DataCeiling.data_type:
-                    associated_data_row = [
-                        associated_element.level.name,
-                        room.revit_model.name,
-                        str(associated_element.instance_properties.id),
-                        associated_element.design_set_and_option.set_name,
-                        associated_element.design_set_and_option.option_name,
-                        str(associated_element.design_set_and_option.is_primary),
-                    ]
-
-                    associated_data_row = (
-                        associated_data_row
-                        + _get_property_values_as_list(
-                            associated_element.type_properties.properties,
-                            ceiling_type_property_keys,
-                        )
-                    )
-                    associated_data_row = (
-                        associated_data_row
-                        + _get_property_values_as_list(
-                            associated_element.instance_properties.properties,
-                            ceiling_instance_property_keys,
-                        )
-                    )
-                    associated_data_rows.append(associated_data_row)
-
-                    data.append(data_row + associated_data_row)
+            for ceiling_in_room in room.ceilings:
+                ceiling = ceiling_in_room.ceiling
+                ceiling_data_row = [
+                    ceiling.level.name,
+                    ceiling.revit_model.name,
+                    str(ceiling.instance_properties.id),
+                    ceiling.design_set_and_option.set_name,
+                    ceiling.design_set_and_option.option_name,
+                    str(ceiling.design_set_and_option.is_primary),
+                ]
+                ceiling_data_row = ceiling_data_row + _get_property_values_as_list(
+                    ceiling.type_properties.properties,
+                    ceiling_type_property_keys,
+                )
+                ceiling_data_row = ceiling_data_row + _get_property_values_as_list(
+                    ceiling.instance_properties.properties,
+                    ceiling_instance_property_keys,
+                )
+                ceiling_data_row.append(str(ceiling_in_room.area))
+                data.append(data_row + ceiling_data_row)
     return data
 
 
@@ -295,8 +287,15 @@ def _intersect_ceiling_vs_room(
                         data_objects[level_name][1],
                     )
                 )[0]
-                # add ceiling object to associated elements list of room object
-                data_object_room.associated_elements.append(data_object_ceiling)
+                # wrap the ceiling and its specific intersection area in a typed
+                # container so the same ceiling can appear in multiple rooms with
+                # the correct area for each (avoids the overwrite-on-re-entry bug)
+                ceiling_in_room = DataCeilingInRoom()
+                ceiling_in_room.ceiling = data_object_ceiling
+                ceiling_in_room.area = (
+                    ceiling_polygon.intersection(room_polygon).area * 304.8 * 304.8
+                )
+                data_object_room.ceilings.append(ceiling_in_room)
                 return_value.append_message(
                     "Added ceiling {} to room {}".format(ceiling_poly_id, room_poly_id)
                 )
@@ -314,8 +313,9 @@ def _intersect_ceiling_vs_room(
         room_id = "unknown"
         # populate values if room object is found
         if data_object_room:
-            room_name = data_object_room.instance_properties.properties["Name"]
-            room_number = data_object_room.instance_properties.properties["Number"]
+            props = {p.name: p.value for p in data_object_room.instance_properties.properties}
+            room_name = props.get("Name", "unknown")
+            room_number = props.get("Number", "unknown")
             room_id = data_object_room.instance_properties.id
 
         data_object_ceiling = list(
@@ -425,6 +425,7 @@ def write_data_to_file(
         # ceilings custom data next
         data_header = (
             data_header + ceiling_type_property_keys + ceiling_instance_property_keys
+            + ["ceiling intersection area mm2"]
         )
         # write data to file
         return_value.update(

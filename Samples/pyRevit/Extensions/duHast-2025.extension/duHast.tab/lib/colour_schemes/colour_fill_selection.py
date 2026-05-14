@@ -1,4 +1,4 @@
-# License:
+﻿# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -22,7 +22,7 @@
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.files_csv import read_csv_file
-from duHast.pyRevit.ui_element_selection import get_element_selection_from_user
+from duHast.pyRevit.UI.ui_element_selection import get_element_selection_from_user
 from duHast.pyRevit.file_picker import get_file_path_from_user
 from duHast.Revit.ColourFillSchemes.Objects.colour_fill_storage import ColourFillStorage
 from duHast.Revit.ColourFillSchemes.colour_fill_schemes import get_all_colour_schemes

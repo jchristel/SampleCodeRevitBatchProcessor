@@ -1,4 +1,4 @@
-# License:
+﻿# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -22,7 +22,7 @@
 
 from duHast.Utilities.Objects.result import Result
 from duHast.pyRevit.console_output import print_header, print_error
-from duHast.pyRevit.ui_element_selection import get_element_selection_from_user
+from duHast.pyRevit.UI.ui_element_selection import get_element_selection_from_user
 from duHast.Revit.Rooms.rooms import get_all_rooms
 from duHast.Revit.Rooms.room_common_parameters import get_room_num_name_comb, get_room_level, get_room_phase
 

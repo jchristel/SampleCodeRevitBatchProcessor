@@ -1,4 +1,4 @@
-# License:
+﻿# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -34,7 +34,7 @@ from duHast.Revit.LinePattern.purge_unused_fill_patterns_by_delete import (
     purge_fill_pattern_by_delete,
     get_fill_pattern_ids,
 )
-from duHast.pyRevit.ui_element_selection import get_element_selection_from_user
+from duHast.pyRevit.UI.ui_element_selection import get_element_selection_from_user
 
 
 def purge_line_patterns(doc, output, forms):

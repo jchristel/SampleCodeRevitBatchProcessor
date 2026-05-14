@@ -1,4 +1,4 @@
-# License:
+﻿# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -31,7 +31,7 @@ from duHast.Revit.Common.Objects.FailureHandlingConfiguration import (
 from duHast.pyRevit.console_output import print_header
 from duHast.Revit.Common.failure_handling import with_failures_processing_handler
 from duHast.Revit.Common import file_io as rFile
-from duHast.pyRevit.ui_element_selection import get_element_selection_from_user
+from duHast.pyRevit.UI.ui_element_selection import get_element_selection_from_user
 
 from duHast.Utilities.directory_io import create_target_directory
 from duHast.Utilities.files_io import file_exist

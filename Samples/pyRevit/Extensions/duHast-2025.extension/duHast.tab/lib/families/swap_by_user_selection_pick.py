@@ -1,4 +1,4 @@
-# License:
+﻿# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -26,7 +26,7 @@ from duHast.Revit.UI.custom_selection_user import get_user_selection
 from duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type import FamilyDirectiveSwap
 from duHast.Revit.Family.family_swap_instances_of_types import _swap_loaded_family_instances
 from duHast.Revit.Family.family_functions import get_name_and_category_to_family_dict
-from duHast.pyRevit.ui_element_selection import get_element_selection_from_user
+from duHast.pyRevit.UI.ui_element_selection import get_element_selection_from_user
 from duHast.Revit.Family.Utility.family_swap_instances_by_type_utils import write_swap_directives_to_file
 
 

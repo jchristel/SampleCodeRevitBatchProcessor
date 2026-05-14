@@ -61,7 +61,7 @@ from duHast.Utilities.utility import encode_utf8
 
 
 # ---------------------------------------------------------------------------
-# Default category list – callers may supply their own instead.
+# Default category list - callers may supply their own instead.
 # ---------------------------------------------------------------------------
 
 DEFAULT_ITEM_CATEGORIES = [
@@ -85,8 +85,8 @@ def get_location_data(revit_family_instance):
     Extracts the placement location and orientation of a family instance and
     returns them as a populated :class:`.DataGeometryBase` instance.
 
-    - ``translation_coord`` — x/y/z position converted to metric mm (:class:`.Point3`)
-    - ``rotation_coord``    — 3 × 3 rotation matrix derived from the instance's
+    - ``translation_coord`` - x/y/z position converted to metric mm (:class:`.Point3`)
+    - ``rotation_coord``    - 3 x 3 rotation matrix derived from the instance's
                               local transform (each row is a basis vector [x, y, z])
 
     Only :class:`Autodesk.Revit.DB.LocationPoint` instances are supported.
@@ -112,7 +112,7 @@ def get_location_data(revit_family_instance):
     # --- orientation: rows of the local-to-world rotation matrix ---
     # GetTransform() returns the full local coordinate system of the instance.
     # BasisX / BasisY / BasisZ are unit vectors in world space describing how
-    # the family's local axes are oriented. Together they form the 3×3 rotation
+    # the family's local axes are oriented. Together they form the 3x3 rotation
     # matrix that can be used to reconstruct the instance's facing direction.
     transform = revit_family_instance.GetTransform()
     loc_point.rotation_coord = [
@@ -135,13 +135,13 @@ def get_room_ids(doc, revit_family_instance):
 
     Lookup strategy (in order):
 
-    1. **Phase-aware** — iterates ``doc.Phases`` and calls
+    1. **Phase-aware** - iterates ``doc.Phases`` and calls
        ``FamilyInstance.get_Room(phase)`` for each phase. This is the primary
        source and correctly handles items whose room assignment changes between
        construction phases.
-    2. **Direct property** — ``FamilyInstance.Room`` is tried when the phase
+    2. **Direct property** - ``FamilyInstance.Room`` is tried when the phase
        loop yields nothing (e.g. older family hosting types).
-    3. **Point fallback** — if both of the above return nothing, the instance's
+    3. **Point fallback** - if both of the above return nothing, the instance's
        ``LocationPoint`` is used with ``Document.GetRoomAtPoint`` to perform a
        spatial lookup against the last project phase.
 
@@ -216,7 +216,7 @@ def get_level_data_by_bounding_box(doc, revit_family_instance):
        last one whose elevation is at or below ``bbox.Min.Z``.
     4. If the item sits below every level (e.g. underground) the lowest level
        is used as a fallback.
-    5. ``offset_from_level`` = ``bbox.Min.Z − level.ProjectElevation``, converted
+    5. ``offset_from_level`` = ``bbox.Min.Z - level.ProjectElevation``, converted
        to metric mm.
 
     Returns a default empty :class:`.DataLevel` when no solid geometry or no
@@ -236,7 +236,7 @@ def get_level_data_by_bounding_box(doc, revit_family_instance):
     # --- step 1: bounding box from solid geometry ---
     bbox = get_solids_based_bounding_box_from_family_instance(doc, revit_family_instance)
     if bbox is None:
-        return level_d  # no solid geometry – return empty default
+        return level_d  # no solid geometry - return empty default
 
     bbox_min_z = bbox.Min.Z  # internal Revit units (feet)
 
@@ -248,7 +248,7 @@ def get_level_data_by_bounding_box(doc, revit_family_instance):
         if first_level is None:
             first_level = level
         if level.ProjectElevation <= bbox_min_z:
-            # keep updating – the last one still below wins
+            # keep updating - the last one still below wins
             best_level = level
         else:
             # levels are ascending; nothing further will be below bbox_min_z
@@ -301,7 +301,7 @@ def populate_data_item_object(doc, revit_family_instance):
     :rtype: :class:`.DataItem` or None
     """
 
-    # resolve location first – skip line-based placements
+    # resolve location first - skip line-based placements
     location_data = get_location_data(revit_family_instance)
     if location_data is None:
         return None

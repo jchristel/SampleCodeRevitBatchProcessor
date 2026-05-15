@@ -4,6 +4,33 @@ Intro
 The Data namespace is an attempt to collect rooms related data from a Revit model in order for it to be stored in 
 a graph database.
 
+Architecture
+------------
+
+The namespace is organised into two distinct layers:
+
+**Layer 1 — Collector**
+
+Collector classes (e.g. ``DataRoom``, ``DataDoor``, ``DataCeiling``) faithfully capture all Revit data as-is.
+They are verbose by design. Their job is "capture everything from Revit." These classes are not changed or extended
+for analysis purposes.
+
+**Layer 2 — Analysis**
+
+Analysis classes (e.g. ``DataRoomAnalysis``, ``DataFFEItem``) are lean, curated representations purpose-built for
+comparison, templating, and storage in the graph database. They reference collector objects by id (e.g. ``IfcGUID``
+or Revit element id) rather than embedding them, avoiding data duplication.
+
+Analysis classes are **not** derived from collector classes via inheritance. The two layers have different
+responsibilities and different lifecycles — composition by reference is used instead.
+
+.. note::
+   What this document refers to as the *analysis layer* corresponds to what is also called *blueprints* or
+   *templates* elsewhere in this document. These terms are equivalent. *Analysis layer* is the preferred term
+   going forward.
+
+Refer to ``revit_data_architecture_guidance.md`` for the full architectural rationale behind this design.
+
 Structure
 ---------
 The proposed structure is:
@@ -115,7 +142,7 @@ Refer to duHast.Revit.Rooms.Export.to_data_room.get_all_room_data() for the init
 Sheets
 ^^^^^^^
 
-Sheets and all their properties are exported in one report. That will require extra post processing steps to sort sheets and items into templates (blue prints).
+Sheets and all their properties are exported in one report. That will require extra post processing steps to sort sheets and items into analysis classes (see Architecture section above).
 
 Properties are exported by view port and associated view:
 
@@ -144,24 +171,24 @@ TODO: separate report for ffe tags:
 - insertions point / rotation of element tagged
 
 
-Setting up Templates (Blueprints) for room layout sheets
+Setting up Analysis Classes for room layout sheets
 ----------------------------------------------------------
 
-The end goal is to have sheet templates per room size, where the size is sorted into bands of .25sqm increments. That is further refined by bands 
+The end goal is to have sheet analysis classes per room size, where the size is sorted into bands of .25sqm increments. That is further refined by bands 
 of room proportions ( band step size to be confirmed) and last but not least by bands of items in rooms (step size is 5)
 
 The room size is taking from the room reports which include the room area.
 The room proportions are calculated using the room bounding box length in X / length in Y. The assumption here is that rooms are axis parallel and view ports are not rotated on sheet.
 The number of items in room is derived from the number of entries in the schedule.
 
-From the initial exports the following templates need to be extracted:
+From the initial exports the following analysis classes need to be extracted:
 
 - sheets by room size, proportion and number of items in room
 - tags by item and view type
 
 That sorted data will then need to be culled in order to arrive at:
 
-- one sheet template per (note: a template  might contain multiple sheets)
+- one sheet analysis class per (note: an analysis class might contain multiple sheets)
 
     - room size
 
@@ -172,19 +199,19 @@ That sorted data will then need to be culled in order to arrive at:
 
 Impact on code structure:
 
-Data classes used to export all data are not suitable to represent templates. Data classes for export are for instance missing a unique identifier tying rooms and 
-sheets together. They also contain a lot of data exported from the Revit model in their instance and type properties which may not be required in the templates.
+Data classes used to export all data (collector layer) are not suitable to represent analysis classes. Collector classes are for instance missing a unique identifier tying rooms and 
+sheets together. They also contain a lot of data exported from the Revit model in their instance and type properties which is not required in the analysis layer.
 
-Separate blueprint name space contains classes to represent templates for rooms and sheets. These classes will be used to generate the templates and store them in a graph database.
-Consider an inheritance architecture where i.e. element export data class and element type class inherit from a element base class.
+A separate analysis namespace contains classes to represent analysis data for rooms and sheets. These classes reference collector objects by id rather than inheriting from or
+embedding them. This keeps the two layers independent and avoids data duplication.
 
 
-Blueprints - Sheets
+Analysis - Sheets
 ====================
 
-These blueprints are used to generate room layout sheets based on the size  and proportion of the room and the number of items in the room.
+These analysis classes are used to generate room layout sheets based on the size and proportion of the room and the number of items in the room.
 
-Properties required for sheet blueprint:
+Properties required for sheet analysis class:
 
 - room properties:
     - room size in sqm
@@ -203,7 +230,7 @@ Properties required for sheet blueprint:
 
 That requires that room data and sheet data exported can be linked together. Assume that a specific parameter on the sheet contains a link to the room.
 
-Process to generate a sheet blueprints:
+Process to generate sheet analysis classes:
 
 1. Get all room data from the graph database
 2. Get all sheet data from the graph database
@@ -219,4 +246,4 @@ Process to generate a sheet blueprints:
         - room proportion: round to nearest 0.1
         - number of items: round to nearest 5
 
-7. For each band, and their values generate a sheet blueprint
+7. For each band, and their values generate a sheet analysis class

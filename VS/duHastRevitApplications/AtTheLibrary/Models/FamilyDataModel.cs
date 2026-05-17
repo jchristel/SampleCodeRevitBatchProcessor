@@ -67,13 +67,39 @@ namespace duHastNet.AtTheLibrary.Models
         }
 
         /// <summary>
-        /// return the property by its name
+        /// Normalises a property name for fuzzy matching by removing all underscores
+        /// and spaces, enabling comparison across XML-serialised names (underscores)
+        /// and Revit parameter names (spaces).
+        /// e.g. "Assembly Code", "Assembly_Code" and "Assembly_Code " all normalise
+        /// to "AssemblyCode".
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public FamilyDataProperty GetPropertyByName( string name)
+        private static string NormalisePropertyName(string name)
         {
-            return _properties.Where(x=> x.Name == name).FirstOrDefault();
+            return name.Replace("_", "").Replace(" ", "");
+        }
+
+        /// <summary>
+        /// Returns the property matching the given name.
+        /// First attempts an exact (ordinal, case-insensitive) match.
+        /// If that fails, falls back to a normalised comparison that treats
+        /// underscores and spaces as equivalent, accommodating the mismatch
+        /// between XML-serialised names ("Assembly_Code") and Revit parameter
+        /// names ("Assembly Code").
+        /// </summary>
+        /// <param name="name">The property name to look up.</param>
+        /// <returns>The matching property, or null if none found.</returns>
+        public FamilyDataProperty GetPropertyByName(string name)
+        {
+            // 1. exact match (case-insensitive)
+            var exact = _properties.FirstOrDefault(x =>
+                string.Equals(x.Name, name, System.StringComparison.OrdinalIgnoreCase));
+            if (exact != null)
+                return exact;
+
+            // 2. fallback: normalise both sides and compare
+            string normalisedSearch = NormalisePropertyName(name);
+            return _properties.FirstOrDefault(x =>
+                string.Equals(NormalisePropertyName(x.Name), normalisedSearch, System.StringComparison.OrdinalIgnoreCase));
         }
 
         public void AddMatchingFamily(FamilyRevit family)

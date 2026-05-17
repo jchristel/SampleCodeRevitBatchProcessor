@@ -164,6 +164,15 @@ namespace duHastNet.UI.CustomControls.CustomDataGrid
 
             // Set common properties
             column.Header = columnDef.DisplayName;
+
+            // Use an explicit TextBlock template so WPF does not treat underscores in the
+            // header string as access-key indicators (the default ContentPresenter in some
+            // system themes routes string headers through AccessText, hiding the first '_').
+            var headerTemplate = new DataTemplate();
+            var textBlockFactory = new FrameworkElementFactory(typeof(System.Windows.Controls.TextBlock));
+            textBlockFactory.SetBinding(System.Windows.Controls.TextBlock.TextProperty, new Binding());
+            headerTemplate.VisualTree = textBlockFactory;
+            column.HeaderTemplate = headerTemplate;
             // Width == 0 is the convention for "fill remaining space" (star sizing)
             column.Width = columnDef.Width == 0
                 ? new DataGridLength(1, DataGridLengthUnitType.Star)

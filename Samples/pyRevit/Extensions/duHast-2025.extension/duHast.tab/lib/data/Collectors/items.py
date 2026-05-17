@@ -51,40 +51,60 @@ def items_export_entry(doc, output, forms):
     try:
 
         # ask user to select active or linked document
-        selected_doc = pick_document(doc, forms, button_name="Select model to collect item data from")
-        if selected_doc is None:
-            return_value.append_message("No document selected")
+        selected_docs = pick_document(doc, forms, button_name="Select model to collect item data from", multiselect=True)
+        if not selected_docs or len(selected_docs) == 0:
+            return_value.append_message("No document(s) selected")
             return return_value
 
-        # get item data
-        item_data = get_all_item_data(selected_doc)
+        # get going
+        model_counter = 0
+        
+        # set up a progress bar
+        with forms.ProgressBar(
+            title="Exporting model: {value} of {max_value}", cancellable=True
+        ) as pb:
+            
+            # get data for each selected document and write to file
+            for selected_doc in selected_docs:
+                
+                # update progress bar                
+                model_counter += 1
+                pb.update_progress(model_counter, max_value=len(selected_docs))
+                
+                # get item data
+                item_data = get_all_item_data(selected_doc)
 
-        # convert into a dictionary
-        dic = {
-            di.DataItem.data_type: item_data
-        }
+                # convert into a dictionary
+                dic = {
+                    di.DataItem.data_type: item_data
+                }
 
-        # add some more properties before writing to json
-        json_formatted = build_json_for_file(dic, "{}".format(selected_doc.Title))
+                # add some more properties before writing to json
+                json_formatted = build_json_for_file(dic, "{}".format(selected_doc.Title))
 
-        # save report to json file
-        file_path = forms.save_file(file_ext='json', title="Save report to json file")
+                # save report to json file
+                file_path = forms.save_file(file_ext='json', title="Save report to json file for document: {}".format(selected_doc.Title))
 
-        if (file_path and len(file_path) > 0):
-            # start timer
-            t = Timer()
-            t.start()
+                if (file_path and len(file_path) > 0):
+                    # start timer
+                    t = Timer()
+                    t.start()
 
-            # write data
-            write_status = write_json_to_file(json_data=json_formatted, data_output_file_path=file_path)
-            return_value.update(write_status)
+                    # write data
+                    write_status = write_json_to_file(json_data=json_formatted, data_output_file_path=file_path)
+                    return_value.update(write_status)
 
-            # log the result
-            print("Finished writing report to json file: {} with status: {}".format(file_path, write_status.status))
-            print(t.stop())
+                    # log the result
+                    print("Finished writing report to json file: {} with status: {}".format(file_path, write_status.status))
+                    print(t.stop())
 
-        else:
-            return_value.append_message("No file path selected")
+                else:
+                    return_value.append_message("No file path selected")
+                
+                # check for cancel
+                if pb.cancelled:
+                    return_value.update_sep(False, "User cancelled.")
+                    break
 
     except Exception as e:
         return_value.update_sep(

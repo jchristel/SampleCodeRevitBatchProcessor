@@ -27,6 +27,7 @@ from duHast.Utilities.files_json import write_json_to_file
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Data.Objects.Collectors import data_level_building as dl
 from duHast.Data.Utils.data_to_file import build_json_for_file
+from duHast.pyRevit.UI.doc_selector import pick_document
 
 
 def levels_export_entry(doc, output, forms):
@@ -49,36 +50,60 @@ def levels_export_entry(doc, output, forms):
     return_value = Result()
 
     try:
-
-        # get level data
-        level_data = get_all_level_data(doc)
+        # ask user to select active or linked document
+        selected_docs = pick_document(doc, forms, button_name="Select model to collect level data from", multiselect=True)
+        if not selected_docs or len(selected_docs) == 0:
+                return_value.append_message("No document(s) selected")
+                return return_value
         
-        # convert into a dictionary
-        dic = {
-            dl.DataLevelBuilding.data_type:level_data
-        }
-
-        # add some more properties before writing to json
-        json_formatted = build_json_for_file(dic, "{}".format(doc.Title))
+        # get going
+        model_counter = 0
         
-        # save report to json file
-        file_path = forms.save_file(file_ext='json', title="Save report to json file")
+        # set up a progress bar
+        with forms.ProgressBar(
+            title="Exporting model: {value} of {max_value}", cancellable=True
+        ) as pb:
+            # get data for each selected document and write to file
+            for selected_doc in selected_docs:
+                
+                # update progress bar                
+                model_counter += 1
+                pb.update_progress(model_counter, max_value=len(selected_docs))
+                
+                # get level data
+                level_data = get_all_level_data(selected_doc)
+            
+                # convert into a dictionary
+                dic = {
+                    dl.DataLevelBuilding.data_type:level_data
+                }
 
-        if (file_path and len(file_path) > 0):
-            # start timer
-            t=Timer()
-            t.start()
+                # add some more properties before writing to json
+                json_formatted = build_json_for_file(dic, "{}".format(selected_doc.Title))
+                
+                # save report to json file
+                file_path = forms.save_file(file_ext='json', title="Save report to json file for document: {}".format(selected_doc.Title))
 
-            # write data
-            write_status = write_json_to_file(json_data=json_formatted,data_output_file_path= file_path)
-            return_value.update(write_status)
+                if (file_path and len(file_path) > 0):
+                    # start timer
+                    t=Timer()
+                    t.start()
 
-            # log the result
-            print("Finished writing report to csv file: {} with status: {}".format(file_path, write_status.status))
-            print(t.stop())
-                    
-        else:
-            return_value.append_message("No file path selected")
+                    # write data
+                    write_status = write_json_to_file(json_data=json_formatted,data_output_file_path= file_path)
+                    return_value.update(write_status)
+
+                    # log the result
+                    print("Finished writing report to json file: {} with status: {}".format(file_path, write_status.status))
+                    print(t.stop())
+                            
+                else:
+                    return_value.append_message("No file path selected")
+                
+                # check for cancel
+                if pb.cancelled:
+                    return_value.update_sep(False, "User cancelled.")
+                    break
     
     except Exception as e:
         return_value.update_sep(

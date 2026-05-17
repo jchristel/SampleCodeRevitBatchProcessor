@@ -1,10 +1,10 @@
-﻿<UserControl x:Class="duHastNet.DocManager.UI.Shared.Controls.ModifierControls.AddAtIndexControl"
+<UserControl x:Class="duHastNet.DocManager.UI.Shared.Controls.ModifierControls.AddAtIndexControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:duHastNet.DocManager.UI.Shared.Controls.ModifierControls"
-             xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.25.0.1.1"
+             xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.25.0.1.2"
              mc:Ignorable="d" 
              d:DesignHeight="140" d:DesignWidth="400">
     <UserControl.Resources>
@@ -40,7 +40,7 @@
                  ToolTip="{Binding (Validation.Errors), RelativeSource={RelativeSource Self}, Converter={StaticResource ValidationErrorConverter}}"/>
 
         <!-- Help Text -->
-        <TextBlock Text="Example: Insert '-DRAFT' at position 7 in 'ABC-123' → 'ABC-123-DRAFT'"
+        <TextBlock Text="Example: Insert '-DRAFT' at position 7 in 'ABC-123' ? 'ABC-123-DRAFT'"
                    FontSize="10"
                    Foreground="Gray"
                    Margin="0 5 0 0"

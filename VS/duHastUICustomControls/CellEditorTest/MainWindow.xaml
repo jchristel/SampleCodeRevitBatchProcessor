@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:duHastNet.UI.CustomControls.CellEditorTest"
-        xmlns:custom="clr-namespace:duHastNet.UI.CustomControls;assembly=duHastUICustomControls.25.0.1.1"
+        xmlns:custom="clr-namespace:duHastNet.UI.CustomControls;assembly=duHastUICustomControls.25.0.1.2"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     

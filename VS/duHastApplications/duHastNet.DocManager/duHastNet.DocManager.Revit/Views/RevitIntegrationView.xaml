@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:views="clr-namespace:duHastNet.DocManager.Revit.Views"
              xmlns:vms="clr-namespace:duHastNet.DocManager.Revit.ViewModels"
-             xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.25.0.1.1"
-             xmlns:utilsViews="clr-namespace:duHastNet.Utils.WPF.Views;assembly=Utils.25.0.1.1"
+             xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.25.0.1.2"
+             xmlns:utilsViews="clr-namespace:duHastNet.Utils.WPF.Views;assembly=Utils.25.0.1.2"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="1000">
 

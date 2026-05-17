@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<!-- Set target framework -->
 		<TargetFramework>net8.0-windows</TargetFramework>
@@ -51,12 +51,12 @@
 		<!-- Project references -->
 		<ProjectReference Include="..\duHastNet.DocManager.Core\duHastNet.DocManager.Core.csproj" />
     <!-- utility dll reference -->
-    <Reference Include="Utils.25.0.1.1">
-      <HintPath>..\\..\\..\\_References\\duHast\\Utils.25.0.1.1.dll</HintPath>
+    <Reference Include="Utils.25.0.1.2">
+      <HintPath>..\\..\\..\\_References\\duHast\\Utils.25.0.1.2.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="duHastUICustomControls.25.0.1.1">
-      <HintPath>..\\..\\..\\_References\\duHast\\duHastUICustomControls.25.0.1.1.dll</HintPath>
+    <Reference Include="duHastUICustomControls.25.0.1.2">
+      <HintPath>..\\..\\..\\_References\\duHast\\duHastUICustomControls.25.0.1.2.dll</HintPath>
       <Private>True</Private>
     </Reference>
 	</ItemGroup>

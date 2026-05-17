@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vms="clr-namespace:duHastNet.DocManager.Revit.ViewModels"
-             xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.25.0.1.1"
+             xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.25.0.1.2"
              mc:Ignorable="d"
              d:DesignHeight="500" d:DesignWidth="900"
              d:DataContext="{d:DesignInstance Type=vms:SheetsPanelViewModel, IsDesignTimeCreatable=False}">

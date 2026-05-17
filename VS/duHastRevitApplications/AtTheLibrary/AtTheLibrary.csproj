@@ -4,7 +4,7 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>duHastNet.AtTheLibrary</RootNamespace>
-    <AssemblyName>AtTheLibrary.25.0.1.1</AssemblyName>
+    <AssemblyName>AtTheLibrary.25.0.1.2</AssemblyName>
     <OutputType>Library</OutputType>
     <Platforms>AnyCPU;x64</Platforms>
     <!-- Match your build script's expected path -->
@@ -16,8 +16,8 @@
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
   
     <!-- Assembly metadata (optional - customize as needed) -->
-    <AssemblyVersion>25.0.1.1</AssemblyVersion>
-    <FileVersion>25.0.1.1</FileVersion>
+    <AssemblyVersion>25.0.1.2</AssemblyVersion>
+    <FileVersion>25.0.1.2</FileVersion>
     <Product>duHastNet</Product>
     <Company>duHast</Company>
   </PropertyGroup>
@@ -47,20 +47,20 @@
       <HintPath>..\\..\\_References\\Autodesk\\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="RevitUtils.25.0.1.1">
-      <HintPath>..\\..\\_References\\duHast\\RevitUtils.25.0.1.1.dll</HintPath>
+    <Reference Include="RevitUtils.25.0.1.2">
+      <HintPath>..\\..\\_References\\duHast\\RevitUtils.25.0.1.2.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Utils.25.0.1.1">
-      <HintPath>..\\..\\_References\\duHast\\Utils.25.0.1.1.dll</HintPath>
+    <Reference Include="Utils.25.0.1.2">
+      <HintPath>..\\..\\_References\\duHast\\Utils.25.0.1.2.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="FileIOWrapper.25.0.1.1">
-      <HintPath>..\\..\\_References\\duHast\\FileIOWrapper.25.0.1.1.dll</HintPath>
+    <Reference Include="FileIOWrapper.25.0.1.2">
+      <HintPath>..\\..\\_References\\duHast\\FileIOWrapper.25.0.1.2.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="duHastUICustomControls.25.0.1.1">
-      <HintPath>..\\..\\_References\\duHast\\duHastUICustomControls.25.0.1.1.dll</HintPath>
+    <Reference Include="duHastUICustomControls.25.0.1.2">
+      <HintPath>..\\..\\_References\\duHast\\duHastUICustomControls.25.0.1.2.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

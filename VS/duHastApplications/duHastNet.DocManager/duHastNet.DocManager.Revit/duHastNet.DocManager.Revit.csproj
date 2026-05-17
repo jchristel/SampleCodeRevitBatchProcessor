@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<!-- Set target framework -->
 		<TargetFramework>net8.0-windows</TargetFramework>
@@ -21,9 +21,9 @@
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 
 		<!-- Assembly metadata (optional - customize as needed) -->
-		<AssemblyName>DocManagerRevit.25.0.1.1</AssemblyName>
-		<AssemblyVersion>25.0.1.1</AssemblyVersion>
-		<FileVersion>25.0.1.1</FileVersion>
+		<AssemblyName>DocManagerRevit.25.0.1.2</AssemblyName>
+		<AssemblyVersion>25.0.1.2</AssemblyVersion>
+		<FileVersion>25.0.1.2</FileVersion>
 		<AssemblyTitle>docManager Revit Integration</AssemblyTitle>
 		<Product>DocManager Revit</Product>
 		<Company>duHast</Company>
@@ -57,13 +57,13 @@
 			<Private>False</Private>
 		</Reference>
     <!-- doc manager settings dll reference -->
-    <Reference Include="DocManagerSettingsUI.25.0.1.1">
-      <HintPath>..\\..\\..\\_References\\duHast\\DocManagerSettingsUI.25.0.1.1.dll</HintPath>
+    <Reference Include="DocManagerSettingsUI.25.0.1.2">
+      <HintPath>..\\..\\..\\_References\\duHast\\DocManagerSettingsUI.25.0.1.2.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <!-- utility dll reference -->
-    <Reference Include="Utils.25.0.1.1">
-      <HintPath>..\\..\\..\\_References\\duHast\\Utils.25.0.1.1.dll</HintPath>
+    <Reference Include="Utils.25.0.1.2">
+      <HintPath>..\\..\\..\\_References\\duHast\\Utils.25.0.1.2.dll</HintPath>
       <Private>False</Private>
     </Reference>
 	</ItemGroup>

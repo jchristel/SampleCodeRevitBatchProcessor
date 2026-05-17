@@ -1,10 +1,10 @@
-﻿<UserControl x:Class="duHastNet.DocManager.UI.Shared.Controls.CloudProviderControls.AconexMetadataControl"
+<UserControl x:Class="duHastNet.DocManager.UI.Shared.Controls.CloudProviderControls.AconexMetadataControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:duHastNet.DocManager.UI.Shared.Controls.CloudProviderControls"
-             xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.25.0.1.1"
+             xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.25.0.1.2"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 

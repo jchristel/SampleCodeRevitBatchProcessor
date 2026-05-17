@@ -101,17 +101,25 @@ function Update-CSharpFiles {
         
         if ($content) {
             # Pattern 1: Direct version number references
-            if ($content -match $OldVersion) {
+            # Use escaped pattern in BOTH the match check and the replacement to avoid
+            # dots being treated as regex wildcards, which caused false positive matches
+            # that set $fileChanged without making any actual substitution.
+            if ($content -match [regex]::Escape($OldVersion)) {
                 $content = $content -replace [regex]::Escape($OldVersion), $NewVersion
                 $fileChanged = $true
             }
-            
-            # Pattern 2: Split VERSION constant inm URI helper class
+
+            # Pattern 2: VERSION constant in ResourceUriHelper (and similar classes).
+            # Matches any 4-part version so it acts as a reliable fallback when the
+            # literal OldVersion is not present in the file (e.g. version drift).
             $versionConstPattern = '(private\s+const\s+string\s+VERSION\s*=\s*")(\d+\.\d+\.\d+\.\d+)(")'
             if ($content -match $versionConstPattern) {
-                $content = $content -replace $versionConstPattern, "`$1$NewVersion`$3"
-                $fileChanged = $true
-                Write-Host "    Found VERSION constant in $($_.Name)" -ForegroundColor Magenta
+                $newContent = $content -replace $versionConstPattern, "`$1$NewVersion`$3"
+                if ($newContent -ne $content) {
+                    $content = $newContent
+                    $fileChanged = $true
+                    Write-Host "    Found VERSION constant in $($_.Name)" -ForegroundColor Magenta
+                }
             }
 
             # Pattern 3: Pack URI strings in C# code
@@ -122,7 +130,7 @@ function Update-CSharpFiles {
                 $fileChanged = $true
                 Write-Host "    Found pack URI with version in $($_.Name)" -ForegroundColor Magenta
             }
-            
+
             # Pattern 4: Assembly.Load or Assembly.LoadFrom calls with version
             $assemblyLoadPattern = '(Assembly\.Load(?:From)?\s*\(\s*")([^"]*\.)(\d+\.\d+\.\d+\.\d+)([^"]*")'
             if ($content -match $assemblyLoadPattern) {
@@ -130,18 +138,20 @@ function Update-CSharpFiles {
                 $fileChanged = $true
                 Write-Host "    Found Assembly.Load call with version in $($_.Name)" -ForegroundColor Magenta
             }
-            
-            # Pattern 5: String literals containing assembly names (more general)
-            # This catches other cases where assembly names might be hardcoded
+
+            # Pattern 5: String literals containing assembly names (more general).
+            # Catches other hardcoded duHast assembly references not covered above.
+            # Note: $assemblyNamePattern was previously referenced here but was never
+            # defined, making this condition always false (dead code). Removed.
             $generalAssemblyPattern = '("(?:[^"]*\.)?duHast[^"]*\.)(\d+\.\d+\.\d+\.\d+)([^"]*")'
-            if ($content -match $generalAssemblyPattern -and $content -notmatch $assemblyNamePattern) {
+            if ($content -match $generalAssemblyPattern) {
                 $content = $content -replace $generalAssemblyPattern, "`$1$NewVersion`$3"
                 $fileChanged = $true
                 Write-Host "    Found general assembly reference in $($_.Name)" -ForegroundColor Magenta
             }
-            
+
             if ($fileChanged -and -not $WhatIf) {
-                Set-Content -Path $filePath -Value $content -NoNewline
+                Set-Content -Path $filePath -Value $content -Encoding UTF8 -NoNewline
                 $changesCount++
                 Write-Host "    [CS] $($_.Name)" -ForegroundColor Cyan
             } elseif ($fileChanged) {

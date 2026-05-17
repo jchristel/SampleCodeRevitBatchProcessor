@@ -6,7 +6,9 @@ param(
     [string]$NewVersion,
     [string]$OldVersion,
     [switch]$WhatIf,
-    [string]$BuildConfig = "Release"
+    [string]$BuildConfig = "Release",
+    [ValidateRange(1, 99)]
+    [int]$StartFromSolution = 1
 )
 
 # Import the Python module updater functions
@@ -114,7 +116,7 @@ function Update-CSharpFiles {
             # literal OldVersion is not present in the file (e.g. version drift).
             $versionConstPattern = '(private\s+const\s+string\s+VERSION\s*=\s*")(\d+\.\d+\.\d+\.\d+)(")'
             if ($content -match $versionConstPattern) {
-                $newContent = $content -replace $versionConstPattern, "`$1$NewVersion`$3"
+                $newContent = $content -replace $versionConstPattern, "`${1}$NewVersion`${3}"
                 if ($newContent -ne $content) {
                     $content = $newContent
                     $fileChanged = $true
@@ -126,7 +128,7 @@ function Update-CSharpFiles {
             # Matches: "pack://application:,,,/AssemblyName.1.2.3.4;component/..."
             $packUriPattern = '("pack://application:,,,/[^;/]*\.)(\d+\.\d+\.\d+\.\d+)(;[^"]*")'
             if ($content -match $packUriPattern) {
-                $content = $content -replace $packUriPattern, "`$1$NewVersion`$3"
+                $content = $content -replace $packUriPattern, "`${1}$NewVersion`${3}"
                 $fileChanged = $true
                 Write-Host "    Found pack URI with version in $($_.Name)" -ForegroundColor Magenta
             }
@@ -134,7 +136,7 @@ function Update-CSharpFiles {
             # Pattern 4: Assembly.Load or Assembly.LoadFrom calls with version
             $assemblyLoadPattern = '(Assembly\.Load(?:From)?\s*\(\s*")([^"]*\.)(\d+\.\d+\.\d+\.\d+)([^"]*")'
             if ($content -match $assemblyLoadPattern) {
-                $content = $content -replace $assemblyLoadPattern, "`$1`$2$NewVersion`$4"
+                $content = $content -replace $assemblyLoadPattern, "`${1}`${2}$NewVersion`${4}"
                 $fileChanged = $true
                 Write-Host "    Found Assembly.Load call with version in $($_.Name)" -ForegroundColor Magenta
             }
@@ -145,7 +147,7 @@ function Update-CSharpFiles {
             # defined, making this condition always false (dead code). Removed.
             $generalAssemblyPattern = '("(?:[^"]*\.)?duHast[^"]*\.)(\d+\.\d+\.\d+\.\d+)([^"]*")'
             if ($content -match $generalAssemblyPattern) {
-                $content = $content -replace $generalAssemblyPattern, "`$1$NewVersion`$3"
+                $content = $content -replace $generalAssemblyPattern, "`${1}$NewVersion`${3}"
                 $fileChanged = $true
                 Write-Host "    Found general assembly reference in $($_.Name)" -ForegroundColor Magenta
             }

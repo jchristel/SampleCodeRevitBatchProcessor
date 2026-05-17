@@ -131,7 +131,7 @@ jobs:
                   "docsource/revit_apps/docmanagersettingsui/"
 
         New-Item -ItemType Directory -Force -Path "docsource/revit_apps/docmanagerui"
-        Copy-Item "VS/duHastUI/DocManagerUI/docs/*.md" `
+        Copy-Item "VS/duHastApplications/duHastNet.DocManager/duHastNet.DocManager.Revit/docs/md*.md" `
                   "docsource/revit_apps/docmanagerui/"
 
         New-Item -ItemType Directory -Force -Path "docsource/revit_apps/familyreloaderui"

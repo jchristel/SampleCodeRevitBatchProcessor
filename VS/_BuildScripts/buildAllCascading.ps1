@@ -467,7 +467,10 @@ function Save-VersionChange {
     $history = @()
     if (Test-Path $changeLogPath) {
         try {
-            $history = Get-Content $changeLogPath | ConvertFrom-Json
+            # Wrap in @() to ensure an array even when the JSON contains a single object.
+            # ConvertFrom-Json returns a PSObject (not an array) for single-element JSON
+            # arrays, which causes $history += $change to fail with op_Addition.
+            $history = @(Get-Content $changeLogPath | ConvertFrom-Json)
         } catch {
             $history = @()
         }
@@ -519,6 +522,12 @@ function Invoke-CascadingVersionUpdate {
             Path = "$BasePath\VS\duHastUI\duHastUI.sln"
             CopyTo = @("$BasePath\src\duHast\lib")
             Description = "UI components (depends on most others)"
+        },
+        @{ 
+            Name = "duHastApplications"
+            Path = "$BasePath\VS\duHastApplications\duHastNet.DocManager\duHastNet.DocManager.sln"
+            CopyTo = @("$BasePath\src\duHast\lib")
+            Description = "Applications (depends on most others)"
         }
     )
     
@@ -668,12 +677,12 @@ if (-not $result) {
 }
 
 # Update pyRevit YAML files at the end
-Write-Host "`n=== Updating pyRevit YAML Files ===" -ForegroundColor Magenta
-$yamlChanges = Update-PyRevitYamlFiles -BasePath $basePath -OldVersion $OldVersion -NewVersion $NewVersion
+#Write-Host "`n=== Updating pyRevit YAML Files ===" -ForegroundColor Magenta
+#$yamlChanges = Update-PyRevitYamlFiles -BasePath $basePath -OldVersion $OldVersion -NewVersion $NewVersion
 
-if ($yamlChanges -eq 0) {
-    Write-Host "No pyRevit YAML files needed updating" -ForegroundColor Gray
-}
+#if ($yamlChanges -eq 0) {
+#    Write-Host "No pyRevit YAML files needed updating" -ForegroundColor Gray
+#}
 
 # Update Python modules
 if (Get-Command "Update-PythonModules" -ErrorAction SilentlyContinue) {

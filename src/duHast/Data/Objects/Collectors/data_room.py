@@ -57,10 +57,10 @@ class DataRoom(data_base.DataBase, data_element_geometry_base.DataElementGeometr
 
         # initialise classes with default values
         self.associated_elements = []
-        #: List of :class:`.DataCeilingInRoom` instances — populated at runtime by
+        #: List of :class:`.DataCeilingInRoom` instances - populated at runtime by
         #: ``process_ceilings_to_rooms``. Not persisted to / loaded from JSON.
         self.ceilings = []
-        #: List of :class:`.DataFloorInRoom` instances — populated at runtime by
+        #: List of :class:`.DataFloorInRoom` instances - populated at runtime by
         #: ``process_floors_to_rooms``. Not persisted to / loaded from JSON.
         self.floors = []
         self.instance_properties = data_instance_properties.DataInstanceProperties()

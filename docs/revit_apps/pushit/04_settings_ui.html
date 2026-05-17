@@ -1,0 +1,234 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>PushIt — Settings View Guide &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link rel="up" title="PushIt" href="index.html" />
+    <link rel="next" title="AtTheLibrary" href="../athelibrary/index.html" />
+    <link rel="prev" title="PushIt — CSV Data Source Guide" href="03_csv_data_source_ui.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>PushIt — Settings View Guide</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="../athelibrary/index.html" title="AtTheLibrary" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="03_csv_data_source_ui.html" title="PushIt — CSV Data Source Guide" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Revit Application UI Guides</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">PushIt</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="01_main_ui.html">PushIt — Main UI User Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="02_drofus_data_source_ui.html">PushIt — drofus Data Source Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="03_csv_data_source_ui.html">PushIt — CSV Data Source Guide</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">PushIt — Settings View Guide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#accessing-settings">Accessing Settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#window-layout">Window Layout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#data-source-section">Data Source Section</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#supported-categories-section">Supported Categories Section</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bottom-buttons">Bottom Buttons</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#typical-settings-workflow">Typical Settings Workflow</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../athelibrary/index.html">AtTheLibrary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docmanagersettingsui/index.html">DocManagerSettingsUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docmanagerui/index.html">DocManagerUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../familyreloaderui/index.html">FamilyReloaderUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pdfdwgexporterui/index.html">PDFDWGExporterUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pdfdwgexporterselectionui/index.html">PDFDWGExporterSelectionUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../selectfiles/index.html">SelectFiles</a></li>
+</ul>
+</li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/revit_apps/pushit/04_settings_ui.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="pushit-settings-view-guide">
+<h1>PushIt — Settings View Guide<a class="headerlink" href="#pushit-settings-view-guide" title="Permalink to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
+<p>The Settings view is where you configure the data source (CSV or drofus) and specify which Revit categories PushIt should target when searching for mock room families. Changes made here take effect when you click <strong>Load Data</strong> to return to the main window.</p>
+</section>
+<hr class="docutils" />
+<section id="accessing-settings">
+<h2>Accessing Settings<a class="headerlink" href="#accessing-settings" title="Permalink to this heading">¶</a></h2>
+<p>Click the <strong>⚙ Settings</strong> button in the top-right corner of the main window header. The window content switches to the Settings view.</p>
+</section>
+<hr class="docutils" />
+<section id="window-layout">
+<h2>Window Layout<a class="headerlink" href="#window-layout" title="Permalink to this heading">¶</a></h2>
+<p>The Settings view is divided into the following sections from top to bottom:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Section</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Header banner</p></td>
+<td><p>Blue banner showing “Settings”</p></td>
+</tr>
+<tr class="row-odd"><td><p>Message banner</p></td>
+<td><p>Status and validation messages</p></td>
+</tr>
+<tr class="row-even"><td><p>Data Source section</p></td>
+<td><p>Choose and configure the active data source</p></td>
+</tr>
+<tr class="row-odd"><td><p>Supported Categories section</p></td>
+<td><p>Enable or disable Revit categories that PushIt searches for mock rooms</p></td>
+</tr>
+<tr class="row-even"><td><p>Bottom buttons</p></td>
+<td><p>Cancel (discard changes) or Load Data (apply and return)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="data-source-section">
+<h2>Data Source Section<a class="headerlink" href="#data-source-section" title="Permalink to this heading">¶</a></h2>
+<p>The Data Source section lets you choose where room data is loaded from and configure the connection details.</p>
+<ol class="arabic simple">
+<li><p><strong>Data Source</strong> dropdown — select either <strong>CSV</strong> or <strong>drofus</strong>. Selecting a source reveals its configuration controls below the dropdown.</p></li>
+<li><p>Provider-specific configuration panel — appears immediately below the dropdown once a source is selected.</p></li>
+</ol>
+<p>For full configuration details, refer to the relevant guide:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="03_csv_data_source_ui.html"><span class="std std-doc">03_csv_data_source_ui.md</span></a> — CSV file configuration</p></li>
+<li><p><a class="reference internal" href="02_drofus_data_source_ui.html"><span class="std std-doc">02_drofus_data_source_ui.md</span></a> — drofus API connection and property mappings</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="supported-categories-section">
+<h2>Supported Categories Section<a class="headerlink" href="#supported-categories-section" title="Permalink to this heading">¶</a></h2>
+<p>The Supported Categories grid lists the Revit family categories that PushIt will search when looking for mock room families in the model.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Column</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>IsEnabled</p></td>
+<td><p>Checkbox — tick to include this category in PushIt operations</p></td>
+</tr>
+<tr class="row-odd"><td><p>CategoryName</p></td>
+<td><p>Name of the Revit category (read-only)</p></td>
+</tr>
+</tbody>
+</table>
+<p>Changes to the checkboxes are applied automatically — no separate Apply button is required.</p>
+<blockquote>
+<div><p><strong>Note:</strong> Enabling only the categories that contain your mock room families improves performance and reduces false matches.</p>
+</div></blockquote>
+</section>
+<hr class="docutils" />
+<section id="bottom-buttons">
+<h2>Bottom Buttons<a class="headerlink" href="#bottom-buttons" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Button</p></th>
+<th class="head"><p>Action</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Cancel</p></td>
+<td><p>Discards all changes made in this session and returns to the main window without loading data</p></td>
+</tr>
+<tr class="row-odd"><td><p>Load Data</p></td>
+<td><p>Saves the current settings, loads data from the configured source, and returns to the main window with the mock rooms grid populated</p></td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>Load Data</strong> button is disabled if the selected data source has unresolved validation errors (e.g., invalid file path or missing drofus connection).</p>
+</section>
+<hr class="docutils" />
+<section id="typical-settings-workflow">
+<h2>Typical Settings Workflow<a class="headerlink" href="#typical-settings-workflow" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Click <strong>⚙ Settings</strong> in the main window header.</p></li>
+<li><p>Select your data source (<strong>CSV</strong> or <strong>drofus</strong>) in the Data Source dropdown.</p></li>
+<li><p>Configure the data source (see the relevant guide linked above).</p></li>
+<li><p>In the Supported Categories section, tick the categories that contain your mock room families; untick any that do not apply.</p></li>
+<li><p>Click <strong>Load Data</strong> to apply settings, populate the grid, and return to the main window.</p></li>
+<li><p>Click <strong>Cancel</strong> at any time to discard changes and return without reloading data.</p></li>
+</ol>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="../index.html" accesskey="U">Revit Application UI Guides</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="index.html" >PushIt</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                PushIt — Settings View Guide
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

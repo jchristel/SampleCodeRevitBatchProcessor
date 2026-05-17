@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>AtTheLibrary — Parameters Selection Guide &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link rel="up" title="AtTheLibrary" href="index.html" />
+    <link rel="next" title="AtTheLibrary — Type Catalogue Editor Guide" href="03_type_catalogue_editor_ui.html" />
+    <link rel="prev" title="AtTheLibrary — Main UI User Guide" href="01_main_ui.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>AtTheLibrary — Parameters Selection Guide</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="03_type_catalogue_editor_ui.html" title="AtTheLibrary — Type Catalogue Editor Guide" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="01_main_ui.html" title="AtTheLibrary — Main UI User Guide" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Revit Application UI Guides</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../pushit/index.html">PushIt</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">AtTheLibrary</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="01_main_ui.html">AtTheLibrary — Main UI User Guide</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">AtTheLibrary — Parameters Selection Guide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#accessing-the-parameters-selection-view">Accessing the Parameters Selection View</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#window-layout">Window Layout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#header">Header</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#message-banner">Message Banner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#parameters-data-grid">Parameters Data Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apply-button">Apply Button</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#typical-parameters-selection-workflow">Typical Parameters Selection Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="03_type_catalogue_editor_ui.html">AtTheLibrary — Type Catalogue Editor Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../docmanagersettingsui/index.html">DocManagerSettingsUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docmanagerui/index.html">DocManagerUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../familyreloaderui/index.html">FamilyReloaderUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pdfdwgexporterui/index.html">PDFDWGExporterUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pdfdwgexporterselectionui/index.html">PDFDWGExporterSelectionUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../selectfiles/index.html">SelectFiles</a></li>
+</ul>
+</li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/revit_apps/athelibrary/02_parameters_selection_ui.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="atthelibrary-parameters-selection-guide">
+<h1>AtTheLibrary — Parameters Selection Guide<a class="headerlink" href="#atthelibrary-parameters-selection-guide" title="Permalink to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
+<p>The Parameters Selection view lets you choose which family parameters appear as additional columns in the main families grid. Because families can expose many parameters, you pre-select only the ones relevant to your current task to keep the grid usable.</p>
+<blockquote>
+<div><p><strong>Note:</strong> Selecting more than 10 parameters may make the families grid difficult to use due to the number of columns.</p>
+</div></blockquote>
+</section>
+<hr class="docutils" />
+<section id="accessing-the-parameters-selection-view">
+<h2>Accessing the Parameters Selection View<a class="headerlink" href="#accessing-the-parameters-selection-view" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>In the main AtTheLibrary window, expand the <strong>Data Admin</strong> panel.</p></li>
+<li><p>Click <strong>Filter Available Parameters</strong>.</p></li>
+<li><p>The view switches to the Parameters Selection screen.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="window-layout">
+<h2>Window Layout<a class="headerlink" href="#window-layout" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Section</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Header</p></td>
+<td><p>Title and instructions</p></td>
+</tr>
+<tr class="row-odd"><td><p>Message banner</p></td>
+<td><p>Status and validation messages</p></td>
+</tr>
+<tr class="row-even"><td><p>Parameters data grid</p></td>
+<td><p>Lists all parameters found across the loaded family data</p></td>
+</tr>
+<tr class="row-odd"><td><p>Apply button</p></td>
+<td><p>Confirms the selection and returns to the families grid</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="header">
+<h2>Header<a class="headerlink" href="#header" title="Permalink to this heading">¶</a></h2>
+<p>The header shows:</p>
+<ul class="simple">
+<li><p><strong>“At the library”</strong> — application title.</p></li>
+<li><p>Instruction text: <em>“Pre-select any parameters here which you want to be able to see in the families selection.”</em></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="message-banner">
+<h2>Message Banner<a class="headerlink" href="#message-banner" title="Permalink to this heading">¶</a></h2>
+<p>Displays informational and error messages, consistent with the main view.</p>
+</section>
+<hr class="docutils" />
+<section id="parameters-data-grid">
+<h2>Parameters Data Grid<a class="headerlink" href="#parameters-data-grid" title="Permalink to this heading">¶</a></h2>
+<p>The grid lists every parameter found across all families in the loaded data source.</p>
+<section id="columns">
+<h3>Columns<a class="headerlink" href="#columns" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Column</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Editable</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Is Selected</p></td>
+<td><p>Boolean (checkbox)</p></td>
+<td><p>Yes</p></td>
+<td><p>Tick to include this parameter as a column in the families grid</p></td>
+</tr>
+<tr class="row-odd"><td><p>Parameter Name</p></td>
+<td><p>Text</p></td>
+<td><p>No</p></td>
+<td><p>Name of the parameter</p></td>
+</tr>
+<tr class="row-even"><td><p>Occurence Count</p></td>
+<td><p>Number</p></td>
+<td><p>No</p></td>
+<td><p>Number of families in the data source that have this parameter</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="grid-behaviour">
+<h3>Grid Behaviour<a class="headerlink" href="#grid-behaviour" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Extended selection</strong> — multiple rows can be selected simultaneously using Shift-click or Ctrl-click.</p></li>
+<li><p><strong>Bulk selection</strong> — a select-all control is available in the column header to tick or untick all rows at once.</p></li>
+<li><p>The <strong>Is Selected</strong> checkbox is the only editable field. All other columns are read-only.</p></li>
+</ul>
+</section>
+<section id="choosing-parameters">
+<h3>Choosing Parameters<a class="headerlink" href="#choosing-parameters" title="Permalink to this heading">¶</a></h3>
+<p>Tick the <strong>Is Selected</strong> checkbox for each parameter you want to appear as a column in the families grid. Untick parameters you do not need. The <strong>Occurence Count</strong> column helps you identify parameters that are present across most families versus ones that appear in only a few.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="apply-button">
+<h2>Apply Button<a class="headerlink" href="#apply-button" title="Permalink to this heading">¶</a></h2>
+<p>Click <strong>Apply</strong> to confirm your parameter selection and return to the families grid.</p>
+<ul class="simple">
+<li><p>The families grid immediately reflects the new column selection — ticked parameters appear as additional columns.</p></li>
+<li><p>Your parameter selection is saved automatically between sessions.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="typical-parameters-selection-workflow">
+<h2>Typical Parameters Selection Workflow<a class="headerlink" href="#typical-parameters-selection-workflow" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>From the main window, expand <strong>Data Admin</strong> and click <strong>Filter Available Parameters</strong>.</p></li>
+<li><p>Review the parameter list. Use <strong>Occurence Count</strong> to identify the most widely shared parameters.</p></li>
+<li><p>Tick <strong>Is Selected</strong> for each parameter you want to display (aim for 10 or fewer).</p></li>
+<li><p>Click <strong>Apply</strong> to return to the families grid with the updated columns.</p></li>
+</ol>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="../index.html" accesskey="U">Revit Application UI Guides</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="index.html" >AtTheLibrary</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                AtTheLibrary — Parameters Selection Guide
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

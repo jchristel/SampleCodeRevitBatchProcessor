@@ -1,0 +1,405 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>PDFDWGExporterSelectionUI — Main UI Guide &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link rel="up" title="PDFDWGExporterSelectionUI" href="index.html" />
+    <link rel="next" title="PDFDWGExporterSelectionUI — Print Set Name Dialog Guide" href="02_print_set_dialog_ui.html" />
+    <link rel="prev" title="PDFDWGExporterSelectionUI" href="index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>PDFDWGExporterSelectionUI — Main UI Guide</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="02_print_set_dialog_ui.html" title="PDFDWGExporterSelectionUI — Print Set Name Dialog Guide" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="index.html" title="PDFDWGExporterSelectionUI" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Revit Application UI Guides</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../pushit/index.html">PushIt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../athelibrary/index.html">AtTheLibrary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docmanagersettingsui/index.html">DocManagerSettingsUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docmanagerui/index.html">DocManagerUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../familyreloaderui/index.html">FamilyReloaderUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pdfdwgexporterui/index.html">PDFDWGExporterUI</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">PDFDWGExporterSelectionUI</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">PDFDWGExporterSelectionUI — Main UI Guide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#window-layout">Window Layout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#header-banner">Header Banner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#message-banner">Message Banner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#print-set-section">Print Set Section</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#schedule-section">Schedule Section</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sheet-selection-grid">Sheet Selection Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#export-path-section">Export Path Section</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#export-mode-selector-three-way-switch">Export Mode Selector (Three-Way Switch)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#export-button">Export Button</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#settings-persistence">Settings Persistence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#typical-workflow">Typical Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="02_print_set_dialog_ui.html">PDFDWGExporterSelectionUI — Print Set Name Dialog Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../selectfiles/index.html">SelectFiles</a></li>
+</ul>
+</li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/revit_apps/pdfdwgexporterselectionui/01_main_ui.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="pdfdwgexporterselectionui-main-ui-guide">
+<h1>PDFDWGExporterSelectionUI — Main UI Guide<a class="headerlink" href="#pdfdwgexporterselectionui-main-ui-guide" title="Permalink to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
+<p>PDFDWGExporterSelectionUI is the sheet selection interface for Revit PDF and DWG batch exports. It lists all sheets in the open document, lets you filter by print set or schedule, select individual sheets for export, choose an export mode (PDF, DWG, or both), and specify the export destination folder.</p>
+</section>
+<hr class="docutils" />
+<section id="window-layout">
+<h2>Window Layout<a class="headerlink" href="#window-layout" title="Permalink to this heading">¶</a></h2>
+<p>The main window is divided into the following sections from top to bottom:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Section</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Header banner</p></td>
+<td><p>Shows the application title and subtitle</p></td>
+</tr>
+<tr class="row-odd"><td><p>Message banner</p></td>
+<td><p>Displays status messages and validation errors</p></td>
+</tr>
+<tr class="row-even"><td><p>Print Set section</p></td>
+<td><p>Select and manage named print sets</p></td>
+</tr>
+<tr class="row-odd"><td><p>Schedule section</p></td>
+<td><p>Filter sheets by a Revit schedule</p></td>
+</tr>
+<tr class="row-even"><td><p>Sheet selection grid</p></td>
+<td><p>Select individual sheets to export</p></td>
+</tr>
+<tr class="row-odd"><td><p>Export path section</p></td>
+<td><p>Specify the destination folder</p></td>
+</tr>
+<tr class="row-even"><td><p>Export mode selector</p></td>
+<td><p>Choose PDF, DWG, or both</p></td>
+</tr>
+<tr class="row-odd"><td><p>Export button</p></td>
+<td><p>Execute the export and close</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="header-banner">
+<h2>Header Banner<a class="headerlink" href="#header-banner" title="Permalink to this heading">¶</a></h2>
+<p>The blue banner at the top shows:</p>
+<ul class="simple">
+<li><p><strong>“Export PDF’s and DWG’s”</strong> — application title.</p></li>
+<li><p><strong>Select sheets to export</strong> — subtitle.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="message-banner">
+<h2>Message Banner<a class="headerlink" href="#message-banner" title="Permalink to this heading">¶</a></h2>
+<p>Displays informational and error messages. Error messages remain until dismissed; informational messages auto-dismiss after a short interval.</p>
+</section>
+<hr class="docutils" />
+<section id="print-set-section">
+<h2>Print Set Section<a class="headerlink" href="#print-set-section" title="Permalink to this heading">¶</a></h2>
+<p>A print set is a named, saved collection of sheets. Selecting a print set auto-ticks only the sheets belonging to that set in the grid below.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Control</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Print Set dropdown</p></td>
+<td><p>Lists all available print sets plus <code class="docutils literal notranslate"><span class="pre">&lt;None&gt;</span></code>. Selecting a set filters the Export checkboxes in the grid</p></td>
+</tr>
+<tr class="row-odd"><td><p>Update button</p></td>
+<td><p>Replaces the selected print set’s sheet list with the sheets currently ticked in the grid</p></td>
+</tr>
+<tr class="row-even"><td><p>Duplicate button</p></td>
+<td><p>Opens the <a class="reference internal" href="02_print_set_dialog_ui.html"><span class="std std-doc">Print Set Name dialog</span></a> to create a copy of the selected print set with a new name</p></td>
+</tr>
+<tr class="row-odd"><td><p>Delete button</p></td>
+<td><p>Marks the selected print set for deletion and resets the dropdown to <code class="docutils literal notranslate"><span class="pre">&lt;None&gt;</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>Update</strong>, <strong>Duplicate</strong>, and <strong>Delete</strong> buttons are disabled when <code class="docutils literal notranslate"><span class="pre">&lt;None&gt;</span></code> is selected.</p>
+</section>
+<hr class="docutils" />
+<section id="schedule-section">
+<h2>Schedule Section<a class="headerlink" href="#schedule-section" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Control</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Schedule dropdown</p></td>
+<td><p>Lists all available Revit schedules plus <code class="docutils literal notranslate"><span class="pre">&lt;None&gt;</span></code>. Selecting a schedule auto-ticks only the sheets that appear in that schedule</p></td>
+</tr>
+</tbody>
+</table>
+<p>Selecting a schedule and selecting a print set are independent — either can be used to pre-populate the Export checkboxes.</p>
+</section>
+<hr class="docutils" />
+<section id="sheet-selection-grid">
+<h2>Sheet Selection Grid<a class="headerlink" href="#sheet-selection-grid" title="Permalink to this heading">¶</a></h2>
+<p>The central grid lists every sheet in the open Revit document.</p>
+<section id="columns">
+<h3>Columns<a class="headerlink" href="#columns" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Column</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Editable</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Export</p></td>
+<td><p>Boolean (checkbox)</p></td>
+<td><p>Yes</p></td>
+<td><p>Tick to include this sheet in the export</p></td>
+</tr>
+<tr class="row-odd"><td><p>PDF Name</p></td>
+<td><p>Text</p></td>
+<td><p>No</p></td>
+<td><p>Preview of the generated PDF filename based on the current PDF naming settings</p></td>
+</tr>
+<tr class="row-even"><td><p>DWG Name</p></td>
+<td><p>Text</p></td>
+<td><p>No</p></td>
+<td><p>Preview of the generated DWG filename based on the current DWG naming settings</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sheet Number</p></td>
+<td><p>Text</p></td>
+<td><p>No</p></td>
+<td><p>Revit sheet number</p></td>
+</tr>
+<tr class="row-even"><td><p>Sheet Name</p></td>
+<td><p>Text</p></td>
+<td><p>No</p></td>
+<td><p>Revit sheet name</p></td>
+</tr>
+<tr class="row-odd"><td><p><em>(custom)</em></p></td>
+<td><p>Text</p></td>
+<td><p>No</p></td>
+<td><p>Additional sheet properties added dynamically from the data source</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="grid-features">
+<h3>Grid Features<a class="headerlink" href="#grid-features" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Extended multi-select</strong> — Shift-click or Ctrl-click to select multiple rows.</p></li>
+<li><p><strong>Bulk selection</strong> — a select-all control in the column header ticks or unticks all visible rows.</p></li>
+<li><p><strong>Column management</strong> — columns can be shown or hidden via the column header menu.</p></li>
+<li><p>Column visibility preferences are saved and restored between sessions.</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="export-path-section">
+<h2>Export Path Section<a class="headerlink" href="#export-path-section" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Control</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Export Path text box</p></td>
+<td><p>Full path to the folder where exported files will be saved. Type or paste a path, or use Browse</p></td>
+</tr>
+<tr class="row-odd"><td><p>Browse button</p></td>
+<td><p>Opens a folder picker dialog to select the export destination</p></td>
+</tr>
+</tbody>
+</table>
+<section id="validation">
+<h3>Validation<a class="headerlink" href="#validation" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Rule</p></th>
+<th class="head"><p>Behaviour</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Path must not be empty</p></td>
+<td><p>Error shown below the text box if blank</p></td>
+</tr>
+<tr class="row-odd"><td><p>Path must exist on disk</p></td>
+<td><p>Error shown below the text box if the folder does not exist</p></td>
+</tr>
+</tbody>
+</table>
+<p>While any validation error is present, the <strong>Export</strong> button remains disabled.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="export-mode-selector-three-way-switch">
+<h2>Export Mode Selector (Three-Way Switch)<a class="headerlink" href="#export-mode-selector-three-way-switch" title="Permalink to this heading">¶</a></h2>
+<p>A three-position switch controls which file types are generated.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Position</p></th>
+<th class="head"><p>Label</p></th>
+<th class="head"><p>Effect</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Left</p></td>
+<td><p>Export PDF(s)</p></td>
+<td><p>Only PDF files are exported</p></td>
+</tr>
+<tr class="row-odd"><td><p>Centre</p></td>
+<td><p>Export DWG(s)</p></td>
+<td><p>Only DWG files are exported</p></td>
+</tr>
+<tr class="row-even"><td><p>Right</p></td>
+<td><p>Export PDF(s) and DWG(s)</p></td>
+<td><p>Both PDF and DWG files are exported</p></td>
+</tr>
+</tbody>
+</table>
+<p>The Export button label updates to reflect the active mode.</p>
+</section>
+<hr class="docutils" />
+<section id="export-button">
+<h2>Export Button<a class="headerlink" href="#export-button" title="Permalink to this heading">¶</a></h2>
+<p>The large button at the bottom executes the export for all ticked sheets.</p>
+<ul class="simple">
+<li><p>Enabled only when a valid export path is set.</p></li>
+<li><p>Saves all settings (selected print set, schedule, export path, mode, column configuration) before closing.</p></li>
+<li><p>The calling Revit command processes the export after the window closes.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="settings-persistence">
+<h2>Settings Persistence<a class="headerlink" href="#settings-persistence" title="Permalink to this heading">¶</a></h2>
+<p>The following are saved automatically between sessions:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Last selected print set</p></td>
+<td><p>The print set active when the window was closed</p></td>
+</tr>
+<tr class="row-odd"><td><p>Last selected schedule</p></td>
+<td><p>The schedule active when the window was closed</p></td>
+</tr>
+<tr class="row-even"><td><p>Export folder path</p></td>
+<td><p>The last used export destination</p></td>
+</tr>
+<tr class="row-odd"><td><p>Export mode</p></td>
+<td><p>Whether PDF, DWG, or both was selected</p></td>
+</tr>
+<tr class="row-even"><td><p>Column configuration</p></td>
+<td><p>Which columns are visible and their order</p></td>
+</tr>
+</tbody>
+</table>
+<p>Settings are stored in <code class="docutils literal notranslate"><span class="pre">%LocalAppData%\duHast\pdf_dwg_exporter_settings.json</span></code>.</p>
+</section>
+<hr class="docutils" />
+<section id="typical-workflow">
+<h2>Typical Workflow<a class="headerlink" href="#typical-workflow" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Open a Revit document and launch the PDF/DWG exporter.</p></li>
+<li><p>Select a <strong>Print Set</strong> or <strong>Schedule</strong> to pre-tick a group of sheets, or tick sheets manually.</p></li>
+<li><p>Review the <strong>PDF Name</strong> and <strong>DWG Name</strong> preview columns to confirm filenames look correct.</p></li>
+<li><p>Click <strong>Browse</strong> to set the export destination folder, or type the path directly.</p></li>
+<li><p>Select the export mode using the three-way switch.</p></li>
+<li><p>Click the <strong>Export</strong> button to run the export and close the window.</p></li>
+</ol>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="../index.html" accesskey="U">Revit Application UI Guides</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="index.html" >PDFDWGExporterSelectionUI</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                PDFDWGExporterSelectionUI — Main UI Guide
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

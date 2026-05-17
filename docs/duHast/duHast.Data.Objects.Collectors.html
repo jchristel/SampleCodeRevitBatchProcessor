@@ -60,6 +60,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../revit_apps/index.html">Revit Application UI Guides</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -197,6 +198,8 @@
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Collectors.Properties.html#duHast.Data.Objects.Collectors.Properties.data_property_names.DataPropertyNames.SEGMENTS"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.SEGMENTS</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Collectors.Properties.html#duHast.Data.Objects.Collectors.Properties.data_property_names.DataPropertyNames.SET_NAME"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.SET_NAME</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Collectors.Properties.html#duHast.Data.Objects.Collectors.Properties.data_property_names.DataPropertyNames.SHEET_SIZE"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.SHEET_SIZE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Collectors.Properties.html#duHast.Data.Objects.Collectors.Properties.data_property_names.DataPropertyNames.LOCATION_POINT"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.LOCATION_POINT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Collectors.Properties.html#duHast.Data.Objects.Collectors.Properties.data_property_names.DataPropertyNames.ROOMS"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.ROOMS</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Collectors.Properties.html#duHast.Data.Objects.Collectors.Properties.data_property_names.DataPropertyNames.ROTATION_COORDINATES"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.ROTATION_COORDINATES</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Collectors.Properties.html#duHast.Data.Objects.Collectors.Properties.data_property_names.DataPropertyNames.TAGS"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.TAGS</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Collectors.Properties.html#duHast.Data.Objects.Collectors.Properties.data_property_names.DataPropertyNames.TAG_ELBOW_LOCATION"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.TAG_ELBOW_LOCATION</span></code></a></li>
@@ -297,20 +300,6 @@
 <dd class="field-odd"><p><strong>data_type</strong> (<em>str</em>) – human readable data type</p>
 </dd>
 </dl>
-<dl class="py property">
-<dt class="sig sig-object py" id="duHast.Data.Objects.Collectors.data_base.DataBase.DataType">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DataType</span></span><a class="headerlink" href="#duHast.Data.Objects.Collectors.data_base.DataBase.DataType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Property: returns the data type of this class.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A string representing the data type</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 </section>
@@ -333,6 +322,48 @@
 <dt class="sig sig-object py" id="duHast.Data.Objects.Collectors.data_ceiling.DataCeiling.data_type">
 <span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ceiling'</span></em><a class="headerlink" href="#duHast.Data.Objects.Collectors.data_ceiling.DataCeiling.data_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Data.Objects.Collectors.data_ceiling_in_room">
+<span id="duhast-data-objects-collectors-data-ceiling-in-room-module"></span><h2>duHast.Data.Objects.Collectors.data_ceiling_in_room module<a class="headerlink" href="#module-duHast.Data.Objects.Collectors.data_ceiling_in_room" title="Permalink to this heading">¶</a></h2>
+<section id="data-storage-class-pairing-a-ceiling-with-its-intersection-area-inside-a-room">
+<h3>Data storage class pairing a ceiling with its intersection area inside a room.<a class="headerlink" href="#data-storage-class-pairing-a-ceiling-with-its-intersection-area-inside-a-room" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Collectors.data_ceiling_in_room.DataCeilingInRoom">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.Collectors.data_ceiling_in_room.</span></span><span class="sig-name descname"><span class="pre">DataCeilingInRoom</span></span><a class="headerlink" href="#duHast.Data.Objects.Collectors.data_ceiling_in_room.DataCeilingInRoom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Pairs a <a class="reference internal" href="#duHast.Data.Objects.Collectors.data_ceiling.DataCeiling" title="duHast.Data.Objects.Collectors.data_ceiling.DataCeiling"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataCeiling</span></code></a> instance with the area (mm²) of the polygon
+intersection between that ceiling and a specific room.</p>
+<p>One instance is created per ceiling-room intersection and stored in
+<a class="reference internal" href="#duHast.Data.Objects.Collectors.data_room.DataRoom.ceilings" title="duHast.Data.Objects.Collectors.data_room.DataRoom.ceilings"><code class="xref py py-attr docutils literal notranslate"><span class="pre">DataRoom.ceilings</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>area</strong> (<em>float</em>) – Intersection area in mm².</p></li>
+<li><p><strong>ceiling</strong> (<a class="reference internal" href="#duHast.Data.Objects.Collectors.data_ceiling.DataCeiling" title="duHast.Data.Objects.Collectors.data_ceiling.DataCeiling"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataCeiling</span></code></a>) – The ceiling data object.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Class constructor</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Collectors.data_ceiling_in_room.DataCeilingInRoom.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ceiling_in_room'</span></em><a class="headerlink" href="#duHast.Data.Objects.Collectors.data_ceiling_in_room.DataCeilingInRoom.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Collectors.data_ceiling_in_room.DataCeilingInRoom.area">
+<span class="sig-name descname"><span class="pre">area</span></span><a class="headerlink" href="#duHast.Data.Objects.Collectors.data_ceiling_in_room.DataCeilingInRoom.area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection area between the ceiling and the room polygon, in mm².</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Collectors.data_ceiling_in_room.DataCeilingInRoom.ceiling">
+<span class="sig-name descname"><span class="pre">ceiling</span></span><a class="headerlink" href="#duHast.Data.Objects.Collectors.data_ceiling_in_room.DataCeilingInRoom.ceiling" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="#duHast.Data.Objects.Collectors.data_ceiling.DataCeiling" title="duHast.Data.Objects.Collectors.data_ceiling.DataCeiling"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataCeiling</span></code></a> instance associated with this entry.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -383,6 +414,95 @@
 </dd></dl>
 
 </section>
+<section id="module-duHast.Data.Objects.Collectors.data_floor">
+<span id="duhast-data-objects-collectors-data-floor-module"></span><h2>duHast.Data.Objects.Collectors.data_floor module<a class="headerlink" href="#module-duHast.Data.Objects.Collectors.data_floor" title="Permalink to this heading">¶</a></h2>
+<section id="data-storage-class-for-revit-floor-properties">
+<h3>Data storage class for Revit floor properties.<a class="headerlink" href="#data-storage-class-for-revit-floor-properties" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Collectors.data_floor.DataFloor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.Collectors.data_floor.</span></span><span class="sig-name descname"><span class="pre">DataFloor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Objects.Collectors.data_floor.DataFloor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#duHast.Data.Objects.Collectors.data_base.DataBase" title="duHast.Data.Objects.Collectors.data_base.DataBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataBase</span></code></a>, <a class="reference internal" href="duHast.Data.Objects.Collectors.Properties.html#duHast.Data.Objects.Collectors.Properties.data_element_geometry_base.DataElementGeometryBase" title="duHast.Data.Objects.Collectors.Properties.data_element_geometry_base.DataElementGeometryBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataElementGeometryBase</span></code></a></p>
+<p>Class constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>j</strong> (<em>dict</em><em>, </em><em>optional</em>) – A json formatted dictionary of this class, defaults to {}</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Collectors.data_floor.DataFloor.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'floor'</span></em><a class="headerlink" href="#duHast.Data.Objects.Collectors.data_floor.DataFloor.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Data.Objects.Collectors.data_floor_in_room">
+<span id="duhast-data-objects-collectors-data-floor-in-room-module"></span><h2>duHast.Data.Objects.Collectors.data_floor_in_room module<a class="headerlink" href="#module-duHast.Data.Objects.Collectors.data_floor_in_room" title="Permalink to this heading">¶</a></h2>
+<section id="data-storage-class-pairing-a-floor-with-its-intersection-area-inside-a-room">
+<h3>Data storage class pairing a floor with its intersection area inside a room.<a class="headerlink" href="#data-storage-class-pairing-a-floor-with-its-intersection-area-inside-a-room" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Collectors.data_floor_in_room.DataFloorInRoom">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.Collectors.data_floor_in_room.</span></span><span class="sig-name descname"><span class="pre">DataFloorInRoom</span></span><a class="headerlink" href="#duHast.Data.Objects.Collectors.data_floor_in_room.DataFloorInRoom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Pairs a <a class="reference internal" href="#duHast.Data.Objects.Collectors.data_floor.DataFloor" title="duHast.Data.Objects.Collectors.data_floor.DataFloor"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFloor</span></code></a> instance with the area (mm²) of the polygon
+intersection between that floor and a specific room.</p>
+<p>One instance is created per floor-room intersection and stored in
+<a class="reference internal" href="#duHast.Data.Objects.Collectors.data_room.DataRoom.floors" title="duHast.Data.Objects.Collectors.data_room.DataRoom.floors"><code class="xref py py-attr docutils literal notranslate"><span class="pre">DataRoom.floors</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>area</strong> (<em>float</em>) – Intersection area in mm².</p></li>
+<li><p><strong>floor</strong> (<a class="reference internal" href="#duHast.Data.Objects.Collectors.data_floor.DataFloor" title="duHast.Data.Objects.Collectors.data_floor.DataFloor"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFloor</span></code></a>) – The floor data object.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Class constructor</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Collectors.data_floor_in_room.DataFloorInRoom.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'floor_in_room'</span></em><a class="headerlink" href="#duHast.Data.Objects.Collectors.data_floor_in_room.DataFloorInRoom.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Collectors.data_floor_in_room.DataFloorInRoom.area">
+<span class="sig-name descname"><span class="pre">area</span></span><a class="headerlink" href="#duHast.Data.Objects.Collectors.data_floor_in_room.DataFloorInRoom.area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection area between the floor and the room polygon, in mm².</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Collectors.data_floor_in_room.DataFloorInRoom.floor">
+<span class="sig-name descname"><span class="pre">floor</span></span><a class="headerlink" href="#duHast.Data.Objects.Collectors.data_floor_in_room.DataFloorInRoom.floor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="#duHast.Data.Objects.Collectors.data_floor.DataFloor" title="duHast.Data.Objects.Collectors.data_floor.DataFloor"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFloor</span></code></a> instance associated with this entry.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Data.Objects.Collectors.data_item">
+<span id="duhast-data-objects-collectors-data-item-module"></span><h2>duHast.Data.Objects.Collectors.data_item module<a class="headerlink" href="#module-duHast.Data.Objects.Collectors.data_item" title="Permalink to this heading">¶</a></h2>
+<section id="data-storage-class-for-revit-item-furniture-equipment-etc-properties">
+<h3>Data storage class for Revit item (furniture, equipment etc.) properties.<a class="headerlink" href="#data-storage-class-for-revit-item-furniture-equipment-etc-properties" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Collectors.data_item.DataItem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.Collectors.data_item.</span></span><span class="sig-name descname"><span class="pre">DataItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Objects.Collectors.data_item.DataItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#duHast.Data.Objects.Collectors.data_base.DataBase" title="duHast.Data.Objects.Collectors.data_base.DataBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataBase</span></code></a></p>
+<p>Class constructor.</p>
+<p>Items represent placed family instances such as furniture and equipment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>j</strong> (<em>dict</em><em>, </em><em>optional</em>) – A json formatted dictionary of this class, defaults to None</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Collectors.data_item.DataItem.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'item'</span></em><a class="headerlink" href="#duHast.Data.Objects.Collectors.data_item.DataItem.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-duHast.Data.Objects.Collectors.data_level_building">
 <span id="duhast-data-objects-collectors-data-level-building-module"></span><h2>duHast.Data.Objects.Collectors.data_level_building module<a class="headerlink" href="#module-duHast.Data.Objects.Collectors.data_level_building" title="Permalink to this heading">¶</a></h2>
 <section id="data-storage-class-for-revit-project-level-properties">
@@ -425,6 +545,20 @@
 <dt class="sig sig-object py" id="duHast.Data.Objects.Collectors.data_room.DataRoom.data_type">
 <span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'room'</span></em><a class="headerlink" href="#duHast.Data.Objects.Collectors.data_room.DataRoom.data_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Collectors.data_room.DataRoom.ceilings">
+<span class="sig-name descname"><span class="pre">ceilings</span></span><a class="headerlink" href="#duHast.Data.Objects.Collectors.data_room.DataRoom.ceilings" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of <a class="reference internal" href="#duHast.Data.Objects.Collectors.data_ceiling_in_room.DataCeilingInRoom" title="duHast.Data.Objects.Collectors.data_ceiling_in_room.DataCeilingInRoom"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataCeilingInRoom</span></code></a> instances - populated at runtime by
+<code class="docutils literal notranslate"><span class="pre">process_ceilings_to_rooms</span></code>. Not persisted to / loaded from JSON.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Collectors.data_room.DataRoom.floors">
+<span class="sig-name descname"><span class="pre">floors</span></span><a class="headerlink" href="#duHast.Data.Objects.Collectors.data_room.DataRoom.floors" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of <a class="reference internal" href="#duHast.Data.Objects.Collectors.data_floor_in_room.DataFloorInRoom" title="duHast.Data.Objects.Collectors.data_floor_in_room.DataFloorInRoom"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFloorInRoom</span></code></a> instances - populated at runtime by
+<code class="docutils literal notranslate"><span class="pre">process_floors_to_rooms</span></code>. Not persisted to / loaded from JSON.</p>
+</dd></dl>
 
 </dd></dl>
 

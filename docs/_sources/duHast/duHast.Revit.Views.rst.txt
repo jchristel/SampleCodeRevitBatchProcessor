@@ -114,10 +114,42 @@ duHast.Revit.Views.schedules\_fields module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Views.schedules\_modify module
+-------------------------------------------
+
+.. automodule:: duHast.Revit.Views.schedules_modify
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Views.schedules\_revision\_filter module
 -----------------------------------------------------
 
 .. automodule:: duHast.Revit.Views.schedules_revision_filter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Views.schedules\_sheet\_instances module
+-----------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.schedules_sheet_instances
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Views.schedules\_sheet\_instances\_move module
+-----------------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.schedules_sheet_instances_move
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Views.schedules\_sheet\_instances\_overlap module
+--------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.schedules_sheet_instances_overlap
    :members:
    :undoc-members:
    :show-inheritance:

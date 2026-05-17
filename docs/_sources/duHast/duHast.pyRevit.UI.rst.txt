@@ -4,10 +4,26 @@ duHast.pyRevit.UI package
 Submodules
 ----------
 
+duHast.pyRevit.UI.doc\_selector module
+--------------------------------------
+
+.. automodule:: duHast.pyRevit.UI.doc_selector
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.pyRevit.UI.multiselectors module
 ---------------------------------------
 
 .. automodule:: duHast.pyRevit.UI.multiselectors
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.pyRevit.UI.ui\_element\_selection module
+-----------------------------------------------
+
+.. automodule:: duHast.pyRevit.UI.ui_element_selection
    :members:
    :undoc-members:
    :show-inheritance:

@@ -60,6 +60,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../revit_apps/index.html">Revit Application UI Guides</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -112,8 +113,37 @@
 </ul>
 </section>
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.family_copy_directive_utils.get_copy_directives">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.family_copy_directive_utils.</span></span><span class="sig-name descname"><span class="pre">get_copy_directives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.family_copy_directive_utils.get_copy_directives" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.family_copy_directive_utils.get_copy_directives_from_directory">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.family_copy_directive_utils.</span></span><span class="sig-name descname"><span class="pre">get_copy_directives_from_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.family_copy_directive_utils.get_copy_directives_from_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves file rename  directives from a given folder location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>directory_path</strong> (<em>str</em>) – Fully qualified folder path to folder containing directives.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if rename directives where found and loaded successfully, otherwise False.</p></li>
+<li><p>result.message will contain number of directives found in format:’Found rename directives: ‘ + number</p></li>
+<li><p>result.result list of directives</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain an exception message.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.family_copy_directive_utils.get_copy_directives_from_files">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.family_copy_directive_utils.</span></span><span class="sig-name descname"><span class="pre">get_copy_directives_from_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.family_copy_directive_utils.get_copy_directives_from_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads list of copy directives from files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

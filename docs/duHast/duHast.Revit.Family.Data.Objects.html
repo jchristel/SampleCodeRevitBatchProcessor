@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Family.Data package" href="duHast.Revit.Family.Data.html" />
-    <link rel="next" title="duHast.Revit.Family.Geometry package" href="duHast.Revit.Family.Geometry.html" />
+    <link rel="next" title="duHast.Revit.Family.Export package" href="duHast.Revit.Family.Export.html" />
     <link rel="prev" title="duHast.Revit.Family.Data package" href="duHast.Revit.Family.Data.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
@@ -31,7 +31,7 @@
         <li id="page_buttons">
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
-            <div class="headerButton"><a href="duHast.Revit.Family.Geometry.html" title="duHast.Revit.Family.Geometry package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Family.Export.html" title="duHast.Revit.Family.Export package" accesskey="N">next</a></div>
             <div class="headerButton"><a href="duHast.Revit.Family.Data.html" title="duHast.Revit.Family.Data package" accesskey="P">previous</a></div>
         </li>
     </ul>
@@ -60,6 +60,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../revit_apps/index.html">Revit Application UI Guides</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -728,7 +729,7 @@ all other storage properties will be wiped to avoid mismatches!</p>
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.Objects.family_directive_copy.</span></span><span class="sig-name descname"><span class="pre">FamilyDirectiveCopy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.Objects.family_directive_copy.</span></span><span class="sig-name descname"><span class="pre">FamilyDirectiveCopy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code_used</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#duHast.Revit.Family.Data.Objects.family_directive_base.FamilyDirectiveBase" title="duHast.Revit.Family.Data.Objects.family_directive_base.FamilyDirectiveBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyDirectiveBase</span></code></a></p>
 <p>Class constructor</p>
 <dl class="py attribute">
@@ -754,6 +755,11 @@ all other storage properties will be wiped to avoid mismatches!</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.COPY_DIRECTIVE_LIST_INDEX_NEW_DIRECTORY">
 <span class="sig-name descname"><span class="pre">COPY_DIRECTIVE_LIST_INDEX_NEW_DIRECTORY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.COPY_DIRECTIVE_LIST_INDEX_NEW_DIRECTORY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.COPY_DIRECTIVE_INDEX_CODE_USED">
+<span class="sig-name descname"><span class="pre">COPY_DIRECTIVE_INDEX_CODE_USED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.COPY_DIRECTIVE_INDEX_CODE_USED" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1418,6 +1424,11 @@ Ghost types are types that are not present in the family file but listed in the 
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage.str_to_bytes">
+<span class="sig-name descname"><span class="pre">str_to_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage.str_to_bytes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage.get_difference">
 <span class="sig-name descname"><span class="pre">get_difference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage.get_difference" title="Permalink to this definition">¶</a></dt>
 <dd><p>get the difference between this object and another object</p>
@@ -1464,14 +1475,17 @@ Ghost types are types that are not present in the family file but listed in the 
 
 <dl class="py method">
 <dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage.get_catalogue_file_header_row">
-<span class="sig-name descname"><span class="pre">get_catalogue_file_header_row</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage.get_catalogue_file_header_row" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_catalogue_file_header_row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage.get_catalogue_file_header_row" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the catalogue file header row for this object sample ParameterName##LENGTH##MILLIMETERS</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>the catalogue file header row entry for this parameter</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parameter_name</strong> (<em>str</em>) – the name of the parameter (sometimes the parameter name in the family type data storage object has spaces replaced with underscores, so the parameter name from the catalogue file header row is passed in to ensure the correct parameter is used in the header row generation)</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the catalogue file header row entry for this parameter</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>

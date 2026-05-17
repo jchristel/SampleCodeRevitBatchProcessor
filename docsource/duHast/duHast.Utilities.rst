@@ -156,6 +156,14 @@ duHast.Utilities.files\_xml module
    :undoc-members:
    :show-inheritance:
 
+duHast.Utilities.guids module
+-----------------------------
+
+.. automodule:: duHast.Utilities.guids
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Utilities.log\_decorator module
 --------------------------------------
 

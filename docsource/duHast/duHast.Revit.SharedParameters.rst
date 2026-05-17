@@ -30,6 +30,14 @@ duHast.Revit.SharedParameters.shared\_parameter\_add module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.SharedParameters.shared\_parameter\_load\_def\_file module
+-----------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.SharedParameters.shared_parameter_load_def_file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.SharedParameters.shared\_parameter\_swap module
 ------------------------------------------------------------
 

@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>duHast.Revit.Family.Export package &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../index.html" />
+    <link rel="up" title="duHast.Revit.Family package" href="duHast.Revit.Family.html" />
+    <link rel="next" title="duHast.Revit.Family.Geometry package" href="duHast.Revit.Family.Geometry.html" />
+    <link rel="prev" title="duHast.Revit.Family.Data.Objects package" href="duHast.Revit.Family.Data.Objects.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Family.Export package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Family.Geometry.html" title="duHast.Revit.Family.Geometry package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Family.Data.Objects.html" title="duHast.Revit.Family.Data.Objects package" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">duHast</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.html">duHast.pyRevit package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../revit_apps/index.html">Revit Application UI Guides</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Revit.Family.Export.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-revit-family-export-package">
+<h1>duHast.Revit.Family.Export package<a class="headerlink" href="#duhast-revit-family-export-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Family.Export.to_data_item">
+<span id="duhast-revit-family-export-to-data-item-module"></span><h2>duHast.Revit.Family.Export.to_data_item module<a class="headerlink" href="#module-duHast.Revit.Family.Export.to_data_item" title="Permalink to this heading">¶</a></h2>
+<p>Covers placed family instances belonging to a caller-supplied list of categories
+(furniture, equipment, specialty equipment, etc.).
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Export.to_data_item.get_location_data">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Export.to_data_item.</span></span><span class="sig-name descname"><span class="pre">get_location_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">revit_family_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Export.to_data_item.get_location_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the placement location and orientation of a family instance and
+returns them as a populated <a class="reference internal" href="duHast.Data.Objects.Collectors.Properties.Geometry.html#duHast.Data.Objects.Collectors.Properties.Geometry.geometry_base.DataGeometryBase" title="duHast.Data.Objects.Collectors.Properties.Geometry.geometry_base.DataGeometryBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometryBase</span></code></a> instance.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">translation_coord</span></code> - x/y/z position converted to metric mm (<a class="reference internal" href="duHast.Geometry.html#duHast.Geometry.point_3.Point3" title="duHast.Geometry.point_3.Point3"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point3</span></code></a>)</p></li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">rotation_coord</span></code>    - 3 x 3 rotation matrix derived from the instance’s</dt><dd><p>local transform (each row is a basis vector [x, y, z])</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Only <code class="xref py py-class docutils literal notranslate"><span class="pre">Autodesk.Revit.DB.LocationPoint</span></code> instances are supported.
+Line-based placements (<code class="docutils literal notranslate"><span class="pre">LocationCurve</span></code>) return <em>None</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>revit_family_instance</strong> (<em>Autodesk.Revit.DB.FamilyInstance</em>) – A placed Revit family instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A populated location data object, or <em>None</em> if the location type
+is not a point.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Data.Objects.Collectors.Properties.Geometry.html#duHast.Data.Objects.Collectors.Properties.Geometry.geometry_base.DataGeometryBase" title="duHast.Data.Objects.Collectors.Properties.Geometry.geometry_base.DataGeometryBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometryBase</span></code></a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Export.to_data_item.get_room_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Export.to_data_item.</span></span><span class="sig-name descname"><span class="pre">get_room_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_family_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Export.to_data_item.get_room_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of unique room element ids that the family instance belongs to,
+resolved across all project phases.</p>
+<p>Lookup strategy (in order):</p>
+<ol class="arabic simple">
+<li><p><strong>Phase-aware</strong> - iterates <code class="docutils literal notranslate"><span class="pre">doc.Phases</span></code> and calls
+<code class="docutils literal notranslate"><span class="pre">FamilyInstance.get_Room(phase)</span></code> for each phase. This is the primary
+source and correctly handles items whose room assignment changes between
+construction phases.</p></li>
+<li><p><strong>Direct property</strong> - <code class="docutils literal notranslate"><span class="pre">FamilyInstance.Room</span></code> is tried when the phase
+loop yields nothing (e.g. older family hosting types).</p></li>
+<li><p><strong>Point fallback</strong> - if both of the above return nothing, the instance’s
+<code class="docutils literal notranslate"><span class="pre">LocationPoint</span></code> is used with <code class="docutils literal notranslate"><span class="pre">Document.GetRoomAtPoint</span></code> to perform a
+spatial lookup against the last project phase.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Doors and windows should use <code class="docutils literal notranslate"><span class="pre">FamilyInstance.FromRoom</span></code> /
+<code class="docutils literal notranslate"><span class="pre">FamilyInstance.ToRoom</span></code> instead.  Those categories are not included
+in <code class="xref py py-data docutils literal notranslate"><span class="pre">DEFAULT_ITEM_CATEGORIES</span></code>, so this function does not handle
+that case.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revit_family_instance</strong> (<em>Autodesk.Revit.DB.FamilyInstance</em>) – A placed Revit family instance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Unique room element ids (integers), may be empty.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Export.to_data_item.get_level_data_by_bounding_box">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Export.to_data_item.</span></span><span class="sig-name descname"><span class="pre">get_level_data_by_bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_family_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Export.to_data_item.get_level_data_by_bounding_box" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines the nearest level below a family instance by comparing the lowest
+Z coordinate of its solid geometry against the ascending list of project levels.</p>
+<p>Algorithm:</p>
+<ol class="arabic simple">
+<li><p>Compute the solid-based bounding box of the instance.</p></li>
+<li><p>Take <code class="docutils literal notranslate"><span class="pre">bbox.Min.Z</span></code> (internal Revit feet) as the bottom of the item.</p></li>
+<li><p>Walk all levels sorted ascending by <code class="docutils literal notranslate"><span class="pre">ProjectElevation</span></code> and keep the
+last one whose elevation is at or below <code class="docutils literal notranslate"><span class="pre">bbox.Min.Z</span></code>.</p></li>
+<li><p>If the item sits below every level (e.g. underground) the lowest level
+is used as a fallback.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">offset_from_level</span></code> = <code class="docutils literal notranslate"><span class="pre">bbox.Min.Z</span> <span class="pre">-</span> <span class="pre">level.ProjectElevation</span></code>, converted
+to metric mm.</p></li>
+</ol>
+<p>Returns a default empty <a class="reference internal" href="duHast.Data.Objects.Collectors.Properties.html#duHast.Data.Objects.Collectors.Properties.data_level.DataLevel" title="duHast.Data.Objects.Collectors.Properties.data_level.DataLevel"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLevel</span></code></a> when no solid geometry or no
+levels are found in the document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revit_family_instance</strong> (<em>Autodesk.Revit.DB.FamilyInstance</em>) – A placed Revit family instance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A populated data level instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Data.Objects.Collectors.Properties.html#duHast.Data.Objects.Collectors.Properties.data_level.DataLevel" title="duHast.Data.Objects.Collectors.Properties.data_level.DataLevel"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLevel</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Export.to_data_item.populate_data_item_object">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Export.to_data_item.</span></span><span class="sig-name descname"><span class="pre">populate_data_item_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_family_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Export.to_data_item.populate_data_item_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a <a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_item.DataItem" title="duHast.Data.Objects.Collectors.data_item.DataItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataItem</span></code></a> populated from a single placed family instance.</p>
+<p>Populated fields:</p>
+<ul class="simple">
+<li><p>instance id and instance parameters</p></li>
+<li><p>type name and type parameters</p></li>
+<li><p>level name, level id, and offset from level</p></li>
+<li><p>location point (x/y/z in mm) and rotation matrix</p></li>
+<li><p>phasing (created / demolished)</p></li>
+<li><p>design set / option membership</p></li>
+<li><p>model name</p></li>
+</ul>
+<p>Returns <em>None</em> when the instance has no valid <code class="xref py py-class docutils literal notranslate"><span class="pre">LocationPoint</span></code>
+(e.g. line-based families).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revit_family_instance</strong> (<em>Autodesk.Revit.DB.FamilyInstance</em>) – A placed Revit family instance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A populated data item object, or <em>None</em>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_item.DataItem" title="duHast.Data.Objects.Collectors.data_item.DataItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataItem</span></code></a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Export.to_data_item.get_all_item_data">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Export.to_data_item.</span></span><span class="sig-name descname"><span class="pre">get_all_item_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Export.to_data_item.get_all_item_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collects all placed <code class="xref py py-class docutils literal notranslate"><span class="pre">Autodesk.Revit.DB.FamilyInstance</span></code> elements
+belonging to the given list of categories and returns a list of
+<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_item.DataItem" title="duHast.Data.Objects.Collectors.data_item.DataItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataItem</span></code></a> objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>categories</strong> (<em>list</em><em>[</em><em>Autodesk.Revit.DB.BuiltInCategory</em><em>] or </em><em>None</em>) – List of <code class="xref py py-class docutils literal notranslate"><span class="pre">Autodesk.Revit.DB.BuiltInCategory</span></code> values
+to collect from.  Defaults to <code class="xref py py-data docutils literal notranslate"><span class="pre">DEFAULT_ITEM_CATEGORIES</span></code> when
+<em>None</em> is supplied.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of populated data item instances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_item.DataItem" title="duHast.Data.Objects.Collectors.data_item.DataItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataItem</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.Export">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Family.Export" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="modules.html" accesskey="U">duHast</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.html" >duHast package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.html" >duHast.Revit package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.Family.html" >duHast.Revit.Family package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                duHast.Revit.Family.Export package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

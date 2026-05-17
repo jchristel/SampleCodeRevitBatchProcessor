@@ -28,6 +28,14 @@ duHast.Data.Objects.Collectors.data\_ceiling module
    :undoc-members:
    :show-inheritance:
 
+duHast.Data.Objects.Collectors.data\_ceiling\_in\_room module
+-------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_ceiling_in_room
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Data.Objects.Collectors.data\_door module
 ------------------------------------------------
 
@@ -40,6 +48,30 @@ duHast.Data.Objects.Collectors.data\_family\_base module
 --------------------------------------------------------
 
 .. automodule:: duHast.Data.Objects.Collectors.data_family_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.data\_floor module
+-------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_floor
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.data\_floor\_in\_room module
+-----------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_floor_in_room
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.data\_item module
+------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_item
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,0 +1,305 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>DocManagerSettingsUI — User Guide &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link rel="up" title="DocManagerSettingsUI" href="index.html" />
+    <link rel="next" title="DocManagerUI" href="../docmanagerui/index.html" />
+    <link rel="prev" title="DocManagerSettingsUI" href="index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>DocManagerSettingsUI — User Guide</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="../docmanagerui/index.html" title="DocManagerUI" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="index.html" title="DocManagerSettingsUI" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Revit Application UI Guides</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../pushit/index.html">PushIt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../athelibrary/index.html">AtTheLibrary</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">DocManagerSettingsUI</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">DocManagerSettingsUI — User Guide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#window-layout">Window Layout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#header-banner">Header Banner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#message-banner">Message Banner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#database-path">Database Path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#parameter-mapping-area">Parameter Mapping Area</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#export-import-buttons">Export / Import Buttons</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#save-to-project-button">Save To Project Button</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#typical-workflow">Typical Workflow</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../docmanagerui/index.html">DocManagerUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../familyreloaderui/index.html">FamilyReloaderUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pdfdwgexporterui/index.html">PDFDWGExporterUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pdfdwgexporterselectionui/index.html">PDFDWGExporterSelectionUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../selectfiles/index.html">SelectFiles</a></li>
+</ul>
+</li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/revit_apps/docmanagersettingsui/01_main_ui.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="docmanagersettingsui-user-guide">
+<h1>DocManagerSettingsUI — User Guide<a class="headerlink" href="#docmanagersettingsui-user-guide" title="Permalink to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
+<p>DocManagerSettingsUI is the settings interface for configuring document numbering rules used by the Document Manager Revit integration. It lets you build a document number by combining Revit sheet properties (such as sheet number or custom parameters) with optional prefixes, suffixes, and separators. Settings can be exported to and imported from JSON files for reuse.</p>
+</section>
+<hr class="docutils" />
+<section id="window-layout">
+<h2>Window Layout<a class="headerlink" href="#window-layout" title="Permalink to this heading">¶</a></h2>
+<p>The settings window is divided into the following sections from top to bottom:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Section</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Header banner</p></td>
+<td><p>Shows the application title and subtitle</p></td>
+</tr>
+<tr class="row-odd"><td><p>Message banner</p></td>
+<td><p>Displays status and error messages</p></td>
+</tr>
+<tr class="row-even"><td><p>Database path</p></td>
+<td><p>Select the CSV data source file</p></td>
+</tr>
+<tr class="row-odd"><td><p>Parameter mapping area</p></td>
+<td><p>Build the document number rule by selecting and ordering sheet properties</p></td>
+</tr>
+<tr class="row-even"><td><p>Export / Import buttons</p></td>
+<td><p>Save or load the current configuration as a JSON file</p></td>
+</tr>
+<tr class="row-odd"><td><p>Save button</p></td>
+<td><p>Commit the settings back to the project and close</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="header-banner">
+<h2>Header Banner<a class="headerlink" href="#header-banner" title="Permalink to this heading">¶</a></h2>
+<p>The blue banner at the top shows:</p>
+<ul class="simple">
+<li><p><strong>“Document Manager - Revit Integration”</strong> — application title.</p></li>
+<li><p><strong>Document number settings</strong> — subtitle.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="message-banner">
+<h2>Message Banner<a class="headerlink" href="#message-banner" title="Permalink to this heading">¶</a></h2>
+<p>Displays informational and error messages. Informational messages auto-dismiss after two seconds; error messages remain until dismissed.</p>
+</section>
+<hr class="docutils" />
+<section id="database-path">
+<h2>Database Path<a class="headerlink" href="#database-path" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Control</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Database Path text box</p></td>
+<td><p>Read-only display of the currently selected CSV data source file path</p></td>
+</tr>
+<tr class="row-odd"><td><p>Browse button</p></td>
+<td><p>Opens a file picker filtered to <code class="docutils literal notranslate"><span class="pre">.csv</span></code> files to select the data source</p></td>
+</tr>
+</tbody>
+</table>
+<p>The selected CSV file provides the list of available sheet properties used to populate the parameter list.</p>
+</section>
+<hr class="docutils" />
+<section id="parameter-mapping-area">
+<h2>Parameter Mapping Area<a class="headerlink" href="#parameter-mapping-area" title="Permalink to this heading">¶</a></h2>
+<p>The central area is split into three columns.</p>
+<section id="available-sheet-properties-left-grid">
+<h3>Available Sheet Properties (left grid)<a class="headerlink" href="#available-sheet-properties-left-grid" title="Permalink to this heading">¶</a></h3>
+<p>Lists all Revit sheet properties available for use in the document number rule. Column header: <strong>Sheet properties</strong>.</p>
+<ul class="simple">
+<li><p>Single selection.</p></li>
+<li><p>Read-only — this is a reference list only.</p></li>
+</ul>
+</section>
+<section id="add-remove-buttons-centre">
+<h3>Add / Remove Buttons (centre)<a class="headerlink" href="#add-remove-buttons-centre" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Button</p></th>
+<th class="head"><p>Action</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Add Parameter</p></td>
+<td><p>Moves the selected sheet property from the available list into the document number rule grid on the right</p></td>
+</tr>
+<tr class="row-odd"><td><p>Remove Parameter</p></td>
+<td><p>Removes the selected row from the rule grid, returning it to the available list</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="document-number-rule-grid-right-grid">
+<h3>Document Number Rule Grid (right grid)<a class="headerlink" href="#document-number-rule-grid-right-grid" title="Permalink to this heading">¶</a></h3>
+<p>Shows the ordered list of sheet properties that make up the document number, along with their formatting options.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Column</p></th>
+<th class="head"><p>Editable</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Prefix</p></td>
+<td><p>Yes</p></td>
+<td><p>Text prepended to this property’s value</p></td>
+</tr>
+<tr class="row-odd"><td><p>Parameter</p></td>
+<td><p>No</p></td>
+<td><p>The sheet property name (e.g., Sheet Number, Sheet Name)</p></td>
+</tr>
+<tr class="row-even"><td><p>Suffix</p></td>
+<td><p>Yes</p></td>
+<td><p>Text appended to this property’s value</p></td>
+</tr>
+<tr class="row-odd"><td><p>Separator</p></td>
+<td><p>Yes</p></td>
+<td><p>Text inserted between this property and the next one</p></td>
+</tr>
+</tbody>
+</table>
+<p>Click any cell in the Prefix, Suffix, or Separator column to edit it directly.</p>
+<p><strong>Up / Down buttons</strong> below the grid reorder the selected row, controlling the order in which properties appear in the generated document number.</p>
+<section id="how-the-document-number-is-built">
+<h4>How the document number is built<a class="headerlink" href="#how-the-document-number-is-built" title="Permalink to this heading">¶</a></h4>
+<p>For each row in the rule grid, the output is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Prefix</span><span class="p">][</span><span class="n">Property</span> <span class="n">value</span><span class="p">][</span><span class="n">Suffix</span><span class="p">][</span><span class="n">Separator</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Rows are concatenated in order to produce the final document number.</p>
+<p><strong>Example:</strong> With two rows — Sheet Number (no prefix/suffix, separator <code class="docutils literal notranslate"><span class="pre">-</span></code>) and Sheet Name (no prefix/suffix) — the result becomes <code class="docutils literal notranslate"><span class="pre">A101-Ground</span> <span class="pre">Floor</span> <span class="pre">Plan</span></code>.</p>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="export-import-buttons">
+<h2>Export / Import Buttons<a class="headerlink" href="#export-import-buttons" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Button</p></th>
+<th class="head"><p>Action</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Export</p></td>
+<td><p>Opens a Save dialog to write the current document number rule to a <code class="docutils literal notranslate"><span class="pre">.json</span></code> file</p></td>
+</tr>
+<tr class="row-odd"><td><p>Import</p></td>
+<td><p>Opens an Open dialog to restore a rule from a previously exported <code class="docutils literal notranslate"><span class="pre">.json</span></code> file</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="save-to-project-button">
+<h2>Save To Project Button<a class="headerlink" href="#save-to-project-button" title="Permalink to this heading">¶</a></h2>
+<p>The large <strong>Save To Project</strong> button commits the current document number rule back to the calling Revit context and closes the window.</p>
+</section>
+<hr class="docutils" />
+<section id="typical-workflow">
+<h2>Typical Workflow<a class="headerlink" href="#typical-workflow" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>The Document Manager opens the Settings window.</p></li>
+<li><p>Click <strong>Browse</strong> and select the CSV file containing your sheet properties.</p></li>
+<li><p>Select a property from the <strong>Sheet properties</strong> list and click <strong>Add Parameter</strong>.</p></li>
+<li><p>Edit <strong>Prefix</strong>, <strong>Suffix</strong>, and <strong>Separator</strong> cells to format each component.</p></li>
+<li><p>Use <strong>Up</strong> / <strong>Down</strong> to reorder properties.</p></li>
+<li><p>Repeat until the document number rule is complete.</p></li>
+<li><p>Optionally click <strong>Export</strong> to save the rule for reuse on other projects.</p></li>
+<li><p>Click <strong>Save To Project</strong> to apply the settings and close.</p></li>
+</ol>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="../index.html" accesskey="U">Revit Application UI Guides</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="index.html" >DocManagerSettingsUI</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                DocManagerSettingsUI — User Guide
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

@@ -60,6 +60,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../revit_apps/index.html">Revit Application UI Guides</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -203,6 +204,31 @@ The data returned is filtered by property list past in.</p>
 <li><p><strong>file_name</strong> (<em>str</em>) – The fully qualified file path of the report file.</p></li>
 <li><p><strong>current_file_name</strong> (<em>str</em>) – The current Revit file name which will be appended to data in the report.</p></li>
 <li><p><strong>sheet_properties</strong> (<em>list</em><em> of </em><em>str</em>) – List of sheet properties to be extracted from sheets.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- .status True if data was written successfully. Otherwise False.
+- .message will contain write status.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Reporting.schedules_report.export_schedules_column_widths">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Reporting.schedules_report.</span></span><span class="sig-name descname"><span class="pre">export_schedules_column_widths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schedules</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_names_of_interest</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Reporting.schedules_report.export_schedules_column_widths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes to file the column widths of the fields of interest for the schedules passed in.</p>
+<p>file type: csv</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>file_name</strong> (<em>str</em>) – The fully qualified file path of the report file.</p></li>
+<li><p><strong>schedules</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.ViewSchedule</em>) – list of schedule views to report on.</p></li>
+<li><p><strong>field_names_of_interest</strong> (<em>list</em><em> of </em><em>str</em>) – list of field names to report on.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

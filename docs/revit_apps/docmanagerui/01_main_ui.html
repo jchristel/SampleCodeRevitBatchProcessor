@@ -1,0 +1,321 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>DocManager Revit Integration — User Guide &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>DocManager Revit Integration — User Guide</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Revit Application UI Guides</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/revit_apps/docmanagerui/01_main_ui.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="docmanager-revit-integration-user-guide">
+<h1>DocManager Revit Integration — User Guide<a class="headerlink" href="#docmanager-revit-integration-user-guide" title="Permalink to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
+<p>The DocManager Revit Integration is a Revit add-in that synchronises sheets and revisions from a Revit model to a Document Manager database. It reads sheet properties from the open model, builds document numbers according to a configurable rule, and lets you import new sheets and record revision history against database entries. The window shows two panels — Sheets and Revisions — that can be toggled with a navigation button.</p>
+</section>
+<hr class="docutils" />
+<section id="window-layout">
+<h2>Window Layout<a class="headerlink" href="#window-layout" title="Permalink to this heading">¶</a></h2>
+<p>The window is divided into the following sections from top to bottom:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Section</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Header strip</p></td>
+<td><p>Shows the application name, connected database path, and connection status</p></td>
+</tr>
+<tr class="row-odd"><td><p>Message banner</p></td>
+<td><p>Displays status and error messages</p></td>
+</tr>
+<tr class="row-even"><td><p>Navigation toggle</p></td>
+<td><p>Switches between the Sheets panel and the Revisions panel</p></td>
+</tr>
+<tr class="row-odd"><td><p>Content area</p></td>
+<td><p>Shows either the Sheets panel or the Revisions panel</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="header-strip">
+<h2>Header Strip<a class="headerlink" href="#header-strip" title="Permalink to this heading">¶</a></h2>
+<p>The header strip at the top shows:</p>
+<ul class="simple">
+<li><p><strong>Application name</strong> — identifies the add-in.</p></li>
+<li><p><strong>Database path</strong> — the path of the connected Document Manager database.</p></li>
+<li><p><strong>Connection status</strong> — indicates whether the database connection is active.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="message-banner">
+<h2>Message Banner<a class="headerlink" href="#message-banner" title="Permalink to this heading">¶</a></h2>
+<p>Displays informational and error messages. Informational messages auto-dismiss after two seconds; error messages remain until dismissed.</p>
+</section>
+<hr class="docutils" />
+<section id="navigation-toggle">
+<h2>Navigation Toggle<a class="headerlink" href="#navigation-toggle" title="Permalink to this heading">¶</a></h2>
+<p>The toggle button switches the content area between the two panels:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>State</p></th>
+<th class="head"><p>Panel shown</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Sheets</p></td>
+<td><p>Lists all sheets in the Revit model and their database status</p></td>
+</tr>
+<tr class="row-odd"><td><p>Revisions</p></td>
+<td><p>Lists sheets with revisions and their revision sync status</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="sheets-panel">
+<h2>Sheets Panel<a class="headerlink" href="#sheets-panel" title="Permalink to this heading">¶</a></h2>
+<p>The Sheets panel shows all sheets in the Revit model as rows in a grid. Row background colour indicates the status of each sheet relative to the database:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Row colour</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Red</p></td>
+<td><p>Sheet is not yet in the database — needs importing</p></td>
+</tr>
+<tr class="row-odd"><td><p>Yellow</p></td>
+<td><p>Sheet is in the database but its name has changed — needs updating</p></td>
+</tr>
+<tr class="row-even"><td><p>Green</p></td>
+<td><p>Sheet is up to date in the database</p></td>
+</tr>
+</tbody>
+</table>
+<section id="sheets-grid-columns">
+<h3>Sheets Grid Columns<a class="headerlink" href="#sheets-grid-columns" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Column</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Sheet Number</p></td>
+<td><p>The Revit sheet number</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sheet Name</p></td>
+<td><p>The Revit sheet name</p></td>
+</tr>
+<tr class="row-even"><td><p>Document Number</p></td>
+<td><p>The document number built from the configured numbering rule</p></td>
+</tr>
+<tr class="row-odd"><td><p>Database Name</p></td>
+<td><p>The sheet name currently stored in the database (if present)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="updating-sheets">
+<h3>Updating Sheets<a class="headerlink" href="#updating-sheets" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Select one or more red or yellow rows in the grid.</p></li>
+<li><p>Click <strong>Update</strong>.</p></li>
+<li><p>If the database has custom field definitions, the <a class="reference internal" href="#sheet-custom-properties-dialog"><span class="xref myst">Sheet Custom Properties dialog</span></a> opens to collect per-sheet values before the import proceeds.</p></li>
+<li><p>If a sheet’s document number has changed and a matching entry already exists in the database, the <a class="reference internal" href="#update-existing-document-dialog"><span class="xref myst">Update Existing Document dialog</span></a> opens to confirm the link.</p></li>
+<li><p>On completion the grid refreshes and successfully processed rows turn green.</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="revisions-panel">
+<h2>Revisions Panel<a class="headerlink" href="#revisions-panel" title="Permalink to this heading">¶</a></h2>
+<p>The Revisions panel shows sheets that have matching database documents, along with the status of their revision history. Row background colour indicates sync status:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Row colour</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Grey</p></td>
+<td><p>One or more revision dates could not be parsed — manual review required</p></td>
+</tr>
+<tr class="row-odd"><td><p>Red</p></td>
+<td><p>Revisions exist on the sheet that are missing from the database entirely</p></td>
+</tr>
+<tr class="row-even"><td><p>Yellow</p></td>
+<td><p>Revisions are in the database but have not yet been recorded in the revision indicator history</p></td>
+</tr>
+<tr class="row-odd"><td><p>Green</p></td>
+<td><p>All revisions are valid and fully synchronised</p></td>
+</tr>
+</tbody>
+</table>
+<section id="updating-revisions">
+<h3>Updating Revisions<a class="headerlink" href="#updating-revisions" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Select one or more rows in the grid.</p></li>
+<li><p>Click <strong>Update</strong>.</p></li>
+<li><p>Any revisions missing from the database are created first.</p></li>
+<li><p>Revision history for the selected sheets is then synchronised to the database.</p></li>
+<li><p>On completion the grid refreshes and successfully processed rows turn green.</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="sheet-custom-properties-dialog">
+<h2>Sheet Custom Properties Dialog<a class="headerlink" href="#sheet-custom-properties-dialog" title="Permalink to this heading">¶</a></h2>
+<p>This modal dialog appears during a sheet import when the database has custom field definitions configured. It presents one input field per custom field for the sheet being imported.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Control</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Custom field inputs</p></td>
+<td><p>One text field per defined custom property, labelled with the field name</p></td>
+</tr>
+<tr class="row-odd"><td><p>Confirm button</p></td>
+<td><p>Submits the entered values and continues the import</p></td>
+</tr>
+<tr class="row-even"><td><p>Cancel button</p></td>
+<td><p>Cancels the import for the current sheet</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="update-existing-document-dialog">
+<h2>Update Existing Document Dialog<a class="headerlink" href="#update-existing-document-dialog" title="Permalink to this heading">¶</a></h2>
+<p>This modal dialog appears when a sheet’s document number has changed and a matching entry already exists in the database. It allows you to link the changed sheet to its existing database record rather than creating a duplicate.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Control</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Existing document list</p></td>
+<td><p>Shows the candidate database entry to link to</p></td>
+</tr>
+<tr class="row-odd"><td><p>Confirm button</p></td>
+<td><p>Links the sheet to the selected existing entry and continues</p></td>
+</tr>
+<tr class="row-even"><td><p>Cancel button</p></td>
+<td><p>Skips this sheet and continues with the remaining selection</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="typical-workflow-importing-sheets">
+<h2>Typical Workflow — Importing Sheets<a class="headerlink" href="#typical-workflow-importing-sheets" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Open the Revit model and launch the Document Manager Revit Integration from the add-in ribbon.</p></li>
+<li><p>The window opens on the <strong>Sheets</strong> panel. Red rows indicate sheets not yet in the database.</p></li>
+<li><p>Select all red rows (or a specific subset) and click <strong>Update</strong>.</p></li>
+<li><p>If prompted, fill in any custom field values in the <strong>Sheet Custom Properties</strong> dialog and confirm.</p></li>
+<li><p>The grid refreshes — successfully imported sheets turn green.</p></li>
+<li><p>Repeat for any yellow rows where sheet names have changed.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="typical-workflow-synchronising-revisions">
+<h2>Typical Workflow — Synchronising Revisions<a class="headerlink" href="#typical-workflow-synchronising-revisions" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Switch to the <strong>Revisions</strong> panel using the navigation toggle.</p></li>
+<li><p>Grey rows indicate sheets with unparseable revision dates — review these manually before proceeding.</p></li>
+<li><p>Select red or yellow rows and click <strong>Update</strong>.</p></li>
+<li><p>The add-in creates any missing revision records in the database, then records the revision history for each selected sheet.</p></li>
+<li><p>The grid refreshes — successfully synchronised sheets turn green.</p></li>
+</ol>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                DocManager Revit Integration — User Guide
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

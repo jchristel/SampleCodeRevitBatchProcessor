@@ -60,6 +60,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../revit_apps/index.html">Revit Application UI Guides</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -109,8 +110,12 @@
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Collectors.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Collectors.html#module-duHast.Data.Objects.Collectors.data_base">duHast.Data.Objects.Collectors.data_base module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Collectors.html#module-duHast.Data.Objects.Collectors.data_ceiling">duHast.Data.Objects.Collectors.data_ceiling module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Collectors.html#module-duHast.Data.Objects.Collectors.data_ceiling_in_room">duHast.Data.Objects.Collectors.data_ceiling_in_room module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Collectors.html#module-duHast.Data.Objects.Collectors.data_door">duHast.Data.Objects.Collectors.data_door module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Collectors.html#module-duHast.Data.Objects.Collectors.data_family_base">duHast.Data.Objects.Collectors.data_family_base module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Collectors.html#module-duHast.Data.Objects.Collectors.data_floor">duHast.Data.Objects.Collectors.data_floor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Collectors.html#module-duHast.Data.Objects.Collectors.data_floor_in_room">duHast.Data.Objects.Collectors.data_floor_in_room module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Collectors.html#module-duHast.Data.Objects.Collectors.data_item">duHast.Data.Objects.Collectors.data_item module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Collectors.html#module-duHast.Data.Objects.Collectors.data_level_building">duHast.Data.Objects.Collectors.data_level_building module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Collectors.html#module-duHast.Data.Objects.Collectors.data_room">duHast.Data.Objects.Collectors.data_room module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Collectors.html#module-duHast.Data.Objects.Collectors.data_sheet">duHast.Data.Objects.Collectors.data_sheet module</a></li>
@@ -277,7 +282,7 @@ Any inner loops containing less then 3 points will be ignored. (Empty list will 
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Data.data_to_shapely.GEOMETRY_CONVERTER">
-<span class="sig-prename descclassname"><span class="pre">duHast.Data.data_to_shapely.</span></span><span class="sig-name descname"><span class="pre">GEOMETRY_CONVERTER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ceiling':</span> <span class="pre">&lt;function</span> <span class="pre">get_shapely_polygons_from_data_instance&gt;,</span> <span class="pre">'room':</span> <span class="pre">&lt;function</span> <span class="pre">get_shapely_polygons_from_data_instance&gt;}</span></em><a class="headerlink" href="#duHast.Data.data_to_shapely.GEOMETRY_CONVERTER" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Data.data_to_shapely.</span></span><span class="sig-name descname"><span class="pre">GEOMETRY_CONVERTER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ceiling':</span> <span class="pre">&lt;function</span> <span class="pre">get_shapely_polygons_from_data_instance&gt;,</span> <span class="pre">'floor':</span> <span class="pre">&lt;function</span> <span class="pre">get_shapely_polygons_from_data_instance&gt;,</span> <span class="pre">'room':</span> <span class="pre">&lt;function</span> <span class="pre">get_shapely_polygons_from_data_instance&gt;}</span></em><a class="headerlink" href="#duHast.Data.data_to_shapely.GEOMETRY_CONVERTER" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of available geometry (from revit to shapely ) converters</p>
 </dd></dl>
 
@@ -390,6 +395,166 @@ DataRoom instance will contain any ceilings in that room in associated elements 
 <li><p>result.status (bool) will be False.</p></li>
 <li><p>result.message will contain the exception message.</p></li>
 <li><p>result.result will be an empty list</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Data.process_floors_to_rooms">
+<span id="duhast-data-process-floors-to-rooms-module"></span><h2>duHast.Data.process_floors_to_rooms module<a class="headerlink" href="#module-duHast.Data.process_floors_to_rooms" title="Permalink to this heading">¶</a></h2>
+<section id="sample-showing-how-to-find-which-floors-are-in-which-rooms">
+<h3>Sample showing how to find which floors are in which rooms.<a class="headerlink" href="#sample-showing-how-to-find-which-floors-are-in-which-rooms" title="Permalink to this heading">¶</a></h3>
+<p>This module requires python &gt;3.9 due to dependencies:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>numpy</p></li>
+<li><p>shapely</p></li>
+</ul>
+</div></blockquote>
+<p>This module:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>collects floor and room data instances by level (assumes a floor is always modelled within the room it belongs to)</p></li>
+<li><p>converts room and floor outlines to shapely polygons</p></li>
+<li><p>tests for intersection of all floors on a given level with all rooms on a given level</p></li>
+<li><p>stores any intersections found (checks how much area is intersecting; if too small it is assumed not an intended intersection)</p></li>
+<li><p>reports all rooms and any associated floor(s) found</p></li>
+</ul>
+</div></blockquote>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Data.process_floors_to_rooms.write_data_to_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Data.process_floors_to_rooms.</span></span><span class="sig-name descname"><span class="pre">write_data_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room_instance_property_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Number',</span> <span class="pre">'Name']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">floor_type_property_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Type</span> <span class="pre">Mark']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">floor_instance_property_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Height</span> <span class="pre">Offset</span> <span class="pre">From</span> <span class="pre">Level']</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.process_floors_to_rooms.write_data_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes room + associated floor data to a CSV file.</p>
+<p>The report contains one row per associated floor per room.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (dict{str: (list[<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_room.DataRoom" title="duHast.Data.Objects.Collectors.data_room.DataRoom"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataRoom</span></code></a>], list[<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_floor.DataFloor" title="duHast.Data.Objects.Collectors.data_floor.DataFloor"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFloor</span></code></a>])}) – Dictionary keyed by level name, values are (rooms, floors) tuples.</p></li>
+<li><p><strong>output_file_path</strong> (<em>str</em>) – Fully qualified path for the output CSV file.</p></li>
+<li><p><strong>room_instance_property_keys</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Room instance parameter names to report.
+Defaults to <code class="docutils literal notranslate"><span class="pre">['Number',</span> <span class="pre">'Name']</span></code>.</p></li>
+<li><p><strong>floor_type_property_keys</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Floor type parameter names to report.
+Defaults to <code class="docutils literal notranslate"><span class="pre">['Type</span> <span class="pre">Mark']</span></code>.</p></li>
+<li><p><strong>floor_instance_property_keys</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Floor instance parameter names to report.
+Defaults to <code class="docutils literal notranslate"><span class="pre">['Height</span> <span class="pre">Offset</span> <span class="pre">From</span> <span class="pre">Level']</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result instance with status and messages.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Data.process_floors_to_rooms.get_floors_by_room">
+<span class="sig-prename descclassname"><span class="pre">duHast.Data.process_floors_to_rooms.</span></span><span class="sig-name descname"><span class="pre">get_floors_by_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_source_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.process_floors_to_rooms.get_floors_by_room" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads Revit data from file and runs an intersection check of each floor on a
+level with each room on the same level.</p>
+<p>Any floor whose polygon overlaps a room by more than 0.1 % of the room area
+is added to that room’s <code class="docutils literal notranslate"><span class="pre">associated_elements</span></code> list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data_source_path</strong> (<em>str</em>) – Fully qualified path to a json file containing
+<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_room.DataRoom" title="duHast.Data.Objects.Collectors.data_room.DataRoom"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataRoom</span></code></a> and <a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_floor.DataFloor" title="duHast.Data.Objects.Collectors.data_floor.DataFloor"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFloor</span></code></a> objects.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message: processing messages.</p></li>
+<li><p>result.result: dictionary keyed by level name, values are
+(rooms, floors) tuples with rooms populated with associated floors.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+<li><p>result.result will be an empty list.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Data.process_items_to_rooms">
+<span id="duhast-data-process-items-to-rooms-module"></span><h2>duHast.Data.process_items_to_rooms module<a class="headerlink" href="#module-duHast.Data.process_items_to_rooms" title="Permalink to this heading">¶</a></h2>
+<section id="sample-showing-how-to-find-which-items-furniture-equipment-etc-belong-to-which-rooms">
+<h3>Sample showing how to find which items (furniture, equipment, etc.) belong to which rooms.<a class="headerlink" href="#sample-showing-how-to-find-which-items-furniture-equipment-etc-belong-to-which-rooms" title="Permalink to this heading">¶</a></h3>
+<p>This module:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>reads room and item data instances from a json file</p></li>
+<li><p>matches each item to its room(s) using the room ids already stored on the item
+(populated during export via Revit’s phase-aware room lookup)</p></li>
+<li><p>reports all rooms and any associated item(s) found</p></li>
+</ul>
+</div></blockquote>
+<p>No shapely / numpy dependency — room membership is resolved by id, not by geometry.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Data.process_items_to_rooms.write_data_to_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Data.process_items_to_rooms.</span></span><span class="sig-name descname"><span class="pre">write_data_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room_instance_property_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Number',</span> <span class="pre">'Name']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item_type_property_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Type</span> <span class="pre">Mark']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item_instance_property_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.process_items_to_rooms.write_data_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes room + associated item data to a CSV file.</p>
+<p>The report contains one row per associated item per room.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (dict{str: (list[<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_room.DataRoom" title="duHast.Data.Objects.Collectors.data_room.DataRoom"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataRoom</span></code></a>], list[<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_item.DataItem" title="duHast.Data.Objects.Collectors.data_item.DataItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataItem</span></code></a>])}) – Dictionary keyed by level name, values are (rooms, items) tuples.</p></li>
+<li><p><strong>output_file_path</strong> (<em>str</em>) – Fully qualified path for the output CSV file.</p></li>
+<li><p><strong>room_instance_property_keys</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Room instance parameter names to report.
+Defaults to <code class="docutils literal notranslate"><span class="pre">['Number',</span> <span class="pre">'Name']</span></code>.</p></li>
+<li><p><strong>item_type_property_keys</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Item type parameter names to report.
+Defaults to <code class="docutils literal notranslate"><span class="pre">['Type</span> <span class="pre">Mark']</span></code>.</p></li>
+<li><p><strong>item_instance_property_keys</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Item instance parameter names to report.
+Defaults to <code class="docutils literal notranslate"><span class="pre">[]</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result instance with status and messages.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Data.process_items_to_rooms.get_items_by_room">
+<span class="sig-prename descclassname"><span class="pre">duHast.Data.process_items_to_rooms.</span></span><span class="sig-name descname"><span class="pre">get_items_by_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_source_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.process_items_to_rooms.get_items_by_room" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads Revit data from file and matches each item to the room(s) it belongs to
+using the room ids already stored on the item.</p>
+<p>Any matched item is added to that room’s <code class="docutils literal notranslate"><span class="pre">associated_elements</span></code> list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data_source_path</strong> (<em>str</em>) – Fully qualified path to a json file containing
+<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_room.DataRoom" title="duHast.Data.Objects.Collectors.data_room.DataRoom"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataRoom</span></code></a> and <a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_item.DataItem" title="duHast.Data.Objects.Collectors.data_item.DataItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataItem</span></code></a> objects.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message: processing messages.</p></li>
+<li><p>result.result: dictionary keyed by level name, values are
+(rooms, items) tuples with rooms populated with associated items.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+<li><p>result.result will be an empty list.</p></li>
 </ul>
 </p>
 </dd>

@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>PDFDWGExporterSelectionUI — Print Set Name Dialog Guide &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link rel="up" title="PDFDWGExporterSelectionUI" href="index.html" />
+    <link rel="next" title="SelectFiles" href="../selectfiles/index.html" />
+    <link rel="prev" title="PDFDWGExporterSelectionUI — Main UI Guide" href="01_main_ui.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>PDFDWGExporterSelectionUI — Print Set Name Dialog Guide</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="../selectfiles/index.html" title="SelectFiles" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="01_main_ui.html" title="PDFDWGExporterSelectionUI — Main UI Guide" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Revit Application UI Guides</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../pushit/index.html">PushIt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../athelibrary/index.html">AtTheLibrary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docmanagersettingsui/index.html">DocManagerSettingsUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docmanagerui/index.html">DocManagerUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../familyreloaderui/index.html">FamilyReloaderUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pdfdwgexporterui/index.html">PDFDWGExporterUI</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">PDFDWGExporterSelectionUI</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="01_main_ui.html">PDFDWGExporterSelectionUI — Main UI Guide</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">PDFDWGExporterSelectionUI — Print Set Name Dialog Guide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#accessing-the-dialog">Accessing the Dialog</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dialog-layout">Dialog Layout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#validation-rules">Validation Rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#outcome">Outcome</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#typical-usage">Typical Usage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../selectfiles/index.html">SelectFiles</a></li>
+</ul>
+</li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/revit_apps/pdfdwgexporterselectionui/02_print_set_dialog_ui.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="pdfdwgexporterselectionui-print-set-name-dialog-guide">
+<h1>PDFDWGExporterSelectionUI — Print Set Name Dialog Guide<a class="headerlink" href="#pdfdwgexporterselectionui-print-set-name-dialog-guide" title="Permalink to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
+<p>The Print Set Name dialog appears when duplicating an existing print set. It prompts you to enter a unique name for the new print set before it is created.</p>
+</section>
+<hr class="docutils" />
+<section id="accessing-the-dialog">
+<h2>Accessing the Dialog<a class="headerlink" href="#accessing-the-dialog" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>In the main export window, select an existing print set from the <strong>Print Set</strong> dropdown (not <code class="docutils literal notranslate"><span class="pre">&lt;None&gt;</span></code>).</p></li>
+<li><p>Click <strong>Duplicate</strong>.</p></li>
+<li><p>The Print Set Name dialog opens, centred on the main window.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="dialog-layout">
+<h2>Dialog Layout<a class="headerlink" href="#dialog-layout" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Control</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Print set name label</p></td>
+<td><p>“Print set name:” — identifies the input field</p></td>
+</tr>
+<tr class="row-odd"><td><p>Name text box</p></td>
+<td><p>Enter the name for the new print set. Validated in real time</p></td>
+</tr>
+<tr class="row-even"><td><p>Create button</p></td>
+<td><p>Confirms the name and creates the new print set. Disabled until a valid name is entered. Also triggered by pressing Enter</p></td>
+</tr>
+<tr class="row-odd"><td><p>Cancel button</p></td>
+<td><p>Closes the dialog without creating a print set. Also triggered by pressing Escape</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="validation-rules">
+<h2>Validation Rules<a class="headerlink" href="#validation-rules" title="Permalink to this heading">¶</a></h2>
+<p>The name field enforces the following rules in real time. Errors appear as red text below the text box.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Rule</p></th>
+<th class="head"><p>Error condition</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Name must not be empty</p></td>
+<td><p>Error shown if the field is blank or contains only whitespace</p></td>
+</tr>
+<tr class="row-odd"><td><p>Name must be unique</p></td>
+<td><p>Error shown if a print set with the same name already exists (case-insensitive)</p></td>
+</tr>
+<tr class="row-even"><td><p>Maximum 100 characters</p></td>
+<td><p>Error shown if the name exceeds 100 characters</p></td>
+</tr>
+<tr class="row-odd"><td><p>No invalid file name characters</p></td>
+<td><p>Error shown if the name contains any of: `/ \ : * ? “ &lt; &gt;</p></td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>Create</strong> button is disabled until all validation rules pass.</p>
+</section>
+<hr class="docutils" />
+<section id="outcome">
+<h2>Outcome<a class="headerlink" href="#outcome" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Create clicked (or Enter pressed):</strong> The new print set is created as a copy of the original, containing the same sheets. The main window’s Print Set dropdown updates and automatically selects the new set.</p></li>
+<li><p><strong>Cancel clicked (or Escape pressed):</strong> No print set is created and the dialog closes.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="typical-usage">
+<h2>Typical Usage<a class="headerlink" href="#typical-usage" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Select a print set to copy in the main window.</p></li>
+<li><p>Click <strong>Duplicate</strong> to open this dialog.</p></li>
+<li><p>Type a unique name for the new print set.</p></li>
+<li><p>Confirm no validation errors appear below the field.</p></li>
+<li><p>Click <strong>Create</strong> (or press Enter) to create the copy.</p></li>
+</ol>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="../index.html" accesskey="U">Revit Application UI Guides</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="index.html" >PDFDWGExporterSelectionUI</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                PDFDWGExporterSelectionUI — Print Set Name Dialog Guide
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

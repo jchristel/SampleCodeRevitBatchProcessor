@@ -60,6 +60,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../revit_apps/index.html">Revit Application UI Guides</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -93,6 +94,51 @@
 <h1>duHast.pyRevit.UI package<a class="headerlink" href="#duhast-pyrevit-ui-package" title="Permalink to this heading">¶</a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.pyRevit.UI.doc_selector">
+<span id="duhast-pyrevit-ui-doc-selector-module"></span><h2>duHast.pyRevit.UI.doc_selector module<a class="headerlink" href="#module-duHast.pyRevit.UI.doc_selector" title="Permalink to this heading">¶</a></h2>
+<section id="a-module-to-provide-pyrevit-ui-helpers-for-selecting-a-revit-document-active-or-linked">
+<h3>A module to provide pyRevit UI helpers for selecting a Revit document (active or linked).<a class="headerlink" href="#a-module-to-provide-pyrevit-ui-helpers-for-selecting-a-revit-document-active-or-linked" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.pyRevit.UI.doc_selector.get_docs_for_selection">
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.UI.doc_selector.</span></span><span class="sig-name descname"><span class="pre">get_docs_for_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.UI.doc_selector.get_docs_for_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list containing the active document followed by all loaded linked documents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The active Revit document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of documents available for selection.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[Autodesk.Revit.DB.Document]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.pyRevit.UI.doc_selector.pick_document">
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.UI.doc_selector.</span></span><span class="sig-name descname"><span class="pre">pick_document</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">button_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Select</span> <span class="pre">document'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiselect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.UI.doc_selector.pick_document" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prompts the user to select a Revit document (active or linked) via a pyRevit SelectFromList dialog.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The active Revit document.</p></li>
+<li><p><strong>forms</strong> (<em>module</em>) – The pyRevit forms module.</p></li>
+<li><p><strong>button_name</strong> (<em>str</em>) – Label on the selection button.</p></li>
+<li><p><strong>multiselect</strong> (<em>bool</em>) – Allow selecting multiple documents.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The selected document, a list of selected documents, or None if cancelled.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.Document or list[Autodesk.Revit.DB.Document] or None</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-duHast.pyRevit.UI.multiselectors">
 <span id="duhast-pyrevit-ui-multiselectors-module"></span><h2>duHast.pyRevit.UI.multiselectors module<a class="headerlink" href="#module-duHast.pyRevit.UI.multiselectors" title="Permalink to this heading">¶</a></h2>
@@ -138,6 +184,51 @@
 <dt class="sig sig-object py" id="duHast.pyRevit.UI.multiselectors.pick_levels">
 <span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.UI.multiselectors.</span></span><span class="sig-name descname"><span class="pre">pick_levels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.UI.multiselectors.pick_levels" title="Permalink to this definition">¶</a></dt>
 <dd><p>PyRevit multiselector to pick multiple levels.</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.pyRevit.UI.ui_element_selection">
+<span id="duhast-pyrevit-ui-ui-element-selection-module"></span><h2>duHast.pyRevit.UI.ui_element_selection module<a class="headerlink" href="#module-duHast.pyRevit.UI.ui_element_selection" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-py-revit-element-selection-from-list">
+<h3>This module contains a number of helper functions relating to py Revit element selection from list.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-py-revit-element-selection-from-list" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.pyRevit.UI.ui_element_selection.default_name_builder">
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.UI.ui_element_selection.</span></span><span class="sig-name descname"><span class="pre">default_name_builder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.UI.ui_element_selection.default_name_builder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deafult element name builder is used to build the element name shown in the UI by combining the element name and element  Id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – An element</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A name of the element.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.pyRevit.UI.ui_element_selection.get_element_selection_from_user">
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.UI.ui_element_selection.</span></span><span class="sig-name descname"><span class="pre">get_element_selection_from_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_getter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_selection_description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiselect=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ui_element_name_builder=&lt;function</span> <span class="pre">default_name_builder&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.UI.ui_element_selection.get_element_selection_from_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>lists Elements provided by element getter function in UI and returns the users selection</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Ther current Revit model.</p></li>
+<li><p><strong>forms</strong> (<em>_type_</em>) – pyRevit forms</p></li>
+<li><p><strong>element_getter</strong> (<em>_type_</em>) – Function accpeting the document as the only argument returning a list of elements or empty list.</p></li>
+<li><p><strong>element_selection_description</strong> (<em>str</em>) – Text to be displayes on button to prompt user</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None if nothing was selected. Otherwise a list of element ids</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None or [Autodesk.Revit.ElementId]</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

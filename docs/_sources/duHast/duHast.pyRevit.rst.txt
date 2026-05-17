@@ -45,14 +45,6 @@ duHast.pyRevit.net\_dll\_loader module
    :undoc-members:
    :show-inheritance:
 
-duHast.pyRevit.ui\_element\_selection module
---------------------------------------------
-
-.. automodule:: duHast.pyRevit.ui_element_selection
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Module contents
 ---------------
 

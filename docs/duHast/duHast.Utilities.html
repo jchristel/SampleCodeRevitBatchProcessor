@@ -60,6 +60,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../revit_apps/index.html">Revit Application UI Guides</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -1122,6 +1123,20 @@ Checks whether folder exists and if not attempts to create it.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.directory_io.get_current_user_local_app_data_directory">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.directory_io.</span></span><span class="sig-name descname"><span class="pre">get_current_user_local_app_data_directory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.directory_io.get_current_user_local_app_data_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current user’s documents directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path to the user’s documents directory.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.directory_io.create_temp_directory">
 <span class="sig-prename descclassname"><span class="pre">duHast.Utilities.directory_io.</span></span><span class="sig-name descname"><span class="pre">create_temp_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.directory_io.create_temp_directory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a temporary directory in the system temp folder.</p>
@@ -1134,6 +1149,35 @@ Checks whether folder exists and if not attempts to create it.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.directory_io.get_current_user_local_app_data_duHast_temp_directory">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.directory_io.</span></span><span class="sig-name descname"><span class="pre">get_current_user_local_app_data_duHast_temp_directory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.directory_io.get_current_user_local_app_data_duHast_temp_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current user’s local app data duHast temp directory. Creates it if it does not exist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path to the duHast temp directory in the user’s local app data folder.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.directory_io.delete_old_guid_folders">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.directory_io.</span></span><span class="sig-name descname"><span class="pre">delete_old_guid_folders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dry_run</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_modified_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.directory_io.delete_old_guid_folders" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes GUID-named folders (and their contents) in root_path older than cutoff_date.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>root_path         (str):      Path to the directory containing folders to evaluate.
+cutoff_date       (datetime): Folders older than this date will be deleted.
+dry_run           (bool):     If True, only prints what would be deleted.
+use_modified_time (bool):     If True, uses last-modified time; False uses creation time.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Result: Object containing lists of deleted folders, skipped non-GUID folders, and failed deletions.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1197,7 +1241,7 @@ Assumes:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.files_base_combine.combine_files_header_independent">
-<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_base_combine.</span></span><span class="sig-name descname"><span class="pre">combine_files_header_independent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'result.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite_existing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_base_combine.combine_files_header_independent" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_base_combine.</span></span><span class="sig-name descname"><span class="pre">combine_files_header_independent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'result.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite_existing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quoting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_base_combine.combine_files_header_independent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used to combine report files into one file, files may have different number / named columns.</p>
 <p>Columns which are unique to some files will have as a value ‘N/A’ in files where those columns do not exist.</p>
 <dl class="field-list simple">
@@ -2716,6 +2760,23 @@ Assumes:</p>
 <dt class="sig sig-object py" id="duHast.Utilities.files_xml.get_xml_element_value">
 <span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_xml.</span></span><span class="sig-name descname"><span class="pre">get_xml_element_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_type=&lt;class</span> <span class="pre">'str'&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_xml.get_xml_element_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</section>
+<section id="module-duHast.Utilities.guids">
+<span id="duhast-utilities-guids-module"></span><h2>duHast.Utilities.guids module<a class="headerlink" href="#module-duHast.Utilities.guids" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.guids.is_guid">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.guids.</span></span><span class="sig-name descname"><span class="pre">is_guid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.guids.is_guid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the past in value is a valid GUID string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – string to check</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-duHast.Utilities.log_decorator">

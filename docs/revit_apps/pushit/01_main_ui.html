@@ -1,0 +1,363 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>PushIt — Main UI User Guide &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link rel="up" title="PushIt" href="index.html" />
+    <link rel="next" title="PushIt — drofus Data Source Guide" href="02_drofus_data_source_ui.html" />
+    <link rel="prev" title="PushIt" href="index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>PushIt — Main UI User Guide</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="02_drofus_data_source_ui.html" title="PushIt — drofus Data Source Guide" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="index.html" title="PushIt" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Revit Application UI Guides</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">PushIt</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">PushIt — Main UI User Guide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#window-layout">Window Layout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#header-banner">Header Banner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#message-banner">Message Banner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mock-rooms-data-grid">Mock Rooms Data Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#model-action-buttons">Model Action Buttons</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#data-admin-panel">Data Admin Panel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#push-it-buttons">Push It Buttons</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#typical-workflow">Typical Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="02_drofus_data_source_ui.html">PushIt — drofus Data Source Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="03_csv_data_source_ui.html">PushIt — CSV Data Source Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04_settings_ui.html">PushIt — Settings View Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../athelibrary/index.html">AtTheLibrary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docmanagersettingsui/index.html">DocManagerSettingsUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docmanagerui/index.html">DocManagerUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../familyreloaderui/index.html">FamilyReloaderUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pdfdwgexporterui/index.html">PDFDWGExporterUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pdfdwgexporterselectionui/index.html">PDFDWGExporterSelectionUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../selectfiles/index.html">SelectFiles</a></li>
+</ul>
+</li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/revit_apps/pushit/01_main_ui.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="pushit-main-ui-user-guide">
+<h1>PushIt — Main UI User Guide<a class="headerlink" href="#pushit-main-ui-user-guide" title="Permalink to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
+<p>PushIt is a Revit add-in for rapid layout development. It lets you load room data from an external source (CSV file or drofus API), view how that data aligns with <strong>mock rooms</strong> in your open Revit document, and push the data into the model one entry at a time or all at once.</p>
+<p><strong>Mock rooms</strong> are Revit families that visually resemble rooms (with or without walls) but are generic model families — they are not native Revit rooms. PushIt targets these mock room families rather than the built-in Revit room tool.</p>
+</section>
+<hr class="docutils" />
+<section id="window-layout">
+<h2>Window Layout<a class="headerlink" href="#window-layout" title="Permalink to this heading">¶</a></h2>
+<p>The main window is divided into the following sections from top to bottom:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Section</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Header banner</p></td>
+<td><p>Shows the application title, the current Revit document name, and the Settings navigation button</p></td>
+</tr>
+<tr class="row-odd"><td><p>Message banner</p></td>
+<td><p>Displays status messages and validation errors</p></td>
+</tr>
+<tr class="row-even"><td><p>Mock rooms data grid</p></td>
+<td><p>Lists all entries from your data source and their match status in the model</p></td>
+</tr>
+<tr class="row-odd"><td><p>Model action buttons</p></td>
+<td><p>Quick operations on the Revit model</p></td>
+</tr>
+<tr class="row-even"><td><p>Data Admin panel</p></td>
+<td><p>Bulk data operations (update all, wipe stale, save)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Push It buttons</p></td>
+<td><p>Select push mode and execute the push on the selected entry</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="header-banner">
+<h2>Header Banner<a class="headerlink" href="#header-banner" title="Permalink to this heading">¶</a></h2>
+<p>The blue banner at the top shows:</p>
+<ul class="simple">
+<li><p><strong>“Push It…Real Good!”</strong> — application title.</p></li>
+<li><p><strong>Rapid layout development in Revit</strong> — subtitle.</p></li>
+<li><p><strong>Document name</strong> — the title of the currently open Revit document.</p></li>
+<li><p><strong>⚙ Settings</strong> button (top-right) — opens the Settings view to configure the data source and supported Revit categories. See <a class="reference internal" href="04_settings_ui.html"><span class="std std-doc">04_settings_ui.md</span></a>.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="message-banner">
+<h2>Message Banner<a class="headerlink" href="#message-banner" title="Permalink to this heading">¶</a></h2>
+<p>A status bar directly below the header displays informational and error messages. Messages auto-dismiss after a short interval. If a validation problem prevents an action, the relevant error is shown here.</p>
+</section>
+<hr class="docutils" />
+<section id="mock-rooms-data-grid">
+<h2>Mock Rooms Data Grid<a class="headerlink" href="#mock-rooms-data-grid" title="Permalink to this heading">¶</a></h2>
+<p>The central grid lists every entry loaded from your active data source, showing how each entry matches against mock room families in the Revit model.</p>
+<section id="columns">
+<h3>Columns<a class="headerlink" href="#columns" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Column</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>RoomId</p></td>
+<td><p>Text</p></td>
+<td><p>Unique identifier for each data source entry</p></td>
+</tr>
+<tr class="row-odd"><td><p>Count</p></td>
+<td><p>Number</p></td>
+<td><p>Number of mock room family instances in the model that match this room ID</p></td>
+</tr>
+<tr class="row-even"><td><p>Split</p></td>
+<td><p>Number</p></td>
+<td><p>Number of split mock rooms associated with this room ID</p></td>
+</tr>
+<tr class="row-odd"><td><p><em>(custom)</em></p></td>
+<td><p>Various</p></td>
+<td><p>Additional columns added dynamically from the data source (e.g., parameter values from CSV headers or drofus field mappings)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="row-colour-coding">
+<h3>Row Colour Coding<a class="headerlink" href="#row-colour-coding" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Row colour</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Red background</p></td>
+<td><p>More than one mock room in the model matches this room ID (ambiguous match — resolve in Revit before pushing)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Light grey background</p></td>
+<td><p>Exactly one mock room matches (expected state)</p></td>
+</tr>
+<tr class="row-even"><td><p>White background</p></td>
+<td><p>No mock rooms match this room ID</p></td>
+</tr>
+<tr class="row-odd"><td><p>Light green background</p></td>
+<td><p>Entry is marked as a new mock room (pending creation in the model)</p></td>
+</tr>
+<tr class="row-even"><td><p>Amber background</p></td>
+<td><p>Entry is marked as a split mock room</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="grid-filter-indicator">
+<h3>Grid Filter Indicator<a class="headerlink" href="#grid-filter-indicator" title="Permalink to this heading">¶</a></h3>
+<p>When a column filter is active, the border around the grid turns <strong>red</strong> as a reminder that not all entries are visible.</p>
+</section>
+<section id="grid-disabled-state">
+<h3>Grid Disabled State<a class="headerlink" href="#grid-disabled-state" title="Permalink to this heading">¶</a></h3>
+<p>While PushIt is waiting for a Revit command to complete, the grid is disabled and cannot be interacted with. It re-enables automatically when the command finishes.</p>
+</section>
+<section id="selecting-an-entry">
+<h3>Selecting an Entry<a class="headerlink" href="#selecting-an-entry" title="Permalink to this heading">¶</a></h3>
+<p>Click any row to select it. Only one entry can be selected at a time. The selected entry is the target for the Push It, Wipe, and Highlight actions.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="model-action-buttons">
+<h2>Model Action Buttons<a class="headerlink" href="#model-action-buttons" title="Permalink to this heading">¶</a></h2>
+<p>Four controls appear below the grid for direct model interaction.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Control</p></th>
+<th class="head"><p>Action</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Refresh rooms from model</p></td>
+<td><p>Re-reads all mock room families from the open document and updates the Count and Split columns</p></td>
+</tr>
+<tr class="row-odd"><td><p>Wipe selected rooms in model</p></td>
+<td><p>Removes PushIt-managed parameter data from the mock rooms that match the currently selected grid row</p></td>
+</tr>
+<tr class="row-even"><td><p>Highlight rooms in model</p></td>
+<td><p>Selects and highlights the mock room families that match the currently selected grid row in the active Revit view</p></td>
+</tr>
+<tr class="row-odd"><td><p><em>(info display)</em></p></td>
+<td><p>Shows the <strong>Active Design Set</strong> and <strong>Active Design Option</strong> names to the right of the buttons</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="data-admin-panel">
+<h2>Data Admin Panel<a class="headerlink" href="#data-admin-panel" title="Permalink to this heading">¶</a></h2>
+<p>The <strong>Data Admin</strong> section is an expandable panel. Click the header to expand or collapse it. It contains bulk administrative operations.</p>
+<section id="admin-action-buttons">
+<h3>Admin Action Buttons<a class="headerlink" href="#admin-action-buttons" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Button</p></th>
+<th class="head"><p>Action</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Update rooms in model</p></td>
+<td><p>Pushes data from <strong>all</strong> grid rows to their matched mock rooms simultaneously</p></td>
+</tr>
+<tr class="row-odd"><td><p>Wipe stale data from rooms in model</p></td>
+<td><p>Scans the Revit model for mock rooms that were previously managed by PushIt but no longer have a match in the current data, and removes their managed parameters</p></td>
+</tr>
+<tr class="row-even"><td><p>Save room data</p></td>
+<td><p>Opens a file picker to save the current grid contents as a CSV file</p></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<div><p><strong>Data source and category settings</strong> are configured in the <strong>Settings</strong> view. Click <strong>⚙ Settings</strong> in the header to open it.</p>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils" />
+<section id="push-it-buttons">
+<h2>Push It Buttons<a class="headerlink" href="#push-it-buttons" title="Permalink to this heading">¶</a></h2>
+<p>The bottom section contains the mode selector and the main action button.</p>
+<section id="mode-selector-three-way-switch">
+<h3>Mode Selector (Three-Way Switch)<a class="headerlink" href="#mode-selector-three-way-switch" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Position</p></th>
+<th class="head"><p>Label</p></th>
+<th class="head"><p>Mode</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Left</p></td>
+<td><p>Push It</p></td>
+<td><p>Push data from the selected grid row into the matched mock room</p></td>
+</tr>
+<tr class="row-odd"><td><p>Centre</p></td>
+<td><p>Split It</p></td>
+<td><p>Split the matched mock room and push data</p></td>
+</tr>
+<tr class="row-even"><td><p>Right</p></td>
+<td><p>New Room</p></td>
+<td><p>Create a new mock room and push data</p></td>
+</tr>
+</tbody>
+</table>
+<p>Click the desired label to activate that mode. The large action button label updates to reflect the active mode.</p>
+</section>
+<section id="main-action-button">
+<h3>Main Action Button<a class="headerlink" href="#main-action-button" title="Permalink to this heading">¶</a></h3>
+<p>The large button executes the push operation on the currently selected grid row. Its label changes to match the active mode (<strong>Push It</strong>, <strong>Split It</strong>, or <strong>New Room</strong>).</p>
+<ul class="simple">
+<li><p>The button is enabled only when an entry is selected in the grid.</p></li>
+<li><p>The button is disabled while a Revit command is in progress.</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="typical-workflow">
+<h2>Typical Workflow<a class="headerlink" href="#typical-workflow" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Open a Revit document containing mock room families.</p></li>
+<li><p>Launch PushIt from the Revit ribbon.</p></li>
+<li><p>Click <strong>⚙ Settings</strong> in the header to configure your data source (CSV or drofus) and enabled Revit categories.</p></li>
+<li><p>Click <strong>Load Data</strong> in the Settings view to populate the grid and return to the main window.</p></li>
+<li><p>Review the grid. Red rows indicate ambiguous matches; light green rows are new entries pending creation; amber rows are splits.</p></li>
+<li><p>Click <strong>Refresh rooms from model</strong> at any time to resync the Count and Split columns with the current state of the Revit document.</p></li>
+<li><p>Select a row, choose a push mode, and click the main action button to push one entry at a time.</p></li>
+<li><p>Use <strong>Update rooms in model</strong> in the Data Admin panel to push all entries at once after reviewing.</p></li>
+<li><p>Use <strong>Wipe stale data from rooms in model</strong> after reorganising the data source to clean up orphaned parameter values.</p></li>
+</ol>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="../index.html" accesskey="U">Revit Application UI Guides</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="index.html" >PushIt</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                PushIt — Main UI User Guide
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

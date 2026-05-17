@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>AtTheLibrary &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link rel="up" title="Revit Application UI Guides" href="../index.html" />
+    <link rel="next" title="AtTheLibrary — Main UI User Guide" href="01_main_ui.html" />
+    <link rel="prev" title="PushIt — Settings View Guide" href="../pushit/04_settings_ui.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>AtTheLibrary</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="01_main_ui.html" title="AtTheLibrary — Main UI User Guide" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="../pushit/04_settings_ui.html" title="PushIt — Settings View Guide" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Revit Application UI Guides</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../pushit/index.html">PushIt</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">AtTheLibrary</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="01_main_ui.html">AtTheLibrary — Main UI User Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="02_parameters_selection_ui.html">AtTheLibrary — Parameters Selection Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="03_type_catalogue_editor_ui.html">AtTheLibrary — Type Catalogue Editor Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../docmanagersettingsui/index.html">DocManagerSettingsUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docmanagerui/index.html">DocManagerUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../familyreloaderui/index.html">FamilyReloaderUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pdfdwgexporterui/index.html">PDFDWGExporterUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pdfdwgexporterselectionui/index.html">PDFDWGExporterSelectionUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../selectfiles/index.html">SelectFiles</a></li>
+</ul>
+</li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/revit_apps/athelibrary/index.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="atthelibrary">
+<h1>AtTheLibrary<a class="headerlink" href="#atthelibrary" title="Permalink to this heading">¶</a></h1>
+<p>AtTheLibrary is a Revit add-in for browsing and managing a family library.
+It loads family data from a Schedule of Accommodation file, shows match
+status against the open Revit document, and lets you load, edit, or open
+individual families directly from the interface.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="01_main_ui.html">AtTheLibrary — Main UI User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="01_main_ui.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_main_ui.html#window-layout">Window Layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_main_ui.html#header-banner">Header Banner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_main_ui.html#message-banner">Message Banner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_main_ui.html#families-data-grid">Families Data Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_main_ui.html#action-buttons">Action Buttons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_main_ui.html#data-admin-panel">Data Admin Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_main_ui.html#typical-workflow">Typical Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="02_parameters_selection_ui.html">AtTheLibrary — Parameters Selection Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="02_parameters_selection_ui.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_parameters_selection_ui.html#accessing-the-parameters-selection-view">Accessing the Parameters Selection View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_parameters_selection_ui.html#window-layout">Window Layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_parameters_selection_ui.html#header">Header</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_parameters_selection_ui.html#message-banner">Message Banner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_parameters_selection_ui.html#parameters-data-grid">Parameters Data Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_parameters_selection_ui.html#apply-button">Apply Button</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_parameters_selection_ui.html#typical-parameters-selection-workflow">Typical Parameters Selection Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="03_type_catalogue_editor_ui.html">AtTheLibrary — Type Catalogue Editor Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="03_type_catalogue_editor_ui.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_type_catalogue_editor_ui.html#accessing-the-type-catalogue-editor">Accessing the Type Catalogue Editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_type_catalogue_editor_ui.html#window-layout">Window Layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_type_catalogue_editor_ui.html#header-banner">Header Banner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_type_catalogue_editor_ui.html#message-banner">Message Banner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_type_catalogue_editor_ui.html#cell-editor">Cell Editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_type_catalogue_editor_ui.html#action-buttons">Action Buttons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_type_catalogue_editor_ui.html#typical-type-catalogue-editing-workflow">Typical Type Catalogue Editing Workflow</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="../index.html" accesskey="U">Revit Application UI Guides</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                AtTheLibrary
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

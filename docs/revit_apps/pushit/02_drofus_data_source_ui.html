@@ -1,0 +1,386 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>PushIt — drofus Data Source Guide &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link rel="up" title="PushIt" href="index.html" />
+    <link rel="next" title="PushIt — CSV Data Source Guide" href="03_csv_data_source_ui.html" />
+    <link rel="prev" title="PushIt — Main UI User Guide" href="01_main_ui.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>PushIt — drofus Data Source Guide</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="03_csv_data_source_ui.html" title="PushIt — CSV Data Source Guide" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="01_main_ui.html" title="PushIt — Main UI User Guide" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Revit Application UI Guides</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">PushIt</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="01_main_ui.html">PushIt — Main UI User Guide</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">PushIt — drofus Data Source Guide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#opening-the-drofus-settings">Opening the drofus Settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#entering-your-connection-details">Entering Your Connection Details</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#saving-and-reloading-your-settings">Saving and Reloading Your Settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#connecting-to-drofus">Connecting to drofus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#choosing-an-attribute-configuration">Choosing an Attribute Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#setting-up-property-mappings">Setting Up Property Mappings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mapping-dialog">Mapping Dialog</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mapping-warnings">Mapping Warnings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#revit-precedence">Revit Precedence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#loading-data">Loading Data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#typical-first-time-setup">Typical First-Time Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="03_csv_data_source_ui.html">PushIt — CSV Data Source Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04_settings_ui.html">PushIt — Settings View Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../athelibrary/index.html">AtTheLibrary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docmanagersettingsui/index.html">DocManagerSettingsUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docmanagerui/index.html">DocManagerUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../familyreloaderui/index.html">FamilyReloaderUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pdfdwgexporterui/index.html">PDFDWGExporterUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pdfdwgexporterselectionui/index.html">PDFDWGExporterSelectionUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../selectfiles/index.html">SelectFiles</a></li>
+</ul>
+</li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/revit_apps/pushit/02_drofus_data_source_ui.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="pushit-drofus-data-source-guide">
+<h1>PushIt — drofus Data Source Guide<a class="headerlink" href="#pushit-drofus-data-source-guide" title="Permalink to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
+<p>The drofus data source pulls room data directly from your project’s drofus database. After connecting, you choose which set of room attributes to work with and then map each drofus field to the corresponding Revit parameter. PushIt remembers your configuration between sessions, so you only need to set it up once per project.</p>
+</section>
+<hr class="docutils" />
+<section id="opening-the-drofus-settings">
+<h2>Opening the drofus Settings<a class="headerlink" href="#opening-the-drofus-settings" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>In the main PushIt window, click <strong>⚙ Settings</strong> in the header banner.</p></li>
+<li><p>In the <strong>Data Source</strong> dropdown, select <strong>drofus</strong>.</p></li>
+<li><p>The drofus connection fields appear below the dropdown.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="entering-your-connection-details">
+<h2>Entering Your Connection Details<a class="headerlink" href="#entering-your-connection-details" title="Permalink to this heading">¶</a></h2>
+<p>You need four pieces of information to connect. Ask your BIM manager or drofus administrator if you are unsure of any values.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>What to enter</p></th>
+<th class="head"><p>Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Base URL</p></td>
+<td><p>The web address of your organisation’s drofus server</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">https://api.hidd.health.nsw.gov.au</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Database</p></td>
+<td><p>The drofus database name for your project</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hi-alburycr</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Project number</p></td>
+<td><p>The project number within that database</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">01</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>API token</p></td>
+<td><p>Your personal access token from drofus</p></td>
+<td><p><em>(see below)</em></p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Finding your API token:</strong> In drofus, open the Power Query credentials dialog. Copy the token shown there and paste it into the API token field in PushIt.</p>
+</section>
+<hr class="docutils" />
+<section id="saving-and-reloading-your-settings">
+<h2>Saving and Reloading Your Settings<a class="headerlink" href="#saving-and-reloading-your-settings" title="Permalink to this heading">¶</a></h2>
+<p>Use the two buttons below the connection fields to save and share your configuration.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Button</p></th>
+<th class="head"><p>What it does</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Save Settings</p></td>
+<td><p>Saves all connection details, your attribute configuration choice, and all mappings to a file you can share with the team</p></td>
+</tr>
+<tr class="row-odd"><td><p>Load Settings</p></td>
+<td><p>Loads a settings file (for example, one shared by a colleague) to populate all the fields automatically</p></td>
+</tr>
+</tbody>
+</table>
+<p>Your settings are also saved automatically each time you close the PushIt window, so they are ready next time you open it.</p>
+</section>
+<hr class="docutils" />
+<section id="connecting-to-drofus">
+<h2>Connecting to drofus<a class="headerlink" href="#connecting-to-drofus" title="Permalink to this heading">¶</a></h2>
+<p>Once all four connection fields are filled in, click <strong>Connect</strong>.</p>
+<ul class="simple">
+<li><p>While connecting, a <em>“Connecting…”</em> message is displayed.</p></li>
+<li><p>If the connection succeeds, a green message confirms it and shows how many rooms were found — for example, <em>“Connected — 142 rooms found.”</em></p></li>
+<li><p>If the connection fails, a red message explains the problem (wrong token, server unreachable, etc.). Check your connection details and try again.</p></li>
+</ul>
+<p>Once connected, the <strong>Attribute Configuration</strong> selector and the <strong>Property Mappings</strong> list appear.</p>
+<section id="if-drofus-is-not-available">
+<h3>If drofus Is Not Available<a class="headerlink" href="#if-drofus-is-not-available" title="Permalink to this heading">¶</a></h3>
+<p>If PushIt cannot reach drofus when it opens — for example because you are working offline — any mappings you saved previously are still shown so you can review them. You cannot add, edit, or validate mappings until you successfully connect. Click <strong>Connect</strong> whenever the server becomes reachable again.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="choosing-an-attribute-configuration">
+<h2>Choosing an Attribute Configuration<a class="headerlink" href="#choosing-an-attribute-configuration" title="Permalink to this heading">¶</a></h2>
+<p>drofus organises room data into <strong>attribute configurations</strong> — named groups of fields that are relevant to your project stage or use case. Selecting the right configuration ensures you only see and map the fields that apply to your work.</p>
+<p>After a successful connection, a dropdown labelled <strong>Attribute Configuration</strong> appears above the mapping list. Select the configuration that matches your current workflow.</p>
+<p>Your selection is remembered and restored automatically next time you open PushIt.</p>
+<section id="switching-to-a-different-configuration">
+<h3>Switching to a Different Configuration<a class="headerlink" href="#switching-to-a-different-configuration" title="Permalink to this heading">¶</a></h3>
+<p>If you change the configuration after you have already set up mappings, PushIt checks whether any of your existing mappings use fields that are not in the new configuration.</p>
+<ul class="simple">
+<li><p>If all your mappings are compatible, the switch happens immediately.</p></li>
+<li><p>If some mappings would be lost, a confirmation message appears telling you how many mappings will be <strong>removed</strong> and how many will be <strong>kept</strong>. You can confirm the switch or cancel and stay with your current configuration.</p></li>
+</ul>
+<blockquote>
+<div><p>Any mappings removed during a configuration switch cannot be recovered — you will need to add them again if you switch back.</p>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils" />
+<section id="setting-up-property-mappings">
+<h2>Setting Up Property Mappings<a class="headerlink" href="#setting-up-property-mappings" title="Permalink to this heading">¶</a></h2>
+<p>Property mappings tell PushIt which drofus field corresponds to which Revit parameter. You need at least one mapping, and exactly one of your mappings must be marked as the <strong>unique identifier</strong> — this is the field PushIt uses to match each drofus room to its corresponding mock room in Revit.</p>
+<section id="the-mapping-list">
+<h3>The Mapping List<a class="headerlink" href="#the-mapping-list" title="Permalink to this heading">¶</a></h3>
+<p>Each row in the mapping list shows one field-to-parameter link.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Column</p></th>
+<th class="head"><p>What it shows</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>⚠</p></td>
+<td><p>An orange warning icon appears if PushIt cannot find the drofus field or the Revit parameter. See <a class="reference internal" href="#mapping-warnings"><span class="xref myst">Mapping Warnings</span></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>🔑</p></td>
+<td><p>A key icon marks the mapping that is used as the unique room identifier</p></td>
+</tr>
+<tr class="row-even"><td><p>drofus Field</p></td>
+<td><p>The name of the drofus room field (hover over it to see the underlying field code)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Revit Parameter</p></td>
+<td><p>The Revit shared parameter that will receive the data</p></td>
+</tr>
+<tr class="row-even"><td><p>Direction</p></td>
+<td><p>Which way the data flows (currently always <em>drofus → Revit</em>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Revit Precedence</p></td>
+<td><p>A checkbox that controls what happens on repeated pushes to split rooms — see <a class="reference internal" href="#revit-precedence"><span class="xref myst">Revit Precedence</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="adding-a-mapping">
+<h3>Adding a Mapping<a class="headerlink" href="#adding-a-mapping" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Click <strong>Add</strong>.</p></li>
+<li><p>In the dialog that opens, choose a drofus field and a Revit parameter (see <a class="reference internal" href="#mapping-dialog"><span class="xref myst">Mapping Dialog</span></a>).</p></li>
+<li><p>Click <strong>OK</strong>. The new mapping appears in the list.</p></li>
+</ol>
+<p>The <strong>Add</strong> button is disabled when all available fields in the current configuration have already been mapped.</p>
+</section>
+<section id="editing-a-mapping">
+<h3>Editing a Mapping<a class="headerlink" href="#editing-a-mapping" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Click the mapping row you want to change to select it.</p></li>
+<li><p>Click <strong>Edit</strong>.</p></li>
+<li><p>Adjust the settings in the dialog and click <strong>OK</strong>.</p></li>
+</ol>
+</section>
+<section id="removing-a-mapping">
+<h3>Removing a Mapping<a class="headerlink" href="#removing-a-mapping" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Click the mapping row you want to delete to select it.</p></li>
+<li><p>Click <strong>Remove</strong>. The mapping is deleted immediately.</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="mapping-dialog">
+<h2>Mapping Dialog<a class="headerlink" href="#mapping-dialog" title="Permalink to this heading">¶</a></h2>
+<p>When you add or edit a mapping, a dialog opens with the following fields.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>drofus Field</p></td>
+<td><p>Choose the drofus room field from the dropdown. Only fields in your selected attribute configuration that have not already been mapped are shown.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Revit Parameter</p></td>
+<td><p>Choose the Revit shared parameter from the dropdown. Only parameters that exist in the current document and have not already been mapped are shown.</p></td>
+</tr>
+<tr class="row-even"><td><p>GUID</p></td>
+<td><p>Filled in automatically when you select a Revit parameter. You do not need to change this.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Direction</p></td>
+<td><p>The direction data flows. Pre-filled based on how the field is configured in drofus. Currently only <em>drofus → Revit</em> is active.</p></td>
+</tr>
+<tr class="row-even"><td><p>Is unique identifier</p></td>
+<td><p>Tick this box to mark the mapping as the unique room match key. Only one mapping can have this ticked at a time.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Click <strong>OK</strong> to save the mapping or <strong>Cancel</strong> to discard it.</p>
+</section>
+<hr class="docutils" />
+<section id="mapping-warnings">
+<h2>Mapping Warnings<a class="headerlink" href="#mapping-warnings" title="Permalink to this heading">¶</a></h2>
+<p>If the orange ⚠ icon appears next to a mapping, one of the following has happened:</p>
+<ul class="simple">
+<li><p><strong>drofus field missing</strong> — the field no longer exists in the current attribute configuration (it may have been renamed or removed in drofus).</p></li>
+<li><p><strong>Revit parameter missing</strong> — the shared parameter does not exist in the currently open Revit document.</p></li>
+</ul>
+<p>A yellow <strong>“Some mappings have validation warnings”</strong> banner also appears above the mapping list when any warning is present. Resolve all warnings before loading data — PushIt cannot push data for a mapping it cannot validate.</p>
+<p><strong>To fix a missing drofus field:</strong> Edit the mapping and choose the replacement field, or remove the mapping if the field is no longer needed.</p>
+<p><strong>To fix a missing Revit parameter:</strong> Ensure the correct shared parameter file is loaded in the Revit document, then reconnect so PushIt can recheck the parameters.</p>
+</section>
+<hr class="docutils" />
+<section id="revit-precedence">
+<h2>Revit Precedence<a class="headerlink" href="#revit-precedence" title="Permalink to this heading">¶</a></h2>
+<p>The <strong>Revit Precedence</strong> checkbox on each mapping row controls what PushIt does when it pushes data to a <strong>split room</strong> more than once.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Checkbox state</p></th>
+<th class="head"><p>Behaviour</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Unchecked (default)</p></td>
+<td><p>Every push overwrites the Revit parameter with the current value from drofus. Manual changes made in Revit are overwritten.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Checked</p></td>
+<td><p>The first push writes the drofus value into Revit as usual. After that, PushIt leaves the Revit value untouched — it will not be overwritten by drofus data on any future push.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Use <strong>Revit Precedence</strong> for parameters you expect to be fine-tuned in Revit after the initial layout is established — for example, where the net area of a split room has been manually adjusted. Leave it unchecked for parameters that should always reflect the current drofus data.</p>
+<p>Changes to the Revit Precedence checkboxes are saved automatically when you close the Settings view or click <strong>Save Settings</strong>.</p>
+</section>
+<hr class="docutils" />
+<section id="loading-data">
+<h2>Loading Data<a class="headerlink" href="#loading-data" title="Permalink to this heading">¶</a></h2>
+<p>Once you have connected, chosen a configuration, and set up your mappings:</p>
+<ol class="arabic simple">
+<li><p>Click <strong>Load Data</strong> at the bottom of the Settings view.</p></li>
+<li><p>PushIt retrieves the room data from drofus, populates the rooms grid in the main window, and returns you to the main view.</p></li>
+</ol>
+<p>If the Load Data button is greyed out, check that:</p>
+<ul class="simple">
+<li><p>All four connection fields are filled in.</p></li>
+<li><p>You have successfully connected (green status message showing).</p></li>
+<li><p>At least one mapping exists and has no warnings.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="typical-first-time-setup">
+<h2>Typical First-Time Setup<a class="headerlink" href="#typical-first-time-setup" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Click <strong>⚙ Settings</strong> in the main window.</p></li>
+<li><p>Choose <strong>drofus</strong> from the Data Source dropdown.</p></li>
+<li><p>Enter your Base URL, Database, Project number, and API token.</p></li>
+<li><p>Click <strong>Connect</strong> and wait for the green confirmation message.</p></li>
+<li><p>Choose your project’s <strong>Attribute Configuration</strong> from the dropdown.</p></li>
+<li><p>Click <strong>Add</strong> and create your first mapping — make sure to tick <em>Is unique identifier</em> on the field that links drofus rooms to Revit rooms.</p></li>
+<li><p>Click <strong>Add</strong> again for each additional parameter you want to push.</p></li>
+<li><p>For any parameter that should not be overwritten after its first split-room push, tick <strong>Revit Precedence</strong> in the mapping list.</p></li>
+<li><p>Check that no ⚠ warnings are shown.</p></li>
+<li><p>Click <strong>Save Settings</strong> to store the configuration for the team.</p></li>
+<li><p>Click <strong>Load Data</strong> to populate the rooms grid.</p></li>
+</ol>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="../index.html" accesskey="U">Revit Application UI Guides</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="index.html" >PushIt</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                PushIt — drofus Data Source Guide
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

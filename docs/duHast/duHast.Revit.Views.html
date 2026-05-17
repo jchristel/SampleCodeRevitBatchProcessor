@@ -60,6 +60,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../revit_apps/index.html">Revit Application UI Guides</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -164,6 +165,10 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Import.html#duHast.Revit.Views.Import.read_filter_storage.read_filter_storage_from_file"><code class="docutils literal notranslate"><span class="pre">read_filter_storage_from_file()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Views.Import.html#module-duHast.Revit.Views.Import.schedules_width_read_from_file">duHast.Revit.Views.Import.schedules_width_read_from_file module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Import.html#duHast.Revit.Views.Import.schedules_width_read_from_file.read_column_width_data_file"><code class="docutils literal notranslate"><span class="pre">read_column_width_data_file()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Views.Import.html#module-duHast.Revit.Views.Import">Module contents</a></li>
 </ul>
 </li>
@@ -227,6 +232,7 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Reporting.html#duHast.Revit.Views.Reporting.schedules_report.get_schedules_report_data_filtered"><code class="docutils literal notranslate"><span class="pre">get_schedules_report_data_filtered()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Reporting.html#duHast.Revit.Views.Reporting.schedules_report.write_schedule_data"><code class="docutils literal notranslate"><span class="pre">write_schedule_data()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Reporting.html#duHast.Revit.Views.Reporting.schedules_report.write_schedule_data_by_property_names"><code class="docutils literal notranslate"><span class="pre">write_schedule_data_by_property_names()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Reporting.html#duHast.Revit.Views.Reporting.schedules_report.export_schedules_column_widths"><code class="docutils literal notranslate"><span class="pre">export_schedules_column_widths()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Views.Reporting.html#module-duHast.Revit.Views.Reporting.sheets_report">duHast.Revit.Views.Reporting.sheets_report module</a><ul>
@@ -1152,6 +1158,26 @@ view reference types and view continuation types in the model.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules.get_all_schedules_placed_on_sheets">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules.</span></span><span class="sig-name descname"><span class="pre">get_all_schedules_placed_on_sheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_revision_schedules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules.get_all_schedules_placed_on_sheets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all schedules with an instance placed on a sheet. Optionally filter out revision schedules.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>filter_revision_schedules</strong> (<em>bool</em>) – If true, titleblock revision schedules will be filtered out. Default is True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of schedules with a sheet schedule instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.View</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Views.schedules.get_schedule_instance_on_sheet">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules.</span></span><span class="sig-name descname"><span class="pre">get_schedule_instance_on_sheet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules.get_schedule_instance_on_sheet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list containing all schedule sheet instances on a sheet.</p>
@@ -1242,16 +1268,70 @@ view reference types and view continuation types in the model.</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules.filter_split_schedules">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules.</span></span><span class="sig-name descname"><span class="pre">filter_split_schedules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schedules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules.filter_split_schedules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns only schedules which are split on sheet</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>schedules</strong> – a list of view schedule instances</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of schedules which are split on sheet or an empty list if none are split</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Revit.Views.schedules_element_filters">
 <span id="duhast-revit-views-schedules-element-filters-module"></span><h2>duHast.Revit.Views.schedules_element_filters module<a class="headerlink" href="#module-duHast.Revit.Views.schedules_element_filters" title="Permalink to this heading">¶</a></h2>
-<section id="id1">
-<h3>This module contains a number of helper functions relating to Revit view schedules.<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-filters-revit-view-schedules">
+<h3>This module contains a number of helper functions relating to filters Revit view schedules.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-filters-revit-view-schedules" title="Permalink to this heading">¶</a></h3>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Views.schedules_element_filters.get_schedule_filters">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_element_filters.</span></span><span class="sig-name descname"><span class="pre">get_schedule_filters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schedule</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_element_filters.get_schedule_filters" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_element_filters.get_schedule_filters_by_field_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_element_filters.</span></span><span class="sig-name descname"><span class="pre">get_schedule_filters_by_field_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schedule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_element_filters.get_schedule_filters_by_field_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the filters of a schedule by the field name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>schedule</strong> (<em>Autodesk.Revit.DB.ViewSchedule</em>) – Revit schedule view.</p></li>
+<li><p><strong>field_name</strong> (<em>str</em>) – Name of the field to get the filters for.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of filters that are applied to the schedule for the specified field name. If no filters are found, an empty list is returned.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ScheduleFilter</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_element_filters.get_schedule_filters_and_index_by_field_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_element_filters.</span></span><span class="sig-name descname"><span class="pre">get_schedule_filters_and_index_by_field_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schedule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_element_filters.get_schedule_filters_and_index_by_field_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the filters of a schedule by the field name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>schedule</strong> (<em>Autodesk.Revit.DB.ViewSchedule</em>) – Revit schedule view.</p></li>
+<li><p><strong>field_name</strong> (<em>str</em>) – Name of the field to get the filters for.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of tuples in format(filter, index) that are applied to the schedule for the specified field name. If no filters are found, an empty list is returned.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ScheduleFilter</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="duhast-revit-views-schedules-export-module">
@@ -1356,6 +1436,26 @@ view reference types and view continuation types in the model.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_fields.get_field_from_schedule_by_field_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_fields.</span></span><span class="sig-name descname"><span class="pre">get_field_from_schedule_by_field_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schedule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_fields.get_field_from_schedule_by_field_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the field matching the given name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>schedule</strong> (<em>Autodesk.Revit.DB.ViewSchedule</em>) – The Revit schedule object from which to extract the field index.</p></li>
+<li><p><strong>field_name</strong> (<em>str</em>) – The human readable field name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The field or None if no match was found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.ScheduleField</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Views.schedules_fields.get_field_values_from_schedule_by_parameter_id">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_fields.</span></span><span class="sig-name descname"><span class="pre">get_field_values_from_schedule_by_parameter_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schedule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_fields.get_field_values_from_schedule_by_parameter_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of all field values from a Revit schedule based on the parameter id.</p>
@@ -1372,11 +1472,60 @@ view reference types and view continuation types in the model.</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_fields.get_schedules_column_widths">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_fields.</span></span><span class="sig-name descname"><span class="pre">get_schedules_column_widths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schedules</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_names_of_interest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_fields.get_schedules_column_widths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of lists with schedule id and column data for the specified field names of interest. If no field names of interest are provided, will return column data for all fields in the schedule.</p>
+<p>Each row starts with the schedule id followed by tuples of field name and column width in inches for each field of interest.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>schedules</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.ViewSchedule</em>) – A list of Revit schedule objects to extract column width data from.</p></li>
+<li><p><strong>field_names_of_interest</strong> (<em>list</em><em> of </em><em>str</em><em>, </em><em>optional</em>) – A list of field names to extract column width data for. If empty, will extract column width data for all fields in the schedule.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Result object containing a list of lists with schedule id and column data for the specified field names of interest, or an error message if the operation fails.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">duHast.Utilities.Objects.result.Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.schedules_modify">
+<span id="duhast-revit-views-schedules-modify-module"></span><h2>duHast.Revit.Views.schedules_modify module<a class="headerlink" href="#module-duHast.Revit.Views.schedules_modify" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-view-schedule-modifications">
+<h3>This module contains a number of helper functions relating to Revit view schedule modifications.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-view-schedule-modifications" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_modify.adjust_column_width">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_modify.</span></span><span class="sig-name descname"><span class="pre">adjust_column_width</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schedules</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_modify.adjust_column_width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adjusts the column width of a specified field in a list of schedules.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document object.</p></li>
+<li><p><strong>schedules</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.ViewSchedule</em>) – A list of Revit schedule objects to adjust.</p></li>
+<li><p><strong>field_data</strong> (<em>dict</em><em>[</em><em>int</em><em>, </em><em>dict</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>]</em>) – A dictionary where the key is the schedule id and the values are another dictionary with the field name (key) and column width (value) to set.</p></li>
+<li><p><strong>callback_progress</strong> (<em>function</em><em>, </em><em>optional</em>) – An optional callback function to update the progress of the operation. The function should accept two parameters: the current progress (int) and the maximum progress (int).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Result object containing a list of schedules that were skipped because they did not contain the specified field.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">duHast.Utilities.Objects.result.Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Revit.Views.schedules_revision_filter">
 <span id="duhast-revit-views-schedules-revision-filter-module"></span><h2>duHast.Revit.Views.schedules_revision_filter module<a class="headerlink" href="#module-duHast.Revit.Views.schedules_revision_filter" title="Permalink to this heading">¶</a></h2>
-<section id="id2">
-<h3>This module contains a number of helper functions relating to Revit view schedules.<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<section id="id1">
+<h3>This module contains a number of helper functions relating to Revit view schedules.<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Views.schedules_revision_filter.filter_revision_schedules">
@@ -1409,6 +1558,220 @@ view reference types and view continuation types in the model.</p>
 </dd>
 </dl>
 <p>:rtype:bool</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.schedules_sheet_instances">
+<span id="duhast-revit-views-schedules-sheet-instances-module"></span><h2>duHast.Revit.Views.schedules_sheet_instances module<a class="headerlink" href="#module-duHast.Revit.Views.schedules_sheet_instances" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-sheet-schedule-instances">
+<h3>This module contains a number of helper functions relating to Revit sheet schedule instances.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-sheet-schedule-instances" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_sheet_instances.get_sheets_with_overlapping_schedules">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_sheet_instances.</span></span><span class="sig-name descname"><span class="pre">get_sheets_with_overlapping_schedules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_sheet_instances.get_sheets_with_overlapping_schedules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of sheets where schedules are overlapping the titleblock, along with the overlapping schedule instances and their required X-axis adjustments.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>doc: The Revit document.
+sheets: A list of ViewSheet objects to check.</p>
+</dd>
+<dt>Returns:</dt><dd><p>list of tuples: [(sheet, {instance_id: delta_x}), …] where each tuple contains a sheet and a dictionary of overlapping schedule instance IDs and their required X-axis adjustments.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_sheet_instances.get_sheets_with_schedules_outside_titleblock">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_sheet_instances.</span></span><span class="sig-name descname"><span class="pre">get_sheets_with_schedules_outside_titleblock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_sheet_instances.get_sheets_with_schedules_outside_titleblock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks all provided sheets for schedule instances extending outside the titleblock boundary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document object.</p></li>
+<li><p><strong>sheets</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.ViewSheet</em>) – A list of ViewSheet objects to check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of tuples containing the sheet and a dictionary of schedule instance IDs and the edges they violate.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of (Autodesk.Revit.DB.ViewSheet, { instance_id_int: [edge_strings] })</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_sheet_instances.get_sheets_with_schedules_overlapping_viewports">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_sheet_instances.</span></span><span class="sig-name descname"><span class="pre">get_sheets_with_schedules_overlapping_viewports</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_sheet_instances.get_sheets_with_schedules_overlapping_viewports" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks all provided sheets for schedule instances overlapping any viewport.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document object.</p></li>
+<li><p><strong>sheets</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.ViewSheet</em>) – A list of ViewSheet objects to check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of tuples containing the sheet and a dictionary of overlapping schedule instance IDs and their required X movement.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of (Autodesk.Revit.DB.ViewSheet, { instance_id_int: delta_x_in_feet })</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.schedules_sheet_instances_move">
+<span id="duhast-revit-views-schedules-sheet-instances-move-module"></span><h2>duHast.Revit.Views.schedules_sheet_instances_move module<a class="headerlink" href="#module-duHast.Revit.Views.schedules_sheet_instances_move" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-moving-of-revit-sheet-schedule-instances">
+<h3>This module contains a number of helper functions relating to moving of Revit sheet schedule instances.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-moving-of-revit-sheet-schedule-instances" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_sheet_instances_move.move_schedule_instance_along_x">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_sheet_instances_move.</span></span><span class="sig-name descname"><span class="pre">move_schedule_instance_along_x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segments_to_move</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schedule_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_sheet_instances_move.move_schedule_instance_along_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves schedule segment along the X axis by a given distance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document object.</p></li>
+<li><p><strong>segments_to_move</strong> (<em>{ instance_id_int: delta_x_in_feet }</em>) – A Dictionary containing as key the view schedule segment Id and the distance along the X it is to move in inches</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Result object containing the move status and message for each segment moved.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">duHast.Utilities.Objects.result.Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_sheet_instances_move.resolve_overlaps">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_sheet_instances_move.</span></span><span class="sig-name descname"><span class="pre">resolve_overlaps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schedule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schedule_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_sheet_instances_move.resolve_overlaps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if schedule segments are overlapping and if so move them iteratively until no more overlaps are detected or max iterations is reached.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document object.</p></li>
+<li><p><strong>schedule</strong> (<em>Autodesk.Revit.DB.ViewSchedule</em>) – The Revit schedule object to check for overlaps.</p></li>
+<li><p><strong>schedule_name</strong> (<em>str</em>) – The name of the schedule being processed (used for logging).</p></li>
+<li><p><strong>max_iterations</strong> (<em>int</em>) – The maximum number of iterations to attempt to resolve overlaps (default is 10).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Result object containing a list of schedules that were skipped because they did not contain the specified field.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">duHast.Utilities.Objects.result.Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_sheet_instances_move.move_schedule_sheet_instances_in_x_until_no_overlap">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_sheet_instances_move.</span></span><span class="sig-name descname"><span class="pre">move_schedule_sheet_instances_in_x_until_no_overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schedules</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_sheet_instances_move.move_schedule_sheet_instances_in_x_until_no_overlap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds any split schedule in the model and moves segments 1 to n (skips 0) by a given distance (the overlap) to the right.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document object.</p></li>
+<li><p><strong>schedules</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.ViewSchedule</em>) – A list of Revit schedule objects to check for overlaps and move if necessary.</p></li>
+<li><p><strong>callback_progress</strong> (<em>function</em><em>, </em><em>optional</em>) – An optional callback function to update the progress of the operation. The function should accept two parameters: the current progress (int) and the maximum progress (int).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Result object containing the move status and message for each schedule processed.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">duHast.Utilities.Objects.result.Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.schedules_sheet_instances_overlap">
+<span id="duhast-revit-views-schedules-sheet-instances-overlap-module"></span><h2>duHast.Revit.Views.schedules_sheet_instances_overlap module<a class="headerlink" href="#module-duHast.Revit.Views.schedules_sheet_instances_overlap" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-moving-of-revit-sheet-schedule-instances-overlapping">
+<h3>This module contains a number of helper functions relating to moving of Revit sheet schedule instances overlapping.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-moving-of-revit-sheet-schedule-instances-overlapping" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_sheet_instances_overlap.check_schedule_sheet_instances_are_overlapping">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_sheet_instances_overlap.</span></span><span class="sig-name descname"><span class="pre">check_schedule_sheet_instances_are_overlapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schedule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_sheet_instances_overlap.check_schedule_sheet_instances_are_overlapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if any segments of a split schedule overlap on their respective sheets.</p>
+<p>Returns a dictionary mapping segment instance IDs (int) to the distance in feet
+they need to move in the X direction to resolve the overlap. If the schedule is
+not split or no overlaps are found, an empty dictionary is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document object.</p></li>
+<li><p><strong>schedule</strong> (<em>Autodesk.Revit.DB.ViewSchedule</em>) – The Revit schedule object from which to extract the field index.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a dictionary where key is the schedule sheet instance Id as integer and the distance it has to move to avoid overlap with the previous segment.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>{ instance_id_int: delta_x_in_feet }</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_sheet_instances_overlap.check_schedules_overlap_titleblock">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_sheet_instances_overlap.</span></span><span class="sig-name descname"><span class="pre">check_schedules_overlap_titleblock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_sheet_instances_overlap.check_schedules_overlap_titleblock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if any schedule sheet instances on a given sheet overlap with the titleblock (inside the title block)</p>
+<p>Returns a dictionary mapping schedule sheet instance IDs (int) to the distance
+in feet they need to move in the X direction to clear the titleblock.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>doc: The Revit document.
+sheet: The ViewSheet to check.</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: { instance_id (int): delta_x (float) } for each overlapping schedule instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_sheet_instances_overlap.check_schedules_outside_titleblock">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_sheet_instances_overlap.</span></span><span class="sig-name descname"><span class="pre">check_schedules_outside_titleblock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_sheet_instances_overlap.check_schedules_outside_titleblock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if any schedule sheet instances on a given sheet extend outside the titleblock boundary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document object.</p></li>
+<li><p><strong>sheet</strong> (<em>Autodesk.Revit.DB.ViewSheet</em>) – The ViewSheet to check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a dictionary where key is the schedule sheet instance Id as integer and a list of edges it is outside of.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>{ instance_id_int: [edge_strings] }</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_sheet_instances_overlap.check_schedules_overlap_viewports">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_sheet_instances_overlap.</span></span><span class="sig-name descname"><span class="pre">check_schedules_overlap_viewports</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_sheet_instances_overlap.check_schedules_overlap_viewports" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if any schedule sheet instances on a given sheet overlap with any viewports.</p>
+<p>Returns a dictionary mapping schedule sheet instance IDs (int) to the distance
+in feet they need to move in the X direction to clear the overlapping viewport.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document object.</p></li>
+<li><p><strong>sheet</strong> (<em>Autodesk.Revit.DB.ViewSheet</em>) – The ViewSheet to check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a dictionary where key is the schedule sheet instance Id as integer and the distance it has to move to avoid overlap with a viewport.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>{ instance_id_int: delta_x_in_feet }</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -1514,6 +1877,25 @@ view reference types and view continuation types in the model.</p>
 sheet (Autodesk.Revit.DB.ViewSheet):The sheet of which to return the title block from</p>
 </dd>
 <dt>Returns:</dt><dd><p>Autodesk.Revit.DB.FamilyInstance: The first title block instance on a sheet or None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.sheets.get_titleblock_bounding_box">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.sheets.</span></span><span class="sig-name descname"><span class="pre">get_titleblock_bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.sheets.get_titleblock_bounding_box" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the bounding box of the titleblock on a sheet, or None if not found.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.sheets.get_sheets_from_schedule_instances">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.sheets.</span></span><span class="sig-name descname"><span class="pre">get_sheets_from_schedule_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schedules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.sheets.get_sheets_from_schedule_instances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of sheets that contain schedule sheet instances of the provided schedules.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>doc (Autodesk.Revit.DB.Document): Current Revit model document.
+schedules (list of Autodesk.Revit.DB.ViewSchedule): List of schedules to check for instances on sheets.</p>
+</dd>
+<dt>Returns:</dt><dd><p>list of Autodesk.Revit.DB.ViewSheet: List of sheets that contain schedule sheet instances of the provided schedules.</p>
 </dd>
 </dl>
 </dd></dl>

@@ -60,6 +60,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../revit_apps/index.html">Revit Application UI Guides</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -91,6 +92,61 @@
             
   <section id="duhast-revit-floors-export-package">
 <h1>duHast.Revit.Floors.Export package<a class="headerlink" href="#duhast-revit-floors-export-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Floors.Export.to_data_floor">
+<span id="duhast-revit-floors-export-to-data-floor-module"></span><h2>duHast.Revit.Floors.Export.to_data_floor module<a class="headerlink" href="#module-duHast.Revit.Floors.Export.to_data_floor" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-revit-floors-export-to-data-class-functions">
+<h3>This module contains a Revit floors export to DATA class functions.<a class="headerlink" href="#this-module-contains-a-revit-floors-export-to-data-class-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Floors.Export.to_data_floor.populate_data_floor_object">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Floors.Export.to_data_floor.</span></span><span class="sig-name descname"><span class="pre">populate_data_floor_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_floor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Floors.Export.to_data_floor.populate_data_floor_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a custom floor data object populated with some data from the revit model floor passed in.</p>
+<ul class="simple">
+<li><p>floor id</p></li>
+<li><p>floor type name</p></li>
+<li><p>floor mark</p></li>
+<li><p>floor type mark</p></li>
+<li><p>floor level name</p></li>
+<li><p>floor level id</p></li>
+<li><p>floor offset from level</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revit_floor</strong> (<em>Autodesk.Revit.DB.Floor</em>) – A revit floor instance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A data floor object instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_floor.DataFloor" title="duHast.Data.Objects.Collectors.data_floor.DataFloor"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFloor</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Floors.Export.to_data_floor.get_all_floor_data">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Floors.Export.to_data_floor.</span></span><span class="sig-name descname"><span class="pre">get_all_floor_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Floors.Export.to_data_floor.get_all_floor_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of floor data objects for each floor element in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of data floor instances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of <a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_floor.DataFloor" title="duHast.Data.Objects.Collectors.data_floor.DataFloor"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFloor</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Floors.Export">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Floors.Export" title="Permalink to this heading">¶</a></h2>
 </section>

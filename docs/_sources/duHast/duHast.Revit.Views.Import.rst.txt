@@ -20,6 +20,14 @@ duHast.Revit.Views.Import.read\_filter\_storage module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Views.Import.schedules\_width\_read\_from\_file module
+-------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.Import.schedules_width_read_from_file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

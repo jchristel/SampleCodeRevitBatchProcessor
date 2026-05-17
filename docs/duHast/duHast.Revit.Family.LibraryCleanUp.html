@@ -60,6 +60,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../revit_apps/index.html">Revit Application UI Guides</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -174,8 +175,13 @@
 <dd></dd></dl>
 
 </section>
-<section id="duhast-revit-family-librarycleanup-in-process-module">
-<h2>duHast.Revit.Family.LibraryCleanUp.in_process module<a class="headerlink" href="#duhast-revit-family-librarycleanup-in-process-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-duHast.Revit.Family.LibraryCleanUp.in_process">
+<span id="duhast-revit-family-librarycleanup-in-process-module"></span><h2>duHast.Revit.Family.LibraryCleanUp.in_process module<a class="headerlink" href="#module-duHast.Revit.Family.LibraryCleanUp.in_process" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.in_process.in_process_family">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.in_process.</span></span><span class="sig-name descname"><span class="pre">in_process_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">library_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_modifier_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters_to_reset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.in_process.in_process_family" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="module-duHast.Revit.Family.LibraryCleanUp.in_project_load_and_swap">
 <span id="duhast-revit-family-librarycleanup-in-project-load-and-swap-module"></span><h2>duHast.Revit.Family.LibraryCleanUp.in_project_load_and_swap module<a class="headerlink" href="#module-duHast.Revit.Family.LibraryCleanUp.in_project_load_and_swap" title="Permalink to this heading">¶</a></h2>
@@ -318,6 +324,27 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.post_process.move_directives_to_library">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.post_process.</span></span><span class="sig-name descname"><span class="pre">move_directives_to_library</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">library_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.post_process.move_directives_to_library" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves directive files from the output path to the library path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_path</strong> (<em>str</em>) – Path where directive files are located.</p></li>
+<li><p><strong>library_path</strong> (<em>str</em>) – Path to the library where directive files will be moved.</p></li>
+<li><p><strong>output</strong> (<em>function</em>) – Output function to log messages.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object indicating success or failure of the operation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.post_process.post_process_family">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.post_process.</span></span><span class="sig-name descname"><span class="pre">post_process_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">library_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup_directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.post_process.post_process_family" title="Permalink to this definition">¶</a></dt>
 <dd><p>Post-process function to handle the final steps after family processing.</p>
@@ -370,7 +397,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.LibraryCleanUp.pre_process.pre_process">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.pre_process.</span></span><span class="sig-name descname"><span class="pre">pre_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">library_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_list_directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code_descriptor_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.pre_process.pre_process" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.LibraryCleanUp.pre_process.</span></span><span class="sig-name descname"><span class="pre">pre_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">library_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_list_directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code_descriptor_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_task_lists</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_code_parameter_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sample_grouping_code'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.LibraryCleanUp.pre_process.pre_process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pre-process function to prepare for the family type data extraction.</p>
 <p>This function is a placeholder for any pre-processing steps that may be needed before extracting family type data from the library.</p>
 <dl class="field-list simple">
@@ -379,7 +406,7 @@
 <li><p><strong>library_path</strong> (<em>str</em>) – Path to the library containing family files to be renamed.</p></li>
 <li><p><strong>output_path</strong> (<em>str</em>) – Path where the directives will be written and changed family files will be copied to.</p></li>
 <li><p><strong>task_list_directory_path</strong> (<em>str</em>) – Path where the task lists for RBP will be written.</p></li>
-<li><p><strong>code_descriptor_path</strong> (<em>str</em>) – Path to the code descriptor file. (AUSHFG)</p></li>
+<li><p><strong>code_descriptor_path</strong> (<em>str</em>) – Path to the code descriptor file.</p></li>
 <li><p><strong>output</strong> – Output object to write messages to.</p></li>
 </ul>
 </dd>

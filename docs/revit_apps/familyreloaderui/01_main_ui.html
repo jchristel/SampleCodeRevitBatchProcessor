@@ -1,0 +1,367 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>FamilyReloaderUI — User Guide &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link rel="up" title="FamilyReloaderUI" href="index.html" />
+    <link rel="next" title="PDFDWGExporterUI" href="../pdfdwgexporterui/index.html" />
+    <link rel="prev" title="FamilyReloaderUI" href="index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>FamilyReloaderUI — User Guide</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="../pdfdwgexporterui/index.html" title="PDFDWGExporterUI" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="index.html" title="FamilyReloaderUI" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Revit Application UI Guides</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../pushit/index.html">PushIt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../athelibrary/index.html">AtTheLibrary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docmanagersettingsui/index.html">DocManagerSettingsUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docmanagerui/index.html">DocManagerUI</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">FamilyReloaderUI</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">FamilyReloaderUI — User Guide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#window-layout">Window Layout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#header-banner">Header Banner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#message-banner">Message Banner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#families-data-grid">Families Data Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#library-path-section">Library Path Section</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reload-mode-selector">Reload Mode Selector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reload-families-button">Reload Families Button</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#settings-persistence">Settings Persistence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#typical-workflow">Typical Workflow</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../pdfdwgexporterui/index.html">PDFDWGExporterUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pdfdwgexporterselectionui/index.html">PDFDWGExporterSelectionUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../selectfiles/index.html">SelectFiles</a></li>
+</ul>
+</li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/revit_apps/familyreloaderui/01_main_ui.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="familyreloaderui-user-guide">
+<h1>FamilyReloaderUI — User Guide<a class="headerlink" href="#familyreloaderui-user-guide" title="Permalink to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
+<p>FamilyReloaderUI is a Revit add-in for batch reloading families. It lists all families in the open Revit document, searches a library directory for matching <code class="docutils literal notranslate"><span class="pre">.rfa</span></code> files, and lets you reload selected families — either updating existing types only or loading all types from the library files.</p>
+</section>
+<hr class="docutils" />
+<section id="window-layout">
+<h2>Window Layout<a class="headerlink" href="#window-layout" title="Permalink to this heading">¶</a></h2>
+<p>The main window is divided into the following sections from top to bottom:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Section</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Header banner</p></td>
+<td><p>Shows the application title and subtitle</p></td>
+</tr>
+<tr class="row-odd"><td><p>Message banner</p></td>
+<td><p>Displays status messages and validation errors</p></td>
+</tr>
+<tr class="row-even"><td><p>Families data grid</p></td>
+<td><p>Lists all families in the open Revit document</p></td>
+</tr>
+<tr class="row-odd"><td><p>Library path section</p></td>
+<td><p>Specify and search the family library directory</p></td>
+</tr>
+<tr class="row-even"><td><p>Reload mode selector</p></td>
+<td><p>Choose how types are handled during reload</p></td>
+</tr>
+<tr class="row-odd"><td><p>Reload button</p></td>
+<td><p>Execute the reload for all selected families</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="header-banner">
+<h2>Header Banner<a class="headerlink" href="#header-banner" title="Permalink to this heading">¶</a></h2>
+<p>The blue banner at the top shows:</p>
+<ul class="simple">
+<li><p><strong>“Family Reloader”</strong> — application title.</p></li>
+<li><p><strong>Reload families en-batch into your project or family</strong> — subtitle.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="message-banner">
+<h2>Message Banner<a class="headerlink" href="#message-banner" title="Permalink to this heading">¶</a></h2>
+<p>A status bar directly below the header displays informational and error messages. Error messages remain until dismissed. Informational messages auto-dismiss after a short interval.</p>
+</section>
+<hr class="docutils" />
+<section id="families-data-grid">
+<h2>Families Data Grid<a class="headerlink" href="#families-data-grid" title="Permalink to this heading">¶</a></h2>
+<p>The central grid lists every family loaded in the open Revit document.</p>
+<section id="columns">
+<h3>Columns<a class="headerlink" href="#columns" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Column</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Editable</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Reload</p></td>
+<td><p>Boolean (checkbox)</p></td>
+<td><p>Yes</p></td>
+<td><p>Tick to include this family in the reload operation</p></td>
+</tr>
+<tr class="row-odd"><td><p>Family Name</p></td>
+<td><p>Text</p></td>
+<td><p>No</p></td>
+<td><p>Name of the family in the Revit document</p></td>
+</tr>
+<tr class="row-even"><td><p>Family Category</p></td>
+<td><p>Text</p></td>
+<td><p>No</p></td>
+<td><p>Revit category the family belongs to (e.g., Doors, Windows)</p></td>
+</tr>
+<tr class="row-odd"><td><p>IsShared</p></td>
+<td><p>Boolean</p></td>
+<td><p>No</p></td>
+<td><p>Whether the family is a shared family</p></td>
+</tr>
+<tr class="row-even"><td><p>Match Status</p></td>
+<td><p>Text</p></td>
+<td><p>No</p></td>
+<td><p>Result of the library search: <code class="docutils literal notranslate"><span class="pre">SingleMatch</span></code>, <code class="docutils literal notranslate"><span class="pre">MultipleMatches</span></code>, or <code class="docutils literal notranslate"><span class="pre">NoMatch</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Family Last Updated</p></td>
+<td><p>Date/Time</p></td>
+<td><p>No</p></td>
+<td><p>Last modification date of the matching library file</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="match-status-values">
+<h3>Match Status Values<a class="headerlink" href="#match-status-values" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Status</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>SingleMatch</p></td>
+<td><p>Exactly one matching <code class="docutils literal notranslate"><span class="pre">.rfa</span></code> file was found in the library — this family can be reloaded</p></td>
+</tr>
+<tr class="row-odd"><td><p>MultipleMatches</p></td>
+<td><p>More than one matching file was found — the match is ambiguous and the family cannot be reloaded until resolved</p></td>
+</tr>
+<tr class="row-even"><td><p>NoMatch</p></td>
+<td><p>No matching file was found in the library directory</p></td>
+</tr>
+</tbody>
+</table>
+<p>Only families with a <strong>SingleMatch</strong> status should be ticked for reload. Families with other statuses cannot be reloaded reliably.</p>
+</section>
+<section id="selecting-families">
+<h3>Selecting Families<a class="headerlink" href="#selecting-families" title="Permalink to this heading">¶</a></h3>
+<p>The grid supports extended selection. The <strong>Reload</strong> checkbox is the only editable column — tick it on the rows you want to include in the batch reload.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="library-path-section">
+<h2>Library Path Section<a class="headerlink" href="#library-path-section" title="Permalink to this heading">¶</a></h2>
+<p>This section specifies the directory to search for family files.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Control</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Library Path text box</p></td>
+<td><p>Full path to the folder containing your <code class="docutils literal notranslate"><span class="pre">.rfa</span></code> library files. Type or paste a path, or use Browse</p></td>
+</tr>
+<tr class="row-odd"><td><p>Incl Sub Directories checkbox</p></td>
+<td><p>When ticked, the search includes all subdirectories of the library path</p></td>
+</tr>
+<tr class="row-even"><td><p>Browse button</p></td>
+<td><p>Opens a folder picker dialog to select the library directory</p></td>
+</tr>
+<tr class="row-odd"><td><p>Update button</p></td>
+<td><p>Searches the library directory and updates the Match Status and Family Last Updated columns for all families. Enabled only when a valid library path is entered</p></td>
+</tr>
+</tbody>
+</table>
+<section id="validation">
+<h3>Validation<a class="headerlink" href="#validation" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Rule</p></th>
+<th class="head"><p>Behaviour</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Library path must not be empty</p></td>
+<td><p>Error shown below the text box if blank</p></td>
+</tr>
+<tr class="row-odd"><td><p>Library path must exist on disk</p></td>
+<td><p>Error shown below the text box if the directory does not exist</p></td>
+</tr>
+</tbody>
+</table>
+<p>While any validation error is present, the <strong>Reload Families</strong> button remains disabled.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="reload-mode-selector">
+<h2>Reload Mode Selector<a class="headerlink" href="#reload-mode-selector" title="Permalink to this heading">¶</a></h2>
+<p>Two mutually exclusive radio buttons control how family types are handled during the reload.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Behaviour</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Import All Types On Reload</p></td>
+<td><p>All types defined in the library <code class="docutils literal notranslate"><span class="pre">.rfa</span></code> file are loaded into the Revit document</p></td>
+</tr>
+<tr class="row-odd"><td><p>Reload Existing Types Only</p></td>
+<td><p>Only types that already exist in the document are updated; no new types are added</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="reload-families-button">
+<h2>Reload Families Button<a class="headerlink" href="#reload-families-button" title="Permalink to this heading">¶</a></h2>
+<p>The large <strong>Reload Families</strong> button at the bottom executes the batch reload for all ticked families.</p>
+<ul class="simple">
+<li><p>Enabled only when a valid library path is entered (no validation errors).</p></li>
+<li><p>Saves all settings and grid column configuration before closing the window.</p></li>
+<li><p>The calling Revit command processes the selected families after the window closes.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="settings-persistence">
+<h2>Settings Persistence<a class="headerlink" href="#settings-persistence" title="Permalink to this heading">¶</a></h2>
+<p>The following settings are saved automatically between sessions:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Library path</p></td>
+<td><p>The last used library directory path</p></td>
+</tr>
+<tr class="row-odd"><td><p>Include Sub Directories</p></td>
+<td><p>The last state of the subdirectory checkbox</p></td>
+</tr>
+<tr class="row-even"><td><p>Reload mode</p></td>
+<td><p>Whether Import All Types or Reload Existing Types was selected</p></td>
+</tr>
+<tr class="row-odd"><td><p>Column configuration</p></td>
+<td><p>Which columns are visible and their order</p></td>
+</tr>
+</tbody>
+</table>
+<p>Settings are stored in <code class="docutils literal notranslate"><span class="pre">%LocalAppData%\duHast\Reloader_settings.json</span></code>.</p>
+</section>
+<hr class="docutils" />
+<section id="typical-workflow">
+<h2>Typical Workflow<a class="headerlink" href="#typical-workflow" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Launch FamilyReloaderUI from the Revit ribbon with a document open.</p></li>
+<li><p>The families grid populates with all families in the document.</p></li>
+<li><p>Enter the path to your family library in the <strong>Library Path</strong> field, or click <strong>Browse</strong>.</p></li>
+<li><p>Optionally tick <strong>Incl Sub Directories</strong> to search subdirectories.</p></li>
+<li><p>Click <strong>Update</strong> to search the library and populate the Match Status and Last Updated columns.</p></li>
+<li><p>Review the grid. Tick <strong>Reload</strong> on families with a <code class="docutils literal notranslate"><span class="pre">SingleMatch</span></code> status that you want to reload.</p></li>
+<li><p>Select a reload mode: <strong>Import All Types</strong> or <strong>Reload Existing Types Only</strong>.</p></li>
+<li><p>Click <strong>Reload Families</strong> to execute the batch reload and close the window.</p></li>
+</ol>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="../index.html" accesskey="U">Revit Application UI Guides</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="index.html" >FamilyReloaderUI</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                FamilyReloaderUI — User Guide
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

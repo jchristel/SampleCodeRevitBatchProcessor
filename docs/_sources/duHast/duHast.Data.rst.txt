@@ -29,6 +29,22 @@ duHast.Data.process\_ceilings\_to\_rooms module
    :undoc-members:
    :show-inheritance:
 
+duHast.Data.process\_floors\_to\_rooms module
+---------------------------------------------
+
+.. automodule:: duHast.Data.process_floors_to_rooms
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.process\_items\_to\_rooms module
+--------------------------------------------
+
+.. automodule:: duHast.Data.process_items_to_rooms
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

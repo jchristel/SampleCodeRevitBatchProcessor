@@ -520,7 +520,7 @@ function Invoke-CascadingVersionUpdate {
         @{ 
             Name = "duHastUI"
             Path = "$BasePath\VS\duHastUI\duHastUI.sln"
-            CopyTo = @("$BasePath\src\duHast\lib")
+            CopyTo = @("$BasePath\VS\_References\duHast")
             Description = "UI components (depends on most others)"
         },
         @{ 

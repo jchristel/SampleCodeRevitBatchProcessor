@@ -340,7 +340,7 @@ namespace duHastNet.AtTheLibrary.Commands
             List<string> convertedHeader = [""];
 
             //skip the first entry since already added as empty value      
-            for (int i = 1; i<= currentHeader.Count; i++)
+            for (int i = 1; i< currentHeader.Count; i++)
             {
                 if (headerMapping.TryGetValue(currentHeader[i], out string oldEntryRetrieved))
                 {

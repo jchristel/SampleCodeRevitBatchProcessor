@@ -1,4 +1,4 @@
-#
+﻿#
 # License:
 #
 #
@@ -23,7 +23,7 @@
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Views.schedules import  get_all_sheet_schedules
-from duHast.pyRevit.ui_element_selection import get_element_selection_from_user
+from duHast.pyRevit.UI.ui_element_selection import get_element_selection_from_user
 
 
 def schedule_name_builder(element):

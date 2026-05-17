@@ -26,6 +26,7 @@ from duHast.Utilities.files_json import write_json_to_file
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Data.Objects.Collectors import data_floor as df
 from duHast.Data.Utils.data_to_file import build_json_for_file
+from duHast.pyRevit.UI.doc_selector import pick_document
 
 
 def floors_export_entry(doc, output, forms):
@@ -49,8 +50,14 @@ def floors_export_entry(doc, output, forms):
 
     try:
 
+        # ask user to select active or linked document
+        selected_doc = pick_document(doc, forms, button_name="Select model to collect floor data from")
+        if selected_doc is None:
+            return_value.append_message("No document selected")
+            return return_value
+
         # get floor data
-        floor_data = get_all_floor_data(doc)
+        floor_data = get_all_floor_data(selected_doc)
 
         # convert into a dictionary
         dic = {
@@ -58,7 +65,7 @@ def floors_export_entry(doc, output, forms):
         }
 
         # add some more properties before writing to json
-        json_formatted = build_json_for_file(dic, "{}".format(doc.Title))
+        json_formatted = build_json_for_file(dic, "{}".format(selected_doc.Title))
 
         # save report to json file
         file_path = forms.save_file(file_ext='json', title="Save report to json file")

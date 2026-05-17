@@ -1,4 +1,4 @@
-# License:
+﻿# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -24,7 +24,7 @@
 from duHast.Utilities.Objects.result import Result
 
 from duHast.pyRevit.console_output import print_header
-from duHast.pyRevit.ui_element_selection import get_element_selection_from_user
+from duHast.pyRevit.UI.ui_element_selection import get_element_selection_from_user
 from duHast.Revit.Categories.change_family_category import change_family_category
 from duHast.Revit.Categories.categories import get_category_by_id, get_available_categories_depending_on_category_type_owner
 

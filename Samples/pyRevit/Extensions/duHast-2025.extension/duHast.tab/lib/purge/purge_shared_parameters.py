@@ -1,4 +1,4 @@
-# License:
+﻿# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -26,7 +26,7 @@ from duHast.Revit.SharedParameters.purge_unused_shared_parameters_by_delete impo
     purge_shared_parameters_by_delete,
 )
 from duHast.Revit.SharedParameters.shared_parameters import get_all_shared_parameters
-from duHast.pyRevit.ui_element_selection import get_element_selection_from_user
+from duHast.pyRevit.UI.ui_element_selection import get_element_selection_from_user
 
 
 def purge_shared_parameters(doc, output, forms):

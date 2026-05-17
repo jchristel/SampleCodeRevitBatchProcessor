@@ -1,6 +1,6 @@
 
 # version number for all dlls
-$dllVersion=".25.0.1.1"
+$dllVersion=".25.0.1.2"
 
 # Function to determine base path from script location
 function Get-BasePathFromLocation {

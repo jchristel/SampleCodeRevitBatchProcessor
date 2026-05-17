@@ -1,7 +1,16 @@
-{
-    "Branch":  "net8DuHast",
-    "DateTime":  "2026-01-25 15:54:18",
-    "ToVersion":  "25.0.0.3",
-    "BasePath":  "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor-NET8",
-    "FromVersion":  "25.0.0.2"
-}
+[
+    {
+        "Branch":  "net8DuHast",
+        "DateTime":  "2026-01-25 15:54:18",
+        "ToVersion":  "25.0.0.3",
+        "BasePath":  "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor-NET8",
+        "FromVersion":  "25.0.0.2"
+    },
+    {
+        "Branch":  "net8DuHast",
+        "DateTime":  "2026-05-17 14:25:01",
+        "ToVersion":  "25.0.1.2",
+        "BasePath":  "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor-NET8",
+        "FromVersion":  "25.0.1.1"
+    }
+]

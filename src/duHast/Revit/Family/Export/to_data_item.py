@@ -50,6 +50,7 @@ from duHast.Revit.Exports.export_data import (
     get_instance_properties,
     get_model_data,
     get_phasing_data,
+    get_super_component_id,
     get_type_properties,
 )
 from duHast.Revit.Family.family_geometry import (
@@ -329,6 +330,9 @@ def populate_data_item_object(doc, revit_family_instance):
     data_i.design_set_and_option = get_design_set_data(
         doc=doc, element=revit_family_instance
     )
+
+    # super component id (populated when instance is a shared nested family)
+    data_i.super_component_id = get_super_component_id(revit_family_instance)
 
     return data_i
 

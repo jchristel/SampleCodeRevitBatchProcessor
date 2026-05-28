@@ -60,6 +60,7 @@ class DataItem(data_base.DataBase):
         super(DataItem, self).__init__(data_type=DataItem.data_type, j=j)
 
         # set default values
+        self.super_component_id = -1
         # list of room element ids this item belongs to (can be more than one when phasing is applied)
         self.rooms = []
         # location in the model: x/y/z position (translation_coord) and facing direction (rotation_coord)
@@ -88,6 +89,9 @@ class DataItem(data_base.DataBase):
 
             # attempt to populate from json
             try:
+                self.super_component_id = json_var.get(
+                    DataPropertyNames.SUPER_COMPONENT_ID, -1
+                )
                 # rooms: list of integer element ids
                 self.rooms = json_var.get(DataPropertyNames.ROOMS, [])
 

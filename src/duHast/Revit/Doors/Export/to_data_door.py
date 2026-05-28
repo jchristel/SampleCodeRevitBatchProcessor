@@ -50,7 +50,44 @@ from duHast.Revit.Exports.export_data import (
     get_instance_properties,
     get_type_properties,
     get_design_set_data,
+    get_super_component_id,
 )
+from duHast.Data.Objects.Collectors.Properties.data_room_to_phase import DataRoomToPhase
+
+
+def _get_room_entries(doc, revit_door, get_room_fn):
+    """
+    Iterates all project phases and collects DataRoomToPhase entries by calling
+    get_room_fn(phase) on the door for each phase.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revit_door: A Revit door instance.
+    :type revit_door: Autodesk.Revit.DB.FamilyInstance
+    :param get_room_fn: Bound method accepting a Phase and returning a Room or None.
+    :type get_room_fn: callable
+
+    :return: List of room-to-phase pairings, one per phase that returned a room.
+    :rtype: list[:class:`.DataRoomToPhase`]
+    """
+    entries = []
+    seen = set()
+    for phase in doc.Phases:
+        try:
+            room = get_room_fn(phase)
+            if room is None:
+                continue
+            key = (phase.Id.Value, room.Id.Value)
+            if key in seen:
+                continue
+            seen.add(key)
+            entry = DataRoomToPhase()
+            entry.phase_id = phase.Id.Value
+            entry.room_id = room.Id.Value
+            entries.append(entry)
+        except Exception:
+            pass
+    return entries
 
 
 def populate_data_door_object(doc, revit_door):
@@ -127,6 +164,13 @@ def populate_data_door_object(doc, revit_door):
         # get phasing information
         phase = get_phasing_data(doc=doc, element=revit_door)
         data_door.phasing = phase
+
+        # super component id (populated when door is a shared nested family)
+        data_door.super_component_id = get_super_component_id(revit_door)
+
+        # to-room and from-room per phase
+        data_door.to_room = _get_room_entries(doc, revit_door, revit_door.get_ToRoom)
+        data_door.from_room = _get_room_entries(doc, revit_door, revit_door.get_FromRoom)
 
         return data_door
     else:

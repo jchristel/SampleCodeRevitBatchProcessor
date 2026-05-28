@@ -49,19 +49,25 @@ class DataFamilyBase(
 
     data_type = "family_instance"
 
-    def __init__(self, j=None):
+    def __init__(self, data_type=None, j=None):
         """
         Class constructor.
 
+        :param data_type: human readable data type, defaults to DataFamilyBase.data_type
+        :type data_type: str, optional
         :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
 
         # store data type  in base class
-        super(DataFamilyBase, self).__init__(data_type=DataFamilyBase.data_type, j=j)
+        super(DataFamilyBase, self).__init__(
+            data_type=data_type if data_type is not None else DataFamilyBase.data_type,
+            j=j,
+        )
 
         # set default values
         self.associated_elements = []
+        self.super_component_id = -1
         self.instance_properties = data_instance_properties.DataInstanceProperties()
         self.type_properties = data_type_properties.DataTypeProperties()
         self.level = data_level.DataLevel()
@@ -88,6 +94,9 @@ class DataFamilyBase(
 
             # attempt to populate from json
             try:
+                self.super_component_id = json_var.get(
+                    DataPropertyNames.SUPER_COMPONENT_ID, -1
+                )
                 self.instance_properties = (
                     data_instance_properties.DataInstanceProperties(
                         json_var.get(

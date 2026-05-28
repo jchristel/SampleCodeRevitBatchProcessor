@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit door properties.
+Data storage class associating a room element id with the phase it was observed in.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 #
@@ -26,34 +26,34 @@ Data storage class for Revit door properties.
 #
 #
 
-
 import json
 
-from duHast.Data.Objects.Collectors.data_family_base import DataFamilyBase
-from duHast.Data.Objects.Collectors.Properties import data_room_to_phase
+from duHast.Data.Objects.Collectors import data_base
 from duHast.Data.Objects.Collectors.Properties.data_property_names import (
     DataPropertyNames,
 )
 
 
-class DataDoor(DataFamilyBase):
+class DataRoomToPhase(data_base.DataBase):
 
-    data_type = "door"
+    data_type = "room_to_phase"
 
     def __init__(self, j=None):
         """
         Class constructor.
 
-        :param j: A json formatted dictionary of this class, defaults to {}
+        Stores a single room-to-phase pairing: the element id of a room and the
+        element id of the phase in which that room assignment was observed.
+
+        :param j: A json formatted dictionary of this class, defaults to None
         :type j: dict, optional
         """
 
-        # store data type  in base class
-        super(DataDoor, self).__init__(data_type=DataDoor.data_type, j=j)
+        super(DataRoomToPhase, self).__init__(DataRoomToPhase.data_type)
 
-        # set default values
-        self.to_room = []
-        self.from_room = []
+        # set default values  (-1 == not set)
+        self.phase_id = -1
+        self.room_id = -1
 
         json_var = None
         if j is not None:
@@ -69,15 +69,38 @@ class DataDoor(DataFamilyBase):
                 )
 
             try:
-                self.to_room = [
-                    data_room_to_phase.DataRoomToPhase(entry)
-                    for entry in json_var.get(DataPropertyNames.TO_ROOM, [])
-                ]
-                self.from_room = [
-                    data_room_to_phase.DataRoomToPhase(entry)
-                    for entry in json_var.get(DataPropertyNames.FROM_ROOM, [])
-                ]
+                self.phase_id = json_var.get(DataPropertyNames.PHASE_ID, self.phase_id)
+                if not isinstance(self.phase_id, int):
+                    raise TypeError(
+                        "phase_id needs to be of type int, got {} instead.".format(
+                            type(self.phase_id)
+                        )
+                    )
+
+                self.room_id = json_var.get(DataPropertyNames.ROOM_ID, self.room_id)
+                if not isinstance(self.room_id, int):
+                    raise TypeError(
+                        "room_id needs to be of type int, got {} instead.".format(
+                            type(self.room_id)
+                        )
+                    )
+
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
+
+    def __eq__(self, other):
+        if not isinstance(other, DataRoomToPhase):
+            raise ValueError(
+                "other needs to be of type DataRoomToPhase, got {} instead.".format(
+                    type(other)
+                )
+            )
+        return self.phase_id == other.phase_id and self.room_id == other.room_id
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash((self.phase_id, self.room_id))

@@ -214,6 +214,23 @@ def get_phasing_data(doc, element):
     return phase_d
 
 
+def get_super_component_id(family_instance):
+    """
+    Returns the integer Element Id of the super component (host) family instance,
+    or -1 when the instance is not a shared nested family.
+
+    :param family_instance: A Revit family instance.
+    :type family_instance: Autodesk.Revit.DB.FamilyInstance
+
+    :return: super component element id, or -1 if not nested
+    :rtype: int
+    """
+    super_component = family_instance.SuperComponent
+    if super_component is None:
+        return -1
+    return super_component.Id.Value
+
+
 def get_model_data(doc):
     """
     Returns a revit_model instance with the name populated. If detached and not saved yet it will be named "Detached Model"

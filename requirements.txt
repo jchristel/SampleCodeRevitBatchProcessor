@@ -36,6 +36,6 @@ smmap==5.0.0
 tomli==2.0.1
 typed-ast==1.5.3
 typing_extensions==4.2.0
-urllib3==2.6.3
+urllib3==2.7.0
 wrapt==1.11.1
 zipp==3.8.0

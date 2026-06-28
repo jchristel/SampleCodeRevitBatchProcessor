@@ -5,9 +5,11 @@ layout:
   - Stats
   - PlaceRevitRooms
   - Area By Room
+  - -------------
+  - RoomMatePOC
 
 # bundle tooltip
-tooltip: Hassell
+tooltip: Layout for duHast Revit Addin
 
 
 # bundle author

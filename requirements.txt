@@ -1,5 +1,5 @@
 astroid==2.1.0
-black==24.3.0
+black==26.3.1
 build==1.1.1
 certifi==2024.7.4
 charset-normalizer==2.0.12

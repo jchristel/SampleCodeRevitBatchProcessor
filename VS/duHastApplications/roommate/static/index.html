@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Room Plan</title>
+<style>
+  :root {
+    --paper: #f3efe6;
+    --ink: #1f2421;
+    --rule: #cfc7b4;
+    --fill: #e4ddc9;
+    --fill-hover: #d4c9a8;
+    --accent: #b4541f;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--mono);
+    display: grid;
+    grid-template-rows: auto 1fr;
+  }
+
+  header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--ink);
+  }
+  header h1 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  header .meta {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+  }
+  header .meta.stale { color: var(--ink); opacity: 0.5; }
+
+  main { position: relative; overflow: hidden; }
+
+  svg { width: 100%; height: 100%; display: block; cursor: grab; }
+  svg:active { cursor: grabbing; }
+
+  .grid line { stroke: var(--rule); stroke-width: 0.5; vector-effect: non-scaling-stroke; }
+
+  .room { fill: var(--fill); stroke: var(--ink); stroke-width: 1.5;
+          stroke-linejoin: round; transition: fill 0.12s ease; vector-effect: non-scaling-stroke; }
+  .room:hover { fill: var(--fill-hover); }
+  .hole { fill: var(--paper); stroke: var(--ink); stroke-width: 1;
+          stroke-dasharray: 4 3; vector-effect: non-scaling-stroke; }
+
+  .label { fill: var(--ink); text-anchor: middle;
+           dominant-baseline: middle; pointer-events: none; }
+  .label .tag { fill: var(--accent); letter-spacing: 0.05em; }
+
+  /* --- level slider, a vertical "stack of floors" control on the left --- */
+  .levels {
+    position: absolute;
+    top: 1.25rem;
+    left: 1.25rem;
+    background: rgba(243, 239, 230, 0.92);
+    border: 1px solid var(--ink);
+    padding: 0.75rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: calc(100% - 2.5rem);
+  }
+  .levels .heading {
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+  .levels .stack {
+    display: flex;
+    flex-direction: column-reverse; /* highest elevation on top */
+    gap: 2px;
+    overflow-y: auto;
+  }
+  .levels button {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-align: left;
+    padding: 0.35rem 0.6rem;
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid transparent;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    white-space: nowrap;
+  }
+  .levels button:hover { border-color: var(--rule); }
+  .levels button.active {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .levels button .elev { opacity: 0.55; font-size: 0.66rem; }
+  .levels button.active .elev { opacity: 0.8; }
+  .levels .count { font-size: 0.6rem; opacity: 0.5; }
+  .levels.hidden { display: none; }
+
+  .empty {
+    position: absolute; inset: 0; display: grid; place-content: center;
+    text-align: center; gap: 0.4rem; color: var(--ink);
+  }
+  .empty strong { font-weight: 600; letter-spacing: 0.05em; }
+  .empty span { font-size: 0.75rem; opacity: 0.6; }
+  .empty code { background: #0001; padding: 0.1rem 0.4rem; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Room Plan</h1>
+    <span class="meta" id="meta">waiting for data</span>
+  </header>
+  <main>
+    <svg id="plan" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="levels hidden" id="levels">
+      <div class="heading">Levels</div>
+      <div class="stack" id="levelStack"></div>
+    </div>
+    <div class="empty" id="empty">
+      <strong>No rooms received yet</strong>
+      <span>POST your room JSON to <code>/rooms</code> from Revit, then this updates.</span>
+    </div>
+  </main>
+
+<script>
+const SVG = "http://www.w3.org/2000/svg";
+const plan = document.getElementById("plan");
+const meta = document.getElementById("meta");
+const empty = document.getElementById("empty");
+const levelsEl = document.getElementById("levels");
+const levelStack = document.getElementById("levelStack");
+
+// --- view transform state ---
+let view = { x: 0, y: 0, w: 100, h: 100 };
+let fitted = { x: 0, y: 0, w: 100, h: 100 };
+let lastPayloadJson = null;
+
+// --- level state ---
+let currentPayload = null;   // last rendered payload
+let activeLevelId = null;    // which level is shown
+
+function setViewBox() {
+  plan.setAttribute("viewBox", `${view.x} ${view.y} ${view.w} ${view.h}`);
+}
+
+function flip(p) { return { x: p.x, y: -p.y }; }
+
+function bounds(rooms) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const r of rooms)
+    for (const loop of r.loops)
+      for (const raw of loop.points) {
+        const p = flip(raw);
+        if (p.x < minX) minX = p.x;
+        if (p.y < minY) minY = p.y;
+        if (p.x > maxX) maxX = p.x;
+        if (p.y > maxY) maxY = p.y;
+      }
+  if (!isFinite(minX)) return null;
+  return { minX, minY, maxX, maxY };
+}
+
+function loopBox(loop) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const raw of loop.points) {
+    const p = flip(raw);
+    if (p.x < minX) minX = p.x;
+    if (p.y < minY) minY = p.y;
+    if (p.x > maxX) maxX = p.x;
+    if (p.y > maxY) maxY = p.y;
+  }
+  return { w: maxX - minX, h: maxY - minY };
+}
+
+function pointsAttr(loop) {
+  return loop.points.map(raw => { const p = flip(raw); return `${p.x},${p.y}`; }).join(" ");
+}
+
+function centroid(loop) {
+  const pts = loop.points.map(flip);
+  let a = 0, cx = 0, cy = 0;
+  for (let i = 0; i < pts.length; i++) {
+    const p = pts[i], q = pts[(i + 1) % pts.length];
+    const cross = p.x * q.y - q.x * p.y;
+    a += cross; cx += (p.x + q.x) * cross; cy += (p.y + q.y) * cross;
+  }
+  if (Math.abs(a) < 1e-9) {
+    const n = pts.length;
+    return { x: pts.reduce((s, p) => s + p.x, 0) / n, y: pts.reduce((s, p) => s + p.y, 0) / n };
+  }
+  a *= 0.5;
+  return { x: cx / (6 * a), y: cy / (6 * a) };
+}
+
+// Build the ordered list of levels to show. Prefer the payload's `levels`
+// array (ordered by elevation on the server); fall back to deriving from
+// rooms if an older payload omits it.
+function levelsForPayload(payload) {
+  if (Array.isArray(payload.levels) && payload.levels.length) {
+    return payload.levels.slice().sort((a, b) => a.elevation - b.elevation);
+  }
+  const seen = new Map();
+  for (const r of payload.rooms || []) {
+    const id = r.level_id || "unknown";
+    if (!seen.has(id)) seen.set(id, { id, name: id, elevation: 0 });
+  }
+  return [...seen.values()];
+}
+
+function roomsOnLevel(payload, levelId) {
+  return (payload.rooms || []).filter(r => (r.level_id || "unknown") === levelId);
+}
+
+// Draw a single level's rooms and re-fit the view to them.
+function renderLevel(payload, levelId, { refit = true } = {}) {
+  plan.replaceChildren();
+  const rooms = roomsOnLevel(payload, levelId);
+
+  if (rooms.length === 0) {
+    // a level with no placed rooms — clear canvas, leave a note in the meta
+    if (refit) { view = { ...fitted }; setViewBox(); }
+    return;
+  }
+
+  const b = bounds(rooms);
+  if (!b) return;
+
+  const w = b.maxX - b.minX, h = b.maxY - b.minY;
+  const pad = Math.max(w, h) * 0.04 || 1;
+
+  if (refit) {
+    fitted = { x: b.minX - pad, y: b.minY - pad, w: w + 2 * pad, h: h + 2 * pad };
+    view = { ...fitted };
+    setViewBox();
+  }
+
+  const baseFont = Math.max(fitted.w, fitted.h) * 0.02;
+
+  const g = document.createElementNS(SVG, "g");
+  g.setAttribute("class", "grid");
+  const step = 5;
+  for (let gx = Math.ceil(fitted.x / step) * step; gx < fitted.x + fitted.w; gx += step)
+    g.appendChild(line(gx, fitted.y, gx, fitted.y + fitted.h));
+  for (let gy = Math.ceil(fitted.y / step) * step; gy < fitted.y + fitted.h; gy += step)
+    g.appendChild(line(fitted.x, gy, fitted.x + fitted.w, gy));
+  plan.appendChild(g);
+
+  for (const room of rooms) {
+    if (!room.loops || room.loops.length === 0) continue;
+
+    const outer = document.createElementNS(SVG, "polygon");
+    outer.setAttribute("points", pointsAttr(room.loops[0]));
+    outer.setAttribute("class", "room");
+    outer.appendChild(titleEl(room.name || room.id));
+    plan.appendChild(outer);
+
+    for (let i = 1; i < room.loops.length; i++) {
+      const hole = document.createElementNS(SVG, "polygon");
+      hole.setAttribute("points", pointsAttr(room.loops[i]));
+      hole.setAttribute("class", "hole");
+      plan.appendChild(hole);
+    }
+
+    addLabel(room, baseFont);
+  }
+}
+
+function addLabel(room, baseFont) {
+  const box = loopBox(room.loops[0]);
+  const name = room.name || "(unnamed)";
+  const widthLimited = (box.w * 0.9) / Math.max(name.length, 1) / 0.6;
+  const heightLimited = box.h * 0.4;
+  const fontSize = Math.min(baseFont, widthLimited, heightLimited);
+  if (fontSize < baseFont * 0.25) return;
+
+  const c = centroid(room.loops[0]);
+  const label = document.createElementNS(SVG, "text");
+  label.setAttribute("class", "label");
+  label.setAttribute("x", c.x);
+  label.setAttribute("y", c.y);
+  label.setAttribute("font-size", fontSize);
+
+  const nameSpan = document.createElementNS(SVG, "tspan");
+  nameSpan.textContent = name;
+  nameSpan.setAttribute("x", c.x);
+
+  const tag = document.createElementNS(SVG, "tspan");
+  tag.setAttribute("class", "tag");
+  tag.setAttribute("x", c.x);
+  tag.setAttribute("dy", "1.2em");
+  tag.setAttribute("font-size", fontSize * 0.7);
+  tag.textContent = room.id;
+
+  label.append(nameSpan, tag);
+  plan.appendChild(label);
+}
+
+function line(x1, y1, x2, y2) {
+  const l = document.createElementNS(SVG, "line");
+  l.setAttribute("x1", x1); l.setAttribute("y1", y1);
+  l.setAttribute("x2", x2); l.setAttribute("y2", y2);
+  return l;
+}
+function titleEl(text) {
+  const t = document.createElementNS(SVG, "title");
+  t.textContent = text;
+  return t;
+}
+
+// Build the level buttons. column-reverse in CSS puts highest elevation at top.
+function buildLevelControl(payload, levels) {
+  levelStack.replaceChildren();
+  for (const lvl of levels) {
+    const count = roomsOnLevel(payload, lvl.id).length;
+    const btn = document.createElement("button");
+    btn.dataset.levelId = lvl.id;
+    if (lvl.id === activeLevelId) btn.classList.add("active");
+
+    const left = document.createElement("span");
+    left.textContent = lvl.name;
+    const right = document.createElement("span");
+    right.className = "elev";
+    right.textContent = `${count} rm`;
+
+    btn.append(left, right);
+    btn.addEventListener("click", () => selectLevel(lvl.id));
+    levelStack.appendChild(btn);
+  }
+  levelsEl.classList.toggle("hidden", levels.length <= 1);
+}
+
+function selectLevel(levelId) {
+  if (!currentPayload) return;
+  activeLevelId = levelId;
+  for (const btn of levelStack.children)
+    btn.classList.toggle("active", btn.dataset.levelId === levelId);
+  renderLevel(currentPayload, levelId, { refit: true });
+  updateMeta();
+}
+
+function updateMeta() {
+  if (!currentPayload) return;
+  const lvls = levelsForPayload(currentPayload);
+  const active = lvls.find(l => l.id === activeLevelId);
+  const n = roomsOnLevel(currentPayload, activeLevelId).length;
+  const lvlName = active ? active.name : "—";
+  meta.textContent = `${lvlName} · ${n} room${n === 1 ? "" : "s"} · v${currentPayload.schema_version} · ${new Date().toLocaleTimeString()}`;
+  meta.classList.remove("stale");
+}
+
+// Called only when new data arrives.
+function ingest(payload) {
+  currentPayload = payload;
+  empty.classList.add("hidden");
+
+  const levels = levelsForPayload(payload);
+
+  // keep the current level if it still exists, else default to the lowest one
+  if (!levels.some(l => l.id === activeLevelId)) {
+    activeLevelId = levels.length ? levels[0].id : null;
+  }
+
+  buildLevelControl(payload, levels);
+  if (activeLevelId) renderLevel(payload, activeLevelId, { refit: true });
+  updateMeta();
+}
+
+// --- pan & zoom ---
+let dragging = false, last = null;
+plan.addEventListener("pointerdown", e => { dragging = true; last = { x: e.clientX, y: e.clientY }; plan.setPointerCapture(e.pointerId); });
+plan.addEventListener("pointerup", () => dragging = false);
+plan.addEventListener("pointermove", e => {
+  if (!dragging) return;
+  const rect = plan.getBoundingClientRect();
+  const dx = (e.clientX - last.x) / rect.width * view.w;
+  const dy = (e.clientY - last.y) / rect.height * view.h;
+  view.x -= dx; view.y -= dy;
+  last = { x: e.clientX, y: e.clientY };
+  setViewBox();
+});
+plan.addEventListener("wheel", e => {
+  e.preventDefault();
+  const rect = plan.getBoundingClientRect();
+  const mx = view.x + (e.clientX - rect.left) / rect.width * view.w;
+  const my = view.y + (e.clientY - rect.top) / rect.height * view.h;
+  const k = e.deltaY > 0 ? 1.1 : 0.9;
+  view.x = mx - (mx - view.x) * k;
+  view.y = my - (my - view.y) * k;
+  view.w *= k; view.h *= k;
+  setViewBox();
+}, { passive: false });
+plan.addEventListener("dblclick", () => { view = { ...fitted }; setViewBox(); });
+
+// --- polling ---
+async function poll() {
+  try {
+    const res = await fetch("/rooms", { cache: "no-store" });
+    if (res.status === 204) { meta.textContent = "waiting for data"; meta.classList.add("stale"); return; }
+    if (!res.ok) throw new Error(res.status);
+    const payload = await res.json();
+    const incoming = JSON.stringify(payload);
+    if (incoming !== lastPayloadJson) {
+      lastPayloadJson = incoming;
+      ingest(payload);   // re-fits + rebuilds level control only on real change
+    }
+  } catch (err) {
+    meta.textContent = "connection lost"; meta.classList.add("stale");
+  }
+}
+poll();
+setInterval(poll, 2000);
+</script>
+</body>
+</html>

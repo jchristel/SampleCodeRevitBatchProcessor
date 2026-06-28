@@ -27,7 +27,7 @@ pylint==2.2.2
 pyproject_hooks==1.2.0
 python-dateutil==2.9.0.post0
 pytz==2025.1
-requests==2.27.1
+requests==2.33.0
 rope==0.17.0
 ruamel.yaml==0.17.21
 ruamel.yaml.clib==0.2.6

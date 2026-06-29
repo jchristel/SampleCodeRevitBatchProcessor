@@ -84,6 +84,14 @@ duHast.Data.Objects.Collectors.Properties.data\_revit\_model module
    :undoc-members:
    :show-inheritance:
 
+duHast.Data.Objects.Collectors.Properties.data\_room\_to\_phase module
+----------------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.Properties.data_room_to_phase
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Data.Objects.Collectors.Properties.data\_schedule\_segement module
 -------------------------------------------------------------------------
 

@@ -40,7 +40,107 @@ from Autodesk.Revit.DB import (
     ElementId,
     Line,
     Arc,
+    Options,
+    ViewDetailLevel,
+    Solid,
+    PlanarFace,
 )
+
+# Tolerance for "do these two points coincide", in feet.
+# Revit precision is ~1/16" (~0.0052 ft), so 1e-3 ft (~0.3 mm) is safely below
+# a real join but well above floating noise.
+GAP_TOL = 1e-3
+
+def _pt_gap(a, b):
+    """Planar distance between two XYZ points (ignores Z)."""
+    dx = a.X - b.X
+    dy = a.Y - b.Y
+    return (dx * dx + dy * dy) ** 0.5
+
+
+def _loop_has_gap(loop_segments):
+    """True if any segment's END does not meet the NEXT segment's START
+    (the dropped-segment quirk). Checks consecutive end->next-start, wrapping
+    the last segment back to the first."""
+    n = len(loop_segments)
+    if n < 3:
+        return True  # too few to be a valid polygon -> treat as broken
+    for i in range(n):
+        end_i = loop_segments[i].GetCurve().GetEndPoint(1)
+        start_next = loop_segments[(i + 1) % n].GetCurve().GetEndPoint(0)
+        if _pt_gap(end_i, start_next) > GAP_TOL:
+            return True
+    return False
+
+
+def _polygon_area(pts):
+    """Signed shoelace area of a list of (x,y). Used only to pick the largest
+    loop; sign/winding not relied upon elsewhere."""
+    n = len(pts)
+    if n < 3:
+        return 0.0
+    s = 0.0
+    for i in range(n):
+        x1, y1 = pts[i]
+        x2, y2 = pts[(i + 1) % n]
+        s += x1 * y2 - x2 * y1
+    return s * 0.5
+
+
+def _outer_loop_via_solid(room):
+    """Fall back to the room's 3D solid: take the lowest horizontal planar
+    face (the floor) and return its largest edge loop as the outer boundary.
+    Inner loops (holes) are ignored. Returns a list of (x,y) or None."""
+    
+    data_geo_polygon = dGeometryPoly.DataGeometryPolygon2()
+    
+    opt = Options()
+    opt.ComputeReferences = False
+    opt.DetailLevel = ViewDetailLevel.Fine
+
+    geo = room.get_Geometry(opt)
+    if geo is None:
+        return data_geo_polygon
+
+    solid = None
+    for obj in geo:
+        if isinstance(obj, Solid) and obj.Faces.Size > 0 and obj.Volume > 0:
+            solid = obj
+            break
+    if solid is None:
+        return data_geo_polygon
+
+    # Lowest horizontal planar face = floor.
+    floor = None
+    lowest_z = None
+    for f in solid.Faces:
+        if isinstance(f, PlanarFace) and abs(f.FaceNormal.Z) > 0.99:
+            z = f.Origin.Z
+            if lowest_z is None or z < lowest_z:
+                lowest_z = z
+                floor = f
+    if floor is None:
+        return data_geo_polygon
+
+    # The floor may have several edge loops (outer + holes). Pick the one with
+    # the largest absolute area as the outer boundary; ignore the rest.
+    best_pts = None
+    best_area = -1.0
+    for edge_loop in floor.EdgeLoops:
+        pts = []
+        for edge in edge_loop:
+            p = edge.AsCurve().GetEndPoint(0)
+            pts.append((p.X, p.Y))
+        a = abs(_polygon_area(pts))
+        if a > best_area:
+            best_area = a
+            best_pts = pts
+    
+    # set the outer loop in the data geometry polygon
+    if best_pts is not None:
+        data_geo_polygon.outer_loop = best_pts
+        
+    return data_geo_polygon
 
 
 def get_room_boundary_loops(
@@ -93,7 +193,7 @@ def get_points_from_room_boundaries(boundary_loops):
             loop_points = []
             for segment in room_loop:
                 p = segment.GetCurve().GetEndPoint(0)
-                loop_points.append(p)
+                loop_points.append((p.X, p.Y))
             if loop_counter == 0:
                 data_geo_polygon.outer_loop = loop_points
             else:
@@ -117,7 +217,24 @@ def get_2d_points_from_revit_room(revit_room):
     """
 
     all_room_points = []
-    boundary_loops = get_room_boundary_loops(revit_room)
+    boundary_loops_all = get_room_boundary_loops(revit_room)
+    boundary_loops = boundary_loops_all[0] if boundary_loops_all else []
+    
+    # any internal loops will be ignored in this case
+    if len(boundary_loops) == 0:
+        # this can happen if the room is enclosed by linked model only. Revit api does not return any boundary segments in this case. We will try to get the outer loop via solid
+        room_points = _outer_loop_via_solid(revit_room)
+        all_room_points.append(room_points)
+        return all_room_points
+    
+    # Outer loop is the first; check it for gaps. If broken, go to fallback.
+    # means that the room is not closed and we need to get the outer loop via solid
+    if _loop_has_gap(boundary_loops[0]):
+        room_points = _outer_loop_via_solid(revit_room)
+        all_room_points.append(room_points)
+        return all_room_points
+
+    # go standard route and get the points from the boundary segments
     if len(boundary_loops) > 0:
         room_points = get_points_from_room_boundaries(boundary_loops)
         all_room_points.append(room_points)

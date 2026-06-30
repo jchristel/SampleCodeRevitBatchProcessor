@@ -189,7 +189,6 @@ def get_points_from_room_boundaries(boundary_loops):
     data_geo_polygon = dGeometryPoly.DataGeometryPolygon2()
     for boundary_loop in boundary_loops:
         for room_loop in boundary_loop:
-            p = None  # segment start point
             loop_points = []
             for segment in room_loop:
                 p = segment.GetCurve().GetEndPoint(0)
@@ -235,9 +234,8 @@ def get_2d_points_from_revit_room(revit_room):
         return all_room_points
 
     # go standard route and get the points from the boundary segments
-    if len(boundary_loops) > 0:
-        room_points = get_points_from_room_boundaries(boundary_loops)
-        all_room_points.append(room_points)
+    room_points = get_points_from_room_boundaries(boundary_loops_all)
+    all_room_points.append(room_points)
     return all_room_points
 
 

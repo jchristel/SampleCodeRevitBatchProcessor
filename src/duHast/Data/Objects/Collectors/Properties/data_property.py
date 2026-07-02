@@ -50,6 +50,7 @@ class DataProperty(data_base.DataBase):
         # set default values
         self.name = "-"
         self.value = None
+        self.storage_type = None
 
         json_var = None
         # check if any data was past in with constructor!
@@ -77,6 +78,7 @@ class DataProperty(data_base.DataBase):
                     )
 
                 self.value = json_var.get(DataPropertyNames.VALUE_FIELD, self.value)
+                self.storage_type = json_var.get(DataPropertyNames.STORAGE_TYPE, self.storage_type)
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
@@ -85,10 +87,14 @@ class DataProperty(data_base.DataBase):
     def __eq__(self, other):
         if not isinstance(other, DataProperty):
             return NotImplemented
-        return self.name == other.name and self.value == other.value
+        return (
+            self.name == other.name
+            and self.value == other.value
+            and self.storage_type == other.storage_type
+        )
 
     def __ne__(self, other):
         return not self.__eq__(other)
-    
+
     def __hash__(self):
-        return hash((self.name, self.value))
+        return hash((self.name, self.value, self.storage_type))

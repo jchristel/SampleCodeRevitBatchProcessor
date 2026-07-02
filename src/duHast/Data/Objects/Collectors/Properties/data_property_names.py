@@ -82,6 +82,7 @@ class DataPropertyNames():
     VIEW_PORT_TYPE = "vp_type"
     VIEW_PORTS = "view_ports"
     VIEW_ID = "view_id"
+    STORAGE_TYPE = "storage_type"
     SUPER_COMPONENT_ID = "super_component_id"
     TO_ROOM = "to_room"
     WIDTH= "width"

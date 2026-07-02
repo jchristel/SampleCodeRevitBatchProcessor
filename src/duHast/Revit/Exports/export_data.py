@@ -36,6 +36,7 @@ from duHast.Revit.Common.parameter_get_utils import (
     getter_element_id_as_element_int,
     getter_none,
     get_all_parameters_and_values_wit_custom_getters,
+    get_parameter_value_with_over_load,
     get_built_in_parameter_value,
 )
 from duHast.Revit.Common.design_set_options import get_design_set_option_info
@@ -77,13 +78,13 @@ def get_element_properties(element):
     }
 
     # convert properties from Revit into data_property instances
+    # iterate parameters directly so we have access to p.StorageType alongside the value
     properties = []
-    for revit_prop in get_all_parameters_and_values_wit_custom_getters(
-        element, value_getter
-    ).items():
+    for p in element.GetOrderedParameters():
         data_p = DataProperty()
-        data_p.name = revit_prop[0]
-        data_p.value = revit_prop[1]
+        data_p.name = p.Definition.Name
+        data_p.value = get_parameter_value_with_over_load(p, value_getter)
+        data_p.storage_type = str(p.StorageType)
         properties.append(data_p)
 
     return properties

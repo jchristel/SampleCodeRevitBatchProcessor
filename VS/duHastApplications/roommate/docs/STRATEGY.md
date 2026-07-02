@@ -291,6 +291,244 @@ database, retention, surviving restarts) is a bigger, separate step than keying
 by project; add it only when a snapshot must outlive the process. Let the
 live-model testing indicate whether it is needed.
 
+## Next steps (committed order)
+
+Three moves, sequenced so each lands on the one before it. The order is
+deliberate: firm up the room contract first, then wire the external source that
+joins onto it, then define the classification structure over it. Properties lead
+because both later steps depend on them — the dRofus link key and every
+classification tier's code/name fields all live in the properties block, so the
+thing being joined and classified must be fully formed first.
+
+### 1. Expand the room properties contract (properties always present)
+
+`Room` today is `id / name / level_id / loops` — geometry plus a display name.
+The next contract bump carries a **properties** block on every room, *always
+present* (not `Option`), so consumers never branch on presence. This lands first
+because both later steps read from it: the dRofus link key (step 2) and the
+hierarchy's identity/display fields (step 3) both live here.
+
+**Two tiers, two treatments.** Revit properties come in two kinds and the
+contract carries both, because a downstream consumer can't assume which tier its
+field falls in:
+
+- *Built-in Revit properties* — guaranteed to exist because Revit builds them in
+  (name, number, area, level, etc.). Modelled as a **typed struct**, non-`Option`
+  fields, since the extractor can rely on them.
+- *Project-varying (custom) properties* — shared/project parameters that differ
+  per model. Shape is unknown at compile time, so an **open bag**
+  (`Map<String, _>`), defaulting to empty.
+
+- **"Always present" means the block, not every field.** The properties block
+  itself is always there — both tiers included, custom possibly empty — so
+  readers branch on nothing. Within it, built-ins are guaranteed values, customs
+  are best-effort. Keep the two separated so a reader knows which guarantee it's
+  getting. Use `#[serde(default)]` so an older or sparse payload deserializes to
+  the empty form rather than failing.
+- **Both tiers are join surfaces — that's why both must ship.** The dRofus link
+  key might be a built-in *or* a custom param depending on project setup; the
+  hierarchy keys on built-in identity but may pull custom display metadata.
+  Neither later step can assume the tier, so both are in the contract,
+  addressable uniformly.
+- **Raw properties, per the extract-dumb rule.** Values ride as extracted
+  primitives, not interpreted — same reason the contract carries coordinates,
+  not areas. Built-ins are a fixed pull; customs are "extract whatever params
+  exist, raw." Two collection strategies, one block, no interpretation either
+  side.
+
+**Custom values as raw strings, with an optional storage-type hint.** Revit
+hands most params back as strings, so the custom bag carries **raw strings for
+now** and defers any typing server-side. The extractor can additionally forward
+Revit's declared `StorageType` (String / Integer / Double / ElementId) as
+*guidance* — an observed fact, not a computed value, so still extract-dumb.
+
+- **Shape each custom property as a `{ value, storage_type }` pair**, not two
+  parallel `values`/`types` maps — keeps the pair together, can't drift, and an
+  absent type degrades gracefully to "treat as string."
+- **Hint, not guarantee.** The declared type and the parseable content can
+  disagree (a String param holding "12.5", an empty Double). The server coerces
+  *guided by* the hint but keeps the raw string as source of truth, falling back
+  to it when coercion fails. Coercion stays server-side and lazy — store raw,
+  coerce only when a consumer actually needs a typed read.
+
+**Ids and `ElementId` values are 64-bit ints at the source, strings in the
+contract.** Revit 2024+ made `ElementId` 64-bit (`Int64`), and IronPython 2.7
+can truncate a large id across the CLR boundary — especially via the deprecated
+32-bit `IntegerValue`, which fails silently with a wrapped number rather than an
+error.
+
+- **Stringify at extraction, before IronPython can narrow it** — read `.Value`
+  (the Int64) and `str()` it on read, never touching `IntegerValue`. An id is an
+  identity token, not a number to compute on; string is the only width-safe
+  carrier across the IronPython/CLR seam. The contract already carries `id`,
+  `level_id`, and room identity as `String` — this documents *why* they must stay
+  that way.
+- **Same treatment for any `ElementId`-storage custom param** — stringify the
+  underlying Int64 at extraction, carry raw, resolve server-side only if a
+  consumer needs it. Note that a raw ElementId is a reference, not a display
+  value, so resolving it is extraction-side work to decide on deliberately.
+- **Server stays clean.** Rust reads a `String`; if it needs the number it parses
+  to `i64` explicitly, where width is safe — never inheriting a truncated value.
+
+- **Schema bump, loud on mismatch.** Version the change (v2 → v3 territory,
+  aligning with the project/model/snapshot contract already sketched) so an old
+  producer surfaces as HTTP 422, not a silent misrender.
+
+### 2. Load test dRofus data from file
+
+The settings scaffold already resolves a `DrofusSource::File { path }` at
+startup and holds it in `AppState`; what's missing is the loader that actually
+reads it. Add it next, mirroring the `seed_if_test` pattern already proven for
+snapshots: read the file once at startup, parse into a keyed lookup, hold it in
+state for join at response assembly.
+
+**File format — a two-header-row CSV.** The dRofus export is CSV (not JSON —
+this is the one input that isn't machine-JSON, because it's a dRofus-side export
+in its native tabular form):
+
+```
+DrofusRoomId,   NetArea,     Department,  ...   ← row 1: dRofus property names
+RevitDrofusKey, d_net_area,  d_dept,      ...   ← row 2: matching Revit param names
+<key value>,    <value>,     <value>,     ...   ← row 3+: data
+```
+
+The **two header rows are the join spec**, and must both be retained, not
+collapsed:
+- *Row 2, column 0* names the Revit room property whose *value* holds the dRofus
+  id — this is the link. Constant for the whole file, read once at load.
+- *Row 1* is the dRofus field names — the display/label layer for the joined
+  data. Row 2's other columns are the Revit param names those fields correspond
+  to, kept for reconciliation.
+
+**The link is a direct value match, ids are unique → `Map<String, DrofusRecord>`.**
+The Revit property value equals the dRofus id directly (no transform), and ids
+don't repeat, so the loader builds a flat map, one record per id, no collision
+handling. Join at `/rooms` assembly is an O(1) lookup per room: read the linking
+property off the room, hit the map.
+
+- **This is the `File` loader the enum was built for.** The `#[serde(tag =
+  "type")]` variant is already in place precisely so this loader is the only new
+  surface — when the real API connector lands, `DrofusSource::Api` slots in
+  beside `File` as a loader-only change, state and `/rooms` untouched.
+- **Store raw, join late.** Hold the parsed map in `AppState` alongside the
+  resolved source; attach at response assembly, never at load — keeps `/rooms`
+  the raw-geometry endpoint and leaves the Revit snapshot untouched.
+- **Depends on step 1.** The linking key lives in the room's properties block,
+  so the join can't be wired until rooms carry that property — which is exactly
+  why properties now lead. The key may sit in either the built-in or the custom
+  tier, so both must be present and uniformly addressable before the join.
+- **Unmatched key is a signal, not an error.** A room with no linking value just
+  gets no dRofus data (empty, since the sub-object is always-present). A key on
+  the room but absent from the map is the useful mismatch — same diagnostic role
+  as the room↔level join: the two exports saw different model state.
+- **Dev seam, prod-safe by construction.** Loading here is the reference-data
+  analogue of `test_data`: wired at startup from config, absent-safe, feeding
+  the join rather than shipping as a live default.
+
+**Attach as a separate `drofus` sub-object on the room, not merged into
+properties.** This is a lifecycle decision, not just provenance: the user will
+eventually poll the dRofus server for fresh data *mid-session*, so dRofus
+refreshes on its own trigger, independent of the Revit push. Merging it into the
+properties block would fuse two different-lifecycle things into one bag — the
+coupling "endpoints follow fetch lifecycle" warns against. A separate sub-object
+keeps the seam where the refresh boundary actually is.
+
+- **The startup file load is the degenerate case of a polled source** —
+  fetch-once-at-boot. By the same fetch-lifecycle test, a live-pollable dRofus
+  source trends toward its own endpoint (`/drofus` or similar) rather than always
+  riding inside `/rooms`; the separate sub-object now is the shape that lets that
+  split happen later without touching the room contract.
+- **Provenance falls out for free.** Separate object keeps the join reversible —
+  swap file loader for API loader, re-attach, no Revit-extracted property ever
+  overwritten.
+- **Caveat to stay honest about.** A separately-refreshing source reintroduces a
+  mild version of the two-fetches-that-must-recombine problem the levels decision
+  avoided — geometry and dRofus data can be momentarily out of sync client-side.
+  Acceptable here because they share no render-pass dependency the way
+  levels/rooms do, but named so the staleness is a known choice, not a surprise.
+
+### 3. Establish a room classification hierarchy
+
+An **n-tier classification hierarchy** that groups rooms by their properties —
+e.g. Building → Department → Sub-department → Functional Group. Test
+implementation, no UI: define it in the settings file, load and validate at
+startup, optionally resolve each room's classification path in memory. (Not to
+be confused with the storage hierarchy in the data-model section — that's about
+identity and versioning; this is about organizational grouping within a
+snapshot.)
+
+**Config-resolved at startup, before rooms arrive — same reason as dRofus.** It
+isn't payload data; it's a *definition of how to interpret* payload data, from a
+separate source (the settings file), wired in before the first POST so it
+reflects the order rooms will be classified into. Belongs in settings, not the
+push — the same line the handoff drew for dRofus.
+
+**Its own top-level section, not under `[sources]`.** A source *supplies* values
+to join; the hierarchy *defines structure over* values already on the room.
+Different kind of thing → separate section, so either can change without touching
+the other (mirrors the handoff's `test_data`-vs-`drofus` split). The
+array-of-tables form encodes tier order for free — outermost first, and order
+*is* the meaning:
+
+```toml
+[[hierarchy]]
+name = "Building"
+code_property = "d_building_code"
+name_property = "d_building_name"
+
+[[hierarchy]]
+name = "Department"
+code_property = "d_dept_code"
+name_property = "d_dept_name"
+
+# ... Sub-department, Functional Group, n tiers deep
+```
+
+- **Each tier names a code and/or a name property.** Classification fields
+  usually come as a pair — a code and a display name — so each tier can reference
+  both, either, giving code-only, name-only, or both. Validate at startup that a
+  tier names *at least one*: a tier with neither is unkeyable, so fail fast
+  (consistent with settings loading).
+- **Rides on step 1, like dRofus.** Every `code_property` / `name_property` must
+  resolve against the room's properties block, and may live in either the
+  built-in or custom tier — so this is the third consumer that depends on
+  properties landing first.
+
+**Missing tier data is a first-class visualizable state, not an error.** The
+project already has two "mismatch" cases where a reference that *should* resolve
+*doesn't*, and both are treated as diagnostic signals that two data sources
+disagreed: the **room↔level mismatch** (Open items — a room's `level_id` has no
+match in the level export, meaning the room and level collectors saw different
+model state) and the **dRofus key mismatch** (step 2 — a room's link key is
+present but absent from the dRofus map, meaning the Revit and dRofus exports saw
+different rooms). Missing tier data looks superficially similar but is the
+*opposite* case: nothing disagreed, the room is simply classified only partway
+down — an *expected*, incomplete-by-design state, not a broken reference. So
+instead of flagging it, the rule is: **assign the room to the highest tier it
+has data for, and set every tier below to an explicit `undefined`.**
+
+- **Resolved classification is a full-depth path with explicit `undefined`
+  slots**, never a truncated path. Every room gets a value at every tier — real
+  code/name or the `undefined` sentinel — so the grouping tree is uniform-depth
+  and the viewer can render "undefined Sub-department" as its own visible group.
+  Same discipline as always-present properties: no consumer branches on presence;
+  absence is a represented value. A wholly-unclassified room (missing even tier
+  1) is `undefined` all the way down, so it's still visualizable rather than
+  vanishing.
+- **Surfacing partial classification is a purpose, not a side effect.** For a
+  classification system still being built out, "which rooms aren't fully
+  classified yet" is exactly the useful view — the `undefined` fill makes it
+  legible instead of dropping rooms into a black-hole bucket.
+
+**Derived data, computed server-side; endpoint deferred.** Building the tree
+(which rooms roll up under which department) is *computed from* property values
+per the definition — processing, so server-side. Per "endpoints follow fetch
+lifecycle" it's a natural `/hierarchy` or `/groups` endpoint when UI wants it;
+for now, resolve in memory, no endpoint. **Staleness caveat:** the resolved
+classification is a cache over a static definition + the current snapshot — once
+rooms re-push or dRofus re-polls mid-session, it must recompute on new data, the
+server-side twin of the dRofus join staleness. A known choice, not a surprise.
+
 ## Open items / things to watch
 
 - **Extraction is the dominant cost (measured).** ~840 rooms exported in ~11s

@@ -45,6 +45,17 @@
   }
   header .meta.stale { color: var(--ink); opacity: 0.5; }
 
+  /* --- project / building / level pickers, all in the header row --- */
+  header select.picker {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--ink);
+    padding: 0.25rem 0.5rem;
+  }
+  header select.picker.hidden { display: none; }
+
   main { position: relative; overflow: hidden; }
 
   svg { width: 100%; height: 100%; display: block; cursor: grab; }
@@ -62,55 +73,6 @@
            dominant-baseline: middle; pointer-events: none; }
   .label .tag { fill: var(--accent); letter-spacing: 0.05em; }
 
-  /* --- level slider, a vertical "stack of floors" control on the left --- */
-  .levels {
-    position: absolute;
-    top: 1.25rem;
-    left: 1.25rem;
-    background: rgba(243, 239, 230, 0.92);
-    border: 1px solid var(--ink);
-    padding: 0.75rem 0.9rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    max-height: calc(100% - 2.5rem);
-  }
-  .levels .heading {
-    font-size: 0.6rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    opacity: 0.6;
-  }
-  .levels .stack {
-    display: flex;
-    flex-direction: column-reverse; /* highest elevation on top */
-    gap: 2px;
-    overflow-y: auto;
-  }
-  .levels button {
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    text-align: left;
-    padding: 0.35rem 0.6rem;
-    background: transparent;
-    color: var(--ink);
-    border: 1px solid transparent;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    white-space: nowrap;
-  }
-  .levels button:hover { border-color: var(--rule); }
-  .levels button.active {
-    background: var(--ink);
-    color: var(--paper);
-  }
-  .levels button .elev { opacity: 0.55; font-size: 0.66rem; }
-  .levels button.active .elev { opacity: 0.8; }
-  .levels .count { font-size: 0.6rem; opacity: 0.5; }
-  .levels.hidden { display: none; }
-
   .empty {
     position: absolute; inset: 0; display: grid; place-content: center;
     text-align: center; gap: 0.4rem; color: var(--ink);
@@ -124,14 +86,13 @@
 <body>
   <header>
     <h1>Room Plan</h1>
+    <select class="picker hidden" id="projectSelect"></select>
+    <select class="picker hidden" id="buildingSelect"></select>
+    <select class="picker hidden" id="levelSelect"></select>
     <span class="meta" id="meta">waiting for data</span>
   </header>
   <main>
     <svg id="plan" xmlns="http://www.w3.org/2000/svg"></svg>
-    <div class="levels hidden" id="levels">
-      <div class="heading">Levels</div>
-      <div class="stack" id="levelStack"></div>
-    </div>
     <div class="empty" id="empty">
       <strong>No rooms received yet</strong>
       <span>POST your room JSON to <code>/rooms</code> from Revit, then this updates.</span>
@@ -143,8 +104,9 @@ const SVG = "http://www.w3.org/2000/svg";
 const plan = document.getElementById("plan");
 const meta = document.getElementById("meta");
 const empty = document.getElementById("empty");
-const levelsEl = document.getElementById("levels");
-const levelStack = document.getElementById("levelStack");
+const projectSelect = document.getElementById("projectSelect");
+const buildingSelect = document.getElementById("buildingSelect");
+const levelSelect = document.getElementById("levelSelect");
 
 // --- view transform state ---
 let view = { x: 0, y: 0, w: 100, h: 100 };
@@ -154,6 +116,18 @@ let lastPayloadJson = null;
 // --- level state ---
 let currentPayload = null;   // last rendered payload
 let activeLevelId = null;    // which level is shown
+
+// --- scope state: which project/building /rooms is currently fetching ---
+let currentProjectId = null;
+let currentBuildingKey = null;    // opaque key from /projects/{id}/buildings; null = no filter
+let lastProjectIds = null;        // for diffing the periodic /projects refresh
+let lastBuildingsSignature = null;
+
+async function fetchJson(url) {
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) throw new Error(`${url} -> ${res.status}`);
+  return res.json();
+}
 
 function setViewBox() {
   plan.setAttribute("viewBox", `${view.x} ${view.y} ${view.w} ${view.h}`);
@@ -323,36 +297,113 @@ function titleEl(text) {
   return t;
 }
 
-// Build the level buttons. column-reverse in CSS puts highest elevation at top.
+// Populate the level picker, highest elevation first (a <select> has no
+// CSS-driven reversal the old floor-stack relied on, so sort explicitly here;
+// `levelsForPayload`'s own ascending order — used elsewhere for the default
+// "lowest level" selection — is untouched).
 function buildLevelControl(payload, levels) {
-  levelStack.replaceChildren();
-  for (const lvl of levels) {
+  levelSelect.replaceChildren();
+  const ordered = levels.slice().sort((a, b) => b.elevation - a.elevation);
+  for (const lvl of ordered) {
     const count = roomsOnLevel(payload, lvl.id).length;
-    const btn = document.createElement("button");
-    btn.dataset.levelId = lvl.id;
-    if (lvl.id === activeLevelId) btn.classList.add("active");
-
-    const left = document.createElement("span");
-    left.textContent = lvl.name;
-    const right = document.createElement("span");
-    right.className = "elev";
-    right.textContent = `${count} rm`;
-
-    btn.append(left, right);
-    btn.addEventListener("click", () => selectLevel(lvl.id));
-    levelStack.appendChild(btn);
+    const opt = document.createElement("option");
+    opt.value = lvl.id;
+    opt.textContent = `${lvl.name} (${count} rm)`;
+    if (lvl.id === activeLevelId) opt.selected = true;
+    levelSelect.appendChild(opt);
   }
-  levelsEl.classList.toggle("hidden", levels.length <= 1);
+  levelSelect.classList.toggle("hidden", levels.length <= 1);
 }
 
 function selectLevel(levelId) {
   if (!currentPayload) return;
   activeLevelId = levelId;
-  for (const btn of levelStack.children)
-    btn.classList.toggle("active", btn.dataset.levelId === levelId);
   renderLevel(currentPayload, levelId, { refit: true });
   updateMeta();
 }
+levelSelect.addEventListener("change", () => selectLevel(levelSelect.value));
+
+// --- project / building pickers ---
+
+function populateProjectSelect(projects) {
+  const prevValue = projectSelect.value;
+  projectSelect.replaceChildren();
+  for (const p of projects) {
+    const opt = document.createElement("option");
+    opt.value = p.id;
+    opt.textContent = p.name;
+    projectSelect.appendChild(opt);
+  }
+  projectSelect.classList.toggle("hidden", projects.length <= 1);
+  if (projects.some(p => p.id === prevValue)) projectSelect.value = prevValue;
+}
+
+function populateBuildingSelect(data) {
+  const prevValue = buildingSelect.value;
+  buildingSelect.replaceChildren();
+  for (const b of data.buildings) {
+    const opt = document.createElement("option");
+    opt.value = b.key;
+    opt.textContent = b.unclassified ? "Unclassified" : (b.name || b.code || b.key);
+    buildingSelect.appendChild(opt);
+  }
+  buildingSelect.classList.toggle("hidden", data.buildings.length <= 1);
+  if (data.buildings.some(b => b.key === prevValue)) buildingSelect.value = prevValue;
+}
+
+// Fetch the known projects; auto-select if there's exactly one and the
+// current selection (if any) no longer exists. Diffs against the last-seen
+// id list so it doesn't fight an in-progress user selection every tick.
+async function loadProjects() {
+  let projects;
+  try {
+    projects = await fetchJson("/projects");
+  } catch (err) {
+    return; // leave the current selection alone; poll() reports connection loss
+  }
+  const ids = projects.map(p => p.id).join(",");
+  if (ids === lastProjectIds) return;
+  lastProjectIds = ids;
+  populateProjectSelect(projects);
+
+  if (!projects.some(p => p.id === currentProjectId)) {
+    currentProjectId = projects.length ? projects[0].id : null;
+    lastBuildingsSignature = null; // force a buildings refresh for the new project
+  }
+  if (currentProjectId) await loadBuildingsForProject(currentProjectId);
+}
+
+// Fetch the buildings within one project; auto-select if there's exactly one
+// (or none configured at all, meaning "everything in this project").
+async function loadBuildingsForProject(projectId) {
+  let data;
+  try {
+    data = await fetchJson(`/projects/${encodeURIComponent(projectId)}/buildings`);
+  } catch (err) {
+    return;
+  }
+  const signature = `${data.tier_configured}:${data.buildings.map(b => b.key).join(",")}`;
+  if (signature === lastBuildingsSignature) return;
+  lastBuildingsSignature = signature;
+  populateBuildingSelect(data);
+
+  if (!data.buildings.some(b => b.key === currentBuildingKey)) {
+    currentBuildingKey = data.buildings.length ? data.buildings[0].key : null;
+  }
+}
+
+projectSelect.addEventListener("change", async () => {
+  currentProjectId = projectSelect.value;
+  currentBuildingKey = null;
+  lastBuildingsSignature = null;
+  await loadBuildingsForProject(currentProjectId);
+  lastPayloadJson = null; // force the next poll tick to render immediately
+});
+
+buildingSelect.addEventListener("change", () => {
+  currentBuildingKey = buildingSelect.value;
+  lastPayloadJson = null; // force the next poll tick to render immediately
+});
 
 function updateMeta() {
   if (!currentPayload) return;
@@ -408,9 +459,20 @@ plan.addEventListener("wheel", e => {
 plan.addEventListener("dblclick", () => { view = { ...fitted }; setViewBox(); });
 
 // --- polling ---
+
+// Build /rooms's URL from the current project/building selection. Neither
+// selected -> today's unscoped "merge everything" behaviour.
+function roomsUrl() {
+  const params = new URLSearchParams();
+  if (currentProjectId) params.set("project", currentProjectId);
+  if (currentBuildingKey) params.set("building", currentBuildingKey);
+  const qs = params.toString();
+  return qs ? `/rooms?${qs}` : "/rooms";
+}
+
 async function poll() {
   try {
-    const res = await fetch("/rooms", { cache: "no-store" });
+    const res = await fetch(roomsUrl(), { cache: "no-store" });
     if (res.status === 204) { meta.textContent = "waiting for data"; meta.classList.add("stale"); return; }
     if (!res.ok) throw new Error(res.status);
     const payload = await res.json();
@@ -423,8 +485,16 @@ async function poll() {
     meta.textContent = "connection lost"; meta.classList.add("stale");
   }
 }
-poll();
-setInterval(poll, 2000);
+
+// Each tick: refresh the project/building pickers (cheap, in-memory-derived;
+// this is also how a newly-pushed project/building shows up without a page
+// reload), then fetch rooms scoped to whatever's currently selected.
+async function tick() {
+  await loadProjects();
+  await poll();
+}
+tick();
+setInterval(tick, 2000);
 </script>
 </body>
 </html>

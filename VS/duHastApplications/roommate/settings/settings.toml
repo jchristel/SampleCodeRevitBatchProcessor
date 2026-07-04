@@ -1,0 +1,77 @@
+# Sample roommate server settings.
+#
+# Run with:
+#   cargo run -- --settings settings/settings.toml
+# or with the compiled exe directly, from any directory:
+#   roommate.exe --settings C:\path\to\roommate\settings\settings.toml
+#
+# Relative paths below (drofus.csv, test_snapshot.json, storage root) resolve
+# against *this file's own directory*, not the process's current working
+# directory -- so this settings file works the same regardless of where the
+# binary is launched from. `static/` is the one exception: it's still served
+# relative to the process cwd (see ServeDir::new("static") in main.rs), so
+# `cargo run` from the crate root is still required to see the viewer page.
+
+# ---------------------------------------------------------------------------
+# External reference data joined onto rooms at /rooms response assembly.
+# See STRATEGY.md "Load test dRofus data from file".
+# ---------------------------------------------------------------------------
+[sources.drofus]
+type = "file"
+path = "./drofus.csv"
+
+# ---------------------------------------------------------------------------
+# On-disk snapshot persistence. Omit this whole section to run purely
+# in-memory (snapshots lost on restart) -- useful for a quick local test.
+# "../data/snapshots" lands next to src/, static/, docs/ (a sibling of
+# settings/), not inside settings/ itself.
+# ---------------------------------------------------------------------------
+[storage]
+root = "../data/snapshots"
+
+# ---------------------------------------------------------------------------
+# Dev-only: seeds the server with a snapshot at startup so /rooms has data
+# without a manual POST. Omit in prod. The file is the same JSON shape a
+# push sends -- here, the v5 contract shape produced by post_rooms.py's
+# translate(), generated from test/Data/rooms.json + levels.json.
+# ---------------------------------------------------------------------------
+[test_data]
+snapshot_path = "./test_snapshot.json"
+
+# ---------------------------------------------------------------------------
+# Classification hierarchy, outermost tier first. Each tier names a code
+# and/or a name property (at least one, validated at startup) to resolve
+# against a room. See STRATEGY.md "Establish a room classification hierarchy".
+# These reference dRofus-joined field names as an example of shared/project
+# parameters a real project might key on -- swap for whatever properties your
+# rooms actually carry.
+# ---------------------------------------------------------------------------
+[[hierarchy]]
+name = "Building"
+code_property = "d_building_code"
+name_property = "d_building_name"
+
+[[hierarchy]]
+name = "Department"
+code_property = "Department"
+
+# ---------------------------------------------------------------------------
+# Canonical property name -> per-source raw property name. lookup_property
+# (used by both the dRofus join and the classifier above) resolves a
+# canonical name through this table for the pushing model's `source`; with no
+# matching entry it falls back to matching the name verbatim -- which is all
+# a single, English-language Revit source ever needs. This table earns its
+# keep once a second producer exists (e.g. IFC, or a non-English Revit UI)
+# and the same concept lives under a different raw name per source.
+# ---------------------------------------------------------------------------
+[[builtin_properties]]
+canonical = "Area"
+by_source = { revit = "Area" }
+
+[[builtin_properties]]
+canonical = "Number"
+by_source = { revit = "Number" }
+
+[[builtin_properties]]
+canonical = "Department"
+by_source = { revit = "Department" }

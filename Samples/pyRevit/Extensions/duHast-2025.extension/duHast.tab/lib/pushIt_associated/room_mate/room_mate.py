@@ -21,6 +21,8 @@
 #
 
 
+import datetime
+
 from duHast.Revit.Rooms.Export.to_data_room import get_all_room_data
 from duHast.Revit.Levels.Export.to_data_level_building import get_all_level_data
 from duHast.Utilities.Objects.result import Result
@@ -77,19 +79,39 @@ def rooms_export_entry(doc, uiapp, output, forms):
                 room_data = get_all_room_data(selected_doc)
                 # get level data
                 level_data = get_all_level_data(selected_doc)
-                
+
+                # v4 identity envelope (STRATEGY.md "Identity"). Model id is a
+                # known stopgap: Title, not a GUID -- no stable GUID source exists
+                # in duHast for a plain local (non-workshared, non-cloud) file.
+                project_info = selected_doc.ProjectInformation
+                envelope = {
+                    "project": {
+                        "id": project_info.Number or selected_doc.Title,
+                        "name": project_info.Name or selected_doc.Title,
+                    },
+                    "model": {
+                        "id": selected_doc.Title,
+                        "name": selected_doc.Title,
+                    },
+                    "snapshot": {
+                        "taken_at": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    },
+                }
+
                 # convert into a dictionary
                 dic_room_data = {
                     dr.DataRoom.data_type:room_data
                 }
+                dic_room_data.update(envelope)
 
                 # add some more properties before writing to json
                 json_formatted_room = build_json_for_file(dic_room_data, "{}".format(selected_doc.Title))
-                
+
                 # convert into a dictionary
                 dic_level_data = {
                     dl.DataLevelBuilding.data_type:level_data
                 }
+                dic_level_data.update(envelope)
 
                 # add some more properties before writing to json
                 json_formatted_level = build_json_for_file(dic_level_data, "{}".format(selected_doc.Title))

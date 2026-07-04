@@ -1,0 +1,254 @@
+//! Startup configuration: the TOML settings file and everything parsed from it.
+//!
+//! Config a human hand-edits lives here (hence TOML, with comments); the *data*
+//! it points at stays JSON. Everything is resolved once at startup and fails
+//! fast on bad config — better a loud startup error than a surprise on the first
+//! request. See `settings-infrastructure-handoff.md`.
+//!
+//! `DrofusSource` lives here (not in `drofus`) because it's part of the settings
+//! contract; the `#[serde(tag = "type")]` enum is the seam that makes the future
+//! file→API swap a loader-only change. `HierarchyTier` lives here too, as the
+//! classification *definition*; `classify` consumes it but doesn't own its shape.
+
+use std::collections::HashMap;
+use std::path::{Path, PathBuf};
+
+use anyhow::Context;
+use serde::Deserialize;
+
+/// Top-level server settings, parsed once at startup from a TOML file.
+#[derive(Debug, Deserialize)]
+pub struct Settings {
+    pub sources: Sources,
+
+    /// Where model snapshots are persisted on disk. When present, pushes are
+    /// written under this root (project-guid/model-guid/snapshot.json) and
+    /// survive restarts. When absent, storage stays purely in-memory (dev/test).
+    #[serde(default)]
+    pub storage: Option<Storage>,
+
+    /// Dev-only: when present, seeds the server with a snapshot from disk at
+    /// startup so no manual POST is needed. Omit in prod.
+    #[serde(default)]
+    pub test_data: Option<TestData>,
+
+    /// Ordered classification tiers, outermost first. Empty if the section is
+    /// omitted (a project with no classification defined).
+    #[serde(default)]
+    pub hierarchy: Vec<HierarchyTier>,
+
+    /// Canonical property names, each resolved to a source-specific raw
+    /// property name. Lets a project retarget which raw property backs a
+    /// canonical concept (e.g. "Area") without a Rust code change — the seam
+    /// that matters once a second data source (e.g. IFC) can produce rooms
+    /// alongside Revit, since the same canonical concept lives under a
+    /// different raw name per source. Empty if the section is omitted, in
+    /// which case `lookup_property` matches names verbatim (today's
+    /// single-source behaviour).
+    #[serde(default)]
+    pub builtin_properties: Vec<BuiltinPropertyDef>,
+}
+
+/// On-disk snapshot storage config. Its own section (not under `[sources]`):
+/// a source *supplies* join data, storage *persists* the snapshots themselves —
+/// different kind of thing. Kept as an `Option` on `Settings` so omitting it is
+/// a clean fallback to the in-memory store, no other change.
+#[derive(Debug, Deserialize)]
+pub struct Storage {
+    /// Root directory holding one sub-dir per project (named by project GUID).
+    /// Created on first push if missing; must be writable.
+    pub root: PathBuf,
+}
+
+/// External data sources joined onto the Revit snapshot.
+#[derive(Debug, Deserialize)]
+pub struct Sources {
+    pub drofus: DrofusSource,
+}
+
+/// dRofus source. `#[serde(tag = "type")]` lets the TOML `type` field pick the
+/// variant — adding an `Api` variant later is a loader-only change; all
+/// consumers of `AppState` stay untouched.
+#[derive(Debug, Deserialize)]
+#[serde(tag = "type", rename_all = "lowercase")]
+pub enum DrofusSource {
+    /// Current: load from a local file.
+    File { path: PathBuf },
+    // Future: Api { url: String, api_key: String },
+}
+
+/// Dev-only seed data. Kept separate from `drofus` so removing this test seam
+/// later is a one-section deletion with no other changes.
+#[derive(Debug, Deserialize)]
+pub struct TestData {
+    /// Path to a pre-exported snapshot (same JSON shape a POST sends).
+    pub snapshot_path: PathBuf,
+}
+
+/// One tier of the classification hierarchy. A tier is keyed by a code and/or a
+/// name property — at least one must be present (validated at startup), since a
+/// tier naming neither is unkeyable.
+#[derive(Debug, Clone, Deserialize)]
+pub struct HierarchyTier {
+    /// Human label for the tier ("Building", "Department").
+    pub name: String,
+    /// Room property holding this tier's code. Optional per-tier.
+    #[serde(default)]
+    pub code_property: Option<String>,
+    /// Room property holding this tier's display name. Optional per-tier.
+    #[serde(default)]
+    pub name_property: Option<String>,
+}
+
+impl HierarchyTier {
+    /// A tier must name at least one property or it can't be keyed. Validated
+    /// at startup so a misconfigured tier is a loud error, not a silent
+    /// "undefined" for every room.
+    pub fn validate(&self) -> anyhow::Result<()> {
+        if self.code_property.is_none() && self.name_property.is_none() {
+            anyhow::bail!(
+                "hierarchy tier '{}' names neither code_property nor name_property",
+                self.name
+            );
+        }
+        Ok(())
+    }
+}
+
+/// One canonical property definition: a stable name consumers (dRofus
+/// `link_property`, hierarchy tier `code_property`/`name_property`) reference,
+/// resolved per-source to whatever raw property name that source actually
+/// uses. See `Settings::builtin_properties`.
+#[derive(Debug, Clone, Deserialize)]
+pub struct BuiltinPropertyDef {
+    /// The stable name consumers reference (e.g. "Area").
+    pub canonical: String,
+    /// Source key (e.g. "revit") → that source's raw property name.
+    pub by_source: HashMap<String, String>,
+}
+
+impl BuiltinPropertyDef {
+    /// A definition with no source mappings can never resolve to anything —
+    /// fail fast rather than silently never matching at request time.
+    pub fn validate(&self) -> anyhow::Result<()> {
+        if self.by_source.is_empty() {
+            anyhow::bail!(
+                "builtin property '{}' has no by_source mappings",
+                self.canonical
+            );
+        }
+        Ok(())
+    }
+}
+
+/// Resolve a path from the settings file relative to the settings file's own
+/// directory, not the process's current working directory. Without this, a
+/// relative path like `./settings/drofus.csv` only works when the binary
+/// happens to be launched with cwd == crate root (e.g. via `cargo run`) —
+/// running the compiled exe directly from anywhere else silently breaks it.
+/// Absolute paths pass through unchanged.
+fn resolve_relative_to(path: &mut PathBuf, settings_dir: Option<&Path>) {
+    if path.is_absolute() {
+        return;
+    }
+    if let Some(dir) = settings_dir {
+        *path = dir.join(&path);
+    }
+}
+
+pub fn load_settings(path: &PathBuf) -> anyhow::Result<Settings> {
+    let raw = std::fs::read_to_string(path)
+        .with_context(|| format!("could not read settings file: {}", path.display()))?;
+    let mut settings: Settings = toml::from_str(&raw).context("failed to parse settings TOML")?;
+
+    // Base dir for every relative path *inside* the settings file. `.filter`
+    // turns a bare filename's empty parent ("") into None, which just means
+    // "no base to prepend" — those paths fall back to cwd-relative, same as
+    // before this fix.
+    let settings_dir = path.parent().filter(|p| !p.as_os_str().is_empty());
+    match &mut settings.sources.drofus {
+        DrofusSource::File { path: drofus_path } => resolve_relative_to(drofus_path, settings_dir),
+    }
+    if let Some(storage) = &mut settings.storage {
+        resolve_relative_to(&mut storage.root, settings_dir);
+    }
+    if let Some(test_data) = &mut settings.test_data {
+        resolve_relative_to(&mut test_data.snapshot_path, settings_dir);
+    }
+
+    // Fail fast on unkeyable or duplicate-named tiers — better a startup error
+    // than a silent classification that groups every room under "undefined",
+    // or a tier name lookup (e.g. "Building") silently picking the first of
+    // two matches.
+    let mut seen_tier_names = std::collections::HashSet::new();
+    for tier in &settings.hierarchy {
+        tier.validate()?;
+        if !seen_tier_names.insert(tier.name.clone()) {
+            anyhow::bail!("duplicate hierarchy tier name: '{}'", tier.name);
+        }
+    }
+    // Fail fast on unmappable or duplicate builtin property definitions —
+    // same discipline as hierarchy tiers.
+    let mut seen_canonical = std::collections::HashSet::new();
+    for def in &settings.builtin_properties {
+        def.validate()?;
+        if !seen_canonical.insert(def.canonical.clone()) {
+            anyhow::bail!("duplicate builtin property canonical name: '{}'", def.canonical);
+        }
+    }
+    Ok(settings)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A HierarchyTier with neither property fails validation.
+    #[test]
+    fn test_unkeyable_tier_fails_validation() {
+        let tier = HierarchyTier {
+            name: "Ghost".to_string(),
+            code_property: None,
+            name_property: None,
+        };
+        assert!(tier.validate().is_err());
+    }
+
+    /// Two hierarchy tiers sharing a name fail `load_settings` at startup —
+    /// otherwise a `.position(|t| t.name == "Building")` lookup would silently
+    /// pick the first of two matches.
+    #[test]
+    fn test_duplicate_tier_names_fail_load_settings() {
+        let dir = std::env::temp_dir().join(format!("roommate-dup-tier-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let drofus_path = dir.join("drofus.csv");
+        std::fs::write(&drofus_path, "Id\nNumber\n").unwrap();
+
+        let settings_path = dir.join("settings.toml");
+        std::fs::write(
+            &settings_path,
+            format!(
+                r#"
+[sources.drofus]
+type = "file"
+path = "{}"
+
+[[hierarchy]]
+name = "Building"
+code_property = "a"
+
+[[hierarchy]]
+name = "Building"
+code_property = "b"
+"#,
+                drofus_path.display().to_string().replace('\\', "/")
+            ),
+        )
+        .unwrap();
+
+        let result = load_settings(&settings_path);
+        assert!(result.is_err());
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+}

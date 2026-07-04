@@ -1,6 +1,6 @@
 """
 POC bridge: take the duHast room + level exports, translate to the viewer's
-v2 contract, and POST to the Rust server.
+v5 contract, and POST to the Rust server.
 """
 
 import json
@@ -12,7 +12,12 @@ from System.Text import Encoding
 from duHast.Utilities.files_json import serialize_utf
 
 SERVER_URL = "http://127.0.0.1:5151/rooms"
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 5
+
+# Which producer this script feeds the server from. The server resolves
+# canonical property names (Area, Number, ...) to this source's raw property
+# names via its own settings -- this script only needs to say who it is.
+SOURCE = "revit"
 
 
 LEVEL_LIST_KEY = "building level"
@@ -37,8 +42,26 @@ def loop_to_points(loop):
     return [{"x": float(pt[0]), "y": float(pt[1])} for pt in loop]
 
 
+def properties_to_map(instance_properties):
+    """Reshape duHast's [{name, value, storage_type}, ...] list into a flat
+    {name: {value, storage_type}} map. One generic transform, no per-field
+    logic -- which names count as "builtin" is a server-side settings concern
+    (STRATEGY.md "source dimension"), not something decided here."""
+    out = {}
+    for prop in instance_properties.get("properties", []):
+        name = prop.get("name")
+        if not name:
+            continue
+        value = prop.get("value")
+        out[name] = {
+            "value": "" if value is None else str(value),
+            "storage_type": prop.get("storage_type"),
+        }
+    return out
+
+
 def translate(rooms_source, levels_source):
-    """Map the two duHast exports onto the server's v2 contract."""
+    """Map the two duHast exports onto the server's v5 contract."""
     # levels from the dedicated level export
     levels = []
     for lvl in levels_source.get(LEVEL_LIST_KEY, []):
@@ -80,13 +103,24 @@ def translate(rooms_source, levels_source):
             "name": label,
             "level_id": level_id,
             "loops": loops,
+            "properties": properties_to_map(props),
         })
 
-    return {"schema_version": SCHEMA_VERSION, "levels": levels, "rooms": out_rooms}
+    model = dict(rooms_source.get("model", {"id": "unknown", "name": "unknown"}))
+    model["source"] = SOURCE
+
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "project": rooms_source.get("project", {"id": "unknown", "name": "unknown"}),
+        "model": model,
+        "snapshot": rooms_source.get("snapshot", {"taken_at": ""}),
+        "levels": levels,
+        "rooms": out_rooms,
+    }
 
 
 def post_payload(json_formatted_room, json_formatted_level, url=SERVER_URL):
-    """Flatten both duHast exports, translate, and POST the v2 contract."""
+    """Flatten both duHast exports, translate, and POST the v5 contract."""
     rooms_source = duhast_objects_to_plain(json_formatted_room)
     levels_source = duhast_objects_to_plain(json_formatted_level)
     contract = translate(rooms_source, levels_source)

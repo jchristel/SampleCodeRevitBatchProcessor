@@ -11,6 +11,21 @@
 # binary is launched from. `static/` is the one exception: it's still served
 # relative to the process cwd (see ServeDir::new("static") in main.rs), so
 # `cargo run` from the crate root is still required to see the viewer page.
+#
+# NOTE: TOML requires every bare `key = value` belonging to the top-level
+# table (like `room_label` below) to appear before the *first* `[table]` or
+# `[[array-of-tables]]` header in the file -- once a section header opens,
+# subsequent bare keys attach to that section (or its last array entry), not
+# back to the top level. Add new top-level Settings fields up here, not
+# after [[hierarchy]]/[[builtin_properties]] further down.
+
+# ---------------------------------------------------------------------------
+# Ordered properties shown on a room's label in the viewer. "$name"/"$id" are
+# intrinsic tokens for the room's own name/id (not resolved via
+# builtin_properties below); anything else is a canonical property name
+# resolved the same way. Defaults to ["$name", "$id"] if this line is omitted.
+# ---------------------------------------------------------------------------
+room_label = ["$name", "Area", "$id"]
 
 # ---------------------------------------------------------------------------
 # External reference data joined onto rooms at /rooms response assembly.

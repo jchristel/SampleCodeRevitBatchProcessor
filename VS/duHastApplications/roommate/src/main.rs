@@ -32,7 +32,7 @@ use clap::Parser;
 use tower_http::{cors::CorsLayer, services::ServeDir, trace::TraceLayer};
 
 use crate::drofus::load_drofus;
-use crate::handlers::{get_project_buildings, get_projects, get_rooms, ingest_rooms};
+use crate::handlers::{get_project_buildings, get_project_validation, get_projects, get_rooms, ingest_rooms};
 use crate::settings::{load_settings, Settings};
 use crate::state::{seed_if_test, AppState, Shared};
 use crate::storage::{FsStore, MemStore, SnapshotStore};
@@ -56,7 +56,7 @@ async fn main() -> anyhow::Result<()> {
 
     tracing::info!("settings loaded from {}", args.settings.display());
 
-    let Settings { sources, storage, test_data, hierarchy, builtin_properties } = settings;
+    let Settings { sources, storage, test_data, hierarchy, builtin_properties, room_label } = settings;
     let drofus = load_drofus(&sources.drofus)?;
 
     // Pick the backend from config: a `[storage]` root → persistent FsStore,
@@ -73,7 +73,7 @@ async fn main() -> anyhow::Result<()> {
         }
     };
 
-    let state: Shared = Arc::new(AppState::new(store, drofus, hierarchy, builtin_properties));
+    let state: Shared = Arc::new(AppState::new(store, drofus, hierarchy, builtin_properties, room_label));
 
     seed_if_test(&state, test_data.as_ref())?;
 
@@ -81,6 +81,7 @@ async fn main() -> anyhow::Result<()> {
         .route("/rooms", post(ingest_rooms).get(get_rooms))
         .route("/projects", get(get_projects))
         .route("/projects/{id}/buildings", get(get_project_buildings))
+        .route("/projects/{id}/validation", get(get_project_validation))
         // Serves the viewer page at "/" from ./static.
         .fallback_service(ServeDir::new("static"))
         // Lets the browser viewer call /rooms even if served from elsewhere.

@@ -149,6 +149,39 @@
           "storage_type": null
         }
       }
+    },
+    {
+      "id": "324773",
+      "name": "Room 2",
+      "level_id": "311",
+      "loops": [
+        {
+          "points": [
+            {
+              "x": 21.059210479422546,
+              "y": -20.288302648660938
+            },
+            {
+              "x": -17.982784271233626,
+              "y": -20.288302648660938
+            },
+            {
+              "x": -17.982784271233626,
+              "y": -30.288302648660938
+            },
+            {
+              "x": 21.059210479422546,
+              "y": -30.288302648660938
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "Name": { "value": "Room", "storage_type": null },
+        "Number": { "value": "2", "storage_type": null },
+        "Area": { "value": "50.0", "storage_type": null },
+        "Department": { "value": "Radiology", "storage_type": null }
+      }
     }
   ]
 }

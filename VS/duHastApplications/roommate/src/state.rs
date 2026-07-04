@@ -62,6 +62,10 @@ pub struct AppState {
     /// dRofus join and classification resolve names consistently regardless
     /// of which producer the room came from.
     pub builtin_properties: Vec<BuiltinPropertyDef>,
+
+    /// Ordered property names shown on a room's label in the viewer. Resolved
+    /// per-room inside `/rooms` assembly, same as `hierarchy`.
+    pub room_label: Vec<String>,
 }
 
 impl AppState {
@@ -70,8 +74,9 @@ impl AppState {
         drofus: DrofusData,
         hierarchy: Vec<HierarchyTier>,
         builtin_properties: Vec<BuiltinPropertyDef>,
+        room_label: Vec<String>,
     ) -> Self {
-        Self { store, drofus: Some(drofus), hierarchy, builtin_properties }
+        Self { store, drofus: Some(drofus), hierarchy, builtin_properties, room_label }
     }
 
     /// Store a pushed payload. Upsert semantics live in the store impl; state

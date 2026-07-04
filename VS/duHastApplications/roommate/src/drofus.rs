@@ -35,6 +35,14 @@ pub struct DrofusData {
 
     /// dRofus id → record. Direct value match; ids are unique, so a plain map.
     pub by_id: BTreeMap<String, DrofusRecord>,
+
+    /// dRofus field label (row 1) → the Revit property name row 2 lists for
+    /// that same column (columns 1+; column 0 is `link_property` above).
+    /// This is the "kept for reconciliation" data the CSV format documents —
+    /// row 2's non-link columns were always meant to let a consumer cross-check
+    /// a dRofus value against the *correct* Revit property (which may not
+    /// share the dRofus field's literal name), not just read once and discard.
+    pub reconciliation: BTreeMap<String, String>,
 }
 
 /// Read the two-header-row CSV into DrofusData. Fail fast (startup) on a
@@ -68,6 +76,19 @@ pub fn load_drofus(source: &DrofusSource) -> anyhow::Result<DrofusData> {
         .context("dRofus CSV row 2 col 0 (link property) is empty")?
         .to_string();
 
+    // Row 1/row 2, cols 1+: dRofus field label -> the Revit property name it
+    // reconciles against. Blank Revit-name cells are skipped rather than
+    // failing the load — reconciliation is a bonus check, not required for
+    // the join itself to work.
+    let mut reconciliation = BTreeMap::new();
+    for col in 1..labels.len() {
+        if let (Some(label), Some(revit_name)) = (labels.get(col), revit_names.get(col)) {
+            if !revit_name.is_empty() {
+                reconciliation.insert(label.to_string(), revit_name.to_string());
+            }
+        }
+    }
+
     // Data rows: col 0 is the dRofus id (the key), cols 1+ are values keyed by
     // the row-1 label at the same column index.
     let mut by_id = BTreeMap::new();
@@ -91,5 +112,38 @@ pub fn load_drofus(source: &DrofusSource) -> anyhow::Result<DrofusData> {
         by_id.len(),
         link_property
     );
-    Ok(DrofusData { link_property, by_id })
+    Ok(DrofusData { link_property, by_id, reconciliation })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::io::Write;
+
+    /// Row 2's non-link columns populate `reconciliation` (label -> Revit
+    /// property name); a blank Revit-name cell is skipped, not fatal.
+    #[test]
+    fn test_load_drofus_populates_reconciliation() {
+        let dir = std::env::temp_dir().join(format!("roommate-drofus-test-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let path = dir.join("drofus.csv");
+        let mut file = std::fs::File::create(&path).unwrap();
+        write!(
+            file,
+            "DrofusRoomId,NetArea,Department,Notes\nNumber,Area,Department,\n1,25.5,Cardiology,ignored\n"
+        )
+        .unwrap();
+        drop(file);
+
+        let data = load_drofus(&DrofusSource::File { path: path.clone() }).unwrap();
+
+        assert_eq!(data.link_property, "Number");
+        assert_eq!(data.reconciliation.get("NetArea"), Some(&"Area".to_string()));
+        assert_eq!(data.reconciliation.get("Department"), Some(&"Department".to_string()));
+        // "Notes" has a blank Revit-name cell in row 2 -- skipped, not present.
+        assert_eq!(data.reconciliation.get("Notes"), None);
+        assert_eq!(data.by_id["1"].fields.get("NetArea"), Some(&"25.5".to_string()));
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
 }

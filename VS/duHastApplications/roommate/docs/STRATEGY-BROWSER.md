@@ -24,6 +24,38 @@ side should shape future server endpoints.
   refresh on the same 2s cadence (gated by a shallow id-list diff so they
   don't fight an in-progress selection), which is also how a newly-pushed
   project or building shows up without a page reload.
+- **Room labels: configurable, always-rendered, correctly layered.** `addLabel`
+  renders `room.label` (the server-resolved, ordered field list — see
+  [Server](STRATEGY-SERVER.md)'s `room_label` setting) instead of hardcoding
+  `room.name`/`room.id`; the first field is the large primary line, any
+  further fields stack below as smaller accent-colored lines, generalizing
+  the old fixed two-line layout to however many fields are configured. Two
+  bugs fixed alongside this: (1) labels no longer silently disappear on small
+  rooms — the old `fontSize < baseFont * 0.25` cutoff (a floor-wide threshold
+  that dropped a label outright rather than just shrinking it) is gone; a
+  label now always renders clamped to fit its own room, however small, and
+  zoom can't recover a dropped label anyway since panning/zooming never
+  re-invokes rendering. (2) `renderLevel` now appends every room's polygons
+  in one pass, then every room's labels in a second pass — SVG has no
+  reliable z-index (paint order is DOM order, full stop), so the old
+  per-room interleaved loop let a later room's opaque polygon paint over an
+  earlier room's label whenever their screen-space boxes were anywhere
+  close, which got worse on bigger plans with more rooms.
+- **Data validation panel: badge, highlighting, CSV export.** A header badge
+  (`⚠ N`, `✓`, or hidden when dRofus isn't configured) toggles a right-anchored
+  side panel listing [Server](STRATEGY-SERVER.md)'s four dRofus health checks.
+  Fetched only when the project selection changes or via the panel's own
+  Refresh button — deliberately not on the 2s room poll, since this is an
+  on-demand check, not something to watch update live. Two things layered on
+  top, both entirely client-side: (1) rooms with any issue get a distinct
+  fill (`.room.error`, a new `--error` CSS variable) *only while the panel is
+  open* — `showErrors` toggles with the panel's visibility and triggers a
+  `refit: false` re-render, so opening/closing it never disturbs the current
+  pan/zoom. (2) A "Download CSV" button builds a `room_id,error` CSV directly
+  from the already-fetched report (one row per issue, so a room with several
+  issues appears several times) and triggers a browser download — no server
+  endpoint for this, matching "keep axum a pure JSON API": a CSV is just a
+  presentation reshuffle of data the browser already has.
 
 ## Rendering: SVG today, and when to move
 

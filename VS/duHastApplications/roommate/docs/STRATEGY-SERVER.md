@@ -72,6 +72,41 @@ carrying its rationale in a module header, all with unit tests.
   produced by `post_rooms.py`'s `translate()` against
   `test/Data/rooms.json`/`levels.json`) — `cargo run -- --settings
   settings/settings.toml` seeds and serves it with no manual POST needed.
+- **Configurable room labels (`room_label`).** An ordered list of property
+  names, resolved into `RoomResponse.label: Vec<String>` at response assembly
+  so the viewer never hardcodes which fields it shows (see
+  [Browser](STRATEGY-BROWSER.md)). `"$name"`/`"$id"` are intrinsic tokens for
+  `Room`'s own fields (`lookup_property` only reads `room.properties`, so
+  these can't go through it); anything else resolves through the exact same
+  canonical/source mapping dRofus and classification already use. Defaults to
+  `["$name", "$id"]` — today's label — so omitting the setting changes
+  nothing. An unresolvable name just contributes nothing to that room's
+  label, no startup validation needed. **Footgun worth knowing:** in TOML, a
+  bare `key = value` after an opened `[[array-of-tables]]` section (like
+  `[[builtin_properties]]`) attaches to that array's *last entry*, not back
+  to the top-level table — and since `BuiltinPropertyDef` doesn't reject
+  unknown fields, a misplaced `room_label` line is silently swallowed with no
+  error. Top-level `Settings` keys must be declared before the first section
+  header in `settings.toml`.
+
+- **Data validation report (`GET /projects/{id}/validation`).** First real
+  use of the pipeline surfaced a need to audit data quality, not just render
+  it. Four checks, computed in one pass by the pure `compute_validation`
+  (thin async wrapper does the `State`/`Path` extraction, same shape as
+  `resolve_label_fields`): every room's `lookup_property` resolution against
+  the dRofus link property (missing → `rooms_missing_link_value`); values
+  grouped to catch a link value shared by more than one room
+  (`duplicate_link_values` — ambiguous, so excluded from the remaining checks,
+  since a shared link can't be uniquely matched to one room); each remaining
+  room's value looked up in `DrofusData.by_id` (miss →
+  `rooms_unmatched_in_drofus`); and for a hit, every `(dRofus label, Revit
+  property)` pair in the newly-retained `reconciliation` map (see
+  [Sources](STRATEGY-SOURCES.md)) compared between the two sides, trimmed
+  string equality, recorded as a `PropertyMismatch` on disagreement — either
+  side missing a value is skipped (absence, not disagreement, a different
+  problem). `drofus_configured: false` (no dRofus source at all) short-circuits
+  to an empty report, not an error, same discipline as `tier_configured` for
+  buildings.
 
 **Deferred (design settled, not built):** snapshot-history query + delete UI,
 per-model / `/hierarchy` endpoints, DB backend, an owning level above project.

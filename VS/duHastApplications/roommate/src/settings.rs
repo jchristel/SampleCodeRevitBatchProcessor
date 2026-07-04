@@ -47,6 +47,22 @@ pub struct Settings {
     /// single-source behaviour).
     #[serde(default)]
     pub builtin_properties: Vec<BuiltinPropertyDef>,
+
+    /// Ordered list of property names shown on a room's label in the viewer.
+    /// `"$name"` / `"$id"` are intrinsic tokens referring to the room's own
+    /// `name`/`id` fields (not resolvable via `lookup_property`, which only
+    /// reads `room.properties`); anything else is a canonical property name
+    /// resolved the same way dRofus/classification already are. Defaults to
+    /// `["$name", "$id"]` — today's label — so omitting this section changes
+    /// nothing. No startup validation: an unresolvable name just contributes
+    /// nothing to that room's label, same "absence is fine" discipline as
+    /// everywhere else here.
+    #[serde(default = "default_room_label")]
+    pub room_label: Vec<String>,
+}
+
+fn default_room_label() -> Vec<String> {
+    vec!["$name".to_string(), "$id".to_string()]
 }
 
 /// On-disk snapshot storage config. Its own section (not under `[sources]`):

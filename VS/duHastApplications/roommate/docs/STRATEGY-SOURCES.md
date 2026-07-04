@@ -38,7 +38,11 @@ Revit.
   keyed map (`by_id: BTreeMap<String, DrofusRecord>`); joined onto rooms at
   `/rooms` response assembly as a separate `drofus` sub-object, leaving the
   stored snapshot raw. `File` variant behind a `#[serde(tag = "type")]` enum,
-  ready for an `Api` variant later with no other consumer touched.
+  ready for an `Api` variant later with no other consumer touched. Row 2's
+  non-link columns are also retained now, as `reconciliation: BTreeMap<String,
+  String>` (dRofus field label → the Revit property it corresponds to) — see
+  [Server](STRATEGY-SERVER.md)'s data validation report, the first real
+  consumer of the "kept for reconciliation" data below.
 - **Transport: HTTP POST to localhost.** Revit add-ins run in-process on .NET;
   POST is simplest, most debuggable, language-agnostic, and the same
   `HttpClient` carries over to a future C# add-in. Alternatives considered:
@@ -85,7 +89,8 @@ The two header rows are the join spec and must both be retained:
   dRofus id — the link, constant for the whole file, read once at load.
 - **Row 1** is the dRofus field labels — the display layer for the joined
   data. Row 2's other columns are the Revit param names those fields
-  correspond to, kept for reconciliation.
+  correspond to, kept for reconciliation — now actually retained and used
+  (see Implemented above), not just parsed and discarded.
 
 The link is a direct value match and dRofus ids are unique, so the loader
 builds a flat `Map<String, DrofusRecord>` — no collision handling needed.

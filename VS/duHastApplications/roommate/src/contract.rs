@@ -151,6 +151,21 @@ pub struct RoomPayload {
     pub rooms: Vec<Room>,
 }
 
+/// The first NDJSON line of a streamed push (`POST /rooms/stream`): everything
+/// in `RoomPayload` EXCEPT `rooms`, which arrive as subsequent lines, one room
+/// per line. Kept as its own type (rather than making `rooms` optional on
+/// `RoomPayload`) so the envelope deserializes on its own with no rooms
+/// present, and so `RoomPayload` itself keeps `rooms` guaranteed for every
+/// other consumer. See HANDOVER-streaming.md.
+#[derive(Debug, Clone, Deserialize)]
+pub struct StreamEnvelope {
+    pub schema_version: u32,
+    pub project: Project,
+    pub model: Model,
+    pub snapshot: Snapshot,
+    pub levels: Vec<Level>,
+}
+
 /// Schema version this server accepts. Now v5: the fixed, typed `builtin`
 /// struct is gone — `Room.properties` is one flat, source-native map, and
 /// "which properties are builtin" moved from a Rust type to a settings-driven,
@@ -268,6 +283,25 @@ mod tests {
         assert_eq!(cv("7.5", Some("String")).as_f64(), Some(7.5));
         // Truly non-numeric returns None.
         assert_eq!(cv("Finance", Some("String")).as_f64(), None);
+    }
+
+    /// A `StreamEnvelope` (line 1 of a `/rooms/stream` push) deserializes with
+    /// no `rooms` key present -- proves it doesn't accidentally require one.
+    #[test]
+    fn test_stream_envelope_deserializes_without_rooms() {
+        let json = serde_json::json!({
+            "schema_version": 5,
+            "project":  { "id": "p1", "name": "Hospital Job" },
+            "model":    { "id": "m-guid", "name": "ARCH", "source": "revit" },
+            "snapshot": { "taken_at": "2026-05-09T11:13:34Z" },
+            "levels": [{ "id": "lvl1", "name": "Level 1", "elevation": 0.0 }]
+        });
+
+        let envelope: StreamEnvelope = serde_json::from_value(json).unwrap();
+        assert_eq!(envelope.schema_version, 5);
+        assert_eq!(envelope.project.id, "p1");
+        assert_eq!(envelope.model.source, "revit");
+        assert_eq!(envelope.levels.len(), 1);
     }
 
     /// lookup_property resolves a canonical name to a source-specific raw

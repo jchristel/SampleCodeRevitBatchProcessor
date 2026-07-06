@@ -31,7 +31,7 @@ from duHast.Data.Objects.Collectors import data_level_building as dl
 from duHast.Data.Utils.data_to_file import build_json_for_file
 from duHast.pyRevit.UI.doc_selector import pick_document
 
-from post_rooms import post_payload
+from post_rooms import post_payload_stream
 
 def rooms_export_entry(doc, uiapp, output, forms):
 
@@ -116,8 +116,10 @@ def rooms_export_entry(doc, uiapp, output, forms):
                 # add some more properties before writing to json
                 json_formatted_level = build_json_for_file(dic_level_data, "{}".format(selected_doc.Title))
                 
-                # post to the server
-                post_payload(json_formatted_room, json_formatted_level) 
+                # post to the server: gzip-compressed NDJSON stream, so a
+                # >100 MB FFE export never gets buffered whole client-side or
+                # server-side (see roommate's HANDOVER-streaming*.md)
+                post_payload_stream(json_formatted_room, json_formatted_level)
                 
                 # check for cancel
                 if pb.cancelled:

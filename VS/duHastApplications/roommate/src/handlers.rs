@@ -13,14 +13,18 @@
 use std::collections::BTreeMap;
 
 use axum::{
+    body::Body,
     extract::{Path, Query, State},
     http::StatusCode,
     Json,
 };
+use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
+use tokio::io::AsyncBufReadExt;
+use tokio_util::io::StreamReader;
 
 use crate::classify::{classify_room, TierValue};
-use crate::contract::{lookup_property, Room, RoomPayload, SUPPORTED_SCHEMA};
+use crate::contract::{lookup_property, Room, RoomPayload, StreamEnvelope, SUPPORTED_SCHEMA};
 use crate::drofus::{DrofusData, DrofusRecord};
 use crate::settings::{BuiltinPropertyDef, HierarchyTier};
 use crate::state::{ModelKey, Shared};
@@ -64,6 +68,88 @@ pub async fn ingest_rooms(
 pub struct IngestResponse {
     pub accepted: bool,
     pub room_count: usize,
+}
+
+/// Streaming ingest for very large models (NDJSON, see HANDOVER-streaming.md).
+/// Reads the request body as a line-delimited stream instead of buffering it
+/// whole with `Json<RoomPayload>`, so peak memory is one line, not the entire
+/// (possibly >100 MB) payload. Line 1 is the envelope (identity + levels, no
+/// rooms); every following line is one `Room`. If `RequestDecompressionLayer`
+/// is in front (see `main.rs`), this stream is already the inflated bytes --
+/// gzip and streaming compose without either side knowing about the other.
+///
+/// Rooms are still accumulated into a `Vec` before handing the assembled
+/// `RoomPayload` to the existing store, so storage and everything downstream
+/// stays byte-for-byte identical to the buffered path -- streaming changes
+/// only how the body is *read*. Honest limitation: peak memory is therefore
+/// the in-memory room set, not the raw JSON text (still a real win, since the
+/// text is ~40% empty-string overhead). If even that Vec is too large, the
+/// next step is a `SnapshotStore::put_streaming` that writes rooms to disk as
+/// they arrive -- deferred until the Vec itself is the ceiling.
+pub async fn ingest_rooms_stream(
+    State(state): State<Shared>,
+    body: Body,
+) -> Result<Json<IngestResponse>, (StatusCode, String)> {
+    let stream = body
+        .into_data_stream()
+        .map(|r| r.map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e)));
+    let reader = StreamReader::new(stream);
+    let mut lines = reader.lines();
+
+    let envelope_line = lines
+        .next_line()
+        .await
+        .map_err(|e| (StatusCode::BAD_REQUEST, format!("read error: {e}")))?
+        .ok_or((StatusCode::BAD_REQUEST, "empty body".into()))?;
+
+    let envelope: StreamEnvelope = serde_json::from_str(&envelope_line)
+        .map_err(|e| (StatusCode::BAD_REQUEST, format!("bad envelope: {e}")))?;
+
+    if envelope.schema_version != SUPPORTED_SCHEMA {
+        return Err((
+            StatusCode::UNPROCESSABLE_ENTITY,
+            format!(
+                "schema_version {} not supported; this server speaks {}",
+                envelope.schema_version, SUPPORTED_SCHEMA
+            ),
+        ));
+    }
+
+    let mut rooms: Vec<Room> = Vec::new();
+    while let Some(line) = lines
+        .next_line()
+        .await
+        .map_err(|e| (StatusCode::BAD_REQUEST, format!("read error: {e}")))?
+    {
+        if line.trim().is_empty() {
+            continue; // tolerate a trailing blank line
+        }
+        let room: Room = serde_json::from_str(&line)
+            .map_err(|e| (StatusCode::BAD_REQUEST, format!("bad room line: {e}")))?;
+        rooms.push(room);
+    }
+
+    let count = rooms.len();
+    tracing::info!("streamed {} room(s)", count);
+
+    let payload = RoomPayload {
+        schema_version: envelope.schema_version,
+        project: envelope.project,
+        model: envelope.model,
+        snapshot: envelope.snapshot,
+        levels: envelope.levels,
+        rooms,
+    };
+
+    state.set_snapshot(payload).map_err(|e| {
+        tracing::error!("failed to store snapshot: {e:#}");
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("could not store snapshot: {e}"),
+        )
+    })?;
+
+    Ok(Json(IngestResponse { accepted: true, room_count: count }))
 }
 
 /// A room as sent to the viewer: the stored room plus any attached dRofus data

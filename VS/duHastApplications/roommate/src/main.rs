@@ -10,7 +10,8 @@
 //! - `drofus`    — reference-data loader + join dataset.
 //! - `classify`  — room → full-depth classification path.
 //! - `state`     — shared in-memory store + startup seed.
-//! - `handlers`  — the `/rooms` push and fetch, where derived data is assembled.
+//! - `handlers`  — the `/rooms` push and fetch (plus the streaming `/rooms/stream`
+//!                 push for large models), where derived data is assembled.
 
 mod classify;
 mod contract;
@@ -25,16 +26,26 @@ use std::sync::Arc;
 
 use anyhow::Context;
 use axum::{
+    extract::DefaultBodyLimit,
     routing::{get, post},
     Router,
 };
 use clap::Parser;
-use tower_http::{cors::CorsLayer, services::ServeDir, trace::TraceLayer};
+use tower_http::{cors::CorsLayer, decompression::RequestDecompressionLayer, services::ServeDir, trace::TraceLayer};
 
 use crate::drofus::load_drofus;
-use crate::handlers::{get_project_buildings, get_project_validation, get_projects, get_rooms, ingest_rooms};
+use crate::handlers::{
+    get_project_buildings, get_project_validation, get_projects, get_rooms, ingest_rooms, ingest_rooms_stream,
+};
 use crate::settings::{load_settings, Settings};
 use crate::state::{seed_if_test, AppState, Shared};
+
+/// Cap on the buffered `/rooms` body -- applies to the DECOMPRESSED size, since
+/// `RequestDecompressionLayer` inflates before this limit is checked. FFE
+/// exports run >100 MB uncompressed; sized generously above that rather than
+/// tuned tight, since the streaming route (`/rooms/stream`) is the intended
+/// home for anything approaching this ceiling anyway. See HANDOVER-gzip.md.
+const ROOMS_BODY_LIMIT_BYTES: usize = 512 * 1024 * 1024;
 use crate::storage::{FsStore, MemStore, SnapshotStore};
 
 #[derive(Parser)]
@@ -78,12 +89,29 @@ async fn main() -> anyhow::Result<()> {
     seed_if_test(&state, test_data.as_ref())?;
 
     let app = Router::new()
-        .route("/rooms", post(ingest_rooms).get(get_rooms))
+        .route(
+            "/rooms",
+            post(ingest_rooms).get(get_rooms).layer(DefaultBodyLimit::max(ROOMS_BODY_LIMIT_BYTES)),
+        )
+        // Streaming NDJSON ingest for models too large to buffer whole (see
+        // HANDOVER-streaming.md) -- disables the body limit entirely and relies
+        // on line-by-line reading to keep peak memory low instead.
+        .route(
+            "/rooms/stream",
+            post(ingest_rooms_stream).layer(DefaultBodyLimit::disable()),
+        )
         .route("/projects", get(get_projects))
         .route("/projects/{id}/buildings", get(get_project_buildings))
         .route("/projects/{id}/validation", get(get_project_validation))
         // Serves the viewer page at "/" from ./static.
         .fallback_service(ServeDir::new("static"))
+        // Inflate gzip request bodies (Content-Encoding: gzip) before Json/NDJSON
+        // parsing sees them. Transparent: a non-gzip body passes through
+        // untouched, so an uncompressed sender still works -- purely additive.
+        // Added before Cors/Trace so it sits innermost (Router::layer wraps
+        // outward: the layer added last runs first on the request path), i.e.
+        // decompression happens right before the body reaches a handler.
+        .layer(RequestDecompressionLayer::new())
         // Lets the browser viewer call /rooms even if served from elsewhere.
         .layer(CorsLayer::permissive())
         .layer(TraceLayer::new_for_http())

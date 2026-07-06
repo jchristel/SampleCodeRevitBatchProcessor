@@ -108,6 +108,29 @@ carrying its rationale in a module header, all with unit tests.
   to an empty report, not an error, same discipline as `tier_configured` for
   buildings.
 
+- **Gzip request decompression + streaming NDJSON ingest.** FFE exports run
+  >100 MB uncompressed. Two independent, composable changes: (1)
+  `RequestDecompressionLayer` (tower-http) inflates any `Content-Encoding: gzip`
+  request body before it reaches a handler — transparent, so an uncompressed
+  sender still works unchanged, and neither `ingest_rooms` nor the JSON
+  contract needed to change at all. (2) A new `POST /rooms/stream` reads the
+  body as line-delimited JSON (NDJSON: line 1 is `StreamEnvelope` — everything
+  in `RoomPayload` except `rooms` — every following line is one `Room`)
+  instead of buffering the whole body with `Json<RoomPayload>`, so peak memory
+  is one line, not the entire payload; rooms are still accumulated into a
+  `Vec` before handing the assembled `RoomPayload` to the same
+  `state.set_snapshot` the buffered path uses, so storage stays identical —
+  only *parsing* is streamed. The buffered `/rooms` route now also carries an
+  explicit `DefaultBodyLimit` (previously unset, silently capped at axum's
+  2 MB default) sized well above the largest expected export, since
+  `DefaultBodyLimit` measures the *decompressed* size; `/rooms/stream`
+  disables the limit entirely and relies on streaming instead. See
+  HANDOVER-gzip.md / HANDOVER-streaming.md for the full rationale.
+  **Honest limitation carried over unchanged:** the streaming handler still
+  assembles all rooms into one `Vec` before storing, so it doesn't help if
+  even that in-memory room set is too large — the deferred next step is a
+  `SnapshotStore::put_streaming` that writes rooms to disk as they arrive.
+
 **Deferred (design settled, not built):** snapshot-history query + delete UI,
 per-model / `/hierarchy` endpoints, DB backend, an owning level above project.
 

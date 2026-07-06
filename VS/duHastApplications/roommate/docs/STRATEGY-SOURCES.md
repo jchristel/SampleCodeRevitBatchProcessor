@@ -51,6 +51,21 @@ Revit.
   The cost the split adds is **serialization overhead** — extract, JSON-encode,
   send, decode — almost always worth it for the decoupling, but the thing to
   measure on a huge model.
+- **Gzip + NDJSON streaming push (`post_rooms.py`).** FFE exports run >100 MB
+  uncompressed, too large to hold as one JSON string client-side or buffer
+  whole server-side. `post_payload_stream` (the path `room_mate.py` actually
+  calls) never builds a second full `rooms` list or one giant `json.dumps`
+  string: it gzip-compresses a line-delimited stream — one envelope line
+  (`build_envelope`), then one line per room, translated (`translate_room`)
+  and written as each is read off the duHast export — straight to
+  `POST /rooms/stream`. Peak memory is therefore one room, not the whole
+  export (see [Server](STRATEGY-SERVER.md)'s matching streaming-ingest note).
+  The older fully-buffered `translate()`/`post_payload` pair (whole payload in
+  one dict, one `StringContent` POST to `/rooms`) is kept only because it's
+  what regenerates `settings/test_snapshot.json` and suits small/manual
+  pushes — `translate()` is now `build_envelope` + a loop over
+  `translate_room`, so both paths share one translation, not two to keep in
+  sync.
 
 ## Why sources need reconciling, not just parsing
 

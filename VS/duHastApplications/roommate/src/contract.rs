@@ -62,18 +62,6 @@ pub struct CustomValue {
     pub storage_type: Option<String>,
 }
 
-impl CustomValue {
-    /// Best-effort typed read guided by the storage-type hint, falling back to
-    /// the raw string's natural parse, and never panicking. Returns None only
-    /// when nothing sensible can be produced. Callers that just want the string
-    /// read `.value` directly and ignore this.
-    pub fn as_f64(&self) -> Option<f64> {
-        // Hint steers intent, but content wins: try to parse regardless, since
-        // the declared type can lie (e.g. a String param holding "12.5").
-        self.value.trim().parse::<f64>().ok()
-    }
-}
-
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Room {
     pub id: String,
@@ -368,22 +356,6 @@ mod tests {
 
         let room: Room = serde_json::from_value(json).unwrap();
         assert!(room.properties.is_empty());
-    }
-
-    /// CustomValue::as_f64 parses a numeric string regardless of storage_type.
-    #[test]
-    fn test_custom_value_as_f64() {
-        let cv = |val: &str, st: Option<&str>| CustomValue {
-            value: val.to_string(),
-            storage_type: st.map(|s| s.to_string()),
-        };
-
-        assert_eq!(cv("3.14", Some("Double")).as_f64(), Some(3.14));
-        assert_eq!(cv("42", Some("Integer")).as_f64(), Some(42.0));
-        // Content wins over hint: a String param holding a number still parses.
-        assert_eq!(cv("7.5", Some("String")).as_f64(), Some(7.5));
-        // Truly non-numeric returns None.
-        assert_eq!(cv("Finance", Some("String")).as_f64(), None);
     }
 
     /// A `StreamEnvelope` (line 1 of a `/rooms/stream` push) deserializes with

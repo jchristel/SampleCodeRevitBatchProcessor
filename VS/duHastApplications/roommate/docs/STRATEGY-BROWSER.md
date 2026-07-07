@@ -43,19 +43,27 @@ side should shape future server endpoints.
   close, which got worse on bigger plans with more rooms.
 - **Data validation panel: badge, highlighting, CSV export.** A header badge
   (`⚠ N`, `✓`, or hidden when dRofus isn't configured) toggles a right-anchored
-  side panel listing [Server](STRATEGY-SERVER.md)'s four dRofus health checks.
-  Fetched only when the project selection changes or via the panel's own
-  Refresh button — deliberately not on the 2s room poll, since this is an
-  on-demand check, not something to watch update live. Two things layered on
-  top, both entirely client-side: (1) rooms with any issue get a distinct
-  fill (`.room.error`, a new `--error` CSS variable) *only while the panel is
-  open* — `showErrors` toggles with the panel's visibility and triggers a
-  `refit: false` re-render, so opening/closing it never disturbs the current
-  pan/zoom. (2) A "Download CSV" button builds a `room_id,error` CSV directly
-  from the already-fetched report (one row per issue, so a room with several
-  issues appears several times) and triggers a browser download — no server
-  endpoint for this, matching "keep axum a pure JSON API": a CSV is just a
-  presentation reshuffle of data the browser already has.
+  side panel listing [Server](STRATEGY-SERVER.md)'s six dRofus health checks
+  (missing/duplicate link values, unmatched-in-dRofus, property mismatches,
+  and the two Revit-side presence checks, `fields_absent_in_revit` /
+  `fields_empty_in_revit`), plus an always-shown, non-error **field
+  coverage** section (which dRofus columns this pass actually checks, and
+  against which Revit property). Coverage is built and rendered separately
+  from the issue sections specifically so it survives the "No issues found"
+  collapse instead of disappearing with it, and it stays out of the badge
+  count — it's a config reference, not a data-quality problem. Fetched only
+  when the project selection changes or via the panel's own Refresh button —
+  deliberately not on the 2s room poll, since this is an on-demand check, not
+  something to watch update live. Two things layered on top, both entirely
+  client-side: (1) rooms with any issue (across all six checks) get a
+  distinct fill (`.room.error`, a new `--error` CSS variable) *only while the
+  panel is open* — `showErrors` toggles with the panel's visibility and
+  triggers a `refit: false` re-render, so opening/closing it never disturbs
+  the current pan/zoom. (2) A "Download CSV" button builds a `room_id,error`
+  CSV directly from the already-fetched report (one row per issue, so a room
+  with several issues appears several times) and triggers a browser download
+  — no server endpoint for this, matching "keep axum a pure JSON API": a CSV
+  is just a presentation reshuffle of data the browser already has.
 
 ## Rendering: SVG today, and when to move
 

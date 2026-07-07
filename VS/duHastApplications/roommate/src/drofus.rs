@@ -43,6 +43,13 @@ pub struct DrofusData {
     /// a dRofus value against the *correct* Revit property (which may not
     /// share the dRofus field's literal name), not just read once and discard.
     pub reconciliation: BTreeMap<String, String>,
+
+    /// Every dRofus field label from row 1 (columns 1+), regardless of
+    /// whether row 2 gave it a Revit property mapping. `reconciliation` only
+    /// has the *mapped* subset; the QA coverage report needs the full set too,
+    /// so it can show "not currently checked" for a label that has no mapping
+    /// rather than silently omitting it.
+    pub all_labels: Vec<String>,
 }
 
 /// Read the two-header-row CSV into DrofusData. Fail fast (startup) on a
@@ -81,10 +88,14 @@ pub fn load_drofus(source: &DrofusSource) -> anyhow::Result<DrofusData> {
     // failing the load — reconciliation is a bonus check, not required for
     // the join itself to work.
     let mut reconciliation = BTreeMap::new();
+    let mut all_labels = Vec::new();
     for col in 1..labels.len() {
-        if let (Some(label), Some(revit_name)) = (labels.get(col), revit_names.get(col)) {
-            if !revit_name.is_empty() {
-                reconciliation.insert(label.to_string(), revit_name.to_string());
+        if let Some(label) = labels.get(col) {
+            all_labels.push(label.to_string());
+            if let Some(revit_name) = revit_names.get(col) {
+                if !revit_name.is_empty() {
+                    reconciliation.insert(label.to_string(), revit_name.to_string());
+                }
             }
         }
     }
@@ -112,7 +123,7 @@ pub fn load_drofus(source: &DrofusSource) -> anyhow::Result<DrofusData> {
         by_id.len(),
         link_property
     );
-    Ok(DrofusData { link_property, by_id, reconciliation })
+    Ok(DrofusData { link_property, by_id, reconciliation, all_labels })
 }
 
 #[cfg(test)]
@@ -143,6 +154,15 @@ mod tests {
         // "Notes" has a blank Revit-name cell in row 2 -- skipped, not present.
         assert_eq!(data.reconciliation.get("Notes"), None);
         assert_eq!(data.by_id["1"].fields.get("NetArea"), Some(&"25.5".to_string()));
+
+        // `all_labels` carries every row-1 label regardless of mapping --
+        // "Notes" belongs here even though it's absent from `reconciliation`,
+        // so the coverage report can show it as "not checked" rather than
+        // silently omitting it.
+        assert_eq!(
+            data.all_labels,
+            vec!["NetArea".to_string(), "Department".to_string(), "Notes".to_string()]
+        );
 
         std::fs::remove_dir_all(&dir).ok();
     }

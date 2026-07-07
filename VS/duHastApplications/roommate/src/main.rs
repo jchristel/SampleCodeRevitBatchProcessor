@@ -37,7 +37,7 @@ use crate::drofus::load_drofus;
 use crate::handlers::{
     get_project_buildings, get_project_validation, get_projects, get_rooms, ingest_rooms, ingest_rooms_stream,
 };
-use crate::settings::{load_settings, Settings};
+use crate::settings::{load_settings, validate_drofus_fields, Settings};
 use crate::state::{seed_if_test, AppState, Shared};
 
 /// Cap on the buffered `/rooms` body -- applies to the DECOMPRESSED size, since
@@ -67,8 +67,20 @@ async fn main() -> anyhow::Result<()> {
 
     tracing::info!("settings loaded from {}", args.settings.display());
 
-    let Settings { sources, storage, test_data, hierarchy, builtin_properties, room_label } = settings;
+    let Settings {
+        sources,
+        storage,
+        test_data,
+        hierarchy,
+        builtin_properties,
+        room_label,
+        drofus_fields,
+    } = settings;
     let drofus = load_drofus(&sources.drofus)?;
+
+    // Can't validate this inside `load_settings`: the dRofus CSV (and its
+    // label set) isn't loaded until the line above, one step later.
+    validate_drofus_fields(&drofus_fields, &drofus.all_labels).context("bad drofus_fields in settings file")?;
 
     // Pick the backend from config: a `[storage]` root → persistent FsStore,
     // otherwise the volatile MemStore (dev/test). Both satisfy SnapshotStore, so
@@ -84,7 +96,14 @@ async fn main() -> anyhow::Result<()> {
         }
     };
 
-    let state: Shared = Arc::new(AppState::new(store, drofus, hierarchy, builtin_properties, room_label));
+    let state: Shared = Arc::new(AppState::new(
+        store,
+        drofus,
+        hierarchy,
+        builtin_properties,
+        room_label,
+        drofus_fields,
+    ));
 
     seed_if_test(&state, test_data.as_ref())?;
 

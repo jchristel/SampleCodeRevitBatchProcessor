@@ -16,7 +16,7 @@ use anyhow::Context;
 
 use crate::contract::RoomPayload;
 use crate::drofus::DrofusData;
-use crate::settings::{BuiltinPropertyDef, HierarchyTier, TestData};
+use crate::settings::{BuiltinPropertyDef, DrofusFieldConfig, HierarchyTier, TestData};
 use crate::storage::SnapshotStore;
 
 /// Composite key identifying one storage bucket: a model within a project.
@@ -66,6 +66,12 @@ pub struct AppState {
     /// Ordered property names shown on a room's label in the viewer. Resolved
     /// per-room inside `/rooms` assembly, same as `hierarchy`.
     pub room_label: Vec<String>,
+
+    /// Per-column dRofus type/QA declarations loaded from settings.
+    /// Consulted by `compute_validation` alongside `drofus`, and available to
+    /// any future consumer (e.g. a date-based colouring feature) that needs
+    /// to know a column's declared type.
+    pub drofus_fields: Vec<DrofusFieldConfig>,
 }
 
 impl AppState {
@@ -75,8 +81,9 @@ impl AppState {
         hierarchy: Vec<HierarchyTier>,
         builtin_properties: Vec<BuiltinPropertyDef>,
         room_label: Vec<String>,
+        drofus_fields: Vec<DrofusFieldConfig>,
     ) -> Self {
-        Self { store, drofus: Some(drofus), hierarchy, builtin_properties, room_label }
+        Self { store, drofus: Some(drofus), hierarchy, builtin_properties, room_label, drofus_fields }
     }
 
     /// Store a pushed payload. Upsert semantics live in the store impl; state

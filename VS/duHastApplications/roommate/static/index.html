@@ -480,6 +480,19 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 }
 
+// Informational, not a data-quality error: which dRofus fields this pass
+// actually checks (and against which Revit property), so it stays out of
+// `errorRoomIds`/the issue count and is shown regardless of whether any
+// issues were found -- built separately from `html` below so it survives the
+// "No issues found" collapse instead of disappearing with it.
+function renderFieldCoverage(coverage) {
+  if (!coverage || coverage.length === 0) return "";
+  return `<section><h3>Field coverage (${coverage.length})</h3><ul>${coverage.map(c =>
+    `<li class="${c.checked ? "ok" : ""}">${escapeHtml(c.label)}: ${c.checked ? "yes" : "no"}`
+    + `${c.revit_property ? ` (${escapeHtml(c.revit_property)})` : ""}</li>`
+  ).join("")}</ul></section>`;
+}
+
 function renderValidation(data) {
   currentValidation = data;
 
@@ -495,13 +508,16 @@ function renderValidation(data) {
     ...data.duplicate_link_values.flatMap(d => d.room_ids),
     ...data.rooms_unmatched_in_drofus,
     ...data.property_mismatches.map(m => m.room_id),
+    ...data.fields_absent_in_revit.map(m => m.room_id),
+    ...data.fields_empty_in_revit.map(m => m.room_id),
   ]);
   if (showErrors && currentPayload && activeLevelId) {
     renderLevel(currentPayload, activeLevelId, { refit: false });
   }
 
   const issueCount = data.rooms_missing_link_value.length + data.duplicate_link_values.length
-    + data.rooms_unmatched_in_drofus.length + data.property_mismatches.length;
+    + data.rooms_unmatched_in_drofus.length + data.property_mismatches.length
+    + data.fields_absent_in_revit.length + data.fields_empty_in_revit.length;
 
   validationToggle.classList.remove("hidden");
   validationToggle.textContent = issueCount ? `⚠ ${issueCount}` : "✓";
@@ -516,9 +532,14 @@ function renderValidation(data) {
     section("Property mismatches", data.property_mismatches, m =>
       `<li class="mismatch">room ${escapeHtml(m.room_id)} · ${escapeHtml(m.field)}: `
       + `"${escapeHtml(m.room_value)}" vs dRofus "${escapeHtml(m.drofus_value)}"</li>`),
+    section("Field absent in Revit", data.fields_absent_in_revit, m =>
+      `<li class="mismatch">room ${escapeHtml(m.room_id)} · ${escapeHtml(m.field)}</li>`),
+    section("Field empty in Revit", data.fields_empty_in_revit, m =>
+      `<li class="mismatch">room ${escapeHtml(m.room_id)} · ${escapeHtml(m.field)}</li>`),
   ].join("");
 
-  validationBody.innerHTML = issueCount ? html : `<p class="ok">No issues found.</p>`;
+  validationBody.innerHTML = (issueCount ? html : `<p class="ok">No issues found.</p>`)
+    + renderFieldCoverage(data.field_coverage);
 }
 
 async function loadValidation(projectId) {
@@ -548,6 +569,8 @@ function buildValidationCsv(data) {
   for (const id of data.rooms_unmatched_in_drofus) rows.push([id, "unmatched in dRofus"]);
   for (const m of data.property_mismatches)
     rows.push([m.room_id, `property mismatch: ${m.field} (room="${m.room_value}" vs dRofus="${m.drofus_value}")`]);
+  for (const m of data.fields_absent_in_revit) rows.push([m.room_id, `field absent in Revit: ${m.field}`]);
+  for (const m of data.fields_empty_in_revit) rows.push([m.room_id, `field empty in Revit: ${m.field}`]);
   return rows.map(r => r.map(csvEscape).join(",")).join("\r\n");
 }
 

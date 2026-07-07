@@ -10,7 +10,7 @@
 //! own trigger (an adjacency graph, a `/hierarchy` grouping) earns its own
 //! endpoint later — it isn't crammed in here.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 use axum::{
     body::Body,
@@ -24,9 +24,12 @@ use tokio::io::AsyncBufReadExt;
 use tokio_util::io::StreamReader;
 
 use crate::classify::{classify_room, TierValue};
-use crate::contract::{lookup_property, Room, RoomPayload, StreamEnvelope, SUPPORTED_SCHEMA};
+use crate::contract::{
+    elevation_match, lookup_property, numeric_match, property_presence, Level, PropertyPresence, Room, RoomPayload,
+    StreamEnvelope, SUPPORTED_SCHEMA,
+};
 use crate::drofus::{DrofusData, DrofusRecord};
-use crate::settings::{BuiltinPropertyDef, HierarchyTier};
+use crate::settings::{BuiltinPropertyDef, CompareMode, DrofusFieldConfig, HierarchyTier};
 use crate::state::{ModelKey, Shared};
 
 /// Revit posts room data here. Returns 200 with a short summary, or 422 if the
@@ -413,10 +416,40 @@ pub async fn get_rooms(
     let building_idx = building_tier_index(&state.hierarchy);
     let building_filter_active = query.building.is_some() && building_idx.is_some();
 
+    // Level dedup: a `Level.id` is only unique *within* its own model (same
+    // caveat as room ids -- see `ModelKey`'s doc comment), so two linked
+    // models that both define "the same" architectural level produce two
+    // distinct `Level` rows with the same (name, elevation) but different
+    // ids. Merge them: same name + same elevation (tolerant of cross-file
+    // float drift via `elevation_match`, the same rounding discipline used
+    // for dRofus property comparison) IS the same level, no further
+    // disambiguation. First-seen id per group wins as the canonical id; every
+    // other (model_id, level_id) pair that maps to that group is remapped to
+    // it before rooms are serialized, so the level picker and room filtering
+    // still agree on one id per real-world level.
+    let mut canonical_levels: Vec<Level> = Vec::new();
+    let mut level_remap: BTreeMap<(String, String), String> = BTreeMap::new();
+    for (key, payload) in &scoped {
+        for level in &payload.levels {
+            let canonical_id = match canonical_levels
+                .iter()
+                .find(|c| c.name == level.name && elevation_match(c.elevation, level.elevation))
+            {
+                Some(existing) => existing.id.clone(),
+                None => {
+                    canonical_levels.push(level.clone());
+                    level.id.clone()
+                }
+            };
+            level_remap.insert((key.model_id.clone(), level.id.clone()), canonical_id);
+        }
+    }
+
     let mut levels = Vec::new();
+    let mut emitted_level_ids: BTreeSet<String> = BTreeSet::new();
     let mut rooms: Vec<RoomResponse> = Vec::new();
 
-    for (_key, payload) in &scoped {
+    for (key, payload) in &scoped {
         let matching_rooms: Vec<&Room> = if let (Some(wanted), Some(idx)) = (&query.building, building_idx) {
             payload
                 .rooms
@@ -438,12 +471,24 @@ pub async fn get_rooms(
             continue; // this model contributed nothing to the requested building
         }
 
-        levels.extend(payload.levels.iter().cloned());
-        rooms.extend(
-            matching_rooms
-                .into_iter()
-                .map(|room| assemble_room(&state, room, &payload.model.source)),
-        );
+        for level in &payload.levels {
+            let canonical_id = level_remap
+                .get(&(key.model_id.clone(), level.id.clone()))
+                .cloned()
+                .unwrap_or_else(|| level.id.clone());
+            if emitted_level_ids.insert(canonical_id.clone()) {
+                let mut level = level.clone();
+                level.id = canonical_id;
+                levels.push(level);
+            }
+        }
+        rooms.extend(matching_rooms.into_iter().map(|room| {
+            let mut response = assemble_room(&state, room, &payload.model.source);
+            if let Some(canonical_id) = level_remap.get(&(key.model_id.clone(), room.level_id.clone())) {
+                response.room.level_id = canonical_id.clone();
+            }
+            response
+        }));
     }
 
     // Report the accepted schema version (all stored payloads share it — the
@@ -476,6 +521,34 @@ pub struct PropertyMismatch {
     pub drofus_value: String,
 }
 
+/// One reconciled field where dRofus has a real value but the matched room's
+/// corresponding Revit property doesn't (see `PropertyPresence`). Kept as two
+/// separate response lists rather than one, because the two cases mean
+/// different things: landing here via `Absent` means the property was never
+/// extracted from Revit for this room at all -- a mapping typo or a
+/// parameter the extractor never wired up, worth flagging loudly; via
+/// `Empty` it just means nobody has filled the value in yet, an ordinary
+/// per-room gap.
+#[derive(Serialize)]
+pub struct MissingInRevit {
+    pub room_id: String,
+    pub drofus_id: String,
+    pub field: String,
+}
+
+/// Whether one dRofus CSV field (row 1) is actually checked by this QA pass,
+/// and if so, which Revit property it's checked against. A field overridden
+/// `Ignore` in settings is left out of this list entirely -- that's a
+/// deliberate exclusion (e.g. a sync timestamp that will legitimately always
+/// differ), not a coverage gap someone needs to notice and fix.
+#[derive(Serialize)]
+pub struct FieldCoverage {
+    pub label: String,
+    pub checked: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub revit_property: Option<String>,
+}
+
 /// Data-quality report for one project's rooms against dRofus, for the
 /// header's validation panel. An on-demand aggregate over the whole
 /// snapshot, not a per-room render concern — see STRATEGY-SOURCES.md.
@@ -490,6 +563,9 @@ pub struct ValidationResponse {
     pub duplicate_link_values: Vec<DuplicateLinkValue>,
     pub rooms_unmatched_in_drofus: Vec<String>,
     pub property_mismatches: Vec<PropertyMismatch>,
+    pub fields_absent_in_revit: Vec<MissingInRevit>,
+    pub fields_empty_in_revit: Vec<MissingInRevit>,
+    pub field_coverage: Vec<FieldCoverage>,
 }
 
 impl ValidationResponse {
@@ -502,8 +578,19 @@ impl ValidationResponse {
             duplicate_link_values: vec![],
             rooms_unmatched_in_drofus: vec![],
             property_mismatches: vec![],
+            fields_absent_in_revit: vec![],
+            fields_empty_in_revit: vec![],
+            field_coverage: vec![],
         }
     }
+}
+
+/// The configured QA override for one dRofus field label, or `None` when the
+/// column has no declaration, or a declaration with no `qa` set (both mean
+/// the default: numeric-adaptive if both sides parse as a number, else exact
+/// string match).
+fn compare_mode(drofus_fields: &[DrofusFieldConfig], label: &str) -> Option<CompareMode> {
+    drofus_fields.iter().find(|f| f.label == label).and_then(|f| f.qa)
 }
 
 /// Pure computation behind `get_project_validation` — pulled out so it's
@@ -513,12 +600,15 @@ impl ValidationResponse {
 /// property; (2) among those that do, is the value actually unique per room
 /// (a shared value is ambiguous — recorded, then excluded from the rest);
 /// (3) does each remaining room's value find a dRofus record; (4) for rooms
-/// that do, does every reconciled property agree between the two sides.
+/// that do, does every reconciled, non-`Ignore`d property agree between the
+/// two sides. Also reports `field_coverage`: which dRofus fields this pass
+/// actually checks at all, for the panel's "what's being QA'd" reference.
 fn compute_validation(
     project_id: &str,
     stored: &[(ModelKey, RoomPayload)],
     drofus: &DrofusData,
     builtin_defs: &[BuiltinPropertyDef],
+    drofus_fields: &[DrofusFieldConfig],
 ) -> ValidationResponse {
     let mut total_rooms = 0;
     let mut rooms_missing_link_value = Vec::new();
@@ -541,6 +631,8 @@ fn compute_validation(
     let mut duplicate_link_values = Vec::new();
     let mut rooms_unmatched_in_drofus = Vec::new();
     let mut property_mismatches = Vec::new();
+    let mut fields_absent_in_revit = Vec::new();
+    let mut fields_empty_in_revit = Vec::new();
 
     for (value, rooms) in &by_value {
         if rooms.len() > 1 {
@@ -556,23 +648,67 @@ fn compute_validation(
             continue;
         };
         for (label, revit_property) in &drofus.reconciliation {
-            let drofus_value = record.fields.get(label);
-            let room_value = lookup_property(room, revit_property, source, builtin_defs);
-            // Only compare when both sides actually have a value -- one side
-            // missing is a different problem (absence), not a disagreement.
-            if let (Some(drofus_value), Some(room_value)) = (drofus_value, room_value) {
-                if drofus_value.trim() != room_value.trim() {
-                    property_mismatches.push(PropertyMismatch {
-                        room_id: room.id.clone(),
-                        drofus_id: value.clone(),
-                        field: label.clone(),
-                        room_value,
-                        drofus_value: drofus_value.clone(),
-                    });
+            if compare_mode(drofus_fields, label) == Some(CompareMode::Ignore) {
+                continue;
+            }
+            // Normalize the dRofus side the same way `lookup_property`
+            // already does for the Revit side: a blank cell is "no value
+            // here", not a real empty-string value to compare against. A
+            // dRofus-side absence isn't tracked further -- only Revit-side
+            // absence is (see `MissingInRevit`'s doc comment for why).
+            let Some(drofus_value) = record.fields.get(label).filter(|s| !s.is_empty()) else {
+                continue;
+            };
+            match property_presence(room, revit_property, source, builtin_defs) {
+                PropertyPresence::Absent => fields_absent_in_revit.push(MissingInRevit {
+                    room_id: room.id.clone(),
+                    drofus_id: value.clone(),
+                    field: label.clone(),
+                }),
+                PropertyPresence::Empty => fields_empty_in_revit.push(MissingInRevit {
+                    room_id: room.id.clone(),
+                    drofus_id: value.clone(),
+                    field: label.clone(),
+                }),
+                PropertyPresence::Present(room_value) => {
+                    let matches = if compare_mode(drofus_fields, label) == Some(CompareMode::Exact) {
+                        drofus_value.trim() == room_value.trim()
+                    } else {
+                        numeric_match(drofus_value, &room_value)
+                            .unwrap_or_else(|| drofus_value.trim() == room_value.trim())
+                    };
+                    if !matches {
+                        property_mismatches.push(PropertyMismatch {
+                            room_id: room.id.clone(),
+                            drofus_id: value.clone(),
+                            field: label.clone(),
+                            room_value,
+                            drofus_value: drofus_value.clone(),
+                        });
+                    }
                 }
             }
         }
     }
+
+    // Which dRofus fields this pass actually checks: every row-1 label
+    // except those overridden `Ignore` (a deliberate exclusion, hidden from
+    // this report entirely rather than shown as "not checked").
+    let ignored: BTreeSet<&str> = drofus_fields
+        .iter()
+        .filter(|f| f.qa == Some(CompareMode::Ignore))
+        .map(|f| f.label.as_str())
+        .collect();
+    let field_coverage: Vec<FieldCoverage> = drofus
+        .all_labels
+        .iter()
+        .filter(|label| !ignored.contains(label.as_str()))
+        .map(|label| FieldCoverage {
+            label: label.clone(),
+            checked: drofus.reconciliation.contains_key(label),
+            revit_property: drofus.reconciliation.get(label).cloned(),
+        })
+        .collect();
 
     ValidationResponse {
         drofus_configured: true,
@@ -582,6 +718,9 @@ fn compute_validation(
         duplicate_link_values,
         rooms_unmatched_in_drofus,
         property_mismatches,
+        fields_absent_in_revit,
+        fields_empty_in_revit,
+        field_coverage,
     }
 }
 
@@ -600,7 +739,13 @@ pub async fn get_project_validation(
         StatusCode::INTERNAL_SERVER_ERROR
     })?;
 
-    Ok(Json(compute_validation(&project_id, &stored, drofus, &state.builtin_properties)))
+    Ok(Json(compute_validation(
+        &project_id,
+        &stored,
+        drofus,
+        &state.builtin_properties,
+        &state.drofus_fields,
+    )))
 }
 
 #[cfg(test)]
@@ -636,18 +781,30 @@ mod tests {
         reconciliation: &[(&str, &str)],
     ) -> DrofusData {
         let mut by_id = BTreeMap::new();
+        // `all_labels` mirrors the real loader's row-1 label set: the union
+        // of every reconciled label and every field label that shows up in
+        // any record (the real CSV always has a row-1 label for a column
+        // regardless of whether row 2 mapped it).
+        let mut all_labels: std::collections::BTreeSet<String> = std::collections::BTreeSet::new();
         for (id, fields) in records {
             let mut f = BTreeMap::new();
             for (k, v) in *fields {
                 f.insert(k.to_string(), v.to_string());
+                all_labels.insert(k.to_string());
             }
             by_id.insert(id.to_string(), DrofusRecord { fields: f });
         }
         let mut reconciliation_map = BTreeMap::new();
         for (k, v) in reconciliation {
             reconciliation_map.insert(k.to_string(), v.to_string());
+            all_labels.insert(k.to_string());
         }
-        DrofusData { link_property: link_property.to_string(), by_id, reconciliation: reconciliation_map }
+        DrofusData {
+            link_property: link_property.to_string(),
+            by_id,
+            reconciliation: reconciliation_map,
+            all_labels: all_labels.into_iter().collect(),
+        }
     }
 
     /// A room with no value for the link property is reported, not silently
@@ -659,7 +816,7 @@ mod tests {
         let stored = vec![(key, payload)];
         let drofus = make_drofus("Number", &[], &[]);
 
-        let result = compute_validation("p1", &stored, &drofus, &[]);
+        let result = compute_validation("p1", &stored, &drofus, &[], &[]);
 
         assert_eq!(result.total_rooms, 1);
         assert_eq!(result.rooms_missing_link_value, vec!["1".to_string()]);
@@ -679,7 +836,7 @@ mod tests {
         let stored = vec![(key, payload)];
         let drofus = make_drofus("Number", &[("101", &[])], &[]);
 
-        let result = compute_validation("p1", &stored, &drofus, &[]);
+        let result = compute_validation("p1", &stored, &drofus, &[], &[]);
 
         assert_eq!(result.duplicate_link_values.len(), 1);
         let dup = &result.duplicate_link_values[0];
@@ -698,7 +855,7 @@ mod tests {
         let stored = vec![(key, payload)];
         let drofus = make_drofus("Number", &[("1", &[])], &[]);
 
-        let result = compute_validation("p1", &stored, &drofus, &[]);
+        let result = compute_validation("p1", &stored, &drofus, &[], &[]);
 
         assert_eq!(result.rooms_unmatched_in_drofus, vec!["1".to_string()]);
     }
@@ -716,7 +873,7 @@ mod tests {
             &[("NetArea", "Area"), ("Dept", "Department")],
         );
 
-        let result = compute_validation("p1", &stored, &drofus, &[]);
+        let result = compute_validation("p1", &stored, &drofus, &[], &[]);
 
         assert!(result.rooms_unmatched_in_drofus.is_empty());
         assert_eq!(result.property_mismatches.len(), 1);
@@ -724,6 +881,124 @@ mod tests {
         assert_eq!(mismatch.field, "NetArea");
         assert_eq!(mismatch.room_value, "25.5");
         assert_eq!(mismatch.drofus_value, "30.0");
+    }
+
+    /// The reported bug: a unit-conversion float artifact (Revit's
+    /// `"1.49999935417"` vs dRofus's `"1.5"`) must not be flagged once both
+    /// are rounded to the lesser stated precision.
+    #[test]
+    fn test_compute_validation_numeric_tolerance_no_false_mismatch() {
+        let room = make_room("1", "Room", &[("Number", "1"), ("Area", "1.49999935417")]);
+        let (key, payload) = make_payload("p1", vec![room]);
+        let stored = vec![(key, payload)];
+        let drofus = make_drofus("Number", &[("1", &[("NetArea", "1.5")])], &[("NetArea", "Area")]);
+
+        let result = compute_validation("p1", &stored, &drofus, &[], &[]);
+
+        assert!(result.property_mismatches.is_empty());
+    }
+
+    /// A blank dRofus cell must be treated as "no value here", not compared
+    /// against Revit's real value -- previously this produced a false
+    /// `""` vs `"25.5"` mismatch.
+    #[test]
+    fn test_compute_validation_empty_drofus_value_not_flagged() {
+        let room = make_room("1", "Room", &[("Number", "1"), ("Area", "25.5")]);
+        let (key, payload) = make_payload("p1", vec![room]);
+        let stored = vec![(key, payload)];
+        let drofus = make_drofus("Number", &[("1", &[("NetArea", "")])], &[("NetArea", "Area")]);
+
+        let result = compute_validation("p1", &stored, &drofus, &[], &[]);
+
+        assert!(result.property_mismatches.is_empty());
+        assert!(result.fields_absent_in_revit.is_empty());
+        assert!(result.fields_empty_in_revit.is_empty());
+    }
+
+    /// dRofus has a real value but the room has no such Revit property at
+    /// all -- the serious case (mapping/model-setup problem), reported
+    /// separately from a merely-blank value.
+    #[test]
+    fn test_compute_validation_field_absent_in_revit() {
+        let room = make_room("1", "Room", &[("Number", "1")]); // no "Area" property at all
+        let (key, payload) = make_payload("p1", vec![room]);
+        let stored = vec![(key, payload)];
+        let drofus = make_drofus("Number", &[("1", &[("NetArea", "30.0")])], &[("NetArea", "Area")]);
+
+        let result = compute_validation("p1", &stored, &drofus, &[], &[]);
+
+        assert!(result.property_mismatches.is_empty());
+        assert!(result.fields_empty_in_revit.is_empty());
+        assert_eq!(result.fields_absent_in_revit.len(), 1);
+        assert_eq!(result.fields_absent_in_revit[0].field, "NetArea");
+    }
+
+    /// dRofus has a real value, the room's Revit property exists but is
+    /// blank -- an ordinary per-room gap, reported separately from `Absent`.
+    #[test]
+    fn test_compute_validation_field_empty_in_revit() {
+        let room = make_room("1", "Room", &[("Number", "1"), ("Area", "")]);
+        let (key, payload) = make_payload("p1", vec![room]);
+        let stored = vec![(key, payload)];
+        let drofus = make_drofus("Number", &[("1", &[("NetArea", "30.0")])], &[("NetArea", "Area")]);
+
+        let result = compute_validation("p1", &stored, &drofus, &[], &[]);
+
+        assert!(result.property_mismatches.is_empty());
+        assert!(result.fields_absent_in_revit.is_empty());
+        assert_eq!(result.fields_empty_in_revit.len(), 1);
+        assert_eq!(result.fields_empty_in_revit[0].field, "NetArea");
+    }
+
+    /// A field overridden `Ignore` is skipped entirely: no mismatch, no
+    /// absent/empty entry, and no row in the coverage report.
+    #[test]
+    fn test_compute_validation_ignore_override_skips_field_entirely() {
+        let room = make_room("1", "Room", &[("Number", "1"), ("SyncTime", "2026-07-02")]);
+        let (key, payload) = make_payload("p1", vec![room]);
+        let stored = vec![(key, payload)];
+        let drofus = make_drofus("Number", &[("1", &[("LastSync", "2026-06-29")])], &[("LastSync", "SyncTime")]);
+        // Also declares the field's type -- proves `qa: Ignore` and `type:
+        // Date` coexist: QA still skips it, independent of what a future
+        // date-consuming feature would do with the same declaration.
+        let drofus_fields = vec![crate::settings::DrofusFieldConfig {
+            label: "LastSync".to_string(),
+            field_type: crate::settings::FieldType::Date,
+            format: Some("%Y-%m-%d".to_string()),
+            qa: Some(CompareMode::Ignore),
+        }];
+
+        let result = compute_validation("p1", &stored, &drofus, &[], &drofus_fields);
+
+        assert!(result.property_mismatches.is_empty());
+        assert!(result.fields_absent_in_revit.is_empty());
+        assert!(result.fields_empty_in_revit.is_empty());
+        assert!(result.field_coverage.iter().all(|c| c.label != "LastSync"));
+    }
+
+    /// The coverage report shows every dRofus field: a reconciled one as
+    /// checked (with its mapped Revit property), an unmapped one as
+    /// unchecked.
+    #[test]
+    fn test_compute_validation_field_coverage() {
+        let room = make_room("1", "Room", &[("Number", "1"), ("Area", "25.5")]);
+        let (key, payload) = make_payload("p1", vec![room]);
+        let stored = vec![(key, payload)];
+        let drofus = make_drofus(
+            "Number",
+            &[("1", &[("NetArea", "25.5"), ("Notes", "not mapped")])],
+            &[("NetArea", "Area")],
+        );
+
+        let result = compute_validation("p1", &stored, &drofus, &[], &[]);
+
+        let net_area = result.field_coverage.iter().find(|c| c.label == "NetArea").unwrap();
+        assert!(net_area.checked);
+        assert_eq!(net_area.revit_property.as_deref(), Some("Area"));
+
+        let notes = result.field_coverage.iter().find(|c| c.label == "Notes").unwrap();
+        assert!(!notes.checked);
+        assert!(notes.revit_property.is_none());
     }
 
     /// `$name`/`$id` resolve to the room's own fields, not `room.properties`.
@@ -757,5 +1032,67 @@ mod tests {
         let fields = vec!["$name".to_string(), "Nonexistent".to_string(), "$id".to_string()];
         let label = resolve_label_fields(&room, &fields, "revit", &[]);
         assert_eq!(label, vec!["Room".to_string(), "1".to_string()]);
+    }
+
+    /// Two models under the same project each define "the same" level (same
+    /// name, near-identical elevation, different model-local `Level.id`) --
+    /// `get_rooms` must collapse them into one `Level` in the response and
+    /// remap both models' rooms to point at that one canonical id.
+    #[tokio::test]
+    async fn test_get_rooms_dedups_levels_by_name_and_elevation() {
+        use crate::state::AppState;
+        use crate::storage::MemStore;
+
+        let mut room_a = make_room("r1", "Room A", &[]);
+        room_a.level_id = "lvlA".to_string();
+        let mut room_b = make_room("r2", "Room B", &[]);
+        room_b.level_id = "lvlB".to_string();
+
+        let payload_a = RoomPayload {
+            schema_version: 5,
+            project: Project { id: "p1".to_string(), name: "P".to_string() },
+            model: Model { id: "modelA".to_string(), name: "A".to_string(), source: "revit".to_string() },
+            snapshot: Snapshot { taken_at: "2026-01-01T00:00:00Z".to_string() },
+            levels: vec![Level { id: "lvlA".to_string(), name: "Level 1".to_string(), elevation: 0.0 }],
+            rooms: vec![room_a],
+        };
+        let payload_b = RoomPayload {
+            schema_version: 5,
+            project: Project { id: "p1".to_string(), name: "P".to_string() },
+            model: Model { id: "modelB".to_string(), name: "B".to_string(), source: "revit".to_string() },
+            snapshot: Snapshot { taken_at: "2026-01-01T00:00:01Z".to_string() },
+            // Same name, elevation drifted by float noise well within tolerance.
+            levels: vec![Level { id: "lvlB".to_string(), name: "Level 1".to_string(), elevation: 0.000000001 }],
+            rooms: vec![room_b],
+        };
+
+        let state: Shared = std::sync::Arc::new(AppState::new(
+            Box::new(MemStore::new()),
+            make_drofus("Number", &[], &[]),
+            vec![],
+            vec![],
+            vec!["$name".to_string(), "$id".to_string()],
+            vec![],
+        ));
+        state.set_snapshot(payload_a).unwrap();
+        state.set_snapshot(payload_b).unwrap();
+
+        let response = get_rooms(
+            State(state),
+            Query(RoomsQuery { project: Some("p1".to_string()), building: None }),
+        )
+        .await
+        .unwrap();
+
+        let value = response.0;
+        let levels = value["levels"].as_array().unwrap();
+        assert_eq!(levels.len(), 1, "same name+elevation levels must collapse to one");
+
+        let canonical_id = levels[0]["id"].as_str().unwrap();
+        let rooms = value["rooms"].as_array().unwrap();
+        assert_eq!(rooms.len(), 2);
+        for room in rooms {
+            assert_eq!(room["level_id"].as_str().unwrap(), canonical_id);
+        }
     }
 }

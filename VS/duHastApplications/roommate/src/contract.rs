@@ -175,10 +175,10 @@ pub struct StreamEnvelope {
 /// together.
 pub const SUPPORTED_SCHEMA: u32 = 5;
 
-/// Look up a room property by its *canonical* name (e.g. "Area"), resolving it
-/// to the source-specific raw property name via `builtin_defs` before reading
-/// the room's flat property map. Used by both the dRofus join and the
-/// classifier so the lookup strategy is consistent and lives in one place.
+/// Resolve a *canonical* property name (e.g. "Area") to the source-specific
+/// raw property name a room's `properties` map actually keys on, via
+/// `builtin_defs`. Shared by `lookup_property` and `property_presence` so the
+/// two can never disagree on what a canonical name resolves to.
 ///
 /// When no `BuiltinPropertyDef` names `canonical_name`, or none of its
 /// `by_source` entries match `source`, `canonical_name` is used verbatim as
@@ -186,26 +186,127 @@ pub const SUPPORTED_SCHEMA: u32 = 5;
 /// were never in the builtin set to begin with) work unchanged, and what lets
 /// hierarchy/dRofus configs reference a raw name directly when no canonical
 /// mapping is configured.
+fn resolve_raw_name<'a>(
+    canonical_name: &'a str,
+    source: &str,
+    builtin_defs: &'a [BuiltinPropertyDef],
+) -> &'a str {
+    builtin_defs
+        .iter()
+        .find(|d| d.canonical == canonical_name)
+        .and_then(|d| d.by_source.get(source))
+        .map(String::as_str)
+        .unwrap_or(canonical_name)
+}
+
+/// The three states a room property can be in — distinguished because they
+/// mean different things for data-quality reporting: `Absent` means the
+/// property was never extracted from Revit for this room at all (a mapping
+/// typo or a parameter the extractor never wired up — a setup problem worth
+/// flagging loudly), while `Empty` means the property exists but nobody has
+/// filled in a value yet (an ordinary per-room gap).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum PropertyPresence {
+    /// No property of the resolved raw name exists on this room at all.
+    Absent,
+    /// The property exists but its value is an empty string.
+    Empty,
+    /// The property exists with a non-empty value.
+    Present(String),
+}
+
+/// Look up a room property by its *canonical* name, resolving it to the
+/// source-specific raw property name first (see `resolve_raw_name`), then
+/// reporting which of the three `PropertyPresence` states it's in. Used where
+/// the absent/empty distinction matters (data-quality reporting); most
+/// callers just want `lookup_property`'s collapsed `Option<String>`.
+pub fn property_presence(
+    room: &Room,
+    canonical_name: &str,
+    source: &str,
+    builtin_defs: &[BuiltinPropertyDef],
+) -> PropertyPresence {
+    let raw_name = resolve_raw_name(canonical_name, source, builtin_defs);
+    match room.properties.get(raw_name) {
+        None => PropertyPresence::Absent,
+        Some(v) if v.value.is_empty() => PropertyPresence::Empty,
+        Some(v) => PropertyPresence::Present(v.value.clone()),
+    }
+}
+
+/// Look up a room property by its *canonical* name (e.g. "Area"), resolving it
+/// to the source-specific raw property name via `builtin_defs` before reading
+/// the room's flat property map. Used by both the dRofus join and the
+/// classifier so the lookup strategy is consistent and lives in one place.
 ///
 /// Returns `None` when the resolved property is absent or holds an empty
-/// value.
+/// value — i.e. collapses `PropertyPresence::Absent`/`Empty` together. A thin
+/// wrapper over `property_presence` so the two can never drift apart.
 pub fn lookup_property(
     room: &Room,
     canonical_name: &str,
     source: &str,
     builtin_defs: &[BuiltinPropertyDef],
 ) -> Option<String> {
-    let raw_name = builtin_defs
-        .iter()
-        .find(|d| d.canonical == canonical_name)
-        .and_then(|d| d.by_source.get(source))
-        .map(String::as_str)
-        .unwrap_or(canonical_name);
+    match property_presence(room, canonical_name, source, builtin_defs) {
+        PropertyPresence::Present(v) => Some(v),
+        PropertyPresence::Absent | PropertyPresence::Empty => None,
+    }
+}
 
-    room.properties
-        .get(raw_name)
-        .map(|v| v.value.clone())
-        .filter(|s| !s.is_empty())
+/// IEEE 754 zero has two bit patterns (`0.0` and `-0.0`) that compare equal
+/// numerically but format differently (`"-0"` vs `"0"`) -- collapse to the
+/// positive form before formatting so a genuine zero never spuriously
+/// mismatches itself.
+fn normalize_zero(v: f64) -> f64 {
+    if v == 0.0 {
+        0.0
+    } else {
+        v
+    }
+}
+
+/// Count the digits after the decimal point in a raw numeric string -- the
+/// "stated precision" of a value as authored. This has to run on the string,
+/// not the parsed `f64`: reformatting a parsed float loses (`"1.50"` ->
+/// `1.5`) or fabricates (binary rounding noise) digits that were never part
+/// of what was actually written.
+fn decimal_places(s: &str) -> usize {
+    s.trim().split_once('.').map_or(0, |(_, frac)| frac.len())
+}
+
+/// Compare two raw numeric strings tolerant of float-precision drift: round
+/// both to the *lesser* of their two stated decimal precisions, rather than
+/// to a fixed epsilon. This is what lets dRofus's `"1.5"` agree with Revit's
+/// `"1.49999935417"` (a unit-conversion rounding artifact) -- dRofus only
+/// stated 1 decimal digit of precision, so disagreement past that digit
+/// isn't a real mismatch, whereas two values that both state 6 digits of
+/// precision and differ in the 6th are a genuine disagreement.
+///
+/// Returns `None` when either side doesn't parse as a number at all; callers
+/// should fall back to exact string comparison in that case.
+pub fn numeric_match(a: &str, b: &str) -> Option<bool> {
+    let x: f64 = a.trim().parse().ok()?;
+    let y: f64 = b.trim().parse().ok()?;
+    let n = decimal_places(a).min(decimal_places(b));
+    let x = normalize_zero(x);
+    let y = normalize_zero(y);
+    Some(format!("{:.*}", n, x) == format!("{:.*}", n, y))
+}
+
+/// Same rounding discipline as `numeric_match`, for a value that was never a
+/// string to begin with (`Level.elevation` arrives as a parsed JSON number,
+/// so any "stated precision" it once had is already gone by the time Rust
+/// sees it). Approximated instead: format to a generous fixed precision, then
+/// trim trailing zeros, so a value authored as a clean `0.0` collapses to 0
+/// decimals while one carrying real float noise from a unit conversion keeps
+/// a long non-zero tail. Falls back to exact equality on the vanishingly
+/// unlikely chance both trimmed strings fail to parse.
+pub fn elevation_match(a: f64, b: f64) -> bool {
+    const PRECISION: usize = 9;
+    let sa = format!("{:.*}", PRECISION, normalize_zero(a));
+    let sb = format!("{:.*}", PRECISION, normalize_zero(b));
+    numeric_match(sa.trim_end_matches('0'), sb.trim_end_matches('0')).unwrap_or(a == b)
 }
 
 #[cfg(test)]
@@ -357,5 +458,96 @@ mod tests {
             lookup_property(&room, "Dept", "revit", &[]),
             Some("Finance".to_string())
         );
+    }
+
+    /// The reported bug: dRofus's `"1.5"` (1 stated decimal) agrees with
+    /// Revit's `"1.49999935417"` (a unit-conversion rounding artifact) once
+    /// both are rounded to the lesser of the two stated precisions.
+    #[test]
+    fn test_numeric_match_adaptive_precision() {
+        assert_eq!(numeric_match("1.5", "1.49999935417"), Some(true));
+    }
+
+    /// Two values that both state 6 digits of precision and genuinely differ
+    /// at that precision are a real mismatch, not noise to round away.
+    #[test]
+    fn test_numeric_match_genuine_disagreement_at_stated_precision() {
+        assert_eq!(numeric_match("1.500001", "1.499999"), Some(false));
+    }
+
+    /// A value with no decimal point at all (0 stated decimals) forces
+    /// whole-number comparison.
+    #[test]
+    fn test_numeric_match_integer_side_forces_whole_number_compare() {
+        assert_eq!(numeric_match("150", "150.0000001"), Some(true));
+        assert_eq!(numeric_match("150", "150.6"), Some(false));
+    }
+
+    /// Either side failing to parse as a number falls back to `None` so the
+    /// caller knows to use exact string comparison instead.
+    #[test]
+    fn test_numeric_match_non_numeric_returns_none() {
+        assert_eq!(numeric_match("Cardiology", "25.5"), None);
+        assert_eq!(numeric_match("25.5", "Cardiology"), None);
+    }
+
+    /// `elevation_match` approximates stated precision from a bare `f64` by
+    /// trimming trailing zeros off a fixed-precision format, rather than
+    /// requiring a raw string.
+    #[test]
+    fn test_elevation_match_trims_float_noise() {
+        // A "clean" 0.0 vs a value carrying float noise many decimals out.
+        assert!(elevation_match(0.0, 0.000000000_1));
+        assert!(elevation_match(12.0, 12.000000001));
+        // 12.6, not 12.5 -- avoids depending on round-half-to-even tie-breaking.
+        assert!(!elevation_match(12.0, 12.6));
+    }
+
+    /// Negative zero and positive zero must compare equal, not mismatch on
+    /// their differing sign when formatted.
+    #[test]
+    fn test_elevation_match_negative_zero() {
+        assert!(elevation_match(-0.0, 0.0));
+    }
+
+    /// `property_presence` distinguishes a property that was never extracted
+    /// at all (`Absent` -- a mapping/setup problem) from one that exists but
+    /// is blank (`Empty` -- an ordinary per-room gap), and reports a real
+    /// value as `Present`.
+    #[test]
+    fn test_property_presence_distinguishes_absent_empty_present() {
+        let mut properties = BTreeMap::new();
+        properties.insert(
+            "Blank".to_string(),
+            CustomValue { value: "".to_string(), storage_type: None },
+        );
+        properties.insert(
+            "Filled".to_string(),
+            CustomValue { value: "25.5".to_string(), storage_type: None },
+        );
+        let room = Room { id: "r1".into(), name: "Office".into(), level_id: "lvl1".into(), loops: vec![], properties };
+
+        assert_eq!(property_presence(&room, "Missing", "revit", &[]), PropertyPresence::Absent);
+        assert_eq!(property_presence(&room, "Blank", "revit", &[]), PropertyPresence::Empty);
+        assert_eq!(
+            property_presence(&room, "Filled", "revit", &[]),
+            PropertyPresence::Present("25.5".to_string())
+        );
+    }
+
+    /// `lookup_property`'s existing collapsed behavior must survive the
+    /// refactor onto `property_presence` unchanged: both `Absent` and `Empty`
+    /// read as `None`.
+    #[test]
+    fn test_lookup_property_still_collapses_absent_and_empty_to_none() {
+        let mut properties = BTreeMap::new();
+        properties.insert(
+            "Blank".to_string(),
+            CustomValue { value: "".to_string(), storage_type: None },
+        );
+        let room = Room { id: "r1".into(), name: "Office".into(), level_id: "lvl1".into(), loops: vec![], properties };
+
+        assert_eq!(lookup_property(&room, "Missing", "revit", &[]), None);
+        assert_eq!(lookup_property(&room, "Blank", "revit", &[]), None);
     }
 }

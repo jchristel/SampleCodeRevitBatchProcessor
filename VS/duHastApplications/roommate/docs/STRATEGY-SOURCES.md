@@ -43,6 +43,27 @@ Revit.
   String>` (dRofus field label → the Revit property it corresponds to) — see
   [Server](STRATEGY-SERVER.md)'s data validation report, the first real
   consumer of the "kept for reconciliation" data below.
+- **Per-column dRofus type/QA declarations (`drofus_fields`).** One
+  declaration per dRofus column — `label` (matches row 1), an optional `type`
+  (`string` default, `numeric`, or `date`), an optional `format` (required,
+  and only meaningful, when `type = "date"` — a chrono strftime-style
+  pattern, since dRofus hands dates back as formatted text, e.g.
+  `"6/29/2026 5:01:01 PM +10:00"`, not a structured value), and an optional
+  `qa` override (`exact` forces string comparison even when both sides parse
+  as numbers; `ignore` excludes the column from comparison *and* the
+  coverage report entirely). Deliberately **one** table answering "what is
+  this column," not two: the QA override started life as its own standalone
+  list (`drofus_field_overrides`/`CompareMode`) until a colour-rooms-by-date
+  feature idea came up that needs to actually parse a column's type, not
+  just skip it in QA — a second, separate "what is this column" table would
+  only have drifted from the first, so the override was folded into this
+  more general per-column declaration instead. `type`/`format` aren't
+  consumed by anything yet — no date parsing is implemented — they exist as
+  the seam a future consumer reads from; validated at startup regardless (a
+  `date` field needs a `format`, a `format` on anything else is almost
+  certainly a mistake, and every `label` must actually exist in the loaded
+  CSV). `qa` is the only field consumed today, by
+  [Server](STRATEGY-SERVER.md)'s validation report.
 - **Transport: HTTP POST to localhost.** Revit add-ins run in-process on .NET;
   POST is simplest, most debuggable, language-agnostic, and the same
   `HttpClient` carries over to a future C# add-in. Alternatives considered:
@@ -103,9 +124,12 @@ The two header rows are the join spec and must both be retained:
 - **Row 2, column 0** names the Revit room property whose *value* holds the
   dRofus id — the link, constant for the whole file, read once at load.
 - **Row 1** is the dRofus field labels — the display layer for the joined
-  data. Row 2's other columns are the Revit param names those fields
-  correspond to, kept for reconciliation — now actually retained and used
-  (see Implemented above), not just parsed and discarded.
+  data, and retained in full as `DrofusData.all_labels` regardless of
+  whether row 2 mapped a given column (needed so [Server](STRATEGY-SERVER.md)'s
+  coverage report can show an unmapped column as "not checked" rather than
+  omitting it silently). Row 2's other columns are the Revit param names
+  those fields correspond to, kept for reconciliation — now actually
+  retained and used (see Implemented above), not just parsed and discarded.
 
 The link is a direct value match and dRofus ids are unique, so the loader
 builds a flat `Map<String, DrofusRecord>` — no collision handling needed.

@@ -59,10 +59,109 @@ pub struct Settings {
     /// everywhere else here.
     #[serde(default = "default_room_label")]
     pub room_label: Vec<String>,
+
+    /// Per-column declarations for dRofus CSV fields: what *type* of data a
+    /// column holds, and, optionally, how QA comparison should treat it. One
+    /// declaration per column, not two separate lists — "what is this
+    /// column" shouldn't be answered in two places that can drift apart.
+    /// `type` is read by any consumer that needs to know a column's shape
+    /// (QA's numeric-adaptive comparison already infers numeric-ness at
+    /// compare time without needing this, but a future feature like
+    /// colouring rooms by proximity to a date needs to actually parse the
+    /// value, which requires being told the format up front). `qa` is the
+    /// QA-specific override this used to be alone: `Exact` forces string
+    /// comparison even when both sides parse as numbers; `Ignore` excludes
+    /// the field from comparison *and* the coverage report entirely — for a
+    /// column that's mapped (present in the dRofus CSV's row 2) but expected
+    /// to always differ, e.g. a last-synchronised timestamp, before this
+    /// server can actually compare dates. Empty if omitted, which is today's
+    /// default behavior for every column: treated as a string, numeric-
+    /// adaptive comparison if both sides happen to parse as a number.
+    #[serde(default)]
+    pub drofus_fields: Vec<DrofusFieldConfig>,
 }
 
 fn default_room_label() -> Vec<String> {
     vec!["$name".to_string(), "$id".to_string()]
+}
+
+/// One dRofus column's declared type/format, and optionally a QA override.
+/// `label` matches row 1 of the dRofus CSV (the same key
+/// `DrofusData::reconciliation`/`all_labels` use).
+#[derive(Debug, Clone, Deserialize)]
+pub struct DrofusFieldConfig {
+    pub label: String,
+
+    /// What kind of data this column holds. Defaults to `String` (today's
+    /// implicit treatment of every column) when omitted.
+    #[serde(default, rename = "type")]
+    pub field_type: FieldType,
+
+    /// Required when `field_type` is `Date`: a chrono strftime-style pattern
+    /// describing how this column's raw string is laid out -- dRofus dates
+    /// arrive as formatted text (e.g. `"6/29/2026 5:01:01 PM +10:00"`), not a
+    /// structured value, so a parser needs to be told the shape rather than
+    /// guessing it. Meaningless for any other `field_type`.
+    #[serde(default)]
+    pub format: Option<String>,
+
+    /// Optional QA comparison override for this column. `None` (the default)
+    /// keeps today's behavior: numeric-adaptive comparison if both sides
+    /// parse as a number, else exact string match.
+    #[serde(default)]
+    pub qa: Option<CompareMode>,
+}
+
+/// The kind of data a dRofus column holds. Not a closed set forever -- more
+/// variants join as consumers need them (e.g. a `Numeric { unit }` case,
+/// once real unit conversion rather than adaptive rounding is needed).
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum FieldType {
+    #[default]
+    String,
+    Numeric,
+    Date,
+}
+
+/// How one dRofus field's value is compared against Revit's, when the
+/// default (numeric-adaptive if both sides parse as a number, else exact
+/// string match) needs overriding.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum CompareMode {
+    /// Force exact string comparison even when both sides parse as numbers.
+    Exact,
+    /// Skip comparison and coverage reporting for this field entirely.
+    Ignore,
+}
+
+/// Fail fast on a malformed dRofus field declaration — same "loud startup
+/// error over a silent no-op" discipline as hierarchy tiers and builtin
+/// properties:
+/// - a `label` the dRofus CSV never declared. Can't run inside
+///   `load_settings` itself: dRofus loads *after* settings in `main.rs`, so
+///   the label set isn't known yet at that point — this runs as a separate
+///   step once both are loaded.
+/// - a `Date` field with no `format` — unusable without one.
+/// - a `format` given on a non-`Date` field — meaningless, almost certainly a
+///   mistake rather than intentional.
+pub fn validate_drofus_fields(fields: &[DrofusFieldConfig], all_labels: &[String]) -> anyhow::Result<()> {
+    for field in fields {
+        if !all_labels.iter().any(|l| l == &field.label) {
+            anyhow::bail!("drofus_fields references unknown dRofus field label: '{}'", field.label);
+        }
+        match (field.field_type, &field.format) {
+            (FieldType::Date, None) => {
+                anyhow::bail!("drofus_fields entry '{}' has type = \"date\" but no format", field.label);
+            }
+            (other, Some(_)) if other != FieldType::Date => {
+                anyhow::bail!("drofus_fields entry '{}' sets format but type is not \"date\"", field.label);
+            }
+            _ => {}
+        }
+    }
+    Ok(())
 }
 
 /// On-disk snapshot storage config. Its own section (not under `[sources]`):
@@ -266,5 +365,62 @@ code_property = "b"
         assert!(result.is_err());
 
         std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// A minimal `DrofusFieldConfig` for tests that only care about one
+    /// aspect of the declaration.
+    fn field(label: &str) -> DrofusFieldConfig {
+        DrofusFieldConfig { label: label.to_string(), field_type: FieldType::default(), format: None, qa: None }
+    }
+
+    /// A declaration referencing a label the dRofus CSV never declared fails
+    /// startup rather than silently never applying.
+    #[test]
+    fn test_validate_drofus_fields_rejects_unknown_label() {
+        let fields = vec![DrofusFieldConfig { qa: Some(CompareMode::Ignore), ..field("Nonexistent") }];
+        let all_labels = vec!["NetArea".to_string(), "Department".to_string()];
+
+        assert!(validate_drofus_fields(&fields, &all_labels).is_err());
+    }
+
+    /// A declaration referencing a real label, with only a `qa` override and
+    /// no `type`, passes validation (today's shipped behavior, generalized).
+    #[test]
+    fn test_validate_drofus_fields_accepts_known_label() {
+        let fields = vec![DrofusFieldConfig { qa: Some(CompareMode::Exact), ..field("NetArea") }];
+        let all_labels = vec!["NetArea".to_string(), "Department".to_string()];
+
+        assert!(validate_drofus_fields(&fields, &all_labels).is_ok());
+    }
+
+    /// `type = "date"` with no `format` is unusable -- fails validation.
+    #[test]
+    fn test_validate_drofus_fields_date_without_format_fails() {
+        let fields = vec![DrofusFieldConfig { field_type: FieldType::Date, ..field("LastSync") }];
+        let all_labels = vec!["LastSync".to_string()];
+
+        assert!(validate_drofus_fields(&fields, &all_labels).is_err());
+    }
+
+    /// `type = "date"` with a `format` passes validation.
+    #[test]
+    fn test_validate_drofus_fields_date_with_format_passes() {
+        let fields = vec![DrofusFieldConfig {
+            field_type: FieldType::Date,
+            format: Some("%-m/%-d/%Y %-I:%M:%S %p %z".to_string()),
+            ..field("LastSync")
+        }];
+        let all_labels = vec!["LastSync".to_string()];
+
+        assert!(validate_drofus_fields(&fields, &all_labels).is_ok());
+    }
+
+    /// A `format` on a non-date field is meaningless -- fails validation.
+    #[test]
+    fn test_validate_drofus_fields_format_on_non_date_fails() {
+        let fields = vec![DrofusFieldConfig { format: Some("whatever".to_string()), ..field("NetArea") }];
+        let all_labels = vec!["NetArea".to_string()];
+
+        assert!(validate_drofus_fields(&fields, &all_labels).is_err());
     }
 }

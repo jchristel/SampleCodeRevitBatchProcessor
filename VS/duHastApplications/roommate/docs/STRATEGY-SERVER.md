@@ -52,8 +52,16 @@ carrying its rationale in a module header, all with unit tests.
   building filter is active — levels are their own array from a separate
   Revit export, so a floor can legitimately have zero rooms of a given
   building right now yet still belong to it; with no filter, every scoped
-  model's levels are included exactly as before. A dedicated per-model
-  endpoint is still deferred.
+  model's levels are included exactly as before. Levels are also
+  deduplicated across the merge: a `Level.id` is only unique *within* its own
+  model (same caveat as room ids), so two linked models defining "the same"
+  architectural level would otherwise appear twice. Equal `name` and
+  `elevation` — elevation compared with the same adaptive-precision rounding
+  as the validation report's numeric comparison below, tolerant of
+  cross-file float drift — collapse to one canonical level; every
+  contributing room's `level_id` is remapped to it before serialization, so
+  the level picker and room filtering agree on one id per real-world level.
+  A dedicated per-model endpoint is still deferred.
 - **Swappable persistence (`SnapshotStore` trait).** `FsStore` writes
   `<root>/<project-guid>/{project.toml, <model-guid>/<ts>.json}` — an
   authoritative, two-way `project.toml`, upsert-on-push (creates unknown
@@ -91,22 +99,59 @@ carrying its rationale in a module header, all with unit tests.
 
 - **Data validation report (`GET /projects/{id}/validation`).** First real
   use of the pipeline surfaced a need to audit data quality, not just render
-  it. Four checks, computed in one pass by the pure `compute_validation`
-  (thin async wrapper does the `State`/`Path` extraction, same shape as
-  `resolve_label_fields`): every room's `lookup_property` resolution against
-  the dRofus link property (missing → `rooms_missing_link_value`); values
-  grouped to catch a link value shared by more than one room
-  (`duplicate_link_values` — ambiguous, so excluded from the remaining checks,
-  since a shared link can't be uniquely matched to one room); each remaining
-  room's value looked up in `DrofusData.by_id` (miss →
-  `rooms_unmatched_in_drofus`); and for a hit, every `(dRofus label, Revit
-  property)` pair in the newly-retained `reconciliation` map (see
-  [Sources](STRATEGY-SOURCES.md)) compared between the two sides, trimmed
-  string equality, recorded as a `PropertyMismatch` on disagreement — either
-  side missing a value is skipped (absence, not disagreement, a different
-  problem). `drofus_configured: false` (no dRofus source at all) short-circuits
-  to an empty report, not an error, same discipline as `tier_configured` for
-  buildings.
+  it. Computed in one pass by the pure `compute_validation` (thin async
+  wrapper does the `State`/`Path` extraction, same shape as
+  `resolve_label_fields`):
+  - Every room's `lookup_property` resolution against the dRofus link
+    property (missing → `rooms_missing_link_value`); values grouped to catch
+    a link value shared by more than one room (`duplicate_link_values` —
+    ambiguous, so excluded from the remaining checks, since a shared link
+    can't be uniquely matched to one room); each remaining room's value
+    looked up in `DrofusData.by_id` (miss → `rooms_unmatched_in_drofus`).
+  - For a hit, every `(dRofus label, Revit property)` pair in the
+    `reconciliation` map (see [Sources](STRATEGY-SOURCES.md)) is checked,
+    unless that field's `drofus_fields` declaration sets `qa = "ignore"` (see
+    Sources), in which case it's skipped entirely — not compared, not listed
+    in `field_coverage` either, since that's a deliberate exclusion (e.g. a
+    last-synchronised timestamp expected to always differ), not a coverage
+    gap.
+  - **Comparison is numeric-adaptive, not plain string equality.**
+    `contract::numeric_match` parses both sides as `f64` and, if both parse,
+    rounds each to the *lesser* of the two raw strings' stated decimal
+    precision before comparing — dRofus's `"1.5"` agrees with Revit's
+    `"1.49999935417"` (a unit-conversion rounding artifact) because dRofus
+    only stated one decimal digit of precision, so disagreement past that
+    digit isn't real. Falls back to exact (trimmed) string equality when
+    either side isn't numeric, or when the field's `qa` override forces
+    `"exact"`. No fixed epsilon anywhere — precision is inferred per
+    comparison from the data itself, never configured.
+  - **The dRofus side is normalized the same way the Revit side always
+    was:** a blank CSV cell reads as absent, not as a real empty-string value
+    to compare against — otherwise a blank dRofus cell would false-flag
+    against any real Revit value. A dRofus-side absence isn't tracked
+    further: the dRofus export is the source of truth for whether a field
+    has a value at all, so a field it never populated isn't this report's
+    problem.
+  - **Revit-side absence is split into two distinct severities** via
+    `contract::PropertyPresence` (`Absent | Empty | Present`), used wherever
+    `lookup_property`'s collapsed `Option<String>` isn't precise enough:
+    `Absent` (the property was never extracted from Revit for this room at
+    all) → `fields_absent_in_revit`, a likely mapping typo or a parameter the
+    extractor never wired up, worth flagging loudly as a setup problem;
+    `Empty` (the property exists but nobody filled in a value) →
+    `fields_empty_in_revit`, an ordinary per-room gap. Both are only reported
+    when dRofus actually has a value for that field — nothing on the Revit
+    side to compare against yet isn't an error.
+  - **`field_coverage`** answers "which dRofus columns does this pass
+    actually check" — every `all_labels` entry (see Sources) except
+    `qa = "ignore"`-declared ones, each flagged `checked` (present in
+    `reconciliation`) with its mapped Revit property when so. Makes the
+    previously-implicit "a blank Revit-name cell in row 2 means this column
+    isn't checked" convention visible in the running server, not just
+    legible from the CSV.
+  - `drofus_configured: false` (no dRofus source at all) short-circuits to an
+    empty report, not an error, same discipline as `tier_configured` for
+    buildings.
 
 - **Gzip request decompression + streaming NDJSON ingest.** FFE exports run
   >100 MB uncompressed. Two independent, composable changes: (1)
@@ -132,7 +177,11 @@ carrying its rationale in a module header, all with unit tests.
   `SnapshotStore::put_streaming` that writes rooms to disk as they arrive.
 
 **Deferred (design settled, not built):** snapshot-history query + delete UI,
-per-model / `/hierarchy` endpoints, DB backend, an owning level above project.
+per-model / `/hierarchy` endpoints, DB backend, an owning level above
+project, date-aware QA comparison and a colour-rooms-by-date-proximity
+viewer feature (`drofus_fields` already reserves `type = "date"` / `format`
+for this — see [Sources](STRATEGY-SOURCES.md) — but nothing parses or
+consumes it yet).
 
 ## Data model: project → model → snapshot → {levels, rooms}
 

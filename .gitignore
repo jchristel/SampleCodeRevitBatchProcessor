@@ -157,7 +157,6 @@ dmypy.json
 ipch/
 obj/
 [Bb]in
-!duHastApplications/roommate/src/bin/
 [Dd]ebug
 [Rr]elease
 
@@ -241,6 +240,11 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+
+# roommate is a Rust crate that uses src/bin/ for multiple binaries (cargo's
+# own convention) -- unignore it from the [Bb]in/ rules above, which are
+# meant for .NET build-output directories, not Rust source directories.
+!VS/duHastApplications/roommate/src/bin/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

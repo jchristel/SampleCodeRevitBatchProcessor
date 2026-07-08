@@ -157,6 +157,7 @@ dmypy.json
 ipch/
 obj/
 [Bb]in
+!duHastApplications/roommate/src/bin/
 [Dd]ebug
 [Rr]elease
 

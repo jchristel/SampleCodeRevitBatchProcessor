@@ -1,30 +1,11 @@
-//! roommate — Revit → Rust → browser room viewer.
-//!
-//! `main` is deliberately thin: parse args, load settings + dRofus (fail fast),
-//! build shared state, wire the router. All the substance lives in the modules
-//! below, each carrying its own rationale at the top:
-//!
-//! - `contract`  — the JSON contract shared with the Revit extractor + the
-//!                 cross-tier property lookup both consumers use.
-//! - `settings`  — startup TOML config (sources, test seed, hierarchy defn).
-//! - `drofus`    — reference-data loader + join dataset.
-//! - `classify`  — room → full-depth classification path.
-//! - `state`     — shared in-memory store + startup seed.
-//! - `handlers`  — the `/rooms` push and fetch (plus the streaming `/rooms/stream`
-//!                 push for large models), where derived data is assembled.
-
-mod classify;
-mod contract;
-mod drofus;
-mod handlers;
-mod settings;
-mod state;
-mod storage;
+//! roommate — the Axum HTTP server binary. Deliberately thin: parse args,
+//! build shared state via `roommate::bootstrap`, wire the router. All the
+//! substance lives in the `roommate` lib crate (see its own header for the
+//! module index). The `mcp` binary (`src/bin/mcp.rs`) is the other consumer
+//! of that lib crate, over stdio instead of HTTP.
 
 use std::path::PathBuf;
-use std::sync::Arc;
 
-use anyhow::Context;
 use axum::{
     extract::DefaultBodyLimit,
     routing::{get, post},
@@ -33,12 +14,10 @@ use axum::{
 use clap::Parser;
 use tower_http::{cors::CorsLayer, decompression::RequestDecompressionLayer, services::ServeDir, trace::TraceLayer};
 
-use crate::drofus::load_drofus;
-use crate::handlers::{
+use roommate::bootstrap::build_state;
+use roommate::handlers::{
     get_project_buildings, get_project_validation, get_projects, get_rooms, ingest_rooms, ingest_rooms_stream,
 };
-use crate::settings::{load_settings, validate_drofus_fields, Settings};
-use crate::state::{seed_if_test, AppState, Shared};
 
 /// Cap on the buffered `/rooms` body -- applies to the DECOMPRESSED size, since
 /// `RequestDecompressionLayer` inflates before this limit is checked. FFE
@@ -46,7 +25,6 @@ use crate::state::{seed_if_test, AppState, Shared};
 /// tuned tight, since the streaming route (`/rooms/stream`) is the intended
 /// home for anything approaching this ceiling anyway. See HANDOVER-gzip.md.
 const ROOMS_BODY_LIMIT_BYTES: usize = 512 * 1024 * 1024;
-use crate::storage::{FsStore, MemStore, SnapshotStore};
 
 #[derive(Parser)]
 struct Args {
@@ -62,50 +40,7 @@ async fn main() -> anyhow::Result<()> {
         .init();
 
     let args = Args::parse();
-    let settings = load_settings(&args.settings)
-        .with_context(|| format!("bad settings file: {}", args.settings.display()))?;
-
-    tracing::info!("settings loaded from {}", args.settings.display());
-
-    let Settings {
-        sources,
-        storage,
-        test_data,
-        hierarchy,
-        builtin_properties,
-        room_label,
-        drofus_fields,
-    } = settings;
-    let drofus = load_drofus(&sources.drofus)?;
-
-    // Can't validate this inside `load_settings`: the dRofus CSV (and its
-    // label set) isn't loaded until the line above, one step later.
-    validate_drofus_fields(&drofus_fields, &drofus.all_labels).context("bad drofus_fields in settings file")?;
-
-    // Pick the backend from config: a `[storage]` root → persistent FsStore,
-    // otherwise the volatile MemStore (dev/test). Both satisfy SnapshotStore, so
-    // this is the only line that knows which one is running.
-    let store: Box<dyn SnapshotStore> = match storage {
-        Some(cfg) => {
-            tracing::info!("persistent storage at {}", cfg.root.display());
-            Box::new(FsStore::new(cfg.root)?)
-        }
-        None => {
-            tracing::info!("no [storage] configured — using in-memory store");
-            Box::new(MemStore::new())
-        }
-    };
-
-    let state: Shared = Arc::new(AppState::new(
-        store,
-        drofus,
-        hierarchy,
-        builtin_properties,
-        room_label,
-        drofus_fields,
-    ));
-
-    seed_if_test(&state, test_data.as_ref())?;
+    let state = build_state(&args.settings)?;
 
     let app = Router::new()
         .route(

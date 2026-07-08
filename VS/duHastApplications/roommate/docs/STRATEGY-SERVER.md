@@ -5,8 +5,8 @@ Part of the Roommate strategy docs: [Index](STRATEGY.md) ·
 
 The Rust/axum process: what it stores, how it derives data at read time, and
 how it's configured. Code is split across `src/` modules (`contract`,
-`settings`, `drofus`, `classify`, `state`, `storage`, `handlers`, `main`), each
-carrying its rationale in a module header, all with unit tests.
+`settings`, `drofus`, `classify`, `state`, `storage`, `service`, `handlers`,
+`main`), each carrying its rationale in a module header, all with unit tests.
 
 ## Implemented
 
@@ -17,6 +17,29 @@ carrying its rationale in a module header, all with unit tests.
   assumes a tier or a source. It resolves names through the per-source mapping
   described in [Sources](STRATEGY-SOURCES.md); this doc covers what consumes
   the resolved value.
+- **Service layer.** The derive/assemble logic behind the read-side endpoints
+  (dRofus join, classification, validation assembly) lives in `service/`, not
+  in `handlers`. `handlers` is now a thin Axum adapter layer: extract params,
+  call one `service` function, translate the result to HTTP. `service/` never
+  imports `axum` — the seam is dependency direction, not a framework — so a
+  future MCP server can call the same functions `handlers` does. Ingest
+  (`POST /rooms`, `/rooms/stream`) has no derive logic worth sharing and stays
+  entirely in `handlers`. See HANDOVER-service-layer.md.
+
+  **Deferred gap:** `service::validation::compute_validation` still resolves
+  each room's dRofus link value with its own direct `lookup_property` call
+  rather than going through `service::rooms::assemble_room`'s join —
+  unchanged from before this extraction (no regression), but it means the
+  "future features reuse the join" benefit HANDOVER-service-layer.md
+  anticipates for F&E validation isn't wired up yet. Left alone deliberately:
+  validation's duplicate-link-value detection and missing-vs-unmatched
+  distinction are structurally different from "assemble one room for
+  display," so routing through `assemble_room` now would mean either losing
+  that distinction or paying for classification/label work validation
+  doesn't use — a speculative abstraction with no current payoff.
+  `assemble_room` stays private (`rooms.rs`-only) until F&E validation is
+  actually being built and its real needs are known; at that point, widen its
+  visibility to `pub(crate)` and decide there whether it fits.
 - **Classification hierarchy.** N-tier `[[hierarchy]]` from settings,
   validated at startup (a tier naming neither `code_property` nor
   `name_property` is a startup error, and duplicate tier names are also a

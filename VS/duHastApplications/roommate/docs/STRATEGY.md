@@ -1,9 +1,9 @@
 # Roommate — Architecture & Strategy
 
 Notes capturing the design decisions behind the Revit → Rust → browser room
-viewer. Written as a reference to come back to, not a spec. Split across four
+viewer. Written as a reference to come back to, not a spec. Split across five
 docs along the pipeline's own boundaries, so each can be read (and changed)
-without pulling in the other two:
+without pulling in the others:
 
 - **This doc** — the pipeline overview, the core split principle that governs
   all three layers, and the current wire contract they all share.
@@ -15,6 +15,8 @@ without pulling in the other two:
   storage, classification, settings.
 - **[Browser](STRATEGY-BROWSER.md)** — the SVG viewer: rendering strategy,
   UI growth path, endpoint design from the fetch side.
+- **[MCP](STRATEGY-MCP.md)** — the stdio MCP server: a second, tool-based
+  front door onto the same read-side logic the server exposes over HTTP.
 
 A change that touches more than one layer (the v5 property rework did all
 three) should update every doc it touches — that's the cost of the split, and

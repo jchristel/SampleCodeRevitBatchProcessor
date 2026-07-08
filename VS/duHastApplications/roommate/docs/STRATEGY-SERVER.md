@@ -1,7 +1,8 @@
 # Roommate — Server
 
 Part of the Roommate strategy docs: [Index](STRATEGY.md) ·
-[Sources](STRATEGY-SOURCES.md) · [Browser](STRATEGY-BROWSER.md)
+[Sources](STRATEGY-SOURCES.md) · [Browser](STRATEGY-BROWSER.md) ·
+[MCP](STRATEGY-MCP.md)
 
 The Rust/axum process: what it stores, how it derives data at read time, and
 how it's configured. Code is split across `src/` modules (`contract`,
@@ -21,8 +22,9 @@ how it's configured. Code is split across `src/` modules (`contract`,
   (dRofus join, classification, validation assembly) lives in `service/`, not
   in `handlers`. `handlers` is now a thin Axum adapter layer: extract params,
   call one `service` function, translate the result to HTTP. `service/` never
-  imports `axum` — the seam is dependency direction, not a framework — so a
-  future MCP server can call the same functions `handlers` does. Ingest
+  imports `axum` — the seam is dependency direction, not a framework — which
+  is exactly what let the MCP server ([MCP](STRATEGY-MCP.md)) call the same
+  functions `handlers` does without touching this layer at all. Ingest
   (`POST /rooms`, `/rooms/stream`) has no derive logic worth sharing and stays
   entirely in `handlers`. See HANDOVER-service-layer.md.
 

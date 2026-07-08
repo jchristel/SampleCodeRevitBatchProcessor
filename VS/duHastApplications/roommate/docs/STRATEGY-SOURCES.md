@@ -1,7 +1,8 @@
 # Roommate — Sources
 
 Part of the Roommate strategy docs: [Index](STRATEGY.md) ·
-[Server](STRATEGY-SERVER.md) · [Browser](STRATEGY-BROWSER.md)
+[Server](STRATEGY-SERVER.md) · [Browser](STRATEGY-BROWSER.md) ·
+[MCP](STRATEGY-MCP.md)
 
 Everything that supplies raw data into the pipeline: the Revit/pyRevit
 producer, and dRofus (external reference data, today's only other source).

@@ -110,6 +110,17 @@ fn compare_mode(drofus_fields: &[DrofusFieldConfig], label: &str) -> Option<Comp
     drofus_fields.iter().find(|f| f.label == label).and_then(|f| f.qa)
 }
 
+/// A copy of `s` with every non-ASCII character replaced by `?`, mirroring
+/// duHast's `encode_ascii` step (Python's `str.encode("ascii", "replace")`,
+/// see `Objects/base.py`'s `to_json_utf`) that every room value already went
+/// through before it reached this service. Used to re-check a string-compare
+/// mismatch: if narrowing the dRofus side the same lossy way makes it equal
+/// to the room value, the two sides agree and the mismatch was purely an
+/// artefact of that export step (HANDOVER_utf8.md), not a real disagreement.
+fn ascii_narrowed(s: &str) -> String {
+    s.chars().map(|c| if c.is_ascii() { c } else { '?' }).collect()
+}
+
 /// Pure computation behind `compute_project_validation` — pulled out so it's
 /// testable without a full `AppState`, same shape as `resolve_label_fields`.
 ///
@@ -188,11 +199,20 @@ pub fn compute_validation(
                     field: label.clone(),
                 }),
                 PropertyPresence::Present(room_value) => {
-                    let matches = if compare_mode(drofus_fields, label) == Some(CompareMode::Exact) {
-                        drofus_value.trim() == room_value.trim()
-                    } else {
-                        numeric_match(drofus_value, &room_value)
-                            .unwrap_or_else(|| drofus_value.trim() == room_value.trim())
+                    let exact_mode = compare_mode(drofus_fields, label) == Some(CompareMode::Exact);
+                    // `numeric_match` only decides the comparison in non-exact mode when both
+                    // sides parse as numbers; `None` here means the comparison falls back to
+                    // string equality below, whether because exact mode forced it or because at
+                    // least one side isn't numeric (this is also the path date-labeled fields
+                    // take today -- there's no separate typed-date comparison, see
+                    // HANDOVER_utf8.md).
+                    let numeric = if exact_mode { None } else { numeric_match(drofus_value, &room_value) };
+                    let matches = match numeric {
+                        Some(numeric_matches) => numeric_matches,
+                        None => {
+                            drofus_value.trim() == room_value.trim()
+                                || ascii_narrowed(drofus_value.trim()) == room_value.trim()
+                        }
                     };
                     if !matches {
                         property_mismatches.push(PropertyMismatch {
@@ -390,6 +410,43 @@ mod tests {
         assert_eq!(mismatch.field, "NetArea");
         assert_eq!(mismatch.room_value, "25.5");
         assert_eq!(mismatch.drofus_value, "30.0");
+    }
+
+    /// The reported bug: the Revit export's ASCII-narrowing step replaces any
+    /// non-ASCII character with `?` before the value reaches this service, so
+    /// a room value that legitimately started with an en dash arrives as
+    /// `?`. That must not be flagged once the dRofus side is narrowed the
+    /// same lossy way and the two agree (HANDOVER_utf8.md).
+    #[test]
+    fn test_compute_validation_ascii_narrowing_no_false_mismatch() {
+        let room = make_room("1", "Room", &[("Number", "1"), ("Department", "Loading Dock ? Option 2")]);
+        let (key, payload) = make_payload("p1", vec![room]);
+        let stored = vec![(key, payload)];
+        let drofus = make_drofus(
+            "Number",
+            &[("1", &[("Dept", "Loading Dock \u{2013} Option 2")])],
+            &[("Dept", "Department")],
+        );
+
+        let result = compute_validation("p1", &stored, &drofus, &[], &[]);
+
+        assert!(result.property_mismatches.is_empty());
+    }
+
+    /// A genuine content mismatch that merely happens to contain a literal
+    /// `?` on the dRofus side must still be reported -- narrowing only
+    /// rescues a mismatch when it's the *sole* difference, not any mismatch
+    /// touching a `?` character.
+    #[test]
+    fn test_compute_validation_ascii_narrowing_does_not_mask_genuine_mismatch() {
+        let room = make_room("1", "Room", &[("Number", "1"), ("Department", "MECH")]);
+        let (key, payload) = make_payload("p1", vec![room]);
+        let stored = vec![(key, payload)];
+        let drofus = make_drofus("Number", &[("1", &[("Dept", "SM.EX?")])], &[("Dept", "Department")]);
+
+        let result = compute_validation("p1", &stored, &drofus, &[], &[]);
+
+        assert_eq!(result.property_mismatches.len(), 1);
     }
 
     /// The reported bug: a unit-conversion float artifact (Revit's

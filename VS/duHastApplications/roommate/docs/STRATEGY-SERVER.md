@@ -150,6 +150,21 @@ how it's configured. Code is split across `src/` modules (`contract`,
     either side isn't numeric, or when the field's `qa` override forces
     `"exact"`. No fixed epsilon anywhere — precision is inferred per
     comparison from the data itself, never configured.
+  - **A string-equality mismatch gets one more check before it's reported:
+    has the Revit side already lost the disputed character?** duHast's own
+    export step (`Objects/base.py`'s `to_json_utf` → `Utilities/utility.py`'s
+    `encode_ascii`) narrows every string to ASCII before it ever reaches this
+    service, replacing anything outside `0x00`-`0x7F` with a literal `?` —
+    e.g. an en dash arrives as `?`. dRofus keeps the original character, so a
+    field that's otherwise identical false-flags on that one glyph alone. On
+    a string-equality mismatch (an exact-mode field, or the non-numeric
+    fallback below — the latter is also the path a `type = "date"` field
+    takes today, since dates don't yet get a typed comparison of their own),
+    `ascii_narrowed` re-runs the comparison with the dRofus side narrowed the
+    same lossy way; agreement there means the mismatch was purely an
+    artifact of the export's encoding step, not real disagreement. A
+    mismatch that merely *contains* a `?` without narrowing to full equality
+    still fails. See `HANDOVER_utf8.md`.
   - **The dRofus side is normalized the same way the Revit side always
     was:** a blank CSV cell reads as absent, not as a real empty-string value
     to compare against — otherwise a blank dRofus cell would false-flag

@@ -93,18 +93,22 @@ how it's configured. Code is split across `src/` modules (`contract`,
   project/model structure), full snapshot history (one file per push).
   `MemStore` keeps the in-memory behaviour for `[storage]`-less/dev configs. A
   database is a future third impl behind the same trait.
-- **Settings-file-relative paths.** Every relative path inside `settings.toml`
-  (dRofus CSV, storage root, test snapshot) resolves against the settings
-  file's own directory, not the process's current working directory — so the
-  compiled exe behaves the same regardless of where it's launched from.
+- **Settings-file-relative paths.** Every relative path inside a settings
+  file (dRofus CSV in a per-project file; storage root and test snapshot in
+  `server.toml`) resolves against that settings file's own directory, not the
+  process's current working directory — so the compiled exe behaves the same
+  regardless of where it's launched from.
   (`static/`, served by `ServeDir::new("static")`, is the one exception: it's
   still cwd-relative, so the viewer page itself still needs the exe launched
   from the crate root, or `static/` copied alongside it.)
-- **Sample dev config.** `settings/` holds a runnable example: `settings.toml`,
-  a two-row `drofus.csv`, and a `test_snapshot.json` (a real v5 payload
-  produced by `post_rooms.py`'s `translate()` against
-  `test/Data/rooms.json`/`levels.json`) — `cargo run -- --settings
-  settings/settings.toml` seeds and serves it with no manual POST needed.
+- **Sample dev config.** `settings/` holds a runnable example: `server.toml`
+  (storage root + dev seed), `projects/sample-project.toml` (classification,
+  dRofus source, room label — one file per project, see
+  HANDOVER-per-project-settings.md), a two-row `drofus.csv`, and a
+  `test_snapshot.json` (a real v5 payload produced by `post_rooms.py`'s
+  `translate()` against `test/Data/rooms.json`/`levels.json`) — `cargo run --
+  --server-settings settings/server.toml --project-settings
+  settings/projects` seeds and serves it with no manual POST needed.
 - **Configurable room labels (`room_label`).** An ordered list of property
   names, resolved into `RoomResponse.label: Vec<String>` at response assembly
   so the viewer never hardcodes which fields it shows (see

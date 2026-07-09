@@ -16,21 +16,26 @@ use std::path::{Path, PathBuf};
 use anyhow::Context;
 use serde::Deserialize;
 
-/// Top-level server settings, parsed once at startup from a TOML file.
+/// One project's settings, parsed once at startup from its own TOML file
+/// (one of N files in the `--project-settings` directory — see
+/// HANDOVER-per-project-settings.md). Server-wide config (`[storage]`,
+/// `[test_data]`) lives separately in `ServerConfig`, loaded once from
+/// `--server-settings` independent of this per-project loop.
 #[derive(Debug, Deserialize)]
 pub struct Settings {
+    /// This bundle's project id — matched against `RoomPayload.project.id` to
+    /// select which bundle applies to a given model. Must be non-empty
+    /// (validated at load).
+    pub project_id: String,
+
+    /// When true, this bundle is also the explicit fallback for any project
+    /// with no dedicated settings file (`AppState::settings_for`). At most
+    /// one project file may set this — validated across the whole directory
+    /// at load time, not here (a single file can't see its siblings).
+    #[serde(default)]
+    pub is_default: bool,
+
     pub sources: Sources,
-
-    /// Where model snapshots are persisted on disk. When present, pushes are
-    /// written under this root (project-guid/model-guid/snapshot.json) and
-    /// survive restarts. When absent, storage stays purely in-memory (dev/test).
-    #[serde(default)]
-    pub storage: Option<Storage>,
-
-    /// Dev-only: when present, seeds the server with a snapshot from disk at
-    /// startup so no manual POST is needed. Omit in prod.
-    #[serde(default)]
-    pub test_data: Option<TestData>,
 
     /// Ordered classification tiers, outermost first. Empty if the section is
     /// omitted (a project with no classification defined).
@@ -164,10 +169,45 @@ pub fn validate_drofus_fields(fields: &[DrofusFieldConfig], all_labels: &[String
     Ok(())
 }
 
+/// Server-wide settings, parsed once at startup from the `--server-settings`
+/// file — separate from per-project `Settings` because storage and dev
+/// seeding are properties of the running server, not of any one project.
+#[derive(Debug, Deserialize)]
+pub struct ServerConfig {
+    /// Where model snapshots are persisted on disk. When present, pushes are
+    /// written under this root (project-guid/model-guid/snapshot.json) and
+    /// survive restarts. When absent, storage stays purely in-memory (dev/test).
+    #[serde(default)]
+    pub storage: Option<Storage>,
+
+    /// Dev-only: when present, seeds the server with a snapshot from disk at
+    /// startup so no manual POST is needed. Omit in prod.
+    #[serde(default)]
+    pub test_data: Option<TestData>,
+}
+
+pub fn load_server_config(path: &PathBuf) -> anyhow::Result<ServerConfig> {
+    let raw = std::fs::read_to_string(path)
+        .with_context(|| format!("could not read server settings file: {}", path.display()))?;
+    let mut config: ServerConfig = toml::from_str(&raw).context("failed to parse server settings TOML")?;
+
+    // Same base-dir discipline as `load_settings`: relative paths inside this
+    // file resolve against the file's own directory, not the process cwd.
+    let settings_dir = path.parent().filter(|p| !p.as_os_str().is_empty());
+    if let Some(storage) = &mut config.storage {
+        resolve_relative_to(&mut storage.root, settings_dir);
+    }
+    if let Some(test_data) = &mut config.test_data {
+        resolve_relative_to(&mut test_data.snapshot_path, settings_dir);
+    }
+
+    Ok(config)
+}
+
 /// On-disk snapshot storage config. Its own section (not under `[sources]`):
 /// a source *supplies* join data, storage *persists* the snapshots themselves —
-/// different kind of thing. Kept as an `Option` on `Settings` so omitting it is
-/// a clean fallback to the in-memory store, no other change.
+/// different kind of thing. Kept as an `Option` on `ServerConfig` so omitting
+/// it is a clean fallback to the in-memory store, no other change.
 #[derive(Debug, Deserialize)]
 pub struct Storage {
     /// Root directory holding one sub-dir per project (named by project GUID).
@@ -284,11 +324,9 @@ pub fn load_settings(path: &PathBuf) -> anyhow::Result<Settings> {
     match &mut settings.sources.drofus {
         DrofusSource::File { path: drofus_path } => resolve_relative_to(drofus_path, settings_dir),
     }
-    if let Some(storage) = &mut settings.storage {
-        resolve_relative_to(&mut storage.root, settings_dir);
-    }
-    if let Some(test_data) = &mut settings.test_data {
-        resolve_relative_to(&mut test_data.snapshot_path, settings_dir);
+
+    if settings.project_id.trim().is_empty() {
+        anyhow::bail!("settings file {} has an empty project_id", path.display());
     }
 
     // Fail fast on unkeyable or duplicate-named tiers — better a startup error
@@ -344,6 +382,8 @@ mod tests {
             &settings_path,
             format!(
                 r#"
+project_id = "p1"
+
 [sources.drofus]
 type = "file"
 path = "{}"

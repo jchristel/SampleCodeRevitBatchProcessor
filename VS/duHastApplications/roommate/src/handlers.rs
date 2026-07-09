@@ -41,6 +41,18 @@ pub async fn ingest_rooms(
         ));
     }
 
+    // A push for a project with no registered settings is rejected rather
+    // than lazily accepted — pairs with `assemble_rooms`'s "skip on read"
+    // policy (see HANDOVER-per-project-settings.md): a project must be
+    // explicitly onboarded (a settings file registered under its id, or an
+    // explicit `is_default` fallback) before it can push at all.
+    if state.settings_for(&payload.project.id).is_none() {
+        return Err((
+            StatusCode::UNPROCESSABLE_ENTITY,
+            format!("no settings configured for project '{}'", payload.project.id),
+        ));
+    }
+
     let count = payload.rooms.len();
     tracing::info!("received {} room(s)", count);
 
@@ -108,6 +120,16 @@ pub async fn ingest_rooms_stream(
                 "schema_version {} not supported; this server speaks {}",
                 envelope.schema_version, SUPPORTED_SCHEMA
             ),
+        ));
+    }
+
+    // Same registration check as the buffered path -- checked as soon as the
+    // envelope's project id is known, before the (potentially large) room
+    // stream is read at all.
+    if state.settings_for(&envelope.project.id).is_none() {
+        return Err((
+            StatusCode::UNPROCESSABLE_ENTITY,
+            format!("no settings configured for project '{}'", envelope.project.id),
         ));
     }
 
@@ -237,7 +259,7 @@ mod tests {
     use super::*;
     use crate::contract::{Level, Model, Project, Snapshot};
     use crate::drofus::DrofusData;
-    use crate::state::AppState;
+    use crate::state::{AppState, ProjectSettings};
     use crate::storage::MemStore;
     use std::collections::BTreeMap;
 
@@ -254,19 +276,28 @@ mod tests {
         }
     }
 
+    fn make_bundle() -> ProjectSettings {
+        ProjectSettings {
+            drofus: Some(make_drofus()),
+            hierarchy: vec![],
+            builtin_properties: vec![],
+            room_label: vec!["$name".to_string(), "$id".to_string()],
+            drofus_fields: vec![],
+        }
+    }
+
+    /// Registers one project's bundle under its id -- the shape
+    /// `AppState::new` now takes in place of the old five flat fields.
+    fn single_project(project_id: &str) -> std::collections::HashMap<String, ProjectSettings> {
+        std::collections::HashMap::from([(project_id.to_string(), make_bundle())])
+    }
+
     /// An empty store yields 204 through the full handler, not just at the
     /// service layer -- the one behavior that genuinely lives at the HTTP
     /// seam (`service::rooms::assemble_rooms` has no notion of "204").
     #[tokio::test]
     async fn test_get_rooms_returns_204_when_store_empty() {
-        let state: Shared = std::sync::Arc::new(AppState::new(
-            Box::new(MemStore::new()),
-            make_drofus(),
-            vec![],
-            vec![],
-            vec!["$name".to_string(), "$id".to_string()],
-            vec![],
-        ));
+        let state: Shared = std::sync::Arc::new(AppState::new(Box::new(MemStore::new()), single_project("p1"), None));
 
         let result = get_rooms(State(state), Query(RoomsQuery { project: None, building: None })).await;
         assert_eq!(result.unwrap_err(), StatusCode::NO_CONTENT);
@@ -284,14 +315,7 @@ mod tests {
             levels: vec![Level { id: "l1".to_string(), name: "Level 1".to_string(), elevation: 0.0 }],
             rooms: vec![make_room("r1", "Room A")],
         };
-        let state: Shared = std::sync::Arc::new(AppState::new(
-            Box::new(MemStore::new()),
-            make_drofus(),
-            vec![],
-            vec![],
-            vec!["$name".to_string(), "$id".to_string()],
-            vec![],
-        ));
+        let state: Shared = std::sync::Arc::new(AppState::new(Box::new(MemStore::new()), single_project("p1"), None));
         state.set_snapshot(payload).unwrap();
 
         let result = get_rooms(
@@ -303,5 +327,27 @@ mod tests {
 
         let rooms = result.0["rooms"].as_array().unwrap();
         assert!(rooms.is_empty());
+    }
+
+    /// A push for a project with no registered settings (and no default
+    /// bundle) is rejected 422, not silently stored -- pairs with
+    /// `assemble_rooms`'s "skip on read" for the same case.
+    #[tokio::test]
+    async fn test_ingest_rooms_rejects_unregistered_project() {
+        let payload = RoomPayload {
+            schema_version: SUPPORTED_SCHEMA,
+            project: Project { id: "unregistered".to_string(), name: "P".to_string() },
+            model: Model { id: "m1".to_string(), name: "M".to_string(), source: "revit".to_string() },
+            snapshot: Snapshot { taken_at: "2026-01-01T00:00:00Z".to_string() },
+            levels: vec![],
+            rooms: vec![make_room("r1", "Room A")],
+        };
+        let state: Shared = std::sync::Arc::new(AppState::new(Box::new(MemStore::new()), single_project("p1"), None));
+
+        let result = ingest_rooms(State(state), Json(payload)).await;
+        match result {
+            Err((status, _)) => assert_eq!(status, StatusCode::UNPROCESSABLE_ENTITY),
+            Ok(_) => panic!("expected 422 for an unregistered project"),
+        }
     }
 }

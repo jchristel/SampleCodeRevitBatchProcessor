@@ -263,18 +263,23 @@ pub fn compute_validation(
 
 /// Data-quality report for the header's validation panel — see
 /// `ValidationResponse`/`compute_validation`. `drofus_configured: false` is a
-/// normal, non-error result (no dRofus source at all) and is returned as
-/// `Ok`; a storage read failure is a real internal error and surfaces as
-/// `ServiceError::Internal`, so the HTTP adapter can still map it to 500
-/// exactly as it does today.
+/// normal, non-error result — covers both "no dRofus source configured for
+/// this project" and "this project has no registered settings at all" (the
+/// latter has no separate signal here, same as `list_buildings`) — and is
+/// returned as `Ok`; a storage read failure is a real internal error and
+/// surfaces as `ServiceError::Internal`, so the HTTP adapter can still map it
+/// to 500 exactly as it does today.
 pub fn compute_project_validation(state: &AppState, project_id: &str) -> Result<ValidationResponse, ServiceError> {
-    let Some(drofus) = state.drofus.as_ref() else {
+    let Some(bundle) = state.settings_for(project_id) else {
+        return Ok(ValidationResponse::drofus_not_configured());
+    };
+    let Some(drofus) = bundle.drofus.as_ref() else {
         return Ok(ValidationResponse::drofus_not_configured());
     };
 
     let stored = state.all_snapshots().map_err(ServiceError::Internal)?;
 
-    Ok(compute_validation(project_id, &stored, drofus, &state.builtin_properties, &state.drofus_fields))
+    Ok(compute_validation(project_id, &stored, drofus, &bundle.builtin_properties, &bundle.drofus_fields))
 }
 
 #[cfg(test)]

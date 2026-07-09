@@ -1,0 +1,38 @@
+# Sample roommate server-wide settings: storage backend + dev seed. Split out
+# of the old single settings.toml (see
+# ../docs/HANDOVER-per-project-settings.md) because these two are properties
+# of the running server, not of any one project -- per-project classification
+# rules and dRofus sources now live one file per project under ./projects/.
+#
+# Run with:
+#   cargo run -- --server-settings settings/server.toml --project-settings settings/projects
+# or with the compiled exe directly, from any directory:
+#   roommate.exe --server-settings C:\path\to\roommate\settings\server.toml --project-settings C:\path\to\roommate\settings\projects
+#
+# Relative paths below (test_snapshot.json, storage root) resolve against
+# *this file's own directory*, not the process's current working directory --
+# so this settings file works the same regardless of where the binary is
+# launched from.
+
+# ---------------------------------------------------------------------------
+# On-disk snapshot persistence. Omit this whole section to run purely
+# in-memory (snapshots lost on restart) -- useful for a quick local test.
+# "../data/snapshots" lands next to src/, static/, docs/ (a sibling of
+# settings/), not inside settings/ itself.
+# ---------------------------------------------------------------------------
+[storage]
+root = "../data/snapshots"
+
+# ---------------------------------------------------------------------------
+# Dev-only: seeds the server with a snapshot at startup so /rooms has data
+# without a manual POST. Omit in prod. The file is the same JSON shape a
+# push sends -- here, the v5 contract shape produced by post_rooms.py's
+# translate(), generated from test/Data/rooms.json + levels.json. Seeding
+# writes straight to the store (bypasses the ingest handler's registration
+# check), but its project id ("sample-project") still needs a registered (or
+# default) settings bundle in --project-settings for /rooms etc. to actually
+# serve it -- an unregistered project's stored rooms are simply skipped on
+# read, not an error.
+# ---------------------------------------------------------------------------
+[test_data]
+snapshot_path = "./test_snapshot.json"

@@ -14,7 +14,7 @@
 //! stdout is reserved for the JSON-RPC stream, so all logging goes to
 //! stderr. This is a distinct OS process from any running HTTP server: it
 //! only sees the same room data if pointed at the same `[storage]` root via
-//! `--settings`, since `MemStore` state isn't shared across processes.
+//! `--server-settings`, since `MemStore` state isn't shared across processes.
 
 use std::path::PathBuf;
 
@@ -135,7 +135,7 @@ impl ServerHandler for RoommateMcp {
             .with_server_info(Implementation::new("roommate-mcp", env!("CARGO_PKG_VERSION")))
             .with_instructions(
                 "Read-only access to roommate's stored room and dRofus data. \
-                 Requires the same [storage] root as the HTTP server (via --settings) \
+                 Requires the same [storage] root as the HTTP server (via --server-settings) \
                  to see real data -- this process does not share memory with it."
                     .to_string(),
             )
@@ -144,9 +144,15 @@ impl ServerHandler for RoommateMcp {
 
 #[derive(Parser)]
 struct Args {
-    /// Path to the TOML settings file (same file the HTTP server uses).
+    /// Path to the server-wide TOML settings file (same file the HTTP server
+    /// uses via `--server-settings`).
     #[arg(long)]
-    settings: PathBuf,
+    server_settings: PathBuf,
+
+    /// Path to the directory of per-project TOML settings files (same
+    /// directory the HTTP server uses via `--project-settings`).
+    #[arg(long)]
+    project_settings: PathBuf,
 }
 
 #[tokio::main]
@@ -158,7 +164,7 @@ async fn main() -> anyhow::Result<()> {
         .init();
 
     let args = Args::parse();
-    let state = build_state(&args.settings)?;
+    let state = build_state(&args.server_settings, &args.project_settings)?;
 
     let service = RoommateMcp::new(state).serve(stdio()).await.inspect_err(|e| {
         tracing::error!("serving error: {e:?}");

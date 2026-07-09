@@ -28,9 +28,15 @@ const ROOMS_BODY_LIMIT_BYTES: usize = 512 * 1024 * 1024;
 
 #[derive(Parser)]
 struct Args {
-    /// Path to the TOML settings file.
+    /// Path to the server-wide TOML settings file (`[storage]`, `[test_data]`).
     #[arg(long)]
-    settings: PathBuf,
+    server_settings: PathBuf,
+
+    /// Path to a directory of per-project TOML settings files (one per
+    /// project, each declaring its own `project_id`). See
+    /// HANDOVER-per-project-settings.md.
+    #[arg(long)]
+    project_settings: PathBuf,
 }
 
 #[tokio::main]
@@ -40,7 +46,7 @@ async fn main() -> anyhow::Result<()> {
         .init();
 
     let args = Args::parse();
-    let state = build_state(&args.settings)?;
+    let state = build_state(&args.server_settings, &args.project_settings)?;
 
     let app = Router::new()
         .route(

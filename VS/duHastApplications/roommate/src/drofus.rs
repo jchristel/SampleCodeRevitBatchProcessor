@@ -27,7 +27,10 @@ pub struct DrofusRecord {
     pub fields: BTreeMap<String, String>,
 }
 
-/// The whole dRofus dataset, resolved once at startup.
+/// The whole dRofus dataset, resolved once at startup. `Clone` so a bundle
+/// marked `is_default` can be registered both under its own project id and as
+/// `AppState`'s fallback without the two copies aliasing.
+#[derive(Clone)]
 pub struct DrofusData {
     /// Which room property holds the linking id (CSV row 2, col 0).
     /// Read the room property of THIS name to get its dRofus key.

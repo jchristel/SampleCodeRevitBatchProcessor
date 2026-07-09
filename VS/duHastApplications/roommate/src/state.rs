@@ -10,6 +10,7 @@
 //! both state and storage key on; keeping it here avoids a state↔storage import
 //! cycle.
 
+use std::collections::HashMap;
 use std::sync::Arc;
 
 use anyhow::Context;
@@ -43,47 +44,73 @@ impl ModelKey {
     }
 }
 
-/// Shared application state: the snapshot store plus the read-only join/classify
-/// inputs resolved at startup.
-pub struct AppState {
-    /// The snapshot store, behind the trait so the backend is swappable.
-    store: Box<dyn SnapshotStore>,
-
-    /// Resolved dRofus data, loaded once at startup. Joined onto rooms at
-    /// response assembly — a stored snapshot is never mutated by the join.
+/// One project's classification/join inputs — everything that used to be a
+/// flat field on `AppState`, bundled so it can be registered per project
+/// instead of applied globally. See HANDOVER-per-project-settings.md.
+#[derive(Clone)]
+pub struct ProjectSettings {
+    /// Resolved dRofus data for this project, loaded once at startup. Joined
+    /// onto rooms at response assembly — a stored snapshot is never mutated
+    /// by the join.
     pub drofus: Option<DrofusData>,
 
-    /// Classification tiers loaded from settings. Resolved per-room inside
-    /// `/rooms` assembly; not cached (see classify_room).
+    /// Classification tiers loaded from this project's settings. Resolved
+    /// per-room inside `/rooms` assembly; not cached (see classify_room).
     pub hierarchy: Vec<HierarchyTier>,
 
-    /// Canonical → per-source raw property name mappings loaded from
-    /// settings. Passed to `lookup_property` alongside each room's source so
-    /// dRofus join and classification resolve names consistently regardless
-    /// of which producer the room came from.
+    /// Canonical → per-source raw property name mappings loaded from this
+    /// project's settings. Passed to `lookup_property` alongside each room's
+    /// source so dRofus join and classification resolve names consistently
+    /// regardless of which producer the room came from.
     pub builtin_properties: Vec<BuiltinPropertyDef>,
 
     /// Ordered property names shown on a room's label in the viewer. Resolved
     /// per-room inside `/rooms` assembly, same as `hierarchy`.
     pub room_label: Vec<String>,
 
-    /// Per-column dRofus type/QA declarations loaded from settings.
-    /// Consulted by `compute_validation` alongside `drofus`, and available to
-    /// any future consumer (e.g. a date-based colouring feature) that needs
-    /// to know a column's declared type.
+    /// Per-column dRofus type/QA declarations loaded from this project's
+    /// settings. Consulted by `compute_validation` alongside `drofus`, and
+    /// available to any future consumer (e.g. a date-based colouring
+    /// feature) that needs to know a column's declared type.
     pub drofus_fields: Vec<DrofusFieldConfig>,
+}
+
+/// Shared application state: the snapshot store plus a registry of per-project
+/// join/classify inputs resolved at startup.
+pub struct AppState {
+    /// The snapshot store, behind the trait so the backend is swappable.
+    store: Box<dyn SnapshotStore>,
+
+    /// Per-project settings bundles, keyed by project id. Storage stays one
+    /// tree keyed by `(project_id, model_id)` independently of this registry
+    /// — a project can have stored snapshots with no registered settings (see
+    /// `settings_for`'s fallback/skip semantics at each call site).
+    project_settings: HashMap<String, ProjectSettings>,
+
+    /// Explicit fallback bundle for a project with no dedicated settings
+    /// file, if the operator configured one (one project file marked
+    /// `is_default = true`). When absent, an unregistered project is skipped
+    /// on read and rejected on ingest rather than silently falling back to
+    /// any bundle.
+    default_settings: Option<ProjectSettings>,
 }
 
 impl AppState {
     pub fn new(
         store: Box<dyn SnapshotStore>,
-        drofus: DrofusData,
-        hierarchy: Vec<HierarchyTier>,
-        builtin_properties: Vec<BuiltinPropertyDef>,
-        room_label: Vec<String>,
-        drofus_fields: Vec<DrofusFieldConfig>,
+        project_settings: HashMap<String, ProjectSettings>,
+        default_settings: Option<ProjectSettings>,
     ) -> Self {
-        Self { store, drofus: Some(drofus), hierarchy, builtin_properties, room_label, drofus_fields }
+        Self { store, project_settings, default_settings }
+    }
+
+    /// Resolve the settings bundle for one project: its own registered
+    /// settings if present, else the explicit default bundle if one is
+    /// configured, else `None` (unregistered, no fallback). Every read/ingest
+    /// call site that used to reach for `state.<field>` directly now goes
+    /// through here instead.
+    pub fn settings_for(&self, project_id: &str) -> Option<&ProjectSettings> {
+        self.project_settings.get(project_id).or(self.default_settings.as_ref())
     }
 
     /// Store a pushed payload. Upsert semantics live in the store impl; state

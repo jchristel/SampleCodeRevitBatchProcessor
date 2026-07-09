@@ -1,23 +1,34 @@
-# Sample roommate server settings.
+# Sample per-project roommate settings: classification hierarchy, dRofus
+# source, builtin property mappings, and room label -- everything scoped to
+# one project (`project_id` below). One file like this per real project lives
+# in the --project-settings directory. See
+# ../../docs/HANDOVER-per-project-settings.md.
 #
-# Run with:
-#   cargo run -- --settings settings/settings.toml
-# or with the compiled exe directly, from any directory:
-#   roommate.exe --settings C:\path\to\roommate\settings\settings.toml
-#
-# Relative paths below (drofus.csv, test_snapshot.json, storage root) resolve
-# against *this file's own directory*, not the process's current working
-# directory -- so this settings file works the same regardless of where the
-# binary is launched from. `static/` is the one exception: it's still served
-# relative to the process cwd (see ServeDir::new("static") in main.rs), so
-# `cargo run` from the crate root is still required to see the viewer page.
+# Relative paths below (drofus.csv) resolve against *this file's own
+# directory* (settings/projects/), not the process's current working
+# directory or the --server-settings file's directory.
 #
 # NOTE: TOML requires every bare `key = value` belonging to the top-level
-# table (like `room_label` below) to appear before the *first* `[table]` or
-# `[[array-of-tables]]` header in the file -- once a section header opens,
-# subsequent bare keys attach to that section (or its last array entry), not
-# back to the top level. Add new top-level Settings fields up here, not
-# after [[hierarchy]]/[[builtin_properties]] further down.
+# table (like `project_id`/`room_label` below) to appear before the *first*
+# [table] or [[array-of-tables]] header in the file -- once a section header
+# opens, subsequent bare keys attach to that section (or its last array
+# entry), not back to the top level. Add new top-level Settings fields up
+# here, not after [[hierarchy]]/[[builtin_properties]] further down.
+
+# ---------------------------------------------------------------------------
+# This bundle's project id -- matched against RoomPayload.project.id to pick
+# it for a given pushed/read model. Must match the "sample-project" id baked
+# into ../test_snapshot.json for the dev seed to actually be served.
+# ---------------------------------------------------------------------------
+project_id = "sample-project"
+
+# ---------------------------------------------------------------------------
+# Also serve as the fallback bundle for any project pushed/read without its
+# own registered settings file (AppState::settings_for) -- keeps today's
+# "one global profile" behavior for anything not yet explicitly onboarded.
+# Remove once every real project has its own dedicated file.
+# ---------------------------------------------------------------------------
+is_default = true
 
 # ---------------------------------------------------------------------------
 # Ordered properties shown on a room's label in the viewer. "$name"/"$id" are
@@ -28,30 +39,12 @@
 room_label = ["$name", "Area", "$id"]
 
 # ---------------------------------------------------------------------------
-# External reference data joined onto rooms at /rooms response assembly.
-# See STRATEGY.md "Load test dRofus data from file".
+# External reference data joined onto this project's rooms at /rooms response
+# assembly. See STRATEGY.md "Load test dRofus data from file".
 # ---------------------------------------------------------------------------
 [sources.drofus]
 type = "file"
-path = "./drofus.csv"
-
-# ---------------------------------------------------------------------------
-# On-disk snapshot persistence. Omit this whole section to run purely
-# in-memory (snapshots lost on restart) -- useful for a quick local test.
-# "../data/snapshots" lands next to src/, static/, docs/ (a sibling of
-# settings/), not inside settings/ itself.
-# ---------------------------------------------------------------------------
-[storage]
-root = "../data/snapshots"
-
-# ---------------------------------------------------------------------------
-# Dev-only: seeds the server with a snapshot at startup so /rooms has data
-# without a manual POST. Omit in prod. The file is the same JSON shape a
-# push sends -- here, the v5 contract shape produced by post_rooms.py's
-# translate(), generated from test/Data/rooms.json + levels.json.
-# ---------------------------------------------------------------------------
-[test_data]
-snapshot_path = "./test_snapshot.json"
+path = "../drofus.csv"
 
 # ---------------------------------------------------------------------------
 # Classification hierarchy, outermost tier first. Each tier names a code

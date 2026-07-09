@@ -68,8 +68,17 @@ pub fn list_projects(state: &AppState) -> Result<Vec<ProjectSummary>, ServiceErr
 /// room in one project's stored models, using `classify_room` exactly as it
 /// already runs for `/rooms` — building selection has no identity or storage
 /// of its own, it's a filter over the classification that already exists.
+///
+/// A project with no registered settings bundle behaves exactly like a
+/// registered project with no "Building" tier configured: `tier_configured:
+/// false`, not an error — this endpoint has no separate "unregistered"
+/// signal, since an empty/absent building list means the same thing to the
+/// picker either way.
 pub fn list_buildings(state: &AppState, project_id: &str) -> Result<BuildingsResponse, ServiceError> {
-    let Some(idx) = building_tier_index(&state.hierarchy) else {
+    let Some(bundle) = state.settings_for(project_id) else {
+        return Ok(BuildingsResponse { tier_configured: false, buildings: vec![] });
+    };
+    let Some(idx) = building_tier_index(&bundle.hierarchy) else {
         return Ok(BuildingsResponse { tier_configured: false, buildings: vec![] });
     };
 
@@ -86,7 +95,7 @@ pub fn list_buildings(state: &AppState, project_id: &str) -> Result<BuildingsRes
             continue;
         }
         for room in &payload.rooms {
-            let path = classify_room(room, &state.hierarchy, &payload.model.source, &state.builtin_properties);
+            let path = classify_room(room, &bundle.hierarchy, &payload.model.source, &bundle.builtin_properties);
             let Some(tier) = path.get(idx) else { continue };
             if tier.undefined {
                 has_unclassified = true;

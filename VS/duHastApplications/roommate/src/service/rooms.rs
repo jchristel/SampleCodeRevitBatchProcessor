@@ -10,10 +10,10 @@ use std::collections::{BTreeMap, BTreeSet};
 use serde::Serialize;
 
 use crate::classify::{classify_room, TierValue};
-use crate::contract::{elevation_match, lookup_property, Level, Room, SUPPORTED_SCHEMA};
+use crate::contract::{elevation_match, lookup_property, Level, Room, RoomPayload, SUPPORTED_SCHEMA};
 use crate::drofus::DrofusRecord;
 use crate::settings::{BuiltinPropertyDef, HierarchyTier};
-use crate::state::AppState;
+use crate::state::{AppState, ModelKey, ProjectSettings};
 
 use super::ServiceError;
 
@@ -70,20 +70,23 @@ fn resolve_label_fields(
 /// Pulled out so the single- and multi-model paths derive rooms identically —
 /// the join/classify logic lives in exactly one place.
 ///
-/// `source` comes from the owning model's `Model.source` (e.g. "revit") — it
-/// picks which `BuiltinPropertyDef.by_source` entry `lookup_property` uses to
-/// resolve a canonical name to this room's actual raw property name.
-fn assemble_room(state: &AppState, room: &Room, source: &str) -> RoomResponse {
+/// `bundle` is the owning payload's project's settings (see
+/// `AppState::settings_for`) — every field that used to come off `AppState`
+/// directly now comes off this per-project bundle instead. `source` comes
+/// from the owning model's `Model.source` (e.g. "revit") — it picks which
+/// `BuiltinPropertyDef.by_source` entry `lookup_property` uses to resolve a
+/// canonical name to this room's actual raw property name.
+fn assemble_room(bundle: &ProjectSettings, room: &Room, source: &str) -> RoomResponse {
     // dRofus join: read the link property off the room, look up the record.
-    let drofus = state.drofus.as_ref().and_then(|d| {
-        lookup_property(room, &d.link_property, source, &state.builtin_properties)
+    let drofus = bundle.drofus.as_ref().and_then(|d| {
+        lookup_property(room, &d.link_property, source, &bundle.builtin_properties)
             .and_then(|key| d.by_id.get(&key).cloned())
     });
 
     // Classification resolved fresh — see staleness note on classify_room.
-    let classification = classify_room(room, &state.hierarchy, source, &state.builtin_properties);
+    let classification = classify_room(room, &bundle.hierarchy, source, &bundle.builtin_properties);
 
-    let label = resolve_label_fields(room, &state.room_label, source, &state.builtin_properties);
+    let label = resolve_label_fields(room, &bundle.room_label, source, &bundle.builtin_properties);
 
     RoomResponse { room: room.clone(), drofus, classification, label }
 }
@@ -148,13 +151,16 @@ pub fn assemble_rooms(
     let stored = state.all_snapshots().map_err(ServiceError::Internal)?;
     let store_empty = stored.is_empty();
 
-    let scoped: Vec<_> = stored
+    // Scope to the requested project (if any), then drop any payload whose
+    // project has no registered settings bundle — an unscoped merge is now
+    // inherently per-project, so a model with nothing to classify/join it
+    // against has no home in the result (see
+    // HANDOVER-per-project-settings.md: "skip on read").
+    let scoped: Vec<(&ModelKey, &RoomPayload, &ProjectSettings)> = stored
         .iter()
         .filter(|(_key, payload)| project.map_or(true, |p| payload.project.id == p))
+        .filter_map(|(key, payload)| state.settings_for(&payload.project.id).map(|bundle| (key, payload, bundle)))
         .collect();
-
-    let building_idx = building_tier_index(&state.hierarchy);
-    let building_filter_active = building.is_some() && building_idx.is_some();
 
     // Level dedup: a `Level.id` is only unique *within* its own model (same
     // caveat as room ids -- see `ModelKey`'s doc comment), so two linked
@@ -169,7 +175,7 @@ pub fn assemble_rooms(
     // still agree on one id per real-world level.
     let mut canonical_levels: Vec<Level> = Vec::new();
     let mut level_remap: BTreeMap<(String, String), String> = BTreeMap::new();
-    for (key, payload) in &scoped {
+    for (key, payload, _bundle) in &scoped {
         for level in &payload.levels {
             let canonical_id = match canonical_levels
                 .iter()
@@ -189,13 +195,19 @@ pub fn assemble_rooms(
     let mut emitted_level_ids: BTreeSet<String> = BTreeSet::new();
     let mut rooms: Vec<RoomResponse> = Vec::new();
 
-    for (key, payload) in &scoped {
+    for (key, payload, bundle) in &scoped {
+        // Building tier index is resolved from this payload's own project
+        // bundle — a project with no "Building" tier configured just never
+        // matches the filter, same graceful degrade as before, now per-project.
+        let building_idx = building_tier_index(&bundle.hierarchy);
+        let building_filter_active = building.is_some() && building_idx.is_some();
+
         let matching_rooms: Vec<&Room> = if let (Some(wanted), Some(idx)) = (building, building_idx) {
             payload
                 .rooms
                 .iter()
                 .filter(|room| {
-                    let path = classify_room(room, &state.hierarchy, &payload.model.source, &state.builtin_properties);
+                    let path = classify_room(room, &bundle.hierarchy, &payload.model.source, &bundle.builtin_properties);
                     match path.get(idx) {
                         Some(tier) if tier.undefined => wanted == UNCLASSIFIED_BUILDING_KEY,
                         Some(tier) => building_key(&tier.code, &tier.name) == *wanted,
@@ -223,7 +235,7 @@ pub fn assemble_rooms(
             }
         }
         rooms.extend(matching_rooms.into_iter().map(|room| {
-            let mut response = assemble_room(state, room, &payload.model.source);
+            let mut response = assemble_room(bundle, room, &payload.model.source);
             if let Some(canonical_id) = level_remap.get(&(key.model_id.clone(), room.level_id.clone())) {
                 response.room.level_id = canonical_id.clone();
             }
@@ -257,6 +269,24 @@ mod tests {
             reconciliation: BTreeMap::new(),
             all_labels: vec![],
         }
+    }
+
+    /// A minimal `ProjectSettings` bundle for tests that only care about the
+    /// dRofus link property and the default room label.
+    fn make_bundle(link_property: &str) -> ProjectSettings {
+        ProjectSettings {
+            drofus: Some(make_drofus(link_property)),
+            hierarchy: vec![],
+            builtin_properties: vec![],
+            room_label: vec!["$name".to_string(), "$id".to_string()],
+            drofus_fields: vec![],
+        }
+    }
+
+    /// Registers one project's bundle under its id -- the shape
+    /// `AppState::new` now takes in place of the old five flat fields.
+    fn single_project(project_id: &str, bundle: ProjectSettings) -> std::collections::HashMap<String, ProjectSettings> {
+        std::collections::HashMap::from([(project_id.to_string(), bundle)])
     }
 
     /// `$name`/`$id` resolve to the room's own fields, not `room.properties`.
@@ -321,14 +351,7 @@ mod tests {
             rooms: vec![room_b],
         };
 
-        let state = AppState::new(
-            Box::new(MemStore::new()),
-            make_drofus("Number"),
-            vec![],
-            vec![],
-            vec!["$name".to_string(), "$id".to_string()],
-            vec![],
-        );
+        let state = AppState::new(Box::new(MemStore::new()), single_project("p1", make_bundle("Number")), None);
         state.set_snapshot(payload_a).unwrap();
         state.set_snapshot(payload_b).unwrap();
 
@@ -348,17 +371,36 @@ mod tests {
     /// that simply matches nothing.
     #[test]
     fn test_assemble_rooms_reports_store_empty() {
-        let state = AppState::new(
-            Box::new(MemStore::new()),
-            make_drofus("Number"),
-            vec![],
-            vec![],
-            vec!["$name".to_string(), "$id".to_string()],
-            vec![],
-        );
+        let state = AppState::new(Box::new(MemStore::new()), single_project("p1", make_bundle("Number")), None);
 
         let result = assemble_rooms(&state, None, None).unwrap();
         assert!(result.store_empty);
         assert!(result.rooms.is_empty());
+    }
+
+    /// A payload whose project has no registered settings (and no default
+    /// bundle configured) is skipped from an unscoped merge entirely -- it's
+    /// not enough for the store to be non-empty; the project must actually be
+    /// registered for its rooms to appear.
+    #[test]
+    fn test_assemble_rooms_skips_unregistered_project() {
+        let payload = RoomPayload {
+            schema_version: 5,
+            project: Project { id: "unregistered".to_string(), name: "P".to_string() },
+            model: Model { id: "m1".to_string(), name: "M".to_string(), source: "revit".to_string() },
+            snapshot: Snapshot { taken_at: "2026-01-01T00:00:00Z".to_string() },
+            levels: vec![Level { id: "l1".to_string(), name: "Level 1".to_string(), elevation: 0.0 }],
+            rooms: vec![make_room("r1", "Room A", &[])],
+        };
+
+        // Registry only knows "p1" -- "unregistered" has no bundle and no
+        // default is configured.
+        let state = AppState::new(Box::new(MemStore::new()), single_project("p1", make_bundle("Number")), None);
+        state.set_snapshot(payload).unwrap();
+
+        let result = assemble_rooms(&state, None, None).unwrap();
+        assert!(!result.store_empty, "the store did receive a push");
+        assert!(result.rooms.is_empty(), "but the unregistered project's rooms must not appear");
+        assert!(result.levels.is_empty());
     }
 }

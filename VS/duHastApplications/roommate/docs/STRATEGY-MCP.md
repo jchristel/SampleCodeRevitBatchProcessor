@@ -65,11 +65,11 @@ for the extraction itself.
 - **Process isolation is real, not just theoretical.** A stdio MCP server is
   spawned as a fresh OS process by its client — it never shares memory with
   a long-running `roommate` HTTP server. The two only see the same room data
-  if both are launched with `--settings` pointing at a file whose `[storage]`
-  section names the same `FsStore` root; with no `[storage]` section
-  (`MemStore`), the MCP process starts empty regardless of what the HTTP
-  server has stored. Verified end-to-end: a smoke-test run of `mcp.exe`
-  against the repo's own `settings/settings.toml` returned both the
+  if both are launched with `--server-settings` pointing at a file whose
+  `[storage]` section names the same `FsStore` root; with no `[storage]`
+  section (`MemStore`), the MCP process starts empty regardless of what the
+  HTTP server has stored. Verified end-to-end: a smoke-test run of `mcp.exe`
+  against the repo's own `settings/server.toml` returned both the
   `[test_data]`-seeded project *and* a project previously pushed to the HTTP
   server's on-disk `FsStore` — proving the shared-root mechanism, not just
   asserting it.

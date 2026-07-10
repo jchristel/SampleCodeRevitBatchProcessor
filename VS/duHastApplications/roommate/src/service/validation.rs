@@ -12,7 +12,7 @@ use serde::Serialize;
 
 use crate::contract::{lookup_property, numeric_match, property_presence, PropertyPresence, Room, RoomPayload};
 use crate::drofus::DrofusData;
-use crate::settings::{BuiltinPropertyDef, CompareMode, DrofusFieldConfig};
+use crate::settings::{BuiltinPropertyDef, CompareMode, DrofusFieldConfig, FieldType};
 use crate::state::{AppState, ModelKey};
 
 use super::ServiceError;
@@ -102,12 +102,68 @@ impl ValidationResponse {
     }
 }
 
+/// The declaration for one dRofus field label, if the settings carry one.
+fn field_config<'a>(drofus_fields: &'a [DrofusFieldConfig], label: &str) -> Option<&'a DrofusFieldConfig> {
+    drofus_fields.iter().find(|f| f.label == label)
+}
+
 /// The configured QA override for one dRofus field label, or `None` when the
 /// column has no declaration, or a declaration with no `qa` set (both mean
 /// the default: numeric-adaptive if both sides parse as a number, else exact
 /// string match).
 fn compare_mode(drofus_fields: &[DrofusFieldConfig], label: &str) -> Option<CompareMode> {
-    drofus_fields.iter().find(|f| f.label == label).and_then(|f| f.qa)
+    field_config(drofus_fields, label).and_then(|f| f.qa)
+}
+
+/// One side of a date comparison. Whether the pattern captured a UTC offset
+/// decides how the two sides can be compared (see `date_match`).
+enum ParsedDate {
+    /// The pattern carried an offset (`%z`-family): a real instant.
+    Zoned(chrono::DateTime<chrono::FixedOffset>),
+    /// No offset in the pattern: a wall-clock reading with no timezone.
+    Naive(chrono::NaiveDateTime),
+}
+
+/// Parse one side's raw string with its declared strftime pattern. Tries the
+/// offset-aware form first (a pattern without `%z` never matches it), then
+/// datetime, then bare date (midnight) — so one declaration covers whichever
+/// granularity the column actually holds.
+fn parse_date_side(s: &str, fmt: &str) -> Option<ParsedDate> {
+    use chrono::{DateTime, NaiveDate, NaiveDateTime};
+    if let Ok(dt) = DateTime::parse_from_str(s, fmt) {
+        return Some(ParsedDate::Zoned(dt));
+    }
+    if let Ok(dt) = NaiveDateTime::parse_from_str(s, fmt) {
+        return Some(ParsedDate::Naive(dt));
+    }
+    if let Ok(d) = NaiveDate::parse_from_str(s, fmt) {
+        return Some(ParsedDate::Naive(d.and_hms_opt(0, 0, 0).expect("midnight is always valid")));
+    }
+    None
+}
+
+/// Typed comparison for a `Date`-declared field: parse both sides with their
+/// declared patterns and compare what they denote, so two renderings of the
+/// same moment don't count as a mismatch. Same `None = fall back` contract as
+/// `numeric_match`: if either side fails to parse, the caller drops to the
+/// string path — the declaration is a hint, not truth (the same stance
+/// `CustomValue.storage_type` takes).
+///
+/// Comparison rule when the two sides differ in offset-awareness: two zoned
+/// sides compare as instants; a zoned side against a naive side compares the
+/// zoned side's *local* wall-clock reading against the naive one (the naive
+/// side has no timezone to convert with, and its writer most plausibly wrote
+/// local time); two naive sides compare directly.
+fn date_match(drofus_value: &str, room_value: &str, drofus_fmt: &str, revit_fmt: &str) -> Option<bool> {
+    let a = parse_date_side(drofus_value.trim(), drofus_fmt)?;
+    let b = parse_date_side(room_value.trim(), revit_fmt)?;
+    Some(match (a, b) {
+        (ParsedDate::Zoned(a), ParsedDate::Zoned(b)) => a == b,
+        (ParsedDate::Zoned(z), ParsedDate::Naive(n)) | (ParsedDate::Naive(n), ParsedDate::Zoned(z)) => {
+            z.naive_local() == n
+        }
+        (ParsedDate::Naive(a), ParsedDate::Naive(b)) => a == b,
+    })
 }
 
 /// A copy of `s` with every non-ASCII character replaced by `?`, mirroring
@@ -199,17 +255,32 @@ pub fn compute_validation(
                     field: label.clone(),
                 }),
                 PropertyPresence::Present(room_value) => {
-                    let exact_mode = compare_mode(drofus_fields, label) == Some(CompareMode::Exact);
-                    // `numeric_match` only decides the comparison in non-exact mode when both
-                    // sides parse as numbers; `None` here means the comparison falls back to
-                    // string equality below, whether because exact mode forced it or because at
-                    // least one side isn't numeric (this is also the path date-labeled fields
-                    // take today -- there's no separate typed-date comparison, see
-                    // HANDOVER_utf8.md).
-                    let numeric = if exact_mode { None } else { numeric_match(drofus_value, &room_value) };
-                    let matches = match numeric {
-                        Some(numeric_matches) => numeric_matches,
-                        None => {
+                    let field_cfg = field_config(drofus_fields, label);
+                    let exact_mode = field_cfg.and_then(|f| f.qa) == Some(CompareMode::Exact);
+                    // Typed comparison ladder, each rung falling through on
+                    // `None`: a `Date`-declared field is compared as parsed
+                    // instants first (two renderings of one moment agree);
+                    // then `numeric_match` when both sides parse as numbers;
+                    // finally string equality. `Exact` mode skips both typed
+                    // rungs and forces the string comparison.
+                    let date = if exact_mode {
+                        None
+                    } else {
+                        field_cfg.filter(|f| f.field_type == FieldType::Date).and_then(|f| {
+                            let fmt = f.format.as_deref()?; // always Some on Date (validated at startup)
+                            let revit_fmt = f.revit_format.as_deref().unwrap_or(fmt);
+                            date_match(drofus_value, &room_value, fmt, revit_fmt)
+                        })
+                    };
+                    let numeric = if exact_mode || date.is_some() {
+                        None
+                    } else {
+                        numeric_match(drofus_value, &room_value)
+                    };
+                    let matches = match (date, numeric) {
+                        (Some(date_matches), _) => date_matches,
+                        (None, Some(numeric_matches)) => numeric_matches,
+                        (None, None) => {
                             drofus_value.trim() == room_value.trim()
                                 || ascii_narrowed(drofus_value.trim()) == room_value.trim()
                         }
@@ -536,6 +607,7 @@ mod tests {
             label: "LastSync".to_string(),
             field_type: crate::settings::FieldType::Date,
             format: Some("%Y-%m-%d".to_string()),
+            revit_format: None,
             qa: Some(CompareMode::Ignore),
         }];
 
@@ -545,6 +617,114 @@ mod tests {
         assert!(result.fields_absent_in_revit.is_empty());
         assert!(result.fields_empty_in_revit.is_empty());
         assert!(result.field_coverage.iter().all(|c| c.label != "LastSync"));
+    }
+
+    /// A `Date` field declaration for tests: the shipped dRofus pattern,
+    /// optionally a distinct Revit-side pattern, optionally a QA override.
+    fn date_field(label: &str, revit_format: Option<&str>, qa: Option<CompareMode>) -> DrofusFieldConfig {
+        DrofusFieldConfig {
+            label: label.to_string(),
+            field_type: FieldType::Date,
+            format: Some("%-m/%-d/%Y %-I:%M:%S %p %z".to_string()),
+            revit_format: revit_format.map(|s| s.to_string()),
+            qa,
+        }
+    }
+
+    const DROFUS_DATE_FMT: &str = "%-m/%-d/%Y %-I:%M:%S %p %z";
+
+    /// `date_match` with the shipped dRofus pattern: two renderings of the
+    /// same instant agree, different instants disagree, and an unparseable
+    /// side yields `None` (fall back to string comparison).
+    #[test]
+    fn test_date_match_same_instant_different_rendering() {
+        // Same instant: 5:01:01 PM +10:00 == 7:01:01 AM +00:00.
+        assert_eq!(
+            date_match(
+                "6/29/2026 5:01:01 PM +10:00",
+                "6/29/2026 7:01:01 AM +00:00",
+                DROFUS_DATE_FMT,
+                DROFUS_DATE_FMT,
+            ),
+            Some(true)
+        );
+        assert_eq!(
+            date_match(
+                "6/29/2026 5:01:01 PM +10:00",
+                "6/29/2026 5:01:02 PM +10:00",
+                DROFUS_DATE_FMT,
+                DROFUS_DATE_FMT,
+            ),
+            Some(false)
+        );
+        assert_eq!(
+            date_match("not a date", "6/29/2026 5:01:01 PM +10:00", DROFUS_DATE_FMT, DROFUS_DATE_FMT),
+            None
+        );
+    }
+
+    /// A distinct `revit_format` parses the room side with its own pattern; a
+    /// zoned dRofus side against a naive Revit side compares the zoned side's
+    /// local wall-clock reading.
+    #[test]
+    fn test_date_match_revit_format_and_mixed_offset() {
+        assert_eq!(
+            date_match(
+                "6/29/2026 5:01:01 PM +10:00",
+                "2026-06-29 17:01:01",
+                DROFUS_DATE_FMT,
+                "%Y-%m-%d %H:%M:%S",
+            ),
+            Some(true)
+        );
+        assert_eq!(
+            date_match(
+                "6/29/2026 5:01:01 PM +10:00",
+                "2026-06-29 07:01:01",
+                DROFUS_DATE_FMT,
+                "%Y-%m-%d %H:%M:%S",
+            ),
+            Some(false),
+            "a naive side is a wall-clock reading, not a UTC instant"
+        );
+    }
+
+    /// A `Date`-declared field where the two sides differ textually but
+    /// denote the same instant produces no mismatch; `qa = "exact"` on the
+    /// same field forces the textual comparison and reports it.
+    #[test]
+    fn test_compute_validation_date_field_same_instant_not_flagged() {
+        let room = make_room("1", "Room", &[("Number", "1"), ("SyncTime", "6/29/2026 7:01:01 AM +00:00")]);
+        let (key, payload) = make_payload("p1", vec![room]);
+        let stored = vec![(key, payload)];
+        let drofus = make_drofus(
+            "Number",
+            &[("1", &[("LastSync", "6/29/2026 5:01:01 PM +10:00")])],
+            &[("LastSync", "SyncTime")],
+        );
+
+        let typed = vec![date_field("LastSync", None, None)];
+        let result = compute_validation("p1", &stored, &drofus, &[], &typed);
+        assert!(result.property_mismatches.is_empty(), "same instant, different rendering: no mismatch");
+
+        let exact = vec![date_field("LastSync", None, Some(CompareMode::Exact))];
+        let result = compute_validation("p1", &stored, &drofus, &[], &exact);
+        assert_eq!(result.property_mismatches.len(), 1, "exact mode forces the textual comparison");
+    }
+
+    /// A `Date` declaration whose values don't actually parse falls back to
+    /// the string path -- the declaration is a hint, not truth, so a
+    /// free-text value in a date-labeled column still compares as a string.
+    #[test]
+    fn test_compute_validation_date_field_unparseable_falls_back_to_string() {
+        let room = make_room("1", "Room", &[("Number", "1"), ("SyncTime", "pending")]);
+        let (key, payload) = make_payload("p1", vec![room]);
+        let stored = vec![(key, payload)];
+        let drofus = make_drofus("Number", &[("1", &[("LastSync", "pending")])], &[("LastSync", "SyncTime")]);
+
+        let typed = vec![date_field("LastSync", None, None)];
+        let result = compute_validation("p1", &stored, &drofus, &[], &typed);
+        assert!(result.property_mismatches.is_empty(), "equal strings agree on the fallback path");
     }
 
     /// The coverage report shows every dRofus field: a reconciled one as

@@ -56,14 +56,11 @@ fn json_result<T: serde::Serialize>(value: &T) -> Result<CallToolResult, McpErro
     Ok(CallToolResult::success(vec![ContentBlock::text(json)]))
 }
 
-/// `ServiceError` -> `McpError`. No HTTP status codes to map to here --
-/// `NotFound`/`BadInput` both become `invalid_params` (the closest MCP
-/// tool-call equivalent to "the caller gave us something we can't act on"),
-/// `Internal` becomes `internal_error`.
+/// `ServiceError` -> `McpError`. Only `Internal` exists today (variants join
+/// with their first producer -- see `ServiceError`); it becomes
+/// `internal_error`.
 fn to_mcp_error(err: ServiceError) -> McpError {
     match err {
-        ServiceError::NotFound(msg) => McpError::invalid_params(msg, None),
-        ServiceError::BadInput(msg) => McpError::invalid_params(msg, None),
         ServiceError::Internal(e) => {
             tracing::error!("internal service error: {e:#}");
             McpError::internal_error(e.to_string(), None)
@@ -105,14 +102,19 @@ impl RoommateMcp {
 
     /// Merges every stored model's levels and rooms, optionally scoped by
     /// project and building -- see `service::rooms::assemble_rooms`. The
-    /// result's `store_empty` field reports whether anything has ever been
-    /// pushed at all (there's no MCP equivalent of the HTTP 204 this maps to
-    /// on the read route).
-    #[tool(description = "Fetch merged rooms and levels across stored models, optionally scoped by project id and building key")]
+    /// service's `None` ("nothing has ever been pushed" -- the HTTP 204 case)
+    /// has no MCP status-code equivalent, so it becomes a short plain-text
+    /// answer instead of a JSON body; an LLM client reads either just fine.
+    #[tool(description = "Fetch merged rooms and levels across stored models, optionally scoped by project id and building key. A project whose hierarchy has no 'Building' tier matches nothing under a building filter (check list_buildings' tier_configured before filtering).")]
     fn get_rooms(&self, Parameters(p): Parameters<GetRoomsParams>) -> Result<CallToolResult, McpError> {
         let result = rooms::assemble_rooms(&self.state, p.project.as_deref(), p.building.as_deref())
             .map_err(to_mcp_error)?;
-        json_result(&result)
+        match result {
+            None => Ok(CallToolResult::success(vec![ContentBlock::text(
+                "no snapshots have been pushed to this server yet",
+            )])),
+            Some(result) => json_result(&result),
+        }
     }
 
     /// Runs the dRofus reconciliation QA report for one project -- see

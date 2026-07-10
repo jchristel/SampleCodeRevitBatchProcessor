@@ -49,18 +49,38 @@ fn load_project_settings_dir(
         let settings = load_settings(&path).with_context(|| format!("bad settings file: {}", path.display()))?;
         tracing::info!("project settings loaded from {} (project_id = {})", path.display(), settings.project_id);
 
-        let drofus = load_drofus(&settings.sources.drofus)
-            .with_context(|| format!("bad dRofus source in {}", path.display()))?;
+        // dRofus is optional per project: load and validate only when a
+        // source is configured. `drofus_fields` declarations with *no* dRofus
+        // source are a config mistake (they describe columns of a source that
+        // isn't there) — fail loudly, same discipline as
+        // `validate_drofus_fields`' unknown-label check.
+        let drofus = match &settings.sources.drofus {
+            Some(source) => {
+                let drofus = load_drofus(source)
+                    .with_context(|| format!("bad dRofus source in {}", path.display()))?;
 
-        // Can't validate this inside `load_settings`: the dRofus CSV (and its
-        // label set) isn't loaded until the line above, one step later.
-        validate_drofus_fields(&settings.drofus_fields, &drofus.all_labels)
-            .with_context(|| format!("bad drofus_fields in {}", path.display()))?;
+                // Can't validate this inside `load_settings`: the dRofus CSV (and its
+                // label set) isn't loaded until the line above, one step later.
+                validate_drofus_fields(&settings.drofus_fields, &drofus.all_labels)
+                    .with_context(|| format!("bad drofus_fields in {}", path.display()))?;
+                Some(drofus)
+            }
+            None => {
+                if !settings.drofus_fields.is_empty() {
+                    anyhow::bail!(
+                        "{} declares drofus_fields but no [sources.drofus] — \
+                         remove the declarations or configure the source",
+                        path.display()
+                    );
+                }
+                None
+            }
+        };
 
         let project_id = settings.project_id.clone();
         let is_default = settings.is_default;
         let bundle = ProjectSettings {
-            drofus: Some(drofus),
+            drofus,
             hierarchy: settings.hierarchy,
             builtin_properties: settings.builtin_properties,
             room_label: settings.room_label,
@@ -117,4 +137,50 @@ pub fn build_state(server_settings: &PathBuf, projects_dir: &PathBuf) -> anyhow:
     seed_if_test(&state, test_data.as_ref())?;
 
     Ok(state)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn temp_projects_dir(tag: &str) -> std::path::PathBuf {
+        let dir = std::env::temp_dir().join(format!("roommate-bootstrap-{}-{}", tag, std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        dir
+    }
+
+    /// A project with no `[sources]` at all registers with `drofus: None` —
+    /// the state `compute_project_validation` reports as
+    /// `drofus_configured: false`.
+    #[test]
+    fn test_project_without_sources_registers_with_no_drofus() {
+        let dir = temp_projects_dir("no-sources");
+        std::fs::write(dir.join("p1.toml"), "project_id = \"p1\"\n").unwrap();
+
+        let (registry, _default) = load_project_settings_dir(&dir).unwrap();
+        assert!(registry.get("p1").unwrap().drofus.is_none());
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// `drofus_fields` declarations without a dRofus source are a config
+    /// mistake — declarations for a source that isn't there — and must fail
+    /// startup loudly, not be silently carried along.
+    #[test]
+    fn test_drofus_fields_without_source_fails_startup() {
+        let dir = temp_projects_dir("fields-no-source");
+        std::fs::write(
+            dir.join("p1.toml"),
+            "project_id = \"p1\"\n\n[[drofus_fields]]\nlabel = \"NetArea\"\nqa = \"exact\"\n",
+        )
+        .unwrap();
+
+        let msg = match load_project_settings_dir(&dir) {
+            Err(err) => format!("{err:#}"),
+            Ok(_) => panic!("expected startup failure for drofus_fields without a source"),
+        };
+        assert!(msg.contains("drofus_fields"), "message names the problem: {msg}");
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
 }

@@ -35,6 +35,11 @@ pub struct Settings {
     #[serde(default)]
     pub is_default: bool,
 
+    /// External sources joined onto this project's rooms. Defaulted so a
+    /// project with no external sources at all is legal config — a project
+    /// not using dRofus is normal, and the validation endpoint already
+    /// reports it as `drofus_configured: false` rather than an error.
+    #[serde(default)]
     pub sources: Sources,
 
     /// Ordered classification tiers, outermost first. Empty if the section is
@@ -69,19 +74,18 @@ pub struct Settings {
     /// column holds, and, optionally, how QA comparison should treat it. One
     /// declaration per column, not two separate lists — "what is this
     /// column" shouldn't be answered in two places that can drift apart.
-    /// `type` is read by any consumer that needs to know a column's shape
-    /// (QA's numeric-adaptive comparison already infers numeric-ness at
-    /// compare time without needing this, but a future feature like
-    /// colouring rooms by proximity to a date needs to actually parse the
-    /// value, which requires being told the format up front). `qa` is the
-    /// QA-specific override this used to be alone: `Exact` forces string
-    /// comparison even when both sides parse as numbers; `Ignore` excludes
-    /// the field from comparison *and* the coverage report entirely — for a
-    /// column that's mapped (present in the dRofus CSV's row 2) but expected
-    /// to always differ, e.g. a last-synchronised timestamp, before this
-    /// server can actually compare dates. Empty if omitted, which is today's
-    /// default behavior for every column: treated as a string, numeric-
-    /// adaptive comparison if both sides happen to parse as a number.
+    /// `type` is read by any consumer that needs to know a column's shape:
+    /// QA's date comparison parses a `Date`-declared column's values with the
+    /// declared `format` and compares the parsed instants, so two renderings
+    /// of the same moment no longer count as a mismatch (numeric-adaptive
+    /// comparison still infers numeric-ness at compare time without needing a
+    /// declaration). `qa` is the QA-specific override this used to be alone:
+    /// `Exact` forces string comparison even when both sides parse as numbers
+    /// or dates; `Ignore` excludes the field from comparison *and* the
+    /// coverage report entirely — for a column that's mapped (present in the
+    /// dRofus CSV's row 2) but expected to always differ. Empty if omitted,
+    /// which is the default behavior for every column: treated as a string,
+    /// numeric-adaptive comparison if both sides happen to parse as a number.
     #[serde(default)]
     pub drofus_fields: Vec<DrofusFieldConfig>,
 }
@@ -106,9 +110,21 @@ pub struct DrofusFieldConfig {
     /// describing how this column's raw string is laid out -- dRofus dates
     /// arrive as formatted text (e.g. `"6/29/2026 5:01:01 PM +10:00"`), not a
     /// structured value, so a parser needs to be told the shape rather than
-    /// guessing it. Meaningless for any other `field_type`.
+    /// guessing it. Meaningless for any other `field_type`. Dry-run-validated
+    /// at startup (a typo like `%Q` fails loudly rather than silently never
+    /// parsing anything at compare time).
     #[serde(default)]
     pub format: Option<String>,
+
+    /// Optional second strftime pattern for the *Revit* side of a date
+    /// comparison, when the room property renders dates differently from the
+    /// dRofus column. Absent (the common case) means `format` is used for
+    /// both sides. Only legal on a `Date` field, same as `format`. Exists
+    /// because the two sources format independently -- no real snapshot with
+    /// a date-bearing room property existed when this was added, so rather
+    /// than guess Revit's shape, a project can declare it when it shows up.
+    #[serde(default)]
+    pub revit_format: Option<String>,
 
     /// Optional QA comparison override for this column. `None` (the default)
     /// keeps today's behavior: numeric-adaptive comparison if both sides
@@ -141,6 +157,23 @@ pub enum CompareMode {
     Ignore,
 }
 
+/// Dry-run one strftime pattern so a typo (e.g. `%Q`) fails at startup, not
+/// silently at compare time. `StrftimeItems` yields an `Item::Error` for any
+/// specifier chrono doesn't know — walking the items is exactly the parse the
+/// comparison will do later, minus a value.
+fn validate_strftime(label: &str, which: &str, pattern: &str) -> anyhow::Result<()> {
+    use chrono::format::{Item, StrftimeItems};
+    if StrftimeItems::new(pattern).any(|item| matches!(item, Item::Error)) {
+        anyhow::bail!(
+            "drofus_fields entry '{}' has an invalid {} strftime pattern: '{}'",
+            label,
+            which,
+            pattern
+        );
+    }
+    Ok(())
+}
+
 /// Fail fast on a malformed dRofus field declaration — same "loud startup
 /// error over a silent no-op" discipline as hierarchy tiers and builtin
 /// properties:
@@ -149,8 +182,10 @@ pub enum CompareMode {
 ///   the label set isn't known yet at that point — this runs as a separate
 ///   step once both are loaded.
 /// - a `Date` field with no `format` — unusable without one.
-/// - a `format` given on a non-`Date` field — meaningless, almost certainly a
-///   mistake rather than intentional.
+/// - a `format`/`revit_format` given on a non-`Date` field — meaningless,
+///   almost certainly a mistake rather than intentional.
+/// - a `format`/`revit_format` that isn't a valid strftime pattern — it would
+///   never parse any value, making the declaration a silent no-op.
 pub fn validate_drofus_fields(fields: &[DrofusFieldConfig], all_labels: &[String]) -> anyhow::Result<()> {
     for field in fields {
         if !all_labels.iter().any(|l| l == &field.label) {
@@ -163,7 +198,17 @@ pub fn validate_drofus_fields(fields: &[DrofusFieldConfig], all_labels: &[String
             (other, Some(_)) if other != FieldType::Date => {
                 anyhow::bail!("drofus_fields entry '{}' sets format but type is not \"date\"", field.label);
             }
+            (FieldType::Date, Some(format)) => validate_strftime(&field.label, "format", format)?,
             _ => {}
+        }
+        if let Some(revit_format) = &field.revit_format {
+            if field.field_type != FieldType::Date {
+                anyhow::bail!(
+                    "drofus_fields entry '{}' sets revit_format but type is not \"date\"",
+                    field.label
+                );
+            }
+            validate_strftime(&field.label, "revit_format", revit_format)?;
         }
     }
     Ok(())
@@ -215,10 +260,14 @@ pub struct Storage {
     pub root: PathBuf,
 }
 
-/// External data sources joined onto the Revit snapshot.
-#[derive(Debug, Deserialize)]
+/// External data sources joined onto the Revit snapshot. Every source is
+/// optional: which sources a project uses is that project's choice, and an
+/// absent source degrades to "not configured" downstream (e.g.
+/// `ValidationResponse.drofus_configured: false`), never an error.
+#[derive(Debug, Default, Deserialize)]
 pub struct Sources {
-    pub drofus: DrofusSource,
+    #[serde(default)]
+    pub drofus: Option<DrofusSource>,
 }
 
 /// dRofus source. `#[serde(tag = "type")]` lets the TOML `type` field pick the
@@ -321,8 +370,8 @@ pub fn load_settings(path: &PathBuf) -> anyhow::Result<Settings> {
     // "no base to prepend" — those paths fall back to cwd-relative, same as
     // before this fix.
     let settings_dir = path.parent().filter(|p| !p.as_os_str().is_empty());
-    match &mut settings.sources.drofus {
-        DrofusSource::File { path: drofus_path } => resolve_relative_to(drofus_path, settings_dir),
+    if let Some(DrofusSource::File { path: drofus_path }) = &mut settings.sources.drofus {
+        resolve_relative_to(drofus_path, settings_dir);
     }
 
     if settings.project_id.trim().is_empty() {
@@ -407,10 +456,32 @@ code_property = "b"
         std::fs::remove_dir_all(&dir).ok();
     }
 
+    /// A settings file with no `[sources]` section at all is legal — a
+    /// project not using dRofus (or any external source) is a normal state,
+    /// not a config error.
+    #[test]
+    fn test_settings_without_sources_loads() {
+        let dir = std::env::temp_dir().join(format!("roommate-no-sources-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let settings_path = dir.join("settings.toml");
+        std::fs::write(&settings_path, "project_id = \"p1\"\n").unwrap();
+
+        let settings = load_settings(&settings_path).unwrap();
+        assert!(settings.sources.drofus.is_none());
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
     /// A minimal `DrofusFieldConfig` for tests that only care about one
     /// aspect of the declaration.
     fn field(label: &str) -> DrofusFieldConfig {
-        DrofusFieldConfig { label: label.to_string(), field_type: FieldType::default(), format: None, qa: None }
+        DrofusFieldConfig {
+            label: label.to_string(),
+            field_type: FieldType::default(),
+            format: None,
+            revit_format: None,
+            qa: None,
+        }
     }
 
     /// A declaration referencing a label the dRofus CSV never declared fails
@@ -462,5 +533,49 @@ code_property = "b"
         let all_labels = vec!["NetArea".to_string()];
 
         assert!(validate_drofus_fields(&fields, &all_labels).is_err());
+    }
+
+    /// A strftime typo (`%Q` is not a chrono specifier) fails at startup --
+    /// otherwise the pattern would pass config validation and just silently
+    /// never parse anything at compare time.
+    #[test]
+    fn test_validate_drofus_fields_malformed_strftime_fails() {
+        let fields = vec![DrofusFieldConfig {
+            field_type: FieldType::Date,
+            format: Some("%Q/%-d/%Y".to_string()),
+            ..field("LastSync")
+        }];
+        let all_labels = vec!["LastSync".to_string()];
+
+        assert!(validate_drofus_fields(&fields, &all_labels).is_err());
+    }
+
+    /// `revit_format` follows `format`'s rules: legal (and dry-run-validated)
+    /// on a date field, rejected on any other type.
+    #[test]
+    fn test_validate_drofus_fields_revit_format_rules() {
+        let all_labels = vec!["LastSync".to_string(), "NetArea".to_string()];
+
+        let good = vec![DrofusFieldConfig {
+            field_type: FieldType::Date,
+            format: Some("%-m/%-d/%Y %-I:%M:%S %p %z".to_string()),
+            revit_format: Some("%Y-%m-%d %H:%M:%S".to_string()),
+            ..field("LastSync")
+        }];
+        assert!(validate_drofus_fields(&good, &all_labels).is_ok());
+
+        let on_non_date = vec![DrofusFieldConfig {
+            revit_format: Some("%Y-%m-%d".to_string()),
+            ..field("NetArea")
+        }];
+        assert!(validate_drofus_fields(&on_non_date, &all_labels).is_err());
+
+        let malformed = vec![DrofusFieldConfig {
+            field_type: FieldType::Date,
+            format: Some("%Y-%m-%d".to_string()),
+            revit_format: Some("%Q".to_string()),
+            ..field("LastSync")
+        }];
+        assert!(validate_drofus_fields(&malformed, &all_labels).is_err());
     }
 }

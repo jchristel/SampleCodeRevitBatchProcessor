@@ -67,13 +67,22 @@ pub struct ModelEntry {
 ///
 /// `put` is an **upsert**: it creates whatever project/model structure is
 /// missing, then stores the snapshot. It never rejects an unknown id — a push
-/// defines new structure.
+/// defines new structure. A snapshot that already exists for the same
+/// `taken_at` is **skipped with a warning**, never overwritten: history is
+/// kept, and a re-sent payload must not silently destroy the record it
+/// duplicates.
 pub trait SnapshotStore: Send + Sync {
     /// Persist one pushed payload, creating project/model structure as needed.
     fn put(&self, payload: &RoomPayload) -> Result<()>;
 
     /// Latest snapshot for a model, if any. (Latest = newest by snapshot key.)
     fn get_latest(&self, key: &ModelKey) -> Result<Option<RoomPayload>>;
+
+    /// Every model key the store knows about — the index question. For
+    /// `FsStore` this is answered by the `project.toml` manifests (the
+    /// manifest is the index, snapshots are the record), reconciled against
+    /// the directory tree.
+    fn list_models(&self) -> Result<Vec<ModelKey>>;
 
     /// Every model's latest snapshot, for the merge that `/rooms` currently does.
     fn all_latest(&self) -> Result<Vec<(ModelKey, RoomPayload)>>;
@@ -199,7 +208,14 @@ impl SnapshotStore for FsStore {
 
         // 3. Write the snapshot under its own timestamped filename — never
         //    overwriting a prior one, so the model dir accumulates full history.
+        //    A same-`taken_at` re-push is skipped, not overwritten: the client
+        //    stamps sub-second precision, so a collision means a genuinely
+        //    re-sent payload, and even that must not silently destroy history.
         let file = model_dir.join(Self::snapshot_filename(&payload.snapshot.taken_at));
+        if file.exists() {
+            tracing::warn!("snapshot already exists, skipping: {}", file.display());
+            return Ok(());
+        }
         let json = serde_json::to_string_pretty(payload).context("could not serialise snapshot")?;
         fs::write(&file, json)
             .with_context(|| format!("could not write snapshot: {}", file.display()))?;
@@ -221,23 +237,29 @@ impl SnapshotStore for FsStore {
         }
     }
 
-    fn all_latest(&self) -> Result<Vec<(ModelKey, RoomPayload)>> {
+    fn list_models(&self) -> Result<Vec<ModelKey>> {
         let mut out = Vec::new();
         if !self.root.exists() {
             return Ok(out);
         }
-        // Walk <root>/<project>/<model>/ two levels deep, take each model's latest.
         for project in fs::read_dir(&self.root)? {
             let project_dir = project?.path();
             if !project_dir.is_dir() {
                 continue;
             }
-            // Dir name *is* the project GUID — the store keys on the path, so the
-            // filesystem is the index (no separate lookup table to keep in sync).
+            // Dir name *is* the project GUID — display names live in the
+            // manifest, identity lives in the path.
             let project_id = match project_dir.file_name().and_then(|n| n.to_str()) {
                 Some(id) => id.to_string(),
                 None => continue, // non-UTF-8 dir name: not one of ours, skip
             };
+
+            // The manifest is the index: one key per `models` entry. But the
+            // snapshots are the record, so a model dir the manifest doesn't
+            // list is a manifest bug, not invisible data — warn (making the
+            // drift noticeable) and include it anyway: filesystem truth wins.
+            let manifest = self.read_manifest(&project_id)?;
+            let mut model_ids: Vec<String> = manifest.models.keys().cloned().collect();
             for model in fs::read_dir(&project_dir)? {
                 let model_dir = model?.path();
                 if !model_dir.is_dir() {
@@ -247,10 +269,31 @@ impl SnapshotStore for FsStore {
                     Some(id) => id.to_string(),
                     None => continue,
                 };
-                if let Some(path) = Self::latest_snapshot_file(&model_dir)? {
-                    let payload = Self::read_payload(&path)?;
-                    out.push((ModelKey { project_id: project_id.clone(), model_id }, payload));
+                if !manifest.models.contains_key(&model_id) {
+                    tracing::warn!(
+                        "model dir {}/{} is missing from project.toml — including it anyway (filesystem wins)",
+                        project_id,
+                        model_id
+                    );
+                    model_ids.push(model_id);
                 }
+            }
+
+            out.extend(model_ids.into_iter().map(|model_id| ModelKey { project_id: project_id.clone(), model_id }));
+        }
+        Ok(out)
+    }
+
+    fn all_latest(&self) -> Result<Vec<(ModelKey, RoomPayload)>> {
+        // The manifest-backed index supplies the keys, `get_latest` reads each
+        // key's newest snapshot — the manifest is the index, the snapshots the
+        // record, exactly as the module doc claims. A manifest entry whose dir
+        // holds no snapshots yet (or was deleted by hand) simply yields
+        // nothing for that key.
+        let mut out = Vec::new();
+        for key in self.list_models()? {
+            if let Some(payload) = self.get_latest(&key)? {
+                out.push((key, payload));
             }
         }
         Ok(out)
@@ -282,6 +325,10 @@ impl SnapshotStore for MemStore {
 
     fn get_latest(&self, key: &ModelKey) -> Result<Option<RoomPayload>> {
         Ok(self.latest.lock().unwrap().get(key).cloned())
+    }
+
+    fn list_models(&self) -> Result<Vec<ModelKey>> {
+        Ok(self.latest.lock().unwrap().keys().cloned().collect())
     }
 
     fn all_latest(&self) -> Result<Vec<(ModelKey, RoomPayload)>> {
@@ -342,6 +389,59 @@ mod tests {
         // Both snapshot files present — history not overwritten.
         let files = std::fs::read_dir(dir.join("p").join("m")).unwrap().count();
         assert_eq!(files, 2);
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// The manifest is the read index: a model dir present on disk but
+    /// missing from `project.toml` must still appear in `all_latest`
+    /// (filesystem truth wins over a buggy manifest), alongside the
+    /// manifest-listed model.
+    #[test]
+    fn test_fs_store_filesystem_wins_over_manifest() {
+        let dir = std::env::temp_dir().join(format!("roommate-manifest-{}", std::process::id()));
+        let store = FsStore::new(dir.clone()).unwrap();
+
+        store.put(&payload("proj1", "modelA", "2026-01-01T10:00:00Z")).unwrap();
+        store.put(&payload("proj1", "modelB", "2026-01-01T11:00:00Z")).unwrap();
+
+        // Sabotage the manifest: drop modelB from it, as if a push had
+        // crashed between snapshot write and manifest write.
+        let manifest_path = dir.join("proj1").join("project.toml");
+        let manifest = ProjectManifest {
+            name: "P".to_string(),
+            models: BTreeMap::from([("modelA".to_string(), ModelEntry { name: "M".to_string() })]),
+        };
+        std::fs::write(&manifest_path, toml::to_string_pretty(&manifest).unwrap()).unwrap();
+
+        let mut keys: Vec<String> = store.list_models().unwrap().into_iter().map(|k| k.model_id).collect();
+        keys.sort();
+        assert_eq!(keys, vec!["modelA".to_string(), "modelB".to_string()]);
+
+        let all = store.all_latest().unwrap();
+        assert_eq!(all.len(), 2, "the un-manifested model still appears");
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// A re-push with an identical `taken_at` is skipped, not overwritten —
+    /// history must never be silently destroyed by a duplicate timestamp.
+    #[test]
+    fn test_fs_store_duplicate_taken_at_does_not_overwrite() {
+        let dir = std::env::temp_dir().join(format!("roommate-dup-ts-{}", std::process::id()));
+        let store = FsStore::new(dir.clone()).unwrap();
+
+        let first = payload("p", "m", "2026-01-01T10:00:00Z");
+        store.put(&first).unwrap();
+
+        // Same taken_at, different content — must NOT replace the original.
+        let mut second = payload("p", "m", "2026-01-01T10:00:00Z");
+        second.project.name = "CHANGED".to_string();
+        store.put(&second).unwrap();
+
+        let key = ModelKey { project_id: "p".into(), model_id: "m".into() };
+        let latest = store.get_latest(&key).unwrap().unwrap();
+        assert_eq!(latest.project.name, "P", "the original snapshot survives a duplicate-timestamp re-push");
 
         std::fs::remove_dir_all(&dir).ok();
     }

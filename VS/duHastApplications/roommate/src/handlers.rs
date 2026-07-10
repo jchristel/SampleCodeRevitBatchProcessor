@@ -25,33 +25,69 @@ use crate::service::validation::ValidationResponse;
 use crate::service::{projects, rooms, validation, ServiceError};
 use crate::state::Shared;
 
+/// Reject a project/model id that can't safely become a filesystem path
+/// component. `FsStore` builds paths as `root/<project_id>/<model_id>` straight
+/// from these ids, and the client currently sends the Revit document *title*
+/// as the model id — a title containing `/`, `\`, or `..` would be a path
+/// traversal out of the storage root. Same startup-loud spirit as settings
+/// validation, applied at the ingest trust boundary; shared by both ingest
+/// handlers so they can't drift.
+fn validate_id(kind: &str, id: &str) -> Result<(), (StatusCode, String)> {
+    let bad = id.trim().is_empty()
+        || id == "."
+        || id == ".."
+        || id.contains(['/', '\\', '<', '>', ':', '"', '|', '?', '*'])
+        || id.chars().any(|c| c.is_control());
+    if bad {
+        return Err((
+            StatusCode::UNPROCESSABLE_ENTITY,
+            format!("{kind} id {id:?} is empty or contains characters unsafe for storage paths"),
+        ));
+    }
+    Ok(())
+}
+
+/// Every pre-flight check both ingest routes share, in one place so the
+/// buffered and streaming paths can't drift on what gets rejected:
+/// - a schema version this server doesn't speak;
+/// - a project with no registered settings — rejected rather than lazily
+///   accepted, pairing with `assemble_rooms`'s "skip on read" policy (see
+///   HANDOVER-per-project-settings.md): a project must be explicitly
+///   onboarded (a settings file registered under its id, or an explicit
+///   `is_default` fallback) before it can push at all;
+/// - identity ids unsafe as storage path components (`validate_id`).
+///
+/// Takes already-parsed identity fields (not a payload) so the streaming
+/// route can run it from the envelope line alone, before reading any rooms.
+fn validate_ingest(
+    state: &Shared,
+    schema_version: u32,
+    project_id: &str,
+    model_id: &str,
+) -> Result<(), (StatusCode, String)> {
+    if schema_version != SUPPORTED_SCHEMA {
+        return Err((
+            StatusCode::UNPROCESSABLE_ENTITY,
+            format!("schema_version {schema_version} not supported; this server speaks {SUPPORTED_SCHEMA}"),
+        ));
+    }
+    if state.settings_for(project_id).is_none() {
+        return Err((
+            StatusCode::UNPROCESSABLE_ENTITY,
+            format!("no settings configured for project '{project_id}'"),
+        ));
+    }
+    validate_id("project", project_id)?;
+    validate_id("model", model_id)
+}
+
 /// Revit posts room data here. Returns 200 with a short summary, or 422 if the
-/// schema version is one this server doesn't understand.
+/// payload fails any `validate_ingest` check.
 pub async fn ingest_rooms(
     State(state): State<Shared>,
     Json(payload): Json<RoomPayload>,
 ) -> Result<Json<IngestResponse>, (StatusCode, String)> {
-    if payload.schema_version != SUPPORTED_SCHEMA {
-        return Err((
-            StatusCode::UNPROCESSABLE_ENTITY,
-            format!(
-                "schema_version {} not supported; this server speaks {}",
-                payload.schema_version, SUPPORTED_SCHEMA
-            ),
-        ));
-    }
-
-    // A push for a project with no registered settings is rejected rather
-    // than lazily accepted — pairs with `assemble_rooms`'s "skip on read"
-    // policy (see HANDOVER-per-project-settings.md): a project must be
-    // explicitly onboarded (a settings file registered under its id, or an
-    // explicit `is_default` fallback) before it can push at all.
-    if state.settings_for(&payload.project.id).is_none() {
-        return Err((
-            StatusCode::UNPROCESSABLE_ENTITY,
-            format!("no settings configured for project '{}'", payload.project.id),
-        ));
-    }
+    validate_ingest(&state, payload.schema_version, &payload.project.id, &payload.model.id)?;
 
     let count = payload.rooms.len();
     tracing::info!("received {} room(s)", count);
@@ -113,25 +149,9 @@ pub async fn ingest_rooms_stream(
     let envelope: StreamEnvelope = serde_json::from_str(&envelope_line)
         .map_err(|e| (StatusCode::BAD_REQUEST, format!("bad envelope: {e}")))?;
 
-    if envelope.schema_version != SUPPORTED_SCHEMA {
-        return Err((
-            StatusCode::UNPROCESSABLE_ENTITY,
-            format!(
-                "schema_version {} not supported; this server speaks {}",
-                envelope.schema_version, SUPPORTED_SCHEMA
-            ),
-        ));
-    }
-
-    // Same registration check as the buffered path -- checked as soon as the
-    // envelope's project id is known, before the (potentially large) room
-    // stream is read at all.
-    if state.settings_for(&envelope.project.id).is_none() {
-        return Err((
-            StatusCode::UNPROCESSABLE_ENTITY,
-            format!("no settings configured for project '{}'", envelope.project.id),
-        ));
-    }
+    // Same pre-flight as the buffered path -- run as soon as the envelope is
+    // parsed, before the (potentially large) room stream is read at all.
+    validate_ingest(&state, envelope.schema_version, &envelope.project.id, &envelope.model.id)?;
 
     let mut rooms: Vec<Room> = Vec::new();
     while let Some(line) = lines
@@ -171,19 +191,11 @@ pub async fn ingest_rooms_stream(
 }
 
 /// `ServiceError` -> `StatusCode`, with no body -- matches what every read
-/// handler below returned before this extraction (a bare `StatusCode` on
-/// failure, since none of today's failure paths produce a `NotFound`/
-/// `BadInput`; the mapping exists for when a future service function does).
+/// handler below returned before the service extraction. Only `Internal`
+/// exists today (variants join with their first producer -- see
+/// `ServiceError`), so every service failure is a 500.
 fn map_service_error(err: ServiceError) -> StatusCode {
     match err {
-        ServiceError::NotFound(msg) => {
-            tracing::warn!("not found: {msg}");
-            StatusCode::NOT_FOUND
-        }
-        ServiceError::BadInput(msg) => {
-            tracing::warn!("bad input: {msg}");
-            StatusCode::BAD_REQUEST
-        }
         ServiceError::Internal(e) => {
             tracing::error!("internal service error: {e:#}");
             StatusCode::INTERNAL_SERVER_ERROR
@@ -222,26 +234,21 @@ pub struct RoomsQuery {
 }
 
 /// The viewer fetches here — see `service::rooms::assemble_rooms`. Returns
-/// 204 when nothing has ever been posted (`store_empty`); a project/building
-/// filter matching nothing still returns 200 with empty arrays.
+/// 204 when nothing has ever been posted (the service's `None` case); a
+/// project/building filter matching nothing still returns 200 with empty
+/// arrays. `RoomsResult` serializes directly — every field is wire shape, so
+/// no hand-built JSON is needed here.
 pub async fn get_rooms(
     State(state): State<Shared>,
     Query(query): Query<RoomsQuery>,
-) -> Result<Json<serde_json::Value>, StatusCode> {
+) -> Result<Json<rooms::RoomsResult>, StatusCode> {
     let result = rooms::assemble_rooms(&state, query.project.as_deref(), query.building.as_deref())
         .map_err(map_service_error)?;
 
-    if result.store_empty {
-        return Err(StatusCode::NO_CONTENT);
+    match result {
+        None => Err(StatusCode::NO_CONTENT),
+        Some(result) => Ok(Json(result)),
     }
-
-    // Report the accepted schema version (all stored payloads share it — the
-    // ingest check guarantees it), so the viewer's version check still holds.
-    Ok(Json(serde_json::json!({
-        "schema_version": result.schema_version,
-        "levels": result.levels,
-        "rooms": result.rooms,
-    })))
 }
 
 /// Data-quality report for the header's validation panel — see
@@ -300,7 +307,10 @@ mod tests {
         let state: Shared = std::sync::Arc::new(AppState::new(Box::new(MemStore::new()), single_project("p1"), None));
 
         let result = get_rooms(State(state), Query(RoomsQuery { project: None, building: None })).await;
-        assert_eq!(result.unwrap_err(), StatusCode::NO_CONTENT);
+        match result {
+            Err(status) => assert_eq!(status, StatusCode::NO_CONTENT),
+            Ok(_) => panic!("expected 204 for an empty store"),
+        }
     }
 
     /// A project filter matching nothing still returns 200 with empty
@@ -325,8 +335,34 @@ mod tests {
         .await
         .unwrap();
 
-        let rooms = result.0["rooms"].as_array().unwrap();
-        assert!(rooms.is_empty());
+        assert!(result.0.rooms.is_empty());
+    }
+
+    /// A project/model id that could escape the storage root as a path
+    /// component is rejected 422 before anything is written -- the ids
+    /// become `root/<project_id>/<model_id>` in `FsStore` verbatim.
+    #[tokio::test]
+    async fn test_ingest_rooms_rejects_path_unsafe_ids() {
+        for (project_id, model_id) in [("p1", "../escape"), ("p1", "a/b"), ("p1", "a\\b"), ("p1", "  ")] {
+            let payload = RoomPayload {
+                schema_version: SUPPORTED_SCHEMA,
+                project: Project { id: project_id.to_string(), name: "P".to_string() },
+                model: Model { id: model_id.to_string(), name: "M".to_string(), source: "revit".to_string() },
+                snapshot: Snapshot { taken_at: "2026-01-01T00:00:00Z".to_string() },
+                levels: vec![],
+                rooms: vec![],
+            };
+            let state: Shared = std::sync::Arc::new(AppState::new(Box::new(MemStore::new()), single_project("p1"), None));
+
+            let result = ingest_rooms(State(state), Json(payload)).await;
+            match result {
+                Err((status, msg)) => {
+                    assert_eq!(status, StatusCode::UNPROCESSABLE_ENTITY, "model id {model_id:?}");
+                    assert!(msg.contains("unsafe") || msg.contains("empty"), "message names the problem: {msg}");
+                }
+                Ok(_) => panic!("expected 422 for model id {model_id:?}"),
+            }
+        }
     }
 
     /// A push for a project with no registered settings (and no default

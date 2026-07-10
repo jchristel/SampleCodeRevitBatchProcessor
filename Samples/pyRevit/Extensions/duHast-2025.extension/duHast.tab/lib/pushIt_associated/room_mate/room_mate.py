@@ -21,6 +21,7 @@
 #
 
 
+import copy
 import datetime
 
 from duHast.Revit.Rooms.Export.to_data_room import get_all_room_data
@@ -83,6 +84,19 @@ def rooms_export_entry(doc, uiapp, output, forms):
                 # v4 identity envelope (STRATEGY.md "Identity"). Model id is a
                 # known stopgap: Title, not a GUID -- no stable GUID source exists
                 # in duHast for a plain local (non-workshared, non-cloud) file.
+                # Two consequences of keying on Title: two different files that
+                # share a Title collide into ONE model record on the server,
+                # and renaming a file forks its history into a new record. If
+                # duHast ever exposes Document.CreationGUID / worksharing
+                # GUIDs, switch to those.
+                #
+                # taken_at carries microseconds: it becomes the snapshot
+                # filename server-side, so two pushes of the same model within
+                # one second must not collide (the server skips a duplicate
+                # timestamp rather than overwriting, but the client shouldn't
+                # produce one in normal use). %f is fixed-width, so the string
+                # stays lexically sortable -- the server's "lexical max =
+                # newest" rule depends on that.
                 project_info = selected_doc.ProjectInformation
                 envelope = {
                     "project": {
@@ -94,9 +108,15 @@ def rooms_export_entry(doc, uiapp, output, forms):
                         "name": selected_doc.Title,
                     },
                     "snapshot": {
-                        "taken_at": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                        "taken_at": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
                     },
                 }
+
+                # a large export takes a while -- honour a cancel clicked
+                # during it before starting the (also slow) post
+                if pb.cancelled:
+                    return_value.update_sep(False, "User cancelled.")
+                    break
 
                 # convert into a dictionary
                 dic_room_data = {
@@ -107,20 +127,35 @@ def rooms_export_entry(doc, uiapp, output, forms):
                 # add some more properties before writing to json
                 json_formatted_room = build_json_for_file(dic_room_data, "{}".format(selected_doc.Title))
 
-                # convert into a dictionary
+                # convert into a dictionary. The envelope is deep-copied for
+                # this second use: .update() shares the nested project/model/
+                # snapshot dict instances, and the two exports must not be able
+                # to cross-contaminate if anything downstream mutates its input.
                 dic_level_data = {
                     dl.DataLevelBuilding.data_type:level_data
                 }
-                dic_level_data.update(envelope)
+                dic_level_data.update(copy.deepcopy(envelope))
 
                 # add some more properties before writing to json
                 json_formatted_level = build_json_for_file(dic_level_data, "{}".format(selected_doc.Title))
-                
+
                 # post to the server: gzip-compressed NDJSON stream, so a
                 # >100 MB FFE export never gets buffered whole client-side or
-                # server-side (see roommate's HANDOVER-streaming*.md)
-                post_payload_stream(json_formatted_room, json_formatted_level)
-                
+                # server-side (see roommate's HANDOVER-streaming*.md).
+                # A failed push flips the overall Result red but does NOT abort
+                # the loop -- one bad model shouldn't discard the other models'
+                # successful pushes, the run just must not end green.
+                ok, status, text = post_payload_stream(json_formatted_room, json_formatted_level)
+                if ok:
+                    return_value.append_message(
+                        "{}: server accepted ({})".format(selected_doc.Title, text)
+                    )
+                else:
+                    return_value.update_sep(
+                        False,
+                        "{}: push failed ({}): {}".format(selected_doc.Title, status, text),
+                    )
+
                 # check for cancel
                 if pb.cancelled:
                     return_value.update_sep(False, "User cancelled.")

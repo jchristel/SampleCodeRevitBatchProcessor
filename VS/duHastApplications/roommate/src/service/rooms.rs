@@ -113,27 +113,27 @@ pub fn building_tier_index(hierarchy: &[HierarchyTier]) -> Option<usize> {
 }
 
 /// Result of merging every stored model's levels and rooms into one flat
-/// payload. `store_empty` is distinct from an empty `rooms`/`levels` result: a
-/// project/building filter that matches nothing still yields a real (empty)
-/// result, whereas `store_empty` means nothing has ever been pushed at all --
-/// only the latter is a transport-level "204 No Content" signal, and that
-/// decision belongs to the HTTP adapter, not here. Derives `Serialize` so a
-/// non-HTTP consumer (e.g. the MCP server) can return it directly; the HTTP
-/// handler still builds its own `json!` from these fields since it omits
-/// `store_empty` from the wire shape.
+/// payload. Derives `Serialize` so both adapters (HTTP handler, MCP server)
+/// can return it directly -- every field here is wire shape, nothing needs
+/// stripping. "Nothing has ever been pushed" is not a field on this type; it
+/// is `assemble_rooms` returning `None` (see there).
 #[derive(serde::Serialize)]
 pub struct RoomsResult {
     pub schema_version: u32,
     pub levels: Vec<Level>,
     pub rooms: Vec<RoomResponse>,
-    pub store_empty: bool,
 }
 
 /// Merge every stored model's levels and rooms into one flat payload, scoped
 /// by an optional project id and an optional opaque building key (from
-/// `projects::list_buildings`). If no tier is named "Building", `building` is
-/// a no-op rather than an error — same graceful degrade as the buildings
-/// listing. A model contributes its `levels` only when it contributed at
+/// `projects::list_buildings`). When a building filter is given, a project
+/// whose hierarchy has no tier named "Building" matches *nothing* -- not
+/// everything. The caller asked for a building; a project with no notion of
+/// one can't answer that question, and `list_buildings` already tells a
+/// well-behaved client `tier_configured: false` so it never sends this
+/// combination. An empty result is honest; a silently ignored filter is not
+/// (it used to leak a tier-less project's entire room set into a filtered
+/// multi-project merge). A model contributes its `levels` only when it contributed at
 /// least one matching room: levels are their own array from a separate Revit
 /// export, so a floor can legitimately have zero rooms of a given building
 /// right now yet still belong to it — dropping it would make the slider
@@ -143,13 +143,20 @@ pub struct RoomsResult {
 ///
 /// dRofus join and classification are resolved here at response assembly — the
 /// stored snapshots stay raw; derived data is never written back to state.
+///
+/// Returns `Ok(None)` when nothing has ever been pushed to this server at all
+/// -- the HTTP adapter's "204 No Content" case. A filter that merely matches
+/// nothing is still `Ok(Some)` with empty vecs: the store has data, the
+/// question just has an empty answer.
 pub fn assemble_rooms(
     state: &AppState,
     project: Option<&str>,
     building: Option<&str>,
-) -> Result<RoomsResult, ServiceError> {
+) -> Result<Option<RoomsResult>, ServiceError> {
     let stored = state.all_snapshots().map_err(ServiceError::Internal)?;
-    let store_empty = stored.is_empty();
+    if stored.is_empty() {
+        return Ok(None);
+    }
 
     // Scope to the requested project (if any), then drop any payload whose
     // project has no registered settings bundle — an unscoped merge is now
@@ -170,40 +177,52 @@ pub fn assemble_rooms(
     // float drift via `elevation_match`, the same rounding discipline used
     // for dRofus property comparison) IS the same level, no further
     // disambiguation. First-seen id per group wins as the canonical id; every
-    // other (model_id, level_id) pair that maps to that group is remapped to
-    // it before rooms are serialized, so the level picker and room filtering
-    // still agree on one id per real-world level.
-    let mut canonical_levels: Vec<Level> = Vec::new();
-    let mut level_remap: BTreeMap<(String, String), String> = BTreeMap::new();
+    // other (project_id, model_id, level_id) triple that maps to that group
+    // is remapped to it before rooms are serialized, so the level picker and
+    // room filtering still agree on one id per real-world level.
+    //
+    // Grouped *per project*: level identity is only meaningful within one
+    // project (the dedup exists for linked models of one job), so two
+    // unrelated projects that both have a "Level 1" @ 0.0 keep their own
+    // levels in an unscoped merge instead of collapsing onto whichever
+    // project happened to be seen first.
+    let mut canonical_levels: BTreeMap<String, Vec<Level>> = BTreeMap::new(); // project_id -> levels
+    let mut level_remap: BTreeMap<(String, String, String), String> = BTreeMap::new(); // (project_id, model_id, level_id) -> canonical
     for (key, payload, _bundle) in &scoped {
+        let project_levels = canonical_levels.entry(key.project_id.clone()).or_default();
         for level in &payload.levels {
-            let canonical_id = match canonical_levels
+            let canonical_id = match project_levels
                 .iter()
                 .find(|c| c.name == level.name && elevation_match(c.elevation, level.elevation))
             {
                 Some(existing) => existing.id.clone(),
                 None => {
-                    canonical_levels.push(level.clone());
+                    project_levels.push(level.clone());
                     level.id.clone()
                 }
             };
-            level_remap.insert((key.model_id.clone(), level.id.clone()), canonical_id);
+            level_remap.insert(
+                (key.project_id.clone(), key.model_id.clone(), level.id.clone()),
+                canonical_id,
+            );
         }
     }
 
     let mut levels = Vec::new();
-    let mut emitted_level_ids: BTreeSet<String> = BTreeSet::new();
+    // Keyed (project_id, canonical_id): canonical ids are model-local, so two
+    // projects could in principle mint the same id -- a flat set would let one
+    // project's level suppress another's.
+    let mut emitted_level_ids: BTreeSet<(String, String)> = BTreeSet::new();
     let mut rooms: Vec<RoomResponse> = Vec::new();
 
     for (key, payload, bundle) in &scoped {
         // Building tier index is resolved from this payload's own project
-        // bundle — a project with no "Building" tier configured just never
-        // matches the filter, same graceful degrade as before, now per-project.
+        // bundle -- projects with different hierarchies coexist in one merge.
         let building_idx = building_tier_index(&bundle.hierarchy);
-        let building_filter_active = building.is_some() && building_idx.is_some();
+        let building_filter_active = building.is_some();
 
-        let matching_rooms: Vec<&Room> = if let (Some(wanted), Some(idx)) = (building, building_idx) {
-            payload
+        let matching_rooms: Vec<&Room> = match (building, building_idx) {
+            (Some(wanted), Some(idx)) => payload
                 .rooms
                 .iter()
                 .filter(|room| {
@@ -214,9 +233,13 @@ pub fn assemble_rooms(
                         None => false,
                     }
                 })
-                .collect()
-        } else {
-            payload.rooms.iter().collect()
+                .collect(),
+            // A building filter was requested but this project has no
+            // "Building" tier: it can't answer the question, so it matches
+            // nothing -- contributing all its rooms instead would leak them
+            // into a response the caller believes is filtered.
+            (Some(_), None) => Vec::new(),
+            (None, _) => payload.rooms.iter().collect(),
         };
 
         if building_filter_active && matching_rooms.is_empty() {
@@ -225,10 +248,10 @@ pub fn assemble_rooms(
 
         for level in &payload.levels {
             let canonical_id = level_remap
-                .get(&(key.model_id.clone(), level.id.clone()))
+                .get(&(key.project_id.clone(), key.model_id.clone(), level.id.clone()))
                 .cloned()
                 .unwrap_or_else(|| level.id.clone());
-            if emitted_level_ids.insert(canonical_id.clone()) {
+            if emitted_level_ids.insert((key.project_id.clone(), canonical_id.clone())) {
                 let mut level = level.clone();
                 level.id = canonical_id;
                 levels.push(level);
@@ -236,14 +259,16 @@ pub fn assemble_rooms(
         }
         rooms.extend(matching_rooms.into_iter().map(|room| {
             let mut response = assemble_room(bundle, room, &payload.model.source);
-            if let Some(canonical_id) = level_remap.get(&(key.model_id.clone(), room.level_id.clone())) {
+            if let Some(canonical_id) =
+                level_remap.get(&(key.project_id.clone(), key.model_id.clone(), room.level_id.clone()))
+            {
                 response.room.level_id = canonical_id.clone();
             }
             response
         }));
     }
 
-    Ok(RoomsResult { schema_version: SUPPORTED_SCHEMA, levels, rooms, store_empty })
+    Ok(Some(RoomsResult { schema_version: SUPPORTED_SCHEMA, levels, rooms }))
 }
 
 #[cfg(test)]
@@ -287,6 +312,30 @@ mod tests {
     /// `AppState::new` now takes in place of the old five flat fields.
     fn single_project(project_id: &str, bundle: ProjectSettings) -> std::collections::HashMap<String, ProjectSettings> {
         std::collections::HashMap::from([(project_id.to_string(), bundle)])
+    }
+
+    /// A bundle with a one-tier "Building" hierarchy keyed on `bldg_code`,
+    /// for tests exercising the building filter across projects.
+    fn make_bundle_with_building_tier() -> ProjectSettings {
+        ProjectSettings {
+            hierarchy: vec![HierarchyTier {
+                name: "Building".to_string(),
+                code_property: Some("bldg_code".to_string()),
+                name_property: None,
+            }],
+            ..make_bundle("Number")
+        }
+    }
+
+    fn make_payload(project_id: &str, model_id: &str, levels: Vec<Level>, rooms: Vec<Room>) -> RoomPayload {
+        RoomPayload {
+            schema_version: 5,
+            project: Project { id: project_id.to_string(), name: "P".to_string() },
+            model: Model { id: model_id.to_string(), name: "M".to_string(), source: "revit".to_string() },
+            snapshot: Snapshot { taken_at: "2026-01-01T00:00:00Z".to_string() },
+            levels,
+            rooms,
+        }
     }
 
     /// `$name`/`$id` resolve to the room's own fields, not `room.properties`.
@@ -355,9 +404,8 @@ mod tests {
         state.set_snapshot(payload_a).unwrap();
         state.set_snapshot(payload_b).unwrap();
 
-        let result = assemble_rooms(&state, Some("p1"), None).unwrap();
+        let result = assemble_rooms(&state, Some("p1"), None).unwrap().expect("store has data");
 
-        assert!(!result.store_empty);
         assert_eq!(result.levels.len(), 1, "same name+elevation levels must collapse to one");
 
         let canonical_id = result.levels[0].id.clone();
@@ -367,15 +415,14 @@ mod tests {
         }
     }
 
-    /// An empty store is reported via `store_empty`, distinct from a filter
-    /// that simply matches nothing.
+    /// An empty store is reported as `None`, distinct from a filter that
+    /// simply matches nothing (which is `Some` with empty vecs).
     #[test]
     fn test_assemble_rooms_reports_store_empty() {
         let state = AppState::new(Box::new(MemStore::new()), single_project("p1", make_bundle("Number")), None);
 
         let result = assemble_rooms(&state, None, None).unwrap();
-        assert!(result.store_empty);
-        assert!(result.rooms.is_empty());
+        assert!(result.is_none(), "nothing has ever been pushed");
     }
 
     /// A payload whose project has no registered settings (and no default
@@ -398,9 +445,117 @@ mod tests {
         let state = AppState::new(Box::new(MemStore::new()), single_project("p1", make_bundle("Number")), None);
         state.set_snapshot(payload).unwrap();
 
-        let result = assemble_rooms(&state, None, None).unwrap();
-        assert!(!result.store_empty, "the store did receive a push");
+        let result = assemble_rooms(&state, None, None).unwrap().expect("the store did receive a push");
         assert!(result.rooms.is_empty(), "but the unregistered project's rooms must not appear");
+        assert!(result.levels.is_empty());
+    }
+
+    /// Two *different* projects each define "Level 1" @ 0.0 -- an unscoped
+    /// merge must keep both levels (level identity is only meaningful within
+    /// a project), and each project's room must keep a level id minted from
+    /// its own project's model, never remapped onto the other project's.
+    #[test]
+    fn test_assemble_rooms_level_dedup_does_not_cross_projects() {
+        let mut room_a = make_room("r1", "Room A", &[]);
+        room_a.level_id = "lvlA".to_string();
+        let mut room_b = make_room("r2", "Room B", &[]);
+        room_b.level_id = "lvlB".to_string();
+
+        let payload_a = make_payload(
+            "p1",
+            "modelA",
+            vec![Level { id: "lvlA".to_string(), name: "Level 1".to_string(), elevation: 0.0 }],
+            vec![room_a],
+        );
+        let payload_b = make_payload(
+            "p2",
+            "modelB",
+            vec![Level { id: "lvlB".to_string(), name: "Level 1".to_string(), elevation: 0.0 }],
+            vec![room_b],
+        );
+
+        let registry = std::collections::HashMap::from([
+            ("p1".to_string(), make_bundle("Number")),
+            ("p2".to_string(), make_bundle("Number")),
+        ]);
+        let state = AppState::new(Box::new(MemStore::new()), registry, None);
+        state.set_snapshot(payload_a).unwrap();
+        state.set_snapshot(payload_b).unwrap();
+
+        let result = assemble_rooms(&state, None, None).unwrap().expect("store has data");
+
+        assert_eq!(result.levels.len(), 2, "same (name, elevation) in different projects must NOT collapse");
+        assert_eq!(result.rooms.len(), 2);
+        for room in &result.rooms {
+            let expected = if room.room.id == "r1" { "lvlA" } else { "lvlB" };
+            assert_eq!(room.room.level_id, expected, "each room keeps its own project's level id");
+        }
+    }
+
+    /// Unscoped merge with a building filter: project A (Building tier, room
+    /// in building B01) contributes its matching room and its levels; project
+    /// B (no hierarchy at all) can't answer a building question, so it
+    /// contributes nothing -- neither rooms nor levels.
+    #[test]
+    fn test_assemble_rooms_building_filter_excludes_tierless_project() {
+        let mut room_a = make_room("r1", "Room A", &[("bldg_code", "B01")]);
+        room_a.level_id = "lvlA".to_string();
+        let mut room_b = make_room("r2", "Room B", &[]);
+        room_b.level_id = "lvlB".to_string();
+
+        let payload_a = make_payload(
+            "p1",
+            "modelA",
+            vec![Level { id: "lvlA".to_string(), name: "Level 1".to_string(), elevation: 0.0 }],
+            vec![room_a],
+        );
+        let payload_b = make_payload(
+            "p2",
+            "modelB",
+            vec![Level { id: "lvlB".to_string(), name: "Level 9".to_string(), elevation: 30.0 }],
+            vec![room_b],
+        );
+
+        let registry = std::collections::HashMap::from([
+            ("p1".to_string(), make_bundle_with_building_tier()),
+            ("p2".to_string(), make_bundle("Number")), // no hierarchy
+        ]);
+        let state = AppState::new(Box::new(MemStore::new()), registry, None);
+        state.set_snapshot(payload_a).unwrap();
+        state.set_snapshot(payload_b).unwrap();
+
+        let key = building_key(&Some("B01".to_string()), &None);
+        let result = assemble_rooms(&state, None, Some(&key)).unwrap().expect("store has data");
+
+        assert_eq!(result.rooms.len(), 1, "only project A's matching room");
+        assert_eq!(result.rooms[0].room.id, "r1");
+        assert_eq!(result.levels.len(), 1, "only project A's levels");
+        assert_eq!(result.levels[0].name, "Level 1");
+    }
+
+    /// Scoped to a project with no Building tier while a building filter is
+    /// active: the project can't answer the question, so the result is empty
+    /// (not the project's whole room set) -- but the store is not empty.
+    #[test]
+    fn test_assemble_rooms_building_filter_on_tierless_project_is_empty() {
+        let mut room_b = make_room("r2", "Room B", &[]);
+        room_b.level_id = "lvlB".to_string();
+        let payload_b = make_payload(
+            "p2",
+            "modelB",
+            vec![Level { id: "lvlB".to_string(), name: "Level 9".to_string(), elevation: 30.0 }],
+            vec![room_b],
+        );
+
+        let state = AppState::new(Box::new(MemStore::new()), single_project("p2", make_bundle("Number")), None);
+        state.set_snapshot(payload_b).unwrap();
+
+        let key = building_key(&Some("B01".to_string()), &None);
+        let result = assemble_rooms(&state, Some("p2"), Some(&key))
+            .unwrap()
+            .expect("store is not empty, so this is Some with empty vecs");
+
+        assert!(result.rooms.is_empty(), "a filter the project can't answer matches nothing");
         assert!(result.levels.is_empty());
     }
 }

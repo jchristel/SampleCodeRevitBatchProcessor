@@ -2,10 +2,10 @@
 //! live inside the `/rooms` and validation handlers.
 //!
 //! Domain logic never imports a transport crate -- no `axum`, no `rmcp`, no
-//! `StatusCode` in here. `ServiceError` is the seam: each transport (today's
-//! Axum `handlers`, a future MCP server) maps it to its own convention. That
-//! mapping is deliberately kept *out* of this module -- it belongs in the
-//! adapter, not the domain. See HANDOVER-service-layer.md.
+//! `StatusCode` in here. `ServiceError` is the seam: each transport (the Axum
+//! `handlers`, the MCP server in `src/bin/mcp.rs`) maps it to its own
+//! convention. That mapping is deliberately kept *out* of this module -- it
+//! belongs in the adapter, not the domain. See HANDOVER-service-layer.md.
 
 pub mod projects;
 pub mod rooms;

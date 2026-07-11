@@ -41,8 +41,14 @@ struct Args {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    // Filter on the *current* crate name -- this said "revit_viewer" (the
+    // crate's old name) for a while, which silently dropped every log event
+    // the server emitted. RUST_LOG still wins when set.
     tracing_subscriber::fmt()
-        .with_env_filter("revit_viewer=info,tower_http=info")
+        .with_env_filter(
+            tracing_subscriber::EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| tracing_subscriber::EnvFilter::new("roommate=info,tower_http=info")),
+        )
         .init();
 
     let args = Args::parse();

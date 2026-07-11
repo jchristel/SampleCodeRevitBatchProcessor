@@ -13,7 +13,10 @@
 //! - `settings`  — startup TOML config (sources, test seed, hierarchy defn).
 //! - `drofus`    — reference-data loader + join dataset.
 //! - `classify`  — room → full-depth classification path.
-//! - `state`     — shared in-memory store + startup seed.
+//! - `state`     — shared app state: settings registry + the snapshot store
+//!                 behind its trait, plus the startup seed.
+//! - `storage`   — the `SnapshotStore` trait and its two impls (`FsStore`
+//!                 on disk, `MemStore` volatile).
 //! - `bootstrap` — settings file path -> running `Shared` state, reused by
 //!                 both binaries' `main()`.
 //! - `handlers`  — thin Axum adapters: the `/rooms` push (plus the streaming

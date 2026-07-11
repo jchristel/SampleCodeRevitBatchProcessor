@@ -5,8 +5,9 @@
 //! never leak past this file.
 //!
 //! Ingest (`ingest_rooms` / `ingest_rooms_stream`) is the exception: it has no
-//! derive logic worth sharing with a future MCP server, so it stays here in
-//! full per the handover doc.
+//! derive logic worth sharing with the MCP server (which deliberately exposes
+//! no ingest -- see `src/bin/mcp.rs`), so it stays here in full per the
+//! handover doc.
 
 use axum::{
     body::Body,
@@ -55,7 +56,8 @@ fn validate_id(kind: &str, id: &str) -> Result<(), (StatusCode, String)> {
 ///   HANDOVER-per-project-settings.md): a project must be explicitly
 ///   onboarded (a settings file registered under its id, or an explicit
 ///   `is_default` fallback) before it can push at all;
-/// - identity ids unsafe as storage path components (`validate_id`).
+/// - identity ids unsafe as storage path components (`validate_id`);
+/// - a `taken_at` unsafe as a snapshot *filename* (`validate_taken_at`).
 ///
 /// Takes already-parsed identity fields (not a payload) so the streaming
 /// route can run it from the envelope line alone, before reading any rooms.
@@ -64,6 +66,7 @@ fn validate_ingest(
     schema_version: u32,
     project_id: &str,
     model_id: &str,
+    taken_at: &str,
 ) -> Result<(), (StatusCode, String)> {
     if schema_version != SUPPORTED_SCHEMA {
         return Err((
@@ -78,7 +81,28 @@ fn validate_ingest(
         ));
     }
     validate_id("project", project_id)?;
-    validate_id("model", model_id)
+    validate_id("model", model_id)?;
+    validate_taken_at(taken_at)
+}
+
+/// `taken_at` becomes the snapshot *filename* (`FsStore::snapshot_filename`),
+/// so it gets the same trust-boundary treatment as the ids -- with two
+/// differences: `:` is allowed (ISO-8601 needs it; the store sanitises it
+/// before filesystem use), and an empty value is rejected because it would
+/// produce a file literally named `.json` and wreck the store's
+/// lexical-max-is-newest ordering.
+fn validate_taken_at(taken_at: &str) -> Result<(), (StatusCode, String)> {
+    let bad = taken_at.trim().is_empty()
+        || taken_at.contains("..")
+        || taken_at.contains(['/', '\\', '<', '>', '"', '|', '?', '*'])
+        || taken_at.chars().any(|c| c.is_control());
+    if bad {
+        return Err((
+            StatusCode::UNPROCESSABLE_ENTITY,
+            format!("snapshot taken_at {taken_at:?} is empty or contains characters unsafe for storage filenames"),
+        ));
+    }
+    Ok(())
 }
 
 /// Revit posts room data here. Returns 200 with a short summary, or 422 if the
@@ -87,7 +111,13 @@ pub async fn ingest_rooms(
     State(state): State<Shared>,
     Json(payload): Json<RoomPayload>,
 ) -> Result<Json<IngestResponse>, (StatusCode, String)> {
-    validate_ingest(&state, payload.schema_version, &payload.project.id, &payload.model.id)?;
+    validate_ingest(
+        &state,
+        payload.schema_version,
+        &payload.project.id,
+        &payload.model.id,
+        &payload.snapshot.taken_at,
+    )?;
 
     let count = payload.rooms.len();
     tracing::info!("received {} room(s)", count);
@@ -151,7 +181,13 @@ pub async fn ingest_rooms_stream(
 
     // Same pre-flight as the buffered path -- run as soon as the envelope is
     // parsed, before the (potentially large) room stream is read at all.
-    validate_ingest(&state, envelope.schema_version, &envelope.project.id, &envelope.model.id)?;
+    validate_ingest(
+        &state,
+        envelope.schema_version,
+        &envelope.project.id,
+        &envelope.model.id,
+        &envelope.snapshot.taken_at,
+    )?;
 
     let mut rooms: Vec<Room> = Vec::new();
     while let Some(line) = lines
@@ -339,16 +375,28 @@ mod tests {
     }
 
     /// A project/model id that could escape the storage root as a path
-    /// component is rejected 422 before anything is written -- the ids
-    /// become `root/<project_id>/<model_id>` in `FsStore` verbatim.
+    /// component -- or a `taken_at` that could escape the model dir as a
+    /// filename -- is rejected 422 before anything is written: ids become
+    /// `root/<project_id>/<model_id>` and `taken_at` becomes the snapshot
+    /// filename in `FsStore` verbatim.
     #[tokio::test]
-    async fn test_ingest_rooms_rejects_path_unsafe_ids() {
-        for (project_id, model_id) in [("p1", "../escape"), ("p1", "a/b"), ("p1", "a\\b"), ("p1", "  ")] {
+    async fn test_ingest_rooms_rejects_path_unsafe_identity() {
+        let good_ts = "2026-01-01T00:00:00Z";
+        let cases = [
+            ("../escape", good_ts),
+            ("a/b", good_ts),
+            ("a\\b", good_ts),
+            ("  ", good_ts),
+            ("m1", ""),
+            ("m1", "..\\..\\evil"),
+            ("m1", "2026/01/01"),
+        ];
+        for (model_id, taken_at) in cases {
             let payload = RoomPayload {
                 schema_version: SUPPORTED_SCHEMA,
-                project: Project { id: project_id.to_string(), name: "P".to_string() },
+                project: Project { id: "p1".to_string(), name: "P".to_string() },
                 model: Model { id: model_id.to_string(), name: "M".to_string(), source: "revit".to_string() },
-                snapshot: Snapshot { taken_at: "2026-01-01T00:00:00Z".to_string() },
+                snapshot: Snapshot { taken_at: taken_at.to_string() },
                 levels: vec![],
                 rooms: vec![],
             };
@@ -357,12 +405,24 @@ mod tests {
             let result = ingest_rooms(State(state), Json(payload)).await;
             match result {
                 Err((status, msg)) => {
-                    assert_eq!(status, StatusCode::UNPROCESSABLE_ENTITY, "model id {model_id:?}");
+                    assert_eq!(status, StatusCode::UNPROCESSABLE_ENTITY, "model {model_id:?} taken_at {taken_at:?}");
                     assert!(msg.contains("unsafe") || msg.contains("empty"), "message names the problem: {msg}");
                 }
-                Ok(_) => panic!("expected 422 for model id {model_id:?}"),
+                Ok(_) => panic!("expected 422 for model {model_id:?} taken_at {taken_at:?}"),
             }
         }
+
+        // A normal ISO timestamp (with its `:`) still passes.
+        let payload = RoomPayload {
+            schema_version: SUPPORTED_SCHEMA,
+            project: Project { id: "p1".to_string(), name: "P".to_string() },
+            model: Model { id: "m1".to_string(), name: "M".to_string(), source: "revit".to_string() },
+            snapshot: Snapshot { taken_at: good_ts.to_string() },
+            levels: vec![],
+            rooms: vec![],
+        };
+        let state: Shared = std::sync::Arc::new(AppState::new(Box::new(MemStore::new()), single_project("p1"), None));
+        assert!(ingest_rooms(State(state), Json(payload)).await.is_ok());
     }
 
     /// A push for a project with no registered settings (and no default

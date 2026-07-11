@@ -99,8 +99,11 @@ pub const UNCLASSIFIED_BUILDING_KEY: &str = "__unclassified__";
 /// Opaque token identifying one building bucket, built from its resolved
 /// `(code, name)` pair. Callers (the browser) never decode this — they just
 /// echo it back to `/rooms?building=..` — so the encoding only has to be
-/// stable and collision-free for the lifetime of one response, not
-/// human-meaningful.
+/// stable for the lifetime of one response, not human-meaningful. Known
+/// caveat: a literal `|` inside a code/name could in principle make two
+/// distinct pairs collide (`("a|", "b")` and `("a", "|b")` both encode to
+/// `"a||b"`); accepted, since a `|` inside a building code is not a realistic
+/// input and the cost is only two buckets merging in the picker.
 pub fn building_key(code: &Option<String>, name: &Option<String>) -> String {
     format!("{}|{}", code.as_deref().unwrap_or(""), name.as_deref().unwrap_or(""))
 }

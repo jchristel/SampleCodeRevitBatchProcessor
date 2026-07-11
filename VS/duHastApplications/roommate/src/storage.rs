@@ -67,10 +67,11 @@ pub struct ModelEntry {
 ///
 /// `put` is an **upsert**: it creates whatever project/model structure is
 /// missing, then stores the snapshot. It never rejects an unknown id — a push
-/// defines new structure. A snapshot that already exists for the same
-/// `taken_at` is **skipped with a warning**, never overwritten: history is
-/// kept, and a re-sent payload must not silently destroy the record it
-/// duplicates.
+/// defines new structure. On a duplicate `taken_at`, a history-keeping store
+/// (`FsStore`) **skips with a warning** rather than overwrite — a re-sent
+/// payload must not silently destroy the record it duplicates. `MemStore`
+/// keeps no history at all (latest-only, by design), so replacement *is* its
+/// normal upsert and the skip rule doesn't apply.
 pub trait SnapshotStore: Send + Sync {
     /// Persist one pushed payload, creating project/model structure as needed.
     fn put(&self, payload: &RoomPayload) -> Result<()>;

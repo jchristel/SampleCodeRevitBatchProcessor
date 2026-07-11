@@ -54,10 +54,11 @@ pub struct BuildingsResponse {
 /// concern, not reflected here.
 pub fn list_projects(state: &AppState) -> Result<Vec<ProjectSummary>, ServiceError> {
     let stored = state.all_snapshots().map_err(ServiceError::Internal)?;
+    let registry = state.settings();
 
     let mut seen: BTreeMap<String, String> = BTreeMap::new();
     for (_key, payload) in &stored {
-        if state.settings_for(&payload.project.id).is_none() {
+        if registry.settings_for(&payload.project.id).is_none() {
             continue; // skip on read, same as assemble_rooms
         }
         seen.entry(payload.project.id.clone())
@@ -83,7 +84,8 @@ pub fn list_projects(state: &AppState) -> Result<Vec<ProjectSummary>, ServiceErr
 /// signal, since an empty/absent building list means the same thing to the
 /// picker either way.
 pub fn list_buildings(state: &AppState, project_id: &str) -> Result<BuildingsResponse, ServiceError> {
-    let Some(bundle) = state.settings_for(project_id) else {
+    let registry = state.settings();
+    let Some(bundle) = registry.settings_for(project_id) else {
         return Ok(BuildingsResponse { tier_configured: false, buildings: vec![] });
     };
     let Some(idx) = building_tier_index(&bundle.hierarchy) else {

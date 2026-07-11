@@ -161,6 +161,10 @@ pub fn assemble_rooms(
         return Ok(None);
     }
 
+    // One settings snapshot for the whole request — a save landing mid-merge
+    // can't mix old and new bundles in one response.
+    let registry = state.settings();
+
     // Scope to the requested project (if any), then drop any payload whose
     // project has no registered settings bundle — an unscoped merge is now
     // inherently per-project, so a model with nothing to classify/join it
@@ -169,7 +173,7 @@ pub fn assemble_rooms(
     let scoped: Vec<(&ModelKey, &RoomPayload, &ProjectSettings)> = stored
         .iter()
         .filter(|(_key, payload)| project.map_or(true, |p| payload.project.id == p))
-        .filter_map(|(key, payload)| state.settings_for(&payload.project.id).map(|bundle| (key, payload, bundle)))
+        .filter_map(|(key, payload)| registry.settings_for(&payload.project.id).map(|bundle| (key, payload, bundle)))
         .collect();
 
     // Level dedup: a `Level.id` is only unique *within* its own model (same

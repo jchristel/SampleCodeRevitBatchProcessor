@@ -29,6 +29,7 @@ use rmcp::{
 
 use roommate::bootstrap::build_state;
 use roommate::service::{projects, rooms, validation, ServiceError};
+use roommate::settings_api::{self, SettingsError};
 use roommate::state::Shared;
 
 #[derive(Debug, serde::Deserialize, schemars::JsonSchema)]
@@ -123,6 +124,62 @@ impl RoommateMcp {
     fn get_validation(&self, Parameters(p): Parameters<ProjectIdParams>) -> Result<CallToolResult, McpError> {
         let result = validation::compute_project_validation(&self.state, &p.project_id).map_err(to_mcp_error)?;
         json_result(&result)
+    }
+
+    // Settings tools are READ-ONLY by design: this is a separate process from
+    // the HTTP server, so a write from here could not hot-swap that server's
+    // in-memory registry -- the file and the serving process would silently
+    // disagree until a restart. Mutation stays behind the HTTP settings UI
+    // (see `settings_api`'s module doc), matching the "Read-only access"
+    // contract `get_info` declares.
+
+    /// Lists every project settings file with its headline facts -- see
+    /// `settings_api::list_project_files`.
+    #[tool(description = "List every project settings file (project id, is_default, whether dRofus is configured). \
+                          Reads the files fresh, so a settings change saved through the HTTP UI shows here immediately; \
+                          this process's own get_rooms/get_validation behavior still reflects the settings loaded at its startup.")]
+    fn list_project_settings(&self) -> Result<CallToolResult, McpError> {
+        let dir = self.projects_dir()?;
+        let result = settings_api::list_project_files(&dir).map_err(settings_to_mcp_error)?;
+        json_result(&result)
+    }
+
+    /// One project's parsed settings as JSON -- see
+    /// `settings_api::get_project_file`.
+    #[tool(description = "Get one project's settings (hierarchy, dRofus source, builtin properties, room label, QA fields) as JSON. \
+                          Reads the file fresh, so a settings change saved through the HTTP UI shows here immediately; \
+                          this process's own get_rooms/get_validation behavior still reflects the settings loaded at its startup.")]
+    fn get_project_settings(&self, Parameters(p): Parameters<ProjectIdParams>) -> Result<CallToolResult, McpError> {
+        let dir = self.projects_dir()?;
+        let (file, settings) = settings_api::get_project_file(&dir, &p.project_id).map_err(settings_to_mcp_error)?;
+        json_result(&serde_json::json!({ "file": file, "settings": settings }))
+    }
+
+    /// The `--project-settings` directory this process was started with --
+    /// always present for this binary (the arg is required), so the error arm
+    /// is defensive only.
+    fn projects_dir(&self) -> Result<std::path::PathBuf, McpError> {
+        self.state
+            .projects_dir()
+            .cloned()
+            .ok_or_else(|| McpError::internal_error("no project settings directory configured", None))
+    }
+}
+
+/// `SettingsError` -> `McpError`: caller-addressable problems (unknown id,
+/// invalid input) become `invalid_params`; the rest `internal_error`.
+fn settings_to_mcp_error(err: SettingsError) -> McpError {
+    match err {
+        SettingsError::NotFound(msg) | SettingsError::Invalid(msg) | SettingsError::Conflict(msg) => {
+            McpError::invalid_params(msg, None)
+        }
+        SettingsError::NotFileBacked => {
+            McpError::internal_error("no project settings directory configured", None)
+        }
+        SettingsError::Internal(e) => {
+            tracing::error!("settings read error: {e:#}");
+            McpError::internal_error(e.to_string(), None)
+        }
     }
 }
 

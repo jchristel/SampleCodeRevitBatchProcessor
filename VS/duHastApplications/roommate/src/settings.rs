@@ -14,14 +14,18 @@ use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
 use anyhow::Context;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 /// One project's settings, parsed once at startup from its own TOML file
 /// (one of N files in the `--project-settings` directory — see
 /// HANDOVER-per-project-settings.md). Server-wide config (`[storage]`,
 /// `[test_data]`) lives separately in `ServerConfig`, loaded once from
 /// `--server-settings` independent of this per-project loop.
-#[derive(Debug, Deserialize)]
+///
+/// Also derives `Serialize` (as do all the types it contains): the settings
+/// API serves this exact shape as JSON and writes it back as TOML, so the
+/// wire shape and the config-file shape can never drift.
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Settings {
     /// This bundle's project id — matched against `RoomPayload.project.id` to
     /// select which bundle applies to a given model. Must be non-empty
@@ -97,7 +101,7 @@ fn default_room_label() -> Vec<String> {
 /// One dRofus column's declared type/format, and optionally a QA override.
 /// `label` matches row 1 of the dRofus CSV (the same key
 /// `DrofusData::reconciliation`/`all_labels` use).
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct DrofusFieldConfig {
     pub label: String,
 
@@ -136,7 +140,7 @@ pub struct DrofusFieldConfig {
 /// The kind of data a dRofus column holds. Not a closed set forever -- more
 /// variants join as consumers need them (e.g. a `Numeric { unit }` case,
 /// once real unit conversion rather than adaptive rounding is needed).
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Deserialize)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum FieldType {
     #[default]
@@ -148,7 +152,7 @@ pub enum FieldType {
 /// How one dRofus field's value is compared against Revit's, when the
 /// default (numeric-adaptive if both sides parse as a number, else exact
 /// string match) needs overriding.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum CompareMode {
     /// Force exact string comparison even when both sides parse as numbers.
@@ -264,16 +268,16 @@ pub struct Storage {
 /// optional: which sources a project uses is that project's choice, and an
 /// absent source degrades to "not configured" downstream (e.g.
 /// `ValidationResponse.drofus_configured: false`), never an error.
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Default, Deserialize, Serialize)]
 pub struct Sources {
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub drofus: Option<DrofusSource>,
 }
 
 /// dRofus source. `#[serde(tag = "type")]` lets the TOML `type` field pick the
 /// variant — adding an `Api` variant later is a loader-only change; all
 /// consumers of `AppState` stay untouched.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum DrofusSource {
     /// Current: load from a local file.
@@ -292,7 +296,7 @@ pub struct TestData {
 /// One tier of the classification hierarchy. A tier is keyed by a code and/or a
 /// name property — at least one must be present (validated at startup), since a
 /// tier naming neither is unkeyable.
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct HierarchyTier {
     /// Human label for the tier ("Building", "Department").
     pub name: String,
@@ -323,7 +327,7 @@ impl HierarchyTier {
 /// `link_property`, hierarchy tier `code_property`/`name_property`) reference,
 /// resolved per-source to whatever raw property name that source actually
 /// uses. See `Settings::builtin_properties`.
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct BuiltinPropertyDef {
     /// The stable name consumers reference (e.g. "Area").
     pub canonical: String,

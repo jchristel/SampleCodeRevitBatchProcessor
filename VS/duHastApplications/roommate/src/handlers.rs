@@ -32,14 +32,10 @@ use crate::state::Shared;
 /// as the model id — a title containing `/`, `\`, or `..` would be a path
 /// traversal out of the storage root. Same startup-loud spirit as settings
 /// validation, applied at the ingest trust boundary; shared by both ingest
-/// handlers so they can't drift.
+/// handlers, and the predicate itself (`state::is_path_safe_component`) is
+/// shared with the settings API so the two agree on what a safe id is.
 fn validate_id(kind: &str, id: &str) -> Result<(), (StatusCode, String)> {
-    let bad = id.trim().is_empty()
-        || id == "."
-        || id == ".."
-        || id.contains(['/', '\\', '<', '>', ':', '"', '|', '?', '*'])
-        || id.chars().any(|c| c.is_control());
-    if bad {
+    if !crate::state::is_path_safe_component(id) {
         return Err((
             StatusCode::UNPROCESSABLE_ENTITY,
             format!("{kind} id {id:?} is empty or contains characters unsafe for storage paths"),
@@ -74,7 +70,7 @@ fn validate_ingest(
             format!("schema_version {schema_version} not supported; this server speaks {SUPPORTED_SCHEMA}"),
         ));
     }
-    if state.settings_for(project_id).is_none() {
+    if state.settings().settings_for(project_id).is_none() {
         return Err((
             StatusCode::UNPROCESSABLE_ENTITY,
             format!("no settings configured for project '{project_id}'"),

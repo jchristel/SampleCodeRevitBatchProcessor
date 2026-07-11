@@ -341,7 +341,8 @@ pub fn compute_validation(
 /// surfaces as `ServiceError::Internal`, so the HTTP adapter can still map it
 /// to 500 exactly as it does today.
 pub fn compute_project_validation(state: &AppState, project_id: &str) -> Result<ValidationResponse, ServiceError> {
-    let Some(bundle) = state.settings_for(project_id) else {
+    let registry = state.settings();
+    let Some(bundle) = registry.settings_for(project_id) else {
         return Ok(ValidationResponse::drofus_not_configured());
     };
     let Some(drofus) = bundle.drofus.as_ref() else {

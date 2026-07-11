@@ -18,6 +18,9 @@ use roommate::bootstrap::build_state;
 use roommate::handlers::{
     get_project_buildings, get_project_validation, get_projects, get_rooms, ingest_rooms, ingest_rooms_stream,
 };
+use roommate::settings_api::{
+    http_create_project, http_drofus_check, http_get_project, http_list_projects, http_update_project,
+};
 
 /// Cap on the buffered `/rooms` body -- applies to the DECOMPRESSED size, since
 /// `RequestDecompressionLayer` inflates before this limit is checked. FFE
@@ -69,6 +72,11 @@ async fn main() -> anyhow::Result<()> {
         .route("/projects", get(get_projects))
         .route("/projects/{id}/buildings", get(get_project_buildings))
         .route("/projects/{id}/validation", get(get_project_validation))
+        // Settings read/save API behind static/settings.html — see
+        // `settings_api`'s module doc for the save pipeline and trust model.
+        .route("/api/settings/projects", get(http_list_projects).post(http_create_project))
+        .route("/api/settings/projects/{id}", get(http_get_project).put(http_update_project))
+        .route("/api/settings/drofus-check", post(http_drofus_check))
         // Serves the viewer page at "/" from ./static.
         .fallback_service(ServeDir::new("static"))
         // Inflate gzip request bodies (Content-Encoding: gzip) before Json/NDJSON

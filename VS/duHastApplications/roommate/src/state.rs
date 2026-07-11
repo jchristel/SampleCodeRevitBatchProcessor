@@ -11,7 +11,8 @@
 //! cycle.
 
 use std::collections::HashMap;
-use std::sync::Arc;
+use std::path::PathBuf;
+use std::sync::{Arc, RwLock};
 
 use anyhow::Context;
 
@@ -42,6 +43,20 @@ impl ModelKey {
             model_id: payload.model.id.clone(),
         }
     }
+}
+
+/// Whether `s` is safe to use as a single filesystem path component —
+/// `FsStore` builds paths from project/model ids verbatim, and the settings
+/// API names project files `<project_id>.toml`. One predicate shared by
+/// ingest validation and the settings API so the two can never disagree on
+/// what a safe id is. Lives here next to `ModelKey` for the same reason it
+/// does: it's identity policy both state and storage depend on.
+pub fn is_path_safe_component(s: &str) -> bool {
+    !(s.trim().is_empty()
+        || s == "."
+        || s == ".."
+        || s.contains(['/', '\\', '<', '>', ':', '"', '|', '?', '*'])
+        || s.chars().any(|c| c.is_control()))
 }
 
 /// One project's classification/join inputs — everything that used to be a
@@ -75,24 +90,49 @@ pub struct ProjectSettings {
     pub drofus_fields: Vec<DrofusFieldConfig>,
 }
 
-/// Shared application state: the snapshot store plus a registry of per-project
-/// join/classify inputs resolved at startup.
-pub struct AppState {
-    /// The snapshot store, behind the trait so the backend is swappable.
-    store: Box<dyn SnapshotStore>,
-
+/// One immutable snapshot of every project's settings. Swapped wholesale
+/// behind `AppState`'s lock when the settings UI saves (see `settings_api`) —
+/// a request takes ONE snapshot up front and works off it, so a mid-request
+/// swap can never produce a torn read (half old hierarchy, half new dRofus).
+pub struct SettingsRegistry {
     /// Per-project settings bundles, keyed by project id. Storage stays one
     /// tree keyed by `(project_id, model_id)` independently of this registry
     /// — a project can have stored snapshots with no registered settings (see
     /// `settings_for`'s fallback/skip semantics at each call site).
-    project_settings: HashMap<String, ProjectSettings>,
+    pub by_project: HashMap<String, ProjectSettings>,
 
     /// Explicit fallback bundle for a project with no dedicated settings
     /// file, if the operator configured one (one project file marked
     /// `is_default = true`). When absent, an unregistered project is skipped
     /// on read and rejected on ingest rather than silently falling back to
     /// any bundle.
-    default_settings: Option<ProjectSettings>,
+    pub default: Option<ProjectSettings>,
+}
+
+impl SettingsRegistry {
+    /// Resolve the settings bundle for one project: its own registered
+    /// settings if present, else the explicit default bundle if one is
+    /// configured, else `None` (unregistered, no fallback).
+    pub fn settings_for(&self, project_id: &str) -> Option<&ProjectSettings> {
+        self.by_project.get(project_id).or(self.default.as_ref())
+    }
+}
+
+/// Shared application state: the snapshot store plus the swappable settings
+/// registry (resolved at startup, replaceable at runtime by the settings UI).
+pub struct AppState {
+    /// The snapshot store, behind the trait so the backend is swappable.
+    store: Box<dyn SnapshotStore>,
+
+    /// The current settings registry. `RwLock<Arc<..>>` so reads are one
+    /// cheap Arc clone and a save swaps the whole registry atomically —
+    /// in-flight requests keep the snapshot they started with.
+    registry: RwLock<Arc<SettingsRegistry>>,
+
+    /// The `--project-settings` directory the registry was loaded from.
+    /// `None` when the state wasn't built from files (unit tests) — the
+    /// settings API reports "not file-backed" in that case.
+    projects_dir: Option<PathBuf>,
 }
 
 impl AppState {
@@ -101,16 +141,39 @@ impl AppState {
         project_settings: HashMap<String, ProjectSettings>,
         default_settings: Option<ProjectSettings>,
     ) -> Self {
-        Self { store, project_settings, default_settings }
+        Self {
+            store,
+            registry: RwLock::new(Arc::new(SettingsRegistry {
+                by_project: project_settings,
+                default: default_settings,
+            })),
+            projects_dir: None,
+        }
     }
 
-    /// Resolve the settings bundle for one project: its own registered
-    /// settings if present, else the explicit default bundle if one is
-    /// configured, else `None` (unregistered, no fallback). Every read/ingest
-    /// call site that used to reach for `state.<field>` directly now goes
-    /// through here instead.
-    pub fn settings_for(&self, project_id: &str) -> Option<&ProjectSettings> {
-        self.project_settings.get(project_id).or(self.default_settings.as_ref())
+    /// Record which directory the registry came from — chained by `bootstrap`
+    /// right after `new`, so the settings API knows where to read/write files.
+    pub fn with_projects_dir(mut self, dir: PathBuf) -> Self {
+        self.projects_dir = Some(dir);
+        self
+    }
+
+    pub fn projects_dir(&self) -> Option<&PathBuf> {
+        self.projects_dir.as_ref()
+    }
+
+    /// The current settings registry snapshot. Take it ONCE at the top of a
+    /// request and resolve every bundle off that one `Arc` — a save that
+    /// lands mid-request then simply applies from the next request on.
+    pub fn settings(&self) -> Arc<SettingsRegistry> {
+        self.registry.read().unwrap().clone()
+    }
+
+    /// Replace the whole registry — the hot-reload half of a settings save.
+    /// Only called after the new registry loaded and validated completely, so
+    /// the running server can never observe a half-updated state.
+    pub fn swap_registry(&self, new: SettingsRegistry) {
+        *self.registry.write().unwrap() = Arc::new(new);
     }
 
     /// Store a pushed payload. Upsert semantics live in the store impl; state

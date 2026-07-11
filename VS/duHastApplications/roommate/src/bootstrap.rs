@@ -23,14 +23,62 @@ use crate::settings::{load_server_config, load_settings, validate_drofus_fields,
 use crate::state::{seed_if_test, AppState, ProjectSettings, Shared};
 use crate::storage::{FsStore, MemStore, SnapshotStore};
 
+/// Load and fully validate ONE project settings file into its runtime
+/// bundle: parse TOML, load the dRofus CSV when configured, validate the
+/// `drofus_fields` declarations against it. This is the single validation
+/// pipeline for a project file — startup (`load_project_settings_dir`) and
+/// the settings API's save both run exactly this, so a file the UI accepts
+/// can never fail the next boot.
+pub fn load_project_bundle(path: &Path) -> anyhow::Result<(String, bool, ProjectSettings)> {
+    let settings = load_settings(&path.to_path_buf()).with_context(|| format!("bad settings file: {}", path.display()))?;
+
+    // dRofus is optional per project: load and validate only when a
+    // source is configured. `drofus_fields` declarations with *no* dRofus
+    // source are a config mistake (they describe columns of a source that
+    // isn't there) — fail loudly, same discipline as
+    // `validate_drofus_fields`' unknown-label check.
+    let drofus = match &settings.sources.drofus {
+        Some(source) => {
+            let drofus = load_drofus(source)
+                .with_context(|| format!("bad dRofus source in {}", path.display()))?;
+
+            // Can't validate this inside `load_settings`: the dRofus CSV (and its
+            // label set) isn't loaded until the line above, one step later.
+            validate_drofus_fields(&settings.drofus_fields, &drofus.all_labels)
+                .with_context(|| format!("bad drofus_fields in {}", path.display()))?;
+            Some(drofus)
+        }
+        None => {
+            if !settings.drofus_fields.is_empty() {
+                anyhow::bail!(
+                    "{} declares drofus_fields but no [sources.drofus] — \
+                     remove the declarations or configure the source",
+                    path.display()
+                );
+            }
+            None
+        }
+    };
+
+    let bundle = ProjectSettings {
+        drofus,
+        hierarchy: settings.hierarchy,
+        builtin_properties: settings.builtin_properties,
+        room_label: settings.room_label,
+        drofus_fields: settings.drofus_fields,
+    };
+    Ok((settings.project_id, settings.is_default, bundle))
+}
+
 /// Load and validate every `*.toml` file directly inside `projects_dir` (not
 /// recursive) into a project-id-keyed registry, plus the explicit default
 /// bundle if exactly one file sets `is_default = true`. Fails the whole
 /// startup on: a malformed file, a duplicate `project_id` across files, or
 /// more than one file claiming `is_default` -- same "loud startup error over
 /// a silent no-op" discipline `load_settings` already uses for hierarchy
-/// tiers and builtin properties.
-fn load_project_settings_dir(
+/// tiers and builtin properties. Also re-run by the settings API after a
+/// save, to build the registry it hot-swaps in.
+pub fn load_project_settings_dir(
     projects_dir: &Path,
 ) -> anyhow::Result<(HashMap<String, ProjectSettings>, Option<ProjectSettings>)> {
     let mut registry = HashMap::new();
@@ -46,46 +94,8 @@ fn load_project_settings_dir(
             continue; // not a settings file (e.g. a stray drofus.csv sitting alongside)
         }
 
-        let settings = load_settings(&path).with_context(|| format!("bad settings file: {}", path.display()))?;
-        tracing::info!("project settings loaded from {} (project_id = {})", path.display(), settings.project_id);
-
-        // dRofus is optional per project: load and validate only when a
-        // source is configured. `drofus_fields` declarations with *no* dRofus
-        // source are a config mistake (they describe columns of a source that
-        // isn't there) — fail loudly, same discipline as
-        // `validate_drofus_fields`' unknown-label check.
-        let drofus = match &settings.sources.drofus {
-            Some(source) => {
-                let drofus = load_drofus(source)
-                    .with_context(|| format!("bad dRofus source in {}", path.display()))?;
-
-                // Can't validate this inside `load_settings`: the dRofus CSV (and its
-                // label set) isn't loaded until the line above, one step later.
-                validate_drofus_fields(&settings.drofus_fields, &drofus.all_labels)
-                    .with_context(|| format!("bad drofus_fields in {}", path.display()))?;
-                Some(drofus)
-            }
-            None => {
-                if !settings.drofus_fields.is_empty() {
-                    anyhow::bail!(
-                        "{} declares drofus_fields but no [sources.drofus] — \
-                         remove the declarations or configure the source",
-                        path.display()
-                    );
-                }
-                None
-            }
-        };
-
-        let project_id = settings.project_id.clone();
-        let is_default = settings.is_default;
-        let bundle = ProjectSettings {
-            drofus,
-            hierarchy: settings.hierarchy,
-            builtin_properties: settings.builtin_properties,
-            room_label: settings.room_label,
-            drofus_fields: settings.drofus_fields,
-        };
+        let (project_id, is_default, bundle) = load_project_bundle(&path)?;
+        tracing::info!("project settings loaded from {} (project_id = {})", path.display(), project_id);
 
         if is_default {
             if let Some((other_id, _)) = &default_bundle {
@@ -132,7 +142,9 @@ pub fn build_state(server_settings: &PathBuf, projects_dir: &PathBuf) -> anyhow:
         }
     };
 
-    let state: Shared = Arc::new(AppState::new(store, project_settings, default_settings));
+    let state: Shared = Arc::new(
+        AppState::new(store, project_settings, default_settings).with_projects_dir(projects_dir.clone()),
+    );
 
     seed_if_test(&state, test_data.as_ref())?;
 

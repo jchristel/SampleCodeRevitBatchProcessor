@@ -434,7 +434,12 @@ function populateBuildingSelect(data) {
   for (const b of data.buildings) {
     const opt = document.createElement("option");
     opt.value = b.key;
-    opt.textContent = b.unclassified ? "Unclassified" : (b.name || b.code || b.key);
+    // `ambiguous` means another building shares this name; append the code so
+    // the two options are distinguishable. A same-name entry with no code has
+    // nothing to append — its code-bearing twin carries the distinction.
+    let label = b.unclassified ? "Unclassified" : (b.name || b.code || b.key);
+    if (b.ambiguous && b.name && b.code) label = `${b.name} (${b.code})`;
+    opt.textContent = label;
     buildingSelect.appendChild(opt);
   }
   buildingSelect.classList.toggle("hidden", data.buildings.length <= 1);

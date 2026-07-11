@@ -10,14 +10,14 @@ Code, or another agent host) can call the read side as tools instead of
 issuing HTTP requests. This exists because [Server](STRATEGY-SERVER.md)'s
 `service/` extraction made the derive/assemble logic transport-agnostic —
 this doc is what that extraction bought: a second adapter that was a new
-binary plus tool definitions, not a rewrite. See HANDOVER-service-layer.md
-for the extraction itself.
+binary plus tool definitions, not a rewrite. See
+Superseded/HANDOVER-service-layer.md for the extraction itself.
 
 ## Implemented
 
 - **Separate binary, shared lib crate.** The crate is now `lib.rs` (every
   domain module: `contract`, `settings`, `drofus`, `classify`, `state`,
-  `storage`, `service`, `handlers`, plus the new `bootstrap`) plus two bins:
+  `storage`, `service`, `handlers`, `settings_api`, plus `bootstrap`) plus two bins:
   `main.rs` (the Axum HTTP server) and `bin/mcp.rs` (this MCP server). Neither
   bin's transport crate leaks into the other — `mcp.rs` never imports `axum`,
   `main.rs` never imports `rmcp` — the same "dependency direction is the
@@ -37,22 +37,37 @@ for the extraction itself.
   **stderr only**: stdout is the JSON-RPC stream, and anything else written
   there (an errant `println!`, a stdout-default `tracing_subscriber`)
   silently corrupts the protocol.
-- **Four tools, one per existing read route:** `list_projects`,
-  `list_buildings`, `get_rooms` (project/building filters optional),
-  `get_validation`. Ingest (`POST /rooms`, `/rooms/stream`) has no MCP
-  counterpart — an LLM pushing a full room snapshot isn't a realistic flow,
-  and the HTTP server remains the only ingest path.
+- **Six tools: one per existing read route, plus two settings reads.**
+  `list_projects`, `list_buildings`, `get_rooms` (project/building filters
+  optional), and `get_validation` mirror the four HTTP read routes.
+  `list_project_settings` / `get_project_settings` reuse `settings_api`'s
+  transport-agnostic read core (see [Server](STRATEGY-SERVER.md)'s settings
+  API bullet); they parse the TOML files fresh per call, so a change saved
+  through the HTTP settings UI shows in them immediately — while this
+  process's own `get_rooms`/`get_validation` still run on the registry
+  loaded at its startup. Settings tools are read-only by design: this is a
+  separate process from the HTTP server, so a write from here could not
+  hot-swap that server's in-memory registry — the file and the serving
+  process would silently disagree until a restart. Mutation stays behind the
+  HTTP settings UI, matching the "Read-only access" contract `get_info`
+  declares. Ingest (`POST /rooms`, `/rooms/stream`) has no MCP counterpart
+  either — an LLM pushing a full room snapshot isn't a realistic flow, and
+  the HTTP server remains the only ingest path.
 - **`ServiceError` → `McpError` mapping.** `NotFound`/`BadInput` both become
   `McpError::invalid_params` (MCP's tool-call error surface has no direct
   404/400 split); `Internal` becomes `McpError::internal_error`. Required
   giving `ServiceError` real `Display`/`Error` impls (previously `Debug`-only,
   since nothing needed to stringify it before this).
-- **`RoomsResult` gained `#[derive(Serialize)]`.** The HTTP handler had never
-  serialized it directly — it hand-built a `json!` from its fields to omit
-  `store_empty` from the wire shape. The MCP tool returns `RoomsResult`
-  as-is, `store_empty` included: there's no MCP equivalent of the HTTP 204
-  that field exists to drive, so it's just a plain field in the JSON payload
-  instead of a transport-level signal.
+- **`RoomsResult` derives `Serialize`; "nothing pushed yet" is not a field
+  on it.** `assemble_rooms` returns `Option<RoomsResult>` — the old
+  `store_empty` bool (a transport concern smuggled through the domain type;
+  removed in the code-review fixes, see HANDOVER-review-fixes.md) is gone,
+  so both adapters can serialize the result directly. Each maps `None` its
+  own way: the HTTP handler answers 204 No Content, the `get_rooms` tool
+  answers a short plain-text "no snapshots have been pushed" block (MCP has
+  no status-code equivalent, and an LLM client reads either just fine). A
+  `Some` with empty vecs is different and flows through as JSON: the store
+  has data, the question just has an empty answer.
 - **`Implementation::from_build_env()` reports the wrong crate.** It's a
   plain function whose body bakes in `env!("CARGO_PKG_NAME"/"CARGO_PKG_VERSION")`
   at *rmcp's own* compile time, not the caller's — using it made `initialize`

@@ -34,8 +34,8 @@ A three-part pipeline, decoupled across a process and a language boundary:
    second source (e.g. IFC) ever joins Revit. Details: [Sources](STRATEGY-SOURCES.md).
 2. **Server (Rust / axum).** Receives the JSON, holds every model's latest
    payload keyed by `(project, model)`, persists it (or holds it in memory),
-   and serves it back on request. Also serves the viewer page. Details:
-   [Server](STRATEGY-SERVER.md).
+   and serves it back on request. Also serves the viewer and settings pages.
+   Details: [Server](STRATEGY-SERVER.md).
 3. **Viewer (browser / SVG).** Fetches the payload, draws room outlines as a
    floor plan, with a level slider to switch floors. Polls every 2s so a fresh
    POST appears without a manual refresh. Details: [Browser](STRATEGY-BROWSER.md).

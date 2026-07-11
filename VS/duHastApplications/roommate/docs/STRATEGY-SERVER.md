@@ -5,9 +5,11 @@ Part of the Roommate strategy docs: [Index](STRATEGY.md) ·
 [MCP](STRATEGY-MCP.md)
 
 The Rust/axum process: what it stores, how it derives data at read time, and
-how it's configured. Code is split across `src/` modules (`contract`,
-`settings`, `drofus`, `classify`, `state`, `storage`, `service`, `handlers`,
-`main`), each carrying its rationale in a module header, all with unit tests.
+how it's configured. Code is a library crate (`lib.rs`) split across `src/`
+modules (`contract`, `settings`, `drofus`, `classify`, `state`, `storage`,
+`bootstrap`, `service`, `handlers`, `settings_api`) plus two binaries —
+`main.rs` (this HTTP server) and `bin/mcp.rs` (see [MCP](STRATEGY-MCP.md)) —
+each module carrying its rationale in a header, all with unit tests.
 
 ## Implemented
 
@@ -26,7 +28,7 @@ how it's configured. Code is split across `src/` modules (`contract`,
   is exactly what let the MCP server ([MCP](STRATEGY-MCP.md)) call the same
   functions `handlers` does without touching this layer at all. Ingest
   (`POST /rooms`, `/rooms/stream`) has no derive logic worth sharing and stays
-  entirely in `handlers`. See HANDOVER-service-layer.md.
+  entirely in `handlers`. See Superseded/HANDOVER-service-layer.md.
 
   **Deferred gap:** `service::validation::compute_validation` still resolves
   each room's dRofus link value with its own direct `lookup_property` call
@@ -63,7 +65,13 @@ how it's configured. Code is split across `src/` modules (`contract`,
   "Unclassified" bucket for rooms where it didn't resolve), each keyed by an
   opaque token the browser echoes back rather than reconstructing. No tier
   named "Building" configured → `tier_configured: false`, not an error: the
-  whole project is treated as one building.
+  whole project is treated as one building. Distinctness is the `(code, name)`
+  pair, so two buildings can legitimately share a name (different codes, or
+  one resolved a name but no code — a represented state, since a tier resolves
+  when *either* property is present); such entries carry `ambiguous: true` so
+  a picker that renders names can disambiguate (the viewer appends the code)
+  instead of showing two identical options. Nameless entries and the
+  Unclassified bucket are exempt from the flag.
 - **Identity envelope (v4 → v5).** Every payload carries `project` / `model` /
   `snapshot`; `model` also carries `source` (see
   [Sources](STRATEGY-SOURCES.md)). `SUPPORTED_SCHEMA = 5`, hard-required, no
@@ -72,13 +80,20 @@ how it's configured. Code is split across `src/` modules (`contract`,
   fixing the multi-document overwrite bug. `/rooms` merges every model's
   latest into one flat payload by default; optional `?project=`/`?building=`
   query params (the latter matched against the same Building tier as above)
-  narrow that merge to one project or building. A model contributes its
+  narrow that merge to one project or building. Under an active building
+  filter, a project whose hierarchy has no "Building" tier matches *nothing*,
+  not everything — the caller asked for a building, and a project with no
+  notion of one can't answer that question (a silently ignored filter used to
+  leak such a project's entire room set into a filtered multi-project merge;
+  `list_buildings`' `tier_configured: false` already tells a well-behaved
+  client not to send the combination). A model contributes its
   `levels` only when it contributed at least one matching room when a
   building filter is active — levels are their own array from a separate
   Revit export, so a floor can legitimately have zero rooms of a given
   building right now yet still belong to it; with no filter, every scoped
   model's levels are included exactly as before. Levels are also
-  deduplicated across the merge: a `Level.id` is only unique *within* its own
+  deduplicated across the merge, scoped per project (two projects' "Level 1"
+  never collapse into each other): a `Level.id` is only unique *within* its own
   model (same caveat as room ids), so two linked models defining "the same"
   architectural level would otherwise appear twice. Equal `name` and
   `elevation` — elevation compared with the same adaptive-precision rounding
@@ -88,11 +103,17 @@ how it's configured. Code is split across `src/` modules (`contract`,
   the level picker and room filtering agree on one id per real-world level.
   A dedicated per-model endpoint is still deferred.
 - **Swappable persistence (`SnapshotStore` trait).** `FsStore` writes
-  `<root>/<project-guid>/{project.toml, <model-guid>/<ts>.json}` — an
-  authoritative, two-way `project.toml`, upsert-on-push (creates unknown
-  project/model structure), full snapshot history (one file per push).
-  `MemStore` keeps the in-memory behaviour for `[storage]`-less/dev configs. A
-  database is a future third impl behind the same trait.
+  `<root>/<project-guid>/{project.toml, <model-guid>/<ts>.json}` — a two-way
+  `project.toml` manifest, upsert-on-push (creates unknown project/model
+  structure), full snapshot history (one file per push). The manifest is the
+  *index* (readable without opening any snapshot), the snapshot files are the
+  record — and list-reads reconcile the manifest against the directory tree,
+  with the filesystem winning on disagreement, so a hand-edited or stale
+  manifest can't hide models that exist on disk. A re-push with a duplicate
+  `taken_at` is skipped with a warning rather than overwriting the snapshot
+  it duplicates. `MemStore` keeps the in-memory behaviour (latest-only, no
+  history) for `[storage]`-less/dev configs. A database is a future third
+  impl behind the same trait.
 - **Settings-file-relative paths.** Every relative path inside a settings
   file (dRofus CSV in a per-project file; storage root and test snapshot in
   `server.toml`) resolves against that settings file's own directory, not the
@@ -104,7 +125,7 @@ how it's configured. Code is split across `src/` modules (`contract`,
 - **Sample dev config.** `settings/` holds a runnable example: `server.toml`
   (storage root + dev seed), `projects/sample-project.toml` (classification,
   dRofus source, room label — one file per project, see
-  HANDOVER-per-project-settings.md), a two-row `drofus.csv`, and a
+  Superseded/HANDOVER-per-project-settings.md), a two-row `drofus.csv`, and a
   `test_snapshot.json` (a real v5 payload produced by `post_rooms.py`'s
   `translate()` against `test/Data/rooms.json`/`levels.json`) — `cargo run --
   --server-settings settings/server.toml --project-settings
@@ -124,7 +145,32 @@ how it's configured. Code is split across `src/` modules (`contract`,
   to the top-level table — and since `BuiltinPropertyDef` doesn't reject
   unknown fields, a misplaced `room_label` line is silently swallowed with no
   error. Top-level `Settings` keys must be declared before the first section
-  header in `settings.toml`.
+  header in a project settings file.
+
+- **Settings read/save API + UI (`/api/settings/*`, `static/settings.html`).**
+  The per-project TOML files are editable from the browser: a settings page
+  (sibling of the viewer, linked from its header) lists every file in the
+  projects dir — a file that fails to parse still gets a row carrying its
+  error, since this UI is exactly the tool you'd reach for to notice a rotten
+  file — and edits identity, dRofus source, hierarchy, builtin properties,
+  room label, and QA fields through a form. `settings_api.rs` mirrors the
+  handler/service split inside one module: a transport-agnostic core over the
+  projects dir (typed `SettingsError`) plus thin Axum adapters
+  (`GET/POST /api/settings/projects`, `GET/PUT /api/settings/projects/{id}`,
+  and `POST /api/settings/drofus-check`, a dry-run of a dRofus CSV path
+  powering the form's "check" button and its label dropdowns). The TOML files
+  remain the single source of truth: reads parse them fresh per call (no
+  filename bookkeeping in `AppState`), and a save validates the candidate
+  through the exact startup pipeline (`bootstrap::load_project_bundle`)
+  before installing the file and hot-swapping the in-process registry — a
+  file this API accepts can never fail the next boot, and a rejected save
+  leaves the existing file untouched. An update cannot rename a project id;
+  a second `is_default` file is rejected; saves are serialized end-to-end by
+  a lock so the scan-then-write race is structurally impossible. Writes are
+  HTTP-only — the MCP binary reuses the core's *read* functions but never
+  writes (see [MCP](STRATEGY-MCP.md): separate process, so its write could
+  not hot-swap this process's registry). Access control is the `127.0.0.1`
+  bind, same trust model as ingest.
 
 - **Data validation report (`GET /projects/{id}/validation`).** First real
   use of the pipeline surfaced a need to audit data quality, not just render
@@ -154,6 +200,18 @@ how it's configured. Code is split across `src/` modules (`contract`,
     either side isn't numeric, or when the field's `qa` override forces
     `"exact"`. No fixed epsilon anywhere — precision is inferred per
     comparison from the data itself, never configured.
+  - **A `type = "date"` field gets a typed comparison of its own**
+    (`date_match`): both sides are parsed with the declared strftime pattern
+    (`format`, with an optional `revit_format` for when the Revit side
+    renders dates differently from the dRofus column) — trying zoned
+    datetime, then naive datetime, then bare date (midnight) — and compared
+    by what they denote, so two renderings of the same moment don't
+    false-flag. Two offset-aware sides compare as instants; a zoned side
+    against a naive one compares the zoned side's *local* wall-clock reading
+    (the naive writer most plausibly wrote local time); two naive sides
+    compare directly. Same fall-back contract as `numeric_match`: if either
+    side fails to parse, the comparison drops to the string path — the
+    declaration is a hint, not truth.
   - **A string-equality mismatch gets one more check before it's reported:
     has the Revit side already lost the disputed character?** duHast's own
     export step (`Objects/base.py`'s `to_json_utf` → `Utilities/utility.py`'s
@@ -161,14 +219,13 @@ how it's configured. Code is split across `src/` modules (`contract`,
     service, replacing anything outside `0x00`-`0x7F` with a literal `?` —
     e.g. an en dash arrives as `?`. dRofus keeps the original character, so a
     field that's otherwise identical false-flags on that one glyph alone. On
-    a string-equality mismatch (an exact-mode field, or the non-numeric
-    fallback below — the latter is also the path a `type = "date"` field
-    takes today, since dates don't yet get a typed comparison of their own),
+    a string-equality mismatch (an exact-mode field, the non-numeric
+    fallback, or a date field whose values didn't parse),
     `ascii_narrowed` re-runs the comparison with the dRofus side narrowed the
     same lossy way; agreement there means the mismatch was purely an
     artifact of the export's encoding step, not real disagreement. A
     mismatch that merely *contains* a `?` without narrowing to full equality
-    still fails. See `HANDOVER_utf8.md`.
+    still fails. See `Superseded/HANDOVER_utf8.md`.
   - **The dRofus side is normalized the same way the Revit side always
     was:** a blank CSV cell reads as absent, not as a real empty-string value
     to compare against — otherwise a blank dRofus cell would false-flag
@@ -214,7 +271,8 @@ how it's configured. Code is split across `src/` modules (`contract`,
   2 MB default) sized well above the largest expected export, since
   `DefaultBodyLimit` measures the *decompressed* size; `/rooms/stream`
   disables the limit entirely and relies on streaming instead. See
-  HANDOVER-gzip.md / HANDOVER-streaming.md for the full rationale.
+  Superseded/HANDOVER-gzip.md / Superseded/HANDOVER-streaming.md for the
+  full rationale.
   **Honest limitation carried over unchanged:** the streaming handler still
   assembles all rooms into one `Vec` before storing, so it doesn't help if
   even that in-memory room set is too large — the deferred next step is a
@@ -222,10 +280,9 @@ how it's configured. Code is split across `src/` modules (`contract`,
 
 **Deferred (design settled, not built):** snapshot-history query + delete UI,
 per-model / `/hierarchy` endpoints, DB backend, an owning level above
-project, date-aware QA comparison and a colour-rooms-by-date-proximity
-viewer feature (`drofus_fields` already reserves `type = "date"` / `format`
-for this — see [Sources](STRATEGY-SOURCES.md) — but nothing parses or
-consumes it yet).
+project, and a colour-rooms-by-date-proximity viewer feature (the QA side of
+`drofus_fields`' `type = "date"` / `format` is consumed now — see the typed
+date comparison above — but no viewer feature reads the parsed dates yet).
 
 ## Data model: project → model → snapshot → {levels, rooms}
 

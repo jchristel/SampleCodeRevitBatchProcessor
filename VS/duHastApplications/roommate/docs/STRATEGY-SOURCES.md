@@ -49,7 +49,10 @@ Revit.
   (`string` default, `numeric`, or `date`), an optional `format` (required,
   and only meaningful, when `type = "date"` — a chrono strftime-style
   pattern, since dRofus hands dates back as formatted text, e.g.
-  `"6/29/2026 5:01:01 PM +10:00"`, not a structured value), and an optional
+  `"6/29/2026 5:01:01 PM +10:00"`, not a structured value), an optional
+  `revit_format` (a second strftime pattern for the *Revit* side of a date
+  comparison, when the room property renders dates differently from the
+  dRofus column — absent means `format` covers both sides), and an optional
   `qa` override (`exact` forces string comparison even when both sides parse
   as numbers; `ignore` excludes the column from comparison *and* the
   coverage report entirely). Deliberately **one** table answering "what is
@@ -58,13 +61,15 @@ Revit.
   feature idea came up that needs to actually parse a column's type, not
   just skip it in QA — a second, separate "what is this column" table would
   only have drifted from the first, so the override was folded into this
-  more general per-column declaration instead. `type`/`format` aren't
-  consumed by anything yet — no date parsing is implemented — they exist as
-  the seam a future consumer reads from; validated at startup regardless (a
-  `date` field needs a `format`, a `format` on anything else is almost
-  certainly a mistake, and every `label` must actually exist in the loaded
-  CSV). `qa` is the only field consumed today, by
-  [Server](STRATEGY-SERVER.md)'s validation report.
+  more general per-column declaration instead. `type`/`format`/`revit_format`
+  now have their first consumer: [Server](STRATEGY-SERVER.md)'s validation
+  report parses a `date`-declared column's values with the declared
+  pattern(s) and compares the parsed instants instead of the raw strings
+  (the colour-rooms-by-date viewer feature that motivated typing the column
+  is still unbuilt). Everything is validated at startup: a `date` field
+  needs a `format`, a `format`/`revit_format` on anything else is almost
+  certainly a mistake, each pattern must be a valid strftime string, and
+  every `label` must actually exist in the loaded CSV.
 - **Transport: HTTP POST to localhost.** Revit add-ins run in-process on .NET;
   POST is simplest, most debuggable, language-agnostic, and the same
   `HttpClient` carries over to a future C# add-in. Alternatives considered:

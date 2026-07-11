@@ -19,7 +19,11 @@ side should shape future server endpoints.
   one real choice, so the common single-project/single-building dev case shows
   no pickers at all. The level picker lists floors highest-elevation-first (a
   `<select>` has no CSS-driven reversal the old button stack relied on, so
-  it's sorted explicitly at render time).
+  it's sorted explicitly at render time). A building option the server flags
+  `ambiguous` (another building shares its name — legitimate, since buildings
+  are distinct by `(code, name)`) renders as "Name (CODE)" so the two options
+  are distinguishable; a same-name entry with no code stays the bare name,
+  its code-bearing twin carrying the visible distinction.
 - **Scoped polling.** `poll()` builds `/rooms`'s URL from the current
   project/building selection every tick; project/building pickers themselves
   refresh on the same 2s cadence (gated by a shallow id-list diff so they
@@ -65,6 +69,15 @@ side should shape future server endpoints.
   with several issues appears several times) and triggers a browser download
   — no server endpoint for this, matching "keep axum a pure JSON API": a CSV
   is just a presentation reshuffle of data the browser already has.
+- **Settings page (`settings.html`).** A sibling static page, linked from the
+  viewer's header, over [Server](STRATEGY-SERVER.md)'s `/api/settings` routes:
+  a project-file list on the left (a file that fails to parse still gets a
+  row showing its error), a form editor for identity / dRofus source /
+  hierarchy / builtin properties / room label / QA fields, a dRofus "check"
+  button that dry-runs the CSV path server-side, and saves that go through
+  the exact startup validation before landing (see Server). Same visual
+  language as the viewer — the `:root` tokens are copied verbatim rather
+  than extracted, an accepted duplication while it's just two sibling pages.
 
 ## Rendering: SVG today, and when to move
 

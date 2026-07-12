@@ -1,0 +1,187 @@
+{
+  "schema_version": 5,
+  "project": {
+    "id": "sample-project",
+    "name": "Sample Hospital Job"
+  },
+  "model": {
+    "id": "sample-model",
+    "name": "Project1-ARCH",
+    "source": "revit"
+  },
+  "snapshot": {
+    "taken_at": "2026-05-09T11:13:34Z"
+  },
+  "levels": [
+    {
+      "id": "311",
+      "name": "Level 0",
+      "elevation": 0.0
+    },
+    {
+      "id": "694",
+      "name": "Level 1",
+      "elevation": 3999.9999999999995
+    }
+  ],
+  "rooms": [
+    {
+      "id": "324772",
+      "name": "Room 1",
+      "level_id": "311",
+      "loops": [
+        {
+          "points": [
+            {
+              "x": 21.059210479422546,
+              "y": 14.848180290971605
+            },
+            {
+              "x": -17.982784271233626,
+              "y": 14.848180290971605
+            },
+            {
+              "x": -17.982784271233626,
+              "y": -18.288302648660938
+            },
+            {
+              "x": 21.059210479422546,
+              "y": -18.288302648660938
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "Limit Offset": {
+          "value": "4000.0000000000005",
+          "storage_type": null
+        },
+        "Unbounded Height": {
+          "value": "4000.0000000000005",
+          "storage_type": null
+        },
+        "Name": {
+          "value": "Room",
+          "storage_type": null
+        },
+        "IFC Predefined Type": {
+          "value": "None",
+          "storage_type": null
+        },
+        "Occupancy": {
+          "value": "None",
+          "storage_type": null
+        },
+        "Export to IFC As": {
+          "value": "None",
+          "storage_type": null
+        },
+        "Perimeter": {
+          "value": "42840.00000000001",
+          "storage_type": null
+        },
+        "Computation Height": {
+          "value": "0.0",
+          "storage_type": null
+        },
+        "Volume": {
+          "value": "",
+          "storage_type": null
+        },
+        "Floor Finish": {
+          "value": "None",
+          "storage_type": null
+        },
+        "Department": {
+          "value": "None",
+          "storage_type": null
+        },
+        "Phase": {
+          "value": "0",
+          "storage_type": null
+        },
+        "IfcGUID": {
+          "value": "39Lp2V0Qv8vBv7w54kAZmb",
+          "storage_type": null
+        },
+        "Base Offset": {
+          "value": "0.0",
+          "storage_type": null
+        },
+        "Ceiling Finish": {
+          "value": "None",
+          "storage_type": null
+        },
+        "Number": {
+          "value": "1",
+          "storage_type": null
+        },
+        "Base Finish": {
+          "value": "None",
+          "storage_type": null
+        },
+        "Wall Finish": {
+          "value": "None",
+          "storage_type": null
+        },
+        "Area": {
+          "value": "113.89405096216444",
+          "storage_type": null
+        },
+        "Level": {
+          "value": "311",
+          "storage_type": null
+        },
+        "Image": {
+          "value": "-1",
+          "storage_type": null
+        },
+        "Upper Limit": {
+          "value": "311",
+          "storage_type": null
+        },
+        "Comments": {
+          "value": "None",
+          "storage_type": null
+        },
+        "Export to IFC": {
+          "value": "0",
+          "storage_type": null
+        }
+      }
+    },
+    {
+      "id": "324773",
+      "name": "Room 2",
+      "level_id": "311",
+      "loops": [
+        {
+          "points": [
+            {
+              "x": 21.059210479422546,
+              "y": -20.288302648660938
+            },
+            {
+              "x": -17.982784271233626,
+              "y": -20.288302648660938
+            },
+            {
+              "x": -17.982784271233626,
+              "y": -30.288302648660938
+            },
+            {
+              "x": 21.059210479422546,
+              "y": -30.288302648660938
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "Name": { "value": "Room", "storage_type": null },
+        "Number": { "value": "2", "storage_type": null },
+        "Area": { "value": "50.0", "storage_type": null },
+        "Department": { "value": "Radiology", "storage_type": null }
+      }
+    }
+  ]
+}

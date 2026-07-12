@@ -1,130 +1,111 @@
-use std::sync::{Arc, Mutex};
+//! roommate — the Axum HTTP server binary. Deliberately thin: parse args,
+//! build shared state via `roommate::bootstrap`, wire the router. All the
+//! substance lives in the `roommate` lib crate (see its own header for the
+//! module index). The `mcp` binary (`src/bin/mcp.rs`) is the other consumer
+//! of that lib crate, over stdio instead of HTTP.
+
+use std::path::PathBuf;
 
 use axum::{
-    extract::State,
-    http::StatusCode,
+    extract::DefaultBodyLimit,
     routing::{get, post},
-    Json, Router,
+    Router,
 };
-use serde::{Deserialize, Serialize};
-use tower_http::{cors::CorsLayer, services::ServeDir, trace::TraceLayer};
+use clap::Parser;
+use tower_http::{cors::CorsLayer, decompression::RequestDecompressionLayer, services::ServeDir, trace::TraceLayer};
 
-// ---------- JSON contract (must match the Revit add-in's serializer) ----------
+use roommate::bootstrap::build_state;
+use roommate::handlers::{
+    get_model_latest_snapshot, get_project_buildings, get_project_milestones, get_project_snapshots,
+    get_project_validation, get_projects, get_rooms, ingest_rooms, ingest_rooms_stream,
+};
+use roommate::settings_api::{
+    http_create_project, http_drofus_check, http_get_project, http_list_projects, http_update_project,
+};
 
-/// A 2D point in Revit model space. Units are decimal feet, Y points UP.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
-struct Point2D {
-    x: f64,
-    y: f64,
+/// Cap on the buffered `/rooms` body -- applies to the DECOMPRESSED size, since
+/// `RequestDecompressionLayer` inflates before this limit is checked. FFE
+/// exports run >100 MB uncompressed; sized generously above that rather than
+/// tuned tight, since the streaming route (`/rooms/stream`) is the intended
+/// home for anything approaching this ceiling anyway. See HANDOVER-gzip.md.
+const ROOMS_BODY_LIMIT_BYTES: usize = 512 * 1024 * 1024;
+
+#[derive(Parser)]
+struct Args {
+    /// Path to the server-wide TOML settings file (`[storage]`, `[test_data]`).
+    #[arg(long)]
+    server_settings: PathBuf,
+
+    /// Path to a directory of per-project TOML settings files (one per
+    /// project, each declaring its own `project_id`). See
+    /// HANDOVER-per-project-settings.md.
+    #[arg(long)]
+    project_settings: PathBuf,
 }
-
-/// A single closed loop of points. A room has one outer loop and zero or more
-/// inner loops (holes, e.g. a column or shaft punched through the room).
-#[derive(Debug, Clone, Serialize, Deserialize)]
-struct Loop {
-    points: Vec<Point2D>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-struct Level {
-    id: String,
-    name: String,
-    elevation: f64,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-struct Room {
-    id: String,
-    name: String,
-    level_id: String,
-    loops: Vec<Loop>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-struct RoomPayload {
-    schema_version: u32,
-    levels: Vec<Level>,
-    rooms: Vec<Room>,
-}
-
-const SUPPORTED_SCHEMA: u32 = 2;
-
-// ---------- Shared state ----------
-
-/// In-memory store of the last payload received. Mutex is fine: this is a
-/// single-user local tool, not a high-concurrency service.
-#[derive(Default)]
-struct AppState {
-    latest: Mutex<Option<RoomPayload>>,
-}
-
-type Shared = Arc<AppState>;
-
-// ---------- Handlers ----------
-
-/// Revit posts room data here. Returns 200 with a short summary, or 422 if the
-/// schema version is one this server doesn't understand.
-async fn ingest_rooms(
-    State(state): State<Shared>,
-    Json(payload): Json<RoomPayload>,
-) -> Result<Json<IngestResponse>, (StatusCode, String)> {
-    if payload.schema_version != SUPPORTED_SCHEMA {
-        return Err((
-            StatusCode::UNPROCESSABLE_ENTITY,
-            format!(
-                "schema_version {} not supported; this server speaks {}",
-                payload.schema_version, SUPPORTED_SCHEMA
-            ),
-        ));
-    }
-
-    let count = payload.rooms.len();
-    tracing::info!("received {} room(s)", count);
-
-    *state.latest.lock().unwrap() = Some(payload);
-
-    Ok(Json(IngestResponse {
-        accepted: true,
-        room_count: count,
-    }))
-}
-
-#[derive(Serialize)]
-struct IngestResponse {
-    accepted: bool,
-    room_count: usize,
-}
-
-/// The viewer fetches the most recent payload here. Returns 204 if nothing has
-/// been posted yet, so the front-end can show an empty state.
-async fn get_rooms(State(state): State<Shared>) -> Result<Json<RoomPayload>, StatusCode> {
-    match state.latest.lock().unwrap().clone() {
-        Some(payload) => Ok(Json(payload)),
-        None => Err(StatusCode::NO_CONTENT),
-    }
-}
-
-// ---------- Wiring ----------
 
 #[tokio::main]
-async fn main() {
+async fn main() -> anyhow::Result<()> {
+    // Filter on the *current* crate name -- this said "revit_viewer" (the
+    // crate's old name) for a while, which silently dropped every log event
+    // the server emitted. RUST_LOG still wins when set.
     tracing_subscriber::fmt()
-        .with_env_filter("revit_viewer=info,tower_http=info")
+        .with_env_filter(
+            tracing_subscriber::EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| tracing_subscriber::EnvFilter::new("roommate=info,tower_http=info")),
+        )
         .init();
 
-    let state: Shared = Arc::new(AppState::default());
+    let args = Args::parse();
+    let state = build_state(&args.server_settings, &args.project_settings)?;
 
     let app = Router::new()
-        .route("/rooms", post(ingest_rooms).get(get_rooms))
+        .route(
+            "/rooms",
+            post(ingest_rooms).get(get_rooms).layer(DefaultBodyLimit::max(ROOMS_BODY_LIMIT_BYTES)),
+        )
+        // Streaming NDJSON ingest for models too large to buffer whole (see
+        // HANDOVER-streaming.md) -- disables the body limit entirely and relies
+        // on line-by-line reading to keep peak memory low instead.
+        .route(
+            "/rooms/stream",
+            post(ingest_rooms_stream).layer(DefaultBodyLimit::disable()),
+        )
+        .route("/projects", get(get_projects))
+        .route("/projects/{id}/buildings", get(get_project_buildings))
+        .route("/projects/{id}/validation", get(get_project_validation))
+        // Snapshot history: everything per project (grouped by model), and the
+        // per-model latest a follow-up upload attaches its data to.
+        .route("/projects/{id}/snapshots", get(get_project_snapshots))
+        // Milestones: named dated pins over snapshots, defined per project in
+        // its settings file; the viewer's dropdown reads this list.
+        .route("/projects/{id}/milestones", get(get_project_milestones))
+        .route(
+            "/projects/{project_id}/models/{model_id}/snapshots/latest",
+            get(get_model_latest_snapshot),
+        )
+        // Settings read/save API behind static/settings.html — see
+        // `settings_api`'s module doc for the save pipeline and trust model.
+        .route("/api/settings/projects", get(http_list_projects).post(http_create_project))
+        .route("/api/settings/projects/{id}", get(http_get_project).put(http_update_project))
+        .route("/api/settings/drofus-check", post(http_drofus_check))
         // Serves the viewer page at "/" from ./static.
         .fallback_service(ServeDir::new("static"))
+        // Inflate gzip request bodies (Content-Encoding: gzip) before Json/NDJSON
+        // parsing sees them. Transparent: a non-gzip body passes through
+        // untouched, so an uncompressed sender still works -- purely additive.
+        // Added before Cors/Trace so it sits innermost (Router::layer wraps
+        // outward: the layer added last runs first on the request path), i.e.
+        // decompression happens right before the body reaches a handler.
+        .layer(RequestDecompressionLayer::new())
         // Lets the browser viewer call /rooms even if served from elsewhere.
         .layer(CorsLayer::permissive())
         .layer(TraceLayer::new_for_http())
         .with_state(state);
 
     let addr = "127.0.0.1:5151";
-    let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
+    let listener = tokio::net::TcpListener::bind(addr).await?;
     tracing::info!("viewer on http://{addr}  (POST room JSON to http://{addr}/rooms)");
-    axum::serve(listener, app).await.unwrap();
+    axum::serve(listener, app).await?;
+
+    Ok(())
 }

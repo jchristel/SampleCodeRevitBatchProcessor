@@ -34,9 +34,9 @@ namespace duHastNet.PushIt.Models
         // migrates any non-empty DataPath value into DataSource.CsvConfig
         // automatically on first load. Do NOT use DataPath in new code.
         //
-        // The JsonProperty name matches the key used by the original PushIt
-        // settings file ("rooms_data_file_path") so old files are migrated
-        // correctly. NullValueHandling.Ignore ensures the field is omitted from
+        // The property name matches the key used by the original PushIt
+        // settings file ("DataPath") so old files are migrated correctly.
+        // NullValueHandling.Ignore ensures the field is omitted from
         // JSON on the first save after migration.
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string? DataPath { get; set; }

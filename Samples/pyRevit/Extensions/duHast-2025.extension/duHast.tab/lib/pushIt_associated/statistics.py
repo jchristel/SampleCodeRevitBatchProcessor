@@ -26,8 +26,8 @@ from duHast.Utilities.Objects.result import Result
 from Autodesk.Revit.DB import Element, WorksharingUtils
 
 from pushIt_associated.utils.utilities import (
-    get_unique_id_parameter_from_data_file, 
-    get_data_path_and_supported_categories, 
+    get_unique_id_parameter,
+    get_push_it_data_source,
     get_family_instances_of_supported_categories,
     sort_families_by_parameter_value,
 )
@@ -82,16 +82,16 @@ def basic_stats_entry(doc,  uiapp, output, forms):
     # set up a status tracker
     return_value = Result()
 
-    data_path, supported_category_names = get_data_path_and_supported_categories()
-    if data_path is None or supported_category_names is None:
-        return_value.update_sep(False, "Invalid data path or supported categories")
+    data_source = get_push_it_data_source()
+    if data_source is None:
+        return_value.update_sep(False, "Invalid data source or supported categories")
         return return_value
-    
+
+    supported_category_names = data_source.enabled_category_names
     print("Supported categories: {}".format(supported_category_names))
 
-    # read the data file and get the first column since it will contain the unique id parameter info by which to sort
-    # push it rooms and design options by
-    parameter_name, parameter_guid = get_unique_id_parameter_from_data_file(data_path)
+    # get the unique id parameter info by which to sort push it rooms and design options by
+    parameter_name, parameter_guid = get_unique_id_parameter(data_source)
     if parameter_name is None or parameter_guid is None:
         return_value.update_sep(False, "Invalid parameter name or guid")
         return return_value

@@ -12,6 +12,7 @@
     --fill: #e4ddc9;
     --fill-hover: #d4c9a8;
     --accent: #b4541f;
+    --error: #c98c86;
     --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
   }
   * { box-sizing: border-box; }
@@ -45,6 +46,57 @@
   }
   header .meta.stale { color: var(--ink); opacity: 0.5; }
 
+  /* --- project / building / level pickers, all in the header row --- */
+  header select.picker {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--ink);
+    padding: 0.25rem 0.5rem;
+  }
+  header select.picker.hidden { display: none; }
+
+  /* --- data-validation badge (header) + side panel --- */
+  header button.validation-toggle {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--ink);
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+  }
+  header button.validation-toggle.issues { border-color: var(--accent); color: var(--accent); }
+  header button.validation-toggle.hidden { display: none; }
+
+  .validation-panel {
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 320px;
+    max-width: 80%;
+    background: rgba(243, 239, 230, 0.97);
+    border-left: 1px solid var(--ink);
+    padding: 1rem 1.1rem;
+    overflow-y: auto;
+    font-size: 0.72rem;
+  }
+  .validation-panel.hidden { display: none; }
+  .validation-panel h2 {
+    font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
+    opacity: 0.6; margin: 0 0 0.75rem;
+  }
+  .validation-panel section { margin-bottom: 1rem; }
+  .validation-panel section h3 { font-size: 0.68rem; margin: 0 0 0.35rem; }
+  .validation-panel ul { margin: 0; padding-left: 1.1rem; }
+  .validation-panel .mismatch { margin-bottom: 0.3rem; }
+  .validation-panel .ok { opacity: 0.6; }
+  .validation-panel button.refresh {
+    font-family: var(--mono); font-size: 0.68rem; background: var(--paper);
+    color: var(--ink); border: 1px solid var(--ink); padding: 0.25rem 0.5rem;
+    cursor: pointer; margin-bottom: 0.75rem;
+  }
+
   main { position: relative; overflow: hidden; }
 
   svg { width: 100%; height: 100%; display: block; cursor: grab; }
@@ -55,61 +107,14 @@
   .room { fill: var(--fill); stroke: var(--ink); stroke-width: 1.5;
           stroke-linejoin: round; transition: fill 0.12s ease; vector-effect: non-scaling-stroke; }
   .room:hover { fill: var(--fill-hover); }
+  .room.error { fill: var(--error); }
+  .room.error:hover { fill: var(--accent); }
   .hole { fill: var(--paper); stroke: var(--ink); stroke-width: 1;
           stroke-dasharray: 4 3; vector-effect: non-scaling-stroke; }
 
   .label { fill: var(--ink); text-anchor: middle;
            dominant-baseline: middle; pointer-events: none; }
   .label .tag { fill: var(--accent); letter-spacing: 0.05em; }
-
-  /* --- level slider, a vertical "stack of floors" control on the left --- */
-  .levels {
-    position: absolute;
-    top: 1.25rem;
-    left: 1.25rem;
-    background: rgba(243, 239, 230, 0.92);
-    border: 1px solid var(--ink);
-    padding: 0.75rem 0.9rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    max-height: calc(100% - 2.5rem);
-  }
-  .levels .heading {
-    font-size: 0.6rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    opacity: 0.6;
-  }
-  .levels .stack {
-    display: flex;
-    flex-direction: column-reverse; /* highest elevation on top */
-    gap: 2px;
-    overflow-y: auto;
-  }
-  .levels button {
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    text-align: left;
-    padding: 0.35rem 0.6rem;
-    background: transparent;
-    color: var(--ink);
-    border: 1px solid transparent;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    white-space: nowrap;
-  }
-  .levels button:hover { border-color: var(--rule); }
-  .levels button.active {
-    background: var(--ink);
-    color: var(--paper);
-  }
-  .levels button .elev { opacity: 0.55; font-size: 0.66rem; }
-  .levels button.active .elev { opacity: 0.8; }
-  .levels .count { font-size: 0.6rem; opacity: 0.5; }
-  .levels.hidden { display: none; }
 
   .empty {
     position: absolute; inset: 0; display: grid; place-content: center;
@@ -124,17 +129,25 @@
 <body>
   <header>
     <h1>Room Plan</h1>
+    <select class="picker hidden" id="projectSelect"></select>
+    <select class="picker hidden" id="buildingSelect"></select>
+    <select class="picker hidden" id="milestoneSelect"></select>
+    <select class="picker hidden" id="levelSelect"></select>
+    <button class="validation-toggle hidden" id="validationToggle"></button>
     <span class="meta" id="meta">waiting for data</span>
+    <a href="/settings.html" style="margin-left:auto; color:var(--accent); font-size:0.72rem; text-decoration:none;">settings</a>
   </header>
   <main>
     <svg id="plan" xmlns="http://www.w3.org/2000/svg"></svg>
-    <div class="levels hidden" id="levels">
-      <div class="heading">Levels</div>
-      <div class="stack" id="levelStack"></div>
-    </div>
     <div class="empty" id="empty">
       <strong>No rooms received yet</strong>
       <span>POST your room JSON to <code>/rooms</code> from Revit, then this updates.</span>
+    </div>
+    <div class="validation-panel hidden" id="validationPanel">
+      <h2>Data Validation</h2>
+      <button class="refresh" id="validationRefresh">Refresh</button>
+      <button class="refresh" id="validationDownload">Download CSV</button>
+      <div id="validationBody"></div>
     </div>
   </main>
 
@@ -143,8 +156,15 @@ const SVG = "http://www.w3.org/2000/svg";
 const plan = document.getElementById("plan");
 const meta = document.getElementById("meta");
 const empty = document.getElementById("empty");
-const levelsEl = document.getElementById("levels");
-const levelStack = document.getElementById("levelStack");
+const projectSelect = document.getElementById("projectSelect");
+const buildingSelect = document.getElementById("buildingSelect");
+const milestoneSelect = document.getElementById("milestoneSelect");
+const levelSelect = document.getElementById("levelSelect");
+const validationToggle = document.getElementById("validationToggle");
+const validationPanel = document.getElementById("validationPanel");
+const validationRefresh = document.getElementById("validationRefresh");
+const validationDownload = document.getElementById("validationDownload");
+const validationBody = document.getElementById("validationBody");
 
 // --- view transform state ---
 let view = { x: 0, y: 0, w: 100, h: 100 };
@@ -154,6 +174,25 @@ let lastPayloadJson = null;
 // --- level state ---
 let currentPayload = null;   // last rendered payload
 let activeLevelId = null;    // which level is shown
+
+// --- scope state: which project/building /rooms is currently fetching ---
+let currentProjectId = null;
+let currentBuildingKey = null;    // opaque key from /projects/{id}/buildings; null = no filter
+let currentMilestone = null;      // milestone name from /projects/{id}/milestones; null = Latest
+let lastProjectIds = null;        // for diffing the periodic /projects refresh
+let lastBuildingsSignature = null;
+let lastMilestonesSignature = null;
+
+// --- validation panel state ---
+let currentValidation = null;     // last-fetched ValidationResponse, for CSV export
+let errorRoomIds = new Set();     // every room id with >=1 issue, for highlighting
+let showErrors = false;           // highlight only while the panel is open
+
+async function fetchJson(url) {
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) throw new Error(`${url} -> ${res.status}`);
+  return res.json();
+}
 
 function setViewBox() {
   plan.setAttribute("viewBox", `${view.x} ${view.y} ${view.w} ${view.h}`);
@@ -261,12 +300,19 @@ function renderLevel(payload, levelId, { refit = true } = {}) {
     g.appendChild(line(fitted.x, gy, fitted.x + fitted.w, gy));
   plan.appendChild(g);
 
+  // Two passes, not one: every room's polygons first, then every room's
+  // label. SVG has no reliable z-index — paint order is DOM order, full
+  // stop — so interleaving polygon-then-label per room (as a single loop
+  // would) lets a later room's opaque fill paint over an earlier room's
+  // label whenever their screen-space boxes are anywhere close. Appending
+  // all polygons before any label guarantees labels always sit on top,
+  // regardless of room order in the data.
   for (const room of rooms) {
     if (!room.loops || room.loops.length === 0) continue;
 
     const outer = document.createElementNS(SVG, "polygon");
     outer.setAttribute("points", pointsAttr(room.loops[0]));
-    outer.setAttribute("class", "room");
+    outer.setAttribute("class", showErrors && errorRoomIds.has(room.id) ? "room error" : "room");
     outer.appendChild(titleEl(room.name || room.id));
     plan.appendChild(outer);
 
@@ -276,18 +322,40 @@ function renderLevel(payload, levelId, { refit = true } = {}) {
       hole.setAttribute("class", "hole");
       plan.appendChild(hole);
     }
+  }
 
+  for (const room of rooms) {
+    if (!room.loops || room.loops.length === 0) continue;
     addLabel(room, baseFont);
   }
 }
 
+// `room.label` is the server-resolved, ordered list of fields configured by
+// settings.toml's `room_label` (see STRATEGY-SERVER.md) — the browser just
+// renders whatever it's given, no property names hardcoded here. The first
+// field is the large primary line; any further fields stack below as
+// smaller accent-colored lines, generalizing the old fixed name+id layout to
+// however many fields are configured.
+//
+// `room.label` present but empty means this room's configured properties
+// genuinely didn't resolve (respect that — no label, don't guess); `room.label`
+// altogether missing (an older payload, pre-dating this feature) falls back
+// to today's previous default.
 function addLabel(room, baseFont) {
+  const fields = room.label !== undefined ? room.label : [room.name || room.id].filter(Boolean);
+  if (fields.length === 0) return;
+
   const box = loopBox(room.loops[0]);
-  const name = room.name || "(unnamed)";
-  const widthLimited = (box.w * 0.9) / Math.max(name.length, 1) / 0.6;
-  const heightLimited = box.h * 0.4;
+  const longest = fields.reduce((n, f) => Math.max(n, String(f).length), 1);
+  const widthLimited = (box.w * 0.9) / longest / 0.6;
+  // Budget for `fields.length` stacked lines: the primary line (1 unit) plus
+  // each secondary line (~0.7 units, matching its smaller font-size below).
+  const heightLimited = (box.h * 0.8) / (1 + 0.7 * (fields.length - 1));
   const fontSize = Math.min(baseFont, widthLimited, heightLimited);
-  if (fontSize < baseFont * 0.25) return;
+  // No longer dropped below a size threshold — always render clamped to fit
+  // this room, however small; the user zooms in to read a tiny one. Only
+  // guard against a genuinely degenerate (zero/negative) computed size.
+  if (!(fontSize > 0)) return;
 
   const c = centroid(room.loops[0]);
   const label = document.createElementNS(SVG, "text");
@@ -296,18 +364,18 @@ function addLabel(room, baseFont) {
   label.setAttribute("y", c.y);
   label.setAttribute("font-size", fontSize);
 
-  const nameSpan = document.createElementNS(SVG, "tspan");
-  nameSpan.textContent = name;
-  nameSpan.setAttribute("x", c.x);
+  fields.forEach((text, i) => {
+    const span = document.createElementNS(SVG, "tspan");
+    span.setAttribute("x", c.x);
+    span.textContent = text;
+    if (i > 0) {
+      span.setAttribute("class", "tag");
+      span.setAttribute("dy", "1.2em");
+      span.setAttribute("font-size", fontSize * 0.7);
+    }
+    label.appendChild(span);
+  });
 
-  const tag = document.createElementNS(SVG, "tspan");
-  tag.setAttribute("class", "tag");
-  tag.setAttribute("x", c.x);
-  tag.setAttribute("dy", "1.2em");
-  tag.setAttribute("font-size", fontSize * 0.7);
-  tag.textContent = room.id;
-
-  label.append(nameSpan, tag);
   plan.appendChild(label);
 }
 
@@ -323,36 +391,308 @@ function titleEl(text) {
   return t;
 }
 
-// Build the level buttons. column-reverse in CSS puts highest elevation at top.
+// Populate the level picker, highest elevation first (a <select> has no
+// CSS-driven reversal the old floor-stack relied on, so sort explicitly here;
+// `levelsForPayload`'s own ascending order — used elsewhere for the default
+// "lowest level" selection — is untouched).
 function buildLevelControl(payload, levels) {
-  levelStack.replaceChildren();
-  for (const lvl of levels) {
+  levelSelect.replaceChildren();
+  const ordered = levels.slice().sort((a, b) => b.elevation - a.elevation);
+  for (const lvl of ordered) {
     const count = roomsOnLevel(payload, lvl.id).length;
-    const btn = document.createElement("button");
-    btn.dataset.levelId = lvl.id;
-    if (lvl.id === activeLevelId) btn.classList.add("active");
-
-    const left = document.createElement("span");
-    left.textContent = lvl.name;
-    const right = document.createElement("span");
-    right.className = "elev";
-    right.textContent = `${count} rm`;
-
-    btn.append(left, right);
-    btn.addEventListener("click", () => selectLevel(lvl.id));
-    levelStack.appendChild(btn);
+    const opt = document.createElement("option");
+    opt.value = lvl.id;
+    opt.textContent = `${lvl.name} (${count} rm)`;
+    if (lvl.id === activeLevelId) opt.selected = true;
+    levelSelect.appendChild(opt);
   }
-  levelsEl.classList.toggle("hidden", levels.length <= 1);
+  levelSelect.classList.toggle("hidden", levels.length <= 1);
 }
 
 function selectLevel(levelId) {
   if (!currentPayload) return;
   activeLevelId = levelId;
-  for (const btn of levelStack.children)
-    btn.classList.toggle("active", btn.dataset.levelId === levelId);
   renderLevel(currentPayload, levelId, { refit: true });
   updateMeta();
 }
+levelSelect.addEventListener("change", () => selectLevel(levelSelect.value));
+
+// --- project / building pickers ---
+
+function populateProjectSelect(projects) {
+  const prevValue = projectSelect.value;
+  projectSelect.replaceChildren();
+  for (const p of projects) {
+    const opt = document.createElement("option");
+    opt.value = p.id;
+    opt.textContent = p.name;
+    projectSelect.appendChild(opt);
+  }
+  projectSelect.classList.toggle("hidden", projects.length <= 1);
+  if (projects.some(p => p.id === prevValue)) projectSelect.value = prevValue;
+}
+
+function populateBuildingSelect(data) {
+  const prevValue = buildingSelect.value;
+  buildingSelect.replaceChildren();
+  for (const b of data.buildings) {
+    const opt = document.createElement("option");
+    opt.value = b.key;
+    // `ambiguous` means another building shares this name; append the code so
+    // the two options are distinguishable. A same-name entry with no code has
+    // nothing to append — its code-bearing twin carries the distinction.
+    let label = b.unclassified ? "Unclassified" : (b.name || b.code || b.key);
+    if (b.ambiguous && b.name && b.code) label = `${b.name} (${b.code})`;
+    opt.textContent = label;
+    buildingSelect.appendChild(opt);
+  }
+  buildingSelect.classList.toggle("hidden", data.buildings.length <= 1);
+  if (data.buildings.some(b => b.key === prevValue)) buildingSelect.value = prevValue;
+}
+
+function populateMilestoneSelect(data) {
+  const prevValue = milestoneSelect.value;
+  milestoneSelect.replaceChildren();
+  const latest = document.createElement("option");
+  latest.value = ""; // empty value = no milestone filter = each model's latest
+  latest.textContent = "Latest";
+  milestoneSelect.appendChild(latest);
+  for (const m of data.milestones) {
+    const opt = document.createElement("option");
+    opt.value = m.name; // the name is the milestone's identity server-side
+    opt.textContent = `${m.name} (${m.date})`;
+    milestoneSelect.appendChild(opt);
+  }
+  // Hidden when the project defines no milestones — unlike project/building's
+  // <=1 rule, "Latest" alone is not a choice worth showing a picker for.
+  milestoneSelect.classList.toggle("hidden", data.milestones.length === 0);
+  if (data.milestones.some(m => m.name === prevValue)) milestoneSelect.value = prevValue;
+}
+
+// Fetch the known projects; auto-select if there's exactly one and the
+// current selection (if any) no longer exists. Diffs against the last-seen
+// id list so it doesn't fight an in-progress user selection every tick.
+async function loadProjects() {
+  let projects;
+  try {
+    projects = await fetchJson("/projects");
+  } catch (err) {
+    return; // leave the current selection alone; poll() reports connection loss
+  }
+  const ids = projects.map(p => p.id).join(",");
+  if (ids === lastProjectIds) return;
+  lastProjectIds = ids;
+  populateProjectSelect(projects);
+
+  if (!projects.some(p => p.id === currentProjectId)) {
+    currentProjectId = projects.length ? projects[0].id : null;
+    lastBuildingsSignature = null; // force a buildings refresh for the new project
+    lastMilestonesSignature = null; // ...and a milestones refresh
+    currentMilestone = null;        // a milestone belongs to its project
+    loadValidation(currentProjectId); // project (re)established -- refresh once, not every tick
+  }
+  if (currentProjectId) {
+    await loadBuildingsForProject(currentProjectId);
+    await loadMilestonesForProject(currentProjectId);
+  }
+}
+
+// --- data validation panel ---
+//
+// An on-demand health check (does every room have a value for the dRofus
+// link property, are those values unique, does each match a dRofus record,
+// do matched rooms' reconciled fields agree), not something to watch update
+// live -- deliberately not part of the 2s room poll. Fetched only when the
+// project selection changes, or via the panel's own Refresh button.
+
+function section(title, items, renderItem) {
+  if (items.length === 0) return "";
+  return `<section><h3>${title} (${items.length})</h3><ul>${items.map(renderItem).join("")}</ul></section>`;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+
+// Informational, not a data-quality error: which dRofus fields this pass
+// actually checks (and against which Revit property), so it stays out of
+// `errorRoomIds`/the issue count and is shown regardless of whether any
+// issues were found -- built separately from `html` below so it survives the
+// "No issues found" collapse instead of disappearing with it.
+function renderFieldCoverage(coverage) {
+  if (!coverage || coverage.length === 0) return "";
+  return `<section><h3>Field coverage (${coverage.length})</h3><ul>${coverage.map(c =>
+    `<li class="${c.checked ? "ok" : ""}">${escapeHtml(c.label)}: ${c.checked ? "yes" : "no"}`
+    + `${c.revit_property ? ` (${escapeHtml(c.revit_property)})` : ""}</li>`
+  ).join("")}</ul></section>`;
+}
+
+function renderValidation(data) {
+  currentValidation = data;
+
+  if (!data.drofus_configured) {
+    validationToggle.classList.add("hidden");
+    validationPanel.classList.add("hidden");
+    errorRoomIds = new Set();
+    return;
+  }
+
+  errorRoomIds = new Set([
+    ...data.rooms_missing_link_value,
+    ...data.duplicate_link_values.flatMap(d => d.room_ids),
+    ...data.rooms_unmatched_in_drofus,
+    ...data.property_mismatches.map(m => m.room_id),
+    ...data.fields_absent_in_revit.map(m => m.room_id),
+    ...data.fields_empty_in_revit.map(m => m.room_id),
+  ]);
+  if (showErrors && currentPayload && activeLevelId) {
+    renderLevel(currentPayload, activeLevelId, { refit: false });
+  }
+
+  const issueCount = data.rooms_missing_link_value.length + data.duplicate_link_values.length
+    + data.rooms_unmatched_in_drofus.length + data.property_mismatches.length
+    + data.fields_absent_in_revit.length + data.fields_empty_in_revit.length;
+
+  validationToggle.classList.remove("hidden");
+  validationToggle.textContent = issueCount ? `⚠ ${issueCount}` : "✓";
+  validationToggle.classList.toggle("issues", issueCount > 0);
+
+  const html = [
+    `<p>${data.total_rooms} room(s) checked against link property <strong>${escapeHtml(data.link_property)}</strong>.</p>`,
+    section("Missing link value", data.rooms_missing_link_value, id => `<li>${escapeHtml(id)}</li>`),
+    section("Duplicate link values", data.duplicate_link_values,
+      d => `<li>${escapeHtml(d.value)}: ${d.room_ids.map(escapeHtml).join(", ")}</li>`),
+    section("Unmatched in dRofus", data.rooms_unmatched_in_drofus, id => `<li>${escapeHtml(id)}</li>`),
+    section("Property mismatches", data.property_mismatches, m =>
+      `<li class="mismatch">room ${escapeHtml(m.room_id)} · ${escapeHtml(m.field)}: `
+      + `"${escapeHtml(m.room_value)}" vs dRofus "${escapeHtml(m.drofus_value)}"</li>`),
+    section("Field absent in Revit", data.fields_absent_in_revit, m =>
+      `<li class="mismatch">room ${escapeHtml(m.room_id)} · ${escapeHtml(m.field)}</li>`),
+    section("Field empty in Revit", data.fields_empty_in_revit, m =>
+      `<li class="mismatch">room ${escapeHtml(m.room_id)} · ${escapeHtml(m.field)}</li>`),
+  ].join("");
+
+  validationBody.innerHTML = (issueCount ? html : `<p class="ok">No issues found.</p>`)
+    + renderFieldCoverage(data.field_coverage);
+}
+
+async function loadValidation(projectId) {
+  if (!projectId) return;
+  try {
+    const data = await fetchJson(`/projects/${encodeURIComponent(projectId)}/validation`);
+    renderValidation(data);
+  } catch (err) {
+    // transient fetch failure -- leave the last-known validation state alone
+  }
+}
+
+// CSV export stays entirely client-side -- the browser already has the full
+// report in memory the moment the panel loads, and a CSV is just a different
+// presentation of the same data, not something the server needs to know how
+// to produce (axum stays a pure JSON API).
+function csvEscape(value) {
+  const s = String(value);
+  return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+function buildValidationCsv(data) {
+  const rows = [["room_id", "error"]];
+  for (const id of data.rooms_missing_link_value) rows.push([id, "missing link value"]);
+  for (const dup of data.duplicate_link_values)
+    for (const id of dup.room_ids) rows.push([id, `duplicate link value: ${dup.value}`]);
+  for (const id of data.rooms_unmatched_in_drofus) rows.push([id, "unmatched in dRofus"]);
+  for (const m of data.property_mismatches)
+    rows.push([m.room_id, `property mismatch: ${m.field} (room="${m.room_value}" vs dRofus="${m.drofus_value}")`]);
+  for (const m of data.fields_absent_in_revit) rows.push([m.room_id, `field absent in Revit: ${m.field}`]);
+  for (const m of data.fields_empty_in_revit) rows.push([m.room_id, `field empty in Revit: ${m.field}`]);
+  return rows.map(r => r.map(csvEscape).join(",")).join("\r\n");
+}
+
+function downloadValidationCsv() {
+  if (!currentValidation || !currentValidation.drofus_configured) return;
+  const csv = buildValidationCsv(currentValidation);
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `validation-${currentProjectId || "project"}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+validationToggle.addEventListener("click", () => {
+  validationPanel.classList.toggle("hidden");
+  showErrors = !validationPanel.classList.contains("hidden");
+  if (currentPayload && activeLevelId) renderLevel(currentPayload, activeLevelId, { refit: false });
+});
+validationRefresh.addEventListener("click", () => loadValidation(currentProjectId));
+validationDownload.addEventListener("click", downloadValidationCsv);
+
+// Fetch the buildings within one project; auto-select if there's exactly one
+// (or none configured at all, meaning "everything in this project").
+async function loadBuildingsForProject(projectId) {
+  let data;
+  try {
+    data = await fetchJson(`/projects/${encodeURIComponent(projectId)}/buildings`);
+  } catch (err) {
+    return;
+  }
+  const signature = `${data.tier_configured}:${data.buildings.map(b => b.key).join(",")}`;
+  if (signature === lastBuildingsSignature) return;
+  lastBuildingsSignature = signature;
+  populateBuildingSelect(data);
+
+  if (!data.buildings.some(b => b.key === currentBuildingKey)) {
+    currentBuildingKey = data.buildings.length ? data.buildings[0].key : null;
+  }
+}
+
+// Fetch one project's milestones for the picker; same signature-diff gating
+// as buildings so the 2s refresh doesn't fight an in-progress selection. If
+// the selected milestone disappeared (deleted/renamed in settings), fall back
+// to Latest rather than silently keeping a filter the server can't answer.
+async function loadMilestonesForProject(projectId) {
+  let data;
+  try {
+    data = await fetchJson(`/projects/${encodeURIComponent(projectId)}/milestones`);
+  } catch (err) {
+    return;
+  }
+  const signature = data.milestones.map(m => `${m.name}@${m.date}`).join(",");
+  if (signature === lastMilestonesSignature) return;
+  lastMilestonesSignature = signature;
+  populateMilestoneSelect(data);
+
+  if (currentMilestone && !data.milestones.some(m => m.name === currentMilestone)) {
+    currentMilestone = null;
+    milestoneSelect.value = "";
+    lastPayloadJson = null; // selection changed under us -> re-render on next tick
+  }
+}
+
+projectSelect.addEventListener("change", async () => {
+  currentProjectId = projectSelect.value;
+  currentBuildingKey = null;
+  lastBuildingsSignature = null;
+  currentMilestone = null;
+  lastMilestonesSignature = null;
+  await loadBuildingsForProject(currentProjectId);
+  await loadMilestonesForProject(currentProjectId);
+  loadValidation(currentProjectId);
+  lastPayloadJson = null; // force the next poll tick to render immediately
+});
+
+buildingSelect.addEventListener("change", () => {
+  currentBuildingKey = buildingSelect.value;
+  lastPayloadJson = null; // force the next poll tick to render immediately
+});
+
+milestoneSelect.addEventListener("change", () => {
+  currentMilestone = milestoneSelect.value || null; // "" = Latest
+  lastPayloadJson = null; // force the next poll tick to render immediately
+});
 
 function updateMeta() {
   if (!currentPayload) return;
@@ -408,9 +748,22 @@ plan.addEventListener("wheel", e => {
 plan.addEventListener("dblclick", () => { view = { ...fitted }; setViewBox(); });
 
 // --- polling ---
+
+// Build /rooms's URL from the current project/building/milestone selection.
+// Nothing selected -> today's unscoped "merge everything" behaviour. The
+// milestone only rides along with its project — it's a per-project name.
+function roomsUrl() {
+  const params = new URLSearchParams();
+  if (currentProjectId) params.set("project", currentProjectId);
+  if (currentBuildingKey) params.set("building", currentBuildingKey);
+  if (currentProjectId && currentMilestone) params.set("milestone", currentMilestone);
+  const qs = params.toString();
+  return qs ? `/rooms?${qs}` : "/rooms";
+}
+
 async function poll() {
   try {
-    const res = await fetch("/rooms", { cache: "no-store" });
+    const res = await fetch(roomsUrl(), { cache: "no-store" });
     if (res.status === 204) { meta.textContent = "waiting for data"; meta.classList.add("stale"); return; }
     if (!res.ok) throw new Error(res.status);
     const payload = await res.json();
@@ -423,8 +776,16 @@ async function poll() {
     meta.textContent = "connection lost"; meta.classList.add("stale");
   }
 }
-poll();
-setInterval(poll, 2000);
+
+// Each tick: refresh the project/building pickers (cheap, in-memory-derived;
+// this is also how a newly-pushed project/building shows up without a page
+// reload), then fetch rooms scoped to whatever's currently selected.
+async function tick() {
+  await loadProjects();
+  await poll();
+}
+tick();
+setInterval(tick, 2000);
 </script>
 </body>
 </html>

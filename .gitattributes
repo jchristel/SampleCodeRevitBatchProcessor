@@ -1,0 +1,37 @@
+# Line-ending policy, so working-tree endings stop depending on each clone's
+# core.autocrlf setting. Text files are stored LF in the repo; git detects
+# binary content on its own and leaves it alone.
+* text=auto
+
+# Source and config: LF in the working tree on every platform (matches
+# rustfmt/tooling defaults; pyRevit/IronPython reads LF fine).
+*.rs   text eol=lf
+*.py   text eol=lf
+*.toml text eol=lf
+*.json text eol=lf
+*.md   text eol=lf
+*.html text eol=lf
+*.css  text eol=lf
+*.js   text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+
+# Windows-only scripts: CRLF in the working tree (cmd.exe is picky about it).
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Visual Studio keeps its own files CRLF.
+*.sln    text eol=crlf
+*.csproj text eol=crlf
+
+# Never touch: binary assets git's auto-detection should not second-guess.
+*.rvt binary
+*.rfa binary
+*.rte binary
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.dll binary
+*.exe binary

@@ -1,0 +1,283 @@
+//! roommate's MCP server: exposes the read side (`list_projects`,
+//! `list_buildings`, `get_rooms`, `get_validation`, `list_snapshots`,
+//! `get_latest_snapshot`, `list_milestones`) as MCP tools over stdio, one
+//! per existing HTTP read route. Each tool is a thin adapter over
+//! `roommate::service` -- parse params, call one service function, serialize
+//! the result -- exactly like the Axum handlers in `roommate::handlers`, just
+//! a second transport over the same domain layer. See
+//! HANDOVER-service-layer.md.
+//!
+//! Ingest (`POST /rooms`) has no MCP equivalent here: an MCP client asking an
+//! LLM to push a full room snapshot isn't a realistic flow, and the HTTP
+//! server remains the ingest path.
+//!
+//! Run as a client-spawned subprocess (e.g. from an MCP host's config) --
+//! stdout is reserved for the JSON-RPC stream, so all logging goes to
+//! stderr. This is a distinct OS process from any running HTTP server: it
+//! only sees the same room data if pointed at the same `[storage]` root via
+//! `--server-settings`, since `MemStore` state isn't shared across processes.
+
+use std::path::PathBuf;
+
+use clap::Parser;
+use rmcp::{
+    handler::server::{router::tool::ToolRouter, wrapper::Parameters},
+    model::{CallToolResult, ContentBlock, Implementation, ServerCapabilities, ServerInfo},
+    schemars, tool, tool_handler, tool_router,
+    transport::stdio,
+    ErrorData as McpError, ServerHandler, ServiceExt,
+};
+
+use roommate::bootstrap::build_state;
+use roommate::service::{milestones, projects, rooms, snapshots, validation, ServiceError};
+use roommate::settings_api::{self, SettingsError};
+use roommate::state::Shared;
+
+#[derive(Debug, serde::Deserialize, schemars::JsonSchema)]
+struct ProjectIdParams {
+    /// The project id, as returned by `list_projects`.
+    project_id: String,
+}
+
+#[derive(Debug, serde::Deserialize, schemars::JsonSchema)]
+struct ModelIdParams {
+    /// The project id, as returned by `list_projects`.
+    project_id: String,
+    /// The model id, as returned by `list_snapshots`.
+    model_id: String,
+}
+
+#[derive(Debug, serde::Deserialize, schemars::JsonSchema)]
+struct GetRoomsParams {
+    /// Scope the merge to one project id. Omit to merge every stored model.
+    #[serde(default)]
+    project: Option<String>,
+    /// Opaque building key from `list_buildings`. Omit for no building filter.
+    #[serde(default)]
+    building: Option<String>,
+    /// Milestone name from `list_milestones`: serve the snapshots that
+    /// milestone pins instead of each model's latest. Omit for latest.
+    #[serde(default)]
+    milestone: Option<String>,
+}
+
+/// Serialize any service response into a single text content block -- the
+/// same `Serialize` types the HTTP handlers already return as JSON, just
+/// wrapped for MCP instead of `axum::Json`.
+fn json_result<T: serde::Serialize>(value: &T) -> Result<CallToolResult, McpError> {
+    let json = serde_json::to_string(value)
+        .map_err(|e| McpError::internal_error(format!("failed to serialize response: {e}"), None))?;
+    Ok(CallToolResult::success(vec![ContentBlock::text(json)]))
+}
+
+/// `ServiceError` -> `McpError`. Only `Internal` exists today (variants join
+/// with their first producer -- see `ServiceError`); it becomes
+/// `internal_error`.
+fn to_mcp_error(err: ServiceError) -> McpError {
+    match err {
+        ServiceError::Internal(e) => {
+            tracing::error!("internal service error: {e:#}");
+            McpError::internal_error(e.to_string(), None)
+        }
+    }
+}
+
+// `tool_router` is read by the `#[tool_handler]`-generated dispatch code,
+// but rustc's dead-code analysis doesn't see through that -- same false
+// positive the rmcp SDK's own examples suppress this way.
+#[allow(dead_code)]
+#[derive(Clone)]
+struct RoommateMcp {
+    state: Shared,
+    tool_router: ToolRouter<RoommateMcp>,
+}
+
+#[tool_router]
+impl RoommateMcp {
+    fn new(state: Shared) -> Self {
+        Self { state, tool_router: Self::tool_router() }
+    }
+
+    /// Lists every project with at least one stored model -- see
+    /// `service::projects::list_projects`.
+    #[tool(description = "List every project with at least one stored model")]
+    fn list_projects(&self) -> Result<CallToolResult, McpError> {
+        let result = projects::list_projects(&self.state).map_err(to_mcp_error)?;
+        json_result(&result)
+    }
+
+    /// Lists the distinct "Building" classification values for one project
+    /// -- see `service::projects::list_buildings`.
+    #[tool(description = "List the distinct Building classification values found in one project's rooms")]
+    fn list_buildings(&self, Parameters(p): Parameters<ProjectIdParams>) -> Result<CallToolResult, McpError> {
+        let result = projects::list_buildings(&self.state, &p.project_id).map_err(to_mcp_error)?;
+        json_result(&result)
+    }
+
+    /// Merges every stored model's levels and rooms, optionally scoped by
+    /// project and building -- see `service::rooms::assemble_rooms`. The
+    /// service's `None` ("nothing has ever been pushed" -- the HTTP 204 case)
+    /// has no MCP status-code equivalent, so it becomes a short plain-text
+    /// answer instead of a JSON body; an LLM client reads either just fine.
+    #[tool(description = "Fetch merged rooms and levels across stored models, optionally scoped by project id, building key, and milestone name. A project whose hierarchy has no 'Building' tier matches nothing under a building filter (check list_buildings' tier_configured before filtering); under a milestone filter, models are served from the snapshots that milestone pins instead of their latest.")]
+    fn get_rooms(&self, Parameters(p): Parameters<GetRoomsParams>) -> Result<CallToolResult, McpError> {
+        let result = rooms::assemble_rooms(&self.state, p.project.as_deref(), p.building.as_deref(), p.milestone.as_deref())
+            .map_err(to_mcp_error)?;
+        match result {
+            None => Ok(CallToolResult::success(vec![ContentBlock::text(
+                "no snapshots have been pushed to this server yet",
+            )])),
+            Some(result) => json_result(&result),
+        }
+    }
+
+    /// Lists one project's milestones (named dated snapshot pins) -- see
+    /// `service::milestones::list_milestones`.
+    #[tool(description = "List one project's milestones: named dates with data snapshots pinned to them, newest first. Pass a milestone's name to get_rooms to view the project as captured at that milestone.")]
+    fn list_milestones(&self, Parameters(p): Parameters<ProjectIdParams>) -> Result<CallToolResult, McpError> {
+        let result = milestones::list_milestones(&self.state, &p.project_id).map_err(to_mcp_error)?;
+        json_result(&result)
+    }
+
+    /// Lists every stored snapshot id for one project, grouped per model --
+    /// see `service::snapshots::list_project_snapshots`.
+    #[tool(description = "List every stored snapshot id (RFC3339 UTC taken_at) for one project, grouped per model, each group carrying its latest")]
+    fn list_snapshots(&self, Parameters(p): Parameters<ProjectIdParams>) -> Result<CallToolResult, McpError> {
+        let result = snapshots::list_project_snapshots(&self.state, &p.project_id).map_err(to_mcp_error)?;
+        json_result(&result)
+    }
+
+    /// The latest snapshot id for one model -- see
+    /// `service::snapshots::latest_snapshot`. The service's `None` (the HTTP
+    /// 404 case) becomes a short plain-text answer, same convention as
+    /// `get_rooms`' empty-store case.
+    #[tool(description = "Get the latest snapshot id (taken_at) for one model of one project")]
+    fn get_latest_snapshot(&self, Parameters(p): Parameters<ModelIdParams>) -> Result<CallToolResult, McpError> {
+        let result = snapshots::latest_snapshot(&self.state, &p.project_id, &p.model_id).map_err(to_mcp_error)?;
+        match result {
+            None => Ok(CallToolResult::success(vec![ContentBlock::text(
+                "no snapshots stored for that project/model",
+            )])),
+            Some(latest) => json_result(&latest),
+        }
+    }
+
+    /// Runs the dRofus reconciliation QA report for one project -- see
+    /// `service::validation::compute_project_validation`.
+    #[tool(description = "Run the dRofus reconciliation validation report for one project")]
+    fn get_validation(&self, Parameters(p): Parameters<ProjectIdParams>) -> Result<CallToolResult, McpError> {
+        let result = validation::compute_project_validation(&self.state, &p.project_id).map_err(to_mcp_error)?;
+        json_result(&result)
+    }
+
+    // Settings tools are READ-ONLY by design: this is a separate process from
+    // the HTTP server, so a write from here could not hot-swap that server's
+    // in-memory registry -- the file and the serving process would silently
+    // disagree until a restart. Mutation stays behind the HTTP settings UI
+    // (see `settings_api`'s module doc), matching the "Read-only access"
+    // contract `get_info` declares.
+
+    /// Lists every project settings file with its headline facts -- see
+    /// `settings_api::list_project_files`.
+    #[tool(description = "List every project settings file (project id, is_default, whether dRofus is configured). \
+                          Reads the files fresh, so a settings change saved through the HTTP UI shows here immediately; \
+                          this process's own get_rooms/get_validation behavior still reflects the settings loaded at its startup.")]
+    fn list_project_settings(&self) -> Result<CallToolResult, McpError> {
+        let dir = self.projects_dir()?;
+        let result = settings_api::list_project_files(&dir).map_err(settings_to_mcp_error)?;
+        json_result(&result)
+    }
+
+    /// One project's parsed settings as JSON -- see
+    /// `settings_api::get_project_file`.
+    #[tool(description = "Get one project's settings (hierarchy, dRofus source, builtin properties, room label, QA fields) as JSON. \
+                          Reads the file fresh, so a settings change saved through the HTTP UI shows here immediately; \
+                          this process's own get_rooms/get_validation behavior still reflects the settings loaded at its startup.")]
+    fn get_project_settings(&self, Parameters(p): Parameters<ProjectIdParams>) -> Result<CallToolResult, McpError> {
+        let dir = self.projects_dir()?;
+        let (file, settings) = settings_api::get_project_file(&dir, &p.project_id).map_err(settings_to_mcp_error)?;
+        json_result(&serde_json::json!({ "file": file, "settings": settings }))
+    }
+
+    /// The `--project-settings` directory this process was started with --
+    /// always present for this binary (the arg is required), so the error arm
+    /// is defensive only.
+    fn projects_dir(&self) -> Result<std::path::PathBuf, McpError> {
+        self.state
+            .projects_dir()
+            .cloned()
+            .ok_or_else(|| McpError::internal_error("no project settings directory configured", None))
+    }
+}
+
+/// `SettingsError` -> `McpError`: caller-addressable problems (unknown id,
+/// invalid input) become `invalid_params`; the rest `internal_error`.
+fn settings_to_mcp_error(err: SettingsError) -> McpError {
+    match err {
+        SettingsError::NotFound(msg) | SettingsError::Invalid(msg) | SettingsError::Conflict(msg) => {
+            McpError::invalid_params(msg, None)
+        }
+        SettingsError::NotFileBacked => {
+            McpError::internal_error("no project settings directory configured", None)
+        }
+        SettingsError::Internal(e) => {
+            tracing::error!("settings read error: {e:#}");
+            McpError::internal_error(e.to_string(), None)
+        }
+    }
+}
+
+#[tool_handler]
+impl ServerHandler for RoommateMcp {
+    fn get_info(&self) -> ServerInfo {
+        // Not `Implementation::from_build_env()` -- it's a plain fn whose body
+        // bakes in `env!()` at *rmcp's own* compile time, so it always reports
+        // "rmcp"/rmcp's version rather than ours (confirmed via a stdio smoke
+        // test). Name and version explicitly instead.
+        ServerInfo::new(ServerCapabilities::builder().enable_tools().build())
+            .with_server_info(Implementation::new("roommate-mcp", env!("CARGO_PKG_VERSION")))
+            .with_instructions(
+                "Read-only access to roommate's stored room and dRofus data. \
+                 Requires the same [storage] root as the HTTP server (via --server-settings) \
+                 to see real data -- this process does not share memory with it."
+                    .to_string(),
+            )
+    }
+}
+
+#[derive(Parser)]
+struct Args {
+    /// Path to the server-wide TOML settings file (same file the HTTP server
+    /// uses via `--server-settings`).
+    #[arg(long)]
+    server_settings: PathBuf,
+
+    /// Path to the directory of per-project TOML settings files (same
+    /// directory the HTTP server uses via `--project-settings`).
+    #[arg(long)]
+    project_settings: PathBuf,
+}
+
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
+    // stderr, never stdout -- stdout is the JSON-RPC transport. Filter on the
+    // *current* crate name (this said "revit_viewer", the crate's old name,
+    // which silently dropped every log event). RUST_LOG still wins when set.
+    tracing_subscriber::fmt()
+        .with_env_filter(
+            tracing_subscriber::EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| tracing_subscriber::EnvFilter::new("roommate=info")),
+        )
+        .with_writer(std::io::stderr)
+        .init();
+
+    let args = Args::parse();
+    let state = build_state(&args.server_settings, &args.project_settings)?;
+
+    let service = RoommateMcp::new(state).serve(stdio()).await.inspect_err(|e| {
+        tracing::error!("serving error: {e:?}");
+    })?;
+    service.waiting().await?;
+
+    Ok(())
+}

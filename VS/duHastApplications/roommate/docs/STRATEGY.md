@@ -1,8 +1,28 @@
 # Roommate — Architecture & Strategy
 
 Notes capturing the design decisions behind the Revit → Rust → browser room
-viewer, and the reasoning for where the project goes next. Written as a
-reference to come back to, not a spec.
+viewer. Written as a reference to come back to, not a spec. Split across five
+docs along the pipeline's own boundaries, so each can be read (and changed)
+without pulling in the others:
+
+- **This doc** — the pipeline overview, the core split principle that governs
+  all three layers, and the current wire contract they all share.
+- **[Sources](STRATEGY-SOURCES.md)** — everything that supplies raw data:
+  the Revit/pyRevit producer and dRofus (today's only external reference
+  source). What each extracts, its raw format, and how the server reconciles
+  property names across sources.
+- **[Server](STRATEGY-SERVER.md)** — the Rust/axum process: data model,
+  storage, classification, settings.
+- **[Browser](STRATEGY-BROWSER.md)** — the SVG viewer: rendering strategy,
+  UI growth path, endpoint design from the fetch side.
+- **[MCP](STRATEGY-MCP.md)** — the stdio MCP server: a second, tool-based
+  front door onto the same read-side logic the server exposes over HTTP.
+
+A change that touches more than one layer (the v5 property rework did all
+three) should update every doc it touches — that's the cost of the split, and
+worth it for how much easier each doc is to read in isolation the rest of the
+time.
+
 
 ## What exists today
 
@@ -10,12 +30,16 @@ A three-part pipeline, decoupled across a process and a language boundary:
 
 1. **Producer (IronPython / pyRevit).** Extracts room outlines and level data
    from a Revit model, translates them into a versioned JSON contract, and
-   POSTs to the local server.
-2. **Server (Rust / axum).** Receives the JSON, holds the latest payload in
-   memory, and serves it back on request. Also serves the viewer page.
+   POSTs to the local server. Declares which producer it is (`model.source`,
+   e.g. `"revit"`) so the server can resolve property names correctly if a
+   second source (e.g. IFC) ever joins Revit. Details: [Sources](STRATEGY-SOURCES.md).
+2. **Server (Rust / axum).** Receives the JSON, holds every model's latest
+   payload keyed by `(project, model)`, persists it (or holds it in memory),
+   and serves it back on request. Also serves the viewer and settings pages.
+   Details: [Server](STRATEGY-SERVER.md).
 3. **Viewer (browser / SVG).** Fetches the payload, draws room outlines as a
    floor plan, with a level slider to switch floors. Polls every 2s so a fresh
-   POST appears without a manual refresh.
+   POST appears without a manual refresh. Details: [Browser](STRATEGY-BROWSER.md).
 
 The three are coupled only by the JSON contract over `localhost:5151`, not by
 the build. Each can evolve independently.
@@ -51,9 +75,17 @@ Rust side does **all processing**. The reasoning matters more than the rule:
   not computed areas. Send level ids and elevations, not pre-sorted orderings.
   The more the JSON is primitives, the less the two sides are coupled to each
   other's assumptions.
-- **Version the schema.** Already practised (v1 → v2 when levels became
-  first-class). A mismatch then surfaces loudly (HTTP 422) instead of silently
-  misrendering.
+- **Version the schema.** Practised through v1 → v5 so far. A mismatch surfaces
+  loudly (HTTP 422) instead of silently misrendering.
+- **Ids and `ElementId` values are 64-bit ints at the source, strings in the
+  contract.** Revit 2024+ made `ElementId` 64-bit (`Int64`); IronPython 2.7 can
+  truncate a large id across the CLR boundary, especially via the deprecated
+  32-bit `IntegerValue`, which fails silently with a wrapped number rather than
+  an error. Rule: read `.Value` and `str()` it at extraction, never touch
+  `IntegerValue`; the contract carries `id`, `level_id`, and any
+  ElementId-storage custom property as `String` for exactly this reason. Rust
+  parses to `i64` only where it actually needs the number, where the width is
+  safe.
 
 ### A caveat to stay honest about
 
@@ -67,7 +99,8 @@ linked models, simplification) is pushed server-side.
 
 **Before optimizing, measure where the seconds actually go** — Revit collection,
 transport, or server processing. If extraction is 8 seconds, agonizing over a
-50ms Rust algorithm is the wrong end.
+50ms Rust algorithm is the wrong end. (Measured: ~840 rooms in ~11s, ~13ms/room,
+almost entirely Revit API time — see [Sources](STRATEGY-SOURCES.md).)
 
 Two related notes:
 
@@ -77,259 +110,14 @@ Two related notes:
   a tight single-threaded loop once overhead is counted. Rayon pays off at scale
   (thousands of independent elements). Measure before parallelizing.
 
-## Transport
-
-Revit add-ins run in-process on .NET. Chosen transport is **HTTP POST to
-localhost** — simplest, most debuggable, language-agnostic, and the same
-`HttpClient` carries over to a future C# add-in. Alternatives considered:
-WebSocket (only if the server needs to push updates back), named pipe (lowest
-latency, more fiddly cross-language), file watch (crude but simple). HTTP is the
-right default for on-demand room exports.
-
-The cost the split adds is **serialization overhead** — extract, JSON-encode,
-send, decode. Almost always worth it for the decoupling, but it is the thing to
-measure on a huge model.
-
-## Rendering: SVG today, and when to move
-
-SVG is the current choice and is likely right for a long time.
-
-- **SVG stays correct** for more vector primitives — annotations, dimension
-  lines, tags, highlighted adjacencies, overlays, clickable/hoverable regions —
-  in the hundreds to low thousands of elements. Every element is a real DOM
-  node, so hit-testing, hover, click, CSS styling, and accessibility come for
-  free. This is why labels and tooltips were trivial to add.
-- **The wall is the DOM**, not the feature set. Performance degrades somewhere
-  in the low tens of thousands of elements (layout/repaint of a huge DOM).
-  SVG also has no render loop — it is retained-mode, so continuous animation
-  (dragging, live cursor feedback) fights the model.
-
-The escalation tiers, if ever needed:
-
-- **Canvas 2D** — immediate-mode, handles far more shapes, natural for
-  draw-on-top with a render loop. Cost: lose DOM-given interactivity; rebuild
-  hit-testing (point-in-polygon), hover, styling by hand.
-- **WebGL / GPU** (PixiJS, regl, deck.gl-style) — hundreds of thousands of
-  elements at 60fps. Real complexity; overkill unless genuinely at that scale.
-
-The trigger to move is **not** "draw shapes on top" (well within SVG's comfort
-zone) but **element count on screen** or **a need for continuous animation**.
-Because the server emits geometry as data, the renderer is swappable without
-touching the server or extractor — so this decision can be deferred until real
-usage demands it. For many architectural-plan cases it never does.
-
-## UI growth: toward a richer browser tool
-
-Goal is a richer browser tool run locally (not a desktop app). The strategy:
-
-- **Keep axum as a pure JSON API. This is the load-bearing decision.** The
-  server emits data over HTTP, never HTML, and never assumes what the UI looks
-  like. Holding this line keeps every later choice reversible and local.
-- **Grow the vanilla JS until it actually hurts** — and that takes longer than
-  expected. More endpoints, a properties panel on click, filters, search,
-  synchronized views can all be plain DOM against the current setup. The real
-  signal to adopt a framework is not a feature but a feeling: manually writing
-  the same state into several DOM places and watching them drift. Adopting one
-  earlier is toolchain overhead for no payoff.
-- **When it hurts, the fork is JS framework vs. Rust+WASM.** Behind axum, either
-  a JS framework (Svelte gentlest, React most-supported) or a Rust+WASM one
-  (Leptos / Dioxus). The project tilts toward **Leptos / Dioxus**: the Rust
-  `Room` / `Level` / processed-geometry structs can be reused directly in the
-  UI, eliminating the recurring friction of re-describing a carefully versioned
-  contract in TypeScript. The trade is a smaller ecosystem and fewer ready-made
-  components — a fair deal for a single-developer tool valuing one language and
-  shared types end to end.
-
-### Endpoints follow fetch lifecycle, not data type
-
-As capabilities are added, give each its own **purpose-shaped endpoint** rather
-than overloading `/rooms`. When processing arrives, `/rooms` stays raw geometry
-and new endpoints (`/adjacencies`, `/levels/{id}/analysis`, etc.) carry the
-derived data. Small endpoints mean any future frontend composes them freely, and
-no presentation assumption gets baked into the data layer.
-
-The principle is **not** "one endpoint per data type" — it is "one endpoint per
-thing fetched independently, on its own schedule, by its own consumer." The
-test: *would this ever be fetched on a different trigger, or be expensive enough
-that it shouldn't sit in the default payload?*
-
-- **No → keep it in the snapshot.** Levels are a worked example: the viewer needs
-  levels and rooms *together*, in the same render pass, from the same POST. They
-  share a lifecycle (one export, one payload, one fetch). Splitting them would
-  mean two requests that always travel together, recombined client-side, with a
-  race between them — cost, no benefit. Levels stay inside the payload.
-- **Yes → own endpoint.** Derived/computed data that is recomputed on a
-  different trigger, sized differently, or consumed by a different part of the
-  UI: an adjacency graph, per-level analysis fetched only when a level is
-  selected, full detail on one room for a properties panel.
-
-This also means the processing layer and the endpoint that exposes it tend to
-arrive in the same move: add the algorithm, add the endpoint.
-
-## Data model: project → model → snapshot → {levels, rooms}
-
-The moment the server *stores* data rather than relaying it, "the latest
-payload" stops being meaningful — latest *for what?* Stored data needs a key
-saying which thing each snapshot is a version of. This is the general form of
-the multi-document overwrite bug: without identity, two buildings POSTed to the
-same server overwrite each other.
-
-The committed hierarchy is **project → model → snapshot(timestamped) →
-{levels, rooms}**. Each level earns its place; collapsing two of them forces a
-later migration.
-
-- **Project** — the human-meaningful container ("the hospital job"). Stable,
-  long-lived, mostly identity + display metadata (name, number, client). Groups
-  models that belong together. The level a user thinks in.
-- **Model** — a single Revit file. One project routinely has several:
-  architectural, structural, linked consultant models, each POSTing
-  independently. This is exactly the `pick_document` multi-select case — each
-  selected document is a *model* under one *project*. Collapsing model into
-  project reintroduces the overwrite bug. The stable Revit identity (model GUID)
-  lives here, since a GUID identifies a *file*, not a job.
-- **Snapshot** — one timestamped push of one model. This is what makes it a
-  *store* rather than a relay. Every export creates a snapshot; the model
-  accumulates them. Keeping all (full history) vs. latest-only is a retention
-  choice deferrable to later — but snapshot being its own level is what makes
-  "this floor as it was last Tuesday" or "what changed since last push"
-  *possible* without restructuring.
-- **{levels, rooms}** — payload content scoped to a snapshot. Stays together for
-  the fetch-lifecycle reason above; the hierarchy over it is about identity and
-  versioning, this layer is the geometry.
-
-### Identity
-
-Each level needs its own key, keying downward:
-
-- **Project id** — stable, user-assigned or generated.
-- **Model id** — lean on the **Revit model GUID**: stable across renames,
-  unique per file. Prefer it over file name (which forks the record on rename).
-- **Snapshot id** — a timestamp is the natural key; source it from the export's
-  existing `"date processed"` field so it reflects when the model was *read*,
-  not when the server received it.
-- **Room identity is really *(model, room id)*** — raw Revit room ids are only
-  unique within a model, so the same id can appear in two linked models. The
-  hierarchy disambiguates them.
-
-Keep **identity** (immutable, machine-chosen — e.g. the GUID) separate from
-**display metadata** (mutable — name, number). Tie storage to the id, not the
-name, so renaming in Revit does not fork the record.
-
-**Project ids should be globally unique** (a GUID-like key, not "project 1" /
-"project 2" scoped to nothing). Globally unique ids let a project be addressed,
-compared, or later re-parented under an owning entity without collision or
-renumbering — the flexibility is free, so take it even before it is needed.
-
-### Cross-project operations, and whether a top level is needed
-
-Comparing or moving data *between* projects does **not** require a container
-above project. Those are *operations across peers*, not evidence of a shared
-parent — modelling the verb (compare, move) as a noun (a new level) is the
-wrong instinct. A container is justified only when things share a lifecycle or
-ownership; "compare A to B" implies neither.
-
-What cross-project operations actually need:
-
-- **Stable, addressable identity per project** — already provided by the project
-  id. Comparison and move are functions over two ids:
-  `compare(projectA, projectB)`, or a move sourcing from one project id and
-  writing to another. Peers reached by id, no nesting.
-- **A common coordinate frame, for geometry.** The real subtlety, and *not* a
-  hierarchy problem. Each project's rooms sit in their own Revit model space
-  (own origin, own rotation). Comparing footprints or moving a room across
-  projects is meaningless until they share a datum — a shared survey point or an
-  explicit alignment transform between them. No amount of nesting solves this;
-  it is a geometry problem that bites anyone assuming "same structure ⇒
-  comparable."
-
-**When a top level *is* justified:** a real owning entity emerges — a portfolio,
-organization, or client that groups many projects, controls access, or is the
-unit queried at ("all rooms across the hospital network"). That is a genuine
-container with its own identity and metadata, driven by *organizational* need
-(multi-tenancy, access control, rollups), not by the compare/move operations.
-Absent that need, the level is dead weight.
-
-The committed structure blocks neither path: cross-project operations can be
-added without a new level, and an owning level can be added above project later
-without disturbing anything below it — additive, like snapshot history.
-
-### Contract shape (v3)
-
-A pushed payload declares where it sits; the server reads project + model to
-find the slot and creates a snapshot under it.
+## Current contract (v5 — shipped)
 
 ```json
 {
-  "schema_version": 3,
-  "project":  { "id": "...", "name": "Hospital Job" },
-  "model":    { "id": "<revit-guid>", "name": "Project1-ARCH" },
+  "schema_version": 5,
+  "project":  { "id": "p1", "name": "Hospital Job" },
+  "model":    { "id": "<revit-guid>", "name": "Project1-ARCH", "source": "revit" },
   "snapshot": { "taken_at": "2026-05-09T11:13:34Z" },
-  "levels": [ ... ],
-  "rooms":  [ ... ]
-}
-```
-
-### Storage shape follows the hierarchy
-
-In-memory first: `Map<ProjectId, Project>` → `Map<ModelId, Model>` → ordered
-snapshots. Endpoints address into it (`/projects`,
-`/projects/{id}/models`, `/projects/{p}/models/{m}/snapshots/latest`), which is
-where "endpoints follow fetch lifecycle" pays off — the hierarchy gives the URL
-structure for free. This is also where the in-memory `Mutex<Option<Payload>>`
-becomes a keyed map, and later a real datastore if persistence across restarts
-is wanted.
-
-### Commit to the shape, implement incrementally
-
-The *structure* is the decision now; the *machinery* can lag. Sensible first
-step: project + model keying with snapshot = latest-only (one payload per model,
-overwritten). That immediately fixes multi-model overwrite and matches where
-`pick_document` already is. Full snapshot history (keep the list, query by time)
-is added when history is actually wanted — and because snapshot is already its
-own level, that addition is additive, not a migration. **Persistence** (a
-database, retention, surviving restarts) is a bigger, separate step than keying
-by project; add it only when a snapshot must outlive the process. Let the
-live-model testing indicate whether it is needed.
-
-## Open items / things to watch
-
-- **Extraction is the dominant cost (measured).** ~840 rooms exported in ~11s
-  (~13ms/room) — normal-to-good for Revit boundary extraction, and almost
-  entirely Revit API time: single-threaded on Revit's main thread because it
-  must be. Serialization, POST, and server storage are milliseconds against
-  this. Confirms the "measure where the seconds go" principle: the seconds are
-  in extraction, which Rust's speed does **not** touch. Freeing consequence:
-  server-side processing can be written for clarity, not speed — it runs against
-  an 11s baseline it cannot move. The real optimization axis for the slow side
-  is **extracting less or incrementally** (fewer params, skip unneeded rooms,
-  pull only changed rooms since the last snapshot — which the snapshot hierarchy
-  leaves the door open for), *not* server-side speed or language choice. Only
-  worth attacking if near-live updates while modeling are wanted.
-- **Multi-document overwrite.** The server stores only the latest POST
-  (last-write-wins, in-memory). Selecting several models in `pick_document`
-  leaves only the last one visible. Fine for the POC; merging instead of
-  replacing is a deliberate server-side change if multiple linked models should
-  be viewed together.
-- **Payload size and the 2s poll on large models.** The viewer re-stringifies
-  the whole payload every 2s to detect change. On a big building that diff plus
-  re-render may feel sluggish; cheap fixes are a longer interval or a small
-  fingerprint (room count + hash) instead of full stringify.
-- **Room ↔ level join.** Each room's `level.id` must match an `id` in the level
-  export. A mismatch surfaces as rooms landing on a fallback level named by raw
-  id — a useful signal that the two collectors saw different model state.
-- **Level ordering source.** The slider orders by the level export's
-  `elevation` field (real elevations, in mm), not by `offset_from_level` (the
-  room's offset from its level, which was always 0.0 and useless for ordering).
-- **Coordinates and units.** Revit internal units are decimal feet, Y-up; SVG
-  is Y-down — handled by flipping Y when building geometry. Absolute units do
-  not matter while the viewer auto-fits, but they will once dimensions, a scale
-  bar, or north-alignment are added.
-
-## Current contract (v2)
-
-```json
-{
-  "schema_version": 2,
   "levels": [
     { "id": "311", "name": "Level 0", "elevation": 0.0 }
   ],
@@ -340,10 +128,44 @@ live-model testing indicate whether it is needed.
       "level_id": "311",
       "loops": [
         { "points": [ { "x": 0.0, "y": 0.0 } ] }
-      ]
+      ],
+      "properties": {
+        "Number": { "value": "101", "storage_type": "String" },
+        "Area": { "value": "25.5", "storage_type": "Double" },
+        "d_dept_code": { "value": "D02", "storage_type": "String" }
+      }
     }
   ]
 }
 ```
 
-Convention: `loops[0]` is the outer boundary, `loops[1..]` are holes.
+Convention: `loops[0]` is the outer boundary, `loops[1..]` are holes. Room
+`properties` is one flat map keyed by the producer's own raw property names —
+why it's shaped this way, and how the server reconciles names across sources,
+is in [Sources](STRATEGY-SOURCES.md). The `(project.id, model.id)` pair is the
+store key; ids are immutable, names are display-only — see
+[Server](STRATEGY-SERVER.md) for the full data model. On the `/rooms`
+*response* (not the push), each room additionally carries a `drofus` sub-object
+when its link key matched, and a `classification` path — both derived at
+response assembly, never stored (see Server and Sources respectively).
+
+### The upload envelope
+
+`schema_version` / `project` / `model` / `snapshot` together are the **upload
+envelope**: the identity every upload type carries, rooms being the first.
+Any future upload (FFE, etc.) associates back to room data by exactly two
+keys — the snapshot id and the room id — so it must ride the same envelope
+and resolve its snapshot id through the same contract functions
+(`ensure_taken_at` / `validate_snapshot_id` in `contract.rs`), never a
+reimplementation.
+
+The snapshot id (`snapshot.taken_at`) is an **RFC3339 date-time expressed in
+UTC** (`Z` or `+00:00`; anything else is a 422) — a real date-time by
+definition, lexically sortable so newest-is-lexical-max holds everywhere, and
+structurally incapable of smuggling a path escape. It is also **omittable**:
+a payload that leaves `snapshot` (or just `taken_at`) out asks the server to
+mint the id at ingest. Either way the ingest response reports the resolved id
+(`snapshot_taken_at`, plus `snapshot_generated`) so the pusher can attach
+follow-up uploads to that exact snapshot. This relaxation did not bump the
+schema version: every previously-valid v5 payload is still valid and means
+the same thing.

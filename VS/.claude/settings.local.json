@@ -5,7 +5,14 @@
       "Bash(dir /b /ad \"C:\\\\Users\\\\janchristel\\\\Documents\\\\GitHub\\\\SampleCodeRevitBatchProcessor-NET8\\\\VS\\\\duHastUI\")",
       "Bash(dir \"C:\\\\Users\\\\janchristel\\\\Documents\\\\GitHub\\\\SampleCodeRevitBatchProcessor-NET8\\\\Samples\\\\pyRevit\\\\*.md\" /b)",
       "Bash(grep -iE '\\(views?/\\)|\\(views?\\\\\\\\\\)')",
-      "Bash(ls -d \"C:\\\\Users\\\\janchristel\\\\Documents\\\\GitHub\\\\SampleCodeRevitBatchProcessor-NET8\\\\Samples\\\\pyRevit\\\\Extensions\\\\duHast-2025.extension\\\\duHast.tab\"/*)"
+      "Bash(ls -d \"C:\\\\Users\\\\janchristel\\\\Documents\\\\GitHub\\\\SampleCodeRevitBatchProcessor-NET8\\\\Samples\\\\pyRevit\\\\Extensions\\\\duHast-2025.extension\\\\duHast.tab\"/*)",
+      "Bash(echo \"---exit:$?---\")",
+      "Bash(cargo test *)",
+      "Bash(cargo build *)",
+      "Bash(grep -n \"def get_all_room_data\\\\|Encoding\\\\|storage_type\\\\|value\" \"C:\\\\Users\\\\janchristel\\\\Documents\\\\GitHub\\\\SampleCodeRevitBatchProcessor-NET8\\\\src\\\\duHast\\\\Revit\\\\Rooms\\\\Export\\\\to_data_room.py\" | head -60)",
+      "Bash(grep -n \"class DataRoom\\\\|import\\\\|base\" \"C:\\\\Users\\\\janchristel\\\\Documents\\\\GitHub\\\\SampleCodeRevitBatchProcessor-NET8\\\\src\\\\duHast\\\\Data\\\\Objects\\\\Collectors\\\\data_room.py\" | head -20)",
+      "Bash(grep -n \"class DataBase\\\\|import\" \"C:\\\\Users\\\\janchristel\\\\Documents\\\\GitHub\\\\SampleCodeRevitBatchProcessor-NET8\\\\src\\\\duHast\\\\Data\\\\Objects\\\\Collectors\\\\data_base.py\" | head -10)",
+      "Bash(cargo clippy *)"
     ]
   }
 }

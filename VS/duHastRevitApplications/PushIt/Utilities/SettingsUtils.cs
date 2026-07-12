@@ -39,7 +39,7 @@ namespace duHastNet.PushIt.Utilities
         /// If the file does not exist a safe default is returned.
         /// <para>
         /// If the file was written before the DataSource refactor (i.e. it
-        /// contains a plain <c>rooms_data_file_path</c> string but no <c>DataSource</c>
+        /// contains a plain <c>DataPath</c> string but no <c>DataSource</c>
         /// object), the legacy value is automatically migrated into
         /// <see cref="Models.DataSourceSettings.CsvConfig"/> so the rest of
         /// the application never needs to read <c>DataPath</c> again.
@@ -79,7 +79,7 @@ namespace duHastNet.PushIt.Utilities
                     settings.EnabledCategoryNames = ["Walls"];
                 }
 
-                // ── Migration: legacy rooms_data_file_path → DataSource.CsvConfig ──
+                // ── Migration: legacy DataPath → DataSource.CsvConfig ──
                 // Conditions that indicate migration is needed:
                 //   1. DataSource is null — old file had no DataSource object at all.
                 //   2. SourceType is None — default-constructed with no real data.

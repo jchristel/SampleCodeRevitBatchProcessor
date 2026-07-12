@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Room Plan · Settings</title>
+<style>
+  /* Same visual language as index.html — the two pages are siblings, so the
+     :root tokens are copied verbatim rather than extracted (see plan). */
+  :root {
+    --paper: #f3efe6;
+    --ink: #1f2421;
+    --rule: #cfc7b4;
+    --fill: #e4ddc9;
+    --fill-hover: #d4c9a8;
+    --accent: #b4541f;
+    --error: #c98c86;
+    --ok: #5a7a4f;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--mono);
+    display: grid;
+    grid-template-rows: auto 1fr;
+  }
+
+  header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--ink);
+  }
+  header h1 {
+    font-size: 0.95rem; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; margin: 0;
+  }
+  header a { color: var(--accent); font-size: 0.72rem; text-decoration: none; margin-left: auto; }
+  header a:hover { text-decoration: underline; }
+
+  main {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 0;
+  }
+
+  /* --- left: project list --- */
+  nav {
+    border-right: 1px solid var(--ink);
+    padding: 1rem;
+    overflow-y: auto;
+  }
+  nav h2 {
+    font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
+    opacity: 0.6; margin: 0 0 0.75rem;
+  }
+  nav ul { list-style: none; margin: 0 0 1rem; padding: 0; }
+  nav li button {
+    display: block; width: 100%; text-align: left;
+    font-family: var(--mono); font-size: 0.78rem;
+    background: none; border: none; color: var(--ink);
+    padding: 0.35rem 0.4rem; cursor: pointer;
+  }
+  nav li button:hover { background: var(--fill); }
+  nav li button.active { background: var(--fill-hover); }
+  nav li button .default-mark { color: var(--accent); }
+  nav li .file-error { font-size: 0.62rem; color: var(--accent); padding: 0 0.4rem 0.3rem; }
+
+  button.action {
+    font-family: var(--mono); font-size: 0.72rem;
+    background: var(--paper); color: var(--ink);
+    border: 1px solid var(--ink); padding: 0.3rem 0.6rem; cursor: pointer;
+  }
+  button.action:hover { background: var(--fill); }
+  button.action.primary { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+  button.action.icon { border: none; padding: 0.1rem 0.3rem; font-size: 0.8rem; }
+  button.action:disabled { opacity: 0.4; cursor: default; }
+
+  /* --- right: the form --- */
+  #editor { padding: 1.25rem 1.5rem 3rem; overflow-y: auto; }
+  #editor.hidden { display: none; }
+  .placeholder { padding: 2rem; opacity: 0.6; font-size: 0.8rem; }
+  .placeholder.hidden { display: none; }
+
+  section.block { margin-bottom: 1.6rem; max-width: 760px; }
+  section.block > h2 {
+    font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase;
+    margin: 0 0 0.15rem; border-bottom: 1px solid var(--rule); padding-bottom: 0.25rem;
+  }
+  section.block > .hint { font-size: 0.65rem; opacity: 0.6; margin: 0.15rem 0 0.6rem; }
+  section.block.disabled { opacity: 0.45; pointer-events: none; }
+
+  label.field { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; margin-right: 1rem; }
+  input[type="text"] {
+    font-family: var(--mono); font-size: 0.75rem;
+    background: #fff8; border: 1px solid var(--ink); color: var(--ink);
+    padding: 0.25rem 0.4rem;
+  }
+  input[type="text"]:read-only { background: var(--fill); opacity: 0.8; }
+  select {
+    font-family: var(--mono); font-size: 0.72rem;
+    background: var(--paper); border: 1px solid var(--ink); color: var(--ink);
+    padding: 0.2rem 0.3rem;
+  }
+
+  .rows { display: grid; gap: 0.35rem; margin: 0.4rem 0 0.5rem; }
+  .row { display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; flex-wrap: wrap; }
+  .row .grow { flex: 1 1 8rem; }
+  .row-head { font-size: 0.62rem; opacity: 0.55; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; margin: 0.4rem 0 0.5rem; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    background: var(--fill); border: 1px solid var(--ink);
+    font-size: 0.72rem; padding: 0.15rem 0.2rem 0.15rem 0.5rem;
+  }
+  .chip button { border: none; background: none; cursor: pointer; font-family: var(--mono); font-size: 0.72rem; padding: 0 0.2rem; }
+  .chip button:hover { color: var(--accent); }
+
+  .drofus-status { font-size: 0.7rem; margin-top: 0.35rem; }
+  .drofus-status.ok { color: var(--ok); }
+  .drofus-status.bad { color: var(--accent); }
+
+  #saveBar { display: flex; align-items: center; gap: 1rem; max-width: 760px; margin-top: 1rem; }
+  #saveMessage { font-size: 0.72rem; white-space: pre-wrap; }
+  #saveMessage.ok { color: var(--ok); }
+  #saveMessage.bad { color: var(--accent); }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Room Plan · Settings</h1>
+    <a href="/">← viewer</a>
+  </header>
+  <main>
+    <nav>
+      <h2>Projects</h2>
+      <ul id="projectList"></ul>
+      <button class="action" id="newProjectBtn">+ new project</button>
+    </nav>
+
+    <div>
+      <div class="placeholder" id="placeholder">Select a project on the left, or create a new one.</div>
+
+      <form id="editor" class="hidden" autocomplete="off">
+        <section class="block">
+          <h2>Identity</h2>
+          <p class="hint" id="identityHint"></p>
+          <label class="field">project id
+            <input type="text" id="projectId" size="28" />
+          </label>
+          <label class="field">
+            <input type="checkbox" id="isDefault" />
+            serve as default for unregistered projects
+          </label>
+        </section>
+
+        <section class="block">
+          <h2>dRofus source</h2>
+          <p class="hint">Reference data joined onto rooms. A project without dRofus is a normal state.</p>
+          <label class="field"><input type="checkbox" id="drofusEnabled" /> enabled</label>
+          <label class="field">csv path
+            <input type="text" id="drofusPath" size="36" placeholder="../drofus.csv" />
+          </label>
+          <button type="button" class="action" id="drofusCheckBtn">check</button>
+          <div class="drofus-status hidden" id="drofusStatus"></div>
+        </section>
+
+        <section class="block">
+          <h2>Hierarchy</h2>
+          <p class="hint">Classification tiers, outermost first. Each tier needs a code property and/or a name property. A tier named "Building" powers the building filter.</p>
+          <div class="rows" id="hierarchyRows"></div>
+          <button type="button" class="action" id="addTierBtn">+ tier</button>
+        </section>
+
+        <section class="block">
+          <h2>Builtin properties</h2>
+          <p class="hint">Canonical property name → each source's raw property name (e.g. canonical "Area" backed by revit's "Fläche"). Only needed when a raw name differs from the canonical one.</p>
+          <div class="rows" id="builtinRows"></div>
+          <button type="button" class="action" id="addBuiltinBtn">+ property</button>
+        </section>
+
+        <section class="block">
+          <h2>Room label</h2>
+          <p class="hint">Ordered fields shown on each room in the viewer. $name and $id are the room's own name/id; anything else is a property name.</p>
+          <div class="chips" id="labelChips"></div>
+          <label class="field">
+            <input type="text" id="labelInput" size="16" placeholder="Area" />
+          </label>
+          <button type="button" class="action" id="addLabelBtn">+ field</button>
+        </section>
+
+        <section class="block">
+          <h2>Milestones</h2>
+          <p class="hint">Named dates with data snapshots pinned to them. The viewer's milestone dropdown lists these; a pinned model is served from that snapshot instead of its latest, and an unpinned model doesn't appear in the milestone view. Snapshot ids are what's stored on the server.</p>
+          <div class="rows" id="milestoneRows"></div>
+          <button type="button" class="action" id="addMilestoneBtn">+ milestone</button>
+        </section>
+
+        <section class="block" id="qaBlock">
+          <h2>dRofus QA fields</h2>
+          <p class="hint" id="qaHint">Per-column type/comparison declarations for the validation report. Labels come from row 1 of the dRofus CSV — run "check" above to load them.</p>
+          <div class="rows" id="qaRows"></div>
+          <button type="button" class="action" id="addQaBtn">+ field</button>
+          <datalist id="qaLabelOptions"></datalist>
+        </section>
+
+        <div id="saveBar">
+          <button type="submit" class="action primary" id="saveBtn">Save</button>
+          <span id="saveMessage"></span>
+        </div>
+      </form>
+    </div>
+  </main>
+
+<script>
+"use strict";
+
+// ---------- tiny DOM helper ----------
+function el(tag, attrs, children) {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k === "class") node.className = v;
+    else if (k === "text") node.textContent = v;
+    else if (k.startsWith("on")) node.addEventListener(k.slice(2), v);
+    else node.setAttribute(k, v);
+  }
+  for (const child of children || []) node.appendChild(child);
+  return node;
+}
+
+// ---------- api ----------
+async function apiGet(url) {
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) throw new Error(await res.text() || `${url} -> ${res.status}`);
+  return res.json();
+}
+async function apiSend(method, url, body) {
+  const res = await fetch(url, {
+    method,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const text = await res.text();
+  return { ok: res.ok, status: res.status, text };
+}
+
+// ---------- state ----------
+// `settings` mirrors the server's Settings JSON shape exactly; the row
+// editors mutate it in place and re-render. The server is the validator —
+// its 422 messages are shown verbatim.
+let current = null;      // { isNew, file, settings }
+let drofusLabels = [];   // labels from the last drofus-check, for the QA dropdown
+let activeProjectId = null;
+let projectSnapshots = null; // /projects/{id}/snapshots models for the active project; null = loading
+
+const $ = (id) => document.getElementById(id);
+
+function blankSettings() {
+  return {
+    project_id: "",
+    is_default: false,
+    sources: {},
+    hierarchy: [],
+    builtin_properties: [],
+    room_label: ["$name", "$id"],
+    milestones: [],
+    drofus_fields: [],
+  };
+}
+
+// ---------- project list ----------
+async function loadProjectList() {
+  const list = $("projectList");
+  list.replaceChildren();
+  let items;
+  try {
+    items = await apiGet("/api/settings/projects");
+  } catch (err) {
+    list.appendChild(el("li", {}, [el("span", { class: "file-error", text: String(err.message || err) })]));
+    return;
+  }
+  for (const item of items) {
+    const li = el("li", {});
+    if (item.error) {
+      li.appendChild(el("span", { class: "file-error", text: `${item.file}: ${item.error}` }));
+    } else {
+      const btn = el("button", {
+        type: "button",
+        class: item.project_id === activeProjectId ? "active" : "",
+        onclick: () => selectProject(item.project_id),
+      });
+      btn.appendChild(document.createTextNode(item.project_id + " "));
+      if (item.is_default) btn.appendChild(el("span", { class: "default-mark", text: "●", title: "default bundle" }));
+      li.appendChild(btn);
+    }
+    list.appendChild(li);
+  }
+}
+
+async function selectProject(projectId) {
+  let data;
+  try {
+    data = await apiGet(`/api/settings/projects/${encodeURIComponent(projectId)}`);
+  } catch (err) {
+    showMessage(false, String(err.message || err));
+    return;
+  }
+  activeProjectId = projectId;
+  current = { isNew: false, file: data.file, settings: normalize(data.settings) };
+  drofusLabels = [];
+  openEditor();
+  loadProjectList();
+  // Pre-load the label dropdown when a source is already configured.
+  if (current.settings.sources.drofus) checkDrofus(true);
+  // Pre-load the stored snapshot ids the milestone pin dropdowns offer.
+  loadProjectSnapshots(projectId);
+}
+
+function newProject() {
+  activeProjectId = null;
+  current = { isNew: true, file: null, settings: blankSettings() };
+  drofusLabels = [];
+  projectSnapshots = []; // a project that doesn't exist yet has no stored data
+  openEditor();
+  loadProjectList();
+}
+
+// Fetch which snapshots the server actually stores for this project — the
+// option set for milestone pins. `null` while in flight (renders as a
+// loading hint), `[]` on error/no data (renders as a "nothing stored" hint).
+async function loadProjectSnapshots(projectId) {
+  projectSnapshots = null;
+  renderMilestones();
+  try {
+    const data = await apiGet(`/projects/${encodeURIComponent(projectId)}/snapshots`);
+    projectSnapshots = data.models;
+  } catch (err) {
+    projectSnapshots = [];
+  }
+  renderMilestones();
+}
+
+// Server JSON has nulls for absent Options — normalize to a shape the form
+// logic can treat uniformly (empty strings / absent keys).
+function normalize(s) {
+  s.sources = s.sources || {};
+  s.hierarchy = (s.hierarchy || []).map(t => ({
+    name: t.name || "",
+    code_property: t.code_property || "",
+    name_property: t.name_property || "",
+  }));
+  s.builtin_properties = (s.builtin_properties || []).map(b => ({
+    canonical: b.canonical || "",
+    by_source: Object.entries(b.by_source || {}).map(([source, raw]) => ({ source, raw })),
+  }));
+  s.room_label = s.room_label || [];
+  // Attachments map -> pair list for editing, same treatment as by_source.
+  s.milestones = (s.milestones || []).map(m => ({
+    name: m.name || "",
+    date: m.date || "",
+    attachments: Object.entries(m.attachments || {}).map(([model, taken_at]) => ({ model, taken_at })),
+  }));
+  s.drofus_fields = (s.drofus_fields || []).map(f => ({
+    label: f.label || "",
+    type: f.type || "string",
+    format: f.format || "",
+    revit_format: f.revit_format || "",
+    qa: f.qa || "",
+  }));
+  return s;
+}
+
+// ---------- editor rendering ----------
+function openEditor() {
+  $("placeholder").classList.add("hidden");
+  $("editor").classList.remove("hidden");
+  const s = current.settings;
+
+  $("projectId").value = s.project_id;
+  $("projectId").readOnly = !current.isNew;
+  $("identityHint").textContent = current.isNew
+    ? "The id is matched against pushed payloads' project.id and becomes the settings file name."
+    : `Stored in ${current.file}. The id is the project's identity — create a new project to change it.`;
+  $("isDefault").checked = !!s.is_default;
+
+  const drofus = s.sources.drofus;
+  $("drofusEnabled").checked = !!drofus;
+  $("drofusPath").value = drofus ? drofus.path : "";
+  $("drofusPath").disabled = !drofus;
+  $("drofusCheckBtn").disabled = !drofus;
+  $("drofusStatus").classList.add("hidden");
+
+  renderHierarchy();
+  renderBuiltins();
+  renderLabels();
+  renderMilestones();
+  renderQa();
+  showMessage(null, "");
+}
+
+function rowControls(list, index, rerender) {
+  return [
+    el("button", { type: "button", class: "action icon", title: "move up", text: "↑", onclick: () => {
+      if (index > 0) { [list[index - 1], list[index]] = [list[index], list[index - 1]]; rerender(); }
+    }}),
+    el("button", { type: "button", class: "action icon", title: "move down", text: "↓", onclick: () => {
+      if (index < list.length - 1) { [list[index + 1], list[index]] = [list[index], list[index + 1]]; rerender(); }
+    }}),
+    el("button", { type: "button", class: "action icon", title: "remove", text: "✕", onclick: () => {
+      list.splice(index, 1); rerender();
+    }}),
+  ];
+}
+
+function textInput(obj, key, attrs) {
+  return el("input", Object.assign({
+    type: "text",
+    value: obj[key],
+    oninput: (e) => { obj[key] = e.target.value; },
+  }, attrs || {}));
+}
+
+function renderHierarchy() {
+  const rows = $("hierarchyRows");
+  const tiers = current.settings.hierarchy;
+  rows.replaceChildren();
+  tiers.forEach((tier, i) => {
+    rows.appendChild(el("div", { class: "row" }, [
+      el("span", { class: "row-head", text: `${i + 1}.` }),
+      el("span", { text: "tier" }), textInput(tier, "name", { size: "12", placeholder: "Building" }),
+      el("span", { text: "code prop" }), textInput(tier, "code_property", { size: "14", class: "grow" }),
+      el("span", { text: "name prop" }), textInput(tier, "name_property", { size: "14", class: "grow" }),
+      ...rowControls(tiers, i, renderHierarchy),
+    ]));
+  });
+}
+
+function renderBuiltins() {
+  const rows = $("builtinRows");
+  const props = current.settings.builtin_properties;
+  rows.replaceChildren();
+  props.forEach((prop, i) => {
+    const pairEls = [];
+    prop.by_source.forEach((pair, j) => {
+      pairEls.push(
+        textInput(pair, "source", { size: "7", title: "source (e.g. revit)" }),
+        el("span", { text: ":" }),
+        textInput(pair, "raw", { size: "12", title: "raw property name in that source" }),
+        el("button", { type: "button", class: "action icon", title: "remove mapping", text: "✕", onclick: () => {
+          prop.by_source.splice(j, 1); renderBuiltins();
+        }}),
+      );
+    });
+    rows.appendChild(el("div", { class: "row" }, [
+      el("span", { text: "canonical" }), textInput(prop, "canonical", { size: "12", placeholder: "Area" }),
+      el("span", { text: "←" }),
+      ...pairEls,
+      el("button", { type: "button", class: "action icon", title: "add source mapping", text: "+", onclick: () => {
+        prop.by_source.push({ source: "revit", raw: "" }); renderBuiltins();
+      }}),
+      el("button", { type: "button", class: "action icon", title: "remove property", text: "✕", onclick: () => {
+        props.splice(i, 1); renderBuiltins();
+      }}),
+    ]));
+  });
+}
+
+function renderLabels() {
+  const chips = $("labelChips");
+  const labels = current.settings.room_label;
+  chips.replaceChildren();
+  labels.forEach((name, i) => {
+    chips.appendChild(el("span", { class: "chip" }, [
+      el("span", { text: name }),
+      el("button", { type: "button", title: "move left", text: "‹", onclick: () => {
+        if (i > 0) { [labels[i - 1], labels[i]] = [labels[i], labels[i - 1]]; renderLabels(); }
+      }}),
+      el("button", { type: "button", title: "move right", text: "›", onclick: () => {
+        if (i < labels.length - 1) { [labels[i + 1], labels[i]] = [labels[i], labels[i + 1]]; renderLabels(); }
+      }}),
+      el("button", { type: "button", title: "remove", text: "✕", onclick: () => {
+        labels.splice(i, 1); renderLabels();
+      }}),
+    ]));
+  });
+}
+
+// One pin dropdown: this model's stored snapshot ids plus "not attached".
+// A pin whose id is no longer stored (data deleted since) is kept as an
+// explicit "(missing)" option rather than silently dropped — removing it is
+// the user's call.
+function attachmentSelect(milestone, model) {
+  const pair = milestone.attachments.find(a => a.model === model.id);
+  const sel = el("select", { onchange: (e) => {
+    const value = e.target.value;
+    const idx = milestone.attachments.findIndex(a => a.model === model.id);
+    if (!value) { if (idx >= 0) milestone.attachments.splice(idx, 1); }
+    else if (idx >= 0) milestone.attachments[idx].taken_at = value;
+    else milestone.attachments.push({ model: model.id, taken_at: value });
+  }}, [
+    el("option", { value: "", text: "— not attached —" }),
+    ...model.snapshots.map(ts => el("option", { value: ts, text: ts })),
+  ]);
+  if (pair && !model.snapshots.includes(pair.taken_at)) {
+    sel.appendChild(el("option", { value: pair.taken_at, text: `${pair.taken_at} (missing)` }));
+  }
+  sel.value = pair ? pair.taken_at : "";
+  return sel;
+}
+
+function renderMilestones() {
+  if (!current) return; // snapshots may resolve before any project is open
+  const rows = $("milestoneRows");
+  const milestones = current.settings.milestones;
+  rows.replaceChildren();
+  milestones.forEach((milestone, i) => {
+    rows.appendChild(el("div", { class: "row" }, [
+      el("span", { class: "row-head", text: `${i + 1}.` }),
+      el("span", { text: "name" }), textInput(milestone, "name", { size: "18", placeholder: "Design Freeze" }),
+      el("span", { text: "date" }),
+      el("input", {
+        type: "date",
+        value: /^\d{4}-\d{2}-\d{2}$/.test(milestone.date) ? milestone.date : "",
+        oninput: (e) => { milestone.date = e.target.value; },
+      }),
+      ...rowControls(milestones, i, renderMilestones),
+    ]));
+
+    // Attachments: one pin dropdown per model the server has data for.
+    if (projectSnapshots === null) {
+      rows.appendChild(el("div", { class: "row row-head", text: "loading stored snapshots…" }));
+    } else if (projectSnapshots.length === 0) {
+      rows.appendChild(el("div", { class: "row row-head", text: "no snapshots stored for this project yet — push data first, then pin it here" }));
+    } else {
+      for (const model of projectSnapshots) {
+        rows.appendChild(el("div", { class: "row" }, [
+          el("span", { class: "row-head", text: "↳" }),
+          el("span", { text: `${model.name} (${model.id})` }),
+          attachmentSelect(milestone, model),
+        ]));
+      }
+    }
+    // Pins for models the server has no data for anymore: shown, not hidden —
+    // a dangling pin should be visible and deliberately removable.
+    const knownIds = new Set((projectSnapshots || []).map(m => m.id));
+    milestone.attachments.filter(a => !knownIds.has(a.model)).forEach(pair => {
+      rows.appendChild(el("div", { class: "row" }, [
+        el("span", { class: "row-head", text: "↳" }),
+        el("span", { text: `${pair.model} → ${pair.taken_at} (no stored data for this model)` }),
+        el("button", { type: "button", class: "action icon", title: "remove pin", text: "✕", onclick: () => {
+          const idx = milestone.attachments.indexOf(pair);
+          if (idx >= 0) milestone.attachments.splice(idx, 1);
+          renderMilestones();
+        }}),
+      ]));
+    });
+  });
+}
+
+function renderQa() {
+  const enabled = !!current.settings.sources.drofus;
+  $("qaBlock").classList.toggle("disabled", !enabled);
+  $("qaHint").textContent = enabled
+    ? "Per-column type/comparison declarations for the validation report. Labels come from row 1 of the dRofus CSV — run \"check\" above to load them."
+    : "Declarations require a dRofus source — enable one above first.";
+
+  const options = $("qaLabelOptions");
+  options.replaceChildren(...drofusLabels.map(l => el("option", { value: l })));
+
+  const rows = $("qaRows");
+  const fields = current.settings.drofus_fields;
+  rows.replaceChildren();
+  fields.forEach((field, i) => {
+    const isDate = field.type === "date";
+    const typeSelect = el("select", { onchange: (e) => { field.type = e.target.value; renderQa(); } }, [
+      el("option", { value: "string", text: "string" }),
+      el("option", { value: "numeric", text: "numeric" }),
+      el("option", { value: "date", text: "date" }),
+    ]);
+    typeSelect.value = field.type;
+    const qaSelect = el("select", { title: "QA comparison override", onchange: (e) => { field.qa = e.target.value; } }, [
+      el("option", { value: "", text: "default" }),
+      el("option", { value: "exact", text: "exact" }),
+      el("option", { value: "ignore", text: "ignore" }),
+    ]);
+    qaSelect.value = field.qa;
+
+    const children = [
+      el("span", { text: "label" }),
+      textInput(field, "label", { size: "14", list: "qaLabelOptions" }),
+      el("span", { text: "type" }), typeSelect,
+    ];
+    if (isDate) {
+      children.push(
+        el("span", { text: "format" }),
+        textInput(field, "format", { size: "20", placeholder: "%-m/%-d/%Y %-I:%M:%S %p %z" }),
+        el("span", { text: "revit format" }),
+        textInput(field, "revit_format", { size: "16", placeholder: "(same as format)" }),
+      );
+    }
+    children.push(el("span", { text: "qa" }), qaSelect, ...rowControls(fields, i, renderQa));
+    rows.appendChild(el("div", { class: "row" }, children));
+  });
+}
+
+// ---------- dRofus check ----------
+async function checkDrofus(quiet) {
+  const path = $("drofusPath").value.trim();
+  const status = $("drofusStatus");
+  const result = await apiSend("POST", "/api/settings/drofus-check", { path });
+  status.classList.remove("hidden", "ok", "bad");
+  if (result.ok) {
+    const data = JSON.parse(result.text);
+    drofusLabels = data.labels;
+    status.classList.add("ok");
+    status.textContent = `✓ ${data.record_count} records · link property "${data.link_property}" · ${data.labels.length} labels`;
+    renderQa();
+  } else {
+    drofusLabels = [];
+    status.classList.add("bad");
+    status.textContent = quiet ? "" : `⚠ ${result.text}`;
+    if (quiet) status.classList.add("hidden");
+    renderQa();
+  }
+}
+
+// ---------- save ----------
+function showMessage(ok, text) {
+  const msg = $("saveMessage");
+  msg.classList.remove("ok", "bad");
+  if (ok === true) msg.classList.add("ok");
+  if (ok === false) msg.classList.add("bad");
+  msg.textContent = text;
+}
+
+// Build the exact Settings JSON the server deserializes: empty strings
+// become absent Options, the by_source pair list folds back into a map.
+function toPayload() {
+  const s = current.settings;
+  const opt = (v) => (v && v.trim() ? v.trim() : null);
+  return {
+    project_id: $("projectId").value.trim(),
+    is_default: $("isDefault").checked,
+    sources: $("drofusEnabled").checked
+      ? { drofus: { type: "file", path: $("drofusPath").value.trim() } }
+      : {},
+    hierarchy: s.hierarchy.map(t => ({
+      name: t.name.trim(),
+      code_property: opt(t.code_property),
+      name_property: opt(t.name_property),
+    })),
+    builtin_properties: s.builtin_properties.map(b => ({
+      canonical: b.canonical.trim(),
+      by_source: Object.fromEntries(b.by_source.filter(p => p.source.trim()).map(p => [p.source.trim(), p.raw.trim()])),
+    })),
+    room_label: s.room_label,
+    milestones: s.milestones.map(m => ({
+      name: m.name.trim(),
+      date: m.date.trim(),
+      attachments: Object.fromEntries(m.attachments.filter(a => a.taken_at).map(a => [a.model, a.taken_at])),
+    })),
+    drofus_fields: s.drofus_fields.map(f => ({
+      label: f.label.trim(),
+      type: f.type,
+      format: opt(f.format),
+      revit_format: opt(f.revit_format),
+      qa: opt(f.qa),
+    })),
+  };
+}
+
+async function save() {
+  const payload = toPayload();
+  const result = current.isNew
+    ? await apiSend("POST", "/api/settings/projects", payload)
+    : await apiSend("PUT", `/api/settings/projects/${encodeURIComponent(activeProjectId)}`, payload);
+
+  if (result.ok) {
+    showMessage(true, "✓ saved & applied live");
+    const data = JSON.parse(result.text);
+    activeProjectId = data.settings.project_id;
+    current = { isNew: false, file: `${activeProjectId}.toml`, settings: normalize(data.settings) };
+    openEditor();
+    loadProjectList();
+    if (current.settings.sources.drofus) checkDrofus(true);
+  } else {
+    // The server's 422 is the real validator — show it verbatim.
+    showMessage(false, `⚠ ${result.text}`);
+  }
+}
+
+// ---------- wiring ----------
+$("newProjectBtn").addEventListener("click", newProject);
+$("editor").addEventListener("submit", (e) => { e.preventDefault(); save(); });
+$("drofusEnabled").addEventListener("change", (e) => {
+  if (e.target.checked) {
+    current.settings.sources.drofus = { type: "file", path: $("drofusPath").value };
+  } else {
+    delete current.settings.sources.drofus;
+  }
+  $("drofusPath").disabled = !e.target.checked;
+  $("drofusCheckBtn").disabled = !e.target.checked;
+  renderQa();
+});
+$("drofusPath").addEventListener("input", (e) => {
+  if (current.settings.sources.drofus) current.settings.sources.drofus.path = e.target.value;
+});
+$("drofusCheckBtn").addEventListener("click", () => checkDrofus(false));
+$("addTierBtn").addEventListener("click", () => {
+  current.settings.hierarchy.push({ name: "", code_property: "", name_property: "" });
+  renderHierarchy();
+});
+$("addBuiltinBtn").addEventListener("click", () => {
+  current.settings.builtin_properties.push({ canonical: "", by_source: [{ source: "revit", raw: "" }] });
+  renderBuiltins();
+});
+$("addLabelBtn").addEventListener("click", () => {
+  const value = $("labelInput").value.trim();
+  if (!value) return;
+  current.settings.room_label.push(value);
+  $("labelInput").value = "";
+  renderLabels();
+});
+$("labelInput").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") { e.preventDefault(); $("addLabelBtn").click(); }
+});
+$("addMilestoneBtn").addEventListener("click", () => {
+  current.settings.milestones.push({ name: "", date: "", attachments: [] });
+  renderMilestones();
+});
+$("addQaBtn").addEventListener("click", () => {
+  current.settings.drofus_fields.push({ label: "", type: "string", format: "", revit_format: "", qa: "" });
+  renderQa();
+});
+
+loadProjectList();
+</script>
+</body>
+</html>

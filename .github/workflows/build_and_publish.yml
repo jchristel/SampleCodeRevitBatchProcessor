@@ -150,6 +150,25 @@ jobs:
         Copy-Item "VS/duHastUI/SelectFiles/docs/*.md" `
                   "docsource/revit_apps/selectfiles/"
 
+    - name: Copy pyRevit extension documentation into docsource
+      shell: pwsh
+      run: |
+        New-Item -ItemType Directory -Force -Path "docsource/samples/pyRevit"
+        Copy-Item "Samples/pyRevit/*.md" `
+                  "docsource/samples/pyRevit/"
+
+        # Rewrite links that point into the VS/ source tree so they target
+        # the copies of those pages under docsource/revit_apps/ instead
+        Get-ChildItem "docsource/samples/pyRevit/*.md" | ForEach-Object {
+          (Get-Content $_.FullName -Raw) `
+            -replace '\.\./\.\./VS/duHastUI/DocManagerSettingsUI/docs/', '../../revit_apps/docmanagersettingsui/' `
+            -replace '\.\./\.\./VS/duHastUI/PDFDWGExporterSelectionUI/docs/', '../../revit_apps/pdfdwgexporterselectionui/' `
+            -replace '\.\./\.\./VS/duHastUI/PDFDWGExporterUI/docs/', '../../revit_apps/pdfdwgexporterui/' `
+            -replace '\.\./\.\./VS/duHastRevitApplications/AtTheLibrary/docs/', '../../revit_apps/athelibrary/' `
+            -replace '\.\./\.\./VS/duHastRevitApplications/PushIt/docs/', '../../revit_apps/pushit/' |
+            Set-Content $_.FullName -Encoding utf8 -NoNewline
+        }
+
     - name: Create .rst files
       run: |
         sphinx-apidoc -f -o docsource/duHast src/duHast/

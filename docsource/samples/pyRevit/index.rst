@@ -1,7 +1,13 @@
 pyRevit
 ========
 
-.. toctree::
-   :maxdepth: 2
+Documentation for the duHast pyRevit toolbar extension. These pages are
+generated from the Markdown files in ``Samples/pyRevit/``, which are
+copied into ``docsource`` by the build workflow.
 
-   ../../../Samples/pyRevit/readme
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   readme
+   *

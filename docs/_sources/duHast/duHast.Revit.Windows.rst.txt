@@ -1,0 +1,29 @@
+duHast.Revit.Windows package
+============================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.Revit.Windows.Export
+
+Submodules
+----------
+
+duHast.Revit.Windows.windows module
+-----------------------------------
+
+.. automodule:: duHast.Revit.Windows.windows
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.Windows
+   :members:
+   :undoc-members:
+   :show-inheritance:

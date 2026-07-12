@@ -42,6 +42,7 @@ Subpackages
    duHast.Revit.Views
    duHast.Revit.Walls
    duHast.Revit.Warnings
+   duHast.Revit.Windows
 
 Module contents
 ---------------

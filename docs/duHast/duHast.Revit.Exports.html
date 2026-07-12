@@ -325,6 +325,24 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Exports.export_data.get_super_component_id">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_data.</span></span><span class="sig-name descname"><span class="pre">get_super_component_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_data.get_super_component_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the integer Element Id of the super component (host) family instance,
+or -1 when the instance is not a shared nested family.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>family_instance</strong> (<em>Autodesk.Revit.DB.FamilyInstance</em>) – A Revit family instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>super component element id, or -1 if not nested</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export_data.get_model_data">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_data.</span></span><span class="sig-name descname"><span class="pre">get_model_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_data.get_model_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a revit_model instance with the name populated. If detached and not saved yet it will be named “Detached Model”</p>

@@ -23,6 +23,7 @@ three) should update every doc it touches — that's the cost of the split, and
 worth it for how much easier each doc is to read in isolation the rest of the
 time.
 
+
 ## What exists today
 
 A three-part pipeline, decoupled across a process and a language boundary:

@@ -156,6 +156,14 @@ duHast.Data.Objects.Collectors.data\_view\_schedule module
    :undoc-members:
    :show-inheritance:
 
+duHast.Data.Objects.Collectors.data\_window module
+--------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_window
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

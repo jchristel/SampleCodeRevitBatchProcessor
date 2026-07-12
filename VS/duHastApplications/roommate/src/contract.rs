@@ -116,11 +116,57 @@ pub struct Model {
 /// One timestamped push of one model. Its own contract level so "this floor as
 /// it was last Tuesday" / "what changed since last push" become possible later
 /// without restructuring — even though we only keep the latest for now.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+///
+/// Together with `schema_version` / `project` / `model` this forms the shared
+/// **upload envelope**: the identity every upload type carries, rooms being
+/// the first. Any future upload (FFE, etc.) associates back to room data by
+/// exactly two keys — this snapshot id and the room id — so it must ride the
+/// same envelope, resolved through the same `ensure_taken_at` /
+/// `validate_snapshot_id` pair below rather than reimplementing either.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Snapshot {
-    /// When the model was *read* (sourced from the export's own timestamp), not
-    /// when the server received it. The natural key for snapshot identity.
+    /// The snapshot id: an RFC3339 date-time expressed in UTC. When the model
+    /// was *read* (sourced from the export's own timestamp), not when the
+    /// server received it — except when a producer leaves it blank/omitted, in
+    /// which case the server mints one at ingest (`ensure_taken_at`) and
+    /// returns it in the ingest response. Blank never survives past the ingest
+    /// trust boundary; storage and read code always see a concrete id.
+    #[serde(default)]
     pub taken_at: String,
+}
+
+/// Resolve a possibly-blank snapshot id at the ingest trust boundary: a
+/// blank/whitespace `taken_at` (or one from an omitted `snapshot` object,
+/// which defaults to empty) is replaced with "now" in UTC, at the same
+/// microsecond precision the Revit producer stamps. Returns whether an id was
+/// generated so the ingest response can say so. Every upload type resolves
+/// its snapshot id through this one function.
+pub fn ensure_taken_at(snapshot: &mut Snapshot) -> bool {
+    if snapshot.taken_at.trim().is_empty() {
+        snapshot.taken_at = chrono::Utc::now()
+            .format("%Y-%m-%dT%H:%M:%S%.6fZ")
+            .to_string();
+        return true;
+    }
+    false
+}
+
+/// Whether a (non-blank) snapshot id is acceptable: it must parse as RFC3339
+/// AND be expressed in UTC (`Z` or `+00:00`). One rule covers everything the
+/// id must guarantee: it's a real date-time (the contract's definition of a
+/// snapshot id), it keeps the store's lexical-max-is-newest ordering sound (a
+/// non-UTC offset would sort wrongly against UTC neighbours), and it can't
+/// smuggle a path escape (no RFC3339 string contains `/`, `\`, or `..`) —
+/// which is why ingest needs no separate filename-safety check for it.
+pub fn validate_snapshot_id(taken_at: &str) -> Result<(), String> {
+    let parsed = chrono::DateTime::parse_from_rfc3339(taken_at)
+        .map_err(|e| format!("snapshot taken_at {taken_at:?} is not an RFC3339 date-time: {e}"))?;
+    if parsed.offset().local_minus_utc() != 0 {
+        return Err(format!(
+            "snapshot taken_at {taken_at:?} must be expressed in UTC (\"Z\" or \"+00:00\"), not a local offset"
+        ));
+    }
+    Ok(())
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -130,9 +176,11 @@ pub struct RoomPayload {
     /// v4 identity envelope. Tells the server *which* thing this snapshot is a
     /// version of, so two models POSTed to the same server no longer overwrite
     /// each other. The `(project, model)` pair locates the storage slot; the
-    /// snapshot times it.
+    /// snapshot times it. `snapshot` is `#[serde(default)]`: omitting it (or
+    /// its `taken_at`) asks the server to mint the id — see `ensure_taken_at`.
     pub project: Project,
     pub model: Model,
+    #[serde(default)]
     pub snapshot: Snapshot,
 
     pub levels: Vec<Level>,
@@ -150,6 +198,7 @@ pub struct StreamEnvelope {
     pub schema_version: u32,
     pub project: Project,
     pub model: Model,
+    #[serde(default)]
     pub snapshot: Snapshot,
     pub levels: Vec<Level>,
 }
@@ -161,6 +210,11 @@ pub struct StreamEnvelope {
 /// A v4 producer (split builtin/custom) 422s loud rather than silently
 /// misparsing. No transition window — update the extractor and the server
 /// together.
+///
+/// Still 5 after `snapshot.taken_at` became omittable: that change is a pure
+/// relaxation — every payload that was valid v5 before is still valid and
+/// means the same thing — and bumps are reserved for changes that would make
+/// an existing producer's payload misparse or change meaning.
 pub const SUPPORTED_SCHEMA: u32 = 5;
 
 /// Resolve a *canonical* property name (e.g. "Area") to the source-specific
@@ -375,6 +429,55 @@ mod tests {
         assert_eq!(envelope.project.id, "p1");
         assert_eq!(envelope.model.source, "revit");
         assert_eq!(envelope.levels.len(), 1);
+    }
+
+    /// A payload with no "snapshot" key at all still deserializes (the
+    /// server-generates case) — `taken_at` arrives empty for `ensure_taken_at`
+    /// to resolve.
+    #[test]
+    fn test_payload_deserializes_without_snapshot() {
+        let json = serde_json::json!({
+            "schema_version": 5,
+            "project":  { "id": "p1", "name": "Hospital Job" },
+            "model":    { "id": "m-guid", "name": "ARCH", "source": "revit" },
+            "levels": [],
+            "rooms": []
+        });
+
+        let payload: RoomPayload = serde_json::from_value(json.clone()).unwrap();
+        assert_eq!(payload.snapshot.taken_at, "");
+
+        let envelope: StreamEnvelope = serde_json::from_value(json).unwrap();
+        assert_eq!(envelope.snapshot.taken_at, "");
+    }
+
+    /// A blank/omitted taken_at is replaced with a generated UTC id that
+    /// passes the contract's own validation; a supplied one is left alone.
+    #[test]
+    fn test_ensure_taken_at_generates_only_when_blank() {
+        let mut blank = Snapshot { taken_at: "  ".to_string() };
+        assert!(ensure_taken_at(&mut blank));
+        assert!(validate_snapshot_id(&blank.taken_at).is_ok(), "generated id must be valid: {}", blank.taken_at);
+
+        let mut supplied = Snapshot { taken_at: "2026-01-01T00:00:00Z".to_string() };
+        assert!(!ensure_taken_at(&mut supplied));
+        assert_eq!(supplied.taken_at, "2026-01-01T00:00:00Z");
+    }
+
+    /// The snapshot id rule: RFC3339, expressed in UTC. Non-dates (including
+    /// anything path-shaped) and non-UTC offsets are rejected; "Z" and
+    /// "+00:00" both count as UTC.
+    #[test]
+    fn test_validate_snapshot_id() {
+        assert!(validate_snapshot_id("2026-01-01T00:00:00Z").is_ok());
+        assert!(validate_snapshot_id("2026-01-01T00:00:00.123456Z").is_ok());
+        assert!(validate_snapshot_id("2026-01-01T00:00:00+00:00").is_ok());
+
+        assert!(validate_snapshot_id("2026-01-01T00:00:00+10:00").is_err());
+        assert!(validate_snapshot_id("not-a-date").is_err());
+        assert!(validate_snapshot_id("2026/01/01").is_err());
+        assert!(validate_snapshot_id("..\\..\\evil").is_err());
+        assert!(validate_snapshot_id("").is_err());
     }
 
     /// lookup_property resolves a canonical name to a source-specific raw

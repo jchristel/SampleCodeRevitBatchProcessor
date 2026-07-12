@@ -1,6 +1,7 @@
 //! roommate's MCP server: exposes the read side (`list_projects`,
-//! `list_buildings`, `get_rooms`, `get_validation`) as MCP tools over stdio,
-//! one per existing HTTP read route. Each tool is a thin adapter over
+//! `list_buildings`, `get_rooms`, `get_validation`, `list_snapshots`,
+//! `get_latest_snapshot`, `list_milestones`) as MCP tools over stdio, one
+//! per existing HTTP read route. Each tool is a thin adapter over
 //! `roommate::service` -- parse params, call one service function, serialize
 //! the result -- exactly like the Axum handlers in `roommate::handlers`, just
 //! a second transport over the same domain layer. See
@@ -28,7 +29,7 @@ use rmcp::{
 };
 
 use roommate::bootstrap::build_state;
-use roommate::service::{projects, rooms, validation, ServiceError};
+use roommate::service::{milestones, projects, rooms, snapshots, validation, ServiceError};
 use roommate::settings_api::{self, SettingsError};
 use roommate::state::Shared;
 
@@ -39,6 +40,14 @@ struct ProjectIdParams {
 }
 
 #[derive(Debug, serde::Deserialize, schemars::JsonSchema)]
+struct ModelIdParams {
+    /// The project id, as returned by `list_projects`.
+    project_id: String,
+    /// The model id, as returned by `list_snapshots`.
+    model_id: String,
+}
+
+#[derive(Debug, serde::Deserialize, schemars::JsonSchema)]
 struct GetRoomsParams {
     /// Scope the merge to one project id. Omit to merge every stored model.
     #[serde(default)]
@@ -46,6 +55,10 @@ struct GetRoomsParams {
     /// Opaque building key from `list_buildings`. Omit for no building filter.
     #[serde(default)]
     building: Option<String>,
+    /// Milestone name from `list_milestones`: serve the snapshots that
+    /// milestone pins instead of each model's latest. Omit for latest.
+    #[serde(default)]
+    milestone: Option<String>,
 }
 
 /// Serialize any service response into a single text content block -- the
@@ -106,15 +119,46 @@ impl RoommateMcp {
     /// service's `None` ("nothing has ever been pushed" -- the HTTP 204 case)
     /// has no MCP status-code equivalent, so it becomes a short plain-text
     /// answer instead of a JSON body; an LLM client reads either just fine.
-    #[tool(description = "Fetch merged rooms and levels across stored models, optionally scoped by project id and building key. A project whose hierarchy has no 'Building' tier matches nothing under a building filter (check list_buildings' tier_configured before filtering).")]
+    #[tool(description = "Fetch merged rooms and levels across stored models, optionally scoped by project id, building key, and milestone name. A project whose hierarchy has no 'Building' tier matches nothing under a building filter (check list_buildings' tier_configured before filtering); under a milestone filter, models are served from the snapshots that milestone pins instead of their latest.")]
     fn get_rooms(&self, Parameters(p): Parameters<GetRoomsParams>) -> Result<CallToolResult, McpError> {
-        let result = rooms::assemble_rooms(&self.state, p.project.as_deref(), p.building.as_deref())
+        let result = rooms::assemble_rooms(&self.state, p.project.as_deref(), p.building.as_deref(), p.milestone.as_deref())
             .map_err(to_mcp_error)?;
         match result {
             None => Ok(CallToolResult::success(vec![ContentBlock::text(
                 "no snapshots have been pushed to this server yet",
             )])),
             Some(result) => json_result(&result),
+        }
+    }
+
+    /// Lists one project's milestones (named dated snapshot pins) -- see
+    /// `service::milestones::list_milestones`.
+    #[tool(description = "List one project's milestones: named dates with data snapshots pinned to them, newest first. Pass a milestone's name to get_rooms to view the project as captured at that milestone.")]
+    fn list_milestones(&self, Parameters(p): Parameters<ProjectIdParams>) -> Result<CallToolResult, McpError> {
+        let result = milestones::list_milestones(&self.state, &p.project_id).map_err(to_mcp_error)?;
+        json_result(&result)
+    }
+
+    /// Lists every stored snapshot id for one project, grouped per model --
+    /// see `service::snapshots::list_project_snapshots`.
+    #[tool(description = "List every stored snapshot id (RFC3339 UTC taken_at) for one project, grouped per model, each group carrying its latest")]
+    fn list_snapshots(&self, Parameters(p): Parameters<ProjectIdParams>) -> Result<CallToolResult, McpError> {
+        let result = snapshots::list_project_snapshots(&self.state, &p.project_id).map_err(to_mcp_error)?;
+        json_result(&result)
+    }
+
+    /// The latest snapshot id for one model -- see
+    /// `service::snapshots::latest_snapshot`. The service's `None` (the HTTP
+    /// 404 case) becomes a short plain-text answer, same convention as
+    /// `get_rooms`' empty-store case.
+    #[tool(description = "Get the latest snapshot id (taken_at) for one model of one project")]
+    fn get_latest_snapshot(&self, Parameters(p): Parameters<ModelIdParams>) -> Result<CallToolResult, McpError> {
+        let result = snapshots::latest_snapshot(&self.state, &p.project_id, &p.model_id).map_err(to_mcp_error)?;
+        match result {
+            None => Ok(CallToolResult::success(vec![ContentBlock::text(
+                "no snapshots stored for that project/model",
+            )])),
+            Some(latest) => json_result(&latest),
         }
     }
 

@@ -18,7 +18,7 @@ use anyhow::Context;
 
 use crate::contract::RoomPayload;
 use crate::drofus::DrofusData;
-use crate::settings::{BuiltinPropertyDef, DrofusFieldConfig, HierarchyTier, TestData};
+use crate::settings::{BuiltinPropertyDef, DrofusFieldConfig, HierarchyTier, Milestone, TestData};
 use crate::storage::SnapshotStore;
 
 /// Composite key identifying one storage bucket: a model within a project.
@@ -88,6 +88,11 @@ pub struct ProjectSettings {
     /// available to any future consumer (e.g. a date-based colouring
     /// feature) that needs to know a column's declared type.
     pub drofus_fields: Vec<DrofusFieldConfig>,
+
+    /// User-defined milestones (named dates with explicit snapshot pins)
+    /// loaded from this project's settings. Read by the milestones listing
+    /// and by `assemble_rooms`' milestone filter.
+    pub milestones: Vec<Milestone>,
 }
 
 /// One immutable snapshot of every project's settings. Swapped wholesale
@@ -186,6 +191,16 @@ impl AppState {
     /// Every model's latest snapshot, for the `/rooms` merge.
     pub fn all_snapshots(&self) -> anyhow::Result<Vec<(ModelKey, RoomPayload)>> {
         self.store.all_latest()
+    }
+
+    /// One model's snapshot ids, ascending — see `SnapshotStore::list_snapshot_ids`.
+    pub fn list_snapshot_ids(&self, key: &ModelKey) -> anyhow::Result<Vec<String>> {
+        self.store.list_snapshot_ids(key)
+    }
+
+    /// One specific stored snapshot by id — see `SnapshotStore::get_snapshot`.
+    pub fn get_snapshot(&self, key: &ModelKey, taken_at: &str) -> anyhow::Result<Option<RoomPayload>> {
+        self.store.get_snapshot(key, taken_at)
     }
 }
 

@@ -58,6 +58,14 @@ pub struct ProjectManifest {
 pub struct ModelEntry {
     /// Model display name (mutable; the GUID dir name is the stable identity).
     pub name: String,
+    /// Snapshot ids (raw `taken_at` values) stored for this model, ascending.
+    /// The manifest's index role extended to snapshots: listing a model's
+    /// history reads this, never the (possibly >100 MB) snapshot JSONs.
+    /// `default` keeps manifests written before this field existed parseable —
+    /// their history is recovered from the directory instead (filesystem wins,
+    /// see `list_snapshot_ids`).
+    #[serde(default)]
+    pub snapshots: Vec<String>,
 }
 
 // ---------- the trait ----------
@@ -87,6 +95,17 @@ pub trait SnapshotStore: Send + Sync {
 
     /// Every model's latest snapshot, for the merge that `/rooms` currently does.
     fn all_latest(&self) -> Result<Vec<(ModelKey, RoomPayload)>>;
+
+    /// Every snapshot id (`taken_at`) stored for one model, ascending — so the
+    /// latest is the last element. Empty when the model is unknown or has no
+    /// snapshots yet. A history-less store (`MemStore`) reports just its
+    /// current latest.
+    fn list_snapshot_ids(&self, key: &ModelKey) -> Result<Vec<String>>;
+
+    /// One specific stored snapshot by its id (`taken_at`), or `None` when no
+    /// such snapshot exists — the milestone read path. A history-less store
+    /// (`MemStore`) can only answer for its current latest.
+    fn get_snapshot(&self, key: &ModelKey, taken_at: &str) -> Result<Option<RoomPayload>>;
 }
 
 // ---------- filesystem impl ----------
@@ -171,6 +190,29 @@ impl FsStore {
         Ok(newest)
     }
 
+    /// Best-effort reverse of `snapshot_filename` for a snapshot file the
+    /// manifest doesn't index (a pre-`snapshots`-field store, or a manifest
+    /// that lost an entry): restore the `:` separators the sanitiser
+    /// replaced. Only the positions that are unambiguously time separators in
+    /// an RFC3339 id are restored — the two inside the time-of-day and the
+    /// one in a `+hh-mm` offset tail; anything unrecognisable stays as the
+    /// raw stem. Warning-path fallback only, never the primary index.
+    fn id_from_file_stem(stem: &str) -> String {
+        let mut bytes = stem.as_bytes().to_vec();
+        // "YYYY-MM-DDTHH-MM-SS…": bytes 13 and 16 are sanitised colons.
+        if bytes.len() >= 19 && bytes[10] == b'T' && bytes[13] == b'-' && bytes[16] == b'-' {
+            bytes[13] = b':';
+            bytes[16] = b':';
+        }
+        // A "+hh-mm" numeric-offset tail (e.g. "+00-00"): its '-' was a ':'.
+        if let Some(plus) = bytes.iter().rposition(|&b| b == b'+') {
+            if plus + 5 == bytes.len() - 1 && bytes[plus + 3] == b'-' {
+                bytes[plus + 3] = b':';
+            }
+        }
+        String::from_utf8(bytes).unwrap_or_else(|_| stem.to_string())
+    }
+
     fn read_payload(path: &Path) -> Result<RoomPayload> {
         let raw = fs::read_to_string(path)
             .with_context(|| format!("could not read snapshot: {}", path.display()))?;
@@ -195,16 +237,19 @@ impl SnapshotStore for FsStore {
             .with_context(|| format!("could not create model dir: {}", model_dir.display()))?;
 
         // 2. Upsert the authoritative manifest: refresh the project display name,
-        //    and insert this model if absent (`or_default` = the unknown-model
-        //    case) before updating its name. Rewritten every push so the manifest
-        //    always mirrors what's on disk.
+        //    insert this model if absent (`or_default` = the unknown-model case),
+        //    update its name, and index this snapshot id (insert-if-absent, kept
+        //    sorted so ascending == chronological for RFC3339-UTC ids). Rewritten
+        //    every push so the manifest always mirrors what's on disk — which
+        //    also backfills a pre-`snapshots`-field manifest one push at a time.
         let mut manifest = self.read_manifest(project_id)?;
         manifest.name = payload.project.name.clone();
-        manifest
-            .models
-            .entry(model_id.clone())
-            .or_default()
-            .name = payload.model.name.clone();
+        let entry = manifest.models.entry(model_id.clone()).or_default();
+        entry.name = payload.model.name.clone();
+        if !entry.snapshots.contains(&payload.snapshot.taken_at) {
+            entry.snapshots.push(payload.snapshot.taken_at.clone());
+            entry.snapshots.sort();
+        }
         self.write_manifest(project_id, &manifest)?;
 
         // 3. Write the snapshot under its own timestamped filename — never
@@ -299,6 +344,72 @@ impl SnapshotStore for FsStore {
         }
         Ok(out)
     }
+
+    fn list_snapshot_ids(&self, key: &ModelKey) -> Result<Vec<String>> {
+        // The manifest's `snapshots` list is the index; the directory is the
+        // record. Same reconciliation stance as `list_models`: on
+        // disagreement the filesystem wins — a file the manifest doesn't
+        // index is included (with a best-effort id recovered from its name,
+        // since the sanitised filename lost its `:`), and a manifest id with
+        // no file behind it is dropped. Both are warned about, so drift is
+        // noticeable rather than silent.
+        let indexed = self
+            .read_manifest(&key.project_id)?
+            .models
+            .get(&key.model_id)
+            .map(|m| m.snapshots.clone())
+            .unwrap_or_default();
+
+        let dir = self.model_dir(&key.project_id, &key.model_id);
+        let mut on_disk: Vec<String> = Vec::new();
+        if dir.exists() {
+            for entry in fs::read_dir(&dir)
+                .with_context(|| format!("could not read model dir: {}", dir.display()))?
+            {
+                let path = entry?.path();
+                if path.extension().and_then(|e| e.to_str()) == Some("json") {
+                    if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
+                        on_disk.push(name.to_string());
+                    }
+                }
+            }
+        }
+
+        let mut ids = Vec::new();
+        for id in indexed {
+            let filename = Self::snapshot_filename(&id);
+            if let Some(pos) = on_disk.iter().position(|f| *f == filename) {
+                on_disk.swap_remove(pos);
+                ids.push(id);
+            } else {
+                tracing::warn!(
+                    "manifest lists snapshot {:?} for {}/{} but no file exists — dropping it (filesystem wins)",
+                    id, key.project_id, key.model_id
+                );
+            }
+        }
+        for filename in on_disk {
+            let stem = filename.strip_suffix(".json").unwrap_or(&filename);
+            let id = Self::id_from_file_stem(stem);
+            tracing::warn!(
+                "snapshot file {}/{}/{} is missing from project.toml — including it as {:?} (filesystem wins)",
+                key.project_id, key.model_id, filename, id
+            );
+            ids.push(id);
+        }
+        ids.sort();
+        Ok(ids)
+    }
+
+    fn get_snapshot(&self, key: &ModelKey, taken_at: &str) -> Result<Option<RoomPayload>> {
+        let path = self
+            .model_dir(&key.project_id, &key.model_id)
+            .join(Self::snapshot_filename(taken_at));
+        if !path.exists() {
+            return Ok(None);
+        }
+        Ok(Some(Self::read_payload(&path)?))
+    }
 }
 
 // ---------- in-memory impl ----------
@@ -340,6 +451,30 @@ impl SnapshotStore for MemStore {
             .iter()
             .map(|(k, v)| (k.clone(), v.clone()))
             .collect())
+    }
+
+    fn list_snapshot_ids(&self, key: &ModelKey) -> Result<Vec<String>> {
+        // Latest-only store, so "all snapshot ids" is at most the one current
+        // id — honest about the fact that MemStore keeps no history.
+        Ok(self
+            .latest
+            .lock()
+            .unwrap()
+            .get(key)
+            .map(|p| vec![p.snapshot.taken_at.clone()])
+            .unwrap_or_default())
+    }
+
+    fn get_snapshot(&self, key: &ModelKey, taken_at: &str) -> Result<Option<RoomPayload>> {
+        // Latest-only store: an id can only be answered when it IS the
+        // current latest; anything older is genuinely gone.
+        Ok(self
+            .latest
+            .lock()
+            .unwrap()
+            .get(key)
+            .filter(|p| p.snapshot.taken_at == taken_at)
+            .cloned())
     }
 }
 
@@ -411,7 +546,10 @@ mod tests {
         let manifest_path = dir.join("proj1").join("project.toml");
         let manifest = ProjectManifest {
             name: "P".to_string(),
-            models: BTreeMap::from([("modelA".to_string(), ModelEntry { name: "M".to_string() })]),
+            models: BTreeMap::from([(
+                "modelA".to_string(),
+                ModelEntry { name: "M".to_string(), snapshots: vec!["2026-01-01T10:00:00Z".to_string()] },
+            )]),
         };
         std::fs::write(&manifest_path, toml::to_string_pretty(&manifest).unwrap()).unwrap();
 
@@ -423,6 +561,104 @@ mod tests {
         assert_eq!(all.len(), 2, "the un-manifested model still appears");
 
         std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// Each push indexes its snapshot id in the manifest, and
+    /// `list_snapshot_ids` reads them back ascending regardless of push
+    /// order — never opening a snapshot JSON.
+    #[test]
+    fn test_fs_store_lists_snapshot_ids_ascending() {
+        let dir = std::env::temp_dir().join(format!("roommate-snap-ids-{}", std::process::id()));
+        let store = FsStore::new(dir.clone()).unwrap();
+
+        store.put(&payload("p", "m", "2026-01-02T10:00:00Z")).unwrap();
+        store.put(&payload("p", "m", "2026-01-01T10:00:00Z")).unwrap();
+
+        let key = ModelKey { project_id: "p".into(), model_id: "m".into() };
+        assert_eq!(
+            store.list_snapshot_ids(&key).unwrap(),
+            vec!["2026-01-01T10:00:00Z".to_string(), "2026-01-02T10:00:00Z".to_string()]
+        );
+
+        // Unknown model: empty, not an error.
+        let unknown = ModelKey { project_id: "p".into(), model_id: "nope".into() };
+        assert!(store.list_snapshot_ids(&unknown).unwrap().is_empty());
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// Reconciliation, filesystem wins both ways: a snapshot file the
+    /// manifest doesn't index (a store written before the `snapshots` field
+    /// existed) is included with its id recovered from the sanitised
+    /// filename, and a manifest id with no file behind it is dropped.
+    #[test]
+    fn test_fs_store_snapshot_ids_filesystem_wins_over_manifest() {
+        let dir = std::env::temp_dir().join(format!("roommate-snap-rec-{}", std::process::id()));
+        let store = FsStore::new(dir.clone()).unwrap();
+
+        store.put(&payload("p", "m", "2026-01-01T10:00:00Z")).unwrap();
+        store.put(&payload("p", "m", "2026-01-02T10:00:00Z")).unwrap();
+
+        // Sabotage the manifest: drop the first id (as if written pre-field)
+        // and add a phantom id whose file doesn't exist.
+        let manifest_path = dir.join("p").join("project.toml");
+        let manifest = ProjectManifest {
+            name: "P".to_string(),
+            models: BTreeMap::from([(
+                "m".to_string(),
+                ModelEntry {
+                    name: "M".to_string(),
+                    snapshots: vec!["2026-01-02T10:00:00Z".to_string(), "2026-01-03T10:00:00Z".to_string()],
+                },
+            )]),
+        };
+        std::fs::write(&manifest_path, toml::to_string_pretty(&manifest).unwrap()).unwrap();
+
+        let key = ModelKey { project_id: "p".into(), model_id: "m".into() };
+        assert_eq!(
+            store.list_snapshot_ids(&key).unwrap(),
+            vec!["2026-01-01T10:00:00Z".to_string(), "2026-01-02T10:00:00Z".to_string()],
+            "un-indexed file recovered (with its ':' restored), phantom id dropped"
+        );
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// `get_snapshot` answers a specific historic id (not just the latest),
+    /// and `None` for an id that was never stored.
+    #[test]
+    fn test_fs_store_get_snapshot_by_id() {
+        let dir = std::env::temp_dir().join(format!("roommate-get-snap-{}", std::process::id()));
+        let store = FsStore::new(dir.clone()).unwrap();
+
+        store.put(&payload("p", "m", "2026-01-01T10:00:00Z")).unwrap();
+        store.put(&payload("p", "m", "2026-01-02T10:00:00Z")).unwrap();
+
+        let key = ModelKey { project_id: "p".into(), model_id: "m".into() };
+        let old = store.get_snapshot(&key, "2026-01-01T10:00:00Z").unwrap().unwrap();
+        assert_eq!(old.snapshot.taken_at, "2026-01-01T10:00:00Z");
+        assert!(store.get_snapshot(&key, "2026-03-01T10:00:00Z").unwrap().is_none());
+
+        // MemStore can only answer for its current latest.
+        let mem = MemStore::new();
+        mem.put(&payload("p", "m", "2026-01-01T10:00:00Z")).unwrap();
+        mem.put(&payload("p", "m", "2026-01-02T10:00:00Z")).unwrap();
+        assert!(mem.get_snapshot(&key, "2026-01-02T10:00:00Z").unwrap().is_some());
+        assert!(mem.get_snapshot(&key, "2026-01-01T10:00:00Z").unwrap().is_none());
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// MemStore keeps no history: its snapshot id list is just the current
+    /// latest.
+    #[test]
+    fn test_mem_store_lists_only_latest_snapshot_id() {
+        let store = MemStore::new();
+        store.put(&payload("p", "m", "2026-01-01T10:00:00Z")).unwrap();
+        store.put(&payload("p", "m", "2026-01-02T10:00:00Z")).unwrap();
+
+        let key = ModelKey { project_id: "p".into(), model_id: "m".into() };
+        assert_eq!(store.list_snapshot_ids(&key).unwrap(), vec!["2026-01-02T10:00:00Z".to_string()]);
     }
 
     /// A re-push with an identical `taken_at` is skipped, not overwritten —

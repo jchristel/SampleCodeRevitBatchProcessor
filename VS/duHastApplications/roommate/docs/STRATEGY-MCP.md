@@ -37,9 +37,14 @@ Superseded/HANDOVER-service-layer.md for the extraction itself.
   **stderr only**: stdout is the JSON-RPC stream, and anything else written
   there (an errant `println!`, a stdout-default `tracing_subscriber`)
   silently corrupts the protocol.
-- **Six tools: one per existing read route, plus two settings reads.**
-  `list_projects`, `list_buildings`, `get_rooms` (project/building filters
-  optional), and `get_validation` mirror the four HTTP read routes.
+- **Nine tools: one per existing read route, plus two settings reads.**
+  `list_projects`, `list_buildings`, `get_rooms` (project/building/milestone
+  filters optional), `get_validation`, `list_snapshots`,
+  `get_latest_snapshot`, and `list_milestones` mirror the seven HTTP read
+  routes (snapshot-history and milestone endpoints: see
+  [Server](STRATEGY-SERVER.md); `get_latest_snapshot` maps the service's
+  `None` — HTTP's 404 — to a short plain-text answer, same convention as
+  `get_rooms`' empty-store case).
   `list_project_settings` / `get_project_settings` reuse `settings_api`'s
   transport-agnostic read core (see [Server](STRATEGY-SERVER.md)'s settings
   API bullet); they parse the TOML files fresh per call, so a change saved

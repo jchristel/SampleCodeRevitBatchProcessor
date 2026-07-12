@@ -400,6 +400,12 @@ code_property = "bldg_code"
 canonical = "Area"
 by_source = { revit = "Area" }
 
+[[milestones]]
+name = "Design Freeze"
+date = "2026-06-30"
+[milestones.attachments]
+"model-guid" = "2026-06-29T10:00:00Z"
+
 [[drofus_fields]]
 label = "LastSync"
 type = "date"
@@ -419,6 +425,9 @@ qa = "ignore"
         assert_eq!(reparsed.hierarchy.len(), 1);
         assert_eq!(reparsed.builtin_properties.len(), 1);
         assert_eq!(reparsed.drofus_fields.len(), 1);
+        assert_eq!(reparsed.milestones.len(), 1);
+        assert_eq!(reparsed.milestones[0].name, "Design Freeze");
+        assert_eq!(reparsed.milestones[0].attachments["model-guid"], "2026-06-29T10:00:00Z");
     }
 
     /// Create → list → get round-trip through the core, and the saved project

@@ -129,7 +129,12 @@ def build_envelope(rooms_source, levels_source):
     default-identity push silently merged into one shared fake project, and
     an empty taken_at became a snapshot file literally named `.json`).
     room_mate.py always supplies all three, so only genuinely broken inputs
-    fail."""
+    fail.
+
+    The server can now mint a snapshot id itself when a payload omits
+    `snapshot.taken_at` (it answers with the resolved id) -- this producer
+    deliberately keeps supplying its own: its timestamp says when the model
+    was READ, which the server's receipt time can't know."""
     levels = []
     for lvl in levels_source.get(LEVEL_LIST_KEY, []):
         levels.append({

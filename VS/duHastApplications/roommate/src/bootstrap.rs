@@ -66,6 +66,7 @@ pub fn load_project_bundle(path: &Path) -> anyhow::Result<(String, bool, Project
         builtin_properties: settings.builtin_properties,
         room_label: settings.room_label,
         drofus_fields: settings.drofus_fields,
+        milestones: settings.milestones,
     };
     Ok((settings.project_id, settings.is_default, bundle))
 }

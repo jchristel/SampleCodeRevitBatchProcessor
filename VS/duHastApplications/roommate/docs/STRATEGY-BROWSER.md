@@ -69,13 +69,30 @@ side should shape future server endpoints.
   with several issues appears several times) and triggers a browser download
   — no server endpoint for this, matching "keep axum a pure JSON API": a CSV
   is just a presentation reshuffle of data the browser already has.
+- **Milestone picker.** A fourth header `<select>` (after building): "Latest"
+  (the default, no filter) plus one option per milestone from
+  `GET /projects/{id}/milestones`, labelled `name (date)`. Refreshes on the
+  same 2s cadence as the project/building pickers, gated by its own
+  signature diff; hidden when the project defines no milestones — unlike the
+  other pickers' `<=1` rule, "Latest" alone is not a choice worth a picker.
+  Selecting one adds `milestone=` to the `/rooms` poll URL (only alongside
+  its project — a milestone is a per-project name); a selected milestone
+  that disappears (deleted/renamed in settings) falls back to Latest rather
+  than keeping a filter the server would answer with nothing. The validation
+  badge stays latest-based regardless of the milestone selection (see
+  [Server](STRATEGY-SERVER.md)).
 - **Settings page (`settings.html`).** A sibling static page, linked from the
   viewer's header, over [Server](STRATEGY-SERVER.md)'s `/api/settings` routes:
   a project-file list on the left (a file that fails to parse still gets a
   row showing its error), a form editor for identity / dRofus source /
-  hierarchy / builtin properties / room label / QA fields, a dRofus "check"
-  button that dry-runs the CSV path server-side, and saves that go through
-  the exact startup validation before landing (see Server). Same visual
+  hierarchy / builtin properties / room label / milestones / QA fields, a
+  dRofus "check" button that dry-runs the CSV path server-side, and saves
+  that go through the exact startup validation before landing (see Server).
+  The milestones section edits name/date rows plus per-model pin dropdowns
+  whose options are the snapshot ids the server actually stores
+  (`GET /projects/{id}/snapshots`); a pin referencing a model or snapshot
+  the store no longer has renders visibly as missing rather than being
+  silently dropped — removing it is the user's call. Same visual
   language as the viewer — the `:root` tokens are copied verbatim rather
   than extracted, an accepted duplication while it's just two sibling pages.
 

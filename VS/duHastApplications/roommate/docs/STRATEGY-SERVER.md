@@ -76,6 +76,34 @@ each module carrying its rationale in a header, all with unit tests.
   `snapshot`; `model` also carries `source` (see
   [Sources](STRATEGY-SOURCES.md)). `SUPPORTED_SCHEMA = 5`, hard-required, no
   transition window. Ids are immutable/keys; names are display-only.
+- **Snapshot id: RFC3339 UTC, omittable, echoed back.** The envelope is now
+  explicitly the shared *upload envelope* for any future upload type (see
+  [Index](STRATEGY.md) "The upload envelope"). `snapshot.taken_at` must parse
+  as RFC3339 expressed in UTC (`contract::validate_snapshot_id`, 422
+  otherwise — this one rule replaced the old per-character filename checks
+  for `taken_at`, since no RFC3339 string can contain `/`, `\`, or `..`, and
+  a non-UTC offset would corrupt lexical-max-is-newest ordering). A
+  blank/omitted `snapshot` is resolved server-side (`ensure_taken_at`, UTC
+  now at the producer's own microsecond precision) *before* validation, in
+  both ingest paths; the ingest response carries `snapshot_taken_at` and
+  `snapshot_generated` so a pusher always learns the id its follow-up
+  uploads should attach to. Still v5: a pure relaxation, not a bump.
+- **Snapshot history endpoints (`GET /projects/{id}/snapshots`,
+  `GET /projects/{p}/models/{m}/snapshots/latest`).** The read side of
+  snapshot identity: the first lists every stored snapshot id per model of a
+  project (`{ models: [{ id, name, snapshots: [..asc], latest }] }`, soft
+  empty for unknown/unregistered projects, same skip-on-read as
+  `/projects`); the second answers just the latest id for one model — the
+  "what do I attach this follow-up upload to" call — and 404s when there is
+  none, since it names one specific resource. Backed by a new
+  `SnapshotStore::list_snapshot_ids`: the manifest's `ModelEntry` now indexes
+  each model's snapshot ids (`snapshots`, kept sorted, upserted per push), so
+  listing history never opens the possibly->100 MB snapshot JSONs. Same
+  reconciliation stance as `list_models` — filesystem wins: a file the
+  manifest doesn't index (e.g. stored before this field existed) is included
+  with a best-effort id recovered from its sanitised filename, a manifest id
+  with no file is dropped, both warned. `MemStore` reports just its current
+  latest (it keeps no history by design).
 - **Multi-model store, keyed.** Snapshots keyed by `(project id, model id)`,
   fixing the multi-document overwrite bug. `/rooms` merges every model's
   latest into one flat payload by default; optional `?project=`/`?building=`
@@ -278,9 +306,37 @@ each module carrying its rationale in a header, all with unit tests.
   even that in-memory room set is too large — the deferred next step is a
   `SnapshotStore::put_streaming` that writes rooms to disk as they arrive.
 
-**Deferred (design settled, not built):** snapshot-history query + delete UI,
-per-model / `/hierarchy` endpoints, DB backend, an owning level above
-project, and a colour-rooms-by-date-proximity viewer feature (the QA side of
+- **Milestones (`[[milestones]]` in project settings, `GET
+  /projects/{id}/milestones`, `/rooms?milestone=`).** A milestone is a named
+  date with data snapshots *explicitly pinned* to it (`attachments`: model id
+  → snapshot `taken_at`), so the viewer can show the project as captured at
+  that milestone instead of each model's latest push. Definitions live in
+  the per-project settings TOML — not storage — because they're user-authored
+  per-project metadata with the same lifecycle as hierarchy/room_label, and
+  riding that file buys the whole save pipeline (validation, atomic install,
+  hot-reload) for free; the settings UI edits them like any other section.
+  Load-time validation: non-empty unique names (the name is the identity
+  `/rooms?milestone=` matches on), a date that parses (`YYYY-MM-DD` or
+  RFC3339), every pin a valid snapshot id — but NOT pin *existence*, which
+  settings can't see; a pin to since-deleted data is a read-time skip+warn,
+  same signal-not-error stance as an unmatched dRofus key. Read semantics
+  in `assemble_rooms` follow the building-filter discipline: a project
+  defining no milestone of that name contributes nothing, a model the
+  milestone doesn't pin contributes nothing, and a pinned model's payload is
+  the pinned snapshot loaded via `SnapshotStore::get_snapshot` — substituted
+  *before* level dedup / building filter / dRofus join / classification, so
+  every downstream step (and the building filter) composes unchanged. Two
+  deliberate v1 limits, both documented rather than hidden: the dRofus data
+  joined onto a milestone view is still the project's *current* CSV (dRofus
+  has no snapshots to pin until it becomes an uploaded source riding the
+  shared upload envelope — that's the "future sources" slot in
+  `attachments`), and the validation report stays latest-based.
+
+**Deferred (design settled, not built):** snapshot delete UI (the history
+*query* now exists — see the endpoints above), per-model / `/hierarchy`
+endpoints, DB backend, an owning level above project, dRofus-as-snapshotted-
+source (which is also what lets milestones pin dRofus data), and a
+colour-rooms-by-date-proximity viewer feature (the QA side of
 `drofus_fields`' `type = "date"` / `format` is consumed now — see the typed
 date comparison above — but no viewer feature reads the parsed dates yet).
 
@@ -325,9 +381,12 @@ Each level needs its own key, keying downward:
   without collision or renumbering, at no cost to take now.
 - **Model id** — lean on the **Revit model GUID**: stable across renames,
   unique per file. Prefer it over file name (which forks the record on rename).
-- **Snapshot id** — a timestamp is the natural key; source it from the export's
-  existing `"date processed"` field so it reflects when the model was *read*,
-  not when the server received it.
+- **Snapshot id** — a timestamp is the natural key: an RFC3339 date-time in
+  UTC, sourced from the export's existing `"date processed"` field so it
+  reflects when the model was *read*, not when the server received it. A
+  producer with no meaningful read-time may omit it and let the server mint
+  one at ingest (receipt time is then the honest semantics) — the ingest
+  response reports the resolved id either way.
 - **Room identity is really *(model, room id)*** — raw Revit room ids are only
   unique within a model, so the same id can appear in two linked models. The
   hierarchy disambiguates them.

@@ -195,6 +195,13 @@
           <button type="button" class="action" id="addLabelBtn">+ field</button>
         </section>
 
+        <section class="block">
+          <h2>Milestones</h2>
+          <p class="hint">Named dates with data snapshots pinned to them. The viewer's milestone dropdown lists these; a pinned model is served from that snapshot instead of its latest, and an unpinned model doesn't appear in the milestone view. Snapshot ids are what's stored on the server.</p>
+          <div class="rows" id="milestoneRows"></div>
+          <button type="button" class="action" id="addMilestoneBtn">+ milestone</button>
+        </section>
+
         <section class="block" id="qaBlock">
           <h2>dRofus QA fields</h2>
           <p class="hint" id="qaHint">Per-column type/comparison declarations for the validation report. Labels come from row 1 of the dRofus CSV — run "check" above to load them.</p>
@@ -250,6 +257,7 @@ async function apiSend(method, url, body) {
 let current = null;      // { isNew, file, settings }
 let drofusLabels = [];   // labels from the last drofus-check, for the QA dropdown
 let activeProjectId = null;
+let projectSnapshots = null; // /projects/{id}/snapshots models for the active project; null = loading
 
 const $ = (id) => document.getElementById(id);
 
@@ -261,6 +269,7 @@ function blankSettings() {
     hierarchy: [],
     builtin_properties: [],
     room_label: ["$name", "$id"],
+    milestones: [],
     drofus_fields: [],
   };
 }
@@ -309,14 +318,32 @@ async function selectProject(projectId) {
   loadProjectList();
   // Pre-load the label dropdown when a source is already configured.
   if (current.settings.sources.drofus) checkDrofus(true);
+  // Pre-load the stored snapshot ids the milestone pin dropdowns offer.
+  loadProjectSnapshots(projectId);
 }
 
 function newProject() {
   activeProjectId = null;
   current = { isNew: true, file: null, settings: blankSettings() };
   drofusLabels = [];
+  projectSnapshots = []; // a project that doesn't exist yet has no stored data
   openEditor();
   loadProjectList();
+}
+
+// Fetch which snapshots the server actually stores for this project — the
+// option set for milestone pins. `null` while in flight (renders as a
+// loading hint), `[]` on error/no data (renders as a "nothing stored" hint).
+async function loadProjectSnapshots(projectId) {
+  projectSnapshots = null;
+  renderMilestones();
+  try {
+    const data = await apiGet(`/projects/${encodeURIComponent(projectId)}/snapshots`);
+    projectSnapshots = data.models;
+  } catch (err) {
+    projectSnapshots = [];
+  }
+  renderMilestones();
 }
 
 // Server JSON has nulls for absent Options — normalize to a shape the form
@@ -333,6 +360,12 @@ function normalize(s) {
     by_source: Object.entries(b.by_source || {}).map(([source, raw]) => ({ source, raw })),
   }));
   s.room_label = s.room_label || [];
+  // Attachments map -> pair list for editing, same treatment as by_source.
+  s.milestones = (s.milestones || []).map(m => ({
+    name: m.name || "",
+    date: m.date || "",
+    attachments: Object.entries(m.attachments || {}).map(([model, taken_at]) => ({ model, taken_at })),
+  }));
   s.drofus_fields = (s.drofus_fields || []).map(f => ({
     label: f.label || "",
     type: f.type || "string",
@@ -366,6 +399,7 @@ function openEditor() {
   renderHierarchy();
   renderBuiltins();
   renderLabels();
+  renderMilestones();
   renderQa();
   showMessage(null, "");
 }
@@ -454,6 +488,78 @@ function renderLabels() {
         labels.splice(i, 1); renderLabels();
       }}),
     ]));
+  });
+}
+
+// One pin dropdown: this model's stored snapshot ids plus "not attached".
+// A pin whose id is no longer stored (data deleted since) is kept as an
+// explicit "(missing)" option rather than silently dropped — removing it is
+// the user's call.
+function attachmentSelect(milestone, model) {
+  const pair = milestone.attachments.find(a => a.model === model.id);
+  const sel = el("select", { onchange: (e) => {
+    const value = e.target.value;
+    const idx = milestone.attachments.findIndex(a => a.model === model.id);
+    if (!value) { if (idx >= 0) milestone.attachments.splice(idx, 1); }
+    else if (idx >= 0) milestone.attachments[idx].taken_at = value;
+    else milestone.attachments.push({ model: model.id, taken_at: value });
+  }}, [
+    el("option", { value: "", text: "— not attached —" }),
+    ...model.snapshots.map(ts => el("option", { value: ts, text: ts })),
+  ]);
+  if (pair && !model.snapshots.includes(pair.taken_at)) {
+    sel.appendChild(el("option", { value: pair.taken_at, text: `${pair.taken_at} (missing)` }));
+  }
+  sel.value = pair ? pair.taken_at : "";
+  return sel;
+}
+
+function renderMilestones() {
+  if (!current) return; // snapshots may resolve before any project is open
+  const rows = $("milestoneRows");
+  const milestones = current.settings.milestones;
+  rows.replaceChildren();
+  milestones.forEach((milestone, i) => {
+    rows.appendChild(el("div", { class: "row" }, [
+      el("span", { class: "row-head", text: `${i + 1}.` }),
+      el("span", { text: "name" }), textInput(milestone, "name", { size: "18", placeholder: "Design Freeze" }),
+      el("span", { text: "date" }),
+      el("input", {
+        type: "date",
+        value: /^\d{4}-\d{2}-\d{2}$/.test(milestone.date) ? milestone.date : "",
+        oninput: (e) => { milestone.date = e.target.value; },
+      }),
+      ...rowControls(milestones, i, renderMilestones),
+    ]));
+
+    // Attachments: one pin dropdown per model the server has data for.
+    if (projectSnapshots === null) {
+      rows.appendChild(el("div", { class: "row row-head", text: "loading stored snapshots…" }));
+    } else if (projectSnapshots.length === 0) {
+      rows.appendChild(el("div", { class: "row row-head", text: "no snapshots stored for this project yet — push data first, then pin it here" }));
+    } else {
+      for (const model of projectSnapshots) {
+        rows.appendChild(el("div", { class: "row" }, [
+          el("span", { class: "row-head", text: "↳" }),
+          el("span", { text: `${model.name} (${model.id})` }),
+          attachmentSelect(milestone, model),
+        ]));
+      }
+    }
+    // Pins for models the server has no data for anymore: shown, not hidden —
+    // a dangling pin should be visible and deliberately removable.
+    const knownIds = new Set((projectSnapshots || []).map(m => m.id));
+    milestone.attachments.filter(a => !knownIds.has(a.model)).forEach(pair => {
+      rows.appendChild(el("div", { class: "row" }, [
+        el("span", { class: "row-head", text: "↳" }),
+        el("span", { text: `${pair.model} → ${pair.taken_at} (no stored data for this model)` }),
+        el("button", { type: "button", class: "action icon", title: "remove pin", text: "✕", onclick: () => {
+          const idx = milestone.attachments.indexOf(pair);
+          if (idx >= 0) milestone.attachments.splice(idx, 1);
+          renderMilestones();
+        }}),
+      ]));
+    });
   });
 }
 
@@ -554,6 +660,11 @@ function toPayload() {
       by_source: Object.fromEntries(b.by_source.filter(p => p.source.trim()).map(p => [p.source.trim(), p.raw.trim()])),
     })),
     room_label: s.room_label,
+    milestones: s.milestones.map(m => ({
+      name: m.name.trim(),
+      date: m.date.trim(),
+      attachments: Object.fromEntries(m.attachments.filter(a => a.taken_at).map(a => [a.model, a.taken_at])),
+    })),
     drofus_fields: s.drofus_fields.map(f => ({
       label: f.label.trim(),
       type: f.type,
@@ -618,6 +729,10 @@ $("addLabelBtn").addEventListener("click", () => {
 });
 $("labelInput").addEventListener("keydown", (e) => {
   if (e.key === "Enter") { e.preventDefault(); $("addLabelBtn").click(); }
+});
+$("addMilestoneBtn").addEventListener("click", () => {
+  current.settings.milestones.push({ name: "", date: "", attachments: [] });
+  renderMilestones();
 });
 $("addQaBtn").addEventListener("click", () => {
   current.settings.drofus_fields.push({ label: "", type: "string", format: "", revit_format: "", qa: "" });

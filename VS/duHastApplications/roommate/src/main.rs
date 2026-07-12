@@ -16,7 +16,8 @@ use tower_http::{cors::CorsLayer, decompression::RequestDecompressionLayer, serv
 
 use roommate::bootstrap::build_state;
 use roommate::handlers::{
-    get_project_buildings, get_project_validation, get_projects, get_rooms, ingest_rooms, ingest_rooms_stream,
+    get_model_latest_snapshot, get_project_buildings, get_project_milestones, get_project_snapshots,
+    get_project_validation, get_projects, get_rooms, ingest_rooms, ingest_rooms_stream,
 };
 use roommate::settings_api::{
     http_create_project, http_drofus_check, http_get_project, http_list_projects, http_update_project,
@@ -72,6 +73,16 @@ async fn main() -> anyhow::Result<()> {
         .route("/projects", get(get_projects))
         .route("/projects/{id}/buildings", get(get_project_buildings))
         .route("/projects/{id}/validation", get(get_project_validation))
+        // Snapshot history: everything per project (grouped by model), and the
+        // per-model latest a follow-up upload attaches its data to.
+        .route("/projects/{id}/snapshots", get(get_project_snapshots))
+        // Milestones: named dated pins over snapshots, defined per project in
+        // its settings file; the viewer's dropdown reads this list.
+        .route("/projects/{id}/milestones", get(get_project_milestones))
+        .route(
+            "/projects/{project_id}/models/{model_id}/snapshots/latest",
+            get(get_model_latest_snapshot),
+        )
         // Settings read/save API behind static/settings.html — see
         // `settings_api`'s module doc for the save pipeline and trust model.
         .route("/api/settings/projects", get(http_list_projects).post(http_create_project))

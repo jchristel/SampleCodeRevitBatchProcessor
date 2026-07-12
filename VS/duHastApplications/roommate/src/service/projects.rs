@@ -189,6 +189,7 @@ mod tests {
             builtin_properties: vec![],
             room_label: vec!["$name".to_string()],
             drofus_fields: vec![],
+            milestones: vec![],
         }
     }
 

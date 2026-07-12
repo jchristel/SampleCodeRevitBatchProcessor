@@ -128,8 +128,9 @@ pub struct RoomsResult {
 }
 
 /// Merge every stored model's levels and rooms into one flat payload, scoped
-/// by an optional project id and an optional opaque building key (from
-/// `projects::list_buildings`). When a building filter is given, a project
+/// by an optional project id, an optional opaque building key (from
+/// `projects::list_buildings`), and an optional milestone name (from
+/// `milestones::list_milestones`). When a building filter is given, a project
 /// whose hierarchy has no tier named "Building" matches *nothing* -- not
 /// everything. The caller asked for a building; a project with no notion of
 /// one can't answer that question, and `list_buildings` already tells a
@@ -144,8 +145,20 @@ pub struct RoomsResult {
 /// filter is actually active; with no filter, every scoped model's levels are
 /// included exactly as before.
 ///
+/// The milestone filter follows the same discipline: a project whose settings
+/// define no milestone of that name contributes nothing, a model the
+/// milestone doesn't pin contributes nothing, and a pinned model's payload is
+/// the *pinned snapshot* loaded from the store instead of the latest — after
+/// which every downstream step (level dedup, building filter, dRofus join,
+/// classification) runs on the substituted payloads unchanged, so milestone
+/// and building filters compose. A pin whose snapshot no longer exists is
+/// skipped with a warning — a dangling pin is a signal, not an error, same as
+/// an unmatched dRofus key.
+///
 /// dRofus join and classification are resolved here at response assembly — the
 /// stored snapshots stay raw; derived data is never written back to state.
+/// Note the dRofus data joined onto a milestone view is still the project's
+/// *current* CSV — dRofus has no snapshots to pin yet (see STRATEGY-SERVER.md).
 ///
 /// Returns `Ok(None)` when nothing has ever been pushed to this server at all
 /// -- the HTTP adapter's "204 No Content" case. A filter that merely matches
@@ -155,6 +168,7 @@ pub fn assemble_rooms(
     state: &AppState,
     project: Option<&str>,
     building: Option<&str>,
+    milestone: Option<&str>,
 ) -> Result<Option<RoomsResult>, ServiceError> {
     let stored = state.all_snapshots().map_err(ServiceError::Internal)?;
     if stored.is_empty() {
@@ -169,12 +183,40 @@ pub fn assemble_rooms(
     // project has no registered settings bundle — an unscoped merge is now
     // inherently per-project, so a model with nothing to classify/join it
     // against has no home in the result (see
-    // HANDOVER-per-project-settings.md: "skip on read").
-    let scoped: Vec<(&ModelKey, &RoomPayload, &ProjectSettings)> = stored
-        .iter()
-        .filter(|(_key, payload)| project.map_or(true, |p| payload.project.id == p))
-        .filter_map(|(key, payload)| registry.settings_for(&payload.project.id).map(|bundle| (key, payload, bundle)))
-        .collect();
+    // HANDOVER-per-project-settings.md: "skip on read"). Under a milestone
+    // filter, each surviving model's latest payload is then *replaced* by the
+    // snapshot the milestone pins for it (owned payloads, hence no `&` on the
+    // tuple's payload slot).
+    let mut scoped: Vec<(ModelKey, RoomPayload, &ProjectSettings)> = Vec::new();
+    for (key, payload) in stored {
+        if project.is_some_and(|p| payload.project.id != p) {
+            continue;
+        }
+        let Some(bundle) = registry.settings_for(&payload.project.id) else {
+            continue;
+        };
+        match milestone {
+            None => scoped.push((key, payload, bundle)),
+            Some(wanted) => {
+                // A project without this milestone can't answer the question
+                // (building-filter discipline); a model the milestone doesn't
+                // pin isn't part of it.
+                let Some(ms) = bundle.milestones.iter().find(|m| m.name == wanted) else {
+                    continue;
+                };
+                let Some(pinned_id) = ms.attachments.get(&key.model_id) else {
+                    continue;
+                };
+                match state.get_snapshot(&key, pinned_id).map_err(ServiceError::Internal)? {
+                    Some(pinned) => scoped.push((key, pinned, bundle)),
+                    None => tracing::warn!(
+                        "milestone '{}' pins snapshot {:?} for {}/{}, but no such snapshot exists — skipping the model",
+                        wanted, pinned_id, key.project_id, key.model_id
+                    ),
+                }
+            }
+        }
+    }
 
     // Level dedup: a `Level.id` is only unique *within* its own model (same
     // caveat as room ids -- see `ModelKey`'s doc comment), so two linked
@@ -312,6 +354,7 @@ mod tests {
             builtin_properties: vec![],
             room_label: vec!["$name".to_string(), "$id".to_string()],
             drofus_fields: vec![],
+            milestones: vec![],
         }
     }
 
@@ -411,7 +454,7 @@ mod tests {
         state.set_snapshot(payload_a).unwrap();
         state.set_snapshot(payload_b).unwrap();
 
-        let result = assemble_rooms(&state, Some("p1"), None).unwrap().expect("store has data");
+        let result = assemble_rooms(&state, Some("p1"), None, None).unwrap().expect("store has data");
 
         assert_eq!(result.levels.len(), 1, "same name+elevation levels must collapse to one");
 
@@ -428,7 +471,7 @@ mod tests {
     fn test_assemble_rooms_reports_store_empty() {
         let state = AppState::new(Box::new(MemStore::new()), single_project("p1", make_bundle("Number")), None);
 
-        let result = assemble_rooms(&state, None, None).unwrap();
+        let result = assemble_rooms(&state, None, None, None).unwrap();
         assert!(result.is_none(), "nothing has ever been pushed");
     }
 
@@ -452,7 +495,7 @@ mod tests {
         let state = AppState::new(Box::new(MemStore::new()), single_project("p1", make_bundle("Number")), None);
         state.set_snapshot(payload).unwrap();
 
-        let result = assemble_rooms(&state, None, None).unwrap().expect("the store did receive a push");
+        let result = assemble_rooms(&state, None, None, None).unwrap().expect("the store did receive a push");
         assert!(result.rooms.is_empty(), "but the unregistered project's rooms must not appear");
         assert!(result.levels.is_empty());
     }
@@ -489,7 +532,7 @@ mod tests {
         state.set_snapshot(payload_a).unwrap();
         state.set_snapshot(payload_b).unwrap();
 
-        let result = assemble_rooms(&state, None, None).unwrap().expect("store has data");
+        let result = assemble_rooms(&state, None, None, None).unwrap().expect("store has data");
 
         assert_eq!(result.levels.len(), 2, "same (name, elevation) in different projects must NOT collapse");
         assert_eq!(result.rooms.len(), 2);
@@ -532,12 +575,83 @@ mod tests {
         state.set_snapshot(payload_b).unwrap();
 
         let key = building_key(&Some("B01".to_string()), &None);
-        let result = assemble_rooms(&state, None, Some(&key)).unwrap().expect("store has data");
+        let result = assemble_rooms(&state, None, Some(&key), None).unwrap().expect("store has data");
 
         assert_eq!(result.rooms.len(), 1, "only project A's matching room");
         assert_eq!(result.rooms[0].room.id, "r1");
         assert_eq!(result.levels.len(), 1, "only project A's levels");
         assert_eq!(result.levels[0].name, "Level 1");
+    }
+
+    /// A bundle defining one milestone that pins model "m1" to `pinned_ts`.
+    fn make_bundle_with_milestone(pinned_ts: &str) -> ProjectSettings {
+        ProjectSettings {
+            milestones: vec![crate::settings::Milestone {
+                name: "Design Freeze".to_string(),
+                date: "2026-06-30".to_string(),
+                attachments: std::collections::BTreeMap::from([("m1".to_string(), pinned_ts.to_string())]),
+            }],
+            ..make_bundle("Number")
+        }
+    }
+
+    /// A milestone view serves the *pinned* (older) snapshot's rooms while
+    /// the default view keeps serving the latest — the core milestone
+    /// behavior. Uses FsStore because pinning to history needs a store that
+    /// actually keeps it.
+    #[test]
+    fn test_assemble_rooms_milestone_serves_pinned_snapshot() {
+        let dir = std::env::temp_dir().join(format!("roommate-ms-pin-{}", std::process::id()));
+        let store = crate::storage::FsStore::new(dir.clone()).unwrap();
+
+        let old_ts = "2026-06-01T00:00:00Z";
+        let mut old = make_payload("p1", "m1", vec![], vec![make_room("r1", "Old Room", &[])]);
+        old.snapshot.taken_at = old_ts.to_string();
+        let mut new = make_payload("p1", "m1", vec![], vec![make_room("r2", "New Room", &[])]);
+        new.snapshot.taken_at = "2026-07-01T00:00:00Z".to_string();
+
+        let state = AppState::new(Box::new(store), single_project("p1", make_bundle_with_milestone(old_ts)), None);
+        state.set_snapshot(old).unwrap();
+        state.set_snapshot(new).unwrap();
+
+        let latest = assemble_rooms(&state, Some("p1"), None, None).unwrap().expect("store has data");
+        assert_eq!(latest.rooms.len(), 1);
+        assert_eq!(latest.rooms[0].room.name, "New Room");
+
+        let pinned = assemble_rooms(&state, Some("p1"), None, Some("Design Freeze")).unwrap().expect("store has data");
+        assert_eq!(pinned.rooms.len(), 1);
+        assert_eq!(pinned.rooms[0].room.name, "Old Room", "milestone view serves the pinned snapshot");
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// Under a milestone filter, a model the milestone doesn't pin
+    /// contributes nothing, and a project defining no milestone of that name
+    /// contributes nothing at all — same discipline as the building filter.
+    #[test]
+    fn test_assemble_rooms_milestone_excludes_unpinned_and_unknown() {
+        let dir = std::env::temp_dir().join(format!("roommate-ms-excl-{}", std::process::id()));
+        let store = crate::storage::FsStore::new(dir.clone()).unwrap();
+
+        let ts = "2026-06-01T00:00:00Z";
+        let mut pinned_model = make_payload("p1", "m1", vec![], vec![make_room("r1", "Pinned", &[])]);
+        pinned_model.snapshot.taken_at = ts.to_string();
+        let mut unpinned_model = make_payload("p1", "m2", vec![], vec![make_room("r2", "Unpinned", &[])]);
+        unpinned_model.snapshot.taken_at = ts.to_string();
+
+        let state = AppState::new(Box::new(store), single_project("p1", make_bundle_with_milestone(ts)), None);
+        state.set_snapshot(pinned_model).unwrap();
+        state.set_snapshot(unpinned_model).unwrap();
+
+        let result = assemble_rooms(&state, Some("p1"), None, Some("Design Freeze")).unwrap().expect("store has data");
+        assert_eq!(result.rooms.len(), 1, "only the pinned model contributes");
+        assert_eq!(result.rooms[0].room.name, "Pinned");
+
+        // A milestone name this project never defined matches nothing.
+        let unknown = assemble_rooms(&state, Some("p1"), None, Some("Nonexistent")).unwrap().expect("store has data");
+        assert!(unknown.rooms.is_empty());
+
+        std::fs::remove_dir_all(&dir).ok();
     }
 
     /// Scoped to a project with no Building tier while a building filter is
@@ -558,7 +672,7 @@ mod tests {
         state.set_snapshot(payload_b).unwrap();
 
         let key = building_key(&Some("B01".to_string()), &None);
-        let result = assemble_rooms(&state, Some("p2"), Some(&key))
+        let result = assemble_rooms(&state, Some("p2"), Some(&key), None)
             .unwrap()
             .expect("store is not empty, so this is Some with empty vecs");
 

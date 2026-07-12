@@ -78,6 +78,13 @@ Revit.
   The cost the split adds is **serialization overhead** — extract, JSON-encode,
   send, decode — almost always worth it for the decoupling, but the thing to
   measure on a huge model.
+- **Snapshot id is the producer's to state, the server's to fill.** The
+  upload envelope's `snapshot.taken_at` (an RFC3339 UTC date-time — see
+  [Index](STRATEGY.md) "The upload envelope") may be omitted, in which case
+  the server mints one at ingest and reports it in the response. The Revit
+  producer keeps supplying its own deliberately: its timestamp says when the
+  model was *read*, which receipt time can't. A future upload type with no
+  meaningful read-time just leaves it blank.
 - **Gzip + NDJSON streaming push (`post_rooms.py`).** FFE exports run >100 MB
   uncompressed, too large to hold as one JSON string client-side or buffer
   whole server-side. `post_payload_stream` (the path `room_mate.py` actually

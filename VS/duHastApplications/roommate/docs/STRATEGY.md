@@ -147,3 +147,24 @@ store key; ids are immutable, names are display-only — see
 *response* (not the push), each room additionally carries a `drofus` sub-object
 when its link key matched, and a `classification` path — both derived at
 response assembly, never stored (see Server and Sources respectively).
+
+### The upload envelope
+
+`schema_version` / `project` / `model` / `snapshot` together are the **upload
+envelope**: the identity every upload type carries, rooms being the first.
+Any future upload (FFE, etc.) associates back to room data by exactly two
+keys — the snapshot id and the room id — so it must ride the same envelope
+and resolve its snapshot id through the same contract functions
+(`ensure_taken_at` / `validate_snapshot_id` in `contract.rs`), never a
+reimplementation.
+
+The snapshot id (`snapshot.taken_at`) is an **RFC3339 date-time expressed in
+UTC** (`Z` or `+00:00`; anything else is a 422) — a real date-time by
+definition, lexically sortable so newest-is-lexical-max holds everywhere, and
+structurally incapable of smuggling a path escape. It is also **omittable**:
+a payload that leaves `snapshot` (or just `taken_at`) out asks the server to
+mint the id at ingest. Either way the ingest response reports the resolved id
+(`snapshot_taken_at`, plus `snapshot_generated`) so the pusher can attach
+follow-up uploads to that exact snapshot. This relaxation did not bump the
+schema version: every previously-valid v5 payload is still valid and means
+the same thing.

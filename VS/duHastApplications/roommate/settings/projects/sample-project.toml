@@ -83,3 +83,17 @@ by_source = { revit = "Number" }
 [[builtin_properties]]
 canonical = "Department"
 by_source = { revit = "Department" }
+
+# ---------------------------------------------------------------------------
+# Milestones: named dates with data snapshots explicitly pinned to them
+# (attachments: model id -> snapshot taken_at, ids as listed by
+# GET /projects/{id}/snapshots). The viewer's milestone dropdown offers these;
+# a pinned model is served from that snapshot instead of its latest. Usually
+# edited through the settings page rather than by hand. Example:
+#
+# [[milestones]]
+# name = "Design Freeze"
+# date = "2026-06-30"
+# [milestones.attachments]
+# "sample-model" = "2026-05-09T11:13:34Z"
+# ---------------------------------------------------------------------------

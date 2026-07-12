@@ -74,6 +74,16 @@ pub struct Settings {
     #[serde(default = "default_room_label")]
     pub room_label: Vec<String>,
 
+    /// User-defined milestones: named dates with data snapshots explicitly
+    /// pinned to them, so the viewer can show the project as captured at a
+    /// milestone instead of each model's latest push. Lives in settings (not
+    /// storage) deliberately: milestones are per-project user-authored
+    /// metadata with the same lifecycle as hierarchy/room_label, and riding
+    /// this file buys the whole save pipeline — validation, atomic install,
+    /// hot-reload — for free. Empty if omitted.
+    #[serde(default)]
+    pub milestones: Vec<Milestone>,
+
     /// Per-column declarations for dRofus CSV fields: what *type* of data a
     /// column holds, and, optionally, how QA comparison should treat it. One
     /// declaration per column, not two separate lists — "what is this
@@ -293,6 +303,57 @@ pub struct TestData {
     pub snapshot_path: PathBuf,
 }
 
+/// One user-defined milestone: a named date with data snapshots explicitly
+/// pinned to it (`attachments`: model id → snapshot `taken_at`). The *name*
+/// is the milestone's identity — unique per project, and what
+/// `/rooms?milestone=` matches on; the date is display/ordering metadata.
+/// dRofus is deliberately NOT pinnable yet: it's still a single static CSV
+/// per project with no snapshots of its own — when it becomes an uploaded,
+/// snapshotted source (riding the shared upload envelope), its pins join
+/// `attachments` without a redesign; that's the slot future sources fill.
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct Milestone {
+    /// Identity: unique per project, non-empty (validated at load).
+    pub name: String,
+    /// Display/order date: `YYYY-MM-DD` or a full RFC3339 date-time
+    /// (validated at load).
+    pub date: String,
+    /// Explicit pins: model id → snapshot id (`taken_at`). A model with no
+    /// entry simply doesn't appear in this milestone's view. Whether a pinned
+    /// snapshot still *exists* is a read-time concern (skip + warn), not
+    /// validated here — settings can't see storage.
+    #[serde(default)]
+    pub attachments: std::collections::BTreeMap<String, String>,
+}
+
+impl Milestone {
+    /// Startup-loud checks on one milestone's own fields (uniqueness across
+    /// milestones is checked in `load_settings`, which can see the siblings).
+    pub fn validate(&self) -> anyhow::Result<()> {
+        if self.name.trim().is_empty() {
+            anyhow::bail!("a milestone has an empty name");
+        }
+        let date_ok = chrono::NaiveDate::parse_from_str(&self.date, "%Y-%m-%d").is_ok()
+            || chrono::DateTime::parse_from_rfc3339(&self.date).is_ok();
+        if !date_ok {
+            anyhow::bail!(
+                "milestone '{}' has an invalid date {:?} (expected YYYY-MM-DD or RFC3339)",
+                self.name,
+                self.date
+            );
+        }
+        for (model_id, taken_at) in &self.attachments {
+            if model_id.trim().is_empty() {
+                anyhow::bail!("milestone '{}' has an attachment with an empty model id", self.name);
+            }
+            crate::contract::validate_snapshot_id(taken_at).map_err(|e| {
+                anyhow::anyhow!("milestone '{}', attachment for model '{}': {}", self.name, model_id, e)
+            })?;
+        }
+        Ok(())
+    }
+}
+
 /// One tier of the classification hierarchy. A tier is keyed by a code and/or a
 /// name property — at least one must be present (validated at startup), since a
 /// tier naming neither is unkeyable.
@@ -402,6 +463,16 @@ pub fn load_settings(path: &PathBuf) -> anyhow::Result<Settings> {
             anyhow::bail!("duplicate builtin property canonical name: '{}'", def.canonical);
         }
     }
+    // Fail fast on malformed or duplicate-named milestones — the name is the
+    // identity `/rooms?milestone=` matches on, so two milestones sharing one
+    // would silently resolve to the first.
+    let mut seen_milestones = std::collections::HashSet::new();
+    for milestone in &settings.milestones {
+        milestone.validate()?;
+        if !seen_milestones.insert(milestone.name.clone()) {
+            anyhow::bail!("duplicate milestone name: '{}'", milestone.name);
+        }
+    }
     Ok(settings)
 }
 
@@ -472,6 +543,60 @@ code_property = "b"
 
         let settings = load_settings(&settings_path).unwrap();
         assert!(settings.sources.drofus.is_none());
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    fn milestone(name: &str, date: &str) -> Milestone {
+        Milestone { name: name.to_string(), date: date.to_string(), attachments: Default::default() }
+    }
+
+    /// A milestone's own checks: empty name, unparseable date, and an
+    /// attachment whose snapshot id isn't an RFC3339 UTC date-time all fail;
+    /// both accepted date shapes pass.
+    #[test]
+    fn test_milestone_validate() {
+        assert!(milestone("Design Freeze", "2026-06-30").validate().is_ok());
+        assert!(milestone("Design Freeze", "2026-06-30T10:00:00Z").validate().is_ok());
+
+        assert!(milestone("  ", "2026-06-30").validate().is_err(), "empty name");
+        assert!(milestone("M", "sometime in June").validate().is_err(), "bad date");
+
+        let mut bad_pin = milestone("M", "2026-06-30");
+        bad_pin.attachments.insert("model-1".to_string(), "not-a-snapshot-id".to_string());
+        assert!(bad_pin.validate().is_err(), "attachment id must be a valid snapshot id");
+
+        let mut good_pin = milestone("M", "2026-06-30");
+        good_pin.attachments.insert("model-1".to_string(), "2026-06-29T10:00:00.123456Z".to_string());
+        assert!(good_pin.validate().is_ok());
+    }
+
+    /// Two milestones sharing a name fail `load_settings` — the name is what
+    /// `/rooms?milestone=` matches on, so a duplicate would silently resolve
+    /// to the first.
+    #[test]
+    fn test_duplicate_milestone_names_fail_load_settings() {
+        let dir = std::env::temp_dir().join(format!("roommate-dup-ms-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let settings_path = dir.join("settings.toml");
+        std::fs::write(
+            &settings_path,
+            r#"
+project_id = "p1"
+
+[[milestones]]
+name = "Freeze"
+date = "2026-06-30"
+
+[[milestones]]
+name = "Freeze"
+date = "2026-07-30"
+"#,
+        )
+        .unwrap();
+
+        let msg = format!("{:#}", load_settings(&settings_path).unwrap_err());
+        assert!(msg.contains("duplicate milestone name"), "message names the problem: {msg}");
 
         std::fs::remove_dir_all(&dir).ok();
     }

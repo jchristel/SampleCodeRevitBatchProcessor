@@ -131,6 +131,7 @@
     <h1>Room Plan</h1>
     <select class="picker hidden" id="projectSelect"></select>
     <select class="picker hidden" id="buildingSelect"></select>
+    <select class="picker hidden" id="milestoneSelect"></select>
     <select class="picker hidden" id="levelSelect"></select>
     <button class="validation-toggle hidden" id="validationToggle"></button>
     <span class="meta" id="meta">waiting for data</span>
@@ -157,6 +158,7 @@ const meta = document.getElementById("meta");
 const empty = document.getElementById("empty");
 const projectSelect = document.getElementById("projectSelect");
 const buildingSelect = document.getElementById("buildingSelect");
+const milestoneSelect = document.getElementById("milestoneSelect");
 const levelSelect = document.getElementById("levelSelect");
 const validationToggle = document.getElementById("validationToggle");
 const validationPanel = document.getElementById("validationPanel");
@@ -176,8 +178,10 @@ let activeLevelId = null;    // which level is shown
 // --- scope state: which project/building /rooms is currently fetching ---
 let currentProjectId = null;
 let currentBuildingKey = null;    // opaque key from /projects/{id}/buildings; null = no filter
+let currentMilestone = null;      // milestone name from /projects/{id}/milestones; null = Latest
 let lastProjectIds = null;        // for diffing the periodic /projects refresh
 let lastBuildingsSignature = null;
+let lastMilestonesSignature = null;
 
 // --- validation panel state ---
 let currentValidation = null;     // last-fetched ValidationResponse, for CSV export
@@ -446,6 +450,25 @@ function populateBuildingSelect(data) {
   if (data.buildings.some(b => b.key === prevValue)) buildingSelect.value = prevValue;
 }
 
+function populateMilestoneSelect(data) {
+  const prevValue = milestoneSelect.value;
+  milestoneSelect.replaceChildren();
+  const latest = document.createElement("option");
+  latest.value = ""; // empty value = no milestone filter = each model's latest
+  latest.textContent = "Latest";
+  milestoneSelect.appendChild(latest);
+  for (const m of data.milestones) {
+    const opt = document.createElement("option");
+    opt.value = m.name; // the name is the milestone's identity server-side
+    opt.textContent = `${m.name} (${m.date})`;
+    milestoneSelect.appendChild(opt);
+  }
+  // Hidden when the project defines no milestones — unlike project/building's
+  // <=1 rule, "Latest" alone is not a choice worth showing a picker for.
+  milestoneSelect.classList.toggle("hidden", data.milestones.length === 0);
+  if (data.milestones.some(m => m.name === prevValue)) milestoneSelect.value = prevValue;
+}
+
 // Fetch the known projects; auto-select if there's exactly one and the
 // current selection (if any) no longer exists. Diffs against the last-seen
 // id list so it doesn't fight an in-progress user selection every tick.
@@ -464,9 +487,14 @@ async function loadProjects() {
   if (!projects.some(p => p.id === currentProjectId)) {
     currentProjectId = projects.length ? projects[0].id : null;
     lastBuildingsSignature = null; // force a buildings refresh for the new project
+    lastMilestonesSignature = null; // ...and a milestones refresh
+    currentMilestone = null;        // a milestone belongs to its project
     loadValidation(currentProjectId); // project (re)established -- refresh once, not every tick
   }
-  if (currentProjectId) await loadBuildingsForProject(currentProjectId);
+  if (currentProjectId) {
+    await loadBuildingsForProject(currentProjectId);
+    await loadMilestonesForProject(currentProjectId);
+  }
 }
 
 // --- data validation panel ---
@@ -621,17 +649,48 @@ async function loadBuildingsForProject(projectId) {
   }
 }
 
+// Fetch one project's milestones for the picker; same signature-diff gating
+// as buildings so the 2s refresh doesn't fight an in-progress selection. If
+// the selected milestone disappeared (deleted/renamed in settings), fall back
+// to Latest rather than silently keeping a filter the server can't answer.
+async function loadMilestonesForProject(projectId) {
+  let data;
+  try {
+    data = await fetchJson(`/projects/${encodeURIComponent(projectId)}/milestones`);
+  } catch (err) {
+    return;
+  }
+  const signature = data.milestones.map(m => `${m.name}@${m.date}`).join(",");
+  if (signature === lastMilestonesSignature) return;
+  lastMilestonesSignature = signature;
+  populateMilestoneSelect(data);
+
+  if (currentMilestone && !data.milestones.some(m => m.name === currentMilestone)) {
+    currentMilestone = null;
+    milestoneSelect.value = "";
+    lastPayloadJson = null; // selection changed under us -> re-render on next tick
+  }
+}
+
 projectSelect.addEventListener("change", async () => {
   currentProjectId = projectSelect.value;
   currentBuildingKey = null;
   lastBuildingsSignature = null;
+  currentMilestone = null;
+  lastMilestonesSignature = null;
   await loadBuildingsForProject(currentProjectId);
+  await loadMilestonesForProject(currentProjectId);
   loadValidation(currentProjectId);
   lastPayloadJson = null; // force the next poll tick to render immediately
 });
 
 buildingSelect.addEventListener("change", () => {
   currentBuildingKey = buildingSelect.value;
+  lastPayloadJson = null; // force the next poll tick to render immediately
+});
+
+milestoneSelect.addEventListener("change", () => {
+  currentMilestone = milestoneSelect.value || null; // "" = Latest
   lastPayloadJson = null; // force the next poll tick to render immediately
 });
 
@@ -690,12 +749,14 @@ plan.addEventListener("dblclick", () => { view = { ...fitted }; setViewBox(); })
 
 // --- polling ---
 
-// Build /rooms's URL from the current project/building selection. Neither
-// selected -> today's unscoped "merge everything" behaviour.
+// Build /rooms's URL from the current project/building/milestone selection.
+// Nothing selected -> today's unscoped "merge everything" behaviour. The
+// milestone only rides along with its project — it's a per-project name.
 function roomsUrl() {
   const params = new URLSearchParams();
   if (currentProjectId) params.set("project", currentProjectId);
   if (currentBuildingKey) params.set("building", currentBuildingKey);
+  if (currentProjectId && currentMilestone) params.set("milestone", currentMilestone);
   const qs = params.toString();
   return qs ? `/rooms?${qs}` : "/rooms";
 }

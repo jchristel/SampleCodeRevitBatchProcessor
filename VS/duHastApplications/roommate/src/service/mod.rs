@@ -7,8 +7,10 @@
 //! convention. That mapping is deliberately kept *out* of this module -- it
 //! belongs in the adapter, not the domain. See HANDOVER-service-layer.md.
 
+pub mod milestones;
 pub mod projects;
 pub mod rooms;
+pub mod snapshots;
 pub mod validation;
 
 /// Domain-level failure, independent of how a caller reports it.

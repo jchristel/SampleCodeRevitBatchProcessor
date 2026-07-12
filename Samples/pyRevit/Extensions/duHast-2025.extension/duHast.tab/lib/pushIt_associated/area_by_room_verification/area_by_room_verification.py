@@ -61,7 +61,7 @@ def push_it_area_by_room_verification_entry(doc, uiapp,output, forms):
     push_it_elements_model = doc
 
     # get push it data
-    get_data_result = get_push_it_rooms_data(push_it_elements_model)
+    get_data_result = get_push_it_rooms_data(push_it_elements_model, forms)
     # check we got data
     if( get_data_result.status is False):
         message = "PushIt data retrieval failed: {}".format(get_data_result.message)
@@ -70,8 +70,8 @@ def push_it_area_by_room_verification_entry(doc, uiapp,output, forms):
         return return_value
 
     # get rotation and translation of the coordinate system
-    # this is the translation and rotation of the coordinate system of the pushIt model
-    translation, rotation = get_coordinate_system_translation_and_rotation(push_it_elements_model)
+    # this is the rotation ( 3 x 3 matrix ) and translation ( origin ) of the coordinate system of the pushIt model
+    rotation, translation = get_coordinate_system_translation_and_rotation(push_it_elements_model)
 
     # place the rooms in the current model and transfer the parameter data
     create_and_update_result =  update_push_it_instances_from_rooms(doc, get_data_result.result, rotation=rotation, translation=translation)

@@ -26,9 +26,9 @@ from duHast.Utilities.Objects.result import Result
 from duHast.pyRevit.console_output import print_error
 
 from pushIt_associated.utils.utilities import (
-    get_unique_id_parameter_from_data_file,
-    get_parameters_and_guids_from_data_file,
-    get_data_path_and_supported_categories, 
+    get_unique_id_parameter,
+    get_parameters_and_guids,
+    get_push_it_data_source,
     get_family_instances_of_supported_categories,
     convert_family_instances_to_storage,
 )
@@ -48,20 +48,32 @@ def get_push_it_rooms_data(push_it_elements_model, forms):
     return_value = Result()
 
     try:
-        # read the settings file to get categories such as supported walls, doors, windows, etc. and the data path
-        data_path, supported_category_names = get_data_path_and_supported_categories()
-        if data_path is None or supported_category_names is None:
-            message = "Invalid data path or supported categories"
+        # read the settings file to get the configured data source ( CSV file or drofus property
+        # mappings ) and enabled categories such as supported walls, doors, windows, etc.
+        data_source = get_push_it_data_source()
+        if data_source is None:
+            message = "Invalid data source or supported categories"
             return_value.update_sep(False, message)
             print_error(message)
             return return_value
 
-        # read the current SoA file and get the parameter guids for value transfers
-        parameter_data = get_parameters_and_guids_from_data_file(data_path)
-        #print("Parameter data: ", parameter_data)
+        supported_category_names = data_source.enabled_category_names
 
-        # get the unique id parameter from the data file
-        unique_id_parameter_name, unique_id_parameter_guid = get_unique_id_parameter_from_data_file(data_path)
+        # get the parameter guids for value transfers from the data source
+        parameter_data = get_parameters_and_guids(data_source)
+        if parameter_data is None or len(parameter_data) == 0:
+            message = "No parameter data found in data source: {}".format(data_source.get_source_description())
+            return_value.update_sep(False, message)
+            print_error(message)
+            return return_value
+
+        # get the unique id parameter from the data source
+        unique_id_parameter_name, unique_id_parameter_guid = get_unique_id_parameter(data_source)
+        if unique_id_parameter_name is None or unique_id_parameter_guid is None:
+            message = "No unique id parameter found in data source: {}".format(data_source.get_source_description())
+            return_value.update_sep(False, message)
+            print_error(message)
+            return return_value
         
         # get the rooms from the pushIt model ( including parameter data )
         revit_family_instances_result = get_family_instances_of_supported_categories(push_it_elements_model,  supported_category_names)

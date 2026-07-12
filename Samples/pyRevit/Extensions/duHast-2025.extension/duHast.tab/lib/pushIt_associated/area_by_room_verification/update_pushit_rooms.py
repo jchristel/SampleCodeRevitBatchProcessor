@@ -49,17 +49,16 @@ from pushIt_associated.utils.settings import AREA_BY_REVIT_ROOM_PARAMETER_NAME, 
 DEBUG = True
 
 def apply_transform_to_uv(uv_point, rotation_matrix, translation_vector):
-    # Convert UV point to XYZ point (assuming Z = 0)
-    xyz_point = XYZ(uv_point.U, uv_point.V, 0)
-    
-    # Apply rotation (no rotation in this case)
-    rotated_u = uv_point.U + rotation_matrix[0]
-    rotated_v = uv_point.V + rotation_matrix[1]
-    
-    # Apply translation (identity translation matrix)
-    transformed_u = rotated_u + translation_vector[2][0]  # translation[2][0] should be 0
-    transformed_v = rotated_v + translation_vector[2][1]  # translation[2][1] should be 0
-    
+    # rotation_matrix is [basisX, basisY, basisZ] of the shared coordinate transform,
+    # translation_vector is its origin (both as returned by get_coordinate_system_translation_and_rotation)
+    # transformed point = u * basisX + v * basisY + origin ( z assumed 0 )
+    rotated_u = uv_point.U * rotation_matrix[0][0] + uv_point.V * rotation_matrix[1][0]
+    rotated_v = uv_point.U * rotation_matrix[0][1] + uv_point.V * rotation_matrix[1][1]
+
+    # Apply translation
+    transformed_u = rotated_u + translation_vector[0]
+    transformed_v = rotated_v + translation_vector[1]
+
     return UV(transformed_u, transformed_v)
 
 
@@ -149,10 +148,10 @@ def create_room_from_push_it_instance_and_update(doc, family_instance, levels_as
 
         # create the room
         room_result = create_room (
-            doc, 
-            level=placement_level, 
-            location_point = placement_point,
-              modify_action = modify_action, 
+            doc,
+            level=placement_level,
+            location_point = transformed_placement_uv,
+              modify_action = modify_action,
               transaction_manager = transaction_manager
         )
 
@@ -293,10 +292,14 @@ def update_push_it_instances_from_rooms(doc, family_instances, rotation, transla
             room_result =  create_room_from_push_it_instance_and_update(doc, family_instance, levels_ascending, rotation, translation)
             return_value.update(room_result)
 
-            if len(room_result.result)>0:
-                # add the room id to the list of room ids to delete later
-                room_ids_to_delete.append(room_result.result[0].Id)
-           
+            # skip the area update if no room was created
+            if len(room_result.result) == 0:
+                return_value.update_sep(False, "No room was created for push it instance: {}".format(family_instance.get_ui_name()))
+                continue
+
+            # add the room id to the list of room ids to delete later
+            room_ids_to_delete.append(room_result.result[0].Id)
+
             # update the family instance with the room area if required
             update_result = update_push_it_instance(doc=doc, push_it_family_instance=family_instance,room=room_result.result[0])
             return_value.update(update_result)

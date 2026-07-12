@@ -3,7 +3,7 @@ layout:
   - Settings
   
 # bundle tooltip
-tooltip: Hassell
+tooltip: Creates a PushIt comparison room based on the selected filled region(s)
 
 
 # bundle author

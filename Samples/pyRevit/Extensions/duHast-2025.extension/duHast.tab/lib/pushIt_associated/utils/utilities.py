@@ -47,12 +47,46 @@ from pushIt_associated.push_it_family_property import PushItFamilyProperty
 PUSH_IT_COMMAND_NAME = "WLL"
 
 
-def get_data_path_and_supported_categories():
-    """
-    Get the data path and supported categories from the settings file.
+# data source type values matching the PushIt application DataSourceType enum
+# ( serialised as integers in the settings file )
+DATA_SOURCE_TYPE_NONE = 0
+DATA_SOURCE_TYPE_CSV = 1
+DATA_SOURCE_TYPE_DROFUS = 2
 
-    :return: Path to local app data and list of supported Revit categories
-    :rtype: str,[str]
+
+class PushItDataSource(object):
+    """
+    Source-agnostic view of the pushIt settings file.
+
+    Depending on source_type either csv_path ( CSV sources ) or property_mappings
+    ( drofus sources ) is populated.
+    """
+
+    def __init__(self, source_type, csv_path, property_mappings, enabled_category_names):
+        self.source_type = source_type
+        self.csv_path = csv_path
+        self.property_mappings = property_mappings
+        self.enabled_category_names = enabled_category_names
+
+    def get_source_description(self):
+        if self.source_type == DATA_SOURCE_TYPE_CSV:
+            return "CSV: {}".format(self.csv_path)
+        if self.source_type == DATA_SOURCE_TYPE_DROFUS:
+            return "drofus ( {} property mappings )".format(len(self.property_mappings))
+        return "none"
+
+
+def get_push_it_data_source():
+    """
+    Reads the pushIt settings file and returns the configured data source and enabled categories.
+
+    Supports the current settings schema written by the PushIt application ( a DataSource object
+    with SourceType, CsvConfig and Drofus properties ) as well as the legacy flat DataPath key
+    written before the data source refactor.
+
+    :return: A PushItDataSource instance, or None if the settings file could not be read or does
+        not contain a usable data source.
+    :rtype: :class:`PushItDataSource` or None
     """
 
     # push it settings file path
@@ -60,31 +94,119 @@ def get_data_path_and_supported_categories():
        get_local_app_data_path(),r"duHast/pushIt_settings.json")
     # read the settings file
     read_result = read_json_data_from_file(push_it_settings_file)
-    
+
     # check if read was successful
     if not read_result.status:
         print(read_result.message)
         return None
-    
+
     # get the json dictionary
     dic = read_result.result[0]
 
-    data_path = None
-    enabled_category_names = None
-    # check if the dictionary has the field we are after
-    if "DataPath" in dic:
-        data_path = dic["DataPath"]
-    else:
-        print("DataPath not found in settings file")
-        return None ,None
-    
-    if "EnabledCategoryNames" in dic:
-        enabled_category_names = dic["EnabledCategoryNames"]  
-    else:
+    if "EnabledCategoryNames" not in dic:
         print("EnabledCategoryNames not found in settings file")
-        return None,None
-    
-    return data_path, enabled_category_names
+        return None
+    enabled_category_names = dic["EnabledCategoryNames"]
+
+    # current schema: DataSource object with SourceType, CsvConfig and Drofus properties
+    data_source = dic.get("DataSource")
+    if data_source:
+        source_type = data_source.get("SourceType", DATA_SOURCE_TYPE_NONE)
+
+        if source_type == DATA_SOURCE_TYPE_CSV:
+            csv_config = data_source.get("CsvConfig") or {}
+            csv_path = csv_config.get("FilePath")
+            if not csv_path:
+                print("Settings data source is CSV but no file path is set. Set up the data source in the PushIt settings first.")
+                return None
+            return PushItDataSource(DATA_SOURCE_TYPE_CSV, csv_path, None, enabled_category_names)
+
+        if source_type == DATA_SOURCE_TYPE_DROFUS:
+            drofus = data_source.get("Drofus") or {}
+            property_mappings = drofus.get("PropertyMappings")
+            if not property_mappings:
+                print("Settings data source is drofus but no property mappings are set. Set up the property mappings in the PushIt settings first.")
+                return None
+            return PushItDataSource(DATA_SOURCE_TYPE_DROFUS, None, property_mappings, enabled_category_names)
+
+        print("Settings file has no data source configured. Set up a data source in the PushIt settings first.")
+        return None
+
+    # legacy schema: flat DataPath key ( written before the PushIt data source refactor )
+    if "DataPath" in dic and dic["DataPath"]:
+        return PushItDataSource(DATA_SOURCE_TYPE_CSV, dic["DataPath"], None, enabled_category_names)
+
+    print("No usable data source found in settings file.")
+    return None
+
+
+def get_parameters_and_guids(data_source):
+    """
+    Returns all parameter names and their guids from the configured data source.
+
+    :param data_source: The pushIt data source.
+    :type data_source: :class:`PushItDataSource`
+    :return: A dictionary of parameter name and guid, or None
+    :rtype: {str:str} or None
+    """
+
+    if data_source.source_type == DATA_SOURCE_TYPE_CSV:
+        return get_parameters_and_guids_from_data_file(data_source.csv_path)
+
+    if data_source.source_type == DATA_SOURCE_TYPE_DROFUS:
+        parameter_data = {}
+        for mapping in data_source.property_mappings:
+            parameter_data[mapping.get("RevitParameterName")] = mapping.get("RevitParameterGuid")
+        return parameter_data
+
+    return None
+
+
+def get_unique_id_parameter(data_source):
+    """
+    Returns the unique id parameter name and guid from the configured data source.
+
+    :param data_source: The pushIt data source.
+    :type data_source: :class:`PushItDataSource`
+    :return: Unique ID parameter name and guid ( None, None if not found )
+    :rtype: str,str
+    """
+
+    if data_source.source_type == DATA_SOURCE_TYPE_CSV:
+        csv_result = get_unique_id_parameter_from_data_file(data_source.csv_path)
+        # the data file reader returns a single None on failure
+        if csv_result is None:
+            return None, None
+        return csv_result
+
+    if data_source.source_type == DATA_SOURCE_TYPE_DROFUS:
+        for mapping in data_source.property_mappings:
+            if mapping.get("IsUniqueId"):
+                return mapping.get("RevitParameterName"), mapping.get("RevitParameterGuid")
+        print("No unique id property mapping found in drofus settings.")
+        return None, None
+
+    return None, None
+
+
+def get_data_path_and_supported_categories():
+    """
+    Get the data path and supported categories from the settings file.
+
+    Note: kept for backwards compatibility, this only supports CSV based data sources.
+    Use get_push_it_data_source() for source-agnostic access.
+
+    :return: Path to the data file and list of supported Revit categories ( None, None on failure )
+    :rtype: str,[str]
+    """
+
+    data_source = get_push_it_data_source()
+    if data_source is None:
+        return None, None
+    if data_source.source_type != DATA_SOURCE_TYPE_CSV:
+        print("Settings file does not contain a CSV data source. This tool requires a CSV data source.")
+        return None, None
+    return data_source.csv_path, data_source.enabled_category_names
 
 
 def get_unique_id_parameter_from_data_file(data_path):

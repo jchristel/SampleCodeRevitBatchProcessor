@@ -32,7 +32,44 @@ from duHast.Data.Objects.Collectors import data_level_building as dl
 from duHast.Data.Utils.data_to_file import build_json_for_file
 from duHast.pyRevit.UI.doc_selector import pick_document
 
-from post_rooms import post_payload_stream
+from post_rooms import post_payload_stream, fetch_projects
+
+
+def choose_project(forms):
+    """Force a choice of which SERVER-REGISTERED project to push to, from the
+    server's own `GET /projects` list. Returns `{"id", "name"}`, or `None` to
+    abort the whole run.
+
+    The project id must match a registered settings bundle on the server or the
+    push 422s (and the id becomes a storage path key), so it can't be derived
+    from the Revit document -- it has to come from the server. `None` is
+    returned (and the caller aborts) when the server is unreachable, has no
+    registered projects, or the user cancels; there is deliberately no default
+    or skip path, since a wrong/guessed id is exactly what this replaces."""
+    ok, status, payload = fetch_projects()
+    if not ok:
+        forms.alert(
+            "Could not load projects from the server.\n\n{}".format(payload),
+            title="Roommate - push aborted", warn_icon=True)
+        return None
+    projects = payload
+    if not projects:
+        forms.alert(
+            "The server has no registered projects.\n\n"
+            "A project must be onboarded on the server before rooms can be "
+            "pushed to it.",
+            title="Roommate - no projects", warn_icon=True)
+        return None
+    options = [{"name": p.get("name") or p["id"], "id": p["id"]} for p in projects]
+    selected = forms.SelectFromList.show(
+        options, name_attr="name",
+        title="Select a project to push to",
+        button_name="Push to this project",
+        multiselect=False)
+    if not selected:
+        return None
+    return {"id": selected["id"], "name": selected["name"]}
+
 
 def rooms_export_entry(doc, uiapp, output, forms):
 
@@ -61,6 +98,15 @@ def rooms_export_entry(doc, uiapp, output, forms):
             return_value.append_message("No document(s) selected")
             return return_value
 
+        # pick ONE server-registered project for this run: every selected
+        # model posts under it (matching "several models under one project").
+        # None means abort -- server unreachable, nothing registered, or the
+        # user cancelled -- so nothing is exported or pushed.
+        project = choose_project(forms)
+        if project is None:
+            return_value.update_sep(False, "Push aborted: no project selected.")
+            return return_value
+
         # get going
         model_counter = 0
         
@@ -80,7 +126,7 @@ def rooms_export_entry(doc, uiapp, output, forms):
                 pb.update_progress(model_counter, max_value=len(selected_docs))
 
                 try:
-                    export_and_post_model(selected_doc, return_value, pb)
+                    export_and_post_model(selected_doc, project, return_value, pb)
                 except Exception as e:
                     return_value.update_sep(
                         False, "{}: failed with exception: {}".format(selected_doc.Title, e)
@@ -102,25 +148,27 @@ def rooms_export_entry(doc, uiapp, output, forms):
     return return_value
 
 
-def export_and_post_model(selected_doc, return_value, pb):
-    """Export one model's rooms and levels and push them to the server,
-    recording the outcome on `return_value`. Raises on export/envelope
-    failures -- the caller catches per model so one bad model doesn't
-    abandon the rest."""
+def export_and_post_model(selected_doc, project, return_value, pb):
+    """Export one model's rooms and levels and push them to the server under
+    the picked `project` ({"id", "name"}), recording the outcome on
+    `return_value`. Raises on export/envelope failures -- the caller catches
+    per model so one bad model doesn't abandon the rest."""
 
     # get room data
     room_data = get_all_room_data(selected_doc)
     # get level data
     level_data = get_all_level_data(selected_doc)
 
-    # v4 identity envelope (STRATEGY.md "Identity"). Model id is a
-    # known stopgap: Title, not a GUID -- no stable GUID source exists
-    # in duHast for a plain local (non-workshared, non-cloud) file.
-    # Two consequences of keying on Title: two different files that
-    # share a Title collide into ONE model record on the server,
-    # and renaming a file forks its history into a new record. If
-    # duHast ever exposes Document.CreationGUID / worksharing
-    # GUIDs, switch to those.
+    # v4 identity envelope (STRATEGY.md "Identity"). The project block comes
+    # from the run's picked project (choose_project), NOT the Revit document:
+    # the id must match a settings bundle the server has registered or the push
+    # 422s, and it becomes a storage path key -- a Revit-derived guess can't
+    # guarantee either. Model id is a known stopgap: Title, not a GUID -- no
+    # stable GUID source exists in duHast for a plain local (non-workshared,
+    # non-cloud) file. Two consequences of keying on Title: two different files
+    # that share a Title collide into ONE model record on the server, and
+    # renaming a file forks its history into a new record. If duHast ever
+    # exposes Document.CreationGUID / worksharing GUIDs, switch to those.
     #
     # taken_at carries microseconds: it becomes the snapshot
     # filename server-side, so two pushes of the same model within
@@ -129,11 +177,10 @@ def export_and_post_model(selected_doc, return_value, pb):
     # produce one in normal use). %f is fixed-width, so the string
     # stays lexically sortable -- the server's "lexical max =
     # newest" rule depends on that.
-    project_info = selected_doc.ProjectInformation
     envelope = {
         "project": {
-            "id": project_info.Number or selected_doc.Title,
-            "name": project_info.Name or selected_doc.Title,
+            "id": project["id"],
+            "name": project["name"],
         },
         "model": {
             "id": selected_doc.Title,

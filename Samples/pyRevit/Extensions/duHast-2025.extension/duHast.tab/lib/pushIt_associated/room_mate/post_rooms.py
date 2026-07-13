@@ -38,6 +38,7 @@ from duHast.Utilities.files_json import serialize_utf
 
 SERVER_URL = "http://127.0.0.1:5151/rooms"
 SERVER_URL_STREAM = "http://127.0.0.1:5151/rooms/stream"
+SERVER_URL_PROJECTS = "http://127.0.0.1:5151/projects"
 SCHEMA_VERSION = 5
 
 # Which producer this script feeds the server from. The server resolves
@@ -228,6 +229,38 @@ def write_ndjson_line(gz, obj):
     line = json.dumps(obj, separators=(",", ":")) + "\n"  # compact, no spaces
     data = Encoding.UTF8.GetBytes(line)
     gz.Write(data, 0, data.Length)
+
+
+def fetch_projects(url=SERVER_URL_PROJECTS):
+    """GET the server's registered project list and report it as
+    `(ok, status, text)`, the same tuple shape the post functions use so the
+    caller branches uniformly. On success `text` is the parsed list of
+    `{"id", "name"}` dicts; on any failure it's an error string.
+
+    A push must target a project the server has a registered settings bundle
+    for (the server 422s otherwise -- see roommate's `validate_ingest`), so
+    this list is the authoritative set of ids a push can use. An empty list
+    (`200 []`) is a *success* the caller interprets as "no project onboarded
+    yet" (a hard stop for the producer), not a failure; a 2xx whose body isn't
+    a JSON list is a genuine failure (unexpected server shape)."""
+    client = make_client()
+    try:
+        response = client.GetAsync(url).Result
+        status = int(response.StatusCode)
+        text = response.Content.ReadAsStringAsync().Result
+        if not (200 <= status < 300):
+            return (False, status, "server returned {}: {}".format(status, text))
+        try:
+            projects = json.loads(text)
+        except ValueError as e:
+            return (False, status, "could not parse /projects response: {}".format(e))
+        if not isinstance(projects, list):
+            return (False, status, "unexpected /projects shape: {}".format(text))
+        return (True, status, projects)
+    except Exception as e:
+        return (False, None, "could not reach {}: {}".format(url, unwrap_aggregate(e)))
+    finally:
+        client.Dispose()
 
 
 def _post_content(url, content):

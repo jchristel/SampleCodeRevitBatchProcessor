@@ -205,6 +205,17 @@ pub fn validate_drofus_fields(fields: &[DrofusFieldConfig], all_labels: &[String
         if !all_labels.iter().any(|l| l == &field.label) {
             anyhow::bail!("drofus_fields references unknown dRofus field label: '{}'", field.label);
         }
+    }
+    validate_drofus_field_shapes(fields)
+}
+
+/// The label-independent half of `validate_drofus_fields`: per-field
+/// type/format consistency and strftime pattern validity. Split out for the
+/// one caller that can't know the label set yet — an `Upload`-sourced project
+/// with no CSV uploaded so far, whose declarations should still be checked
+/// for everything checkable without data.
+pub fn validate_drofus_field_shapes(fields: &[DrofusFieldConfig]) -> anyhow::Result<()> {
+    for field in fields {
         match (field.field_type, &field.format) {
             (FieldType::Date, None) => {
                 anyhow::bail!("drofus_fields entry '{}' has type = \"date\" but no format", field.label);
@@ -290,8 +301,14 @@ pub struct Sources {
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum DrofusSource {
-    /// Current: load from a local file.
+    /// Load from a local file path, once at startup.
     File { path: PathBuf },
+    /// Data arrives via `POST /projects/{id}/drofus` uploads, stored as
+    /// timestamped snapshots in the `SnapshotStore`; the latest one is
+    /// hydrated at startup (and hot-swapped in after each upload). A project
+    /// with this source but no upload yet is legitimately "not configured
+    /// yet" downstream — not a startup error.
+    Upload,
     // Future: Api { url: String, api_key: String },
 }
 
@@ -307,10 +324,10 @@ pub struct TestData {
 /// pinned to it (`attachments`: model id → snapshot `taken_at`). The *name*
 /// is the milestone's identity — unique per project, and what
 /// `/rooms?milestone=` matches on; the date is display/ordering metadata.
-/// dRofus is deliberately NOT pinnable yet: it's still a single static CSV
-/// per project with no snapshots of its own — when it becomes an uploaded,
-/// snapshotted source (riding the shared upload envelope), its pins join
-/// `attachments` without a redesign; that's the slot future sources fill.
+/// A milestone can also pin one dRofus snapshot (`drofus_snapshot`), so the
+/// milestone view joins the reference data as it stood at the milestone
+/// rather than the project's current dRofus — the slot that was reserved for
+/// "future sources" now that dRofus is an uploaded, snapshotted source.
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Milestone {
     /// Identity: unique per project, non-empty (validated at load).
@@ -318,6 +335,19 @@ pub struct Milestone {
     /// Display/order date: `YYYY-MM-DD` or a full RFC3339 date-time
     /// (validated at load).
     pub date: String,
+    /// Optional dRofus snapshot pinned to this milestone: the `taken_at` id of
+    /// one uploaded dRofus CSV in the store, joined onto this milestone's rooms
+    /// instead of the project's current dRofus. `None` (the common case, and
+    /// every milestone authored before this field existed) keeps the pre-
+    /// pinning behaviour — the milestone view joins the *current* dRofus.
+    /// dRofus is project-scoped, so this is a single id, not a per-model map
+    /// like `attachments`. Like an `attachments` pin, whether the snapshot
+    /// still *exists* is a read-time concern (skip + warn, fall back to
+    /// current); only its *shape* (a valid RFC3339-UTC snapshot id) is
+    /// validated here. Declared before `attachments` so the TOML serializer
+    /// emits it as a scalar ahead of the `[milestones.attachments]` sub-table.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub drofus_snapshot: Option<String>,
     /// Explicit pins: model id → snapshot id (`taken_at`). A model with no
     /// entry simply doesn't appear in this milestone's view. Whether a pinned
     /// snapshot still *exists* is a read-time concern (skip + warn), not
@@ -349,6 +379,12 @@ impl Milestone {
             crate::contract::validate_snapshot_id(taken_at).map_err(|e| {
                 anyhow::anyhow!("milestone '{}', attachment for model '{}': {}", self.name, model_id, e)
             })?;
+        }
+        // Same rule as an attachments pin: a valid RFC3339-UTC snapshot id.
+        // Existence is not checkable here (settings can't see storage).
+        if let Some(id) = &self.drofus_snapshot {
+            crate::contract::validate_snapshot_id(id)
+                .map_err(|e| anyhow::anyhow!("milestone '{}', drofus_snapshot: {}", self.name, e))?;
         }
         Ok(())
     }
@@ -548,7 +584,12 @@ code_property = "b"
     }
 
     fn milestone(name: &str, date: &str) -> Milestone {
-        Milestone { name: name.to_string(), date: date.to_string(), attachments: Default::default() }
+        Milestone {
+            name: name.to_string(),
+            date: date.to_string(),
+            drofus_snapshot: None,
+            attachments: Default::default(),
+        }
     }
 
     /// A milestone's own checks: empty name, unparseable date, and an
@@ -569,6 +610,15 @@ code_property = "b"
         let mut good_pin = milestone("M", "2026-06-30");
         good_pin.attachments.insert("model-1".to_string(), "2026-06-29T10:00:00.123456Z".to_string());
         assert!(good_pin.validate().is_ok());
+
+        // A dRofus pin follows the same snapshot-id rule as an attachment.
+        let mut bad_drofus = milestone("M", "2026-06-30");
+        bad_drofus.drofus_snapshot = Some("not-a-snapshot-id".to_string());
+        assert!(bad_drofus.validate().is_err(), "drofus_snapshot must be a valid snapshot id");
+
+        let mut good_drofus = milestone("M", "2026-06-30");
+        good_drofus.drofus_snapshot = Some("2026-06-29T17:00:00Z".to_string());
+        assert!(good_drofus.validate().is_ok());
     }
 
     /// Two milestones sharing a name fail `load_settings` — the name is what

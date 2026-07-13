@@ -16,12 +16,15 @@ use tower_http::{cors::CorsLayer, decompression::RequestDecompressionLayer, serv
 
 use roommate::bootstrap::build_state;
 use roommate::handlers::{
-    get_model_latest_snapshot, get_project_buildings, get_project_milestones, get_project_snapshots,
-    get_project_validation, get_projects, get_rooms, ingest_rooms, ingest_rooms_stream,
+    get_drofus_latest, get_drofus_snapshots, get_model_latest_snapshot, get_project_buildings,
+    get_project_milestones, get_project_snapshots, get_project_validation, get_projects, get_rooms,
+    ingest_rooms, ingest_rooms_stream,
 };
 use roommate::settings_api::{
     http_create_project, http_drofus_check, http_get_project, http_list_projects, http_update_project,
+    http_upload_drofus,
 };
+use roommate::DEFAULT_HTTP_ADDR;
 
 /// Cap on the buffered `/rooms` body -- applies to the DECOMPRESSED size, since
 /// `RequestDecompressionLayer` inflates before this limit is checked. FFE
@@ -29,6 +32,11 @@ use roommate::settings_api::{
 /// tuned tight, since the streaming route (`/rooms/stream`) is the intended
 /// home for anything approaching this ceiling anyway. See HANDOVER-gzip.md.
 const ROOMS_BODY_LIMIT_BYTES: usize = 512 * 1024 * 1024;
+
+/// Cap on a dRofus CSV upload body (decompressed, same as above). Real dRofus
+/// exports are a few MB of CSV; 32 MB is generous headroom. Without an
+/// explicit layer this route would get axum's silent 2 MB default.
+const DROFUS_BODY_LIMIT_BYTES: usize = 32 * 1024 * 1024;
 
 #[derive(Parser)]
 struct Args {
@@ -83,6 +91,15 @@ async fn main() -> anyhow::Result<()> {
             "/projects/{project_id}/models/{model_id}/snapshots/latest",
             get(get_model_latest_snapshot),
         )
+        // dRofus upload ingest + its read side: uploaded CSVs are timestamped
+        // project-scoped snapshots in the store (see settings_api's
+        // `upload_drofus` for the validate-before-store pipeline).
+        .route(
+            "/projects/{id}/drofus",
+            post(http_upload_drofus).layer(DefaultBodyLimit::max(DROFUS_BODY_LIMIT_BYTES)),
+        )
+        .route("/projects/{id}/drofus/snapshots", get(get_drofus_snapshots))
+        .route("/projects/{id}/drofus/latest", get(get_drofus_latest))
         // Settings read/save API behind static/settings.html — see
         // `settings_api`'s module doc for the save pipeline and trust model.
         .route("/api/settings/projects", get(http_list_projects).post(http_create_project))
@@ -102,7 +119,7 @@ async fn main() -> anyhow::Result<()> {
         .layer(TraceLayer::new_for_http())
         .with_state(state);
 
-    let addr = "127.0.0.1:5151";
+    let addr = DEFAULT_HTTP_ADDR;
     let listener = tokio::net::TcpListener::bind(addr).await?;
     tracing::info!("viewer on http://{addr}  (POST room JSON to http://{addr}/rooms)");
     axum::serve(listener, app).await?;

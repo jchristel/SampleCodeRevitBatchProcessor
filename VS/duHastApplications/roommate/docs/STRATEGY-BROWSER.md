@@ -88,11 +88,28 @@ side should shape future server endpoints.
   hierarchy / builtin properties / room label / milestones / QA fields, a
   dRofus "check" button that dry-runs the CSV path server-side, and saves
   that go through the exact startup validation before landing (see Server).
+  The dRofus section is a three-way source selector (`none` / `file` /
+  `upload`): `file` keeps the path input + check button; `upload` shows a
+  drag-and-drop zone (with a file-picker fallback) that POSTs the dropped
+  CSV as a raw `text/csv` body to `/projects/{id}/drofus` — deliberately not
+  `FormData`/multipart, matching the server's raw-body ingest — plus the
+  stored upload history from `GET .../drofus/snapshots` with the live latest
+  marked. A success refreshes the QA label dropdowns from the response's
+  `labels` (no second call); the upload-mode counterpart of "check" is
+  `GET .../drofus/latest`, run on editor open, where a 404 renders as a
+  neutral "no upload yet" hint rather than an error. The zone is disabled
+  with a "save the project first" hint while the project is unsaved, since
+  the endpoint rejects unregistered projects.
   The milestones section edits name/date rows plus per-model pin dropdowns
   whose options are the snapshot ids the server actually stores
   (`GET /projects/{id}/snapshots`); a pin referencing a model or snapshot
   the store no longer has renders visibly as missing rather than being
-  silently dropped — removing it is the user's call. Same visual
+  silently dropped — removing it is the user's call. Each milestone also
+  gets a single **dRofus pin** dropdown (`— current dRofus —` plus one option
+  per uploaded dRofus snapshot from `GET /projects/{id}/drofus/snapshots`),
+  shown only when the project actually has uploaded dRofus snapshots to
+  choose from — a `file`-sourced or upload-less project has nothing to pin,
+  so the control is simply absent. Same visual
   language as the viewer — the `:root` tokens are copied verbatim rather
   than extracted, an accepted duplication while it's just two sibling pages.
 

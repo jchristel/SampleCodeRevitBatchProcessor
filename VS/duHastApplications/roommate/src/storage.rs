@@ -11,6 +11,8 @@
 //! <root>/
 //!   <project-guid>/
 //!     project.toml          authoritative: project name + known models
+//!     drofus/               reserved (never a model id): uploaded dRofus CSVs
+//!       <snapshot-ts>.csv   one file per upload — history kept, never overwritten
 //!     <model-guid>/
 //!       <snapshot-ts>.json  one file per push — history kept, never overwritten
 //! ```
@@ -34,6 +36,12 @@ use serde::{Deserialize, Serialize};
 use crate::contract::RoomPayload;
 use crate::state::ModelKey;
 
+/// Reserved subdirectory name inside a project dir for uploaded dRofus CSVs.
+/// Never treated as a model dir — `list_models` skips it explicitly. (Model
+/// ids are Revit GUIDs in practice, so a real collision is implausible; the
+/// skip makes it impossible.)
+pub const DROFUS_DIR: &str = "drofus";
+
 // ---------- project.toml ----------
 
 /// The authoritative per-project manifest, one `project.toml` per project dir.
@@ -51,6 +59,13 @@ pub struct ProjectManifest {
     /// Known models under this project, keyed by model GUID.
     #[serde(default)]
     pub models: BTreeMap<String, ModelEntry>,
+    /// Snapshot ids (raw `taken_at` values) of uploaded dRofus CSVs, ascending.
+    /// Project-scoped, not model-scoped: dRofus is reference data joined onto
+    /// every model's rooms, so it hangs off the manifest directly rather than
+    /// a `ModelEntry`. Same index role (and same `default` back-compat rule)
+    /// as `ModelEntry::snapshots`.
+    #[serde(default)]
+    pub drofus_snapshots: Vec<String>,
 }
 
 /// One model's entry in a `ProjectManifest`.
@@ -106,6 +121,28 @@ pub trait SnapshotStore: Send + Sync {
     /// such snapshot exists — the milestone read path. A history-less store
     /// (`MemStore`) can only answer for its current latest.
     fn get_snapshot(&self, key: &ModelKey, taken_at: &str) -> Result<Option<RoomPayload>>;
+
+    /// Store one uploaded dRofus CSV against a project. Returns `false` when
+    /// a dRofus snapshot with this `taken_at` already exists — skipped with a
+    /// warning, never overwritten, same duplicate rule as `put`. The caller
+    /// is expected to have *validated the CSV before storing it*: a stored
+    /// CSV is hydrated at every boot, so a bad one stored here fails the next
+    /// startup loudly.
+    fn put_drofus(&self, project_id: &str, taken_at: &str, csv: &[u8]) -> Result<bool>;
+
+    /// Every dRofus snapshot id (`taken_at`) stored for one project,
+    /// ascending — latest is the last element. Empty when the project is
+    /// unknown or has no uploads yet. A history-less store (`MemStore`)
+    /// reports just its current latest.
+    fn list_drofus_snapshot_ids(&self, project_id: &str) -> Result<Vec<String>>;
+
+    /// One stored dRofus CSV by its snapshot id, or `None`.
+    fn get_drofus(&self, project_id: &str, taken_at: &str) -> Result<Option<Vec<u8>>>;
+
+    /// The newest stored dRofus CSV with its id — the bootstrap hydration
+    /// read that turns an `Upload`-sourced project's stored data into its
+    /// in-memory `DrofusData`.
+    fn get_latest_drofus(&self, project_id: &str) -> Result<Option<(String, Vec<u8>)>>;
 }
 
 // ---------- filesystem impl ----------
@@ -139,6 +176,17 @@ impl FsStore {
 
     fn model_dir(&self, project_id: &str, model_id: &str) -> PathBuf {
         self.project_dir(project_id).join(model_id)
+    }
+
+    fn drofus_dir(&self, project_id: &str) -> PathBuf {
+        self.project_dir(project_id).join(DROFUS_DIR)
+    }
+
+    /// dRofus CSV filename from a snapshot id — same `:` sanitisation as
+    /// `snapshot_filename` (so lexical-max-is-newest holds for `.csv` files
+    /// exactly as for `.json`), different extension.
+    fn drofus_filename(taken_at: &str) -> String {
+        format!("{}.csv", taken_at.replace(':', "-"))
     }
 
     /// Read a project's manifest, or a default (empty) one if it doesn't exist
@@ -315,6 +363,9 @@ impl SnapshotStore for FsStore {
                     Some(id) => id.to_string(),
                     None => continue,
                 };
+                if model_id == DROFUS_DIR {
+                    continue; // reserved dRofus upload dir, never a model
+                }
                 if !manifest.models.contains_key(&model_id) {
                     tracing::warn!(
                         "model dir {}/{} is missing from project.toml — including it anyway (filesystem wins)",
@@ -410,6 +461,103 @@ impl SnapshotStore for FsStore {
         }
         Ok(Some(Self::read_payload(&path)?))
     }
+
+    fn put_drofus(&self, project_id: &str, taken_at: &str, csv: &[u8]) -> Result<bool> {
+        // Same upsert shape as `put`: ensure the dir, index the id in the
+        // manifest, then write the file — skipping (never overwriting) a
+        // duplicate `taken_at`.
+        let dir = self.drofus_dir(project_id);
+        fs::create_dir_all(&dir)
+            .with_context(|| format!("could not create dRofus dir: {}", dir.display()))?;
+
+        let mut manifest = self.read_manifest(project_id)?;
+        if !manifest.drofus_snapshots.iter().any(|id| id == taken_at) {
+            manifest.drofus_snapshots.push(taken_at.to_string());
+            manifest.drofus_snapshots.sort();
+        }
+        self.write_manifest(project_id, &manifest)?;
+
+        let file = dir.join(Self::drofus_filename(taken_at));
+        if file.exists() {
+            tracing::warn!("dRofus snapshot already exists, skipping: {}", file.display());
+            return Ok(false);
+        }
+        fs::write(&file, csv)
+            .with_context(|| format!("could not write dRofus snapshot: {}", file.display()))?;
+
+        tracing::info!("stored dRofus snapshot {} @ {}", project_id, taken_at);
+        Ok(true)
+    }
+
+    fn list_drofus_snapshot_ids(&self, project_id: &str) -> Result<Vec<String>> {
+        // Same manifest-vs-directory reconciliation as `list_snapshot_ids`:
+        // the manifest is the index, the files are the record, filesystem
+        // wins on disagreement, both directions warned.
+        let indexed = self.read_manifest(project_id)?.drofus_snapshots;
+
+        let dir = self.drofus_dir(project_id);
+        let mut on_disk: Vec<String> = Vec::new();
+        if dir.exists() {
+            for entry in fs::read_dir(&dir)
+                .with_context(|| format!("could not read dRofus dir: {}", dir.display()))?
+            {
+                let path = entry?.path();
+                if path.extension().and_then(|e| e.to_str()) == Some("csv") {
+                    if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
+                        on_disk.push(name.to_string());
+                    }
+                }
+            }
+        }
+
+        let mut ids = Vec::new();
+        for id in indexed {
+            let filename = Self::drofus_filename(&id);
+            if let Some(pos) = on_disk.iter().position(|f| *f == filename) {
+                on_disk.swap_remove(pos);
+                ids.push(id);
+            } else {
+                tracing::warn!(
+                    "manifest lists dRofus snapshot {:?} for {} but no file exists — dropping it (filesystem wins)",
+                    id, project_id
+                );
+            }
+        }
+        for filename in on_disk {
+            let stem = filename.strip_suffix(".csv").unwrap_or(&filename);
+            let id = Self::id_from_file_stem(stem);
+            tracing::warn!(
+                "dRofus file {}/{}/{} is missing from project.toml — including it as {:?} (filesystem wins)",
+                project_id, DROFUS_DIR, filename, id
+            );
+            ids.push(id);
+        }
+        ids.sort();
+        Ok(ids)
+    }
+
+    fn get_drofus(&self, project_id: &str, taken_at: &str) -> Result<Option<Vec<u8>>> {
+        let path = self.drofus_dir(project_id).join(Self::drofus_filename(taken_at));
+        if !path.exists() {
+            return Ok(None);
+        }
+        Ok(Some(fs::read(&path)
+            .with_context(|| format!("could not read dRofus snapshot: {}", path.display()))?))
+    }
+
+    fn get_latest_drofus(&self, project_id: &str) -> Result<Option<(String, Vec<u8>)>> {
+        // Latest = last of the reconciled ascending list (RFC3339-UTC ids, so
+        // lexical max is newest). Going through the reconciliation instead of
+        // a raw directory scan means an un-indexed file still wins its way in
+        // and a phantom manifest id can't name a file that isn't there.
+        let Some(id) = self.list_drofus_snapshot_ids(project_id)?.pop() else {
+            return Ok(None);
+        };
+        match self.get_drofus(project_id, &id)? {
+            Some(bytes) => Ok(Some((id, bytes))),
+            None => Ok(None), // racing delete; treat as no data
+        }
+    }
 }
 
 // ---------- in-memory impl ----------
@@ -420,6 +568,9 @@ impl SnapshotStore for FsStore {
 #[derive(Default)]
 pub struct MemStore {
     latest: Mutex<BTreeMap<ModelKey, RoomPayload>>,
+    /// Latest uploaded dRofus CSV per project id: `(taken_at, bytes)`.
+    /// Latest-only like `latest` — history is a disk affordance.
+    drofus: Mutex<BTreeMap<String, (String, Vec<u8>)>>,
 }
 
 impl MemStore {
@@ -475,6 +626,40 @@ impl SnapshotStore for MemStore {
             .get(key)
             .filter(|p| p.snapshot.taken_at == taken_at)
             .cloned())
+    }
+
+    fn put_drofus(&self, project_id: &str, taken_at: &str, csv: &[u8]) -> Result<bool> {
+        // Latest-only: replacement is the normal upsert (same stance as
+        // `put`), so the duplicate-skip rule doesn't apply here.
+        self.drofus
+            .lock()
+            .unwrap()
+            .insert(project_id.to_string(), (taken_at.to_string(), csv.to_vec()));
+        Ok(true)
+    }
+
+    fn list_drofus_snapshot_ids(&self, project_id: &str) -> Result<Vec<String>> {
+        Ok(self
+            .drofus
+            .lock()
+            .unwrap()
+            .get(project_id)
+            .map(|(id, _)| vec![id.clone()])
+            .unwrap_or_default())
+    }
+
+    fn get_drofus(&self, project_id: &str, taken_at: &str) -> Result<Option<Vec<u8>>> {
+        Ok(self
+            .drofus
+            .lock()
+            .unwrap()
+            .get(project_id)
+            .filter(|(id, _)| id == taken_at)
+            .map(|(_, bytes)| bytes.clone()))
+    }
+
+    fn get_latest_drofus(&self, project_id: &str) -> Result<Option<(String, Vec<u8>)>> {
+        Ok(self.drofus.lock().unwrap().get(project_id).cloned())
     }
 }
 
@@ -550,6 +735,7 @@ mod tests {
                 "modelA".to_string(),
                 ModelEntry { name: "M".to_string(), snapshots: vec!["2026-01-01T10:00:00Z".to_string()] },
             )]),
+            drofus_snapshots: vec![],
         };
         std::fs::write(&manifest_path, toml::to_string_pretty(&manifest).unwrap()).unwrap();
 
@@ -611,6 +797,7 @@ mod tests {
                     snapshots: vec!["2026-01-02T10:00:00Z".to_string(), "2026-01-03T10:00:00Z".to_string()],
                 },
             )]),
+            drofus_snapshots: vec![],
         };
         std::fs::write(&manifest_path, toml::to_string_pretty(&manifest).unwrap()).unwrap();
 
@@ -659,6 +846,102 @@ mod tests {
 
         let key = ModelKey { project_id: "p".into(), model_id: "m".into() };
         assert_eq!(store.list_snapshot_ids(&key).unwrap(), vec!["2026-01-02T10:00:00Z".to_string()]);
+    }
+
+    /// dRofus uploads: put/list/get/latest round-trip, ascending ids,
+    /// duplicate `taken_at` skipped with the original bytes preserved.
+    #[test]
+    fn test_fs_store_drofus_round_trip() {
+        let dir = std::env::temp_dir().join(format!("roommate-drofus-{}", std::process::id()));
+        let store = FsStore::new(dir.clone()).unwrap();
+
+        assert!(store.get_latest_drofus("p").unwrap().is_none());
+        assert!(store.list_drofus_snapshot_ids("p").unwrap().is_empty());
+
+        assert!(store.put_drofus("p", "2026-01-02T10:00:00Z", b"csv-two").unwrap());
+        assert!(store.put_drofus("p", "2026-01-01T10:00:00Z", b"csv-one").unwrap());
+
+        assert_eq!(
+            store.list_drofus_snapshot_ids("p").unwrap(),
+            vec!["2026-01-01T10:00:00Z".to_string(), "2026-01-02T10:00:00Z".to_string()]
+        );
+        assert_eq!(store.get_drofus("p", "2026-01-01T10:00:00Z").unwrap().unwrap(), b"csv-one");
+        assert!(store.get_drofus("p", "2026-03-01T10:00:00Z").unwrap().is_none());
+
+        // Latest is the lexical max — the older backfill did not displace it.
+        let (id, bytes) = store.get_latest_drofus("p").unwrap().unwrap();
+        assert_eq!(id, "2026-01-02T10:00:00Z");
+        assert_eq!(bytes, b"csv-two");
+
+        // Duplicate taken_at: skipped (false), original bytes preserved.
+        assert!(!store.put_drofus("p", "2026-01-02T10:00:00Z", b"CHANGED").unwrap());
+        assert_eq!(store.get_drofus("p", "2026-01-02T10:00:00Z").unwrap().unwrap(), b"csv-two");
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// The reserved `drofus/` dir must never surface as a phantom model in
+    /// `list_models` — the single most likely silent regression of adding a
+    /// non-model subdirectory to the project dir.
+    #[test]
+    fn test_fs_store_drofus_dir_is_not_a_model() {
+        let dir = std::env::temp_dir().join(format!("roommate-drofus-dir-{}", std::process::id()));
+        let store = FsStore::new(dir.clone()).unwrap();
+
+        store.put(&payload("p", "m", "2026-01-01T10:00:00Z")).unwrap();
+        store.put_drofus("p", "2026-01-01T11:00:00Z", b"csv").unwrap();
+
+        let keys = store.list_models().unwrap();
+        assert_eq!(keys.len(), 1);
+        assert_eq!(keys[0].model_id, "m");
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// dRofus reconciliation, filesystem wins both ways: an un-indexed file
+    /// is included with its id recovered from the sanitised filename, a
+    /// manifest id with no file behind it is dropped.
+    #[test]
+    fn test_fs_store_drofus_ids_filesystem_wins_over_manifest() {
+        let dir = std::env::temp_dir().join(format!("roommate-drofus-rec-{}", std::process::id()));
+        let store = FsStore::new(dir.clone()).unwrap();
+
+        store.put_drofus("p", "2026-01-01T10:00:00Z", b"one").unwrap();
+        store.put_drofus("p", "2026-01-02T10:00:00Z", b"two").unwrap();
+
+        // Sabotage the manifest: drop the first id, add a phantom one.
+        let manifest_path = dir.join("p").join("project.toml");
+        let manifest = ProjectManifest {
+            name: String::new(),
+            models: BTreeMap::new(),
+            drofus_snapshots: vec!["2026-01-02T10:00:00Z".to_string(), "2026-01-03T10:00:00Z".to_string()],
+        };
+        std::fs::write(&manifest_path, toml::to_string_pretty(&manifest).unwrap()).unwrap();
+
+        assert_eq!(
+            store.list_drofus_snapshot_ids("p").unwrap(),
+            vec!["2026-01-01T10:00:00Z".to_string(), "2026-01-02T10:00:00Z".to_string()],
+            "un-indexed file recovered (with its ':' restored), phantom id dropped"
+        );
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// MemStore dRofus: latest-only, replacement is the normal upsert.
+    #[test]
+    fn test_mem_store_drofus_latest_only() {
+        let store = MemStore::new();
+        assert!(store.get_latest_drofus("p").unwrap().is_none());
+
+        store.put_drofus("p", "2026-01-01T10:00:00Z", b"one").unwrap();
+        store.put_drofus("p", "2026-01-02T10:00:00Z", b"two").unwrap();
+
+        assert_eq!(store.list_drofus_snapshot_ids("p").unwrap(), vec!["2026-01-02T10:00:00Z".to_string()]);
+        let (id, bytes) = store.get_latest_drofus("p").unwrap().unwrap();
+        assert_eq!(id, "2026-01-02T10:00:00Z");
+        assert_eq!(bytes, b"two");
+        assert!(store.get_drofus("p", "2026-01-01T10:00:00Z").unwrap().is_none());
+        assert_eq!(store.get_drofus("p", "2026-01-02T10:00:00Z").unwrap().unwrap(), b"two");
     }
 
     /// A re-push with an identical `taken_at` is skipped, not overwritten —

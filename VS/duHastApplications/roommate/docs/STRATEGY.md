@@ -169,3 +169,14 @@ mint the id at ingest. Either way the ingest response reports the resolved id
 follow-up uploads to that exact snapshot. This relaxation did not bump the
 schema version: every previously-valid v5 payload is still valid and means
 the same thing.
+
+The **dRofus CSV upload** (`POST /projects/{id}/drofus` — see
+[Sources](STRATEGY-SOURCES.md) and [Server](STRATEGY-SERVER.md)) is the
+second upload type, and shows which half of the envelope generalizes: it has
+no model (dRofus is project-scoped reference data, joined by link value, not
+associated to rooms via snapshot+room ids), so it carries no JSON envelope at
+all — but its snapshot id rides the same rules exactly. The raw CSV body has
+nowhere to put a `taken_at`, so it travels as a `?taken_at=` query param,
+resolved through the same `ensure_taken_at` / `validate_snapshot_id` pair,
+omittable, and echoed back (`snapshot_taken_at` / `snapshot_generated`) like
+every other ingest.

@@ -29,6 +29,11 @@
 //!                 agnostic core (reads shared with the MCP binary) + the
 //!                 `/api/settings` Axum adapters; saves hot-swap the registry.
 
+/// Where the HTTP server binds by default. Shared with `bin/mcp.rs`'s
+/// `--server-url` default (its `upload_drofus` tool forwards over HTTP to
+/// this address) so the two binaries can't drift on where the server lives.
+pub const DEFAULT_HTTP_ADDR: &str = "127.0.0.1:5151";
+
 pub mod bootstrap;
 pub mod classify;
 pub mod contract;

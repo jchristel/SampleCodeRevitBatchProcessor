@@ -35,15 +35,37 @@ Revit.
   `"revit"`) — the key the mapping above resolves against. A plain string, not
   a closed Rust enum: adding a source is a settings-file change, not a
   recompile.
-- **dRofus loader + join.** Two-header-row CSV read once at startup into a
-  keyed map (`by_id: BTreeMap<String, DrofusRecord>`); joined onto rooms at
-  `/rooms` response assembly as a separate `drofus` sub-object, leaving the
-  stored snapshot raw. `File` variant behind a `#[serde(tag = "type")]` enum,
-  ready for an `Api` variant later with no other consumer touched. Row 2's
-  non-link columns are also retained now, as `reconciliation: BTreeMap<String,
-  String>` (dRofus field label → the Revit property it corresponds to) — see
-  [Server](STRATEGY-SERVER.md)'s data validation report, the first real
-  consumer of the "kept for reconciliation" data below.
+- **dRofus loader + join.** Two-header-row CSV read into a keyed map
+  (`by_id: BTreeMap<String, DrofusRecord>`); joined onto rooms at `/rooms`
+  response assembly as a separate `drofus` sub-object, leaving the stored
+  snapshot raw. The `#[serde(tag = "type")]` source enum now has **two
+  variants**: `File { path }` (read from disk once at startup — the original
+  behaviour, unchanged) and `Upload` (data arrives via browser/HTTP upload,
+  stored as timestamped snapshots — see the next bullet); an `Api` variant
+  later still slots in with no other consumer touched. The loader itself is
+  **byte-source-agnostic** (`load_drofus_from_reader`, with path and bytes
+  wrappers; the bytes path strips a leading UTF-8 BOM, which Excel CSV
+  exports routinely carry and the csv crate does not strip) — which source
+  feeds it is dispatched in `bootstrap::load_project_bundle`, where the
+  store is in scope. Row 2's non-link columns are also retained, as
+  `reconciliation: BTreeMap<String, String>` (dRofus field label → the Revit
+  property it corresponds to) — see [Server](STRATEGY-SERVER.md)'s data
+  validation report, the first real consumer of the "kept for
+  reconciliation" data below.
+- **dRofus as an uploaded, snapshotted source (`type = "upload"`).** The
+  previously-deferred item. A project declaring `[sources.drofus] type =
+  "upload"` takes its dRofus data from `POST /projects/{id}/drofus` (raw
+  `text/csv` body, drag-and-drop on the settings page or any HTTP client);
+  each accepted upload is stored as a dated snapshot in the `SnapshotStore`
+  (`<root>/<project>/drofus/<taken_at>.csv` — see
+  [Server](STRATEGY-SERVER.md)), the latest one hydrated at startup and
+  hot-swapped in after each upload. The snapshot id rides the shared upload
+  envelope's rules via `?taken_at=` (see [Index](STRATEGY.md)). A project
+  with the upload source but no upload yet is a legitimate "not configured
+  yet" state (`drofus_configured: false` downstream), not a startup error —
+  its `drofus_fields` get shape-only validation until the first CSV supplies
+  a label set. This is also the storage groundwork milestones need to pin
+  dRofus data (the pinning itself is still deferred).
 - **Per-column dRofus type/QA declarations (`drofus_fields`).** One
   declaration per dRofus column — `label` (matches row 1), an optional `type`
   (`string` default, `numeric`, or `date`), an optional `format` (required,

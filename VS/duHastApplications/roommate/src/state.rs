@@ -202,6 +202,35 @@ impl AppState {
     pub fn get_snapshot(&self, key: &ModelKey, taken_at: &str) -> anyhow::Result<Option<RoomPayload>> {
         self.store.get_snapshot(key, taken_at)
     }
+
+    /// Direct access to the store, for callers that need to pass it on
+    /// (`load_project_bundle` hydrates `Upload`-sourced dRofus from it during
+    /// a settings save's re-validation).
+    pub fn store(&self) -> &dyn SnapshotStore {
+        self.store.as_ref()
+    }
+
+    /// Store one uploaded dRofus CSV — see `SnapshotStore::put_drofus`.
+    pub fn put_drofus(&self, project_id: &str, taken_at: &str, csv: &[u8]) -> anyhow::Result<bool> {
+        self.store.put_drofus(project_id, taken_at, csv)
+    }
+
+    /// One project's dRofus snapshot ids, ascending — see
+    /// `SnapshotStore::list_drofus_snapshot_ids`.
+    pub fn list_drofus_snapshot_ids(&self, project_id: &str) -> anyhow::Result<Vec<String>> {
+        self.store.list_drofus_snapshot_ids(project_id)
+    }
+
+    /// One stored dRofus CSV by snapshot id — see `SnapshotStore::get_drofus`.
+    pub fn get_drofus(&self, project_id: &str, taken_at: &str) -> anyhow::Result<Option<Vec<u8>>> {
+        self.store.get_drofus(project_id, taken_at)
+    }
+
+    /// The newest stored dRofus CSV with its id — see
+    /// `SnapshotStore::get_latest_drofus`.
+    pub fn get_latest_drofus(&self, project_id: &str) -> anyhow::Result<Option<(String, Vec<u8>)>> {
+        self.store.get_latest_drofus(project_id)
+    }
 }
 
 pub type Shared = Arc<AppState>;

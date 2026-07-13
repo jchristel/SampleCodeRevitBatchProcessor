@@ -18,18 +18,23 @@ use std::sync::Arc;
 
 use anyhow::Context;
 
-use crate::drofus::load_drofus;
-use crate::settings::{load_server_config, load_settings, validate_drofus_fields, ServerConfig};
+use crate::drofus::{load_drofus_from_bytes, load_drofus_from_path};
+use crate::settings::{
+    load_server_config, load_settings, validate_drofus_field_shapes, validate_drofus_fields,
+    DrofusSource, ServerConfig,
+};
 use crate::state::{seed_if_test, AppState, ProjectSettings, Shared};
 use crate::storage::{FsStore, MemStore, SnapshotStore};
 
 /// Load and fully validate ONE project settings file into its runtime
-/// bundle: parse TOML, load the dRofus CSV when configured, validate the
+/// bundle: parse TOML, load the dRofus data when configured (a `file` source
+/// reads its CSV path; an `upload` source hydrates the latest stored CSV from
+/// the snapshot store — which is why the store is a parameter), validate the
 /// `drofus_fields` declarations against it. This is the single validation
 /// pipeline for a project file — startup (`load_project_settings_dir`) and
 /// the settings API's save both run exactly this, so a file the UI accepts
 /// can never fail the next boot.
-pub fn load_project_bundle(path: &Path) -> anyhow::Result<(String, bool, ProjectSettings)> {
+pub fn load_project_bundle(path: &Path, store: &dyn SnapshotStore) -> anyhow::Result<(String, bool, ProjectSettings)> {
     let settings = load_settings(&path.to_path_buf()).with_context(|| format!("bad settings file: {}", path.display()))?;
 
     // dRofus is optional per project: load and validate only when a
@@ -38,8 +43,8 @@ pub fn load_project_bundle(path: &Path) -> anyhow::Result<(String, bool, Project
     // isn't there) — fail loudly, same discipline as
     // `validate_drofus_fields`' unknown-label check.
     let drofus = match &settings.sources.drofus {
-        Some(source) => {
-            let drofus = load_drofus(source)
+        Some(DrofusSource::File { path: csv_path }) => {
+            let drofus = load_drofus_from_path(csv_path)
                 .with_context(|| format!("bad dRofus source in {}", path.display()))?;
 
             // Can't validate this inside `load_settings`: the dRofus CSV (and its
@@ -48,6 +53,33 @@ pub fn load_project_bundle(path: &Path) -> anyhow::Result<(String, bool, Project
                 .with_context(|| format!("bad drofus_fields in {}", path.display()))?;
             Some(drofus)
         }
+        Some(DrofusSource::Upload) => match store.get_latest_drofus(&settings.project_id)? {
+            Some((taken_at, bytes)) => {
+                // A stored CSV that fails to parse fails the boot loudly —
+                // same discipline as a rotted `file` CSV. The upload endpoint
+                // validates before storing, so this is only reachable by
+                // hand-editing the store.
+                let drofus = load_drofus_from_bytes(&bytes).with_context(|| {
+                    format!(
+                        "bad stored dRofus upload {} for project '{}' (referenced by {})",
+                        taken_at,
+                        settings.project_id,
+                        path.display()
+                    )
+                })?;
+                validate_drofus_fields(&settings.drofus_fields, &drofus.all_labels)
+                    .with_context(|| format!("bad drofus_fields in {}", path.display()))?;
+                Some(drofus)
+            }
+            // No upload yet: a legitimate "not configured yet" state, not an
+            // error. The label set is unknowable, so only the label-free half
+            // of the field validation can run.
+            None => {
+                validate_drofus_field_shapes(&settings.drofus_fields)
+                    .with_context(|| format!("bad drofus_fields in {}", path.display()))?;
+                None
+            }
+        },
         None => {
             if !settings.drofus_fields.is_empty() {
                 anyhow::bail!(
@@ -81,6 +113,7 @@ pub fn load_project_bundle(path: &Path) -> anyhow::Result<(String, bool, Project
 /// save, to build the registry it hot-swaps in.
 pub fn load_project_settings_dir(
     projects_dir: &Path,
+    store: &dyn SnapshotStore,
 ) -> anyhow::Result<(HashMap<String, ProjectSettings>, Option<ProjectSettings>)> {
     let mut registry = HashMap::new();
     let mut default_bundle: Option<(String, ProjectSettings)> = None;
@@ -95,7 +128,7 @@ pub fn load_project_settings_dir(
             continue; // not a settings file (e.g. a stray drofus.csv sitting alongside)
         }
 
-        let (project_id, is_default, bundle) = load_project_bundle(&path)?;
+        let (project_id, is_default, bundle) = load_project_bundle(&path, store)?;
         tracing::info!("project settings loaded from {} (project_id = {})", path.display(), project_id);
 
         if is_default {
@@ -122,16 +155,11 @@ pub fn build_state(server_settings: &PathBuf, projects_dir: &PathBuf) -> anyhow:
         .with_context(|| format!("bad server settings file: {}", server_settings.display()))?;
     tracing::info!("server settings loaded from {}", server_settings.display());
 
-    let (project_settings, default_settings) = load_project_settings_dir(projects_dir)
-        .with_context(|| format!("bad project settings directory: {}", projects_dir.display()))?;
-
-    if project_settings.is_empty() && default_settings.is_none() {
-        tracing::warn!("no project settings files found in {} -- every read/ingest will be rejected/skipped until one is added", projects_dir.display());
-    }
-
     // Pick the backend from config: a `[storage]` root → persistent FsStore,
     // otherwise the volatile MemStore (dev/test). Both satisfy SnapshotStore, so
-    // this is the only line that knows which one is running.
+    // this is the only line that knows which one is running. Constructed BEFORE
+    // the project bundles load, because an `upload`-sourced project hydrates
+    // its dRofus data from this store.
     let store: Box<dyn SnapshotStore> = match storage {
         Some(cfg) => {
             tracing::info!("persistent storage at {}", cfg.root.display());
@@ -142,6 +170,13 @@ pub fn build_state(server_settings: &PathBuf, projects_dir: &PathBuf) -> anyhow:
             Box::new(MemStore::new())
         }
     };
+
+    let (project_settings, default_settings) = load_project_settings_dir(projects_dir, store.as_ref())
+        .with_context(|| format!("bad project settings directory: {}", projects_dir.display()))?;
+
+    if project_settings.is_empty() && default_settings.is_none() {
+        tracing::warn!("no project settings files found in {} -- every read/ingest will be rejected/skipped until one is added", projects_dir.display());
+    }
 
     let state: Shared = Arc::new(
         AppState::new(store, project_settings, default_settings).with_projects_dir(projects_dir.clone()),
@@ -170,7 +205,7 @@ mod tests {
         let dir = temp_projects_dir("no-sources");
         std::fs::write(dir.join("p1.toml"), "project_id = \"p1\"\n").unwrap();
 
-        let (registry, _default) = load_project_settings_dir(&dir).unwrap();
+        let (registry, _default) = load_project_settings_dir(&dir, &MemStore::new()).unwrap();
         assert!(registry.get("p1").unwrap().drofus.is_none());
 
         std::fs::remove_dir_all(&dir).ok();
@@ -188,11 +223,100 @@ mod tests {
         )
         .unwrap();
 
-        let msg = match load_project_settings_dir(&dir) {
+        let msg = match load_project_settings_dir(&dir, &MemStore::new()) {
             Err(err) => format!("{err:#}"),
             Ok(_) => panic!("expected startup failure for drofus_fields without a source"),
         };
         assert!(msg.contains("drofus_fields"), "message names the problem: {msg}");
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// An `upload`-sourced project with no upload yet registers with
+    /// `drofus: None` — a legitimate not-configured-yet state — and its
+    /// `drofus_fields` are accepted on their label-free shape checks alone.
+    #[test]
+    fn test_upload_source_with_empty_store_registers_without_drofus() {
+        let dir = temp_projects_dir("upload-empty");
+        std::fs::write(
+            dir.join("p1.toml"),
+            "project_id = \"p1\"\n\n[sources.drofus]\ntype = \"upload\"\n\n[[drofus_fields]]\nlabel = \"NetArea\"\nqa = \"exact\"\n",
+        )
+        .unwrap();
+
+        let (registry, _default) = load_project_settings_dir(&dir, &MemStore::new()).unwrap();
+        let bundle = registry.get("p1").unwrap();
+        assert!(bundle.drofus.is_none());
+        assert_eq!(bundle.drofus_fields.len(), 1, "field declarations carried along for later");
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// An `upload`-sourced project's shape checks still run with no data: a
+    /// `date` field without a `format` is rejectable without knowing labels.
+    #[test]
+    fn test_upload_source_shape_validation_runs_without_data() {
+        let dir = temp_projects_dir("upload-shape");
+        std::fs::write(
+            dir.join("p1.toml"),
+            "project_id = \"p1\"\n\n[sources.drofus]\ntype = \"upload\"\n\n[[drofus_fields]]\nlabel = \"Updated\"\ntype = \"date\"\n",
+        )
+        .unwrap();
+
+        let msg = match load_project_settings_dir(&dir, &MemStore::new()) {
+            Err(err) => format!("{err:#}"),
+            Ok(_) => panic!("expected failure: date field with no format"),
+        };
+        assert!(msg.contains("format"), "message names the problem: {msg}");
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// An `upload`-sourced project with a stored CSV hydrates it as its
+    /// dRofus data, and `drofus_fields` labels are validated against it.
+    #[test]
+    fn test_upload_source_hydrates_latest_stored_csv() {
+        let dir = temp_projects_dir("upload-hydrate");
+        std::fs::write(
+            dir.join("p1.toml"),
+            "project_id = \"p1\"\n\n[sources.drofus]\ntype = \"upload\"\n\n[[drofus_fields]]\nlabel = \"NetArea\"\nqa = \"exact\"\n",
+        )
+        .unwrap();
+
+        let store = MemStore::new();
+        store
+            .put_drofus("p1", "2026-01-01T10:00:00Z", b"DrofusRoomId,NetArea\nNumber,Area\n1,25.5\n")
+            .unwrap();
+
+        let (registry, _default) = load_project_settings_dir(&dir, &store).unwrap();
+        let drofus = registry.get("p1").unwrap().drofus.as_ref().expect("hydrated");
+        assert_eq!(drofus.link_property, "Number");
+        assert_eq!(drofus.by_id["1"].fields.get("NetArea"), Some(&"25.5".to_string()));
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// A stored CSV whose labels don't cover the declared `drofus_fields`
+    /// fails the load loudly — same discipline as a `file` source.
+    #[test]
+    fn test_upload_source_label_mismatch_fails_loudly() {
+        let dir = temp_projects_dir("upload-mismatch");
+        std::fs::write(
+            dir.join("p1.toml"),
+            "project_id = \"p1\"\n\n[sources.drofus]\ntype = \"upload\"\n\n[[drofus_fields]]\nlabel = \"NoSuchColumn\"\nqa = \"exact\"\n",
+        )
+        .unwrap();
+
+        let store = MemStore::new();
+        store
+            .put_drofus("p1", "2026-01-01T10:00:00Z", b"DrofusRoomId,NetArea\nNumber,Area\n1,25.5\n")
+            .unwrap();
+
+        let msg = match load_project_settings_dir(&dir, &store) {
+            Err(err) => format!("{err:#}"),
+            Ok(_) => panic!("expected failure: drofus_fields label not in stored CSV"),
+        };
+        assert!(msg.contains("NoSuchColumn"), "message names the label: {msg}");
 
         std::fs::remove_dir_all(&dir).ok();
     }

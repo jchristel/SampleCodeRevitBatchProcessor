@@ -1,15 +1,24 @@
 //! roommate's MCP server: exposes the read side (`list_projects`,
 //! `list_buildings`, `get_rooms`, `get_validation`, `list_snapshots`,
-//! `get_latest_snapshot`, `list_milestones`) as MCP tools over stdio, one
-//! per existing HTTP read route. Each tool is a thin adapter over
-//! `roommate::service` -- parse params, call one service function, serialize
-//! the result -- exactly like the Axum handlers in `roommate::handlers`, just
-//! a second transport over the same domain layer. See
-//! HANDOVER-service-layer.md.
+//! `get_latest_snapshot`, `list_milestones`, `list_drofus_snapshots`,
+//! `get_drofus_snapshot`) as MCP tools over stdio, one per existing HTTP
+//! read route. Each tool is a thin adapter over `roommate::service` -- parse
+//! params, call one service function, serialize the result -- exactly like
+//! the Axum handlers in `roommate::handlers`, just a second transport over
+//! the same domain layer. See HANDOVER-service-layer.md.
 //!
 //! Ingest (`POST /rooms`) has no MCP equivalent here: an MCP client asking an
 //! LLM to push a full room snapshot isn't a realistic flow, and the HTTP
 //! server remains the ingest path.
+//!
+//! The one mutating tool, `upload_drofus`, doesn't break that rule: it never
+//! writes this process's state or the store — it reads a CSV file and
+//! *forwards it over HTTP* to the running server (`--server-url`, default the
+//! shared `DEFAULT_HTTP_ADDR`), which stays the single writer and hot-swaps
+//! its own registry. The `reqwest` dependency this adds is an HTTP *client*;
+//! the "no transport crate leaks into the other binary" rule is about server
+//! frameworks (`mcp.rs` still never imports `axum`), and `main.rs` still
+//! never imports `rmcp` or `reqwest`.
 //!
 //! Run as a client-spawned subprocess (e.g. from an MCP host's config) --
 //! stdout is reserved for the JSON-RPC stream, so all logging goes to
@@ -29,9 +38,10 @@ use rmcp::{
 };
 
 use roommate::bootstrap::build_state;
-use roommate::service::{milestones, projects, rooms, snapshots, validation, ServiceError};
+use roommate::service::{drofus, milestones, projects, rooms, snapshots, validation, ServiceError};
 use roommate::settings_api::{self, SettingsError};
 use roommate::state::Shared;
+use roommate::DEFAULT_HTTP_ADDR;
 
 #[derive(Debug, serde::Deserialize, schemars::JsonSchema)]
 struct ProjectIdParams {
@@ -70,6 +80,22 @@ fn json_result<T: serde::Serialize>(value: &T) -> Result<CallToolResult, McpErro
     Ok(CallToolResult::success(vec![ContentBlock::text(json)]))
 }
 
+/// Minimal percent-encoding for URL path/query components. The values that
+/// pass through here are constrained by construction — project ids are
+/// path-safe (`is_path_safe_component`) and `taken_at` is RFC3339, whose only
+/// URL-reserved character is the `+` of a numeric offset — so a tiny
+/// encode-everything-non-unreserved loop beats a dependency.
+fn urlencode(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    for b in s.bytes() {
+        match b {
+            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'_' | b'.' | b'~' => out.push(b as char),
+            _ => out.push_str(&format!("%{b:02X}")),
+        }
+    }
+    out
+}
+
 /// `ServiceError` -> `McpError`. Only `Internal` exists today (variants join
 /// with their first producer -- see `ServiceError`); it becomes
 /// `internal_error`.
@@ -82,6 +108,28 @@ fn to_mcp_error(err: ServiceError) -> McpError {
     }
 }
 
+#[derive(Debug, serde::Deserialize, schemars::JsonSchema)]
+struct GetDrofusSnapshotParams {
+    /// The project id, as returned by `list_projects`.
+    project_id: String,
+    /// A dRofus snapshot id from `list_drofus_snapshots`. Omit for the latest.
+    #[serde(default)]
+    taken_at: Option<String>,
+}
+
+#[derive(Debug, serde::Deserialize, schemars::JsonSchema)]
+struct UploadDrofusParams {
+    /// The project id, as returned by `list_projects`. Its settings must
+    /// declare `[sources.drofus] type = "upload"`.
+    project_id: String,
+    /// Absolute path to the dRofus CSV export to upload.
+    path: String,
+    /// Snapshot id (RFC3339 UTC date-time) to store the upload under. Omit
+    /// to let the server mint one; the result reports the resolved id.
+    #[serde(default)]
+    taken_at: Option<String>,
+}
+
 // `tool_router` is read by the `#[tool_handler]`-generated dispatch code,
 // but rustc's dead-code analysis doesn't see through that -- same false
 // positive the rmcp SDK's own examples suppress this way.
@@ -89,13 +137,14 @@ fn to_mcp_error(err: ServiceError) -> McpError {
 #[derive(Clone)]
 struct RoommateMcp {
     state: Shared,
+    server_url: String,
     tool_router: ToolRouter<RoommateMcp>,
 }
 
 #[tool_router]
 impl RoommateMcp {
-    fn new(state: Shared) -> Self {
-        Self { state, tool_router: Self::tool_router() }
+    fn new(state: Shared, server_url: String) -> Self {
+        Self { state, server_url, tool_router: Self::tool_router() }
     }
 
     /// Lists every project with at least one stored model -- see
@@ -133,7 +182,7 @@ impl RoommateMcp {
 
     /// Lists one project's milestones (named dated snapshot pins) -- see
     /// `service::milestones::list_milestones`.
-    #[tool(description = "List one project's milestones: named dates with data snapshots pinned to them, newest first. Pass a milestone's name to get_rooms to view the project as captured at that milestone.")]
+    #[tool(description = "List one project's milestones: named dates with data snapshots pinned to them, newest first — each carries its model-pin count and its pinned dRofus snapshot id (drofus_snapshot) when one is set. Pass a milestone's name to get_rooms to view the project as captured at that milestone, rooms AND dRofus.")]
     fn list_milestones(&self, Parameters(p): Parameters<ProjectIdParams>) -> Result<CallToolResult, McpError> {
         let result = milestones::list_milestones(&self.state, &p.project_id).map_err(to_mcp_error)?;
         json_result(&result)
@@ -170,12 +219,86 @@ impl RoommateMcp {
         json_result(&result)
     }
 
+    /// Lists every uploaded dRofus snapshot id for one project -- see
+    /// `service::drofus::list_drofus_snapshots`.
+    #[tool(description = "List every uploaded dRofus CSV snapshot id (RFC3339 UTC taken_at) for one project, ascending, with the latest. \
+                          Reads the shared store fresh, so an upload forwarded moments ago shows here immediately.")]
+    fn list_drofus_snapshots(&self, Parameters(p): Parameters<ProjectIdParams>) -> Result<CallToolResult, McpError> {
+        let result = drofus::list_drofus_snapshots(&self.state, &p.project_id).map_err(to_mcp_error)?;
+        json_result(&result)
+    }
+
+    /// A parsed summary of one uploaded dRofus CSV -- see
+    /// `service::drofus::get_drofus_snapshot`. The service's `None` (the
+    /// HTTP 404 case) becomes a short plain-text answer, same convention as
+    /// `get_latest_snapshot`.
+    #[tool(description = "Get a parsed summary (record count, link property, field labels) of one uploaded dRofus CSV -- the given taken_at, or the latest when omitted. \
+                          Reads the shared store fresh.")]
+    fn get_drofus_snapshot(&self, Parameters(p): Parameters<GetDrofusSnapshotParams>) -> Result<CallToolResult, McpError> {
+        let result = drofus::get_drofus_snapshot(&self.state, &p.project_id, p.taken_at.as_deref()).map_err(to_mcp_error)?;
+        match result {
+            None => Ok(CallToolResult::success(vec![ContentBlock::text(
+                "no such dRofus upload stored for that project",
+            )])),
+            Some(info) => json_result(&info),
+        }
+    }
+
+    /// Uploads a dRofus CSV by FORWARDING it to the running HTTP server --
+    /// this process never writes the store itself (see the module doc): the
+    /// server validates, stores, and hot-swaps its own registry, staying the
+    /// single writer.
+    #[tool(description = "Upload a dRofus CSV export (given as an absolute file path) for one project. \
+                          Forwards the file over HTTP to the running roommate server, which validates it against the project's \
+                          drofus_fields before storing it as a dated snapshot and applying it live -- so the HTTP server must be running. \
+                          The project's settings must declare [sources.drofus] type = \"upload\". \
+                          Note the staleness asymmetry: after an upload, this process's own get_rooms/get_validation still join the \
+                          dRofus data loaded at ITS startup; list_drofus_snapshots/get_drofus_snapshot read the store fresh and see the new upload immediately.")]
+    async fn upload_drofus(&self, Parameters(p): Parameters<UploadDrofusParams>) -> Result<CallToolResult, McpError> {
+        let bytes = std::fs::read(&p.path)
+            .map_err(|e| McpError::invalid_params(format!("could not read CSV file {:?}: {e}", p.path), None))?;
+
+        let mut url = format!("{}/projects/{}/drofus", self.server_url.trim_end_matches('/'), urlencode(&p.project_id));
+        if let Some(taken_at) = &p.taken_at {
+            url.push_str(&format!("?taken_at={}", urlencode(taken_at)));
+        }
+
+        let response = reqwest::Client::new()
+            .post(&url)
+            .header("Content-Type", "text/csv")
+            .body(bytes)
+            .send()
+            .await
+            .map_err(|e| {
+                McpError::internal_error(
+                    format!(
+                        "the roommate HTTP server is not reachable at {} ({e}) -- \
+                         start it (it is the single writer for uploads) and retry",
+                        self.server_url
+                    ),
+                    None,
+                )
+            })?;
+
+        let status = response.status();
+        let body = response.text().await.unwrap_or_default();
+        if status.is_success() {
+            Ok(CallToolResult::success(vec![ContentBlock::text(body)]))
+        } else {
+            // The server's rejection text is the real validator -- pass it on
+            // verbatim, marked caller-addressable.
+            Err(McpError::invalid_params(format!("server answered {status}: {body}"), None))
+        }
+    }
+
     // Settings tools are READ-ONLY by design: this is a separate process from
     // the HTTP server, so a write from here could not hot-swap that server's
     // in-memory registry -- the file and the serving process would silently
     // disagree until a restart. Mutation stays behind the HTTP settings UI
-    // (see `settings_api`'s module doc), matching the "Read-only access"
-    // contract `get_info` declares.
+    // (see `settings_api`'s module doc), matching the "Read-only access
+    // against local state" contract `get_info` declares. `upload_drofus`
+    // above is not an exception: it forwards to that HTTP server rather than
+    // writing anything from this process.
 
     /// Lists every project settings file with its headline facts -- see
     /// `settings_api::list_project_files`.
@@ -237,9 +360,12 @@ impl ServerHandler for RoommateMcp {
         ServerInfo::new(ServerCapabilities::builder().enable_tools().build())
             .with_server_info(Implementation::new("roommate-mcp", env!("CARGO_PKG_VERSION")))
             .with_instructions(
-                "Read-only access to roommate's stored room and dRofus data. \
-                 Requires the same [storage] root as the HTTP server (via --server-settings) \
-                 to see real data -- this process does not share memory with it."
+                "Read-only access to roommate's stored room and dRofus data -- this process never \
+                 writes its own state or the store. The one mutating tool, upload_drofus, forwards \
+                 the CSV over HTTP to the running roommate server, which stays the single writer \
+                 and hot-swaps its own registry. Requires the same [storage] root as the HTTP \
+                 server (via --server-settings) to see real data -- this process does not share \
+                 memory with it."
                     .to_string(),
             )
     }
@@ -256,6 +382,12 @@ struct Args {
     /// directory the HTTP server uses via `--project-settings`).
     #[arg(long)]
     project_settings: PathBuf,
+
+    /// Base URL of the running roommate HTTP server, used only by the
+    /// `upload_drofus` tool (which forwards uploads to it). Defaults to the
+    /// address the server binary binds by default.
+    #[arg(long, default_value_t = format!("http://{DEFAULT_HTTP_ADDR}"))]
+    server_url: String,
 }
 
 #[tokio::main]
@@ -274,7 +406,7 @@ async fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     let state = build_state(&args.server_settings, &args.project_settings)?;
 
-    let service = RoommateMcp::new(state).serve(stdio()).await.inspect_err(|e| {
+    let service = RoommateMcp::new(state, args.server_url).serve(stdio()).await.inspect_err(|e| {
         tracing::error!("serving error: {e:?}");
     })?;
     service.waiting().await?;

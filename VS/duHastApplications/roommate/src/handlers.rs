@@ -21,11 +21,12 @@ use tokio::io::AsyncBufReadExt;
 use tokio_util::io::StreamReader;
 
 use crate::contract::{Room, RoomPayload, StreamEnvelope, SUPPORTED_SCHEMA};
+use crate::service::drofus::{DrofusSnapshotInfo, DrofusSnapshotList};
 use crate::service::milestones::MilestonesResponse;
 use crate::service::projects::{BuildingsResponse, ProjectSummary};
 use crate::service::snapshots::{LatestSnapshot, ProjectSnapshotsResponse};
 use crate::service::validation::ValidationResponse;
-use crate::service::{milestones, projects, rooms, snapshots, validation, ServiceError};
+use crate::service::{drofus, milestones, projects, rooms, snapshots, validation, ServiceError};
 use crate::state::Shared;
 
 /// Reject a project/model id that can't safely become a filesystem path
@@ -276,6 +277,32 @@ pub async fn get_model_latest_snapshot(
     match result {
         None => Err(StatusCode::NOT_FOUND),
         Some(latest) => Ok(Json(latest)),
+    }
+}
+
+/// Lists every uploaded dRofus snapshot id for one project — see
+/// `service::drofus::list_drofus_snapshots`. Soft-empty for unknown
+/// projects, same as the model-snapshot listing.
+pub async fn get_drofus_snapshots(
+    State(state): State<Shared>,
+    Path(project_id): Path<String>,
+) -> Result<Json<DrofusSnapshotList>, StatusCode> {
+    let result = drofus::list_drofus_snapshots(&state, &project_id).map_err(map_service_error)?;
+    Ok(Json(result))
+}
+
+/// A parsed summary of the latest uploaded dRofus CSV for one project — see
+/// `service::drofus::get_drofus_snapshot`. 404 when there is none: this
+/// names one specific resource, same convention as
+/// `get_model_latest_snapshot`.
+pub async fn get_drofus_latest(
+    State(state): State<Shared>,
+    Path(project_id): Path<String>,
+) -> Result<Json<DrofusSnapshotInfo>, StatusCode> {
+    let result = drofus::get_drofus_snapshot(&state, &project_id, None).map_err(map_service_error)?;
+    match result {
+        None => Err(StatusCode::NOT_FOUND),
+        Some(info) => Ok(Json(info)),
     }
 }
 

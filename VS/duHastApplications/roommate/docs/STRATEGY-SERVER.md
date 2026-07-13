@@ -192,7 +192,11 @@ each module carrying its rationale in a header, all with unit tests.
   through the exact startup pipeline (`bootstrap::load_project_bundle`)
   before installing the file and hot-swapping the in-process registry — a
   file this API accepts can never fail the next boot, and a rejected save
-  leaves the existing file untouched. An update cannot rename a project id;
+  leaves the existing file untouched. For an `upload`-sourced project that
+  validation includes the store: the `drofus_fields` labels are checked
+  against the *latest stored CSV* (which is why `load_project_bundle` now
+  takes the store), and saving before any upload exists is fine — shape-only
+  validation until data arrives. An update cannot rename a project id;
   a second `is_default` file is rejected; saves are serialized end-to-end by
   a lock so the scan-then-write race is structurally impossible. Writes are
   HTTP-only — the MCP binary reuses the core's *read* functions but never
@@ -325,17 +329,55 @@ each module carrying its rationale in a header, all with unit tests.
   milestone doesn't pin contributes nothing, and a pinned model's payload is
   the pinned snapshot loaded via `SnapshotStore::get_snapshot` — substituted
   *before* level dedup / building filter / dRofus join / classification, so
-  every downstream step (and the building filter) composes unchanged. Two
-  deliberate v1 limits, both documented rather than hidden: the dRofus data
-  joined onto a milestone view is still the project's *current* CSV (dRofus
-  has no snapshots to pin until it becomes an uploaded source riding the
-  shared upload envelope — that's the "future sources" slot in
-  `attachments`), and the validation report stays latest-based.
+  every downstream step (and the building filter) composes unchanged. A
+  milestone can also pin **one dRofus snapshot** (`drofus_snapshot`, the
+  optional field beside `attachments`): under that milestone, `assemble_rooms`
+  joins the pinned CSV loaded from the store (`get_drofus` +
+  `load_drofus_from_bytes`) instead of the project's current dRofus, resolved
+  once per project and memoised so an unscoped multi-project `?milestone=`
+  merge never cross-joins one project's pinned dRofus onto another's rooms. A
+  pin whose snapshot is missing or unparseable falls back to the current
+  dRofus with a warning — the same signal-not-error stance as a dangling model
+  pin (the room is still served, just joined against current data). This kept
+  the milestone substitution on its existing seam: it changes *which*
+  `DrofusData` feeds the join, nothing downstream. The one remaining
+  deliberate v1 limit: the **validation report stays latest-based** regardless
+  of the milestone selection (it resolves its own dRofus link independently —
+  see the Service-layer "deferred gap").
+
+- **dRofus upload ingest (`POST /projects/{id}/drofus`) + snapshotted
+  storage.** The previously-deferred dRofus-as-snapshotted-source (see
+  [Sources](STRATEGY-SOURCES.md) for the source-model side). Raw `text/csv`
+  body — the `/rooms/stream` raw-body precedent, no multipart dependency —
+  with the snapshot id as `?taken_at=`, resolved/validated/echoed through the
+  same contract functions as rooms ingest, and an explicit 32 MB
+  `DefaultBodyLimit` (axum's default is a silent 2 MB). **Validate before
+  store, order load-bearing:** the CSV is parsed and its labels checked
+  against the project's `drofus_fields` *before* `put_drofus` — a stored CSV
+  is hydrated at every boot, so accepting a bad one would fail the next
+  startup of both binaries. Storage: `<root>/<project>/drofus/<taken_at>.csv`
+  (same `:`→`-` filename sanitisation, `.csv` extension), indexed by a new
+  `drofus_snapshots` list on the project manifest with the same
+  filesystem-wins reconciliation as model snapshots; `drofus/` is a reserved
+  name `list_models` explicitly skips (else it would surface as a phantom
+  model). Duplicate `taken_at`: skip + warn, reported as `stored: false`.
+  The upload core lives in `settings_api` because that's where the mutation
+  machinery already is: it runs under the same `SAVE_LOCK` as settings saves
+  and shares their `reload_and_swap` tail, so an upload and a save can never
+  race or diverge on how a registry is rebuilt — and the freshly-stored CSV
+  goes live without a restart iff it is the store's lexical-max latest (an
+  older backfill correctly doesn't displace a newer one). Bootstrap
+  consequence: the store is constructed *before* the project bundles load,
+  and `load_project_bundle` takes it as a parameter, since an
+  `upload`-sourced project hydrates its dRofus data from the store. Read
+  side: `GET /projects/{id}/drofus/snapshots` (soft-empty listing) and
+  `GET /projects/{id}/drofus/latest` (parsed summary, 404 when none) via a
+  new `service/drofus.rs`, both also exposed as MCP tools (see
+  [MCP](STRATEGY-MCP.md)).
 
 **Deferred (design settled, not built):** snapshot delete UI (the history
 *query* now exists — see the endpoints above), per-model / `/hierarchy`
-endpoints, DB backend, an owning level above project, dRofus-as-snapshotted-
-source (which is also what lets milestones pin dRofus data), and a
+endpoints, DB backend, an owning level above project, and a
 colour-rooms-by-date-proximity viewer feature (the QA side of
 `drofus_fields`' `type = "date"` / `format` is consumed now — see the typed
 date comparison above — but no viewer feature reads the parsed dates yet).

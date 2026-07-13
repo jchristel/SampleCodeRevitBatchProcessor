@@ -11,7 +11,7 @@ use serde::Serialize;
 
 use crate::classify::{classify_room, TierValue};
 use crate::contract::{elevation_match, lookup_property, Level, Room, RoomPayload, SUPPORTED_SCHEMA};
-use crate::drofus::DrofusRecord;
+use crate::drofus::{DrofusData, DrofusRecord};
 use crate::settings::{BuiltinPropertyDef, HierarchyTier};
 use crate::state::{AppState, ModelKey, ProjectSettings};
 
@@ -76,9 +76,14 @@ fn resolve_label_fields(
 /// from the owning model's `Model.source` (e.g. "revit") — it picks which
 /// `BuiltinPropertyDef.by_source` entry `lookup_property` uses to resolve a
 /// canonical name to this room's actual raw property name.
-fn assemble_room(bundle: &ProjectSettings, room: &Room, source: &str) -> RoomResponse {
+///
+/// `drofus` is passed in explicitly rather than read off `bundle.drofus`, so a
+/// milestone view can join a *pinned* dRofus snapshot instead of the project's
+/// current data — the default (non-milestone) caller passes
+/// `bundle.drofus.as_ref()`, identical to before.
+fn assemble_room(bundle: &ProjectSettings, drofus: Option<&DrofusData>, room: &Room, source: &str) -> RoomResponse {
     // dRofus join: read the link property off the room, look up the record.
-    let drofus = bundle.drofus.as_ref().and_then(|d| {
+    let drofus = drofus.and_then(|d| {
         lookup_property(room, &d.link_property, source, &bundle.builtin_properties)
             .and_then(|key| d.by_id.get(&key).cloned())
     });
@@ -157,8 +162,10 @@ pub struct RoomsResult {
 ///
 /// dRofus join and classification are resolved here at response assembly — the
 /// stored snapshots stay raw; derived data is never written back to state.
-/// Note the dRofus data joined onto a milestone view is still the project's
-/// *current* CSV — dRofus has no snapshots to pin yet (see STRATEGY-SERVER.md).
+/// A milestone that pins a `drofus_snapshot` joins *that* stored CSV instead of
+/// the project's current dRofus, resolved once per project (see below); a pin
+/// whose snapshot is missing or unparseable falls back to the current dRofus
+/// with a warning, the same signal-not-error stance as a dangling model pin.
 ///
 /// Returns `Ok(None)` when nothing has ever been pushed to this server at all
 /// -- the HTTP adapter's "204 No Content" case. A filter that merely matches
@@ -187,6 +194,13 @@ pub fn assemble_rooms(
     // filter, each surviving model's latest payload is then *replaced* by the
     // snapshot the milestone pins for it (owned payloads, hence no `&` on the
     // tuple's payload slot).
+    // The dRofus a milestone view should join against, resolved once per
+    // project (project id → override). `None` value = "attempted, fall back to
+    // current" (a missing or unparseable pin), so it's memoised too and never
+    // re-parsed or re-warned across a project's models. Empty for the
+    // non-milestone path.
+    let mut milestone_drofus: BTreeMap<String, Option<DrofusData>> = BTreeMap::new();
+
     let mut scoped: Vec<(ModelKey, RoomPayload, &ProjectSettings)> = Vec::new();
     for (key, payload) in stored {
         if project.is_some_and(|p| payload.project.id != p) {
@@ -208,7 +222,36 @@ pub fn assemble_rooms(
                     continue;
                 };
                 match state.get_snapshot(&key, pinned_id).map_err(ServiceError::Internal)? {
-                    Some(pinned) => scoped.push((key, pinned, bundle)),
+                    Some(pinned) => {
+                        // Resolve this project's pinned dRofus override once.
+                        // Keyed per project so an unscoped multi-project
+                        // `?milestone=` merge never cross-joins A's dRofus onto B.
+                        if let Some(drofus_pin) = &ms.drofus_snapshot {
+                            if !milestone_drofus.contains_key(&key.project_id) {
+                                let resolved = match state.get_drofus(&key.project_id, drofus_pin).map_err(ServiceError::Internal)? {
+                                    Some(bytes) => match crate::drofus::load_drofus_from_bytes(&bytes) {
+                                        Ok(data) => Some(data),
+                                        Err(e) => {
+                                            tracing::warn!(
+                                                "milestone '{}' pins dRofus snapshot {:?} for project {}, but it failed to parse ({e:#}) — falling back to current dRofus",
+                                                wanted, drofus_pin, key.project_id
+                                            );
+                                            None
+                                        }
+                                    },
+                                    None => {
+                                        tracing::warn!(
+                                            "milestone '{}' pins dRofus snapshot {:?} for project {}, but no such snapshot exists — falling back to current dRofus",
+                                            wanted, drofus_pin, key.project_id
+                                        );
+                                        None
+                                    }
+                                };
+                                milestone_drofus.insert(key.project_id.clone(), resolved);
+                            }
+                        }
+                        scoped.push((key, pinned, bundle));
+                    }
                     None => tracing::warn!(
                         "milestone '{}' pins snapshot {:?} for {}/{}, but no such snapshot exists — skipping the model",
                         wanted, pinned_id, key.project_id, key.model_id
@@ -306,8 +349,15 @@ pub fn assemble_rooms(
                 levels.push(level);
             }
         }
+        // A milestone-pinned dRofus override wins when it resolved; otherwise
+        // (no milestone, no pin, or a pin that fell back) the project's current
+        // dRofus — identical to pre-pinning behaviour.
+        let effective_drofus = match milestone_drofus.get(&key.project_id) {
+            Some(Some(data)) => Some(data),
+            _ => bundle.drofus.as_ref(),
+        };
         rooms.extend(matching_rooms.into_iter().map(|room| {
-            let mut response = assemble_room(bundle, room, &payload.model.source);
+            let mut response = assemble_room(bundle, effective_drofus, room, &payload.model.source);
             if let Some(canonical_id) =
                 level_remap.get(&(key.project_id.clone(), key.model_id.clone(), room.level_id.clone()))
             {
@@ -324,7 +374,6 @@ pub fn assemble_rooms(
 mod tests {
     use super::*;
     use crate::contract::{CustomValue, Model, Project, RoomPayload, Snapshot};
-    use crate::drofus::DrofusData;
     use crate::state::AppState;
     use crate::storage::MemStore;
 
@@ -343,6 +392,44 @@ mod tests {
             reconciliation: BTreeMap::new(),
             all_labels: vec![],
         }
+    }
+
+    /// A dRofus dataset with one record: link id `id` carries `label` = `value`.
+    /// Used by the milestone-pinning tests to make the *current* dRofus differ
+    /// from the *pinned* one for the same room, so the join source is what the
+    /// assertion actually distinguishes.
+    fn make_drofus_with_record(link_property: &str, id: &str, label: &str, value: &str) -> DrofusData {
+        DrofusData {
+            link_property: link_property.to_string(),
+            by_id: BTreeMap::from([(
+                id.to_string(),
+                DrofusRecord { fields: BTreeMap::from([(label.to_string(), value.to_string())]) },
+            )]),
+            reconciliation: BTreeMap::new(),
+            all_labels: vec![label.to_string()],
+        }
+    }
+
+    /// A bundle whose *current* dRofus yields `current_value` (`NetArea`) for
+    /// link id "1", with one "Design Freeze" milestone pinning model "m1" to
+    /// `pinned_ts` and optionally a `drofus_snapshot`.
+    fn bundle_for_drofus_pin(current_value: &str, pinned_ts: &str, drofus_ts: Option<&str>) -> ProjectSettings {
+        ProjectSettings {
+            drofus: Some(make_drofus_with_record("Number", "1", "NetArea", current_value)),
+            milestones: vec![crate::settings::Milestone {
+                name: "Design Freeze".to_string(),
+                date: "2026-06-30".to_string(),
+                drofus_snapshot: drofus_ts.map(|s| s.to_string()),
+                attachments: std::collections::BTreeMap::from([("m1".to_string(), pinned_ts.to_string())]),
+            }],
+            ..make_bundle("Number")
+        }
+    }
+
+    /// A two-header-row dRofus CSV pinning link id "1" to one `NetArea` value —
+    /// the on-store form a `drofus_snapshot` pin loads and parses.
+    fn drofus_csv(net_area: &str) -> Vec<u8> {
+        format!("DrofusRoomId,NetArea\nNumber,NetArea\n1,{net_area}\n").into_bytes()
     }
 
     /// A minimal `ProjectSettings` bundle for tests that only care about the
@@ -585,10 +672,17 @@ mod tests {
 
     /// A bundle defining one milestone that pins model "m1" to `pinned_ts`.
     fn make_bundle_with_milestone(pinned_ts: &str) -> ProjectSettings {
+        make_bundle_with_milestone_drofus(pinned_ts, None)
+    }
+
+    /// Like `make_bundle_with_milestone`, but the milestone also pins a
+    /// `drofus_snapshot` when `drofus_ts` is `Some`.
+    fn make_bundle_with_milestone_drofus(pinned_ts: &str, drofus_ts: Option<&str>) -> ProjectSettings {
         ProjectSettings {
             milestones: vec![crate::settings::Milestone {
                 name: "Design Freeze".to_string(),
                 date: "2026-06-30".to_string(),
+                drofus_snapshot: drofus_ts.map(|s| s.to_string()),
                 attachments: std::collections::BTreeMap::from([("m1".to_string(), pinned_ts.to_string())]),
             }],
             ..make_bundle("Number")
@@ -650,6 +744,141 @@ mod tests {
         // A milestone name this project never defined matches nothing.
         let unknown = assemble_rooms(&state, Some("p1"), None, Some("Nonexistent")).unwrap().expect("store has data");
         assert!(unknown.rooms.is_empty());
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// The whole dRofus-pinning feature in one test: a milestone that pins a
+    /// `drofus_snapshot` joins that stored CSV, while the default (latest) view
+    /// joins the project's current dRofus — same room, different join source.
+    #[test]
+    fn test_assemble_rooms_milestone_joins_pinned_drofus() {
+        let dir = std::env::temp_dir().join(format!("roommate-ms-drofus-{}", std::process::id()));
+        let store = crate::storage::FsStore::new(dir.clone()).unwrap();
+
+        let old_model_ts = "2026-06-01T00:00:00Z";
+        let old_drofus_ts = "2026-06-01T09:00:00Z";
+        // Same room (link id "1") in both snapshots, so only the dRofus differs.
+        let mut old = make_payload("p1", "m1", vec![], vec![make_room("r1", "Room", &[("Number", "1")])]);
+        old.snapshot.taken_at = old_model_ts.to_string();
+        let mut new = make_payload("p1", "m1", vec![], vec![make_room("r1", "Room", &[("Number", "1")])]);
+        new.snapshot.taken_at = "2026-07-01T00:00:00Z".to_string();
+
+        // Current dRofus yields "new-value"; the pinned CSV yields "old-value".
+        let bundle = bundle_for_drofus_pin("new-value", old_model_ts, Some(old_drofus_ts));
+        let state = AppState::new(Box::new(store), single_project("p1", bundle), None);
+        state.set_snapshot(old).unwrap();
+        state.set_snapshot(new).unwrap();
+        state.put_drofus("p1", old_drofus_ts, &drofus_csv("old-value")).unwrap();
+
+        let latest = assemble_rooms(&state, Some("p1"), None, None).unwrap().expect("store has data");
+        assert_eq!(
+            latest.rooms[0].drofus.as_ref().unwrap().fields.get("NetArea"),
+            Some(&"new-value".to_string()),
+            "default view joins the current dRofus"
+        );
+
+        let pinned = assemble_rooms(&state, Some("p1"), None, Some("Design Freeze")).unwrap().expect("store has data");
+        assert_eq!(
+            pinned.rooms[0].drofus.as_ref().unwrap().fields.get("NetArea"),
+            Some(&"old-value".to_string()),
+            "milestone view joins the pinned dRofus snapshot"
+        );
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// A `drofus_snapshot` pointing at an id that was never uploaded falls back
+    /// to the current dRofus with a warning — the room is still returned, not
+    /// dropped (dRofus is a join, not the room itself).
+    #[test]
+    fn test_assemble_rooms_milestone_missing_drofus_pin_falls_back() {
+        let dir = std::env::temp_dir().join(format!("roommate-ms-drofus-miss-{}", std::process::id()));
+        let store = crate::storage::FsStore::new(dir.clone()).unwrap();
+
+        let model_ts = "2026-06-01T00:00:00Z";
+        let mut pinned_model = make_payload("p1", "m1", vec![], vec![make_room("r1", "Room", &[("Number", "1")])]);
+        pinned_model.snapshot.taken_at = model_ts.to_string();
+
+        // Pins a dRofus id that is never put into the store.
+        let bundle = bundle_for_drofus_pin("current-value", model_ts, Some("2026-01-01T00:00:00Z"));
+        let state = AppState::new(Box::new(store), single_project("p1", bundle), None);
+        state.set_snapshot(pinned_model).unwrap();
+
+        let result = assemble_rooms(&state, Some("p1"), None, Some("Design Freeze")).unwrap().expect("store has data");
+        assert_eq!(result.rooms.len(), 1, "the room is still returned (fallback, not dropped)");
+        assert_eq!(
+            result.rooms[0].drofus.as_ref().unwrap().fields.get("NetArea"),
+            Some(&"current-value".to_string()),
+            "falls back to the current dRofus"
+        );
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// A milestone with model pins but no `drofus_snapshot` joins the current
+    /// dRofus — guards the default (pre-pinning) path.
+    #[test]
+    fn test_assemble_rooms_milestone_without_drofus_pin_uses_current() {
+        let dir = std::env::temp_dir().join(format!("roommate-ms-drofus-none-{}", std::process::id()));
+        let store = crate::storage::FsStore::new(dir.clone()).unwrap();
+
+        let model_ts = "2026-06-01T00:00:00Z";
+        let mut pinned_model = make_payload("p1", "m1", vec![], vec![make_room("r1", "Room", &[("Number", "1")])]);
+        pinned_model.snapshot.taken_at = model_ts.to_string();
+
+        let bundle = bundle_for_drofus_pin("current-value", model_ts, None);
+        let state = AppState::new(Box::new(store), single_project("p1", bundle), None);
+        state.set_snapshot(pinned_model).unwrap();
+
+        let result = assemble_rooms(&state, Some("p1"), None, Some("Design Freeze")).unwrap().expect("store has data");
+        assert_eq!(
+            result.rooms[0].drofus.as_ref().unwrap().fields.get("NetArea"),
+            Some(&"current-value".to_string())
+        );
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// Multi-project isolation: in an unscoped `?milestone=` merge, project A's
+    /// pinned dRofus must not leak onto project B's rooms — B keeps its own
+    /// current dRofus.
+    #[test]
+    fn test_assemble_rooms_milestone_drofus_pin_does_not_cross_projects() {
+        let dir = std::env::temp_dir().join(format!("roommate-ms-drofus-iso-{}", std::process::id()));
+        let store = crate::storage::FsStore::new(dir.clone()).unwrap();
+
+        let model_ts = "2026-06-01T00:00:00Z";
+        let a_drofus_ts = "2026-06-01T09:00:00Z";
+
+        let mut a = make_payload("pA", "m1", vec![], vec![make_room("rA", "Room A", &[("Number", "1")])]);
+        a.snapshot.taken_at = model_ts.to_string();
+        let mut b = make_payload("pB", "m1", vec![], vec![make_room("rB", "Room B", &[("Number", "1")])]);
+        b.snapshot.taken_at = model_ts.to_string();
+
+        // A pins a dRofus snapshot; B has no pin, so its current dRofus stands.
+        let registry = std::collections::HashMap::from([
+            ("pA".to_string(), bundle_for_drofus_pin("A-current", model_ts, Some(a_drofus_ts))),
+            ("pB".to_string(), bundle_for_drofus_pin("B-current", model_ts, None)),
+        ]);
+        let state = AppState::new(Box::new(store), registry, None);
+        state.set_snapshot(a).unwrap();
+        state.set_snapshot(b).unwrap();
+        state.put_drofus("pA", a_drofus_ts, &drofus_csv("A-pinned")).unwrap();
+
+        let result = assemble_rooms(&state, None, None, Some("Design Freeze")).unwrap().expect("store has data");
+        let room_a = result.rooms.iter().find(|r| r.room.id == "rA").expect("A present");
+        let room_b = result.rooms.iter().find(|r| r.room.id == "rB").expect("B present");
+        assert_eq!(
+            room_a.drofus.as_ref().unwrap().fields.get("NetArea"),
+            Some(&"A-pinned".to_string()),
+            "A joins its own pinned dRofus"
+        );
+        assert_eq!(
+            room_b.drofus.as_ref().unwrap().fields.get("NetArea"),
+            Some(&"B-current".to_string()),
+            "B keeps its current dRofus — A's pin did not leak across"
+        );
 
         std::fs::remove_dir_all(&dir).ok();
     }

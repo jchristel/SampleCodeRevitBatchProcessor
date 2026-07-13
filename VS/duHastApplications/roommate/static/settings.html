@@ -125,6 +125,21 @@
   .drofus-status.ok { color: var(--ok); }
   .drofus-status.bad { color: var(--accent); }
 
+  /* dRofus upload drop zone */
+  .drop-zone {
+    border: 1px dashed var(--ink);
+    padding: 0.9rem;
+    font-size: 0.72rem;
+    margin: 0.5rem 0 0.3rem;
+    display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+  }
+  .drop-zone.drag { background: var(--fill); border-style: solid; }
+  .drop-zone.disabled { opacity: 0.45; }
+  .drop-zone.disabled button { pointer-events: none; }
+  #drofusSnapshotList { list-style: none; margin: 0.4rem 0 0; padding: 0; font-size: 0.68rem; }
+  #drofusSnapshotList li { padding: 0.1rem 0; }
+  #drofusSnapshotList .latest-mark { color: var(--ok); }
+
   #saveBar { display: flex; align-items: center; gap: 1rem; max-width: 760px; margin-top: 1rem; }
   #saveMessage { font-size: 0.72rem; white-space: pre-wrap; }
   #saveMessage.ok { color: var(--ok); }
@@ -162,12 +177,28 @@
 
         <section class="block">
           <h2>dRofus source</h2>
-          <p class="hint">Reference data joined onto rooms. A project without dRofus is a normal state.</p>
-          <label class="field"><input type="checkbox" id="drofusEnabled" /> enabled</label>
-          <label class="field">csv path
-            <input type="text" id="drofusPath" size="36" placeholder="../drofus.csv" />
+          <p class="hint">Reference data joined onto rooms. A project without dRofus is a normal state. "file" reads a CSV path from disk; "upload" takes CSVs uploaded here, stored server-side as dated snapshots.</p>
+          <label class="field">source
+            <select id="drofusSourceType">
+              <option value="">none</option>
+              <option value="file">file</option>
+              <option value="upload">upload</option>
+            </select>
           </label>
-          <button type="button" class="action" id="drofusCheckBtn">check</button>
+          <span id="drofusFileBlock" class="hidden">
+            <label class="field">csv path
+              <input type="text" id="drofusPath" size="36" placeholder="../drofus.csv" />
+            </label>
+            <button type="button" class="action" id="drofusCheckBtn">check</button>
+          </span>
+          <div id="drofusUploadBlock" class="hidden">
+            <div class="drop-zone" id="drofusDrop">
+              <span id="drofusDropHint">drop a dRofus CSV here, or</span>
+              <button type="button" class="action" id="drofusPickBtn">choose file…</button>
+              <input type="file" id="drofusFile" accept=".csv,text/csv" class="hidden" />
+            </div>
+            <ul id="drofusSnapshotList"></ul>
+          </div>
           <div class="drofus-status hidden" id="drofusStatus"></div>
         </section>
 
@@ -255,9 +286,10 @@ async function apiSend(method, url, body) {
 // editors mutate it in place and re-render. The server is the validator —
 // its 422 messages are shown verbatim.
 let current = null;      // { isNew, file, settings }
-let drofusLabels = [];   // labels from the last drofus-check, for the QA dropdown
+let drofusLabels = [];   // labels from the last drofus-check/upload, for the QA dropdown
 let activeProjectId = null;
 let projectSnapshots = null; // /projects/{id}/snapshots models for the active project; null = loading
+let drofusSnapshots = null;  // /projects/{id}/drofus/snapshots for the active project; null = loading
 
 const $ = (id) => document.getElementById(id);
 
@@ -314,10 +346,14 @@ async function selectProject(projectId) {
   activeProjectId = projectId;
   current = { isNew: false, file: data.file, settings: normalize(data.settings) };
   drofusLabels = [];
+  drofusSnapshots = null;
   openEditor();
   loadProjectList();
-  // Pre-load the label dropdown when a source is already configured.
-  if (current.settings.sources.drofus) checkDrofus(true);
+  // Pre-load the label dropdown when a source is already configured: a file
+  // source dry-runs its path, an upload source reads the latest stored CSV.
+  const drofus = current.settings.sources.drofus;
+  if (drofus && drofus.type === "file") checkDrofus(true);
+  if (drofus && drofus.type === "upload") { loadDrofusLatest(); loadDrofusSnapshots(); }
   // Pre-load the stored snapshot ids the milestone pin dropdowns offer.
   loadProjectSnapshots(projectId);
 }
@@ -327,6 +363,7 @@ function newProject() {
   current = { isNew: true, file: null, settings: blankSettings() };
   drofusLabels = [];
   projectSnapshots = []; // a project that doesn't exist yet has no stored data
+  drofusSnapshots = [];
   openEditor();
   loadProjectList();
 }
@@ -364,6 +401,7 @@ function normalize(s) {
   s.milestones = (s.milestones || []).map(m => ({
     name: m.name || "",
     date: m.date || "",
+    drofus_snapshot: m.drofus_snapshot || "",
     attachments: Object.entries(m.attachments || {}).map(([model, taken_at]) => ({ model, taken_at })),
   }));
   s.drofus_fields = (s.drofus_fields || []).map(f => ({
@@ -390,11 +428,10 @@ function openEditor() {
   $("isDefault").checked = !!s.is_default;
 
   const drofus = s.sources.drofus;
-  $("drofusEnabled").checked = !!drofus;
-  $("drofusPath").value = drofus ? drofus.path : "";
-  $("drofusPath").disabled = !drofus;
-  $("drofusCheckBtn").disabled = !drofus;
+  $("drofusSourceType").value = drofus ? drofus.type : "";
+  $("drofusPath").value = drofus && drofus.type === "file" ? drofus.path : "";
   $("drofusStatus").classList.add("hidden");
+  renderDrofusSource();
 
   renderHierarchy();
   renderBuiltins();
@@ -514,6 +551,22 @@ function attachmentSelect(milestone, model) {
   return sel;
 }
 
+// The dRofus-snapshot pin for one milestone: "current dRofus" (empty) plus one
+// option per uploaded dRofus snapshot. dRofus is project-scoped, so it's a
+// single pin, not per-model. A pinned id no longer stored is kept as an
+// explicit "(missing)" option, same stance as an attachment pin.
+function drofusPinSelect(milestone) {
+  const sel = el("select", { onchange: (e) => { milestone.drofus_snapshot = e.target.value; } }, [
+    el("option", { value: "", text: "— current dRofus —" }),
+    ...drofusSnapshots.map(ts => el("option", { value: ts, text: ts })),
+  ]);
+  if (milestone.drofus_snapshot && !drofusSnapshots.includes(milestone.drofus_snapshot)) {
+    sel.appendChild(el("option", { value: milestone.drofus_snapshot, text: `${milestone.drofus_snapshot} (missing)` }));
+  }
+  sel.value = milestone.drofus_snapshot || "";
+  return sel;
+}
+
 function renderMilestones() {
   if (!current) return; // snapshots may resolve before any project is open
   const rows = $("milestoneRows");
@@ -531,6 +584,17 @@ function renderMilestones() {
       }),
       ...rowControls(milestones, i, renderMilestones),
     ]));
+
+    // dRofus pin: only meaningful when the project has uploaded dRofus
+    // snapshots to choose from (an upload-sourced project with at least one
+    // upload). Absent otherwise — pinning nothing is the default anyway.
+    if (drofusSnapshots && drofusSnapshots.length > 0) {
+      rows.appendChild(el("div", { class: "row" }, [
+        el("span", { class: "row-head", text: "⟐" }),
+        el("span", { text: "dRofus" }),
+        drofusPinSelect(milestone),
+      ]));
+    }
 
     // Attachments: one pin dropdown per model the server has data for.
     if (projectSnapshots === null) {
@@ -564,11 +628,13 @@ function renderMilestones() {
 }
 
 function renderQa() {
-  const enabled = !!current.settings.sources.drofus;
-  $("qaBlock").classList.toggle("disabled", !enabled);
-  $("qaHint").textContent = enabled
-    ? "Per-column type/comparison declarations for the validation report. Labels come from row 1 of the dRofus CSV — run \"check\" above to load them."
-    : "Declarations require a dRofus source — enable one above first.";
+  const drofus = current.settings.sources.drofus;
+  $("qaBlock").classList.toggle("disabled", !drofus);
+  $("qaHint").textContent = !drofus
+    ? "Declarations require a dRofus source — enable one above first."
+    : drofus.type === "upload"
+      ? "Per-column type/comparison declarations for the validation report. Labels come from row 1 of the latest uploaded CSV."
+      : "Per-column type/comparison declarations for the validation report. Labels come from row 1 of the dRofus CSV — run \"check\" above to load them.";
 
   const options = $("qaLabelOptions");
   options.replaceChildren(...drofusLabels.map(l => el("option", { value: l })));
@@ -609,6 +675,109 @@ function renderQa() {
   });
 }
 
+// ---------- dRofus source ----------
+// Show the block matching the selected source type. The upload zone is
+// disabled for an unsaved project: the endpoint rejects unregistered
+// projects, so say why up front instead of letting the POST fail.
+function renderDrofusSource() {
+  const type = $("drofusSourceType").value;
+  $("drofusFileBlock").classList.toggle("hidden", type !== "file");
+  $("drofusUploadBlock").classList.toggle("hidden", type !== "upload");
+  if (type === "upload") {
+    const locked = current.isNew;
+    $("drofusDrop").classList.toggle("disabled", locked);
+    $("drofusDropHint").textContent = locked
+      ? "save the project first, then upload CSVs here —"
+      : "drop a dRofus CSV here, or";
+    renderDrofusSnapshots();
+  }
+}
+
+function renderDrofusSnapshots() {
+  const list = $("drofusSnapshotList");
+  list.replaceChildren();
+  if (drofusSnapshots === null) {
+    list.appendChild(el("li", { class: "row-head", text: "loading stored uploads…" }));
+  } else if (drofusSnapshots.length === 0) {
+    list.appendChild(el("li", { class: "row-head", text: "no uploads stored yet" }));
+  } else {
+    // Newest first for reading; the last id in the (ascending) list is latest.
+    const latest = drofusSnapshots[drofusSnapshots.length - 1];
+    [...drofusSnapshots].reverse().forEach(ts => {
+      const li = el("li", {}, [el("span", { text: ts + " " })]);
+      if (ts === latest) li.appendChild(el("span", { class: "latest-mark", text: "← latest (live)" }));
+      list.appendChild(li);
+    });
+  }
+}
+
+async function loadDrofusSnapshots() {
+  drofusSnapshots = null;
+  renderDrofusSnapshots();
+  renderMilestones(); // hide any stale dRofus pin dropdowns while reloading
+  try {
+    const data = await apiGet(`/projects/${encodeURIComponent(activeProjectId)}/drofus/snapshots`);
+    drofusSnapshots = data.snapshots || [];
+  } catch (err) {
+    drofusSnapshots = [];
+  }
+  renderDrofusSnapshots();
+  renderMilestones(); // the milestone pin dropdowns depend on this list
+}
+
+// The upload-mode counterpart of the file-mode "check": read the latest
+// stored CSV's summary to fill the QA label dropdown. "No upload yet" (404)
+// is a neutral state, not an error.
+async function loadDrofusLatest() {
+  const status = $("drofusStatus");
+  const res = await fetch(`/projects/${encodeURIComponent(activeProjectId)}/drofus/latest`, { cache: "no-store" });
+  status.classList.remove("hidden", "ok", "bad");
+  if (res.ok) {
+    const data = await res.json();
+    drofusLabels = data.labels;
+    status.classList.add("ok");
+    status.textContent = `✓ latest upload ${data.taken_at} · ${data.record_count} records · link property "${data.link_property}"`;
+  } else {
+    drofusLabels = [];
+    status.textContent = "no upload yet — QA labels load from the first uploaded CSV";
+  }
+  renderQa();
+}
+
+async function uploadDrofusFile(file) {
+  if (!file || current.isNew) return;
+  const status = $("drofusStatus");
+  status.classList.remove("hidden", "ok", "bad");
+  status.textContent = `uploading ${file.name}…`;
+  let res, text;
+  try {
+    res = await fetch(`/projects/${encodeURIComponent(activeProjectId)}/drofus`, {
+      method: "POST",
+      headers: { "Content-Type": "text/csv" },
+      body: file,
+    });
+    text = await res.text();
+  } catch (err) {
+    status.classList.add("bad");
+    status.textContent = `⚠ upload failed: ${err.message || err}`;
+    return;
+  }
+  if (res.ok) {
+    const data = JSON.parse(text);
+    drofusLabels = data.labels;
+    status.classList.add("ok");
+    status.textContent =
+      `✓ ${data.record_count} records · link property "${data.link_property}" · snapshot ${data.snapshot_taken_at}` +
+      (data.stored ? " — applied live" : " — duplicate snapshot id, skipped");
+    renderQa();
+    loadDrofusSnapshots();
+  } else {
+    // The server's 422 is the real validator — show it verbatim.
+    status.classList.add("bad");
+    status.textContent = `⚠ ${text}`;
+  }
+}
+
 // ---------- dRofus check ----------
 async function checkDrofus(quiet) {
   const path = $("drofusPath").value.trim();
@@ -647,9 +816,12 @@ function toPayload() {
   return {
     project_id: $("projectId").value.trim(),
     is_default: $("isDefault").checked,
-    sources: $("drofusEnabled").checked
-      ? { drofus: { type: "file", path: $("drofusPath").value.trim() } }
-      : {},
+    sources: (() => {
+      const type = $("drofusSourceType").value;
+      if (type === "file") return { drofus: { type: "file", path: $("drofusPath").value.trim() } };
+      if (type === "upload") return { drofus: { type: "upload" } };
+      return {};
+    })(),
     hierarchy: s.hierarchy.map(t => ({
       name: t.name.trim(),
       code_property: opt(t.code_property),
@@ -663,6 +835,7 @@ function toPayload() {
     milestones: s.milestones.map(m => ({
       name: m.name.trim(),
       date: m.date.trim(),
+      drofus_snapshot: opt(m.drofus_snapshot),
       attachments: Object.fromEntries(m.attachments.filter(a => a.taken_at).map(a => [a.model, a.taken_at])),
     })),
     drofus_fields: s.drofus_fields.map(f => ({
@@ -688,7 +861,9 @@ async function save() {
     current = { isNew: false, file: `${activeProjectId}.toml`, settings: normalize(data.settings) };
     openEditor();
     loadProjectList();
-    if (current.settings.sources.drofus) checkDrofus(true);
+    const drofus = current.settings.sources.drofus;
+    if (drofus && drofus.type === "file") checkDrofus(true);
+    if (drofus && drofus.type === "upload") { loadDrofusLatest(); loadDrofusSnapshots(); }
   } else {
     // The server's 422 is the real validator — show it verbatim.
     showMessage(false, `⚠ ${result.text}`);
@@ -698,20 +873,40 @@ async function save() {
 // ---------- wiring ----------
 $("newProjectBtn").addEventListener("click", newProject);
 $("editor").addEventListener("submit", (e) => { e.preventDefault(); save(); });
-$("drofusEnabled").addEventListener("change", (e) => {
-  if (e.target.checked) {
+$("drofusSourceType").addEventListener("change", (e) => {
+  const type = e.target.value;
+  if (type === "file") {
     current.settings.sources.drofus = { type: "file", path: $("drofusPath").value };
+  } else if (type === "upload") {
+    current.settings.sources.drofus = { type: "upload" };
+    if (!current.isNew) { loadDrofusLatest(); loadDrofusSnapshots(); }
   } else {
     delete current.settings.sources.drofus;
   }
-  $("drofusPath").disabled = !e.target.checked;
-  $("drofusCheckBtn").disabled = !e.target.checked;
+  $("drofusStatus").classList.add("hidden");
+  renderDrofusSource();
   renderQa();
 });
 $("drofusPath").addEventListener("input", (e) => {
-  if (current.settings.sources.drofus) current.settings.sources.drofus.path = e.target.value;
+  const drofus = current.settings.sources.drofus;
+  if (drofus && drofus.type === "file") drofus.path = e.target.value;
 });
 $("drofusCheckBtn").addEventListener("click", () => checkDrofus(false));
+$("drofusPickBtn").addEventListener("click", () => $("drofusFile").click());
+$("drofusFile").addEventListener("change", (e) => {
+  uploadDrofusFile(e.target.files[0]);
+  e.target.value = ""; // allow re-uploading the same file
+});
+{
+  const drop = $("drofusDrop");
+  drop.addEventListener("dragover", (e) => { e.preventDefault(); if (!current?.isNew) drop.classList.add("drag"); });
+  drop.addEventListener("dragleave", () => drop.classList.remove("drag"));
+  drop.addEventListener("drop", (e) => {
+    e.preventDefault();
+    drop.classList.remove("drag");
+    uploadDrofusFile(e.dataTransfer.files[0]);
+  });
+}
 $("addTierBtn").addEventListener("click", () => {
   current.settings.hierarchy.push({ name: "", code_property: "", name_property: "" });
   renderHierarchy();

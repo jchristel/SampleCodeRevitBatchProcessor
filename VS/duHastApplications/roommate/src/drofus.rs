@@ -9,16 +9,18 @@
 //! be fused into the room's own properties — keeping it separate keeps the seam
 //! where the refresh boundary actually is.
 //!
-//! The file loader is the degenerate (fetch-once-at-boot) case of that pollable
-//! source; when the real API connector lands it slots in as a new `DrofusSource`
-//! variant, this loader its only new surface.
+//! The loader is byte-source-agnostic (`load_drofus_from_reader`, with path
+//! and bytes wrappers): a settings-file path (`DrofusSource::File`), an
+//! uploaded CSV hydrated from the snapshot store (`DrofusSource::Upload`), or
+//! a future API response all parse through the same function. Which source
+//! feeds it is dispatched in `bootstrap::load_project_bundle`, where the
+//! store is in scope — not here.
 
 use std::collections::BTreeMap;
+use std::path::Path;
 
 use anyhow::Context;
 use serde::Serialize;
-
-use crate::settings::DrofusSource;
 
 /// One dRofus row, resolved. `fields` is dRofus-field-label → value (row 1
 /// labels as keys). Kept as strings — same raw discipline as custom props.
@@ -63,12 +65,10 @@ pub struct DrofusData {
 ///   row 2: Revit param names    (RevitDrofusKey, d_net_area, d_dept, …)
 ///   row 3+: data rows
 /// Row 2, col 0 = the Revit room property whose value is the dRofus id (link).
-pub fn load_drofus(source: &DrofusSource) -> anyhow::Result<DrofusData> {
-    let DrofusSource::File { path } = source; // only variant today
+pub fn load_drofus_from_reader<R: std::io::Read>(reader: R) -> anyhow::Result<DrofusData> {
     let mut rdr = csv::ReaderBuilder::new()
         .has_headers(false) // both header rows are data to us; we parse them by hand
-        .from_path(path)
-        .with_context(|| format!("could not open dRofus CSV: {}", path.display()))?;
+        .from_reader(reader);
 
     let mut records = rdr.records();
 
@@ -129,6 +129,25 @@ pub fn load_drofus(source: &DrofusSource) -> anyhow::Result<DrofusData> {
     Ok(DrofusData { link_property, by_id, reconciliation, all_labels })
 }
 
+/// Load a dRofus CSV from a file path (`DrofusSource::File`, and the settings
+/// API's dry-run check). Reads the whole file so the bytes path below — and
+/// its BOM handling — is the single parse entry.
+pub fn load_drofus_from_path(path: &Path) -> anyhow::Result<DrofusData> {
+    let bytes = std::fs::read(path)
+        .with_context(|| format!("could not open dRofus CSV: {}", path.display()))?;
+    load_drofus_from_bytes(&bytes)
+}
+
+/// Load a dRofus CSV from raw bytes (an upload body, or a stored upload
+/// hydrated at boot). Strips a leading UTF-8 BOM first: Excel CSV exports
+/// routinely carry one and the csv crate does not strip it. The BOM lands in
+/// row 1 col 0 — unused today, but a quoted first cell parses wrong with a
+/// BOM in front, and "col 0 is never read" is not a contract worth leaning on.
+pub fn load_drofus_from_bytes(bytes: &[u8]) -> anyhow::Result<DrofusData> {
+    let bytes = bytes.strip_prefix(b"\xEF\xBB\xBF").unwrap_or(bytes);
+    load_drofus_from_reader(bytes)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -149,7 +168,7 @@ mod tests {
         .unwrap();
         drop(file);
 
-        let data = load_drofus(&DrofusSource::File { path: path.clone() }).unwrap();
+        let data = load_drofus_from_path(&path).unwrap();
 
         assert_eq!(data.link_property, "Number");
         assert_eq!(data.reconciliation.get("NetArea"), Some(&"Area".to_string()));
@@ -168,5 +187,22 @@ mod tests {
         );
 
         std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// The bytes loader parses an upload body directly, and strips a leading
+    /// UTF-8 BOM (Excel exports carry one; the csv crate does not strip it).
+    #[test]
+    fn test_load_drofus_from_bytes_strips_bom() {
+        let csv = "DrofusRoomId,NetArea\nNumber,Area\n1,25.5\n";
+
+        let plain = load_drofus_from_bytes(csv.as_bytes()).unwrap();
+        assert_eq!(plain.link_property, "Number");
+        assert_eq!(plain.by_id["1"].fields.get("NetArea"), Some(&"25.5".to_string()));
+
+        let mut bom_prefixed = b"\xEF\xBB\xBF".to_vec();
+        bom_prefixed.extend_from_slice(csv.as_bytes());
+        let bom = load_drofus_from_bytes(&bom_prefixed).unwrap();
+        assert_eq!(bom.link_property, "Number");
+        assert_eq!(bom.all_labels, vec!["NetArea".to_string()]);
     }
 }

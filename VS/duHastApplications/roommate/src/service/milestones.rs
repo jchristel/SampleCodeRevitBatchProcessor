@@ -9,14 +9,21 @@ use serde::Serialize;
 use super::ServiceError;
 use crate::state::AppState;
 
-/// One milestone as the picker sees it. `attached_models` is a count, not the
-/// pin map itself — the dropdown only labels options; the settings UI, which
-/// edits the pins, reads them through the settings API instead.
+/// One milestone as the picker sees it. `attached_models` is a *count* of
+/// model pins, not the pin map itself — the dropdown only labels options, and
+/// the settings UI (which edits the pins) reads the full map through the
+/// settings API instead. `drofus_snapshot` is the exception: it's a single
+/// scalar, not a map, and surfacing it here is what lets a consumer (notably
+/// the MCP `list_milestones` tool) see *whether and what* dRofus a milestone
+/// pins without a second `get_project_settings` call. Absent when the
+/// milestone joins the current dRofus (no pin).
 #[derive(Serialize)]
 pub struct MilestoneSummary {
     pub name: String,
     pub date: String,
     pub attached_models: usize,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub drofus_snapshot: Option<String>,
 }
 
 #[derive(Serialize)]
@@ -41,6 +48,7 @@ pub fn list_milestones(state: &AppState, project_id: &str) -> Result<MilestonesR
             name: m.name.clone(),
             date: m.date.clone(),
             attached_models: m.attachments.len(),
+            drofus_snapshot: m.drofus_snapshot.clone(),
         })
         .collect();
     // Both accepted date shapes (`YYYY-MM-DD`, RFC3339) start with the
@@ -61,6 +69,7 @@ mod tests {
         Milestone {
             name: name.to_string(),
             date: date.to_string(),
+            drofus_snapshot: None,
             attachments: BTreeMap::from([("m1".to_string(), "2026-01-01T00:00:00Z".to_string())]),
         }
     }
@@ -76,13 +85,13 @@ mod tests {
         }
     }
 
-    /// Milestones list newest date first, each carrying its pin count.
+    /// Milestones list newest date first, each carrying its pin count and its
+    /// dRofus pin when set (absent otherwise).
     #[test]
     fn test_list_milestones_newest_first() {
-        let bundle = make_bundle(vec![
-            make_milestone("Concept", "2026-03-01"),
-            make_milestone("Design Freeze", "2026-06-30"),
-        ]);
+        let mut pinned = make_milestone("Design Freeze", "2026-06-30");
+        pinned.drofus_snapshot = Some("2026-06-29T17:00:00Z".to_string());
+        let bundle = make_bundle(vec![make_milestone("Concept", "2026-03-01"), pinned]);
         let registry = std::collections::HashMap::from([("p1".to_string(), bundle)]);
         let state = AppState::new(Box::new(MemStore::new()), registry, None);
 
@@ -92,6 +101,8 @@ mod tests {
         assert_eq!(result.milestones[0].name, "Design Freeze");
         assert_eq!(result.milestones[1].name, "Concept");
         assert_eq!(result.milestones[0].attached_models, 1);
+        assert_eq!(result.milestones[0].drofus_snapshot.as_deref(), Some("2026-06-29T17:00:00Z"));
+        assert_eq!(result.milestones[1].drofus_snapshot, None, "no pin → absent");
     }
 
     /// An unknown/unregistered project answers an empty list, not an error.

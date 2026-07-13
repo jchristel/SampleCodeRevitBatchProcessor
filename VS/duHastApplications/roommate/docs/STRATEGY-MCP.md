@@ -37,14 +37,26 @@ Superseded/HANDOVER-service-layer.md for the extraction itself.
   **stderr only**: stdout is the JSON-RPC stream, and anything else written
   there (an errant `println!`, a stdout-default `tracing_subscriber`)
   silently corrupts the protocol.
-- **Nine tools: one per existing read route, plus two settings reads.**
+- **Twelve tools: one per existing read route, two settings reads, and one
+  forwarded upload.**
   `list_projects`, `list_buildings`, `get_rooms` (project/building/milestone
   filters optional), `get_validation`, `list_snapshots`,
-  `get_latest_snapshot`, and `list_milestones` mirror the seven HTTP read
-  routes (snapshot-history and milestone endpoints: see
-  [Server](STRATEGY-SERVER.md); `get_latest_snapshot` maps the service's
-  `None` — HTTP's 404 — to a short plain-text answer, same convention as
-  `get_rooms`' empty-store case).
+  `get_latest_snapshot`, `list_milestones`, `list_drofus_snapshots`, and
+  `get_drofus_snapshot` mirror the nine HTTP read routes (snapshot-history,
+  milestone, and dRofus-upload endpoints: see [Server](STRATEGY-SERVER.md);
+  `get_latest_snapshot` and `get_drofus_snapshot` map the service's `None` —
+  HTTP's 404 — to a short plain-text answer, same convention as `get_rooms`'
+  empty-store case).
+  **Milestone dRofus pinning is inherited, not re-plumbed:** `get_rooms`'s
+  `milestone` filter calls the same `assemble_rooms` the HTTP route does, and
+  that function resolves a milestone's pinned dRofus snapshot below the
+  transport seam — so a milestone view over MCP substitutes both the pinned
+  *model* snapshots and the pinned *dRofus* CSV automatically, no MCP-specific
+  code. `list_milestones` surfaces each milestone's `drofus_snapshot` id (its
+  `MilestoneSummary`, alongside the model-pin count) so a client sees whether
+  and what dRofus a milestone pins without a second `get_project_settings`
+  call. Authoring a pin stays HTTP/settings-UI only (the read-only stance
+  below), though `get_project_settings` exposes the raw pins for reading.
   `list_project_settings` / `get_project_settings` reuse `settings_api`'s
   transport-agnostic read core (see [Server](STRATEGY-SERVER.md)'s settings
   API bullet); they parse the TOML files fresh per call, so a change saved
@@ -58,6 +70,25 @@ Superseded/HANDOVER-service-layer.md for the extraction itself.
   declares. Ingest (`POST /rooms`, `/rooms/stream`) has no MCP counterpart
   either — an LLM pushing a full room snapshot isn't a realistic flow, and
   the HTTP server remains the only ingest path.
+- **`upload_drofus`: mutation by forwarding, not by writing.** The one
+  mutating tool doesn't break the read-only stance, it routes around the
+  split-brain problem: it reads a dRofus CSV from an absolute file path and
+  POSTs it to the running HTTP server's `/projects/{id}/drofus`
+  (`--server-url`, defaulting to the `DEFAULT_HTTP_ADDR` const both binaries
+  share so they can't drift), so the HTTP server stays the single writer and
+  hot-swaps its own registry. The HTTP server must be running — a connect
+  failure answers a clear "start it and retry", and a non-2xx passes the
+  server's rejection text through verbatim (the server is the real
+  validator). This adds `reqwest` (no default features — loopback plain
+  HTTP, no TLS stack) to the crate: an HTTP *client*, which doesn't breach
+  the "neither bin's transport crate leaks into the other" rule — that rule
+  is about server frameworks, and `mcp.rs` still never imports `axum` while
+  `main.rs` never imports `rmcp`/`reqwest`. **Staleness asymmetry, stated in
+  the tool description so it doesn't read as a bug:** after a forwarded
+  upload, this process's own `get_rooms`/`get_validation` still join the
+  dRofus data loaded at *its* startup (registries aren't shared), while
+  `list_drofus_snapshots`/`get_drofus_snapshot` read the shared store fresh
+  and see the new upload immediately.
 - **`ServiceError` → `McpError` mapping.** `NotFound`/`BadInput` both become
   `McpError::invalid_params` (MCP's tool-call error surface has no direct
   404/400 split); `Internal` becomes `McpError::internal_error`. Required

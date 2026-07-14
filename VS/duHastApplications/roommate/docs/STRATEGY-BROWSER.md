@@ -81,13 +81,40 @@ side should shape future server endpoints.
   than keeping a filter the server would answer with nothing. The validation
   badge stays latest-based regardless of the milestone selection (see
   [Server](STRATEGY-SERVER.md)).
+- **Colour plans: client-side room colouring, a picker + persisted config.**
+  A fifth header `<select>` — "No colour" (flat, the default) plus one option
+  per plan from the project's `settings.colour_plans` — lets the viewer colour
+  rooms by a per-project, user-authored rule. **All colour math is client-side**
+  (`colourForRoom` in `index.html`); the server stores `colour_plans` verbatim
+  and computes nothing — the same "axum stays a pure JSON API" line that keeps
+  CSV export and QA rendering out of the server. This is also *why* the viewer
+  makes its one read of `/api/settings/projects/{id}` here (on project change,
+  not every tick — re-fetching would fight the picker): colour plans have no
+  other delivery channel, and reusing the settings read endpoint adds zero
+  server surface. `ColourPlan.active` sets the picker's default; "No colour"
+  always overrides, so it's a default, not a forced application. Palettes are a
+  hand-picked JS constant of ColorBrewer schemes (no d3/npm — the page stays a
+  zero-build vanilla layer), sampled piecewise-linearly. Fill is applied as an
+  inline `style.fill` (a `fill` *presentation attribute* loses to the `.room`
+  CSS rule; inline style wins), precedence selected-plan > error highlight >
+  default `--fill`; "No colour" leaves the class fill untouched, preserving
+  today's look and hover. A room the plan can't colour — missing/unparseable
+  property, ratio-by-zero, a value in a gap between bands — renders a "no data"
+  grey, never an error. **Scope:** only *property compare* (compare two room
+  properties → match / diverging / bands) is wired this pass; hierarchy and
+  date-range modes persist and validate but render flat grey (a documented
+  follow-up), so an authored plan of those kinds degrades safely. The
+  number→colour step (`Colouring`) is kept separate from the number-derivation
+  step so a future milestone-compare mode (same property across two snapshots)
+  reuses match/diverging/bands untouched.
 - **Settings page (`settings.html`).** A sibling static page, linked from the
   viewer's header, over [Server](STRATEGY-SERVER.md)'s `/api/settings` routes:
   a project-file list on the left (a file that fails to parse still gets a
   row showing its error), a form editor for identity / dRofus source /
-  hierarchy / builtin properties / room label / milestones / QA fields, a
-  dRofus "check" button that dry-runs the CSV path server-side, and saves
-  that go through the exact startup validation before landing (see Server).
+  hierarchy / builtin properties / room label / milestones / QA fields /
+  colour plans, a dRofus "check" button that dry-runs the CSV path
+  server-side, and saves that go through the exact startup validation before
+  landing (see Server).
   The dRofus section is a three-way source selector (`none` / `file` /
   `upload`): `file` keeps the path input + check button; `upload` shows a
   drag-and-drop zone (with a file-picker fallback) that POSTs the dropped
@@ -109,7 +136,14 @@ side should shape future server endpoints.
   per uploaded dRofus snapshot from `GET /projects/{id}/drofus/snapshots`),
   shown only when the project actually has uploaded dRofus snapshots to
   choose from — a `file`-sourced or upload-less project has nothing to pin,
-  so the control is simply absent. Same visual
+  so the control is simply absent. The **colour plans** section edits
+  property-compare plans (name, an active *radio* so the browser enforces the
+  one-active rule the server validates, A/B property inputs drawn from a
+  datalist of the project's real room property keys fetched from `/rooms`, the
+  op, and the colouring sub-mode — match tolerance / diverging scheme / add-
+  remove band rows). A plan of a not-yet-editable mode (a hand-authored
+  hierarchy/date-range plan) is shown read-only and round-trips unchanged
+  rather than being clobbered on save. Same visual
   language as the viewer — the `:root` tokens are copied verbatim rather
   than extracted, an accepted duplication while it's just two sibling pages.
 

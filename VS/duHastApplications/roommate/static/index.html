@@ -132,6 +132,7 @@
     <select class="picker hidden" id="projectSelect"></select>
     <select class="picker hidden" id="buildingSelect"></select>
     <select class="picker hidden" id="milestoneSelect"></select>
+    <select class="picker hidden" id="colourSelect"></select>
     <select class="picker hidden" id="levelSelect"></select>
     <button class="validation-toggle hidden" id="validationToggle"></button>
     <span class="meta" id="meta">waiting for data</span>
@@ -159,6 +160,7 @@ const empty = document.getElementById("empty");
 const projectSelect = document.getElementById("projectSelect");
 const buildingSelect = document.getElementById("buildingSelect");
 const milestoneSelect = document.getElementById("milestoneSelect");
+const colourSelect = document.getElementById("colourSelect");
 const levelSelect = document.getElementById("levelSelect");
 const validationToggle = document.getElementById("validationToggle");
 const validationPanel = document.getElementById("validationPanel");
@@ -182,6 +184,15 @@ let currentMilestone = null;      // milestone name from /projects/{id}/mileston
 let lastProjectIds = null;        // for diffing the periodic /projects refresh
 let lastBuildingsSignature = null;
 let lastMilestonesSignature = null;
+
+// --- colour-plan state ---
+// Colour plans are per-project user config (settings.colour_plans), fetched
+// from /api/settings on project change — the ONLY thing the viewer reads from
+// the settings API, and read-only. `activeColourPlan` is the plan the picker
+// currently has selected, or null for "None (flat)" (today's flat fill). The
+// server computes no colours — every colour decision below is client-side.
+let colourPlans = [];             // ColourPlan[] for the current project
+let activeColourPlan = null;      // the selected plan object, or null = flat
 
 // --- validation panel state ---
 let currentValidation = null;     // last-fetched ValidationResponse, for CSV export
@@ -267,6 +278,170 @@ function roomsOnLevel(payload, levelId) {
 }
 
 // Draw a single level's rooms and re-fit the view to them.
+// ============================ colour plans ============================
+//
+// All client-side by design: the server stores `colour_plans` verbatim and
+// computes nothing (see settings `colour_plans`). Only property-compare is
+// wired this pass; hierarchy/date-range are authored but render flat grey (a
+// documented follow-up), so an authored plan of those kinds degrades safely
+// rather than throwing.
+
+// Fill for a room the active plan can't colour — missing/unparseable property,
+// ratio-by-zero, a value in a gap between bands, or an unimplemented mode. A
+// muted neutral, deliberately distinct from --fill so "not coloured by this
+// plan" reads as a state, not a bug.
+const NO_DATA_COLOUR = "#c9c2b0";
+// match mode is binary and needs no palette — two fixed, colour-blind-safe
+// stops (ColorBrewer RdYlGn extremes): within tolerance vs. not.
+const MATCH_COLOUR = "#1a9850";     // green: |A−B| within tolerance
+const MISMATCH_COLOUR = "#d73027";  // red:   outside tolerance
+
+// A few ColorBrewer schemes as literal hex stops — no d3/npm, the browser
+// layer stays a zero-build vanilla page. Sampled at t∈[0,1] by `sampleScheme`.
+const SCHEMES = {
+  // Diverging red↔blue — signed difference centred on zero. ColorBrewer RdBu.
+  RdBu: ["#ca0020", "#f4a582", "#f7f7f7", "#92c5de", "#0571b0"],
+  // Diverging red↔green — where "near/good" should read green. RdYlGn.
+  RdYlGn: ["#d7191c", "#fdae61", "#ffffbf", "#a6d96a", "#1a9641"],
+  // Sequential single-hue ramps — for the (deferred) hierarchy tint/shade.
+  Greens: ["#edf8e9", "#bae4b3", "#74c476", "#31a354", "#006d2c"],
+  Blues: ["#eff3ff", "#bdd7e7", "#6baed6", "#3182bd", "#08519c"],
+  // Qualitative — for the (deferred) hierarchy parent hues. ColorBrewer Set2.
+  Set2: ["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f", "#e5c494", "#b3b3b3"],
+};
+
+function hexToRgb(h) {
+  const n = parseInt(h.slice(1), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+function rgbToHex(r, g, b) {
+  const c = v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0");
+  return `#${c(r)}${c(g)}${c(b)}`;
+}
+// Sample a scheme at t∈[0,1], piecewise-linear across its hex stops (clamps t).
+function sampleScheme(name, t) {
+  const stops = SCHEMES[name] || SCHEMES.RdBu; // unknown scheme -> a safe default
+  t = Math.max(0, Math.min(1, t));
+  if (stops.length === 1) return stops[0];
+  const pos = t * (stops.length - 1);
+  const i = Math.min(Math.floor(pos), stops.length - 2);
+  const f = pos - i;
+  const a = hexToRgb(stops[i]), b = hexToRgb(stops[i + 1]);
+  return rgbToHex(a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f);
+}
+
+// Parse a room property value to a number, or null if absent/non-numeric.
+// Values are strings like "1.49999935417" (float noise is a known upstream
+// bug); parseFloat handles the noise, the comparison tolerance handles the rest.
+function numericProp(room, name) {
+  const p = room.properties && room.properties[name];
+  if (!p || p.value == null || p.value === "") return null;
+  const n = parseFloat(p.value);
+  return Number.isFinite(n) ? n : null;
+}
+
+// The "derive one number per room" half of property-compare — kept separate
+// from the "map number -> colour" half on purpose: a future MilestoneCompare
+// mode would swap ONLY this step (sourcing B from a pinned snapshot instead of
+// a second property) and reuse the colourings untouched. Returns null when the
+// room can't produce a number (missing/unparseable property, or ratio-by-zero)
+// -> the caller renders "no data" grey.
+function propertyCompareNumber(room, mode) {
+  const a = numericProp(room, mode.property_a);
+  const b = numericProp(room, mode.property_b);
+  if (a == null || b == null) return null;
+  if (mode.op === "ratio") return b === 0 ? null : a / b;
+  return a - b; // "diff" (default)
+}
+
+// Precompute per-level scale info once, before the room loop, so each
+// colourForRoom call is cheap. Today only the diverging colouring needs it:
+// the symmetric max |number| across the level, for a zero-centred auto-scale.
+function buildColourContext(rooms, plan) {
+  const ctx = { maxAbs: 0 };
+  if (!plan || plan.mode.kind !== "propertycompare" || plan.mode.colouring.style !== "diverging") return ctx;
+  for (const room of rooms) {
+    const n = propertyCompareNumber(room, plan.mode);
+    if (n != null) ctx.maxAbs = Math.max(ctx.maxAbs, Math.abs(n));
+  }
+  return ctx;
+}
+
+// Map a room to its fill under `plan`, or NO_DATA_COLOUR. Pure; branches on
+// plan.mode.kind. Only "propertycompare" is implemented this pass.
+function colourForRoom(room, plan, ctx) {
+  const mode = plan.mode;
+  if (mode.kind !== "propertycompare") {
+    return NO_DATA_COLOUR; // TODO(follow-up): hierarchy + daterange rendering
+  }
+  const number = propertyCompareNumber(room, mode);
+  if (number == null) return NO_DATA_COLOUR;
+
+  const c = mode.colouring;
+  if (c.style === "match") {
+    // Binary: within tolerance of zero (a match) vs not. Reuses the dRofus
+    // numeric-adaptive *philosophy* (compare as numbers with a tolerance) —
+    // see settings CompareMode — not a second comparison engine.
+    return Math.abs(number) <= c.tolerance ? MATCH_COLOUR : MISMATCH_COLOUR;
+  }
+  if (c.style === "diverging") {
+    // Zero-centred, auto-scaled to the level's symmetric extent: number 0 maps
+    // to the palette midpoint, ±maxAbs to its ends. A flat level (maxAbs 0) is
+    // all-midpoint, which is correct — there are no differences to show.
+    const extent = ctx.maxAbs || 1;
+    return sampleScheme(c.scheme, 0.5 + number / (2 * extent));
+  }
+  if (c.style === "bands") {
+    // Ordered first-match scan over half-open [lo, hi). This simplicity is
+    // *earned by* the server-side validation (validate_colour_plans rejects
+    // overlapping/out-of-order bands), so there is deliberately NO
+    // overlap-resolution here — do not re-add it. A value in a gap between
+    // bands, or outside all bands, is "no data" grey.
+    for (const band of c.bands) {
+      const aboveLo = band.lo == null || number >= band.lo;
+      const belowHi = band.hi == null || number < band.hi;
+      if (aboveLo && belowHi) return band.colour;
+    }
+    return NO_DATA_COLOUR;
+  }
+  return NO_DATA_COLOUR; // unknown colouring style
+}
+
+// --- colour-plan picker ---
+
+// "None (flat)" first, then one option per plan. Hidden when the project has no
+// plans — like the milestone picker, "None" alone is not a choice worth a picker.
+function populateColourSelect(plans) {
+  colourSelect.replaceChildren();
+  const none = document.createElement("option");
+  none.value = "";
+  none.textContent = "No colour";
+  colourSelect.appendChild(none);
+  for (const p of plans) {
+    const opt = document.createElement("option");
+    opt.value = p.name; // the name is the plan's identity in settings
+    opt.textContent = p.name;
+    colourSelect.appendChild(opt);
+  }
+  colourSelect.classList.toggle("hidden", plans.length === 0);
+}
+
+// Read this project's colour plans from the settings API (the viewer's one,
+// read-only, use of /api/settings) and default the picker to the `active` plan.
+// The picker's "No colour" always overrides, so `active` is just the default.
+async function loadColourPlansForProject(projectId) {
+  try {
+    const data = await fetchJson(`/api/settings/projects/${encodeURIComponent(projectId)}`);
+    colourPlans = (data.settings && data.settings.colour_plans) || [];
+  } catch (err) {
+    colourPlans = []; // no settings file / unreachable -> no colouring, flat fill
+  }
+  populateColourSelect(colourPlans);
+  const active = colourPlans.find(p => p.active) || null;
+  activeColourPlan = active;
+  colourSelect.value = active ? active.name : "";
+}
+
 function renderLevel(payload, levelId, { refit = true } = {}) {
   plan.replaceChildren();
   const rooms = roomsOnLevel(payload, levelId);
@@ -300,6 +475,11 @@ function renderLevel(payload, levelId, { refit = true } = {}) {
     g.appendChild(line(fitted.x, gy, fitted.x + fitted.w, gy));
   plan.appendChild(g);
 
+  // When a colour plan is selected, precompute its per-level scale context
+  // once (not per room). `null` when the picker is on "No colour" — then the
+  // fill comes from the CSS class exactly as before.
+  const colourCtx = activeColourPlan ? buildColourContext(rooms, activeColourPlan) : null;
+
   // Two passes, not one: every room's polygons first, then every room's
   // label. SVG has no reliable z-index — paint order is DOM order, full
   // stop — so interleaving polygon-then-label per room (as a single loop
@@ -313,6 +493,12 @@ function renderLevel(payload, levelId, { refit = true } = {}) {
     const outer = document.createElementNS(SVG, "polygon");
     outer.setAttribute("points", pointsAttr(room.loops[0]));
     outer.setAttribute("class", showErrors && errorRoomIds.has(room.id) ? "room error" : "room");
+    // Fill precedence: an active colour plan wins over the error highlight and
+    // the default --fill. Set as an INLINE style, not a `fill` presentation
+    // attribute — a presentation attribute loses to the `.room` CSS rule,
+    // inline style beats it. "No colour" (no active plan) leaves the class
+    // fill untouched, preserving today's look and hover behaviour.
+    if (activeColourPlan) outer.style.fill = colourForRoom(room, activeColourPlan, colourCtx);
     outer.appendChild(titleEl(room.name || room.id));
     plan.appendChild(outer);
 
@@ -490,6 +676,10 @@ async function loadProjects() {
     lastMilestonesSignature = null; // ...and a milestones refresh
     currentMilestone = null;        // a milestone belongs to its project
     loadValidation(currentProjectId); // project (re)established -- refresh once, not every tick
+    // Colour plans reload only on project change (here + the picker's own
+    // change handler), NOT every tick — re-fetching each tick would reset the
+    // picker to the active plan and fight a user's selection.
+    if (currentProjectId) loadColourPlansForProject(currentProjectId);
   }
   if (currentProjectId) {
     await loadBuildingsForProject(currentProjectId);
@@ -680,6 +870,7 @@ projectSelect.addEventListener("change", async () => {
   lastMilestonesSignature = null;
   await loadBuildingsForProject(currentProjectId);
   await loadMilestonesForProject(currentProjectId);
+  await loadColourPlansForProject(currentProjectId);
   loadValidation(currentProjectId);
   lastPayloadJson = null; // force the next poll tick to render immediately
 });
@@ -692,6 +883,15 @@ buildingSelect.addEventListener("change", () => {
 milestoneSelect.addEventListener("change", () => {
   currentMilestone = milestoneSelect.value || null; // "" = Latest
   lastPayloadJson = null; // force the next poll tick to render immediately
+});
+
+colourSelect.addEventListener("change", () => {
+  // "" = No colour (flat). Otherwise the plan whose name matches. Re-render the
+  // current level with refit:false so pan/zoom is preserved — a pure
+  // presentation change, same as toggling the validation panel. No /rooms
+  // refetch: colouring is computed from the payload already in hand.
+  activeColourPlan = colourSelect.value ? (colourPlans.find(p => p.name === colourSelect.value) || null) : null;
+  if (currentPayload && activeLevelId) renderLevel(currentPayload, activeLevelId, { refit: false });
 });
 
 function updateMeta() {

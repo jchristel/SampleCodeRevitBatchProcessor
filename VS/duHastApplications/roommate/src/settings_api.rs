@@ -504,7 +504,9 @@ mod tests {
     #[test]
     fn test_settings_toml_round_trip() {
         let source: Settings = toml::from_str(
-            r#"
+            // `r##"…"##` (not `r#"…"#`): a colour value like `"#5a7a4f"` contains
+            // the `"#` sequence that would otherwise close a single-hash raw string.
+            r##"
 project_id = "p1"
 is_default = true
 room_label = ["$name", "Area"]
@@ -532,7 +534,23 @@ label = "LastSync"
 type = "date"
 format = "%Y-%m-%d"
 qa = "ignore"
-"#,
+
+[[colour_plans]]
+name = "Area check"
+active = true
+[colour_plans.mode]
+kind = "propertycompare"
+property_a = "Area"
+property_b = "d_net_area"
+op = "diff"
+[colour_plans.mode.colouring]
+style = "bands"
+bands = [
+    { hi = 0.0, colour = "#5a7a4f" },
+    { lo = 0.0, hi = 1.0, colour = "#e4ddc9" },
+    { lo = 1.0, colour = "#b4541f" },
+]
+"##,
         )
         .unwrap();
 
@@ -549,6 +567,33 @@ qa = "ignore"
         assert_eq!(reparsed.milestones.len(), 1);
         assert_eq!(reparsed.milestones[0].name, "Design Freeze");
         assert_eq!(reparsed.milestones[0].attachments["model-guid"], "2026-06-29T10:00:00Z");
+
+        // Colour plans survive the full TOML round-trip — including the nested
+        // internally-tagged `mode`/`colouring` enums and the `Bands` list (the
+        // serde-tagging decision this test is the gate for).
+        assert_eq!(reparsed.colour_plans.len(), 1);
+        let plan = &reparsed.colour_plans[0];
+        assert_eq!(plan.name, "Area check");
+        assert!(plan.active);
+        match &plan.mode {
+            crate::settings::ColourMode::PropertyCompare { property_a, colouring, .. } => {
+                assert_eq!(property_a, "Area");
+                match colouring {
+                    crate::settings::Colouring::Bands { bands } => assert_eq!(bands.len(), 3),
+                    other => panic!("expected Bands, got {other:?}"),
+                }
+            }
+            other => panic!("expected PropertyCompare, got {other:?}"),
+        }
+    }
+
+    /// A settings file with no `colour_plans` key deserializes to an empty
+    /// `Vec` — the `#[serde(default)]` back-compat net for every project file
+    /// saved before this feature existed.
+    #[test]
+    fn test_settings_without_colour_plans_defaults_empty() {
+        let source: Settings = toml::from_str("project_id = \"p1\"\n").unwrap();
+        assert!(source.colour_plans.is_empty());
     }
 
     /// Create → list → get round-trip through the core, and the saved project

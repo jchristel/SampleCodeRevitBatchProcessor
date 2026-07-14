@@ -27,7 +27,7 @@ mod load;
 mod validate;
 
 pub use load::{load_server_config, load_settings};
-pub use validate::{validate_drofus_field_shapes, validate_drofus_fields};
+pub use validate::{validate_colour_plans, validate_drofus_field_shapes, validate_drofus_fields};
 
 /// One project's settings, parsed once at startup from its own TOML file
 /// (one of N files in the `--project-settings` directory — see
@@ -115,6 +115,26 @@ pub struct Settings {
     /// numeric-adaptive comparison if both sides happen to parse as a number.
     #[serde(default)]
     pub drofus_fields: Vec<DrofusFieldConfig>,
+
+    /// User-authored colour plans for the viewer: named, persisted colouring
+    /// configs the user switches between. Lives in settings (not storage) for
+    /// the same reason `milestones` does — per-project user metadata with the
+    /// same lifecycle as hierarchy/room_label, riding this file's save
+    /// pipeline (validation, atomic install, hot-reload) for free.
+    ///
+    /// The server treats this as **opaque**: it stores and serves it verbatim
+    /// and computes no colours. ALL colour math is client-side, where room
+    /// property values already live — the same "keep axum a pure JSON API"
+    /// decision that kept CSV export and QA rendering out of the server
+    /// (see STRATEGY-BROWSER.md). A `Vec` (not a single plan) so a project can
+    /// keep a library of plans; `ColourPlan.active` marks the one the viewer's
+    /// colour picker defaults to (the picker's "None (flat)" always overrides,
+    /// so `active` is a default, not a forced application). Empty if omitted —
+    /// no plans, today's flat fill. The `#[serde(default)]` is the back-compat
+    /// net: every already-saved project file (which has no `colour_plans` key)
+    /// still deserializes to an empty `Vec`.
+    #[serde(default)]
+    pub colour_plans: Vec<ColourPlan>,
 }
 
 fn default_room_label() -> Vec<String> {
@@ -182,6 +202,144 @@ pub enum CompareMode {
     Exact,
     /// Skip comparison and coverage reporting for this field entirely.
     Ignore,
+}
+
+// ---------- colour plans ----------
+//
+// Persisted, per-project room-colouring configs for the viewer. The server is
+// deliberately *opaque* to all of this: it round-trips these types verbatim
+// and never computes a colour (see `Settings::colour_plans`). The types live
+// here only so they persist through the settings save pipeline; every field's
+// *meaning* is a browser concern, resolved in `index.html`.
+
+/// One named, persisted colouring configuration. `active` marks the plan the
+/// viewer's colour picker defaults to — the picker also offers "None (flat)",
+/// which always overrides, so `active` is a default selection, not a forced
+/// application. `name` is user-facing only (the picker label). At most one plan
+/// may be `active` (validated — see `validate_colour_plans`).
+///
+/// Scalar fields (`name`, `active`) are declared before `mode` (a sub-table)
+/// so the TOML serializer emits them ahead of the `[colour_plans.mode]` table
+/// — the same footgun documented for `Milestone.drofus_snapshot`.
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct ColourPlan {
+    /// User-facing label shown in the viewer's colour picker.
+    pub name: String,
+    /// Whether this plan is the viewer picker's default selection. `false`
+    /// (the default) means the plan is in the library but not the default —
+    /// the picker starts on "None (flat)" unless some plan sets this.
+    #[serde(default)]
+    pub active: bool,
+    /// The colouring strategy. Internally tagged on `kind` so the wire shape is
+    /// self-describing and the browser switches on one field — the same tagged
+    /// representation `DrofusSource` uses.
+    pub mode: ColourMode,
+}
+
+/// The colouring strategies. Internally tagged on `kind` (like `DrofusSource`'s
+/// `type`), so the browser branches on `mode.kind`. Every variant is a *struct*
+/// variant, not a newtype/tuple: internally-tagged serde enums can't carry a
+/// newtype variant that wraps a sequence, and struct variants keep the JSON/TOML
+/// shape flat and self-describing.
+///
+/// Only `PropertyCompare` is wired end-to-end in the viewer today; `Hierarchy`
+/// and `DateRange` persist and validate but the viewer renders them as flat
+/// "no data" for now (a documented follow-up — see STRATEGY-BROWSER.md), so an
+/// authored plan of those kinds degrades safely rather than erroring.
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(tag = "kind", rename_all = "lowercase")]
+pub enum ColourMode {
+    /// Categorical hue per parent hierarchy tier, tint/shade per child tier.
+    /// `tiers` names which hierarchy tiers participate (outermost first);
+    /// `scheme` names a bundled qualitative palette. (Viewer follow-up.)
+    Hierarchy {
+        tiers: Vec<String>,
+        scheme: String,
+    },
+
+    /// Colour by proximity of a date-typed `property` to `near_date`: nearest
+    /// green, furthest red, future blue. `property` is a canonical/room
+    /// property name resolved browser-side the same way labels are; `scheme`
+    /// names a bundled diverging palette. (Viewer follow-up.)
+    DateRange {
+        property: String,
+        near_date: String,
+        scheme: String,
+    },
+
+    /// Compare two room properties. `op` derives one number per room
+    /// (difference or ratio of A and B); `colouring` maps that number to a
+    /// colour. The two steps are kept deliberately separate: the number
+    /// derivation is what a *future* `MilestoneCompare` mode (same property
+    /// across two snapshots — current vs a `/rooms?milestone=`-pinned one)
+    /// would swap out, reusing `Colouring` untouched. Property names that don't
+    /// resolve on a given room aren't an error — that room just renders "no
+    /// data" grey (the `room_label` "absence is fine" discipline).
+    PropertyCompare {
+        property_a: String,
+        property_b: String,
+        op: CompareOp,
+        colouring: Colouring,
+    },
+}
+
+/// How `PropertyCompare` reduces two property values to one number.
+#[derive(Debug, Clone, Copy, Deserialize, Serialize)]
+#[serde(rename_all = "lowercase")]
+pub enum CompareOp {
+    /// `A − B`. The natural choice for match (`|A−B| ≤ tol`) and a
+    /// zero-centred diverging ramp.
+    Diff,
+    /// `A / B`. For proportional comparisons; the browser guards division by
+    /// zero (→ "no data" grey), so no server-side check is needed.
+    Ratio,
+}
+
+/// The number→colour step, factored *out* of `PropertyCompare` on purpose: it's
+/// the reusable half, so a future mode that derives a per-room number
+/// differently (e.g. `MilestoneCompare`) reuses these three styles without
+/// change. Internally tagged on `style`; struct variants only (see
+/// `ColourMode` for why).
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(tag = "style", rename_all = "lowercase")]
+pub enum Colouring {
+    /// Two colours: within `tolerance` of zero (a match) vs. not. This is the
+    /// dRofus-vs-Revit QA case. Reuses the *philosophy* of `CompareMode`'s
+    /// numeric-adaptive comparison (both sides parse as numbers → numeric
+    /// compare with tolerance, else exact) rather than inventing a second one —
+    /// the actual comparison runs browser-side against string property values.
+    Match { tolerance: f64 },
+    /// Map the number onto a diverging palette centred on zero, auto-scaled to
+    /// the level's data extent (computed per-render in the browser). `scheme`
+    /// names a bundled diverging palette.
+    Diverging { scheme: String },
+    /// Map the number through user-defined cutoff→colour `bands`. A struct
+    /// variant (`{ bands }`), not a newtype `Bands(Vec<Band>)`, because
+    /// internally-tagged enums can't wrap a sequence in a newtype variant.
+    Bands { bands: Vec<Band> },
+}
+
+/// One band of a `Bands` colouring: the half-open interval `[lo, hi)` gets
+/// `colour`. `lo`/`hi` are `Option` so the first/last band can be open-ended
+/// (`None` = −∞ / +∞). Bands are validated at load to be sorted and disjoint
+/// (see `validate_colour_plans`), which is what lets the browser do a simple
+/// ordered first-match scan with no overlap-resolution logic. A value that
+/// falls in a *gap* between bands (allowed) renders as "no data" grey — a
+/// deliberate gap, not a bug.
+///
+/// `colour` is a CSS colour string (e.g. `"#b4541f"`); the server never parses
+/// it — validating colour syntax is a browser concern, and an unparseable one
+/// just renders as the browser's fallback.
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct Band {
+    /// Inclusive lower bound; `None` = open (−∞).
+    #[serde(default)]
+    pub lo: Option<f64>,
+    /// Exclusive upper bound; `None` = open (+∞).
+    #[serde(default)]
+    pub hi: Option<f64>,
+    /// CSS colour string applied to rooms whose value lands in `[lo, hi)`.
+    pub colour: String,
 }
 
 /// Server-wide settings, parsed once at startup from the `--server-settings`

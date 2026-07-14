@@ -90,6 +90,11 @@ pub fn load_settings(path: &PathBuf) -> anyhow::Result<Settings> {
             anyhow::bail!("duplicate milestone name: '{}'", milestone.name);
         }
     }
+    // Fail fast on a malformed colour-plan library (>1 active, overlapping
+    // bands). Colour plans need no dRofus labels, so — unlike
+    // `validate_drofus_fields` which runs later in `bootstrap` — this belongs
+    // here alongside the other settings-only validators.
+    super::validate_colour_plans(&settings.colour_plans)?;
     Ok(settings)
 }
 

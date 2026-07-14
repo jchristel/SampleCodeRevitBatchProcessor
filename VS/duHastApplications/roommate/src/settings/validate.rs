@@ -4,7 +4,7 @@
 //! stay legible apart. Re-exported from `mod.rs`, so callers still use
 //! `crate::settings::validate_drofus_fields`.
 
-use super::{DrofusFieldConfig, FieldType};
+use super::{Band, ColourMode, ColourPlan, Colouring, DrofusFieldConfig, FieldType};
 
 /// Dry-run one strftime pattern so a typo (e.g. `%Q`) fails at startup, not
 /// silently at compare time. `StrftimeItems` yields an `Item::Error` for any
@@ -74,10 +74,77 @@ pub fn validate_drofus_field_shapes(fields: &[DrofusFieldConfig]) -> anyhow::Res
     Ok(())
 }
 
+/// Fail fast on a malformed colour-plan library — same "loud startup error over
+/// a silent no-op" discipline as the other validators. Two checks:
+/// - **At most one `active` plan** (more than one is ambiguous: which does the
+///   viewer picker default to?). Same single-selection rule as the settings
+///   dir's `is_default`, but within one file so it runs in the normal load step.
+/// - **`Bands` colourings are a sorted, disjoint partition** (see
+///   `validate_bands`).
+///
+/// Property names are deliberately **not** validated: a name that doesn't
+/// resolve on a room just renders that room "no data" grey in the browser (the
+/// `room_label` "an unresolvable name contributes nothing" precedent), and room
+/// properties are source-native and vary, so a hard fail here would reject
+/// legitimate configs.
+pub fn validate_colour_plans(plans: &[ColourPlan]) -> anyhow::Result<()> {
+    let active: Vec<&str> = plans.iter().filter(|p| p.active).map(|p| p.name.as_str()).collect();
+    if active.len() > 1 {
+        anyhow::bail!(
+            "more than one colour plan is marked active ({:?}) — at most one may be active",
+            active
+        );
+    }
+    for plan in plans {
+        if let ColourMode::PropertyCompare { colouring: Colouring::Bands { bands }, .. } = &plan.mode {
+            validate_bands(&plan.name, bands)?;
+        }
+    }
+    Ok(())
+}
+
+/// Bands must be authored as a sorted, disjoint partition of the value line:
+/// each band `[lo, hi)` and, in `Vec` order, band *n*'s `hi` `<=` band *n+1*'s
+/// `lo`. Rejecting overlap *and* out-of-order here (rather than picking a winner
+/// at colour time) is what lets the browser do a simple ordered first-match
+/// scan — a single consecutive check catches both, since an out-of-order pair
+/// has the earlier band's `hi` above the later band's `lo`. Open ends: a `None`
+/// upper (+∞) is only valid on the last band, a `None` lower (−∞) only on the
+/// first (any other position fails the consecutive check). Gaps between bands
+/// are allowed and render grey — a deliberate gap, not a bug.
+fn validate_bands(plan: &str, bands: &[Band]) -> anyhow::Result<()> {
+    // A single band must be non-empty: `[lo, hi)` with `lo >= hi` covers
+    // nothing (a copy-paste or swapped-bounds mistake).
+    for band in bands {
+        if let (Some(lo), Some(hi)) = (band.lo, band.hi) {
+            if lo >= hi {
+                anyhow::bail!(
+                    "colour plan '{}' has an empty/reversed band [{}, {}) — lo must be < hi",
+                    plan, lo, hi
+                );
+            }
+        }
+    }
+    for pair in bands.windows(2) {
+        let (a, b) = (&pair[0], &pair[1]);
+        // Disjoint + sorted iff a.hi <= b.lo. `None` on a.hi (+∞ but not last)
+        // or b.lo (−∞ but not first) is an overlap/out-of-order by definition.
+        let disjoint = matches!((a.hi, b.lo), (Some(hi), Some(lo)) if hi <= lo);
+        if !disjoint {
+            anyhow::bail!(
+                "colour plan '{}' has overlapping or out-of-order bands: [{:?}, {:?}) then [{:?}, {:?}) \
+                 — each band's hi must be <= the next band's lo, sorted ascending",
+                plan, a.lo, a.hi, b.lo, b.hi
+            );
+        }
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::settings::CompareMode;
+    use crate::settings::{CompareMode, CompareOp};
 
     /// A minimal `DrofusFieldConfig` for tests that only care about one
     /// aspect of the declaration.
@@ -184,5 +251,67 @@ mod tests {
             ..field("LastSync")
         }];
         assert!(validate_drofus_fields(&malformed, &all_labels).is_err());
+    }
+
+    // ---------- colour plans ----------
+
+    /// A property-compare/bands plan with the given bands, `active` as stated.
+    fn bands_plan(name: &str, active: bool, bands: Vec<Band>) -> ColourPlan {
+        ColourPlan {
+            name: name.to_string(),
+            active,
+            mode: ColourMode::PropertyCompare {
+                property_a: "A".to_string(),
+                property_b: "B".to_string(),
+                op: CompareOp::Diff,
+                colouring: Colouring::Bands { bands },
+            },
+        }
+    }
+
+    fn band(lo: Option<f64>, hi: Option<f64>) -> Band {
+        Band { lo, hi, colour: "#000000".to_string() }
+    }
+
+    /// At most one plan may be `active`; two is a loud error naming both.
+    #[test]
+    fn test_validate_colour_plans_rejects_multiple_active() {
+        let plans = vec![bands_plan("A", true, vec![]), bands_plan("B", true, vec![])];
+        let msg = format!("{:#}", validate_colour_plans(&plans).unwrap_err());
+        assert!(msg.contains("active"), "message names the problem: {msg}");
+
+        // Exactly one active is fine.
+        assert!(validate_colour_plans(&[bands_plan("A", true, vec![]), bands_plan("B", false, vec![])]).is_ok());
+    }
+
+    /// A sorted, disjoint set of bands (including open ends and a deliberate
+    /// gap) passes; overlapping, out-of-order, and reversed bands each fail.
+    #[test]
+    fn test_validate_colour_plans_band_partition() {
+        // Open-low, a gap (5..10 uncovered), open-high — all valid.
+        let ok = bands_plan("ok", false, vec![
+            band(None, Some(0.0)),
+            band(Some(0.0), Some(5.0)),
+            band(Some(10.0), None),
+        ]);
+        assert!(validate_colour_plans(&[ok]).is_ok());
+
+        // Overlap: [0,10) then [5,15).
+        let overlap = bands_plan("ov", false, vec![band(Some(0.0), Some(10.0)), band(Some(5.0), Some(15.0))]);
+        let msg = format!("{:#}", validate_colour_plans(&[overlap]).unwrap_err());
+        assert!(msg.contains("overlapping or out-of-order") && msg.contains("'ov'"), "{msg}");
+
+        // Out-of-order: [10,20) then [0,5).
+        let unsorted = bands_plan("us", false, vec![band(Some(10.0), Some(20.0)), band(Some(0.0), Some(5.0))]);
+        assert!(validate_colour_plans(&[unsorted]).is_err());
+
+        // Reversed single band: [10, 0).
+        let reversed = bands_plan("rev", false, vec![band(Some(10.0), Some(0.0))]);
+        let msg = format!("{:#}", validate_colour_plans(&[reversed]).unwrap_err());
+        assert!(msg.contains("reversed") || msg.contains("lo must be < hi"), "{msg}");
+
+        // Open-high band not last → invalid (its +∞ upper overlaps the next).
+        let open_high_mid = bands_plan("ohm", false, vec![band(Some(0.0), None), band(Some(10.0), Some(20.0))]);
+        assert!(validate_colour_plans(&[open_high_mid]).is_err());
     }
 }

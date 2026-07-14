@@ -241,6 +241,14 @@
           <datalist id="qaLabelOptions"></datalist>
         </section>
 
+        <section class="block">
+          <h2>Colour plans</h2>
+          <p class="hint">Named room-colouring configs the viewer's colour picker offers. At most one may be active (the picker's default; "No colour" always overrides). All colouring is computed in the browser — the server just stores these. This pass edits <em>property compare</em> plans (compare two room properties, colour by the result); property names come from the current project's rooms.</p>
+          <div class="rows" id="colourRows"></div>
+          <button type="button" class="action" id="addColourBtn">+ colour plan</button>
+          <datalist id="roomPropertyOptions"></datalist>
+        </section>
+
         <div id="saveBar">
           <button type="submit" class="action primary" id="saveBtn">Save</button>
           <span id="saveMessage"></span>
@@ -290,6 +298,7 @@ let drofusLabels = [];   // labels from the last drofus-check/upload, for the QA
 let activeProjectId = null;
 let projectSnapshots = null; // /projects/{id}/snapshots models for the active project; null = loading
 let drofusSnapshots = null;  // /projects/{id}/drofus/snapshots for the active project; null = loading
+let roomPropertyKeys = [];   // union of room.properties keys for the active project, for colour-plan property inputs
 
 const $ = (id) => document.getElementById(id);
 
@@ -303,6 +312,7 @@ function blankSettings() {
     room_label: ["$name", "$id"],
     milestones: [],
     drofus_fields: [],
+    colour_plans: [],
   };
 }
 
@@ -356,6 +366,27 @@ async function selectProject(projectId) {
   if (drofus && drofus.type === "upload") { loadDrofusLatest(); loadDrofusSnapshots(); }
   // Pre-load the stored snapshot ids the milestone pin dropdowns offer.
   loadProjectSnapshots(projectId);
+  // Pre-load the room property keys the colour-plan property inputs offer.
+  loadRoomPropertyKeys(projectId);
+}
+
+// The union of property names actually present on this project's rooms — the
+// datalist the colour-plan property-compare inputs draw from. Fetched from
+// /rooms (the viewer's data source); an unreachable/empty result just means an
+// empty list (the inputs stay free-text, so a not-yet-present name still works).
+async function loadRoomPropertyKeys(projectId) {
+  roomPropertyKeys = [];
+  try {
+    const data = await apiGet(`/rooms?project=${encodeURIComponent(projectId)}`);
+    const keys = new Set();
+    for (const room of (data.rooms || [])) {
+      for (const k of Object.keys(room.properties || {})) keys.add(k);
+    }
+    roomPropertyKeys = [...keys].sort();
+  } catch (err) {
+    roomPropertyKeys = [];
+  }
+  $("roomPropertyOptions").replaceChildren(...roomPropertyKeys.map(k => el("option", { value: k })));
 }
 
 function newProject() {
@@ -364,6 +395,7 @@ function newProject() {
   drofusLabels = [];
   projectSnapshots = []; // a project that doesn't exist yet has no stored data
   drofusSnapshots = [];
+  roomPropertyKeys = [];
   openEditor();
   loadProjectList();
 }
@@ -411,6 +443,34 @@ function normalize(s) {
     revit_format: f.revit_format || "",
     qa: f.qa || "",
   }));
+  // Colour plans -> a flat editing shape. A plan whose mode isn't
+  // property-compare (a hand-authored hierarchy/date-range plan — not editable
+  // in this UI yet) is preserved *opaquely* (`opaque` + `_raw`) so opening and
+  // saving such a project round-trips it unchanged instead of clobbering it.
+  s.colour_plans = (s.colour_plans || []).map(p => {
+    const m = p.mode || {};
+    if (m.kind !== "propertycompare") {
+      return { name: p.name || "", active: !!p.active, opaque: true, _raw: p };
+    }
+    const c = m.colouring || {};
+    return {
+      name: p.name || "",
+      active: !!p.active,
+      opaque: false,
+      property_a: m.property_a || "",
+      property_b: m.property_b || "",
+      op: m.op || "diff",
+      style: c.style || "match",
+      tolerance: typeof c.tolerance === "number" ? c.tolerance : 0,
+      scheme: c.scheme || "RdBu",
+      // Bands editing shape: keep lo/hi as strings so an empty input = open end.
+      bands: (c.bands || []).map(b => ({
+        lo: b.lo == null ? "" : String(b.lo),
+        hi: b.hi == null ? "" : String(b.hi),
+        colour: b.colour || "#b4541f",
+      })),
+    };
+  });
   return s;
 }
 
@@ -438,6 +498,7 @@ function openEditor() {
   renderLabels();
   renderMilestones();
   renderQa();
+  renderColourPlans();
   showMessage(null, "");
 }
 
@@ -675,6 +736,105 @@ function renderQa() {
   });
 }
 
+// ---------- colour plans ----------
+//
+// Only property-compare plans are editable here (the viewer only renders those
+// this pass). A plan of another mode, hand-authored in TOML, is shown as an
+// opaque read-only row and round-trips unchanged (see `normalize`), so this UI
+// never clobbers it.
+
+// The single-active rule, mirrored in the UI by radios sharing one name: making
+// one plan active clears the others (validation enforces it server-side too).
+function setActiveColourPlan(target) {
+  for (const p of current.settings.colour_plans) p.active = (p === target);
+  renderColourPlans();
+}
+
+function renderColourPlans() {
+  const rows = $("colourRows");
+  const plans = current.settings.colour_plans;
+  rows.replaceChildren();
+  plans.forEach((plan, i) => {
+    // Header row: active radio + name + remove/reorder. Shared radio name means
+    // the browser enforces one-active on its own; `setActiveColourPlan` keeps
+    // the model in sync.
+    const activeRadio = el("input", {
+      type: "radio", name: "colourActive", title: "the viewer picker's default plan",
+      onchange: () => setActiveColourPlan(plan),
+    });
+    activeRadio.checked = !!plan.active;
+
+    const head = el("div", { class: "row" }, [
+      el("span", { class: "row-head", text: `${i + 1}.` }),
+      el("label", { class: "field" }, [activeRadio, document.createTextNode(" active")]),
+      el("span", { text: "name" }), textInput(plan, "name", { size: "18", placeholder: "Area check" }),
+      ...rowControls(plans, i, renderColourPlans),
+    ]);
+    rows.appendChild(head);
+
+    if (plan.opaque) {
+      const kind = (plan._raw && plan._raw.mode && plan._raw.mode.kind) || "?";
+      rows.appendChild(el("div", { class: "row row-head", text: `↳ ${kind} plan — edit this one directly in the project TOML (not editable here yet)` }));
+      return;
+    }
+
+    // Property-compare: A op B.
+    const opSelect = el("select", { title: "how A and B combine", onchange: (e) => { plan.op = e.target.value; } }, [
+      el("option", { value: "diff", text: "A − B (diff)" }),
+      el("option", { value: "ratio", text: "A ÷ B (ratio)" }),
+    ]);
+    opSelect.value = plan.op;
+    rows.appendChild(el("div", { class: "row" }, [
+      el("span", { class: "row-head", text: "↳" }),
+      el("span", { text: "A" }), textInput(plan, "property_a", { size: "16", list: "roomPropertyOptions", placeholder: "Area" }),
+      opSelect,
+      el("span", { text: "B" }), textInput(plan, "property_b", { size: "16", list: "roomPropertyOptions", placeholder: "d_net_area" }),
+    ]));
+
+    // Colouring sub-mode + its own controls.
+    const styleSelect = el("select", { title: "how the number becomes a colour", onchange: (e) => { plan.style = e.target.value; renderColourPlans(); } }, [
+      el("option", { value: "match", text: "match (2 colours)" }),
+      el("option", { value: "diverging", text: "diverging ramp" }),
+      el("option", { value: "bands", text: "bands" }),
+    ]);
+    styleSelect.value = plan.style;
+    const styleRow = [el("span", { class: "row-head", text: "↳" }), el("span", { text: "colour by" }), styleSelect];
+    if (plan.style === "match") {
+      styleRow.push(el("span", { text: "tolerance" }), textInput(plan, "tolerance", { size: "8", placeholder: "0.5" }));
+    } else if (plan.style === "diverging") {
+      const schemeSelect = el("select", { onchange: (e) => { plan.scheme = e.target.value; } },
+        ["RdBu", "RdYlGn"].map(s => el("option", { value: s, text: s })));
+      schemeSelect.value = plan.scheme;
+      styleRow.push(el("span", { text: "scheme" }), schemeSelect);
+    }
+    rows.appendChild(el("div", { class: "row" }, styleRow));
+
+    // Bands: editable [lo, hi) colour rows. Empty lo/hi = open end.
+    if (plan.style === "bands") {
+      plan.bands.forEach((b, j) => {
+        rows.appendChild(el("div", { class: "row" }, [
+          el("span", { class: "row-head", text: "↳↳" }),
+          el("span", { text: "[" }), textInput(b, "lo", { size: "6", placeholder: "−∞" }),
+          el("span", { text: "," }), textInput(b, "hi", { size: "6", placeholder: "+∞" }),
+          el("span", { text: ")" }),
+          el("input", { type: "color", value: /^#[0-9a-fA-F]{6}$/.test(b.colour) ? b.colour : "#b4541f",
+            oninput: (e) => { b.colour = e.target.value; } }),
+          el("button", { type: "button", class: "action icon", title: "remove band", text: "✕", onclick: () => {
+            plan.bands.splice(j, 1); renderColourPlans();
+          }}),
+        ]));
+      });
+      rows.appendChild(el("div", { class: "row" }, [
+        el("span", { class: "row-head", text: "↳↳" }),
+        el("button", { type: "button", class: "action", text: "+ band", onclick: () => {
+          plan.bands.push({ lo: "", hi: "", colour: "#b4541f" }); renderColourPlans();
+        }}),
+        el("span", { class: "row-head", text: "half-open [lo, hi); blank = open end; must be sorted & non-overlapping (server validates)" }),
+      ]));
+    }
+  });
+}
+
 // ---------- dRofus source ----------
 // Show the block matching the selected source type. The upload zone is
 // disabled for an unsaved project: the endpoint rejects unregistered
@@ -845,6 +1005,36 @@ function toPayload() {
       revit_format: opt(f.revit_format),
       qa: opt(f.qa),
     })),
+    colour_plans: s.colour_plans.map(colourPlanToWire),
+  };
+}
+
+// Rebuild one colour plan's wire shape from the flat editing model. An opaque
+// (non-property-compare) plan is emitted from its preserved `_raw` unchanged.
+// A band lo/hi is a number when the input parses, else null = open end (blank
+// or unparseable). The server does the real validation (sorted/disjoint, one
+// active); this just produces well-typed JSON.
+function colourPlanToWire(p) {
+  if (p.opaque) return p._raw;
+  let colouring;
+  if (p.style === "match") {
+    colouring = { style: "match", tolerance: parseFloat(p.tolerance) || 0 };
+  } else if (p.style === "diverging") {
+    colouring = { style: "diverging", scheme: p.scheme };
+  } else {
+    const num = v => (v != null && String(v).trim() !== "" && Number.isFinite(parseFloat(v))) ? parseFloat(v) : null;
+    colouring = { style: "bands", bands: p.bands.map(b => ({ lo: num(b.lo), hi: num(b.hi), colour: b.colour })) };
+  }
+  return {
+    name: p.name.trim(),
+    active: !!p.active,
+    mode: {
+      kind: "propertycompare",
+      property_a: p.property_a.trim(),
+      property_b: p.property_b.trim(),
+      op: p.op,
+      colouring,
+    },
   };
 }
 
@@ -932,6 +1122,16 @@ $("addMilestoneBtn").addEventListener("click", () => {
 $("addQaBtn").addEventListener("click", () => {
   current.settings.drofus_fields.push({ label: "", type: "string", format: "", revit_format: "", qa: "" });
   renderQa();
+});
+$("addColourBtn").addEventListener("click", () => {
+  // A new plan defaults to property-compare/match, inactive (the user marks it
+  // active deliberately — and only one may be).
+  current.settings.colour_plans.push({
+    name: "", active: false, opaque: false,
+    property_a: "", property_b: "", op: "diff",
+    style: "match", tolerance: 0, scheme: "RdBu", bands: [],
+  });
+  renderColourPlans();
 });
 
 loadProjectList();

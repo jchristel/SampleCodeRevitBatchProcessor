@@ -17,6 +17,7 @@ design decisions behind the Revit → Rust → browser room data pipeline.
 
 | Document | Description |
 |---|---|
+| [Coding Conventions](CODING-CONVENTIONS.md) | The engineering rules this codebase follows (module structure, testing, dependency direction, error stance) |
 | [Server Settings Infrastructure](settings-infrastructure-handoff.md) | Handoff summary for the server settings infrastructure |
 
 Older handoff documents that have been superseded live in [Superseded](Superseded/).

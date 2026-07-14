@@ -9,12 +9,25 @@
 //! contract; the `#[serde(tag = "type")]` enum is the seam that makes the future
 //! file→API swap a loader-only change. `HierarchyTier` lives here too, as the
 //! classification *definition*; `classify` consumes it but doesn't own its shape.
+//!
+//! Split across three files by concern, re-exported here so the public paths
+//! (`crate::settings::Settings`, `::load_settings`, `::validate_drofus_fields`,
+//! …) never move:
+//! - **this file** — the config/domain types and their inherent `validate()`
+//!   methods (part of each type's own API);
+//! - **`validate`** — the standalone validation *functions* over those types;
+//! - **`load`** — the TOML loaders and settings-file-relative path resolution.
 
 use std::collections::HashMap;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
-use anyhow::Context;
 use serde::{Deserialize, Serialize};
+
+mod load;
+mod validate;
+
+pub use load::{load_server_config, load_settings};
+pub use validate::{validate_drofus_field_shapes, validate_drofus_fields};
 
 /// One project's settings, parsed once at startup from its own TOML file
 /// (one of N files in the `--project-settings` directory — see
@@ -171,74 +184,6 @@ pub enum CompareMode {
     Ignore,
 }
 
-/// Dry-run one strftime pattern so a typo (e.g. `%Q`) fails at startup, not
-/// silently at compare time. `StrftimeItems` yields an `Item::Error` for any
-/// specifier chrono doesn't know — walking the items is exactly the parse the
-/// comparison will do later, minus a value.
-fn validate_strftime(label: &str, which: &str, pattern: &str) -> anyhow::Result<()> {
-    use chrono::format::{Item, StrftimeItems};
-    if StrftimeItems::new(pattern).any(|item| matches!(item, Item::Error)) {
-        anyhow::bail!(
-            "drofus_fields entry '{}' has an invalid {} strftime pattern: '{}'",
-            label,
-            which,
-            pattern
-        );
-    }
-    Ok(())
-}
-
-/// Fail fast on a malformed dRofus field declaration — same "loud startup
-/// error over a silent no-op" discipline as hierarchy tiers and builtin
-/// properties:
-/// - a `label` the dRofus CSV never declared. Can't run inside
-///   `load_settings` itself: dRofus loads *after* settings in `main.rs`, so
-///   the label set isn't known yet at that point — this runs as a separate
-///   step once both are loaded.
-/// - a `Date` field with no `format` — unusable without one.
-/// - a `format`/`revit_format` given on a non-`Date` field — meaningless,
-///   almost certainly a mistake rather than intentional.
-/// - a `format`/`revit_format` that isn't a valid strftime pattern — it would
-///   never parse any value, making the declaration a silent no-op.
-pub fn validate_drofus_fields(fields: &[DrofusFieldConfig], all_labels: &[String]) -> anyhow::Result<()> {
-    for field in fields {
-        if !all_labels.iter().any(|l| l == &field.label) {
-            anyhow::bail!("drofus_fields references unknown dRofus field label: '{}'", field.label);
-        }
-    }
-    validate_drofus_field_shapes(fields)
-}
-
-/// The label-independent half of `validate_drofus_fields`: per-field
-/// type/format consistency and strftime pattern validity. Split out for the
-/// one caller that can't know the label set yet — an `Upload`-sourced project
-/// with no CSV uploaded so far, whose declarations should still be checked
-/// for everything checkable without data.
-pub fn validate_drofus_field_shapes(fields: &[DrofusFieldConfig]) -> anyhow::Result<()> {
-    for field in fields {
-        match (field.field_type, &field.format) {
-            (FieldType::Date, None) => {
-                anyhow::bail!("drofus_fields entry '{}' has type = \"date\" but no format", field.label);
-            }
-            (other, Some(_)) if other != FieldType::Date => {
-                anyhow::bail!("drofus_fields entry '{}' sets format but type is not \"date\"", field.label);
-            }
-            (FieldType::Date, Some(format)) => validate_strftime(&field.label, "format", format)?,
-            _ => {}
-        }
-        if let Some(revit_format) = &field.revit_format {
-            if field.field_type != FieldType::Date {
-                anyhow::bail!(
-                    "drofus_fields entry '{}' sets revit_format but type is not \"date\"",
-                    field.label
-                );
-            }
-            validate_strftime(&field.label, "revit_format", revit_format)?;
-        }
-    }
-    Ok(())
-}
-
 /// Server-wide settings, parsed once at startup from the `--server-settings`
 /// file — separate from per-project `Settings` because storage and dev
 /// seeding are properties of the running server, not of any one project.
@@ -254,24 +199,6 @@ pub struct ServerConfig {
     /// startup so no manual POST is needed. Omit in prod.
     #[serde(default)]
     pub test_data: Option<TestData>,
-}
-
-pub fn load_server_config(path: &PathBuf) -> anyhow::Result<ServerConfig> {
-    let raw = std::fs::read_to_string(path)
-        .with_context(|| format!("could not read server settings file: {}", path.display()))?;
-    let mut config: ServerConfig = toml::from_str(&raw).context("failed to parse server settings TOML")?;
-
-    // Same base-dir discipline as `load_settings`: relative paths inside this
-    // file resolve against the file's own directory, not the process cwd.
-    let settings_dir = path.parent().filter(|p| !p.as_os_str().is_empty());
-    if let Some(storage) = &mut config.storage {
-        resolve_relative_to(&mut storage.root, settings_dir);
-    }
-    if let Some(test_data) = &mut config.test_data {
-        resolve_relative_to(&mut test_data.snapshot_path, settings_dir);
-    }
-
-    Ok(config)
 }
 
 /// On-disk snapshot storage config. Its own section (not under `[sources]`):
@@ -446,72 +373,6 @@ impl BuiltinPropertyDef {
     }
 }
 
-/// Resolve a path from the settings file relative to the settings file's own
-/// directory, not the process's current working directory. Without this, a
-/// relative path like `./settings/drofus.csv` only works when the binary
-/// happens to be launched with cwd == crate root (e.g. via `cargo run`) —
-/// running the compiled exe directly from anywhere else silently breaks it.
-/// Absolute paths pass through unchanged.
-fn resolve_relative_to(path: &mut PathBuf, settings_dir: Option<&Path>) {
-    if path.is_absolute() {
-        return;
-    }
-    if let Some(dir) = settings_dir {
-        *path = dir.join(&path);
-    }
-}
-
-pub fn load_settings(path: &PathBuf) -> anyhow::Result<Settings> {
-    let raw = std::fs::read_to_string(path)
-        .with_context(|| format!("could not read settings file: {}", path.display()))?;
-    let mut settings: Settings = toml::from_str(&raw).context("failed to parse settings TOML")?;
-
-    // Base dir for every relative path *inside* the settings file. `.filter`
-    // turns a bare filename's empty parent ("") into None, which just means
-    // "no base to prepend" — those paths fall back to cwd-relative, same as
-    // before this fix.
-    let settings_dir = path.parent().filter(|p| !p.as_os_str().is_empty());
-    if let Some(DrofusSource::File { path: drofus_path }) = &mut settings.sources.drofus {
-        resolve_relative_to(drofus_path, settings_dir);
-    }
-
-    if settings.project_id.trim().is_empty() {
-        anyhow::bail!("settings file {} has an empty project_id", path.display());
-    }
-
-    // Fail fast on unkeyable or duplicate-named tiers — better a startup error
-    // than a silent classification that groups every room under "undefined",
-    // or a tier name lookup (e.g. "Building") silently picking the first of
-    // two matches.
-    let mut seen_tier_names = std::collections::HashSet::new();
-    for tier in &settings.hierarchy {
-        tier.validate()?;
-        if !seen_tier_names.insert(tier.name.clone()) {
-            anyhow::bail!("duplicate hierarchy tier name: '{}'", tier.name);
-        }
-    }
-    // Fail fast on unmappable or duplicate builtin property definitions —
-    // same discipline as hierarchy tiers.
-    let mut seen_canonical = std::collections::HashSet::new();
-    for def in &settings.builtin_properties {
-        def.validate()?;
-        if !seen_canonical.insert(def.canonical.clone()) {
-            anyhow::bail!("duplicate builtin property canonical name: '{}'", def.canonical);
-        }
-    }
-    // Fail fast on malformed or duplicate-named milestones — the name is the
-    // identity `/rooms?milestone=` matches on, so two milestones sharing one
-    // would silently resolve to the first.
-    let mut seen_milestones = std::collections::HashSet::new();
-    for milestone in &settings.milestones {
-        milestone.validate()?;
-        if !seen_milestones.insert(milestone.name.clone()) {
-            anyhow::bail!("duplicate milestone name: '{}'", milestone.name);
-        }
-    }
-    Ok(settings)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -525,62 +386,6 @@ mod tests {
             name_property: None,
         };
         assert!(tier.validate().is_err());
-    }
-
-    /// Two hierarchy tiers sharing a name fail `load_settings` at startup —
-    /// otherwise a `.position(|t| t.name == "Building")` lookup would silently
-    /// pick the first of two matches.
-    #[test]
-    fn test_duplicate_tier_names_fail_load_settings() {
-        let dir = std::env::temp_dir().join(format!("roommate-dup-tier-{}", std::process::id()));
-        std::fs::create_dir_all(&dir).unwrap();
-        let drofus_path = dir.join("drofus.csv");
-        std::fs::write(&drofus_path, "Id\nNumber\n").unwrap();
-
-        let settings_path = dir.join("settings.toml");
-        std::fs::write(
-            &settings_path,
-            format!(
-                r#"
-project_id = "p1"
-
-[sources.drofus]
-type = "file"
-path = "{}"
-
-[[hierarchy]]
-name = "Building"
-code_property = "a"
-
-[[hierarchy]]
-name = "Building"
-code_property = "b"
-"#,
-                drofus_path.display().to_string().replace('\\', "/")
-            ),
-        )
-        .unwrap();
-
-        let result = load_settings(&settings_path);
-        assert!(result.is_err());
-
-        std::fs::remove_dir_all(&dir).ok();
-    }
-
-    /// A settings file with no `[sources]` section at all is legal — a
-    /// project not using dRofus (or any external source) is a normal state,
-    /// not a config error.
-    #[test]
-    fn test_settings_without_sources_loads() {
-        let dir = std::env::temp_dir().join(format!("roommate-no-sources-{}", std::process::id()));
-        std::fs::create_dir_all(&dir).unwrap();
-        let settings_path = dir.join("settings.toml");
-        std::fs::write(&settings_path, "project_id = \"p1\"\n").unwrap();
-
-        let settings = load_settings(&settings_path).unwrap();
-        assert!(settings.sources.drofus.is_none());
-
-        std::fs::remove_dir_all(&dir).ok();
     }
 
     fn milestone(name: &str, date: &str) -> Milestone {
@@ -619,142 +424,5 @@ code_property = "b"
         let mut good_drofus = milestone("M", "2026-06-30");
         good_drofus.drofus_snapshot = Some("2026-06-29T17:00:00Z".to_string());
         assert!(good_drofus.validate().is_ok());
-    }
-
-    /// Two milestones sharing a name fail `load_settings` — the name is what
-    /// `/rooms?milestone=` matches on, so a duplicate would silently resolve
-    /// to the first.
-    #[test]
-    fn test_duplicate_milestone_names_fail_load_settings() {
-        let dir = std::env::temp_dir().join(format!("roommate-dup-ms-{}", std::process::id()));
-        std::fs::create_dir_all(&dir).unwrap();
-        let settings_path = dir.join("settings.toml");
-        std::fs::write(
-            &settings_path,
-            r#"
-project_id = "p1"
-
-[[milestones]]
-name = "Freeze"
-date = "2026-06-30"
-
-[[milestones]]
-name = "Freeze"
-date = "2026-07-30"
-"#,
-        )
-        .unwrap();
-
-        let msg = format!("{:#}", load_settings(&settings_path).unwrap_err());
-        assert!(msg.contains("duplicate milestone name"), "message names the problem: {msg}");
-
-        std::fs::remove_dir_all(&dir).ok();
-    }
-
-    /// A minimal `DrofusFieldConfig` for tests that only care about one
-    /// aspect of the declaration.
-    fn field(label: &str) -> DrofusFieldConfig {
-        DrofusFieldConfig {
-            label: label.to_string(),
-            field_type: FieldType::default(),
-            format: None,
-            revit_format: None,
-            qa: None,
-        }
-    }
-
-    /// A declaration referencing a label the dRofus CSV never declared fails
-    /// startup rather than silently never applying.
-    #[test]
-    fn test_validate_drofus_fields_rejects_unknown_label() {
-        let fields = vec![DrofusFieldConfig { qa: Some(CompareMode::Ignore), ..field("Nonexistent") }];
-        let all_labels = vec!["NetArea".to_string(), "Department".to_string()];
-
-        assert!(validate_drofus_fields(&fields, &all_labels).is_err());
-    }
-
-    /// A declaration referencing a real label, with only a `qa` override and
-    /// no `type`, passes validation (today's shipped behavior, generalized).
-    #[test]
-    fn test_validate_drofus_fields_accepts_known_label() {
-        let fields = vec![DrofusFieldConfig { qa: Some(CompareMode::Exact), ..field("NetArea") }];
-        let all_labels = vec!["NetArea".to_string(), "Department".to_string()];
-
-        assert!(validate_drofus_fields(&fields, &all_labels).is_ok());
-    }
-
-    /// `type = "date"` with no `format` is unusable -- fails validation.
-    #[test]
-    fn test_validate_drofus_fields_date_without_format_fails() {
-        let fields = vec![DrofusFieldConfig { field_type: FieldType::Date, ..field("LastSync") }];
-        let all_labels = vec!["LastSync".to_string()];
-
-        assert!(validate_drofus_fields(&fields, &all_labels).is_err());
-    }
-
-    /// `type = "date"` with a `format` passes validation.
-    #[test]
-    fn test_validate_drofus_fields_date_with_format_passes() {
-        let fields = vec![DrofusFieldConfig {
-            field_type: FieldType::Date,
-            format: Some("%-m/%-d/%Y %-I:%M:%S %p %z".to_string()),
-            ..field("LastSync")
-        }];
-        let all_labels = vec!["LastSync".to_string()];
-
-        assert!(validate_drofus_fields(&fields, &all_labels).is_ok());
-    }
-
-    /// A `format` on a non-date field is meaningless -- fails validation.
-    #[test]
-    fn test_validate_drofus_fields_format_on_non_date_fails() {
-        let fields = vec![DrofusFieldConfig { format: Some("whatever".to_string()), ..field("NetArea") }];
-        let all_labels = vec!["NetArea".to_string()];
-
-        assert!(validate_drofus_fields(&fields, &all_labels).is_err());
-    }
-
-    /// A strftime typo (`%Q` is not a chrono specifier) fails at startup --
-    /// otherwise the pattern would pass config validation and just silently
-    /// never parse anything at compare time.
-    #[test]
-    fn test_validate_drofus_fields_malformed_strftime_fails() {
-        let fields = vec![DrofusFieldConfig {
-            field_type: FieldType::Date,
-            format: Some("%Q/%-d/%Y".to_string()),
-            ..field("LastSync")
-        }];
-        let all_labels = vec!["LastSync".to_string()];
-
-        assert!(validate_drofus_fields(&fields, &all_labels).is_err());
-    }
-
-    /// `revit_format` follows `format`'s rules: legal (and dry-run-validated)
-    /// on a date field, rejected on any other type.
-    #[test]
-    fn test_validate_drofus_fields_revit_format_rules() {
-        let all_labels = vec!["LastSync".to_string(), "NetArea".to_string()];
-
-        let good = vec![DrofusFieldConfig {
-            field_type: FieldType::Date,
-            format: Some("%-m/%-d/%Y %-I:%M:%S %p %z".to_string()),
-            revit_format: Some("%Y-%m-%d %H:%M:%S".to_string()),
-            ..field("LastSync")
-        }];
-        assert!(validate_drofus_fields(&good, &all_labels).is_ok());
-
-        let on_non_date = vec![DrofusFieldConfig {
-            revit_format: Some("%Y-%m-%d".to_string()),
-            ..field("NetArea")
-        }];
-        assert!(validate_drofus_fields(&on_non_date, &all_labels).is_err());
-
-        let malformed = vec![DrofusFieldConfig {
-            field_type: FieldType::Date,
-            format: Some("%Y-%m-%d".to_string()),
-            revit_format: Some("%Q".to_string()),
-            ..field("LastSync")
-        }];
-        assert!(validate_drofus_fields(&malformed, &all_labels).is_err());
     }
 }

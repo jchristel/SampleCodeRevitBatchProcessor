@@ -3,6 +3,13 @@ name = "roommate"
 version = "0.1.0"
 edition = "2024"
 
+# Discovery aid, not a gate: `too_many_lines` (fires >100 lines) surfaces
+# functions worth a second look. `warn`, never `deny` — a long-but-cohesive
+# function carries `#[allow(clippy::too_many_lines)]` with a reason rather
+# than being fragmented into single-use helpers just to hit the number.
+[lints.clippy]
+too_many_lines = "warn"
+
 [dependencies]
 axum = "0.8"
 tokio = { version = "1", features = ["full"] }

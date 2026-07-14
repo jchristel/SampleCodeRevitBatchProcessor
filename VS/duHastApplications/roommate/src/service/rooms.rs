@@ -13,9 +13,22 @@ use crate::classify::{classify_room, TierValue};
 use crate::contract::{elevation_match, lookup_property, Level, Room, RoomPayload, SUPPORTED_SCHEMA};
 use crate::drofus::{DrofusData, DrofusRecord};
 use crate::settings::{BuiltinPropertyDef, HierarchyTier};
-use crate::state::{AppState, ModelKey, ProjectSettings};
+use crate::state::{AppState, ModelKey, ProjectSettings, SettingsRegistry};
 
 use super::ServiceError;
+
+/// A stored payload scoped to one request: its key, the (possibly
+/// milestone-substituted) payload, and the project settings bundle it resolves
+/// against — borrowed from the request's single settings snapshot, hence the
+/// lifetime. The unit the three assembly phases pass between them.
+type ScopedPayload<'a> = (ModelKey, RoomPayload, &'a ProjectSettings);
+
+/// The dRofus a milestone view joins against, resolved once per project
+/// (`project id → override`). A `Some(data)` is joined instead of the
+/// project's current dRofus; a `None` *value* means "attempted, fall back to
+/// current" (a missing or unparseable pin, memoised so it's neither re-parsed
+/// nor re-warned). Empty on the non-milestone path.
+type MilestoneDrofus = BTreeMap<String, Option<DrofusData>>;
 
 /// A room as sent to the viewer: the stored room plus any attached dRofus data
 /// and its resolved classification path. Separate response type so the join
@@ -183,25 +196,46 @@ pub fn assemble_rooms(
     }
 
     // One settings snapshot for the whole request — a save landing mid-merge
-    // can't mix old and new bundles in one response.
+    // can't mix old and new bundles in one response. Held here for the length
+    // of the request so `scoped`'s `&ProjectSettings` borrows stay valid.
     let registry = state.settings();
 
-    // Scope to the requested project (if any), then drop any payload whose
-    // project has no registered settings bundle — an unscoped merge is now
-    // inherently per-project, so a model with nothing to classify/join it
-    // against has no home in the result (see
-    // HANDOVER-per-project-settings.md: "skip on read"). Under a milestone
-    // filter, each surviving model's latest payload is then *replaced* by the
-    // snapshot the milestone pins for it (owned payloads, hence no `&` on the
-    // tuple's payload slot).
-    // The dRofus a milestone view should join against, resolved once per
-    // project (project id → override). `None` value = "attempted, fall back to
-    // current" (a missing or unparseable pin), so it's memoised too and never
-    // re-parsed or re-warned across a project's models. Empty for the
-    // non-milestone path.
-    let mut milestone_drofus: BTreeMap<String, Option<DrofusData>> = BTreeMap::new();
+    // Three phases, each its own helper: scope the stored payloads to the
+    // request (and resolve any milestone substitutions), dedup levels across
+    // linked models, then derive the response rooms/levels.
+    let (scoped, milestone_drofus) = scope_payloads(state, &registry, stored, project, milestone)?;
+    let level_remap = dedup_levels(&scoped);
+    let (levels, rooms) = assemble_scoped_rooms(&scoped, &level_remap, &milestone_drofus, building);
 
-    let mut scoped: Vec<(ModelKey, RoomPayload, &ProjectSettings)> = Vec::new();
+    Ok(Some(RoomsResult { schema_version: SUPPORTED_SCHEMA, levels, rooms }))
+}
+
+/// Phase 1 — scope the stored payloads to the request. Drops any payload whose
+/// project has no registered settings bundle (an unscoped merge is
+/// per-project, so a model with nothing to classify/join against has no home —
+/// see HANDOVER-per-project-settings.md "skip on read"), and, under a
+/// milestone filter, *replaces* each surviving model's latest payload with the
+/// snapshot the milestone pins for it (owned payloads, hence no `&` on the
+/// tuple's payload slot). A project without the named milestone, or a model it
+/// doesn't pin, contributes nothing — the building-filter discipline.
+///
+/// The second return value is the milestone's pinned dRofus, resolved once per
+/// project (`project id → override`): `Some(data)` = joined instead of the
+/// project's current dRofus; a `None` *value* means "attempted, fall back to
+/// current" (a missing or unparseable pin), memoised so it's neither re-parsed
+/// nor re-warned across a project's models. Empty on the non-milestone path.
+/// Kept together with the scoping loop that fills it, since that's where the
+/// pin is known.
+fn scope_payloads<'r>(
+    state: &AppState,
+    registry: &'r SettingsRegistry,
+    stored: Vec<(ModelKey, RoomPayload)>,
+    project: Option<&str>,
+    milestone: Option<&str>,
+) -> Result<(Vec<ScopedPayload<'r>>, MilestoneDrofus), ServiceError> {
+    let mut milestone_drofus: MilestoneDrofus = BTreeMap::new();
+    let mut scoped: Vec<ScopedPayload> = Vec::new();
+
     for (key, payload) in stored {
         if project.is_some_and(|p| payload.project.id != p) {
             continue;
@@ -212,9 +246,6 @@ pub fn assemble_rooms(
         match milestone {
             None => scoped.push((key, payload, bundle)),
             Some(wanted) => {
-                // A project without this milestone can't answer the question
-                // (building-filter discipline); a model the milestone doesn't
-                // pin isn't part of it.
                 let Some(ms) = bundle.milestones.iter().find(|m| m.name == wanted) else {
                     continue;
                 };
@@ -223,32 +254,11 @@ pub fn assemble_rooms(
                 };
                 match state.get_snapshot(&key, pinned_id).map_err(ServiceError::Internal)? {
                     Some(pinned) => {
-                        // Resolve this project's pinned dRofus override once.
-                        // Keyed per project so an unscoped multi-project
-                        // `?milestone=` merge never cross-joins A's dRofus onto B.
-                        if let Some(drofus_pin) = &ms.drofus_snapshot {
-                            if !milestone_drofus.contains_key(&key.project_id) {
-                                let resolved = match state.get_drofus(&key.project_id, drofus_pin).map_err(ServiceError::Internal)? {
-                                    Some(bytes) => match crate::drofus::load_drofus_from_bytes(&bytes) {
-                                        Ok(data) => Some(data),
-                                        Err(e) => {
-                                            tracing::warn!(
-                                                "milestone '{}' pins dRofus snapshot {:?} for project {}, but it failed to parse ({e:#}) — falling back to current dRofus",
-                                                wanted, drofus_pin, key.project_id
-                                            );
-                                            None
-                                        }
-                                    },
-                                    None => {
-                                        tracing::warn!(
-                                            "milestone '{}' pins dRofus snapshot {:?} for project {}, but no such snapshot exists — falling back to current dRofus",
-                                            wanted, drofus_pin, key.project_id
-                                        );
-                                        None
-                                    }
-                                };
-                                milestone_drofus.insert(key.project_id.clone(), resolved);
-                            }
+                        if let Some(drofus_pin) = &ms.drofus_snapshot
+                            && !milestone_drofus.contains_key(&key.project_id)
+                        {
+                            let resolved = resolve_pinned_drofus(state, wanted, &key.project_id, drofus_pin)?;
+                            milestone_drofus.insert(key.project_id.clone(), resolved);
                         }
                         scoped.push((key, pinned, bundle));
                     }
@@ -261,26 +271,59 @@ pub fn assemble_rooms(
         }
     }
 
-    // Level dedup: a `Level.id` is only unique *within* its own model (same
-    // caveat as room ids -- see `ModelKey`'s doc comment), so two linked
-    // models that both define "the same" architectural level produce two
-    // distinct `Level` rows with the same (name, elevation) but different
-    // ids. Merge them: same name + same elevation (tolerant of cross-file
-    // float drift via `elevation_match`, the same rounding discipline used
-    // for dRofus property comparison) IS the same level, no further
-    // disambiguation. First-seen id per group wins as the canonical id; every
-    // other (project_id, model_id, level_id) triple that maps to that group
-    // is remapped to it before rooms are serialized, so the level picker and
-    // room filtering still agree on one id per real-world level.
-    //
-    // Grouped *per project*: level identity is only meaningful within one
-    // project (the dedup exists for linked models of one job), so two
-    // unrelated projects that both have a "Level 1" @ 0.0 keep their own
-    // levels in an unscoped merge instead of collapsing onto whichever
-    // project happened to be seen first.
+    Ok((scoped, milestone_drofus))
+}
+
+/// Load and parse a milestone's pinned dRofus CSV for one project. A missing
+/// or unparseable pin resolves to `None` with a warning (fall back to the
+/// project's current dRofus — signal, not error, same stance as a dangling
+/// model pin).
+fn resolve_pinned_drofus(
+    state: &AppState,
+    milestone: &str,
+    project_id: &str,
+    drofus_pin: &str,
+) -> Result<Option<DrofusData>, ServiceError> {
+    match state.get_drofus(project_id, drofus_pin).map_err(ServiceError::Internal)? {
+        Some(bytes) => match crate::drofus::load_drofus_from_bytes(&bytes) {
+            Ok(data) => Ok(Some(data)),
+            Err(e) => {
+                tracing::warn!(
+                    "milestone '{}' pins dRofus snapshot {:?} for project {}, but it failed to parse ({e:#}) — falling back to current dRofus",
+                    milestone, drofus_pin, project_id
+                );
+                Ok(None)
+            }
+        },
+        None => {
+            tracing::warn!(
+                "milestone '{}' pins dRofus snapshot {:?} for project {}, but no such snapshot exists — falling back to current dRofus",
+                milestone, drofus_pin, project_id
+            );
+            Ok(None)
+        }
+    }
+}
+
+/// Phase 2 — level dedup across linked models. A `Level.id` is only unique
+/// *within* its own model (same caveat as room ids -- see `ModelKey`'s doc
+/// comment), so two linked models that both define "the same" architectural
+/// level produce two distinct `Level` rows with the same (name, elevation) but
+/// different ids. Merge them: same name + same elevation (tolerant of
+/// cross-file float drift via `elevation_match`, the same rounding discipline
+/// used for dRofus property comparison) IS the same level. Returns the remap
+/// `(project_id, model_id, level_id) -> canonical id`; first-seen id per group
+/// wins as canonical, so the level picker and room filtering agree on one id
+/// per real-world level.
+///
+/// Grouped *per project*: level identity is only meaningful within one project
+/// (the dedup exists for linked models of one job), so two unrelated projects
+/// that both have a "Level 1" @ 0.0 keep their own levels in an unscoped merge
+/// instead of collapsing onto whichever project happened to be seen first.
+fn dedup_levels(scoped: &[ScopedPayload<'_>]) -> BTreeMap<(String, String, String), String> {
     let mut canonical_levels: BTreeMap<String, Vec<Level>> = BTreeMap::new(); // project_id -> levels
-    let mut level_remap: BTreeMap<(String, String, String), String> = BTreeMap::new(); // (project_id, model_id, level_id) -> canonical
-    for (key, payload, _bundle) in &scoped {
+    let mut level_remap: BTreeMap<(String, String, String), String> = BTreeMap::new();
+    for (key, payload, _bundle) in scoped {
         let project_levels = canonical_levels.entry(key.project_id.clone()).or_default();
         for level in &payload.levels {
             let canonical_id = match project_levels
@@ -299,7 +342,22 @@ pub fn assemble_rooms(
             );
         }
     }
+    level_remap
+}
 
+/// Phase 3 — derive the response levels and rooms from the scoped payloads.
+/// Applies the optional building filter (a project with no "Building" tier
+/// matches nothing under it, never everything), emits each canonical level
+/// once per project, and joins each room against its effective dRofus (the
+/// milestone-pinned override when one resolved, else the project's current
+/// dRofus — identical to pre-pinning behaviour), remapping room `level_id`s to
+/// the canonical ids from phase 2.
+fn assemble_scoped_rooms(
+    scoped: &[ScopedPayload<'_>],
+    level_remap: &BTreeMap<(String, String, String), String>,
+    milestone_drofus: &MilestoneDrofus,
+    building: Option<&str>,
+) -> (Vec<Level>, Vec<RoomResponse>) {
     let mut levels = Vec::new();
     // Keyed (project_id, canonical_id): canonical ids are model-local, so two
     // projects could in principle mint the same id -- a flat set would let one
@@ -307,7 +365,7 @@ pub fn assemble_rooms(
     let mut emitted_level_ids: BTreeSet<(String, String)> = BTreeSet::new();
     let mut rooms: Vec<RoomResponse> = Vec::new();
 
-    for (key, payload, bundle) in &scoped {
+    for (key, payload, bundle) in scoped {
         // Building tier index is resolved from this payload's own project
         // bundle -- projects with different hierarchies coexist in one merge.
         let building_idx = building_tier_index(&bundle.hierarchy);
@@ -367,7 +425,7 @@ pub fn assemble_rooms(
         }));
     }
 
-    Ok(Some(RoomsResult { schema_version: SUPPORTED_SCHEMA, levels, rooms }))
+    (levels, rooms)
 }
 
 #[cfg(test)]

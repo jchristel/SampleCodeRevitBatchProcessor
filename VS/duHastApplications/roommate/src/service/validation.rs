@@ -17,6 +17,12 @@ use crate::state::{AppState, ModelKey};
 
 use super::ServiceError;
 
+/// Resolved link value → every `(room, source)` that resolved to it. A value
+/// with more than one entry is an ambiguous (duplicate) link value, excluded
+/// from the unmatched/mismatch checks. Borrows the rooms out of the stored
+/// payloads, hence the lifetime.
+type LinkValueIndex<'a> = BTreeMap<String, Vec<(&'a Room, &'a str)>>;
+
 /// One link-property value shared by more than one room — ambiguous, so it's
 /// excluded from the unmatched/mismatch checks below rather than guessing
 /// which room a dRofus record actually describes.
@@ -177,27 +183,20 @@ fn ascii_narrowed(s: &str) -> String {
     s.chars().map(|c| if c.is_ascii() { c } else { '?' }).collect()
 }
 
-/// Pure computation behind `compute_project_validation` — pulled out so it's
-/// testable without a full `AppState`, same shape as `resolve_label_fields`.
-///
-/// Four checks, in order: (1) does every room resolve a value for the link
-/// property; (2) among those that do, is the value actually unique per room
-/// (a shared value is ambiguous — recorded, then excluded from the rest);
-/// (3) does each remaining room's value find a dRofus record; (4) for rooms
-/// that do, does every reconciled, non-`Ignore`d property agree between the
-/// two sides. Also reports `field_coverage`: which dRofus fields this pass
-/// actually checks at all, for the panel's "what's being QA'd" reference.
-pub fn compute_validation(
+/// Phase 1 — resolve every room's link-property value. Returns the room
+/// count, the ids of rooms that resolved no value at all
+/// (`rooms_missing_link_value`), and a map of resolved link value → every
+/// `(room, source)` that resolved to it (so the caller can detect a value
+/// shared by more than one room). Borrows the rooms out of `stored`.
+fn resolve_link_values<'a>(
     project_id: &str,
-    stored: &[(ModelKey, RoomPayload)],
+    stored: &'a [(ModelKey, RoomPayload)],
     drofus: &DrofusData,
     builtin_defs: &[BuiltinPropertyDef],
-    drofus_fields: &[DrofusFieldConfig],
-) -> ValidationResponse {
+) -> (usize, Vec<String>, LinkValueIndex<'a>) {
     let mut total_rooms = 0;
     let mut rooms_missing_link_value = Vec::new();
-    // Resolved link value -> every (room, source) that resolved to it.
-    let mut by_value: BTreeMap<String, Vec<(&Room, &str)>> = BTreeMap::new();
+    let mut by_value: LinkValueIndex = BTreeMap::new();
 
     for (_key, payload) in stored {
         if payload.project.id != project_id {
@@ -211,6 +210,85 @@ pub fn compute_validation(
             }
         }
     }
+
+    (total_rooms, rooms_missing_link_value, by_value)
+}
+
+/// The typed comparison ladder for one reconciled field, each rung falling
+/// through to the next on `None`: a `Date`-declared field is compared as
+/// parsed instants first (two renderings of one moment agree); then
+/// `numeric_match` when both sides parse as numbers; finally string equality
+/// (with the ASCII-narrowing re-check that forgives duHast's lossy
+/// `encode_ascii` export step — see `ascii_narrowed`). `Exact` mode skips both
+/// typed rungs and forces the string comparison.
+fn field_values_agree(drofus_value: &str, room_value: &str, field_cfg: Option<&DrofusFieldConfig>) -> bool {
+    let exact_mode = field_cfg.and_then(|f| f.qa) == Some(CompareMode::Exact);
+    let date = if exact_mode {
+        None
+    } else {
+        field_cfg.filter(|f| f.field_type == FieldType::Date).and_then(|f| {
+            let fmt = f.format.as_deref()?; // always Some on Date (validated at startup)
+            let revit_fmt = f.revit_format.as_deref().unwrap_or(fmt);
+            date_match(drofus_value, room_value, fmt, revit_fmt)
+        })
+    };
+    let numeric = if exact_mode || date.is_some() {
+        None
+    } else {
+        numeric_match(drofus_value, room_value)
+    };
+    match (date, numeric) {
+        (Some(date_matches), _) => date_matches,
+        (None, Some(numeric_matches)) => numeric_matches,
+        (None, None) => {
+            drofus_value.trim() == room_value.trim()
+                || ascii_narrowed(drofus_value.trim()) == room_value.trim()
+        }
+    }
+}
+
+/// Phase 3 — which dRofus fields this pass actually checks: every row-1 label
+/// except those overridden `Ignore` (a deliberate exclusion, hidden from this
+/// report entirely rather than shown as "not checked"), each flagged with
+/// whether row 2 mapped it to a Revit property.
+fn compute_field_coverage(drofus: &DrofusData, drofus_fields: &[DrofusFieldConfig]) -> Vec<FieldCoverage> {
+    let ignored: BTreeSet<&str> = drofus_fields
+        .iter()
+        .filter(|f| f.qa == Some(CompareMode::Ignore))
+        .map(|f| f.label.as_str())
+        .collect();
+    drofus
+        .all_labels
+        .iter()
+        .filter(|label| !ignored.contains(label.as_str()))
+        .map(|label| FieldCoverage {
+            label: label.clone(),
+            checked: drofus.reconciliation.contains_key(label),
+            revit_property: drofus.reconciliation.get(label).cloned(),
+        })
+        .collect()
+}
+
+/// Pure computation behind `compute_project_validation` — pulled out so it's
+/// testable without a full `AppState`, same shape as `resolve_label_fields`.
+///
+/// Four checks, in order: (1) does every room resolve a value for the link
+/// property (`resolve_link_values`); (2) among those that do, is the value
+/// actually unique per room (a shared value is ambiguous — recorded, then
+/// excluded from the rest); (3) does each remaining room's value find a dRofus
+/// record; (4) for rooms that do, does every reconciled, non-`Ignore`d
+/// property agree between the two sides (`field_values_agree`). Also reports
+/// `field_coverage` (`compute_field_coverage`): which dRofus fields this pass
+/// actually checks at all, for the panel's "what's being QA'd" reference.
+pub fn compute_validation(
+    project_id: &str,
+    stored: &[(ModelKey, RoomPayload)],
+    drofus: &DrofusData,
+    builtin_defs: &[BuiltinPropertyDef],
+    drofus_fields: &[DrofusFieldConfig],
+) -> ValidationResponse {
+    let (total_rooms, rooms_missing_link_value, by_value) =
+        resolve_link_values(project_id, stored, drofus, builtin_defs);
 
     let mut duplicate_link_values = Vec::new();
     let mut rooms_unmatched_in_drofus = Vec::new();
@@ -255,37 +333,7 @@ pub fn compute_validation(
                     field: label.clone(),
                 }),
                 PropertyPresence::Present(room_value) => {
-                    let field_cfg = field_config(drofus_fields, label);
-                    let exact_mode = field_cfg.and_then(|f| f.qa) == Some(CompareMode::Exact);
-                    // Typed comparison ladder, each rung falling through on
-                    // `None`: a `Date`-declared field is compared as parsed
-                    // instants first (two renderings of one moment agree);
-                    // then `numeric_match` when both sides parse as numbers;
-                    // finally string equality. `Exact` mode skips both typed
-                    // rungs and forces the string comparison.
-                    let date = if exact_mode {
-                        None
-                    } else {
-                        field_cfg.filter(|f| f.field_type == FieldType::Date).and_then(|f| {
-                            let fmt = f.format.as_deref()?; // always Some on Date (validated at startup)
-                            let revit_fmt = f.revit_format.as_deref().unwrap_or(fmt);
-                            date_match(drofus_value, &room_value, fmt, revit_fmt)
-                        })
-                    };
-                    let numeric = if exact_mode || date.is_some() {
-                        None
-                    } else {
-                        numeric_match(drofus_value, &room_value)
-                    };
-                    let matches = match (date, numeric) {
-                        (Some(date_matches), _) => date_matches,
-                        (None, Some(numeric_matches)) => numeric_matches,
-                        (None, None) => {
-                            drofus_value.trim() == room_value.trim()
-                                || ascii_narrowed(drofus_value.trim()) == room_value.trim()
-                        }
-                    };
-                    if !matches {
+                    if !field_values_agree(drofus_value, &room_value, field_config(drofus_fields, label)) {
                         property_mismatches.push(PropertyMismatch {
                             room_id: room.id.clone(),
                             drofus_id: value.clone(),
@@ -299,25 +347,6 @@ pub fn compute_validation(
         }
     }
 
-    // Which dRofus fields this pass actually checks: every row-1 label
-    // except those overridden `Ignore` (a deliberate exclusion, hidden from
-    // this report entirely rather than shown as "not checked").
-    let ignored: BTreeSet<&str> = drofus_fields
-        .iter()
-        .filter(|f| f.qa == Some(CompareMode::Ignore))
-        .map(|f| f.label.as_str())
-        .collect();
-    let field_coverage: Vec<FieldCoverage> = drofus
-        .all_labels
-        .iter()
-        .filter(|label| !ignored.contains(label.as_str()))
-        .map(|label| FieldCoverage {
-            label: label.clone(),
-            checked: drofus.reconciliation.contains_key(label),
-            revit_property: drofus.reconciliation.get(label).cloned(),
-        })
-        .collect();
-
     ValidationResponse {
         drofus_configured: true,
         link_property: Some(drofus.link_property.clone()),
@@ -328,7 +357,7 @@ pub fn compute_validation(
         property_mismatches,
         fields_absent_in_revit,
         fields_empty_in_revit,
-        field_coverage,
+        field_coverage: compute_field_coverage(drofus, drofus_fields),
     }
 }
 

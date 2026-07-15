@@ -15,9 +15,16 @@ side should shape future server endpoints.
   header row, right of "Room Plan" — project and building (see
   [Server](STRATEGY-SERVER.md)'s `/projects`/`/projects/{id}/buildings`), and
   the level picker moved here from its former floating panel over the canvas.
-  Each auto-hides when it has ≤1 option and auto-selects when there's exactly
-  one real choice, so the common single-project/single-building dev case shows
-  no pickers at all. The level picker lists floors highest-elevation-first (a
+  Building and level auto-hide when they have ≤1 option and auto-select when
+  there's exactly one real choice, so the common single-building dev case
+  shows no picker at all. **Project is the exception: it's shown whenever any
+  project exists, single option included** (hidden only at zero, where there's
+  no name to state). Which project you're looking at isn't a choice, it's the
+  scope of everything on screen — and the ≤1 rule left that anonymous exactly
+  when it's least obvious: several projects registered but only one holding
+  rooms is the normal state while the others are onboarded, since `/projects`
+  lists only projects with stored snapshots. The level picker lists floors
+  highest-elevation-first (a
   `<select>` has no CSS-driven reversal the old button stack relied on, so
   it's sorted explicitly at render time). A building option the server flags
   `ambiguous` (another building shares its name — legitimate, since buildings
@@ -69,7 +76,8 @@ side should shape future server endpoints.
   with several issues appears several times) and triggers a browser download
   — no server endpoint for this, matching "keep axum a pure JSON API": a CSV
   is just a presentation reshuffle of data the browser already has.
-- **Milestone picker.** A fourth header `<select>` (after building): "Latest"
+- **Milestone picker.** A header `<select>` sitting immediately after project,
+  ahead of building: "Latest"
   (the default, no filter) plus one option per milestone from
   `GET /projects/{id}/milestones`, labelled `name (date)`. Refreshes on the
   same 2s cadence as the project/building pickers, gated by its own

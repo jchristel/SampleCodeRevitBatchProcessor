@@ -37,8 +37,8 @@ from post_rooms import post_payload_stream, fetch_projects
 
 def choose_project(forms):
     """Force a choice of which SERVER-REGISTERED project to push to, from the
-    server's own `GET /projects` list. Returns `{"id", "name"}`, or `None` to
-    abort the whole run.
+    server's registered settings bundles (`fetch_projects`). Returns
+    `{"id", "name"}`, or `None` to abort the whole run.
 
     The project id must match a registered settings bundle on the server or the
     push 422s (and the id becomes a storage path key), so it can't be derived
@@ -60,15 +60,38 @@ def choose_project(forms):
             "pushed to it.",
             title="Roommate - no projects", warn_icon=True)
         return None
-    options = [{"name": p.get("name") or p["id"], "id": p["id"]} for p in projects]
+
+    # Label by display name, disambiguating a shared one with its id. Names are
+    # free-form (unlike ids, which the server enforces unique across settings
+    # files), so two projects CAN share one -- and the selection comes back from
+    # the form as its label string, so duplicate labels would silently resolve
+    # to whichever project was found first. Only the collided labels carry the
+    # id, mirroring how the server flags ambiguous buildings rather than
+    # decorating everything.
+    name_counts = {}
+    for p in projects:
+        name_counts[p["name"]] = name_counts.get(p["name"], 0) + 1
+
+    by_label = {}
+    for p in projects:
+        label = p["name"]
+        if name_counts[label] > 1:
+            label = "{} ({})".format(p["name"], p["id"])
+        by_label[label] = p
+
     selected = forms.SelectFromList.show(
-        options, name_attr="name",
+        sorted(by_label.keys()),
         title="Select a project to push to",
         button_name="Push to this project",
         multiselect=False)
     if not selected:
         return None
-    return {"id": selected["id"], "name": selected["name"]}
+
+    project = by_label.get(selected)
+    if project is None:
+        return None
+
+    return {"id": project["id"], "name": project["name"]}
 
 
 def rooms_export_entry(doc, uiapp, output, forms):

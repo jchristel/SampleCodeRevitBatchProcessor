@@ -43,6 +43,12 @@ pub struct ProjectFileSummary {
     pub file: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub project_id: Option<String>,
+    /// The project's display name, absent when the file sets none — consumers
+    /// fall back to `project_id`. Carried on the summary so the pyRevit push
+    /// picker can both label a project and send `project.name` from one call
+    /// (see room_mate's `fetch_projects`).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
     pub is_default: bool,
     pub drofus_configured: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -114,6 +120,7 @@ pub fn list_project_files(projects_dir: &Path) -> Result<Vec<ProjectFileSummary>
             Ok(settings) => out.push(ProjectFileSummary {
                 file: file_name(&path),
                 project_id: Some(settings.project_id),
+                name: settings.name,
                 is_default: settings.is_default,
                 drofus_configured: settings.sources.drofus.is_some(),
                 error: None,
@@ -121,6 +128,7 @@ pub fn list_project_files(projects_dir: &Path) -> Result<Vec<ProjectFileSummary>
             Err(e) => out.push(ProjectFileSummary {
                 file: file_name(&path),
                 project_id: None,
+                name: None,
                 is_default: false,
                 drofus_configured: false,
                 error: Some(format!("{e:#}")),
@@ -297,7 +305,7 @@ pub struct DrofusUploadResult {
     pub link_property: String,
     pub labels: Vec<String>,
     pub snapshot_taken_at: String,
-    pub snapshot_generated: bool,
+    pub snapshot_id_generated: bool,
 }
 
 /// Store one uploaded dRofus CSV against a project and hot-swap it into the
@@ -320,7 +328,7 @@ pub fn upload_drofus(
     // Resolve the snapshot id through the shared contract functions — minted
     // when absent, validated always, echoed back either way.
     let mut snapshot = Snapshot { taken_at: taken_at.unwrap_or_default().to_string() };
-    let snapshot_generated = ensure_taken_at(&mut snapshot);
+    let snapshot_id_generated = ensure_taken_at(&mut snapshot);
     validate_snapshot_id(&snapshot.taken_at).map_err(SettingsError::Invalid)?;
 
     // The target project must exist and declare the upload source — an
@@ -364,7 +372,7 @@ pub fn upload_drofus(
         link_property: data.link_property,
         labels: data.all_labels,
         snapshot_taken_at: snapshot.taken_at,
-        snapshot_generated,
+        snapshot_id_generated,
     })
 }
 
@@ -724,7 +732,7 @@ format = "%Y-%m-%d"
 
         let res = upload_drofus(&state, "p1", Some("2026-01-01T10:00:00Z"), UPLOAD_CSV).unwrap();
         assert!(res.accepted && res.stored);
-        assert!(!res.snapshot_generated);
+        assert!(!res.snapshot_id_generated);
         assert_eq!(res.snapshot_taken_at, "2026-01-01T10:00:00Z");
         assert_eq!(res.record_count, 1);
         assert_eq!(res.link_property, "Number");
@@ -737,7 +745,7 @@ format = "%Y-%m-%d"
 
         // Omitted taken_at: minted server-side and reported as such.
         let minted = upload_drofus(&state, "p1", None, UPLOAD_CSV).unwrap();
-        assert!(minted.snapshot_generated);
+        assert!(minted.snapshot_id_generated);
         assert!(crate::contract::validate_snapshot_id(&minted.snapshot_taken_at).is_ok());
 
         std::fs::remove_dir_all(&dir).ok();

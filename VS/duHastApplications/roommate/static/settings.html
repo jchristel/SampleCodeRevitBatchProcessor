@@ -169,6 +169,9 @@
           <label class="field">project id
             <input type="text" id="projectId" size="28" />
           </label>
+          <label class="field">display name
+            <input type="text" id="projectName" size="28" placeholder="(defaults to the project id)" />
+          </label>
           <label class="field">
             <input type="checkbox" id="isDefault" />
             serve as default for unregistered projects
@@ -306,6 +309,7 @@ const $ = (id) => document.getElementById(id);
 function blankSettings() {
   return {
     project_id: "",
+    name: null,
     is_default: false,
     sources: {},
     hierarchy: [],
@@ -496,8 +500,9 @@ function openEditor() {
   $("projectId").value = s.project_id;
   $("projectId").readOnly = !current.isNew;
   $("identityHint").textContent = current.isNew
-    ? "The id is matched against pushed payloads' project.id and becomes the settings file name."
-    : `Stored in ${current.file}. The id is the project's identity — create a new project to change it.`;
+    ? "The id is matched against pushed payloads' project.id and becomes the settings file name. The display name is a label only, and can be changed at any time."
+    : `Stored in ${current.file}. The id is the project's identity — create a new project to change it. The display name is a label only, and can be changed at any time.`;
+  $("projectName").value = s.name || "";
   $("isDefault").checked = !!s.is_default;
 
   const drofus = s.sources.drofus;
@@ -1056,6 +1061,9 @@ function toPayload() {
   const opt = (v) => (v && v.trim() ? v.trim() : null);
   return {
     project_id: $("projectId").value.trim(),
+    // Blank means "no name" (the server rejects a present-but-empty one) —
+    // the project then displays under its id.
+    name: opt($("projectName").value),
     is_default: $("isDefault").checked,
     sources: (() => {
       const type = $("drofusSourceType").value;

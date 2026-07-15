@@ -86,8 +86,11 @@ each module carrying its rationale in a header, all with unit tests.
   blank/omitted `snapshot` is resolved server-side (`ensure_taken_at`, UTC
   now at the producer's own microsecond precision) *before* validation, in
   both ingest paths; the ingest response carries `snapshot_taken_at` and
-  `snapshot_generated` so a pusher always learns the id its follow-up
-  uploads should attach to. Still v5: a pure relaxation, not a bump.
+  `snapshot_id_generated` so a pusher always learns the id its follow-up
+  uploads should attach to. The flag answers "did the server mint this id?",
+  not "was a snapshot stored?" (that's `accepted`/`room_count`) — a producer
+  that stamps its own `taken_at`, as the Revit one does, sees `false` on every
+  successful push. Still v5: a pure relaxation, not a bump.
 - **Snapshot history endpoints (`GET /projects/{id}/snapshots`,
   `GET /projects/{p}/models/{m}/snapshots/latest`).** The read side of
   snapshot identity: the first lists every stored snapshot id per model of a
@@ -174,6 +177,24 @@ each module carrying its rationale in a header, all with unit tests.
   unknown fields, a misplaced `room_label` line is silently swallowed with no
   error. Top-level `Settings` keys must be declared before the first section
   header in a project settings file.
+
+- **Project display name (`name`).** The settings file is where a project's
+  human-readable name is *authored*; `project_id` stays the identity (matched
+  against `RoomPayload.project.id`, and a storage path key), so the two can't
+  be the same field — an id can't be renamed, a label must be. Optional:
+  absent means the project displays under its id, which is what every consumer
+  did before the field existed. Non-empty when present, validated at load —
+  omitting the key is how you say "no name", so a blank one is a mistake, not
+  a way to say it. The name reaches storage the same way it always did, via
+  the producer: `/api/settings/projects` carries it, the pusher sends it back
+  as `project.name` (see room_mate's `fetch_projects`), and the store's
+  `project.toml` manifest mirrors it for `/projects` to serve. So the server
+  never reads a name *out* of settings to answer `/projects` — that endpoint
+  still reports what was pushed, and a renamed project shows its new name
+  after the next push. Unlike ids, names are **not** unique across files:
+  consumers that label by name disambiguate collisions themselves (the pyRevit
+  picker appends the id, as `list_buildings` already flags ambiguous
+  buildings).
 
 - **Settings read/save API + UI (`/api/settings/*`, `static/settings.html`).**
   The per-project TOML files are editable from the browser: a settings page

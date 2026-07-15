@@ -130,8 +130,8 @@
   <header>
     <h1>Room Plan</h1>
     <select class="picker hidden" id="projectSelect"></select>
-    <select class="picker hidden" id="buildingSelect"></select>
     <select class="picker hidden" id="milestoneSelect"></select>
+    <select class="picker hidden" id="buildingSelect"></select>
     <select class="picker hidden" id="colourSelect"></select>
     <select class="picker hidden" id="levelSelect"></select>
     <button class="validation-toggle hidden" id="validationToggle"></button>
@@ -776,7 +776,14 @@ function populateProjectSelect(projects) {
     opt.textContent = p.name;
     projectSelect.appendChild(opt);
   }
-  projectSelect.classList.toggle("hidden", projects.length <= 1);
+  // Shown whenever there is a project at all — deliberately NOT the `<= 1`
+  // auto-hide the other pickers use. Which project you're looking at is not a
+  // choice, it's the scope of everything on screen, and hiding it left the
+  // single-project case anonymous: with several projects registered but only
+  // one holding rooms (the normal state while others are onboarded), the
+  // viewer silently showed one of them with nothing saying which. An empty
+  // select is still hidden — there's no name to state.
+  projectSelect.classList.toggle("hidden", projects.length === 0);
   if (projects.some(p => p.id === prevValue)) projectSelect.value = prevValue;
 }
 

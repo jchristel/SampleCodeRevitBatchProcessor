@@ -165,8 +165,9 @@ definition, lexically sortable so newest-is-lexical-max holds everywhere, and
 structurally incapable of smuggling a path escape. It is also **omittable**:
 a payload that leaves `snapshot` (or just `taken_at`) out asks the server to
 mint the id at ingest. Either way the ingest response reports the resolved id
-(`snapshot_taken_at`, plus `snapshot_generated`) so the pusher can attach
-follow-up uploads to that exact snapshot. This relaxation did not bump the
+(`snapshot_taken_at`, plus `snapshot_id_generated` — which says whether the
+server minted that id, not whether a snapshot was stored) so the pusher can
+attach follow-up uploads to that exact snapshot. This relaxation did not bump the
 schema version: every previously-valid v5 payload is still valid and means
 the same thing.
 
@@ -178,5 +179,5 @@ associated to rooms via snapshot+room ids), so it carries no JSON envelope at
 all — but its snapshot id rides the same rules exactly. The raw CSV body has
 nowhere to put a `taken_at`, so it travels as a `?taken_at=` query param,
 resolved through the same `ensure_taken_at` / `validate_snapshot_id` pair,
-omittable, and echoed back (`snapshot_taken_at` / `snapshot_generated`) like
-every other ingest.
+omittable, and echoed back (`snapshot_taken_at` / `snapshot_id_generated`)
+like every other ingest.

@@ -45,6 +45,27 @@ pub struct Settings {
     /// (validated at load).
     pub project_id: String,
 
+    /// Human-readable project name, for display only — never matched against
+    /// anything, so it stays freely editable in a way `project_id` (a storage
+    /// path key) can't be. Producers read it from `/api/settings/projects` and
+    /// send it as `RoomPayload.project.name`, which is what the store's
+    /// `project.toml` manifest and the viewer's project picker then show; this
+    /// file is where that name is *authored*.
+    ///
+    /// Optional, and absence is a normal state, not a defect: a project that
+    /// never sets one is displayed under its id (every consumer falls back
+    /// that way), which is exactly the behaviour before this field existed.
+    /// Must be non-empty *when present* (validated at load) — a blank name is
+    /// a mistake, and silently displaying an empty label is worse than saying
+    /// so at startup.
+    ///
+    /// Declared here, adjacent to the other scalars and above `sources`,
+    /// because TOML requires scalar keys to precede any table — serde emits
+    /// fields in declaration order, so moving this below `sources` would write
+    /// files that don't round-trip.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+
     /// When true, this bundle is also the explicit fallback for any project
     /// with no dedicated settings file (`AppState::settings_for`). At most
     /// one project file may set this — validated across the whole directory

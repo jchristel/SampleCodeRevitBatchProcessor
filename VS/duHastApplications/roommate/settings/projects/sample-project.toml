@@ -1,59 +1,19 @@
-# Sample per-project roommate settings: classification hierarchy, dRofus
-# source, builtin property mappings, and room label -- everything scoped to
-# one project (`project_id` below). One file like this per real project lives
-# in the --project-settings directory. See
-# ../../docs/HANDOVER-per-project-settings.md.
-#
-# Relative paths below (drofus.csv) resolve against *this file's own
-# directory* (settings/projects/), not the process's current working
-# directory or the --server-settings file's directory.
-#
-# NOTE: TOML requires every bare `key = value` belonging to the top-level
-# table (like `project_id`/`room_label` below) to appear before the *first*
-# [table] or [[array-of-tables]] header in the file -- once a section header
-# opens, subsequent bare keys attach to that section (or its last array
-# entry), not back to the top level. Add new top-level Settings fields up
-# here, not after [[hierarchy]]/[[builtin_properties]] further down.
-
-# ---------------------------------------------------------------------------
-# This bundle's project id -- matched against RoomPayload.project.id to pick
-# it for a given pushed/read model. Must match the "sample-project" id baked
-# into ../test_snapshot.json for the dev seed to actually be served.
-# ---------------------------------------------------------------------------
 project_id = "sample-project"
+name = "Sample Hospital Job"
+is_default = false
+room_label = [
+    "$name",
+    "Area",
+    "$id",
+]
+milestones = []
+drofus_fields = []
+colour_plans = []
 
-# ---------------------------------------------------------------------------
-# Also serve as the fallback bundle for any project pushed/read without its
-# own registered settings file (AppState::settings_for) -- keeps today's
-# "one global profile" behavior for anything not yet explicitly onboarded.
-# Remove once every real project has its own dedicated file.
-# ---------------------------------------------------------------------------
-is_default = true
-
-# ---------------------------------------------------------------------------
-# Ordered properties shown on a room's label in the viewer. "$name"/"$id" are
-# intrinsic tokens for the room's own name/id (not resolved via
-# builtin_properties below); anything else is a canonical property name
-# resolved the same way. Defaults to ["$name", "$id"] if this line is omitted.
-# ---------------------------------------------------------------------------
-room_label = ["$name", "Area", "$id"]
-
-# ---------------------------------------------------------------------------
-# External reference data joined onto this project's rooms at /rooms response
-# assembly. See STRATEGY.md "Load test dRofus data from file".
-# ---------------------------------------------------------------------------
 [sources.drofus]
 type = "file"
 path = "../drofus.csv"
 
-# ---------------------------------------------------------------------------
-# Classification hierarchy, outermost tier first. Each tier names a code
-# and/or a name property (at least one, validated at startup) to resolve
-# against a room. See STRATEGY.md "Establish a room classification hierarchy".
-# These reference dRofus-joined field names as an example of shared/project
-# parameters a real project might key on -- swap for whatever properties your
-# rooms actually carry.
-# ---------------------------------------------------------------------------
 [[hierarchy]]
 name = "Building"
 code_property = "d_building_code"
@@ -63,37 +23,20 @@ name_property = "d_building_name"
 name = "Department"
 code_property = "Department"
 
-# ---------------------------------------------------------------------------
-# Canonical property name -> per-source raw property name. lookup_property
-# (used by both the dRofus join and the classifier above) resolves a
-# canonical name through this table for the pushing model's `source`; with no
-# matching entry it falls back to matching the name verbatim -- which is all
-# a single, English-language Revit source ever needs. This table earns its
-# keep once a second producer exists (e.g. IFC, or a non-English Revit UI)
-# and the same concept lives under a different raw name per source.
-# ---------------------------------------------------------------------------
 [[builtin_properties]]
 canonical = "Area"
-by_source = { revit = "Area" }
+
+[builtin_properties.by_source]
+revit = "Area"
 
 [[builtin_properties]]
 canonical = "Number"
-by_source = { revit = "Number" }
+
+[builtin_properties.by_source]
+revit = "Number"
 
 [[builtin_properties]]
 canonical = "Department"
-by_source = { revit = "Department" }
 
-# ---------------------------------------------------------------------------
-# Milestones: named dates with data snapshots explicitly pinned to them
-# (attachments: model id -> snapshot taken_at, ids as listed by
-# GET /projects/{id}/snapshots). The viewer's milestone dropdown offers these;
-# a pinned model is served from that snapshot instead of its latest. Usually
-# edited through the settings page rather than by hand. Example:
-#
-# [[milestones]]
-# name = "Design Freeze"
-# date = "2026-06-30"
-# [milestones.attachments]
-# "sample-model" = "2026-05-09T11:13:34Z"
-# ---------------------------------------------------------------------------
+[builtin_properties.by_source]
+revit = "Department"

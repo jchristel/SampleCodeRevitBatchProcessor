@@ -38,7 +38,11 @@ from duHast.Utilities.files_json import serialize_utf
 
 SERVER_URL = "http://127.0.0.1:5151/rooms"
 SERVER_URL_STREAM = "http://127.0.0.1:5151/rooms/stream"
-SERVER_URL_PROJECTS = "http://127.0.0.1:5151/projects"
+# The settings endpoint, NOT /projects: a push target must be a *registered*
+# project, and /projects lists only projects that already have stored
+# snapshots -- which a project can only get by being pushed to first. See
+# fetch_projects.
+SERVER_URL_PROJECTS = "http://127.0.0.1:5151/api/settings/projects"
 SCHEMA_VERSION = 5
 
 # Which producer this script feeds the server from. The server resolves
@@ -234,15 +238,33 @@ def write_ndjson_line(gz, obj):
 def fetch_projects(url=SERVER_URL_PROJECTS):
     """GET the server's registered project list and report it as
     `(ok, status, text)`, the same tuple shape the post functions use so the
-    caller branches uniformly. On success `text` is the parsed list of
-    `{"id", "name"}` dicts; on any failure it's an error string.
+    caller branches uniformly. On success `text` is a list of `{"id", "name"}`
+    dicts; on any failure it's an error string.
 
     A push must target a project the server has a registered settings bundle
-    for (the server 422s otherwise -- see roommate's `validate_ingest`), so
-    this list is the authoritative set of ids a push can use. An empty list
-    (`200 []`) is a *success* the caller interprets as "no project onboarded
-    yet" (a hard stop for the producer), not a failure; a 2xx whose body isn't
-    a JSON list is a genuine failure (unexpected server shape)."""
+    for (the server 422s otherwise -- see roommate's `validate_ingest`), so the
+    authoritative set of ids a push can use is the set of settings files:
+    `/api/settings/projects`. This deliberately does NOT use `/projects`, which
+    answers a different question -- "which projects have rooms to look at" (it
+    derives its list from stored snapshots, for the viewer's picker). Asking it
+    here is a chicken-and-egg: a newly onboarded project has no snapshots, so
+    it would never be offered, so it could never receive the first push that
+    would make it appear.
+
+    Settings files are the wire shape here, so this normalises them for the
+    caller: `name` is the file's authored display name, falling back to the id
+    when it sets none (absence is a normal state server-side, so the fallback
+    is required, not defensive). That name is what the caller sends back as
+    `project.name`, which the server writes into its storage manifest and the
+    viewer shows -- so the settings file, not this script, is what names a
+    project. Entries carrying a parse `error` have no readable `project_id` and
+    so cannot be pushed to under any id -- they're dropped rather than offered
+    as un-selectable noise.
+
+    An empty list (`200 []`) is a *success* the caller interprets as "no
+    project onboarded yet" (a hard stop for the producer), not a failure; a 2xx
+    whose body isn't a JSON list is a genuine failure (unexpected server
+    shape)."""
     client = make_client()
     try:
         response = client.GetAsync(url).Result
@@ -251,11 +273,16 @@ def fetch_projects(url=SERVER_URL_PROJECTS):
         if not (200 <= status < 300):
             return (False, status, "server returned {}: {}".format(status, text))
         try:
-            projects = json.loads(text)
+            files = json.loads(text)
         except ValueError as e:
-            return (False, status, "could not parse /projects response: {}".format(e))
-        if not isinstance(projects, list):
-            return (False, status, "unexpected /projects shape: {}".format(text))
+            return (False, status, "could not parse {} response: {}".format(url, e))
+        if not isinstance(files, list):
+            return (False, status, "unexpected {} shape: {}".format(url, text))
+        projects = [
+            {"id": f["project_id"], "name": f.get("name") or f["project_id"]}
+            for f in files
+            if f.get("project_id")
+        ]
         return (True, status, projects)
     except Exception as e:
         return (False, None, "could not reach {}: {}".format(url, unwrap_aggregate(e)))

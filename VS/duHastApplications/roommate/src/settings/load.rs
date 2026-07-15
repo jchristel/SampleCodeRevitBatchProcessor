@@ -60,6 +60,18 @@ pub fn load_settings(path: &PathBuf) -> anyhow::Result<Settings> {
         anyhow::bail!("settings file {} has an empty project_id", path.display());
     }
 
+    // A present-but-blank name is a mistake, not a way to say "no name":
+    // omitting the key is. Caught here rather than tolerated, since the
+    // alternative is every consumer rendering an empty label.
+    if let Some(name) = &settings.name {
+        if name.trim().is_empty() {
+            anyhow::bail!(
+                "settings file {} has an empty name — omit the key to display the project under its id",
+                path.display()
+            );
+        }
+    }
+
     // Fail fast on unkeyable or duplicate-named tiers — better a startup error
     // than a silent classification that groups every room under "undefined",
     // or a tier name lookup (e.g. "Building") silently picking the first of
@@ -154,6 +166,59 @@ code_property = "b"
 
         let settings = load_settings(&settings_path).unwrap();
         assert!(settings.sources.drofus.is_none());
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// A settings file with no `name` is legal — the project is then displayed
+    /// under its id by every consumer, which is the behaviour that predates
+    /// the field.
+    #[test]
+    fn test_settings_without_name_loads() {
+        let dir = std::env::temp_dir().join(format!("roommate-no-name-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let settings_path = dir.join("settings.toml");
+        std::fs::write(&settings_path, "project_id = \"p1\"\n").unwrap();
+
+        let settings = load_settings(&settings_path).unwrap();
+        assert!(settings.name.is_none());
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// A present-but-blank `name` fails load: omitting the key is how you say
+    /// "no name", so a blank one is a mistake — and tolerating it would have
+    /// every consumer render an empty label.
+    #[test]
+    fn test_blank_name_fails_load_settings() {
+        let dir = std::env::temp_dir().join(format!("roommate-blank-name-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let settings_path = dir.join("settings.toml");
+        std::fs::write(&settings_path, "project_id = \"p1\"\nname = \"   \"\n").unwrap();
+
+        let result = load_settings(&settings_path);
+        assert!(result.is_err());
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// `name` survives a TOML round-trip in a position TOML accepts: serde
+    /// emits fields in declaration order, so a scalar declared below a table
+    /// (`sources`) would serialize into a file that no longer parses.
+    #[test]
+    fn test_name_round_trips_through_toml() {
+        let dir = std::env::temp_dir().join(format!("roommate-name-rt-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let settings_path = dir.join("settings.toml");
+        std::fs::write(&settings_path, "project_id = \"p1\"\nname = \"Sample Hospital Job\"\n").unwrap();
+
+        let settings = load_settings(&settings_path).unwrap();
+        assert_eq!(settings.name.as_deref(), Some("Sample Hospital Job"));
+
+        let written = toml::to_string_pretty(&settings).unwrap();
+        std::fs::write(&settings_path, &written).unwrap();
+        let reloaded = load_settings(&settings_path).unwrap();
+        assert_eq!(reloaded.name.as_deref(), Some("Sample Hospital Job"));
 
         std::fs::remove_dir_all(&dir).ok();
     }

@@ -1,0 +1,13 @@
+project_id = "House A"
+is_default = false
+hierarchy = []
+builtin_properties = []
+room_label = [
+    "$name",
+    "$id",
+]
+milestones = []
+drofus_fields = []
+colour_plans = []
+
+[sources]

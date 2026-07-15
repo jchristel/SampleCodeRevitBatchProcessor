@@ -105,7 +105,7 @@ pub async fn ingest_rooms(
     State(state): State<Shared>,
     Json(mut payload): Json<RoomPayload>,
 ) -> Result<Json<IngestResponse>, (StatusCode, String)> {
-    let snapshot_generated = crate::contract::ensure_taken_at(&mut payload.snapshot);
+    let snapshot_id_generated = crate::contract::ensure_taken_at(&mut payload.snapshot);
     validate_ingest(
         &state,
         payload.schema_version,
@@ -132,7 +132,7 @@ pub async fn ingest_rooms(
         accepted: true,
         room_count: count,
         snapshot_taken_at,
-        snapshot_generated,
+        snapshot_id_generated,
     }))
 }
 
@@ -141,11 +141,17 @@ pub struct IngestResponse {
     pub accepted: bool,
     pub room_count: usize,
     /// The snapshot id this push was stored under — echoed back (or minted,
-    /// see `snapshot_generated`) so the pusher can associate follow-up
+    /// see `snapshot_id_generated`) so the pusher can associate follow-up
     /// uploads with this exact snapshot.
     pub snapshot_taken_at: String,
-    /// True when the server minted the id because the payload left it blank.
-    pub snapshot_generated: bool,
+    /// True when the server minted the id above because the payload left it
+    /// blank; false when the payload supplied one and the server used it.
+    ///
+    /// It describes the *id*, not the snapshot: whether a snapshot was stored
+    /// is reported by `accepted`/`room_count`. A producer that stamps its own
+    /// `taken_at` (as the Revit one always does) therefore sees `false` here
+    /// on every successful push.
+    pub snapshot_id_generated: bool,
 }
 
 /// Streaming ingest for very large models (NDJSON, see HANDOVER-streaming.md).
@@ -185,7 +191,7 @@ pub async fn ingest_rooms_stream(
 
     // Same resolve-then-pre-flight as the buffered path -- run as soon as the
     // envelope is parsed, before the (potentially large) room stream is read.
-    let snapshot_generated = crate::contract::ensure_taken_at(&mut envelope.snapshot);
+    let snapshot_id_generated = crate::contract::ensure_taken_at(&mut envelope.snapshot);
     validate_ingest(
         &state,
         envelope.schema_version,
@@ -229,7 +235,7 @@ pub async fn ingest_rooms_stream(
         )
     })?;
 
-    Ok(Json(IngestResponse { accepted: true, room_count: count, snapshot_taken_at, snapshot_generated }))
+    Ok(Json(IngestResponse { accepted: true, room_count: count, snapshot_taken_at, snapshot_id_generated }))
 }
 
 /// `ServiceError` -> `StatusCode`, with no body -- matches what every read
@@ -506,7 +512,26 @@ mod tests {
         let state: Shared = std::sync::Arc::new(AppState::new(Box::new(MemStore::new()), single_project("p1"), None));
         let response = ingest_rooms(State(state), Json(payload)).await.unwrap();
         assert_eq!(response.0.snapshot_taken_at, good_ts);
-        assert!(!response.0.snapshot_generated);
+        assert!(!response.0.snapshot_id_generated);
+    }
+
+    /// The ingest response's JSON keys are the producer-facing contract (the
+    /// pyRevit client reads this body), so they're asserted as *text*: the
+    /// Rust-side assertions elsewhere in this module would survive a rename
+    /// that silently broke every consumer.
+    #[test]
+    fn test_ingest_response_wire_keys() {
+        let json = serde_json::to_string(&IngestResponse {
+            accepted: true,
+            room_count: 26,
+            snapshot_taken_at: "2026-07-15T11:18:58.186000Z".to_string(),
+            snapshot_id_generated: false,
+        })
+        .unwrap();
+
+        assert!(json.contains(r#""snapshot_id_generated":false"#), "unexpected wire shape: {json}");
+        assert!(json.contains(r#""snapshot_taken_at":"2026-07-15T11:18:58.186000Z""#));
+        assert!(json.contains(r#""room_count":26"#));
     }
 
     /// A blank (or omitted -- serde defaults it to blank) snapshot id is no
@@ -526,7 +551,7 @@ mod tests {
 
         let response = ingest_rooms(State(state.clone()), Json(payload)).await.unwrap();
 
-        assert!(response.0.snapshot_generated);
+        assert!(response.0.snapshot_id_generated);
         assert!(crate::contract::validate_snapshot_id(&response.0.snapshot_taken_at).is_ok());
         // The store keyed the push under exactly the id the response reports.
         let key = crate::state::ModelKey { project_id: "p1".into(), model_id: "m1".into() };

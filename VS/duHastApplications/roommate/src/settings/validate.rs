@@ -96,8 +96,17 @@ pub fn validate_colour_plans(plans: &[ColourPlan]) -> anyhow::Result<()> {
         );
     }
     for plan in plans {
-        if let ColourMode::PropertyCompare { colouring: Colouring::Bands { bands }, .. } = &plan.mode {
-            validate_bands(&plan.name, bands)?;
+        match &plan.mode {
+            ColourMode::PropertyCompare { colouring: Colouring::Bands { bands }, .. } => {
+                validate_bands(&plan.name, bands)?;
+            }
+            // A date-range `format`, when given, must be a real strftime pattern
+            // — same dry-run as `drofus_fields`, so a typo fails at load rather
+            // than silently never parsing any room date at colour time.
+            ColourMode::DateRange { format: Some(format), .. } => {
+                validate_strftime(&plan.name, "date-range format", format)?;
+            }
+            _ => {}
         }
     }
     Ok(())
@@ -313,5 +322,25 @@ mod tests {
         // Open-high band not last → invalid (its +∞ upper overlaps the next).
         let open_high_mid = bands_plan("ohm", false, vec![band(Some(0.0), None), band(Some(10.0), Some(20.0))]);
         assert!(validate_colour_plans(&[open_high_mid]).is_err());
+    }
+
+    /// A date-range `format`, when given, must be a valid strftime pattern —
+    /// same dry-run as `drofus_fields`. Absent format is fine (native parsing).
+    #[test]
+    fn test_validate_colour_plans_daterange_format() {
+        let plan = |format: Option<&str>| ColourPlan {
+            name: "dates".to_string(),
+            active: false,
+            mode: ColourMode::DateRange {
+                property: "LastSync".to_string(),
+                near_date: "2026-06-30".to_string(),
+                scheme: "RdYlGn".to_string(),
+                format: format.map(|s| s.to_string()),
+            },
+        };
+        assert!(validate_colour_plans(&[plan(Some("%Y-%m-%d"))]).is_ok());
+        assert!(validate_colour_plans(&[plan(None)]).is_ok(), "no format = native parsing, fine");
+        let msg = format!("{:#}", validate_colour_plans(&[plan(Some("%Q-%d"))]).unwrap_err());
+        assert!(msg.contains("date-range format") && msg.contains("'dates'"), "{msg}");
     }
 }

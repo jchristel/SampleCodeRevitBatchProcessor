@@ -247,6 +247,7 @@
           <div class="rows" id="colourRows"></div>
           <button type="button" class="action" id="addColourBtn">+ colour plan</button>
           <datalist id="roomPropertyOptions"></datalist>
+          <datalist id="dateFormatOptions"></datalist>
         </section>
 
         <div id="saveBar">
@@ -443,13 +444,15 @@ function normalize(s) {
     revit_format: f.revit_format || "",
     qa: f.qa || "",
   }));
-  // Colour plans -> a flat editing shape. A plan whose mode isn't
-  // property-compare (a hand-authored hierarchy/date-range plan — not editable
-  // in this UI yet) is preserved *opaquely* (`opaque` + `_raw`) so opening and
-  // saving such a project round-trips it unchanged instead of clobbering it.
+  // Colour plans -> a flat editing shape covering all three modes. A plan of a
+  // genuinely unknown kind (forward-compat) is preserved *opaquely* (`opaque` +
+  // `_raw`) so it round-trips unchanged rather than being clobbered on save.
+  // The single editing object carries fields for every mode; `kind` selects
+  // which the row renders and `colourPlanToWire` reads.
   s.colour_plans = (s.colour_plans || []).map(p => {
     const m = p.mode || {};
-    if (m.kind !== "propertycompare") {
+    const kind = m.kind || "propertycompare";
+    if (kind !== "propertycompare" && kind !== "hierarchy" && kind !== "daterange") {
       return { name: p.name || "", active: !!p.active, opaque: true, _raw: p };
     }
     const c = m.colouring || {};
@@ -457,18 +460,28 @@ function normalize(s) {
       name: p.name || "",
       active: !!p.active,
       opaque: false,
+      kind,
+      // property-compare
       property_a: m.property_a || "",
       property_b: m.property_b || "",
       op: m.op || "diff",
       style: c.style || "match",
       tolerance: typeof c.tolerance === "number" ? c.tolerance : 0,
-      scheme: c.scheme || "RdBu",
+      compareScheme: c.scheme || "RdBu",
       // Bands editing shape: keep lo/hi as strings so an empty input = open end.
       bands: (c.bands || []).map(b => ({
         lo: b.lo == null ? "" : String(b.lo),
         hi: b.hi == null ? "" : String(b.hi),
         colour: b.colour || "#b4541f",
       })),
+      // hierarchy
+      tiers: Array.isArray(m.tiers) ? m.tiers.slice() : [],
+      hierScheme: kind === "hierarchy" ? (m.scheme || "Set2") : "Set2",
+      // date-range
+      property: m.property || "",
+      near_date: m.near_date || "",
+      dateScheme: kind === "daterange" ? (m.scheme || "RdYlGn") : "RdYlGn",
+      format: m.format || "",
     };
   });
   return s;
@@ -753,6 +766,12 @@ function setActiveColourPlan(target) {
 function renderColourPlans() {
   const rows = $("colourRows");
   const plans = current.settings.colour_plans;
+  // Date-range format hints: the strftime patterns the project's date-typed
+  // dRofus fields already declare (Revit room dates come from dRofus, so they
+  // share the format) — the author picks one instead of retyping.
+  const dateFormats = [...new Set((current.settings.drofus_fields || [])
+    .filter(f => f.type === "date" && f.format).map(f => f.format))];
+  $("dateFormatOptions").replaceChildren(...dateFormats.map(f => el("option", { value: f })));
   rows.replaceChildren();
   plans.forEach((plan, i) => {
     // Header row: active radio + name + remove/reorder. Shared radio name means
@@ -774,65 +793,127 @@ function renderColourPlans() {
 
     if (plan.opaque) {
       const kind = (plan._raw && plan._raw.mode && plan._raw.mode.kind) || "?";
-      rows.appendChild(el("div", { class: "row row-head", text: `↳ ${kind} plan — edit this one directly in the project TOML (not editable here yet)` }));
+      rows.appendChild(el("div", { class: "row row-head", text: `↳ ${kind} plan — unknown mode, edit this one directly in the project TOML` }));
       return;
     }
 
-    // Property-compare: A op B.
-    const opSelect = el("select", { title: "how A and B combine", onchange: (e) => { plan.op = e.target.value; } }, [
-      el("option", { value: "diff", text: "A − B (diff)" }),
-      el("option", { value: "ratio", text: "A ÷ B (ratio)" }),
+    // Mode selector: which of the three strategies this plan uses.
+    const modeSelect = el("select", { title: "what this plan colours by", onchange: (e) => { plan.kind = e.target.value; renderColourPlans(); } }, [
+      el("option", { value: "propertycompare", text: "property compare" }),
+      el("option", { value: "hierarchy", text: "hierarchy" }),
+      el("option", { value: "daterange", text: "date range" }),
     ]);
-    opSelect.value = plan.op;
-    rows.appendChild(el("div", { class: "row" }, [
-      el("span", { class: "row-head", text: "↳" }),
-      el("span", { text: "A" }), textInput(plan, "property_a", { size: "16", list: "roomPropertyOptions", placeholder: "Area" }),
-      opSelect,
-      el("span", { text: "B" }), textInput(plan, "property_b", { size: "16", list: "roomPropertyOptions", placeholder: "d_net_area" }),
-    ]));
+    modeSelect.value = plan.kind;
+    rows.appendChild(el("div", { class: "row" }, [el("span", { class: "row-head", text: "↳" }), el("span", { text: "mode" }), modeSelect]));
 
-    // Colouring sub-mode + its own controls.
-    const styleSelect = el("select", { title: "how the number becomes a colour", onchange: (e) => { plan.style = e.target.value; renderColourPlans(); } }, [
-      el("option", { value: "match", text: "match (2 colours)" }),
-      el("option", { value: "diverging", text: "diverging ramp" }),
-      el("option", { value: "bands", text: "bands" }),
-    ]);
-    styleSelect.value = plan.style;
-    const styleRow = [el("span", { class: "row-head", text: "↳" }), el("span", { text: "colour by" }), styleSelect];
-    if (plan.style === "match") {
-      styleRow.push(el("span", { text: "tolerance" }), textInput(plan, "tolerance", { size: "8", placeholder: "0.5" }));
-    } else if (plan.style === "diverging") {
-      const schemeSelect = el("select", { onchange: (e) => { plan.scheme = e.target.value; } },
-        ["RdBu", "RdYlGn"].map(s => el("option", { value: s, text: s })));
-      schemeSelect.value = plan.scheme;
-      styleRow.push(el("span", { text: "scheme" }), schemeSelect);
-    }
-    rows.appendChild(el("div", { class: "row" }, styleRow));
+    if (plan.kind === "propertycompare") renderPropertyComparePlan(rows, plan);
+    else if (plan.kind === "hierarchy") renderHierarchyPlan(rows, plan);
+    else if (plan.kind === "daterange") renderDateRangePlan(rows, plan);
+  });
+}
 
-    // Bands: editable [lo, hi) colour rows. Empty lo/hi = open end.
-    if (plan.style === "bands") {
-      plan.bands.forEach((b, j) => {
-        rows.appendChild(el("div", { class: "row" }, [
-          el("span", { class: "row-head", text: "↳↳" }),
-          el("span", { text: "[" }), textInput(b, "lo", { size: "6", placeholder: "−∞" }),
-          el("span", { text: "," }), textInput(b, "hi", { size: "6", placeholder: "+∞" }),
-          el("span", { text: ")" }),
-          el("input", { type: "color", value: /^#[0-9a-fA-F]{6}$/.test(b.colour) ? b.colour : "#b4541f",
-            oninput: (e) => { b.colour = e.target.value; } }),
-          el("button", { type: "button", class: "action icon", title: "remove band", text: "✕", onclick: () => {
-            plan.bands.splice(j, 1); renderColourPlans();
-          }}),
-        ]));
-      });
+function renderPropertyComparePlan(rows, plan) {
+  // A op B.
+  const opSelect = el("select", { title: "how A and B combine", onchange: (e) => { plan.op = e.target.value; } }, [
+    el("option", { value: "diff", text: "A − B (diff)" }),
+    el("option", { value: "ratio", text: "A ÷ B (ratio)" }),
+  ]);
+  opSelect.value = plan.op;
+  rows.appendChild(el("div", { class: "row" }, [
+    el("span", { class: "row-head", text: "↳" }),
+    el("span", { text: "A" }), textInput(plan, "property_a", { size: "16", list: "roomPropertyOptions", placeholder: "Area" }),
+    opSelect,
+    el("span", { text: "B" }), textInput(plan, "property_b", { size: "16", list: "roomPropertyOptions", placeholder: "d_net_area" }),
+  ]));
+
+  // Colouring sub-mode + its own controls.
+  const styleSelect = el("select", { title: "how the number becomes a colour", onchange: (e) => { plan.style = e.target.value; renderColourPlans(); } }, [
+    el("option", { value: "match", text: "match (2 colours)" }),
+    el("option", { value: "diverging", text: "diverging ramp" }),
+    el("option", { value: "bands", text: "bands" }),
+  ]);
+  styleSelect.value = plan.style;
+  const styleRow = [el("span", { class: "row-head", text: "↳" }), el("span", { text: "colour by" }), styleSelect];
+  if (plan.style === "match") {
+    styleRow.push(el("span", { text: "tolerance" }), textInput(plan, "tolerance", { size: "8", placeholder: "0.5" }));
+  } else if (plan.style === "diverging") {
+    const schemeSelect = el("select", { onchange: (e) => { plan.compareScheme = e.target.value; } },
+      ["RdBu", "RdYlGn"].map(s => el("option", { value: s, text: s })));
+    schemeSelect.value = plan.compareScheme;
+    styleRow.push(el("span", { text: "scheme" }), schemeSelect);
+  }
+  rows.appendChild(el("div", { class: "row" }, styleRow));
+
+  // Bands: editable [lo, hi) colour rows. Empty lo/hi = open end.
+  if (plan.style === "bands") {
+    plan.bands.forEach((b, j) => {
       rows.appendChild(el("div", { class: "row" }, [
         el("span", { class: "row-head", text: "↳↳" }),
-        el("button", { type: "button", class: "action", text: "+ band", onclick: () => {
-          plan.bands.push({ lo: "", hi: "", colour: "#b4541f" }); renderColourPlans();
+        el("span", { text: "[" }), textInput(b, "lo", { size: "6", placeholder: "−∞" }),
+        el("span", { text: "," }), textInput(b, "hi", { size: "6", placeholder: "+∞" }),
+        el("span", { text: ")" }),
+        el("input", { type: "color", value: /^#[0-9a-fA-F]{6}$/.test(b.colour) ? b.colour : "#b4541f",
+          oninput: (e) => { b.colour = e.target.value; } }),
+        el("button", { type: "button", class: "action icon", title: "remove band", text: "✕", onclick: () => {
+          plan.bands.splice(j, 1); renderColourPlans();
         }}),
-        el("span", { class: "row-head", text: "half-open [lo, hi); blank = open end; must be sorted & non-overlapping (server validates)" }),
       ]));
-    }
+    });
+    rows.appendChild(el("div", { class: "row" }, [
+      el("span", { class: "row-head", text: "↳↳" }),
+      el("button", { type: "button", class: "action", text: "+ band", onclick: () => {
+        plan.bands.push({ lo: "", hi: "", colour: "#b4541f" }); renderColourPlans();
+      }}),
+      el("span", { class: "row-head", text: "half-open [lo, hi); blank = open end; must be sorted & non-overlapping (server validates)" }),
+    ]));
+  }
+}
+
+function renderHierarchyPlan(rows, plan) {
+  // Participating tiers, drawn from the project's own hierarchy tiers (edited
+  // in the Hierarchy section above — same live model). Order is check order:
+  // first checked = parent (hue), second = child (tint), rest ignored.
+  const tierNames = (current.settings.hierarchy || []).map(t => (t.name || "").trim()).filter(Boolean);
+  if (tierNames.length === 0) {
+    rows.appendChild(el("div", { class: "row row-head", text: "↳ no hierarchy tiers defined — add tiers in the Hierarchy section first" }));
+    return;
+  }
+  tierNames.forEach(name => {
+    const box = el("input", { type: "checkbox", onchange: (e) => {
+      if (e.target.checked) { if (!plan.tiers.includes(name)) plan.tiers.push(name); }
+      else { plan.tiers = plan.tiers.filter(t => t !== name); }
+      renderColourPlans(); // refresh the "parent → child" summary line
+    }});
+    box.checked = plan.tiers.includes(name);
+    rows.appendChild(el("div", { class: "row" }, [
+      el("span", { class: "row-head", text: "↳" }),
+      el("label", { class: "field" }, [box, document.createTextNode(" " + name)]),
+    ]));
   });
+  rows.appendChild(el("div", { class: "row row-head", text: `parent (hue) → child (tint): ${plan.tiers.join(" → ") || "(none checked — pick at least the parent tier)"}` }));
+  const schemeSelect = el("select", { title: "qualitative palette for the parent hues", onchange: (e) => { plan.hierScheme = e.target.value; } },
+    ["Set2", "Paired"].map(s => el("option", { value: s, text: s })));
+  schemeSelect.value = plan.hierScheme;
+  rows.appendChild(el("div", { class: "row" }, [el("span", { class: "row-head", text: "↳" }), el("span", { text: "hue scheme" }), schemeSelect]));
+}
+
+function renderDateRangePlan(rows, plan) {
+  rows.appendChild(el("div", { class: "row" }, [
+    el("span", { class: "row-head", text: "↳" }),
+    el("span", { text: "date property" }), textInput(plan, "property", { size: "16", list: "roomPropertyOptions", placeholder: "LastSync" }),
+    el("span", { text: "near date" }),
+    el("input", { type: "date", value: /^\d{4}-\d{2}-\d{2}$/.test(plan.near_date) ? plan.near_date : "",
+      oninput: (e) => { plan.near_date = e.target.value; } }),
+  ]));
+  const schemeSelect = el("select", { title: "near = green end, far = red end", onchange: (e) => { plan.dateScheme = e.target.value; } },
+    ["RdYlGn", "RdBu"].map(s => el("option", { value: s, text: s })));
+  schemeSelect.value = plan.dateScheme;
+  rows.appendChild(el("div", { class: "row" }, [
+    el("span", { class: "row-head", text: "↳" }), el("span", { text: "scheme" }), schemeSelect,
+    el("span", { text: "date format" }),
+    textInput(plan, "format", { size: "22", list: "dateFormatOptions", placeholder: "(blank = ISO-8601)" }),
+  ]));
+  rows.appendChild(el("div", { class: "row row-head", text: "format is the strftime pattern the dates are in (reuse the dRofus date field's format); after near date → blue" }));
 }
 
 // ---------- dRofus source ----------
@@ -1009,33 +1090,43 @@ function toPayload() {
   };
 }
 
-// Rebuild one colour plan's wire shape from the flat editing model. An opaque
-// (non-property-compare) plan is emitted from its preserved `_raw` unchanged.
-// A band lo/hi is a number when the input parses, else null = open end (blank
-// or unparseable). The server does the real validation (sorted/disjoint, one
-// active); this just produces well-typed JSON.
+// Rebuild one colour plan's wire shape (server `ColourPlan`/`ColourMode`) from
+// the flat editing model, per `kind`. An opaque plan (unknown mode) is emitted
+// from its preserved `_raw` unchanged. The server does the real validation
+// (one active, bands sorted/disjoint, valid date format); this just produces
+// well-typed JSON.
 function colourPlanToWire(p) {
   if (p.opaque) return p._raw;
-  let colouring;
-  if (p.style === "match") {
-    colouring = { style: "match", tolerance: parseFloat(p.tolerance) || 0 };
-  } else if (p.style === "diverging") {
-    colouring = { style: "diverging", scheme: p.scheme };
+  let mode;
+  if (p.kind === "hierarchy") {
+    mode = { kind: "hierarchy", tiers: p.tiers.slice(), scheme: p.hierScheme };
+  } else if (p.kind === "daterange") {
+    mode = {
+      kind: "daterange",
+      property: p.property.trim(),
+      near_date: p.near_date.trim(),
+      scheme: p.dateScheme,
+      format: (p.format && p.format.trim()) ? p.format.trim() : null, // blank = native ISO parse
+    };
   } else {
-    const num = v => (v != null && String(v).trim() !== "" && Number.isFinite(parseFloat(v))) ? parseFloat(v) : null;
-    colouring = { style: "bands", bands: p.bands.map(b => ({ lo: num(b.lo), hi: num(b.hi), colour: b.colour })) };
-  }
-  return {
-    name: p.name.trim(),
-    active: !!p.active,
-    mode: {
+    let colouring;
+    if (p.style === "match") {
+      colouring = { style: "match", tolerance: parseFloat(p.tolerance) || 0 };
+    } else if (p.style === "diverging") {
+      colouring = { style: "diverging", scheme: p.compareScheme };
+    } else {
+      const num = v => (v != null && String(v).trim() !== "" && Number.isFinite(parseFloat(v))) ? parseFloat(v) : null;
+      colouring = { style: "bands", bands: p.bands.map(b => ({ lo: num(b.lo), hi: num(b.hi), colour: b.colour })) };
+    }
+    mode = {
       kind: "propertycompare",
       property_a: p.property_a.trim(),
       property_b: p.property_b.trim(),
       op: p.op,
       colouring,
-    },
-  };
+    };
+  }
+  return { name: p.name.trim(), active: !!p.active, mode };
 }
 
 async function save() {
@@ -1125,11 +1216,14 @@ $("addQaBtn").addEventListener("click", () => {
 });
 $("addColourBtn").addEventListener("click", () => {
   // A new plan defaults to property-compare/match, inactive (the user marks it
-  // active deliberately — and only one may be).
+  // active deliberately — and only one may be). Carries fields for every mode;
+  // `kind` selects which the row shows and `colourPlanToWire` emits.
   current.settings.colour_plans.push({
-    name: "", active: false, opaque: false,
+    name: "", active: false, opaque: false, kind: "propertycompare",
     property_a: "", property_b: "", op: "diff",
-    style: "match", tolerance: 0, scheme: "RdBu", bands: [],
+    style: "match", tolerance: 0, compareScheme: "RdBu", bands: [],
+    tiers: [], hierScheme: "Set2",
+    property: "", near_date: "", dateScheme: "RdYlGn", format: "",
   });
   renderColourPlans();
 });

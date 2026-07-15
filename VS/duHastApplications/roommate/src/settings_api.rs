@@ -550,6 +550,22 @@ bands = [
     { lo = 0.0, hi = 1.0, colour = "#e4ddc9" },
     { lo = 1.0, colour = "#b4541f" },
 ]
+
+[[colour_plans]]
+name = "By department"
+[colour_plans.mode]
+kind = "hierarchy"
+tiers = ["Building", "Department"]
+scheme = "Set2"
+
+[[colour_plans]]
+name = "By sync date"
+[colour_plans.mode]
+kind = "daterange"
+property = "LastSync"
+near_date = "2026-06-30"
+scheme = "RdYlGn"
+format = "%Y-%m-%d"
 "##,
         )
         .unwrap();
@@ -568,22 +584,35 @@ bands = [
         assert_eq!(reparsed.milestones[0].name, "Design Freeze");
         assert_eq!(reparsed.milestones[0].attachments["model-guid"], "2026-06-29T10:00:00Z");
 
-        // Colour plans survive the full TOML round-trip — including the nested
-        // internally-tagged `mode`/`colouring` enums and the `Bands` list (the
-        // serde-tagging decision this test is the gate for).
-        assert_eq!(reparsed.colour_plans.len(), 1);
-        let plan = &reparsed.colour_plans[0];
-        assert_eq!(plan.name, "Area check");
-        assert!(plan.active);
-        match &plan.mode {
-            crate::settings::ColourMode::PropertyCompare { property_a, colouring, .. } => {
+        // Colour plans survive the full TOML round-trip — all three modes'
+        // nested internally-tagged `mode`/`colouring` enums, the `Bands` list,
+        // and the date-range `format` (the serde-tagging decision this test is
+        // the gate for).
+        use crate::settings::{ColourMode, Colouring};
+        assert_eq!(reparsed.colour_plans.len(), 3);
+        match &reparsed.colour_plans[0].mode {
+            ColourMode::PropertyCompare { property_a, colouring, .. } => {
                 assert_eq!(property_a, "Area");
                 match colouring {
-                    crate::settings::Colouring::Bands { bands } => assert_eq!(bands.len(), 3),
+                    Colouring::Bands { bands } => assert_eq!(bands.len(), 3),
                     other => panic!("expected Bands, got {other:?}"),
                 }
             }
             other => panic!("expected PropertyCompare, got {other:?}"),
+        }
+        match &reparsed.colour_plans[1].mode {
+            ColourMode::Hierarchy { tiers, scheme } => {
+                assert_eq!(tiers, &vec!["Building".to_string(), "Department".to_string()]);
+                assert_eq!(scheme, "Set2");
+            }
+            other => panic!("expected Hierarchy, got {other:?}"),
+        }
+        match &reparsed.colour_plans[2].mode {
+            ColourMode::DateRange { property, format, .. } => {
+                assert_eq!(property, "LastSync");
+                assert_eq!(format.as_deref(), Some("%Y-%m-%d"));
+            }
+            other => panic!("expected DateRange, got {other:?}"),
         }
     }
 

@@ -250,21 +250,33 @@ pub struct ColourPlan {
 #[serde(tag = "kind", rename_all = "lowercase")]
 pub enum ColourMode {
     /// Categorical hue per parent hierarchy tier, tint/shade per child tier.
-    /// `tiers` names which hierarchy tiers participate (outermost first);
-    /// `scheme` names a bundled qualitative palette. (Viewer follow-up.)
+    /// `tiers` names which hierarchy tiers participate, parent first (the
+    /// browser reads each room's server-resolved `classification` path and
+    /// matches by tier name); `scheme` names a bundled qualitative palette for
+    /// the parent hues (child tint/shade is derived by lightening, no second
+    /// scheme). One tier → hue only; a room whose parent tier is `undefined`
+    /// renders "no data" grey.
     Hierarchy {
         tiers: Vec<String>,
         scheme: String,
     },
 
     /// Colour by proximity of a date-typed `property` to `near_date`: nearest
-    /// green, furthest red, future blue. `property` is a canonical/room
-    /// property name resolved browser-side the same way labels are; `scheme`
-    /// names a bundled diverging palette. (Viewer follow-up.)
+    /// green, furthest red, a date after `near_date` blue. `property` is a
+    /// canonical/room property name resolved browser-side the same way labels
+    /// are; `scheme` names a bundled diverging palette. `format` is the
+    /// strftime pattern the room's date strings are in — the *same* pattern the
+    /// dRofus date column uses (Revit room dates originate from dRofus), so an
+    /// author reuses the `drofus_fields` `format` rather than inventing one;
+    /// omitted means the browser falls back to native ISO-8601 parsing, and an
+    /// unparseable value just renders "no data" grey. Validated as a real
+    /// strftime pattern at load when present (see `validate_colour_plans`).
     DateRange {
         property: String,
         near_date: String,
         scheme: String,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        format: Option<String>,
     },
 
     /// Compare two room properties. `op` derives one number per room

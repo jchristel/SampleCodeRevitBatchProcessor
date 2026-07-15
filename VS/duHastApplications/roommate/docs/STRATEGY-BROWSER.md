@@ -100,13 +100,23 @@ side should shape future server endpoints.
   default `--fill`; "No colour" leaves the class fill untouched, preserving
   today's look and hover. A room the plan can't colour — missing/unparseable
   property, ratio-by-zero, a value in a gap between bands — renders a "no data"
-  grey, never an error. **Scope:** only *property compare* (compare two room
-  properties → match / diverging / bands) is wired this pass; hierarchy and
-  date-range modes persist and validate but render flat grey (a documented
-  follow-up), so an authored plan of those kinds degrades safely. The
-  number→colour step (`Colouring`) is kept separate from the number-derivation
-  step so a future milestone-compare mode (same property across two snapshots)
-  reuses match/diverging/bands untouched.
+  grey, never an error. **All three modes are wired:**
+  - *property compare* — compare two room properties (`A op B`) → match /
+    diverging / bands. The number→colour step (`Colouring`) is kept separate
+    from the number-derivation step so a future milestone-compare mode (same
+    property across two snapshots) reuses match/diverging/bands untouched.
+  - *hierarchy* — categorical hue per parent tier, tint/shade per child. Reads
+    each room's server-resolved `classification` path (already on the payload —
+    no client re-derivation): `tiers[0]` → a distinct qualitative hue per value
+    (Set2/Paired), `tiers[1]` → a lightened tint of it. An undefined parent
+    tier → grey.
+  - *date-range* — proximity of a date-typed property to `near_date`: after it
+    → a fixed blue, at/before → green (near) to red (far), auto-scaled to the
+    level's furthest past. Dates parse by an optional strftime `format` — the
+    *same* pattern the dRofus date column uses, since Revit room dates originate
+    from dRofus (the editor pre-fills it from the project's `date`-typed
+    `drofus_fields`) — falling back to native ISO-8601 when omitted; an
+    unparseable value → grey.
 - **Settings page (`settings.html`).** A sibling static page, linked from the
   viewer's header, over [Server](STRATEGY-SERVER.md)'s `/api/settings` routes:
   a project-file list on the left (a file that fails to parse still gets a
@@ -136,14 +146,18 @@ side should shape future server endpoints.
   per uploaded dRofus snapshot from `GET /projects/{id}/drofus/snapshots`),
   shown only when the project actually has uploaded dRofus snapshots to
   choose from — a `file`-sourced or upload-less project has nothing to pin,
-  so the control is simply absent. The **colour plans** section edits
-  property-compare plans (name, an active *radio* so the browser enforces the
-  one-active rule the server validates, A/B property inputs drawn from a
-  datalist of the project's real room property keys fetched from `/rooms`, the
-  op, and the colouring sub-mode — match tolerance / diverging scheme / add-
-  remove band rows). A plan of a not-yet-editable mode (a hand-authored
-  hierarchy/date-range plan) is shown read-only and round-trips unchanged
-  rather than being clobbered on save. Same visual
+  so the control is simply absent. The **colour plans** section edits all three
+  modes: a name, an active *radio* (the browser enforces the one-active rule the
+  server also validates), a mode selector, and mode-specific controls —
+  *property compare*: A/B property inputs (datalist of the project's real room
+  keys from `/rooms`), op, and colouring sub-mode (match tolerance / diverging
+  scheme / add-remove band rows); *hierarchy*: an ordered checklist of the
+  project's own hierarchy tiers (parent first) + a qualitative scheme;
+  *date-range*: a date-property input, a near-date picker, a scheme, and a
+  strftime format input pre-filled from the project's `date`-typed
+  `drofus_fields` (blank = native ISO). A plan of a genuinely unknown mode
+  (forward-compat) is shown read-only and round-trips unchanged rather than
+  being clobbered on save. Same visual
   language as the viewer — the `:root` tokens are copied verbatim rather
   than extracted, an accepted duplication while it's just two sibling pages.
 

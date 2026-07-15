@@ -359,9 +359,10 @@ each module carrying its rationale in a header, all with unit tests.
   a `Bands` colouring must be a sorted, disjoint partition (`[lo, hi)`, each
   band's `hi <=` the next's `lo`, open ends only at the extremes) — rejecting
   overlap/out-of-order loudly so the browser can do a simple ordered
-  first-match scan. Property names are *not* validated (source-native, vary —
-  an unresolvable name just renders grey client-side, the `room_label`
-  precedent). The mode/colouring enums are internally-tagged struct variants
+  first-match scan; and a date-range `format`, when given, must be a valid
+  strftime pattern (same dry-run as `drofus_fields`). Property names are *not*
+  validated (source-native, vary — an unresolvable name just renders grey
+  client-side, the `room_label` precedent). The mode/colouring enums are internally-tagged struct variants
   (`ColourMode` on `kind`, `Colouring` on `style`), which round-trip through
   toml exactly like `DrofusSource` — verified by `test_settings_toml_round_trip`.
 

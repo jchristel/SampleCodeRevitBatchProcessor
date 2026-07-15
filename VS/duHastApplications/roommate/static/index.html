@@ -281,20 +281,21 @@ function roomsOnLevel(payload, levelId) {
 // ============================ colour plans ============================
 //
 // All client-side by design: the server stores `colour_plans` verbatim and
-// computes nothing (see settings `colour_plans`). Only property-compare is
-// wired this pass; hierarchy/date-range are authored but render flat grey (a
-// documented follow-up), so an authored plan of those kinds degrades safely
-// rather than throwing.
+// computes nothing (see settings `colour_plans`). All three modes —
+// property-compare, hierarchy, date-range — are wired here.
 
 // Fill for a room the active plan can't colour — missing/unparseable property,
-// ratio-by-zero, a value in a gap between bands, or an unimplemented mode. A
-// muted neutral, deliberately distinct from --fill so "not coloured by this
-// plan" reads as a state, not a bug.
+// ratio-by-zero, a value in a gap between bands, or an undefined hierarchy
+// tier. A muted neutral, deliberately distinct from --fill so "not coloured by
+// this plan" reads as a state, not a bug.
 const NO_DATA_COLOUR = "#c9c2b0";
 // match mode is binary and needs no palette — two fixed, colour-blind-safe
 // stops (ColorBrewer RdYlGn extremes): within tolerance vs. not.
 const MATCH_COLOUR = "#1a9850";     // green: |A−B| within tolerance
 const MISMATCH_COLOUR = "#d73027";  // red:   outside tolerance
+// date-range: a date after near_date is "future" — a fixed blue, separate from
+// the green→red near/far ramp (the RdYlGn scheme has no blue of its own).
+const FUTURE_COLOUR = "#2c7fb8";
 
 // A few ColorBrewer schemes as literal hex stops — no d3/npm, the browser
 // layer stays a zero-build vanilla page. Sampled at t∈[0,1] by `sampleScheme`.
@@ -306,8 +307,9 @@ const SCHEMES = {
   // Sequential single-hue ramps — for the (deferred) hierarchy tint/shade.
   Greens: ["#edf8e9", "#bae4b3", "#74c476", "#31a354", "#006d2c"],
   Blues: ["#eff3ff", "#bdd7e7", "#6baed6", "#3182bd", "#08519c"],
-  // Qualitative — for the (deferred) hierarchy parent hues. ColorBrewer Set2.
+  // Qualitative — hierarchy parent hues. ColorBrewer Set2 (8) / Paired (12).
   Set2: ["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f", "#e5c494", "#b3b3b3"],
+  Paired: ["#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a", "#ffff99", "#b15928"],
 };
 
 function hexToRgb(h) {
@@ -340,6 +342,94 @@ function numericProp(room, name) {
   return Number.isFinite(n) ? n : null;
 }
 
+// The k-th colour of a qualitative scheme (wraps if there are more categories
+// than stops — acceptable; two categories sharing a hue is a mild collision,
+// not a correctness bug).
+function qualitative(scheme, k) {
+  const stops = SCHEMES[scheme] || SCHEMES.Set2;
+  return stops[k % stops.length];
+}
+// Lighten a hex toward white by t∈[0,1] — the child tint/shade of a parent hue
+// in hierarchy mode (no second scheme needed).
+function lighten(hex, t) {
+  const [r, g, b] = hexToRgb(hex);
+  return rgbToHex(r + (255 - r) * t, g + (255 - g) * t, b + (255 - b) * t);
+}
+
+// A room's value at one hierarchy tier, from the server-resolved
+// `classification` path (already on the payload — the server does the
+// hierarchy resolution, this just reads it). `null` when the tier is undefined
+// for this room (or absent) — the caller renders grey. Prefers the code, falls
+// back to the name (a tier resolves when either is present).
+function classKey(room, tierName) {
+  const tv = (room.classification || []).find(t => t.tier === tierName);
+  if (!tv || tv.undefined) return null;
+  return tv.code != null ? tv.code : (tv.name != null ? tv.name : null);
+}
+
+// A room's raw date-property string, or null if absent/empty.
+function dateProp(room, name) {
+  const p = room.properties && room.properties[name];
+  return p && p.value != null && p.value !== "" ? p.value : null;
+}
+
+// Parse a date string to epoch-ms, or null. With a strftime `format` (the same
+// pattern the dRofus date column uses — Revit room dates come from dRofus),
+// parse by that; without one, fall back to the browser's native ISO-8601
+// parse. An unparseable value -> null -> "no data" grey (safe degrade).
+function parseDate(value, format) {
+  if (value == null || value === "") return null;
+  if (format) return parseStrftime(value, format);
+  const ms = Date.parse(value);
+  return Number.isFinite(ms) ? ms : null;
+}
+
+// A compact strftime parser for the specifiers dRofus/Revit dates use:
+// %Y %y %m %d %H %I %M %S %p %z and their %- no-pad variants, plus %%. Builds
+// a regex from the pattern (literals escaped), then assembles a UTC timestamp.
+// An unsupported specifier or a value that doesn't match returns null — we
+// never guess, so a mismatch degrades to grey rather than mis-colouring.
+function parseStrftime(value, pattern) {
+  const order = [];
+  let regex = "^";
+  for (let i = 0; i < pattern.length; i++) {
+    if (pattern[i] !== "%") { regex += pattern[i].replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); continue; }
+    i++;
+    let nopad = false;
+    if (pattern[i] === "-") { nopad = true; i++; }
+    const spec = pattern[i];
+    const num = nopad ? "\\d{1,2}" : "\\d{2}";
+    switch (spec) {
+      case "Y": regex += "(\\d{4})"; order.push("Y"); break;
+      case "y": regex += "(\\d{2})"; order.push("y"); break;
+      case "m": regex += `(${num})`; order.push("m"); break;
+      case "d": regex += `(${num})`; order.push("d"); break;
+      case "H": regex += `(${num})`; order.push("H"); break;
+      case "I": regex += `(${num})`; order.push("I"); break;
+      case "M": regex += `(${num})`; order.push("M"); break;
+      case "S": regex += `(${num})`; order.push("S"); break;
+      case "p": regex += "([AaPp][Mm])"; order.push("p"); break;
+      case "z": regex += "(Z|[+-]\\d{2}:?\\d{2})"; order.push("z"); break;
+      case "%": regex += "%"; break;
+      default: return null; // unsupported specifier -> refuse to guess
+    }
+  }
+  const m = new RegExp(regex + "$").exec(String(value).trim());
+  if (!m) return null;
+  const f = {};
+  order.forEach((k, idx) => f[k] = m[idx + 1]);
+  const year = f.Y != null ? +f.Y : (f.y != null ? 2000 + +f.y : null);
+  if (year == null) return null;
+  let hour = f.H != null ? +f.H : (f.I != null ? +f.I : 0);
+  if (f.p && f.I != null) hour = (+f.I % 12) + (/pm/i.test(f.p) ? 12 : 0);
+  let ms = Date.UTC(year, (f.m != null ? +f.m - 1 : 0), (f.d != null ? +f.d : 1), hour, (f.M != null ? +f.M : 0), (f.S != null ? +f.S : 0));
+  if (f.z && f.z !== "Z") {
+    const zm = /([+-])(\d{2}):?(\d{2})/.exec(f.z);
+    if (zm) ms += (zm[1] === "-" ? 1 : -1) * ((+zm[2]) * 60 + (+zm[3])) * 60000; // shift to UTC
+  }
+  return ms;
+}
+
 // The "derive one number per room" half of property-compare — kept separate
 // from the "map number -> colour" half on purpose: a future MilestoneCompare
 // mode would swap ONLY this step (sourcing B from a pinned snapshot instead of
@@ -354,26 +444,98 @@ function propertyCompareNumber(room, mode) {
   return a - b; // "diff" (default)
 }
 
-// Precompute per-level scale info once, before the room loop, so each
-// colourForRoom call is cheap. Today only the diverging colouring needs it:
-// the symmetric max |number| across the level, for a zero-centred auto-scale.
+// Precompute per-level scale/assignment info once, before the room loop, so
+// each colourForRoom call is cheap. What's needed is per mode:
+//  - property-compare/diverging: symmetric max |number| for the zero-centred scale;
+//  - hierarchy: a stable value->colour assignment (parent hues + child tints);
+//  - date-range: the parsed near_date and the furthest past distance for the ramp.
 function buildColourContext(rooms, plan) {
   const ctx = { maxAbs: 0 };
-  if (!plan || plan.mode.kind !== "propertycompare" || plan.mode.colouring.style !== "diverging") return ctx;
-  for (const room of rooms) {
-    const n = propertyCompareNumber(room, plan.mode);
-    if (n != null) ctx.maxAbs = Math.max(ctx.maxAbs, Math.abs(n));
+  if (!plan) return ctx;
+  const mode = plan.mode;
+
+  if (mode.kind === "propertycompare" && mode.colouring.style === "diverging") {
+    for (const room of rooms) {
+      const n = propertyCompareNumber(room, mode);
+      if (n != null) ctx.maxAbs = Math.max(ctx.maxAbs, Math.abs(n));
+    }
+  } else if (mode.kind === "hierarchy") {
+    // Parent tier -> a distinct qualitative hue; within each parent, child tier
+    // -> a tint of that hue. Distinct values collected across the level and
+    // *sorted* so the same value keeps the same colour across renders.
+    const parentTier = (mode.tiers || [])[0];
+    const childTier = (mode.tiers || [])[1];
+    const parents = new Set();
+    const childrenByParent = new Map(); // parentKey -> Set(childKey)
+    for (const room of rooms) {
+      const pk = parentTier ? classKey(room, parentTier) : null;
+      if (pk == null) continue;
+      parents.add(pk);
+      if (childTier) {
+        const ck = classKey(room, childTier);
+        if (ck != null) {
+          if (!childrenByParent.has(pk)) childrenByParent.set(pk, new Set());
+          childrenByParent.get(pk).add(ck);
+        }
+      }
+    }
+    ctx.parentHue = new Map();
+    [...parents].sort().forEach((pk, i) => ctx.parentHue.set(pk, qualitative(mode.scheme, i)));
+    ctx.childColour = new Map(); // `${pk} ${ck}` -> tinted hex
+    for (const [pk, set] of childrenByParent) {
+      const base = ctx.parentHue.get(pk);
+      const list = [...set].sort();
+      // Spread tints across 0..0.55 lighter than the parent hue, so a parent
+      // with children still reads as one hue family, children distinguishable.
+      list.forEach((ck, j) => ctx.childColour.set(`${pk} ${ck}`, lighten(base, list.length > 1 ? (j / (list.length - 1)) * 0.55 : 0)));
+    }
+    ctx.parentTier = parentTier;
+    ctx.childTier = childTier;
+  } else if (mode.kind === "daterange") {
+    ctx.nearMs = parseDate(mode.near_date, null); // near_date is a plain YYYY-MM-DD from the editor
+    ctx.maxPast = 0;
+    for (const room of rooms) {
+      const d = parseDate(dateProp(room, mode.property), mode.format);
+      if (d == null || ctx.nearMs == null) continue;
+      const delta = d - ctx.nearMs;
+      if (delta <= 0) ctx.maxPast = Math.max(ctx.maxPast, -delta); // past/at only; future goes blue
+    }
   }
   return ctx;
 }
 
 // Map a room to its fill under `plan`, or NO_DATA_COLOUR. Pure; branches on
-// plan.mode.kind. Only "propertycompare" is implemented this pass.
+// plan.mode.kind. `ctx` carries the per-level precompute from buildColourContext.
 function colourForRoom(room, plan, ctx) {
   const mode = plan.mode;
-  if (mode.kind !== "propertycompare") {
-    return NO_DATA_COLOUR; // TODO(follow-up): hierarchy + daterange rendering
+
+  if (mode.kind === "hierarchy") {
+    // Parent tier -> hue, child tier -> a tint of it (both assigned in ctx).
+    // Undefined parent tier -> grey; a room with a parent but no (or an
+    // unassigned) child value just takes the flat parent hue.
+    const pk = ctx.parentTier ? classKey(room, ctx.parentTier) : null;
+    if (pk == null) return NO_DATA_COLOUR;
+    if (ctx.childTier) {
+      const ck = classKey(room, ctx.childTier);
+      if (ck != null && ctx.childColour.has(`${pk} ${ck}`)) return ctx.childColour.get(`${pk} ${ck}`);
+    }
+    return ctx.parentHue.get(pk) || NO_DATA_COLOUR;
   }
+
+  if (mode.kind === "daterange") {
+    // Proximity to near_date: after it -> future (fixed blue); at/before it ->
+    // near (green) ... far (red) on the scheme, auto-scaled to the level's
+    // furthest past. Unparseable/missing date -> grey.
+    const d = parseDate(dateProp(room, mode.property), mode.format);
+    if (d == null || ctx.nearMs == null) return NO_DATA_COLOUR;
+    const delta = d - ctx.nearMs;
+    if (delta > 0) return FUTURE_COLOUR;
+    // t=1 at near_date (green end), t=0 at the furthest past (red end).
+    const t = ctx.maxPast > 0 ? 1 - (Math.abs(delta) / ctx.maxPast) : 1;
+    return sampleScheme(mode.scheme, t);
+  }
+
+  if (mode.kind !== "propertycompare") return NO_DATA_COLOUR; // unknown mode
   const number = propertyCompareNumber(room, mode);
   if (number == null) return NO_DATA_COLOUR;
 

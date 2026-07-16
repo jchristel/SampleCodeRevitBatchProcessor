@@ -73,6 +73,39 @@ pub struct Settings {
     #[serde(default)]
     pub is_default: bool,
 
+    /// The room property whose value identifies "the same room" when comparing
+    /// milestones (see `service::comparison`). Its own concept, deliberately
+    /// **not** the dRofus `link_property`: milestone comparison stands entirely
+    /// on its own — a project may compare milestones with no dRofus configured
+    /// at all — so the id key it matches rooms on is user-chosen and lives
+    /// here, separate from anything dRofus. `None` (the default, and every
+    /// project file predating this feature) is a real, reachable state: the
+    /// comparison then has no way to match rooms across milestones and reports
+    /// a "no comparison key configured" result rather than silently falling
+    /// back to dRofus or to room `id`. Resolved per-room the same canonical/
+    /// source way as every other property name, so a rename or a second source
+    /// needs no change here.
+    ///
+    /// A scalar declared before any table field so the TOML serializer emits it
+    /// ahead of `[sources]` etc. — the ordering footgun documented in
+    /// CODING-CONVENTIONS.md.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub comparison_key: Option<String>,
+
+    /// Ordered room property names compared across milestones, on rooms present
+    /// in both a compared milestone and the baseline. Persisted here (not passed
+    /// per request) with the same lifecycle as `room_label`/`milestones`, so it
+    /// survives and rides the settings save pipeline. Enumeration is off the
+    /// *baseline's* rooms at compare time (only properties on the baseline are
+    /// comparable); a name that doesn't resolve on the other side is reported as
+    /// a distinct "missing property" state, not a value difference. No startup
+    /// validation — an unresolvable name simply contributes nothing, the house
+    /// "absence is fine" discipline. Empty (the default) means no properties are
+    /// compared, only room add/remove. A value array, declared before any table
+    /// field for the same TOML-ordering reason as `comparison_key`.
+    #[serde(default)]
+    pub comparison_properties: Vec<String>,
+
     /// External sources joined onto this project's rooms. Defaulted so a
     /// project with no external sources at all is legal config — a project
     /// not using dRofus is normal, and the validation endpoint already

@@ -518,6 +518,8 @@ mod tests {
 project_id = "p1"
 is_default = true
 room_label = ["$name", "Area"]
+comparison_key = "Number"
+comparison_properties = ["Area", "Department"]
 
 [sources.drofus]
 type = "file"
@@ -584,6 +586,11 @@ format = "%Y-%m-%d"
         assert_eq!(reparsed.project_id, "p1");
         assert!(reparsed.is_default);
         assert_eq!(reparsed.room_label, vec!["$name".to_string(), "Area".to_string()]);
+        // Comparison settings survive the round-trip — both are declared before
+        // any table field, so the TOML serializer emits them as top-level
+        // key/values rather than folding them into `[sources.drofus]`.
+        assert_eq!(reparsed.comparison_key.as_deref(), Some("Number"));
+        assert_eq!(reparsed.comparison_properties, vec!["Area".to_string(), "Department".to_string()]);
         assert!(matches!(reparsed.sources.drofus, Some(DrofusSource::File { .. })));
         assert_eq!(reparsed.hierarchy.len(), 1);
         assert_eq!(reparsed.builtin_properties.len(), 1);

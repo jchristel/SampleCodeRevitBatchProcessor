@@ -16,9 +16,9 @@ use tower_http::{cors::CorsLayer, decompression::RequestDecompressionLayer, serv
 
 use roommate::bootstrap::build_state;
 use roommate::handlers::{
-    get_drofus_latest, get_drofus_snapshots, get_model_latest_snapshot, get_project_buildings,
-    get_project_milestones, get_project_snapshots, get_project_validation, get_projects, get_rooms,
-    ingest_rooms, ingest_rooms_stream,
+    compare_project_milestones, get_drofus_latest, get_drofus_snapshots, get_model_latest_snapshot,
+    get_project_buildings, get_project_milestones, get_project_snapshots, get_project_validation,
+    get_projects, get_rooms, ingest_rooms, ingest_rooms_stream,
 };
 use roommate::settings_api::{
     http_create_project, http_drofus_check, http_get_project, http_list_projects, http_update_project,
@@ -87,6 +87,10 @@ async fn main() -> anyhow::Result<()> {
         // Milestones: named dated pins over snapshots, defined per project in
         // its settings file; the viewer's dropdown reads this list.
         .route("/projects/{id}/milestones", get(get_project_milestones))
+        // Milestone comparison: a baseline-vs-each-other diff of rooms and a
+        // user-defined property set. POST (not GET) for its list body — see
+        // `handlers::compare_project_milestones`.
+        .route("/projects/{id}/comparison", post(compare_project_milestones))
         .route(
             "/projects/{project_id}/models/{model_id}/snapshots/latest",
             get(get_model_latest_snapshot),

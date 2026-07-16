@@ -38,7 +38,7 @@ use rmcp::{
 };
 
 use roommate::bootstrap::build_state;
-use roommate::service::{drofus, milestones, projects, rooms, snapshots, validation, ServiceError};
+use roommate::service::{comparison, drofus, milestones, projects, rooms, snapshots, validation, ServiceError};
 use roommate::settings_api::{self, SettingsError};
 use roommate::state::Shared;
 use roommate::DEFAULT_HTTP_ADDR;
@@ -106,6 +106,19 @@ fn to_mcp_error(err: ServiceError) -> McpError {
             McpError::internal_error(e.to_string(), None)
         }
     }
+}
+
+#[derive(Debug, serde::Deserialize, schemars::JsonSchema)]
+struct CompareMilestonesParams {
+    /// The project id, as returned by `list_projects`.
+    project_id: String,
+    /// The baseline milestone name (from `list_milestones`) every other is
+    /// compared against.
+    baseline: String,
+    /// The milestone names to compare against the baseline. Any equal to the
+    /// baseline is skipped.
+    #[serde(default)]
+    others: Vec<String>,
 }
 
 #[derive(Debug, serde::Deserialize, schemars::JsonSchema)]
@@ -185,6 +198,18 @@ impl RoommateMcp {
     #[tool(description = "List one project's milestones: named dates with data snapshots pinned to them, newest first — each carries its model-pin count and its pinned dRofus snapshot id (drofus_snapshot) when one is set. Pass a milestone's name to get_rooms to view the project as captured at that milestone, rooms AND dRofus.")]
     fn list_milestones(&self, Parameters(p): Parameters<ProjectIdParams>) -> Result<CallToolResult, McpError> {
         let result = milestones::list_milestones(&self.state, &p.project_id).map_err(to_mcp_error)?;
+        json_result(&result)
+    }
+
+    /// Compares N milestones against a baseline for one project -- see
+    /// `service::comparison::compare_milestones`. A project with no
+    /// `comparison_key` configured returns `comparison_key_configured: false`.
+    #[tool(description = "Compare milestones for one project: one baseline milestone versus each of the others (a star diff, not all-pairs). \
+                          Reports rooms added and removed relative to the baseline, and per-property differences on rooms present in both, \
+                          over the project's configured comparison property set. Rooms are matched by the project's user-defined comparison_key \
+                          property (its own setting, NOT the dRofus link property); if none is configured the result is comparison_key_configured: false.")]
+    fn compare_milestones(&self, Parameters(p): Parameters<CompareMilestonesParams>) -> Result<CallToolResult, McpError> {
+        let result = comparison::compare_milestones(&self.state, &p.project_id, &p.baseline, &p.others).map_err(to_mcp_error)?;
         json_result(&result)
     }
 

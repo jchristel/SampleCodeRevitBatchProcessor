@@ -55,6 +55,15 @@ pub struct RoomResponse {
     /// The viewer renders whatever's here without needing to know property
     /// names itself.
     pub label: Vec<String>,
+
+    /// The owning model's `source` (e.g. "revit"). Carried so a downstream
+    /// consumer — `service::comparison` — can resolve this room's canonical
+    /// property names against the project's `builtin_properties` exactly the
+    /// way assembly already did, rather than re-deriving it. Not part of the
+    /// wire shape (the viewer never needs it), so skipped from serialization;
+    /// the /rooms JSON is byte-for-byte unchanged.
+    #[serde(skip)]
+    pub source: String,
 }
 
 /// Resolve one room's label fields from the configured, ordered name list.
@@ -106,7 +115,7 @@ fn assemble_room(bundle: &ProjectSettings, drofus: Option<&DrofusData>, room: &R
 
     let label = resolve_label_fields(room, &bundle.room_label, source, &bundle.builtin_properties);
 
-    RoomResponse { room: room.clone(), drofus, classification, label }
+    RoomResponse { room: room.clone(), drofus, classification, label, source: source.to_string() }
 }
 
 /// Sentinel `building` key for rooms whose "Building" tier didn't resolve —
@@ -500,6 +509,8 @@ mod tests {
             room_label: vec!["$name".to_string(), "$id".to_string()],
             drofus_fields: vec![],
             milestones: vec![],
+            comparison_key: None,
+            comparison_properties: vec![],
         }
     }
 

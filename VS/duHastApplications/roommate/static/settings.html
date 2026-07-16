@@ -150,6 +150,7 @@
 <body>
   <header>
     <h1>Room Plan · Settings</h1>
+    <a href="/comparison.html">compare</a>
     <a href="/">← viewer</a>
   </header>
   <main>
@@ -318,6 +319,11 @@ function blankSettings() {
     milestones: [],
     drofus_fields: [],
     colour_plans: [],
+    // Milestone-comparison config is edited on comparison.html, not here; this
+    // page has no UI for it but must carry it through a save (toPayload rebuilds
+    // the whole Settings, so an omitted field would be dropped on the next save).
+    comparison_key: null,
+    comparison_properties: [],
   };
 }
 
@@ -1095,6 +1101,10 @@ function toPayload() {
       qa: opt(f.qa),
     })),
     colour_plans: s.colour_plans.map(colourPlanToWire),
+    // Preserved, not edited here — see blankSettings. Carried straight from
+    // current.settings so a save on this page never clobbers what comparison.html set.
+    comparison_key: opt(s.comparison_key),
+    comparison_properties: s.comparison_properties || [],
   };
 }
 

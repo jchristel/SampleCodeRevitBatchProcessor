@@ -21,6 +21,7 @@ use tokio::io::AsyncBufReadExt;
 use tokio_util::io::StreamReader;
 
 use crate::contract::{Room, RoomPayload, StreamEnvelope, SUPPORTED_SCHEMA};
+use crate::service::comparison::{self, ComparisonResponse};
 use crate::service::drofus::{DrofusSnapshotInfo, DrofusSnapshotList};
 use crate::service::milestones::MilestonesResponse;
 use crate::service::projects::{BuildingsResponse, ProjectSummary};
@@ -380,6 +381,32 @@ pub async fn get_project_validation(
     Ok(Json(report))
 }
 
+/// The baseline milestone plus the milestones to compare against it. A POST
+/// body rather than query params because the compared set is a list (repeated
+/// query keys don't deserialize cleanly, and milestone names can contain any
+/// character) — the same POST-that-reads shape `drofus-check` uses.
+#[derive(Deserialize)]
+pub struct ComparisonRequest {
+    pub baseline: String,
+    #[serde(default)]
+    pub others: Vec<String>,
+}
+
+/// Milestone comparison for one project — see
+/// `service::comparison::compare_milestones`. A read, but POST-shaped for its
+/// list input. A project with no `comparison_key` configured returns 200 with
+/// `comparison_key_configured: false` (a real state the client renders), not an
+/// error.
+pub async fn compare_project_milestones(
+    State(state): State<Shared>,
+    Path(project_id): Path<String>,
+    Json(req): Json<ComparisonRequest>,
+) -> Result<Json<ComparisonResponse>, StatusCode> {
+    let result = comparison::compare_milestones(&state, &project_id, &req.baseline, &req.others)
+        .map_err(map_service_error)?;
+    Ok(Json(result))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -410,6 +437,8 @@ mod tests {
             room_label: vec!["$name".to_string(), "$id".to_string()],
             drofus_fields: vec![],
             milestones: vec![],
+            comparison_key: None,
+            comparison_properties: vec![],
         }
     }
 

@@ -82,6 +82,8 @@ mod tests {
             room_label: vec!["$name".to_string()],
             drofus_fields: vec![],
             milestones,
+            comparison_key: None,
+            comparison_properties: vec![],
         }
     }
 

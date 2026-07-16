@@ -7,6 +7,7 @@
 //! convention. That mapping is deliberately kept *out* of this module -- it
 //! belongs in the adapter, not the domain. See HANDOVER-service-layer.md.
 
+pub mod comparison;
 pub mod drofus;
 pub mod milestones;
 pub mod projects;

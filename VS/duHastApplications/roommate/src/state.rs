@@ -93,6 +93,16 @@ pub struct ProjectSettings {
     /// loaded from this project's settings. Read by the milestones listing
     /// and by `assemble_rooms`' milestone filter.
     pub milestones: Vec<Milestone>,
+
+    /// The user-chosen room property that identifies "the same room" across
+    /// milestones, or `None` when unset (see `Settings::comparison_key`). Read
+    /// by `service::comparison`; its own concept, independent of the dRofus
+    /// `link_property`.
+    pub comparison_key: Option<String>,
+
+    /// Ordered room property names compared across milestones (see
+    /// `Settings::comparison_properties`). Read by `service::comparison`.
+    pub comparison_properties: Vec<String>,
 }
 
 /// One immutable snapshot of every project's settings. Swapped wholesale

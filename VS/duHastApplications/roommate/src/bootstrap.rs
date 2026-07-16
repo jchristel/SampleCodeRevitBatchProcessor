@@ -99,6 +99,8 @@ pub fn load_project_bundle(path: &Path, store: &dyn SnapshotStore) -> anyhow::Re
         room_label: settings.room_label,
         drofus_fields: settings.drofus_fields,
         milestones: settings.milestones,
+        comparison_key: settings.comparison_key,
+        comparison_properties: settings.comparison_properties,
     };
     Ok((settings.project_id, settings.is_default, bundle))
 }

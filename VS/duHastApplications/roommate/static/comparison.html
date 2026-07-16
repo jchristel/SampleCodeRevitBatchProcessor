@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Room Plan · Milestone Comparison</title>
+<style>
+  /* Same visual language as index.html / settings.html — sibling pages, so the
+     :root tokens are copied verbatim rather than extracted. */
+  :root {
+    --paper: #f3efe6;
+    --ink: #1f2421;
+    --rule: #cfc7b4;
+    --fill: #e4ddc9;
+    --fill-hover: #d4c9a8;
+    --accent: #b4541f;
+    --error: #c98c86;
+    --ok: #5a7a4f;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--mono);
+    display: grid;
+    grid-template-rows: auto 1fr;
+  }
+
+  header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--ink);
+  }
+  header h1 {
+    font-size: 0.95rem; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; margin: 0;
+  }
+  header select.picker {
+    font-family: var(--mono); font-size: 0.72rem;
+    background: var(--paper); color: var(--ink);
+    border: 1px solid var(--ink); padding: 0.25rem 0.5rem;
+  }
+  header .links { margin-left: auto; display: flex; gap: 1rem; }
+  header .links a { color: var(--accent); font-size: 0.72rem; text-decoration: none; }
+  header .links a:hover { text-decoration: underline; }
+
+  main { display: grid; grid-template-columns: 340px 1fr; min-height: 0; }
+
+  /* --- left: config + milestone selection --- */
+  aside {
+    border-right: 1px solid var(--ink);
+    padding: 1.1rem 1.2rem 3rem;
+    overflow-y: auto;
+  }
+  aside.hidden, #results.hidden, .placeholder.hidden { display: none; }
+
+  section.block { margin-bottom: 1.6rem; }
+  section.block > h2 {
+    font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase;
+    margin: 0 0 0.15rem; border-bottom: 1px solid var(--rule); padding-bottom: 0.25rem;
+  }
+  section.block > .hint { font-size: 0.65rem; opacity: 0.6; margin: 0.15rem 0 0.6rem; }
+
+  label.field { display: flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; margin: 0.4rem 0; }
+  input[type="text"] {
+    font-family: var(--mono); font-size: 0.75rem; flex: 1;
+    background: #fff8; border: 1px solid var(--ink); color: var(--ink);
+    padding: 0.25rem 0.4rem;
+  }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; margin: 0.4rem 0 0.5rem; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    background: var(--fill); border: 1px solid var(--ink);
+    font-size: 0.72rem; padding: 0.15rem 0.2rem 0.15rem 0.5rem;
+  }
+  .chip button {
+    font-family: var(--mono); border: none; background: none; cursor: pointer;
+    color: var(--accent); font-size: 0.85rem; line-height: 1; padding: 0 0.15rem;
+  }
+  .add-row { display: flex; gap: 0.4rem; align-items: center; }
+
+  button.action {
+    font-family: var(--mono); font-size: 0.72rem;
+    background: var(--paper); color: var(--ink);
+    border: 1px solid var(--ink); padding: 0.3rem 0.6rem; cursor: pointer;
+  }
+  button.action:hover { background: var(--fill); }
+  button.action.primary { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+  button.action:disabled { opacity: 0.4; cursor: default; }
+
+  .milestone-list { display: grid; gap: 0.25rem; margin: 0.3rem 0; }
+  .milestone-list .row { display: grid; grid-template-columns: auto auto 1fr; gap: 0.5rem; align-items: center; font-size: 0.74rem; }
+  .milestone-list .row .date { opacity: 0.55; font-size: 0.66rem; }
+
+  .msg { font-size: 0.7rem; margin: 0.5rem 0; }
+  .msg.ok { color: var(--ok); }
+  .msg.err { color: var(--accent); }
+  .msg.hidden { display: none; }
+
+  /* --- right: results --- */
+  #results { padding: 1.25rem 1.5rem 3rem; overflow-y: auto; }
+  .placeholder { padding: 2rem; opacity: 0.6; font-size: 0.8rem; }
+
+  .banner {
+    border: 1px solid var(--accent); background: #fff6; color: var(--accent);
+    padding: 0.6rem 0.8rem; font-size: 0.74rem; margin-bottom: 1.2rem;
+  }
+  .cmp { border-top: 1px solid var(--rule); padding-top: 0.9rem; margin-top: 1.1rem; }
+  .cmp:first-of-type { border-top: none; margin-top: 0; }
+  .cmp h3 { font-size: 0.82rem; margin: 0 0 0.5rem; }
+  .cmp h3 .base { opacity: 0.55; font-weight: 400; }
+  .grp { margin: 0.5rem 0; }
+  .grp > h4 {
+    font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase;
+    opacity: 0.6; margin: 0 0 0.3rem;
+  }
+  ul { margin: 0; padding-left: 1.1rem; font-size: 0.74rem; }
+  li { margin-bottom: 0.2rem; }
+  .val { color: var(--accent); }
+  .arrow { opacity: 0.5; padding: 0 0.25rem; }
+  .miss { color: var(--accent); }
+  .added li::marker { color: var(--ok); }
+  .removed li::marker { color: var(--accent); }
+  .dup { color: var(--accent); font-size: 0.72rem; }
+  .none { opacity: 0.55; font-size: 0.74rem; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Milestone Comparison</h1>
+    <select class="picker hidden" id="projectSelect"></select>
+    <div class="links">
+      <a href="/">viewer</a>
+      <a href="/settings.html">settings</a>
+    </div>
+  </header>
+  <main>
+    <aside class="hidden" id="panel">
+      <section class="block">
+        <h2>Comparison key</h2>
+        <p class="hint">The room property whose value identifies "the same room"
+          across milestones. Its own setting — not the dRofus link property.
+          Without one, no comparison can run.</p>
+        <label class="field">
+          <input type="text" id="keyInput" list="propertyOptions" placeholder="e.g. Number" />
+        </label>
+      </section>
+
+      <section class="block">
+        <h2>Compared properties</h2>
+        <p class="hint">Room properties diffed on rooms present in both a
+          milestone and the baseline. Enumerated from the baseline; a property
+          absent on the other side is reported as "missing", not a difference.</p>
+        <div class="chips" id="propChips"></div>
+        <div class="add-row">
+          <input type="text" id="propInput" list="propertyOptions" placeholder="property name" />
+          <button class="action" id="addPropBtn" type="button">Add</button>
+        </div>
+      </section>
+
+      <section class="block">
+        <button class="action primary" id="saveConfigBtn" type="button">Save config</button>
+        <span class="msg hidden" id="configMsg"></span>
+      </section>
+
+      <section class="block">
+        <h2>Milestones</h2>
+        <p class="hint">Pick one baseline; check the others to compare against it.</p>
+        <div class="milestone-list" id="milestoneList"></div>
+        <button class="action primary" id="compareBtn" type="button" disabled>Compare</button>
+        <span class="msg hidden" id="compareMsg"></span>
+      </section>
+    </aside>
+
+    <div class="placeholder" id="placeholder">Select a project to begin.</div>
+    <div id="results" class="hidden"></div>
+  </main>
+
+  <datalist id="propertyOptions"></datalist>
+
+<script>
+const $ = (id) => document.getElementById(id);
+
+// --- tiny element helper, same spirit as settings.html's `el` ---
+function el(tag, attrs = {}, children = []) {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") node.className = v;
+    else if (k === "text") node.textContent = v;
+    else if (k.startsWith("on") && typeof v === "function") node.addEventListener(k.slice(2), v);
+    else if (v != null) node.setAttribute(k, v);
+  }
+  for (const c of [].concat(children)) if (c != null) node.append(c);
+  return node;
+}
+
+// --- api (same shape as settings.html) ---
+async function apiGet(url) {
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) throw new Error(await res.text() || `${url} -> ${res.status}`);
+  return res.json();
+}
+async function apiSend(method, url, body) {
+  const res = await fetch(url, {
+    method,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const text = await res.text();
+  return { ok: res.ok, status: res.status, text };
+}
+
+// --- state ---
+let activeProjectId = null;
+// The FULL Settings JSON for the active project, in the server's wire shape,
+// kept verbatim so a save PUTs it back unchanged except the two comparison
+// fields — no lossy round-trip through an editing model (that's what would let
+// a save here clobber, say, colour plans; we deliberately don't touch them).
+let currentSettings = null;
+let comparisonProperties = [];  // editing copy of currentSettings.comparison_properties
+
+// ---------- projects ----------
+async function loadProjects() {
+  let projects;
+  try {
+    projects = await apiGet("/projects");
+  } catch (err) {
+    return;
+  }
+  const sel = $("projectSelect");
+  sel.replaceChildren();
+  for (const p of projects) sel.append(el("option", { value: p.id, text: p.name }));
+  sel.classList.toggle("hidden", projects.length === 0);
+  if (projects.length && !projects.some(p => p.id === activeProjectId)) {
+    sel.value = projects[0].id;
+    selectProject(projects[0].id);
+  }
+}
+
+async function selectProject(projectId) {
+  activeProjectId = projectId;
+  $("placeholder").classList.add("hidden");
+  $("panel").classList.remove("hidden");
+  $("results").classList.add("hidden");
+  hide("configMsg"); hide("compareMsg");
+
+  // Load settings (for the comparison config), milestones, and property keys.
+  try {
+    const data = await apiGet(`/api/settings/projects/${encodeURIComponent(projectId)}`);
+    currentSettings = data.settings;
+  } catch (err) {
+    currentSettings = null;
+    show("configMsg", false, String(err.message || err));
+  }
+  $("keyInput").value = (currentSettings && currentSettings.comparison_key) || "";
+  comparisonProperties = (currentSettings && currentSettings.comparison_properties) ? [...currentSettings.comparison_properties] : [];
+  renderPropChips();
+
+  loadPropertyKeys(projectId);
+  loadMilestones(projectId);
+}
+
+// The union of property names on this project's rooms, for the two datalists —
+// same source settings.html uses. A free-text input still works if empty.
+async function loadPropertyKeys(projectId) {
+  let keys = [];
+  try {
+    const data = await apiGet(`/rooms?project=${encodeURIComponent(projectId)}`);
+    const set = new Set();
+    for (const room of (data.rooms || [])) for (const k of Object.keys(room.properties || {})) set.add(k);
+    keys = [...set].sort();
+  } catch (err) { keys = []; }
+  $("propertyOptions").replaceChildren(...keys.map(k => el("option", { value: k })));
+}
+
+// ---------- comparison config ----------
+function renderPropChips() {
+  const box = $("propChips");
+  box.replaceChildren();
+  if (comparisonProperties.length === 0) {
+    box.append(el("span", { class: "none", text: "none — only room add/remove will be reported" }));
+    return;
+  }
+  comparisonProperties.forEach((name, i) => {
+    box.append(el("span", { class: "chip" }, [
+      name,
+      el("button", { type: "button", title: "remove", onclick: () => { comparisonProperties.splice(i, 1); renderPropChips(); } }, ["×"]),
+    ]));
+  });
+}
+
+function addProperty() {
+  const v = $("propInput").value.trim();
+  if (!v || comparisonProperties.includes(v)) { $("propInput").value = ""; return; }
+  comparisonProperties.push(v);
+  $("propInput").value = "";
+  renderPropChips();
+}
+
+async function saveConfig() {
+  if (!currentSettings) { show("configMsg", false, "no settings loaded for this project"); return; }
+  const key = $("keyInput").value.trim();
+  // Mutate only the two comparison fields; everything else PUTs back verbatim.
+  currentSettings.comparison_key = key || null;
+  currentSettings.comparison_properties = [...comparisonProperties];
+
+  const result = await apiSend("PUT", `/api/settings/projects/${encodeURIComponent(activeProjectId)}`, currentSettings);
+  if (result.ok) {
+    const data = JSON.parse(result.text);
+    currentSettings = data.settings;
+    show("configMsg", true, "✓ saved & applied live");
+  } else {
+    // The server's 422 is the real validator — show it verbatim.
+    show("configMsg", false, `⚠ ${result.text}`);
+  }
+}
+
+// ---------- milestones ----------
+async function loadMilestones(projectId) {
+  let data;
+  try {
+    data = await apiGet(`/projects/${encodeURIComponent(projectId)}/milestones`);
+  } catch (err) {
+    data = { milestones: [] };
+  }
+  const list = $("milestoneList");
+  list.replaceChildren();
+  if (!data.milestones.length) {
+    list.append(el("p", { class: "none", text: "This project defines no milestones. Add some in settings first." }));
+    $("compareBtn").disabled = true;
+    return;
+  }
+  for (const m of data.milestones) {
+    const baseline = el("input", { type: "radio", name: "baseline", value: m.name, onchange: updateCompareEnabled });
+    const other = el("input", { type: "checkbox", class: "other", value: m.name, onchange: updateCompareEnabled });
+    list.append(el("div", { class: "row" }, [
+      el("label", {}, [baseline, " base"]),
+      el("label", {}, [other, " compare"]),
+      el("span", {}, [m.name, " ", el("span", { class: "date", text: m.date })]),
+    ]));
+  }
+  updateCompareEnabled();
+}
+
+function selectedBaseline() {
+  const r = document.querySelector('input[name="baseline"]:checked');
+  return r ? r.value : null;
+}
+function selectedOthers() {
+  return [...document.querySelectorAll("input.other:checked")].map(c => c.value).filter(v => v !== selectedBaseline());
+}
+function updateCompareEnabled() {
+  $("compareBtn").disabled = !(selectedBaseline() && selectedOthers().length > 0);
+}
+
+// ---------- run + render ----------
+async function runComparison() {
+  const baseline = selectedBaseline();
+  const others = selectedOthers();
+  if (!baseline || others.length === 0) return;
+  hide("compareMsg");
+
+  let data;
+  try {
+    const result = await apiSend("POST", `/projects/${encodeURIComponent(activeProjectId)}/comparison`, { baseline, others });
+    if (!result.ok) { show("compareMsg", false, `⚠ ${result.text}`); return; }
+    data = JSON.parse(result.text);
+  } catch (err) {
+    show("compareMsg", false, String(err.message || err));
+    return;
+  }
+  renderResults(data);
+}
+
+function list(items, cls) {
+  return el("ul", { class: cls || "" }, items.map(t => el("li", {}, [t])));
+}
+
+function renderResults(data) {
+  const out = $("results");
+  out.replaceChildren();
+  out.classList.remove("hidden");
+
+  if (!data.comparison_key_configured) {
+    out.append(el("div", { class: "banner", text:
+      "No comparison key configured for this project. Set one above (the room "
+      + "property that identifies the same room across milestones) and save, then compare." }));
+    return;
+  }
+
+  out.append(el("p", { class: "hint", text:
+    `Baseline "${data.baseline}" · matched on ${data.comparison_key}`
+    + (data.compared_properties.length ? ` · properties: ${data.compared_properties.join(", ")}` : " · no properties compared") }));
+
+  if (data.baseline_duplicate_key_values.length) {
+    out.append(el("div", { class: "banner" }, [
+      el("strong", { text: "Baseline has ambiguous keys " }),
+      "(excluded from matching): "
+      + data.baseline_duplicate_key_values.map(d => `${d.value} [${d.room_ids.join(", ")}]`).join("; "),
+    ]));
+  }
+
+  for (const cmp of data.comparisons) {
+    const block = el("div", { class: "cmp" });
+    block.append(el("h3", {}, [cmp.milestone, " ", el("span", { class: "base", text: `vs ${data.baseline}` })]));
+
+    if (cmp.rooms_added.length) {
+      block.append(el("div", { class: "grp" }, [el("h4", { text: `Rooms added (${cmp.rooms_added.length})` }), list(cmp.rooms_added, "added")]));
+    }
+    if (cmp.rooms_removed.length) {
+      block.append(el("div", { class: "grp" }, [el("h4", { text: `Rooms removed (${cmp.rooms_removed.length})` }), list(cmp.rooms_removed, "removed")]));
+    }
+    if (cmp.changed_rooms.length) {
+      const items = cmp.changed_rooms.map(r => {
+        const parts = [el("strong", { text: `room ${r.room_id}` }), ` (${data.comparison_key} ${r.key})`];
+        const sub = [];
+        for (const d of r.differences) {
+          sub.push(el("li", {}, [
+            `${d.property}: `, el("span", { class: "val", text: d.baseline_value || '""' }),
+            el("span", { class: "arrow", text: "→" }), el("span", { class: "val", text: d.other_value || '""' }),
+          ]));
+        }
+        for (const m of r.missing_properties) {
+          sub.push(el("li", {}, [`${m.property}: `, el("span", { class: "val", text: m.baseline_value }), el("span", { class: "miss", text: " · missing" })]));
+        }
+        return el("li", {}, [...parts, el("ul", {}, sub)]);
+      });
+      block.append(el("div", { class: "grp" }, [el("h4", { text: `Rooms changed (${cmp.changed_rooms.length})` }), el("ul", {}, items)]));
+    }
+    if (cmp.duplicate_key_values.length) {
+      block.append(el("div", { class: "grp" }, [
+        el("h4", { text: "Ambiguous keys (excluded)" }),
+        el("p", { class: "dup", text: cmp.duplicate_key_values.map(d => `${d.value} [${d.room_ids.join(", ")}]`).join("; ") }),
+      ]));
+    }
+    if (!cmp.rooms_added.length && !cmp.rooms_removed.length && !cmp.changed_rooms.length && !cmp.duplicate_key_values.length) {
+      block.append(el("p", { class: "none", text: "No differences from the baseline." }));
+    }
+    out.append(block);
+  }
+}
+
+// ---------- small helpers ----------
+function show(id, ok, text) {
+  const n = $(id);
+  n.textContent = text;
+  n.className = `msg ${ok ? "ok" : "err"}`;
+}
+function hide(id) { $(id).className = "msg hidden"; }
+
+// ---------- wiring ----------
+$("projectSelect").addEventListener("change", (e) => selectProject(e.target.value));
+$("addPropBtn").addEventListener("click", addProperty);
+$("propInput").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); addProperty(); } });
+$("saveConfigBtn").addEventListener("click", saveConfig);
+$("compareBtn").addEventListener("click", runComparison);
+
+loadProjects();
+</script>
+</body>
+</html>

@@ -39,41 +39,95 @@
     text-transform: uppercase;
     margin: 0;
   }
-  header .meta {
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    color: var(--accent);
-  }
-  header .meta.stale { color: var(--ink); opacity: 0.5; }
+  header .links { margin-left: auto; display: flex; gap: 1rem; align-items: baseline; }
+  header .links a { color: var(--accent); font-size: 0.72rem; text-decoration: none; }
+  header .links a:hover { text-decoration: underline; }
 
-  /* --- project / building / level pickers, all in the header row --- */
-  header select.picker {
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    background: var(--paper);
-    color: var(--ink);
-    border: 1px solid var(--ink);
-    padding: 0.25rem 0.5rem;
+  /* App-wide controls: add/remove zone, link toggle. */
+  header button.ctl {
+    font-family: var(--mono); font-size: 0.72rem;
+    background: var(--paper); color: var(--ink);
+    border: 1px solid var(--ink); padding: 0.25rem 0.5rem; cursor: pointer;
   }
-  header select.picker.hidden { display: none; }
+  header button.ctl:hover { background: var(--fill); }
+  header button.ctl:disabled { opacity: 0.4; cursor: default; }
+  header button.ctl.on { border-color: var(--accent); color: var(--accent); font-weight: 600; }
 
-  /* --- data-validation badge (header) + side panel --- */
-  header button.validation-toggle {
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    background: var(--paper);
-    color: var(--ink);
-    border: 1px solid var(--ink);
-    padding: 0.25rem 0.5rem;
-    cursor: pointer;
+  /* The zone grid. The 1px gap over a dark background is the hairline rule
+     between zones. Column count is set on `main` from the zone count. */
+  main {
+    display: grid;
+    gap: 1px;
+    background: var(--ink);
+    min-height: 0;
   }
-  header button.validation-toggle.issues { border-color: var(--accent); color: var(--accent); }
-  header button.validation-toggle.hidden { display: none; }
+
+  .zone {
+    position: relative;
+    background: var(--paper);
+    display: grid;
+    grid-template-rows: auto 1fr;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* Per-zone toolbar: this zone's own project/building/milestone/colour/level
+     pickers plus its validation toggle and meta line. */
+  .zone-toolbar {
+    display: flex; align-items: center; flex-wrap: wrap;
+    gap: 0.4rem; padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid var(--ink);
+  }
+  .zone-toolbar select.picker {
+    font-family: var(--mono); font-size: 0.72rem;
+    background: var(--paper); color: var(--ink);
+    border: 1px solid var(--ink); padding: 0.2rem 0.4rem;
+  }
+  .zone-toolbar select.picker.hidden { display: none; }
+  .zone-toolbar button.validation-toggle {
+    font-family: var(--mono); font-size: 0.72rem;
+    background: var(--paper); color: var(--ink);
+    border: 1px solid var(--ink); padding: 0.2rem 0.4rem; cursor: pointer;
+  }
+  .zone-toolbar button.validation-toggle.issues { border-color: var(--accent); color: var(--accent); }
+  .zone-toolbar button.validation-toggle.hidden { display: none; }
+  .zone-toolbar .meta { font-size: 0.66rem; letter-spacing: 0.08em; color: var(--accent); margin-left: auto; }
+  .zone-toolbar .meta.stale { color: var(--ink); opacity: 0.5; }
+
+  /* The canvas region below the toolbar; holds the SVG, the empty-state note,
+     and the validation panel (both absolutely positioned over the SVG). */
+  .zone-canvas { position: relative; overflow: hidden; min-height: 0; }
+  .zone-canvas svg { width: 100%; height: 100%; display: block; cursor: grab; }
+  .zone-canvas svg:active { cursor: grabbing; }
+
+  .grid line { stroke: var(--rule); stroke-width: 0.5; vector-effect: non-scaling-stroke; }
+
+  .room { fill: var(--fill); stroke: var(--ink); stroke-width: 1.5;
+          stroke-linejoin: round; transition: fill 0.12s ease; vector-effect: non-scaling-stroke; }
+  .room:hover { fill: var(--fill-hover); }
+  .room.error { fill: var(--error); }
+  .room.error:hover { fill: var(--accent); }
+  .hole { fill: var(--paper); stroke: var(--ink); stroke-width: 1;
+          stroke-dasharray: 4 3; vector-effect: non-scaling-stroke; }
+
+  .label { fill: var(--ink); text-anchor: middle;
+           dominant-baseline: middle; pointer-events: none; }
+  .label .tag { fill: var(--accent); letter-spacing: 0.05em; }
+
+  .empty {
+    position: absolute; inset: 0; display: grid; place-content: center;
+    text-align: center; gap: 0.4rem; color: var(--ink); padding: 1rem;
+  }
+  .empty strong { font-weight: 600; letter-spacing: 0.05em; }
+  .empty span { font-size: 0.72rem; opacity: 0.6; }
+  .empty code { background: #0001; padding: 0.1rem 0.4rem; }
+  .hidden { display: none; }
 
   .validation-panel {
     position: absolute;
     top: 0; right: 0; bottom: 0;
-    width: 320px;
+    width: 300px;
     max-width: 80%;
     background: rgba(243, 239, 230, 0.97);
     border-left: 1px solid var(--ink);
@@ -96,108 +150,65 @@
     color: var(--ink); border: 1px solid var(--ink); padding: 0.25rem 0.5rem;
     cursor: pointer; margin-bottom: 0.75rem;
   }
-
-  main { position: relative; overflow: hidden; }
-
-  svg { width: 100%; height: 100%; display: block; cursor: grab; }
-  svg:active { cursor: grabbing; }
-
-  .grid line { stroke: var(--rule); stroke-width: 0.5; vector-effect: non-scaling-stroke; }
-
-  .room { fill: var(--fill); stroke: var(--ink); stroke-width: 1.5;
-          stroke-linejoin: round; transition: fill 0.12s ease; vector-effect: non-scaling-stroke; }
-  .room:hover { fill: var(--fill-hover); }
-  .room.error { fill: var(--error); }
-  .room.error:hover { fill: var(--accent); }
-  .hole { fill: var(--paper); stroke: var(--ink); stroke-width: 1;
-          stroke-dasharray: 4 3; vector-effect: non-scaling-stroke; }
-
-  .label { fill: var(--ink); text-anchor: middle;
-           dominant-baseline: middle; pointer-events: none; }
-  .label .tag { fill: var(--accent); letter-spacing: 0.05em; }
-
-  .empty {
-    position: absolute; inset: 0; display: grid; place-content: center;
-    text-align: center; gap: 0.4rem; color: var(--ink);
-  }
-  .empty strong { font-weight: 600; letter-spacing: 0.05em; }
-  .empty span { font-size: 0.75rem; opacity: 0.6; }
-  .empty code { background: #0001; padding: 0.1rem 0.4rem; }
-  .hidden { display: none; }
 </style>
 </head>
 <body>
   <header>
     <h1>Room Plan</h1>
-    <select class="picker hidden" id="projectSelect"></select>
-    <select class="picker hidden" id="milestoneSelect"></select>
-    <select class="picker hidden" id="buildingSelect"></select>
-    <select class="picker hidden" id="colourSelect"></select>
-    <select class="picker hidden" id="levelSelect"></select>
-    <button class="validation-toggle hidden" id="validationToggle"></button>
-    <span class="meta" id="meta">waiting for data</span>
-    <a href="/settings.html" style="margin-left:auto; color:var(--accent); font-size:0.72rem; text-decoration:none;">settings</a>
+    <button class="ctl" id="addZone" title="Add a zone">+ zone</button>
+    <button class="ctl" id="removeZone" title="Remove the last zone">− zone</button>
+    <button class="ctl" id="linkToggle" title="Sync zoom/pan across all zones">Link views: off</button>
+    <div class="links">
+      <a href="/comparison.html">compare</a>
+      <a href="/settings.html">settings</a>
+    </div>
   </header>
-  <main>
-    <svg id="plan" xmlns="http://www.w3.org/2000/svg"></svg>
-    <div class="empty" id="empty">
-      <strong>No rooms received yet</strong>
-      <span>POST your room JSON to <code>/rooms</code> from Revit, then this updates.</span>
+  <main id="zones"></main>
+
+  <!-- One zone's DOM. Cloned per panel by createZone(); every stateful node is
+       reached via querySelector on the clone, never a document-wide id. -->
+  <template id="zoneTemplate">
+    <div class="zone">
+      <div class="zone-toolbar">
+        <select class="picker projectSelect hidden"></select>
+        <select class="picker milestoneSelect hidden"></select>
+        <select class="picker buildingSelect hidden"></select>
+        <select class="picker colourSelect hidden"></select>
+        <select class="picker levelSelect hidden"></select>
+        <button class="validation-toggle hidden"></button>
+        <span class="meta">waiting for data</span>
+      </div>
+      <div class="zone-canvas">
+        <svg class="plan" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div class="empty">
+          <strong>No rooms received yet</strong>
+          <span>POST room JSON to <code>/rooms</code>, then this updates.</span>
+        </div>
+        <div class="validation-panel hidden">
+          <h2>Data Validation</h2>
+          <button class="refresh vRefresh">Refresh</button>
+          <button class="refresh vDownload">Download CSV</button>
+          <div class="vBody"></div>
+        </div>
+      </div>
     </div>
-    <div class="validation-panel hidden" id="validationPanel">
-      <h2>Data Validation</h2>
-      <button class="refresh" id="validationRefresh">Refresh</button>
-      <button class="refresh" id="validationDownload">Download CSV</button>
-      <div id="validationBody"></div>
-    </div>
-  </main>
+  </template>
 
 <script>
 const SVG = "http://www.w3.org/2000/svg";
-const plan = document.getElementById("plan");
-const meta = document.getElementById("meta");
-const empty = document.getElementById("empty");
-const projectSelect = document.getElementById("projectSelect");
-const buildingSelect = document.getElementById("buildingSelect");
-const milestoneSelect = document.getElementById("milestoneSelect");
-const colourSelect = document.getElementById("colourSelect");
-const levelSelect = document.getElementById("levelSelect");
-const validationToggle = document.getElementById("validationToggle");
-const validationPanel = document.getElementById("validationPanel");
-const validationRefresh = document.getElementById("validationRefresh");
-const validationDownload = document.getElementById("validationDownload");
-const validationBody = document.getElementById("validationBody");
+const zonesEl = document.getElementById("zones");
+const zoneTemplate = document.getElementById("zoneTemplate");
 
-// --- view transform state ---
-let view = { x: 0, y: 0, w: 100, h: 100 };
-let fitted = { x: 0, y: 0, w: 100, h: 100 };
-let lastPayloadJson = null;
+// Every zone is a self-contained viewer: its own SVG, view transform, scope
+// selection, poll cursor, colour plan, and validation state. What used to be a
+// module-level singleton (`view`, `currentProjectId`, `lastPayloadJson`, …) is
+// now a field on the zone; the pure geometry/colour helpers below stay
+// module-level and take data in, data out.
+const zones = [];
+let zoneSeq = 0;
 
-// --- level state ---
-let currentPayload = null;   // last rendered payload
-let activeLevelId = null;    // which level is shown
-
-// --- scope state: which project/building /rooms is currently fetching ---
-let currentProjectId = null;
-let currentBuildingKey = null;    // opaque key from /projects/{id}/buildings; null = no filter
-let currentMilestone = null;      // milestone name from /projects/{id}/milestones; null = Latest
-let lastProjectIds = null;        // for diffing the periodic /projects refresh
-let lastBuildingsSignature = null;
-let lastMilestonesSignature = null;
-
-// --- colour-plan state ---
-// Colour plans are per-project user config (settings.colour_plans), fetched
-// from /api/settings on project change — the ONLY thing the viewer reads from
-// the settings API, and read-only. `activeColourPlan` is the plan the picker
-// currently has selected, or null for "None (flat)" (today's flat fill). The
-// server computes no colours — every colour decision below is client-side.
-let colourPlans = [];             // ColourPlan[] for the current project
-let activeColourPlan = null;      // the selected plan object, or null = flat
-
-// --- validation panel state ---
-let currentValidation = null;     // last-fetched ValidationResponse, for CSV export
-let errorRoomIds = new Set();     // every room id with >=1 issue, for highlighting
-let showErrors = false;           // highlight only while the panel is open
+// Global: sync the view transform across every zone when on (see commitView).
+let linkViews = false;
 
 async function fetchJson(url) {
   const res = await fetch(url, { cache: "no-store" });
@@ -205,9 +216,9 @@ async function fetchJson(url) {
   return res.json();
 }
 
-function setViewBox() {
-  plan.setAttribute("viewBox", `${view.x} ${view.y} ${view.w} ${view.h}`);
-}
+// ======================= pure geometry helpers =======================
+// These never touched a global and don't now — they take data and return
+// data/elements, so they're shared across every zone unchanged.
 
 function flip(p) { return { x: p.x, y: -p.y }; }
 
@@ -277,12 +288,25 @@ function roomsOnLevel(payload, levelId) {
   return (payload.rooms || []).filter(r => (r.level_id || "unknown") === levelId);
 }
 
-// Draw a single level's rooms and re-fit the view to them.
+function line(x1, y1, x2, y2) {
+  const l = document.createElementNS(SVG, "line");
+  l.setAttribute("x1", x1); l.setAttribute("y1", y1);
+  l.setAttribute("x2", x2); l.setAttribute("y2", y2);
+  return l;
+}
+function titleEl(text) {
+  const t = document.createElementNS(SVG, "title");
+  t.textContent = text;
+  return t;
+}
+
 // ============================ colour plans ============================
 //
 // All client-side by design: the server stores `colour_plans` verbatim and
 // computes nothing (see settings `colour_plans`). All three modes —
-// property-compare, hierarchy, date-range — are wired here.
+// property-compare, hierarchy, date-range — are wired here. Every function in
+// this block is pure (data in, colour/number out) and zone-agnostic; a zone
+// only carries the *selected* plan (`zone.activeColourPlan`).
 
 // Fill for a room the active plan can't colour — missing/unparseable property,
 // ratio-by-zero, a value in a gap between bands, or an undefined hierarchy
@@ -300,14 +324,10 @@ const FUTURE_COLOUR = "#2c7fb8";
 // A few ColorBrewer schemes as literal hex stops — no d3/npm, the browser
 // layer stays a zero-build vanilla page. Sampled at t∈[0,1] by `sampleScheme`.
 const SCHEMES = {
-  // Diverging red↔blue — signed difference centred on zero. ColorBrewer RdBu.
   RdBu: ["#ca0020", "#f4a582", "#f7f7f7", "#92c5de", "#0571b0"],
-  // Diverging red↔green — where "near/good" should read green. RdYlGn.
   RdYlGn: ["#d7191c", "#fdae61", "#ffffbf", "#a6d96a", "#1a9641"],
-  // Sequential single-hue ramps — for the (deferred) hierarchy tint/shade.
   Greens: ["#edf8e9", "#bae4b3", "#74c476", "#31a354", "#006d2c"],
   Blues: ["#eff3ff", "#bdd7e7", "#6baed6", "#3182bd", "#08519c"],
-  // Qualitative — hierarchy parent hues. ColorBrewer Set2 (8) / Paired (12).
   Set2: ["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f", "#e5c494", "#b3b3b3"],
   Paired: ["#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a", "#ffff99", "#b15928"],
 };
@@ -320,7 +340,6 @@ function rgbToHex(r, g, b) {
   const c = v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0");
   return `#${c(r)}${c(g)}${c(b)}`;
 }
-// Sample a scheme at t∈[0,1], piecewise-linear across its hex stops (clamps t).
 function sampleScheme(name, t) {
   const stops = SCHEMES[name] || SCHEMES.RdBu; // unknown scheme -> a safe default
   t = Math.max(0, Math.min(1, t));
@@ -332,9 +351,6 @@ function sampleScheme(name, t) {
   return rgbToHex(a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f);
 }
 
-// Parse a room property value to a number, or null if absent/non-numeric.
-// Values are strings like "1.49999935417" (float noise is a known upstream
-// bug); parseFloat handles the noise, the comparison tolerance handles the rest.
 function numericProp(room, name) {
   const p = room.properties && room.properties[name];
   if (!p || p.value == null || p.value === "") return null;
@@ -342,41 +358,26 @@ function numericProp(room, name) {
   return Number.isFinite(n) ? n : null;
 }
 
-// The k-th colour of a qualitative scheme (wraps if there are more categories
-// than stops — acceptable; two categories sharing a hue is a mild collision,
-// not a correctness bug).
 function qualitative(scheme, k) {
   const stops = SCHEMES[scheme] || SCHEMES.Set2;
   return stops[k % stops.length];
 }
-// Lighten a hex toward white by t∈[0,1] — the child tint/shade of a parent hue
-// in hierarchy mode (no second scheme needed).
 function lighten(hex, t) {
   const [r, g, b] = hexToRgb(hex);
   return rgbToHex(r + (255 - r) * t, g + (255 - g) * t, b + (255 - b) * t);
 }
 
-// A room's value at one hierarchy tier, from the server-resolved
-// `classification` path (already on the payload — the server does the
-// hierarchy resolution, this just reads it). `null` when the tier is undefined
-// for this room (or absent) — the caller renders grey. Prefers the code, falls
-// back to the name (a tier resolves when either is present).
 function classKey(room, tierName) {
   const tv = (room.classification || []).find(t => t.tier === tierName);
   if (!tv || tv.undefined) return null;
   return tv.code != null ? tv.code : (tv.name != null ? tv.name : null);
 }
 
-// A room's raw date-property string, or null if absent/empty.
 function dateProp(room, name) {
   const p = room.properties && room.properties[name];
   return p && p.value != null && p.value !== "" ? p.value : null;
 }
 
-// Parse a date string to epoch-ms, or null. With a strftime `format` (the same
-// pattern the dRofus date column uses — Revit room dates come from dRofus),
-// parse by that; without one, fall back to the browser's native ISO-8601
-// parse. An unparseable value -> null -> "no data" grey (safe degrade).
 function parseDate(value, format) {
   if (value == null || value === "") return null;
   if (format) return parseStrftime(value, format);
@@ -384,11 +385,6 @@ function parseDate(value, format) {
   return Number.isFinite(ms) ? ms : null;
 }
 
-// A compact strftime parser for the specifiers dRofus/Revit dates use:
-// %Y %y %m %d %H %I %M %S %p %z and their %- no-pad variants, plus %%. Builds
-// a regex from the pattern (literals escaped), then assembles a UTC timestamp.
-// An unsupported specifier or a value that doesn't match returns null — we
-// never guess, so a mismatch degrades to grey rather than mis-colouring.
 function parseStrftime(value, pattern) {
   const order = [];
   let regex = "^";
@@ -430,12 +426,6 @@ function parseStrftime(value, pattern) {
   return ms;
 }
 
-// The "derive one number per room" half of property-compare — kept separate
-// from the "map number -> colour" half on purpose: a future MilestoneCompare
-// mode would swap ONLY this step (sourcing B from a pinned snapshot instead of
-// a second property) and reuse the colourings untouched. Returns null when the
-// room can't produce a number (missing/unparseable property, or ratio-by-zero)
-// -> the caller renders "no data" grey.
 function propertyCompareNumber(room, mode) {
   const a = numericProp(room, mode.property_a);
   const b = numericProp(room, mode.property_b);
@@ -444,11 +434,6 @@ function propertyCompareNumber(room, mode) {
   return a - b; // "diff" (default)
 }
 
-// Precompute per-level scale/assignment info once, before the room loop, so
-// each colourForRoom call is cheap. What's needed is per mode:
-//  - property-compare/diverging: symmetric max |number| for the zero-centred scale;
-//  - hierarchy: a stable value->colour assignment (parent hues + child tints);
-//  - date-range: the parsed near_date and the furthest past distance for the ramp.
 function buildColourContext(rooms, plan) {
   const ctx = { maxAbs: 0 };
   if (!plan) return ctx;
@@ -460,9 +445,6 @@ function buildColourContext(rooms, plan) {
       if (n != null) ctx.maxAbs = Math.max(ctx.maxAbs, Math.abs(n));
     }
   } else if (mode.kind === "hierarchy") {
-    // Parent tier -> a distinct qualitative hue; within each parent, child tier
-    // -> a tint of that hue. Distinct values collected across the level and
-    // *sorted* so the same value keeps the same colour across renders.
     const parentTier = (mode.tiers || [])[0];
     const childTier = (mode.tiers || [])[1];
     const parents = new Set();
@@ -481,13 +463,11 @@ function buildColourContext(rooms, plan) {
     }
     ctx.parentHue = new Map();
     [...parents].sort().forEach((pk, i) => ctx.parentHue.set(pk, qualitative(mode.scheme, i)));
-    ctx.childColour = new Map(); // `${pk} ${ck}` -> tinted hex
+    ctx.childColour = new Map(); // `${pk}\0${ck}` -> tinted hex
     for (const [pk, set] of childrenByParent) {
       const base = ctx.parentHue.get(pk);
       const list = [...set].sort();
-      // Spread tints across 0..0.55 lighter than the parent hue, so a parent
-      // with children still reads as one hue family, children distinguishable.
-      list.forEach((ck, j) => ctx.childColour.set(`${pk} ${ck}`, lighten(base, list.length > 1 ? (j / (list.length - 1)) * 0.55 : 0)));
+      list.forEach((ck, j) => ctx.childColour.set(`${pk}\0${ck}`, lighten(base, list.length > 1 ? (j / (list.length - 1)) * 0.55 : 0)));
     }
     ctx.parentTier = parentTier;
     ctx.childTier = childTier;
@@ -504,33 +484,24 @@ function buildColourContext(rooms, plan) {
   return ctx;
 }
 
-// Map a room to its fill under `plan`, or NO_DATA_COLOUR. Pure; branches on
-// plan.mode.kind. `ctx` carries the per-level precompute from buildColourContext.
 function colourForRoom(room, plan, ctx) {
   const mode = plan.mode;
 
   if (mode.kind === "hierarchy") {
-    // Parent tier -> hue, child tier -> a tint of it (both assigned in ctx).
-    // Undefined parent tier -> grey; a room with a parent but no (or an
-    // unassigned) child value just takes the flat parent hue.
     const pk = ctx.parentTier ? classKey(room, ctx.parentTier) : null;
     if (pk == null) return NO_DATA_COLOUR;
     if (ctx.childTier) {
       const ck = classKey(room, ctx.childTier);
-      if (ck != null && ctx.childColour.has(`${pk} ${ck}`)) return ctx.childColour.get(`${pk} ${ck}`);
+      if (ck != null && ctx.childColour.has(`${pk}\0${ck}`)) return ctx.childColour.get(`${pk}\0${ck}`);
     }
     return ctx.parentHue.get(pk) || NO_DATA_COLOUR;
   }
 
   if (mode.kind === "daterange") {
-    // Proximity to near_date: after it -> future (fixed blue); at/before it ->
-    // near (green) ... far (red) on the scheme, auto-scaled to the level's
-    // furthest past. Unparseable/missing date -> grey.
     const d = parseDate(dateProp(room, mode.property), mode.format);
     if (d == null || ctx.nearMs == null) return NO_DATA_COLOUR;
     const delta = d - ctx.nearMs;
     if (delta > 0) return FUTURE_COLOUR;
-    // t=1 at near_date (green end), t=0 at the furthest past (red end).
     const t = ctx.maxPast > 0 ? 1 - (Math.abs(delta) / ctx.maxPast) : 1;
     return sampleScheme(mode.scheme, t);
   }
@@ -541,24 +512,15 @@ function colourForRoom(room, plan, ctx) {
 
   const c = mode.colouring;
   if (c.style === "match") {
-    // Binary: within tolerance of zero (a match) vs not. Reuses the dRofus
-    // numeric-adaptive *philosophy* (compare as numbers with a tolerance) —
-    // see settings CompareMode — not a second comparison engine.
     return Math.abs(number) <= c.tolerance ? MATCH_COLOUR : MISMATCH_COLOUR;
   }
   if (c.style === "diverging") {
-    // Zero-centred, auto-scaled to the level's symmetric extent: number 0 maps
-    // to the palette midpoint, ±maxAbs to its ends. A flat level (maxAbs 0) is
-    // all-midpoint, which is correct — there are no differences to show.
     const extent = ctx.maxAbs || 1;
     return sampleScheme(c.scheme, 0.5 + number / (2 * extent));
   }
   if (c.style === "bands") {
-    // Ordered first-match scan over half-open [lo, hi). This simplicity is
-    // *earned by* the server-side validation (validate_colour_plans rejects
-    // overlapping/out-of-order bands), so there is deliberately NO
-    // overlap-resolution here — do not re-add it. A value in a gap between
-    // bands, or outside all bands, is "no data" grey.
+    // Ordered first-match scan over half-open [lo, hi). Simplicity earned by
+    // the server-side validation (bands sorted/disjoint) — no overlap logic.
     for (const band of c.bands) {
       const aboveLo = band.lo == null || number >= band.lo;
       const belowHi = band.hi == null || number < band.hi;
@@ -569,48 +531,19 @@ function colourForRoom(room, plan, ctx) {
   return NO_DATA_COLOUR; // unknown colouring style
 }
 
-// --- colour-plan picker ---
+// ============================ per-zone render ============================
 
-// "None (flat)" first, then one option per plan. Hidden when the project has no
-// plans — like the milestone picker, "None" alone is not a choice worth a picker.
-function populateColourSelect(plans) {
-  colourSelect.replaceChildren();
-  const none = document.createElement("option");
-  none.value = "";
-  none.textContent = "No colour";
-  colourSelect.appendChild(none);
-  for (const p of plans) {
-    const opt = document.createElement("option");
-    opt.value = p.name; // the name is the plan's identity in settings
-    opt.textContent = p.name;
-    colourSelect.appendChild(opt);
-  }
-  colourSelect.classList.toggle("hidden", plans.length === 0);
+function setViewBox(zone) {
+  zone.svg.setAttribute("viewBox", `${zone.view.x} ${zone.view.y} ${zone.view.w} ${zone.view.h}`);
 }
 
-// Read this project's colour plans from the settings API (the viewer's one,
-// read-only, use of /api/settings) and default the picker to the `active` plan.
-// The picker's "No colour" always overrides, so `active` is just the default.
-async function loadColourPlansForProject(projectId) {
-  try {
-    const data = await fetchJson(`/api/settings/projects/${encodeURIComponent(projectId)}`);
-    colourPlans = (data.settings && data.settings.colour_plans) || [];
-  } catch (err) {
-    colourPlans = []; // no settings file / unreachable -> no colouring, flat fill
-  }
-  populateColourSelect(colourPlans);
-  const active = colourPlans.find(p => p.active) || null;
-  activeColourPlan = active;
-  colourSelect.value = active ? active.name : "";
-}
-
-function renderLevel(payload, levelId, { refit = true } = {}) {
+function renderLevel(zone, payload, levelId, { refit = true } = {}) {
+  const plan = zone.svg;
   plan.replaceChildren();
   const rooms = roomsOnLevel(payload, levelId);
 
   if (rooms.length === 0) {
-    // a level with no placed rooms — clear canvas, leave a note in the meta
-    if (refit) { view = { ...fitted }; setViewBox(); }
+    if (refit) { zone.view = { ...zone.fitted }; setViewBox(zone); }
     return;
   }
 
@@ -621,46 +554,38 @@ function renderLevel(payload, levelId, { refit = true } = {}) {
   const pad = Math.max(w, h) * 0.04 || 1;
 
   if (refit) {
-    fitted = { x: b.minX - pad, y: b.minY - pad, w: w + 2 * pad, h: h + 2 * pad };
-    view = { ...fitted };
-    setViewBox();
+    zone.fitted = { x: b.minX - pad, y: b.minY - pad, w: w + 2 * pad, h: h + 2 * pad };
+    zone.view = { ...zone.fitted };
+    setViewBox(zone);
   }
 
-  const baseFont = Math.max(fitted.w, fitted.h) * 0.02;
+  const baseFont = Math.max(zone.fitted.w, zone.fitted.h) * 0.02;
 
   const g = document.createElementNS(SVG, "g");
   g.setAttribute("class", "grid");
   const step = 5;
-  for (let gx = Math.ceil(fitted.x / step) * step; gx < fitted.x + fitted.w; gx += step)
-    g.appendChild(line(gx, fitted.y, gx, fitted.y + fitted.h));
-  for (let gy = Math.ceil(fitted.y / step) * step; gy < fitted.y + fitted.h; gy += step)
-    g.appendChild(line(fitted.x, gy, fitted.x + fitted.w, gy));
+  for (let gx = Math.ceil(zone.fitted.x / step) * step; gx < zone.fitted.x + zone.fitted.w; gx += step)
+    g.appendChild(line(gx, zone.fitted.y, gx, zone.fitted.y + zone.fitted.h));
+  for (let gy = Math.ceil(zone.fitted.y / step) * step; gy < zone.fitted.y + zone.fitted.h; gy += step)
+    g.appendChild(line(zone.fitted.x, gy, zone.fitted.x + zone.fitted.w, gy));
   plan.appendChild(g);
 
-  // When a colour plan is selected, precompute its per-level scale context
-  // once (not per room). `null` when the picker is on "No colour" — then the
-  // fill comes from the CSS class exactly as before.
-  const colourCtx = activeColourPlan ? buildColourContext(rooms, activeColourPlan) : null;
+  // Precompute the active plan's per-level scale context once (not per room).
+  const colourCtx = zone.activeColourPlan ? buildColourContext(rooms, zone.activeColourPlan) : null;
 
-  // Two passes, not one: every room's polygons first, then every room's
-  // label. SVG has no reliable z-index — paint order is DOM order, full
-  // stop — so interleaving polygon-then-label per room (as a single loop
-  // would) lets a later room's opaque fill paint over an earlier room's
-  // label whenever their screen-space boxes are anywhere close. Appending
-  // all polygons before any label guarantees labels always sit on top,
-  // regardless of room order in the data.
+  // Two passes, not one: every room's polygons first, then every room's label.
+  // SVG has no reliable z-index — paint order is DOM order — so appending all
+  // polygons before any label guarantees labels always sit on top.
   for (const room of rooms) {
     if (!room.loops || room.loops.length === 0) continue;
 
     const outer = document.createElementNS(SVG, "polygon");
     outer.setAttribute("points", pointsAttr(room.loops[0]));
-    outer.setAttribute("class", showErrors && errorRoomIds.has(room.id) ? "room error" : "room");
+    outer.setAttribute("class", zone.showErrors && zone.errorRoomIds.has(room.id) ? "room error" : "room");
     // Fill precedence: an active colour plan wins over the error highlight and
-    // the default --fill. Set as an INLINE style, not a `fill` presentation
-    // attribute — a presentation attribute loses to the `.room` CSS rule,
-    // inline style beats it. "No colour" (no active plan) leaves the class
-    // fill untouched, preserving today's look and hover behaviour.
-    if (activeColourPlan) outer.style.fill = colourForRoom(room, activeColourPlan, colourCtx);
+    // the default --fill. Inline style beats the `.room` CSS rule; a
+    // presentation attribute would lose to it.
+    if (zone.activeColourPlan) outer.style.fill = colourForRoom(room, zone.activeColourPlan, colourCtx);
     outer.appendChild(titleEl(room.name || room.id));
     plan.appendChild(outer);
 
@@ -674,35 +599,24 @@ function renderLevel(payload, levelId, { refit = true } = {}) {
 
   for (const room of rooms) {
     if (!room.loops || room.loops.length === 0) continue;
-    addLabel(room, baseFont);
+    addLabel(zone, room, baseFont);
   }
 }
 
-// `room.label` is the server-resolved, ordered list of fields configured by
-// settings.toml's `room_label` (see STRATEGY-SERVER.md) — the browser just
-// renders whatever it's given, no property names hardcoded here. The first
-// field is the large primary line; any further fields stack below as
-// smaller accent-colored lines, generalizing the old fixed name+id layout to
-// however many fields are configured.
-//
-// `room.label` present but empty means this room's configured properties
-// genuinely didn't resolve (respect that — no label, don't guess); `room.label`
-// altogether missing (an older payload, pre-dating this feature) falls back
-// to today's previous default.
-function addLabel(room, baseFont) {
+// `room.label` is the server-resolved, ordered field list (settings.toml's
+// `room_label`) — the browser renders whatever it's given. First field is the
+// primary line; further fields stack below as smaller accent lines. `label`
+// present-but-empty means the configured properties didn't resolve (respect
+// it); `label` missing (an older payload) falls back to name/id.
+function addLabel(zone, room, baseFont) {
   const fields = room.label !== undefined ? room.label : [room.name || room.id].filter(Boolean);
   if (fields.length === 0) return;
 
   const box = loopBox(room.loops[0]);
   const longest = fields.reduce((n, f) => Math.max(n, String(f).length), 1);
   const widthLimited = (box.w * 0.9) / longest / 0.6;
-  // Budget for `fields.length` stacked lines: the primary line (1 unit) plus
-  // each secondary line (~0.7 units, matching its smaller font-size below).
   const heightLimited = (box.h * 0.8) / (1 + 0.7 * (fields.length - 1));
   const fontSize = Math.min(baseFont, widthLimited, heightLimited);
-  // No longer dropped below a size threshold — always render clamped to fit
-  // this room, however small; the user zooms in to read a tiny one. Only
-  // guard against a genuinely degenerate (zero/negative) computed size.
   if (!(fontSize > 0)) return;
 
   const c = centroid(room.loops[0]);
@@ -724,145 +638,212 @@ function addLabel(room, baseFont) {
     label.appendChild(span);
   });
 
-  plan.appendChild(label);
+  zone.svg.appendChild(label);
 }
 
-function line(x1, y1, x2, y2) {
-  const l = document.createElementNS(SVG, "line");
-  l.setAttribute("x1", x1); l.setAttribute("y1", y1);
-  l.setAttribute("x2", x2); l.setAttribute("y2", y2);
-  return l;
-}
-function titleEl(text) {
-  const t = document.createElementNS(SVG, "title");
-  t.textContent = text;
-  return t;
-}
-
-// Populate the level picker, highest elevation first (a <select> has no
-// CSS-driven reversal the old floor-stack relied on, so sort explicitly here;
-// `levelsForPayload`'s own ascending order — used elsewhere for the default
-// "lowest level" selection — is untouched).
-function buildLevelControl(payload, levels) {
-  levelSelect.replaceChildren();
+// Populate this zone's level picker, highest elevation first.
+function buildLevelControl(zone, payload, levels) {
+  const sel = zone.els.levelSelect;
+  sel.replaceChildren();
   const ordered = levels.slice().sort((a, b) => b.elevation - a.elevation);
   for (const lvl of ordered) {
     const count = roomsOnLevel(payload, lvl.id).length;
     const opt = document.createElement("option");
     opt.value = lvl.id;
     opt.textContent = `${lvl.name} (${count} rm)`;
-    if (lvl.id === activeLevelId) opt.selected = true;
-    levelSelect.appendChild(opt);
+    if (lvl.id === zone.activeLevelId) opt.selected = true;
+    sel.appendChild(opt);
   }
-  levelSelect.classList.toggle("hidden", levels.length <= 1);
+  sel.classList.toggle("hidden", levels.length <= 1);
 }
 
-function selectLevel(levelId) {
-  if (!currentPayload) return;
-  activeLevelId = levelId;
-  renderLevel(currentPayload, levelId, { refit: true });
-  updateMeta();
+function selectLevel(zone, levelId) {
+  if (!zone.currentPayload) return;
+  zone.activeLevelId = levelId;
+  renderLevel(zone, zone.currentPayload, levelId, { refit: true });
+  updateMeta(zone);
 }
-levelSelect.addEventListener("change", () => selectLevel(levelSelect.value));
 
-// --- project / building pickers ---
+function updateMeta(zone) {
+  if (!zone.currentPayload) return;
+  const lvls = levelsForPayload(zone.currentPayload);
+  const active = lvls.find(l => l.id === zone.activeLevelId);
+  const n = roomsOnLevel(zone.currentPayload, zone.activeLevelId).length;
+  const lvlName = active ? active.name : "—";
+  zone.els.meta.textContent = `${lvlName} · ${n} room${n === 1 ? "" : "s"} · v${zone.currentPayload.schema_version} · ${new Date().toLocaleTimeString()}`;
+  zone.els.meta.classList.remove("stale");
+}
 
-function populateProjectSelect(projects) {
-  const prevValue = projectSelect.value;
-  projectSelect.replaceChildren();
+// Called only when new data arrives for a zone.
+function ingest(zone, payload) {
+  zone.currentPayload = payload;
+  zone.els.empty.classList.add("hidden");
+
+  const levels = levelsForPayload(payload);
+  if (!levels.some(l => l.id === zone.activeLevelId)) {
+    zone.activeLevelId = levels.length ? levels[0].id : null;
+  }
+
+  buildLevelControl(zone, payload, levels);
+  if (zone.activeLevelId) renderLevel(zone, payload, zone.activeLevelId, { refit: true });
+  updateMeta(zone);
+}
+
+// ============================ colour picker ============================
+
+function populateColourSelect(zone, plans) {
+  const sel = zone.els.colourSelect;
+  sel.replaceChildren();
+  const none = document.createElement("option");
+  none.value = "";
+  none.textContent = "No colour";
+  sel.appendChild(none);
+  for (const p of plans) {
+    const opt = document.createElement("option");
+    opt.value = p.name;
+    opt.textContent = p.name;
+    sel.appendChild(opt);
+  }
+  sel.classList.toggle("hidden", plans.length === 0);
+}
+
+// Read this zone's project's colour plans from the settings API (the viewer's
+// one read-only use of /api/settings) and default the picker to the `active`
+// plan. "No colour" always overrides, so `active` is just the default.
+async function loadColourPlansForProject(zone, projectId) {
+  try {
+    const data = await fetchJson(`/api/settings/projects/${encodeURIComponent(projectId)}`);
+    zone.colourPlans = (data.settings && data.settings.colour_plans) || [];
+  } catch (err) {
+    zone.colourPlans = [];
+  }
+  populateColourSelect(zone, zone.colourPlans);
+  const active = zone.colourPlans.find(p => p.active) || null;
+  zone.activeColourPlan = active;
+  zone.els.colourSelect.value = active ? active.name : "";
+}
+
+// ============================ project/building/milestone pickers =========
+
+function populateProjectSelect(zone, projects) {
+  const sel = zone.els.projectSelect;
+  const prevValue = sel.value;
+  sel.replaceChildren();
   for (const p of projects) {
     const opt = document.createElement("option");
     opt.value = p.id;
     opt.textContent = p.name;
-    projectSelect.appendChild(opt);
+    sel.appendChild(opt);
   }
-  // Shown whenever there is a project at all — deliberately NOT the `<= 1`
-  // auto-hide the other pickers use. Which project you're looking at is not a
-  // choice, it's the scope of everything on screen, and hiding it left the
-  // single-project case anonymous: with several projects registered but only
-  // one holding rooms (the normal state while others are onboarded), the
-  // viewer silently showed one of them with nothing saying which. An empty
-  // select is still hidden — there's no name to state.
-  projectSelect.classList.toggle("hidden", projects.length === 0);
-  if (projects.some(p => p.id === prevValue)) projectSelect.value = prevValue;
+  sel.classList.toggle("hidden", projects.length === 0);
+  if (projects.some(p => p.id === prevValue)) sel.value = prevValue;
 }
 
-function populateBuildingSelect(data) {
-  const prevValue = buildingSelect.value;
-  buildingSelect.replaceChildren();
+function populateBuildingSelect(zone, data) {
+  const sel = zone.els.buildingSelect;
+  const prevValue = sel.value;
+  sel.replaceChildren();
   for (const b of data.buildings) {
     const opt = document.createElement("option");
     opt.value = b.key;
-    // `ambiguous` means another building shares this name; append the code so
-    // the two options are distinguishable. A same-name entry with no code has
-    // nothing to append — its code-bearing twin carries the distinction.
     let label = b.unclassified ? "Unclassified" : (b.name || b.code || b.key);
     if (b.ambiguous && b.name && b.code) label = `${b.name} (${b.code})`;
     opt.textContent = label;
-    buildingSelect.appendChild(opt);
+    sel.appendChild(opt);
   }
-  buildingSelect.classList.toggle("hidden", data.buildings.length <= 1);
-  if (data.buildings.some(b => b.key === prevValue)) buildingSelect.value = prevValue;
+  sel.classList.toggle("hidden", data.buildings.length <= 1);
+  if (data.buildings.some(b => b.key === prevValue)) sel.value = prevValue;
 }
 
-function populateMilestoneSelect(data) {
-  const prevValue = milestoneSelect.value;
-  milestoneSelect.replaceChildren();
+function populateMilestoneSelect(zone, data) {
+  const sel = zone.els.milestoneSelect;
+  const prevValue = sel.value;
+  sel.replaceChildren();
   const latest = document.createElement("option");
-  latest.value = ""; // empty value = no milestone filter = each model's latest
+  latest.value = "";
   latest.textContent = "Latest";
-  milestoneSelect.appendChild(latest);
+  sel.appendChild(latest);
   for (const m of data.milestones) {
     const opt = document.createElement("option");
-    opt.value = m.name; // the name is the milestone's identity server-side
+    opt.value = m.name;
     opt.textContent = `${m.name} (${m.date})`;
-    milestoneSelect.appendChild(opt);
+    sel.appendChild(opt);
   }
-  // Hidden when the project defines no milestones — unlike project/building's
-  // <=1 rule, "Latest" alone is not a choice worth showing a picker for.
-  milestoneSelect.classList.toggle("hidden", data.milestones.length === 0);
-  if (data.milestones.some(m => m.name === prevValue)) milestoneSelect.value = prevValue;
+  sel.classList.toggle("hidden", data.milestones.length === 0);
+  if (data.milestones.some(m => m.name === prevValue)) sel.value = prevValue;
 }
 
-// Fetch the known projects; auto-select if there's exactly one and the
-// current selection (if any) no longer exists. Diffs against the last-seen
-// id list so it doesn't fight an in-progress user selection every tick.
-async function loadProjects() {
+// Fetch the known projects for one zone; auto-select if the zone's current
+// project (if any) no longer exists. Diffs against the zone's last-seen id
+// list so it doesn't fight an in-progress user selection every tick.
+async function loadProjects(zone) {
   let projects;
   try {
     projects = await fetchJson("/projects");
   } catch (err) {
-    return; // leave the current selection alone; poll() reports connection loss
+    return; // leave selection alone; poll() reports connection loss
   }
   const ids = projects.map(p => p.id).join(",");
-  if (ids === lastProjectIds) return;
-  lastProjectIds = ids;
-  populateProjectSelect(projects);
+  if (ids === zone.lastProjectIds) return;
+  zone.lastProjectIds = ids;
+  populateProjectSelect(zone, projects);
 
-  if (!projects.some(p => p.id === currentProjectId)) {
-    currentProjectId = projects.length ? projects[0].id : null;
-    lastBuildingsSignature = null; // force a buildings refresh for the new project
-    lastMilestonesSignature = null; // ...and a milestones refresh
-    currentMilestone = null;        // a milestone belongs to its project
-    loadValidation(currentProjectId); // project (re)established -- refresh once, not every tick
-    // Colour plans reload only on project change (here + the picker's own
-    // change handler), NOT every tick — re-fetching each tick would reset the
-    // picker to the active plan and fight a user's selection.
-    if (currentProjectId) loadColourPlansForProject(currentProjectId);
+  if (!projects.some(p => p.id === zone.projectId)) {
+    zone.projectId = projects.length ? projects[0].id : null;
+    zone.lastBuildingsSignature = null;
+    zone.lastMilestonesSignature = null;
+    zone.milestone = null;
+    if (zone.projectId) {
+      loadValidation(zone, zone.projectId);
+      loadColourPlansForProject(zone, zone.projectId);
+    }
   }
-  if (currentProjectId) {
-    await loadBuildingsForProject(currentProjectId);
-    await loadMilestonesForProject(currentProjectId);
+  if (zone.projectId) {
+    await loadBuildingsForProject(zone, zone.projectId);
+    await loadMilestonesForProject(zone, zone.projectId);
   }
 }
 
-// --- data validation panel ---
+async function loadBuildingsForProject(zone, projectId) {
+  let data;
+  try {
+    data = await fetchJson(`/projects/${encodeURIComponent(projectId)}/buildings`);
+  } catch (err) {
+    return;
+  }
+  const signature = `${data.tier_configured}:${data.buildings.map(b => b.key).join(",")}`;
+  if (signature === zone.lastBuildingsSignature) return;
+  zone.lastBuildingsSignature = signature;
+  populateBuildingSelect(zone, data);
+
+  if (!data.buildings.some(b => b.key === zone.buildingKey)) {
+    zone.buildingKey = data.buildings.length ? data.buildings[0].key : null;
+  }
+}
+
+async function loadMilestonesForProject(zone, projectId) {
+  let data;
+  try {
+    data = await fetchJson(`/projects/${encodeURIComponent(projectId)}/milestones`);
+  } catch (err) {
+    return;
+  }
+  const signature = data.milestones.map(m => `${m.name}@${m.date}`).join(",");
+  if (signature === zone.lastMilestonesSignature) return;
+  zone.lastMilestonesSignature = signature;
+  populateMilestoneSelect(zone, data);
+
+  if (zone.milestone && !data.milestones.some(m => m.name === zone.milestone)) {
+    zone.milestone = null;
+    zone.els.milestoneSelect.value = "";
+    zone.lastPayloadJson = null; // selection changed under us -> re-render next tick
+  }
+}
+
+// ============================ validation panel (per zone) ============================
 //
-// An on-demand health check (does every room have a value for the dRofus
-// link property, are those values unique, does each match a dRofus record,
-// do matched rooms' reconciled fields agree), not something to watch update
-// live -- deliberately not part of the 2s room poll. Fetched only when the
-// project selection changes, or via the panel's own Refresh button.
+// An on-demand health check, not part of the room poll. Fetched when the
+// zone's project changes, or via the panel's own Refresh button.
 
 function section(title, items, renderItem) {
   if (items.length === 0) return "";
@@ -873,11 +854,6 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 }
 
-// Informational, not a data-quality error: which dRofus fields this pass
-// actually checks (and against which Revit property), so it stays out of
-// `errorRoomIds`/the issue count and is shown regardless of whether any
-// issues were found -- built separately from `html` below so it survives the
-// "No issues found" collapse instead of disappearing with it.
 function renderFieldCoverage(coverage) {
   if (!coverage || coverage.length === 0) return "";
   return `<section><h3>Field coverage (${coverage.length})</h3><ul>${coverage.map(c =>
@@ -886,17 +862,17 @@ function renderFieldCoverage(coverage) {
   ).join("")}</ul></section>`;
 }
 
-function renderValidation(data) {
-  currentValidation = data;
+function renderValidation(zone, data) {
+  zone.currentValidation = data;
 
   if (!data.drofus_configured) {
-    validationToggle.classList.add("hidden");
-    validationPanel.classList.add("hidden");
-    errorRoomIds = new Set();
+    zone.els.validationToggle.classList.add("hidden");
+    zone.els.validationPanel.classList.add("hidden");
+    zone.errorRoomIds = new Set();
     return;
   }
 
-  errorRoomIds = new Set([
+  zone.errorRoomIds = new Set([
     ...data.rooms_missing_link_value,
     ...data.duplicate_link_values.flatMap(d => d.room_ids),
     ...data.rooms_unmatched_in_drofus,
@@ -904,17 +880,18 @@ function renderValidation(data) {
     ...data.fields_absent_in_revit.map(m => m.room_id),
     ...data.fields_empty_in_revit.map(m => m.room_id),
   ]);
-  if (showErrors && currentPayload && activeLevelId) {
-    renderLevel(currentPayload, activeLevelId, { refit: false });
+  if (zone.showErrors && zone.currentPayload && zone.activeLevelId) {
+    renderLevel(zone, zone.currentPayload, zone.activeLevelId, { refit: false });
   }
 
   const issueCount = data.rooms_missing_link_value.length + data.duplicate_link_values.length
     + data.rooms_unmatched_in_drofus.length + data.property_mismatches.length
     + data.fields_absent_in_revit.length + data.fields_empty_in_revit.length;
 
-  validationToggle.classList.remove("hidden");
-  validationToggle.textContent = issueCount ? `⚠ ${issueCount}` : "✓";
-  validationToggle.classList.toggle("issues", issueCount > 0);
+  const toggle = zone.els.validationToggle;
+  toggle.classList.remove("hidden");
+  toggle.textContent = issueCount ? `⚠ ${issueCount}` : "✓";
+  toggle.classList.toggle("issues", issueCount > 0);
 
   const html = [
     `<p>${data.total_rooms} room(s) checked against link property <strong>${escapeHtml(data.link_property)}</strong>.</p>`,
@@ -931,24 +908,20 @@ function renderValidation(data) {
       `<li class="mismatch">room ${escapeHtml(m.room_id)} · ${escapeHtml(m.field)}</li>`),
   ].join("");
 
-  validationBody.innerHTML = (issueCount ? html : `<p class="ok">No issues found.</p>`)
+  zone.els.validationBody.innerHTML = (issueCount ? html : `<p class="ok">No issues found.</p>`)
     + renderFieldCoverage(data.field_coverage);
 }
 
-async function loadValidation(projectId) {
+async function loadValidation(zone, projectId) {
   if (!projectId) return;
   try {
     const data = await fetchJson(`/projects/${encodeURIComponent(projectId)}/validation`);
-    renderValidation(data);
+    renderValidation(zone, data);
   } catch (err) {
     // transient fetch failure -- leave the last-known validation state alone
   }
 }
 
-// CSV export stays entirely client-side -- the browser already has the full
-// report in memory the moment the panel loads, and a CSV is just a different
-// presentation of the same data, not something the server needs to know how
-// to produce (axum stays a pure JSON API).
 function csvEscape(value) {
   const s = String(value);
   return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
@@ -967,192 +940,256 @@ function buildValidationCsv(data) {
   return rows.map(r => r.map(csvEscape).join(",")).join("\r\n");
 }
 
-function downloadValidationCsv() {
-  if (!currentValidation || !currentValidation.drofus_configured) return;
-  const csv = buildValidationCsv(currentValidation);
+function downloadValidationCsv(zone) {
+  if (!zone.currentValidation || !zone.currentValidation.drofus_configured) return;
+  const csv = buildValidationCsv(zone.currentValidation);
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `validation-${currentProjectId || "project"}.csv`;
+  a.download = `validation-${zone.projectId || "project"}.csv`;
   document.body.appendChild(a);
   a.click();
   a.remove();
   URL.revokeObjectURL(url);
 }
 
-validationToggle.addEventListener("click", () => {
-  validationPanel.classList.toggle("hidden");
-  showErrors = !validationPanel.classList.contains("hidden");
-  if (currentPayload && activeLevelId) renderLevel(currentPayload, activeLevelId, { refit: false });
-});
-validationRefresh.addEventListener("click", () => loadValidation(currentProjectId));
-validationDownload.addEventListener("click", downloadValidationCsv);
+// ============================ polling (per zone) ============================
 
-// Fetch the buildings within one project; auto-select if there's exactly one
-// (or none configured at all, meaning "everything in this project").
-async function loadBuildingsForProject(projectId) {
-  let data;
-  try {
-    data = await fetchJson(`/projects/${encodeURIComponent(projectId)}/buildings`);
-  } catch (err) {
-    return;
-  }
-  const signature = `${data.tier_configured}:${data.buildings.map(b => b.key).join(",")}`;
-  if (signature === lastBuildingsSignature) return;
-  lastBuildingsSignature = signature;
-  populateBuildingSelect(data);
-
-  if (!data.buildings.some(b => b.key === currentBuildingKey)) {
-    currentBuildingKey = data.buildings.length ? data.buildings[0].key : null;
-  }
-}
-
-// Fetch one project's milestones for the picker; same signature-diff gating
-// as buildings so the 2s refresh doesn't fight an in-progress selection. If
-// the selected milestone disappeared (deleted/renamed in settings), fall back
-// to Latest rather than silently keeping a filter the server can't answer.
-async function loadMilestonesForProject(projectId) {
-  let data;
-  try {
-    data = await fetchJson(`/projects/${encodeURIComponent(projectId)}/milestones`);
-  } catch (err) {
-    return;
-  }
-  const signature = data.milestones.map(m => `${m.name}@${m.date}`).join(",");
-  if (signature === lastMilestonesSignature) return;
-  lastMilestonesSignature = signature;
-  populateMilestoneSelect(data);
-
-  if (currentMilestone && !data.milestones.some(m => m.name === currentMilestone)) {
-    currentMilestone = null;
-    milestoneSelect.value = "";
-    lastPayloadJson = null; // selection changed under us -> re-render on next tick
-  }
-}
-
-projectSelect.addEventListener("change", async () => {
-  currentProjectId = projectSelect.value;
-  currentBuildingKey = null;
-  lastBuildingsSignature = null;
-  currentMilestone = null;
-  lastMilestonesSignature = null;
-  await loadBuildingsForProject(currentProjectId);
-  await loadMilestonesForProject(currentProjectId);
-  await loadColourPlansForProject(currentProjectId);
-  loadValidation(currentProjectId);
-  lastPayloadJson = null; // force the next poll tick to render immediately
-});
-
-buildingSelect.addEventListener("change", () => {
-  currentBuildingKey = buildingSelect.value;
-  lastPayloadJson = null; // force the next poll tick to render immediately
-});
-
-milestoneSelect.addEventListener("change", () => {
-  currentMilestone = milestoneSelect.value || null; // "" = Latest
-  lastPayloadJson = null; // force the next poll tick to render immediately
-});
-
-colourSelect.addEventListener("change", () => {
-  // "" = No colour (flat). Otherwise the plan whose name matches. Re-render the
-  // current level with refit:false so pan/zoom is preserved — a pure
-  // presentation change, same as toggling the validation panel. No /rooms
-  // refetch: colouring is computed from the payload already in hand.
-  activeColourPlan = colourSelect.value ? (colourPlans.find(p => p.name === colourSelect.value) || null) : null;
-  if (currentPayload && activeLevelId) renderLevel(currentPayload, activeLevelId, { refit: false });
-});
-
-function updateMeta() {
-  if (!currentPayload) return;
-  const lvls = levelsForPayload(currentPayload);
-  const active = lvls.find(l => l.id === activeLevelId);
-  const n = roomsOnLevel(currentPayload, activeLevelId).length;
-  const lvlName = active ? active.name : "—";
-  meta.textContent = `${lvlName} · ${n} room${n === 1 ? "" : "s"} · v${currentPayload.schema_version} · ${new Date().toLocaleTimeString()}`;
-  meta.classList.remove("stale");
-}
-
-// Called only when new data arrives.
-function ingest(payload) {
-  currentPayload = payload;
-  empty.classList.add("hidden");
-
-  const levels = levelsForPayload(payload);
-
-  // keep the current level if it still exists, else default to the lowest one
-  if (!levels.some(l => l.id === activeLevelId)) {
-    activeLevelId = levels.length ? levels[0].id : null;
-  }
-
-  buildLevelControl(payload, levels);
-  if (activeLevelId) renderLevel(payload, activeLevelId, { refit: true });
-  updateMeta();
-}
-
-// --- pan & zoom ---
-let dragging = false, last = null;
-plan.addEventListener("pointerdown", e => { dragging = true; last = { x: e.clientX, y: e.clientY }; plan.setPointerCapture(e.pointerId); });
-plan.addEventListener("pointerup", () => dragging = false);
-plan.addEventListener("pointermove", e => {
-  if (!dragging) return;
-  const rect = plan.getBoundingClientRect();
-  const dx = (e.clientX - last.x) / rect.width * view.w;
-  const dy = (e.clientY - last.y) / rect.height * view.h;
-  view.x -= dx; view.y -= dy;
-  last = { x: e.clientX, y: e.clientY };
-  setViewBox();
-});
-plan.addEventListener("wheel", e => {
-  e.preventDefault();
-  const rect = plan.getBoundingClientRect();
-  const mx = view.x + (e.clientX - rect.left) / rect.width * view.w;
-  const my = view.y + (e.clientY - rect.top) / rect.height * view.h;
-  const k = e.deltaY > 0 ? 1.1 : 0.9;
-  view.x = mx - (mx - view.x) * k;
-  view.y = my - (my - view.y) * k;
-  view.w *= k; view.h *= k;
-  setViewBox();
-}, { passive: false });
-plan.addEventListener("dblclick", () => { view = { ...fitted }; setViewBox(); });
-
-// --- polling ---
-
-// Build /rooms's URL from the current project/building/milestone selection.
-// Nothing selected -> today's unscoped "merge everything" behaviour. The
-// milestone only rides along with its project — it's a per-project name.
-function roomsUrl() {
+// Build this zone's /rooms URL from its project/building/milestone selection.
+function roomsUrl(zone) {
   const params = new URLSearchParams();
-  if (currentProjectId) params.set("project", currentProjectId);
-  if (currentBuildingKey) params.set("building", currentBuildingKey);
-  if (currentProjectId && currentMilestone) params.set("milestone", currentMilestone);
+  if (zone.projectId) params.set("project", zone.projectId);
+  if (zone.buildingKey) params.set("building", zone.buildingKey);
+  if (zone.projectId && zone.milestone) params.set("milestone", zone.milestone);
   const qs = params.toString();
   return qs ? `/rooms?${qs}` : "/rooms";
 }
 
-async function poll() {
+async function poll(zone) {
   try {
-    const res = await fetch(roomsUrl(), { cache: "no-store" });
-    if (res.status === 204) { meta.textContent = "waiting for data"; meta.classList.add("stale"); return; }
+    const res = await fetch(roomsUrl(zone), { cache: "no-store" });
+    if (res.status === 204) { zone.els.meta.textContent = "waiting for data"; zone.els.meta.classList.add("stale"); return; }
     if (!res.ok) throw new Error(res.status);
     const payload = await res.json();
     const incoming = JSON.stringify(payload);
-    if (incoming !== lastPayloadJson) {
-      lastPayloadJson = incoming;
-      ingest(payload);   // re-fits + rebuilds level control only on real change
+    if (incoming !== zone.lastPayloadJson) {
+      zone.lastPayloadJson = incoming;
+      ingest(zone, payload); // re-fits + rebuilds level control only on real change
     }
   } catch (err) {
-    meta.textContent = "connection lost"; meta.classList.add("stale");
+    zone.els.meta.textContent = "connection lost"; zone.els.meta.classList.add("stale");
   }
 }
 
-// Each tick: refresh the project/building pickers (cheap, in-memory-derived;
-// this is also how a newly-pushed project/building shows up without a page
-// reload), then fetch rooms scoped to whatever's currently selected.
-async function tick() {
-  await loadProjects();
-  await poll();
+// ============================ view linking ============================
+
+// Apply a view to a zone and repaint its viewBox.
+function applyView(zone, v) {
+  zone.view = { ...v };
+  setViewBox(zone);
 }
+
+// Route a gesture's resulting view: linked -> every zone gets the SAME view;
+// unlinked -> just the origin zone. When linked, each zone zooms around the
+// origin zone's cursor point (all zones receive one `v`) — the correct,
+// locked-together behaviour; the anchor is not recomputed per zone.
+function commitView(originZone, v) {
+  if (linkViews) {
+    for (const z of zones) applyView(z, v);
+  } else {
+    applyView(originZone, v);
+  }
+}
+
+// Attach pan/zoom to one zone's SVG. Each handler computes the new transform
+// against THAT zone's view, then routes it through commitView.
+function wireInteractions(zone) {
+  const svg = zone.svg;
+  let dragging = false, last = null;
+
+  svg.addEventListener("pointerdown", e => {
+    dragging = true; last = { x: e.clientX, y: e.clientY };
+    svg.setPointerCapture(e.pointerId);
+  });
+  svg.addEventListener("pointerup", () => { dragging = false; });
+
+  svg.addEventListener("pointermove", e => {
+    if (!dragging) return;
+    const rect = svg.getBoundingClientRect();
+    const v = { ...zone.view };
+    v.x -= (e.clientX - last.x) / rect.width * v.w;
+    v.y -= (e.clientY - last.y) / rect.height * v.h;
+    last = { x: e.clientX, y: e.clientY };
+    commitView(zone, v);
+  });
+
+  svg.addEventListener("wheel", e => {
+    e.preventDefault();
+    const rect = svg.getBoundingClientRect();
+    const v = { ...zone.view };
+    const mx = v.x + (e.clientX - rect.left) / rect.width * v.w;
+    const my = v.y + (e.clientY - rect.top) / rect.height * v.h;
+    const k = e.deltaY > 0 ? 1.1 : 0.9;
+    v.x = mx - (mx - v.x) * k;
+    v.y = my - (my - v.y) * k;
+    v.w *= k; v.h *= k;
+    commitView(zone, v);
+  }, { passive: false });
+
+  svg.addEventListener("dblclick", () => commitView(zone, zone.fitted));
+}
+
+// ============================ zone lifecycle ============================
+
+function wireZoneControls(zone) {
+  const e = zone.els;
+  e.levelSelect.addEventListener("change", () => selectLevel(zone, e.levelSelect.value));
+
+  e.projectSelect.addEventListener("change", async () => {
+    zone.projectId = e.projectSelect.value;
+    zone.buildingKey = null;
+    zone.lastBuildingsSignature = null;
+    zone.milestone = null;
+    zone.lastMilestonesSignature = null;
+    await loadBuildingsForProject(zone, zone.projectId);
+    await loadMilestonesForProject(zone, zone.projectId);
+    await loadColourPlansForProject(zone, zone.projectId);
+    loadValidation(zone, zone.projectId);
+    zone.lastPayloadJson = null; // force the next poll tick to render immediately
+  });
+
+  e.buildingSelect.addEventListener("change", () => {
+    zone.buildingKey = e.buildingSelect.value;
+    zone.lastPayloadJson = null;
+  });
+
+  e.milestoneSelect.addEventListener("change", () => {
+    zone.milestone = e.milestoneSelect.value || null; // "" = Latest
+    zone.lastPayloadJson = null;
+  });
+
+  e.colourSelect.addEventListener("change", () => {
+    // Re-render the current level with refit:false so pan/zoom is preserved —
+    // a pure presentation change. No /rooms refetch.
+    zone.activeColourPlan = e.colourSelect.value ? (zone.colourPlans.find(p => p.name === e.colourSelect.value) || null) : null;
+    if (zone.currentPayload && zone.activeLevelId) renderLevel(zone, zone.currentPayload, zone.activeLevelId, { refit: false });
+  });
+
+  e.validationToggle.addEventListener("click", () => {
+    e.validationPanel.classList.toggle("hidden");
+    zone.showErrors = !e.validationPanel.classList.contains("hidden");
+    if (zone.currentPayload && zone.activeLevelId) renderLevel(zone, zone.currentPayload, zone.activeLevelId, { refit: false });
+  });
+  e.validationRefresh.addEventListener("click", () => loadValidation(zone, zone.projectId));
+  e.validationDownload.addEventListener("click", () => downloadValidationCsv(zone));
+}
+
+// Build one zone: clone the template, wire its own state object, controls, and
+// interactions. `seed` (optional) clones scope from an existing zone so a
+// newly-added zone starts on the same project/building rather than blank.
+function createZone(seed) {
+  const id = `zone-${zoneSeq++}`;
+  const frag = zoneTemplate.content.cloneNode(true);
+  const root = frag.querySelector(".zone");
+  const q = (sel) => root.querySelector(sel);
+
+  const zone = {
+    id, root,
+    svg: q("svg.plan"),
+    view: { x: 0, y: 0, w: 100, h: 100 },
+    fitted: { x: 0, y: 0, w: 100, h: 100 },
+    lastPayloadJson: null,
+    currentPayload: null,
+    activeLevelId: null,
+    // scope selection (was the global currentProjectId etc.)
+    projectId: seed ? seed.projectId : null,
+    buildingKey: seed ? seed.buildingKey : null,
+    milestone: seed ? seed.milestone : null,
+    // per-zone poll bookkeeping
+    lastProjectIds: null,
+    lastBuildingsSignature: null,
+    lastMilestonesSignature: null,
+    // per-zone colour + validation state
+    colourPlans: [],
+    activeColourPlan: null,
+    currentValidation: null,
+    errorRoomIds: new Set(),
+    showErrors: false,
+    els: {
+      projectSelect: q(".projectSelect"),
+      milestoneSelect: q(".milestoneSelect"),
+      buildingSelect: q(".buildingSelect"),
+      colourSelect: q(".colourSelect"),
+      levelSelect: q(".levelSelect"),
+      validationToggle: q(".validation-toggle"),
+      meta: q(".meta"),
+      empty: q(".empty"),
+      validationPanel: q(".validation-panel"),
+      validationRefresh: q(".vRefresh"),
+      validationDownload: q(".vDownload"),
+      validationBody: q(".vBody"),
+    },
+  };
+
+  wireZoneControls(zone);
+  wireInteractions(zone);
+  zonesEl.appendChild(root);
+  zones.push(zone);
+  return zone;
+}
+
+function removeZone() {
+  if (zones.length <= 1) return;
+  const zone = zones.pop();
+  zone.root.remove();
+  setLayout();
+}
+
+// The grid column count follows the zone count, capped at 3 (rows wrap beyond).
+function setLayout() {
+  zonesEl.style.gridTemplateColumns = `repeat(${Math.min(zones.length, 3)}, 1fr)`;
+  document.getElementById("removeZone").disabled = zones.length <= 1;
+}
+
+// ============================ polling loop ============================
+
+// Each tick: for every zone, refresh its pickers (cheap, in-memory-derived —
+// also how a newly-pushed project/building shows up without a reload), then
+// fetch rooms scoped to that zone's selection.
+async function tick() {
+  for (const zone of zones) {
+    await loadProjects(zone);
+    await poll(zone);
+  }
+}
+
+// ============================ header controls ============================
+
+document.getElementById("addZone").addEventListener("click", async () => {
+  const seed = zones.length ? zones[zones.length - 1] : null;
+  const zone = createZone(seed);
+  setLayout();
+  // Bring the new zone up to speed immediately rather than waiting a full tick.
+  await loadProjects(zone);
+  await poll(zone);
+});
+
+document.getElementById("removeZone").addEventListener("click", removeZone);
+
+document.getElementById("linkToggle").addEventListener("click", (e) => {
+  linkViews = !linkViews;
+  e.target.textContent = `Link views: ${linkViews ? "on" : "off"}`;
+  e.target.classList.toggle("on", linkViews);
+  // On enabling, immediately snap every zone to the first zone's view so they
+  // start aligned rather than only syncing on the next gesture.
+  if (linkViews && zones.length) commitView(zones[0], zones[0].view);
+});
+
+// ============================ boot ============================
+
+createZone(null);
+setLayout();
 tick();
 setInterval(tick, 2000);
 </script>

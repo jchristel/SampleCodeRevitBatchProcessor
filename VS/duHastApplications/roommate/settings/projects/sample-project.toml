@@ -1,6 +1,7 @@
 project_id = "sample-project"
 name = "Sample Hospital Job"
 is_default = false
+comparison_properties = []
 room_label = [
     "$name",
     "Area",
@@ -8,7 +9,6 @@ room_label = [
 ]
 milestones = []
 drofus_fields = []
-colour_plans = []
 
 [sources.drofus]
 type = "file"
@@ -40,3 +40,17 @@ canonical = "Department"
 
 [builtin_properties.by_source]
 revit = "Department"
+
+[[colour_plans]]
+name = "Area vs Perimeter"
+active = true
+
+[colour_plans.mode]
+kind = "propertycompare"
+property_a = "Area"
+property_b = "Perimeter"
+op = "diff"
+
+[colour_plans.mode.colouring]
+style = "diverging"
+scheme = "RdYlGn"

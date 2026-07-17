@@ -1,0 +1,21 @@
+/* Shared design tokens for the roommate viewer pages (index / settings /
+   comparison). Single source of truth for the palette, so "change the accent
+   colour" is a one-file edit instead of a three-file one that drifts. Each
+   page's own, page-specific CSS stays inline in its <style> block — only these
+   :root custom properties are shared. Served from static/ by axum's ServeDir
+   (see main.rs), so it costs one <link>, no build step.
+
+   --ok is only used by settings.html / comparison.html; it lives here anyway so
+   there is one palette rather than a split one — an unused token costs
+   index.html nothing. */
+:root {
+  --paper: #f3efe6;
+  --ink: #1f2421;
+  --rule: #cfc7b4;
+  --fill: #e4ddc9;
+  --fill-hover: #d4c9a8;
+  --accent: #b4541f;
+  --error: #c98c86;
+  --ok: #5a7a4f;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
+}

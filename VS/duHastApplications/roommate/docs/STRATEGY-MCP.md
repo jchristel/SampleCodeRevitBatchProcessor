@@ -132,6 +132,16 @@ Superseded/HANDOVER-service-layer.md for the extraction itself.
   `!VS/duHastApplications/roommate/src/bin/` placed *after* that rule (a
   negation earlier in the file, before a later blanket rule, loses — gitignore
   is evaluated top-to-bottom, last match wins).
+- **Host wiring shipped.** Concrete client configs now exist so the server plugs
+  into a real MCP host, not just a raw stdio pipe: a project-scoped `.mcp.json`
+  at the crate root (Claude Code — build-free via `cargo run -q`, whose `-q` keeps
+  cargo's status lines off the JSON-RPC stdout) and a Claude Desktop `mcpServers`
+  snippet with absolute paths, both in [mcp-host-setup.md](mcp-host-setup.md)
+  alongside build + verify steps. Verified: the committed `.mcp.json` command run
+  end-to-end returns `get_hierarchy_areas` over stdio with no cargo noise leaking
+  into the transport. Adding another host is a copy-paste of the same
+  `command`/`args`; both share the HTTP server's `--server-settings` /
+  `--project-settings`, so the two front doors see identical data.
 
 ## Open items / things to watch
 
@@ -147,7 +157,6 @@ Superseded/HANDOVER-service-layer.md for the extraction itself.
 - **No resources or prompts exposed**, only tools — matches the handover
   doc's "read side ... as tools" scope. Worth revisiting if an MCP client
   wants to browse stored snapshots as resources rather than calling a tool
-  per query, but nothing today motivates it.
-- **Not yet packaged for a specific MCP host.** Wiring `mcp.exe` into a
-  concrete client's config (e.g. Claude Desktop's `mcpServers` entry) is
-  unstarted — this doc covers the server side only.
+  per query, but nothing today motivates it. (Host *packaging*, which used to be
+  the other open item here, is now done — see Implemented /
+  [mcp-host-setup.md](mcp-host-setup.md).)

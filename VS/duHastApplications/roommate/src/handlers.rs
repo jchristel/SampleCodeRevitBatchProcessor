@@ -21,6 +21,7 @@ use tokio::io::AsyncBufReadExt;
 use tokio_util::io::StreamReader;
 
 use crate::contract::{Room, RoomPayload, StreamEnvelope, SUPPORTED_SCHEMA};
+use crate::service::areas;
 use crate::service::comparison::{self, ComparisonResponse};
 use crate::service::drofus::{DrofusSnapshotInfo, DrofusSnapshotList};
 use crate::service::milestones::MilestonesResponse;
@@ -381,6 +382,32 @@ pub async fn get_project_validation(
     Ok(Json(report))
 }
 
+/// Optional building/milestone scoping for `GET /projects/{id}/areas` (the
+/// project itself is the path id). Same scoping vocabulary as `/rooms`.
+#[derive(Deserialize)]
+pub struct AreasQuery {
+    #[serde(default)]
+    pub building: Option<String>,
+    #[serde(default)]
+    pub milestone: Option<String>,
+}
+
+/// Hierarchy gross-area footprints for one project — see
+/// `service::areas::assemble_areas`. 204 when nothing has ever been posted
+/// (mirrors `/rooms`); a scope matching nothing is 200 with empty `groups`.
+pub async fn get_project_areas(
+    State(state): State<Shared>,
+    Path(project_id): Path<String>,
+    Query(query): Query<AreasQuery>,
+) -> Result<Json<areas::AreasResult>, StatusCode> {
+    let result = areas::assemble_areas(&state, &project_id, query.building.as_deref(), query.milestone.as_deref())
+        .map_err(map_service_error)?;
+    match result {
+        None => Err(StatusCode::NO_CONTENT),
+        Some(result) => Ok(Json(result)),
+    }
+}
+
 /// The baseline milestone plus the milestones to compare against it. A POST
 /// body rather than query params because the compared set is a list (repeated
 /// query keys don't deserialize cleanly, and milestone names can contain any
@@ -439,7 +466,7 @@ mod tests {
             milestones: vec![],
             comparison_key: None,
             comparison_properties: vec![],
-        }
+            hierarchy_exclusions: vec![],        }
     }
 
     /// Registers one project's bundle under its id -- the shape

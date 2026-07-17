@@ -4,20 +4,10 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Room Plan · Settings</title>
+<!-- Shared palette tokens (:root custom properties) live in one file so the
+     three sibling pages can't drift; page-specific CSS stays in <style> below. -->
+<link rel="stylesheet" href="tokens.css" />
 <style>
-  /* Same visual language as index.html — the two pages are siblings, so the
-     :root tokens are copied verbatim rather than extracted (see plan). */
-  :root {
-    --paper: #f3efe6;
-    --ink: #1f2421;
-    --rule: #cfc7b4;
-    --fill: #e4ddc9;
-    --fill-hover: #d4c9a8;
-    --accent: #b4541f;
-    --error: #c98c86;
-    --ok: #5a7a4f;
-    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
-  }
   * { box-sizing: border-box; }
   html, body { height: 100%; margin: 0; }
   body {
@@ -262,6 +252,8 @@
     </div>
   </main>
 
+<!-- Shared api helpers (apiGet / apiSend), loaded before this page's script. -->
+<script src="common.js"></script>
 <script>
 "use strict";
 
@@ -279,20 +271,7 @@ function el(tag, attrs, children) {
 }
 
 // ---------- api ----------
-async function apiGet(url) {
-  const res = await fetch(url, { cache: "no-store" });
-  if (!res.ok) throw new Error(await res.text() || `${url} -> ${res.status}`);
-  return res.json();
-}
-async function apiSend(method, url, body) {
-  const res = await fetch(url, {
-    method,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  const text = await res.text();
-  return { ok: res.ok, status: res.status, text };
-}
+// apiGet / apiSend live in common.js (shared with comparison.html).
 
 // ---------- state ----------
 // `settings` mirrors the server's Settings JSON shape exactly; the row

@@ -99,7 +99,7 @@ mod tests {
             milestones: vec![],
             comparison_key: None,
             comparison_properties: vec![],
-        };
+            hierarchy_exclusions: vec![],        };
         let registry = std::collections::HashMap::from([("p1".to_string(), bundle)]);
         AppState::new(Box::new(MemStore::new()), registry, None)
     }

@@ -125,6 +125,46 @@ side should shape future server endpoints.
     from dRofus (the editor pre-fills it from the project's `date`-typed
     `drofus_fields`) — falling back to native ISO-8601 when omitted; an
     unparseable value → grey.
+- **SVG export (per-zone, one file per level).** An "Export SVGs" button on each
+  zone's toolbar saves that zone's whole building — one standalone `.svg` per
+  level — with no server endpoint, the same "presentation reshuffle of data the
+  browser already has" line that kept CSV export and QA/colour rendering
+  client-side: the browser already holds the rendered SVG, so exporting is just
+  serializing DOM. A second consumer of the render path — `renderLevel` was split
+  into a pure `paintLevel(svg, rooms, fitted, …)` painter (reads no zone/global
+  state) plus the on-screen `renderLevel` wrapper, so the export and the live view
+  can't drift. Each file is fully self-contained: framed to that level's *fitted*
+  bounds (not the user's pan/zoom), an embedded `<style>` whose colours are read
+  live from the resolved `:root` custom properties (so it never diverges from the
+  page and needs no `tokens.css`), an opaque paper background `<rect>`, `xmlns`,
+  and an explicit `viewBox`/`width`/`height` — it opens correctly in a bare
+  browser tab and in Illustrator/Inkscape. Error highlighting follows the
+  validation panel (`showErrors`), which is only on once validation is loaded, so
+  an exported "errors" file is never a silent empty highlight; coloured rooms
+  carry their resolved fill inline and survive serialization. Filenames are
+  self-describing (`roomplan_<project>_<level>[_<milestone>][_errors].svg`). One
+  click emits N downloads (browsers prompt once to allow multiple), staggered to
+  avoid throttling. All-levels-in-one-file and raster (PNG/PDF) export remain out
+  of scope.
+- **Hierarchy areas overlay + summary.** A per-zone "Areas" toggle draws the
+  server's dissolved gross-area footprints (`GET /projects/{id}/areas`, see
+  [Server](STRATEGY-SERVER.md)) on top of the current level, rooms ghosted
+  beneath, with a tier picker (Building / Department / …) to choose which tier's
+  footprints show. The overlay reuses the render path's transforms and the
+  categorical `Set2` palette; footprints are hole-free, so each group is a plain
+  `<polygon>` per island (no even-odd path) — a small simplification the
+  "discard holes" server decision buys the front end. A Case-A excluded group
+  (`counted_upward: false`) reads dashed + faint rather than vanishing. A summary
+  panel puts each group's dissolved **footprint** area beside its summed **net**
+  room area (computed client-side by shoelace over each room's loops) and their
+  **Δ** = wall zones + filled voids, with a per-level total and a cross-level
+  total for the tier — the two numbers answer different questions, and their
+  difference is itself legible. All client-side, the same "axum stays a pure JSON
+  API" line as the colour maths and CSV export: the server ships coordinates and
+  areas, the browser draws and tabulates. Fetched **on demand** (on toggle, and
+  refreshed when new room data arrives) rather than on the 2s room poll, since
+  areas are derived and heavier than a room fetch — the endpoint-vs-poll lifecycle
+  call the "Endpoints follow fetch lifecycle" section describes.
 - **Settings page (`settings.html`).** A sibling static page, linked from the
   viewer's header, over [Server](STRATEGY-SERVER.md)'s `/api/settings` routes:
   a project-file list on the left (a file that fails to parse still gets a
@@ -166,8 +206,12 @@ side should shape future server endpoints.
   `drofus_fields` (blank = native ISO). A plan of a genuinely unknown mode
   (forward-compat) is shown read-only and round-trips unchanged rather than
   being clobbered on save. Same visual
-  language as the viewer — the `:root` tokens are copied verbatim rather
-  than extracted, an accepted duplication while it's just two sibling pages.
+  language as the viewer — once a third sibling page (`comparison.html`) appeared,
+  the shared `:root` palette tokens were extracted to `static/tokens.css`
+  (`<link>`ed by all three pages), and the two identical settings-API fetch
+  helpers (`apiGet`/`apiSend`, used by `settings.html` and `comparison.html`) to
+  `static/common.js`. Both are served by the same `ServeDir`, so it stays a
+  zero-build vanilla layer; page-specific CSS/JS stays inline per page.
 
 ## Rendering: SVG today, and when to move
 
@@ -258,10 +302,30 @@ serving a different consumer (a hierarchy browser) than the room render.
 
 ## Open items / things to watch
 
-- **Payload size and the 2s poll on large models.** The viewer re-stringifies
-  the whole payload every 2s to detect change. On a big building that diff plus
-  re-render may feel sluggish; cheap fixes are a longer interval or a small
-  fingerprint (room count + hash) instead of full stringify.
+- **2s-poll re-render cost — resolved.** The viewer used to re-stringify the
+  whole payload every 2s to detect change. It now compares a single
+  server-computed content `revision` (see [Server](STRATEGY-SERVER.md)), so a
+  quiet system triggers no re-render between real pushes; the per-zone tick also
+  fetches `/projects` once and runs zones concurrently. Kept here as a pointer
+  since earlier notes flagged this as a risk.
+- **Viewport culling on pan/zoom — implemented.** SVG clips but does not cull, so
+  every room element used to cost per frame regardless of zoom. `paintLevel` now
+  records each room's precomputed (Y-flipped) bbox + its nodes as a "cull unit";
+  `setViewBox` schedules a `requestAnimationFrame`-throttled `cullZone` that hides
+  rooms whose bbox is outside the current view (plus a 20%-of-view margin) and
+  shows them again on re-entry, toggling a unit's `display` only when its on/off
+  state actually changes. bboxes come from the loop points, never `getBBox` (which
+  would force layout). The SVG export deliberately passes no cull-unit array — an
+  exported file needs every room. Measured on the 10k-room `big-plate` fixture
+  (5,046 rooms/level): a deep zoomed-in pan went from **~595 ms/frame (~2 fps)** to
+  **4–15 ms/frame** (only the ~12–40 on-screen rooms drawn), verified to restore
+  every room on zoom-out and to leave the export at full room count.
+- **Fitted-view cost at very high room counts — still open.** Culling helps only
+  when geometry is off-screen; a *fitted* view of a 5,000-room level still paints
+  everything (~0.5 s+/frame), so the remaining lever there is level-of-detail
+  (drop labels / merge rooms when the whole plate is on screen), not culling. The
+  grid is also not yet capped to the visible region — minor next to the rooms, but
+  the same idea. Both deferred pending need.
 - **Coordinates and units.** Revit internal units are decimal feet, Y-up; SVG
   is Y-down — handled by flipping Y when building geometry. Absolute units do
   not matter while the viewer auto-fits, but they will once dimensions, a scale

@@ -18,7 +18,9 @@ use anyhow::Context;
 
 use crate::contract::RoomPayload;
 use crate::drofus::DrofusData;
-use crate::settings::{BuiltinPropertyDef, DrofusFieldConfig, HierarchyTier, Milestone, TestData};
+use crate::settings::{
+    BuiltinPropertyDef, DrofusFieldConfig, HierarchyExclusion, HierarchyTier, Milestone, TestData,
+};
 use crate::storage::SnapshotStore;
 
 /// Composite key identifying one storage bucket: a model within a project.
@@ -103,6 +105,13 @@ pub struct ProjectSettings {
     /// Ordered room property names compared across milestones (see
     /// `Settings::comparison_properties`). Read by `service::comparison`.
     pub comparison_properties: Vec<String>,
+
+    /// Footprint exclusions for the hierarchy-areas feature. Unlike
+    /// `colour_plans` (client-only, never in this bundle), exclusions are used by
+    /// the SERVER when it computes footprints in `service::areas`, so they belong
+    /// here in the resolved bundle alongside `hierarchy` — resolved via
+    /// `settings_for` like every other classification input.
+    pub hierarchy_exclusions: Vec<HierarchyExclusion>,
 }
 
 /// One immutable snapshot of every project's settings. Swapped wholesale

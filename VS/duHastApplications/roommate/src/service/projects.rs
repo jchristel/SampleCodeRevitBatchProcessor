@@ -192,7 +192,7 @@ mod tests {
             milestones: vec![],
             comparison_key: None,
             comparison_properties: vec![],
-        }
+            hierarchy_exclusions: vec![],        }
     }
 
     /// A stored-but-unregistered project is skipped from the listing — same

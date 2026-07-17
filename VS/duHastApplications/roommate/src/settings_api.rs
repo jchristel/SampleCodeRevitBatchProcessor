@@ -618,6 +618,15 @@ property = "LastSync"
 near_date = "2026-06-30"
 scheme = "RdYlGn"
 format = "%Y-%m-%d"
+
+[[hierarchy_exclusions]]
+match = "group"
+tier = "Department"
+value = "Outdoor"
+
+[[hierarchy_exclusions]]
+match = "rooms"
+ids = ["12345", "67890"]
 "##,
         )
         .unwrap();
@@ -670,6 +679,24 @@ format = "%Y-%m-%d"
                 assert_eq!(format.as_deref(), Some("%Y-%m-%d"));
             }
             other => panic!("expected DateRange, got {other:?}"),
+        }
+
+        // Hierarchy exclusions survive the round-trip even though they are the
+        // LAST array-of-tables, emitted after the colour-plan tables — the exact
+        // ordering the `skip_serializing_if` guard protects. Both match kinds
+        // (internally tagged on `match`) parse back to their variants.
+        use crate::settings::HierarchyExclusion;
+        assert_eq!(reparsed.hierarchy_exclusions.len(), 2);
+        match &reparsed.hierarchy_exclusions[0] {
+            HierarchyExclusion::Group { tier, value } => {
+                assert_eq!(tier, "Department");
+                assert_eq!(value, "Outdoor");
+            }
+            other => panic!("expected Group, got {other:?}"),
+        }
+        match &reparsed.hierarchy_exclusions[1] {
+            HierarchyExclusion::Rooms { ids } => assert_eq!(ids, &vec!["12345".to_string(), "67890".to_string()]),
+            other => panic!("expected Rooms, got {other:?}"),
         }
     }
 

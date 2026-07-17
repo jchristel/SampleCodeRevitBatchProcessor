@@ -4,17 +4,10 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Room Plan</title>
+<!-- Shared palette tokens (:root custom properties) live in one file so the
+     three sibling pages can't drift; page-specific CSS stays in <style> below. -->
+<link rel="stylesheet" href="tokens.css" />
 <style>
-  :root {
-    --paper: #f3efe6;
-    --ink: #1f2421;
-    --rule: #cfc7b4;
-    --fill: #e4ddc9;
-    --fill-hover: #d4c9a8;
-    --accent: #b4541f;
-    --error: #c98c86;
-    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
-  }
   * { box-sizing: border-box; }
   html, body { height: 100%; margin: 0; }
   body {
@@ -92,6 +85,12 @@
   }
   .zone-toolbar button.validation-toggle.issues { border-color: var(--accent); color: var(--accent); }
   .zone-toolbar button.validation-toggle.hidden { display: none; }
+  .zone-toolbar button.export-svg {
+    font-family: var(--mono); font-size: 0.72rem;
+    background: var(--paper); color: var(--ink);
+    border: 1px solid var(--ink); padding: 0.2rem 0.4rem; cursor: pointer;
+  }
+  .zone-toolbar button.export-svg.hidden { display: none; }
   .zone-toolbar .meta { font-size: 0.66rem; letter-spacing: 0.08em; color: var(--accent); margin-left: auto; }
   .zone-toolbar .meta.stale { color: var(--ink); opacity: 0.5; }
 
@@ -150,6 +149,43 @@
     color: var(--ink); border: 1px solid var(--ink); padding: 0.25rem 0.5rem;
     cursor: pointer; margin-bottom: 0.75rem;
   }
+
+  /* --- hierarchy gross-area footprints: overlay + summary --- */
+  .zone-toolbar button.areas-toggle {
+    font-family: var(--mono); font-size: 0.72rem;
+    background: var(--paper); color: var(--ink);
+    border: 1px solid var(--ink); padding: 0.2rem 0.4rem; cursor: pointer;
+  }
+  .zone-toolbar button.areas-toggle.on { border-color: var(--accent); color: var(--accent); }
+  .zone-toolbar button.areas-toggle.hidden,
+  .zone-toolbar select.areasTier.hidden { display: none; }
+  /* Rooms recede so the dissolved footprints read clearly on top. */
+  svg.plan.areas-active .room,
+  svg.plan.areas-active .hole { opacity: 0.16; }
+  svg.plan.areas-active .label { opacity: 0.22; }
+  .area-poly { fill-opacity: 0.32; stroke-width: 2; vector-effect: non-scaling-stroke; }
+  /* A group withheld from tiers above (Case-A exclusion) reads as dashed + faint. */
+  .area-poly.faded { fill-opacity: 0.12; stroke-dasharray: 5 4; }
+  .area-label { fill: var(--ink); text-anchor: middle; dominant-baseline: middle;
+                pointer-events: none; font-weight: 600; }
+  .areas-panel {
+    position: absolute; top: 0; right: 0; bottom: 0; width: 330px; max-width: 85%;
+    background: rgba(243, 239, 230, 0.97); border-left: 1px solid var(--ink);
+    padding: 1rem 1.1rem; overflow-y: auto; font-size: 0.72rem;
+  }
+  .areas-panel.hidden { display: none; }
+  .areas-panel h2 {
+    font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
+    opacity: 0.6; margin: 0 0 0.6rem;
+  }
+  .areas-panel .note { opacity: 0.6; margin: 0 0 0.6rem; }
+  .areas-panel table { width: 100%; border-collapse: collapse; }
+  .areas-panel th, .areas-panel td { text-align: right; padding: 0.22rem 0.3rem; border-bottom: 1px solid var(--rule); }
+  .areas-panel th:first-child, .areas-panel td:first-child { text-align: left; }
+  .areas-panel thead th { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.6; }
+  .areas-panel tr.total td { font-weight: 600; border-top: 2px solid var(--ink); }
+  .areas-panel .swatch { display: inline-block; width: 0.6rem; height: 0.6rem; margin-right: 0.35rem; vertical-align: middle; }
+  .areas-panel .uncounted { opacity: 0.6; font-style: italic; }
 </style>
 </head>
 <body>
@@ -176,6 +212,9 @@
         <select class="picker colourSelect hidden"></select>
         <select class="picker levelSelect hidden"></select>
         <button class="validation-toggle hidden"></button>
+        <button class="export-svg hidden" title="Export every level as its own SVG file">Export SVGs</button>
+        <button class="areas-toggle hidden" title="Show hierarchy gross-area footprints">Areas</button>
+        <select class="picker areasTier hidden" title="Footprint tier"></select>
         <span class="meta">waiting for data</span>
       </div>
       <div class="zone-canvas">
@@ -189,6 +228,10 @@
           <button class="refresh vRefresh">Refresh</button>
           <button class="refresh vDownload">Download CSV</button>
           <div class="vBody"></div>
+        </div>
+        <div class="areas-panel hidden">
+          <h2>Hierarchy areas</h2>
+          <div class="aBody"></div>
         </div>
       </div>
     </div>
@@ -535,6 +578,127 @@ function colourForRoom(room, plan, ctx) {
 
 function setViewBox(zone) {
   zone.svg.setAttribute("viewBox", `${zone.view.x} ${zone.view.y} ${zone.view.w} ${zone.view.h}`);
+  scheduleCull(zone); // hide/show rooms for the new view (throttled to a frame)
+}
+
+// A room's bounding box in the SVG's (Y-flipped) coordinate space — the same
+// space as `zone.view`/the viewBox — computed from the outer loop's points, NOT
+// from getBBox (which forces a synchronous layout). Stored once at paint time.
+function roomBBox(room) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const raw of room.loops[0].points) {
+    const p = flip(raw);
+    if (p.x < minX) minX = p.x;
+    if (p.y < minY) minY = p.y;
+    if (p.x > maxX) maxX = p.x;
+    if (p.y > maxY) maxY = p.y;
+  }
+  return { minX, minY, maxX, maxY };
+}
+
+// Viewport culling: hide rooms whose bbox is outside the current view (plus a
+// margin so panning doesn't pop edges), show them again when they re-enter. SVG
+// clips but does not cull — every element still costs per frame — so at a few
+// thousand rooms a zoomed-in view is unusable without this. Only toggles a unit's
+// nodes when its on/off state actually changes, so steady-state panning touches
+// just the handful crossing the boundary, not the whole level.
+function cullZone(zone) {
+  const units = zone.cullUnits;
+  if (!units || units.length === 0) return;
+  const v = zone.view;
+  const mx = v.w * 0.2, my = v.h * 0.2; // keep a 20%-of-view margin loaded
+  const x0 = v.x - mx, y0 = v.y - my, x1 = v.x + v.w + mx, y1 = v.y + v.h + my;
+  for (const u of units) {
+    const off = u.maxX < x0 || u.minX > x1 || u.maxY < y0 || u.minY > y1;
+    if (off !== u.hidden) {
+      const d = off ? "none" : "";
+      for (const n of u.nodes) n.style.display = d;
+      u.hidden = off;
+    }
+  }
+}
+
+// One cull per animation frame, so a burst of wheel/drag events (each calling
+// setViewBox) collapses to a single cull on the next frame rather than one per event.
+function scheduleCull(zone) {
+  if (zone._cullRaf) return;
+  zone._cullRaf = requestAnimationFrame(() => { zone._cullRaf = 0; cullZone(zone); });
+}
+
+// Fitted bounds (padded) that frame a level's rooms. Both the on-screen refit
+// and the SVG export frame to this, so the two can never disagree. Null when the
+// rooms have no drawable geometry.
+function fittedBounds(rooms) {
+  const b = bounds(rooms);
+  if (!b) return null;
+  const w = b.maxX - b.minX, h = b.maxY - b.minY;
+  const pad = Math.max(w, h) * 0.04 || 1;
+  return { x: b.minX - pad, y: b.minY - pad, w: w + 2 * pad, h: h + 2 * pad };
+}
+
+// Pure painter: appends grid + room polygons + labels for one level into `svg`,
+// framed to `fitted`. Reads nothing from a zone or module global — the colour
+// plan, error set, and error toggle are passed in — so the live renderer and the
+// SVG export share exactly one body and can't drift.
+// When `cullUnits` (an array) is passed, each room's nodes + precomputed bbox are
+// collected into it so the live view can hide off-screen rooms on pan/zoom
+// (viewport culling). The SVG export passes none — an exported file needs every
+// room, and a detached node has no view to cull against.
+function paintLevel(svg, rooms, fitted, { colourPlan = null, errorRoomIds = null, showErrors = false, cullUnits = null } = {}) {
+  const baseFont = Math.max(fitted.w, fitted.h) * 0.02;
+
+  const g = document.createElementNS(SVG, "g");
+  g.setAttribute("class", "grid");
+  const step = 5;
+  for (let gx = Math.ceil(fitted.x / step) * step; gx < fitted.x + fitted.w; gx += step)
+    g.appendChild(line(gx, fitted.y, gx, fitted.y + fitted.h));
+  for (let gy = Math.ceil(fitted.y / step) * step; gy < fitted.y + fitted.h; gy += step)
+    g.appendChild(line(fitted.x, gy, fitted.x + fitted.w, gy));
+  svg.appendChild(g);
+
+  // Precompute the active plan's per-level scale context once (not per room).
+  const colourCtx = colourPlan ? buildColourContext(rooms, colourPlan) : null;
+
+  // A room's cull unit: its precomputed (flipped) bbox + every node that must
+  // hide/show together. Keyed by room across the two paint passes so the label
+  // (pass 2) joins the same unit as the polygons (pass 1).
+  const units = cullUnits ? new Map() : null;
+
+  // Two passes, not one: every room's polygons first, then every room's label.
+  // SVG has no reliable z-index — paint order is DOM order — so appending all
+  // polygons before any label guarantees labels always sit on top.
+  for (const room of rooms) {
+    if (!room.loops || room.loops.length === 0) continue;
+
+    const outer = document.createElementNS(SVG, "polygon");
+    outer.setAttribute("points", pointsAttr(room.loops[0]));
+    outer.setAttribute("class", showErrors && errorRoomIds && errorRoomIds.has(room.id) ? "room error" : "room");
+    // Fill precedence: an active colour plan wins over the error highlight and
+    // the default --fill. Inline style beats the `.room` CSS rule; a
+    // presentation attribute would lose to it. This inline fill is a resolved
+    // literal, so it survives serialization into an exported .svg unchanged.
+    if (colourPlan) outer.style.fill = colourForRoom(room, colourPlan, colourCtx);
+    outer.appendChild(titleEl(room.name || room.id));
+    svg.appendChild(outer);
+
+    const nodes = units ? [outer] : null;
+    for (let i = 1; i < room.loops.length; i++) {
+      const hole = document.createElementNS(SVG, "polygon");
+      hole.setAttribute("points", pointsAttr(room.loops[i]));
+      hole.setAttribute("class", "hole");
+      svg.appendChild(hole);
+      if (nodes) nodes.push(hole);
+    }
+    if (units) units.set(room, { ...roomBBox(room), nodes, hidden: false });
+  }
+
+  for (const room of rooms) {
+    if (!room.loops || room.loops.length === 0) continue;
+    const label = addLabel(svg, room, baseFont);
+    if (units && label) units.get(room).nodes.push(label);
+  }
+
+  if (cullUnits) for (const u of units.values()) cullUnits.push(u);
 }
 
 function renderLevel(zone, payload, levelId, { refit = true } = {}) {
@@ -547,60 +711,28 @@ function renderLevel(zone, payload, levelId, { refit = true } = {}) {
     return;
   }
 
-  const b = bounds(rooms);
-  if (!b) return;
-
-  const w = b.maxX - b.minX, h = b.maxY - b.minY;
-  const pad = Math.max(w, h) * 0.04 || 1;
-
   if (refit) {
-    zone.fitted = { x: b.minX - pad, y: b.minY - pad, w: w + 2 * pad, h: h + 2 * pad };
-    zone.view = { ...zone.fitted };
+    const fitted = fittedBounds(rooms);
+    if (!fitted) return;
+    zone.fitted = fitted;
+    zone.view = { ...fitted };
     setViewBox(zone);
   }
+  if (!zone.fitted) return; // no established frame yet (unbounded first render)
 
-  const baseFont = Math.max(zone.fitted.w, zone.fitted.h) * 0.02;
+  zone.cullUnits = [];
+  paintLevel(plan, rooms, zone.fitted, {
+    colourPlan: zone.activeColourPlan,
+    errorRoomIds: zone.errorRoomIds,
+    showErrors: zone.showErrors,
+    cullUnits: zone.cullUnits,
+  });
+  cullZone(zone); // hide off-screen rooms for the current view straight away
 
-  const g = document.createElementNS(SVG, "g");
-  g.setAttribute("class", "grid");
-  const step = 5;
-  for (let gx = Math.ceil(zone.fitted.x / step) * step; gx < zone.fitted.x + zone.fitted.w; gx += step)
-    g.appendChild(line(gx, zone.fitted.y, gx, zone.fitted.y + zone.fitted.h));
-  for (let gy = Math.ceil(zone.fitted.y / step) * step; gy < zone.fitted.y + zone.fitted.h; gy += step)
-    g.appendChild(line(zone.fitted.x, gy, zone.fitted.x + zone.fitted.w, gy));
-  plan.appendChild(g);
-
-  // Precompute the active plan's per-level scale context once (not per room).
-  const colourCtx = zone.activeColourPlan ? buildColourContext(rooms, zone.activeColourPlan) : null;
-
-  // Two passes, not one: every room's polygons first, then every room's label.
-  // SVG has no reliable z-index — paint order is DOM order — so appending all
-  // polygons before any label guarantees labels always sit on top.
-  for (const room of rooms) {
-    if (!room.loops || room.loops.length === 0) continue;
-
-    const outer = document.createElementNS(SVG, "polygon");
-    outer.setAttribute("points", pointsAttr(room.loops[0]));
-    outer.setAttribute("class", zone.showErrors && zone.errorRoomIds.has(room.id) ? "room error" : "room");
-    // Fill precedence: an active colour plan wins over the error highlight and
-    // the default --fill. Inline style beats the `.room` CSS rule; a
-    // presentation attribute would lose to it.
-    if (zone.activeColourPlan) outer.style.fill = colourForRoom(room, zone.activeColourPlan, colourCtx);
-    outer.appendChild(titleEl(room.name || room.id));
-    plan.appendChild(outer);
-
-    for (let i = 1; i < room.loops.length; i++) {
-      const hole = document.createElementNS(SVG, "polygon");
-      hole.setAttribute("points", pointsAttr(room.loops[i]));
-      hole.setAttribute("class", "hole");
-      plan.appendChild(hole);
-    }
-  }
-
-  for (const room of rooms) {
-    if (!room.loops || room.loops.length === 0) continue;
-    addLabel(zone, room, baseFont);
-  }
+  // Re-add the areas overlay on top: renderLevel is the single choke point every
+  // re-render (poll, colour, validation, level switch) passes through, so this
+  // one call keeps the footprints painted without each caller knowing about them.
+  if (zone.areasMode) renderAreasOverlay(zone);
 }
 
 // `room.label` is the server-resolved, ordered field list (settings.toml's
@@ -608,16 +740,16 @@ function renderLevel(zone, payload, levelId, { refit = true } = {}) {
 // primary line; further fields stack below as smaller accent lines. `label`
 // present-but-empty means the configured properties didn't resolve (respect
 // it); `label` missing (an older payload) falls back to name/id.
-function addLabel(zone, room, baseFont) {
+function addLabel(svg, room, baseFont) {
   const fields = room.label !== undefined ? room.label : [room.name || room.id].filter(Boolean);
-  if (fields.length === 0) return;
+  if (fields.length === 0) return null;
 
   const box = loopBox(room.loops[0]);
   const longest = fields.reduce((n, f) => Math.max(n, String(f).length), 1);
   const widthLimited = (box.w * 0.9) / longest / 0.6;
   const heightLimited = (box.h * 0.8) / (1 + 0.7 * (fields.length - 1));
   const fontSize = Math.min(baseFont, widthLimited, heightLimited);
-  if (!(fontSize > 0)) return;
+  if (!(fontSize > 0)) return null;
 
   const c = centroid(room.loops[0]);
   const label = document.createElementNS(SVG, "text");
@@ -638,7 +770,8 @@ function addLabel(zone, room, baseFont) {
     label.appendChild(span);
   });
 
-  zone.svg.appendChild(label);
+  svg.appendChild(label);
+  return label;
 }
 
 // Populate this zone's level picker, highest elevation first.
@@ -662,6 +795,7 @@ function selectLevel(zone, levelId) {
   zone.activeLevelId = levelId;
   renderLevel(zone, zone.currentPayload, levelId, { refit: true });
   updateMeta(zone);
+  if (zone.areasMode) renderAreasSummary(zone); // overlay follows via renderLevel
 }
 
 function updateMeta(zone) {
@@ -678,6 +812,8 @@ function updateMeta(zone) {
 function ingest(zone, payload) {
   zone.currentPayload = payload;
   zone.els.empty.classList.add("hidden");
+  zone.els.exportSvg.classList.remove("hidden"); // there's now something to export
+  zone.els.areasToggle.classList.remove("hidden"); // footprints can be computed now
 
   const levels = levelsForPayload(payload);
   const prevLevelId = zone.activeLevelId;
@@ -696,6 +832,9 @@ function ingest(zone, payload) {
   const refit = !zone.fitted || zone.activeLevelId !== prevLevelId;
   if (zone.activeLevelId) renderLevel(zone, payload, zone.activeLevelId, { refit });
   updateMeta(zone);
+  // New room data means the footprints changed: refresh them (data + overlay +
+  // summary) while the mode is open. Fire-and-forget — ingest itself is sync.
+  if (zone.areasMode) loadAreas(zone);
 }
 
 // ============================ colour picker ============================
@@ -985,6 +1124,304 @@ function downloadValidationCsv(zone) {
   URL.revokeObjectURL(url);
 }
 
+// ============================ SVG export ============================
+
+// The plan's visual styling lives in this page's <style> (colours) and
+// tokens.css (the palette). A saved .svg leaves the browser and references
+// neither, so it must carry its own <style>. Structural values (stroke widths,
+// dash, non-scaling-stroke) mirror the `.room`/`.hole`/`.grid` rules above;
+// colours are read live from the resolved CSS custom properties so they never
+// drift from the page. `--fill-hover` is interactive-only and omitted.
+function exportStyleBlock() {
+  const cs = getComputedStyle(document.documentElement);
+  const v = (name) => cs.getPropertyValue(name).trim();
+  return `
+    .grid line { stroke: ${v('--rule')}; stroke-width: 0.5; vector-effect: non-scaling-stroke; }
+    .room { fill: ${v('--fill')}; stroke: ${v('--ink')}; stroke-width: 1.5; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+    .room.error { fill: ${v('--error')}; }
+    .hole { fill: ${v('--paper')}; stroke: ${v('--ink')}; stroke-width: 1; stroke-dasharray: 4 3; vector-effect: non-scaling-stroke; }
+    .label { fill: ${v('--ink')}; text-anchor: middle; dominant-baseline: middle; }
+    .label .tag { fill: ${v('--accent')}; letter-spacing: 0.05em; }
+  `;
+}
+
+// Build ONE standalone, self-contained SVG document string for a single level,
+// framed to that level's own fitted bounds (never the zone's current pan/zoom).
+// Returns null for a level with no drawable rooms. Reuses `paintLevel`, so the
+// exported geometry is identical to what's on screen.
+const EXPORT_WIDTH_PX = 1600;
+function buildLevelSvgFile(payload, levelId, { withErrors = false, colourPlan = null, errorRoomIds = null } = {}) {
+  const rooms = roomsOnLevel(payload, levelId);
+  const fitted = fittedBounds(rooms);
+  if (!fitted) return null;
+
+  const svg = document.createElementNS(SVG, "svg");
+  svg.setAttribute("xmlns", SVG);
+  svg.setAttribute("viewBox", `${fitted.x} ${fitted.y} ${fitted.w} ${fitted.h}`);
+  svg.setAttribute("width", EXPORT_WIDTH_PX);
+  svg.setAttribute("height", Math.max(1, Math.round(EXPORT_WIDTH_PX * fitted.h / fitted.w)));
+
+  const style = document.createElementNS(SVG, "style");
+  style.textContent = exportStyleBlock();
+  svg.appendChild(style);
+
+  // Opaque paper background covering the viewBox, so the file isn't transparent
+  // when pasted onto a white/dark surface. First child = painted first = behind.
+  const bg = document.createElementNS(SVG, "rect");
+  bg.setAttribute("x", fitted.x);
+  bg.setAttribute("y", fitted.y);
+  bg.setAttribute("width", fitted.w);
+  bg.setAttribute("height", fitted.h);
+  bg.setAttribute("fill", getComputedStyle(document.documentElement).getPropertyValue('--paper').trim());
+  svg.appendChild(bg);
+
+  paintLevel(svg, rooms, fitted, { colourPlan, errorRoomIds, showErrors: withErrors });
+
+  return '<?xml version="1.0" encoding="UTF-8"?>\n' + new XMLSerializer().serializeToString(svg);
+}
+
+// A filesystem-safe, self-describing name: roomplan_<project>_<level>[_<milestone>][_errors].svg
+function svgFilename(zone, levelName, withErrors) {
+  const safe = (s, fallback) =>
+    (s ? String(s) : "").replace(/[^a-z0-9._-]+/gi, "-").replace(/^-+|-+$/g, "") || fallback;
+  const parts = ["roomplan", safe(zone.projectId, "project"), safe(levelName, "level")];
+  if (zone.milestone) parts.push(safe(zone.milestone, "milestone"));
+  if (withErrors) parts.push("errors");
+  return parts.join("_") + ".svg";
+}
+
+function downloadSvg(svgText, filename) {
+  const blob = new Blob([svgText], { type: "image/svg+xml;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+// Export EVERY building level of this zone's current payload, one standalone
+// .svg per level. One click -> N downloads: browsers show a one-time "allow
+// multiple downloads" permission and can throttle rapid clicks, so the files are
+// emitted with a small stagger. Error highlighting follows the validation panel
+// (`showErrors`), which is only on once validation is loaded — so an exported
+// "errors" file is never a silent empty highlight.
+async function exportZoneLevels(zone) {
+  if (!zone.currentPayload) return;
+  const levels = levelsForPayload(zone.currentPayload);
+  if (levels.length === 0) return;
+  const withErrors = zone.showErrors;
+  for (const lvl of levels) {
+    const svgText = buildLevelSvgFile(zone.currentPayload, lvl.id, {
+      withErrors,
+      colourPlan: zone.activeColourPlan,
+      errorRoomIds: zone.errorRoomIds,
+    });
+    if (!svgText) continue; // level with no drawable rooms
+    downloadSvg(svgText, svgFilename(zone, lvl.name, withErrors));
+    await new Promise((r) => setTimeout(r, 150));
+  }
+}
+
+// ============================ hierarchy areas ============================
+
+function areasUrl(zone) {
+  const params = new URLSearchParams();
+  if (zone.buildingKey) params.set("building", zone.buildingKey);
+  if (zone.milestone) params.set("milestone", zone.milestone);
+  const qs = params.toString();
+  return `/projects/${encodeURIComponent(zone.projectId)}/areas${qs ? "?" + qs : ""}`;
+}
+
+// Fetch the dissolved footprints for this zone's scope, then refresh the tier
+// picker, overlay, and summary. On-demand (NOT on the 2s room poll): areas are
+// derived and heavier than a room fetch, and only needed while the mode is on —
+// re-fetched on toggle-on and whenever real new room data arrives (see ingest).
+async function loadAreas(zone) {
+  if (!zone.projectId) return;
+  try {
+    zone.areasData = await fetchJson(areasUrl(zone));
+  } catch (err) {
+    zone.areasData = null;
+  }
+  populateAreasTier(zone);
+  renderAreasOverlay(zone);
+  renderAreasSummary(zone);
+}
+
+// Tier labels come from the group paths: path depth i carries that tier's label.
+function tierNames(data) {
+  const names = [];
+  for (const g of (data && data.groups) || [])
+    g.path.forEach((t, i) => { if (names[i] === undefined) names[i] = t.tier; });
+  return names;
+}
+
+function populateAreasTier(zone) {
+  const sel = zone.els.areasTier;
+  const names = tierNames(zone.areasData);
+  sel.replaceChildren();
+  names.forEach((name, depth) => {
+    const opt = document.createElement("option");
+    opt.value = String(depth);
+    opt.textContent = name;
+    sel.appendChild(opt);
+  });
+  if (zone.areasTier >= names.length) zone.areasTier = 0;
+  sel.value = String(zone.areasTier);
+  sel.classList.toggle("hidden", !zone.areasMode || names.length === 0);
+}
+
+// Identity of a classification prefix — matches server area-groups to client
+// rooms by the same (code,name,undefined) tuple everything else resolves.
+function tierSig(t) { return `${t.code == null ? "" : t.code}|${t.name == null ? "" : t.name}|${t.undefined ? "U" : ""}`; }
+function pathKey(path, depth) { return path.slice(0, depth + 1).map(tierSig).join("/"); }
+function tierLabel(t) { return t.undefined ? `undefined ${t.tier}` : (t.name || t.code || t.tier); }
+
+// A footprint ring is [[x,y],…] in model coords; flip Y for the SVG's Y-down space.
+function ringPointsAttr(ring) { return ring.map(([x, y]) => `${x},${-y}`).join(" "); }
+
+function ringAreaAbs(ring) {
+  let a = 0;
+  for (let i = 0; i < ring.length; i++) {
+    const [x1, y1] = ring[i], [x2, y2] = ring[(i + 1) % ring.length];
+    a += x1 * y2 - x2 * y1;
+  }
+  return Math.abs(a) / 2;
+}
+
+function ringCentroid(ring) {
+  let a = 0, cx = 0, cy = 0;
+  for (let i = 0; i < ring.length; i++) {
+    const [x1, y1] = ring[i], [x2, y2] = ring[(i + 1) % ring.length];
+    const cross = x1 * y2 - x2 * y1;
+    a += cross; cx += (x1 + x2) * cross; cy += (y1 + y2) * cross;
+  }
+  if (Math.abs(a) < 1e-9) {
+    const n = ring.length || 1;
+    return { x: ring.reduce((s, p) => s + p[0], 0) / n, y: ring.reduce((s, p) => s + p[1], 0) / n };
+  }
+  return { x: cx / (3 * a), y: cy / (3 * a) };
+}
+
+// Net area of one room = its outer loop minus its holes (shoelace, model coords).
+// The dissolved footprint is always >= the summed net of its rooms; the gap is
+// wall zones + filled voids (see HANDOVER-hierarchy-areas.md "Naming").
+function roomNetArea(room) {
+  if (!room.loops || room.loops.length === 0) return 0;
+  const ringArea = (loop) => {
+    const p = loop.points;
+    let a = 0;
+    for (let i = 0; i < p.length; i++) {
+      const q = p[(i + 1) % p.length];
+      a += p[i].x * q.y - q.x * p[i].y;
+    }
+    return Math.abs(a) / 2;
+  };
+  let area = ringArea(room.loops[0]);
+  for (let i = 1; i < room.loops.length; i++) area -= ringArea(room.loops[i]);
+  return Math.max(0, area);
+}
+
+// Groups on the active level at the selected tier, in server order (so overlay
+// and summary agree on a group's colour index).
+function activeAreaGroups(zone) {
+  if (!zone.areasData) return [];
+  const depth = zone.areasTier;
+  return zone.areasData.groups.filter(g => g.level_id === zone.activeLevelId && g.path.length === depth + 1);
+}
+
+// Draw the dissolved footprints for the active level at the selected tier, on
+// top of the (ghosted) rooms. Rebuilt on every render/level/tier change; removed
+// when the mode is off. Called at the end of renderLevel so it survives the
+// poll/colour/validation re-renders that replaceChildren() the plan.
+function renderAreasOverlay(zone) {
+  const svg = zone.svg;
+  const existing = svg.querySelector(".areas-overlay");
+  if (existing) existing.remove();
+  svg.classList.toggle("areas-active", zone.areasMode);
+  if (!zone.areasMode || !zone.areasData) return;
+
+  const groups = activeAreaGroups(zone);
+  if (groups.length === 0) return;
+
+  const depth = zone.areasTier;
+  const g = document.createElementNS(SVG, "g");
+  g.setAttribute("class", "areas-overlay");
+  const baseFont = Math.max(zone.fitted.w, zone.fitted.h) * 0.022;
+
+  groups.forEach((grp, i) => {
+    const colour = qualitative("Set2", i);
+    for (const ring of grp.rings) {
+      if (!ring || ring.length < 3) continue;
+      const poly = document.createElementNS(SVG, "polygon");
+      poly.setAttribute("points", ringPointsAttr(ring));
+      poly.setAttribute("class", grp.counted_upward ? "area-poly" : "area-poly faded");
+      poly.style.fill = colour;
+      poly.style.stroke = colour;
+      g.appendChild(poly);
+    }
+    const big = grp.rings.reduce((a, b) => (b && ringAreaAbs(b) > ringAreaAbs(a || []) ? b : a), grp.rings[0]);
+    if (big && big.length >= 3) {
+      const c = ringCentroid(big);
+      const label = document.createElementNS(SVG, "text");
+      label.setAttribute("class", "area-label");
+      label.setAttribute("x", c.x);
+      label.setAttribute("y", -c.y);
+      label.setAttribute("font-size", baseFont);
+      label.textContent = tierLabel(grp.path[depth]);
+      g.appendChild(label);
+    }
+  });
+  svg.appendChild(g);
+}
+
+// The summary panel: for the active level at the selected tier, each group's
+// dissolved FOOTPRINT area (server) beside its summed NET room area (client),
+// and the difference. Totals for the level, plus a cross-level total for the tier.
+function renderAreasSummary(zone) {
+  const body = zone.els.areasBody;
+  if (!zone.areasMode || !zone.areasData) { body.innerHTML = ""; return; }
+
+  const depth = zone.areasTier;
+  const groups = activeAreaGroups(zone);
+
+  // Net room area per group on the active level, keyed by the same path prefix.
+  const net = new Map();
+  const rooms = zone.currentPayload ? roomsOnLevel(zone.currentPayload, zone.activeLevelId) : [];
+  for (const r of rooms) {
+    if (!r.classification || r.classification.length < depth + 1) continue;
+    const key = pathKey(r.classification, depth);
+    net.set(key, (net.get(key) || 0) + roomNetArea(r));
+  }
+
+  const fmt = (n) => n.toLocaleString(undefined, { maximumFractionDigits: 1 });
+  let tF = 0, tN = 0;
+  const rows = groups.map((grp, i) => {
+    const key = pathKey(grp.path, depth);
+    const netA = net.get(key) || 0;
+    tF += grp.area; tN += netA;
+    const colour = qualitative("Set2", i);
+    const flag = grp.counted_upward ? "" : ` <span class="uncounted">(not counted up)</span>`;
+    return `<tr>
+      <td><span class="swatch" style="background:${colour}"></span>${escapeHtml(tierLabel(grp.path[depth]))}${flag}</td>
+      <td>${fmt(grp.area)}</td><td>${fmt(netA)}</td><td>${fmt(grp.area - netA)}</td></tr>`;
+  }).join("");
+
+  const grand = zone.areasData.groups
+    .filter(g => g.path.length === depth + 1)
+    .reduce((s, g) => s + g.area, 0);
+
+  body.innerHTML = groups.length
+    ? `<p class="note">Active level — dissolved footprint vs summed net room area (model units²). Δ = wall zones + filled voids.</p>
+       <table><thead><tr><th>Group</th><th>Footprint</th><th>Net</th><th>Δ</th></tr></thead>
+       <tbody>${rows}<tr class="total"><td>Level total</td><td>${fmt(tF)}</td><td>${fmt(tN)}</td><td>${fmt(tF - tN)}</td></tr></tbody></table>
+       <p class="note">All levels, this tier: ${fmt(grand)} footprint.</p>`
+    : `<p class="note">No footprints for this level and tier.</p>`;
+}
+
 // ============================ polling (per zone) ============================
 
 // Build this zone's /rooms URL from its project/building/milestone selection.
@@ -1121,6 +1558,25 @@ function wireZoneControls(zone) {
   });
   e.validationRefresh.addEventListener("click", () => loadValidation(zone, zone.projectId));
   e.validationDownload.addEventListener("click", () => downloadValidationCsv(zone));
+  e.exportSvg.addEventListener("click", () => exportZoneLevels(zone));
+
+  e.areasToggle.addEventListener("click", () => {
+    zone.areasMode = !zone.areasMode;
+    e.areasToggle.classList.toggle("on", zone.areasMode);
+    e.areasPanel.classList.toggle("hidden", !zone.areasMode);
+    if (zone.areasMode) {
+      loadAreas(zone); // fetch + tier picker + overlay + summary
+    } else {
+      e.areasTier.classList.add("hidden");
+      renderAreasOverlay(zone); // removes the overlay + un-ghosts rooms
+      renderAreasSummary(zone); // clears the panel body
+    }
+  });
+  e.areasTier.addEventListener("change", () => {
+    zone.areasTier = parseInt(e.areasTier.value, 10) || 0;
+    renderAreasOverlay(zone);
+    renderAreasSummary(zone);
+  });
 }
 
 // Build one zone: clone the template, wire its own state object, controls, and
@@ -1140,6 +1596,8 @@ function createZone(seed) {
     lastRevision: null,
     currentPayload: null,
     activeLevelId: null,
+    cullUnits: null,   // per-room {bbox, nodes} for viewport culling on pan/zoom
+    _cullRaf: 0,       // pending requestAnimationFrame id, throttles the cull
     // scope selection (was the global currentProjectId etc.)
     projectId: seed ? seed.projectId : null,
     buildingKey: seed ? seed.buildingKey : null,
@@ -1155,6 +1613,10 @@ function createZone(seed) {
     currentValidation: null,
     errorRoomIds: new Set(),
     showErrors: false,
+    // per-zone hierarchy-areas state
+    areasMode: false,
+    areasData: null,   // last /areas result (all levels + tiers)
+    areasTier: 0,      // selected tier depth (0 = outermost, e.g. Building)
     els: {
       projectSelect: q(".projectSelect"),
       milestoneSelect: q(".milestoneSelect"),
@@ -1162,6 +1624,11 @@ function createZone(seed) {
       colourSelect: q(".colourSelect"),
       levelSelect: q(".levelSelect"),
       validationToggle: q(".validation-toggle"),
+      exportSvg: q(".export-svg"),
+      areasToggle: q(".areas-toggle"),
+      areasTier: q(".areasTier"),
+      areasPanel: q(".areas-panel"),
+      areasBody: q(".aBody"),
       meta: q(".meta"),
       empty: q(".empty"),
       validationPanel: q(".validation-panel"),

@@ -387,6 +387,41 @@ each module carrying its rationale in a header, all with unit tests.
   (`ColourMode` on `kind`, `Colouring` on `style`), which round-trip through
   toml exactly like `DrofusSource` — verified by `test_settings_toml_round_trip`.
 
+- **Hierarchy gross-area footprints (`GET /projects/{id}/areas`).** The first
+  endpoint that does real geometry, not property lookup: it unions room outlines
+  into a dissolved footprint per hierarchy group, per level. `service::areas`
+  (transport-agnostic, over the `geo` crate) runs a two-stage pipeline per level
+  — build each **bottom-tier** group's footprint from its rooms' outer loops
+  (union → keep exterior rings only, discarding interior holes → dedup collinear
+  vertices), then dissolve child footprints into parents tier by tier up to the
+  top. Grouping reuses `classify_room`'s resolved path verbatim (the `undefined`
+  bucket is a real group, not a dropped room); the endpoint reuses
+  `assemble_rooms` for the scoped, already-classified room set, so `?building=` /
+  `?milestone=` scoping and classification come for free. **Islands** (disconnected
+  exterior rings — separate wings of one group) are always kept: the result is a
+  `MultiPolygon` at every tier. **Holes are discarded at every tier, not just the
+  bottom** — unioning two hole-free child footprints can enclose a courtyard that
+  belongs to no room, and "enclosed open space counts as area" must hold
+  everywhere, so the strip runs after every union (this deliberately corrects the
+  design note that said stripping once suffices). Each tier's area is the
+  *measured* area of its own dissolved polygon, never a sum of children (which
+  would mishandle shared wall zones and filled voids) — so parent area ≠ Σ child
+  areas by design. **Exclusions** (`[[hierarchy_exclusions]]` in project settings,
+  on `ProjectSettings` since the server uses them — unlike client-only colour
+  plans) come in two kinds whose match implies the pipeline stage: a `group`
+  match withholds a resolved group from its parent's dissolve (Case A, stage 2 —
+  drops from that tier and above, still reported with `counted_upward: false`); a
+  `rooms` match drops rooms before any union (Case B, stage 1 — gone from every
+  tier including their own group). The number is named an **aggregated room
+  footprint** (wall-zone/void-inclusive), *not* net area or a standards gross.
+  One computation feeds both asks — the plan-view overlay (rings) and the summary
+  table (areas) — so there is no second pipeline. The response carries hole-free
+  exterior rings, so the browser needs only `<polygon>`, no even-odd fill dance.
+  New geometry dependency: `geo` (`BooleanOps::union`, `MultiPolygon`), the first
+  crate that makes the Rust-side geometry-performance argument real rather than
+  potential; pairwise union today, `unary_union`/`rayon` held in reserve until
+  measurement warrants (STRATEGY.md "Parallelism has a threshold").
+
 - **dRofus upload ingest (`POST /projects/{id}/drofus`) + snapshotted
   storage.** The previously-deferred dRofus-as-snapshotted-source (see
   [Sources](STRATEGY-SOURCES.md) for the source-model side). Raw `text/csv`
@@ -419,10 +454,11 @@ each module carrying its rationale in a header, all with unit tests.
 
 **Deferred (design settled, not built):** snapshot delete UI (the history
 *query* now exists — see the endpoints above), per-model / `/hierarchy`
-endpoints, DB backend, an owning level above project, and a
-colour-rooms-by-date-proximity viewer feature (the QA side of
-`drofus_fields`' `type = "date"` / `format` is consumed now — see the typed
-date comparison above — but no viewer feature reads the parsed dates yet).
+endpoints, DB backend, and an owning level above project. (The
+colour-rooms-by-date-proximity viewer feature that used to sit here is now built
+as the date-range colour mode — see [Browser](STRATEGY-BROWSER.md) — reading a
+room's date property against the plan's own `near_date` / `format`, distinct
+from `drofus_fields`' QA-side typed date comparison above.)
 
 ## Data model: project → model → snapshot → {levels, rooms}
 

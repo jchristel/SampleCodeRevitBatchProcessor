@@ -553,7 +553,7 @@ mod tests {
             milestones: vec![],
             comparison_key: None,
             comparison_properties: vec![],
-        }
+            hierarchy_exclusions: vec![],        }
     }
 
     /// Registers one project's bundle under its id -- the shape

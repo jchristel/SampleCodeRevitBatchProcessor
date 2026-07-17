@@ -84,7 +84,7 @@ mod tests {
             milestones,
             comparison_key: None,
             comparison_properties: vec![],
-        }
+            hierarchy_exclusions: vec![],        }
     }
 
     /// Milestones list newest date first, each carrying its pin count and its

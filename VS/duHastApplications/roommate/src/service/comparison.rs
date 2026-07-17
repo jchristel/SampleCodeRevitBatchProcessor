@@ -375,6 +375,7 @@ mod tests {
             milestones,
             comparison_key: comparison_key.map(|s| s.to_string()),
             comparison_properties: comparison_properties.iter().map(|s| s.to_string()).collect(),
+            hierarchy_exclusions: vec![],
         }
     }
 

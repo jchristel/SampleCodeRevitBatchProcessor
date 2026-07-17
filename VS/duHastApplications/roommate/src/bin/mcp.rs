@@ -1,8 +1,8 @@
 //! roommate's MCP server: exposes the read side (`list_projects`,
-//! `list_buildings`, `get_rooms`, `get_validation`, `list_snapshots`,
-//! `get_latest_snapshot`, `list_milestones`, `list_drofus_snapshots`,
-//! `get_drofus_snapshot`) as MCP tools over stdio, one per existing HTTP
-//! read route. Each tool is a thin adapter over `roommate::service` -- parse
+//! `list_buildings`, `get_rooms`, `get_validation`, `get_hierarchy_areas`,
+//! `list_snapshots`, `get_latest_snapshot`, `list_milestones`,
+//! `list_drofus_snapshots`, `get_drofus_snapshot`) as MCP tools over stdio, one
+//! per existing HTTP read route. Each tool is a thin adapter over `roommate::service` -- parse
 //! params, call one service function, serialize the result -- exactly like
 //! the Axum handlers in `roommate::handlers`, just a second transport over
 //! the same domain layer. See HANDOVER-service-layer.md.
@@ -38,7 +38,9 @@ use rmcp::{
 };
 
 use roommate::bootstrap::build_state;
-use roommate::service::{comparison, drofus, milestones, projects, rooms, snapshots, validation, ServiceError};
+use roommate::service::{
+    areas, comparison, drofus, milestones, projects, rooms, snapshots, validation, ServiceError,
+};
 use roommate::settings_api::{self, SettingsError};
 use roommate::state::Shared;
 use roommate::DEFAULT_HTTP_ADDR;
@@ -66,6 +68,19 @@ struct GetRoomsParams {
     #[serde(default)]
     building: Option<String>,
     /// Milestone name from `list_milestones`: serve the snapshots that
+    /// milestone pins instead of each model's latest. Omit for latest.
+    #[serde(default)]
+    milestone: Option<String>,
+}
+
+#[derive(Debug, serde::Deserialize, schemars::JsonSchema)]
+struct AreasParams {
+    /// The project id, as returned by `list_projects`.
+    project_id: String,
+    /// Opaque building key from `list_buildings`. Omit for no building filter.
+    #[serde(default)]
+    building: Option<String>,
+    /// Milestone name from `list_milestones`: measure the snapshots that
     /// milestone pins instead of each model's latest. Omit for latest.
     #[serde(default)]
     milestone: Option<String>,
@@ -242,6 +257,22 @@ impl RoommateMcp {
     fn get_validation(&self, Parameters(p): Parameters<ProjectIdParams>) -> Result<CallToolResult, McpError> {
         let result = validation::compute_project_validation(&self.state, &p.project_id).map_err(to_mcp_error)?;
         json_result(&result)
+    }
+
+    /// Hierarchy gross-area footprints for one project -- see
+    /// `service::areas::assemble_areas`. Shares the exact read logic the HTTP
+    /// `GET /projects/{id}/areas` uses; `None` (nothing pushed) mirrors
+    /// `get_rooms`' empty-store message.
+    #[tool(description = "Compute per-level, per-tier dissolved gross-area footprints for one project, optionally scoped by building key and milestone name. Each group carries its resolved classification path, its measured footprint area (an aggregated ROOM FOOTPRINT — wall-zone/void-inclusive, NOT net area or a standards gross), whether it counts toward tiers above it (a settings exclusion can withhold a group), and its hole-free exterior rings. Area at every tier is measured from that tier's own dissolved polygon, so a parent's area is not the sum of its children's.")]
+    fn get_hierarchy_areas(&self, Parameters(p): Parameters<AreasParams>) -> Result<CallToolResult, McpError> {
+        let result = areas::assemble_areas(&self.state, &p.project_id, p.building.as_deref(), p.milestone.as_deref())
+            .map_err(to_mcp_error)?;
+        match result {
+            None => Ok(CallToolResult::success(vec![ContentBlock::text(
+                "no snapshots have been pushed to this server yet",
+            )])),
+            Some(result) => json_result(&result),
+        }
     }
 
     /// Lists every uploaded dRofus snapshot id for one project -- see

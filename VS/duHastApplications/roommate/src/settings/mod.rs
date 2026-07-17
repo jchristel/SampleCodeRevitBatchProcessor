@@ -189,6 +189,15 @@ pub struct Settings {
     /// still deserializes to an empty `Vec`.
     #[serde(default)]
     pub colour_plans: Vec<ColourPlan>,
+
+    /// Footprint exclusions for the hierarchy-areas feature (`service::areas`):
+    /// rooms or whole groups withheld from the aggregated footprints. Empty (the
+    /// default, and every file predating this feature) means nothing is excluded.
+    /// `skip_serializing_if` so an empty list emits nothing — a trailing
+    /// `hierarchy_exclusions = []` after the colour-plan tables would trip the
+    /// TOML "value-after-table" ordering footgun (CODING-CONVENTIONS.md).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub hierarchy_exclusions: Vec<HierarchyExclusion>,
 }
 
 fn default_room_label() -> Vec<String> {
@@ -296,10 +305,10 @@ pub struct ColourPlan {
 /// newtype variant that wraps a sequence, and struct variants keep the JSON/TOML
 /// shape flat and self-describing.
 ///
-/// Only `PropertyCompare` is wired end-to-end in the viewer today; `Hierarchy`
-/// and `DateRange` persist and validate but the viewer renders them as flat
-/// "no data" for now (a documented follow-up — see STRATEGY-BROWSER.md), so an
-/// authored plan of those kinds degrades safely rather than erroring.
+/// All three modes are wired end-to-end in the viewer (`colourForRoom` in
+/// `index.html` — see STRATEGY-BROWSER.md); an authored plan whose values don't
+/// resolve (an unparseable property, a ratio-by-zero, a value between bands, an
+/// undefined tier) degrades to a "no data" grey rather than erroring.
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(tag = "kind", rename_all = "lowercase")]
 pub enum ColourMode {
@@ -569,6 +578,29 @@ impl HierarchyTier {
         }
         Ok(())
     }
+}
+
+/// A footprint exclusion for the hierarchy-areas feature (`service::areas`). The
+/// match kind implies WHERE in the two-stage pipeline it applies — the handover's
+/// "the match kind implies the stage":
+///
+/// - `group` — Case A, applied at **stage 2**: a resolved group at `tier` whose
+///   value matches is computed normally but WITHHELD from its parent's dissolve,
+///   so it drops out of that tier and every tier above while its own footprints
+///   stay. Still reported, flagged "not counted upward" (outdoor areas: real,
+///   with their own plan, but not part of the building footprint).
+/// - `rooms` — Case B, applied at **stage 1**: the listed room ids never enter
+///   any union, so they vanish from every tier including their own bottom group.
+///
+/// Matching a group reuses the resolved tier value everything else classifies
+/// against — no second matching vocabulary; `value` matches the tier's resolved
+/// code OR name. Internally tagged on `match`, the same self-describing shape
+/// `DrofusSource`/`ColourMode` use.
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(tag = "match", rename_all = "lowercase")]
+pub enum HierarchyExclusion {
+    Group { tier: String, value: String },
+    Rooms { ids: Vec<String> },
 }
 
 /// One canonical property definition: a stable name consumers (dRofus

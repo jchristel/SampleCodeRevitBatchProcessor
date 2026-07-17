@@ -101,6 +101,7 @@ pub fn load_project_bundle(path: &Path, store: &dyn SnapshotStore) -> anyhow::Re
         milestones: settings.milestones,
         comparison_key: settings.comparison_key,
         comparison_properties: settings.comparison_properties,
+        hierarchy_exclusions: settings.hierarchy_exclusions,
     };
     Ok((settings.project_id, settings.is_default, bundle))
 }

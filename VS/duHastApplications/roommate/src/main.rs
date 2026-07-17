@@ -21,8 +21,8 @@ use roommate::handlers::{
     get_projects, get_rooms, ingest_rooms, ingest_rooms_stream,
 };
 use roommate::settings_api::{
-    http_create_project, http_drofus_check, http_get_project, http_list_projects, http_update_project,
-    http_upload_drofus,
+    http_create_project, http_drofus_check, http_get_project, http_get_project_resolved,
+    http_list_projects, http_update_project, http_upload_drofus,
 };
 use roommate::DEFAULT_HTTP_ADDR;
 
@@ -108,6 +108,10 @@ async fn main() -> anyhow::Result<()> {
         // `settings_api`'s module doc for the save pipeline and trust model.
         .route("/api/settings/projects", get(http_list_projects).post(http_create_project))
         .route("/api/settings/projects/{id}", get(http_get_project).put(http_update_project))
+        // Viewer-only resolving read: same as the GET above but falls back to the
+        // is_default file, so the viewer's payload id (not a settings project_id)
+        // still finds its colour plans. Editors keep the strict route above.
+        .route("/api/settings/resolve/{id}", get(http_get_project_resolved))
         .route("/api/settings/drofus-check", post(http_drofus_check))
         // Serves the viewer page at "/" from ./static.
         .fallback_service(ServeDir::new("static"))

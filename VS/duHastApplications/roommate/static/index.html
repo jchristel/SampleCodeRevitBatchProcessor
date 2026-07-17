@@ -201,7 +201,7 @@ const zoneTemplate = document.getElementById("zoneTemplate");
 
 // Every zone is a self-contained viewer: its own SVG, view transform, scope
 // selection, poll cursor, colour plan, and validation state. What used to be a
-// module-level singleton (`view`, `currentProjectId`, `lastPayloadJson`, …) is
+// module-level singleton (`view`, `currentProjectId`, `lastRevision`, …) is
 // now a field on the zone; the pure geometry/colour helpers below stay
 // module-level and take data in, data out.
 const zones = [];
@@ -680,12 +680,21 @@ function ingest(zone, payload) {
   zone.els.empty.classList.add("hidden");
 
   const levels = levelsForPayload(payload);
+  const prevLevelId = zone.activeLevelId;
   if (!levels.some(l => l.id === zone.activeLevelId)) {
     zone.activeLevelId = levels.length ? levels[0].id : null;
   }
 
   buildLevelControl(zone, payload, levels);
-  if (zone.activeLevelId) renderLevel(zone, payload, zone.activeLevelId, { refit: true });
+  // Refit (reset zoom/pan to the fitted view) only on the first render or when
+  // the active level actually changed. A plain data re-push on the same level
+  // keeps the user's current zoom rather than snapping back to fitted, which
+  // read as zoom-specific stutter (see HANDOVER-viewer-performance.md). The
+  // first render must fit: zone.fitted has to exist for a no-refit render, whose
+  // grid/label sizing reads it. Explicit level switches still refit via
+  // selectLevel.
+  const refit = !zone.fitted || zone.activeLevelId !== prevLevelId;
+  if (zone.activeLevelId) renderLevel(zone, payload, zone.activeLevelId, { refit });
   updateMeta(zone);
 }
 
@@ -712,7 +721,11 @@ function populateColourSelect(zone, plans) {
 // plan. "No colour" always overrides, so `active` is just the default.
 async function loadColourPlansForProject(zone, projectId) {
   try {
-    const data = await fetchJson(`/api/settings/projects/${encodeURIComponent(projectId)}`);
+    // Resolving route (not the strict /api/settings/projects/{id} the editors
+    // use): the viewer holds the *payload* project id, which is not a settings
+    // project_id, so it needs the server's default-fallback to find the file
+    // that carries this project's colour plans. See resolve_project_file.
+    const data = await fetchJson(`/api/settings/resolve/${encodeURIComponent(projectId)}`);
     zone.colourPlans = (data.settings && data.settings.colour_plans) || [];
   } catch (err) {
     zone.colourPlans = [];
@@ -776,14 +789,31 @@ function populateMilestoneSelect(zone, data) {
 // Fetch the known projects for one zone; auto-select if the zone's current
 // project (if any) no longer exists. Diffs against the zone's last-seen id
 // list so it doesn't fight an in-progress user selection every tick.
-async function loadProjects(zone) {
-  let projects;
-  try {
-    projects = await fetchJson("/projects");
-  } catch (err) {
-    return; // leave selection alone; poll() reports connection loss
+async function loadProjects(zone, projects) {
+  // `tick` fetches /projects once and shares the list across every zone (the
+  // list is global, so one fetch per tick, not one per zone). Callers without a
+  // list — e.g. the add-zone handler bringing a new zone up to speed — pass none
+  // and we fetch our own.
+  if (!projects) {
+    try {
+      projects = await fetchJson("/projects");
+    } catch (err) {
+      return; // leave selection alone; poll() reports connection loss
+    }
   }
   const ids = projects.map(p => p.id).join(",");
+
+  // Colour plans depend only on the zone's *current* project, not on whether the
+  // project *list* changed — so load them before the early-return guard below.
+  // Without this, the picker never appears in the steady state: the list is
+  // unchanged every tick, `loadProjects` returns early, and the load lower down
+  // is unreachable. The colourPlansProjectId guard keeps this to one fetch per
+  // project change.
+  if (zone.projectId && zone.colourPlansProjectId !== zone.projectId) {
+    zone.colourPlansProjectId = zone.projectId;
+    loadColourPlansForProject(zone, zone.projectId);
+  }
+
   if (ids === zone.lastProjectIds) return;
   zone.lastProjectIds = ids;
   populateProjectSelect(zone, projects);
@@ -795,7 +825,8 @@ async function loadProjects(zone) {
     zone.milestone = null;
     if (zone.projectId) {
       loadValidation(zone, zone.projectId);
-      loadColourPlansForProject(zone, zone.projectId);
+      // Colour plans load via the guarded block above; a reset changes
+      // zone.projectId, so the guard re-fires on the next tick.
     }
   }
   if (zone.projectId) {
@@ -836,7 +867,7 @@ async function loadMilestonesForProject(zone, projectId) {
   if (zone.milestone && !data.milestones.some(m => m.name === zone.milestone)) {
     zone.milestone = null;
     zone.els.milestoneSelect.value = "";
-    zone.lastPayloadJson = null; // selection changed under us -> re-render next tick
+    zone.lastRevision = null; // selection changed under us -> re-render next tick
   }
 }
 
@@ -972,9 +1003,15 @@ async function poll(zone) {
     if (res.status === 204) { zone.els.meta.textContent = "waiting for data"; zone.els.meta.classList.add("stale"); return; }
     if (!res.ok) throw new Error(res.status);
     const payload = await res.json();
-    const incoming = JSON.stringify(payload);
-    if (incoming !== zone.lastPayloadJson) {
-      zone.lastPayloadJson = incoming;
+    // Change-detection compares the server's one-value content revision instead
+    // of re-stringifying the whole payload every poll (see the `revision` field
+    // in rooms.rs / HANDOVER-viewer-performance.md). A quiet system returns the
+    // same revision every tick, so `ingest` (full teardown + rebuild) never
+    // fires between real pushes. Fall back to a stringify only if an older
+    // server omits the field, so the viewer still updates against one.
+    const incoming = payload.revision ?? JSON.stringify(payload);
+    if (incoming !== zone.lastRevision) {
+      zone.lastRevision = incoming;
       ingest(zone, payload); // re-fits + rebuilds level control only on real change
     }
   } catch (err) {
@@ -1054,19 +1091,20 @@ function wireZoneControls(zone) {
     zone.lastMilestonesSignature = null;
     await loadBuildingsForProject(zone, zone.projectId);
     await loadMilestonesForProject(zone, zone.projectId);
+    zone.colourPlansProjectId = zone.projectId; // keep the refresh guard in sync
     await loadColourPlansForProject(zone, zone.projectId);
     loadValidation(zone, zone.projectId);
-    zone.lastPayloadJson = null; // force the next poll tick to render immediately
+    zone.lastRevision = null; // force the next poll tick to render immediately
   });
 
   e.buildingSelect.addEventListener("change", () => {
     zone.buildingKey = e.buildingSelect.value;
-    zone.lastPayloadJson = null;
+    zone.lastRevision = null;
   });
 
   e.milestoneSelect.addEventListener("change", () => {
     zone.milestone = e.milestoneSelect.value || null; // "" = Latest
-    zone.lastPayloadJson = null;
+    zone.lastRevision = null;
   });
 
   e.colourSelect.addEventListener("change", () => {
@@ -1099,7 +1137,7 @@ function createZone(seed) {
     svg: q("svg.plan"),
     view: { x: 0, y: 0, w: 100, h: 100 },
     fitted: { x: 0, y: 0, w: 100, h: 100 },
-    lastPayloadJson: null,
+    lastRevision: null,
     currentPayload: null,
     activeLevelId: null,
     // scope selection (was the global currentProjectId etc.)
@@ -1113,6 +1151,7 @@ function createZone(seed) {
     // per-zone colour + validation state
     colourPlans: [],
     activeColourPlan: null,
+    colourPlansProjectId: null, // guard: which project's plans are loaded
     currentValidation: null,
     errorRoomIds: new Set(),
     showErrors: false,
@@ -1158,10 +1197,21 @@ function setLayout() {
 // also how a newly-pushed project/building shows up without a reload), then
 // fetch rooms scoped to that zone's selection.
 async function tick() {
-  for (const zone of zones) {
-    await loadProjects(zone);
-    await poll(zone);
+  // Fetch the global project list once, then fan out over zones concurrently.
+  // Previously this looped zones serially and re-fetched /projects per zone, so
+  // N zones cost N× the work back-to-back every tick; sharing the list and
+  // running zones in parallel keeps idle tick cost roughly flat in N.
+  let projects = null;
+  try {
+    projects = await fetchJson("/projects");
+  } catch (err) {
+    // Connection issue: skip the picker refresh (as a per-zone loadProjects
+    // would have on its own failed fetch) and let each zone's poll surface it.
   }
+  await Promise.all(zones.map(async (zone) => {
+    if (projects) await loadProjects(zone, projects);
+    await poll(zone);
+  }));
 }
 
 // ============================ header controls ============================

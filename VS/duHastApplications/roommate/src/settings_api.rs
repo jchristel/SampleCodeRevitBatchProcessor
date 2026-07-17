@@ -152,6 +152,34 @@ pub fn get_project_file(projects_dir: &Path, project_id: &str) -> Result<(String
     Err(SettingsError::NotFound(format!("no settings file declares project_id '{project_id}'")))
 }
 
+/// Like `get_project_file`, but with the default-fallback semantics of
+/// `SettingsRegistry::settings_for`: when no file's `project_id` matches
+/// exactly, fall back to the file marked `is_default = true`.
+///
+/// The viewer resolves colour plans by the *payload* project id (e.g.
+/// `"130486"`), which is not a settings `project_id` (e.g. `"Rouse Hill ..."`),
+/// so the exact match 404s and it needs this fallback. The editors
+/// (`settings.html`, `comparison.html`) must NOT get the fallback — they GET and
+/// PUT the same path by the real `project_id`, and a silent default-fallback
+/// could load or overwrite the wrong file — which is why this is a separate
+/// function feeding a separate route rather than a change to `get_project_file`.
+/// Returns the parsed `Settings` (so `colour_plans` ride along) and its file.
+pub fn resolve_project_file(projects_dir: &Path, project_id: &str) -> Result<(String, Settings), SettingsError> {
+    if let Ok(found) = get_project_file(projects_dir, project_id) {
+        return Ok(found);
+    }
+    for path in settings_files(projects_dir)? {
+        if let Ok(settings) = read_raw(&path) {
+            if settings.is_default {
+                return Ok((file_name(&path), settings));
+            }
+        }
+    }
+    Err(SettingsError::NotFound(format!(
+        "no settings file declares project_id '{project_id}' and none is marked is_default"
+    )))
+}
+
 /// Dry-run a dRofus CSV path (relative paths resolve against the projects
 /// dir, exactly as they would from a settings file there) and report what it
 /// contains — record count for the UI's sanity line, the label set for the
@@ -419,6 +447,20 @@ pub async fn http_get_project(
 ) -> Result<Json<ProjectSettingsResponse>, (StatusCode, String)> {
     let dir = require_dir(&state)?;
     let (file, settings) = get_project_file(&dir, &project_id).map_err(to_http)?;
+    Ok(Json(ProjectSettingsResponse { file, settings }))
+}
+
+/// `GET /api/settings/resolve/{id}` — the viewer's read-only, default-falling-
+/// back variant of `http_get_project`. Same response shape; only the lookup
+/// differs (`resolve_project_file`). The viewer, which holds a payload id that
+/// isn't a settings `project_id`, is the sole intended caller; editors keep the
+/// strict `/api/settings/projects/{id}` route for GET and PUT.
+pub async fn http_get_project_resolved(
+    State(state): State<Shared>,
+    UrlPath(project_id): UrlPath<String>,
+) -> Result<Json<ProjectSettingsResponse>, (StatusCode, String)> {
+    let dir = require_dir(&state)?;
+    let (file, settings) = resolve_project_file(&dir, &project_id).map_err(to_http)?;
     Ok(Json(ProjectSettingsResponse { file, settings }))
 }
 
@@ -923,6 +965,48 @@ format = "%Y-%m-%d"
         assert!(bad.error.is_some());
         let good = list.iter().find(|s| s.file == "good.toml").unwrap();
         assert_eq!(good.project_id.as_deref(), Some("p1"));
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// The viewer's resolving read: an exact `project_id` match wins even when a
+    /// different file is the default (never silently prefer the default over a
+    /// real match).
+    #[test]
+    fn test_resolve_project_file_exact_match_wins() {
+        let dir = temp_dir("resolve-exact");
+        std::fs::write(dir.join("real.toml"), "project_id = \"Rouse Hill\"\n").unwrap();
+        std::fs::write(dir.join("default.toml"), "project_id = \"other\"\nis_default = true\n").unwrap();
+
+        let (file, settings) = resolve_project_file(&dir, "Rouse Hill").unwrap();
+        assert_eq!(file, "real.toml");
+        assert_eq!(settings.project_id, "Rouse Hill");
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// An unknown id (the viewer's payload id case) falls back to the file marked
+    /// `is_default` — this is what makes the colour picker resolve.
+    #[test]
+    fn test_resolve_project_file_falls_back_to_default() {
+        let dir = temp_dir("resolve-default");
+        std::fs::write(dir.join("real.toml"), "project_id = \"Rouse Hill\"\nis_default = true\n").unwrap();
+
+        let (file, settings) = resolve_project_file(&dir, "130486").unwrap();
+        assert_eq!(file, "real.toml");
+        assert_eq!(settings.project_id, "Rouse Hill", "fell back to the is_default file");
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// An unknown id with no default file is `NotFound` — the fallback doesn't
+    /// invent a match.
+    #[test]
+    fn test_resolve_project_file_unknown_no_default_is_not_found() {
+        let dir = temp_dir("resolve-none");
+        std::fs::write(dir.join("real.toml"), "project_id = \"Rouse Hill\"\n").unwrap();
+
+        assert!(matches!(resolve_project_file(&dir, "130486"), Err(SettingsError::NotFound(_))));
 
         std::fs::remove_dir_all(&dir).ok();
     }

@@ -150,8 +150,49 @@ pub fn building_tier_index(hierarchy: &[HierarchyTier]) -> Option<usize> {
 #[derive(serde::Serialize)]
 pub struct RoomsResult {
     pub schema_version: u32,
+    /// A stable content revision summarising *which snapshot* each contributing
+    /// model provides (see `scoped_revision`). Two idle responses return a
+    /// byte-identical value; a real push bumps it. The viewer compares this one
+    /// field instead of re-stringifying the whole payload every poll, so a quiet
+    /// system triggers no re-render (see HANDOVER-viewer-performance.md).
+    pub revision: String,
     pub levels: Vec<Level>,
     pub rooms: Vec<RoomResponse>,
+}
+
+/// A stable content revision for a `RoomsResult`, derived from the set of
+/// contributing `(model, snapshot)` pairs. It changes only when a push replaces
+/// a model's snapshot (a new `taken_at`) or when the set of contributing models
+/// changes, and is byte-identical between two idle responses — which is exactly
+/// the "has anything actually changed?" signal the viewer's poll needs.
+///
+/// It deliberately tracks snapshot *identity*, not derived data: a settings-only
+/// change (a colour plan, a dRofus mapping) leaves the pushed geometry untouched
+/// and does not move the revision. The set is sorted before hashing so
+/// linked-model iteration order can't perturb the result. Milestone pins already
+/// substituted their pinned payload upstream, so `snapshot.taken_at` here is the
+/// snapshot actually rendered.
+fn scoped_revision(scoped: &[ScopedPayload]) -> String {
+    use std::hash::{Hash, Hasher};
+
+    let mut parts: Vec<(&str, &str, &str)> = scoped
+        .iter()
+        .map(|(key, payload, _)| {
+            (
+                key.project_id.as_str(),
+                key.model_id.as_str(),
+                payload.snapshot.taken_at.as_str(),
+            )
+        })
+        .collect();
+    parts.sort_unstable();
+
+    // DefaultHasher (SipHash with fixed keys) is deterministic across runs, so
+    // the value is comparable even across a server restart — the client only
+    // ever compares consecutive responses, but stability costs nothing here.
+    let mut hasher = std::collections::hash_map::DefaultHasher::new();
+    parts.hash(&mut hasher);
+    format!("{:016x}", hasher.finish())
 }
 
 /// Merge every stored model's levels and rooms into one flat payload, scoped
@@ -213,10 +254,11 @@ pub fn assemble_rooms(
     // request (and resolve any milestone substitutions), dedup levels across
     // linked models, then derive the response rooms/levels.
     let (scoped, milestone_drofus) = scope_payloads(state, &registry, stored, project, milestone)?;
+    let revision = scoped_revision(&scoped);
     let level_remap = dedup_levels(&scoped);
     let (levels, rooms) = assemble_scoped_rooms(&scoped, &level_remap, &milestone_drofus, building);
 
-    Ok(Some(RoomsResult { schema_version: SUPPORTED_SCHEMA, levels, rooms }))
+    Ok(Some(RoomsResult { schema_version: SUPPORTED_SCHEMA, revision, levels, rooms }))
 }
 
 /// Phase 1 — scope the stored payloads to the request. Drops any payload whose
@@ -629,6 +671,37 @@ mod tests {
 
         let result = assemble_rooms(&state, None, None, None).unwrap();
         assert!(result.is_none(), "nothing has ever been pushed");
+    }
+
+    /// The response revision is stable while idle, moves when a push replaces a
+    /// model's snapshot, and moves again when the set of contributing models
+    /// changes -- this is the one value the viewer polls on instead of
+    /// re-stringifying the whole payload (see `scoped_revision`).
+    #[test]
+    fn test_assemble_rooms_revision_tracks_pushes() {
+        let level = vec![Level { id: "l1".to_string(), name: "Level 1".to_string(), elevation: 0.0 }];
+        let state = AppState::new(Box::new(MemStore::new()), single_project("p1", make_bundle("Number")), None);
+        state
+            .set_snapshot(make_payload("p1", "m1", level.clone(), vec![make_room("r1", "Room A", &[])]))
+            .unwrap();
+
+        let rev1 = assemble_rooms(&state, None, None, None).unwrap().expect("store has data").revision;
+        let rev1_again = assemble_rooms(&state, None, None, None).unwrap().expect("store has data").revision;
+        assert_eq!(rev1, rev1_again, "an idle store must return a byte-identical revision every poll");
+
+        // Re-push the same model slot with a newer snapshot id: revision moves.
+        let mut newer = make_payload("p1", "m1", level.clone(), vec![make_room("r1", "Room A", &[])]);
+        newer.snapshot.taken_at = "2026-02-02T00:00:00Z".to_string();
+        state.set_snapshot(newer).unwrap();
+        let rev2 = assemble_rooms(&state, None, None, None).unwrap().expect("store has data").revision;
+        assert_ne!(rev1, rev2, "a new snapshot for a model must change the revision");
+
+        // A second contributing model changes the set, hence the revision again.
+        state
+            .set_snapshot(make_payload("p1", "m2", level, vec![make_room("r2", "Room B", &[])]))
+            .unwrap();
+        let rev3 = assemble_rooms(&state, None, None, None).unwrap().expect("store has data").revision;
+        assert_ne!(rev2, rev3, "adding a contributing model must change the revision");
     }
 
     /// A payload whose project has no registered settings (and no default

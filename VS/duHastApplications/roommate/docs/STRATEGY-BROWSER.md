@@ -210,8 +210,33 @@ side should shape future server endpoints.
   the shared `:root` palette tokens were extracted to `static/tokens.css`
   (`<link>`ed by all three pages), and the two identical settings-API fetch
   helpers (`apiGet`/`apiSend`, used by `settings.html` and `comparison.html`) to
-  `static/common.js`. Both are served by the same `ServeDir`, so it stays a
-  zero-build vanilla layer; page-specific CSS/JS stays inline per page.
+  `static/common.js` — which also now carries the selection-persistence helpers
+  (`seedProjectId`/`persistSelection`, loaded by all three pages including the
+  viewer; see "Selection persistence" below). Both are served by the same
+  `ServeDir`, so it stays a zero-build vanilla layer; page-specific CSS/JS stays
+  inline per page.
+- **Selection persistence (URL + localStorage).** The three pages are separate
+  static documents linked by plain `<a href>`, so a navigation drops all
+  in-memory state; previously each reseeded to `projects[0]`, so viewer → settings
+  → back reset the user's project. Now the scope pick survives navigation,
+  reloads, and bookmarks via two stores with a deliberate precedence, in
+  `common.js`'s `seedProjectId` (read) / `persistSelection` (write): **the URL
+  query wins** (a bookmarked/deep-linked `?project=…` is authoritative),
+  **localStorage is the cross-page fallback seed** (one shared key,
+  `roommate.project`, so a pick on any page seeds the others), and the page's own
+  `projects[0]` default is the last resort. A restored id is always **validated
+  against the live `/projects` list** first — a stale id falls through to the
+  default, never a bad fetch. Writes use `history.replaceState` (a selection is
+  not a navigation, so it adds no Back-button history). localStorage stores
+  **only the project id** (the one selection every page shares); the viewer's
+  building/milestone are viewer-specific and per-project, so they ride the **URL
+  only** and never seed the other pages. The viewer persists only its **first
+  zone** (`zones[0]`) — restoring N independent zone scopes from one URL isn't
+  worth the complexity — and its restore also seeds localStorage (parity with the
+  editors, whose restore persists via `selectProject`), so a bookmarked viewer
+  link carries the project onward. Deliberately kept a small URL/localStorage fix,
+  not a router or framework — the STRATEGY trigger for that ("writing the same
+  state into several DOM places and watching them drift") isn't met.
 
 ## Rendering: SVG today, and when to move
 
@@ -329,4 +354,15 @@ serving a different consumer (a hierarchy browser) than the room render.
 - **Coordinates and units.** Revit internal units are decimal feet, Y-up; SVG
   is Y-down — handled by flipping Y when building geometry. Absolute units do
   not matter while the viewer auto-fits, but they will once dimensions, a scale
-  bar, or north-alignment are added.
+  bar, or north-alignment are added. The **placement** half of that is already
+  on the wire: a model may carry a `model_to_shared` affine on its envelope (see
+  [Index](STRATEGY.md) "The upload envelope") mapping its room points into the
+  project's shared/real-world frame. The renderer ignores it today (auto-fit
+  needs no absolute placement), but north-alignment, a real-world scale bar, and
+  the georeferencing map underlay (Phase 3 — `docs/HANDOVER-georeferencing.md`)
+  are exactly the features that consume it. Composing it correctly is a
+  browser-side job — the existing Y-flip *plus* the `model_to_shared` matrix
+  *plus* (for the underlay) a reprojection into the tile frame — and the server
+  stays out of it: it emits the transform as data, the renderer composes the
+  picture, consistent with "the server emits geometry as data, the renderer is
+  swappable."

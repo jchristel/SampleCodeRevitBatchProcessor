@@ -385,6 +385,7 @@ mod tests {
             project: Project { id: "p1".to_string(), name: "P".to_string() },
             model: Model { id: model_id.to_string(), name: "M".to_string(), source: "revit".to_string() },
             snapshot: Snapshot { taken_at: taken_at.to_string() },
+            model_to_shared: None,
             levels: vec![Level { id: "1".to_string(), name: "Level 1".to_string(), elevation: 0.0 }],
             rooms,
         }

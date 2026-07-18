@@ -20,7 +20,7 @@ use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;
 use tokio_util::io::StreamReader;
 
-use crate::contract::{Room, RoomPayload, StreamEnvelope, SUPPORTED_SCHEMA};
+use crate::contract::{ModelToShared, Room, RoomPayload, StreamEnvelope, SUPPORTED_SCHEMA};
 use crate::service::areas;
 use crate::service::comparison::{self, ComparisonResponse};
 use crate::service::drofus::{DrofusSnapshotInfo, DrofusSnapshotList};
@@ -99,6 +99,29 @@ fn validate_taken_at(taken_at: &str) -> Result<(), (StatusCode, String)> {
     crate::contract::validate_snapshot_id(taken_at).map_err(|e| (StatusCode::UNPROCESSABLE_ENTITY, e))
 }
 
+/// Tolerance for the `model_to_shared` rigidity check: the linear part should be
+/// a pure rotation (`|det| ≈ 1`). Generous — its only job is to catch a matrix
+/// that has silently picked up scale/shear, not to police float noise.
+const MODEL_TO_SHARED_DET_TOL: f64 = 1e-6;
+
+/// Warn (never reject) when a push carries a `model_to_shared` whose linear part
+/// isn't a pure rotation — a scaled/sheared transform would silently distort
+/// placement. This is advisory only (HANDOVER-georeferencing.md "the underlay is
+/// non-load-bearing"; "signal, not error"): the geometry still stores and
+/// renders, so a 422 would be wrong here. A missing transform is the normal
+/// un-placed case and warns nothing.
+fn warn_on_transform_drift(model_to_shared: Option<&ModelToShared>, project_id: &str, model_id: &str) {
+    if let Some(m) = model_to_shared
+        && !m.is_rigid(MODEL_TO_SHARED_DET_TOL)
+    {
+        tracing::warn!(
+            "model_to_shared for {project_id}/{model_id} is not a pure rotation \
+             (|det| = {:.6}, expected ≈ 1); placement may be distorted",
+            m.determinant().abs()
+        );
+    }
+}
+
 /// Revit posts room data here. Returns 200 with a short summary, or 422 if the
 /// payload fails any `validate_ingest` check. A blank/omitted snapshot id is
 /// minted server-side first (`ensure_taken_at`); the response always carries
@@ -115,6 +138,7 @@ pub async fn ingest_rooms(
         &payload.model.id,
         &payload.snapshot.taken_at,
     )?;
+    warn_on_transform_drift(payload.model_to_shared.as_ref(), &payload.project.id, &payload.model.id);
 
     let count = payload.rooms.len();
     let snapshot_taken_at = payload.snapshot.taken_at.clone();
@@ -201,6 +225,7 @@ pub async fn ingest_rooms_stream(
         &envelope.model.id,
         &envelope.snapshot.taken_at,
     )?;
+    warn_on_transform_drift(envelope.model_to_shared.as_ref(), &envelope.project.id, &envelope.model.id);
 
     let mut rooms: Vec<Room> = Vec::new();
     while let Some(line) = lines
@@ -225,6 +250,7 @@ pub async fn ingest_rooms_stream(
         project: envelope.project,
         model: envelope.model,
         snapshot: envelope.snapshot,
+        model_to_shared: envelope.model_to_shared,
         levels: envelope.levels,
         rooms,
     };
@@ -498,6 +524,7 @@ mod tests {
             project: Project { id: "p1".to_string(), name: "P".to_string() },
             model: Model { id: "m1".to_string(), name: "M".to_string(), source: "revit".to_string() },
             snapshot: Snapshot { taken_at: "2026-01-01T00:00:00Z".to_string() },
+            model_to_shared: None,
             levels: vec![Level { id: "l1".to_string(), name: "Level 1".to_string(), elevation: 0.0 }],
             rooms: vec![make_room("r1", "Room A")],
         };
@@ -537,6 +564,7 @@ mod tests {
                 project: Project { id: "p1".to_string(), name: "P".to_string() },
                 model: Model { id: model_id.to_string(), name: "M".to_string(), source: "revit".to_string() },
                 snapshot: Snapshot { taken_at: taken_at.to_string() },
+                model_to_shared: None,
                 levels: vec![],
                 rooms: vec![],
             };
@@ -562,6 +590,7 @@ mod tests {
             project: Project { id: "p1".to_string(), name: "P".to_string() },
             model: Model { id: "m1".to_string(), name: "M".to_string(), source: "revit".to_string() },
             snapshot: Snapshot { taken_at: good_ts.to_string() },
+            model_to_shared: None,
             levels: vec![],
             rooms: vec![],
         };
@@ -600,6 +629,7 @@ mod tests {
             project: Project { id: "p1".to_string(), name: "P".to_string() },
             model: Model { id: "m1".to_string(), name: "M".to_string(), source: "revit".to_string() },
             snapshot: Snapshot { taken_at: "".to_string() },
+            model_to_shared: None,
             levels: vec![],
             rooms: vec![make_room("r1", "Room A")],
         };
@@ -624,6 +654,7 @@ mod tests {
             project: Project { id: "unregistered".to_string(), name: "P".to_string() },
             model: Model { id: "m1".to_string(), name: "M".to_string(), source: "revit".to_string() },
             snapshot: Snapshot { taken_at: "2026-01-01T00:00:00Z".to_string() },
+            model_to_shared: None,
             levels: vec![],
             rooms: vec![make_room("r1", "Room A")],
         };
@@ -634,5 +665,48 @@ mod tests {
             Err((status, _)) => assert_eq!(status, StatusCode::UNPROCESSABLE_ENTITY),
             Ok(_) => panic!("expected 422 for an unregistered project"),
         }
+    }
+
+    /// A push carrying a `model_to_shared` is accepted and the transform is
+    /// stored on the snapshot verbatim -- it rides the envelope end to end.
+    #[tokio::test]
+    async fn test_ingest_rooms_stores_model_to_shared() {
+        let matrix = [0.9704980833640151, -0.2411088347339701, 0.2411088347339701, 0.9704980833640151, 945737.6, 20545096.5];
+        let payload = RoomPayload {
+            schema_version: SUPPORTED_SCHEMA,
+            project: Project { id: "p1".to_string(), name: "P".to_string() },
+            model: Model { id: "m1".to_string(), name: "M".to_string(), source: "revit".to_string() },
+            snapshot: Snapshot { taken_at: "2026-01-01T00:00:00Z".to_string() },
+            model_to_shared: Some(ModelToShared { matrix }),
+            levels: vec![],
+            rooms: vec![make_room("r1", "Room A")],
+        };
+        let state = std::sync::Arc::new(AppState::new(Box::new(MemStore::new()), single_project("p1"), None));
+
+        ingest_rooms(State(state.clone() as Shared), Json(payload)).await.expect("accepted");
+
+        let stored = state.all_snapshots().unwrap();
+        let (_, payload) = stored.iter().find(|(k, _)| k.model_id == "m1").expect("stored");
+        assert_eq!(payload.model_to_shared.expect("carried through").matrix, matrix);
+    }
+
+    /// A `model_to_shared` whose linear part isn't a pure rotation (here a 2×
+    /// scale, |det| = 4) is still *accepted* -- the drift is a `tracing::warn!`,
+    /// never a 422 (advisory only; the geometry still stores and renders).
+    #[tokio::test]
+    async fn test_ingest_rooms_accepts_non_rigid_model_to_shared() {
+        let payload = RoomPayload {
+            schema_version: SUPPORTED_SCHEMA,
+            project: Project { id: "p1".to_string(), name: "P".to_string() },
+            model: Model { id: "m1".to_string(), name: "M".to_string(), source: "revit".to_string() },
+            snapshot: Snapshot { taken_at: "2026-01-01T00:00:00Z".to_string() },
+            model_to_shared: Some(ModelToShared { matrix: [2.0, 0.0, 0.0, 2.0, 0.0, 0.0] }),
+            levels: vec![],
+            rooms: vec![make_room("r1", "Room A")],
+        };
+        let state: Shared = std::sync::Arc::new(AppState::new(Box::new(MemStore::new()), single_project("p1"), None));
+
+        let response = ingest_rooms(State(state), Json(payload)).await.expect("accepted despite det drift");
+        assert!(response.0.accepted);
     }
 }

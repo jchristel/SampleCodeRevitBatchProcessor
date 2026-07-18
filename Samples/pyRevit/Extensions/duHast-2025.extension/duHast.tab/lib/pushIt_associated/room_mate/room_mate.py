@@ -26,13 +26,14 @@ import datetime
 
 from duHast.Revit.Rooms.Export.to_data_room import get_all_room_data
 from duHast.Revit.Levels.Export.to_data_level_building import get_all_level_data
+from duHast.Revit.Common.Geometry.geometry import get_coordinate_system_translation_and_rotation
 from duHast.Utilities.Objects.result import Result
 from duHast.Data.Objects.Collectors import data_room as dr
 from duHast.Data.Objects.Collectors import data_level_building as dl
 from duHast.Data.Utils.data_to_file import build_json_for_file
 from duHast.pyRevit.UI.doc_selector import pick_document
 
-from post_rooms import post_payload_stream, fetch_projects
+from post_rooms import post_payload_stream, fetch_projects, coordinate_system_to_affine
 
 
 def choose_project(forms):
@@ -213,6 +214,27 @@ def export_and_post_model(selected_doc, project, return_value, pb):
             "taken_at": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
         },
     }
+
+    # Model->shared placement transform (HANDOVER-georeferencing.md Phase 1).
+    # Read ONCE per model from the document's shared coordinates
+    # (ActiveProjectLocation) -- a model-level fact, the same relationship duHast
+    # otherwise stamps onto every room polygon, so there is nothing to reconcile
+    # across rooms. Reduced to the 2D affine the server's `ModelToShared`
+    # carries, and stamped on the envelope (so both the buffered and the
+    # streaming push carry it -- the streaming path builds its envelope from this
+    # dict minus the room list). Advisory and optional: if the read fails, omit
+    # it and still push; the model renders via auto-fit exactly as before, and an
+    # identity transform (an un-surveyed model) is emitted normally.
+    try:
+        rotation, translation = get_coordinate_system_translation_and_rotation(selected_doc)
+        envelope["model_to_shared"] = {
+            "matrix": coordinate_system_to_affine(rotation, translation),
+        }
+    except Exception as e:
+        return_value.append_message(
+            "{}: could not read shared-coordinate transform ({}); "
+            "pushing without a georeference".format(selected_doc.Title, e)
+        )
 
     # a large export takes a while -- honour a cancel clicked
     # during it before starting the (also slow) post; the caller

@@ -122,6 +122,17 @@ Revit.
   pushes — `translate()` is now `build_envelope` + a loop over
   `translate_room`, so both paths share one translation, not two to keep in
   sync.
+- **The model→shared transform is stamped on the envelope, not per room.** The
+  duHast export carries the shared-coordinate placement on *every* geometry
+  object (`DataGeometryBase.translation_coord` / `rotation_coord`), but it's one
+  document-level `ProjectLocation` fact repeated. `room_mate.py` reads it once
+  per model (`get_coordinate_system_translation_and_rotation(doc)`), reduces it
+  to the 2D affine, and puts it on the envelope as `model_to_shared` (see
+  [Index](STRATEGY.md) "The upload envelope"); `translate_room` therefore
+  deliberately drops the per-polygon copy, keeping room geometry raw model-space
+  points. Because it rides the envelope, the streaming path carries it on line 1
+  with no per-room scan. Georeferencing Phase 1 — see
+  `docs/HANDOVER-georeferencing.md`.
 
 ## Why sources need reconciling, not just parsing
 

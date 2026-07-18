@@ -581,6 +581,7 @@ mod tests {
             project: Project { id: project_id.to_string(), name: "P".to_string() },
             model: Model { id: model_id.to_string(), name: "M".to_string(), source: "revit".to_string() },
             snapshot: Snapshot { taken_at: "2026-01-01T00:00:00Z".to_string() },
+            model_to_shared: None,
             levels,
             rooms,
         }
@@ -635,6 +636,7 @@ mod tests {
             project: Project { id: "p1".to_string(), name: "P".to_string() },
             model: Model { id: "modelA".to_string(), name: "A".to_string(), source: "revit".to_string() },
             snapshot: Snapshot { taken_at: "2026-01-01T00:00:00Z".to_string() },
+            model_to_shared: None,
             levels: vec![Level { id: "lvlA".to_string(), name: "Level 1".to_string(), elevation: 0.0 }],
             rooms: vec![room_a],
         };
@@ -643,6 +645,7 @@ mod tests {
             project: Project { id: "p1".to_string(), name: "P".to_string() },
             model: Model { id: "modelB".to_string(), name: "B".to_string(), source: "revit".to_string() },
             snapshot: Snapshot { taken_at: "2026-01-01T00:00:01Z".to_string() },
+            model_to_shared: None,
             // Same name, elevation drifted by float noise well within tolerance.
             levels: vec![Level { id: "lvlB".to_string(), name: "Level 1".to_string(), elevation: 0.000000001 }],
             rooms: vec![room_b],
@@ -715,6 +718,7 @@ mod tests {
             project: Project { id: "unregistered".to_string(), name: "P".to_string() },
             model: Model { id: "m1".to_string(), name: "M".to_string(), source: "revit".to_string() },
             snapshot: Snapshot { taken_at: "2026-01-01T00:00:00Z".to_string() },
+            model_to_shared: None,
             levels: vec![Level { id: "l1".to_string(), name: "Level 1".to_string(), elevation: 0.0 }],
             rooms: vec![make_room("r1", "Room A", &[])],
         };

@@ -118,6 +118,7 @@ Two related notes:
   "project":  { "id": "p1", "name": "Hospital Job" },
   "model":    { "id": "<revit-guid>", "name": "Project1-ARCH", "source": "revit" },
   "snapshot": { "taken_at": "2026-05-09T11:13:34Z" },
+  "model_to_shared": { "matrix": [1.0, 0.0, 0.0, 1.0, 0.0, 0.0] },
   "levels": [
     { "id": "311", "name": "Level 0", "elevation": 0.0 }
   ],
@@ -149,6 +150,9 @@ store key; ids are immutable, names are display-only — see
 when its link key matched, and a `classification` path — both derived at
 response assembly, never stored (see Server and Sources respectively).
 
+`model_to_shared` is the optional per-model placement transform — see [The
+upload envelope](#the-upload-envelope) below.
+
 ### The upload envelope
 
 `schema_version` / `project` / `model` / `snapshot` together are the **upload
@@ -170,6 +174,26 @@ server minted that id, not whether a snapshot was stored) so the pusher can
 attach follow-up uploads to that exact snapshot. This relaxation did not bump the
 schema version: every previously-valid v5 payload is still valid and means
 the same thing.
+
+**`model_to_shared` — the per-model placement transform (optional).** A model's
+room polygons are stored in Revit *model space* (decimal feet, Y-up). This field
+carries the 2D affine `[a, b, c, d, e, f]` (`shared_x = a·x + c·y + e`,
+`shared_y = b·x + d·y + f`) that maps those points into the project's **shared
+coordinate system** — one transform per model, since it's a document-level
+`ProjectLocation` fact (the *same* relationship on every room), so it rides the
+envelope, not each polygon. It exists on two independent grounds: it puts every
+room of a model into one common frame (which cross-model comparison needs — see
+[Server](STRATEGY-SERVER.md) "A common coordinate frame"), and, when a project
+is survey-registered, shared space *is* real-world grid space, which is what
+later makes a map underlay placeable. It carries **no unit conversion** — a
+rigid-body placement, so `|det|` of its linear part is ≈ 1 (ingest *warns*, never
+rejects, on drift). Optional and defaulted (`Option<ModelToShared>`): an
+un-placed model omits it and still renders via auto-fit exactly as before, so —
+like the omittable snapshot id — adding it did **not** bump the schema. The
+producer reads it once per model from `ActiveProjectLocation` and stamps it on
+the envelope. This is Phase 1 of the georeferencing track; Phases 2–3 (the
+`survey_registered` opt-in and the map underlay) build on it — see
+`docs/HANDOVER-georeferencing.md`.
 
 The **dRofus CSV upload** (`POST /projects/{id}/drofus` — see
 [Sources](STRATEGY-SOURCES.md) and [Server](STRATEGY-SERVER.md)) is the

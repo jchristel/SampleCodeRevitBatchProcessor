@@ -169,6 +169,45 @@ pub fn validate_snapshot_id(taken_at: &str) -> Result<(), String> {
     Ok(())
 }
 
+/// The affine transform mapping a model's room points from Revit model space
+/// into the project's SHARED coordinate system. One per model, not per room:
+/// it's a model-level `ProjectLocation` fact (the *same* relationship on every
+/// room), so it rides the envelope rather than each polygon — see
+/// HANDOVER-georeferencing.md "Fact 1".
+///
+/// It exists for two independent reasons: (a) it puts every room in a model into
+/// one common frame, which cross-model comparison needs regardless of any map
+/// (STRATEGY-SERVER "common coordinate frame"); (b) when the project is
+/// survey-registered, shared space IS grid space in the declared CRS, which is
+/// what later makes a map underlay placeable. It carries NO unit conversion —
+/// this is a rigid-body placement (rotation + translation), not a scale, so
+/// `|det|` of its linear part is ≈ 1 (a useful ingest sanity check).
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+pub struct ModelToShared {
+    /// 2D affine as `[a, b, c, d, e, f]`: `shared_x = a*x + c*y + e`,
+    /// `shared_y = b*x + d*y + f`. The linear part `[[a, c], [b, d]]` is a pure
+    /// rotation from Revit's shared-coordinate `ProjectLocation` (no scale or
+    /// shear), so `|det| = |a*d - c*b| ≈ 1`.
+    pub matrix: [f64; 6],
+}
+
+impl ModelToShared {
+    /// Determinant of the linear part `[[a, c], [b, d]]` = `a*d - c*b`. A pure
+    /// rotation gives `|det| ≈ 1`; a value that has drifted means a scaled or
+    /// sheared matrix that would silently distort placement.
+    pub fn determinant(&self) -> f64 {
+        let [a, b, c, d, _e, _f] = self.matrix;
+        a * d - c * b
+    }
+
+    /// Whether the transform is a rigid-body placement (pure rotation), i.e.
+    /// `|det| ≈ 1` within `tol`. Used at ingest to *warn* (not reject) — a
+    /// non-rigid transform is advisory-suspect, not a broken contract.
+    pub fn is_rigid(&self, tol: f64) -> bool {
+        (self.determinant().abs() - 1.0).abs() <= tol
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RoomPayload {
     pub schema_version: u32,
@@ -182,6 +221,13 @@ pub struct RoomPayload {
     pub model: Model,
     #[serde(default)]
     pub snapshot: Snapshot,
+
+    /// Optional model→shared placement transform for this model (see
+    /// `ModelToShared`). Absent on an un-placed model, which still renders fine
+    /// via auto-fit exactly as before — `#[serde(default)]` keeps every
+    /// pre-georeference payload valid and unchanged in meaning (no schema bump).
+    #[serde(default)]
+    pub model_to_shared: Option<ModelToShared>,
 
     pub levels: Vec<Level>,
     pub rooms: Vec<Room>,
@@ -200,6 +246,10 @@ pub struct StreamEnvelope {
     pub model: Model,
     #[serde(default)]
     pub snapshot: Snapshot,
+    /// Model→shared placement transform, in lockstep with `RoomPayload` (a
+    /// streamed push carries identical envelope metadata; only `rooms` differ).
+    #[serde(default)]
+    pub model_to_shared: Option<ModelToShared>,
     pub levels: Vec<Level>,
 }
 
@@ -215,6 +265,11 @@ pub struct StreamEnvelope {
 /// relaxation — every payload that was valid v5 before is still valid and
 /// means the same thing — and bumps are reserved for changes that would make
 /// an existing producer's payload misparse or change meaning.
+///
+/// Still 5 after the optional `model_to_shared` envelope field was added
+/// (HANDOVER-georeferencing.md Phase 1): same reasoning — it defaults to
+/// `None`, so a pre-georeference payload stays valid and means exactly what it
+/// did (an un-placed model, rendered via auto-fit).
 pub const SUPPORTED_SCHEMA: u32 = 5;
 
 /// Resolve a *canonical* property name (e.g. "Area") to the source-specific
@@ -412,6 +467,64 @@ mod tests {
         assert!(room.properties.is_empty());
     }
 
+    /// `model_to_shared` round-trips on `RoomPayload`: present it deserializes
+    /// into the affine and survives re-serialization; absent it defaults to
+    /// `None` (the pre-georeference payload, unchanged in meaning).
+    #[test]
+    fn test_model_to_shared_round_trips_and_defaults_to_none() {
+        let base = serde_json::json!({
+            "schema_version": 5,
+            "project":  { "id": "p1", "name": "Hospital Job" },
+            "model":    { "id": "m-guid", "name": "ARCH", "source": "revit" },
+            "snapshot": { "taken_at": "2026-05-09T11:13:34Z" },
+            "levels": [],
+            "rooms": []
+        });
+
+        // Absent → None.
+        let without: RoomPayload = serde_json::from_value(base.clone()).unwrap();
+        assert!(without.model_to_shared.is_none());
+
+        // Present → the affine, and it round-trips.
+        let mut with = base;
+        with["model_to_shared"] = serde_json::json!({
+            "matrix": [0.9704980833640151, -0.2411088347339701, 0.2411088347339701, 0.9704980833640151, 945737.6456106724, 20545096.538269494]
+        });
+        let payload: RoomPayload = serde_json::from_value(with).unwrap();
+        let mts = payload.model_to_shared.expect("present");
+        assert!((mts.matrix[4] - 945737.6456106724).abs() < 1e-6);
+
+        // Survives a serialize→parse cycle (compared with tolerance: a JSON f64
+        // round-trip can differ by an ULP between the `from_value` and
+        // `from_str` paths, which is not what this test is about).
+        let reparsed: RoomPayload =
+            serde_json::from_str(&serde_json::to_string(&payload).unwrap()).unwrap();
+        let back = reparsed.model_to_shared.expect("present after round-trip");
+        for (a, b) in back.matrix.iter().zip(mts.matrix.iter()) {
+            // Absolute 1e-6 (sub-micron in feet) absorbs the ULP-scale drift a
+            // ~1e7 grid coordinate picks up crossing the JSON f64 boundary.
+            assert!((a - b).abs() < 1e-6, "round-trip drifted: {a} vs {b}");
+        }
+    }
+
+    /// `is_rigid` accepts the real geo_data.json rotation (a pure ~13.95° spin,
+    /// |det| ≈ 1) and rejects a scaled matrix that would distort placement.
+    #[test]
+    fn test_model_to_shared_determinant_flags_non_rigid() {
+        let rigid = ModelToShared {
+            matrix: [0.9704980833640151, -0.2411088347339701, 0.2411088347339701, 0.9704980833640151, 945737.6, 20545096.5],
+        };
+        assert!((rigid.determinant() - 1.0).abs() < 1e-9);
+        assert!(rigid.is_rigid(1e-6));
+
+        // Identity is trivially rigid.
+        assert!(ModelToShared { matrix: [1.0, 0.0, 0.0, 1.0, 0.0, 0.0] }.is_rigid(1e-6));
+
+        // A 2× scale on both axes: det = 4, not rigid.
+        let scaled = ModelToShared { matrix: [2.0, 0.0, 0.0, 2.0, 0.0, 0.0] };
+        assert!(!scaled.is_rigid(1e-6));
+    }
+
     /// A `StreamEnvelope` (line 1 of a `/rooms/stream` push) deserializes with
     /// no `rooms` key present -- proves it doesn't accidentally require one.
     #[test]
@@ -429,6 +542,9 @@ mod tests {
         assert_eq!(envelope.project.id, "p1");
         assert_eq!(envelope.model.source, "revit");
         assert_eq!(envelope.levels.len(), 1);
+        // No `model_to_shared` key present → defaults to None (in lockstep with
+        // RoomPayload), so an un-placed streamed push stays valid.
+        assert!(envelope.model_to_shared.is_none());
     }
 
     /// A payload with no "snapshot" key at all still deserializes (the

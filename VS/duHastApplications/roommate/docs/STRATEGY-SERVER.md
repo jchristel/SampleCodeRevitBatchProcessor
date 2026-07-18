@@ -535,7 +535,17 @@ What cross-project operations actually need:
   projects is meaningless until they share a datum — a shared survey point or an
   explicit alignment transform between them. No amount of nesting solves this;
   it is a geometry problem that bites anyone assuming "same structure ⇒
-  comparable."
+  comparable." **The first half of the datum now exists:** each model may carry a
+  `model_to_shared` transform on its envelope (see [Index](STRATEGY.md) "The
+  upload envelope") that maps its room points from model space into the project's
+  *shared* coordinate system — so the rooms of one project's linked models land
+  in one frame. What that does **not** yet give you is a frame shared *across*
+  projects: two survey-registered projects in the same CRS become directly
+  comparable, but the general cross-project case still needs an explicit
+  alignment. The transform is the enabler, deliberately shipped ahead of any
+  comparison or map that consumes it (georeferencing Phase 1 — see
+  `docs/HANDOVER-georeferencing.md`); nothing numeric depends on it being present
+  or correct.
 
 **When a top level *is* justified:** a real owning entity emerges — a portfolio,
 organization, or client that groups many projects, controls access, or is the

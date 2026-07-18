@@ -16,6 +16,16 @@ start by building the underlay.** Build the transform (phase 1); it earns its
 place on cross-model comparison grounds alone, and the underlay (phase 3) rests
 on it.
 
+> **Status (2026-07-19): Phase 1 has landed.** ✅ The `model_to_shared` transform
+> is on the envelope end-to-end (server + producer), tested and shipped. Phases 2
+> and 3 remain as described. Two things worked out differently from the sketch
+> below once the actual exporter was read — both noted inline in the Phase 1
+> section: (a) the transform is read **once per model** directly from the
+> document's `ProjectLocation`, so the per-room-equality ingest guard proved
+> unnecessary; (b) the affine's row/column mapping was pinned down from source
+> (rotation is stored as basis-vector rows). See `docs/STRATEGY.md` "The upload
+> envelope" for the shipped contract and the plan file for the full record.
+
 ---
 
 ## The two facts everything here depends on
@@ -73,9 +83,20 @@ than re-deriving two scalars pyRevit would have to compute anyway. So:
 
 ---
 
-## Phase 1 — hoist the model→shared transform to the envelope
+## Phase 1 — hoist the model→shared transform to the envelope  ✅ LANDED
 
 **This is the only phase worth doing now.** It's useful with or without any map.
+
+> **As shipped.** `ModelToShared { matrix: [f64; 6] }` in `contract.rs`, added as
+> an optional `#[serde(default)] model_to_shared` on **both** `RoomPayload` and
+> `StreamEnvelope` (no schema bump — still v5). Ingest *warns* (never rejects) on
+> `|det|` drift from 1. The producer (`room_mate.py`) reads the transform **once
+> per model** from `doc.ActiveProjectLocation` via duHast's
+> `get_coordinate_system_translation_and_rotation`, reduces it to the 2D affine
+> (`post_rooms.py::coordinate_system_to_affine`), and stamps it on the envelope;
+> `translate_room` drops the now-redundant per-polygon copy. The affine mapping,
+> pinned from source: rotation is returned as basis-vector **rows**, so
+> `a,b = row0.x, row0.y`, `c,d = row1.x, row1.y`, `e,f = origin.x, origin.y`.
 
 pyRevit currently emits the matrix per-room. Change it to emit **once per
 model**, on the envelope. On the server:
@@ -118,6 +139,14 @@ transforms?). Once pyRevit emits once per model, this check is moot but cheap to
 keep as a guard against a regressing exporter. Also sanity-check |det| ≈ 1
 (pure rotation) and warn — not reject — if it drifts, since a scaled matrix
 would silently distort placement.
+
+> **What shipped instead.** The per-room-equality guard was **not built**, and
+> deliberately so. The transform never reaches the wire per-room: the producer
+> reads it once from the document's `ProjectLocation` (a single model-level
+> fact — each linked model is pushed as its own model with its own transform),
+> so there is no per-room copy to diverge and nothing for the server to
+> reconcile. What *did* ship is the `|det| ≈ 1` warn (`is_rigid`, tolerance
+> `1e-6`), in both ingest paths — advisory only, exactly as specified.
 
 **Convention note:** this is transport-agnostic contract + validation — lives in
 `contract.rs` / service side, not in handlers or mcp.rs. Inline tests: matrix
@@ -213,10 +242,14 @@ sibling layer under the rooms, sharing the same pan/zoom.
    MapTiler, needs an API key surfaced to the browser) vs government WMTS (often
    keyless but terms/attribution vary). This decides the fetch code and whether
    settings needs a key field.
-3. **Does pyRevit already expose the shared-coordinate transform cleanly?**
+3. ~~**Does pyRevit already expose the shared-coordinate transform cleanly?**
    Confirm it can emit the model→shared matrix once per model (Revit
    `ProjectLocation` / shared coordinates expose it). Phase 1's per-room-equality
-   check is the safety net during transition, but the target is emit-once.
+   check is the safety net during transition, but the target is emit-once.~~
+   **Resolved (Phase 1):** yes — duHast's
+   `get_coordinate_system_translation_and_rotation(doc)` returns it directly from
+   `doc.ActiveProjectLocation`, so the producer emits once per model with no
+   transition period and no equality safety-net needed.
 
 ---
 

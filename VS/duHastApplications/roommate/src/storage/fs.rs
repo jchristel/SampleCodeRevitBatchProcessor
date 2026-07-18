@@ -437,6 +437,7 @@ mod tests {
             project: Project { id: project.into(), name: "P".into() },
             model: Model { id: model.into(), name: "M".into(), source: "revit".into() },
             snapshot: Snapshot { taken_at: ts.into() },
+            model_to_shared: None,
             levels: vec![],
             rooms: vec![],
         }

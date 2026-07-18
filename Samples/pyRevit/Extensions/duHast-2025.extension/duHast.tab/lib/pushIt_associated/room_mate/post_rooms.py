@@ -103,6 +103,28 @@ def loop_to_points(loop):
     return [{"x": float(pt[0]), "y": float(pt[1])} for pt in loop]
 
 
+def coordinate_system_to_affine(rotation, translation):
+    """Reduce duHast's shared-coordinate transform (as returned by
+    ``get_coordinate_system_translation_and_rotation``) to the 2D affine
+    ``[a, b, c, d, e, f]`` the server's ``ModelToShared`` carries, where
+    ``shared_x = a*x + c*y + e`` and ``shared_y = b*x + d*y + f``.
+
+    ``rotation`` is 3 basis-vector rows ``[BasisX, BasisY, BasisZ]`` (BasisX is
+    the image of the model +X axis, BasisY of +Y); ``translation`` is the origin.
+    So ``a,b = BasisX.x, BasisX.y`` and ``c,d = BasisY.x, BasisY.y``. Only the x
+    and y of the first two basis rows and of the origin are read, so this is
+    agnostic to 2D (3x2) vs 3D (3x3) serialization -- the z basis and any z
+    translation are for elevation, not the plan placement.
+
+    Carries NO unit conversion: this is a rigid-body placement (rotation +
+    translation in feet), never a scale (HANDOVER-georeferencing.md)."""
+    return [
+        float(rotation[0][0]), float(rotation[0][1]),
+        float(rotation[1][0]), float(rotation[1][1]),
+        float(translation[0]), float(translation[1]),
+    ]
+
+
 def properties_to_map(instance_properties):
     """Reshape duHast's [{name, value, storage_type}, ...] list into a flat
     {name: {value, storage_type}} map. One generic transform, no per-field
@@ -162,13 +184,25 @@ def build_envelope(rooms_source, levels_source):
     model = dict(model)
     model["source"] = SOURCE
 
-    return {
+    envelope = {
         "schema_version": SCHEMA_VERSION,
         "project": project,
         "model": model,
         "snapshot": snapshot,
         "levels": levels,
     }
+
+    # The model->shared placement transform (see contract.rs `ModelToShared`) is
+    # a model-level fact stamped onto the envelope by room_mate.py, so it is
+    # forwarded verbatim rather than derived here. Optional: absent on an
+    # un-placed model, which the server renders via auto-fit exactly as before.
+    # It rides the envelope, so the streaming path (which builds this from
+    # `room_meta`, minus the room list) carries it with no per-room scan.
+    model_to_shared = rooms_source.get("model_to_shared")
+    if model_to_shared is not None:
+        envelope["model_to_shared"] = model_to_shared
+
+    return envelope
 
 
 def translate_room(room):

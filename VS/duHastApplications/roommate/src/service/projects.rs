@@ -177,6 +177,7 @@ mod tests {
             project: Project { id: project_id.to_string(), name: project_name.to_string() },
             model: Model { id: "m1".to_string(), name: "M".to_string(), source: "revit".to_string() },
             snapshot: Snapshot { taken_at: "2026-01-01T00:00:00Z".to_string() },
+            model_to_shared: None,
             levels: vec![],
             rooms: vec![],
         }

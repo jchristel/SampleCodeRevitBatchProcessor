@@ -1,0 +1,74 @@
+# Showcase project: a synthetic sample campus demonstrating every implemented
+# feature — multiple buildings, the classification hierarchy, colour plans (all
+# three modes), two milestones, and milestone comparison. Its rooms come from
+# scripts/gen_showcase.py (two snapshots: Concept + Design Freeze); this file
+# defines the classification/colour/milestone/comparison config those rooms feed.
+project_id = "showcase"
+name = "Sample Campus"
+is_default = false
+
+# Room label: the room name plus its stable number.
+room_label = ["$name", "RoomNumber"]
+
+# Milestone comparison: match rooms across milestones by their RoomNumber, and
+# report changes in these properties. Concept -> Design Freeze resizes some rooms
+# (Area), reassigns one department, and adds/removes rooms.
+comparison_key = "RoomNumber"
+comparison_properties = ["Area", "Department", "SubDepartment"]
+
+# Three-tier classification. "Building" is the tier the building picker keys on.
+[[hierarchy]]
+name = "Building"
+name_property = "Building"
+
+[[hierarchy]]
+name = "Department"
+name_property = "Department"
+
+[[hierarchy]]
+name = "SubDepartment"
+name_property = "SubDepartment"
+
+# Two milestones, each pinning the campus-arch model to one of the two snapshots
+# gen_showcase.py pushes (by taken_at). Newest first is a display concern; the
+# server orders them.
+[[milestones]]
+name = "Concept"
+date = "2026-01-15"
+[milestones.attachments]
+"campus-arch" = "2026-01-15T09:00:00Z"
+
+[[milestones]]
+name = "Design Freeze"
+date = "2026-06-30"
+[milestones.attachments]
+"campus-arch" = "2026-06-30T09:00:00Z"
+
+# Colour plans — one per mode, so the viewer's picker shows all three.
+[[colour_plans]]
+name = "By department"
+active = true
+[colour_plans.mode]
+kind = "hierarchy"
+tiers = ["Building", "Department"]
+scheme = "Set2"
+
+[[colour_plans]]
+name = "Area vs target"
+[colour_plans.mode]
+kind = "propertycompare"
+property_a = "Area"
+property_b = "TargetArea"
+op = "diff"
+[colour_plans.mode.colouring]
+style = "diverging"
+scheme = "RdBu"
+
+[[colour_plans]]
+name = "By renovation date"
+[colour_plans.mode]
+kind = "daterange"
+property = "LastRenovated"
+near_date = "2026-06-30"
+scheme = "RdYlGn"
+format = "%Y-%m-%d"

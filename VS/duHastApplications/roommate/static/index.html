@@ -237,6 +237,9 @@
     </div>
   </template>
 
+<!-- Shared selection-persistence helpers (seedProjectId / persistSelection),
+     the same file settings.html and comparison.html load. -->
+<script src="common.js"></script>
 <script>
 const SVG = "http://www.w3.org/2000/svg";
 const zonesEl = document.getElementById("zones");
@@ -958,7 +961,21 @@ async function loadProjects(zone, projects) {
   populateProjectSelect(zone, projects);
 
   if (!projects.some(p => p.id === zone.projectId)) {
-    zone.projectId = projects.length ? projects[0].id : null;
+    // Restore the first zone's project from URL/localStorage on first resolve;
+    // additional zones (and later re-resolves) keep the plain projects[0]
+    // default. A seed the server no longer lists falls through to projects[0].
+    let fallback = projects.length ? projects[0].id : null;
+    if (zone === zones[0] && !zone._seeded && projects.length) {
+      zone._seeded = true; // one-shot, so a later project deletion re-defaults cleanly
+      const seed = seedProjectId();
+      if (seed && projects.some(p => p.id === seed)) fallback = seed;
+    }
+    zone.projectId = fallback;
+    // Sync the picker to the resolved/restored project. populateProjectSelect
+    // above runs before this block, so on a first-load restore it would otherwise
+    // leave the dropdown showing projects[0] while the zone renders the restored
+    // project — a confusing mismatch.
+    if (zone.projectId) zone.els.projectSelect.value = zone.projectId;
     zone.lastBuildingsSignature = null;
     zone.lastMilestonesSignature = null;
     zone.milestone = null;
@@ -971,6 +988,36 @@ async function loadProjects(zone, projects) {
   if (zone.projectId) {
     await loadBuildingsForProject(zone, zone.projectId);
     await loadMilestonesForProject(zone, zone.projectId);
+
+    // Restore the first zone's building/milestone from the URL once, after their
+    // option lists exist — and only if the freshly-loaded lists still contain
+    // them (stale scope falls away, same discipline as the project seed). A
+    // second one-shot flag so the 2s poll's picker refreshes never clobber a
+    // later manual change. building/milestone are URL-only (never localStorage).
+    if (zone === zones[0] && !zone._seededScope) {
+      zone._seededScope = true;
+      const hasOpt = (sel, v) => Array.from(sel.options).some(o => o.value === v);
+      const b = urlParam("building");
+      if (b && hasOpt(zone.els.buildingSelect, b)) {
+        zone.buildingKey = b;
+        zone.els.buildingSelect.value = b;
+        zone.lastRevision = null;
+      }
+      const m = urlParam("milestone");
+      if (m && hasOpt(zone.els.milestoneSelect, m)) {
+        zone.milestone = m;
+        zone.els.milestoneSelect.value = m;
+        zone.lastRevision = null;
+      }
+
+      // Seed cross-page persistence from a restored/deep-linked selection too, so
+      // the viewer matches settings/comparison (whose restore persists via their
+      // selectProject). Writes the project id to localStorage + URL and mirrors
+      // the actual current scope — a URL value, or the auto-selected building —
+      // back into the URL, replacing any stale scope the deep-link carried. This
+      // is why a bookmarked viewer link carries the project to the other pages.
+      persistSelection(zone.projectId, { building: zone.buildingKey, milestone: zone.milestone });
+    }
   }
 }
 
@@ -1532,16 +1579,23 @@ function wireZoneControls(zone) {
     await loadColourPlansForProject(zone, zone.projectId);
     loadValidation(zone, zone.projectId);
     zone.lastRevision = null; // force the next poll tick to render immediately
+    // Persist only the first zone's scope; a second zone's picker must not
+    // overwrite the URL. building/milestone are null here (just reset), so the
+    // helper drops them from the URL — the pick carries project only until the
+    // user re-scopes.
+    if (zone === zones[0]) persistSelection(zone.projectId, { building: zone.buildingKey, milestone: zone.milestone });
   });
 
   e.buildingSelect.addEventListener("change", () => {
     zone.buildingKey = e.buildingSelect.value;
     zone.lastRevision = null;
+    if (zone === zones[0]) persistSelection(zone.projectId, { building: zone.buildingKey, milestone: zone.milestone });
   });
 
   e.milestoneSelect.addEventListener("change", () => {
     zone.milestone = e.milestoneSelect.value || null; // "" = Latest
     zone.lastRevision = null;
+    if (zone === zones[0]) persistSelection(zone.projectId, { building: zone.buildingKey, milestone: zone.milestone });
   });
 
   e.colourSelect.addEventListener("change", () => {
@@ -1602,6 +1656,8 @@ function createZone(seed) {
     projectId: seed ? seed.projectId : null,
     buildingKey: seed ? seed.buildingKey : null,
     milestone: seed ? seed.milestone : null,
+    _seeded: false,       // one-shot guard: first-zone URL/localStorage project restore has run
+    _seededScope: false,  // one-shot guard: first-zone building/milestone URL restore has run
     // per-zone poll bookkeeping
     lastProjectIds: null,
     lastBuildingsSignature: null,

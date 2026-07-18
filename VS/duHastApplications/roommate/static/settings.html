@@ -280,6 +280,7 @@ function el(tag, attrs, children) {
 let current = null;      // { isNew, file, settings }
 let drofusLabels = [];   // labels from the last drofus-check/upload, for the QA dropdown
 let activeProjectId = null;
+let didRestore = false; // one-shot: auto-open the URL/localStorage-seeded project on first list load
 let projectSnapshots = null; // /projects/{id}/snapshots models for the active project; null = loading
 let drofusSnapshots = null;  // /projects/{id}/drofus/snapshots for the active project; null = loading
 let roomPropertyKeys = [];   // union of room.properties keys for the active project, for colour-plan property inputs
@@ -333,6 +334,20 @@ async function loadProjectList() {
     }
     list.appendChild(li);
   }
+
+  // First render only: if a URL/localStorage seed names a project this list
+  // actually contains, open it — that's how a pick made on another page lands
+  // here. No seed, or a seed the list doesn't contain, leaves the "pick a
+  // project" list untouched (unchanged first-run behaviour). The one-shot guard
+  // stops the loadProjectList() refreshes after every save/select from
+  // re-triggering a restore and fighting the user's later navigation.
+  if (!didRestore) {
+    didRestore = true;
+    const seed = seedProjectId();
+    if (seed && !activeProjectId && items.some(i => i.project_id === seed)) {
+      selectProject(seed);
+    }
+  }
 }
 
 async function selectProject(projectId) {
@@ -344,6 +359,7 @@ async function selectProject(projectId) {
     return;
   }
   activeProjectId = projectId;
+  persistSelection(activeProjectId); // keep the pick in URL + localStorage across pages
   current = { isNew: false, file: data.file, settings: normalize(data.settings) };
   drofusLabels = [];
   drofusSnapshots = null;
@@ -381,6 +397,7 @@ async function loadRoomPropertyKeys(projectId) {
 
 function newProject() {
   activeProjectId = null;
+  persistSelection(null); // no active project → clear the restored-pick seed
   current = { isNew: true, file: null, settings: blankSettings() };
   drofusLabels = [];
   projectSnapshots = []; // a project that doesn't exist yet has no stored data
@@ -1136,6 +1153,7 @@ async function save() {
     showMessage(true, "✓ saved & applied live");
     const data = JSON.parse(result.text);
     activeProjectId = data.settings.project_id;
+    persistSelection(activeProjectId); // a freshly-saved project becomes the seed
     current = { isNew: false, file: `${activeProjectId}.toml`, settings: normalize(data.settings) };
     openEditor();
     loadProjectList();

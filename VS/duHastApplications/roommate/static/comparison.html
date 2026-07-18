@@ -215,14 +215,20 @@ async function loadProjects() {
   sel.replaceChildren();
   for (const p of projects) sel.append(el("option", { value: p.id, text: p.name }));
   sel.classList.toggle("hidden", projects.length === 0);
+  // Restore precedence: a valid URL/localStorage seed wins, else first project.
+  // A seed the server no longer lists is ignored (falls to projects[0]), so we
+  // never drive selectProject with a stale id.
   if (projects.length && !projects.some(p => p.id === activeProjectId)) {
-    sel.value = projects[0].id;
-    selectProject(projects[0].id);
+    const seed = seedProjectId();
+    const restored = seed && projects.some(p => p.id === seed) ? seed : projects[0].id;
+    sel.value = restored;
+    selectProject(restored);
   }
 }
 
 async function selectProject(projectId) {
   activeProjectId = projectId;
+  persistSelection(activeProjectId); // URL + localStorage, so the pick survives navigation
   $("placeholder").classList.add("hidden");
   $("panel").classList.remove("hidden");
   $("results").classList.add("hidden");

@@ -46,6 +46,22 @@
   header button.ctl:disabled { opacity: 0.4; cursor: default; }
   header button.ctl.on { border-color: var(--accent); color: var(--accent); font-weight: 600; }
 
+  /* Global room search: input + a "Fields" checklist popover. */
+  header .search { position: relative; display: flex; gap: 0.4rem; align-items: center; }
+  header #searchInput {
+    font-family: var(--mono); font-size: 0.72rem; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--ink); padding: 0.25rem 0.5rem;
+  }
+  .fields-panel {
+    position: absolute; top: 100%; left: 0; margin-top: 0.3rem; z-index: 10;
+    background: var(--paper); border: 1px solid var(--rule); padding: 0.5rem 0.6rem;
+    max-height: 40vh; overflow: auto; min-width: 12rem;
+  }
+  .fields-panel.hidden { display: none; }
+  .fields-panel .fields-actions { margin-bottom: 0.4rem; display: flex; gap: 0.5rem; }
+  .fields-panel .fields-actions a { color: var(--accent); font-size: 0.66rem; cursor: pointer; }
+  .fields-panel label { display: block; font-size: 0.7rem; white-space: nowrap; cursor: pointer; }
+
   /* The zone grid. The 1px gap over a dark background is the hairline rule
      between zones. Column count is set on `main` from the zone count. */
   main {
@@ -107,6 +123,11 @@
   .room:hover { fill: var(--fill-hover); }
   .room.error { fill: var(--error); }
   .room.error:hover { fill: var(--accent); }
+  /* Search: matches get a bold accent outline (composes over any fill — colour
+     plan or error); non-matches fade so matches stand out. `.dim` is opacity so
+     it works regardless of an inline colour-plan fill. */
+  .room.match { stroke: var(--accent); stroke-width: 3; }
+  .dim { opacity: 0.15; }
   .hole { fill: var(--paper); stroke: var(--ink); stroke-width: 1;
           stroke-dasharray: 4 3; vector-effect: non-scaling-stroke; }
 
@@ -194,6 +215,11 @@
     <button class="ctl" id="addZone" title="Add a zone">+ zone</button>
     <button class="ctl" id="removeZone" title="Remove the last zone">− zone</button>
     <button class="ctl" id="linkToggle" title="Sync zoom/pan across all zones">Link views: off</button>
+    <div class="search">
+      <input id="searchInput" type="search" placeholder="Search rooms…" autocomplete="off" />
+      <button class="ctl" id="fieldsToggle" title="Choose which fields to search">Fields ▾</button>
+      <div id="fieldsPanel" class="fields-panel hidden"></div>
+    </div>
     <div class="links">
       <a href="/comparison.html">compare</a>
       <a href="/settings.html">settings</a>
@@ -256,6 +282,13 @@ let zoneSeq = 0;
 
 // Global: sync the view transform across every zone when on (see commitView).
 let linkViews = false;
+
+// Global room search (see the "search" section lower down): one query + one set
+// of enabled field keys, applied to every zone. `searchFields` empty means "not
+// yet initialised" — populated to all-available on first data / panel build.
+let searchQuery = "";
+const searchFields = new Set();
+let searchFieldsInitialised = false;
 
 async function fetchJson(url) {
   const res = await fetch(url, { cache: "no-store" });
@@ -648,7 +681,7 @@ function fittedBounds(rooms) {
 // collected into it so the live view can hide off-screen rooms on pan/zoom
 // (viewport culling). The SVG export passes none — an exported file needs every
 // room, and a detached node has no view to cull against.
-function paintLevel(svg, rooms, fitted, { colourPlan = null, errorRoomIds = null, showErrors = false, cullUnits = null } = {}) {
+function paintLevel(svg, rooms, fitted, { colourPlan = null, errorRoomIds = null, showErrors = false, cullUnits = null, matchRoomIds = null, searchActive = false } = {}) {
   const baseFont = Math.max(fitted.w, fitted.h) * 0.02;
 
   const g = document.createElementNS(SVG, "g");
@@ -674,9 +707,20 @@ function paintLevel(svg, rooms, fitted, { colourPlan = null, errorRoomIds = null
   for (const room of rooms) {
     if (!room.loops || room.loops.length === 0) continue;
 
+    // Search state per room: a match gets `.match` (accent outline); when a
+    // search is active every non-match gets `.dim` (rooms, holes and label), so
+    // matches stand out. Composes with the `.error` highlight and colour-plan
+    // fills — `.match` is a stroke, `.dim` is opacity.
+    const isMatch = searchActive && matchRoomIds && matchRoomIds.has(room.id);
+    const dimmed = searchActive && !isMatch;
+
     const outer = document.createElementNS(SVG, "polygon");
     outer.setAttribute("points", pointsAttr(room.loops[0]));
-    outer.setAttribute("class", showErrors && errorRoomIds && errorRoomIds.has(room.id) ? "room error" : "room");
+    let cls = "room";
+    if (showErrors && errorRoomIds && errorRoomIds.has(room.id)) cls += " error";
+    if (isMatch) cls += " match";
+    if (dimmed) cls += " dim";
+    outer.setAttribute("class", cls);
     // Fill precedence: an active colour plan wins over the error highlight and
     // the default --fill. Inline style beats the `.room` CSS rule; a
     // presentation attribute would lose to it. This inline fill is a resolved
@@ -689,17 +733,19 @@ function paintLevel(svg, rooms, fitted, { colourPlan = null, errorRoomIds = null
     for (let i = 1; i < room.loops.length; i++) {
       const hole = document.createElementNS(SVG, "polygon");
       hole.setAttribute("points", pointsAttr(room.loops[i]));
-      hole.setAttribute("class", "hole");
+      hole.setAttribute("class", dimmed ? "hole dim" : "hole");
       svg.appendChild(hole);
       if (nodes) nodes.push(hole);
     }
-    if (units) units.set(room, { ...roomBBox(room), nodes, hidden: false });
+    if (units) units.set(room, { room, ...roomBBox(room), nodes, hidden: false });
   }
 
   for (const room of rooms) {
     if (!room.loops || room.loops.length === 0) continue;
     const label = addLabel(svg, room, baseFont);
-    if (units && label) units.get(room).nodes.push(label);
+    if (!label) continue;
+    if (searchActive && !(matchRoomIds && matchRoomIds.has(room.id))) label.classList.add("dim");
+    if (units) units.get(room).nodes.push(label);
   }
 
   if (cullUnits) for (const u of units.values()) cullUnits.push(u);
@@ -730,6 +776,8 @@ function renderLevel(zone, payload, levelId, { refit = true } = {}) {
     errorRoomIds: zone.errorRoomIds,
     showErrors: zone.showErrors,
     cullUnits: zone.cullUnits,
+    matchRoomIds: zone.searchMatchIds,
+    searchActive: zone.searchActive,
   });
   cullZone(zone); // hide off-screen rooms for the current view straight away
 
@@ -808,13 +856,23 @@ function updateMeta(zone) {
   const active = lvls.find(l => l.id === zone.activeLevelId);
   const n = roomsOnLevel(zone.currentPayload, zone.activeLevelId).length;
   const lvlName = active ? active.name : "—";
-  zone.els.meta.textContent = `${lvlName} · ${n} room${n === 1 ? "" : "s"} · v${zone.currentPayload.schema_version} · ${new Date().toLocaleTimeString()}`;
+  // While a search is active, surface this zone's match count (over its whole
+  // payload, all levels — highlighting is visible only on the shown level).
+  const matches = zone.searchActive && zone.searchMatchIds
+    ? ` · ${zone.searchMatchIds.size} match${zone.searchMatchIds.size === 1 ? "" : "es"}`
+    : "";
+  zone.els.meta.textContent = `${lvlName} · ${n} room${n === 1 ? "" : "s"} · v${zone.currentPayload.schema_version} · ${new Date().toLocaleTimeString()}${matches}`;
   zone.els.meta.classList.remove("stale");
 }
 
 // Called only when new data arrives for a zone.
 function ingest(zone, payload) {
   zone.currentPayload = payload;
+  // A new payload may add properties (a different project) — refresh the search
+  // field checklist, then recompute this zone's matches so the render below
+  // carries the highlight.
+  refreshFieldsPanel();
+  computeZoneMatches(zone);
   zone.els.empty.classList.add("hidden");
   zone.els.exportSvg.classList.remove("hidden"); // there's now something to export
   zone.els.areasToggle.classList.remove("hidden"); // footprints can be computed now
@@ -1526,6 +1584,138 @@ function downloadAreasCsv(zone) {
   if (!zone.areasData || !zone.areasData.groups || zone.areasData.groups.length === 0) return;
   downloadCsv(`areas-${zone.projectId || "project"}.csv`, buildAreasCsv(zone));
 }
+
+// ============================ room search (global) ============================
+//
+// One search box + a field checklist, applied to EVERY zone. Matching is a local
+// substring scan over rooms already in memory; highlighting toggles classes on
+// the already-rendered nodes (the cull-unit room->nodes map) rather than
+// rebuilding the SVG — so it stays smooth at thousands of rooms. See the plan /
+// HANDOVER for why this is frontend-only.
+
+function debounce(fn, ms) {
+  let t;
+  return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+}
+
+// Intrinsic/aggregate field keys carry a friendly label; raw property keys show
+// verbatim.
+const SEARCH_FIELD_LABELS = { "$name": "Name", "$id": "Id", "$classification": "Classification", "$drofus": "dRofus" };
+function searchFieldLabel(key) { return SEARCH_FIELD_LABELS[key] || key; }
+
+// Every field the search can look at: the intrinsic/aggregate keys plus the
+// union of raw property keys across ALL zones' loaded rooms, so the checklist
+// lists everything available even if a given zone lacks a property.
+function availableSearchFields() {
+  const props = new Set();
+  for (const z of zones)
+    for (const r of (z.currentPayload ? z.currentPayload.rooms : []))
+      for (const k of Object.keys(r.properties || {})) props.add(k);
+  return ["$name", "$id", "$classification", "$drofus", ...[...props].sort()];
+}
+
+// True when `q` (already lowercased) is a substring of any ENABLED field's value.
+function roomMatches(room, q, fields) {
+  const hit = (v) => v != null && String(v).toLowerCase().includes(q);
+  if (fields.has("$name") && hit(room.name)) return true;
+  if (fields.has("$id") && hit(room.id)) return true;
+  if (fields.has("$classification") && room.classification &&
+      room.classification.some(t => hit(t.name) || hit(t.code))) return true;
+  if (fields.has("$drofus") && room.drofus && room.drofus.fields &&
+      Object.values(room.drofus.fields).some(hit)) return true;
+  const props = room.properties || {};
+  for (const k in props) if (fields.has(k) && hit(props[k].value)) return true;
+  return false;
+}
+
+// Recompute one zone's match set over its WHOLE payload (level-independent, so a
+// level switch re-paints with the same set).
+function computeZoneMatches(zone) {
+  const q = searchQuery.trim().toLowerCase();
+  zone.searchActive = q.length > 0;
+  if (!q || !zone.currentPayload) { zone.searchMatchIds = null; return; }
+  const ids = new Set();
+  for (const r of zone.currentPayload.rooms) if (roomMatches(r, q, searchFields)) ids.add(r.id);
+  zone.searchMatchIds = ids;
+}
+
+// Fast path: toggle `.match`/`.dim` on the already-rendered nodes via the
+// cull-unit room->nodes map (nodes[0] = room polygon, rest = holes + label).
+function applyHighlight(zone) {
+  const active = zone.searchActive;
+  for (const u of (zone.cullUnits || [])) {
+    const isMatch = active && zone.searchMatchIds && zone.searchMatchIds.has(u.room.id);
+    u.nodes[0].classList.toggle("match", !!isMatch);
+    for (let i = 0; i < u.nodes.length; i++) u.nodes[i].classList.toggle("dim", active && !isMatch);
+  }
+}
+
+// Recompute + re-highlight every zone, and refresh each zone's match count.
+function applySearch() {
+  for (const z of zones) {
+    computeZoneMatches(z);
+    applyHighlight(z);
+    updateMeta(z);
+  }
+}
+const debouncedApplySearch = debounce(applySearch, 200);
+
+// Build/refresh the field checklist. Preserves existing ticks; a genuinely new
+// field (from a newly loaded project) defaults on. First build ticks everything
+// — the "all fields" default.
+function refreshFieldsPanel() {
+  const panel = document.getElementById("fieldsPanel");
+  if (!panel) return;
+  const fields = availableSearchFields();
+  const known = new Set([...panel.querySelectorAll("input")].map(i => i.value));
+  if (!searchFieldsInitialised) {
+    fields.forEach(f => searchFields.add(f));
+    searchFieldsInitialised = true;
+  } else {
+    fields.forEach(f => { if (!known.has(f)) searchFields.add(f); }); // new field -> on
+  }
+
+  panel.replaceChildren();
+  const actions = document.createElement("div");
+  actions.className = "fields-actions";
+  const mkAction = (text, fn) => {
+    const a = document.createElement("a");
+    a.textContent = text;
+    a.addEventListener("click", fn);
+    return a;
+  };
+  actions.appendChild(mkAction("All", () => { fields.forEach(f => searchFields.add(f)); refreshFieldsPanel(); applySearch(); }));
+  actions.appendChild(mkAction("None", () => { searchFields.clear(); refreshFieldsPanel(); applySearch(); }));
+  panel.appendChild(actions);
+
+  for (const f of fields) {
+    const label = document.createElement("label");
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.value = f;
+    cb.checked = searchFields.has(f);
+    cb.addEventListener("change", () => {
+      if (cb.checked) searchFields.add(f); else searchFields.delete(f);
+      applySearch();
+    });
+    label.appendChild(cb);
+    label.appendChild(document.createTextNode(" " + searchFieldLabel(f)));
+    panel.appendChild(label);
+  }
+}
+
+document.getElementById("searchInput").addEventListener("input", (e) => {
+  searchQuery = e.target.value;
+  debouncedApplySearch();
+});
+document.getElementById("fieldsToggle").addEventListener("click", (e) => {
+  e.stopPropagation();
+  document.getElementById("fieldsPanel").classList.toggle("hidden");
+});
+// Click outside the search cluster closes the field panel.
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".search")) document.getElementById("fieldsPanel").classList.add("hidden");
+});
 
 // ============================ polling (per zone) ============================
 

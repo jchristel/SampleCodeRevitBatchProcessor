@@ -200,25 +200,44 @@ The transform chain is fully determined once the two preconditions hold:
 room point (feet, Y-up, model space)
   → ModelToShared.matrix            → shared coords = grid coords in `crs`
   → reproject (crs → EPSG:3857)     → Web Mercator metres
-  → tile service                    → image
-  → draw as <image> behind the SVG room layer, same viewport
+  → Protomaps (PMTiles)             → basemap tiles, rendered client-side
+  → draw behind the SVG room layer, same viewport
 ```
 
-Provider options, least-code first: a **static-map endpoint** (one request for a
-bbox → one image) is the simplest drop-in. **XYZ/WMTS tiles** give zoom without
-re-fetching but you stitch them. For these AU projects, government aerial
-imagery WMTS/WMS is worth preferring over a commercial provider. Draw it as an
-`<image>` behind the existing room `<path>` layer in the plan SVG (index.html)
-— the renderer already builds one SVG viewport per level, so the underlay is a
-sibling layer under the rooms, sharing the same pan/zoom.
+**Provider decision: Protomaps only.** The underlay is served as
+[Protomaps](https://protomaps.com) — a single **PMTiles** archive (all tiles in
+one file, served over HTTP Range requests from any static host or object store,
+no tile-server process) rendered client-side. This is the one provider to build
+against; the earlier "static-map vs XYZ/WMTS, commercial vs government WMTS"
+menu is closed. It fits the project ethos: open, self-hostable, keyless when the
+PMTiles file is served locally, Web Mercator (EPSG:3857) like every other XYZ
+scheme.
+
+Two consequences of the choice, both to accept deliberately:
+
+- **The basemap is OSM-derived *vector*, not aerial imagery.** Protomaps'
+  flagship basemaps are streets/buildings/labels styled in the browser — a
+  schematic map, not a photo. The doc's earlier lean toward "government aerial
+  WMTS" is dropped with this decision. If aerial photography is ever actually
+  wanted, that's a *different* data source (a raster PMTiles archive you build,
+  or another provider) — call it out then; it is not what "Protomaps" gives you.
+- **It renders through a map library, not a bare `<image>`.** Vector PMTiles
+  need a renderer — MapLibre GL JS (via the `pmtiles://` protocol plugin) or
+  `protomaps-leaflet`. So the underlay is not literally an `<image>` sibling of
+  the room `<path>` layer; it is that library's canvas/WebGL surface, positioned
+  behind the room SVG and **kept in viewport lockstep** with it (see "the hard
+  20%"). This is heavier than the single-script `proj4js` include — an honest
+  cost against STRATEGY-BROWSER's no-build/vanilla ethos, and the main reason the
+  underlay stays a clearly-scoped, independently-toggleable later phase.
 
 ### The hard 20%: don't hand-roll these
 
 - **Reprojection is real geodesy.** `crs` (MGA2020 / GDA2020 / UTM) → Web
   Mercator is a proper transform. Browser side: `proj4js`. Do **not** approximate
-  it — at building scale the error is visible. This is the one genuinely new
-  dependency the underlay adds. (STRATEGY-BROWSER is deliberately no-build /
-  vanilla JS; `proj4js` is a single small script include, consistent with that.)
+  it — at building scale the error is visible. This is one of **two** new browser
+  dependencies the underlay adds — `proj4js` (small, a single script include,
+  consistent with STRATEGY-BROWSER's no-build/vanilla ethos) and the Protomaps
+  renderer (heavier — see the provider note above).
 - **Three coordinate frames in one viewport.** Room polygons are feet, Y-up;
   SVG is Y-down (already handled by the existing Y-flip — STRATEGY-BROWSER
   "Coordinates and units"); the underlay is metres, Web Mercator, Y-down.
@@ -226,6 +245,15 @@ sibling layer under the rooms, sharing the same pan/zoom.
   ModelToShared matrix *plus* the reproject *plus* a scale/translate into the
   SVG viewport. Get the composition order right and test it against one known
   real-world building before trusting it.
+- **Two renderers, one camera.** Because Protomaps draws to its own
+  canvas/WebGL surface (not an SVG `<image>`), the composition above isn't a
+  one-time transform — it must run on *every* pan/zoom to keep the map library's
+  camera locked to the SVG viewport. The room SVG stays the source of truth for
+  interaction; the map is a slaved layer whose centre/zoom/bearing are recomputed
+  from the SVG viewport each frame (the reproject makes zoom levels and the
+  ModelToShared rotation makes bearing non-trivial). This viewport-lockstep is
+  the single biggest integration risk in the underlay and the reason it's a
+  standalone phase.
 - **The underlay is non-load-bearing.** Reassert the Fact-2 discipline in code:
   the underlay layer must be independently toggleable and its failure (bad
   tile fetch, mis-registered project, reprojection error) must degrade to "no
@@ -238,10 +266,22 @@ sibling layer under the rooms, sharing the same pan/zoom.
 1. **Which CRSs must be supported?** MGA2020 has multiple zones (49–56 for AU);
    confirm the set these projects actually use so the reprojection defs are
    bundled. Adding a zone is a proj4 definition string, not code.
-2. **Provider + credentials.** Static-map vs tiles; commercial (Mapbox /
-   MapTiler, needs an API key surfaced to the browser) vs government WMTS (often
-   keyless but terms/attribution vary). This decides the fetch code and whether
-   settings needs a key field.
+2. ~~**Provider + credentials.** Static-map vs tiles; commercial (Mapbox /
+   MapTiler) vs government WMTS.~~ **Decided: Protomaps only** (see Phase 3). The
+   residual sub-questions the choice leaves open:
+   - **Which PMTiles archive, hosted where?** A whole-country basemap is
+     gigabytes; a per-project city/region extract is far smaller. Decide the
+     extent and whether the roommate server serves the `.pmtiles` file itself
+     (Range-request friendly) or it lives on separate static hosting. If
+     Protomaps' *hosted* API is used instead of a self-hosted file, that
+     reintroduces an API key to surface to the browser — prefer self-hosted to
+     keep it keyless.
+   - **Which renderer?** MapLibre GL JS (`pmtiles://` protocol) for full vector
+     styling, vs the lighter `protomaps-leaflet`. This trades bundle weight
+     against styling control and sets how the viewport-lockstep (above) is wired.
+   - **Vector styling, or build a raster PMTiles?** The default is a vector OSM
+     basemap; an aerial-imagery look would require sourcing/building raster
+     PMTiles — only if genuinely needed.
 3. ~~**Does pyRevit already expose the shared-coordinate transform cleanly?**
    Confirm it can emit the model→shared matrix once per model (Revit
    `ProjectLocation` / shared coordinates expose it). Phase 1's per-room-equality

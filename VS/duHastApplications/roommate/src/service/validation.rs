@@ -72,6 +72,40 @@ pub struct FieldCoverage {
     pub revit_property: Option<String>,
 }
 
+/// Per-room detail for a room that appears in some discrepancy list — the
+/// human-friendly fields the CSV export shows beyond the bare `room_id`. Keyed
+/// by `room_id` in `ValidationResponse::error_rooms`. Every field defaults to
+/// `""` when the underlying property doesn't resolve (an absent room Number, or
+/// a room that resolved no link value at all), so a consumer never has to
+/// distinguish "absent" from "empty" here — the discrepancy lists already carry
+/// that distinction where it matters.
+#[derive(Serialize)]
+pub struct ErrorRoomInfo {
+    /// The room's Revit "Number" parameter value (resolved via `lookup_property`).
+    pub number: String,
+    /// The room's Revit "Name" parameter value (resolved via `lookup_property`).
+    pub name: String,
+    /// The room's dRofus link value — its value for the link property. `""` when
+    /// the room resolved none (i.e. it's in `rooms_missing_link_value`).
+    pub link_value: String,
+}
+
+/// Discrepancy tallies so a consumer (MCP `get_validation`, the browser panel)
+/// can answer "how many discrepancies?" without re-summing the six lists.
+/// Category counts are the **list lengths** — `duplicate_link_values` counts
+/// duplicate-value *groups*, not the rooms in them — matching the panel's
+/// existing issue count. `total` is their sum.
+#[derive(Serialize)]
+pub struct DiscrepancyCounts {
+    pub total: usize,
+    pub rooms_missing_link_value: usize,
+    pub duplicate_link_values: usize,
+    pub rooms_unmatched_in_drofus: usize,
+    pub property_mismatches: usize,
+    pub fields_absent_in_revit: usize,
+    pub fields_empty_in_revit: usize,
+}
+
 /// Data-quality report for one project's rooms against dRofus, for the
 /// header's validation panel. An on-demand aggregate over the whole
 /// snapshot, not a per-room render concern — see STRATEGY-SOURCES.md.
@@ -89,6 +123,12 @@ pub struct ValidationResponse {
     pub fields_absent_in_revit: Vec<MissingInRevit>,
     pub fields_empty_in_revit: Vec<MissingInRevit>,
     pub field_coverage: Vec<FieldCoverage>,
+    /// Discrepancy tallies (total + per-category) — see `DiscrepancyCounts`.
+    pub discrepancies: DiscrepancyCounts,
+    /// `room_id` → its `ErrorRoomInfo`, populated only for rooms that appear in
+    /// some discrepancy list above. What the CSV export reads to fill its
+    /// room_number/room_name/link-value columns.
+    pub error_rooms: BTreeMap<String, ErrorRoomInfo>,
 }
 
 impl ValidationResponse {
@@ -104,6 +144,16 @@ impl ValidationResponse {
             fields_absent_in_revit: vec![],
             fields_empty_in_revit: vec![],
             field_coverage: vec![],
+            discrepancies: DiscrepancyCounts {
+                total: 0,
+                rooms_missing_link_value: 0,
+                duplicate_link_values: 0,
+                rooms_unmatched_in_drofus: 0,
+                property_mismatches: 0,
+                fields_absent_in_revit: 0,
+                fields_empty_in_revit: 0,
+            },
+            error_rooms: BTreeMap::new(),
         }
     }
 }
@@ -269,6 +319,48 @@ fn compute_field_coverage(drofus: &DrofusData, drofus_fields: &[DrofusFieldConfi
         .collect()
 }
 
+/// Resolve the human-friendly detail (`ErrorRoomInfo`) for every room whose id
+/// is in `error_ids`, in a single pass over the project's rooms. Number, name
+/// and link value all go through `lookup_property` the same way
+/// `resolve_link_values` resolves the link value — so canonical→raw resolution
+/// (and the source dimension) stays consistent with the rest of the pass, and a
+/// property that doesn't resolve degrades to `""` (the CSV shows a blank cell).
+///
+/// Keyed by `room_id`, which is only unique within a model — the same
+/// pre-existing caveat the discrepancy lists already carry (a colliding id from
+/// a second linked model resolves to whichever room is seen last). This is a
+/// detail lookup for display, not an identity the checks depend on.
+fn collect_error_rooms(
+    project_id: &str,
+    stored: &[(ModelKey, RoomPayload)],
+    drofus: &DrofusData,
+    builtin_defs: &[BuiltinPropertyDef],
+    error_ids: &BTreeSet<String>,
+) -> BTreeMap<String, ErrorRoomInfo> {
+    let mut error_rooms = BTreeMap::new();
+    for (_key, payload) in stored {
+        if payload.project.id != project_id {
+            continue;
+        }
+        let source = &payload.model.source;
+        for room in &payload.rooms {
+            if !error_ids.contains(&room.id) {
+                continue;
+            }
+            error_rooms.insert(
+                room.id.clone(),
+                ErrorRoomInfo {
+                    number: lookup_property(room, "Number", source, builtin_defs).unwrap_or_default(),
+                    name: lookup_property(room, "Name", source, builtin_defs).unwrap_or_default(),
+                    link_value: lookup_property(room, &drofus.link_property, source, builtin_defs)
+                        .unwrap_or_default(),
+                },
+            );
+        }
+    }
+    error_rooms
+}
+
 /// Pure computation behind `compute_project_validation` — pulled out so it's
 /// testable without a full `AppState`, same shape as `resolve_label_fields`.
 ///
@@ -347,6 +439,34 @@ pub fn compute_validation(
         }
     }
 
+    // Per-category counts (list lengths — duplicate counts as groups, matching
+    // the panel's issue count) and their total, so a consumer needn't re-sum.
+    let discrepancies = DiscrepancyCounts {
+        total: rooms_missing_link_value.len()
+            + duplicate_link_values.len()
+            + rooms_unmatched_in_drofus.len()
+            + property_mismatches.len()
+            + fields_absent_in_revit.len()
+            + fields_empty_in_revit.len(),
+        rooms_missing_link_value: rooms_missing_link_value.len(),
+        duplicate_link_values: duplicate_link_values.len(),
+        rooms_unmatched_in_drofus: rooms_unmatched_in_drofus.len(),
+        property_mismatches: property_mismatches.len(),
+        fields_absent_in_revit: fields_absent_in_revit.len(),
+        fields_empty_in_revit: fields_empty_in_revit.len(),
+    };
+
+    // Every room id that appears in any discrepancy list — the set the CSV
+    // export needs number/name/link-value for.
+    let mut error_ids: BTreeSet<String> = BTreeSet::new();
+    error_ids.extend(rooms_missing_link_value.iter().cloned());
+    error_ids.extend(duplicate_link_values.iter().flat_map(|d| d.room_ids.iter().cloned()));
+    error_ids.extend(rooms_unmatched_in_drofus.iter().cloned());
+    error_ids.extend(property_mismatches.iter().map(|m| m.room_id.clone()));
+    error_ids.extend(fields_absent_in_revit.iter().map(|m| m.room_id.clone()));
+    error_ids.extend(fields_empty_in_revit.iter().map(|m| m.room_id.clone()));
+    let error_rooms = collect_error_rooms(project_id, stored, drofus, builtin_defs, &error_ids);
+
     ValidationResponse {
         drofus_configured: true,
         link_property: Some(drofus.link_property.clone()),
@@ -358,6 +478,8 @@ pub fn compute_validation(
         fields_absent_in_revit,
         fields_empty_in_revit,
         field_coverage: compute_field_coverage(drofus, drofus_fields),
+        discrepancies,
+        error_rooms,
     }
 }
 
@@ -517,6 +639,56 @@ mod tests {
         assert_eq!(mismatch.field, "NetArea");
         assert_eq!(mismatch.room_value, "25.5");
         assert_eq!(mismatch.drofus_value, "30.0");
+    }
+
+    /// A discrepant room carries its number/name/link-value in `error_rooms`
+    /// (what the CSV export shows beyond the id), and the discrepancy counts
+    /// tally the lists.
+    #[test]
+    fn test_compute_validation_error_rooms_and_counts() {
+        let room = make_room(
+            "r1",
+            "Office 101",
+            &[("Number", "101"), ("Name", "Office"), ("Area", "25.5")],
+        );
+        let (key, payload) = make_payload("p1", vec![room]);
+        let stored = vec![(key, payload)];
+        let drofus = make_drofus("Number", &[("101", &[("NetArea", "30.0")])], &[("NetArea", "Area")]);
+
+        let result = compute_validation("p1", &stored, &drofus, &[], &[]);
+
+        // One mismatch (Area 25.5 vs NetArea 30.0), and the counts reflect it.
+        assert_eq!(result.property_mismatches.len(), 1);
+        assert_eq!(result.discrepancies.property_mismatches, 1);
+        assert_eq!(result.discrepancies.total, 1);
+
+        // The mismatched room's detail: Revit Number/Name params + link value.
+        let info = result.error_rooms.get("r1").expect("mismatched room has detail");
+        assert_eq!(info.number, "101");
+        assert_eq!(info.name, "Office");
+        assert_eq!(info.link_value, "101");
+    }
+
+    /// A room missing its link value appears in `error_rooms` with an empty
+    /// `link_value` (there is none to resolve), while its Name still resolves;
+    /// the counts tally the missing-link category and the total.
+    #[test]
+    fn test_compute_validation_error_rooms_missing_link_value_blank() {
+        let room = make_room("r1", "Office", &[("Name", "Office")]); // no "Number"
+        let (key, payload) = make_payload("p1", vec![room]);
+        let stored = vec![(key, payload)];
+        let drofus = make_drofus("Number", &[], &[]);
+
+        let result = compute_validation("p1", &stored, &drofus, &[], &[]);
+
+        assert_eq!(result.rooms_missing_link_value, vec!["r1".to_string()]);
+        assert_eq!(result.discrepancies.rooms_missing_link_value, 1);
+        assert_eq!(result.discrepancies.total, 1);
+
+        let info = result.error_rooms.get("r1").expect("missing-link room has detail");
+        assert_eq!(info.link_value, "", "no link value resolved → blank");
+        assert_eq!(info.number, "", "no Number param → blank");
+        assert_eq!(info.name, "Office");
     }
 
     /// The reported bug: the Revit export's ASCII-narrowing step replaces any

@@ -8,7 +8,6 @@ room_label = [
     "$id",
 ]
 milestones = []
-drofus_fields = []
 
 [sources.drofus]
 type = "file"
@@ -40,6 +39,16 @@ canonical = "Department"
 
 [builtin_properties.by_source]
 revit = "Department"
+
+[[drofus_fields]]
+label = "Department"
+type = "string"
+qa = "exact"
+
+[[drofus_fields]]
+label = "NetArea"
+type = "numeric"
+qa = "exact"
 
 [[colour_plans]]
 name = "Area vs Perimeter"

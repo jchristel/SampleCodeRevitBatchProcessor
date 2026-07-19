@@ -253,7 +253,7 @@ impl RoommateMcp {
 
     /// Runs the dRofus reconciliation QA report for one project -- see
     /// `service::validation::compute_project_validation`.
-    #[tool(description = "Run the dRofus reconciliation validation report for one project")]
+    #[tool(description = "Run the dRofus reconciliation validation report for one project. Includes a 'discrepancies' summary (total plus a per-category breakdown) for a one-shot count, and 'error_rooms' (room_id -> number/name/link value) for the flagged rooms.")]
     fn get_validation(&self, Parameters(p): Parameters<ProjectIdParams>) -> Result<CallToolResult, McpError> {
         let result = validation::compute_project_validation(&self.state, &p.project_id).map_err(to_mcp_error)?;
         json_result(&result)

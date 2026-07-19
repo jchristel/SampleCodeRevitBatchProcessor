@@ -231,6 +231,7 @@
         </div>
         <div class="areas-panel hidden">
           <h2>Hierarchy areas</h2>
+          <button class="refresh aDownload">Download CSV</button>
           <div class="aBody"></div>
         </div>
       </div>
@@ -1101,9 +1102,12 @@ function renderValidation(zone, data) {
     renderLevel(zone, zone.currentPayload, zone.activeLevelId, { refit: false });
   }
 
-  const issueCount = data.rooms_missing_link_value.length + data.duplicate_link_values.length
+  // The server now tallies this (data.discrepancies.total); fall back to the
+  // per-list sum for an older server that doesn't send the summary.
+  const issueCount = data.discrepancies?.total ?? (
+    data.rooms_missing_link_value.length + data.duplicate_link_values.length
     + data.rooms_unmatched_in_drofus.length + data.property_mismatches.length
-    + data.fields_absent_in_revit.length + data.fields_empty_in_revit.length;
+    + data.fields_absent_in_revit.length + data.fields_empty_in_revit.length);
 
   const toggle = zone.els.validationToggle;
   toggle.classList.remove("hidden");
@@ -1145,30 +1149,41 @@ function csvEscape(value) {
 }
 
 function buildValidationCsv(data) {
-  const rows = [["room_id", "error"]];
-  for (const id of data.rooms_missing_link_value) rows.push([id, "missing link value"]);
+  // room_number / room_name / link-value come from the server's per-room detail
+  // (error_rooms), keyed by room_id; the link-value column is headed by the
+  // link property name (e.g. "Number"). Older servers omit these -> blank cells.
+  const info = data.error_rooms || {};
+  const linkHeader = data.link_property || "link_value";
+  const rows = [["room_id", "room_number", "room_name", linkHeader, "error"]];
+  const push = (id, error) => {
+    const r = info[id] || {};
+    rows.push([id, r.number || "", r.name || "", r.link_value || "", error]);
+  };
+  for (const id of data.rooms_missing_link_value) push(id, "missing link value");
   for (const dup of data.duplicate_link_values)
-    for (const id of dup.room_ids) rows.push([id, `duplicate link value: ${dup.value}`]);
-  for (const id of data.rooms_unmatched_in_drofus) rows.push([id, "unmatched in dRofus"]);
+    for (const id of dup.room_ids) push(id, `duplicate link value: ${dup.value}`);
+  for (const id of data.rooms_unmatched_in_drofus) push(id, "unmatched in dRofus");
   for (const m of data.property_mismatches)
-    rows.push([m.room_id, `property mismatch: ${m.field} (room="${m.room_value}" vs dRofus="${m.drofus_value}")`]);
-  for (const m of data.fields_absent_in_revit) rows.push([m.room_id, `field absent in Revit: ${m.field}`]);
-  for (const m of data.fields_empty_in_revit) rows.push([m.room_id, `field empty in Revit: ${m.field}`]);
+    push(m.room_id, `property mismatch: ${m.field} (room="${m.room_value}" vs dRofus="${m.drofus_value}")`);
+  for (const m of data.fields_absent_in_revit) push(m.room_id, `field absent in Revit: ${m.field}`);
+  for (const m of data.fields_empty_in_revit) push(m.room_id, `field empty in Revit: ${m.field}`);
   return rows.map(r => r.map(csvEscape).join(",")).join("\r\n");
 }
 
-function downloadValidationCsv(zone) {
-  if (!zone.currentValidation || !zone.currentValidation.drofus_configured) return;
-  const csv = buildValidationCsv(zone.currentValidation);
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+// Shared by both panels' Download-CSV buttons: turn CSV text into a download.
+function downloadCsv(filename, csvText) {
+  const blob = new Blob([csvText], { type: "text/csv;charset=utf-8" });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `validation-${zone.projectId || "project"}.csv`;
+  const a = Object.assign(document.createElement("a"), { href: url, download: filename });
   document.body.appendChild(a);
   a.click();
   a.remove();
   URL.revokeObjectURL(url);
+}
+
+function downloadValidationCsv(zone) {
+  if (!zone.currentValidation || !zone.currentValidation.drofus_configured) return;
+  downloadCsv(`validation-${zone.projectId || "project"}.csv`, buildValidationCsv(zone.currentValidation));
 }
 
 // ============================ SVG export ============================
@@ -1469,6 +1484,49 @@ function renderAreasSummary(zone) {
     : `<p class="note">No footprints for this level and tier.</p>`;
 }
 
+// Export every group's footprint across ALL levels and tiers (not just the
+// active view the panel shows) as CSV: level, one column per tier, then the
+// server footprint area, the client-summed net room area, their Δ, and whether
+// the group counts toward tiers above it. Reuses the same roomNetArea/pathKey
+// the summary uses, generalised past the active level/tier.
+function buildAreasCsv(zone) {
+  const data = zone.areasData;
+  if (!data || !data.groups || data.groups.length === 0) return "";
+  const levelName = new Map((data.levels || []).map(l => [l.id, l.name]));
+  const tiers = tierNames(data);
+
+  // Net room area per (level, depth, path-prefix) over every room, so each
+  // group at any depth on any level can look up its summed net directly.
+  const net = new Map();
+  for (const r of (zone.currentPayload ? zone.currentPayload.rooms : [])) {
+    if (!r.classification) continue;
+    for (let d = 0; d < r.classification.length; d++) {
+      const key = `${r.level_id}|${d}|${pathKey(r.classification, d)}`;
+      net.set(key, (net.get(key) || 0) + roomNetArea(r));
+    }
+  }
+
+  const num = (x) => Math.round(x * 1000) / 1000; // trim float-noise tails, no locale separators
+  const rows = [["level", ...tiers, "footprint", "net", "delta", "counted_up"]];
+  for (const g of data.groups) {
+    const depth = g.path.length - 1;
+    const netA = net.get(`${g.level_id}|${depth}|${pathKey(g.path, depth)}`) || 0;
+    const tierCells = tiers.map((_, i) => (i < g.path.length ? tierLabel(g.path[i]) : ""));
+    rows.push([
+      levelName.get(g.level_id) || g.level_id,
+      ...tierCells,
+      num(g.area), num(netA), num(g.area - netA),
+      g.counted_upward ? "yes" : "no",
+    ]);
+  }
+  return rows.map(r => r.map(csvEscape).join(",")).join("\r\n");
+}
+
+function downloadAreasCsv(zone) {
+  if (!zone.areasData || !zone.areasData.groups || zone.areasData.groups.length === 0) return;
+  downloadCsv(`areas-${zone.projectId || "project"}.csv`, buildAreasCsv(zone));
+}
+
 // ============================ polling (per zone) ============================
 
 // Build this zone's /rooms URL from its project/building/milestone selection.
@@ -1631,6 +1689,7 @@ function wireZoneControls(zone) {
     renderAreasOverlay(zone);
     renderAreasSummary(zone);
   });
+  e.areasDownload.addEventListener("click", () => downloadAreasCsv(zone));
 }
 
 // Build one zone: clone the template, wire its own state object, controls, and
@@ -1685,6 +1744,7 @@ function createZone(seed) {
       areasTier: q(".areasTier"),
       areasPanel: q(".areas-panel"),
       areasBody: q(".aBody"),
+      areasDownload: q(".aDownload"),
       meta: q(".meta"),
       empty: q(".empty"),
       validationPanel: q(".validation-panel"),

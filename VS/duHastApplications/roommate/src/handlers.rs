@@ -683,7 +683,7 @@ mod tests {
         };
         let state = std::sync::Arc::new(AppState::new(Box::new(MemStore::new()), single_project("p1"), None));
 
-        ingest_rooms(State(state.clone() as Shared), Json(payload)).await.expect("accepted");
+        let _ = ingest_rooms(State(state.clone() as Shared), Json(payload)).await.expect("accepted");
 
         let stored = state.all_snapshots().unwrap();
         let (_, payload) = stored.iter().find(|(k, _)| k.model_id == "m1").expect("stored");

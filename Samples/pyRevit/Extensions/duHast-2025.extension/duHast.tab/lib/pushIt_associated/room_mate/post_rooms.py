@@ -38,6 +38,11 @@ from duHast.Utilities.files_json import serialize_utf
 
 SERVER_URL = "http://127.0.0.1:5151/rooms"
 SERVER_URL_STREAM = "http://127.0.0.1:5151/rooms/stream"
+# The settings endpoint, NOT /projects: a push target must be a *registered*
+# project, and /projects lists only projects that already have stored
+# snapshots -- which a project can only get by being pushed to first. See
+# fetch_projects.
+SERVER_URL_PROJECTS = "http://127.0.0.1:5151/api/settings/projects"
 SCHEMA_VERSION = 5
 
 # Which producer this script feeds the server from. The server resolves
@@ -48,6 +53,26 @@ SOURCE = "revit"
 
 LEVEL_LIST_KEY = "building level"
 ROOM_LIST_KEY = "room"
+
+# Revit's document-level room boundary location (Area and Volume Computations)
+# mapped onto the two regimes the contract knows (contract.rs `RoomBoundary`).
+# Keyed by the *name* of `SpatialElementBoundaryLocation` rather than the enum
+# itself so this module stays free of the Revit assembly: room_mate.py reads the
+# setting, this decides what it means on the wire.
+#
+# The server's distinction is only "do neighbouring rooms tile, or is there a
+# real gap between them". Both centre variants put both rooms' boundaries on the
+# same line, so the gap is zero and there is nothing to bridge; both face
+# variants leave the wall -- or its core -- standing between them, so the gap is
+# real and positive. Which face it is doesn't change the regime, only how wide
+# the gap is, and how wide a gap still counts as a wall is project policy
+# (`[areas] max_wall_thickness`), not a producer fact.
+BOUNDARY_LOCATION_TO_WIRE = {
+    "Center": "centreline",
+    "CoreCenter": "centreline",
+    "Finish": "finish_face",
+    "CoreBoundary": "finish_face",
+}
 
 
 def duhast_objects_to_plain(json_data):
@@ -96,6 +121,41 @@ def find_property(instance_properties, prop_name):
 
 def loop_to_points(loop):
     return [{"x": float(pt[0]), "y": float(pt[1])} for pt in loop]
+
+
+def coordinate_system_to_affine(rotation, translation):
+    """Reduce duHast's shared-coordinate transform (as returned by
+    ``get_coordinate_system_translation_and_rotation``) to the 2D affine
+    ``[a, b, c, d, e, f]`` the server's ``ModelToShared`` carries, where
+    ``shared_x = a*x + c*y + e`` and ``shared_y = b*x + d*y + f``.
+
+    ``rotation`` is 3 basis-vector rows ``[BasisX, BasisY, BasisZ]`` (BasisX is
+    the image of the model +X axis, BasisY of +Y); ``translation`` is the origin.
+    So ``a,b = BasisX.x, BasisX.y`` and ``c,d = BasisY.x, BasisY.y``. Only the x
+    and y of the first two basis rows and of the origin are read, so this is
+    agnostic to 2D (3x2) vs 3D (3x3) serialization -- the z basis and any z
+    translation are for elevation, not the plan placement.
+
+    Carries NO unit conversion: this is a rigid-body placement (rotation +
+    translation in feet), never a scale (HANDOVER-georeferencing.md)."""
+    return [
+        float(rotation[0][0]), float(rotation[0][1]),
+        float(rotation[1][0]), float(rotation[1][1]),
+        float(translation[0]), float(translation[1]),
+    ]
+
+
+def boundary_location_to_room_boundary(location):
+    """Map a `SpatialElementBoundaryLocation` (the enum, or its name) onto the
+    contract's `room_boundary` -- `"centreline"` or `"finish_face"` -- or None
+    when the value isn't one this knows.
+
+    None means "say nothing", never "guess". An absent `room_boundary` is a
+    designed-for state: the server falls back to the project's `[areas]
+    boundary_location` and then to finish face. Inventing a regime here would
+    instead size the server's wall zone off a value nobody declared, and the
+    whole point of the field is that the regime stops being a guess."""
+    return BOUNDARY_LOCATION_TO_WIRE.get(str(location))
 
 
 def properties_to_map(instance_properties):
@@ -157,13 +217,36 @@ def build_envelope(rooms_source, levels_source):
     model = dict(model)
     model["source"] = SOURCE
 
-    return {
+    envelope = {
         "schema_version": SCHEMA_VERSION,
         "project": project,
         "model": model,
         "snapshot": snapshot,
         "levels": levels,
     }
+
+    # The model->shared placement transform (see contract.rs `ModelToShared`) is
+    # a model-level fact stamped onto the envelope by room_mate.py, so it is
+    # forwarded verbatim rather than derived here. Optional: absent on an
+    # un-placed model, which the server renders via auto-fit exactly as before.
+    # It rides the envelope, so the streaming path (which builds this from
+    # `room_meta`, minus the room list) carries it with no per-room scan.
+    model_to_shared = rooms_source.get("model_to_shared")
+    if model_to_shared is not None:
+        envelope["model_to_shared"] = model_to_shared
+
+    # The boundary regime this model was drawn to (contract.rs `RoomBoundary`),
+    # read once per document by room_mate.py and forwarded verbatim for the same
+    # reason as the transform above: a model-level fact, so there is nothing to
+    # reconcile across rooms and the streaming path carries it with no per-room
+    # scan. Optional on the same terms -- absent, the server falls back to the
+    # project's `[areas] boundary_location` and then to finish face, which is
+    # exactly what every push did before this field was sent.
+    room_boundary = rooms_source.get("room_boundary")
+    if room_boundary is not None:
+        envelope["room_boundary"] = room_boundary
+
+    return envelope
 
 
 def translate_room(room):
@@ -228,6 +311,61 @@ def write_ndjson_line(gz, obj):
     line = json.dumps(obj, separators=(",", ":")) + "\n"  # compact, no spaces
     data = Encoding.UTF8.GetBytes(line)
     gz.Write(data, 0, data.Length)
+
+
+def fetch_projects(url=SERVER_URL_PROJECTS):
+    """GET the server's registered project list and report it as
+    `(ok, status, text)`, the same tuple shape the post functions use so the
+    caller branches uniformly. On success `text` is a list of `{"id", "name"}`
+    dicts; on any failure it's an error string.
+
+    A push must target a project the server has a registered settings bundle
+    for (the server 422s otherwise -- see roommate's `validate_ingest`), so the
+    authoritative set of ids a push can use is the set of settings files:
+    `/api/settings/projects`. This deliberately does NOT use `/projects`, which
+    answers a different question -- "which projects have rooms to look at" (it
+    derives its list from stored snapshots, for the viewer's picker). Asking it
+    here is a chicken-and-egg: a newly onboarded project has no snapshots, so
+    it would never be offered, so it could never receive the first push that
+    would make it appear.
+
+    Settings files are the wire shape here, so this normalises them for the
+    caller: `name` is the file's authored display name, falling back to the id
+    when it sets none (absence is a normal state server-side, so the fallback
+    is required, not defensive). That name is what the caller sends back as
+    `project.name`, which the server writes into its storage manifest and the
+    viewer shows -- so the settings file, not this script, is what names a
+    project. Entries carrying a parse `error` have no readable `project_id` and
+    so cannot be pushed to under any id -- they're dropped rather than offered
+    as un-selectable noise.
+
+    An empty list (`200 []`) is a *success* the caller interprets as "no
+    project onboarded yet" (a hard stop for the producer), not a failure; a 2xx
+    whose body isn't a JSON list is a genuine failure (unexpected server
+    shape)."""
+    client = make_client()
+    try:
+        response = client.GetAsync(url).Result
+        status = int(response.StatusCode)
+        text = response.Content.ReadAsStringAsync().Result
+        if not (200 <= status < 300):
+            return (False, status, "server returned {}: {}".format(status, text))
+        try:
+            files = json.loads(text)
+        except ValueError as e:
+            return (False, status, "could not parse {} response: {}".format(url, e))
+        if not isinstance(files, list):
+            return (False, status, "unexpected {} shape: {}".format(url, text))
+        projects = [
+            {"id": f["project_id"], "name": f.get("name") or f["project_id"]}
+            for f in files
+            if f.get("project_id")
+        ]
+        return (True, status, projects)
+    except Exception as e:
+        return (False, None, "could not reach {}: {}".format(url, unwrap_aggregate(e)))
+    finally:
+        client.Dispose()
 
 
 def _post_content(url, content):

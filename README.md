@@ -23,5 +23,5 @@ The sample flows provided in /Sample in this repository use this package.
 
 - [pyRevit extension](Samples/pyRevit) — toolbar tools for family management, export, view management, model maintenance and more
 - [DocManager Revit integration](VS/duHastApplications/duHastNet.DocManager/duHastNet.DocManager.Revit/docs) — UI guide and Revit integration guidelines for the DocManager application
-- [RoomMate](VS/duHastApplications/roommate/docs) — design and strategy documentation for the RoomMate application
+- [RoomMate](https://github.com/jchristel/room_mate) — design and strategy documentation for the RoomMate application
 

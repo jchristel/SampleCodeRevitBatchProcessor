@@ -220,14 +220,14 @@ def get_2d_points_from_revit_room(revit_room):
     boundary_loops_all = get_room_boundary_loops(revit_room)
     boundary_loops = boundary_loops_all[0] if boundary_loops_all else []
     
-    print("before get points")
+    # debug: before get points
 
     # any internal loops will be ignored in this case
     if len(boundary_loops) == 0:
         # this can happen if the room is enclosed by linked model only. Revit api does not return any boundary segments in this case. We will try to get the outer loop via solid
         room_points = _outer_loop_via_solid(revit_room)
         all_room_points.append(room_points)
-        print("after get points via solids after no boundary elements")
+        # debug: after get points via solids after no boundary elements
         return all_room_points
     
     # Outer loop is the first; check it for gaps. If broken, go to fallback.
@@ -235,14 +235,14 @@ def get_2d_points_from_revit_room(revit_room):
     if _loop_has_gap(boundary_loops[0]):
         room_points = _outer_loop_via_solid(revit_room)
         all_room_points.append(room_points)
-        print("after get points via solids due to gaps")
+        # debug: after get points via solids due to gaps
         return all_room_points
 
     # go standard route and get the points from the boundary segments
     room_points = get_points_from_room_boundaries(boundary_loops_all)
     all_room_points.append(room_points)
 
-    print("after get points via segments")
+    # debug: after get points via segments
 
     return all_room_points
 

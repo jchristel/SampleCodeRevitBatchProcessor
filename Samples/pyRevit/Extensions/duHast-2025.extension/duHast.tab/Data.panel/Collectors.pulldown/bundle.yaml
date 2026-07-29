@@ -3,6 +3,7 @@ layout:
   - Levels
   - Floors
   - Rooms
+  - Spaces
   - Items
   - Doors
   - -------

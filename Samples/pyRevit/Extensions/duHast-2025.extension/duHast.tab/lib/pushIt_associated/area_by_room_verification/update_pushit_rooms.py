@@ -52,14 +52,28 @@ def apply_transform_to_uv(uv_point, rotation_matrix, translation_vector):
     # rotation_matrix is [basisX, basisY, basisZ] of the shared coordinate transform,
     # translation_vector is its origin (both as returned by get_coordinate_system_translation_and_rotation)
     # transformed point = u * basisX + v * basisY + origin ( z assumed 0 )
-    rotated_u = uv_point.U * rotation_matrix[0][0] + uv_point.V * rotation_matrix[1][0]
-    rotated_v = uv_point.U * rotation_matrix[0][1] + uv_point.V * rotation_matrix[1][1]
-
-    # Apply translation
-    transformed_u = rotated_u + translation_vector[0]
-    transformed_v = rotated_v + translation_vector[1]
-
+    
+    # Note that the rotation and translation are applied in the order of rotation first, then translation.
+    # Rotation as a 3 x 3 matrix and the translation as a 1 x 3 matrix of the shared coordinate system active in document.
+    
+    # check if rotation is None, if so do not apply any transformation
+    if rotation_matrix is None:
+        rotation_matrix = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]  # Identity matrix for no rotation
+            
+    # Apply rotation (no rotation in this case)
+    rotated_u = uv_point.U * rotation_matrix[0][0] + uv_point.V * rotation_matrix[0][1]
+    rotated_v = uv_point.U * rotation_matrix[1][0] + uv_point.V * rotation_matrix[1][1]
+    
+    # check if translation is None, if so do not apply any transformation
+    if translation_vector is None:
+        translation_vector = [0, 0, 0]
+        
+    # Apply translation (identity translation matrix)
+    transformed_u = rotated_u + translation_vector[0]  # translation[0] should be 0
+    transformed_v = rotated_v + translation_vector[1]  # translation[1] should be 0
+    
     return UV(transformed_u, transformed_v)
+
 
 
 def create_room_from_push_it_instance_and_update(doc, family_instance, levels_ascending, rotation, translation):
@@ -112,7 +126,7 @@ def create_room_from_push_it_instance_and_update(doc, family_instance, levels_as
 
         if DEBUG:
             print("Placement point: {}".format(placement_point))
-         
+        
         # apply the rotation and translation to the placement point ( works on shared coordinate projects only)
         transformed_placement_uv = apply_transform_to_uv(uv_point=placement_point, rotation_matrix=rotation, translation_vector=translation)
        

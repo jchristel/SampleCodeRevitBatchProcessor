@@ -69,9 +69,9 @@ def push_it_area_by_room_verification_entry(doc, uiapp,output, forms):
         print_error(message)
         return return_value
 
-    # get rotation and translation of the coordinate system
-    # this is the rotation ( 3 x 3 matrix ) and translation ( origin ) of the coordinate system of the pushIt model
-    rotation, translation = get_coordinate_system_translation_and_rotation(push_it_elements_model)
+    # update: this is not required since we are assuming the push it elements are in the same model as the revit rooms
+    # use None for rotation and translation instead 
+    rotation, translation = None, None
 
     # place the rooms in the current model and transfer the parameter data
     create_and_update_result =  update_push_it_instances_from_rooms(doc, get_data_result.result, rotation=rotation, translation=translation)

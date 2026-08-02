@@ -30,8 +30,36 @@ from pushIt_associated.utils.get_push_it_room_data_by_selection import get_push_
 from pushIt_associated.place_revit_rooms.create_rooms import create_rooms_from_push_it_instances
 
 # debug flag
-DEBUG = False
+DEBUG = True
 
+def get_model_insertion_method(forms):
+    """
+    Get the model insertion method from the user.
+
+    :return: The model insertion method.
+    :rtype: str
+    """
+    ops = ["Origin to Origin","By Shared Coordinates"]
+    configs = {
+        "Origin to Origin": {"background": "#FF0000"},
+        "By Shared Coordinates" : {"background": "#00FF00"},
+    }
+    ui_options = forms.CommandSwitchWindow.show(
+            ops,  message="Select the model insertion method.", config=configs
+        )
+    
+    if ui_options is None:
+        message = "No model insertion method selected."
+        print_error(message)
+        return None
+    
+    if ui_options == "Origin to Origin":
+        print("Selected model insertion method: {}".format(ui_options))
+        return True
+    else:
+        print("Selected model insertion method: {}".format(ui_options))
+        return False
+    
 
 def place_revit_rooms_entry(doc, uiapp,output, forms):
     """
@@ -83,7 +111,20 @@ def place_revit_rooms_entry(doc, uiapp,output, forms):
 
     # get rotation and translation of the coordinate system
     # this is the translation and rotation of the coordinate system of the pushIt model
-    translation, rotation = get_coordinate_system_translation_and_rotation(push_it_elements_model)
+    # not required if models are linked using origin to origin, but if the models are linked using shared coordinates, this is required to place the rooms in the correct location
+    model_insertion_method = get_model_insertion_method(forms)
+    
+    if model_insertion_method is None:
+        message = "No model insertion method selected."
+        return_value.update_sep(False, message)
+        print_error(message)
+        return return_value
+    
+    translation, rotation = None, None
+    
+    if model_insertion_method is False:
+        translation, rotation = get_coordinate_system_translation_and_rotation(push_it_elements_model)
+    
 
     if DEBUG:
         print("Translation: ", translation)

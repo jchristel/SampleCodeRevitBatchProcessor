@@ -36,16 +36,29 @@ from pushIt_associated.utils.settings import push_it_shared_parameter_to_build_i
 from Autodesk.Revit.DB import UV, XYZ
 
 def apply_transform_to_uv(uv_point, rotation_matrix, translation_vector):
+    
+    
     # Convert UV point to XYZ point (assuming Z = 0)
-    xyz_point = XYZ(uv_point.U, uv_point.V, 0)
+    #xyz_point = XYZ(uv_point.U, uv_point.V, 0)
     
+    # Note that the rotation and translation are applied in the order of rotation first, then translation.
+    # Rotation as a 3 x 3 matrix and the translation as a 1 x 3 matrix of the shared coordinate system active in document.
+    
+    # check if rotation is None, if so do not apply any transformation
+    if rotation_matrix is None:
+        rotation_matrix = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]  # Identity matrix for no rotation
+            
     # Apply rotation (no rotation in this case)
-    rotated_u = uv_point.U + rotation_matrix[0]
-    rotated_v = uv_point.V + rotation_matrix[1]
+    rotated_u = uv_point.U * rotation_matrix[0][0] + uv_point.V * rotation_matrix[0][1]
+    rotated_v = uv_point.U * rotation_matrix[1][0] + uv_point.V * rotation_matrix[1][1]
     
+    # check if translation is None, if so do not apply any transformation
+    if translation_vector is None:
+        translation_vector = [0, 0, 0]
+        
     # Apply translation (identity translation matrix)
-    transformed_u = rotated_u + translation_vector[2][0]  # translation[2][0] should be 0
-    transformed_v = rotated_v + translation_vector[2][1]  # translation[2][1] should be 0
+    transformed_u = rotated_u + translation_vector[0]  # translation[0] should be 0
+    transformed_v = rotated_v + translation_vector[1]  # translation[1] should be 0
     
     return UV(transformed_u, transformed_v)
 

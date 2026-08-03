@@ -1,9 +1,11 @@
 # bundle title
-title: "Room Mate POC"
+title: "Export"
 
 # bundle tooltip
 tooltip: | 
-  Shows the Room Mate POC.
+  Exports data to Room Mate:
+  - Room data
+  - Door data
 
 
 # bundle author

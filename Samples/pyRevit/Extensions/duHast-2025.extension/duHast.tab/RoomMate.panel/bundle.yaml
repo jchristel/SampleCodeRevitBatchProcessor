@@ -1,0 +1,10 @@
+layout:
+  - RoomMateRooms
+
+# bundle tooltip
+tooltip: Room and door exports to Room Mate
+
+
+# bundle author
+author: 
+  - Jan Christel

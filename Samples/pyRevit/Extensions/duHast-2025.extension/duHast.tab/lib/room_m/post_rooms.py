@@ -1,6 +1,6 @@
 """
 POC bridge: take the duHast room + level exports, translate to the viewer's
-v5 contract, and POST to the Rust server.
+v6 contract, and POST to the Rust server.
 
 Large FFE exports run >100 MB uncompressed (see roommate's
 HANDOVER-gzip.md / HANDOVER-streaming.md / HANDOVER-streaming-sender.md), so
@@ -43,7 +43,7 @@ SERVER_URL_STREAM = "http://127.0.0.1:5151/rooms/stream"
 # snapshots -- which a project can only get by being pushed to first. See
 # fetch_projects.
 SERVER_URL_PROJECTS = "http://127.0.0.1:5151/api/settings/projects"
-SCHEMA_VERSION = 5
+SCHEMA_VERSION = 6
 
 # Which producer this script feeds the server from. The server resolves
 # canonical property names (Area, Number, ...) to this source's raw property
@@ -177,8 +177,8 @@ def properties_to_map(instance_properties):
 
 
 def build_envelope(rooms_source, levels_source):
-    """Everything the v5 contract needs EXCEPT `rooms`: schema_version,
-    project, model (+ source), snapshot, levels. Shared by the buffered
+    """Everything the v6 contract needs EXCEPT `rooms`: schema_version,
+    project, model (+ source), snapshot, phase, levels. Shared by the buffered
     `translate()` and the streaming path so both build identity the same
     way -- see contract.rs's `StreamEnvelope`, which is this dict's line-1
     NDJSON counterpart server-side.
@@ -214,6 +214,19 @@ def build_envelope(rooms_source, levels_source):
     if not snapshot or not snapshot.get("taken_at"):
         raise ValueError("export is missing its identity envelope: snapshot.taken_at")
 
+    # REQUIRED as of v6, unlike model_to_shared/room_boundary below. Those are
+    # advisory model facts the server can fall back on; this one says which
+    # phase the rooms were FILTERED to, and a push that omits it is refused --
+    # rightly, because unfiltered rooms are a mix of every phase and there is no
+    # safe default to assume. Validated here rather than left to the server so
+    # the failure names the producer's own bug instead of arriving as a 422.
+    phase = rooms_source.get("phase")
+    if not phase or not str(phase).strip():
+        raise ValueError(
+            "export is missing its phase: rooms must be filtered to one Revit "
+            "phase before pushing (see room_mate.choose_phase)"
+        )
+
     model = dict(model)
     model["source"] = SOURCE
 
@@ -222,6 +235,7 @@ def build_envelope(rooms_source, levels_source):
         "project": project,
         "model": model,
         "snapshot": snapshot,
+        "phase": str(phase).strip(),
         "levels": levels,
     }
 
@@ -286,16 +300,32 @@ def translate_room(room):
     }
 
 
-def translate(rooms_source, levels_source):
-    """Map the two duHast exports onto the server's v5 contract as one whole
+def in_selected_phase(out_room, allowed_room_ids):
+    """Whether a translated room survives the phase filter. `None` means no
+    filter was supplied and every room passes.
+
+    The *test* itself does not live here -- it needs the document's phase
+    ordering, which only Revit has, so `room_mate.rooms_in_phase` runs it and
+    hands down the resulting id set. This module stays free of the Revit
+    assembly (same reason `BOUNDARY_LOCATION_TO_WIRE` is a name lookup), and
+    the filter reduces to a set membership test on ids it can already read."""
+    if allowed_room_ids is None:
+        return True
+    return out_room["id"] in allowed_room_ids
+
+
+def translate(rooms_source, levels_source, allowed_room_ids=None):
+    """Map the two duHast exports onto the server's v6 contract as one whole
     payload. Used for the fully-buffered `/rooms` path and for regenerating
     `settings/test_snapshot.json` (see STRATEGY-SERVER.md) -- kept producing
-    the exact same shape as before this module's streaming refactor."""
+    the exact same shape as before this module's streaming refactor.
+
+    `allowed_room_ids` is the phase filter (see `in_selected_phase`)."""
     envelope = build_envelope(rooms_source, levels_source)
     out_rooms = []
     for room in rooms_source.get(ROOM_LIST_KEY, []):
         out_room = translate_room(room)
-        if out_room is not None:
+        if out_room is not None and in_selected_phase(out_room, allowed_room_ids):
             out_rooms.append(out_room)
     envelope["rooms"] = out_rooms
     return envelope
@@ -390,22 +420,22 @@ def _post_content(url, content):
         client.Dispose()
 
 
-def post_payload(json_formatted_room, json_formatted_level, url=SERVER_URL):
-    """Flatten both duHast exports, translate, and POST the whole v5 contract
+def post_payload(json_formatted_room, json_formatted_level, url=SERVER_URL, allowed_room_ids=None):
+    """Flatten both duHast exports, translate, and POST the whole v6 contract
     as one buffered JSON body. Retained for the `settings/settings.toml`
     dev-seed fixture and small/manual pushes; the live Revit export path
     (`room_mate.py`) uses `post_payload_stream` instead -- see module
     docstring. Returns `(ok, status, text)`."""
     rooms_source = duhast_objects_to_plain(json_formatted_room)
     levels_source = duhast_objects_to_plain(json_formatted_level)
-    contract = translate(rooms_source, levels_source)
+    contract = translate(rooms_source, levels_source, allowed_room_ids)
     body = json.dumps(contract)
 
     content = StringContent(body, Encoding.UTF8, "application/json")
     return _post_content(url, content)
 
 
-def post_payload_stream(json_formatted_room, json_formatted_level, url=SERVER_URL_STREAM):
+def post_payload_stream(json_formatted_room, json_formatted_level, url=SERVER_URL_STREAM, allowed_room_ids=None):
     """Gzip-compress an NDJSON stream (line 1 = envelope, one line per room)
     to the server's streaming ingest. Each room is flattened, translated,
     and written into the gzip stream individually as it's read off the raw
@@ -433,7 +463,7 @@ def post_payload_stream(json_formatted_room, json_formatted_level, url=SERVER_UR
         write_ndjson_line(gz, envelope)
         for room in json_formatted_room.get(ROOM_LIST_KEY, []):
             out_room = translate_room(duhast_object_to_plain(room))
-            if out_room is not None:
+            if out_room is not None and in_selected_phase(out_room, allowed_room_ids):
                 write_ndjson_line(gz, out_room)
         gz.Close()  # MUST close to flush the gzip footer; do NOT skip
         body = out.ToArray()

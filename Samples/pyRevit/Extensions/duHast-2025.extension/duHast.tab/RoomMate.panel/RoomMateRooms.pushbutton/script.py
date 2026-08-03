@@ -15,6 +15,6 @@ doc = revit.doc
 uiapp = __revit__
 
 # create default catalogue type in family
-from pushIt_associated.room_mate.room_mate import rooms_export_entry
+from room_m.room_mate import rooms_export_entry
 
 rooms_export_entry(doc=doc, uiapp=uiapp, output=output, forms=forms)

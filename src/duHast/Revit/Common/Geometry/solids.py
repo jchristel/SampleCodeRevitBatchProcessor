@@ -28,7 +28,7 @@ Revit solids helper functions
 
 from collections import namedtuple
 
-from Autodesk.Revit.DB import BoundingBoxXYZ, ElementId, Options, Solid
+from Autodesk.Revit.DB import BoundingBoxXYZ, ElementId, Options, Solid, XYZ
 
 from duHast.Revit.Common.Geometry.geometry import merge_bounding_box_xyz, get_faces_sorted_by_area_from_solid, get_unique_horizontal_faces, convert_edge_arrays_into_list_of_points,flatten_xyz_point_list_of_lists,get_signed_polygon_area,build_loops_dictionary
 from duHast.Data.Objects.Collectors.Properties.Geometry import geometry_polygon_2 as dGeometryPoly
@@ -68,75 +68,223 @@ def get_2d_points_from_solid(element):
     return all_element_points
 
 
+def get_solids_from_geometry(geometry_element, solids=None):
+    """
+    Collects the solids out of a geometry element, recursing into geometry instances.
+
+    Solids only: a geometry element also holds curves (a door family's plan swing
+    arc, for instance), and including those in a bounding box measures the
+    annotation rather than the object.
+
+    :param geometry_element: The geometry element to walk.
+    :type geometry_element: Autodesk.Revit.DB.GeometryElement
+    :param solids: Accumulator, used when recursing.
+    :type solids: list
+
+    :return: A list of solids with a volume greater than zero.
+    :rtype: list of Autodesk.Revit.DB.Solid
+    """
+
+    if solids is None:
+        solids = []
+
+    for geometry_obj in geometry_element:
+        if geometry_obj is None:
+            continue
+
+        # a solid sitting directly in the element
+        if isinstance(geometry_obj, Solid):
+            if geometry_obj.Id == ElementId.InvalidElementId.Value:
+                continue
+            if geometry_obj.Volume > 0:
+                solids.append(geometry_obj)
+            continue
+
+        # a geometry instance: recurse into its placed geometry. Deliberately
+        # GetInstanceGeometry and not GetSymbolGeometry - the symbol version is
+        # the family as authored, before its host cuts it, which measures larger
+        # than the object actually in the model.
+        get_instance_geometry = getattr(geometry_obj, "GetInstanceGeometry", None)
+        if get_instance_geometry is None:
+            continue  # a curve, a line, a mesh - nothing with a volume
+        instance_geometry = get_instance_geometry()
+        if instance_geometry is not None:
+            get_solids_from_geometry(instance_geometry, solids)
+
+    return solids
+
+
 def get_solid_bounding_box(solid):
     """
-    Returns a bounding box from a solid.
+    Returns the solid's bounding box in WORLD coordinates, axis aligned to the
+    model's axes.
+
+    Axis aligned by design, not by accident: the returned box carries an
+    identity transform and its Min/Max are world coordinates, which is what
+    callers comparing, merging or filtering by extents want. A solid placed at
+    an angle therefore yields a box LARGER than the solid - that is the correct
+    answer to "what world extents does this occupy", and the wrong one for
+    "what shape is this". For the latter use
+    get_oriented_bounding_box_from_family_instance, which keeps the rotation on
+    the box transform.
+
+    All EIGHT corners of the solid's own box are transformed before the world
+    extents are taken. Transforming only Min and Max is not enough: they are
+    opposite corners of an oriented box, so once it is rotated they are no
+    longer the axis aligned extremes. That yields a box which is neither the
+    oriented box nor its correct hull - too small in general, and past ninety
+    degrees of rotation inverted, with the transformed "min" exceeding the
+    transformed "max".
 
     :param solid: The solid to get the bounding box from.
     :type solid: Autodesk.Revit.DB.Solid
 
-    :return: The bounding box of the solid.
+    :return: The world axis aligned bounding box of the solid.
     :rtype: Autodesk.Revit.DB.BoundingBoxXYZ
     """
 
     # get the solids bounding box
     solid_bounding_box = solid.GetBoundingBox()
 
-    # transform the bounding box to the solids transform
-    # which is different from the family instance transform!!
-    solid_transform_min = solid_bounding_box.Transform.OfPoint(solid_bounding_box.Min)
-    solid_transform_max = solid_bounding_box.Transform.OfPoint(solid_bounding_box.Max)
+    minimum = solid_bounding_box.Min
+    maximum = solid_bounding_box.Max
 
-    # create a new bounding box from the transformed points
+    # the box is expressed in the solid's own coordinate system,
+    # which is different from the family instance transform!
+    transform = solid_bounding_box.Transform
+
+    corners = []
+    for x in (minimum.X, maximum.X):
+        for y in (minimum.Y, maximum.Y):
+            for z in (minimum.Z, maximum.Z):
+                corners.append(transform.OfPoint(XYZ(x, y, z)))
+
     solid_transform_bb = BoundingBoxXYZ()
-    solid_transform_bb.Min = solid_transform_min
-    solid_transform_bb.Max = solid_transform_max
+    solid_transform_bb.Min = XYZ(
+        min(point.X for point in corners),
+        min(point.Y for point in corners),
+        min(point.Z for point in corners),
+    )
+    solid_transform_bb.Max = XYZ(
+        max(point.X for point in corners),
+        max(point.Y for point in corners),
+        max(point.Z for point in corners),
+    )
 
     return solid_transform_bb
 
 
 def get_bounding_box_from_family_geometry(geometry_element):
     """
-    Returns a bounding box from the families solid elements geometry only.
-    This is different from the family instance bounding box!
+    Returns a WORLD axis aligned bounding box covering the family's SOLIDS only.
+
+    Two things make this different from the family instance bounding box
+    (Element.get_BoundingBox), and they are different kinds of difference:
+
+    - Content. Only solids are measured. Curves and symbolic geometry - a door
+      family's plan swing arc, say - are ignored, so this is tighter than
+      Revit's own box on any family that draws them.
+    - Orientation. This is NOT tighter. Like Revit's box it is aligned to the
+      model axes, so a family placed at an angle yields a box larger than the
+      family, and the rotation is not recoverable from the result. Where that
+      matters use get_oriented_bounding_box_from_family_instance.
 
     :param geometry_element: The geometry element of a family instance.
     :type geometry_element: Autodesk.Revit.DB.GeometryElement
 
-    :return: The bounding box of the family geometry.
+    :return: The world axis aligned bounding box of the family's solids, or
+        None when it holds no solids.
     :rtype: Autodesk.Revit.DB.BoundingBoxXYZ
     """
 
     merged_result = None
-    for geometry_obj in geometry_element:
-        if geometry_obj is not None:
-            # Instance geometry can also be a Solid
-            if isinstance(geometry_obj, Solid):
-                return get_solid_bounding_box(instance_geometry)
-            # If not a solid, it is a list of geometry objects
-            instance_geometry = geometry_obj.GetInstanceGeometry()
-            if instance_geometry is not None:
-                for element in instance_geometry:
-                    # find solids
-                    if type(element) is Solid:
-                        # check if solid is valid
-                        if element.Id == ElementId.InvalidElementId.Value:
-                            continue
-                        # get the solids bounding box
-                        solid_transform_bb = get_solid_bounding_box(element)
-
-                        # check if this is the first bounding box
-                        if merged_result == None:
-                            merged_result = solid_transform_bb
-                            continue
-
-                        # merge the bounding boxes
-                        merged_result = merge_bounding_box_xyz(
-                            merged_result, solid_transform_bb
-                        )
+    for solid in get_solids_from_geometry(geometry_element):
+        merged_result = merge_bounding_box_xyz(
+            merged_result, get_solid_bounding_box(solid)
+        )
 
     # return the merged bounding box
     return merged_result
+
+
+def get_oriented_bounding_box_from_family_instance(family_instance, options=None):
+    """
+    Returns a bounding box of a family instance's solids that KEEPS the
+    instance's rotation, by measuring it in the instance's own coordinate system
+    and carrying the placement on the box transform.
+
+    The axis aligned alternative cannot be un-rotated afterwards: an axis
+    aligned box of a rotated object no longer records the angle, and recovering
+    it would mean solving for two extents and a rotation from two measurements -
+    degenerate at forty five degrees. An object placed at an angle has to be
+    measured in its own frame in the first place.
+
+    To read the footprint back, transform the corners built from Min/Max by the
+    box's Transform. Anything that only wants world extents should keep using
+    get_bounding_box_from_family_geometry instead.
+
+    :param family_instance: The family instance to measure.
+    :type family_instance: Autodesk.Revit.DB.FamilyInstance
+    :param options: Geometry options; a default Options() is used when omitted.
+    :type options: Autodesk.Revit.DB.Options
+
+    :return: A bounding box in the instance's coordinate system, with its
+        Transform set to the instance transform, or None when the instance has
+        no solid geometry.
+    :rtype: Autodesk.Revit.DB.BoundingBoxXYZ
+    """
+
+    geometry_element = family_instance.get_Geometry(
+        options if options is not None else Options()
+    )
+    if geometry_element is None:
+        return None
+
+    solids = get_solids_from_geometry(geometry_element)
+    if len(solids) == 0:
+        # a real state rather than a failure: some families carry no 3D geometry
+        return None
+
+    transform = family_instance.GetTransform()
+    # world -> instance local, so the extents below are measured along the
+    # instance's own axes rather than the model's
+    inverse = transform.Inverse
+
+    minimum_x = minimum_y = minimum_z = None
+    maximum_x = maximum_y = maximum_z = None
+
+    for solid in solids:
+        for edge in solid.Edges:
+            for point in edge.Tessellate():
+                local = inverse.OfPoint(point)
+                if minimum_x is None:
+                    minimum_x = maximum_x = local.X
+                    minimum_y = maximum_y = local.Y
+                    minimum_z = maximum_z = local.Z
+                    continue
+                if local.X < minimum_x:
+                    minimum_x = local.X
+                if local.X > maximum_x:
+                    maximum_x = local.X
+                if local.Y < minimum_y:
+                    minimum_y = local.Y
+                if local.Y > maximum_y:
+                    maximum_y = local.Y
+                if local.Z < minimum_z:
+                    minimum_z = local.Z
+                if local.Z > maximum_z:
+                    maximum_z = local.Z
+
+    if minimum_x is None:
+        return None
+
+    oriented_bounding_box = BoundingBoxXYZ()
+    oriented_bounding_box.Transform = transform
+    oriented_bounding_box.Min = XYZ(minimum_x, minimum_y, minimum_z)
+    oriented_bounding_box.Max = XYZ(maximum_x, maximum_y, maximum_z)
+
+    return oriented_bounding_box
+
 
 def convert_solid_to_flattened_2d_points(solid):
     """

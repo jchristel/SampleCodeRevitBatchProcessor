@@ -75,6 +75,19 @@ def convert_xyz_in_data_geometry_polygons(doc, dgObject):
 def convert_bounding_box_to_flattened_2d_points(bounding_box):
     """
     Converts a bounding box into a 2D polygon by projecting it onto a plane.( Removes Z values...)
+
+    The box TRANSFORM is applied to the corners. A BoundingBoxXYZ expresses
+    Min/Max in its own coordinate system and carries the placement on its
+    Transform, so reading Min/Max alone is only correct when that transform
+    happens to be the identity. It is the identity for a world aligned box - so
+    this is a no-op for those - and it is not for a box measured in an object's
+    own frame, where ignoring it would return the footprint at the model origin
+    instead of where the object stands.
+
+    A rigid transform keeps the four base corners planar, so the result is still
+    a flat rectangle; it is simply no longer guaranteed to be horizontal if the
+    box belongs to a tilted object.
+
     :param bounding_box: A bounding box.
     :type bounding_box: Autodesk.Revit.DB.BoundingBoxXYZ
     :return: A list of data geometry instances.
@@ -87,6 +100,13 @@ def convert_bounding_box_to_flattened_2d_points(bounding_box):
         XYZ(bounding_box.Max.X, bounding_box.Max.Y, bounding_box.Min.Z),
         XYZ(bounding_box.Min.X, bounding_box.Max.Y, bounding_box.Min.Z),
     ]
+
+    # place them: identity for a world aligned box, the object's placement for
+    # one measured in its own frame
+    transform = bounding_box.Transform
+    if transform is not None:
+        bounding_box_points = [transform.OfPoint(point) for point in bounding_box_points]
+
     # set up data class object and store points in outer loop property
     dataGeometry = dGeometryPoly.DataGeometryPolygon2()
     dataGeometry.outer_loop = bounding_box_points

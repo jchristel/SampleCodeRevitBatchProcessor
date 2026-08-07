@@ -42,7 +42,9 @@ from duHast.Revit.Common.Geometry.to_data_conversion import (
     convert_xyz_in_data_geometry_polygons,
 )
 
-from duHast.Revit.Common.Geometry.solids import get_bounding_box_from_family_geometry
+from duHast.Revit.Common.Geometry.solids import (
+    get_oriented_bounding_box_from_family_instance,
+)
 from duHast.Revit.Exports.export_data import (
     get_level_data,
     get_phasing_data,
@@ -117,8 +119,18 @@ def populate_data_door_object(doc, revit_door):
     # set a default option
     opts = Options()
 
-    door_bounding_box = get_bounding_box_from_family_geometry(
-        revit_door.get_Geometry(opts)
+    # ORIENTED, so an instance placed at an angle keeps its angle. The world
+    # aligned alternative is the right answer to "what extents does this
+    # occupy" and the wrong one to "what shape is this": it is aligned to the
+    # model axes, so a door in a wall running at 30 degrees comes out as an
+    # upright rectangle lying across it. That cannot be corrected afterwards -
+    # an axis aligned box no longer records the angle - so it has to be
+    # measured in the instance's own frame here.
+    #
+    # The placement rides on the box Transform, which
+    # convert_bounding_box_to_flattened_2d_points applies to the corners below.
+    door_bounding_box = get_oriented_bounding_box_from_family_instance(
+        revit_door, opts
     )
     # only export door data if 3D geometry is available
     # if no geometry is available, return None

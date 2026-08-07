@@ -23,6 +23,7 @@
 
 import copy
 import datetime
+import math
 
 # The direct Revit API use in this script. duHast exports elements; the room
 # boundary location is a document *setting* it has no collector for, and phase
@@ -32,7 +33,9 @@ from Autodesk.Revit.DB import (
     BuiltInCategory,
     BuiltInParameter,
     FilteredElementCollector,
+    Options,
     SpatialElementType,
+    XYZ,
 )
 
 from duHast.Revit.Rooms.rooms import get_all_rooms
@@ -57,7 +60,7 @@ from room_m.post_rooms import (
     coordinate_system_to_affine,
     boundary_location_to_room_boundary,
 )
-from room_m.post_doors import post_doors_stream
+from room_m.post_doors import post_doors_stream, SENTINEL_MAGNITUDE
 
 
 def choose_project(forms):
@@ -218,10 +221,14 @@ def elements_in_phase(doc, phase_name, category):
     predicate, which is why the ordered phase list is not on the wire at all.
     It also means strictly *less* extraction, the axis that actually pays.
 
-    Generalised over the category when doors arrived: `CreatedPhaseId` and
-    `DemolishedPhaseId` are `Element` members, so the predicate was never
-    room-specific and duplicating it per entity would have been two places to
-    get the range test wrong.
+    **Doors only, despite the generic name.** It was written expecting to serve
+    every entity, on the reasoning that `CreatedPhaseId`/`DemolishedPhaseId` are
+    `Element` members so the predicate could not be room-specific. That is true
+    of the API and false of the model: a room does not span a range of phases,
+    it belongs to one, and running rooms through this returned nothing at all
+    (see `rooms_in_phase`). The name is kept because the range test genuinely is
+    category-agnostic for anything built-then-demolished; the assumption that
+    every entity works that way is what did not survive.
 
     Raises when the document has no phase of that name: a model that cannot be
     scoped to the chosen phase must fail loudly rather than push everything."""
@@ -250,12 +257,39 @@ def elements_in_phase(doc, phase_name, category):
     return allowed
 
 def rooms_in_phase(doc, phase_name):
-    
-    rooms_in_phase = []
-    rooms = get_all_rooms(doc)
-    
-    for room in rooms:
-        created_phase_name = rPhase.get_phase_name_by_id(
+    """The room ids in `phase_name`.
+
+    **Rooms do NOT go through `exists_in_phase`, and that is the one thing to
+    understand here.** The design assumed one predicate could serve every
+    entity, because `CreatedPhaseId`/`DemolishedPhaseId` are `Element` members.
+    Against a real document that produced *zero* rooms, five pushes running --
+    exactly the "the filter silently keeps nothing" failure the plan named as
+    the first thing to check.
+
+    A room is not a thing that is built in one phase and demolished in another.
+    It BELONGS to exactly one phase, named by the `ROOM_PHASE` built-in
+    parameter, so membership is an equality test rather than a range test over
+    the phase sequence. Doors keep the range test (`doors_in_phase`), and that
+    difference is real rather than an inconsistency worth tidying away.
+
+    Returns a `set`: `post_rooms.in_selected_phase` does one membership test per
+    room, so a list makes filtering a plate quadratic."""
+    order_by_name = dict((p["name"], i) for i, p in enumerate(document_phases(doc)))
+    if phase_name not in order_by_name:
+        # Fail loudly, on the same terms as `elements_in_phase`. Without this a
+        # mistyped or renamed phase yields an empty set, which is indexed,
+        # stored and served as "this model has no rooms" -- and that is not a
+        # hypothetical: it is what the five empty snapshots above looked like
+        # from the outside.
+        raise ValueError(
+            "model has no phase named '{}' (it has: {})".format(
+                phase_name, ", ".join(order_by_name.keys())
+            )
+        )
+
+    allowed = set()
+    for room in get_all_rooms(doc):
+        room_phase = rPhase.get_phase_name_by_id(
             doc,
             rParaGet.get_built_in_parameter_value(
                 room,
@@ -263,11 +297,9 @@ def rooms_in_phase(doc, phase_name):
                 rParaGet.get_parameter_value_as_element_id,
             ),
         )
-        if created_phase_name == phase_name:
-            rooms_in_phase.append(element_id_str(room.Id))
-    
-    print("Found {} rooms in phase {}".format(len(rooms_in_phase), phase_name))
-    return rooms_in_phase
+        if room_phase == phase_name:
+            allowed.add(element_id_str(room.Id))
+    return allowed
 
 
 def doors_in_phase(doc, phase_name):
@@ -308,9 +340,151 @@ def _room_in_phase(door, phase, which):
     return element_id_str(room.Id) if room is not None else None
 
 
-def door_room_references(doc, phase_name):
-    """`{door id: (from_room_id, to_room_id)}` for every door in `doc`, read
-    from the Revit API for the chosen phase.
+def door_insertion_point(door):
+    """The door's plan position as `{"x", "y"}`, or None.
+
+    Revit's `LocationPoint`, which a placed `FamilyInstance` has. Z is dropped:
+    the contract's geometry is 2D plan space throughout, and the level already
+    says which floor this is on.
+
+    This is the field that keeps a *geometry-less* door on the drawing. Two of
+    the 26 sample doors have no 3D geometry, so their footprint arrives empty
+    (see `post_doors.loops_from_polygon`) and nothing else on the wire says
+    where they are. Without this they exist in QA and in `/doors` but appear
+    nowhere a reader looks at a plan, which reads as "there is no door there"
+    rather than "its shape is unknown"."""
+    location = getattr(door, "Location", None)
+    point = getattr(location, "Point", None) if location is not None else None
+    if point is None:
+        return None
+    return {"x": float(point.X), "y": float(point.Y)}
+
+
+def door_through_wall_normal(door):
+    """The unit vector through the wall, from the door's from-room toward its
+    to-room, as `{"x", "y"}`, or None.
+
+    `FamilyInstance.FacingOrientation`, projected to plan and normalised.
+
+    **Facing, not the host wall's direction, and that is the whole point.**
+    Revit's `ToRoom` follows the door's *orientation*; flipping a door in Revit
+    swaps facing and `ToRoom` together, so the two are readings of one fact and
+    cannot drift. Deriving the direction from the host wall would introduce a
+    second source of truth that could disagree with the room references this
+    same pass reads -- and therefore with the server's `owner_rooms`, which is
+    computed from them.
+
+    None when the facing has no plan component at all (a hatch in a floor: the
+    vector points along Z, and its x/y are both ~0). Returned rather than
+    normalised out of a zero-length vector, because the honest answer is that
+    this door has no in-plan direction, and the contract says a consumer must
+    then draw no arrow instead of guessing one."""
+    facing = getattr(door, "FacingOrientation", None)
+    if facing is None:
+        return None
+    x = float(facing.X)
+    y = float(facing.Y)
+    length = math.sqrt(x * x + y * y)
+    if length < 1e-9:
+        return None
+    return {"x": x / length, "y": y / length}
+
+
+def door_footprint(door):
+    """The door's TRUE plan footprint, as four `{"x", "y"}` corners in model
+    space (decimal feet, Y up), or None when it cannot be read.
+
+    **Why this exists: the export's footprint is an axis-aligned bounding box,
+    and a door in a diagonal wall is not axis-aligned.** duHast hands back
+    Revit's `BoundingBoxXYZ` without applying its transform, so the rotation is
+    lost before the data reaches the wire. On an orthogonal wall the box happens
+    to equal the true footprint, which is why 24 of the 26 House A doors look
+    correct and only the two in diagonal walls give it away -- as an upright
+    rectangle sitting across a slanted wall.
+
+    An axis-aligned box of a rotated rectangle **cannot** be un-rotated later:
+    the two extents plus an angle are three unknowns against two measurements,
+    and the system is degenerate at exactly 45 degrees. So no consumer can
+    recover this, and the producer has to send it right.
+
+    The fix is the standard pair. `GetOriginalGeometry` returns the family's
+    geometry in the family's OWN coordinate system -- where the door is
+    axis-aligned by construction, because that is how families are authored --
+    and `GetTransform` is the placement that puts it in the model. Taking the
+    box in family space and transforming its corners keeps the rotation that
+    taking the box in model space throws away.
+
+    Same discipline as `door_placements` reading the room references from the
+    API rather than the export: where duHast's answer is lossy, ask Revit.
+
+    None on any failure, and the caller then falls back to the export's polygon
+    -- which is exactly today's behaviour, so this can only improve a door, never
+    break one. A door family with no 3D geometry returns None here too, and its
+    fallback is the `+/-1e30` sentinel that `loops_from_polygon` already drops."""
+    try:
+        geometry = door.GetOriginalGeometry(Options())
+    except Exception:
+        return None
+    if geometry is None:
+        return None
+
+    try:
+        box = geometry.GetBoundingBox()
+    except Exception:
+        return None
+    if box is None or box.Min is None or box.Max is None:
+        return None
+
+    minimum, maximum = box.Min, box.Max
+    # The same uninitialized-BoundingBoxXYZ sentinel the export path guards, and
+    # the same constant rather than a second copy of the number: a family with
+    # no 3D geometry reaches here too, and its box is +1e30/-1e30.
+    for value in (minimum.X, minimum.Y, maximum.X, maximum.Y):
+        if abs(value) >= SENTINEL_MAGNITUDE:
+            return None
+    if maximum.X <= minimum.X or maximum.Y <= minimum.Y:
+        return None
+
+    try:
+        placement = door.GetTransform()
+        # A `BoundingBoxXYZ` carries its own transform as well. It is usually
+        # the identity, and composing it costs nothing when it is -- but reading
+        # the corners as if it were identity when it is not would misplace the
+        # door silently, which is the failure this whole function exists to stop.
+        if box.Transform is not None:
+            placement = placement.Multiply(box.Transform)
+    except Exception:
+        return None
+
+    # Wound consistently around the box in family space; the placement is rigid,
+    # so the ring stays simple and closed in model space. Z is taken from the
+    # box's own floor rather than zero: the transform is 3D, and feeding it a
+    # point off the family's own plane would shear the footprint on a door that
+    # is not level.
+    corners = (
+        (minimum.X, minimum.Y),
+        (maximum.X, minimum.Y),
+        (maximum.X, maximum.Y),
+        (minimum.X, maximum.Y),
+    )
+    out = []
+    for x, y in corners:
+        point = placement.OfPoint(XYZ(x, y, minimum.Z))
+        out.append({"x": float(point.X), "y": float(point.Y)})
+    return out
+
+
+def door_placements(doc, phase_name):
+    """`{door id: {"from_room", "to_room", "insertion_point", "normal",
+    "footprint"}}` for every door in `doc`, read from the Revit API for the
+    chosen phase.
+
+    **One collector pass, five facts.** These were separate questions once and
+    the room references came first; putting the placement reads here rather than
+    in a second `FilteredElementCollector` walk is not micro-optimisation, it is
+    what guarantees the four values describe the same door in the same phase.
+    A second pass could silently disagree with this one about which elements it
+    saw.
 
     **Read here rather than taken from the duHast export, deliberately.** The
     export carries `from_room`/`to_room` as arrays with one entry per phase,
@@ -324,9 +498,15 @@ def door_room_references(doc, phase_name):
     A door whose room lookup raises is recorded as having neither reference
     rather than aborting the model: one unreadable door must not cost the other
     hundreds, and the server's QA reports it as a door with no room reference -
-    visible, in the place a reader would look."""
+    visible, in the place a reader would look.
+
+    **Each read is caught separately**, so an unreadable room reference costs
+    the position, direction and footprint of that door and nothing more.
+    Catching the whole door at once would have been shorter and would throw away
+    four facts to lose one -- and the fact most likely to raise (the
+    phase-indexed room lookup) is not the one a plan needs to draw the door."""
     phase = phase_by_name(doc, phase_name)
-    references = {}
+    placements = {}
     collector = (
         FilteredElementCollector(doc)
         .OfCategory(BuiltInCategory.OST_Doors)
@@ -334,19 +514,103 @@ def door_room_references(doc, phase_name):
     )
     for door in collector:
         try:
-            references[element_id_str(door.Id)] = (
-                _room_in_phase(door, phase, "FromRoom"),
-                _room_in_phase(door, phase, "ToRoom"),
-            )
+            from_room = _room_in_phase(door, phase, "FromRoom")
+            to_room = _room_in_phase(door, phase, "ToRoom")
         except Exception:
-            references[element_id_str(door.Id)] = (None, None)
-    return references
+            from_room, to_room = None, None
+
+        try:
+            insertion_point = door_insertion_point(door)
+        except Exception:
+            insertion_point = None
+
+        try:
+            normal = door_through_wall_normal(door)
+        except Exception:
+            normal = None
+
+        try:
+            footprint = door_footprint(door)
+        except Exception:
+            footprint = None
+
+        placements[element_id_str(door.Id)] = {
+            "from_room": from_room,
+            "to_room": to_room,
+            "insertion_point": insertion_point,
+            "normal": normal,
+            "footprint": footprint,
+        }
+    return placements
+
+
+ROOMS = "rooms"
+DOORS = "doors"
+
+
+def entities_label(entities):
+    """The chosen entities as the noun phrase in "<...> data" -- singular, since
+    both names are regular plurals and "rooms data" reads as a typo."""
+    return " and ".join(entity[:-1] for entity in entities)
 
 
 def rooms_export_entry(doc, uiapp, output, forms):
+    """Push ROOMS AND THEN DOORS -- the full push, and the original entry point.
+
+    Kept combined under its original name deliberately. The pyRevit button that
+    calls this lives outside this repository, so narrowing this function to
+    rooms would not fail: it would keep succeeding while quietly no longer
+    pushing doors, which is the worst shape a behaviour change can take. The
+    split lives in the two siblings below instead, where wiring a new button is
+    what opts into it.
+
+    :return: Result object with status and message.
+    :rtype: Result
+    """
+    return export_entry(doc, uiapp, output, forms, (ROOMS, DOORS))
+
+
+def rooms_only_export_entry(doc, uiapp, output, forms):
+    """Push ROOMS alone, leaving whatever doors the model already has on the
+    server untouched.
+
+    For re-pushing rooms after a plan change without paying for the door export
+    and its per-door Revit room-reference reads, which are the slow half of a
+    combined run.
+
+    :return: Result object with status and message.
+    :rtype: Result
+    """
+    return export_entry(doc, uiapp, output, forms, (ROOMS,))
+
+
+def doors_export_entry(doc, uiapp, output, forms):
+    """Push DOORS alone, against rooms already on the server.
+
+    The reason this can exist as its own entry: a doors push carries no room
+    data, only room *ids*, so it does not need the rooms to be re-sent -- it
+    needs them to be *there*. Whether they are is the server's question, not
+    this script's, and the server already answers it (a doors push to a model
+    with no rooms is refused, naming the reason). Second-guessing that here
+    would mean this script deciding what counts as "has rooms", which is exactly
+    the check `has_room_snapshot` was fixed for getting wrong.
+
+    :return: Result object with status and message.
+    :rtype: Result
+    """
+    return export_entry(doc, uiapp, output, forms, (DOORS,))
+
+
+def export_entry(doc, uiapp, output, forms, entities):
 
     """
-    Exports rooms from the current Revit document to a JSON file.
+    Exports `entities` from the selected Revit document(s) and pushes them.
+
+    The single run driver behind all three entry points: document selection,
+    the one project, the one phase, and the per-model loop are identical whether
+    a run pushes rooms, doors or both, so they are written once. `entities` is
+    the only thing that varies, and it varies in one place -- what
+    `export_and_post_model` attempts per model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -354,6 +618,8 @@ def rooms_export_entry(doc, uiapp, output, forms):
     :type output: pyRevit.output
     :param forms: pyRevit forms.
     :type forms: pyRevit.forms
+    :param entities: which of ROOMS / DOORS this run pushes, in push order.
+    :type entities: tuple
 
     :return: Result object with status and message.
     :rtype: Result
@@ -365,7 +631,10 @@ def rooms_export_entry(doc, uiapp, output, forms):
     try:
 
         # ask user to select active or linked document
-        selected_docs = pick_document(doc, forms, button_name="Select model to collect room data from", multiselect=True)
+        selected_docs = pick_document(
+            doc, forms,
+            button_name="Select model to collect {} data from".format(entities_label(entities)),
+            multiselect=True)
         if not selected_docs or len(selected_docs) == 0:
             return_value.append_message("No document(s) selected")
             return return_value
@@ -410,7 +679,8 @@ def rooms_export_entry(doc, uiapp, output, forms):
                 pb.update_progress(model_counter, max_value=len(selected_docs))
 
                 try:
-                    export_and_post_model(selected_doc, project, phase_name, return_value, pb)
+                    export_and_post_model(
+                        selected_doc, project, phase_name, return_value, pb, entities)
                 except Exception as e:
                     return_value.update_sep(
                         False, "{}: failed with exception: {}".format(selected_doc.Title, e)
@@ -422,31 +692,65 @@ def rooms_export_entry(doc, uiapp, output, forms):
                     break
 
     except Exception as e:
-        return_value.update_sep(
-            False, "Failed to export room data with exception: {}".format(e)
-        )
-        print("Failed to export room data with exception: {}".format(e))
+        message = "Failed to export {} data with exception: {}".format(
+            entities_label(entities), e)
+        return_value.update_sep(False, message)
+        print(message)
 
     print("Finished")
 
     return return_value
 
 
-def export_and_post_model(selected_doc, project, phase_name, return_value, pb):
-    """Export one model's rooms and levels and push them to the server under
-    the picked `project` ({"id", "name"}), scoped to `phase_name`, recording the
-    outcome on `return_value`. Raises on export/envelope failures -- the caller
-    catches per model so one bad model doesn't abandon the rest."""
+def export_and_post_model(selected_doc, project, phase_name, return_value, pb, entities):
+    """Export and push one model's `entities` under the picked `project`
+    ({"id", "name"}), scoped to `phase_name`, recording the outcome on
+    `return_value`. Raises on export/envelope failures -- the caller catches per
+    model so one bad model doesn't abandon the rest.
 
-    # Resolve the run's phase against THIS document's own phases before
-    # exporting anything: the name is the identity across models, and a document
-    # that doesn't have it raises here (caught per model) rather than pushing an
-    # unfiltered, silently-wrong room set.
-    allowed_room_ids = rooms_in_phase(selected_doc, phase_name)
-    # get room data
-    room_data = get_all_room_data(selected_doc)
-    # get level data
-    level_data = get_all_level_data(selected_doc)
+    **The order in `entities` is not decoration.** A doors push to a model whose
+    rooms are not on the server is refused (a door's from_room/to_room are room
+    ids, and a room id is unique only within a model), so when a run carries
+    both, rooms go first and a failed rooms push stops the model there. That is
+    also why a failed rooms push returns instead of pressing on: pushing doors
+    against rooms that did not land is not something to attempt on a hunch.
+
+    A doors-ONLY run makes no such check and deliberately doesn't: it is asking
+    the server about rooms it did not send, and the server is the only side that
+    knows the answer."""
+    envelope = build_model_envelope(selected_doc, project, phase_name, return_value)
+
+    # A ROOMS fact, so it is read only when rooms are being pushed -- the doors
+    # contract has no field for it, and reading it for a doors-only run would
+    # spend a document read to produce a warning about a value nothing sends.
+    if ROOMS in entities:
+        add_room_boundary(selected_doc, envelope, return_value)
+
+    # Don't begin this model's export at all if a cancel landed during the
+    # previous model's post. The check that matters more is inside each push --
+    # it is the export, not this, that a user waits through long enough to give
+    # up during. The caller re-checks after this returns and stops the loop.
+    if pb.cancelled:
+        return
+
+    if ROOMS in entities:
+        if not export_and_post_rooms(selected_doc, envelope, phase_name, return_value, pb):
+            return
+
+    if DOORS in entities:
+        export_and_post_doors(selected_doc, envelope, phase_name, return_value, pb)
+
+
+def build_model_envelope(selected_doc, project, phase_name, return_value):
+    """The envelope fields BOTH pushes carry: identity, phase, and the
+    model->shared transform.
+
+    Built once per model and handed to whichever pushes run, so a combined run
+    cannot have its two halves disagree about which model, snapshot or phase
+    they describe -- and so a doors-only run builds identity by exactly the same
+    code as a combined one rather than by a second copy that could drift.
+
+    `room_boundary` is deliberately NOT here: see `add_room_boundary`."""
 
     # v4 identity envelope (STRATEGY.md "Identity"). The project block comes
     # from the run's picked project (choose_project), NOT the Revit document:
@@ -507,6 +811,21 @@ def export_and_post_model(selected_doc, project, phase_name, return_value, pb):
             "pushing without a georeference".format(selected_doc.Title, e)
         )
 
+    return envelope
+
+
+def add_room_boundary(selected_doc, envelope, return_value):
+    """Stamp the model's boundary regime onto `envelope`, if it has a readable
+    one.
+
+    Split off `build_model_envelope` rather than left beside the transform it
+    otherwise resembles, because the two are not the same kind of fact. The
+    transform places any geometry, doors included; the boundary regime only
+    tells the server how wide a wall zone between ROOMS is, and the doors
+    contract has no field to carry it. So a doors-only run skips this, and skips
+    the warnings it would otherwise emit about a value nothing on the wire would
+    have read."""
+
     # Which boundary regime this model was drawn to
     # (Superseded/HANDOVER-areas-boundary-location.md Decision 1). Read ONCE per
     # document from Area and Volume Computations, and stamped on the envelope
@@ -540,25 +859,42 @@ def export_and_post_model(selected_doc, project, phase_name, return_value, pb):
             "pushing without a declared boundary".format(selected_doc.Title, e)
         )
 
-    # a large export takes a while -- honour a cancel clicked
-    # during it before starting the (also slow) post; the caller
-    # re-checks pb.cancelled after this returns and stops the loop
-    if pb.cancelled:
-        return
 
-    # convert into a dictionary
+def export_and_post_rooms(selected_doc, envelope, phase_name, return_value, pb):
+    """Export one model's rooms and levels and push them, reusing the already
+    built `envelope`. Returns whether the push landed -- the caller gates the
+    doors push on it, and a cancel reads as "didn't land" for the same reason a
+    failure does: there are no rooms on the server to hang doors off.
+
+    Raises on export failures rather than recording them, unlike its doors
+    counterpart, and the asymmetry is intentional: nothing has been pushed for
+    this model yet when this runs, so there is no successful half to protect.
+    The caller catches per model."""
+
+    # Resolve the run's phase against THIS document's own phases before
+    # exporting anything: the name is the identity across models, and a document
+    # that doesn't have it raises here (caught per model) rather than pushing an
+    # unfiltered, silently-wrong room set.
+    allowed_room_ids = rooms_in_phase(selected_doc, phase_name)
+    # get room data
+    room_data = get_all_room_data(selected_doc)
+    # get level data
+    level_data = get_all_level_data(selected_doc)
+
+    # convert into a dictionary. The envelope is deep-copied on
+    # every use now that one envelope serves several pushes:
+    # .update() shares the nested project/model/snapshot dict
+    # instances, and no two exports may be able to
+    # cross-contaminate if anything downstream mutates its input.
     dic_room_data = {
         dr.DataRoom.data_type:room_data
     }
-    dic_room_data.update(envelope)
+    dic_room_data.update(copy.deepcopy(envelope))
 
     # add some more properties before writing to json
     json_formatted_room = build_json_for_file(dic_room_data, "{}".format(selected_doc.Title))
 
-    # convert into a dictionary. The envelope is deep-copied for
-    # this second use: .update() shares the nested project/model/
-    # snapshot dict instances, and the two exports must not be able
-    # to cross-contaminate if anything downstream mutates its input.
+    # convert into a dictionary
     dic_level_data = {
         dl.DataLevelBuilding.data_type:level_data
     }
@@ -567,12 +903,23 @@ def export_and_post_model(selected_doc, project, phase_name, return_value, pb):
     # add some more properties before writing to json
     json_formatted_level = build_json_for_file(dic_level_data, "{}".format(selected_doc.Title))
 
+    # a large export takes a while -- honour a cancel clicked during it before
+    # starting the (also slow) post; the caller re-checks pb.cancelled after
+    # this returns and stops the loop
+    if pb.cancelled:
+        return False
+
     # post to the server: gzip-compressed NDJSON stream, so a
     # >100 MB FFE export never gets buffered whole client-side or
     # server-side (see roommate's HANDOVER-streaming*.md).
     # A failed push flips the overall Result red but does NOT abort
     # the caller's loop -- one bad model shouldn't discard the other
     # models' successful pushes, the run just must not end green.
+    #
+    # A `status` of None here is not an unreachable server: `post_payload_stream`
+    # also refuses to send a push carrying no rooms at all, and reports that
+    # refusal through this same tuple. Either way it is a failed push whose
+    # message says which, so there is nothing to branch on.
     ok, status, text = post_payload_stream(
         json_formatted_room, json_formatted_level, allowed_room_ids=allowed_room_ids
     )
@@ -589,38 +936,33 @@ def export_and_post_model(selected_doc, project, phase_name, return_value, pb):
             return_value.append_message(
                 "{}: server accepted ({})".format(selected_doc.Title, text)
             )
-    else:
-        return_value.update_sep(
-            False,
-            "{}: push failed ({}): {}".format(selected_doc.Title, status, text),
-        )
-        # The doors push below would be refused anyway when the rooms push was
-        # the model's first (the server requires rooms before doors), and
-        # pushing doors against rooms that failed to land is not something to
-        # attempt on a hunch. Stop here for this model; the caller carries on
-        # with the next one.
-        return
+        return True
 
-    # Doors, after rooms and only after rooms. The server refuses a doors push
-    # to a model with no rooms -- a door's from_room/to_room are room ids, and
-    # room ids are unique only within one model -- so the order is a hard
-    # requirement, not a preference.
-    export_and_post_doors(selected_doc, envelope, phase_name, return_value)
+    return_value.update_sep(
+        False,
+        "{}: push failed ({}): {}".format(selected_doc.Title, status, text),
+    )
+    return False
 
 
-def export_and_post_doors(selected_doc, envelope, phase_name, return_value):
-    """Export one model's doors and push them, reusing the room push's already
-    built `envelope` (identity, phase, model_to_shared) so the two pushes cannot
-    disagree about what model or phase they describe.
+def export_and_post_doors(selected_doc, envelope, phase_name, return_value, pb):
+    """Export one model's doors and push them, reusing the run's already built
+    `envelope` (identity, phase, model_to_shared) so a combined run's two pushes
+    cannot disagree about what model or phase they describe.
 
-    Failures are recorded and swallowed rather than raised: the rooms push has
-    already succeeded by the time this runs, and losing that because the door
-    half failed would be the wrong trade. The run still ends red."""
+    Failures are recorded and swallowed rather than raised. In a combined run
+    the rooms push has already succeeded by the time this runs, and losing that
+    because the door half failed would be the wrong trade; in a doors-only run
+    there is nothing to protect, but recording rather than raising keeps one
+    model's failure from ending the loop either way. The run still ends red.
+
+    Note this reports a failure for a model with no doors at all -- see
+    `post_doors`'s module docstring, which owns that decision and its cost."""
     try:
         allowed_door_ids = doors_in_phase(selected_doc, phase_name)
         # Read from the Revit API, not from the export -- see
-        # `door_room_references`.
-        room_references = door_room_references(selected_doc, phase_name)
+        # `door_placements`.
+        placements = door_placements(selected_doc, phase_name)
 
         door_data = get_all_door_data(selected_doc)
         dic_door_data = {dd.DataDoor.data_type: door_data}
@@ -632,8 +974,14 @@ def export_and_post_doors(selected_doc, envelope, phase_name, return_value):
         )
         return
 
+    # The per-door Revit room-reference reads above are the slow part of a doors
+    # push, so the same "cancel during the export, before the post" check the
+    # room path makes applies here -- and applies whether or not rooms ran first.
+    if pb.cancelled:
+        return
+
     ok, status, text = post_doors_stream(
-        json_formatted_doors, room_references, allowed_door_ids=allowed_door_ids
+        json_formatted_doors, placements, allowed_door_ids=allowed_door_ids
     )
     if ok:
         return_value.append_message(

@@ -20,7 +20,9 @@ output.
 Both post functions return `(ok, status, text)` rather than printing and
 swallowing failures -- the caller (room_mate.py) records per-model failures
 on its `Result`, so a run with a dead server or a rejected payload ends red
-instead of a false "Finished".
+instead of a false "Finished". A push refused *here*, before the network (see
+`empty_push_refusal`), reports through that same tuple with `status = None`,
+so the caller needs no second failure channel to branch on.
 """
 
 import json
@@ -398,6 +400,57 @@ def fetch_projects(url=SERVER_URL_PROJECTS):
         client.Dispose()
 
 
+def empty_push_refusal(entity, envelope, raw_count, dropped):
+    """The `(ok, status, text)` a push reports when it would have sent nothing.
+
+    Refused **client-side, before the POST**, even though the server refuses an
+    empty rooms push itself (`handlers.rs::reject_empty_rooms`). The server's
+    422 is the backstop and stays the authority; this exists because the
+    producer can say something the server cannot. The server sees one number --
+    zero -- and can only guess that a phase filter is behind it. This side still
+    has the export in hand, so it can report that the model held 26 rooms and
+    name where each one went, which is the difference between "0 rooms" sending
+    someone to read server logs and a message that points at the phase picker.
+
+    Shared with `post_doors` rather than reimplemented there, on the same terms
+    as the transport helpers: two guards that could drift on what "empty" means
+    would be worse than none.
+
+    `dropped` is `[(count, why), ...]` -- the fates that account for the missing
+    entries, printed in order and skipping the zeroes. It is allowed to be empty
+    (the buffered paths translate in one call and so cannot break the loss down;
+    the streaming paths, which are what a live Revit push uses, do).
+
+    Note the two halves say different things and mean to. An export that held
+    entries and kept none is a *filter* fault and says so. An export that held
+    none never had anything to filter, and blaming the phase for that would send
+    a reader hunting the wrong thing."""
+    project = (envelope.get("project") or {}).get("id", "unknown")
+    model = (envelope.get("model") or {}).get("id", "unknown")
+    phase = envelope.get("phase", "unknown")
+
+    if raw_count == 0:
+        detail = "the export holds no {} at all".format(entity)
+        advice = ""
+    else:
+        why = ", ".join("{} {}".format(n, reason) for n, reason in dropped if n)
+        # Both entity names are regular plurals, so the singular is the plural
+        # minus its 's' -- worth the two lines because this message is read by
+        # someone already unsure whether the export or the filter is at fault,
+        # and "held 1 rooms" reads as a bug in the tool telling them so.
+        noun = entity if raw_count != 1 else entity[:-1]
+        detail = "the export held {} {}, and none survived{}".format(
+            raw_count, noun, ": " + why if why else "")
+        advice = " Check that the phase filter matched something before pushing."
+
+    message = (
+        "refusing to push {} for {}/{} in phase '{}': {}. Nothing was sent.{}".format(
+            entity, project, model, phase, detail, advice)
+    )
+    print(message)
+    return (False, None, message)
+
+
 def _post_content(url, content):
     """POST prepared content and report the outcome as `(ok, status, text)`:
     `ok` is HTTP 2xx, `status` is the code (None when the server was never
@@ -429,6 +482,15 @@ def post_payload(json_formatted_room, json_formatted_level, url=SERVER_URL, allo
     rooms_source = duhast_objects_to_plain(json_formatted_room)
     levels_source = duhast_objects_to_plain(json_formatted_level)
     contract = translate(rooms_source, levels_source, allowed_room_ids)
+
+    # Guarded on the way OUT, not inside `translate`: `translate` also generates
+    # the `settings/test_snapshot.json` fixture and the `test_data` seed, and a
+    # fixture generator has no business refusing to produce an empty document.
+    # What is a fault is *pushing* one.
+    if not contract["rooms"]:
+        return empty_push_refusal(
+            "rooms", contract, len(rooms_source.get(ROOM_LIST_KEY, [])), [])
+
     body = json.dumps(contract)
 
     content = StringContent(body, Encoding.UTF8, "application/json")
@@ -444,7 +506,16 @@ def post_payload_stream(json_formatted_room, json_formatted_level, url=SERVER_UR
     The compressed body does still accumulate in a `MemoryStream` before the
     POST (see the module docstring for why that's acceptable). This is the
     path `room_mate.py` calls for a live Revit export. Returns
-    `(ok, status, text)`."""
+    `(ok, status, text)`.
+
+    Sends nothing when the translation keeps no rooms (`empty_push_refusal`).
+    The count is taken *as the stream is written* rather than by pre-scanning
+    the export, because the two questions differ: `allowed_room_ids` says what
+    the phase filter keeps, and `translate_room` independently drops unplaced
+    rooms, so only the write loop knows how many rooms actually reached the
+    wire. The body is built and then discarded in that case -- cheap, since
+    there was nothing in it, and it buys a single unambiguous count instead of
+    two estimates that could disagree."""
     # The metadata around the room list (identity envelope, file header) is
     # small -- flatten it in one go, leaving the (potentially huge) room list
     # untouched as raw duHast objects to be flattened one at a time below.
@@ -456,19 +527,37 @@ def post_payload_stream(json_formatted_room, json_formatted_level, url=SERVER_UR
         duhast_object_to_plain(json_formatted_level),
     )
 
+    raw = 0
+    unplaced = 0
+    out_of_phase = 0
+    written = 0
+
     out = MemoryStream()
     try:
         # leaveOpen defaults False: closing gz flushes the gzip footer into `out`.
         gz = GZipStream(out, CompressionMode.Compress)
         write_ndjson_line(gz, envelope)
         for room in json_formatted_room.get(ROOM_LIST_KEY, []):
+            raw += 1
             out_room = translate_room(duhast_object_to_plain(room))
-            if out_room is not None and in_selected_phase(out_room, allowed_room_ids):
-                write_ndjson_line(gz, out_room)
+            if out_room is None:
+                unplaced += 1
+                continue
+            if not in_selected_phase(out_room, allowed_room_ids):
+                out_of_phase += 1
+                continue
+            written += 1
+            write_ndjson_line(gz, out_room)
         gz.Close()  # MUST close to flush the gzip footer; do NOT skip
         body = out.ToArray()
     finally:
         out.Dispose()
+
+    if written == 0:
+        return empty_push_refusal("rooms", envelope, raw, [
+            (unplaced, "unplaced (no boundary loop)"),
+            (out_of_phase, "outside phase '{}'".format(envelope["phase"])),
+        ])
 
     content = ByteArrayContent(body)
     content.Headers.ContentType = MediaTypeHeaderValue("application/x-ndjson")

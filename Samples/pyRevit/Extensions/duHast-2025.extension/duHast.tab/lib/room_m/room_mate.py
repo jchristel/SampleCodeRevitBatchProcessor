@@ -33,9 +33,7 @@ from Autodesk.Revit.DB import (
     BuiltInCategory,
     BuiltInParameter,
     FilteredElementCollector,
-    Options,
     SpatialElementType,
-    XYZ,
 )
 
 from duHast.Revit.Rooms.rooms import get_all_rooms
@@ -60,7 +58,7 @@ from room_m.post_rooms import (
     coordinate_system_to_affine,
     boundary_location_to_room_boundary,
 )
-from room_m.post_doors import post_doors_stream, SENTINEL_MAGNITUDE
+from room_m.post_doors import post_doors_stream
 
 
 def choose_project(forms):
@@ -390,96 +388,11 @@ def door_through_wall_normal(door):
     return {"x": x / length, "y": y / length}
 
 
-def door_footprint(door):
-    """The door's TRUE plan footprint, as four `{"x", "y"}` corners in model
-    space (decimal feet, Y up), or None when it cannot be read.
-
-    **Why this exists: the export's footprint is an axis-aligned bounding box,
-    and a door in a diagonal wall is not axis-aligned.** duHast hands back
-    Revit's `BoundingBoxXYZ` without applying its transform, so the rotation is
-    lost before the data reaches the wire. On an orthogonal wall the box happens
-    to equal the true footprint, which is why 24 of the 26 House A doors look
-    correct and only the two in diagonal walls give it away -- as an upright
-    rectangle sitting across a slanted wall.
-
-    An axis-aligned box of a rotated rectangle **cannot** be un-rotated later:
-    the two extents plus an angle are three unknowns against two measurements,
-    and the system is degenerate at exactly 45 degrees. So no consumer can
-    recover this, and the producer has to send it right.
-
-    The fix is the standard pair. `GetOriginalGeometry` returns the family's
-    geometry in the family's OWN coordinate system -- where the door is
-    axis-aligned by construction, because that is how families are authored --
-    and `GetTransform` is the placement that puts it in the model. Taking the
-    box in family space and transforming its corners keeps the rotation that
-    taking the box in model space throws away.
-
-    Same discipline as `door_placements` reading the room references from the
-    API rather than the export: where duHast's answer is lossy, ask Revit.
-
-    None on any failure, and the caller then falls back to the export's polygon
-    -- which is exactly today's behaviour, so this can only improve a door, never
-    break one. A door family with no 3D geometry returns None here too, and its
-    fallback is the `+/-1e30` sentinel that `loops_from_polygon` already drops."""
-    try:
-        geometry = door.GetOriginalGeometry(Options())
-    except Exception:
-        return None
-    if geometry is None:
-        return None
-
-    try:
-        box = geometry.GetBoundingBox()
-    except Exception:
-        return None
-    if box is None or box.Min is None or box.Max is None:
-        return None
-
-    minimum, maximum = box.Min, box.Max
-    # The same uninitialized-BoundingBoxXYZ sentinel the export path guards, and
-    # the same constant rather than a second copy of the number: a family with
-    # no 3D geometry reaches here too, and its box is +1e30/-1e30.
-    for value in (minimum.X, minimum.Y, maximum.X, maximum.Y):
-        if abs(value) >= SENTINEL_MAGNITUDE:
-            return None
-    if maximum.X <= minimum.X or maximum.Y <= minimum.Y:
-        return None
-
-    try:
-        placement = door.GetTransform()
-        # A `BoundingBoxXYZ` carries its own transform as well. It is usually
-        # the identity, and composing it costs nothing when it is -- but reading
-        # the corners as if it were identity when it is not would misplace the
-        # door silently, which is the failure this whole function exists to stop.
-        if box.Transform is not None:
-            placement = placement.Multiply(box.Transform)
-    except Exception:
-        return None
-
-    # Wound consistently around the box in family space; the placement is rigid,
-    # so the ring stays simple and closed in model space. Z is taken from the
-    # box's own floor rather than zero: the transform is 3D, and feeding it a
-    # point off the family's own plane would shear the footprint on a door that
-    # is not level.
-    corners = (
-        (minimum.X, minimum.Y),
-        (maximum.X, minimum.Y),
-        (maximum.X, maximum.Y),
-        (minimum.X, maximum.Y),
-    )
-    out = []
-    for x, y in corners:
-        point = placement.OfPoint(XYZ(x, y, minimum.Z))
-        out.append({"x": float(point.X), "y": float(point.Y)})
-    return out
-
-
 def door_placements(doc, phase_name):
-    """`{door id: {"from_room", "to_room", "insertion_point", "normal",
-    "footprint"}}` for every door in `doc`, read from the Revit API for the
-    chosen phase.
+    """`{door id: {"from_room", "to_room", "insertion_point", "normal"}}` for
+    every door in `doc`, read from the Revit API for the chosen phase.
 
-    **One collector pass, five facts.** These were separate questions once and
+    **One collector pass, four facts.** These were separate questions once and
     the room references came first; putting the placement reads here rather than
     in a second `FilteredElementCollector` walk is not micro-optimisation, it is
     what guarantees the four values describe the same door in the same phase.
@@ -500,11 +413,11 @@ def door_placements(doc, phase_name):
     hundreds, and the server's QA reports it as a door with no room reference -
     visible, in the place a reader would look.
 
-    **Each read is caught separately**, so an unreadable room reference costs
-    the position, direction and footprint of that door and nothing more.
-    Catching the whole door at once would have been shorter and would throw away
-    four facts to lose one -- and the fact most likely to raise (the
-    phase-indexed room lookup) is not the one a plan needs to draw the door."""
+    **Each of the four is caught separately**, so an unreadable room reference
+    costs the position and direction of that door and nothing more. Catching the
+    whole door at once would have been shorter and would throw away three facts
+    to lose one -- and the fact most likely to raise (the phase-indexed room
+    lookup) is not the one a plan needs to draw the door."""
     phase = phase_by_name(doc, phase_name)
     placements = {}
     collector = (
@@ -529,17 +442,11 @@ def door_placements(doc, phase_name):
         except Exception:
             normal = None
 
-        try:
-            footprint = door_footprint(door)
-        except Exception:
-            footprint = None
-
         placements[element_id_str(door.Id)] = {
             "from_room": from_room,
             "to_room": to_room,
             "insertion_point": insertion_point,
             "normal": normal,
-            "footprint": footprint,
         }
     return placements
 

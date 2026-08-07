@@ -20,16 +20,9 @@ What is genuinely different, and why:
   export.** See `translate_door` -- all four are read from the Revit API by
   `room_mate.py`, in one pass, which is the only side that can ask the
   questions correctly and the only way they are guaranteed to agree.
-- **The footprint is the ORIENTED rectangle read from the Revit API**, not the
-  export's bounding box. duHast returns Revit's `BoundingBoxXYZ` without
-  applying its transform, which is right on an orthogonal wall and visibly
-  wrong on a diagonal one -- and unrecoverable downstream, because an
-  axis-aligned box of a rotated rectangle no longer knows the angle. See
-  `room_mate.door_footprint`.
-- **A degenerate footprint is dropped**, see `loops_from_polygon` -- now the
-  fallback for a door whose geometry the API could not read. This is the one
-  place this module actively discards data, and it has to: the bad value looks
-  like real geometry.
+- **A degenerate footprint is dropped**, see `loops_from_polygon`. This is
+  the one place this module actively discards data, and it has to: the bad
+  value looks like real geometry.
 - **An empty doors push is refused here, though the server accepts one.**
   Deliberately stricter than `handlers.rs`, and the asymmetry is the point.
   The server must allow zero doors, because it cannot tell a shell or a
@@ -93,14 +86,6 @@ def loops_from_polygon(polygons):
     convention verbatim: `[0]` outer, `[1..]` holes, decimal feet, model space,
     Y up. One renderer and one `model_to_shared` transform then serve both
     entities.
-
-    **The FALLBACK path now**, used only when `room_mate.door_footprint` could
-    not read the door's geometry from the Revit API. It is kept because it is
-    strictly better than nothing and because it owns the sentinel guard below,
-    not because it is right: what duHast returns here is an axis-aligned
-    bounding box, so a door in a diagonal wall comes out as an upright rectangle
-    lying across a slanted wall. See `door_footprint` for why that cannot be
-    corrected downstream.
 
     Returns `[]` for a door with no usable footprint, which the contract
     carries deliberately (`Door.loops`). **Not** `None`: unlike an unplaced
@@ -180,9 +165,9 @@ def translate_door(door, placements):
     it carries no id (nothing downstream could key on it).
 
     `placements` is `{door id: {"from_room", "to_room", "insertion_point",
-    "normal", "footprint"}}`, built by `room_mate.door_placements` from the
-    Revit API. **Everything in it is read from Revit rather than from the
-    export**, and for three different reasons.
+    "normal"}}`, built by `room_mate.door_placements` from the Revit API.
+    **Everything in it is read from Revit rather than from the export**, and for
+    two different reasons.
 
     The room references, because the export's own are unusable:
 
@@ -194,15 +179,12 @@ def translate_door(door, placements):
        array against a phase table that isn't there.
 
     The position and direction, because they must agree with those references.
-    `through_wall_normal` is `FacingOrientation` -- the same orientation
-    `ToRoom` itself is resolved along. Read from one API pass over one phase,
-    the values cannot describe different states of the same door.
+    `through_wall_normal` points from the from-room to the to-room, and it is
+    `FacingOrientation` -- the same orientation `ToRoom` itself follows. Read
+    from one API pass over one phase, the four values cannot describe different
+    states of the same door.
 
-    The footprint, because the export's is LOSSY rather than merely awkward: it
-    is an axis-aligned bounding box, and the rotation it drops cannot be
-    recovered by any consumer. See `room_mate.door_footprint`.
-
-    A door absent from `placements` gets `None` for all of them rather than
+    A door absent from `placements` gets `None` for all four rather than
     raising: that is the honest reading (nothing was resolved) and the server's
     QA reports it as a door with no room reference, which is exactly where a
     reader should see it."""
@@ -216,19 +198,10 @@ def translate_door(door, placements):
     level = door.get("level") or {}
     placement = placements.get(door_id) or {}
 
-    # The API footprint wins over the export's. It is the ORIENTED rectangle;
-    # the export's is an axis-aligned bounding box that only coincides with the
-    # truth on an orthogonal wall (see `room_mate.door_footprint`). Falling back
-    # rather than requiring it means this can only improve a door: a door whose
-    # geometry the API could not read behaves exactly as it did before, sentinel
-    # guard included.
-    footprint = placement.get("footprint")
-    loops = [{"points": footprint}] if footprint else loops_from_polygon(door.get("polygon"))
-
     return {
         "id": door_id,
         "level_id": str(level.get("id", "unknown")),
-        "loops": loops,
+        "loops": loops_from_polygon(door.get("polygon")),
         "from_room": placement.get("from_room"),
         "to_room": placement.get("to_room"),
         # Both are sent even when null. The contract accepts their absence (old

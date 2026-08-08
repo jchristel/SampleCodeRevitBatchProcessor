@@ -99,7 +99,11 @@ def populate_data_room_object(doc, revit_room):
                 ),
             )
         )
-        data_r.phasing.demolished = -1
+        # a room carries a creation phase only, so there is nothing to record here.
+        # "-" is the not set marker DataPhasing uses, and it has to be a string: the
+        # class type checks this field on the way back in, so an int written here
+        # stopped the exported room from ever being read back out of json.
+        data_r.phasing.demolished = "-"
 
         # get level data
         try:

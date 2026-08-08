@@ -128,4 +128,13 @@ class DataViewThreeD(DataViewBase):
         return not self.__eq__(other)
     
     def __hash__(self):
-        return hash(self.bounding_box, self.eye_position, self.forward_direction, self.up_direction)
+        # the four values go in as a single tuple. Passed as separate arguments, as
+        # they were, hash() raises for every instance regardless of content.
+        return hash(
+            (
+                self.bounding_box,
+                self.eye_position,
+                self.forward_direction,
+                self.up_direction,
+            )
+        )

@@ -154,7 +154,9 @@ class DataSheet(data_base.DataBase):
             (
                 self.instance_properties,
                 self.type_properties,
-                self.view_ports,
+                # view_ports is a list, which is not hashable. __eq__ compares it as a
+                # plain list, so order matters there and a tuple preserves that.
+                tuple(self.view_ports),
                 self.bounding_box,
                 self.sheet_size,
             )

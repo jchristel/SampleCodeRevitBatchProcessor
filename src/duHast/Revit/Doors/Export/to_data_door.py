@@ -46,10 +46,12 @@ from duHast.Revit.Common.Geometry.solids import (
     get_oriented_bounding_box_from_family_instance,
 )
 from duHast.Revit.Exports.export_data import (
+    get_bounding_box_z_extents,
     get_level_data,
     get_phasing_data,
     get_model_data,
     get_instance_properties,
+    get_room_calculation_point,
     get_type_properties,
     get_design_set_data,
     get_super_component_id,
@@ -148,6 +150,15 @@ def populate_data_door_object(doc, revit_door):
         )
         door_point_groups_as_doubles.append(data_geo_converted)
         data_door.polygon = door_point_groups_as_doubles
+
+        # the Z values a consumer needs to work out which room and level this door
+        # belongs to where Revit could not. Exported separately because the polygon
+        # above is flattened to 2D, so no elevation survives it.
+        data_door.room_calculation_point = get_room_calculation_point(revit_door)
+        (
+            data_door.bounding_box_min_z,
+            data_door.bounding_box_max_z,
+        ) = get_bounding_box_z_extents(revit_door, opts)
 
         # get design set data
         design_set = get_design_set_data(doc=doc, element=revit_door)

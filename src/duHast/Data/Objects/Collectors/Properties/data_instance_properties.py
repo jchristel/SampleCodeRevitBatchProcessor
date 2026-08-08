@@ -106,4 +106,7 @@ class DataInstanceProperties(data_base.DataBase):
         return not self.__eq__(other)
     
     def __hash__(self):
-        return hash((self.id, self.properties))
+        # frozenset rather than the list itself: a list is not hashable, and __eq__
+        # above compares properties as a set, so the hash has to ignore order too or
+        # equal instances could hash differently.
+        return hash((self.id, frozenset(self.properties)))

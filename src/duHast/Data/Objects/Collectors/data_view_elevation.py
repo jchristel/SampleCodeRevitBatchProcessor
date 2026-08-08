@@ -129,5 +129,20 @@ class DataViewElevation(DataViewBase):
         return not self.__eq__(other)
     
     def __hash__(self):
-        return hash((self.bounding_box, self.marker_index, self.view_direction, self.tags))
+        # tags is a list, which is not hashable. It is sorted by the same key __eq__
+        # sorts by before being turned into a tuple, so that two views holding the
+        # same tags in a different order hash alike, as they compare alike.
+        return hash(
+            (
+                self.bounding_box,
+                self.marker_index,
+                self.view_direction,
+                tuple(
+                    sorted(
+                        self.tags,
+                        key=lambda data_tag: data_tag.leader_element_reference_id,
+                    )
+                ),
+            )
+        )
 

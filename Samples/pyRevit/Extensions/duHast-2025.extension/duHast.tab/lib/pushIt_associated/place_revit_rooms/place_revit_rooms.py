@@ -75,9 +75,9 @@ def place_revit_rooms_entry(doc, uiapp,output, forms):
     :type forms: pyRevit.forms
     :return: Result class instance.
 
-        - `result.status` (bool): True if the families where created successfully, otherwise False.
+        - `result.status` (bool): True if the rooms where created and all parameter data transferred successfully, otherwise False.
         - `result.message` (str): Confirmation of successful creation.
-        - `result.result` (list): File path to wall host family.
+        - `result.result` (list): The rooms created.
     On exception:
         - `result.status` (bool): False.
         - `result.message` (str): Generic exception message.
@@ -140,15 +140,33 @@ def place_revit_rooms_entry(doc, uiapp,output, forms):
         forms=forms
     )
     
-    # check if any errors occurred during the creation of the rooms
+    # report how many rooms made it into the model before checking the status
+    # a room can be created but still fail to receive all its parameter values
+    print("Created: {} rooms".format(len(create_result.result)))
+
+    # drop the per room creation confirmation, otherwise it drowns out anything worth reading
+    messages_of_interest = [
+        message
+        for message in create_result.message_as_list
+        if message != "Room created successfully."
+    ]
+
+    # check if any errors occurred during the creation of the rooms or the transfer of parameter values
     if( create_result.status is False):
-        message = "Room creation failed: {}".format(create_result.message)
+        message = "Room creation failed: {}".format("\n".join(messages_of_interest))
         return_value.update_sep(False, message)
         print_error(message)
         return return_value
-    
-    print("Created: {} rooms".format(len(create_result.result)))
 
+    if DEBUG:
+        for message in messages_of_interest:
+            print(message)
+
+    # store the created rooms so a caller can act on them
+    return_value.result = create_result.result
+    return_value.append_message("Created: {} rooms".format(len(create_result.result)))
 
     print("finished!")
+
+    return return_value
 

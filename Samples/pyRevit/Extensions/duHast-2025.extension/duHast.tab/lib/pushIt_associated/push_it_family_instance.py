@@ -24,6 +24,7 @@
 from duHast.Utilities.Objects.base import Base
 
 from pushIt_associated.push_it_family_property import PushItFamilyProperty
+from pushIt_associated.utils.parameter_guid import normalise_guid
 from duHast.Revit.Common.Objects.design_set_property_names import DesignSetPropertyNames
 
 class PushItFamilyInstance(Base):
@@ -106,8 +107,9 @@ class PushItFamilyInstance(Base):
 
 
         if key_id_property_guid is not None:
+            key_id_property_guid_normalised = normalise_guid(key_id_property_guid)
             for property in self.properties:
-                if property.parameter_guid == key_id_property_guid:
+                if normalise_guid(property.parameter_guid) == key_id_property_guid_normalised:
                     key = property.parameter_value
                     break
 

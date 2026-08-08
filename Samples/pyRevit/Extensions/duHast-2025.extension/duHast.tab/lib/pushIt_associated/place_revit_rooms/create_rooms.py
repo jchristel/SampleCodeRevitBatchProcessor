@@ -32,8 +32,115 @@ from duHast.Revit.Common.Objects.FailureHandlingConfiguration import (
 from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
 from pushIt_associated.utils.settings import push_it_shared_parameter_to_build_in_parameter_mapper
+from pushIt_associated.utils.parameter_guid import normalise_guid
 
 from Autodesk.Revit.DB import UV, XYZ
+
+# debug flag: when True a detailed parameter match report is printed for the first room created
+DEBUG = True
+
+# values reported by duHast get_parameter_value when a parameter on the push it family instance
+# holds no value. Attempting to transfer those will either write nonsense or throw.
+EMPTY_PARAMETER_VALUES = ["None", "no Value", ""]
+
+
+def is_empty_parameter_value(value):
+    """
+    Checks whether a parameter value read of a push it family instance is empty.
+
+    :param value: The parameter value as read by duHast get_parameter_value.
+    :type value: str
+    :return: True if there is nothing worth transferring, otherwise False.
+    :rtype: bool
+    """
+
+    if value is None:
+        return True
+    if value in EMPTY_PARAMETER_VALUES:
+        return True
+    # get_parameter_value returns any read failure as a string prefixed with 'Exception: '
+    if isinstance(value, str) and value.startswith("Exception:"):
+        return True
+    return False
+
+
+def set_room_parameter_safely(para, value, parameter_name):
+    """
+    Sets a single room parameter value and contains any failure to this one parameter.
+
+    duHast set_parameter_value_simple does not handle exceptions ( i.e. int( "None" ) on an
+    integer parameter ), so without this wrapper the first bad value aborts the transfer of
+    every remaining parameter on the room.
+
+    :param para: The room parameter to be updated.
+    :type para: Autodesk.Revit.DB.Parameter
+    :param value: The new parameter value as a string.
+    :type value: str
+    :param parameter_name: The parameter name as per the push it family instance ( reporting only ).
+    :type parameter_name: str
+    :return: Result class instance. Status False if the value could not be applied.
+    :rtype: :class:`.Result`
+    """
+
+    return_value = Result()
+
+    # nothing to transfer
+    if is_empty_parameter_value(value):
+        return return_value
+
+    # a read only parameter on the room ( i.e. a reporting parameter ) will throw on set
+    if para.IsReadOnly:
+        return_value.update_sep(False, "...failed [{}]: parameter is read only on the room.".format(parameter_name))
+        return return_value
+
+    try:
+        set_result = set_parameter_value_simple(para, value)
+        # only report failures. A success message per parameter per room would swamp the output window
+        if set_result.status is False:
+            return_value.update(set_result)
+    except Exception as e:
+        return_value.update_sep(False, "...failed [{}] to: {} with exception: {}".format(parameter_name, value, e))
+
+    return return_value
+
+
+def report_debug_parameter_match(family_instance, room_paras_by_guid):
+    """
+    Prints a report of how the push it family instance properties match up against the shared
+    parameters available on the newly created room.
+
+    This is the quickest way to tell a guid mismatch ( no properties / no matches ) apart from a
+    value conversion failure ( matches, but sets fail ) and a missing parameter binding on the
+    Rooms category ( room carries no shared parameters at all ).
+
+    :param family_instance: The push it family instance the room is created from.
+    :type family_instance: :class:`.PushItFamilyInstance`
+    :param room_paras_by_guid: The rooms shared parameters by normalised guid.
+    :type room_paras_by_guid: {str:Autodesk.Revit.DB.Parameter}
+    """
+
+    print("DEBUG: push it instance {} carries {} properties to transfer.".format(
+        family_instance.revit_element_id_integer_value, len(family_instance.properties)))
+    print("DEBUG: room carries {} shared parameters.".format(len(room_paras_by_guid)))
+
+    property_guids = []
+    for prop in family_instance.properties:
+        prop_guid = normalise_guid(prop.parameter_guid)
+        property_guids.append(prop_guid)
+        para = room_paras_by_guid.get(prop_guid)
+        if para is None:
+            print("DEBUG: [no match ] {} guid: {} value: {}".format(
+                prop.parameter_name, prop_guid, prop.parameter_value))
+        else:
+            print("DEBUG: [match   ] {} guid: {} value: {} -> room parameter: {} storage: {} read only: {}".format(
+                prop.parameter_name, prop_guid, prop.parameter_value,
+                para.Definition.Name, para.StorageType, para.IsReadOnly))
+
+    # any shared parameter on the room which no push it property is pointing at
+    for guid, para in room_paras_by_guid.items():
+        if guid not in property_guids:
+            print("DEBUG: [room only] {} guid: {}".format(para.Definition.Name, guid))
+
 
 def apply_transform_to_uv(uv_point, rotation_matrix, translation_vector):
     
@@ -63,16 +170,18 @@ def apply_transform_to_uv(uv_point, rotation_matrix, translation_vector):
     return UV(transformed_u, transformed_v)
 
 
-def create_room_from_push_it_instance(doc, family_instance, levels_ascending, rotation, translation):
+def create_room_from_push_it_instance(doc, family_instance, levels_ascending, rotation, translation, debug=False):
     """
     Create a room in the Revit document.
-    
+
     :param doc: The Revit document
     :type doc: Autodesk.Revit.DB.Document
     :param family_instance: The family instance to create the room from
     :type family_instance: Autodesk.Revit.DB.FamilyInstance
     :param levels_ascending: The list of levels in the Revit document
     :type levels_ascending: list
+    :param debug: If True a parameter match report is printed for this room.
+    :type debug: bool
 
     :return: Result class instance.
     :rtype: Result
@@ -87,22 +196,57 @@ def create_room_from_push_it_instance(doc, family_instance, levels_ascending, ro
             action_return_value = Result()
             try:
 
-                # match up shared parameters
+                # nothing was extracted of the push it family instance in the first place
+                if len(family_instance.properties) == 0:
+                    action_return_value.update_sep(False, "...push it instance {} carries no properties to transfer.".format(family_instance.revit_element_id_integer_value))
+                    return action_return_value
+
+                # build a look up of the rooms shared parameters by normalised guid
+                # guids are normalised since a guid coming out of the data source may be upper case
+                # and / or wrapped in braces where Revit always reports it in lower case without braces
                 paras_room = room.GetOrderedParameters()
+                room_paras_by_guid = {}
+                for para in paras_room:
+                    if para.IsShared:
+                        room_paras_by_guid[normalise_guid(para.GUID)] = para
+
+                if debug:
+                    report_debug_parameter_match(family_instance, room_paras_by_guid)
+
+                # match up shared parameters
+                # note: each parameter is set in isolation so a single failure does not abort the remainder
+                match_counter = 0
+                unmatched_parameter_names = []
                 for prop in family_instance.properties:
-                    for para in paras_room:
-                       if para.IsShared :
-                            if para.GUID.ToString() == prop.parameter_guid:
-                                set_result = set_parameter_value_simple(para, prop.parameter_value)
-                                action_return_value.update(set_result)
-                                break
-                
+                    para = room_paras_by_guid.get(normalise_guid(prop.parameter_guid))
+                    if para is None:
+                        unmatched_parameter_names.append(prop.parameter_name)
+                        continue
+                    match_counter = match_counter + 1
+                    action_return_value.update(set_room_parameter_safely(para, prop.parameter_value, prop.parameter_name))
+
+                # flag the case where not a single property found a home on the room
+                # ( guid mismatch, or the shared parameters are not bound to the Rooms category )
+                if match_counter == 0:
+                    action_return_value.update_sep(False, "...none of the {} push it properties matched a shared parameter on the room. Room carries {} shared parameters.".format(len(family_instance.properties), len(room_paras_by_guid)))
+                elif len(unmatched_parameter_names) > 0:
+                    # one summary line per room, the detail is in the debug report of the first room
+                    action_return_value.append_message("...{} of {} properties had no matching shared parameter on the room: {}".format(len(unmatched_parameter_names), len(family_instance.properties), ", ".join(unmatched_parameter_names)))
+
                 # match up shared parameters to build in parameters
                 for key, value in push_it_shared_parameter_to_build_in_parameter_mapper.items():
                     for prop in family_instance.properties:
                         if prop.parameter_name == key:
-                            set_result = set_builtin_parameter_without_transaction_wrapper_by_name( room,value,prop.parameter_value)
-                            action_return_value.update(set_result)
+                            # nothing to transfer
+                            if is_empty_parameter_value(prop.parameter_value):
+                                break
+                            try:
+                                set_result = set_builtin_parameter_without_transaction_wrapper_by_name( room,value,prop.parameter_value)
+                                # only report failures to keep the output window readable
+                                if set_result.status is False:
+                                    action_return_value.update(set_result)
+                            except Exception as e:
+                                action_return_value.update_sep(False, "...failed to set built in parameter [{}] to: {} with exception: {}".format(key, prop.parameter_value, e))
                             break
 
             except Exception as e:
@@ -197,7 +341,16 @@ def create_rooms_from_push_it_instances(doc, family_instances, rotation, transla
                 # increase the progress bar
                 pb.update_progress(counter, max_value=len(family_instances))
 
-                room_result =  create_room_from_push_it_instance(doc, family_instance, levels_ascending, rotation, translation)
+                # report the parameter match up in detail for the first room only, that is enough
+                # to tell a guid mismatch apart from a value conversion or parameter binding issue
+                room_result =  create_room_from_push_it_instance(
+                    doc,
+                    family_instance,
+                    levels_ascending,
+                    rotation,
+                    translation,
+                    debug=DEBUG and counter == 1,
+                )
                 return_value.update(room_result)
 
                 counter += 1

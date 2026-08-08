@@ -111,6 +111,25 @@ def get_push_it_rooms_data(push_it_elements_model, forms):
         # not all rooms will return a centroid....
         updated_fams_result = get_push_it_families_centroid(push_it_elements_model,selected_rooms)
 
+        # any family which failed here is dropped from the list, so if nothing came back
+        # there is nothing left to place
+        if updated_fams_result.result is None or len(updated_fams_result.result) == 0:
+            message = "Failed to get the centroid of any of the {} selected rooms: {}".format(len(selected_rooms), updated_fams_result.message)
+            return_value.update_sep(False, message)
+            print_error(message)
+            return return_value
+
+        # a failure on individual families is not fatal, carry on with the ones which made it
+        # through but make sure the user knows some rooms will not get placed
+        if updated_fams_result.status is False:
+            message = "Failed to get the centroid of {} of {} selected rooms, those will not be placed: {}".format(
+                len(selected_rooms) - len(updated_fams_result.result),
+                len(selected_rooms),
+                updated_fams_result.message,
+            )
+            return_value.append_message(message)
+            print_error(message)
+
         # store the result
         return_value.result = updated_fams_result.result
     

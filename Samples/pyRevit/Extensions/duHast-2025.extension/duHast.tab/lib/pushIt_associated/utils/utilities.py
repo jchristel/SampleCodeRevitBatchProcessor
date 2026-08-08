@@ -41,6 +41,7 @@ from duHast.Revit.Levels.levels import get_levels_list_ascending, get_nearest_le
 
 from pushIt_associated.push_it_family_instance import PushItFamilyInstance
 from pushIt_associated.push_it_family_property import PushItFamilyProperty
+from pushIt_associated.utils.parameter_guid import normalise_guid
 
 
 # family name prefix to identify the elements to be processed
@@ -445,8 +446,9 @@ def sort_families_by_parameter_value(doc, family_instances,parameter_guid):
     parameter_name = None
     # get the shared parameter definition
     shared_parameters = get_all_shared_parameters(doc)
+    parameter_guid_normalised = normalise_guid(parameter_guid)
     for p in shared_parameters:
-        if p.GuidValue.ToString() ==parameter_guid:
+        if normalise_guid(p.GuidValue) == parameter_guid_normalised:
             parameter_name = p.Name
             break
 
@@ -543,36 +545,43 @@ def get_family_instance_properties(family_instance, parameter_data, unique_id_pa
 
     paras = family_instance.GetOrderedParameters()
 
+    # build a look up of normalised parameter guid to the parameter name as per the data source
+    # guids are normalised since Revit reports them in lower case without braces but guids coming
+    # from the data source are hand authored and may be upper case and / or wrapped in braces
+    parameter_name_by_guid = {}
+    for parameter_name, parameter_guid in parameter_data.items():
+        parameter_name_by_guid[normalise_guid(parameter_guid)] = parameter_name
+
+    unique_id_guid = normalise_guid(unique_id_parameter_guid)
+
     try:
         for para in paras:
             # check if this is a shared parameter
             if para.IsShared:
                 # get the parameter name
                 instance_parameter_name = para.Definition.Name
-                instance_parameter_guid = para.GUID.ToString()
+                instance_parameter_guid = normalise_guid(para.GUID)
                 instance_parameter_value = get_parameter_value(para)
 
-                for parameter_name, parameter_guid in parameter_data.items():
-                    # check if the unique id parameter value is empty, if so reject this family instance
-                    if instance_parameter_guid == unique_id_parameter_guid:
-                        if instance_parameter_value == "None" or instance_parameter_value == "":
-                            raise ValueError("Unique Id Parameter value is None or empty for family instance: {}".format(family_instance.Id.Value))
-                   
-                    # check if the parameter is in the parameter data
-                    if parameter_guid == instance_parameter_guid:
-                        # create a family instance property
-                        family_instance_property = PushItFamilyProperty()
-                        family_instance_property.parameter_description = parameter_name
-                        family_instance_property.parameter_name = instance_parameter_name
-                        family_instance_property.parameter_guid = parameter_guid
-                        family_instance_property.parameter_value =  instance_parameter_value
+                # check if the unique id parameter value is empty, if so reject this family instance
+                if instance_parameter_guid == unique_id_guid:
+                    if instance_parameter_value == "None" or instance_parameter_value == "":
+                        raise ValueError("Unique Id Parameter value is None or empty for family instance: {}".format(family_instance.Id.Value))
 
-                        # add the property to the list
-                        family_instance_properties.append(family_instance_property)
-                        break
+                # check if the parameter is in the parameter data
+                if instance_parameter_guid in parameter_name_by_guid:
+                    # create a family instance property
+                    family_instance_property = PushItFamilyProperty()
+                    family_instance_property.parameter_description = parameter_name_by_guid[instance_parameter_guid]
+                    family_instance_property.parameter_name = instance_parameter_name
+                    family_instance_property.parameter_guid = instance_parameter_guid
+                    family_instance_property.parameter_value =  instance_parameter_value
+
+                    # add the property to the list
+                    family_instance_properties.append(family_instance_property)
     except Exception as e:
         return None
-            
+
     return family_instance_properties
 
 

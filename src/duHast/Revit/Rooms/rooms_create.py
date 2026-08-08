@@ -46,7 +46,9 @@ def create_room (doc, level, location_point, modify_action, transaction_manager=
     :param location_point: The location point of the room.
     :type location_point: Autodesk.Revit.DB.XYZ
     :param  modify_action: An action executed on the room at the time of creation ( in same transaction).
-    :type  modify_action: function taking the room as input
+        If it returns a Result instance that result is merged into the return value, otherwise its
+        outcome is ignored.
+    :type  modify_action: function taking the room as input and returning a Result instance
     :param transaction_manager: The transaction manager to use. Defaults to in_transaction.
     :type transaction_manager: TransactionManager, optional
     :return:
@@ -77,11 +79,15 @@ def create_room (doc, level, location_point, modify_action, transaction_manager=
             try:
                 # Create the room
                 room = doc.Create.NewRoom(level, location_point)
-                # Execute the modify action if provided
-                if modify_action:
-                    modify_action(room)
                 action_return_value.result.append(room)
                 action_return_value.append_message ("Room created successfully.")
+                # Execute the modify action if provided
+                if modify_action:
+                    modify_action_result = modify_action(room)
+                    # merge the outcome of the modify action into the return value
+                    # otherwise any failure to update the room ( i.e. parameter values ) goes unreported
+                    if isinstance(modify_action_result, Result):
+                        action_return_value.update(modify_action_result)
             except Exception as e:
                 action_return_value.update_sep (False,"{}".format(e))
             return action_return_value

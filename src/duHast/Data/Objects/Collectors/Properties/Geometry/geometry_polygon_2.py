@@ -35,7 +35,83 @@ Loops are made up of a number of 2D points.
 import json
 from duHast.Data.Objects.Collectors.Properties.Geometry import geometry_base
 from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
+from duHast.Geometry.geometry_property_names import GeometryPropertyNames
 from duHast.Geometry.point_2 import Point2
+
+
+def loop_point_from_json(point):
+    """
+    Normalises a single loop point read from json into a list of doubles.
+
+    Two shapes exist in the wild. Every exporter writes loop points as [x, y] lists,
+    via get_point_as_doubles, and that is also the shape data_to_shapely reads back
+    out - it indexes point[0] and point[1] and tests len(point) to spot 2D points.
+    A Point2, on the other hand, serialises to an {"x": , "y": } dictionary.
+
+    Both are accepted here and both come back as [x, y], because a polygon that has
+    been through json has to hand downstream code the same type an exported one does.
+    Returning Point2 instances - as this used to - produced polygons that no consumer
+    in the library could read.
+
+    :param point: A single loop point as either [x, y] or {"x": , "y": }.
+    :type point: list | tuple | dict
+
+    :return: The point as [x, y].
+    :rtype: list[float]
+    """
+
+    if isinstance(point, dict):
+        if (
+            GeometryPropertyNames.X not in point
+            or GeometryPropertyNames.Y not in point
+        ):
+            raise ValueError("Loop point dictionary must contain 'x' and 'y' keys.")
+        return [
+            float(point[GeometryPropertyNames.X]),
+            float(point[GeometryPropertyNames.Y]),
+        ]
+
+    if isinstance(point, (list, tuple)):
+        if len(point) < 2:
+            raise ValueError(
+                "Loop point needs at least an x and a y value, got {} value(s).".format(
+                    len(point)
+                )
+            )
+        # anything beyond x and y is dropped: these polygons are 2D by definition
+        return [float(point[0]), float(point[1])]
+
+    raise TypeError(
+        "Loop point must be a list, tuple or dictionary. Got {} instead.".format(
+            type(point)
+        )
+    )
+
+
+def loop_as_tuple(loop):
+    """
+    Converts a single loop into a nested tuple so that it can take part in a hash.
+
+    Loops are lists of points, and points are themselves lists, neither of which is
+    hashable. Both point shapes the class can hold are handled: the [x, y] lists the
+    exporters and json produce, and the Point2 instances add_point_to_outer_loop takes.
+
+    :param loop: A loop as a list of points.
+    :type loop: list
+
+    :return: The loop as a tuple of (x, y) tuples.
+    :rtype: tuple
+    """
+
+    points = []
+    for point in loop:
+        if hasattr(point, GeometryPropertyNames.X) and hasattr(
+            point, GeometryPropertyNames.Y
+        ):
+            points.append((point.x, point.y))
+        else:
+            points.append(tuple(point))
+    return tuple(points)
 
 
 class DataGeometryPolygon2(geometry_base.DataGeometryBase):
@@ -81,7 +157,7 @@ class DataGeometryPolygon2(geometry_base.DataGeometryBase):
                 # need a minimum of 3 points to form a polygon
                 if len(outer_loop) >= 3:
                     for p in outer_loop:
-                        self.outer_loop.append(Point2(j=p))
+                        self.outer_loop.append(loop_point_from_json(p))
                 elif 3 > len(outer_loop) > 0:
                     # not enough points
                     raise ValueError(
@@ -97,7 +173,7 @@ class DataGeometryPolygon2(geometry_base.DataGeometryBase):
                     for loop in inner_loops:
                         loop_points = []
                         for p in loop:
-                            loop_points.append(Point2(j=p))
+                            loop_points.append(loop_point_from_json(p))
                         self.inner_loops.append(loop_points)
 
             except Exception as e:
@@ -145,4 +221,12 @@ class DataGeometryPolygon2(geometry_base.DataGeometryBase):
         return not self.__eq__(other)
 
     def __hash__(self):
-        return hash((self.outer_loop, self.inner_loops))
+        # built from the same two properties __eq__ compares, so that equal polygons
+        # hash equal. Both are nested lists, so they have to be converted to tuples:
+        # hashing them directly raised a TypeError for every polygon.
+        return hash(
+            (
+                loop_as_tuple(self.outer_loop),
+                tuple(loop_as_tuple(loop) for loop in self.inner_loops),
+            )
+        )

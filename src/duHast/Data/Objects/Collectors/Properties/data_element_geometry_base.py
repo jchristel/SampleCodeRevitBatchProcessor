@@ -57,8 +57,11 @@ class DataElementGeometryBase(base.Base):
         # forwards all unused arguments
         super(DataElementGeometryBase, self).__init__(**kwargs)
 
-        # set default values
-        self.polygon = geometry_polygon_2.DataGeometryPolygon2()
+        # a LIST of polygons. Every exporter assigns a list here, because an element
+        # can be made up of more than one polygon ( a ceiling built from several
+        # solids, say ), and data_to_shapely iterates it. Reading a single polygon
+        # back, as this used to, could not load anything the exporters had written.
+        self.polygon = []
 
         json_var = None
         # check valid j input
@@ -81,11 +84,44 @@ class DataElementGeometryBase(base.Base):
             try:
                 # check for polygon data
                 polygon_data = json_var.get(DataPropertyNames.POLYGON, None)
-                self.polygon = geometry_polygon_2.DataGeometryPolygon2(j=polygon_data)
+                self.polygon = self._polygons_from_json(polygon_data)
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
+
+    @staticmethod
+    def _polygons_from_json(polygon_data):
+        """
+        Builds the polygon list from json.
+
+        :param polygon_data: A list of polygon dictionaries. A single polygon
+            dictionary is also accepted and wrapped, so data written before the list
+            was the convention still loads.
+        :type polygon_data: list | dict | None
+
+        :return: A list of polygon instances. Empty when no polygon data was stored.
+        :rtype: list[:class:`.DataGeometryPolygon2`]
+        """
+
+        if polygon_data is None:
+            return []
+
+        # tolerate a lone polygon stored as an object rather than a list of one
+        if isinstance(polygon_data, dict):
+            polygon_data = [polygon_data]
+
+        if not isinstance(polygon_data, list):
+            raise TypeError(
+                "Polygon data must be a list or a dictionary. Got {} instead.".format(
+                    type(polygon_data)
+                )
+            )
+
+        return [
+            geometry_polygon_2.DataGeometryPolygon2(j=polygon)
+            for polygon in polygon_data
+        ]
 
     def __eq__(self, other):
         if not isinstance(other, DataElementGeometryBase):
@@ -96,4 +132,6 @@ class DataElementGeometryBase(base.Base):
         return not self.__eq__(other)
     
     def __hash__(self):
-        return hash(self.polygon)
+        # polygon is a list, which is not hashable, so it goes in as a tuple. Keyed on
+        # the same property __eq__ compares, so equal instances hash equal.
+        return hash(tuple(self.polygon))

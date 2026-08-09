@@ -55,6 +55,19 @@ class DataRoomToPhase(data_base.DataBase):
         self.phase_id = -1
         self.room_id = -1
 
+        # room_id on its own only identifies a room while Revit populates this class,
+        # because then the room is in the same document as the opening by construction.
+        # A room worked out geometrically can live in another model, where element ids
+        # collide freely, so the model has to be named alongside the id.
+        # "-" means the same model as the opening carrying this entry.
+        self.revit_model_name = "-"
+
+        # how the pairing was arrived at: "revit" where Revit itself reported it,
+        # "computed" where it was worked out from geometry. Recorded because the two
+        # are not equally reliable, and because a computed pairing carries no to/from
+        # direction - that ordering only exists in what Revit reports.
+        self.source = "-"
+
         json_var = None
         if j is not None:
             if isinstance(j, str):
@@ -85,6 +98,24 @@ class DataRoomToPhase(data_base.DataBase):
                         )
                     )
 
+                self.revit_model_name = json_var.get(
+                    DataPropertyNames.REVIT_MODEL_NAME, self.revit_model_name
+                )
+                if not isinstance(self.revit_model_name, str):
+                    raise TypeError(
+                        "revit_model_name needs to be of type str, got {} instead.".format(
+                            type(self.revit_model_name)
+                        )
+                    )
+
+                self.source = json_var.get(DataPropertyNames.SOURCE, self.source)
+                if not isinstance(self.source, str):
+                    raise TypeError(
+                        "source needs to be of type str, got {} instead.".format(
+                            type(self.source)
+                        )
+                    )
+
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
@@ -97,10 +128,17 @@ class DataRoomToPhase(data_base.DataBase):
                     type(other)
                 )
             )
-        return self.phase_id == other.phase_id and self.room_id == other.room_id
+        # the model name takes part: the same room id in two different models is two
+        # different rooms, and conflating them would silently drop one of a window's
+        # matches when entries are de-duplicated.
+        return (
+            self.phase_id == other.phase_id
+            and self.room_id == other.room_id
+            and self.revit_model_name == other.revit_model_name
+        )
 
     def __ne__(self, other):
         return not self.__eq__(other)
 
     def __hash__(self):
-        return hash((self.phase_id, self.room_id))
+        return hash((self.phase_id, self.room_id, self.revit_model_name))

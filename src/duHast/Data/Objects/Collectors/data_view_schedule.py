@@ -135,4 +135,8 @@ class DataViewSchedule(DataViewBase):
         return not self.__eq__(other)
 
     def __hash__(self):
-        return hash((self.bounding_box, self.total_number_of_rows, self.segments))
+        # segments is a list, which is not hashable. __eq__ compares it as a plain
+        # list, so order matters there and a tuple preserves that.
+        return hash(
+            (self.bounding_box, self.total_number_of_rows, tuple(self.segments))
+        )

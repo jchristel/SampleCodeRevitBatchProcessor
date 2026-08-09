@@ -27,8 +27,10 @@ This module contains a number of functions around exporting from Revit to data o
 #
 #
 
-from Autodesk.Revit.DB import Element, StorageType
+from Autodesk.Revit.DB import Element, Options, StorageType
 
+from duHast.Revit.Common.Geometry.points import get_point_as_doubles
+from duHast.Revit.Common.Geometry.solids import get_bounding_box_from_family_geometry
 from duHast.Revit.Common.parameter_get_utils import (
     getter_double_as_double_converted_to_metric,
     getter_int_as_int,
@@ -230,6 +232,79 @@ def get_super_component_id(family_instance):
     if super_component is None:
         return -1
     return super_component.Id.Value
+
+
+def get_room_calculation_point(family_instance):
+    """
+    Returns the room calculation point of a family instance.
+
+    This is the point Revit itself uses to decide which room a family instance belongs
+    to, and it exists only where the family author enabled it on the family. It is
+    exported as raw geometry because Revit only resolves the instance to room
+    relationship WITHIN a single model: across links the relationship never populates,
+    since the rooms are not in the instance's document. Anything working across models
+    therefore has to do that calculation itself, and this is its input.
+
+    :param family_instance: A Revit family instance.
+    :type family_instance: Autodesk.Revit.DB.FamilyInstance
+
+    :return: The point as [x, y, z] in decimal feet, or an empty list when the family
+        has no room calculation point enabled.
+    :rtype: list[float]
+    """
+
+    try:
+        # families without the calculation point enabled are a normal state, not a
+        # failure, and the getter throws rather than returning None on those
+        if family_instance.HasSpatialElementCalculationPoint == False:
+            return []
+        calculation_point = family_instance.GetSpatialElementCalculationPoint()
+        if calculation_point is None:
+            return []
+        return get_point_as_doubles(point=calculation_point, include_z=True)
+    except Exception:
+        return []
+
+
+def get_bounding_box_z_extents(family_instance, options=None):
+    """
+    Returns the lowest and highest Z of a family instance's solid geometry: the sill
+    and head of a window, the threshold and head of a door.
+
+    Both are returned together because they are read from one geometry extraction, and
+    because they are only useful as a pair. The lowest Z alone says which level an
+    opening sits above; it takes the height as well to say which storey an opening
+    SPANNING a level mostly belongs to.
+
+    Measured off the WORLD axis aligned box of the instance's solids, so the values are
+    directly comparable with level elevations. The ORIENTED box behind the exported
+    polygon is no use for this - its Min and Max are expressed in the instance's own
+    coordinate system, so on a rotated instance they are not world elevations at all.
+
+    Solids only, which is what is wanted here: a family's symbolic geometry - a door's
+    plan swing arc - carries no meaningful elevation.
+
+    :param family_instance: A Revit family instance.
+    :type family_instance: Autodesk.Revit.DB.FamilyInstance
+    :param options: Geometry options; a default Options() is used when omitted.
+    :type options: Autodesk.Revit.DB.Options
+
+    :return: Lowest and highest Z in decimal feet, or (None, None) when the instance
+        has no solid geometry.
+    :rtype: tuple(float, float)
+    """
+
+    geometry_element = family_instance.get_Geometry(
+        options if options is not None else Options()
+    )
+    if geometry_element is None:
+        return None, None
+
+    bounding_box = get_bounding_box_from_family_geometry(geometry_element)
+    if bounding_box is None:
+        return None, None
+
+    return bounding_box.Min.Z, bounding_box.Max.Z
 
 
 def get_model_data(doc):

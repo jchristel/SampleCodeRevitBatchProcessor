@@ -75,6 +75,18 @@ class DataFamilyBase(
         self.phasing = data_phasing.DataPhasing()
         self.design_set_and_option = data_design_set_option.DataDesignSetOption()
 
+        # what a consumer needs to work out which room, and which level, an opening
+        # belongs to. Min and max Z are the sill and the head: the pair is what allows
+        # an opening crossing a level to be assigned to whichever storey holds most of
+        # its height, which a single Z cannot express.
+        #
+        # All kept as raw measurements rather than a resolved answer, so the rules
+        # applied to them can change without re-exporting. Decimal feet, matching the
+        # polygon geometry rather than the level data ( which is in mm ).
+        self.room_calculation_point = []
+        self.bounding_box_min_z = None
+        self.bounding_box_max_z = None
+
         json_var = None
         # check if any data was past in with constructor!
         if j is not None:
@@ -124,6 +136,45 @@ class DataFamilyBase(
                         data_design_set_option.DataDesignSetOption.data_type, None
                     )
                 )
+
+                # an empty list means the family has no room calculation point enabled,
+                # which a populated one can never be mistaken for: a point is always 3 values
+                self.room_calculation_point = json_var.get(
+                    DataPropertyNames.ROOM_CALCULATION_POINT,
+                    self.room_calculation_point,
+                )
+                if not isinstance(self.room_calculation_point, list):
+                    raise TypeError(
+                        "Expected 'room_calculation_point' to be a list, got {}".format(
+                            type(self.room_calculation_point)
+                        )
+                    )
+
+                # None means the instance has no solid geometry. Deliberately not 0.0,
+                # which is a valid elevation at project datum and would read as a real sill
+                self.bounding_box_min_z = json_var.get(
+                    DataPropertyNames.BOUNDING_BOX_MIN_Z, self.bounding_box_min_z
+                )
+                if self.bounding_box_min_z is not None and not isinstance(
+                    self.bounding_box_min_z, float
+                ):
+                    raise TypeError(
+                        "Expected 'bounding_box_min_z' to be a float or None, got {}".format(
+                            type(self.bounding_box_min_z)
+                        )
+                    )
+
+                self.bounding_box_max_z = json_var.get(
+                    DataPropertyNames.BOUNDING_BOX_MAX_Z, self.bounding_box_max_z
+                )
+                if self.bounding_box_max_z is not None and not isinstance(
+                    self.bounding_box_max_z, float
+                ):
+                    raise TypeError(
+                        "Expected 'bounding_box_max_z' to be a float or None, got {}".format(
+                            type(self.bounding_box_max_z)
+                        )
+                    )
 
                 # get associated elements
                 associated_elements = json_var.get(

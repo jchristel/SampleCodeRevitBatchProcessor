@@ -167,17 +167,20 @@ def get_coordinate_system_translation_and_rotation(doc):
     :param doc: _description_
     :type doc: _type_
 
-    :return: 3 x 3 matrix describing rotation, 1 x 3 matrix describing translation
-    :rtype: list (3) [list(3) int], list [int]
+    :return: 3 x 3 matrix describing rotation, 3 values describing translation
+    :rtype: list (3) [list(3) float], list [float]
     """
 
     projectLocationActive = doc.ActiveProjectLocation
     # get the inverse because we need to go back to origin
     totalTransform = projectLocationActive.GetTotalTransform().Inverse
-    nBasisX = get_point_as_doubles(totalTransform.BasisX)
-    nBasisY = get_point_as_doubles(totalTransform.BasisY)
-    nBasisZ = get_point_as_doubles(totalTransform.BasisZ)
-    nOrigin = get_point_as_doubles(totalTransform.Origin)
+    # include_z, or only x and y of each basis vector come back and the matrix is 3 x 2
+    # rather than the 3 x 3 this claims to return. A coordinate system which is rotated
+    # about anything other than Z then transforms points wrongly, silently.
+    nBasisX = get_point_as_doubles(totalTransform.BasisX, include_z=True)
+    nBasisY = get_point_as_doubles(totalTransform.BasisY, include_z=True)
+    nBasisZ = get_point_as_doubles(totalTransform.BasisZ, include_z=True)
+    nOrigin = get_point_as_doubles(totalTransform.Origin, include_z=True)
     return [nBasisX, nBasisY, nBasisZ], nOrigin
 
 

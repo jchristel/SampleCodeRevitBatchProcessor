@@ -66,17 +66,7 @@ class Matrix(Base):
         if j is not None:
             self._init_from_json(j)
         else:
-            if not isinstance(rows, int):
-                raise TypeError(
-                    "rows must be of type int, got {} instead.".format(type(rows))
-                )
-            if not isinstance(cols, int):
-                raise TypeError(
-                    "cols must be of type int, got {} instead.".format(type(cols))
-                )
-
-            if rows < 1 or cols < 1 or rows > 4 or cols > 4:
-                raise ValueError("Matrix dimensions must be between 1 and 4.")
+            self._validate_dimensions(rows, cols)
 
             self._rows = rows
             self._columns = cols
@@ -104,8 +94,16 @@ class Matrix(Base):
             elif not isinstance(json_string, dict):
                 raise TypeError("Input must be a JSON string or a dictionary.")
 
-            self._rows = json_string.get(GeometryPropertyNames.ROWS, 0)
-            self._columns = json_string.get(GeometryPropertyNames.COLUMNS, 0)
+            rows = json_string.get(GeometryPropertyNames.ROWS, 0)
+            columns = json_string.get(GeometryPropertyNames.COLUMNS, 0)
+
+            # the same checks the direct constructor applies. Without them json could
+            # build matrices the class does not support at all - a 0 x 0 from missing
+            # keys, or anything larger than the 4 x 4 limit.
+            self._validate_dimensions(rows, columns)
+
+            self._rows = rows
+            self._columns = columns
 
             elements_from_json = json_string.get(
                 GeometryPropertyNames.DATA,
@@ -116,6 +114,33 @@ class Matrix(Base):
             )  # Validate after loading from JSON
         except Exception as e:
             raise ValueError("Invalid JSON input: {}".format(e))
+
+    @staticmethod
+    def _validate_dimensions(rows, cols):
+        """
+        Checks a row and column count is something this class supports.
+
+        Shared by both construction paths, so json cannot build a matrix the direct
+        constructor would refuse.
+
+        :param rows: Number of rows.
+        :type rows: int
+        :param cols: Number of columns.
+        :type cols: int
+        :raises TypeError: Thrown if rows or cols is not an integer.
+        :raises ValueError: Thrown if either falls outside 1 to 4.
+        """
+
+        if not isinstance(rows, int):
+            raise TypeError(
+                "rows must be of type int, got {} instead.".format(type(rows))
+            )
+        if not isinstance(cols, int):
+            raise TypeError(
+                "cols must be of type int, got {} instead.".format(type(cols))
+            )
+        if rows < 1 or cols < 1 or rows > 4 or cols > 4:
+            raise ValueError("Matrix dimensions must be between 1 and 4.")
 
     def _validate_elements(self, elements):
         """Validate that the elements are all floats."""
@@ -129,7 +154,12 @@ class Matrix(Base):
                 if not isinstance(value, (float, int)):  # Allow both float and int
                     raise TypeError("All elements must be of type float or int.")
 
-        self._data = elements
+        # a COPY, not the list which was passed in. Storing the caller's list left them
+        # holding a live reference into the matrix, so changing their own list after
+        # construction silently rewrote it - from outside the class entirely, past the
+        # validation above and past __setitem__. One row deep is enough, the values
+        # themselves being numbers.
+        self._data = [list(row) for row in elements]
 
     @property
     def rows(self):
@@ -152,7 +182,9 @@ class Matrix(Base):
     def __setitem__(self, idx, value):
         if len(value) != self.columns:
             raise ValueError("Row must have exactly {} elements.".format(self.columns))
-        self._data[idx] = value
+        # copied for the same reason as in _validate_elements: assigning the caller's
+        # list would hand them a live reference into the matrix through this door
+        self._data[idx] = list(value)
 
     def __add__(self, other):
         if not isinstance(other, Matrix):
@@ -192,6 +224,8 @@ class Matrix(Base):
         return not (self == other)
 
     def __hash__(self):
-        # Convert self._data to a tuple of tuples for hashing
-        data_as_tuple = tuple(tuple(row) for row in self._data)
-        return hash((self.rows, self.columns, data_as_tuple))
+        # the element values are deliberately left out. __eq__ compares them with a
+        # tolerance, so two matrices can be equal while their elements differ, and a
+        # hash built from those elements lets a set keep two entries which compare
+        # equal to each other. The shape is exact under __eq__, so it can take part.
+        return hash((type(self).__name__, self.rows, self.columns))

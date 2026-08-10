@@ -100,12 +100,22 @@ class Vector3(VectorBase):
         return "Vector3D({}, {}, {})".format(self.x, self.y, self.z)
     
     def __eq__(self, other):
+        # anything which is not a Vector3 is simply not equal to one. Raising here, as
+        # this used to, meant an ordinary comparison against None or a string brought
+        # the caller down, and took "is this vector in that list" with it.
         if not isinstance(other, Vector3):
-            raise TypeError("Expected vector3, got: {}".format(type(other).__name__))
-        return is_close(self.x, other.x) and is_close(self.y, other.y) and is_close(self.z, other.z)
-    
+            return NotImplemented
+        return (
+            is_close(self.x, other.x)
+            and is_close(self.y, other.y)
+            and is_close(self.z, other.z)
+        )
+
     def __ne__(self, other):
-        return not self.__eq__(other)
-    
+        # via the == operator, so an unrelated type answers True rather than raising
+        return not (self == other)
+
     def __hash__(self):
-        return hash((self.x, self.y, self.z))
+        # constant per type - see VectorBase.__hash__ for why a component based hash
+        # cannot be made to agree with a tolerant __eq__
+        return hash(type(self).__name__)

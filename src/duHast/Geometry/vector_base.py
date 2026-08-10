@@ -83,11 +83,22 @@ class VectorBase(Base):
     def __eq__(self, other):
         if not isinstance(other, VectorBase):
             return NotImplemented
-        self._check_dimension_compatibility(other)
+        # a 2D and a 3D vector are not equal, which is an ANSWER rather than an error.
+        # _check_dimension_compatibility raises, which is right for arithmetic - there
+        # is no sensible sum of a 2D and a 3D vector - but asking whether two objects
+        # are equal must never blow up.
+        if len(self.components) != len(other.components):
+            return False
         return all(is_close(a, b) for a, b in zip(self.components, other.components))
-    
+
     def __ne__(self, other):
-        return not self.__eq__(other)
-    
+        # via the == operator rather than __eq__ directly: calling __eq__ by hand
+        # returns NotImplemented for an unrelated type, and negating that raises.
+        return not (self == other)
+
     def __hash__(self):
-        return hash(self.components)
+        # constant per type. __eq__ compares with a tolerance, so equal vectors can
+        # hold differing components, and any hash built from those components lets a
+        # set keep two entries which compare equal. Under a relative tolerance no
+        # component based hash can avoid that, so none is used.
+        return hash(type(self).__name__)

@@ -34,7 +34,7 @@ from duHast.Utilities.compare import is_close
 
 
 class BoundingBox3(BoundingBoxBase):
-    def __init__(self, point1=None, point2=None, j=None):
+    def __init__(self, point1=None, point2=None, j=None, **kwargs):
         """
         A 3D bounding box class.
 
@@ -50,10 +50,23 @@ class BoundingBox3(BoundingBoxBase):
         """
 
         # ini super with json field
-        super(BoundingBox3, self).__init__(j=j)
+        super(BoundingBox3, self).__init__(j=j, **kwargs)
+
+        # the base class only defaults the x and y extents, being 2D
+        self._min_z = 0.0
+        self._max_z = 0.0
 
         # check first if a json string / dictionary is provided
         if j:
+            # the base class validates the x and y keys only, so the z keys have to be
+            # checked here. Without this the lookups below raise a bare KeyError rather
+            # than saying what is actually wrong with the json.
+            if (
+                GeometryPropertyNames.MIN_Z not in self.json_ini
+                or GeometryPropertyNames.MAX_Z not in self.json_ini
+            ):
+                raise ValueError("JSON must contain 'min_z' and 'max_z' keys.")
+
             point1 = Point3(
                 x=self.json_ini[GeometryPropertyNames.MIN_X],
                 y=self.json_ini[GeometryPropertyNames.MIN_Y],
@@ -65,28 +78,17 @@ class BoundingBox3(BoundingBoxBase):
                 z=self.json_ini[GeometryPropertyNames.MAX_Z],
             )
 
-        # If both point1 and point2 are None after handling JSON, raise an error
-        if point1 is None or point2 is None:
+        # Supplying neither point is allowed and leaves the box at its zero default,
+        # matching BoundingBox2. Supplying only ONE is a mistake.
+        if (point1 is None) != (point2 is None):
             raise ValueError(
-                "Either two Point2 instances or a JSON string with point data needs to be provided."
+                "Both point1 and point2 must be provided, or neither. Got point1={}, point2={}.".format(
+                    type(point1), type(point2)
+                )
             )
 
-        # some type checking
-        if not isinstance(point1, Point3):
-            raise TypeError(
-                "point1 expected Point3 instance. Got {} instead.".format(type(point1))
-            )
-        if not isinstance(point2, Point3):
-            raise TypeError(
-                "point3 expected Point3 instance. Got {} instead.".format(type(point1))
-            )
-
-        self._min_x = min(point1.x, point2.x)
-        self._max_x = max(point1.x, point2.x)
-        self._min_y = min(point1.y, point2.y)
-        self._max_y = max(point1.y, point2.y)
-        self._min_z = min(point1.z, point2.z)
-        self._max_z = max(point1.z, point2.z)
+        if point1 is not None and point2 is not None:
+            self.update(point1=point1, point2=point2)
 
     @property
     def min_z(self):
@@ -116,11 +118,11 @@ class BoundingBox3(BoundingBoxBase):
         # Type checking
         if not isinstance(point1, Point3):
             raise TypeError(
-                "point1 expected Point2 instance. Got {} instead.".format(type(point1))
+                "point1 expected Point3 instance. Got {} instead.".format(type(point1))
             )
         if not isinstance(point2, Point3):
             raise TypeError(
-                "point2 expected Point2 instance. Got {} instead.".format(type(point2))
+                "point2 expected Point3 instance. Got {} instead.".format(type(point2))
             )
 
         self._min_x = min(point1.x, point2.x)
@@ -184,9 +186,10 @@ class BoundingBox3(BoundingBoxBase):
         )
 
     def __ne__(self, other):
-        return not self.__eq__(other)
+        # via the == operator, so an unrelated type answers True rather than raising
+        return not (self == other)
 
     def __hash__(self):
-        return hash(
-            (self.min_x, self.max_x, self.min_y, self.max_y, self.min_z, self.max_z)
-        )
+        # constant per type - see BoundingBoxBase.__hash__ for why an extent based
+        # hash cannot be made to agree with a tolerant __eq__
+        return hash(type(self).__name__)

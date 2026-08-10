@@ -96,13 +96,19 @@ class Vector2(VectorBase):
         """
         Compares two 2D vectors using is_close() function.
 
+        Anything which is not a Vector2 is simply not equal to one. Raising here, as
+        this used to, meant an ordinary comparison against None or a string brought
+        the caller down, and took "is this vector in that list" with it.
         """
         if not isinstance(other, Vector2):
-            raise TypeError("Expected vector2, got: {}".format(type(other).__name__))
+            return NotImplemented
         return is_close(self.x, other.x) and is_close(self.y, other.y)
-    
+
     def __ne__(self, other):
-        return not self.__eq__(other)
-    
+        # via the == operator, so an unrelated type answers True rather than raising
+        return not (self == other)
+
     def __hash__(self):
-        return hash((self.x, self.y))
+        # constant per type - see VectorBase.__hash__ for why a component based hash
+        # cannot be made to agree with a tolerant __eq__
+        return hash(type(self).__name__)

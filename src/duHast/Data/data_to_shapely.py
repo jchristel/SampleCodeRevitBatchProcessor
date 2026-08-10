@@ -72,19 +72,34 @@ def get_translation_matrix(geometry_object):
     if not HAS_NUMPY:
         raise ImportError("Numpy is not available.")
     
-    translation_matrix = []  # translation only matrix
     # note numpy creates arrays by row!
-    # need to append one more row since matrix dot multiplication rule:
+    # need to append one more column since matrix dot multiplication rule:
     # number of columns in first matrix must match number of rows in second matrix (point later on)
-    for vector in geometry_object.rotation_coord:
-        vector.append(0.0)
-        translation_matrix.append(vector)
-    rotation_matrix = geometry_object.translation_coord  # rotation matrix
-    # adding extra row here
-    rotation_matrix.append(1.0)
-    translation_matrix.append(rotation_matrix)
+    #
+    # rotation_coord is a Matrix and translation_coord a Point3. Both are READ here and
+    # nothing is written back: the previous version appended to the object's own lists,
+    # so calling this twice on one geometry object grew the matrix each time and
+    # produced a different answer on every call.
+    rotation_rows = [list(row) for row in geometry_object.rotation_coord.data]
+    # pad a legacy 3 x 2 rotation out to 3 x 3. Exports made while the z component of
+    # each basis vector was being dropped hold two values per row, which would leave
+    # the rows shorter than the translation row below and the array ragged.
+    for row in rotation_rows:
+        while len(row) < 3:
+            row.append(0.0)
+
+    rows = [row + [0.0] for row in rotation_rows]
+    rows.append(
+        [
+            geometry_object.translation_coord.x,
+            geometry_object.translation_coord.y,
+            geometry_object.translation_coord.z,
+            1.0,
+        ]
+    )
+
     # build combined rotation and translation matrix
-    combined_matrix = np.array(translation_matrix)
+    combined_matrix = np.array(rows)
     # transpose matrix (translation matrix in json file is stored by columns not by rows!)
     combined_matrix = np.transpose(combined_matrix)
     return combined_matrix

@@ -124,7 +124,13 @@ class BoundingBoxBase(Base):
                 is_close(self.max_y, other.max_y))
 
     def __ne__(self, other):
-        return not self.__eq__(other)
-    
+        # via the == operator rather than __eq__ directly: calling __eq__ by hand
+        # returns NotImplemented for an unrelated type, and negating that raises.
+        return not (self == other)
+
     def __hash__(self):
-        return hash((self.min_x, self.max_x, self.min_y, self.max_y))
+        # constant per type. __eq__ compares with a tolerance, so two boxes can be
+        # equal while their extents differ, and a hash built from those extents lets a
+        # set keep two entries which compare equal to each other. Under a relative
+        # tolerance no extent based hash can avoid that, so none is used.
+        return hash(type(self).__name__)

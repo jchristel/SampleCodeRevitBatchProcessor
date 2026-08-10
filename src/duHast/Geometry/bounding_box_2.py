@@ -63,8 +63,18 @@ class BoundingBox2(BoundingBoxBase):
                 y=self.json_ini[GeometryPropertyNames.MAX_Y],
             )
 
-        # If both point1 and point2 are provided update the bounding box
-        if point1 and point2:
+        # Supplying neither point is allowed and leaves the box at its zero default:
+        # DataGeometryBoundingBox2 relies on that to construct an empty instance.
+        # Supplying only ONE is a mistake, and used to pass silently, leaving a zero
+        # sized box which contains() would then answer questions about.
+        if (point1 is None) != (point2 is None):
+            raise ValueError(
+                "Both point1 and point2 must be provided, or neither. Got point1={}, point2={}.".format(
+                    type(point1), type(point2)
+                )
+            )
+
+        if point1 is not None and point2 is not None:
             # set the bounding box
             self.update(point1=point1, point2=point2)
 
@@ -154,7 +164,10 @@ class BoundingBox2(BoundingBoxBase):
         )
 
     def __ne__(self, other):
-        return not self.__eq__(other)
+        # via the == operator, so an unrelated type answers True rather than raising
+        return not (self == other)
 
     def __hash__(self):
-        return hash((self.min_x, self.max_x, self.min_y, self.max_y))
+        # constant per type - see BoundingBoxBase.__hash__ for why an extent based
+        # hash cannot be made to agree with a tolerant __eq__
+        return hash(type(self).__name__)

@@ -29,7 +29,9 @@ Revit Geometry to data geometry conversion helper functions.
 
 from duHast.Data.Objects.Collectors.Properties.Geometry import geometry_polygon_2 as dGeometryPoly
 from duHast.Geometry.bounding_box_2 import BoundingBox2
+from duHast.Geometry.matrix import Matrix
 from duHast.Geometry.point_2 import Point2
+from duHast.Geometry.point_3 import Point3
 from duHast.Revit.Common.Geometry import geometry as rGeo, solids as rSolid
 from duHast.Revit.Common.Geometry.points import get_point_as_doubles
 from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
@@ -64,11 +66,19 @@ def convert_xyz_in_data_geometry_polygons(doc, dgObject):
         inner_loops.append(inner_loop_points)
     data_geometry.outer_loop = outer_loop
     data_geometry.inner_loops = inner_loops
-    # add coordinate system translation and rotation data
-    (
-        data_geometry.rotation_coord,
-        data_geometry.translation_coord,
-    ) = rGeo.get_coordinate_system_translation_and_rotation(doc)
+    # add coordinate system translation and rotation data.
+    #
+    # Stored as the Matrix and Point3 the data class declares, NOT as the raw lists
+    # returned here. Assigning the lists straight through produced json the class could
+    # not read back - Matrix and Point3 are both built from a dictionary - so every
+    # exported polygon failed to reconstruct at this field.
+    rotation, translation = rGeo.get_coordinate_system_translation_and_rotation(doc)
+    data_geometry.rotation_coord = Matrix(
+        rows=len(rotation), cols=len(rotation[0]), elements=rotation
+    )
+    data_geometry.translation_coord = Point3(
+        x=float(translation[0]), y=float(translation[1]), z=float(translation[2])
+    )
     return data_geometry
 
 

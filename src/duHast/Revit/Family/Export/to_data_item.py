@@ -41,6 +41,7 @@ from Autodesk.Revit.DB import (
 from duHast.Data.Objects.Collectors import data_item as dItem
 from duHast.Data.Objects.Collectors.Properties.Geometry import geometry_base
 from duHast.Data.Objects.Collectors.Properties.data_level import DataLevel
+from duHast.Geometry.matrix import Matrix
 from duHast.Revit.Common.Geometry.points import (
     convert_XYZ_to_point3,
     get_point_as_doubles,
@@ -115,12 +116,16 @@ def get_location_data(revit_family_instance):
     # BasisX / BasisY / BasisZ are unit vectors in world space describing how
     # the family's local axes are oriented. Together they form the 3x3 rotation
     # matrix that can be used to reconstruct the instance's facing direction.
+    #
+    # Stored as the Matrix the data class declares. A plain list of lists wrote json
+    # which could not be read back, since Matrix is built from a dictionary.
     transform = revit_family_instance.GetTransform()
-    loc_point.rotation_coord = [
+    basis_vectors = [
         get_point_as_doubles(transform.BasisX, include_z=True),
         get_point_as_doubles(transform.BasisY, include_z=True),
         get_point_as_doubles(transform.BasisZ, include_z=True),
     ]
+    loc_point.rotation_coord = Matrix(rows=3, cols=3, elements=basis_vectors)
 
     return loc_point
 

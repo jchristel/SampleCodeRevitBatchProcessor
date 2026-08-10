@@ -63,12 +63,20 @@ class Point3(PointBase):
         self.z = z
     
     def __eq__(self, other):
-        if not isinstance(other,Point3):
+        # exact type, so a Point3 is never equal to a Point2 sharing its x and y
+        if type(other) is not type(self):
             return NotImplemented
-        return is_close(self.x, other.x) and is_close(self.y, other.y)and is_close(self.z, other.z)
-    
+        return (
+            is_close(self.x, other.x)
+            and is_close(self.y, other.y)
+            and is_close(self.z, other.z)
+        )
+
     def __ne__(self, other):
-        return not self.__eq__(other)
-    
+        # via the == operator, so an unrelated type answers True rather than raising
+        return not (self == other)
+
     def __hash__(self):
-        return hash((self.x, self.y, self.z))
+        # constant per type - see PointBase.__hash__ for why a coordinate based hash
+        # cannot be made to agree with a tolerant __eq__
+        return hash(type(self).__name__)

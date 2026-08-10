@@ -76,20 +76,100 @@ class DataGeometryBase(data_base.DataBase):
                 # check if we got None back...if so use what is the default
                 # since a point can be initialized with None
                 if translation_coord is not None:
-                    self.translation_coord = Point3(j=translation_coord)
+                    self.translation_coord = self._translation_from_json(
+                        translation_coord
+                    )
 
                 rotation_coord = json_var.get(
                     DataPropertyNames.ROTATION_COORDINATES, None
                 )
                 # check if we got None back...if so use what is the default
-                # since a matrix ini from an empty dictionary got 0 x 0 size, meanwhile our default is 3 x 3
                 if rotation_coord is not None:
-                    self.rotation_coord = Matrix(j=rotation_coord)
+                    self.rotation_coord = self._rotation_from_json(rotation_coord)
 
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
+
+    @staticmethod
+    def _translation_from_json(value):
+        """
+        Builds the translation point from json.
+
+        Accepts the dictionary a Point3 serialises to, and the bare [x, y] or
+        [x, y, z] list older exports wrote here. Data holding the list form could not
+        be read back at all until now, since Point3 is built from a dictionary.
+
+        :param value: The stored translation.
+        :type value: dict | list | tuple
+
+        :return: The translation as a point.
+        :rtype: :class:`.Point3`
+        """
+
+        if isinstance(value, dict):
+            return Point3(j=value)
+
+        if isinstance(value, (list, tuple)):
+            if len(value) < 2:
+                raise ValueError(
+                    "Translation needs at least an x and a y value, got {}.".format(
+                        len(value)
+                    )
+                )
+            # older exports dropped z, so it defaults rather than failing
+            return Point3(
+                x=float(value[0]),
+                y=float(value[1]),
+                z=float(value[2]) if len(value) > 2 else 0.0,
+            )
+
+        raise TypeError(
+            "Translation must be a dictionary, list or tuple. Got {} instead.".format(
+                type(value)
+            )
+        )
+
+    @staticmethod
+    def _rotation_from_json(value):
+        """
+        Builds the rotation matrix from json.
+
+        Accepts the dictionary a Matrix serialises to, and the list of rows older
+        exports wrote here. Data holding the list form could not be read back at all
+        until now, since Matrix is built from a dictionary. Rows of two are accepted
+        as well as three, because exports made while the z component was being dropped
+        hold a 3 x 2.
+
+        :param value: The stored rotation.
+        :type value: dict | list | tuple
+
+        :return: The rotation as a matrix.
+        :rtype: :class:`.Matrix`
+        """
+
+        if isinstance(value, dict):
+            return Matrix(j=value)
+
+        if isinstance(value, (list, tuple)):
+            if len(value) == 0 or not isinstance(value[0], (list, tuple)):
+                raise ValueError(
+                    "Rotation as a list must hold one list per row, got {}.".format(
+                        value
+                    )
+                )
+            return Matrix(
+                rows=len(value),
+                cols=len(value[0]),
+                elements=[list(row) for row in value],
+            )
+
+        raise TypeError(
+            "Rotation must be a dictionary, list or tuple. Got {} instead.".format(
+                type(value)
+            )
+        )
 
     def __eq__(self, other):
         if not isinstance(other, DataGeometryBase):

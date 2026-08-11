@@ -33,7 +33,12 @@ class DataPropertyNames():
     Contains property names used in data storage classes
     """
 
+    AREA = "area"
     ASSOCIATED_ELEMENTS = "associated_elements"
+    CEILING = "ceiling"
+    CEILINGS = "ceilings"
+    FLOOR = "floor"
+    FLOORS = "floors"
     FROM_ROOM = "from_room"
     BOUNDING_BOX = "bounding_box"
     BOUNDING_BOX_MAX_Z = "bounding_box_max_z"

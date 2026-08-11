@@ -35,6 +35,8 @@ from duHast.Data.Objects.Collectors.Properties import data_level
 from duHast.Data.Objects.Collectors.Properties import data_instance_properties
 from duHast.Data.Objects.Collectors.Properties import data_revit_model
 from duHast.Data.Objects.Collectors import data_base
+from duHast.Data.Objects.Collectors import data_ceiling_in_room
+from duHast.Data.Objects.Collectors import data_floor_in_room
 from duHast.Data.Objects.Collectors.Properties import data_element_geometry_base
 from duHast.Data.Objects.Collectors.Properties.data_property_names import (
     DataPropertyNames,
@@ -58,10 +60,10 @@ class DataRoom(data_base.DataBase, data_element_geometry_base.DataElementGeometr
         # initialise classes with default values
         self.associated_elements = []
         #: List of :class:`.DataCeilingInRoom` instances - populated at runtime by
-        #: ``process_ceilings_to_rooms``. Not persisted to / loaded from JSON.
+        #: ``process_ceilings_to_rooms``, then persisted to and loaded from JSON.
         self.ceilings = []
         #: List of :class:`.DataFloorInRoom` instances - populated at runtime by
-        #: ``process_floors_to_rooms``. Not persisted to / loaded from JSON.
+        #: ``process_floors_to_rooms``, then persisted to and loaded from JSON.
         self.floors = []
         self.instance_properties = data_instance_properties.DataInstanceProperties()
         self.level = data_level.DataLevel()
@@ -111,6 +113,18 @@ class DataRoom(data_base.DataBase, data_element_geometry_base.DataElementGeometr
                 self.phasing = data_phasing.DataPhasing(
                     json_var.get(data_phasing.DataPhasing.data_type, None)
                 )
+
+                # ceilings and floors in this room. These are written out with the
+                # room, being ordinary public properties, but used to be dropped on the
+                # way back in - a room which had been through the ceiling or floor
+                # processors lost that work as soon as it was read from json again.
+                for ceiling in json_var.get(DataPropertyNames.CEILINGS, []):
+                    self.ceilings.append(
+                        data_ceiling_in_room.DataCeilingInRoom(j=ceiling)
+                    )
+
+                for floor in json_var.get(DataPropertyNames.FLOORS, []):
+                    self.floors.append(data_floor_in_room.DataFloorInRoom(j=floor))
 
                 # get associated elements
                 associated_elements = json_var.get(

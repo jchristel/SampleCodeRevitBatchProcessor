@@ -83,9 +83,6 @@ class Vector3(VectorBase):
 
     def __neg__(self):
         return Vector3(*(-v for v in self.components))
-    
-    def __str__(self):
-        return "Vector3D({}, {}, {})".format(self.x, self.y, self.z)
 
     def __mul__(self, s):
         return Vector3(*(v * s for v in self.components))

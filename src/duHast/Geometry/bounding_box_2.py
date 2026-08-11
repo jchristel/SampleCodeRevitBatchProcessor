@@ -52,8 +52,9 @@ class BoundingBox2(BoundingBoxBase):
         # ini super with json field
         super(BoundingBox2, self).__init__(j=j, **kwargs)
 
-        # check first if a json string / dictionary is provided
-        if j:
+        # check first if a json string / dictionary is provided.
+        # None rather than truthiness, matching the base class
+        if j is not None:
             point1 = Point2(
                 x=self.json_ini[GeometryPropertyNames.MIN_X],
                 y=self.json_ini[GeometryPropertyNames.MIN_Y],
@@ -133,20 +134,8 @@ class BoundingBox2(BoundingBoxBase):
         """
         return self.max_y - self.min_y
     
-    def ratio(self):
-        """
-        The length ration of the bounding box edges by dividing length in X by length in Y direction
-
-        Raises:
-            ValueError: Division by 0 if length of Y is 0
-
-        Returns:
-            float: Edge ration
-        """
-        if self.depth() != 0.0:
-            return self.width()/self.depth()
-        else:
-            raise ValueError("Can not calculate ratio since depth is 0.0 and division by 0.0 is not allowed.")
+    # ratio() comes from BoundingBoxBase: the calculation only needs width() and
+    # depth(), so both the 2D and the 3D box can share one implementation
 
     def __str__(self):
         return "BoundingBox2D({}, {}, {}, {})".format(

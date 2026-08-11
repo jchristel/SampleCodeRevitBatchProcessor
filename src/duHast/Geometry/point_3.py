@@ -47,8 +47,10 @@ class Point3(PointBase):
         # ini super class to allow multi inheritance in children!
         super(Point3, self).__init__(x=x, y=y, j=j)
 
-        # check first if a json string / dictionary is provided
-        if j:
+        # check first if a json string / dictionary is provided.
+        # None rather than truthiness, so an empty dictionary is reported as json with
+        # missing keys rather than silently leaving z unset
+        if j is not None:
             # Validate presence of required keys (stored in base class json)
             if GeometryPropertyNames.Z not in self.json_ini:
                 raise ValueError("JSON must contain 'z' key.")

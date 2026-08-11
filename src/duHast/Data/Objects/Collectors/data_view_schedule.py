@@ -89,7 +89,7 @@ class DataViewSchedule(DataViewBase):
             # attempt to populate from json
             try:
                 self.bounding_box = DataGeometryBoundingBox2(
-                    json_var.get(DataPropertyNames.BOUNDING_BOX, {})
+                    json_var.get(DataPropertyNames.BOUNDING_BOX, None)
                 )
 
                 self.total_number_of_rows = json_var.get(

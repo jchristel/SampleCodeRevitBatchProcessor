@@ -46,8 +46,12 @@ class PointBase(base.Base):
         # ini super class to allow multi inheritance in children!
         super(PointBase, self).__init__()
 
-        # Check if a JSON string / dictionary is provided
-        if j:
+        # Check if a JSON string / dictionary is provided.
+        # Tested against None rather than for truthiness: an EMPTY dictionary is json
+        # which is missing its keys, not json which was never supplied, and it needs to
+        # reach the check below and be reported as such. Skipping it left x and y unset
+        # and the failure surfaced as "x expected float. Got NoneType" instead.
+        if j is not None:
             if isinstance(j, str):
                 # Parse the JSON string
                 j = json.loads(j)

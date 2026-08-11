@@ -97,7 +97,7 @@ class DataSheetViewPort(data_base.DataBase):
             try:
 
                 self.bounding_box = DataGeometryBoundingBox2(
-                    json_var.get(DataPropertyNames.BOUNDING_BOX, {})
+                    json_var.get(DataPropertyNames.BOUNDING_BOX, None)
                 )
                 self.vp_type = json_var.get(
                     DataPropertyNames.VIEW_PORT_TYPE, self.vp_type

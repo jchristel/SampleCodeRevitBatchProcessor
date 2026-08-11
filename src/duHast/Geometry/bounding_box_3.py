@@ -56,8 +56,9 @@ class BoundingBox3(BoundingBoxBase):
         self._min_z = 0.0
         self._max_z = 0.0
 
-        # check first if a json string / dictionary is provided
-        if j:
+        # check first if a json string / dictionary is provided.
+        # None rather than truthiness, matching the base class
+        if j is not None:
             # the base class validates the x and y keys only, so the z keys have to be
             # checked here. Without this the lookups below raise a bare KeyError rather
             # than saying what is actually wrong with the json.

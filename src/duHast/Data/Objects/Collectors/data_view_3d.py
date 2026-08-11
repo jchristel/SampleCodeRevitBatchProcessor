@@ -89,17 +89,24 @@ class DataViewThreeD(DataViewBase):
                     json_var.get(DataPropertyNames.BOUNDING_BOX, None)
                 )
 
-                self.eye_position = Point3(
-                    j=json_var.get(DataPropertyNames.EYE_POSITION, None)
-                )
+                # each of these is optional: the class defaults them to None and writes
+                # them out as null, so the stored value has to be checked before a
+                # Point3 is built from it. Building one unconditionally meant a view
+                # saved with its directions unset could never be read back in - the
+                # point rejected the None and the whole view failed to initialise.
+                eye_position = json_var.get(DataPropertyNames.EYE_POSITION, None)
+                if eye_position is not None:
+                    self.eye_position = Point3(j=eye_position)
 
-                self.forward_direction = Point3(
-                    j=json_var.get(DataPropertyNames.FORWARD_DIRECTION, None)
+                forward_direction = json_var.get(
+                    DataPropertyNames.FORWARD_DIRECTION, None
                 )
+                if forward_direction is not None:
+                    self.forward_direction = Point3(j=forward_direction)
 
-                self.up_direction = Point3(
-                    j=json_var.get(DataPropertyNames.UP_DIRECTION, None)
-                )
+                up_direction = json_var.get(DataPropertyNames.UP_DIRECTION, None)
+                if up_direction is not None:
+                    self.up_direction = Point3(j=up_direction)
 
 
             except Exception as e:

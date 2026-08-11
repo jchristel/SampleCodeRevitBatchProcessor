@@ -92,9 +92,13 @@ class DataViewElevation(DataViewBase):
 
                 self.marker_index = json_var.get(DataPropertyNames.MARKER_INDEX, None)
 
-                self.view_direction = Point3(
-                    j=json_var.get(DataPropertyNames.VIEW_DIRECTION, None)
-                )
+                # optional: the class defaults it to None and writes it out as null, so
+                # the stored value has to be checked before a Point3 is built from it.
+                # Building one unconditionally meant an elevation saved with no view
+                # direction could never be read back in.
+                view_direction = json_var.get(DataPropertyNames.VIEW_DIRECTION, None)
+                if view_direction is not None:
+                    self.view_direction = Point3(j=view_direction)
 
                 # get any tags
                 tags = json_var.get(DataPropertyNames.TAGS, [])

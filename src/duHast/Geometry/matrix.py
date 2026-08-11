@@ -88,32 +88,39 @@ class Matrix(Base):
         :raises ValueError: Input must be a JSON string or a dictionary
         """
 
-        try:
-            if isinstance(json_string, str):
+        # only a genuine parse failure is reported as invalid json. Wrapping the whole
+        # method and re-raising everything as ValueError, as this used to, relabelled
+        # the TypeErrors raised below - so a matrix given something which was not a
+        # dictionary at all, or elements of the wrong type, reported the same class of
+        # error as malformed json.
+        if isinstance(json_string, str):
+            try:
                 json_string = json.loads(json_string)
-            elif not isinstance(json_string, dict):
-                raise TypeError("Input must be a JSON string or a dictionary.")
-
-            rows = json_string.get(GeometryPropertyNames.ROWS, 0)
-            columns = json_string.get(GeometryPropertyNames.COLUMNS, 0)
-
-            # the same checks the direct constructor applies. Without them json could
-            # build matrices the class does not support at all - a 0 x 0 from missing
-            # keys, or anything larger than the 4 x 4 limit.
-            self._validate_dimensions(rows, columns)
-
-            self._rows = rows
-            self._columns = columns
-
-            elements_from_json = json_string.get(
-                GeometryPropertyNames.DATA,
-                [[0.0 for _ in range(self._columns)] for _ in range(self._rows)],
+            except ValueError as e:
+                raise ValueError("Invalid JSON input: {}".format(e))
+        elif not isinstance(json_string, dict):
+            raise TypeError(
+                "Input must be a JSON string or a dictionary. Got {} instead.".format(
+                    type(json_string)
+                )
             )
-            self._validate_elements(
-                elements_from_json
-            )  # Validate after loading from JSON
-        except Exception as e:
-            raise ValueError("Invalid JSON input: {}".format(e))
+
+        rows = json_string.get(GeometryPropertyNames.ROWS, 0)
+        columns = json_string.get(GeometryPropertyNames.COLUMNS, 0)
+
+        # the same checks the direct constructor applies. Without them json could
+        # build matrices the class does not support at all - a 0 x 0 from missing
+        # keys, or anything larger than the 4 x 4 limit.
+        self._validate_dimensions(rows, columns)
+
+        self._rows = rows
+        self._columns = columns
+
+        elements_from_json = json_string.get(
+            GeometryPropertyNames.DATA,
+            [[0.0 for _ in range(self._columns)] for _ in range(self._rows)],
+        )
+        self._validate_elements(elements_from_json)  # Validate after loading from JSON
 
     @staticmethod
     def _validate_dimensions(rows, cols):
@@ -203,6 +210,67 @@ class Matrix(Base):
                 for i in range(self.rows)
             ],
         )
+
+    def __mul__(self, other):
+        """
+        Multiplies this matrix by another matrix, or by a scalar.
+
+        Matrix by matrix follows the usual rule: the left matrix must have as many
+        columns as the right has rows, and the result is left rows by right columns.
+        Note that this is NOT commutative - a * b and b * a are different products,
+        and only one of them may even be a legal shape.
+
+        :param other: A matrix to multiply by, or a number to scale every element by.
+        :type other: :class:`.Matrix` | int | float
+
+        :raises IncompatibleMatrixDimensions: If the shapes cannot be multiplied.
+
+        :return: The product.
+        :rtype: :class:`.Matrix`
+        """
+
+        if isinstance(other, (int, float)):
+            return Matrix(
+                self.rows,
+                self.columns,
+                [[value * other for value in row] for row in self._data],
+            )
+
+        if not isinstance(other, Matrix):
+            return NotImplemented
+
+        if self.columns != other.rows:
+            raise IncompatibleMatrixDimensions(
+                "Can only multiply when the first matrix has as many columns as the second has rows. Got {} columns and {} rows.".format(
+                    self.columns, other.rows
+                ),
+                other,
+            )
+
+        product = [
+            [
+                sum(self._data[i][k] * other[k][j] for k in range(self.columns))
+                for j in range(other.columns)
+            ]
+            for i in range(self.rows)
+        ]
+        return Matrix(self.rows, other.columns, product)
+
+    def __rmul__(self, other):
+        """
+        Handles a scalar on the left, as in 2 * matrix.
+
+        Only scalars reach here: with a matrix on either side python calls __mul__ on
+        the left operand, which is the correct product for that ordering.
+
+        :param other: A number to scale every element by.
+        :type other: int | float
+
+        :return: The product.
+        :rtype: :class:`.Matrix`
+        """
+
+        return self.__mul__(other)
 
     def __str__(self):
         return "\n".join(["\t".join(map(str, row)) for row in self._data])

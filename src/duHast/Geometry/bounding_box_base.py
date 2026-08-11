@@ -32,6 +32,11 @@ from duHast.Utilities.Objects.base import Base
 from duHast.Geometry.geometry_property_names import GeometryPropertyNames
 from duHast.Utilities.compare import is_close
 
+#: A length at or below this counts as zero. Absolute, in the units of the box, since
+#: a relative comparison never reports a very small number as close to zero.
+ZERO_LENGTH_TOLERANCE = 1e-9
+
+
 class BoundingBoxBase(Base):
     def __init__(self, j=None, **kwargs):
         """
@@ -44,8 +49,12 @@ class BoundingBoxBase(Base):
         super(BoundingBoxBase, self).__init__(**kwargs)
 
         json_string=None
-        # Check if a JSON string / dictionary is provided
-        if j:
+        # Check if a JSON string / dictionary is provided.
+        # Tested against None rather than for truthiness: an EMPTY dictionary is json
+        # which is missing its keys, not json which was never supplied, and it needs to
+        # reach the check below and be reported as such rather than quietly leaving a
+        # zero sized box behind.
+        if j is not None:
             if isinstance(j, str):
                 # Parse the JSON string
                 json_string = json.loads(j)
@@ -108,8 +117,34 @@ class BoundingBoxBase(Base):
         raise NotImplementedError("Subclasses should implement this method")
     
     def ratio(self):
-        raise NotImplementedError("Subclasses should implement this method")
-        
+        """
+        The length ratio of the bounding box edges, dividing the length in X by the
+        length in Y.
+
+        Implemented here rather than per subclass, since it is the same calculation for
+        a 2D and a 3D box and only needs width() and depth() which the subclasses
+        provide. BoundingBox3 previously had no ratio at all and inherited a
+        NotImplementedError, while BoundingBox2 carried its own copy.
+
+        :raises ValueError: If the depth is zero, which would be a division by zero.
+
+        :return: Edge ratio.
+        :rtype: float
+        """
+
+        depth = self.depth()
+        # an ABSOLUTE tolerance is required here. is_close on its own compares
+        # relatively, so a depth of 1e-18 is not "close to" 0.0 by that measure and an
+        # exact != 0.0 test let it through to produce an enormous ratio.
+        if is_close(depth, 0.0, abs_tol=ZERO_LENGTH_TOLERANCE):
+            raise ValueError(
+                "Can not calculate ratio since depth is {} and division by 0.0 is not allowed.".format(
+                    depth
+                )
+            )
+        return self.width() / depth
+
+
     def __str__(self):
         return "BoundingBoxBase({}, {}, {}, {})".format(
             self.min_x, self.min_y, self.max_x, self.max_y

@@ -1,43 +1,67 @@
 # Swap Families
 
-**Panel:** Families | **Menu:** Rename > Swap (also accessible as SwapFamilies)
+**Panel:** Families | **Menu:** SwapFamilies
 
-Tools to replace instances of one family type with instances of another family type within the current Revit project.
+<img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/SwapFamilies.pulldown/Icon.png" width="40" alt="button icon">
 
----
+Tools to replace instances of one family type with another in the current project.
 
-## Swap By Directives
+All three report, as tables in the output window, the instances they could **not** swap:
 
-Swaps family instances based on a CSV file containing explicit swap instructions.
+| Table | Meaning |
+|---|---|
+| Host Families containing instances not swapped | Instances nested inside another family |
+| Host Groups containing instances not swapped | Instances inside a group |
 
-**CSV input:** A mapping of source family/type to target family/type. Each row defines one substitution rule.
-
-- Processes all eligible instances in the project matching the source type.
-- Reports any instances inside groups or as nested families that cannot be swapped automatically.
-
-**Use when:** You have a predefined list of substitutions to apply across a project, for example when updating a design from concept families to construction-issue families.
+Those need resolving by hand — swapping nested and grouped instances is not automated.
 
 ---
 
-## Swap By User Selection List
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/SwapFamilies.pulldown/Swap%20By%20Directives.pushbutton/Icon.png" width="24" alt="Swap By Directives icon"> Swap By Directives
 
-Swaps family instances using an interactive selection workflow.
+Swaps instances according to CSV instruction files.
 
-1. A dialog presents a list of family types loaded in the project; select the **source** type to replace.
-2. A second dialog presents available types; select the **target** type to use instead.
-3. All eligible instances of the source type are replaced with the target type.
+**You select a folder, not a file.** The tool searches it for files whose names begin with
+`SwapDirective` and end in `.csv`, and reads every directive it finds across all of them.
 
-Instances inside groups or nested families are reported but not swapped.
+**Directive file columns:**
+
+```
+Source Family Name, Source Family Category Name, Source Family Type Name,
+Target Family Name, Target Family Type Name
+```
+
+**Use when:** You have a predefined substitution list to apply across a project — for example
+moving from concept families to construction-issue families.
 
 ---
 
-## Swap By User Selection Pick
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/SwapFamilies.pulldown/Swap%20By%20User%20Selection%20List.pushbutton/Icon.png" width="24" alt="Swap By Selection icon"> Swap By Selection
 
-Similar to **Swap By User Selection List** but uses a pick-in-canvas interaction to identify the source instance before presenting the target type list.
+Swaps instances through two selection dialogs:
+
+1. Select the **source** family type to replace, from the types loaded in the project.
+2. Select the **target** type to use instead. The list is filtered to the source type's
+   category.
+3. All eligible instances of the source type are swapped.
+
+---
+
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/SwapFamilies.pulldown/Swap%20By%20User%20Selection%20Pick.pushbutton/Icon.png" width="24" alt="Swap By Picking icon"> Swap By Picking
+
+The same as **Swap By Selection**, except the source is identified by **picking an instance
+in the model** rather than choosing from a list. You then select the target type as before.
+
+Afterwards it offers to **save the swap you just performed as a `SwapDirective` CSV** through
+a save dialog. That file can be fed straight back into **Swap By Directives**, so a one-off
+pick can be recorded and replayed on other models.
 
 ---
 
 ## Notes
 
-- Nested families and families inside groups cannot be swapped automatically; resolve those manually.
-- Instance parameters are preserved where the parameter exists on the target type; type parameters are taken from the target type.
+- Instances nested in families or inside groups cannot be swapped automatically; they are
+  reported for manual attention.
+- Instance parameter values are preserved where the target type carries a parameter of the
+  same name. Type parameters come from the target type.
+- Progress is shown in a cancellable progress bar.

@@ -4,8 +4,6 @@ layout:
   - Delete Filters
   - ----------
   - Apply Graphic Overrides
-  - ----------
-  - Add And Apply Filter Overrides Views
 
 # bundle tooltip
 tooltip: Anything relating to view template settings

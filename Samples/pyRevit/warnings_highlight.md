@@ -2,13 +2,15 @@
 
 **Panel:** Warnings | **Menu:** Highlight Warnings
 
+<img src="Extensions/duHast-2025.extension/duHast.tab/Warnings.panel/Highlight%20Warnings.pulldown/Icon.png" width="40" alt="button icon">
+
 Six tools for finding area and room separation lines that carry warnings — two that report
 them model-wide as tables, two that colour them in the active view, and two that clear the
 colouring again.
 
 ---
 
-## Report Area Lines with Warnings
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Warnings.panel/Highlight%20Warnings.pulldown/Area%20Lines.pushbutton/Icon.png" width="24" alt="Report Area Lines with Warnings icon"> Report Area Lines with Warnings
 
 Prints a table of every area separation line in the **model** that has a warning attached,
 so you can find them. Nothing is selected, zoomed to or overridden.
@@ -26,7 +28,7 @@ The Area Views column tells you which view to open to reach the lines listed on 
 
 ---
 
-## Report Room Lines with Warnings
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Warnings.panel/Highlight%20Warnings.pulldown/Room%20Lines.pushbutton/Icon.png" width="24" alt="Report Room Lines with Warnings icon"> Report Room Lines with Warnings
 
 The same idea for room separation lines, grouped more finely.
 
@@ -41,7 +43,7 @@ Table: *Room separation lines with warnings by design set / option, level and ph
 
 ---
 
-## Highlight Area Lines with Warnings
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Warnings.panel/Highlight%20Warnings.pulldown/Highlight%20Area%20Lines.pushbutton/Icon.png" width="24" alt="Highlight Area Lines with Warnings icon"> Highlight Area Lines with Warnings
 
 Overrides the area separation lines that have warnings in the **active view**, setting their
 projection line colour to **red**.
@@ -52,7 +54,7 @@ are considered.
 
 ---
 
-## Highlight Room Lines with Warnings
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Warnings.panel/Highlight%20Warnings.pulldown/Highlight%20Room%20Lines.pushbutton/Icon.png" width="24" alt="Highlight Room Lines with Warnings icon"> Highlight Room Lines with Warnings
 
 The room separation line equivalent, also overriding to **red** in the active view.
 
@@ -68,9 +70,9 @@ which is worth reading if fewer lines light up than you expected.
 
 ---
 
-## Remove Highlight from Area Lines without Warnings
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Warnings.panel/Highlight%20Warnings.pulldown/Remove%20Highlight%20Area%20Lines.pushbutton/Icon.png" width="24" alt="Remove Highlight from Area Lines without Warnings icon"> Remove Highlight from Area Lines without Warnings
 
-## Remove Highlight from Room Lines without Warnings
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Warnings.panel/Highlight%20Warnings.pulldown/Remove%20Highlight%20Room%20Lines.pushbutton/Icon.png" width="24" alt="Remove Highlight from Room Lines without Warnings icon"> Remove Highlight from Room Lines without Warnings
 
 These do **not** clear every highlight. They remove the override from the lines that **no
 longer have warnings**, deliberately leaving the still-warning lines coloured.

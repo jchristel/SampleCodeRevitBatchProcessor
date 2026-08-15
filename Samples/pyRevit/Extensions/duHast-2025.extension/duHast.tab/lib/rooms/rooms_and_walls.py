@@ -64,8 +64,11 @@ def room_name_builder_ui(doc, element):
 
 def walls_to_rooms_entry(doc, output, forms):
     """
-    Compares reports from different libraries.
-    Reports need to be created by report_families_in_library function.
+    Writes the room number into a user selected parameter on the walls bounding each user
+    selected room.
+
+    Where a wall bounds more than one room, the room with the longest shared boundary segment
+    wins.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document

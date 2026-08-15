@@ -2,6 +2,8 @@
 
 **Panel:** PushIt | **Menu:** Stats
 
+<img src="Extensions/duHast-2025.extension/duHast.tab/PushIt.panel/Stats.pulldown/Icon.png" width="40" alt="button icon">
+
 Two reporting tools covering the mock room families in the current model. Both print tables
 to the pyRevit output window and change nothing in the model.
 
@@ -10,7 +12,7 @@ source configuration, and report on the family instances found in those categori
 
 ---
 
-## Stats
+## <img src="Extensions/duHast-2025.extension/duHast.tab/PushIt.panel/Stats.pulldown/StatsSimple.pushbutton/Icon.png" width="24" alt="Stats icon"> Stats
 
 Prints three tables:
 
@@ -31,7 +33,7 @@ created or currently owns them.
 
 ---
 
-## Stats By Design Set And Option
+## <img src="Extensions/duHast-2025.extension/duHast.tab/PushIt.panel/Stats.pulldown/IdsByDesignSetAndOption.pushbutton/Icon.png" width="24" alt="Stats By Design Set And Option icon"> Stats By Design Set And Option
 
 A data quality check, not a listing. It groups the mock rooms by their unique-ID parameter
 value and reports only the values that appear in **more than one design set** — instances

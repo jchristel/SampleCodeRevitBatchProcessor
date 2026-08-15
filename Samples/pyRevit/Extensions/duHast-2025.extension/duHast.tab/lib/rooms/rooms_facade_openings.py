@@ -53,7 +53,7 @@ from rooms.family_utils import get_window_families_by_host_id, window_area_insta
 
 from Autodesk.Revit.DB import BuiltInParameter, Element, ElementId, SharedParameterElement
 
-DEBUG = True
+DEBUG = False
 
 OPENING_FAMILY_NAMEs = ["WDW_Generic_Window Opening", "WDW_Generic_Window Opening_Instance"]
 

@@ -12,7 +12,7 @@ doc= revit.doc
 
 
 
-# import ceiling exporter
+# import sheet exporter
 from data.Collectors.sheets import sheets_export_entry
 
 # run the exporter 

@@ -2,6 +2,8 @@
 
 **Panel:** Families | **Button:** At The Library
 
+<img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/AtTheLibrary.pushbutton/Icon.png" width="40" alt="button icon">
+
 Opens the **AtTheLibrary** WPF application — an interactive library browser that lets you view, filter, load, and edit families from a Schedule of Accommodation (SoA) data source without leaving Revit.
 
 ## What it does
@@ -21,4 +23,5 @@ Use this button when you need to browse a family library, check what is already 
 ## Notes
 
 - The SoA CSV file path is configured within the AtTheLibrary window (browse or type the path, then click Load Data).
+- The window is a .NET UI loaded from the extension's `bin` folder at run time. If that folder is missing or incomplete the button fails immediately with a message about the bin directory.
 - See the [AtTheLibrary user guide](../../VS/duHastRevitApplications/AtTheLibrary/docs/01_main_ui.md) for full documentation of the interface.

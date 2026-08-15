@@ -1,42 +1,61 @@
-# Schedule Tools
+# Schedules
 
 **Panel:** Views | **Menu:** Schedules
+
+<img src="Extensions/duHast-2025.extension/duHast.tab/Views.panel/Schedules.pulldown/Icon.png" width="40" alt="button icon">
 
 Tools for managing Revit schedules — column widths, sheet placement overlaps, and room number filter values.
 
 ---
 
-## Export Column Width
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Views.panel/Schedules.pulldown/Export%20Column%20Width.pushbutton/Icon.png" width="24" alt="Export Column Width icon"> Export Column Width
 
-Saves the current column widths of a selected schedule to a file.
+Saves schedule column widths to a **CSV** file.
 
-- You select the schedule to export.
-- Column widths are written to a JSON or CSV file you specify.
-- Use this as a snapshot before changes, or as a template to apply to other schedules.
+- You select the schedules to export — this is a **multi-select** list, not one schedule.
+- A second dialog asks whether to export **all fields** or only **specific fields**.
+- A save dialog asks where to write the `.csv` file.
 
----
-
-## Resize Column Width From Export
-
-Restores column widths to a schedule from a previously saved export file.
-
-- You select the target schedule and the export file.
-- Column widths are applied in the order defined in the file.
-- Columns that exist in the file but not in the schedule are skipped.
-
-**Use when:** A schedule's column widths have been reset (e.g., after upgrading a template) and you need to restore them to a known-good state.
+Use this as a snapshot before changes, or as a source to apply to other schedules.
 
 ---
 
-## Resize Column Width By Name And Value
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Views.panel/Schedules.pulldown/Resize%20Column%20Width%20From%20Export.pushbutton/Icon.png" width="24" alt="Resize Column Width From Export icon"> Resize Column Width From Export
 
-Sets schedule column widths by specifying column names and target widths directly, without needing a previously exported file.
+Applies column widths to schedules from a previously saved CSV.
 
-- Useful for applying a standard width to a named set of columns across multiple schedules.
+**Workflow:**
+
+1. Select the **CSV file** first.
+2. Select which **schedules** to update, chosen from those named in the file.
+3. The widths are applied with a progress bar.
+
+- Matching is by **schedule name and field name**, not by column order.
+- Schedules that do not contain a field named in the file are skipped, and listed at the end
+  of the run.
+
+**Use when:** A schedule's column widths have been reset (for example after a template
+upgrade) and you need to restore them to a known-good state.
 
 ---
 
-## Report Schedules Overlaps
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Views.panel/Schedules.pulldown/Resize%20Column%20Width%20By%20Name%20And%20Value.pushbutton/Icon.png" width="24" alt="Resize Column Width By Name And Value icon"> Resize Column Width By Name And Value
+
+Sets one column's width across many schedules, without needing an export file.
+
+**Workflow:**
+
+1. Select the **schedules** to modify.
+2. Select the **single field** whose width you want to set.
+3. Enter the width **in millimetres** in the dialog.
+
+Schedules that do not contain that field are skipped and listed at the end of the run.
+
+**Use when:** Applying a standard width to one named column across a set of schedules.
+
+---
+
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Views.panel/Schedules.pulldown/Report%20Schedules%20Overlaps.pushbutton/Icon.png" width="24" alt="Report Overlaps icon"> Report Overlaps
 
 Checks selected sheets for schedule segments that are incorrectly positioned and saves a CSV report for each overlap type found.
 
@@ -46,13 +65,17 @@ Checks selected sheets for schedule segments that are incorrectly positioned and
   - Schedule segments overlapping each other on the same sheet.
   - Schedule segments placed outside the title block boundary.
   - Schedule segments overlapping viewports on the sheet.
-- A separate CSV file is written for each overlap type that has findings.
+- A separate CSV file is written for each overlap type that has findings, named after the
+  model:
+  - `<model title>_schedule_segments_overlap.csv`
+  - `<model title>_schedule_overlaps_title_block.csv`
+  - `<model title>_schedule_overlaps_viewports.csv`
 
 **Use when:** You need to audit sheet layouts before issue, or after a template change has caused schedule instances to shift.
 
 ---
 
-## Fix Schedule Segments Overlaps
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Views.panel/Schedules.pulldown/Fix%20Schedule%20Segments%20Overlaps.pushbutton/Icon.png" width="24" alt="Fix Segment Overlaps icon"> Fix Segment Overlaps
 
 Automatically resolves overlapping schedule segments on sheets by moving them horizontally until no overlaps remain.
 
@@ -64,7 +87,7 @@ Automatically resolves overlapping schedule segments on sheets by moving them ho
 
 ---
 
-## Export Room Number Filter Value
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Views.panel/Schedules.pulldown/Export%20Room%20Number%20Filter%20Value.pushbutton/Icon.png" width="24" alt="Export Room Number Filter Value icon"> Export Room Number Filter Value
 
 Exports the **Room: Number** filter value currently set on each selected schedule to a CSV file.
 
@@ -76,7 +99,7 @@ Exports the **Room: Number** filter value currently set on each selected schedul
 
 ---
 
-## Extract Room Number Filter Value From Schedule Name
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Views.panel/Schedules.pulldown/Extract%20Room%20Number%20Filter%20Value%20From%20Schedule%20Name.pushbutton/Icon.png" width="24" alt="Extract Room Number Filter Value icon"> Extract Room Number Filter Value
 
 Reads each selected schedule's name, extracts the room number from it using a prefix you specify, and updates that schedule's **Room: Number** filter value to match.
 
@@ -89,7 +112,7 @@ Reads each selected schedule's name, extracts the room number from it using a pr
 
 ---
 
-## Import Room Number Filter Value
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Views.panel/Schedules.pulldown/Import%20Room%20Number%20Filter%20Value.pushbutton/Icon.png" width="24" alt="Import Room Number Filter Value icon"> Import Room Number Filter Value
 
 Reads a previously exported Room Number filter CSV file and applies the saved filter values back to the matching schedules.
 
@@ -104,6 +127,7 @@ Reads a previously exported Room Number filter CSV file and applies the saved fi
 ## Notes
 
 - Column width tools act on the **schedule view**, not on placed schedule instances on sheets; changes propagate to all sheet instances of the same schedule.
+- Column widths are handled in **millimetres** throughout; the exported CSV carries the same units.
 - Export column widths immediately after finalising a schedule layout to create a restoration point before sharing the template.
 - The overlap report and fix tools operate on **schedule instances on sheets**, not on the schedule view definition.
 - The Room: Number filter tools work with schedules that have a filter on the built-in `Room: Number` field; schedules without that filter are skipped.

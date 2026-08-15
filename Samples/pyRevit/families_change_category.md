@@ -2,6 +2,8 @@
 
 **Panel:** Families | **Button:** Change Category
 
+<img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/ChangeFamilyCategory.pushbutton/Icon.png" width="40" alt="button icon">
+
 Changes the Revit category of the family currently open in the Family Editor, preserving its
 subcategories.
 

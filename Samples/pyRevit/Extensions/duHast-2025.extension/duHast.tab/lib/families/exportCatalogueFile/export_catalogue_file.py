@@ -23,7 +23,10 @@ import os
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.files_io import get_file_name_without_ext
-from duHast.Revit.Family.family_types_catalogue import export_catalogue_file
+# aliased: this module exposes an entry point of the same name below
+from duHast.Revit.Family.family_types_catalogue import (
+    export_catalogue_file as export_family_types_catalogue_file,
+)
 
 
 def export_catalogue_file(doc, output, forms):
@@ -71,7 +74,7 @@ def export_catalogue_file(doc, output, forms):
     file_name = get_file_name_without_ext(doc.Title)
     output_file_name = os.path.join(family_out_folder_path, "{}.txt".format(file_name))
 
-    export_result = export_catalogue_file(
+    export_result = export_family_types_catalogue_file(
         doc=doc,
         file_path = output_file_name, 
         filters = None, 

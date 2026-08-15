@@ -1,17 +1,20 @@
 """
-An extension applying a hack to force an update to a family when loaded into a project file
+An extension changing the category of the family open in the family editor.
 
-The hack is:
-- create a new family type
-- save the family
-- delete the new family type
-- save the family again
+Any subcategories are preserved: they are recreated under the new category and elements are
+re-assigned to them.
 
+Note:
+
+- This runs on the open family document only, not on families loaded in a project.
+- The family is not saved by this script.
 
 Usage:
 
+- Open the family in the family editor.
 - Run the script.
 
+    - Select the new category.
     - The progress will be displayed in the output window.
 
 """

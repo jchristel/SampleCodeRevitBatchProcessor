@@ -45,22 +45,26 @@ DEBUG = False
 DLL_LIST = [UTILITY,WPF_CUSTOM_CONTROLS,FAMILY_RELOADER_UI]
 
 
-def reload_families(doc, families, forms):
+def reload_families(doc, families, forms, load_all_family_types=False):
     """
     Reloads families in the Revit model.
-    
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param families: List of families to reload.
     :type families: list of Family objects
     :param forms: pyRevit forms module.
     :type forms: pyRevit forms module
+    :param load_all_family_types: If True, family types introduced by the library file are kept
+        ( the UI's "Import All Types On Reload" ). If False, only types already in the document
+        are updated and any new type is deleted again after the reload.
+    :type load_all_family_types: bool
     :return: Result class instance.
         - `result` (bool): True if families were reloaded successfully, otherwise False.
         - `message` (str): details about the reloading process.
     :rtype: :class:`.Result`
     """
-    
+
     return_value = Result()
 
     fam_counter = 0
@@ -73,9 +77,11 @@ def reload_families(doc, families, forms):
                 # reload_family(doc, family, family_file_path):
                 revit_family = doc.GetElement(ElementId(Int64(fam.RevitElementId)))
                 reload_result = reload_family(
-                    doc=doc, 
-                    family=revit_family, 
-                    family_file_path=fam.FamilyFilePath
+                    doc=doc,
+                    family=revit_family,
+                    family_file_path=fam.FamilyFilePath,
+                    # keeping new types is the inverse of deleting them
+                    delete_new_types=not load_all_family_types,
                 )
                 return_value.update(reload_result)
 
@@ -172,10 +178,24 @@ def reloaded_families_entry(doc, output, forms):
         
         
         # reload the families
-        print("Will {} reload families").format(families_reload.FamiliesToReload.Count)
-        
+        print("Will reload {} families".format(families_reload.FamiliesToReload.Count))
+
+        # honour the reload mode picked in the UI: "Import All Types On Reload" keeps any
+        # type the library file introduces, otherwise only existing types are updated
+        load_all_family_types = families_reload.LoadAllFamilyTypesOnReload
+        print(
+            "Reload mode: {}".format(
+                "import all types"
+                if load_all_family_types
+                else "reload existing types only"
+            )
+        )
+
         reloader_result = reload_families(
-            doc=doc, families=families_reload.FamiliesToReload, forms=forms
+            doc=doc,
+            families=families_reload.FamiliesToReload,
+            forms=forms,
+            load_all_family_types=load_all_family_types,
         )
         return_value.update(reloader_result)
         print(reloader_result.message)

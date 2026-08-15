@@ -2,62 +2,87 @@
 
 **Panel:** Warnings | **Menu:** Solve Warnings
 
-Automated tools for resolving common Revit model warnings without manual intervention.
+Automated fixes for four common Revit warning types. Each tool collects the warnings of its
+type from the **whole document**, then works through them with a cancellable progress bar.
+None of them is view-scoped, and none requires a selection.
+
+If the model holds no warnings of the relevant type, the tool reports so and exits.
 
 ---
 
-## Room Tags Outside Room
+## Room tags outside of room
 
-Moves room tags that Revit is warning are positioned outside their associated room back inside the room boundary.
+Moves room tags that Revit reports as sitting outside their room back onto the room.
 
-- Automatically repositions each affected tag to the room's internal reference point.
-- No manual selection required; the tool processes all relevant warnings in the active document.
+For each affected tag it:
+
+1. **Unpins** the tag if it is pinned,
+2. **removes the tag's leader**, and
+3. moves the tag to the room's location point.
+
+**Note:** the leader removal is a visible change and is not undone by the tool. If your
+documentation relies on tag leaders, review the affected tags afterwards.
 
 ---
 
 ## Duplicate Marks
 
-Resolves **Duplicate Mark** warnings by clearing the mark value on the affected element instances.
+Resolves **Duplicate Mark** warnings by clearing the Mark parameter.
 
-- Identifies all elements generating duplicate mark warnings.
-- Clears (empties) the Mark parameter on the duplicate instances.
-- The mark on the first instance is left intact; subsequent duplicates are cleared.
+- Every element named in each warning has its Mark set to an empty value — including the
+  first one. The tool does not keep one instance's mark and clear the rest.
+- Warnings about duplicate **Type Mark** are recognised and deliberately skipped; they are
+  listed in the output as ignored.
 
-**Use when:** A model contains many duplicate mark warnings that are slowing down workflows or preventing export.
-
----
-
-## Area Separation Lines Long
-
-Resolves **Overlapping Area Separation Lines** warnings using an extended search radius to find and remove duplicate or overlapping line segments.
-
-- Scans all area separation lines in the model.
-- Removes the redundant overlapping segment where two lines occupy the same location.
-
-**Long** = wider search radius, catches more overlaps but takes longer on large models.
+**Use when:** A model carries many duplicate mark warnings and the mark values are not
+relied upon.
 
 ---
 
-## Area Separation Lines Short
+## Area Lines Overlap Long / Room Lines Overlap Long
 
-Same as **Area Separation Lines Long** but uses a smaller search radius for faster processing on models where overlaps are known to be close together.
+Resolves overlapping area or room separation line warnings by **lengthening**:
+
+> The longer of the two overlapping lines is extended so it completely covers the shorter
+> one, and the shorter line is then deleted.
+
+The result is a single continuous line.
 
 ---
 
-## Room Separation Lines Long
+## Area Lines Overlap Short / Room Lines Overlap Short
 
-Resolves **Overlapping Room Separation Lines** warnings using an extended search radius.
+Resolves the same warnings by **shortening**:
+
+> The overlap is trimmed away so the two lines no longer cover each other.
+
+Both lines survive, meeting end to end.
 
 ---
 
-## Room Separation Lines Short
+## Choosing Long or Short
 
-Resolves **Overlapping Room Separation Lines** warnings using a smaller, faster search radius.
+Long and Short are **geometric strategies, not speed or search settings**. Pick on the
+outcome you want:
+
+| | Result | Line count |
+|---|---|---|
+| **Long** | One continuous line spanning both originals | Reduced — the shorter line is deleted |
+| **Short** | Two abutting lines with the overlap removed | Unchanged |
+
+Use **Long** to tidy up fragmented boundaries into single runs. Use **Short** where the
+individual line segments carry meaning you want to keep — for example where they were drawn
+per design area.
 
 ---
 
 ## Notes
 
-- Run **Refresh** (or sync the model) after using any solve tool to confirm warnings have been cleared.
-- **Long** variants are more thorough but slower; use **Short** first on large models and fall back to **Long** if any warnings remain.
-- These tools only address the specific warning type they are named for; other warning types must be resolved separately.
+- Warnings are matched by their Revit warning GUID, so only the exact warning type each tool
+  targets is addressed. Other warning types are untouched.
+- Changes are made with failure handling that does not roll back on warnings, so a fix that
+  triggers a further warning still commits. Review the output window.
+- Check the Revit warnings dialog after running to confirm the warnings have cleared; some
+  overlaps resolve into new warnings that need a second pass.
+- These tools modify the model. Save or make a backup first — there is no built-in undo
+  beyond Revit's own.

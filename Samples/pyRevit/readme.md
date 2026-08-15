@@ -15,9 +15,9 @@ Tools for loading, saving, renaming, swapping, and reporting on Revit families a
 | [Reload](families_reload.md) | Reload families from a library folder, with match-status filtering |
 | [Rename](families_rename.md) | Rename loaded families and types, or rename files in a library folder |
 | [Load / Save](families_io.md) | Bulk-load families into the project, or save families out to a folder |
-| [Catalogue Files](families_catalogue_files.md) | Export, clean up, and set default types via catalogue files |
+| [Catalogue Files](families_catalogue_files.md) | Export and clean type catalogue files; strip a family back to a single catalogue placeholder type |
 | [Force Update](families_force_update.md) | Force Revit to detect a family as changed when source files have been overwritten |
-| [Change Category](families_change_category.md) | Reassign a family to a different Revit category |
+| [Change Category](families_change_category.md) | Reassign the open family to a different Revit category, preserving subcategories |
 | [Swap](families_swap.md) | Replace family instances with a different family, by CSV directive or interactive selection |
 | [Reports](families_reports.md) | Generate, compare, and export reports on family libraries and projects |
 | [At The Library](families_at_the_library.md) | Open the AtTheLibrary tool for managing shared type catalogue parameters |
@@ -31,7 +31,7 @@ Tools for exporting sheets to PDF and DWG, comparing export sets, and managing d
 | Button Group | Description |
 |---|---|
 | [PDF / DWG Export](export_pdf_dwg.md) | Export sheets to PDF and/or DWG with configurable naming rules and print sets |
-| [Compare Exports](export_compare.md) | Compare two export result sets to identify differences |
+| [Compare](export_compare.md) | Check the sheets in a Revit schedule against the PDF files in a folder |
 | [DocManager](export_docmanager.md) | Manage document properties and revision data for export records |
 
 ---
@@ -63,7 +63,7 @@ Tools for resolving and highlighting common Revit warnings related to rooms, are
 | Button Group | Description |
 |---|---|
 | [Solve Warnings](warnings_solve.md) | Fix room tags outside rooms, duplicate marks, and overlapping separation lines |
-| [Highlight Warnings](warnings_highlight.md) | Colour-highlight area and room separation lines for visual review |
+| [Highlight Warnings](warnings_highlight.md) | Report area and room separation lines carrying warnings, and colour-highlight them in the active view |
 
 ---
 
@@ -85,11 +85,11 @@ Tools for managing mock rooms (room-like generic model families) and their assoc
 | Button Group | Description |
 |---|---|
 | [PushIt](pushit_main.md) | Open the PushIt application for managing mock room data |
-| [Get A Room](pushit_get_a_room.md) | Convert filled regions to mock room families; configure detection settings |
+| [Get A Room!](pushit_get_a_room.md) | Build mock room families from filled regions; set the family output directory |
 | [Swap Dimensions](pushit_swap_dimensions.md) | Swap the Width and Depth parameter values on selected mock rooms |
-| [Stats](pushit_stats.md) | Report mock room counts and IDs by design set and option |
+| [Stats](pushit_stats.md) | Report mock room counts by family, creator and owner; flag IDs duplicated across design sets |
 | [Place Revit Rooms](pushit_place_revit_rooms.md) | Create native Revit rooms at the locations of mock rooms |
-| [Area By Room](pushit_area_by_room.md) | Place temporary Revit rooms to verify mock room area calculations |
+| [Verify Push It Area](pushit_area_by_room.md) | Measure mock rooms with temporary Revit rooms and write the area back onto them |
 
 ---
 
@@ -125,12 +125,12 @@ Tools for generating ceiling elements from room boundaries.
 
 ### Walls
 
-Tools for generating wall elements and rooms from geometry.
+Tools that relate walls and facade openings back to the rooms they bound.
 
 | Button Group | Description |
 |---|---|
-| [Walls By Rooms](walls_by_rooms.md) | Generate wall elements along the boundaries of existing rooms |
-| [Facade Opening to Room](walls_facade_opening.md) | Create Revit rooms derived from facade opening geometry |
+| [Walls By Room](walls_by_rooms.md) | Write the room number onto the walls bounding each selected room |
+| [Facade Opening To Room](walls_facade_opening.md) | Report external wall and window opening areas per room to CSV |
 
 ---
 

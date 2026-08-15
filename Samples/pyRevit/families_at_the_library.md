@@ -6,7 +6,7 @@ Opens the **AtTheLibrary** WPF application — an interactive library browser th
 
 ## What it does
 
-- Loads family data from a CSV-based SoA file and displays it in a filterable grid.
+- Loads family data from a CSV (refer to Family reports) file and displays it in a filterable grid.
 - Shows how many instances of each family are currently loaded in the open Revit document (the **Count** column).
 - Lets you select individual families and:
   - **Load** the `.rfa` file directly into the current document.

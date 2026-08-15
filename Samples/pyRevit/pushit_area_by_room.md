@@ -1,21 +1,60 @@
-# Area By Room
+# Verify Push It Area
 
-**Panel:** PushIt | **Button:** Area By Room
+**Panel:** PushIt | **Button:** Verify Push It Area
 
-Places temporary Revit rooms alongside mock room family instances and compares the calculated Revit room area against the area stored in the mock room data, as a verification step.
+Measures each mock room by briefly placing a real Revit room inside it, writes the measured
+area back onto the mock room, and deletes the temporary rooms again.
 
 ## What it does
 
-- For each mock room, places a reference Revit room at the same location.
-- Compares the area calculated by Revit (from the actual model boundaries) with the target area recorded in the mock room's parameter data.
-- Reports any discrepancies between the two values.
+For every mock room in the **active** model:
+
+1. Places a temporary Revit room at the mock room's location.
+2. Reads the room's area and perimeter.
+3. Calculates the centre-of-wall area as:
+
+   ```
+   room area + (room perimeter x half wall thickness)
+   ```
+
+   Half wall thickness comes from `duHast_wall_thickness` on the mock room's type, halved.
+   If that parameter is absent, **60 mm** is used.
+4. Compares the calculated area against `duHast_area_designed_centre_wall` on the mock room:
+   - within tolerance — the calculated value is written to
+     **`duHast_area_by_revit_room`** on the mock room instance;
+   - **below 80 %** of the designed area — `duHast_area_by_revit_room` is set to `0.0` and the
+     discrepancy is reported as an error;
+   - **above 105 %** of the designed area — `duHast_area_by_revit_room` is set to `0.0` and the
+     discrepancy is reported.
+5. Deletes all temporary Revit rooms it created.
+
+A mock room whose temporary room comes back with an area of zero — usually because the
+location is not enclosed — is reported and left unchanged.
 
 ## When to use this
 
-Use this button to verify that the mock room layout is achieving the intended areas — for example, after adjusting wall positions or room boundaries. It is a QA step rather than a permanent modelling operation.
+Use this to check the mock room layout against the modelled geometry: after moving walls,
+after adjusting mock room dimensions, or before issuing area figures. The
+`duHast_area_by_revit_room` values it leaves behind can then be scheduled or exported
+alongside the designed areas.
+
+## Requirements
+
+- The mock rooms must be in the **active model**. Unlike **Place Revit Rooms**, this tool does
+  not offer a model picker and does not read from links.
+- Mock room locations must be enclosed by walls, room separation lines or area boundaries,
+  otherwise Revit cannot calculate an area.
+- The mock room instances must carry `duHast_area_designed_centre_wall` — without it the tool
+  reports that the parameter is missing and skips the update.
+- `duHast_area_by_revit_room` must exist on the mock rooms to receive the result.
 
 ## Notes
 
-- The reference Revit rooms placed by this tool are intended to be temporary; delete them after reviewing the area comparison report.
-- Discrepancies between mock room area and calculated room area typically indicate that the surrounding boundary geometry (walls, separation lines) does not match the mock room dimensions.
-- Ensure the model is synced and up to date before running so that Revit's area calculations are based on the latest geometry.
+- The temporary rooms are removed automatically, in a transaction named
+  *"Push it rooms created by area verification"*. There is no manual cleanup step.
+- A value of `0.0` in `duHast_area_by_revit_room` is a **flag, not a measurement** — it means
+  the measured area fell outside the tolerance band, so check the surrounding geometry.
+- The calculated area is measured to the centre of the enclosing walls, which is why the room
+  perimeter and half wall thickness are added to Revit's room area. Comparing it to a
+  clear-internal area will always show a difference.
+- Progress and every calculation are printed to the pyRevit output window.

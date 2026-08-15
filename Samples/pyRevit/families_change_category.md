@@ -1,21 +1,40 @@
-# Change Family Category
+# Change Category
 
-**Panel:** Families | **Button:** Change Family Category
+**Panel:** Families | **Button:** Change Category
 
-Changes the Revit category assigned to a family directly from the project environment, without manually opening the family in the family editor.
+Changes the Revit category of the family currently open in the Family Editor, preserving its
+subcategories.
 
 ## What it does
 
-- Presents a list of available Revit categories to choose from.
-- Reassigns the selected family to the chosen category.
-- Saves the change back to the family.
+- Checks that the active document is a **family document**. If it is not, the tool reports
+  *"This is not a family document."* and exits.
+- Presents a list of the categories available for the family's category type, so you can pick
+  the new one.
+- Reassigns the family to the selected category, recreating the family's subcategories under
+  the new category and re-assigning elements to them so the family's graphical structure
+  survives the change.
 
 ## When to use this
 
-Use this button when a family has been created or received with the wrong category assignment and needs to be corrected before it can be properly scheduled, filtered, or tagged in your project.
+Use this when a family has been created or received with the wrong category and needs to be
+corrected before it can be properly scheduled, filtered or tagged.
+
+## Requirements
+
+- **The family must be open in the Family Editor and be the active document.** This tool does
+  not operate on families loaded in a project — open the family first (via Edit Family or by
+  opening the `.rfa` directly).
+- The target category must be valid for the family's template. Only categories matching the
+  family's category type are offered.
 
 ## Notes
 
-- Changing a family's category may affect tags, schedules, filters, and visibility settings that reference the original category.
-- Review downstream dependencies (schedules, view filters, tags) after changing the category.
-- The family does not need to be open in the family editor; the tool operates on the loaded family in the project.
+- The family is **not saved** by this tool. Review the result, then save the family yourself —
+  or close without saving to discard the change.
+- After saving, reload the family into any projects that use it for the change to take effect
+  there.
+- Changing a family's category affects tags, schedules, view filters and visibility settings
+  that reference the original category. Review those downstream dependencies.
+- Subcategories are carried across, but any host project overrides keyed to the old
+  category's subcategories will not follow automatically.

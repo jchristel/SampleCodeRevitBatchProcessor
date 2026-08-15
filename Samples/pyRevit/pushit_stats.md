@@ -2,35 +2,63 @@
 
 **Panel:** PushIt | **Menu:** Stats
 
-Reporting tools that provide a summary of the mock room families in the current Revit model.
+Two reporting tools covering the mock room families in the current model. Both print tables
+to the pyRevit output window and change nothing in the model.
+
+Both read the enabled categories and the unique-ID parameter from the current PushIt data
+source configuration, and report on the family instances found in those categories.
 
 ---
 
-## Stats Simple
+## Stats
 
-Displays a basic statistical summary of all PushIt mock room elements in the project.
+Prints three tables:
 
-- Total count of mock room instances.
-- Breakdown by design set and design option.
-- Summary of area totals per design option.
+| Table | Columns |
+|---|---|
+| Basic Statistics of PushIt Elements | Family Name, Count |
+| Creators of PushIt Elements | Creator, Count |
+| Owners of PushIt Elements | Owner, Count |
 
-Results are shown in the pyRevit output window and can be copied from there.
+The creator and owner figures come from Revit's worksharing tooltip information, so they are
+only meaningful in a workshared model.
 
-**Use when:** You want a quick overview of how many mock rooms exist in the model and what area they collectively represent.
+Before the tables, the output window lists the supported categories, the unique-ID parameter
+name and GUID, and the total number of family instances found.
+
+**Use when:** You want to know how many mock rooms exist, which families they use, and who
+created or currently owns them.
 
 ---
 
-## IDs By Design Set and Option
+## Stats By Design Set And Option
 
-Lists the Revit element IDs of all mock room instances, organised by design set and design option.
+A data quality check, not a listing. It groups the mock rooms by their unique-ID parameter
+value and reports only the values that appear in **more than one design set** — instances
+that would be counted twice in any area or room schedule spanning design options.
 
-- Useful for scripting or batch processing workflows where you need to reference specific elements by ID.
-- Output is shown in the pyRevit output window.
+| Column | Content |
+|---|---|
+| Unique Id | The unique-ID parameter value shared by the instances |
+| Design Set | The design set the instances sit in |
+| Family Instance ID | Element ids of the instances in that design set |
 
-**Use when:** You need a structured list of element IDs — for example, to feed into a Revit Batch Processor task or to audit which rooms belong to which design option.
+Each problematic unique ID produces one row, with the design set and instance ids repeated
+across the row for every set the ID appears in.
+
+When nothing is wrong the tool prints **"No problematic keys found."** and stops — an empty
+result is the good outcome.
+
+**Use when:** Before running area take-offs or exporting room data, to confirm no mock room
+has been duplicated across design options.
 
 ---
 
 ## Notes
 
-- Both tools read data from the active document; workshared models must be synced before running to ensure the data is current.
+- Both tools require the PushIt data source to be configured; if it cannot be read they exit
+  with *"Invalid data source or supported categories"*.
+- Both require the unique-ID shared parameter to be present; if it is missing they exit with
+  *"Invalid parameter name or guid"*.
+- Both read the active document only. Sync a workshared model before running so the counts and
+  ownership data are current.

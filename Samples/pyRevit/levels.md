@@ -1,49 +1,60 @@
 # Levels
 
-**Panel:** Grids and Levels | **Menu:** Levels
+**Panel:** Grids And Levels | **Menu:** Levels
 
-Tools for controlling level header (bubble) visibility and level display mode in the active Revit view.
+<img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Levels.pulldown/Icon.png" width="40" alt="button icon">
 
----
+Tools for controlling level header visibility and level extents in the active view.
 
-## All 0 Headers On
-
-Shows the level header at the **start end** (end 0) of every level in the active view.
-
----
-
-## All 1 Headers On
-
-Shows the level header at the **finish end** (end 1) of every level in the active view.
+All of these act on the **active view** only, and on the levels visible in it. They are the
+level counterparts of the [Grids](grids.md) tools and follow the same start/end convention —
+but note there is no level equivalent of *Extend Grids* or *Propagate Grids*.
 
 ---
 
-## All Headers Off
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Levels.pulldown/All%200%20Headers%20On.pushbutton/Icon.png" width="24" alt="Show Headers Start icon"> Show Headers Start
 
-Hides level headers at **both ends** of every level in the active view.
-
----
-
-## All 2D
-
-Switches every level in the active view to **2D** mode, so that changes to level extents and header visibility in this view do not affect other views.
+Switches **on** the header at the start end (end 0) of every level visible in the active view.
+It only turns headers on; it never turns one off.
 
 ---
 
-## Toggle 0 Headers By Selection
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Levels.pulldown/All%201%20Headers%20On.pushbutton/Icon.png" width="24" alt="Show Headers End icon"> Show Headers End
 
-Toggles the header at **end 0** of only the levels you have selected before running the tool. Runs on the active view.
+Switches **on** the header at the finish end (end 1) of every level visible in the active view.
 
 ---
 
-## Toggle 1 Headers By Selection
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Levels.pulldown/All%20Headers%20Off.pushbutton/Icon.png" width="24" alt="All Heads Off icon"> All Heads Off
 
-Toggles the header at **end 1** of only the levels you have selected before running the tool. Runs on the active view.
+Hides the headers at **both ends** of every level visible in the active view.
+
+---
+
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Levels.pulldown/All%202D.pushbutton/Icon.png" width="24" alt="All Levels to 2D icon"> All Levels to 2D
+
+Sets both ends of every level visible in the active view to **2D**, so that extent and header
+changes made in this view no longer affect other views.
+
+---
+
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Levels.pulldown/Toggle%200%20Headers%20By%20Selection.pushbutton/Icon.png" width="24" alt="Toggle Headers Start icon"> Toggle Headers Start
+
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Levels.pulldown/Toggle%201%20Headers%20By%20Selection.pushbutton/Icon.png" width="24" alt="Toggle Headers End icon"> Toggle Headers End
+
+Toggles the header at end 0 (Start) or end 1 (End) for **levels you pick**.
+
+Run the tool first — it starts a pick prompt ("Select levels") filtered to the Levels
+category. Pick the levels, finish the selection, and their headers at that end are flipped.
+There is no need to pre-select anything before launching.
 
 ---
 
 ## Notes
 
-- All tools act on the **active view** only.
-- Level changes made in 3D mode affect all views; use **All 2D** first to confine changes to the current view.
-- These tools are the level equivalent of the **Grids** bubble tools and follow the same end-0 / end-1 convention.
+- Levels are visible in section and elevation views, so that is where these tools are
+  normally used.
+- Levels set to 3D share their extents across views. Run **All Levels to 2D** in a view first
+  if you want changes there to stay local to it.
+- If a tool reports no levels in the view, check the view's crop, extents and category
+  visibility — the tools only see levels the view actually shows.

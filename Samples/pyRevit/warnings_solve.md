@@ -2,6 +2,8 @@
 
 **Panel:** Warnings | **Menu:** Solve Warnings
 
+<img src="Extensions/duHast-2025.extension/duHast.tab/Warnings.panel/Solve%20Warnings.pulldown/Icon.png" width="40" alt="button icon">
+
 Automated fixes for four common Revit warning types. Each tool collects the warnings of its
 type from the **whole document**, then works through them with a cancellable progress bar.
 None of them is view-scoped, and none requires a selection.
@@ -10,7 +12,7 @@ If the model holds no warnings of the relevant type, the tool reports so and exi
 
 ---
 
-## Room tags outside of room
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Warnings.panel/Solve%20Warnings.pulldown/Room%20Tags%20Outside%20Room.pushbutton/Icon.png" width="24" alt="Room tags outside of room icon"> Room tags outside of room
 
 Moves room tags that Revit reports as sitting outside their room back onto the room.
 
@@ -25,7 +27,7 @@ documentation relies on tag leaders, review the affected tags afterwards.
 
 ---
 
-## Duplicate Marks
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Warnings.panel/Solve%20Warnings.pulldown/Duplicate%20Marks.pushbutton/Icon.png" width="24" alt="Duplicate Marks icon"> Duplicate Marks
 
 Resolves **Duplicate Mark** warnings by clearing the Mark parameter.
 
@@ -39,7 +41,7 @@ relied upon.
 
 ---
 
-## Area Lines Overlap Long / Room Lines Overlap Long
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Warnings.panel/Solve%20Warnings.pulldown/Area%20Separation%20Lines%20Long.pushbutton/Icon.png" width="24" alt="Area Lines Overlap Long icon"> <img src="Extensions/duHast-2025.extension/duHast.tab/Warnings.panel/Solve%20Warnings.pulldown/Room%20Separation%20Lines%20Long.pushbutton/Icon.png" width="24" alt="Room Lines Overlap Long icon"> Area Lines Overlap Long / Room Lines Overlap Long
 
 Resolves overlapping area or room separation line warnings by **lengthening**:
 
@@ -50,7 +52,7 @@ The result is a single continuous line.
 
 ---
 
-## Area Lines Overlap Short / Room Lines Overlap Short
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Warnings.panel/Solve%20Warnings.pulldown/Area%20Separation%20Lines%20Short.pushbutton/Icon.png" width="24" alt="Area Lines Overlap Short icon"> <img src="Extensions/duHast-2025.extension/duHast.tab/Warnings.panel/Solve%20Warnings.pulldown/Room%20Separation%20Lines%20Short.pushbutton/Icon.png" width="24" alt="Room Lines Overlap Short icon"> Area Lines Overlap Short / Room Lines Overlap Short
 
 Resolves the same warnings by **shortening**:
 

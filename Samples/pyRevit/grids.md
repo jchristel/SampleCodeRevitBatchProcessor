@@ -1,68 +1,91 @@
 # Grids
 
-**Panel:** Grids and Levels | **Menu:** Grids
+**Panel:** Grids And Levels | **Menu:** Grids
 
-Tools for controlling grid bubble visibility and grid display mode in the active Revit view.
+<img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Grids.pulldown/Icon.png" width="40" alt="button icon">
 
----
+Tools for controlling grid bubble visibility and grid extents in the active view.
 
-## All 0 Bubbles On
-
-Shows the grid bubble at the **start end** (end 0) of every grid in the active view.
+All of these act on the **active view** only, and on the grids visible in it.
 
 ---
 
-## All 1 Bubbles On
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Grids.pulldown/All%200%20Bubbles%20On.pushbutton/Icon.png" width="24" alt="Show Bubbles Start icon"> Show Bubbles Start
 
-Shows the grid bubble at the **finish end** (end 1) of every grid in the active view.
-
----
-
-## All Bubbles Off
-
-Hides grid bubbles at **both ends** of every grid in the active view.
+Switches **on** the bubble at the start end (end 0) of every grid visible in the active view.
+It only turns bubbles on; it never turns one off.
 
 ---
 
-## All 2D
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Grids.pulldown/All%201%20Bubbles%20On.pushbutton/Icon.png" width="24" alt="Show Bubbles End icon"> Show Bubbles End
 
-Switches every grid in the active view to **2D** mode, so that changes to grid extents and bubble visibility in this view do not affect other views.
+Switches **on** the bubble at the finish end (end 1) of every grid visible in the active view.
 
 ---
 
-## Propagate Grids
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Grids.pulldown/All%20Bubbles%20Off.pushbutton/Icon.png" width="24" alt="All Bubbles Off icon"> All Bubbles Off
 
-Copies grid bubble visibility, extent overrides, and bubble-end settings from the **active view** to one or more selected target views.
+Hides the bubbles at **both ends** of every grid visible in the active view.
+
+---
+
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Grids.pulldown/All%202D.pushbutton/Icon.png" width="24" alt="All Grids to 2D icon"> All Grids to 2D
+
+Sets both ends of every grid visible in the active view to **2D**, so that extent and bubble
+changes made in this view no longer affect other views.
+
+---
+
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Grids.pulldown/Toggle%200%20Bubbles%20By%20Selection.pushbutton/Icon.png" width="24" alt="Toggle Bubbles Start icon"> Toggle Bubbles Start
+
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Grids.pulldown/Toggle%201%20Bubbles%20By%20Selection.pushbutton/Icon.png" width="24" alt="Toggle Bubbles End icon"> Toggle Bubbles End
+
+Toggles the bubble at end 0 (Start) or end 1 (End) for **grids you pick**.
+
+Run the tool first — it starts a pick prompt ("Select Grids") filtered to the Grids category.
+Pick the grids, finish the selection, and their bubbles at that end are flipped: on becomes
+off, off becomes on. There is no need to pre-select anything before launching.
+
+---
+
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Grids.pulldown/Extend%20Grids.pushbutton/Icon.png" width="24" alt="Extend Grids icon"> Extend Grids
+
+Extends linear grids in the active view out to the **view's crop box**.
+
+**Requirements:**
+
+- The active view must be a **Floor Plan, Ceiling Plan or Area Plan**.
+- The view's **crop box must be enabled** — the crop region is what the grids are extended to.
+- Only linear grids are handled; arc grids are left alone.
+
+---
+
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Grids.pulldown/Propagate%20Grids.pushbutton/Icon.png" width="24" alt="Propagate Grids icon"> Propagate Grids
+
+Copies grid bubble visibility and grid extents from the **active view** to views you select.
 
 **Workflow:**
-1. Set up grid display exactly as required in the source plan view.
+
+1. Set the grid display up exactly as you want it in the source view.
 2. Run **Propagate Grids**.
-3. Select the target views to apply the same settings to.
+3. Select the target views from the list — entries are shown as `view name (view type)`.
 
-**Use when:** You want all floor plan views in a project to share consistent grid display without adjusting each view manually.
+**Requirements:**
 
----
+- The **active view** must be a Floor Plan, Ceiling Plan or Area Plan; the tool exits with an
+  "Unsupported active view type" message otherwise.
+- Only Floor Plans, Ceiling Plans and Area Plans are offered as targets. Sections, elevations
+  and 3D views cannot be targeted.
 
-## Extend Grids
-
-Extends the visible length of grids in the active view to match a defined boundary or extent.
-
----
-
-## Toggle 0 Bubbles By Selection
-
-Toggles the bubble at **end 0** of only the grids you have selected before running the tool. Runs on the active view.
-
----
-
-## Toggle 1 Bubbles By Selection
-
-Toggles the bubble at **end 1** of only the grids you have selected before running the tool. Runs on the active view.
+Progress is shown in a cancellable progress bar.
 
 ---
 
 ## Notes
 
-- All tools act on the **active view** only unless stated otherwise.
-- Grid changes made in 3D mode affect all views; switch to 2D mode first with **All 2D** if you need view-specific control.
-- **Propagate Grids** is the most efficient way to apply a consistent grid layout across many views at once.
+- Grids set to 3D share their extents across views. Run **All Grids to 2D** in a view first if
+  you want changes there to stay local to it.
+- **Propagate Grids** is the efficient way to apply one grid setup across many plan views;
+  the per-view tools above are for setting up that one source view.
+- If a tool reports "No grids visible in view", check the view's crop, view range and category
+  visibility — the tools only see grids the view actually shows.

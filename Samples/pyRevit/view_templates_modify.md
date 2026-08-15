@@ -2,53 +2,84 @@
 
 **Panel:** View Templates | **Menu:** Modify
 
-Tools to propagate filter settings and graphic overrides across multiple view templates in the current project in a single operation.
+<img src="Extensions/duHast-2025.extension/duHast.tab/View%20Templates.panel/Modify.pulldown/Icon.png" width="40" alt="button icon">
+
+Tools to propagate filter and category overrides from one view template to many others in the
+current project.
+
+Three of the four tools work **from a source template**. That source selection is the first
+thing they ask for, and it is easy to miss:
+
+> **source template → target templates → what to propagate → apply**
 
 ---
 
-## Apply Filter Overrides
+## <img src="Extensions/duHast-2025.extension/duHast.tab/View%20Templates.panel/Modify.pulldown/Apply%20Filter%20Overrides.pushbutton/Icon.png" width="24" alt="Apply Filter Overrides icon"> Apply Filter Overrides
 
-Copies the graphic override settings of selected view filters from a source template to one or more target templates.
+Copies the graphic overrides of selected view filters from a source template to target
+templates.
 
 **Workflow:**
-1. Run the tool.
-2. Select the filters whose overrides you want to propagate.
-3. Select the target view templates to update.
-4. The tool applies the matching filter overrides to every selected target template.
 
-- If a filter does not exist in a target template, it is skipped for that template (existing filters are not removed).
-- Only the graphic overrides (colour, line weight, halftone, etc.) are copied; the filter rules themselves are not changed.
+1. Select the **source view template** — the one whose overrides are correct.
+2. Select the **target view templates** to update.
+3. Select the **filters** whose overrides you want to propagate. Only filters present in the
+   source template are offered.
+4. The overrides are applied.
 
-**Use when:** You have adjusted a filter override in one template and need the same change applied to many other templates.
+- A filter that does not exist in a target template is **skipped** for that template.
+- Only the graphic overrides are copied. The filter rules themselves are untouched.
 
----
-
-## Add And Apply Filter Overrides
-
-An extended version of **Apply Filter Overrides** that also adds the filter to target templates where it does not yet exist, in addition to applying the overrides.
-
-**Use when:** You are rolling out a new filter standard and need to add the filter to all relevant templates as well as setting its overrides.
+**Use when:** You have corrected a filter override in one template and need the same
+correction in many others.
 
 ---
 
-## Apply Graphic Overrides
+## <img src="Extensions/duHast-2025.extension/duHast.tab/View%20Templates.panel/Modify.pulldown/Add%20And%20Apply%20Filter%20Overrides.pushbutton/Icon.png" width="24" alt="Add & Apply Filter Overrides icon"> Add & Apply Filter Overrides
 
-Copies category-level graphic overrides (not filter-based) from a source template to one or more target templates.
+Identical to **Apply Filter Overrides**, except that a filter missing from a target template
+is **added** to it before its overrides are applied.
 
-- Useful for propagating changes to cut patterns, projection line weights, or category visibility settings that are defined directly on the template rather than through a filter.
+**Use when:** Rolling out a new filter standard, where the filter needs to reach templates
+that do not yet have it.
 
 ---
 
-## Delete Filters
+## <img src="Extensions/duHast-2025.extension/duHast.tab/View%20Templates.panel/Modify.pulldown/Apply%20Graphic%20Overrides.pushbutton/Icon.png" width="24" alt="Apply Graphic Overrides icon"> Apply Graphic Overrides
 
-Removes specified filters from one or more view templates in a single operation.
+Copies **category** overrides and visibility settings from a source template to target
+templates.
 
-- You select which filters to delete and which templates to remove them from.
-- The filter definitions themselves remain in the project; only the assignment to the selected templates is removed.
+**Workflow:**
+
+1. Select the **source view template**.
+2. Select the **target view templates**.
+3. Select the **categories** to propagate.
+4. The settings are applied.
+
+**Use when:** Propagating cut patterns, projection line weights or category visibility that
+are set directly on the template rather than through a filter.
+
+---
+
+## <img src="Extensions/duHast-2025.extension/duHast.tab/View%20Templates.panel/Modify.pulldown/Delete%20Filters.pushbutton/Icon.png" width="24" alt="Delete Filters icon"> Delete Filters
+
+Removes filters from view templates. This one has **no source template** — the order is
+reversed:
+
+1. Select the **filters** to remove.
+2. Select the **view templates** to remove them from.
+
+The filter definitions remain in the project; only their assignment to the selected templates
+is removed. Progress is printed per template to the output window.
 
 ---
 
 ## Notes
 
-- All tools act on **view templates** in the current project; they do not modify individual views directly.
-- Test changes on a single target template before applying to all templates in large projects.
+- These tools act on **view templates**, not on individual views. Views using those templates
+  pick the changes up through the template.
+- Test on a single target template before applying across a large project — there is no
+  built-in undo beyond Revit's own.
+- If a tool reports that no filters or categories are available, check the source template
+  actually carries the overrides you expect.

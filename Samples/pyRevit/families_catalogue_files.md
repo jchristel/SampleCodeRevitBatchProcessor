@@ -2,6 +2,8 @@
 
 **Panel:** Families | **Menu:** Catalogue Files
 
+<img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/CatalogueFiles.pulldown/Icon.png" width="40" alt="button icon">
+
 Tools for creating, cleaning, and configuring type catalogue files (`.txt`) for Revit
 families.
 
@@ -9,7 +11,7 @@ families.
 
 ---
 
-## Export File
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/CatalogueFiles.pulldown/ExportCatalogueFile.pushbutton/Icon.png" width="24" alt="Export File icon"> Export File
 
 Exports the type data of the open family to a type catalogue file.
 
@@ -22,7 +24,7 @@ file so users can choose which types to load.
 
 ---
 
-## Clean Catalogue File
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/CatalogueFiles.pulldown/DeleteParametersFromCatalogueFile.pushbutton/Icon.png" width="24" alt="Clean Catalogue File icon"> Clean Catalogue File
 
 Cleans an existing catalogue file by removing parameters that should not appear there.
 
@@ -48,7 +50,7 @@ when loading the family.
 
 ---
 
-## Default Catalogue File Type
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/CatalogueFiles.pulldown/DefaultCatalogueFileType.pushbutton/Icon.png" width="24" alt="Default Catalogue File Type icon"> Default Catalogue File Type
 
 > **Warning — this tool deletes family types.** It does not configure a pre-selected type in
 > a catalogue file. Read the steps below before running it, and work on a copy of the family

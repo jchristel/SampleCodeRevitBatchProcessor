@@ -2,6 +2,8 @@
 
 **Panel:** Walls | **Button:** Facade Opening To Room
 
+<img src="Extensions/duHast-2025.extension/duHast.tab/Walls.panel/FacadeOpeningToRoom.pushbutton/Icon.png" width="40" alt="button icon">
+
 Reports the external wall area and the external window opening area for each selected room,
 and writes the result to a CSV file. Nothing is created or modified in the model.
 
@@ -61,8 +63,9 @@ opening family needs an entry in both `OPENING_FAMILY_NAMEs` and the mapper.
 
 ## Notes
 
-- `DEBUG` is set to `True` in the module, so the output window is verbose by default:
-  selected rooms, every opening found, and each wall area calculation are printed.
+- Set `DEBUG = True` in the module for a verbose run — selected rooms, every opening found,
+  and each wall area calculation are then printed to the output window. Useful when the report
+  comes back empty and you need to see which of the three constants is not matching.
 - The wall area is a simple `length x height` rectangle. It is not reduced by the openings,
   and it does not account for parapets, spandrels or sloping soffits.
 - Room area and height are read in project units and written to the CSV as-is; the column

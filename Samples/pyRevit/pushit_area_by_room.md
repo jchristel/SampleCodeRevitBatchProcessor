@@ -2,12 +2,14 @@
 
 **Panel:** PushIt | **Button:** Verify Push It Area
 
+<img src="Extensions/duHast-2025.extension/duHast.tab/PushIt.panel/Area%20By%20Room.pushbutton/Icon.png" width="40" alt="button icon">
+
 Measures each mock room by briefly placing a real Revit room inside it, writes the measured
 area back onto the mock room, and deletes the temporary rooms again.
 
 ## What it does
 
-For every mock room in the **active** model:
+Asks you to select which mock rooms to verify, then for each selected mock room:
 
 1. Places a temporary Revit room at the mock room's location.
 2. Reads the room's area and perimeter.
@@ -29,7 +31,9 @@ For every mock room in the **active** model:
 5. Deletes all temporary Revit rooms it created.
 
 A mock room whose temporary room comes back with an area of zero — usually because the
-location is not enclosed — is reported and left unchanged.
+location is not enclosed — is reported and left unchanged. Mock rooms whose centroid cannot
+be determined are dropped from the run before it starts, with a count printed to the output
+window.
 
 ## When to use this
 

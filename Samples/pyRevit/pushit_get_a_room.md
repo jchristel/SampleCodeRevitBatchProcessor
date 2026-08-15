@@ -2,12 +2,14 @@
 
 **Panel:** PushIt | **Button:** Get A Room! / Settings (split button)
 
+<img src="Extensions/duHast-2025.extension/duHast.tab/PushIt.panel/GetARoom.splitbutton/Icon.png" width="40" alt="button icon">
+
 Builds new mock room families from filled regions drawn in the model, then loads and places
 them.
 
 ---
 
-## Get A Room! (main button)
+## <img src="Extensions/duHast-2025.extension/duHast.tab/PushIt.panel/GetARoom.splitbutton/GetARoom.pushbutton/Icon.png" width="24" alt="Get A Room! icon"> Get A Room! (main button)
 
 This tool **authors Revit family files on disk**. It does not place instances of an existing
 mock room family — it creates a new set of family files for every filled region you select.
@@ -48,7 +50,7 @@ mock room family — it creates a new set of family files for every filled regio
 
 ---
 
-## Settings
+## <img src="Extensions/duHast-2025.extension/duHast.tab/PushIt.panel/GetARoom.splitbutton/Settings.pushbutton/Icon.png" width="24" alt="Settings icon"> Settings
 
 Stores **one value** in the model: the directory the generated family files are written to.
 

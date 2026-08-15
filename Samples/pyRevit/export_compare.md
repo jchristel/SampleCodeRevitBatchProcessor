@@ -2,6 +2,8 @@
 
 **Panel:** Export | **Button:** Compare
 
+<img src="Extensions/duHast-2025.extension/duHast.tab/Export.panel/Compare.pushbutton/Icon.png" width="40" alt="button icon">
+
 Compares the sheets listed in a Revit schedule against the PDF files in a folder, and
 reports which sheets have no matching file and which have more than one.
 

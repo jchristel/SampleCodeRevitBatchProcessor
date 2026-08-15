@@ -2,79 +2,95 @@
 
 **Panel:** Purge Unused | **Menu:** Purge
 
-Tools to remove unused graphic styles, patterns, parameters, views, and templates from the current Revit model, reducing file size and improving model cleanliness.
+<img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Icon.png" width="40" alt="button icon">
 
-Each tool comes in two variants: a **standard** version that processes everything automatically, and a **By Selection** version that shows a list and lets you choose which items to remove.
+Tools to remove unused graphic styles, patterns, parameters, views and templates from the
+current model.
 
----
+**Every tool in this menu asks you what to remove before it deletes anything.** None of them
+runs unattended. What differs is *how* they decide what to offer you.
 
-## Purge Line Styles
+## Two families of tool
 
-Removes all line styles that are not referenced by any element in the model.
+**Try-and-delete tools** — Line Styles, Line Patterns, Fill Patterns, Shared Parameters.
+These attempt to delete each candidate and keep only the deletions Revit accepts; anything
+still in use is rejected and survives. Each has a plain button that sweeps everything of that
+kind, and a **By Selection** twin that runs the same sweep restricted to items you pick.
 
-Uses a try-and-rollback method: it attempts to delete each style and confirms whether Revit allows the deletion (used styles are rejected). Only confirmed unused styles are permanently removed.
-
-**By Selection variant:** Presents a list of candidate line styles so you can choose which ones to remove.
-
----
-
-## Purge Fill Patterns
-
-Removes all fill patterns not used by any material, surface pattern, or element override in the model.
-
-**By Selection variant:** Presents a list so you can choose which fill patterns to remove.
+**List-and-choose tools** — Filters, Unplaced Legends, Unplaced Schedules, Templates,
+Unplaced Views. These work out the unused items up front and present that list for you to
+choose from. There is no By Selection twin because the selection *is* the tool.
 
 ---
 
-## Purge Line Patterns
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Line%20Styles.pushbutton/Icon.png" width="24" alt="Line Styles icon"> <img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Line%20Styles%20By%20Selection.pushbutton/Icon.png" width="24" alt="Line Styles By selection icon"> Line Styles / Line Styles By selection
 
-Removes all line patterns not used by any line style, grid, level, or other element in the model.
+Removes line styles not referenced by any element.
 
-**By Selection variant:** Presents a list so you can choose which line patterns to remove.
-
----
-
-## Purge Shared Parameters
-
-Removes shared parameter definitions that are not bound to any element category in the current project.
-
-**By Selection variant:** Presents a list so you can choose which shared parameters to remove.
+The **By Selection** variant lists **every** line style in the model, not just the unused
+ones — the try-and-delete pass still refuses to remove any that are in use, so a selection
+that includes used styles is safe, it simply won't remove them.
 
 ---
 
-## Purge Unused Filters
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Fill%20Patterns.pushbutton/Icon.png" width="24" alt="Fill Patterns icon"> <img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Fill%20Patterns%20By%20Selection.pushbutton/Icon.png" width="24" alt="Fill Patterns By Selection icon"> Fill Patterns / Fill Patterns By Selection
 
-Removes view filters that are not assigned to any view or view template in the model.
-
----
-
-## Purge Unused Legends
-
-Removes legend views that are not placed on any sheet.
+Removes fill patterns not used by any material, surface pattern or element override. Same
+selection behaviour as line styles.
 
 ---
 
-## Purge Unused Schedules
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Line%20Patterns.pushbutton/Icon.png" width="24" alt="Line Patterns icon"> <img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Line%20Patterns%20By%20Selection.pushbutton/Icon.png" width="24" alt="Line Patterns By Selection icon"> Line Patterns / Line Patterns By Selection
 
-Removes schedule views that are not placed on any sheet.
-
----
-
-## Purge Unused Templates
-
-Removes view templates that are not applied to any view in the model.
+Removes line patterns not used by any line style, grid, level or other element. Same
+selection behaviour as line styles.
 
 ---
 
-## Purge Unplaced Views
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Shared%20Parameters.pushbutton/Icon.png" width="24" alt="Shared Parameters icon"> <img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Shared%20Parameters%20By%20Selection.pushbutton/Icon.png" width="24" alt="Shared Parameters by Selection icon"> Shared Parameters / Shared Parameters by Selection
 
-Removes all views (floor plans, sections, elevations, 3D views, etc.) that are not placed on any sheet.
+Removes shared parameter definitions not bound to any category in the project. Same
+selection behaviour as line styles.
+
+---
+
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Unused%20Filters.pushbutton/Icon.png" width="24" alt="Filters icon"> Filters
+
+Collects view filters not assigned to any view or view template, then asks which of them to
+purge.
+
+---
+
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Unused%20Legends.pushbutton/Icon.png" width="24" alt="Unplaced Legends icon"> Unplaced Legends
+
+Collects legend views not placed on any sheet, then asks which to purge.
+
+---
+
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Unused%20Schedules.pushbutton/Icon.png" width="24" alt="Unplaced Schedules icon"> Unplaced Schedules
+
+Collects schedule views not placed on any sheet, then asks which to purge.
+
+---
+
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Unused%20Templates.pushbutton/Icon.png" width="24" alt="Templates icon"> Templates
+
+Collects view templates not applied to any view, then asks which to purge.
+
+---
+
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Unplaced%20Views.pushbutton/Icon.png" width="24" alt="Unplaced Views icon"> Unplaced Views
+
+Collects views not placed on any sheet — floor plans, sections, elevations, 3D views — then
+asks which to purge.
 
 ---
 
 ## Notes
 
-- Always save or create a model backup before running purge operations — deletions cannot be undone after saving.
-- **By Selection** variants are recommended when you are unsure which items are safe to remove.
-- Running Revit's built-in **Purge Unused** command after these tools can further reduce file size.
-- These tools target specific element types; they do not replace a full model audit.
+- Save or back up the model before purging. Deletions cannot be undone once the file is saved.
+- The list-and-choose tools show nothing to select when there is nothing unused of that kind;
+  they report so and exit.
+- Running Revit's built-in **Purge Unused** afterwards can free up further items these tools
+  do not target.
+- These tools cover specific element types. They are not a substitute for a full model audit.

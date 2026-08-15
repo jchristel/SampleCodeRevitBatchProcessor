@@ -2,6 +2,8 @@
 
 **Panel:** Walls | **Button:** Walls By Room
 
+<img src="Extensions/duHast-2025.extension/duHast.tab/Walls.panel/WallsByRooms.pushbutton/Icon.png" width="40" alt="button icon">
+
 Writes the room number of a room into a parameter on the walls bounding that room. Nothing
 is created or moved — this tool only sets parameter values on existing walls.
 

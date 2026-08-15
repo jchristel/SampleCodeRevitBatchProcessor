@@ -2,74 +2,102 @@
 
 **Panel:** Data | **Menu:** Collectors
 
-Tools that extract element data from the current Revit model and export it to structured files for use in reporting, analysis, or external workflows.
+<img src="Extensions/duHast-2025.extension/duHast.tab/Data.panel/Collectors.pulldown/Icon.png" width="40" alt="button icon">
+
+Eight tools that extract element data from Revit models and write it to **JSON** files for
+reporting, analysis or external workflows.
+
+## How they work
+
+All eight share the same shape:
+
+1. **Pick the models** — a document picker lists the active document and every loaded Revit
+   link, with multi-select. Data is collected from each chosen model in turn.
+2. **Save per model** — one save dialog per selected document, titled with that document's
+   name. Cancelling one save skips that model and continues with the next.
+3. Output is **JSON only**, wrapped with model metadata and a data type key, with the elapsed
+   time reported in the output window.
+
+**Exception:** the **Sheets** collector has no document picker. It runs on the active
+document only and asks for a single output file.
 
 ---
 
-## Rooms
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Data.panel/Collectors.pulldown/Rooms.pushbutton/Icon.png" width="24" alt="Rooms icon"> Rooms
 
-Exports room data from the current Revit model.
+Room data from the selected models.
 
-**Exported data includes:** Room name, number, department, level, area, and all available room parameters.
-
-Output is saved to a CSV or JSON file you specify. Use the exported data to populate spreadsheets, feed into room scheduling tools, or compare against an external Schedule of Accommodation.
-
----
-
-## Sheets
-
-Exports sheet data from the current Revit model.
-
-**Exported data includes:** Sheet number, sheet name, revision data, view names placed on the sheet, and all available sheet parameters.
-
-Use the exported data to build a document register or cross-reference with exported PDF/DWG filenames.
+Use the exported data to populate spreadsheets, feed room scheduling tools, or compare
+against an external Schedule of Accommodation.
 
 ---
 
-## Ceilings
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Data.panel/Collectors.pulldown/Spaces.pushbutton/Icon.png" width="24" alt="Spaces icon"> Spaces
 
-Exports ceiling data from the current Revit model.
-
-**Exported data includes:** Ceiling type, level, area, room association, and all available ceiling parameters.
-
-Use the exported data for ceiling finish schedules or quantity take-offs.
+MEP space data from the selected models. The space equivalent of the Rooms collector.
 
 ---
 
-## Levels
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Data.panel/Collectors.pulldown/Sheets.pushbutton/Icon.png" width="24" alt="Sheets icon"> Sheets
 
-Exports level data from the current Revit model.
+Sheet data from the **active document only**.
 
-**Exported data includes:** Level name, elevation, and associated parameters.
-
-Use the exported data to verify level setup against a project brief or to populate external tools.
+Use it to build a document register or cross-reference against exported PDF/DWG filenames.
 
 ---
 
-## Floors
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Data.panel/Collectors.pulldown/Ceilings.pushbutton/Icon.png" width="24" alt="Ceilings icon"> Ceilings
 
-Exports floor data from the current Revit model.
-
-**Exported data includes:** Floor type, level, offset from level, area, design set/option membership, phasing, and all available floor instance and type parameters.
-
-Use the exported data for floor finish schedules, quantity take-offs, or to cross-reference floor layouts against room data.
+Ceiling data from the selected models. Use it for ceiling finish schedules or quantity
+take-offs.
 
 ---
 
-## Items
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Data.panel/Collectors.pulldown/Floors.pushbutton/Icon.png" width="24" alt="Floors icon"> Floors
 
-Exports placed family instance data (furniture, equipment, and similar items) from the current Revit model.
+Floor data from the selected models, including design set/option membership and phasing.
+Use it for floor finish schedules, take-offs, or to cross-reference floor layouts against
+room data.
 
-**Exported data includes:** Family type, instance parameters, level, offset from level derived from solid geometry, placement location (x/y/z in mm), facing direction (rotation matrix), room associations across all project phases, design set/option membership, and phasing.
+---
 
-By default the following categories are collected: Furniture, Furniture Systems, Mechanical Equipment, Electrical Equipment, Electrical Fixtures, Plumbing Fixtures, Specialty Equipment, and Generic Model.
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Data.panel/Collectors.pulldown/Doors.pushbutton/Icon.png" width="24" alt="Doors icon"> Doors
 
-Use the exported data for FF&E schedules, room content reports, or to verify item placement against a room data sheet.
+Door data from the selected models. Use it for door schedules and for checking door-to-room
+relationships across linked architectural models.
+
+---
+
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Data.panel/Collectors.pulldown/Levels.pushbutton/Icon.png" width="24" alt="Levels icon"> Levels
+
+Level data from the selected models. Use it to verify level setup against a project brief or
+to populate external tools.
+
+---
+
+## <img src="Extensions/duHast-2025.extension/duHast.tab/Data.panel/Collectors.pulldown/Items.pushbutton/Icon.png" width="24" alt="Items icon"> Items
+
+Placed family instance data — furniture, equipment and similar.
+
+**Exported data includes:** family type, instance parameters, level, offset from level
+derived from solid geometry, placement location (x/y/z in mm), facing direction as a rotation
+matrix, room associations across all project phases, design set/option membership, and
+phasing.
+
+Collected categories: Furniture, Furniture Systems, Mechanical Equipment, Electrical
+Equipment, Electrical Fixtures, Plumbing Fixtures, Specialty Equipment, Generic Model.
+
+Use it for FF&E schedules, room content reports, or to verify item placement against a room
+data sheet.
 
 ---
 
 ## Notes
 
-- All collectors write to a destination file you choose via a save dialog; ensure the destination folder exists and is writable.
-- Export files are intended as point-in-time snapshots; re-run the collector to refresh the data after model changes.
-- Exported data can be used as input for Revit Batch Processor workflows that process multiple models.
+- Being able to collect from **linked models** is the main reason to use these over a Revit
+  schedule export: one run over a federated model captures every discipline.
+- Only instances with a point location are captured by the Items collector; line-based
+  placements are skipped.
+- Exports are point-in-time snapshots — re-run after model changes.
+- The JSON output is the input format for downstream duHast data processing and for Revit
+  Batch Processor workflows that process many models.

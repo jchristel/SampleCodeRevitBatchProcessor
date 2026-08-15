@@ -11,7 +11,7 @@ output = script.get_output()
 doc= revit.doc
 
 
-# import ceiling exporter
+# import room exporter
 from data.Collectors.rooms import rooms_export_entry
 
 # run the exporter 

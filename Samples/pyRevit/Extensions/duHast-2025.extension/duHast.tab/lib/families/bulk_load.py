@@ -64,10 +64,11 @@ def get_families(directory):
     # filter out family backup files ( ending in .00??.rfa )
     families_in_directory = remove_backup_revit_files_from_list(families_in_directory)
 
-    # filter out families which occur more than once
+    # filter out families which occur more than once, keeping the first one found
     for path in families_in_directory:
         file_name = os.path.basename(path)
         if file_name not in file_names:
+            file_names.append(file_name)
             filtered_families.append(path)
 
     return filtered_families

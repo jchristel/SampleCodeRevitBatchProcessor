@@ -1,4 +1,4 @@
-print("Oh, hi there! This is the rooms collector script running...")
+print("Oh, hi there! This is the spaces collector script running...")
 
 import sys
 import os
@@ -11,7 +11,7 @@ output = script.get_output()
 doc= revit.doc
 
 
-# import ceiling exporter
+# import space exporter
 from data.Collectors.spaces import spaces_export_entry
 
 # run the exporter 

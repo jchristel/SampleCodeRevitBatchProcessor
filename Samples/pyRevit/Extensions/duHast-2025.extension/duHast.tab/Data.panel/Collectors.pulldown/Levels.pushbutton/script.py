@@ -12,7 +12,7 @@ output = script.get_output()
 doc= revit.doc
 
 
-# import ceiling exporter
+# import level exporter
 from data.Collectors.levels import levels_export_entry
 
 # run the exporter 

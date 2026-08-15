@@ -62,8 +62,11 @@ def room_name_builder_ui(doc, element):
 
 def ceilings_to_rooms_entry(doc, output, forms):
     """
-    Compares reports from different libraries.
-    Reports need to be created by report_families_in_library function.
+    Creates a ceiling matching the boundary of each user selected room.
+
+    The ceiling type is resolved from the room's ceiling finish parameter, falling back to a
+    default type. Ceiling elevation and the phase the ceiling is created in are set by the
+    module level constants.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document

@@ -1,5 +1,6 @@
 layout:
   - RoomMateRooms
+  - ByCategory
 
 # bundle tooltip
 tooltip: Room and door exports to Room Mate

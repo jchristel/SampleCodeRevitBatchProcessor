@@ -1,0 +1,13 @@
+layout:
+  - Rooms
+  - Doors
+  - Windows
+  - FFE
+
+# bundle tooltip
+tooltip: Separate exports of rooms, doors, windows, and FFE elements
+
+
+# bundle author
+author: 
+  - Jan Christel

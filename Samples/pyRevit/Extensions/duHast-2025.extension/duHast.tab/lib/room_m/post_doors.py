@@ -2,11 +2,13 @@
 POC bridge for DOORS: take the duHast door export, translate to the viewer's
 v1 doors contract, and POST to the Rust server.
 
-The sibling of `post_rooms.py`, and deliberately built on it rather than
-beside it -- the transport (`make_client`, `_post_content`), the duHast
-flattening (`duhast_object_to_plain`) and the NDJSON writer
-(`write_ndjson_line`) are imported, not re-implemented, so the two pushes
-cannot drift on how they talk to the server.
+The sibling of `post_rooms.py`, and built alongside it on a shared base rather
+than on it -- the transport (`_post_content`), the duHast flattening
+(`duhast_object_to_plain`), the NDJSON writer (`write_ndjson_line`) and the
+identity envelope (`build_identity_envelope`) all come from `post_common.py`,
+imported and never re-implemented, so the two pushes cannot drift on how they
+talk to the server or on what they claim to be. This module holds only what is
+doors-specific, and knows nothing about rooms.
 
 What is genuinely different, and why:
 
@@ -18,8 +20,9 @@ What is genuinely different, and why:
   only disagree.
 - **The room references, the position and the direction do not come from the
   export.** See `translate_door` -- all four are read from the Revit API by
-  `room_mate.py`, in one pass, which is the only side that can ask the
-  questions correctly and the only way they are guaranteed to agree.
+  `room_m.utils.doors.door_placements`, in one pass, which is the only side
+  that can ask the questions correctly and the only way they are guaranteed to
+  agree.
 - **A degenerate footprint is dropped**, see `loops_from_polygon`. This is
   the one place this module actively discards data, and it has to: the bad
   value looks like real geometry.
@@ -43,14 +46,18 @@ from System.IO.Compression import GZipStream, CompressionMode
 from System.Net.Http import ByteArrayContent
 from System.Net.Http.Headers import MediaTypeHeaderValue
 
-from post_rooms import (
+from room_m.post_common import (
+    build_identity_envelope,
     duhast_object_to_plain,
     empty_push_refusal,
     loop_to_points,
     properties_to_map,
     write_ndjson_line,
     _post_content,
-    SOURCE,
+)
+
+from room_m.utils.phase_filter import (
+    in_selected_phase,
 )
 
 SERVER_URL = "http://127.0.0.1:5151/doors"
@@ -111,53 +118,25 @@ def loops_from_polygon(polygons):
 
 
 def build_envelope(doors_source):
-    """Everything the v1 doors contract needs EXCEPT `doors`: schema_version,
-    project, model (+ source), snapshot, phase, and the optional
-    model_to_shared. The doors counterpart of `post_rooms.build_envelope`, and
-    validated the same way -- identity is checked, never defaulted, because a
-    payload missing project id, model id or snapshot timestamp is broken input
-    and a loud ValueError here beats a 422 that names the wrong thing.
+    """Everything the v1 doors contract needs EXCEPT `doors`.
 
-    No `levels`: see the module docstring."""
-    project = doors_source.get("project")
-    if not project or not project.get("id"):
-        raise ValueError("export is missing its identity envelope: project.id")
-    model = doors_source.get("model")
-    if not model or not model.get("id"):
-        raise ValueError("export is missing its identity envelope: model.id")
-    snapshot = doors_source.get("snapshot")
-    if not snapshot or not snapshot.get("taken_at"):
-        raise ValueError("export is missing its identity envelope: snapshot.taken_at")
+    Which is the shared identity block and nothing else -- no `levels`, no
+    `room_boundary` (see the module docstring for both). That is why this is a
+    single delegating call rather than a body: what a doors envelope carries is
+    exactly what every entity's envelope carries, so the *only* doors-specific
+    facts left here are the schema version and the noun in the phase message.
 
-    # Required, exactly as for rooms, and refused by the server if absent: a
-    # push carrying no phase was never filtered by the phase range test, so it
-    # is unfiltered mixed-phase content. Doors are stricter than rooms on the
-    # OTHER side of this check -- a phase that DISAGREES with the model is
-    # refused rather than quarantined, because activating it would re-phase the
-    # model while its rooms stayed behind.
-    phase = doors_source.get("phase")
-    if not phase or not str(phase).strip():
-        raise ValueError(
-            "export is missing its phase: doors must be filtered to one Revit "
-            "phase before pushing (see room_mate.choose_phase)"
-        )
+    Kept as a named function rather than inlined into its two callers, on the
+    same terms as the transport helpers: the doors schema version is then stated
+    once, and the streaming and buffered paths cannot end up building different
+    envelopes.
 
-    model = dict(model)
-    model["source"] = SOURCE
-
-    envelope = {
-        "schema_version": SCHEMA_VERSION,
-        "project": project,
-        "model": model,
-        "snapshot": snapshot,
-        "phase": str(phase).strip(),
-    }
-
-    model_to_shared = doors_source.get("model_to_shared")
-    if model_to_shared is not None:
-        envelope["model_to_shared"] = model_to_shared
-
-    return envelope
+    Doors are stricter than rooms on the far side of the phase check -- a phase
+    that DISAGREES with the model is refused rather than quarantined, because
+    activating it would re-phase the model while its rooms stayed behind. That
+    is the server's rule, not this envelope's; what happens here is identical
+    for both entities."""
+    return build_identity_envelope(doors_source, "doors", SCHEMA_VERSION)
 
 
 def translate_door(door, placements):
@@ -165,7 +144,8 @@ def translate_door(door, placements):
     it carries no id (nothing downstream could key on it).
 
     `placements` is `{door id: {"from_room", "to_room", "insertion_point",
-    "normal"}}`, built by `room_mate.door_placements` from the Revit API.
+    "normal"}}`, built by `room_m.utils.doors.door_placements` from the Revit
+    API.
     **Everything in it is read from Revit rather than from the export**, and for
     two different reasons.
 
@@ -216,18 +196,6 @@ def translate_door(door, placements):
         "properties": properties_to_map(instance),
         "type_properties": properties_to_map(type_props),
     }
-
-
-def in_selected_phase(out_door, allowed_door_ids):
-    """Whether a translated door survives the phase filter. `None` means no
-    filter was supplied and every door passes.
-
-    The test itself lives in `room_mate.elements_in_phase`, which has the
-    document's phase ordering; this module stays free of the Revit assembly,
-    exactly as the room path does."""
-    if allowed_door_ids is None:
-        return True
-    return out_door["id"] in allowed_door_ids
 
 
 def translate(doors_source, placements, allowed_door_ids=None):

@@ -58,22 +58,26 @@ from room_m.utils.phase_filter import (
 
 SERVER_URL = "http://127.0.0.1:5151/rooms"
 SERVER_URL_STREAM = "http://127.0.0.1:5151/rooms/stream"
-SCHEMA_VERSION = 6
+SCHEMA_VERSION = 7
 
 
 LEVEL_LIST_KEY = "building level"
 ROOM_LIST_KEY = "room"
 
 
-def build_envelope(rooms_source, levels_source):
-    """Everything the v6 contract needs EXCEPT `rooms`: the shared identity
-    block, plus the two fields only a rooms push carries. Shared by the buffered
-    `translate()` and the streaming path so both build identity the same
-    way -- see contract.rs's `StreamEnvelope`, which is this dict's line-1
-    NDJSON counterpart server-side."""
-    # Built before the identity check, as it always has been: a malformed level
-    # is a broken export too, and reordering the two would only change which
-    # complaint a reader sees first.
+def translate_levels(levels_source):
+    """One model's duHast level export as the contract's `levels`, sorted by
+    elevation.
+
+    **Per model, and that is load-bearing.** A level id is a per-document
+    `ElementId`, so two models' level lists cannot be merged -- "Level 1" in the
+    architectural model and in the structural model are different ids naming the
+    same floor, and the server dedups them across models on read. Stamping the
+    list onto its own model's envelope block is what keeps that possible.
+
+    Built before the identity check, as it always has been: a malformed level is
+    a broken export too, and reordering the two would only change which complaint
+    a reader sees first."""
     levels = []
     for lvl in levels_source.get(LEVEL_LIST_KEY, []):
         levels.append({
@@ -82,25 +86,25 @@ def build_envelope(rooms_source, levels_source):
             "elevation": float(lvl.get("elevation", 0.0) or 0.0),
         })
     levels.sort(key=lambda l: l["elevation"])
+    return levels
 
-    envelope = build_identity_envelope(rooms_source, "rooms", SCHEMA_VERSION)
-    envelope["levels"] = levels
 
-    # The boundary regime this model was drawn to (contract.rs `RoomBoundary`),
-    # read once per document by `room_m.utils.post_envelope.add_room_boundary`
-    # and forwarded verbatim for the same reason as the transform: a model-level
-    # fact, so there is nothing to reconcile across rooms and the streaming path
-    # carries it with no per-room scan. Optional -- absent, the server falls back
-    # to the project's `[areas] boundary_location` and then to finish face, which
-    # is exactly what every push did before this field was sent.
-    #
-    # A ROOMS field, which is why it is here rather than in the shared block: the
-    # doors contract has no key for it.
-    room_boundary = rooms_source.get("room_boundary")
-    if room_boundary is not None:
-        envelope["room_boundary"] = room_boundary
+def build_envelope(run_envelope, model_blocks):
+    """Everything the v7 contract needs EXCEPT `rooms`: the run's shared identity
+    plus its `models` list, each block already carrying this model's `levels` and
+    (optionally) its `room_boundary`.
 
-    return envelope
+    Shared by the buffered `translate()` and the streaming path so both build
+    identity the same way -- see contract.rs's `StreamEnvelope`, which is this
+    dict's line-1 NDJSON counterpart server-side.
+
+    The two rooms-only per-model fields are stamped by the caller rather than
+    here: `room_boundary` by `room_m.utils.post_envelope.add_room_boundary` off
+    the document, `levels` by `translate_levels` off the export. Both are
+    optional to the server -- an absent regime falls back to the project's
+    `[areas] boundary_location` and then to finish face, which is exactly what
+    every push did before the field was sent."""
+    return build_identity_envelope(run_envelope, model_blocks, "rooms", SCHEMA_VERSION)
 
 
 def translate_room(room):
@@ -140,40 +144,60 @@ def translate_room(room):
     }
 
 
-def translate(rooms_source, levels_source, allowed_room_ids=None):
-    """Map the two duHast exports onto the server's v6 contract as one whole
+def translate(run_envelope, entries):
+    """Map a run's duHast exports onto the server's v7 contract as one whole
     payload. Used for the fully-buffered `/rooms` path and for regenerating
-    `settings/test_snapshot.json` (see STRATEGY-SERVER.md) -- kept producing
-    the exact same shape as before this module's streaming refactor.
+    `settings/test_snapshot.json` (see STRATEGY-SERVER.md).
 
-    `allowed_room_ids` is the phase filter (see `in_selected_phase`)."""
-    envelope = build_envelope(rooms_source, levels_source)
-    out_rooms = []
-    for room in rooms_source.get(ROOM_LIST_KEY, []):
-        out_room = translate_room(room)
-        if out_room is not None and in_selected_phase(out_room, allowed_room_ids):
-            out_rooms.append(out_room)
-    envelope["rooms"] = out_rooms
-    return envelope
+    `entries` is `[(model_block, contribution), ...]` -- one per document in the
+    run, as `room_m.exporters.rooms.export_model` builds them. Each
+    `contribution` carries the model's raw room and level exports and its phase
+    filter, so the per-model facts stay attached to the model they came from
+    rather than being flattened into one heap this side of the wire."""
+    blocks = []
+    per_model_rooms = []
+    for block, contribution in entries:
+        levels_source = duhast_objects_to_plain(contribution["levels"])
+        rooms_source = duhast_objects_to_plain(contribution["rooms"])
+        block = dict(block)
+        block["levels"] = translate_levels(levels_source)
+        blocks.append(block)
+
+        out_rooms = []
+        for room in rooms_source.get(ROOM_LIST_KEY, []):
+            out_room = translate_room(room)
+            if out_room is not None and in_selected_phase(out_room, contribution["allowed_ids"]):
+                out_rooms.append(out_room)
+        per_model_rooms.append(out_rooms)
+
+    contract = build_envelope(run_envelope, blocks)
+    for model, out_rooms in zip(contract["models"], per_model_rooms):
+        model["rooms"] = out_rooms
+    return contract
 
 
-def post_payload(json_formatted_room, json_formatted_level, url=SERVER_URL, allowed_room_ids=None):
-    """Flatten both duHast exports, translate, and POST the whole v6 contract
+def post_payload(run_envelope, entries, url=SERVER_URL):
+    """Flatten a run's duHast exports, translate, and POST the whole v7 contract
     as one buffered JSON body. Retained for the `settings/settings.toml`
     dev-seed fixture and small/manual pushes; the live Revit export path
     (`room_mate.py`) uses `post_payload_stream` instead -- see module
     docstring. Returns `(ok, status, text)`."""
-    rooms_source = duhast_objects_to_plain(json_formatted_room)
-    levels_source = duhast_objects_to_plain(json_formatted_level)
-    contract = translate(rooms_source, levels_source, allowed_room_ids)
+    contract = translate(run_envelope, entries)
 
     # Guarded on the way OUT, not inside `translate`: `translate` also generates
     # the `settings/test_snapshot.json` fixture and the `test_data` seed, and a
     # fixture generator has no business refusing to produce an empty document.
     # What is a fault is *pushing* one.
-    if not contract["rooms"]:
-        return empty_push_refusal(
-            "rooms", contract, len(rooms_source.get(ROOM_LIST_KEY, [])), [])
+    #
+    # Counted across the RUN, matching the streaming path and
+    # `empty_push_refusal`'s own scope: a run that sent nothing is the fault, and
+    # one rooms-less document among several is not.
+    written = sum(len(model["rooms"]) for model in contract["models"])
+    if not written:
+        raw = sum(
+            len(duhast_objects_to_plain(c["rooms"]).get(ROOM_LIST_KEY, [])) for _, c in entries
+        )
+        return empty_push_refusal("rooms", contract, raw, [])
 
     body = json.dumps(contract)
 
@@ -181,35 +205,41 @@ def post_payload(json_formatted_room, json_formatted_level, url=SERVER_URL, allo
     return _post_content(url, content)
 
 
-def post_payload_stream(json_formatted_room, json_formatted_level, url=SERVER_URL_STREAM, allowed_room_ids=None):
-    """Gzip-compress an NDJSON stream (line 1 = envelope, one line per room)
-    to the server's streaming ingest. Each room is flattened, translated,
-    and written into the gzip stream individually as it's read off the raw
-    export -- no whole-export `json.dumps` round-trip and no second full
-    rooms list, so peak memory on the translation side is one room's dict.
-    The compressed body does still accumulate in a `MemoryStream` before the
-    POST (see the module docstring for why that's acceptable). This is the
-    path `room_mate.py` calls for a live Revit export. Returns
-    `(ok, status, text)`.
+def post_payload_stream(run_envelope, entries, url=SERVER_URL_STREAM):
+    """Gzip-compress an NDJSON stream (line 1 = envelope, one line per room) to
+    the server's streaming ingest. Each room is flattened, translated, and
+    written into the gzip stream individually as it's read off the raw export --
+    no whole-export `json.dumps` round-trip and no second full rooms list, so
+    peak memory on the translation side is one room's dict. The compressed body
+    does still accumulate in a `MemoryStream` before the POST (see the module
+    docstring for why that's acceptable). This is the path `room_mate.py` calls
+    for a live Revit export. Returns `(ok, status, text)`.
 
-    Sends nothing when the translation keeps no rooms (`empty_push_refusal`).
-    The count is taken *as the stream is written* rather than by pre-scanning
-    the export, because the two questions differ: `allowed_room_ids` says what
-    the phase filter keeps, and `translate_room` independently drops unplaced
-    rooms, so only the write loop knows how many rooms actually reached the
-    wire. The body is built and then discarded in that case -- cheap, since
-    there was nothing in it, and it buys a single unambiguous count instead of
-    two estimates that could disagree."""
-    # The metadata around the room list (identity envelope, file header) is
-    # small -- flatten it in one go, leaving the (potentially huge) room list
-    # untouched as raw duHast objects to be flattened one at a time below.
-    room_meta = dict(
-        (key, value) for key, value in json_formatted_room.items() if key != ROOM_LIST_KEY
-    )
-    envelope = build_envelope(
-        duhast_object_to_plain(room_meta),
-        duhast_object_to_plain(json_formatted_level),
-    )
+    `entries` is `[(model_block, contribution), ...]` -- the whole run. **Every
+    room line names its own model**, rather than the stream switching models on a
+    marker line: a dropped or reordered line would otherwise file rooms under the
+    wrong model, and a room id is unique only within a model, so the result would
+    resolve against real-looking rooms instead of failing. The id costs a few
+    bytes gzip removes anyway.
+
+    Sends nothing when the translation keeps no rooms across the whole run
+    (`empty_push_refusal`). The count is taken *as the stream is written* rather
+    than by pre-scanning the export, because the two questions differ: the phase
+    filter says what it keeps, and `translate_room` independently drops unplaced
+    rooms, so only the write loop knows how many rooms actually reached the wire.
+    The body is built and then discarded in that case -- cheap, since there was
+    nothing in it, and it buys a single unambiguous count instead of two
+    estimates that could disagree."""
+    # The metadata around each model's room list (file header) is small --
+    # flatten it in one go, leaving the (potentially huge) room lists untouched
+    # as raw duHast objects to be flattened one at a time below. `levels` is
+    # small too and is needed whole, on the model block it belongs to.
+    blocks = []
+    for block, contribution in entries:
+        block = dict(block)
+        block["levels"] = translate_levels(duhast_object_to_plain(contribution["levels"]))
+        blocks.append(block)
+    envelope = build_envelope(run_envelope, blocks)
 
     raw = 0
     unplaced = 0
@@ -221,17 +251,20 @@ def post_payload_stream(json_formatted_room, json_formatted_level, url=SERVER_UR
         # leaveOpen defaults False: closing gz flushes the gzip footer into `out`.
         gz = GZipStream(out, CompressionMode.Compress)
         write_ndjson_line(gz, envelope)
-        for room in json_formatted_room.get(ROOM_LIST_KEY, []):
-            raw += 1
-            out_room = translate_room(duhast_object_to_plain(room))
-            if out_room is None:
-                unplaced += 1
-                continue
-            if not in_selected_phase(out_room, allowed_room_ids):
-                out_of_phase += 1
-                continue
-            written += 1
-            write_ndjson_line(gz, out_room)
+        for block, (_, contribution) in zip(blocks, entries):
+            model_id = block["id"]
+            for room in contribution["rooms"].get(ROOM_LIST_KEY, []):
+                raw += 1
+                out_room = translate_room(duhast_object_to_plain(room))
+                if out_room is None:
+                    unplaced += 1
+                    continue
+                if not in_selected_phase(out_room, contribution["allowed_ids"]):
+                    out_of_phase += 1
+                    continue
+                written += 1
+                out_room["model_id"] = model_id
+                write_ndjson_line(gz, out_room)
         gz.Close()  # MUST close to flush the gzip footer; do NOT skip
         body = out.ToArray()
     finally:

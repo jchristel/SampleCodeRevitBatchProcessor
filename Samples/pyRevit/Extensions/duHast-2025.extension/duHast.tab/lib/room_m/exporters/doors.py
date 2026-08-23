@@ -20,18 +20,19 @@
 #
 #
 """
-The DOORS half of a push: export one model's doors and send them.
+The DOORS half of a push: export each selected model's doors and send the whole
+run as one push.
 
 One of the entity exporters `room_mate.ENTITY_EXPORTERS` dispatches over -- see
-`room_m.exporters.rooms` for the two names every module in this package offers.
+`room_m.exporters.rooms` for the three names every module in this package
+offers.
 
-Doors are not a blocking entity: a failure here is recorded and the run carries
-on, because by the time this runs a combined run's rooms push has already
-succeeded and losing that would be the wrong trade. `room_mate` owns that
-policy; this module only reports honestly which way it went.
+**Doors no longer depend on rooms having been pushed first.** The server used to
+refuse a doors push to a model with no rooms; it does not, because it resolves a
+door's rooms itself and "the rooms have not arrived yet" is a legitimate state it
+reports rather than refuses. So the rooms and doors buckets are independent, and
+a run may push either alone, in any order.
 """
-
-import copy
 
 from duHast.Revit.Doors.Export.to_data_door import get_all_door_data
 from duHast.Data.Objects.Collectors import data_door as dd
@@ -51,63 +52,69 @@ from room_m.utils.doors import (
 stamp_envelope = None
 
 
-def export_and_post(selected_doc, envelope, phase_name, return_value, pb):
-    """Export one model's doors and push them, reusing the run's already built
-    `envelope` (identity, phase, model_to_shared) so a combined run's pushes
-    cannot disagree about what model or phase they describe.
+def export_model(selected_doc, phase_name, return_value):
+    """Export one model's doors as this document's contribution to the run's
+    doors bucket, or None when it could not be read.
 
-    Returns whether the push landed. Doors are NOT blocking, so a False here
-    does not stop the model -- it is reported and the run moves on, having
-    already flipped the overall `Result` red. The value is still stated
-    honestly rather than always True, because the table is what decides what a
-    failure costs, and an exporter that lied about its outcome would take that
-    decision away from it.
+    Failures are recorded and swallowed rather than raised, so one unreadable
+    document costs its own doors and not the rest of the run's.
 
-    Failures are recorded and swallowed rather than raised. In a combined run
-    the rooms push has already succeeded by the time this runs, and losing that
-    because the door half failed would be the wrong trade; in a doors-only run
-    there is nothing to protect, but recording rather than raising keeps one
-    model's failure from ending the loop either way. The run still ends red.
-
-    Note this reports a failure for a model with no doors at all -- see
-    `post_doors`'s module docstring, which owns that decision and its cost."""
+    :return: `{"doors", "placements", "allowed_ids"}` -- the raw duHast export,
+        the Revit-read placements, and this document's phase filter.
+    :rtype: dict
+    """
     try:
         allowed_door_ids = doors_in_phase(selected_doc, phase_name)
-        # Read from the Revit API, not from the export -- see
-        # `door_placements`.
+        # Read from the Revit API, not from the export -- see `door_placements`.
+        # Keyed by bare door id and therefore only ever used against ITS OWN
+        # model's doors, which is why it rides the contribution rather than being
+        # merged into one run-wide map: door ids, like room ids, are unique only
+        # within a document.
         placements = door_placements(selected_doc, phase_name)
 
         door_data = get_all_door_data(selected_doc)
-        dic_door_data = {dd.DataDoor.data_type: door_data}
-        dic_door_data.update(copy.deepcopy(envelope))
-        json_formatted_doors = build_json_for_file(dic_door_data, "{}".format(selected_doc.Title))
+        json_formatted_doors = build_json_for_file(
+            {dd.DataDoor.data_type: door_data}, "{}".format(selected_doc.Title))
     except Exception as e:
         return_value.update_sep(
             False, "{}: door export failed: {}".format(selected_doc.Title, e)
         )
+        return None
+
+    return {
+        "doors": json_formatted_doors,
+        "placements": placements,
+        "allowed_ids": allowed_door_ids,
+    }
+
+
+def post_bucket(run_envelope, entries, return_value):
+    """Push the run's whole doors bucket -- every selected model, one request.
+
+    `entries` is `[(model_block, contribution), ...]`. Returns whether the push
+    landed.
+
+    Note this reports a failure for a RUN with no doors at all -- see
+    `post_doors`'s module docstring, which owns that decision and its cost. It no
+    longer reports one for a *model* with no doors, which is ordinary in a
+    multiselect run and used to redden it."""
+    if not entries:
         return False
 
-    # The per-door Revit room-reference reads above are the slow part of a doors
-    # push, so the same "cancel during the export, before the post" check the
-    # room path makes applies here -- and applies whether or not rooms ran first.
-    if pb.cancelled:
-        return False
-
-    ok, status, text = post_doors_stream(
-        json_formatted_doors, placements, allowed_door_ids=allowed_door_ids
-    )
+    ok, status, text = post_doors_stream(run_envelope, entries)
+    models = ", ".join(block["id"] for block, _ in entries)
     if ok:
         return_value.append_message(
-            "{}: doors accepted ({})".format(selected_doc.Title, text)
+            "{}: server accepted doors ({})".format(models, text)
         )
         return True
-    else:
-        # There is no 202 here: unlike rooms, a doors push whose phase
-        # disagrees with the model is REFUSED rather than quarantined, because
-        # activating it would re-phase the model while its rooms stayed behind.
-        # So any non-2xx is a real failure with a message worth surfacing.
-        return_value.update_sep(
-            False,
-            "{}: doors push failed ({}): {}".format(selected_doc.Title, status, text),
-        )
-        return False
+
+    # There is no 202 here: unlike rooms, a doors push whose phase disagrees with
+    # the model is REFUSED rather than quarantined, because activating it would
+    # re-phase the model while its rooms stayed behind. So any non-2xx is a real
+    # failure with a message worth surfacing.
+    return_value.update_sep(
+        False,
+        "{}: doors push failed ({}): {}".format(models, status, text),
+    )
+    return False

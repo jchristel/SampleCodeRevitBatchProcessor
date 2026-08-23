@@ -58,53 +58,85 @@ BOUNDARY_LOCATION_TO_WIRE = {
 }
 
 
-def build_model_envelope(selected_doc, project, phase_name, return_value):
-    """The envelope fields BOTH pushes carry: identity, phase, and the
-    model->shared transform.
+def build_run_envelope(project, phase_name):
+    """The envelope fields one RUN carries, shared by every model in it.
 
-    Built once per model and handed to whichever pushes run, so a combined run
-    cannot have its two halves disagree about which model, snapshot or phase
-    they describe -- and so a doors-only run builds identity by exactly the same
-    code as a combined one rather than by a second copy that could drift.
+    **Split from the per-model block below, and the split is the point.** A run
+    now exports several documents and pushes them as one bucket, so what is true
+    of the run and what is true of one document had to stop being one dict. The
+    project is picked once, the phase is picked once, and the snapshot id times
+    the whole read -- which is what makes "these documents were read together"
+    expressible at all. Before the bucket, N models meant N pushes and N
+    timestamps minutes apart, and nothing said they belonged to one run.
 
-    `room_boundary` is deliberately NOT here: see `add_room_boundary`."""
+    The project block comes from the run's picked project (choose_project), NOT
+    the Revit document: the id must match a settings bundle the server has
+    registered or the push 422s, and it becomes a storage path key -- a
+    Revit-derived guess can't guarantee either.
 
-    # v4 identity envelope (STRATEGY.md "Identity"). The project block comes
-    # from the run's picked project (choose_project), NOT the Revit document:
-    # the id must match a settings bundle the server has registered or the push
-    # 422s, and it becomes a storage path key -- a Revit-derived guess can't
-    # guarantee either. Model id is a known stopgap: Title, not a GUID -- no
-    # stable GUID source exists in duHast for a plain local (non-workshared,
-    # non-cloud) file. Two consequences of keying on Title: two different files
-    # that share a Title collide into ONE model record on the server, and
-    # renaming a file forks its history into a new record. If duHast ever
-    # exposes Document.CreationGUID / worksharing GUIDs, switch to those.
-    #
-    # taken_at carries microseconds: it becomes the snapshot
-    # filename server-side, so two pushes of the same model within
-    # one second must not collide (the server skips a duplicate
-    # timestamp rather than overwriting, but the client shouldn't
-    # produce one in normal use). %f is fixed-width, so the string
-    # stays lexically sortable -- the server's "lexical max =
-    # newest" rule depends on that.
-    envelope = {
+    taken_at carries microseconds: it becomes the snapshot filename server-side,
+    so two runs within one second must not collide (the server skips a duplicate
+    timestamp rather than overwriting, but the client shouldn't produce one in
+    normal use). %f is fixed-width, so the string stays lexically sortable --
+    the server's "lexical max = newest" rule depends on that.
+
+    :return: the run's envelope, without its `models` list.
+    :rtype: dict
+    """
+    return {
         "project": {
             "id": project["id"],
             "name": project["name"],
         },
-        "model": {
-            "id": selected_doc.Title,
-            "name": selected_doc.Title,
-        },
         "snapshot": {
             "taken_at": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
         },
-        # The one AUTHORED envelope field: model_to_shared and room_boundary
-        # below are both read off the document, but a document has many phases
-        # and only the user knows which is being pushed. Required, unlike those
-        # two -- the server refuses a push that declares none, because rooms
-        # that were never filtered are a mix of every phase.
+        # The one AUTHORED envelope field: model_to_shared and room_boundary are
+        # both read off a document, but a document has many phases and only the
+        # user knows which is being pushed. Required, unlike those two -- the
+        # server refuses a push that declares none, because rooms that were never
+        # filtered are a mix of every phase.
+        #
+        # Per RUN, not per model. `choose_phase` offers only names common to
+        # every selected document and each document resolves that name against
+        # its own phase table, so a run is scoped to one phase by construction
+        # and a per-model phase could only ever disagree with itself.
         "phase": phase_name,
+    }
+
+
+def build_model_block(selected_doc, return_value):
+    """The envelope fields ONE DOCUMENT carries -- identity and its placement.
+
+    Everything here is a fact about this Revit file and cannot be shared across
+    the run: `levels` are keyed by per-document `ElementId`s, the transform
+    places this document, and the boundary regime (stamped separately, see
+    `add_room_boundary`) is this document's own Area and Volume Computations
+    setting. Merging any of them across models would be merging things that only
+    look alike.
+
+    Model id is a known stopgap: Title, not a GUID -- no stable GUID source
+    exists in duHast for a plain local (non-workshared, non-cloud) file. Two
+    consequences of keying on Title: two different files that share a Title
+    collide into ONE model record on the server, and renaming a file forks its
+    history into a new record. If duHast ever exposes Document.CreationGUID /
+    worksharing GUIDs, switch to those.
+
+    **A run must not select two documents with the same Title.** The server
+    refuses a push declaring one model twice rather than merging them, which is
+    the honest answer -- but the collision is this line's fault, not the user's,
+    and it is worth knowing where it comes from when that 422 arrives.
+
+    Each entity gets its own copy of this block (`room_mate.export_entry` deep
+    copies it), because a rooms push stamps `room_boundary` and `levels` onto its
+    copy and a doors push has no key for either.
+
+    :return: this model's envelope block, without `levels` or `room_boundary`.
+    :rtype: dict
+    """
+    block = {
+        "id": selected_doc.Title,
+        "name": selected_doc.Title,
     }
 
     # Model->shared placement transform (HANDOVER-georeferencing.md Phase 1).
@@ -112,14 +144,13 @@ def build_model_envelope(selected_doc, project, phase_name, return_value):
     # (ActiveProjectLocation) -- a model-level fact, the same relationship duHast
     # otherwise stamps onto every room polygon, so there is nothing to reconcile
     # across rooms. Reduced to the 2D affine the server's `ModelToShared`
-    # carries, and stamped on the envelope (so both the buffered and the
-    # streaming push carry it -- the streaming path builds its envelope from this
-    # dict minus the room list). Advisory and optional: if the read fails, omit
-    # it and still push; the model renders via auto-fit exactly as before, and an
-    # identity transform (an un-surveyed model) is emitted normally.
+    # carries, and stamped on this block so both the buffered and the streaming
+    # push carry it. Advisory and optional: if the read fails, omit it and still
+    # push; the model renders via auto-fit exactly as before, and an identity
+    # transform (an un-surveyed model) is emitted normally.
     try:
         rotation, translation = get_coordinate_system_translation_and_rotation(selected_doc)
-        envelope["model_to_shared"] = {
+        block["model_to_shared"] = {
             "matrix": coordinate_system_to_affine(rotation, translation),
         }
     except Exception as e:
@@ -128,7 +159,7 @@ def build_model_envelope(selected_doc, project, phase_name, return_value):
             "pushing without a georeference".format(selected_doc.Title, e)
         )
 
-    return envelope
+    return block
 
 
 def boundary_location_to_room_boundary(location):
@@ -144,17 +175,21 @@ def boundary_location_to_room_boundary(location):
     return BOUNDARY_LOCATION_TO_WIRE.get(str(location))
 
 
-def add_room_boundary(selected_doc, envelope, return_value):
-    """Stamp the model's boundary regime onto `envelope`, if it has a readable
-    one.
+def add_room_boundary(selected_doc, block, return_value):
+    """Stamp the model's boundary regime onto its envelope `block`, if it has a
+    readable one.
 
-    Split off `build_model_envelope` rather than left beside the transform it
+    Split off `build_model_block` rather than left beside the transform it
     otherwise resembles, because the two are not the same kind of fact. The
     transform places any geometry, doors included; the boundary regime only
     tells the server how wide a wall zone between ROOMS is, and the doors
     contract has no field to carry it. So a doors-only run skips this, and skips
     the warnings it would otherwise emit about a value nothing on the wire would
-    have read."""
+    have read.
+
+    Per model, never per run: a run legitimately mixes a centreline document
+    with a finish-face one, and the server sizes each model's wall zone off its
+    own declaration."""
 
     # Which boundary regime this model was drawn to
     # (Superseded/HANDOVER-areas-boundary-location.md Decision 1). Read ONCE per
@@ -182,7 +217,7 @@ def add_room_boundary(selected_doc, envelope, return_value):
                 "pushing without a declared boundary".format(selected_doc.Title, location)
             )
         else:
-            envelope["room_boundary"] = room_boundary
+            block["room_boundary"] = room_boundary
     except Exception as e:
         return_value.append_message(
             "{}: could not read the room boundary location ({}); "

@@ -20,22 +20,31 @@
 #
 #
 """
-The ROOMS half of a push: export one model's rooms and levels, and send them.
+The ROOMS half of a push: export each selected model's rooms and levels, and
+send the whole run as one push.
 
 One of the entity exporters `room_mate.ENTITY_EXPORTERS` dispatches over. Every
-module in this package offers the same two names, which is the whole interface:
+module in this package offers the same three names, which is the whole
+interface:
 
-- `export_and_post(selected_doc, envelope, phase_name, return_value, pb)`
-  returning whether the push landed.
-- `stamp_envelope`, a callable adding this entity's own field to the per-model
-  envelope, or None when it has none to add.
+- `export_model(selected_doc, phase_name, return_value)` returning this
+  document's contribution to the run's bucket, or None when it could not be
+  read.
+- `post_bucket(run_envelope, entries, return_value)` sending the accumulated
+  bucket, returning whether the push landed.
+- `stamp_envelope`, a callable adding this entity's own field to one model's
+  envelope block, or None when it has none to add.
+
+**Exporting and posting are separate names because a run is now one push.**
+They used to be one call per model, which is what made a doors push depend on
+whether its siblings had already been sent. Now every selected document
+contributes to a bucket and the bucket is posted once, so the ordering question
+does not arise.
 
 Nothing here knows that doors exist, and `room_mate` knows nothing about how
 rooms are exported -- which is what lets windows and FF&E arrive as new modules
 beside this one rather than as new branches inside the run driver.
 """
-
-import copy
 
 from duHast.Revit.Rooms.Export.to_data_room import get_all_room_data
 from duHast.Revit.Levels.Export.to_data_level_building import get_all_level_data
@@ -63,90 +72,87 @@ from room_m.utils.post_envelope import (
 stamp_envelope = add_room_boundary
 
 
-def export_and_post(selected_doc, envelope, phase_name, return_value, pb):
-    """Export one model's rooms and levels and push them, reusing the already
-    built `envelope`.
+def export_model(selected_doc, phase_name, return_value):
+    """Export one model's rooms and levels as this document's contribution to the
+    run's rooms bucket, or None when it could not be read.
 
-    Returns whether the push landed. Rooms are a *blocking* entity in
-    `room_mate.ENTITY_EXPORTERS`, so False stops the model there and nothing
-    queued behind rooms is attempted -- there would be no rooms on the server to
-    hang them off. A cancel reads as "didn't land" for that same reason rather
-    than as a failure.
+    Raises nothing of its own: an export failure is recorded on `return_value`
+    and answered with None, so one unreadable document costs its own rooms and
+    not the rest of the run's. That is a change from when this also posted --
+    there was no successful half to protect then, because the push for this model
+    had not happened yet. Now there is: the models already in the bucket.
 
-    Raises on export failures rather than recording them, unlike the
-    non-blocking exporters, and the asymmetry is intentional: nothing has been
-    pushed for this model yet when this runs, so there is no successful half to
-    protect. `room_mate.export_entry` catches per model."""
+    :return: `{"rooms", "levels", "allowed_ids"}` -- the two raw duHast exports
+        and this document's phase filter, kept unflattened so the streaming path
+        can translate one room at a time.
+    :rtype: dict
+    """
+    try:
+        # Resolve the run's phase against THIS document's own phases before
+        # exporting anything: the name is the identity across models, and a
+        # document that doesn't have it fails here rather than contributing an
+        # unfiltered, silently-wrong room set.
+        allowed_room_ids = rooms_in_phase(selected_doc, phase_name)
+        room_data = get_all_room_data(selected_doc)
+        level_data = get_all_level_data(selected_doc)
 
-    # Resolve the run's phase against THIS document's own phases before
-    # exporting anything: the name is the identity across models, and a document
-    # that doesn't have it raises here (caught per model) rather than pushing an
-    # unfiltered, silently-wrong room set.
-    allowed_room_ids = rooms_in_phase(selected_doc, phase_name)
-    # get room data
-    room_data = get_all_room_data(selected_doc)
-    # get level data
-    level_data = get_all_level_data(selected_doc)
+        # duHast's file wrapper, one per export, exactly as before -- the
+        # translation side reads the list keys out of these.
+        json_formatted_room = build_json_for_file(
+            {dr.DataRoom.data_type: room_data}, "{}".format(selected_doc.Title))
+        json_formatted_level = build_json_for_file(
+            {dl.DataLevelBuilding.data_type: level_data}, "{}".format(selected_doc.Title))
+    except Exception as e:
+        return_value.update_sep(
+            False, "{}: room export failed: {}".format(selected_doc.Title, e)
+        )
+        return None
 
-    # convert into a dictionary. The envelope is deep-copied on
-    # every use now that one envelope serves several pushes:
-    # .update() shares the nested project/model/snapshot dict
-    # instances, and no two exports may be able to
-    # cross-contaminate if anything downstream mutates its input.
-    dic_room_data = {
-        dr.DataRoom.data_type:room_data
+    return {
+        "rooms": json_formatted_room,
+        "levels": json_formatted_level,
+        "allowed_ids": allowed_room_ids,
     }
-    dic_room_data.update(copy.deepcopy(envelope))
 
-    # add some more properties before writing to json
-    json_formatted_room = build_json_for_file(dic_room_data, "{}".format(selected_doc.Title))
 
-    # convert into a dictionary
-    dic_level_data = {
-        dl.DataLevelBuilding.data_type:level_data
-    }
-    dic_level_data.update(copy.deepcopy(envelope))
+def post_bucket(run_envelope, entries, return_value):
+    """Push the run's whole rooms bucket -- every selected model, one request.
 
-    # add some more properties before writing to json
-    json_formatted_level = build_json_for_file(dic_level_data, "{}".format(selected_doc.Title))
+    `entries` is `[(model_block, contribution), ...]`. Returns whether the push
+    landed.
 
-    # a large export takes a while -- honour a cancel clicked during it before
-    # starting the (also slow) post; the caller re-checks pb.cancelled after
-    # this returns and stops the loop
-    if pb.cancelled:
+    A failed push flips the overall Result red. It no longer aborts anything:
+    there is nothing queued behind it, because the run exports first and posts
+    once.
+
+    A `status` of None here is not an unreachable server: `post_payload_stream`
+    also refuses to send a push carrying no rooms at all, and reports that
+    refusal through this same tuple. Either way it is a failed push whose message
+    says which, so there is nothing to branch on."""
+    if not entries:
         return False
 
-    # post to the server: gzip-compressed NDJSON stream, so a
-    # >100 MB FFE export never gets buffered whole client-side or
-    # server-side (see roommate's HANDOVER-streaming*.md).
-    # A failed push flips the overall Result red but does NOT abort
-    # the caller's loop -- one bad model shouldn't discard the other
-    # models' successful pushes, the run just must not end green.
-    #
-    # A `status` of None here is not an unreachable server: `post_payload_stream`
-    # also refuses to send a push carrying no rooms at all, and reports that
-    # refusal through this same tuple. Either way it is a failed push whose
-    # message says which, so there is nothing to branch on.
-    ok, status, text = post_payload_stream(
-        json_formatted_room, json_formatted_level, allowed_room_ids=allowed_room_ids
-    )
+    # gzip-compressed NDJSON stream, so a >100 MB FFE export never gets buffered
+    # whole client-side or server-side (see roommate's HANDOVER-streaming*.md).
+    ok, status, text = post_payload_stream(run_envelope, entries)
+    models = ", ".join(block["id"] for block, _ in entries)
     if ok:
-        # 202 is NOT a plain accept: the phase disagrees with what this model
-        # was first pushed under, so the payload is stored inert and nothing
-        # reads it until someone activates it. Reported distinctly, or a user
-        # sees "accepted" and believes the model updated.
+        # 202 is NOT a plain accept: at least one model's phase disagrees with
+        # what it was first pushed under, so that model's payload is stored inert
+        # and nothing reads it until someone activates it. Reported distinctly,
+        # or a user sees "accepted" and believes every model updated.
         if status == 202:
             return_value.append_message(
-                "{}: stored but NOT live -- {}".format(selected_doc.Title, text)
+                "{}: stored, but NOT every model is live -- {}".format(models, text)
             )
         else:
             return_value.append_message(
-                "{}: server accepted ({})".format(selected_doc.Title, text)
+                "{}: server accepted rooms ({})".format(models, text)
             )
         return True
 
     return_value.update_sep(
         False,
-        "{}: push failed ({}): {}".format(selected_doc.Title, status, text),
+        "{}: rooms push failed ({}): {}".format(models, status, text),
     )
     return False

@@ -20,6 +20,8 @@
 #
 #
 
+import copy
+
 from collections import namedtuple
 
 from duHast.Utilities.Objects.result import Result
@@ -35,7 +37,8 @@ from room_m.utils.generic import (
 )
 
 from room_m.utils.post_envelope import (
-    build_model_envelope,
+    build_run_envelope,
+    build_model_block,
 )
 
 from room_m.exporters import rooms as rooms_exporter
@@ -47,38 +50,30 @@ DOORS = "doors"
 
 
 EntityExporter = namedtuple(
-    "EntityExporter", ["export_and_post", "stamp_envelope", "blocking"])
+    "EntityExporter", ["export_model", "post_bucket", "stamp_envelope"])
 
 # What each entity contributes to a run, and the ONLY place an entity is named
-# in this module's machinery. `export_and_post_model` dispatches over this table
-# rather than branching per entity, so adding windows or FF&E is a new module in
+# in this module's machinery. `export_entry` dispatches over this table rather
+# than branching per entity, so adding windows or FF&E is a new module in
 # `room_m.exporters`, one row here, and one entry point -- not another `if` in
 # the run driver.
 #
-# `blocking` is the run policy, not a fact about the entity, which is why it
-# lives here rather than in the exporter module. Rooms block: a door's
-# from_room/to_room are room ids, so a doors push to a model whose rooms are not
-# on the server is refused, and pressing on after a failed rooms push would be
-# attempting exactly that. Doors do not block: by the time they run in a combined
-# push the rooms have already landed, and discarding that because the door half
-# failed would be the wrong trade. Windows and FF&E will reference rooms the same
-# way doors do, so they belong on the non-blocking side too.
-#
-# A blocking exporter is allowed to RAISE rather than return False -- nothing has
-# been pushed for the model when it runs, so there is no successful half to
-# protect, and `export_entry` catches per model. A non-blocking one must record
-# and return False instead, or one entity's failure would abandon the entities
-# after it.
+# **`blocking` is gone, and its absence is the change.** It used to say that a
+# model's rooms had to land before its doors were attempted, because the server
+# refused a doors push to a model with no rooms. The server no longer asks: it
+# resolves a door's rooms itself, and "the rooms have not arrived yet" is a state
+# it reports rather than refuses. So the buckets are independent, and there is no
+# ordering left for the table to encode. Windows and FF&E inherit that.
 ENTITY_EXPORTERS = {
     ROOMS: EntityExporter(
-        export_and_post=rooms_exporter.export_and_post,
+        export_model=rooms_exporter.export_model,
+        post_bucket=rooms_exporter.post_bucket,
         stamp_envelope=rooms_exporter.stamp_envelope,
-        blocking=True,
     ),
     DOORS: EntityExporter(
-        export_and_post=doors_exporter.export_and_post,
+        export_model=doors_exporter.export_model,
+        post_bucket=doors_exporter.post_bucket,
         stamp_envelope=doors_exporter.stamp_envelope,
-        blocking=False,
     ),
 }
 
@@ -114,15 +109,13 @@ def rooms_only_export_entry(doc, uiapp, output, forms):
 
 
 def doors_export_entry(doc, uiapp, output, forms):
-    """Push DOORS alone, against rooms already on the server.
+    """Push DOORS alone.
 
-    The reason this can exist as its own entry: a doors push carries no room
-    data, only room *ids*, so it does not need the rooms to be re-sent -- it
-    needs them to be *there*. Whether they are is the server's question, not
-    this script's, and the server already answers it (a doors push to a model
-    with no rooms is refused, naming the reason). Second-guessing that here
-    would mean this script deciding what counts as "has rooms", which is exactly
-    the check `has_room_snapshot` was fixed for getting wrong.
+    A doors push carries no room data, only room *ids*, so it never needed the
+    rooms re-sent. It used to need them to already be *there* -- the server
+    refused otherwise -- and that is no longer true either: the server resolves a
+    door's rooms itself and reports "not yet" rather than refusing. So this entry
+    is now genuinely independent, and doors may be pushed before their rooms.
 
     :return: Result object with status and message.
     :rtype: Result
@@ -139,7 +132,13 @@ def export_entry(doc, uiapp, output, forms, entities):
     the one project, the one phase, and the per-model loop are identical whether
     a run pushes rooms, doors or both, so they are written once. `entities` is
     the only thing that varies, and it varies in one place -- what
-    `export_and_post_model` attempts per model.
+    `export_model` reads per document.
+
+    **Every selected model is exported first, then each entity is pushed once.**
+    A run used to be N pushes per entity, one per model, which meant a doors push
+    depended on whether its siblings had already landed and gave the run's models
+    N snapshot ids minutes apart. Now the run reads everything, then sends one
+    bucket per entity under one snapshot id.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -147,8 +146,9 @@ def export_entry(doc, uiapp, output, forms, entities):
     :type output: pyRevit.output
     :param forms: pyRevit forms.
     :type forms: pyRevit.forms
-    :param entities: which `ENTITY_EXPORTERS` keys this run pushes, in push
-        order. Order matters -- see `export_and_post_model`.
+    :param entities: which `ENTITY_EXPORTERS` keys this run pushes. Order is
+        no longer meaningful -- the buckets are independent, see
+        `ENTITY_EXPORTERS`.
     :type entities: tuple
 
     :return: Result object with status and message.
@@ -190,18 +190,34 @@ def export_entry(doc, uiapp, output, forms, entities):
             return return_value
         return_value.append_message("Pushing phase '{}'".format(phase_name))
 
+        # One envelope for the whole run: one project, one phase, one moment
+        # of reading. Built before the loop so every model in the push shares a
+        # snapshot id -- which is what makes "these documents were read
+        # together" a thing the store can express.
+        run_envelope = build_run_envelope(project, phase_name)
+
         # get going
         model_counter = 0
-        
+
+        # One bucket per entity, filled model by model and posted once at the
+        # end. The export is the slow half and happens per document; the push is
+        # one request per entity for the whole run.
+        buckets = dict((entity, []) for entity in entities)
+
+        # Read inside the `with` and acted on outside it, rather than reaching
+        # for `pb.cancelled` after the progress bar has exited.
+        cancelled = False
+
         # set up a progress bar
         with forms.ProgressBar(
             title="Exporting model: {value} of {max_value}", cancellable=True
         ) as pb:
-        
-            # get data for each selected document and write to file. Each
-            # model's export+post runs in its own try: one model failing
-            # (an export exception, a broken envelope) must not abandon the
-            # remaining models -- same per-model policy as a failed post.
+
+            # get data for each selected document. Each model's export runs in
+            # its own try: one model failing (an export exception, a broken
+            # envelope) must not abandon the remaining models. It costs that
+            # model's contribution to every bucket and nothing else -- the run
+            # still pushes what it did read, and still ends red.
             for selected_doc in selected_docs:
 
                 # update progress bar
@@ -209,8 +225,8 @@ def export_entry(doc, uiapp, output, forms, entities):
                 pb.update_progress(model_counter, max_value=len(selected_docs))
 
                 try:
-                    export_and_post_model(
-                        selected_doc, project, phase_name, return_value, pb, entities)
+                    export_model(
+                        selected_doc, phase_name, return_value, entities, buckets)
                 except Exception as e:
                     return_value.update_sep(
                         False, "{}: failed with exception: {}".format(selected_doc.Title, e)
@@ -218,8 +234,25 @@ def export_entry(doc, uiapp, output, forms, entities):
 
                 # check for cancel
                 if pb.cancelled:
+                    cancelled = True
                     return_value.update_sep(False, "User cancelled.")
                     break
+
+        # A cancelled run pushes nothing. The alternative -- sending the models
+        # read so far -- would store a partial run under one snapshot id, which
+        # reads downstream as "these are the documents that were exported
+        # together" and would be a lie. Someone who cancels wants nothing sent.
+        if cancelled:
+            return return_value
+
+        for entity in entities:
+            entries = buckets[entity]
+            if not entries:
+                # Nothing was read for this entity at all -- every model failed,
+                # and each failure is already on `return_value`. Posting an empty
+                # bucket would only add a second, vaguer complaint.
+                continue
+            ENTITY_EXPORTERS[entity].post_bucket(run_envelope, entries, return_value)
 
     except Exception as e:
         message = "Failed to export {} data with exception: {}".format(
@@ -232,43 +265,38 @@ def export_entry(doc, uiapp, output, forms, entities):
     return return_value
 
 
-def export_and_post_model(selected_doc, project, phase_name, return_value, pb, entities):
-    """Export and push one model's `entities` under the picked `project`
-    ({"id", "name"}), scoped to `phase_name`, recording the outcome on
-    `return_value`. Raises on export/envelope failures -- the caller catches per
-    model so one bad model doesn't abandon the rest.
+def export_model(selected_doc, phase_name, return_value, entities, buckets):
+    """Export one model's `entities` into the run's `buckets`, scoped to
+    `phase_name`, recording any failure on `return_value`.
 
-    **The order in `entities` is not decoration.** A doors push to a model whose
-    rooms are not on the server is refused (a door's from_room/to_room are room
-    ids, and a room id is unique only within a model), so when a run carries
-    both, rooms go first and a failed rooms push stops the model there. That is
-    also why a failed rooms push returns instead of pressing on: pushing doors
-    against rooms that did not land is not something to attempt on a hunch.
+    Raises on envelope failures -- the caller catches per model so one bad model
+    doesn't abandon the rest. An *entity's* export failure is not a raise: the
+    exporter records it and answers None, so an unreadable door set does not also
+    cost this model's rooms.
 
-    A doors-ONLY run makes no such check and deliberately doesn't: it is asking
-    the server about rooms it did not send, and the server is the only side that
-    knows the answer."""
-    envelope = build_model_envelope(selected_doc, project, phase_name, return_value)
+    **There is no ordering here, and there used to be.** Rooms had to be pushed
+    before doors for the same model, because the server refused a doors push to a
+    model with no rooms. It no longer does, so the entities are independent and
+    the loop below is genuinely a loop rather than a sequence with a rule in it.
 
-    # Only the entities actually being pushed get to stamp the envelope. A
-    # doors-only run therefore never reads the boundary regime -- which would
-    # spend a document read to produce a warning about a value nothing on the
-    # wire would carry.
-    for entity in entities:
-        stamp_envelope = ENTITY_EXPORTERS[entity].stamp_envelope
-        if stamp_envelope is not None:
-            stamp_envelope(selected_doc, envelope, return_value)
-
-    # Don't begin this model's export at all if a cancel landed during the
-    # previous model's post. The check that matters more is inside each push --
-    # it is the export, not this, that a user waits through long enough to give
-    # up during. The caller re-checks after this returns and stops the loop.
-    if pb.cancelled:
-        return
+    Each entity gets its own deep copy of the model's envelope block: a rooms
+    push stamps `room_boundary` and `levels` onto its copy and a doors push has
+    no key for either, and two entities sharing one nested dict is the exact
+    cross-contamination the old per-push deep copy existed to prevent."""
+    block = build_model_block(selected_doc, return_value)
 
     for entity in entities:
         exporter = ENTITY_EXPORTERS[entity]
-        pushed = exporter.export_and_post(
-            selected_doc, envelope, phase_name, return_value, pb)
-        if not pushed and exporter.blocking:
-            return
+        entity_block = copy.deepcopy(block)
+
+        # Only the entity actually being pushed stamps its own field. A
+        # doors-only run therefore never reads the boundary regime -- which
+        # would spend a document read to produce a warning about a value nothing
+        # on the wire would carry.
+        if exporter.stamp_envelope is not None:
+            exporter.stamp_envelope(selected_doc, entity_block, return_value)
+
+        contribution = exporter.export_model(selected_doc, phase_name, return_value)
+        if contribution is None:
+            continue
+        buckets[entity].append((entity_block, contribution))

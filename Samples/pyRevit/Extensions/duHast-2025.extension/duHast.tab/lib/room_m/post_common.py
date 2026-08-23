@@ -151,15 +151,15 @@ def properties_to_map(instance_properties):
     return out
 
 
-def build_identity_envelope(source, entity, schema_version):
+def build_identity_envelope(run_envelope, model_blocks, entity, schema_version):
     """The envelope fields EVERY entity's contract carries: schema_version,
-    project, model (+ source), snapshot, phase, and the optional
-    model_to_shared.
+    project, snapshot, phase, and the run's `models` list (each block stamped
+    with its `source`).
 
     **One implementation, not one per entity.** The rooms and doors contracts
-    differ in what they carry *around* identity -- levels and a boundary regime
-    for rooms, nothing for doors -- but the identity block itself is the same
-    four validations and the same five keys in both. Two copies of it could
+    differ in what each model block carries *around* identity -- levels and a
+    boundary regime for rooms, nothing for doors -- but the identity block itself
+    is the same validations and the same keys in both. Two copies of it could
     drift on what counts as a valid identity, which is precisely the failure
     these validations exist to catch, and each new entity (windows, FFE) would
     add another copy to keep in step.
@@ -168,65 +168,66 @@ def build_identity_envelope(source, entity, schema_version):
     caller's because the contracts version independently -- a change to the room
     schema has nothing to say about doors.
 
-    Identity is validated, never defaulted: a payload missing project id,
-    model id, or snapshot timestamp is broken input, and a loud ValueError
-    here beats what the old `"unknown"`/`""` fallbacks did downstream (every
-    default-identity push silently merged into one shared fake project, and
-    an empty taken_at became a snapshot file literally named `.json`).
-    `room_m.utils.post_envelope.build_model_envelope` always supplies all three,
-    so only genuinely broken inputs fail.
+    Identity is validated, never defaulted: a push missing project id, model id,
+    or snapshot timestamp is broken input, and a loud ValueError here beats what
+    the old `"unknown"`/`""` fallbacks did downstream (every default-identity
+    push silently merged into one shared fake project, and an empty taken_at
+    became a snapshot file literally named `.json`).
+    `room_m.utils.post_envelope` always supplies all three, so only genuinely
+    broken inputs fail.
+
+    **A run with no models is refused here too.** The server refuses one as well,
+    and this side says the same thing earlier -- a push exists because a run
+    exported at least one document, so an empty list means the run driver lost
+    every model without noticing.
 
     The server can now mint a snapshot id itself when a payload omits
     `snapshot.taken_at` (it answers with the resolved id) -- this producer
     deliberately keeps supplying its own: its timestamp says when the model
     was READ, which the server's receipt time can't know."""
-    project = source.get("project")
+    project = run_envelope.get("project")
     if not project or not project.get("id"):
-        raise ValueError("export is missing its identity envelope: project.id")
-    model = source.get("model")
-    if not model or not model.get("id"):
-        raise ValueError("export is missing its identity envelope: model.id")
-    snapshot = source.get("snapshot")
+        raise ValueError("push is missing its identity envelope: project.id")
+    snapshot = run_envelope.get("snapshot")
     if not snapshot or not snapshot.get("taken_at"):
-        raise ValueError("export is missing its identity envelope: snapshot.taken_at")
+        raise ValueError("push is missing its identity envelope: snapshot.taken_at")
 
-    # REQUIRED, unlike model_to_shared below and the callers' own optional
-    # fields. Those are advisory model facts the server can fall back on; this
-    # one says which phase the entities were FILTERED to, and a push that omits
-    # it is refused -- rightly, because unfiltered content is a mix of every
-    # phase and there is no safe default to assume. Validated here rather than
-    # left to the server so the failure names the producer's own bug instead of
-    # arriving as a 422.
-    phase = source.get("phase")
+    # REQUIRED, unlike the per-model optional fields. Those are advisory model
+    # facts the server can fall back on; this one says which phase the entities
+    # were FILTERED to, and a push that omits it is refused -- rightly, because
+    # unfiltered content is a mix of every phase and there is no safe default to
+    # assume. Validated here rather than left to the server so the failure names
+    # the producer's own bug instead of arriving as a 422.
+    #
+    # One phase for the whole run, so it is validated once rather than per model.
+    phase = run_envelope.get("phase")
     if not phase or not str(phase).strip():
         raise ValueError(
-            "export is missing its phase: {} must be filtered to one Revit "
+            "push is missing its phase: {} must be filtered to one Revit "
             "phase before pushing (see room_m.utils.ui.choose_phase)".format(entity)
         )
 
-    model = dict(model)
-    model["source"] = SOURCE
+    if not model_blocks:
+        raise ValueError(
+            "push declares no models: a {} push exists because a run exported at "
+            "least one document".format(entity)
+        )
 
-    envelope = {
+    models = []
+    for block in model_blocks:
+        if not block or not block.get("id"):
+            raise ValueError("push is missing its identity envelope: model.id")
+        block = dict(block)
+        block["source"] = SOURCE
+        models.append(block)
+
+    return {
         "schema_version": schema_version,
         "project": project,
-        "model": model,
         "snapshot": snapshot,
         "phase": str(phase).strip(),
+        "models": models,
     }
-
-    # The model->shared placement transform (see contract.rs `ModelToShared`) is
-    # a model-level fact stamped onto the envelope by
-    # `room_m.utils.post_envelope.build_model_envelope`, so it is forwarded
-    # verbatim rather than derived here. Optional: absent on an un-placed model,
-    # which the server renders via auto-fit exactly as before. It rides the
-    # envelope, so the streaming paths (which build this from the export's
-    # metadata, minus the entity list) carry it with no per-entity scan.
-    model_to_shared = source.get("model_to_shared")
-    if model_to_shared is not None:
-        envelope["model_to_shared"] = model_to_shared
-
-    return envelope
 
 
 def write_ndjson_line(gz, obj):
@@ -304,13 +305,21 @@ def empty_push_refusal(entity, envelope, raw_count, dropped):
     422 is the backstop and stays the authority; this exists because the
     producer can say something the server cannot. The server sees one number --
     zero -- and can only guess that a phase filter is behind it. This side still
-    has the export in hand, so it can report that the model held 26 rooms and
+    has the export in hand, so it can report that the run held 26 rooms and
     name where each one went, which is the difference between "0 rooms" sending
     someone to read server logs and a message that points at the phase picker.
 
     Shared with `post_doors` rather than reimplemented there, on the same terms
     as the transport helpers: two guards that could drift on what "empty" means
     would be worse than none.
+
+    **Scoped to the RUN, not to one model** -- which is what the multi-model
+    push fixed rather than a detail of it. The question a producer can answer is
+    "someone asked for a push and there is nothing to send"; asked per model it
+    turned a rooms-only document in a multiselect run into a failed doors push
+    and a red run, which was routine and wrong. Asked once per run it is the
+    question it was always meant to be. The server keeps its own per-model rooms
+    guard, and the two are answering different things rather than disagreeing.
 
     `dropped` is `[(count, why), ...]` -- the fates that account for the missing
     entries, printed in order and skipping the zeroes. It is allowed to be empty
@@ -322,7 +331,7 @@ def empty_push_refusal(entity, envelope, raw_count, dropped):
     none never had anything to filter, and blaming the phase for that would send
     a reader hunting the wrong thing."""
     project = (envelope.get("project") or {}).get("id", "unknown")
-    model = (envelope.get("model") or {}).get("id", "unknown")
+    models = ", ".join(m.get("id", "unknown") for m in envelope.get("models") or []) or "no models"
     phase = envelope.get("phase", "unknown")
 
     if raw_count == 0:
@@ -340,8 +349,8 @@ def empty_push_refusal(entity, envelope, raw_count, dropped):
         advice = " Check that the phase filter matched something before pushing."
 
     message = (
-        "refusing to push {} for {}/{} in phase '{}': {}. Nothing was sent.{}".format(
-            entity, project, model, phase, detail, advice)
+        "refusing to push {} for {} ({}) in phase '{}': {}. Nothing was sent.{}".format(
+            entity, project, models, phase, detail, advice)
     )
     print(message)
     return (False, None, message)

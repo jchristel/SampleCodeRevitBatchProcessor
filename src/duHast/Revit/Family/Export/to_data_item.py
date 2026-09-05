@@ -69,6 +69,15 @@ from duHast.Utilities.utility import encode_utf8
 DEFAULT_ITEM_CATEGORIES = [
     BuiltInCategory.OST_Furniture,
     BuiltInCategory.OST_FurnitureSystems,
+    # Added 2026-09-05 because leaving it out exported the wrong half of the
+    # model. Measured on a real document: 87 of 179 nested instances were
+    # OST_Furniture components whose SuperComponent was Casework, all one
+    # family (Handle_Joinery_FIJO_900). So the joinery HANDLES arrived as
+    # first-class items while the casework runs they belong to were absent
+    # entirely. Casework is furniture by every definition a room data sheet
+    # uses, and a list that admits the components of a thing but not the thing
+    # itself is harder to justify than either including or excluding both.
+    BuiltInCategory.OST_Casework,
     BuiltInCategory.OST_MechanicalEquipment,
     BuiltInCategory.OST_ElectricalEquipment,
     BuiltInCategory.OST_ElectricalFixtures,

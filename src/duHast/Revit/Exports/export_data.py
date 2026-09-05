@@ -156,7 +156,26 @@ def get_level_data(doc, element, built_in_parameter_def):
     level_d = DataLevel()
 
     # get level properties
-    level_d.name = encode_utf8(Element.Name.GetValue(doc.GetElement(element.LevelId)))
+    #
+    # Resolved to an element first, and checked, because LevelId can be
+    # InvalidElementId: a window hosted in a curtain panel or on a face has no
+    # level, and doc.GetElement hands back None for it.
+    #
+    # None must never reach Element.Name.GetValue. It does not raise - it returns
+    # the property DESCRIPTOR - and encode_utf8 passes a non string through
+    # unchanged by design, so the descriptor lands in name and kills Base.to_json
+    # at the very end of the export, by which point nothing in the error names the
+    # element that caused it. An unresolved level has to be answered here, where
+    # the element is still in hand.
+    #
+    # "no level" is the marker to_data_room and to_data_space already use for this
+    # same state. Deliberately not DataLevel's "-" default, which means the field
+    # was never populated rather than looked up and found absent.
+    level_element = doc.GetElement(element.LevelId)
+    if level_element is None:
+        level_d.name = "no level"
+    else:
+        level_d.name = encode_utf8(Element.Name.GetValue(level_element))
     level_d.id = element.LevelId.Value
     level_d.offset_from_level = get_built_in_parameter_value(
         element=element, built_in_parameter_def=built_in_parameter_def

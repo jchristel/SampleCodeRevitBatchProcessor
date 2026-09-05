@@ -36,6 +36,7 @@ from Autodesk.Revit.DB import (
     FamilyInstance,
     FilteredElementCollector,
     LocationPoint,
+    Options,
 )
 
 from duHast.Data.Objects.Collectors import data_item as dItem
@@ -45,6 +46,13 @@ from duHast.Geometry.matrix import Matrix
 from duHast.Revit.Common.Geometry.points import (
     convert_XYZ_to_point3,
     get_point_as_doubles,
+)
+from duHast.Revit.Common.Geometry.solids import (
+    get_oriented_bounding_box_from_family_instance,
+)
+from duHast.Revit.Common.Geometry.to_data_conversion import (
+    convert_bounding_box_to_flattened_2d_points,
+    convert_xyz_in_data_geometry_polygons,
 )
 from duHast.Revit.Exports.export_data import (
     get_design_set_data,
@@ -287,6 +295,64 @@ def get_level_data_by_bounding_box(doc, revit_family_instance):
 
 
 # ---------------------------------------------------------------------------
+# Helper: footprint polygon
+# ---------------------------------------------------------------------------
+
+def get_footprint_polygons(doc, revit_family_instance):
+    """
+    Returns the item's footprint as the list of polygons DataItem.polygon takes,
+    or an empty list when there is no solid geometry to measure.
+
+    ORIENTED, so an instance placed at an angle keeps its angle. The world aligned
+    alternative is the right answer to "what extents does this occupy" and the wrong
+    one to "what shape is this": a desk rotated thirty degrees would come out as an
+    upright rectangle lying across it. That cannot be corrected afterwards, since an
+    axis aligned box no longer records the angle, so it has to be measured in the
+    instance's own frame in the first place.
+
+    Sub-components are included, which is where this parts company with doors and
+    windows. A casework run's handles and a fixture's tap are SHARED nested
+    families: separate elements, absent from their host's own geometry. Measuring
+    the host alone returns the carcass, which is not the footprint of the thing on
+    the schedule. A door's nested content is the opposite case - its hardware is not
+    the door - which is why the flag is per caller and not a default.
+
+    Decimal feet, via get_point_as_doubles, matching doors, rooms and the rest of
+    the polygon geometry. Deliberately NOT the millimetres location_point carries:
+    the two units sit side by side in one record, and the polygon is the one that
+    has to line up with every other footprint.
+
+    An empty list is an ordinary state rather than a failure, and the reason this
+    returns one where to_data_door rejects the element outright. A family with no 3D
+    geometry still has a location, a level and its properties, all worth exporting;
+    a consumer draws it at its insertion point instead.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revit_family_instance: A placed Revit family instance.
+    :type revit_family_instance: Autodesk.Revit.DB.FamilyInstance
+
+    :return: A list of polygon instances, empty when nothing could be measured.
+    :rtype: list[:class:`.DataGeometryPolygon2`]
+    """
+
+    # the placement rides on the box Transform, which
+    # convert_bounding_box_to_flattened_2d_points applies to the corners, so the
+    # points come back world placed and rotated
+    bounding_box = get_oriented_bounding_box_from_family_instance(
+        revit_family_instance, Options(), include_sub_components=True
+    )
+    if bounding_box is None:
+        return []
+
+    flattened = convert_bounding_box_to_flattened_2d_points(bounding_box)
+    if len(flattened.outer_loop) == 0:
+        return []
+
+    return [convert_xyz_in_data_geometry_polygons(doc, flattened)]
+
+
+# ---------------------------------------------------------------------------
 # Core populate function
 # ---------------------------------------------------------------------------
 
@@ -300,6 +366,7 @@ def populate_data_item_object(doc, revit_family_instance):
     - type name and type parameters
     - level name, level id, and offset from level
     - location point (x/y/z in mm) and rotation matrix
+    - footprint polygon (oriented, in decimal feet), when the family has solids
     - phasing (created / demolished)
     - design set / option membership
     - model name
@@ -323,6 +390,11 @@ def populate_data_item_object(doc, revit_family_instance):
 
     data_i = dItem.DataItem()
     data_i.location_point = location_data
+
+    # footprint, measured in the instance's own frame so a rotated item keeps its
+    # angle. Empty when the family carries no solid geometry, which is not grounds
+    # for dropping the item - see get_footprint_polygons.
+    data_i.polygon = get_footprint_polygons(doc, revit_family_instance)
 
     # rooms this item belongs to (phase-aware)
     data_i.rooms = get_room_ids(doc, revit_family_instance)

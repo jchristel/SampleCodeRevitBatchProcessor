@@ -36,13 +36,16 @@ from duHast.Data.Objects.Collectors.Properties import data_type_properties
 from duHast.Data.Objects.Collectors.Properties import data_instance_properties
 from duHast.Data.Objects.Collectors.Properties import data_revit_model
 from duHast.Data.Objects.Collectors import data_base
+from duHast.Data.Objects.Collectors.Properties import data_element_geometry_base
 from duHast.Data.Objects.Collectors.Properties.Geometry import geometry_base
 from duHast.Data.Objects.Collectors.Properties.data_property_names import (
     DataPropertyNames,
 )
 
 
-class DataItem(data_base.DataBase):
+class DataItem(
+    data_base.DataBase, data_element_geometry_base.DataElementGeometryBase
+):
 
     data_type = "item"
 
@@ -58,6 +61,21 @@ class DataItem(data_base.DataBase):
 
         # store data type in base class
         super(DataItem, self).__init__(data_type=DataItem.data_type, j=j)
+
+        # the geometry mixin supplies self.polygon, and the super call above is what
+        # populates it from j. A LIST of polygons, because that is what every exporter
+        # writes and what data_to_shapely iterates: reading a single polygon back, as
+        # the mixin once did, could not load anything the exporters had written.
+        #
+        # An empty list is an ordinary state rather than a failure. A family carrying
+        # no 3D geometry has no footprint, and is still worth exporting for its
+        # location, level and properties - which is why an item, unlike a door, is
+        # never dropped for want of one.
+        #
+        # Units differ from location_point below, deliberately: the polygon is decimal
+        # feet, matching doors, rooms and the rest of the geometry, while
+        # location_point is millimetres. Recorded here rather than reconciled, since
+        # changing either would move every consumer that already reads it.
 
         # set default values
         self.super_component_id = -1

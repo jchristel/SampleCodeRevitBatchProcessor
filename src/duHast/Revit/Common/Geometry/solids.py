@@ -207,7 +207,81 @@ def get_bounding_box_from_family_geometry(geometry_element):
     return merged_result
 
 
-def get_oriented_bounding_box_from_family_instance(family_instance, options=None):
+def _get_family_instance_solids(
+    family_instance, options, include_sub_components, visited=None
+):
+    """
+    Collects the solids of a family instance, optionally reaching into its shared
+    nested sub-components.
+
+    A SHARED nested family is a separate element and does not appear in its host's
+    geometry at all, so solids gathered from the host alone stop at the carcass: a
+    casework run measures without its handles, a fixture without its tap. Walking
+    GetSubComponentIds is the only way to reach them. A non shared nested family is
+    already inside the host geometry as a GeometryInstance, so nothing here can
+    double count it.
+
+    Recursive, because a sub-component can itself nest, and guarded by a set of ids
+    already measured so a containment tree that somehow refers back to itself cannot
+    loop forever.
+
+    :param family_instance: The family instance to collect solids from.
+    :type family_instance: Autodesk.Revit.DB.FamilyInstance
+    :param options: Geometry options.
+    :type options: Autodesk.Revit.DB.Options
+    :param include_sub_components: Whether to walk shared nested sub-components.
+    :type include_sub_components: bool
+    :param visited: Accumulator of element ids already measured, used when recursing.
+    :type visited: set
+
+    :return: A list of solids, empty when nothing measurable was found.
+    :rtype: list of Autodesk.Revit.DB.Solid
+    """
+
+    solids = []
+
+    geometry_element = family_instance.get_Geometry(options)
+    if geometry_element is not None:
+        get_solids_from_geometry(geometry_element, solids)
+
+    if not include_sub_components:
+        return solids
+
+    if visited is None:
+        visited = set()
+    visited.add(family_instance.Id.Value)
+
+    try:
+        sub_element_ids = family_instance.GetSubComponentIds()
+    except Exception:
+        # not every family category offers GetSubComponentIds, tags among them
+        return solids
+
+    if sub_element_ids is None:
+        return solids
+
+    # taken off the instance rather than passed in, so doors and windows keep calling
+    # this with the two arguments they always have
+    document = family_instance.Document
+
+    for sub_element_id in sub_element_ids:
+        if sub_element_id.Value in visited:
+            continue
+        sub_element = document.GetElement(sub_element_id)
+        if sub_element is None:
+            continue
+        solids.extend(
+            _get_family_instance_solids(
+                sub_element, options, include_sub_components, visited
+            )
+        )
+
+    return solids
+
+
+def get_oriented_bounding_box_from_family_instance(
+    family_instance, options=None, include_sub_components=False
+):
     """
     Returns a bounding box of a family instance's solids that KEEPS the
     instance's rotation, by measuring it in the instance's own coordinate system
@@ -227,6 +301,20 @@ def get_oriented_bounding_box_from_family_instance(family_instance, options=None
     :type family_instance: Autodesk.Revit.DB.FamilyInstance
     :param options: Geometry options; a default Options() is used when omitted.
     :type options: Autodesk.Revit.DB.Options
+    :param include_sub_components: Whether to measure the instance's shared nested
+        sub-components as well as the instance itself.
+
+        Defaults to False, and the default is the point: a door's sub-components
+        are its leaf, panels and hardware, and doors nest heavily - 113 of 205 on
+        one measured facade file, 58 of them a single handle family. Merging those
+        in would grow every door and window footprint already in production to
+        swallow its hardware, and the wider value would look every bit as plausible
+        as the correct one. So this is a parameter rather than a change of
+        behaviour: doors and windows keep measuring exactly what they always have.
+
+        Opt in where the nested content IS the object being measured, as a casework
+        run's carcass is.
+    :type include_sub_components: bool
 
     :return: A bounding box in the instance's coordinate system, with its
         Transform set to the instance transform, or None when the instance has
@@ -234,13 +322,11 @@ def get_oriented_bounding_box_from_family_instance(family_instance, options=None
     :rtype: Autodesk.Revit.DB.BoundingBoxXYZ
     """
 
-    geometry_element = family_instance.get_Geometry(
-        options if options is not None else Options()
+    solids = _get_family_instance_solids(
+        family_instance,
+        options if options is not None else Options(),
+        include_sub_components,
     )
-    if geometry_element is None:
-        return None
-
-    solids = get_solids_from_geometry(geometry_element)
     if len(solids) == 0:
         # a real state rather than a failure: some families carry no 3D geometry
         return None

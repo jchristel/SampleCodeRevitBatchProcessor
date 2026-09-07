@@ -1,0 +1,10 @@
+# bundle title
+title: "Spaces"
+
+# bundle tooltip
+tooltip: Exports all MEP spaces from the selected services models
+
+
+# bundle author
+author: 
+  - Jan Christel

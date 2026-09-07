@@ -3,9 +3,10 @@ layout:
   - Doors
   - Windows
   - FFE
+  - Spaces
 
 # bundle tooltip
-tooltip: Separate exports of rooms, doors, windows, and FFE elements
+tooltip: Separate exports of rooms, doors, windows, FFE and MEP spaces
 
 
 # bundle author

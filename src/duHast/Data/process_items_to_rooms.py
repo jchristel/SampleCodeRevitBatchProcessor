@@ -10,7 +10,7 @@ This module:
       (populated during export via Revit's phase-aware room lookup)
     - reports all rooms and any associated item(s) found
 
-No shapely / numpy dependency — room membership is resolved by id, not by geometry.
+No shapely / numpy dependency - room membership is resolved by id, not by geometry.
 
 """
 
@@ -79,7 +79,7 @@ def _build_dictionary_by_level_and_data_type(data_reader):
     Returns a dictionary where:
 
     - key: level name
-    - value: a tuple of two lists — (rooms, items) on that level
+    - value: a tuple of two lists - (rooms, items) on that level
 
     :param data_reader: A data reader class instance.
     :type data_reader: :class:`.ReadDataFromFile`

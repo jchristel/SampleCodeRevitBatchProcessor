@@ -38,13 +38,13 @@ from duHast.Utilities.Objects.base import Base
 
 class DataFloorInRoom(Base):
     """
-    Pairs a :class:`.DataFloor` instance with the area (mm²) of the polygon
+    Pairs a :class:`.DataFloor` instance with the area (mm2) of the polygon
     intersection between that floor and a specific room.
 
     One instance is created per floor-room intersection and stored in
     :attr:`.DataRoom.floors`.
 
-    :param area: Intersection area in mm².
+    :param area: Intersection area in mm2.
     :type area: float
     :param floor: The floor data object.
     :type floor: :class:`.DataFloor`
@@ -65,7 +65,7 @@ class DataFloorInRoom(Base):
         super(DataFloorInRoom, self).__init__()
 
         # set default values
-        #: Intersection area between the floor and the room polygon, in mm².
+        #: Intersection area between the floor and the room polygon, in mm2.
         self.area = 0.0
         #: The :class:`.DataFloor` instance associated with this entry.
         self.floor = None

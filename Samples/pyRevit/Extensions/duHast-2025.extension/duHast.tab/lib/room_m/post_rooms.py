@@ -41,6 +41,7 @@ from System.Net.Http.Headers import MediaTypeHeaderValue
 from System.Text import Encoding
 
 from room_m.post_common import (
+    LEVEL_LIST_KEY,
     build_identity_envelope,
     duhast_object_to_plain,
     duhast_objects_to_plain,
@@ -48,6 +49,7 @@ from room_m.post_common import (
     find_property,
     loop_to_points,
     properties_to_map,
+    translate_levels,
     write_ndjson_line,
     _post_content,
 )
@@ -61,32 +63,7 @@ SERVER_URL_STREAM = "http://127.0.0.1:5151/rooms/stream"
 SCHEMA_VERSION = 7
 
 
-LEVEL_LIST_KEY = "building level"
 ROOM_LIST_KEY = "room"
-
-
-def translate_levels(levels_source):
-    """One model's duHast level export as the contract's `levels`, sorted by
-    elevation.
-
-    **Per model, and that is load-bearing.** A level id is a per-document
-    `ElementId`, so two models' level lists cannot be merged -- "Level 1" in the
-    architectural model and in the structural model are different ids naming the
-    same floor, and the server dedups them across models on read. Stamping the
-    list onto its own model's envelope block is what keeps that possible.
-
-    Built before the identity check, as it always has been: a malformed level is
-    a broken export too, and reordering the two would only change which complaint
-    a reader sees first."""
-    levels = []
-    for lvl in levels_source.get(LEVEL_LIST_KEY, []):
-        levels.append({
-            "id": str(lvl.get("id", "unknown")),
-            "name": lvl.get("name", "Unknown Level"),
-            "elevation": float(lvl.get("elevation", 0.0) or 0.0),
-        })
-    levels.sort(key=lambda l: l["elevation"])
-    return levels
 
 
 def build_envelope(run_envelope, model_blocks):
@@ -199,7 +176,12 @@ def post_payload(run_envelope, entries, url=SERVER_URL):
         )
         return empty_push_refusal("rooms", contract, raw, [])
 
-    body = json.dumps(contract)
+    # ensure_ascii=False for the reason `write_ndjson_line` records: under
+    # IronPython 2.7 escaping a non-ASCII character means decoding a byte
+    # oriented str with the system code page first, which fails on bytes like
+    # 0xAE and takes the whole push with it. StringContent below encodes as
+    # UTF-8 correctly instead.
+    body = json.dumps(contract, ensure_ascii=False)
 
     content = StringContent(body, Encoding.UTF8, "application/json")
     return _post_content(url, content)

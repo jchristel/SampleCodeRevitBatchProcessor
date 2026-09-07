@@ -43,10 +43,16 @@ from room_m.utils.post_envelope import (
 
 from room_m.exporters import rooms as rooms_exporter
 from room_m.exporters import doors as doors_exporter
+from room_m.exporters import windows as windows_exporter
+from room_m.exporters import ffe as ffe_exporter
+from room_m.exporters import spaces as spaces_exporter
 
 
 ROOMS = "rooms"
 DOORS = "doors"
+WINDOWS = "windows"
+FFE = "ffe"
+SPACES = "spaces"
 
 
 EntityExporter = namedtuple(
@@ -57,6 +63,30 @@ EntityExporter = namedtuple(
 # than branching per entity, so adding windows or FF&E is a new module in
 # `room_m.exporters`, one row here, and one entry point -- not another `if` in
 # the run driver.
+#
+# **Windows cost exactly one row**, which is what this table was written to make
+# true and is now measured rather than claimed: no new branch in the run driver,
+# no ordering, no new envelope field. The one thing that did NOT come for free
+# was the pyRevit button, which lives outside this repository -- see
+# `windows_export_entry`.
+#
+# **FF&E cost one row too, and that is the stronger result.** Windows are a
+# second OPENING and reuse the door record entirely, so a row was always going
+# to be enough. An item is a different record with a different translation, a
+# different extraction pass and no nested filter -- and the table still did not
+# notice, because what it dispatches over is "how does this entity contribute to
+# a run", which was never about what the entity is. What each row points at
+# absorbed the difference: `room_m.post_entity` grew a `translate` field, and
+# `room_m.exporters.ffe` supplies its own.
+#
+# **Spaces cost one row as well, and they are the case that tested the table
+# from the other side.** Doors, windows and FF&E all push elements that reference
+# rooms. A space references nothing -- it is matched to a room later, by value,
+# on the server -- and it is the first entity whose push rules differ from every
+# sibling's: an empty bucket is sent rather than refused, and a disagreeing phase
+# is quarantined rather than refused. Neither difference reached this table,
+# because both live in `room_m.exporters.spaces` and `room_m.post_spaces`, which
+# is exactly the split the table exists to keep.
 #
 # **`blocking` is gone, and its absence is the change.** It used to say that a
 # model's rooms had to land before its doors were attempted, because the server
@@ -74,6 +104,21 @@ ENTITY_EXPORTERS = {
         export_model=doors_exporter.export_model,
         post_bucket=doors_exporter.post_bucket,
         stamp_envelope=doors_exporter.stamp_envelope,
+    ),
+    WINDOWS: EntityExporter(
+        export_model=windows_exporter.export_model,
+        post_bucket=windows_exporter.post_bucket,
+        stamp_envelope=windows_exporter.stamp_envelope,
+    ),
+    SPACES: EntityExporter(
+        export_model=spaces_exporter.export_model,
+        post_bucket=spaces_exporter.post_bucket,
+        stamp_envelope=spaces_exporter.stamp_envelope,
+    ),
+    FFE: EntityExporter(
+        export_model=ffe_exporter.export_model,
+        post_bucket=ffe_exporter.post_bucket,
+        stamp_envelope=ffe_exporter.stamp_envelope,
     ),
 }
 
@@ -121,6 +166,97 @@ def doors_export_entry(doc, uiapp, output, forms):
     :rtype: Result
     """
     return export_entry(doc, uiapp, output, forms, (DOORS,))
+
+
+def windows_export_entry(doc, uiapp, output, forms):
+    """Push WINDOWS alone.
+
+    A windows push carries no room data, only room *ids* -- and in a facade
+    model, usually not even those, because Revit cannot resolve a room across a
+    link. It needs nothing on the server first: an unresolvable or absent
+    reference is reported rather than refused, so windows may be pushed before
+    their rooms or without them entirely.
+
+    **Its pyRevit button has to be wired outside this repository**, which is the
+    one cost adding an entity does not absorb. Widening an existing entry point
+    instead would be worse: `rooms_export_entry` still pushes rooms AND doors
+    despite its name, and quietly adding windows to it would keep succeeding
+    while changing what every existing button does.
+
+    :return: Result object with status and message.
+    :rtype: Result
+    """
+    return export_entry(doc, uiapp, output, forms, (WINDOWS,))
+
+
+def ffe_export_entry(doc, uiapp, output, forms):
+    """Push FF&E alone.
+
+    An FF&E push carries no room data, only room *ids* -- and unlike a windows
+    push in a facade model, it usually does carry them: FF&E lives in the same
+    document as the rooms it serves, which is the premise of the entity. Revit
+    cannot schedule FF&E against those rooms, and this is the push that lets
+    RoomMate do it instead.
+
+    It needs nothing on the server first: an unresolvable or absent reference is
+    reported rather than refused, so FF&E may be pushed before its rooms.
+
+    **Its pyRevit button has to be wired outside this repository**, and it is the
+    second entry point in that state -- `windows_export_entry` is still waiting
+    for one. Widening an existing entry instead would be worse:
+    `rooms_export_entry` still pushes rooms AND doors despite its name, and
+    quietly adding a third entity to it would keep succeeding while changing what
+    every existing button does.
+
+    **A combined rooms-and-FF&E entry would be genuinely useful** and is
+    deliberately not added here. The two live in one document, so one run could
+    read it once and push both -- but that is a new entry point and a new button,
+    one line of `export_entry(..., (ROOMS, FFE))`, and adding it before anyone
+    has asked would be a third unwired button rather than a saving.
+
+    :return: Result object with status and message.
+    :rtype: Result
+    """
+    return export_entry(doc, uiapp, output, forms, (FFE,))
+
+
+def spaces_export_entry(doc, uiapp, output, forms):
+    """Push SPACES alone.
+
+    The entry a services model uses. A spaces push carries no room references at
+    all -- not even ids -- because a space is matched to a room by a value
+    somebody chose, on the server, across models. So it needs nothing on the
+    server first and cannot be pushed too early.
+
+    **Two things about a spaces run differ from every other entity's, and both
+    are worth knowing before pressing the button.**
+
+    A run pushes ONE phase, and the disciplines do not agree on what to call it.
+    Measured on RHH: the mechanical model keeps 1,532 of its 1,533 spaces in a
+    phase called `Future` while the hydraulic, fire and electrical models use
+    `New Construction`. `choose_phase` offers only names common to every selected
+    document, so a run over all four under the common name pushes three models in
+    full and one space from the fourth. That is a correct push of a phase that
+    model barely uses, and nothing about it is an error -- which is why
+    `exporters.spaces.export_model` reports "N of M spaces are in phase X" for
+    every model, every run. **Read that line.** Two runs, one per phase, is the
+    answer when it looks wrong.
+
+    An empty bucket is sent rather than refused, unlike every other entity's.
+    "This services model was audited and holds no spaces" is the finding, and a
+    different fact from "it was never pushed".
+
+    **Its pyRevit button has to be wired outside this repository**, and it is the
+    third entry point in that state -- `windows_export_entry` and
+    `ffe_export_entry` are both still waiting for one. Widening an existing entry
+    instead would be worse: `rooms_export_entry` still pushes rooms AND doors
+    despite its name, and quietly adding a fifth entity to it would keep
+    succeeding while changing what every existing button does.
+
+    :return: Result object with status and message.
+    :rtype: Result
+    """
+    return export_entry(doc, uiapp, output, forms, (SPACES,))
 
 
 def export_entry(doc, uiapp, output, forms, entities):

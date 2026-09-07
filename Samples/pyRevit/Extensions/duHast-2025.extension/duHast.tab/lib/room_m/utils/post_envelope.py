@@ -192,13 +192,14 @@ def add_room_boundary(selected_doc, block, return_value):
     own declaration."""
 
     # Which boundary regime this model was drawn to
-    # (Superseded/HANDOVER-areas-boundary-location.md Decision 1). Read ONCE per
-    # document from Area and Volume Computations, and stamped on the envelope
-    # alongside the transform above -- a document setting, so each linked model
-    # reports its own, which is why the field is per model and a project-level
-    # declaration could only ever be a fallback. Reading a document option is
-    # extraction, not computation (STRATEGY.md "Keep the extractor dumb on
-    # purpose"): what the regime then MEANS for a wall zone is the server's.
+    # (docs/Superseded/HANDOVER-areas-boundary-location.md Decision 1). Read
+    # ONCE per document from Area and Volume Computations, and stamped on the
+    # envelope alongside the transform above -- a document setting, so each
+    # linked model reports its own, which is why the field is per model and a
+    # project-level declaration could only ever be a fallback. Reading a
+    # document option is extraction, not computation (STRATEGY.md "Keep the
+    # extractor dumb on purpose"): what the regime then MEANS for a wall zone
+    # is the server's.
     #
     # Advisory and optional, exactly like the transform: if the setting can't be
     # read, or is one the contract has no regime for, say nothing and still push

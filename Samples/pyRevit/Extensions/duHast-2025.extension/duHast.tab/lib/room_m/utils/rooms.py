@@ -49,7 +49,7 @@ def rooms_in_phase(doc, phase_name):
     It BELONGS to exactly one phase, named by the `ROOM_PHASE` built-in
     parameter, so membership is an equality test rather than a range test over
     the phase sequence. Doors keep the range test
-    (`room_m.utils.doors.doors_in_phase`), and that difference is real rather
+    (`room_m.utils.openings.openings_in_phase`), and that difference is real rather
     than an inconsistency worth tidying away.
 
     Returns a `set`: `post_rooms.in_selected_phase` does one membership test per

@@ -85,7 +85,7 @@ def _build_dictionary_by_level_and_data_type(data_reader):
     Returns a dictionary where:
 
     - key: level name
-    - value: a tuple of two lists — (rooms, floors) on that level
+    - value: a tuple of two lists - (rooms, floors) on that level
 
     :param data_reader: A data reader class instance.
     :type data_reader: :class:`.ReadDataFromFile`

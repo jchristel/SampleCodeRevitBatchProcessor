@@ -32,7 +32,10 @@ Covers placed family instances belonging to a caller-supplied list of categories
 
 from Autodesk.Revit.DB import (
     BuiltInCategory,
+    BuiltInParameter,
+    Element,
     ElementCategoryFilter,
+    ElementId,
     FamilyInstance,
     FilteredElementCollector,
     LocationPoint,
@@ -223,13 +226,136 @@ def get_room_ids(doc, revit_family_instance):
 
 
 # ---------------------------------------------------------------------------
-# Helper: level from bounding box
+# Helper: level
 # ---------------------------------------------------------------------------
+
+def get_authored_level_id(revit_family_instance):
+    """
+    The level the MODELLER assigned to this instance, or None when it has none.
+
+    Tried before any geometric guess, because it is an answer rather than an
+    inference: the modeller stated it, it is what the Properties palette and
+    every schedule show, and it is what a reader comparing an export against
+    Revit will check it against.
+
+    Three sources, in the order Revit itself resolves them:
+
+    1. ``FamilyInstance.LevelId`` - the association a level-hosted instance has.
+    2. ``FAMILY_LEVEL_PARAM`` - the "Level" parameter.
+    3. ``SCHEDULE_LEVEL_PARAM`` / ``INSTANCE_SCHEDULE_ONLY_LEVEL_PARAM`` - the
+       "Schedule Level" a face-hosted or unhosted family carries instead, which
+       is the only one of the three that some furniture families have.
+
+    Each is guarded rather than tested for availability: the parameters are not
+    present on every category, and an older API may not define the last id at
+    all.
+
+    :param revit_family_instance: A placed Revit family instance.
+    :type revit_family_instance: Autodesk.Revit.DB.FamilyInstance
+
+    :return: The level's element id, or None.
+    :rtype: Autodesk.Revit.DB.ElementId
+    """
+
+    try:
+        level_id = revit_family_instance.LevelId
+        if level_id is not None and level_id != ElementId.InvalidElementId:
+            return level_id
+    except Exception:
+        pass
+
+    for parameter_name in (
+        "FAMILY_LEVEL_PARAM",
+        "SCHEDULE_LEVEL_PARAM",
+        "INSTANCE_SCHEDULE_ONLY_LEVEL_PARAM",
+    ):
+        try:
+            parameter_def = getattr(BuiltInParameter, parameter_name, None)
+            if parameter_def is None:
+                continue
+            parameter = revit_family_instance.get_Parameter(parameter_def)
+            if parameter is None:
+                continue
+            level_id = parameter.AsElementId()
+            if level_id is not None and level_id != ElementId.InvalidElementId:
+                return level_id
+        except Exception:
+            continue
+
+    return None
+
+
+def get_item_level_data(doc, revit_family_instance):
+    """
+    The level an item belongs to: the authored one where there is one, the
+    nearest level below its geometry otherwise.
+
+    **Authored first, geometry only as a fallback.** The bounding box walk below
+    was the only rule for a while, and it is wrong whenever a model carries
+    levels the item is not on - which real models do constantly. Measured on one
+    hospital job: of 15,070 items in a single linked model, 9,186 were exported
+    onto a level they were not assigned to, because the file carries reference
+    levels mis-elevated onto other storeys' heights and the walk picked whichever
+    sorted first. The modeller's own answer was correct for every one of them,
+    and was already being exported in ``instance_properties`` while the derived
+    one went into ``level``.
+
+    Geometry still answers for an item that states no level at all - a
+    face-hosted family on a wall or a ceiling - which is what the walk was
+    written for and the reason it stays.
+
+    ``offset_from_level`` is measured from the solid geometry either way, so it
+    keeps meaning "how far this item sits above the level it belongs to" rather
+    than changing definition with the branch taken.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revit_family_instance: A placed Revit family instance.
+    :type revit_family_instance: Autodesk.Revit.DB.FamilyInstance
+
+    :return: A populated data level instance.
+    :rtype: :class:`.DataLevel`
+    """
+
+    level_id = get_authored_level_id(revit_family_instance)
+    if level_id is None:
+        return get_level_data_by_bounding_box(doc, revit_family_instance)
+
+    level_element = doc.GetElement(level_id)
+    if level_element is None:
+        # The id resolved to nothing - a level deleted out from under the
+        # instance. Fall through rather than exporting a name for an element
+        # that is not there; see get_level_data on why None must never reach
+        # Element.Name.GetValue.
+        return get_level_data_by_bounding_box(doc, revit_family_instance)
+
+    level_d = DataLevel()
+    level_d.name = encode_utf8(Element.Name.GetValue(level_element))
+    level_d.id = level_id.Value
+
+    # Offset from the item's own geometry, matching the fallback's definition.
+    # An item with no solid geometry keeps DataLevel's default rather than
+    # reporting a zero offset it never measured.
+    bbox = get_solids_based_bounding_box_from_family_instance(
+        doc, revit_family_instance
+    )
+    if bbox is not None:
+        level_d.offset_from_level = convert_imperial_feet_to_metric_mm(
+            bbox.Min.Z - level_element.ProjectElevation
+        )
+
+    return level_d
+
 
 def get_level_data_by_bounding_box(doc, revit_family_instance):
     """
     Determines the nearest level below a family instance by comparing the lowest
     Z coordinate of its solid geometry against the ascending list of project levels.
+
+    **The fallback, not the rule.** ``get_item_level_data`` is the entry point
+    and prefers the level the modeller assigned; this answers only for an item
+    that states none. Called directly it will disagree with the Properties
+    palette on any model carrying levels its items are not placed on.
 
     Algorithm:
 
@@ -406,9 +532,10 @@ def populate_data_item_object(doc, revit_family_instance):
     data_i.type_properties = get_type_properties(doc=doc, element=revit_family_instance)
 
     # level + offset from level
-    # Derived from solid geometry bounding box rather than a Revit parameter,
-    # so it works consistently across all family hosting types.
-    data_i.level = get_level_data_by_bounding_box(doc, revit_family_instance)
+    # The level the modeller assigned, falling back to the solid geometry
+    # bounding box for a family that states none - see get_item_level_data for
+    # why that order and not the other.
+    data_i.level = get_item_level_data(doc, revit_family_instance)
 
     # model, phasing, design set
     data_i.revit_model = get_model_data(doc=doc)

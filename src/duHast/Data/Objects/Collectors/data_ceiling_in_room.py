@@ -38,13 +38,13 @@ from duHast.Utilities.Objects.base import Base
 
 class DataCeilingInRoom(Base):
     """
-    Pairs a :class:`.DataCeiling` instance with the area (mm²) of the polygon
+    Pairs a :class:`.DataCeiling` instance with the area (mm2) of the polygon
     intersection between that ceiling and a specific room.
 
     One instance is created per ceiling-room intersection and stored in
     :attr:`.DataRoom.ceilings`.
 
-    :param area: Intersection area in mm².
+    :param area: Intersection area in mm2.
     :type area: float
     :param ceiling: The ceiling data object.
     :type ceiling: :class:`.DataCeiling`
@@ -65,7 +65,7 @@ class DataCeilingInRoom(Base):
         super(DataCeilingInRoom, self).__init__()
 
         # set default values
-        #: Intersection area between the ceiling and the room polygon, in mm².
+        #: Intersection area between the ceiling and the room polygon, in mm2.
         self.area = 0.0
         #: The :class:`.DataCeiling` instance associated with this entry.
         self.ceiling = None

@@ -46,6 +46,7 @@ from room_m.exporters import doors as doors_exporter
 from room_m.exporters import windows as windows_exporter
 from room_m.exporters import ffe as ffe_exporter
 from room_m.exporters import spaces as spaces_exporter
+from room_m.exporters import ceilings as ceilings_exporter
 
 
 ROOMS = "rooms"
@@ -53,6 +54,7 @@ DOORS = "doors"
 WINDOWS = "windows"
 FFE = "ffe"
 SPACES = "spaces"
+CEILINGS = "ceilings"
 
 
 EntityExporter = namedtuple(
@@ -119,6 +121,11 @@ ENTITY_EXPORTERS = {
         export_model=ffe_exporter.export_model,
         post_bucket=ffe_exporter.post_bucket,
         stamp_envelope=ffe_exporter.stamp_envelope,
+    ),
+    CEILINGS: EntityExporter(
+        export_model=ceilings_exporter.export_model,
+        post_bucket=ceilings_exporter.post_bucket,
+        stamp_envelope=ceilings_exporter.stamp_envelope,
     ),
 }
 
@@ -258,6 +265,35 @@ def spaces_export_entry(doc, uiapp, output, forms):
     """
     return export_entry(doc, uiapp, output, forms, (SPACES,))
 
+
+
+def ceilings_export_entry(doc, uiapp, output, forms):
+    """Push CEILINGS alone.
+
+    **A ceilings push carries no room reference at all, so it can never be too
+    early.** Doors and windows name their rooms by id and FFE names one; a
+    Revit ceiling has no room parameter and a room has no ceiling parameter, so
+    the association is derived from polygon overlap on the server, on every
+    read. Push ceilings before their rooms and nothing dangles -- the ceilings
+    simply attribute to nothing until the rooms land, and then they do.
+
+    **The phase filter here is the DOORS range test, not the rooms equality
+    test.** A ceiling is built in one phase and may be demolished in a later
+    one. Running it through the rooms predicate would return nothing, silently.
+    House A cannot catch that mistake -- no ceiling there is demolished, so the
+    two tests agree on that document by accident -- which is why it is written
+    down in `exporters.ceilings` rather than left to a passing run.
+
+    **A ceiling whose geometry duHast cannot measure is still pushed**, with an
+    empty polygon, so "no such ceiling" and "a ceiling nobody could measure"
+    stay distinguishable. The exporter fails the model if the export comes back
+    SHORT of the collector's count, which is what an older duHast does: check
+    which duHast the extension is running before trusting such a push.
+
+    :return: Result object with status and message.
+    :rtype: Result
+    """
+    return export_entry(doc, uiapp, output, forms, entities=(CEILINGS,))
 
 def export_entry(doc, uiapp, output, forms, entities):
 

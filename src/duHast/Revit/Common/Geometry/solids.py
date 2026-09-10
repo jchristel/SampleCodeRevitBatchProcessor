@@ -34,11 +34,56 @@ from duHast.Revit.Common.Geometry.geometry import merge_bounding_box_xyz, get_fa
 from duHast.Data.Objects.Collectors.Properties.Geometry import geometry_polygon_2 as dGeometryPoly
 
 
+def _solids_from_geometry_instances(geometry_element, solids=None):
+    """
+    Collects solids out of the GeometryInstances in a geometry element.
+
+    An IN PLACE family is a FamilyInstance, and its geometry element holds a
+    GeometryInstance rather than solids sitting at the top level - so a walk that
+    only looks at the top level finds nothing at all for one. That is why
+    `get_2d_points_from_solid` used to carry "Does not work with in place
+    elements" in its docstring, and a todo in its body.
+
+    GetInstanceGeometry and deliberately not GetSymbolGeometry: the symbol
+    version is the family as authored, before its host cuts it, and measures
+    larger than the object actually in the model. Same reasoning as
+    `get_solids_from_geometry` below, which this deliberately does NOT reuse -
+    see the caller for why.
+
+    :param geometry_element: The geometry element to walk.
+    :type geometry_element: Autodesk.Revit.DB.GeometryElement
+    :param solids: Accumulator, used when recursing.
+    :type solids: list
+
+    :return: A list of solids.
+    :rtype: list of Autodesk.Revit.DB.Solid
+    """
+
+    if solids is None:
+        solids = []
+
+    for geometry_obj in geometry_element:
+        if geometry_obj is None:
+            continue
+        if type(geometry_obj) is Solid:
+            solids.append(geometry_obj)
+            continue
+        get_instance_geometry = getattr(geometry_obj, "GetInstanceGeometry", None)
+        if get_instance_geometry is None:
+            continue  # a curve, a line, a mesh - nothing with a volume
+        instance_geometry = get_instance_geometry()
+        if instance_geometry is not None:
+            _solids_from_geometry_instances(instance_geometry, solids)
+
+    return solids
+
+
 def get_2d_points_from_solid(element):
     """
     Returns a list of lists of data geometry instances representing the flattened (2D geometry) of the Element
     List of Lists because an element can be made up of multiple solids. Each nested list represents one element solid.
-    Does not work with in place elements.
+
+    Handles in place elements, see `_solids_from_geometry_instances`.
 
     :param element: A revit element instance.
     :type element: Autodesk.Revit.DB.Element
@@ -53,10 +98,32 @@ def get_2d_points_from_solid(element):
     fr1_geom = element.get_Geometry(opt)
     solids = []
     # check geometry for Solid elements
-    # todo check for FamilyInstance geometry ( in place families!)
     for item in fr1_geom:
         if type(item) is Solid:
             solids.append(item)
+
+    # Nothing at the top level: this is an in place family, whose solids sit
+    # inside a GeometryInstance. Descending is what stops one being dropped
+    # silently by every caller of this function - a ceiling that produces no
+    # points is dropped from the export entirely, and downstream it is then
+    # indistinguishable from one nobody modelled.
+    #
+    # ONLY when the top level found nothing, which makes this change provably
+    # inert for every element that already works. Always merging both walks
+    # would alter the solid list for elements exporting fine today, and this
+    # function feeds ceilings AND floors, so a regression here would land in two
+    # entities at once with nothing to catch it. The two populations are
+    # disjoint anyway: a system-family ceiling has top-level solids and no
+    # instance geometry, an in place one has only instance geometry.
+    #
+    # `get_solids_from_geometry` below does the same recursion and is NOT reused
+    # here on purpose. It also filters on `Volume > 0` and on
+    # `Id == InvalidElementId`, and it has only ever been called on family
+    # instances - neither guard has been tested against a plain Ceiling or
+    # Floor, so reusing it would put an unmeasured filter in front of the
+    # population that currently works.
+    if not solids:
+        solids = _solids_from_geometry_instances(fr1_geom)
 
     # process solids to points
     # in place families may have more then one solid

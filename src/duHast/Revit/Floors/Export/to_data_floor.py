@@ -60,7 +60,9 @@ def populate_data_floor_object(doc, revit_floor):
     :param revit_floor: A revit floor instance.
     :type revit_floor: Autodesk.Revit.DB.Floor
 
-    :return: A data floor object instance.
+    :return: A data floor object instance. Always an object, never None: a floor
+        whose geometry could not be measured comes back with an empty `polygon`
+        and every other field populated. See the body for why.
     :rtype: :class:`.DataFloor`
     """
 
@@ -68,6 +70,14 @@ def populate_data_floor_object(doc, revit_floor):
     data_f = dFloor.DataFloor()
     # get floor geometry (boundary points)
     revit_geometry_point_groups = rSolid.get_2d_points_from_solid(revit_floor)
+
+    # An unmeasurable floor is returned with an EMPTY polygon rather than as
+    # None, and this used to be the other way round. Same change and same
+    # reasoning as `to_data_ceiling.populate_data_ceiling_object`, which carries
+    # the full argument: the element still has a good id, level, phase, design
+    # option and both property maps, and dropping it leaves the caller unable to
+    # tell "no such floor" from "a floor nobody could measure" - a model fact and
+    # a pipeline defect, which send a reader to opposite places.
     if len(revit_geometry_point_groups) > 0:
         floor_point_groups_as_doubles = []
         for all_floor_point_groups in revit_geometry_point_groups:
@@ -77,42 +87,46 @@ def populate_data_floor_object(doc, revit_floor):
             floor_point_groups_as_doubles.append(data_geo_converted)
         data_f.polygon = floor_point_groups_as_doubles
 
-        # get design set data
-        design_set = get_design_set_data(doc=doc, element=revit_floor)
-        data_f.design_set_and_option = design_set
+    # get design set data
+    design_set = get_design_set_data(doc=doc, element=revit_floor)
+    data_f.design_set_and_option = design_set
 
-        # get type properties
-        type_props = get_type_properties(doc=doc, element=revit_floor)
-        data_f.type_properties = type_props
+    # get type properties
+    type_props = get_type_properties(doc=doc, element=revit_floor)
+    data_f.type_properties = type_props
 
-        # get instance properties
-        instance_props = get_instance_properties(revit_floor)
-        data_f.instance_properties = instance_props
+    # get instance properties
+    instance_props = get_instance_properties(revit_floor)
+    data_f.instance_properties = instance_props
 
-        # get level properties
-        level = get_level_data(
-            doc=doc,
-            element=revit_floor,
-            built_in_parameter_def=BuiltInParameter.FLOOR_HEIGHTABOVELEVEL_PARAM,
-        )
-        data_f.level = level
+    # get level properties
+    level = get_level_data(
+        doc=doc,
+        element=revit_floor,
+        built_in_parameter_def=BuiltInParameter.FLOOR_HEIGHTABOVELEVEL_PARAM,
+    )
+    data_f.level = level
 
-        # get the model name
-        model = get_model_data(doc=doc)
-        data_f.revit_model = model
+    # get the model name
+    model = get_model_data(doc=doc)
+    data_f.revit_model = model
 
-        # get phasing information
-        phase = get_phasing_data(doc=doc, element=revit_floor)
-        data_f.phasing = phase
+    # get phasing information
+    phase = get_phasing_data(doc=doc, element=revit_floor)
+    data_f.phasing = phase
 
-        return data_f
-    else:
-        return None
+    return data_f
 
 
 def get_all_floor_data(doc):
     """
     Gets a list of floor data objects for each floor element in the model.
+
+    One entry per floor in the model, INCLUDING any whose geometry could not be
+    measured - those carry an empty `polygon`. The count of this list can
+    therefore be compared against the collector's count to find a pipeline
+    problem, which was impossible while unmeasurable floors were silently
+    dropped.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -124,6 +138,10 @@ def get_all_floor_data(doc):
     floors = rFloor.get_all_floor_instances_in_model_by_category(doc)
     for floor in floors:
         fd = populate_data_floor_object(doc, floor)
+        # `populate_data_floor_object` no longer answers None. The guard stays as
+        # a cheap backstop rather than being deleted: this loop is the only thing
+        # between a future regression there and a list with a None in it, which
+        # would fail much further downstream than here.
         if fd is not None:
             all_floor_data.append(fd)
     return all_floor_data

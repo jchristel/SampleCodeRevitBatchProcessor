@@ -23,22 +23,29 @@
 """Translate a run's duHast ceiling exports onto the v1 ceilings contract, and
 push them.
 
-**Take `polygon[0]`, and never union or sum the rest.** This is the one thing
-about ceiling geometry that is not obvious and was measured rather than
-reasoned: `convert_solid_to_flattened_2d_points` walks the HORIZONTAL FACES of a
-solid, and a slab has two of them -- its top and its bottom, near-identical in
-plan. On House A, 7 of 30 ceilings exported more than one polygon; 4 of those
-were the same face twice (IoU above 0.98 between the two largest, areas summing
-to exactly twice their union) and the other 3 were the largest face plus
-sub-1-sqft noise off the side faces. The largest polygon equalled the union of
-all of them on every ceiling measured, and it is always `polygon[0]`.
+**Send EVERY polygon, and let the consumer union them.** This is the one thing
+about ceiling geometry that is not obvious, and the first answer was wrong.
 
-So `loops_from_polygon` -- which already takes the first and discards the rest --
-is exactly right here, and a translation that aggregated the polygons would
-double-count area on 4 of 30. A ceiling that genuinely arrives in disjoint
-pieces would show up in `scripts/analyse_ceilings_probe.py` under Q6 as
-"carries genuinely ADDITIONAL geometry"; House A has none, and THAT is the
-signal to widen the contract rather than the polygon count.
+`convert_solid_to_flattened_2d_points` walks the HORIZONTAL FACES of a solid,
+and a slab has two -- its top and its bottom, near-identical in plan. On House A
+that was the whole story: 7 of 30 ceilings exported more than one polygon, the
+extras were the same face again (IoU above 0.98), and `polygon[0]` happened to
+be the largest. So this module used to take the first and discard the rest.
+
+**RHH proved that general only by accident.** Of its 48 multi-polygon ceilings
+the pieces are genuinely DISJOINT. Measured against the union: taking
+`polygon[0]` loses 44.0% of the ceiling's area on average and 99.2% at worst --
+one 1,457 sqft ceiling whose first piece is 11 sqft -- and taking the LARGEST
+piece still loses 25.7% on average, 31 of the 48 losing over 5%.
+
+So every piece goes on the wire and `service::ceilings` unions them, which is
+the one operation correct on both documents: it collapses House A's duplicated
+faces back to one face and keeps RHH's separate pieces. A SUM would be wrong on
+House A for exactly the reason the union is not.
+
+The trap worth remembering past this module: a ratio of summed area to largest
+area CANNOT distinguish a duplicated face from two equal disjoint pieces -- both
+give `sum` about twice `largest`. Only a real overlap test separates them.
 
 **An unmeasurable ceiling is pushed with empty `loops`, never dropped.** It
 still carries a good id, level, phase and both property maps, and dropping it
@@ -71,6 +78,7 @@ from System.Text import Encoding
 
 from room_m.post_common import (
     build_identity_envelope,
+    loop_to_points,
     duhast_object_to_plain,
     duhast_objects_to_plain,
     properties_to_map,
@@ -80,7 +88,7 @@ from room_m.post_common import (
 )
 
 from room_m.post_entity import (
-    loops_from_polygon,
+    is_degenerate,
 )
 
 from room_m.utils.phase_filter import (
@@ -105,6 +113,34 @@ def build_envelope(run_envelope, model_blocks):
     return build_identity_envelope(run_envelope, model_blocks, "ceilings", SCHEMA_VERSION)
 
 
+def pieces_from_polygon(polygons):
+    """Map duHast's polygon list onto the contract's `polygons` -- EVERY piece,
+    each an outer ring plus its holes, in the room convention (decimal feet,
+    model space, Y up).
+
+    This is `post_entity.loops_from_polygon` widened from one piece to all of
+    them; see the module docstring for the measurement that forced it. The
+    degenerate guard is unchanged and applies per piece, because the
+    uninitialized-bounding-box sentinel is a property of one face rather than of
+    the element -- a ceiling with one bad piece and three good ones keeps the
+    three.
+
+    Returns `[]` for a ceiling with nothing measurable, which the contract
+    carries deliberately: such a ceiling is still pushed, and attributes to no
+    room."""
+    pieces = []
+    for poly in polygons or []:
+        outer = poly.get("outer_loop") or []
+        if not outer or is_degenerate(outer):
+            continue
+        loops = [{"points": loop_to_points(outer)}]
+        for inner in poly.get("inner_loops") or []:
+            if inner and not is_degenerate(inner):
+                loops.append({"points": loop_to_points(inner)})
+        pieces.append({"loops": loops})
+    return pieces
+
+
 def translate_ceiling(ceiling, offsets):
     """Map one duHast ceiling object onto the contract's `Ceiling` shape.
 
@@ -127,7 +163,7 @@ def translate_ceiling(ceiling, offsets):
         # its header explains why that is not the re-derivation CLAUDE.md
         # forbids. Absent means the export could not say, never zero.
         "height_offset": offsets.get(str(props.get("id"))),
-        "loops": loops_from_polygon(ceiling.get("polygon", [])),
+        "polygons": pieces_from_polygon(ceiling.get("polygon", [])),
         "properties": properties_to_map(props),
         "type_properties": properties_to_map(type_props),
         "type_id": str(type_props.get("id")) if type_props.get("id") is not None else None,

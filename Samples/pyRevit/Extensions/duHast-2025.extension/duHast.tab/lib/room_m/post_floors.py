@@ -20,30 +20,31 @@
 #
 #
 
-"""The ceilings push: `room_m.post_surfaces` bound to the v1 ceilings contract.
+"""The floors push: `room_m.post_surfaces` bound to the v1 floors contract.
 
-Everything about how a slab's geometry reaches the server -- every piece on the
-wire, the union, the empty-polygon rule, the offset read from Revit -- lives in
-`post_surfaces`, because floors turned out to need exactly the same. What is
-left here is the four values that make a push a CEILINGS push.
+duHast's `to_data_floor` is `to_data_ceiling` with the category and the offset
+parameter swapped, so a floor reaches the server exactly as a ceiling does --
+see `post_surfaces` for every rule that implies. The one difference a reader of
+the pushed data needs is on the server's side of the contract: a floor's
+`height_offset` is to its TOP, where a ceiling's is to its underside.
 """
 
 from room_m import post_surfaces
 
-CEILINGS_PUSH = post_surfaces.SurfacePush(
-    entity="ceilings",
-    list_key="ceiling",
+FLOORS_PUSH = post_surfaces.SurfacePush(
+    entity="floors",
+    list_key="floor",
     schema_version=1,
-    url="http://127.0.0.1:5151/ceilings",
-    url_stream="http://127.0.0.1:5151/ceilings/stream",
+    url="http://127.0.0.1:5151/floors",
+    url_stream="http://127.0.0.1:5151/floors/stream",
 )
 
 
 def post_payload(run_envelope, entries):
-    """Buffered push of the run's ceilings bucket. Returns `(ok, status, text)`."""
-    return post_surfaces.post_payload(CEILINGS_PUSH, run_envelope, entries)
+    """Buffered push of the run's floors bucket. Returns `(ok, status, text)`."""
+    return post_surfaces.post_payload(FLOORS_PUSH, run_envelope, entries)
 
 
 def post_payload_stream(run_envelope, entries):
-    """Streamed push of the run's ceilings bucket. Returns `(ok, status, text)`."""
-    return post_surfaces.post_payload_stream(CEILINGS_PUSH, run_envelope, entries)
+    """Streamed push of the run's floors bucket. Returns `(ok, status, text)`."""
+    return post_surfaces.post_payload_stream(FLOORS_PUSH, run_envelope, entries)

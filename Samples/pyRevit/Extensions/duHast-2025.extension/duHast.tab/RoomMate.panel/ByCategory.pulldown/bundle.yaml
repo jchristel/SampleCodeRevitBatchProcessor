@@ -5,9 +5,10 @@ layout:
   - FFE
   - Spaces
   - Ceilings
+  - Floors
 
 # bundle tooltip
-tooltip: Separate exports of rooms, doors, windows, FFE, MEP spaces and ceilings
+tooltip: Separate exports of rooms, doors, windows, FFE, MEP spaces, ceilings and floors
 
 
 # bundle author

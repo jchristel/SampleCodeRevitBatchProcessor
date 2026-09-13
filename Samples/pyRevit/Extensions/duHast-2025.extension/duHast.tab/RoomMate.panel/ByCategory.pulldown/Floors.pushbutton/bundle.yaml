@@ -1,0 +1,10 @@
+# bundle title
+title: "Floors"
+
+# bundle tooltip
+tooltip: Exports all floors from the selected models
+
+
+# bundle author
+author:
+  - Jan Christel

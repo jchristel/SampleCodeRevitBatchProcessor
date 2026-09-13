@@ -47,6 +47,7 @@ from room_m.exporters import windows as windows_exporter
 from room_m.exporters import ffe as ffe_exporter
 from room_m.exporters import spaces as spaces_exporter
 from room_m.exporters import ceilings as ceilings_exporter
+from room_m.exporters import floors as floors_exporter
 
 
 ROOMS = "rooms"
@@ -55,6 +56,7 @@ WINDOWS = "windows"
 FFE = "ffe"
 SPACES = "spaces"
 CEILINGS = "ceilings"
+FLOORS = "floors"
 
 
 EntityExporter = namedtuple(
@@ -126,6 +128,11 @@ ENTITY_EXPORTERS = {
         export_model=ceilings_exporter.export_model,
         post_bucket=ceilings_exporter.post_bucket,
         stamp_envelope=ceilings_exporter.stamp_envelope,
+    ),
+    FLOORS: EntityExporter(
+        export_model=floors_exporter.export_model,
+        post_bucket=floors_exporter.post_bucket,
+        stamp_envelope=floors_exporter.stamp_envelope,
     ),
 }
 
@@ -294,6 +301,32 @@ def ceilings_export_entry(doc, uiapp, output, forms):
     :rtype: Result
     """
     return export_entry(doc, uiapp, output, forms, entities=(CEILINGS,))
+
+
+def floors_export_entry(doc, uiapp, output, forms):
+    """Push FLOORS alone.
+
+    Everything `ceilings_export_entry` says holds here, and for the same
+    reasons: a floor carries no room reference, so it cannot be pushed too
+    early; its phase filter is the range test; an unmeasurable floor is still
+    pushed with an empty polygon; and a short export fails the model.
+
+    **Two things are worth knowing before pressing the button on a real
+    project.** The category is `OST_Floors`, so structural slabs are pushed
+    alongside finish floors -- the `Structural` parameter tells them apart on
+    the server. And the room association is MODEL-SCOPED: a floor is only ever
+    attributed to rooms in its own document, so if a project keeps its slabs
+    in a base-build model and its rooms in fit-out models, every slab reports
+    no room. That is a reported state, not a failure, and it is the first
+    thing a floors probe on such a project should look at.
+
+    **Its pyRevit button has to be wired outside this repository**, like every
+    entry point since windows.
+
+    :return: Result object with status and message.
+    :rtype: Result
+    """
+    return export_entry(doc, uiapp, output, forms, entities=(FLOORS,))
 
 def export_entry(doc, uiapp, output, forms, entities):
 

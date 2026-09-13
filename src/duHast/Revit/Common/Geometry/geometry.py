@@ -264,9 +264,21 @@ def adjust_delta(delta, vertex, next_vertex, p):
     elif delta == -3:
         returnValue = 1
     # check if went around point cw or ccw:
-    elif delta == 2:
-        returnValue = 2
-    elif delta == -2:
+    #
+    # BOTH +2 and -2 take the x intercept test, as in The Building Coder's
+    # original. An edge that jumps two quadrants passes either above or below
+    # the test point, and only the intercept says which, whatever the sign.
+    # This used to return +2 unchanged, so an edge crossing diagonally the
+    # "wrong" way added 2 where it should have subtracted it, the winding sum
+    # missed +/-4, and a point inside a polygon read as outside.
+    #
+    # Measured on RoomMate's House A floors probe: build_loops_dictionary then
+    # failed to recognise holes as holes and exported them as separate pieces,
+    # so a consumer taking the union filled every opening back in -- a pool
+    # surround at 558.6 sqft against Revit's 289.1, a lawn with five cut-outs
+    # at 248.4 against 35.6. With the test applied to +2, both classify as one
+    # outer loop with holes and match Revit's area to 0.1 sqft.
+    elif delta == 2 or delta == -2:
         if x_intercept(vertex, next_vertex, p.V) > p.U:
             returnValue = -delta
     return returnValue

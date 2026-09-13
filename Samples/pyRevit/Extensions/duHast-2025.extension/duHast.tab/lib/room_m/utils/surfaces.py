@@ -20,15 +20,15 @@
 #
 #
 
-"""The ceiling facts the duHast export does not carry USABLY.
+"""The slab facts the duHast export does not carry USABLY.
 
 One function, and the reason it exists is worth stating carefully, because on a
 quick read it looks like the thing `CLAUDE.md` forbids.
 
 **The rule is "the extractor reads from Revit what the export does not contain,
-and does not re-measure what it does".** A ceiling's height above its level IS
-in the export -- duHast puts it on the level block as `offset_from_level`. It
-arrives as the string `"2700"`.
+and does not re-measure what it does".** A ceiling's or floor's height above its
+level IS in the export -- duHast puts it on the level block as
+`offset_from_level`. It arrives as the string `"2700"`.
 
 That is not a number in the contract's units. It is Revit's DISPLAY value: a
 millimetre figure, formatted, rounded to the document's display precision, and
@@ -42,40 +42,41 @@ a rendering of it.
 properties with `AsValueString`, which returned `"71 m2"` for a space duHast
 exports as `71.27892877719862`, and any threshold calibrated on that would have
 been calibrated on the rounding. Same shape of mistake, same fix.
+
+Parameterised by category and parameter because those are the only two things
+that differ between the two slabs: `CEILING_HEIGHTABOVELEVEL_PARAM` on
+`OST_Ceilings`, `FLOOR_HEIGHTABOVELEVEL_PARAM` on `OST_Floors` -- the same pair
+duHast's own `get_level_data` is handed for each.
 """
 
 
-def ceiling_offsets(doc):
-    """`{ceiling id: height above its level}` in Revit's internal feet.
+def host_offsets(doc, category, built_in_parameter):
+    """`{element id: height above its level}` in Revit's internal feet, for
+    every instance of `category`.
 
-    A ceiling missing the parameter is simply absent from the map, and
-    `translate_ceiling` then sends `None`. Absent is a legal value on the
+    An element missing the parameter is simply absent from the map, and
+    `translate_surface` then sends `None`. Absent is a legal value on the
     contract -- it means the export could not say, not that the offset is zero,
-    and zero would be a plausible-looking lie.
+    and zero would be a plausible-looking lie. An in-place floor family is the
+    expected case: it is a FamilyInstance, and carries no floor offset parameter.
     """
-    from Autodesk.Revit.DB import (
-        BuiltInCategory,
-        BuiltInParameter,
-        FilteredElementCollector,
-    )
+    from Autodesk.Revit.DB import FilteredElementCollector
 
     from room_m.utils.generic import element_id_str
 
     out = {}
     collector = (
         FilteredElementCollector(doc)
-        .OfCategory(BuiltInCategory.OST_Ceilings)
+        .OfCategory(category)
         .WhereElementIsNotElementType()
     )
     for element in collector:
         try:
-            parameter = element.get_Parameter(
-                BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM
-            )
+            parameter = element.get_Parameter(built_in_parameter)
             if parameter is None:
                 continue
             out[element_id_str(element.Id)] = float(parameter.AsDouble())
         except Exception:
-            # One unreadable ceiling costs its own offset and not the run's.
+            # One unreadable element costs its own offset and not the run's.
             continue
     return out

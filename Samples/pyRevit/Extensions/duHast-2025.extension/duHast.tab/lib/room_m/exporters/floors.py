@@ -20,44 +20,57 @@
 #
 #
 
-"""One model's contribution to a run's CEILINGS bucket, and the push for the
-whole bucket: `room_m.exporters.surfaces` bound to ceilings.
+"""One model's contribution to a run's FLOORS bucket, and the push for the
+whole bucket: `room_m.exporters.surfaces` bound to floors.
 
-The sixth entity. Every rule that governs it -- the range phase test, the
-count guard, the empty-run refusal, nothing re-derived -- is shared with floors
-and stated in `exporters.surfaces`.
+The seventh entity, and the second slab. Every push rule is the ceilings one
+and lives in `exporters.surfaces`. What is floor-specific:
+
+**The collector is duHast's BY CATEGORY, so it includes in-place floors and
+excludes foundation slabs.** `get_all_floor_instances_in_model_by_category`
+answers `OST_Floors`, which holds system floors and in-place floor families
+alike; a foundation slab is class `Floor` but category
+`OST_StructuralFoundation`, and is not here. The by-class collector would miss
+the in-place ones, and `get_2d_points_from_solid` now measures those.
+
+**Structural slabs and finish floors are both pushed.** They share the
+category; the `Structural` instance parameter tells them apart, and it rides
+the property map. Which one a question wants is the reader's call, not this
+producer's.
+
+**The offset is to the TOP of the floor** (`FLOOR_HEIGHTABOVELEVEL_PARAM`),
+where a ceiling's is to its underside. An in-place floor has no such
+parameter and pushes `None`.
 """
 
 from Autodesk.Revit.DB import BuiltInCategory, BuiltInParameter
 
-from duHast.Revit.Ceilings.Export.to_data_ceiling import get_all_ceiling_data
-from duHast.Revit.Ceilings.ceilings import (
-    get_all_ceiling_instances_in_model_by_category,
+from duHast.Revit.Floors.Export.to_data_floor import get_all_floor_data
+from duHast.Revit.Floors.floors import (
+    get_all_floor_instances_in_model_by_category,
 )
-from duHast.Data.Objects.Collectors import data_ceiling as dc
+from duHast.Data.Objects.Collectors import data_floor as df
 
 from room_m.exporters import surfaces
-from room_m.post_ceilings import (
+from room_m.post_floors import (
     post_payload_stream,
 )
 
 
 SPEC = surfaces.SurfaceExport(
-    plural="ceilings",
-    singular="ceiling",
-    category=BuiltInCategory.OST_Ceilings,
-    collect=get_all_ceiling_instances_in_model_by_category,
-    export=get_all_ceiling_data,
-    data_type=dc.DataCeiling.data_type,
-    offset_parameter=BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM,
+    plural="floors",
+    singular="floor",
+    category=BuiltInCategory.OST_Floors,
+    collect=get_all_floor_instances_in_model_by_category,
+    export=get_all_floor_data,
+    data_type=df.DataFloor.data_type,
+    offset_parameter=BuiltInParameter.FLOOR_HEIGHTABOVELEVEL_PARAM,
     post_stream=post_payload_stream,
 )
 
 
-# A ceiling has no boundary regime and no other per-model fact to stamp beyond
-# what the shared identity envelope already carries, so this entity contributes
-# nothing extra to its model block -- the same `None` doors, windows and FFE
-# use, rather than a no-op function.
+# Nothing per model to stamp beyond the shared identity envelope, as for
+# ceilings.
 stamp_envelope = None
 
 

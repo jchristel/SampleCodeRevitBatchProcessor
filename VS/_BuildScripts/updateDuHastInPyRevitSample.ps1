@@ -128,8 +128,100 @@ function CleanAndCopy($source, $destination) {
     Write-Output "Files copied successfully from $source to $destination"
 }
 
+# Function to stamp the deployed copy with the commit it was taken from.
+#
+# A copy in an extension's lib folder is not in git, so without this nothing on
+# a machine says WHICH duHast is installed there -- and duHast decides what an
+# export means (an item's level, a door's footprint, whether a hole in a floor
+# is a hole), so "duHast is present" is not the question anyone needs answered
+# when an export looks wrong. The file is written into the DEPLOYED copy only;
+# src\duHast is deliberately left unstamped, so a copy carrying no
+# _build_info.py is simply one nobody deployed and reports as "unknown".
+#
+# Pure ASCII and both python 2 and 3, because pyRevit runs this under
+# IronPython 2.7, which refuses to parse a non-ASCII source file at all.
+function Write-BuildInfo($destination, $repoRoot, $branchName) {
+    $commit = "unknown"
+    $dirty = $false
+
+    Push-Location $repoRoot
+    try {
+        $sha = git rev-parse HEAD 2>$null
+        if ($LASTEXITCODE -eq 0 -and $sha) {
+            $commit = $sha.Trim()
+            # Scoped to src\duHast: an edit elsewhere in this repo does not
+            # make the python that was copied any less the committed python.
+            $changes = git status --porcelain -- src/duHast 2>$null
+            $dirty = [bool]$changes
+        }
+    } catch {
+        Write-Host "Warning: could not read the commit, stamping it as unknown." -ForegroundColor Yellow
+    } finally {
+        Pop-Location
+        # A failed git probe is an expected outcome here, not the script's
+        # result -- without this reset a machine with no git ends the whole
+        # deploy on git's exit code, having deployed perfectly well.
+        $global:LASTEXITCODE = 0
+    }
+
+    $template = @'
+"""Records which duHast this copy is, and what deployed it.
+
+Written into the copy, never into the source tree: a duHast with no
+_build_info.py is one nobody deployed, which reads as "unknown" rather than
+as an error. Read it through describe() so every caller words it the same.
+"""
+
+COMMIT = "__COMMIT__"
+DIRTY = __DIRTY__
+BRANCH = "__BRANCH__"
+BUILT_AT = "__BUILT_AT__"
+BUILT_BY = "__BUILT_BY__"
+
+
+def describe():
+    """One line naming this copy, for a log or a tool's own output.
+
+    DIRTY matters as much as the commit: a deploy from an edited working tree
+    is not the commit it names, and saying so here is cheaper than working it
+    out later from an export that disagrees with the code.
+    """
+    if not COMMIT or COMMIT == "unknown":
+        return "unknown"
+    text = COMMIT[:8]
+    if DIRTY:
+        text += "-dirty"
+    if BRANCH and BRANCH != "unknown":
+        text += " (" + BRANCH + ")"
+    return text
+'@
+
+    if (-not $branchName) { $branchName = "unknown" }
+
+    $content = $template.
+        Replace("__COMMIT__", $commit).
+        Replace("__DIRTY__", $(if ($dirty) { "True" } else { "False" })).
+        Replace("__BRANCH__", $branchName).
+        Replace("__BUILT_AT__", (Get-Date).ToString("yyyy-MM-ddTHH:mm:sszzz")).
+        Replace("__BUILT_BY__", "updateDuHastInPyRevitSample.ps1")
+
+    # LF and no BOM: IronPython is happy either way, but a BOM is a non-ASCII
+    # byte in a file whose whole point is to be importable.
+    $content = $content.Replace("`r`n", "`n") + "`n"
+    $path = Join-Path $destination "_build_info.py"
+    [System.IO.File]::WriteAllText($path, $content, (New-Object System.Text.UTF8Encoding($false)))
+
+    $suffix = ""
+    if ($dirty) { $suffix = "-dirty" }
+    Write-Host "Stamped duHast as $($commit.Substring(0, [Math]::Min(8, $commit.Length)))$suffix ($branchName)" -ForegroundColor Green
+}
+
 # Execute the function for duHast in pyRevit sample
 CleanAndCopy $sourceFolderLib $destinationFolderLib_one
+
+# Stamp AFTER the copy: CleanAndCopy empties the destination first, so a file
+# written before it would not survive.
+Write-BuildInfo "$destinationFolderLib_one\duHast" $basePath $currentBranch
 
 Write-Host "Deploy process completed!"
 Read-Host "Press Enter to exit"

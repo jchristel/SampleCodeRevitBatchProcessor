@@ -108,9 +108,9 @@ class DataViewPlan(DataViewBase):
         if not isinstance(other, DataViewPlan):
             return NotImplemented
         return self.bounding_box == other.bounding_box and sorted(
-            self.tags, key=lambda data_tag: data_tag.leader_element_reference_id
+            self.tags, key=lambda data_tag: (data_tag.id, data_tag.leader_element_reference_id)
         ) == sorted(
-            other.tags, key=lambda data_tag: data_tag.leader_element_reference_id
+            other.tags, key=lambda data_tag: (data_tag.id, data_tag.leader_element_reference_id)
         )
 
     def __ne__(self, other):
@@ -126,7 +126,7 @@ class DataViewPlan(DataViewBase):
                 tuple(
                     sorted(
                         self.tags,
-                        key=lambda data_tag: data_tag.leader_element_reference_id,
+                        key=lambda data_tag: (data_tag.id, data_tag.leader_element_reference_id),
                     )
                 ),
             )

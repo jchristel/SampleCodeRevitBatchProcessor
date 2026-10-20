@@ -52,6 +52,9 @@ class DataViewBase(data_base.DataBase):
 
         # set default values
         self.id = -1
+        # the view's scale denominator (100 for 1:100); 0 is unread. Tags are placed in model
+        # units, so a distance on paper is only known with it.
+        self.view_scale = 0
 
         json_var = None
         # check if any data was past in with constructor!
@@ -73,6 +76,7 @@ class DataViewBase(data_base.DataBase):
             # attempt to populate from json
             try:
                 self.id = json_var.get(DataPropertyNames.ID, self.id)
+                self.view_scale = json_var.get(DataPropertyNames.VIEW_SCALE, self.view_scale)
 
                 if not isinstance(self.id, int):
                     raise TypeError(

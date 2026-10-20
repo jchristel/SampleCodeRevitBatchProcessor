@@ -124,9 +124,9 @@ class DataViewElevation(DataViewBase):
         if not isinstance(other, DataViewElevation):
             return NotImplemented
         return self.bounding_box == other.bounding_box and self.marker_index == other.marker_index and self.view_direction == other.view_direction and  sorted(
-            self.tags, key=lambda data_tag: data_tag.leader_element_reference_id
+            self.tags, key=lambda data_tag: (data_tag.id, data_tag.leader_element_reference_id)
         ) == sorted(
-            other.tags, key=lambda data_tag: data_tag.leader_element_reference_id
+            other.tags, key=lambda data_tag: (data_tag.id, data_tag.leader_element_reference_id)
         )
 
     def __ne__(self, other):
@@ -144,7 +144,7 @@ class DataViewElevation(DataViewBase):
                 tuple(
                     sorted(
                         self.tags,
-                        key=lambda data_tag: data_tag.leader_element_reference_id,
+                        key=lambda data_tag: (data_tag.id, data_tag.leader_element_reference_id),
                     )
                 ),
             )

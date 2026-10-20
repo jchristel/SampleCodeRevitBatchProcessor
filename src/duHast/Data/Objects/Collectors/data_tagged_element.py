@@ -53,6 +53,11 @@ class DataTaggedElement(data_base.DataBase):
         as `DataItem.location_point` is. Where a tag sits relative to its element is worked out
         by whoever uses it, so the rule for that can change without re-exporting.
 
+        **The ids say where an observation came from; they are never how it is found again.**
+        A blueprint places NEW elements, which get new ids, so a rule for a tag is looked up by
+        what the element is (category, family name, type name), and those names are stored here
+        on purpose even though the FF&E export holds them too.
+
         An element in a linked model has `link_element_id` and `link_instance_id` set and
         `host_element_id` at -1.
 

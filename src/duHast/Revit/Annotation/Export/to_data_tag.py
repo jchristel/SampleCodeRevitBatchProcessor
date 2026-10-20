@@ -13,7 +13,7 @@ Reads the tags in a view into :class:`.DataTag` instances.
 Raw measurements only: millimetres in the model's own coordinates, as `DataItem` writes them.
 Where a tag sits relative to its element is for the user of the data to work out.
 
-A tag that cannot be read is skipped and named in `problems`, never half written.
+A tag that cannot be read is skipped and named in `problems` (or `take_problems`), never half written.
 """
 
 #
@@ -84,6 +84,26 @@ SPATIAL_TAG_KINDS = [
 ]
 
 NO_ID = -1
+
+# Tags that could not be read, when the caller (a view export deep in a sheet export) had no
+# list to hand in. Taken, and cleared, by `take_problems`.
+_problems = []
+
+
+def take_problems():
+    """
+    The lines for every tag skipped since the last call, and clears them.
+
+    The viewport export reads tags without a list of its own to report into, so the skipped ones
+    collect here and whoever started the export asks for them afterwards.
+
+    :return: One line per skipped tag.
+    :rtype: [str]
+    """
+
+    taken = list(_problems)
+    del _problems[:]
+    return taken
 
 
 def _id_value(element_id):
@@ -350,7 +370,7 @@ def get_tags_in_view(doc, view, problems=None):
     :type doc: Autodesk.Revit.DB.Document
     :param view: The view.
     :type view: Autodesk.Revit.DB.View
-    :param problems: Receives a line for each tag that could not be read, defaults to None
+    :param problems: Receives a line for each tag that could not be read, defaults to the module's own list (see `take_problems`)
     :type problems: list of str, optional
 
     :return: The tags, in the order Revit gives them.
@@ -358,13 +378,14 @@ def get_tags_in_view(doc, view, problems=None):
     """
 
     tags = []
+    if problems is None:
+        problems = _problems
 
     def attempt(convert, tag):
         try:
             tags.append(convert())
         except Exception as e:
-            if problems is not None:
-                problems.append("tag {} in view {}: {}".format(_id_value(tag.Id), _id_value(view.Id), e))
+            problems.append("tag {} in view {}: {}".format(_id_value(tag.Id), _id_value(view.Id), e))
 
     for tag in FilteredElementCollector(doc, view.Id).OfClass(IndependentTag):
         attempt(lambda: independent_tag_to_data(doc, tag), tag)

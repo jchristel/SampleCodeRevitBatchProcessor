@@ -11,6 +11,14 @@ Data storage base class used for element tags in views.
     - has tag leader
     - has tag elbow
     - elbow location
+    - tag kind, tag type (category, family name, type name), text, rotation, orientation
+    - the elements tagged, each with its own leader (see DataTaggedElement)
+
+    Positions are millimetres in the model's own coordinates. `point` is the tag head; the
+    `elbow_location`, `leader_end`, `leader_reference` and `leader_element_reference_id`
+    fields are the earlier single-reference form and stay for readers written against it.
+    Raw measurements only: where a tag sits relative to its element is worked out by the user
+    of the data.
 
 """
 
@@ -44,6 +52,11 @@ from duHast.Geometry.point_3 import Point3
 from duHast.Data.Objects.Collectors.Properties.data_property_names import (
     DataPropertyNames,
 )
+from duHast.Data.Objects.Collectors.Properties.data_tag_kind_names import (
+    DataTagKindNames,
+)
+from duHast.Data.Objects.Collectors.data_tag_type import DataTagType
+from duHast.Data.Objects.Collectors.data_tagged_element import DataTaggedElement
 from duHast.Data.Objects.Collectors.Properties.Geometry.geometry_bounding_box_2 import (
     DataGeometryBoundingBox2,
 )
@@ -71,6 +84,17 @@ class DataTag(DataBase):
         self.leader_end = None
         self.leader_reference = None
         self.leader_element_reference_id = -1
+        # the tag element's id in its model (-1 unread)
+        self.id = -1
+        self.tag_kind = DataTagKindNames.INDEPENDENT
+        self.tag_type = DataTagType()
+        # unread / no text is an empty string; a tag whose text could not be read says so
+        self.text = ""
+        self.rotation = 0.0
+        self.orientation = ""
+        self.has_leader = False
+        self.leader_end_condition = ""
+        self.tagged_elements = []
 
         json_var = None
         # check if any data was past in with constructor!
@@ -125,6 +149,21 @@ class DataTag(DataBase):
                         )
                     )
 
+                self.id = json_var.get(DataPropertyNames.ID, self.id)
+                self.tag_kind = json_var.get(DataPropertyNames.TAG_KIND, self.tag_kind)
+                self.tag_type = DataTagType(json_var.get(DataPropertyNames.TAG_TYPE, None))
+                self.text = json_var.get(DataPropertyNames.TAG_TEXT, self.text)
+                self.rotation = json_var.get(DataPropertyNames.TAG_ROTATION, self.rotation)
+                self.orientation = json_var.get(DataPropertyNames.TAG_ORIENTATION, self.orientation)
+                self.has_leader = json_var.get(DataPropertyNames.TAG_HAS_LEADER, self.has_leader)
+                self.leader_end_condition = json_var.get(
+                    DataPropertyNames.TAG_LEADER_END_CONDITION, self.leader_end_condition
+                )
+                self.tagged_elements = [
+                    DataTaggedElement(j=t)
+                    for t in json_var.get(DataPropertyNames.TAGGED_ELEMENTS, [])
+                ]
+
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
@@ -149,6 +188,15 @@ class DataTag(DataBase):
             and self.leader_end == other.leader_end
             and self.leader_reference == other.leader_reference
             and self.leader_element_reference_id == other.leader_element_reference_id
+            and self.id == other.id
+            and self.tag_kind == other.tag_kind
+            and self.tag_type == other.tag_type
+            and self.text == other.text
+            and self.rotation == other.rotation
+            and self.orientation == other.orientation
+            and self.has_leader == other.has_leader
+            and self.leader_end_condition == other.leader_end_condition
+            and self.tagged_elements == other.tagged_elements
         )
 
     def __ne__(self, other):
@@ -163,5 +211,9 @@ class DataTag(DataBase):
                 self.leader_end,
                 self.leader_reference,
                 self.leader_element_reference_id,
+                self.id,
+                self.tag_kind,
+                self.tag_type,
+                tuple(self.tagged_elements),
             )
         )

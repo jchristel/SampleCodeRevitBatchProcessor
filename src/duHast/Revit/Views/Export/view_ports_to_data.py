@@ -43,6 +43,7 @@ from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
 from duHast.Revit.Common.Geometry.points import convert_XYZ_to_point2,convert_XYZ_to_point3
 from duHast.Revit.Views.elevation import get_view_index_on_marker
+from duHast.Revit.Annotation.Export.to_data_tag import get_tags_in_view
 
 from Autodesk.Revit.DB import SectionType, ViewType
 
@@ -90,10 +91,18 @@ def _get_view_crop(view):
         return None
 
 
-def _get_plan_view(view):
+def _get_view_identity(data_instance, view):
+    """Sets what every view carries: its id and its scale (a tag's distance on paper needs it)."""
+    data_instance.id = int(view.Id.Value)
+    data_instance.view_scale = int(view.Scale)
+
+
+def _get_plan_view(doc, view):
     """
     Converts data from a Revit plan view to a data plan view instance
 
+    :param doc: The Revit document.
+    :type doc: Autodesk.Revit.DB.Document
     :param view: The Revit view
     :type view: Autodesk.Revit.DB.ViewPlan
 
@@ -108,7 +117,10 @@ def _get_plan_view(view):
     if bb_min_2d and bb_max_2d:
         data_instance.bounding_box.update(bb_min_2d, bb_max_2d)
 
-    # get any tags in the view
+    _get_view_identity(data_instance, view)
+
+    # the tags in the view, of every kind (independent, room, space, area)
+    data_instance.tags = get_tags_in_view(doc, view)
     return data_instance
 
 def _get_elevation_view(doc, view):
@@ -123,6 +135,8 @@ def _get_elevation_view(doc, view):
     """
 
     data_instance = DataViewElevation()
+    _get_view_identity(data_instance, view)
+    data_instance.tags = get_tags_in_view(doc, view)
 
     # get bounding box
     bb_min_2d, bb_max_2d = _get_view_crop(view)
@@ -220,7 +234,7 @@ def _get_view_data(doc, view):
     # check view type
     if view.ViewType == ViewType.FloorPlan:
         # plan view
-        view_data_instance = _get_plan_view(view=view)
+        view_data_instance = _get_plan_view(doc=doc, view=view)
     elif view.ViewType == ViewType.Elevation:
         # elevation
         view_data_instance = _get_elevation_view(doc=doc, view=view)
@@ -270,6 +284,7 @@ def convert_revit_viewport_to_data_instance(doc, revit_view_port):
 
     # set the viewport type
     view_port_data.vp_type = view_port_type
+    view_port_data.view_id = int(revit_view_port.ViewId.Value)
 
     # set the view
     revit_view = doc.GetElement(revit_view_port.ViewId)

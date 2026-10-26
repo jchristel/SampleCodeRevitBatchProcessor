@@ -303,6 +303,60 @@ def independent_tag_to_data(doc, tag):
     return data
 
 
+# The property a spatial element tag names its element by, per kind. Revit 2026's RoomTag has
+# no TaggedLocalElementId / TaggedElementId (those are on IndependentTag): measured, not assumed.
+_SPATIAL_ELEMENT_PROPERTY = {
+    DataTagKindNames.ROOM: "Room",
+    DataTagKindNames.SPACE: "Space",
+    DataTagKindNames.AREA: "Area",
+}
+
+
+def _spatial_reference(tag, kind):
+    """
+    The one room, space or area a spatial tag refers to, as the reference dictionary
+    `_tagged_element` reads, or None when this tag gives no way to find it.
+
+    The element property (`Room`, `Space`, `Area`) is read first: it is the one that exists on
+    every version seen. The older id properties are tried only when it gives nothing, which is
+    also the case for an element that lives in a link.
+
+    :param tag: The tag.
+    :type tag: Autodesk.Revit.DB.SpatialElementTag
+    :param kind: One of :class:`.DataTagKindNames`.
+    :type kind: str
+
+    :return: The reference, or None.
+    :rtype: {str:Autodesk.Revit.DB.ElementId} or None
+    """
+
+    invalid = ElementId.InvalidElementId
+    reference = {HOST_ELEMENT_ID: invalid, LINK_ELEMENT_ID: invalid, LINK_INSTANCE_ID: invalid}
+
+    name = _SPATIAL_ELEMENT_PROPERTY.get(kind)
+    if name:
+        try:
+            element = getattr(tag, name)
+        except Exception:
+            element = None
+        if element is not None:
+            reference[HOST_ELEMENT_ID] = element.Id
+            return reference
+
+    try:
+        local = tag.TaggedLocalElementId
+        if local != invalid:
+            reference[HOST_ELEMENT_ID] = local
+            return reference
+        tagged = tag.TaggedElementId
+        reference[LINK_ELEMENT_ID] = tagged.LinkedElementId
+        reference[LINK_INSTANCE_ID] = tagged.LinkInstanceId
+        return reference
+    except Exception:
+        # neither way of naming the element exists here: the tag is kept with no tagged element
+        return None
+
+
 def spatial_tag_to_data(doc, tag, kind):
     """
     Converts one room, space or area tag.
@@ -345,18 +399,7 @@ def spatial_tag_to_data(doc, tag, kind):
             pass
 
     # the tagged room / space / area: local to this model, or in a link
-    reference = {HOST_ELEMENT_ID: ElementId.InvalidElementId, LINK_ELEMENT_ID: ElementId.InvalidElementId, LINK_INSTANCE_ID: ElementId.InvalidElementId}
-    try:
-        local = tag.TaggedLocalElementId
-        if local != ElementId.InvalidElementId:
-            reference[HOST_ELEMENT_ID] = local
-        else:
-            tagged = tag.TaggedElementId
-            reference[LINK_ELEMENT_ID] = tagged.LinkedElementId
-            reference[LINK_INSTANCE_ID] = tagged.LinkInstanceId
-    except Exception:
-        # a Revit version without these: the tag is kept with no tagged element rather than lost
-        reference = None
+    reference = _spatial_reference(tag, kind)
     if reference is not None:
         data.tagged_elements = [_tagged_element(doc, reference, 0, [leader] if leader else [])]
     return data

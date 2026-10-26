@@ -19,7 +19,14 @@ if "System" not in sys.modules:
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
 
-from duHast.Revit.Annotation.Export.to_data_tag import NO_ID, pick_leader_entry  # noqa: E402
+from duHast.Data.Objects.Collectors.Properties.data_tag_kind_names import DataTagKindNames  # noqa: E402
+from duHast.Revit.Annotation.Export.to_data_tag import (  # noqa: E402
+    HOST_ELEMENT_ID,
+    LINK_ELEMENT_ID,
+    NO_ID,
+    _spatial_reference,
+    pick_leader_entry,
+)
 
 
 def entry(element_id, linked_id, label):
@@ -49,6 +56,28 @@ class PickLeaderEntry(unittest.TestCase):
     def test_no_entries_is_none(self):
         self.assertIsNone(pick_leader_entry([], 1, NO_ID, 0))
         self.assertIsNone(pick_leader_entry(None, 1, NO_ID, 0))
+
+
+class RoomTagLike(object):
+    """A RoomTag of Revit 2026: it names its room by `Room` and has no tagged-id properties."""
+
+    def __init__(self, room):
+        self.Room = room
+
+
+class SpatialReference(unittest.TestCase):
+    def test_a_room_tag_is_read_through_its_room(self):
+        room = types.SimpleNamespace(Id=2620712)
+        reference = _spatial_reference(RoomTagLike(room), DataTagKindNames.ROOM)
+        self.assertEqual(2620712, reference[HOST_ELEMENT_ID])
+
+    def test_a_tag_with_no_room_and_no_id_properties_gives_none(self):
+        self.assertIsNone(_spatial_reference(RoomTagLike(None), DataTagKindNames.ROOM))
+
+    def test_a_space_tag_uses_space_and_an_area_tag_uses_area(self):
+        tag = types.SimpleNamespace(Space=types.SimpleNamespace(Id=7), Area=types.SimpleNamespace(Id=8))
+        self.assertEqual(7, _spatial_reference(tag, DataTagKindNames.SPACE)[HOST_ELEMENT_ID])
+        self.assertEqual(8, _spatial_reference(tag, DataTagKindNames.AREA)[HOST_ELEMENT_ID])
 
 
 if __name__ == "__main__":

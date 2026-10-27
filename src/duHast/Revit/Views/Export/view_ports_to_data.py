@@ -44,6 +44,7 @@ from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 from duHast.Revit.Common.Geometry.points import convert_XYZ_to_point2,convert_XYZ_to_point3
 from duHast.Revit.Views.elevation import get_view_index_on_marker
 from duHast.Revit.Annotation.Export.to_data_tag import get_tags_in_view
+from duHast.Revit.Common.element_id import get_el_id_int
 
 from Autodesk.Revit.DB import SectionType, ViewType
 
@@ -93,7 +94,7 @@ def _get_view_crop(view):
 
 def _get_view_identity(data_instance, view):
     """Sets what every view carries: its id and its scale (a tag's distance on paper needs it)."""
-    data_instance.id = int(view.Id.Value)
+    data_instance.id = get_el_id_int(view.Id)
     data_instance.view_scale = int(view.Scale)
 
 
@@ -284,7 +285,7 @@ def convert_revit_viewport_to_data_instance(doc, revit_view_port):
 
     # set the viewport type
     view_port_data.vp_type = view_port_type
-    view_port_data.view_id = int(revit_view_port.ViewId.Value)
+    view_port_data.view_id = get_el_id_int(revit_view_port.ViewId)
 
     # set the view
     revit_view = doc.GetElement(revit_view_port.ViewId)

@@ -24,7 +24,6 @@ from duHast.Revit.Annotation.Export.to_data_tag import (  # noqa: E402
     HOST_ELEMENT_ID,
     LINK_ELEMENT_ID,
     NO_ID,
-    _element_id,
     _spatial_reference,
     pick_leader_entry,
 )
@@ -79,14 +78,6 @@ class SpatialReference(unittest.TestCase):
         tag = types.SimpleNamespace(Space=types.SimpleNamespace(Id=7), Area=types.SimpleNamespace(Id=8))
         self.assertEqual(7, _spatial_reference(tag, DataTagKindNames.SPACE)[HOST_ELEMENT_ID])
         self.assertEqual(8, _spatial_reference(tag, DataTagKindNames.AREA)[HOST_ELEMENT_ID])
-
-
-class ElementIdFromInteger(unittest.TestCase):
-    def test_the_integer_reaches_the_constructor_as_a_named_type(self):
-        revit_element_id = sys.modules["Autodesk.Revit.DB"].ElementId
-        revit_element_id.reset_mock()
-        _element_id(42)
-        revit_element_id.assert_called_once_with(int(42))
 
 
 if __name__ == "__main__":

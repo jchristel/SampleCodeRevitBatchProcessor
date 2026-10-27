@@ -51,6 +51,7 @@ from Autodesk.Revit.DB import (
 
 from duHast.Data.Objects.Collectors.data_tag import DataTag
 from duHast.Data.Objects.Collectors.data_tag_type import DataTagType
+from System import Int64
 from duHast.Data.Objects.Collectors.data_tagged_element import DataTaggedElement
 from duHast.Data.Objects.Collectors.Properties.data_tag_kind_names import (
     DataTagKindNames,
@@ -216,6 +217,24 @@ def _location_of(element, transform):
     return data
 
 
+def _element_id(value):
+    """
+    An ElementId from a plain integer.
+
+    A Python int does not pick an overload by itself: ElementId has constructors taking a
+    BuiltInParameter, a BuiltInCategory and an Int64, and Revit 2026 under pyRevit reports
+    "Multiple targets could match" for every tag read. Naming the type removes the choice.
+
+    :param value: The id's integer value.
+    :type value: int
+
+    :return: The id.
+    :rtype: Autodesk.Revit.DB.ElementId
+    """
+
+    return ElementId(Int64(value))
+
+
 def _tagged_element(doc, reference, index, leader_entries):
     """One `DataTaggedElement` from one entry of `get_tagged_elements`."""
 
@@ -231,14 +250,14 @@ def _tagged_element(doc, reference, index, leader_entries):
     transform = None
     element_doc = doc
     if data.host_element_id != NO_ID:
-        element = doc.GetElement(ElementId(data.host_element_id))
+        element = doc.GetElement(_element_id(data.host_element_id))
     elif data.link_instance_id != NO_ID:
-        link_instance = doc.GetElement(ElementId(data.link_instance_id))
+        link_instance = doc.GetElement(_element_id(data.link_instance_id))
         link_doc = link_instance.GetLinkDocument() if link_instance is not None else None
         # an unloaded link has no document: the ids are all there is
         if link_doc is not None and data.link_element_id != NO_ID:
             element_doc = link_doc
-            element = link_doc.GetElement(ElementId(data.link_element_id))
+            element = link_doc.GetElement(_element_id(data.link_element_id))
             transform = link_instance.GetTotalTransform()
     if element is not None:
         data.category = _category_name(element)

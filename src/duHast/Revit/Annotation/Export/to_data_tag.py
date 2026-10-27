@@ -51,6 +51,7 @@ from Autodesk.Revit.DB import (
 
 from duHast.Data.Objects.Collectors.data_tag import DataTag
 from duHast.Data.Objects.Collectors.data_tag_type import DataTagType
+from duHast.Revit.Common.element_id import get_el_id_int, get_element_id_from_int
 from duHast.Data.Objects.Collectors.data_tagged_element import DataTaggedElement
 from duHast.Data.Objects.Collectors.Properties.data_tag_kind_names import (
     DataTagKindNames,
@@ -110,7 +111,7 @@ def _id_value(element_id):
     """An element id as an int, or -1 for none / invalid."""
     if element_id is None or element_id == ElementId.InvalidElementId:
         return NO_ID
-    return int(element_id.Value)
+    return get_el_id_int(element_id)
 
 
 def _name_of(element):
@@ -231,14 +232,14 @@ def _tagged_element(doc, reference, index, leader_entries):
     transform = None
     element_doc = doc
     if data.host_element_id != NO_ID:
-        element = doc.GetElement(ElementId(data.host_element_id))
+        element = doc.GetElement(get_element_id_from_int(data.host_element_id))
     elif data.link_instance_id != NO_ID:
-        link_instance = doc.GetElement(ElementId(data.link_instance_id))
+        link_instance = doc.GetElement(get_element_id_from_int(data.link_instance_id))
         link_doc = link_instance.GetLinkDocument() if link_instance is not None else None
         # an unloaded link has no document: the ids are all there is
         if link_doc is not None and data.link_element_id != NO_ID:
             element_doc = link_doc
-            element = link_doc.GetElement(ElementId(data.link_element_id))
+            element = link_doc.GetElement(get_element_id_from_int(data.link_element_id))
             transform = link_instance.GetTotalTransform()
     if element is not None:
         data.category = _category_name(element)

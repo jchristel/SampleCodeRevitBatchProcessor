@@ -42,7 +42,12 @@ from duHast.Data.Objects.Collectors.Properties.data_schedule_segement import Dat
 from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
 from duHast.Revit.Common.Geometry.points import convert_XYZ_to_point2,convert_XYZ_to_point3
-from duHast.Revit.Views.elevation import get_view_index_on_marker
+from duHast.Revit.Views.elevation import (
+    get_elevation_footprint,
+    get_far_clip,
+    get_marker_and_index_of_view,
+    get_marker_location,
+)
 from duHast.Revit.Annotation.Export.to_data_tag import get_tags_in_view
 from duHast.Revit.Common.element_id import get_el_id_int
 
@@ -144,12 +149,26 @@ def _get_elevation_view(doc, view):
     if bb_min_2d and bb_max_2d:
         data_instance.bounding_box.update(bb_min_2d, bb_max_2d)
 
-    marker = get_view_index_on_marker(doc, view)
-    # store the index
-    data_instance.marker_index = marker
+    # the marker hosting the view, the index the view has on it and where it sits
+    marker, index = get_marker_and_index_of_view(doc, view)
+    data_instance.marker_index = index
+    if marker is not None:
+        data_instance.marker_id = get_el_id_int(marker.Id)
+        marker_point = get_marker_location(marker)
+        if marker_point is not None:
+            data_instance.marker_location = convert_XYZ_to_point3(marker_point)
 
-    # orientation (eye point and view direction)
+    # orientation (view direction)
     data_instance.view_direction = convert_XYZ_to_point3(view.ViewDirection)
+
+    # the elevation line in the model and how far the view looks from it
+    footprint = get_elevation_footprint(view)
+    if footprint is not None:
+        line_start, line_end, depth = footprint
+        data_instance.line_start = convert_XYZ_to_point3(line_start)
+        data_instance.line_end = convert_XYZ_to_point3(line_end)
+        data_instance.view_depth = convert_imperial_feet_to_metric_mm(depth)
+    data_instance.far_clip_mode, data_instance.far_clip_offset = get_far_clip(view)
 
     return data_instance
 

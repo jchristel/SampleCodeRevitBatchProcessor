@@ -66,6 +66,15 @@ class DataViewElevation(DataViewBase):
         self.tags = []
         self.marker_index = None  # index of the view on the elevation marker
         self.view_direction = None  # direction the view is looking at
+        # where the view sits in the model (mm, model coordinates). Each is None when it could
+        # not be read, which is different from zero.
+        self.marker_id = None  # element id of the elevation marker hosting the view
+        self.marker_location = None  # Point3, where the marker sits
+        self.line_start = None  # Point3, one end of the elevation line (the cut plane)
+        self.line_end = None  # Point3, the other end; start to end runs to the viewer's right
+        self.view_depth = None  # mm the view looks back from the line (crop box depth)
+        self.far_clip_mode = None  # 0 no clip, 1 clip with line, 2 clip without line
+        self.far_clip_offset = None  # mm, the far clip offset parameter
 
         json_var = None
         # check if any data was past in with constructor!
@@ -100,6 +109,21 @@ class DataViewElevation(DataViewBase):
                 if view_direction is not None:
                     self.view_direction = Point3(j=view_direction)
 
+                self.marker_id = json_var.get(DataPropertyNames.MARKER_ID, None)
+                self.view_depth = json_var.get(DataPropertyNames.VIEW_DEPTH, None)
+                self.far_clip_mode = json_var.get(DataPropertyNames.FAR_CLIP_MODE, None)
+                self.far_clip_offset = json_var.get(
+                    DataPropertyNames.FAR_CLIP_OFFSET, None
+                )
+                for attribute, key in (
+                    ("marker_location", DataPropertyNames.MARKER_LOCATION),
+                    ("line_start", DataPropertyNames.LINE_START),
+                    ("line_end", DataPropertyNames.LINE_END),
+                ):
+                    value = json_var.get(key, None)
+                    if value is not None:
+                        setattr(self, attribute, Point3(j=value))
+
                 # get any tags
                 tags = json_var.get(DataPropertyNames.TAGS, [])
                 for tag in tags:
@@ -123,10 +147,22 @@ class DataViewElevation(DataViewBase):
         """
         if not isinstance(other, DataViewElevation):
             return NotImplemented
-        return self.bounding_box == other.bounding_box and self.marker_index == other.marker_index and self.view_direction == other.view_direction and  sorted(
+        return self._placement() == other._placement() and self.bounding_box == other.bounding_box and self.marker_index == other.marker_index and self.view_direction == other.view_direction and  sorted(
             self.tags, key=lambda data_tag: (data_tag.id, data_tag.leader_element_reference_id)
         ) == sorted(
             other.tags, key=lambda data_tag: (data_tag.id, data_tag.leader_element_reference_id)
+        )
+
+    def _placement(self):
+        """The fields that say where the view sits, as one tuple."""
+        return (
+            self.marker_id,
+            self.marker_location,
+            self.line_start,
+            self.line_end,
+            self.view_depth,
+            self.far_clip_mode,
+            self.far_clip_offset,
         )
 
     def __ne__(self, other):
@@ -141,6 +177,7 @@ class DataViewElevation(DataViewBase):
                 self.bounding_box,
                 self.marker_index,
                 self.view_direction,
+                self._placement(),
                 tuple(
                     sorted(
                         self.tags,

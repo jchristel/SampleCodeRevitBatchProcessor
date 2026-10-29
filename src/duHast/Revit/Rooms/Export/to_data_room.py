@@ -27,6 +27,7 @@ This module contains a Revit rooms export to DATA class functions.
 #
 #
 
+from duHast.Revit.Common.level_filter import get_level_id_values, is_on_levels
 from Autodesk.Revit.DB import BuiltInParameter, Element
 
 from duHast.Revit.Common import (
@@ -118,18 +119,23 @@ def populate_data_room_object(doc, revit_room):
         return None
 
 
-def get_all_room_data(doc):
+def get_all_room_data(doc, level_ids=None):
     """
     Returns a list of room data objects for each room in the model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
+    :param level_ids: Only rooms on these levels (Revit level ids as integers) are converted, defaults to None (all rooms).
+    :type level_ids: list of int, optional
     :return: A list of room data instances.
     :rtype: list of  :class:`.DataRoom`
     """
 
     all_room_data = []
     rooms = get_all_rooms(doc)
+    level_values = get_level_id_values(level_ids)
     for room in rooms:
+        if not is_on_levels(room, level_values):
+            continue
         rd = populate_data_room_object(doc, room)
         if rd is not None:
             all_room_data.append(rd)

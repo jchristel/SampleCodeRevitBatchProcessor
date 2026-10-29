@@ -27,6 +27,7 @@ This module contains a Revit ceilings export to DATA class functions.
 #
 #
 
+from duHast.Revit.Common.level_filter import get_level_id_values, is_on_levels
 from Autodesk.Revit.DB import BuiltInParameter
 
 # from duHast.APISamples.Ceilings.Geometry import Geometry
@@ -128,7 +129,7 @@ def populate_data_ceiling_object(doc, revit_ceiling):
     return data_c
 
 
-def get_all_ceiling_data(doc):
+def get_all_ceiling_data(doc, level_ids=None):
     """
     Gets a list of ceiling data objects for each ceiling element in the model.
 
@@ -140,13 +141,18 @@ def get_all_ceiling_data(doc):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
+    :param level_ids: Only ceilings on these levels (Revit level ids as integers) are converted, defaults to None (all ceilings).
+    :type level_ids: list of int, optional
     :return: A list of data ceiling instances.
     :rtype: list of :class:`.DataCeiling`
     """
 
     all_ceiling_data = []
     ceilings = rCeiling.get_all_ceiling_instances_in_model_by_category(doc)
+    level_values = get_level_id_values(level_ids)
     for ceiling in ceilings:
+        if not is_on_levels(ceiling, level_values):
+            continue
         cd = populate_data_ceiling_object(doc, ceiling)
         # `populate_data_ceiling_object` no longer answers None. The guard stays
         # as a cheap backstop rather than being deleted: this loop is the only

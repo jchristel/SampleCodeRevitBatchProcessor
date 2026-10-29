@@ -4,6 +4,7 @@ This module contains a Revit spaces export to DATA class functions. Modeled afte
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
+from duHast.Revit.Common.level_filter import get_level_id_values, is_on_levels
 from Autodesk.Revit.DB import BuiltInParameter, Element
 
 from duHast.Revit.Common import (
@@ -94,18 +95,23 @@ def populate_data_space_object(doc, revit_space):
         return None
 
 
-def get_all_space_data(doc):
+def get_all_space_data(doc, level_ids=None):
     """
     Returns a list of space data objects for each space in the model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
+    :param level_ids: Only spaces on these levels (Revit level ids as integers) are converted, defaults to None (all spaces).
+    :type level_ids: list of int, optional
     :return: A list of space data instances.
     :rtype: list of  :class:`.DataSpace`
     """
 
     all_space_data = []
     spaces = get_all_spaces(doc)
+    level_values = get_level_id_values(level_ids)
     for space in spaces:
+        if not is_on_levels(space, level_values):
+            continue
         sd = populate_data_space_object(doc, space)
         if sd is not None:
             all_space_data.append(sd)

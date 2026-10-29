@@ -35,7 +35,7 @@ from duHast.Revit.Common.Objects.FailureHandlingConfiguration import (
     FailureHandlingConfig,
 )
 
-from Autodesk.Revit.DB import Transaction
+from Autodesk.Revit.DB import Transaction, TransactionGroup
 
 # --------------------------------------------Transactions-----------------------------------------
 
@@ -203,3 +203,62 @@ def in_transaction_with_failure_handling(
     # Execute the action with the updated transaction
     result = in_transaction(transaction, action)
     return result
+
+
+def in_transaction_group(group, action, assimilate=True, *args, **kwargs):
+    """
+    Revit transaction group wrapper.
+
+    Runs an action which itself opens one or more transactions (for example through
+    in_transaction or in_transaction_with_failure_handling) inside a transaction group. If the action
+    raises, or returns a Result whose status is False, the whole group is rolled back: everything the
+    action committed is undone, so a failed piece of work leaves no trace in the model.
+
+    :param group: The transaction group to be executed.
+    :type group: Autodesk.Revit.DB.TransactionGroup
+    :param action: The action to be nested within the group. This needs to return a Result class instance!
+    :type action: action().
+    :param assimilate: True: on success the transactions of the group are merged into one (one entry in the undo list). False: they are committed as they are with the group.
+    :type assimilate: bool, optional
+    :param *args: is just a placeholder in case this function is called with the same args than in_transaction
+    :param **kwargs: is just a placeholder in case this function is called with the same args than in_transaction
+
+    :return:
+        Result class instance.
+
+        - .status True if the action succeeded and the group was committed, otherwise False.
+        - .message will contain the action's messages, or the exception message.
+        - .result is whatever the action returned in its result.
+
+    :rtype: :class:`.Result`
+    """
+
+    if not isinstance(group, TransactionGroup):
+        raise ValueError(
+            "The group parameter must be an instance of Autodesk.Revit.DB.TransactionGroup."
+        )
+    if not callable(action):
+        raise ValueError("The action parameter must be a callable function.")
+
+    return_value = res.Result()
+    try:
+        group.Start()
+        try:
+            group_result = action()
+            if group_result is not None and group_result.status == False:
+                # the action reported a failure: undo everything it did
+                group.RollBack()
+                return group_result
+            if assimilate:
+                group.Assimilate()
+            else:
+                group.Commit()
+            if group_result is not None:
+                return_value = group_result
+        except Exception as e:
+            group.RollBack()
+            return_value.update_sep(False, "Failed with exception: {}".format(e))
+    except Exception as e:
+        return_value.update_sep(False, "Failed with exception: {}".format(e))
+
+    return return_value

@@ -119,24 +119,26 @@ def create_elevation_views(
                             action_return_value.append_message("Failed to set view name with exception: {}".format(e))
                 
                         # set the phasing
-                        result_phase = set_builtin_parameter_without_transaction_wrapper_by_name(
-                            element=new_view, 
-                            parameter_definition=BuiltInParameter.VIEW_PHASE, 
-                            parameter_value=phasing.Id
-                        )
-                        # only pass on the message to caller
-                        action_return_value.append_message(result_phase.message)
+                        # phasing is optional: without it the view keeps the phase Revit gives it
+                        if phasing is not None:
+                            result_phase = set_builtin_parameter_without_transaction_wrapper_by_name(
+                                element=new_view,
+                                parameter_definition=BuiltInParameter.VIEW_PHASE,
+                                parameter_value=phasing.Id
+                            )
+                            # only pass on the message to caller
+                            action_return_value.append_message(result_phase.message)
                
                         # set the view crop ( can be a bounding box or a loop )
                         if(isinstance(view_crop, BoundingBoxXYZ)):
                             # set the crop shape
-                            result_bbox = apply_view_bounding_box_crop_without_transaction_wrapper(view=view_plan, bbox=view_crop)
+                            result_bbox = apply_view_bounding_box_crop_without_transaction_wrapper(view=new_view, bbox=view_crop)
                             # only pass on the message to caller
-                            return_value.append_message(result_bbox.message)
+                            action_return_value.append_message(result_bbox.message)
                         elif (isinstance(view_crop, CurveLoop)):
-                            result_loop =  apply_view_crop_without_transaction_wrapper(view=view_plan, crop_loop=view_crop)
+                            result_loop =  apply_view_crop_without_transaction_wrapper(view=new_view, crop_loop=view_crop)
                             # only pass on the message to caller
-                            return_value.append_message(result_loop.message)
+                            action_return_value.append_message(result_loop.message)
                 
                         # make sure the view is cropped if a crop method was supplied
                         if view_crop:

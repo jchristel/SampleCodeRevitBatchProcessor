@@ -68,10 +68,13 @@ def create_sheet(doc, sheet_number, sheet_name, title_block_family_symbol, addit
 
     try:
         # type checking
-        if not(isinstance (sheet_number, str)):
+        # text read from json arrives as unicode in IronPython 2.7, which is not a str there: accept both
+        text_types = (str, type(u""))
+
+        if not(isinstance (sheet_number, text_types)):
             raise ValueError ("sheet number needs to be of type str, got {} instead.".format(type(sheet_number)))
         
-        if not(isinstance(sheet_name, str)):
+        if not(isinstance(sheet_name, text_types)):
             raise ValueError ("sheet name needs to be of type str, got {} instead.".format(type(sheet_name)))
         
         if (not(isinstance(title_block_family_symbol, FamilySymbol))):
@@ -81,6 +84,11 @@ def create_sheet(doc, sheet_number, sheet_name, title_block_family_symbol, addit
         def action():
             action_return_value = Result()
             try:
+                # a title block type which is not active can not be placed
+                if not title_block_family_symbol.IsActive:
+                    title_block_family_symbol.Activate()
+                    doc.Regenerate()
+
                 view_sheet = ViewSheet.Create(doc, title_block_family_symbol.Id)
 
                 # check if sheet was actually created?

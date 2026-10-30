@@ -157,3 +157,20 @@ def get_all_placed_rooms(doc):
 
     all_rooms = get_all_rooms_as_collector(doc)
     return [rm for rm in all_rooms if rm.Location != None and rm.Area > 0.0]
+
+
+def get_room_parameter_names(doc):
+    """
+    Gets the names of the parameters of a room in the model (read from the first room found).
+
+    :param doc: Revit model document to search.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Sorted unique parameter names; empty if the model has no room.
+    :rtype: List str
+    """
+
+    room = get_all_rooms_as_collector(doc).FirstElement()
+    if room is None:
+        return []
+    return sorted(set(p.Definition.Name for p in room.Parameters))

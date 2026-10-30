@@ -47,7 +47,7 @@ def get_symbol_full_name(symbol):
     :rtype: str
     """
 
-    return "{}{}{}".format(symbol.FamilyName, NAME_SEPARATOR, symbol.Name)
+    return "{}{}{}".format(symbol.FamilyName, NAME_SEPARATOR, Element.Name.GetValue(symbol))
 
 
 def get_family_symbols_by_category(doc, built_in_category):

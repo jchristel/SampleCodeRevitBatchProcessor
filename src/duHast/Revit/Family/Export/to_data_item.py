@@ -30,6 +30,8 @@ Covers placed family instances belonging to a caller-supplied list of categories
 #
 #
 
+from duHast.Revit.Common.element_id import get_el_id_int
+from duHast.Revit.Common.level_filter import get_level_id_values
 from Autodesk.Revit.DB import (
     BuiltInCategory,
     BuiltInParameter,
@@ -554,7 +556,7 @@ def populate_data_item_object(doc, revit_family_instance):
 # Collector
 # ---------------------------------------------------------------------------
 
-def get_all_item_data(doc, categories=None):
+def get_all_item_data(doc, categories=None, level_ids=None):
     """
     Collects all placed :class:`Autodesk.Revit.DB.FamilyInstance` elements
     belonging to the given list of categories and returns a list of
@@ -566,6 +568,11 @@ def get_all_item_data(doc, categories=None):
         to collect from.  Defaults to :data:`DEFAULT_ITEM_CATEGORIES` when
         *None* is supplied.
     :type categories: list[Autodesk.Revit.DB.BuiltInCategory] or None
+    :param level_ids: Only items on these levels (Revit level ids as integers) are converted, defaults to None (all
+        items). An item is on the level its export reports, which is the level the modeller assigned
+        (see get_authored_level_id) and, only where there is none, the one worked out from its geometry. The first
+        is known before the (slow) conversion and skips it; the second can only be known after it.
+    :type level_ids: list of int, optional
 
     :return: A list of populated data item instances.
     :rtype: list[:class:`.DataItem`]
@@ -575,6 +582,7 @@ def get_all_item_data(doc, categories=None):
         categories = DEFAULT_ITEM_CATEGORIES
 
     all_item_data = []
+    level_values = get_level_id_values(level_ids)
 
     for category in categories:
         category_filter = ElementCategoryFilter(category)
@@ -585,8 +593,16 @@ def get_all_item_data(doc, categories=None):
         )
 
         for instance in instances:
+            authored = None
+            if level_values is not None:
+                authored = get_authored_level_id(instance)
+                if authored is not None and get_el_id_int(authored) not in level_values:
+                    continue
             item_data = populate_data_item_object(doc, instance)
             if item_data is not None:
+                if level_values is not None and authored is None and item_data.level.id not in level_values:
+                    # the level was worked out from the geometry, so it is only known now
+                    continue
                 all_item_data.append(item_data)
 
     return all_item_data

@@ -27,6 +27,7 @@ This module contains a Revit floors export to DATA class functions.
 #
 #
 
+from duHast.Revit.Common.level_filter import get_level_id_values, is_on_levels
 from Autodesk.Revit.DB import BuiltInParameter
 
 from duHast.Revit.Floors import floors as rFloor
@@ -118,7 +119,7 @@ def populate_data_floor_object(doc, revit_floor):
     return data_f
 
 
-def get_all_floor_data(doc):
+def get_all_floor_data(doc, level_ids=None):
     """
     Gets a list of floor data objects for each floor element in the model.
 
@@ -130,13 +131,18 @@ def get_all_floor_data(doc):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
+    :param level_ids: Only floors on these levels (Revit level ids as integers) are converted, defaults to None (all floors).
+    :type level_ids: list of int, optional
     :return: A list of data floor instances.
     :rtype: list of :class:`.DataFloor`
     """
 
     all_floor_data = []
     floors = rFloor.get_all_floor_instances_in_model_by_category(doc)
+    level_values = get_level_id_values(level_ids)
     for floor in floors:
+        if not is_on_levels(floor, level_values):
+            continue
         fd = populate_data_floor_object(doc, floor)
         # `populate_data_floor_object` no longer answers None. The guard stays as
         # a cheap backstop rather than being deleted: this loop is the only thing

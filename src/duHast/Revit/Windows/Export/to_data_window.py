@@ -27,6 +27,7 @@ This module contains a Revit window export to DATA class functions.
 #
 #
 
+from duHast.Revit.Common.level_filter import get_level_id_values, is_on_levels
 from Autodesk.Revit.DB import (
     BoundingBoxXYZ,
     BuiltInParameter,
@@ -203,12 +204,16 @@ def populate_data_window_object(doc, revit_window):
         return None
 
 
-def get_all_window_data(doc, filter_family_names=[]):
+def get_all_window_data(doc, filter_family_names=[], level_ids=None):
     """
     Gets a list of window data objects for each window element in the model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
+    :param filter_family_names: Only windows of these families are converted, defaults to all.
+    :type filter_family_names: list of str, optional
+    :param level_ids: Only windows on these levels (Revit level ids as integers) are converted, defaults to None (all windows).
+    :type level_ids: list of int, optional
 
     :return: A list of data window instances.
     :rtype: list of :class:`.DataWindow`
@@ -216,7 +221,10 @@ def get_all_window_data(doc, filter_family_names=[]):
 
     all_window_data = []
     windows = get_window_instances(doc)
+    level_values = get_level_id_values(level_ids)
     for window in windows:
+        if not is_on_levels(window, level_values):
+            continue
         # check if window is in filter list
         if len(filter_family_names) > 0:
             if window.Symbol.FamilyName not in filter_family_names:

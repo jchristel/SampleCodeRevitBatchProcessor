@@ -27,6 +27,7 @@ This module contains a Revit door export to DATA class functions.
 #
 #
 
+from duHast.Revit.Common.level_filter import get_level_id_values, is_on_levels
 from Autodesk.Revit.DB import (
     BoundingBoxXYZ,
     BuiltInParameter,
@@ -200,12 +201,16 @@ def populate_data_door_object(doc, revit_door):
         return None
 
 
-def get_all_door_data(doc, filter_family_names=[]):
+def get_all_door_data(doc, filter_family_names=[], level_ids=None):
     """
     Gets a list of door data objects for each door element in the model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
+    :param filter_family_names: Only doors of these families are converted, defaults to all.
+    :type filter_family_names: list of str, optional
+    :param level_ids: Only doors on these levels (Revit level ids as integers) are converted, defaults to None (all doors).
+    :type level_ids: list of int, optional
 
     :return: A list of data door instances.
     :rtype: list of :class:`.DoorCeiling`
@@ -213,7 +218,10 @@ def get_all_door_data(doc, filter_family_names=[]):
 
     all_door_data = []
     doors = get_door_instances(doc)
+    level_values = get_level_id_values(level_ids)
     for door in doors:
+        if not is_on_levels(door, level_values):
+            continue
         # check if door is in filter list
         if len(filter_family_names) > 0:
             if door.Symbol.FamilyName not in filter_family_names:

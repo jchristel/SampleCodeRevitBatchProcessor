@@ -12,7 +12,6 @@ layout:
   - PushIt
   - Export
   - Data
-  - RoomMate
 
 # bundle tooltip
 tooltip: A collection of tools for Revit

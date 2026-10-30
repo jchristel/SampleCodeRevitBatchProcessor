@@ -283,3 +283,37 @@ def get_item_facts(doc, phase, built_in_categories, identify_by="room"):
                 "host": get_host_info(instance),
             }
     return facts
+
+
+def get_instances_by_room_id(doc, phase, built_in_categories, allowed_ids=None):
+    """
+    Returns the family instances of the categories grouped by the room they are in during a phase.
+
+    An instance whose room can not be read, or which is in no room, is left out.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param phase: The phase the room is read in.
+    :type phase: Autodesk.Revit.DB.Phase
+    :param built_in_categories: The categories to walk.
+    :type built_in_categories: list of Autodesk.Revit.DB.BuiltInCategory
+    :param allowed_ids: Only instances with these ids (int) are considered; None considers all.
+    :type allowed_ids: set of int or None
+
+    :return: Room id (int) mapped to the instances in it.
+    :rtype: dict
+    """
+
+    by_room = {}
+    for category in built_in_categories:
+        collector = FilteredElementCollector(doc).OfClass(FamilyInstance).WherePasses(ElementCategoryFilter(category))
+        for instance in collector:
+            try:
+                if allowed_ids is not None and get_el_id_int(instance.Id) not in allowed_ids:
+                    continue
+                room_id = get_room_or_space_id(instance, phase, "Room")
+            except Exception:
+                continue
+            if room_id is not None:
+                by_room.setdefault(room_id, []).append(instance)
+    return by_room

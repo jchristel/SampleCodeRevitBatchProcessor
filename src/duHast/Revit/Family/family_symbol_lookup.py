@@ -30,7 +30,7 @@ names; these functions turn such a name back into the Revit symbol.
 #
 #
 
-from Autodesk.Revit.DB import BuiltInCategory, FilteredElementCollector
+from Autodesk.Revit.DB import BuiltInCategory, Element, FamilySymbol, FilteredElementCollector
 
 # the separator used when a family and a type name are written as one string
 NAME_SEPARATOR = " : "
@@ -157,3 +157,29 @@ def activate_symbol_without_transaction_wrapper(doc, symbol):
     symbol.Activate()
     doc.Regenerate()
     return True
+
+
+def get_family_symbols_by_names(doc):
+    """
+    Returns every family symbol in the model keyed by lower case family name and type name.
+
+    The first symbol wins when two share both names.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: (family name, type name) in lower case mapped to the symbol.
+    :rtype: dict
+    """
+
+    found = {}
+    for symbol in FilteredElementCollector(doc).OfClass(FamilySymbol):
+        try:
+            key = (
+                (symbol.FamilyName or "").strip().lower(),
+                (Element.Name.GetValue(symbol) or "").strip().lower(),
+            )
+            found.setdefault(key, symbol)
+        except Exception:
+            continue
+    return found

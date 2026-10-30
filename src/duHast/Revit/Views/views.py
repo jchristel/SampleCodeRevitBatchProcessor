@@ -48,9 +48,11 @@ from duHast.Revit.Common.parameter_get_utils import (
 from Autodesk.Revit.DB import (
     BuiltInParameter,
     ElementClassFilter,
+    Element,
     ElementId,
     FilteredElementCollector,
     View,
+    ViewFamilyType,
     ViewType,
 )
 
@@ -66,6 +68,45 @@ def get_view_types(doc):
 
     collector = _get_view_types(doc)
     return collector
+
+
+def get_view_family_types(doc, view_family):
+    """
+    Returns the view family types of one view family (floor plan, elevation, section...).
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view_family: The view family.
+    :type view_family: Autodesk.Revit.DB.ViewFamily
+
+    :return: The matching view family types.
+    :rtype: list[Autodesk.Revit.DB.ViewFamilyType]
+    """
+
+    return [
+        t for t in FilteredElementCollector(doc).OfClass(ViewFamilyType) if t.ViewFamily == view_family
+    ]
+
+
+def get_view_family_type_by_name(doc, view_family, name):
+    """
+    Returns the view family type of a view family with the given name.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view_family: The view family.
+    :type view_family: Autodesk.Revit.DB.ViewFamily
+    :param name: The type name.
+    :type name: str
+
+    :return: The view family type, None if there is none of that name.
+    :rtype: Autodesk.Revit.DB.ViewFamilyType or None
+    """
+
+    for t in get_view_family_types(doc, view_family):
+        if Element.Name.GetValue(t) == name:
+            return t
+    return None
 
 
 def get_view_type_ids(doc):

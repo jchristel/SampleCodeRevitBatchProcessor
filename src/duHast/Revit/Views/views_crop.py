@@ -31,7 +31,7 @@ View crop utilities.
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Common.transaction import in_transaction
 
-from Autodesk.Revit.DB import Transaction
+from Autodesk.Revit.DB import BoundingBoxXYZ, Transaction, XYZ
 
 
 def get_view_crop(view):
@@ -232,3 +232,37 @@ def apply_view_bounding_box_crop(doc, view, bbox):
     return return_value
 
 
+def set_view_crop_around_point_without_transaction_wrapper(view, centre, width, height):
+    """
+    Activates the crop of a view and sets it to a rectangle of the given size centred on a point.
+
+    The rectangle is built in the crop box's own coordinate system and keeps the crop box's Z range. The crop region is
+    made active and its visibility is switched off.
+
+    :param view: The view to crop.
+    :type view: Autodesk.Revit.DB.View
+    :param centre: The point to centre the crop on, in model coordinates (feet).
+    :type centre: Autodesk.Revit.DB.XYZ
+    :param width: The crop width in the view's horizontal direction (feet).
+    :type width: float
+    :param height: The crop height in the view's vertical direction (feet).
+    :type height: float
+
+    :return: The result of the operation.
+    :rtype: duHast.Utilities.Objects.result.Result
+    """
+
+    return_value = Result()
+    try:
+        crop_box = view.CropBox
+        local = crop_box.Transform.Inverse.OfPoint(centre)
+        new_box = BoundingBoxXYZ()
+        new_box.Transform = crop_box.Transform
+        new_box.Min = XYZ(local.X - width / 2.0, local.Y - height / 2.0, crop_box.Min.Z)
+        new_box.Max = XYZ(local.X + width / 2.0, local.Y + height / 2.0, crop_box.Max.Z)
+        view.CropBoxActive = True
+        view.CropBoxVisible = False
+        return_value.update(apply_view_bounding_box_crop_without_transaction_wrapper(view, new_box))
+    except Exception as e:
+        return_value.update_sep(False, "Failed to crop view {} around a point: {}".format(view, e))
+    return return_value

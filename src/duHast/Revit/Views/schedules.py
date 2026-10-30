@@ -29,6 +29,7 @@ This module contains a number of helper functions relating to Revit view schedul
 from Autodesk.Revit.DB import (
     BuiltInCategory,
     Category,
+    Element,
     ElementId,
     FilteredElementCollector,
     FilteredElementCollector, 
@@ -151,6 +152,28 @@ def get_schedules(doc):
         if not schedule.IsTitleblockRevisionSchedule:
             schedules_filtered.append(schedule)
     return schedules_filtered
+
+
+def get_schedule_by_name(doc, name):
+    """
+    Get a schedule by its name. Schedule templates and title block revision schedules are not considered.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param name: The schedule name.
+    :type name: str
+
+    :return: The schedule, None if there is none of that name.
+    :rtype: Autodesk.Revit.DB.ViewSchedule or None
+    """
+
+    for schedule in get_schedules(doc):
+        try:
+            if not schedule.IsTemplate and Element.Name.GetValue(schedule) == name:
+                return schedule
+        except Exception:
+            continue
+    return None
 
 
 def get_schedules_by_built_in_category (doc, built_in_category):

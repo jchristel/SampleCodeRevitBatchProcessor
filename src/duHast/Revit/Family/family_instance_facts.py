@@ -317,3 +317,23 @@ def get_instances_by_room_id(doc, phase, built_in_categories, allowed_ids=None):
             if room_id is not None:
                 by_room.setdefault(room_id, []).append(instance)
     return by_room
+
+
+def count_instances_in_room(doc, room_id, phase, built_in_categories):
+    """
+    Counts the family instances of the categories that are in one room during a phase.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param room_id: The room's id.
+    :type room_id: int
+    :param phase: The phase the room is read in.
+    :type phase: Autodesk.Revit.DB.Phase
+    :param built_in_categories: The categories to walk.
+    :type built_in_categories: list of Autodesk.Revit.DB.BuiltInCategory
+
+    :return: The number of instances.
+    :rtype: int
+    """
+
+    return len(get_instances_by_room_id(doc, phase, built_in_categories).get(room_id, []))

@@ -174,3 +174,46 @@ def get_room_parameter_names(doc):
     if room is None:
         return []
     return sorted(set(p.Definition.Name for p in room.Parameters))
+
+
+def get_room_outline_mm(room):
+    """
+    Gets the outer boundary of a room as points in millimetres (model coordinates, plan only).
+
+    :param room: The room.
+    :type room: Autodesk.Revit.DB.Architecture.Room
+
+    :return: The points of the first boundary loop in order; empty if the room has no boundary.
+    :rtype: List of (float, float)
+    """
+
+    feet_to_mm = 304.8
+    loops = room.GetBoundarySegments(SpatialElementBoundaryOptions())
+    if not loops or len(loops) == 0:
+        return []
+    points = []
+    for segment in loops[0]:
+        start = segment.GetCurve().GetEndPoint(0)
+        points.append((start.X * feet_to_mm, start.Y * feet_to_mm))
+    return points
+
+
+def get_room_phase(doc, room):
+    """
+    Gets the phase a room belongs to.
+
+    :param doc: Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param room: The room.
+    :type room: Autodesk.Revit.DB.Architecture.Room
+
+    :return: The room's phase, or None if it has none.
+    :rtype: Autodesk.Revit.DB.Phase or None
+    """
+
+    from Autodesk.Revit.DB import BuiltInParameter
+
+    parameter = room.get_Parameter(BuiltInParameter.ROOM_PHASE)
+    if parameter is None:
+        return None
+    return doc.GetElement(parameter.AsElementId())

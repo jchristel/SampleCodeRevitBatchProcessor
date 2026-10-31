@@ -209,6 +209,30 @@ def get_titleblock_bounding_box(doc, sheet):
     return titleblock.get_BoundingBox(sheet)
 
 
+def get_title_block_size_mm(doc, sheet):
+    """
+    Returns the width and height of a sheet's title block in millimetres, from its bounding box on the sheet.
+
+    Args:
+        doc (Autodesk.Revit.DB.Document): Current Revit model document.
+        sheet (Autodesk.Revit.DB.ViewSheet): The sheet.
+
+    Returns:
+        tuple (float, float) or None: width, height in mm as measured (not snapped to a paper size),
+        or None when the sheet has no title block or the box is empty.
+    """
+
+    box = get_titleblock_bounding_box(doc, sheet)
+    if box is None:
+        return None
+    feet_to_mm = 304.8
+    width = (box.Max.X - box.Min.X) * feet_to_mm
+    height = (box.Max.Y - box.Min.Y) * feet_to_mm
+    if width <= 0 or height <= 0:
+        return None
+    return (round(width, 1), round(height, 1))
+
+
 def get_sheets_from_schedule_instances(doc, schedules):
     """
     Returns a list of sheets that contain schedule sheet instances of the provided schedules.

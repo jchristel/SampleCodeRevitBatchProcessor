@@ -28,13 +28,18 @@ This module contains a number of helper functions relating to Revit elevations.
 #
 
 from Autodesk.Revit.DB import (
+    BuiltInCategory,
     BuiltInParameter,
     ElevationMarker,
+    ElementId,
     FilteredElementCollector,
     LocationPoint,
+    ViewPlan,
     ViewSection,
     XYZ,
 )
+
+from duHast.Revit.Common.element_id import get_el_id_int
 
 from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
@@ -82,21 +87,120 @@ def get_view_index_on_marker(doc, view):
     return index
 
 
-def get_marker_location(marker):
+def get_marker_location(marker, doc=None):
     """
     Get where an elevation marker sits.
 
+    Revit gives an elevation marker no point of its own: its Location is the bare Location class (it can only
+    be moved and rotated), and it has no bounding box outside a plan view. So, when it is not a LocationPoint,
+    and a document is given, the centre of the marker's circle is worked out from its view pointers (see
+    get_marker_centre_from_pointers).
+
     :param marker: The elevation marker.
     :type marker: Autodesk.Revit.DB.ElevationMarker
+    :param doc: The document the marker is in, defaults to None (only a LocationPoint is then answered).
+    :type doc: Autodesk.Revit.DB.Document, optional
 
-    :return: The marker's point in Revit's internal units (feet), None if it has no point location.
+    :return: The marker's point in Revit's internal units (feet), None if it cannot be found.
     :rtype: Autodesk.Revit.DB.XYZ or None
     """
 
     location = marker.Location
     if isinstance(location, LocationPoint):
         return location.Point
+    if doc is None:
+        return None
+    return get_marker_centre_from_pointers(doc, marker)
+
+
+def _plan_view_showing(doc, marker):
+    """The first plan view in which the marker has a bounding box (it has none outside a view), or None."""
+    for view in FilteredElementCollector(doc).OfClass(ViewPlan):
+        try:
+            if view.IsTemplate:
+                continue
+            if marker.get_BoundingBox(view) is not None:
+                return view
+        except Exception:
+            continue
     return None
+
+
+def get_marker_centre_from_pointers(doc, marker):
+    """
+    The centre of an elevation marker's circle, from the pointers of its views.
+
+    Each view on a marker has a pointer (a dependent element of the Views category, created just before the
+    view, so the one with the largest id below the view's) that sits along the view's direction from the
+    circle. The pointer's bounding box in a plan view therefore has its centre on the line through the circle
+    along the view's direction, and the circle is where those lines cross: the least squares point over every
+    view. Two opposite views alone fix the point as the middle of their pointers. One view cannot say how far
+    along its line the circle is, so a marker with a single view answers None.
+
+    Measured on a marker with four views: the four pointers' lines crossed at the circle's centre, where the
+    elevation lines' own middles were 280 mm away (a line can be cropped off-centre).
+
+    :param doc: The document the marker is in.
+    :type doc: Autodesk.Revit.DB.Document
+    :param marker: The elevation marker.
+    :type marker: Autodesk.Revit.DB.ElevationMarker
+
+    :return: The centre in feet, None if it cannot be worked out.
+    :rtype: Autodesk.Revit.DB.XYZ or None
+    """
+
+    try:
+        plan = _plan_view_showing(doc, marker)
+        if plan is None:
+            return None
+        views_category = int(BuiltInCategory.OST_Views)
+        pointers = []
+        for element_id in marker.GetDependentElements(None):
+            element = doc.GetElement(element_id)
+            if element is None or element.Category is None or isinstance(element, (ViewSection, ElevationMarker)):
+                continue
+            if get_el_id_int(element.Category.Id) != views_category:
+                continue
+            box = element.get_BoundingBox(plan)
+            if box is not None:
+                pointers.append((get_el_id_int(element_id), (box.Min + box.Max) * 0.5))
+
+        axes = []
+        for index in range(marker.MaximumViewCount):
+            view_id = marker.GetViewId(index)
+            if view_id == ElementId.InvalidElementId:
+                continue
+            view = doc.GetElement(view_id)
+            below = [p for p in pointers if p[0] < get_el_id_int(view_id)]
+            if view is None or not below:
+                continue
+            centre = max(below, key=lambda p: p[0])[1]
+            direction = view.ViewDirection
+            length = (direction.X * direction.X + direction.Y * direction.Y) ** 0.5
+            if length == 0.0:
+                continue
+            axes.append((centre, direction.X / length, direction.Y / length))
+        if len(axes) < 2:
+            return None
+
+        # least squares over the lines (a point, a direction): the normal equations of the squared distances
+        a = b = d = rx = ry = 0.0
+        for centre, dx, dy in axes:
+            nx, ny = -dy, dx
+            a += nx * nx
+            b += nx * ny
+            d += ny * ny
+            k = nx * centre.X + ny * centre.Y
+            rx += nx * k
+            ry += ny * k
+        det = a * d - b * b
+        z = axes[0][0].Z
+        if abs(det) < 1e-6:
+            # every line parallel (two opposite views): the middle of the pointers is the circle
+            return XYZ(sum(c.X for c, _, _ in axes) / len(axes), sum(c.Y for c, _, _ in axes) / len(axes), z)
+        return XYZ((d * rx - b * ry) / det, (a * ry - b * rx) / det, z)
+    except Exception:
+        return None
 
 
 def get_elevation_footprint(view):

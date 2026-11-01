@@ -34,6 +34,8 @@ class DataPropertyNames():
     """
 
     AREA = "area"
+    ANNOTATION_CROP_ACTIVE = "annotation_crop_active"
+    ANNOTATION_CROP_OFFSETS = "annotation_crop_offsets"
     ASSOCIATED_ELEMENTS = "associated_elements"
     CEILING = "ceiling"
     CEILINGS = "ceilings"

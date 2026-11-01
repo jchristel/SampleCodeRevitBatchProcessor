@@ -55,6 +55,11 @@ class DataViewBase(data_base.DataBase):
         # the view's scale denominator (100 for 1:100); 0 is unread. Tags are placed in model
         # units, so a distance on paper is only known with it.
         self.view_scale = 0
+        # whether the view's annotation crop is on (None: not read or the view cannot have one), and where its
+        # four edges are from the edges of the view crop: {"left", "right", "top", "bottom"} in mm ON PAPER
+        # (Revit keeps them in view units, so they hold at any scale). Plan and elevation views.
+        self.annotation_crop_active = None
+        self.annotation_crop_offsets = None
 
         json_var = None
         # check if any data was past in with constructor!
@@ -77,6 +82,8 @@ class DataViewBase(data_base.DataBase):
             try:
                 self.id = json_var.get(DataPropertyNames.ID, self.id)
                 self.view_scale = json_var.get(DataPropertyNames.VIEW_SCALE, self.view_scale)
+                self.annotation_crop_active = json_var.get(DataPropertyNames.ANNOTATION_CROP_ACTIVE, None)
+                self.annotation_crop_offsets = json_var.get(DataPropertyNames.ANNOTATION_CROP_OFFSETS, None)
 
                 if not isinstance(self.id, int):
                     raise TypeError(

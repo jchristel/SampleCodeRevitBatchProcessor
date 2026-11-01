@@ -302,6 +302,13 @@ def convert_revit_viewport_to_data_instance(doc, revit_view_port):
     centre_point = convert_XYZ_to_point2(revit_view_port.GetBoxCenter())
     view_port_data.centre_point = centre_point
 
+    # where the view title sits (the box above excludes it); not every Revit version offers it
+    try:
+        view_port_data.label_offset = convert_XYZ_to_point2(revit_view_port.LabelOffset)
+        view_port_data.label_line_length = convert_imperial_feet_to_metric_mm(revit_view_port.LabelLineLength)
+    except Exception:
+        pass
+
     # set the viewport type
     view_port_data.vp_type = view_port_type
     view_port_data.view_id = get_el_id_int(revit_view_port.ViewId)

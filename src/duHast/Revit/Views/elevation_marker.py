@@ -236,7 +236,7 @@ def _move_line_to(view, line_start, line_end):
     return None
 
 
-def set_elevation_extent_without_transaction_wrapper(view, line_start, line_end, depth, height=None):
+def set_elevation_extent_without_transaction_wrapper(view, line_start, line_end, depth, height=None, bottom=None):
     """
     Sets how wide and how far an elevation view looks.
 
@@ -256,6 +256,8 @@ def set_elevation_extent_without_transaction_wrapper(view, line_start, line_end,
     :type depth: float or None
     :param height: How tall the crop box is, in feet, measured up from its current bottom; None or 0 leaves the top as it is.
     :type height: float or None
+    :param bottom: Where the bottom of the crop box is, as a height in the model in feet (not above the level: absolute); None leaves the bottom as it is. With a height the top is bottom + height.
+    :type bottom: float or None
 
     :return: Result class instance.
     :rtype: :class:`.Result`
@@ -272,8 +274,12 @@ def set_elevation_extent_without_transaction_wrapper(view, line_start, line_end,
         xs = [inverse.OfPoint(line_start).X, inverse.OfPoint(line_end).X]
         box = BoundingBoxXYZ()
         box.Transform = crop.Transform
-        box.Min = XYZ(min(xs), crop.Min.Y, crop.Min.Z)
-        top = crop.Min.Y + height if height is not None and height > 0.0 else crop.Max.Y
+        low = crop.Min.Y
+        if bottom is not None:
+            # an elevation view's origin is at z = 0 (checked on the made view), so its y is a height in the model
+            low = bottom - crop.Transform.Origin.Z
+        box.Min = XYZ(min(xs), low, crop.Min.Z)
+        top = low + height if height is not None and height > 0.0 else crop.Max.Y
         box.Max = XYZ(max(xs), top, crop.Max.Z)
         view.CropBoxActive = True
         view.CropBox = box

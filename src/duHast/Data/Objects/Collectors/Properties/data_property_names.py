@@ -44,6 +44,8 @@ class DataPropertyNames():
     BOUNDING_BOX_MAX_Z = "bounding_box_max_z"
     BOUNDING_BOX_MIN_Z = "bounding_box_min_z"
     CENTRE_POINT = "centre_point"
+    LABEL_LINE_LENGTH = "label_line_length"
+    LABEL_OFFSET = "label_offset"
     CREATED = "created"
     DATA_TYPE = "data_type"
     DEMOLISHED = "demolished"

@@ -51,7 +51,7 @@ from duHast.Revit.Views.elevation import (
 from duHast.Revit.Annotation.Export.to_data_tag import get_tags_in_view
 from duHast.Revit.Common.element_id import get_el_id_int
 
-from Autodesk.Revit.DB import SectionType, ViewType
+from Autodesk.Revit.DB import BuiltInParameter, SectionType, ViewType
 
 
 def _get_view_port_type(doc, revit_view_port):
@@ -103,6 +103,28 @@ def _get_view_identity(data_instance, view):
     data_instance.view_scale = int(view.Scale)
 
 
+def _get_annotation_crop(data_instance, view):
+    """Reads whether the view's annotation crop is on and, when it is, its offsets from the view crop (mm on paper).
+    A view that cannot have an annotation crop, or a Revit that does not offer it, leaves both unread."""
+    try:
+        parameter = view.get_Parameter(BuiltInParameter.VIEWER_ANNOTATION_CROP_ACTIVE)
+        if parameter is None:
+            return
+        manager = view.GetCropRegionShapeManager()
+        if not manager.CanHaveAnnotationCrop:
+            return
+        data_instance.annotation_crop_active = bool(parameter.AsInteger())
+        if data_instance.annotation_crop_active:
+            data_instance.annotation_crop_offsets = {
+                "left": convert_imperial_feet_to_metric_mm(manager.LeftAnnotationCropOffset),
+                "right": convert_imperial_feet_to_metric_mm(manager.RightAnnotationCropOffset),
+                "top": convert_imperial_feet_to_metric_mm(manager.TopAnnotationCropOffset),
+                "bottom": convert_imperial_feet_to_metric_mm(manager.BottomAnnotationCropOffset),
+            }
+    except Exception:
+        pass
+
+
 def _get_plan_view(doc, view):
     """
     Converts data from a Revit plan view to a data plan view instance
@@ -124,6 +146,7 @@ def _get_plan_view(doc, view):
         data_instance.bounding_box.update(bb_min_2d, bb_max_2d)
 
     _get_view_identity(data_instance, view)
+    _get_annotation_crop(data_instance, view)
 
     # the tags in the view, of every kind (independent, room, space, area)
     data_instance.tags = get_tags_in_view(doc, view)
@@ -142,8 +165,8 @@ def _get_elevation_view(doc, view):
 
     data_instance = DataViewElevation()
     _get_view_identity(data_instance, view)
+    _get_annotation_crop(data_instance, view)
     data_instance.tags = get_tags_in_view(doc, view)
-
     # get bounding box
     bb_min_2d, bb_max_2d = _get_view_crop(view)
     if bb_min_2d and bb_max_2d:

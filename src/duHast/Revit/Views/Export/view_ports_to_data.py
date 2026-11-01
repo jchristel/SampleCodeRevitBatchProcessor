@@ -154,7 +154,7 @@ def _get_elevation_view(doc, view):
     data_instance.marker_index = index
     if marker is not None:
         data_instance.marker_id = get_el_id_int(marker.Id)
-        marker_point = get_marker_location(marker)
+        marker_point = get_marker_location(marker, doc)
         if marker_point is not None:
             data_instance.marker_location = convert_XYZ_to_point3(marker_point)
 

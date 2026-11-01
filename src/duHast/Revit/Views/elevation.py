@@ -113,6 +113,49 @@ def get_marker_location(marker, doc=None):
     return get_marker_centre_from_pointers(doc, marker)
 
 
+def get_pointers_of_marker(doc, marker):
+    """
+    The view pointers of an elevation marker: its dependent elements of the Viewers category (OST_Viewers, which
+    Revit names "Views"), as ids. Moving one moves the elevation view it belongs to relative to the marker (the
+    view's crop box transform is not honoured when set), and nothing else.
+
+    :param doc: The document the marker is in.
+    :type doc: Autodesk.Revit.DB.Document
+    :param marker: The elevation marker.
+    :type marker: Autodesk.Revit.DB.ElevationMarker
+
+    :return: The element ids of the pointers.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    """
+
+    found = []
+    for element_id in marker.GetDependentElements(None):
+        element = doc.GetElement(element_id)
+        if element is None or element.Category is None or isinstance(element, (ViewSection, ElevationMarker)):
+            continue
+        if get_el_id_int(element.Category.Id) == int(BuiltInCategory.OST_Viewers):
+            found.append(element_id)
+    return found
+
+
+def get_pointer_of_view(pointers, view_id):
+    """
+    The pointer of a view among a marker's pointers: a pointer is made just before its view, so it is the one with
+    the largest id below the view's.
+
+    :param pointers: The marker's pointers (get_pointers_of_marker).
+    :type pointers: list of Autodesk.Revit.DB.ElementId
+    :param view_id: The id of the elevation view.
+    :type view_id: Autodesk.Revit.DB.ElementId
+
+    :return: The pointer's id, None if there is none.
+    :rtype: Autodesk.Revit.DB.ElementId or None
+    """
+
+    below = [p for p in pointers if get_el_id_int(p) < get_el_id_int(view_id)]
+    return max(below, key=get_el_id_int) if below else None
+
+
 def _plan_view_showing(doc, marker):
     """The first plan view in which the marker has a bounding box (it has none outside a view), or None."""
     for view in FilteredElementCollector(doc).OfClass(ViewPlan):
@@ -154,15 +197,10 @@ def get_marker_centre_from_pointers(doc, marker):
         if plan is None:
             return None
         # the pointers are in OST_Viewers (-2000278), which Revit names "Views"; OST_Views is another category
-        views_category = int(BuiltInCategory.OST_Viewers)
         pointers = []
-        for element_id in marker.GetDependentElements(None):
-            element = doc.GetElement(element_id)
-            if element is None or element.Category is None or isinstance(element, (ViewSection, ElevationMarker)):
-                continue
-            if get_el_id_int(element.Category.Id) != views_category:
-                continue
-            box = element.get_BoundingBox(plan)
+        pointer_ids = get_pointers_of_marker(doc, marker)
+        for element_id in pointer_ids:
+            box = doc.GetElement(element_id).get_BoundingBox(plan)
             if box is not None:
                 pointers.append((get_el_id_int(element_id), (box.Min + box.Max) * 0.5))
 

@@ -29,10 +29,12 @@ Helper functions to place views on sheets as viewports.
 
 from duHast.Utilities.Objects.result import Result
 
-from Autodesk.Revit.DB import Viewport
+from Autodesk.Revit.DB import Viewport, XYZ
 
 
-def create_viewport_without_transaction_wrapper(doc, sheet, view, centre, viewport_type_id=None):
+def create_viewport_without_transaction_wrapper(
+    doc, sheet, view, centre, viewport_type_id=None, label_offset=None, label_line_length=None
+):
     """
     Places a view on a sheet.
 
@@ -44,10 +46,14 @@ def create_viewport_without_transaction_wrapper(doc, sheet, view, centre, viewpo
     :type sheet: Autodesk.Revit.DB.ViewSheet
     :param view: The view to place.
     :type view: Autodesk.Revit.DB.View
-    :param centre: Where the centre of the viewport goes on the sheet, in feet (z is ignored).
+    :param centre: Where the centre of the viewport box goes on the sheet, in feet (z is ignored). The box excludes the view title, as Viewport.GetBoxCenter does.
     :type centre: Autodesk.Revit.DB.XYZ
     :param viewport_type_id: The viewport type to apply, defaults to None (the default type).
     :type viewport_type_id: Autodesk.Revit.DB.ElementId, optional
+    :param label_offset: Where the view title goes: from the bottom left corner of the viewport box to the left end of the title line, in feet (z is ignored); defaults to None (Revit's default place).
+    :type label_offset: Autodesk.Revit.DB.XYZ, optional
+    :param label_line_length: The length of the title line in feet, defaults to None (Revit's default).
+    :type label_line_length: float, optional
 
     :return: Result class instance. .result holds the viewport when it was created.
     :rtype: :class:`.Result`
@@ -64,6 +70,15 @@ def create_viewport_without_transaction_wrapper(doc, sheet, view, centre, viewpo
         viewport = Viewport.Create(doc, sheet.Id, view.Id, centre)
         if viewport_type_id is not None:
             viewport.ChangeTypeId(viewport_type_id)
+        # Create takes "a location", not documented as the box centre; the box centre (the viewport without its
+        # title, as GetBoxCenter reports it) is what SetBoxCenter places, so say it again once the outline is current
+        doc.Regenerate()
+        viewport.SetBoxCenter(XYZ(centre.X, centre.Y, 0.0))
+        # the title is positioned after the type: a type can bring its own title and line
+        if label_line_length is not None:
+            viewport.LabelLineLength = label_line_length
+        if label_offset is not None:
+            viewport.LabelOffset = label_offset
         return_value.append_message("View {} placed on sheet {}.".format(view.Name, sheet.SheetNumber))
         return_value.result.append(viewport)
     except Exception as e:

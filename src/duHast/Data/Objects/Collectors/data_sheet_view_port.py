@@ -75,6 +75,10 @@ class DataSheetViewPort(data_base.DataBase):
         self.view_id = -1
         self.view = DataViewPlan()
         self.centre_point = Point2(0.0, 0.0)
+        # where the view title sits: from the bottom left corner of the viewport box (which excludes the title)
+        # to the left end of the title line, and how long the line is; both mm. None when not read.
+        self.label_offset = None  # Point2
+        self.label_line_length = None  # float
 
         json_var = None
         # check if any data was past in with constructor!
@@ -108,6 +112,10 @@ class DataSheetViewPort(data_base.DataBase):
                 # if there is a json value take that, otherwise leave default unchanged.
                 if centre_point_value:
                     self.centre_point = Point2(j=centre_point_value)
+                label_offset_value = json_var.get(DataPropertyNames.LABEL_OFFSET, None)
+                if label_offset_value:
+                    self.label_offset = Point2(j=label_offset_value)
+                self.label_line_length = json_var.get(DataPropertyNames.LABEL_LINE_LENGTH, None)
 
                 # set up the view depending on the view port type
                 if self.vp_type == DataViewPortTypeNames.THREE_D:
@@ -150,6 +158,8 @@ class DataSheetViewPort(data_base.DataBase):
             and self.vp_type == other.vp_type
             and self.view == other.view
             and self.centre_point == other.centre_point
+            and self.label_offset == other.label_offset
+            and self.label_line_length == other.label_line_length
         )
 
     def __ne__(self, other):
@@ -163,5 +173,7 @@ class DataSheetViewPort(data_base.DataBase):
                 self.vp_type,
                 self.view,
                 self.centre_point,
+                self.label_offset,
+                self.label_line_length,
             )
         )

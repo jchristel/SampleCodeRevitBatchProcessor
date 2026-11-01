@@ -39,11 +39,49 @@ def _unit(x, y, z):
     return XYZ(x / length, y / length, z / length)
 
 
+def _crop_to_box(doc, view, box_min, box_max):
+    """
+    Turn Crop View on and fit the crop box tightly round the section box as the camera sees it: the extent of
+    the box's eight corners on the view's own right and up axes.
+
+    The crop box only knows the new orientation after a regenerate, so this regenerates first (it must run
+    inside a transaction, as the caller does). Only the crop box's x and y are set; the depth is not used by
+    a parallel view.
+
+    :param doc: The Revit document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view: The 3D view, already oriented and with its section box set.
+    :type view: Autodesk.Revit.DB.View3D
+    :param box_min: The corner of the section box with the smallest coordinates, in feet.
+    :type box_min: Autodesk.Revit.DB.XYZ
+    :param box_max: The opposite corner, in feet.
+    :type box_max: Autodesk.Revit.DB.XYZ
+    """
+
+    view.CropBoxActive = True
+    doc.Regenerate()
+    crop = view.CropBox
+    inverse = crop.Transform.Inverse
+    xs, ys = [], []
+    for x in (box_min.X, box_max.X):
+        for y in (box_min.Y, box_max.Y):
+            for z in (box_min.Z, box_max.Z):
+                local = inverse.OfPoint(XYZ(x, y, z))
+                xs.append(local.X)
+                ys.append(local.Y)
+    fitted = BoundingBoxXYZ()
+    fitted.Transform = crop.Transform
+    fitted.Min = XYZ(min(xs), min(ys), crop.Min.Z)
+    fitted.Max = XYZ(max(xs), max(ys), crop.Max.Z)
+    view.CropBox = fitted
+    view.CropBoxActive = True
+
+
 def create_view_3d_around_box_without_transaction_wrapper(
     doc, view_type, view_name, forward, up, box_min, box_max, phase=None
 ):
     """
-    Creates an isometric 3D view that looks along a direction at a box, and cuts the model to that box (the section box). The view is cropped (Crop View on).
+    Creates an isometric 3D view that looks along a direction at a box, and cuts the model to that box (the section box). The view is cropped to the section box as the camera sees it (Crop View on, fitted tightly).
 
     The camera is put back along the direction far enough to see the whole box, so the box is what the view shows
     whatever height the model sits at: the pitch comes from the direction.
@@ -97,8 +135,7 @@ def create_view_3d_around_box_without_transaction_wrapper(
         diagonal = box_min.DistanceTo(box_max)
         eye = centre - forward_unit * (diagonal * 2.0)
         view.SetOrientation(ViewOrientation3D(eye, up_unit, forward_unit))
-        # "Crop View" on, so the view is cut to what the camera frames rather than the whole screen
-        view.CropBoxActive = True
+        _crop_to_box(doc, view, box_min, box_max)
 
         return_value.append_message("Successfully created 3D view {}".format(view_name))
         return_value.result.append(view)

@@ -130,7 +130,7 @@ def get_marker_centre_from_pointers(doc, marker):
     """
     The centre of an elevation marker's circle, from the pointers of its views.
 
-    Each view on a marker has a pointer (a dependent element of the Views category, created just before the
+    Each view on a marker has a pointer (a dependent element of the Viewers category, shown as "Views" in Revit, created just before the
     view, so the one with the largest id below the view's) that sits along the view's direction from the
     circle. The pointer's bounding box in a plan view therefore has its centre on the line through the circle
     along the view's direction, and the circle is where those lines cross: the least squares point over every
@@ -153,7 +153,8 @@ def get_marker_centre_from_pointers(doc, marker):
         plan = _plan_view_showing(doc, marker)
         if plan is None:
             return None
-        views_category = int(BuiltInCategory.OST_Views)
+        # the pointers are in OST_Viewers (-2000278), which Revit names "Views"; OST_Views is another category
+        views_category = int(BuiltInCategory.OST_Viewers)
         pointers = []
         for element_id in marker.GetDependentElements(None):
             element = doc.GetElement(element_id)

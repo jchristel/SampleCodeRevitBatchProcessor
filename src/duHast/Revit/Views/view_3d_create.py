@@ -43,7 +43,7 @@ def create_view_3d_around_box_without_transaction_wrapper(
     doc, view_type, view_name, forward, up, box_min, box_max, phase=None
 ):
     """
-    Creates an isometric 3D view that looks along a direction at a box, and cuts the model to that box (the section box).
+    Creates an isometric 3D view that looks along a direction at a box, and cuts the model to that box (the section box). The view is cropped (Crop View on).
 
     The camera is put back along the direction far enough to see the whole box, so the box is what the view shows
     whatever height the model sits at: the pitch comes from the direction.
@@ -97,6 +97,8 @@ def create_view_3d_around_box_without_transaction_wrapper(
         diagonal = box_min.DistanceTo(box_max)
         eye = centre - forward_unit * (diagonal * 2.0)
         view.SetOrientation(ViewOrientation3D(eye, up_unit, forward_unit))
+        # "Crop View" on, so the view is cut to what the camera frames rather than the whole screen
+        view.CropBoxActive = True
 
         return_value.append_message("Successfully created 3D view {}".format(view_name))
         return_value.result.append(view)

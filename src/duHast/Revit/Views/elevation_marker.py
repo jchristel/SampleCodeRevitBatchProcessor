@@ -184,12 +184,13 @@ def get_rotation_to_face(look_x, look_y, index_zero_looks=(0.0, 1.0)):
     return turn
 
 
-def set_elevation_extent_without_transaction_wrapper(view, line_start, line_end, depth):
+def set_elevation_extent_without_transaction_wrapper(view, line_start, line_end, depth, height=None):
     """
     Sets how wide and how far an elevation view looks.
 
     The width is the crop box's extent along the view's right direction, taken from where the line's
-    two ends fall on it; the depth is the far clip, made active, at that offset from the view plane.
+    two ends fall on it; the depth is the far clip, made active, at that offset from the view plane;
+    the height, when given, is the crop box's extent upwards from where its bottom already is.
 
     Changing the model: this needs to run inside a transaction.
 
@@ -201,6 +202,8 @@ def set_elevation_extent_without_transaction_wrapper(view, line_start, line_end,
     :type line_end: Autodesk.Revit.DB.XYZ
     :param depth: How far the view looks from its plane, in feet; None or 0 leaves the far clip as it is.
     :type depth: float or None
+    :param height: How tall the crop box is, in feet, measured up from its current bottom; None or 0 leaves the top as it is.
+    :type height: float or None
 
     :return: Result class instance.
     :rtype: :class:`.Result`
@@ -214,7 +217,8 @@ def set_elevation_extent_without_transaction_wrapper(view, line_start, line_end,
         box = BoundingBoxXYZ()
         box.Transform = crop.Transform
         box.Min = XYZ(min(xs), crop.Min.Y, crop.Min.Z)
-        box.Max = XYZ(max(xs), crop.Max.Y, crop.Max.Z)
+        top = crop.Min.Y + height if height is not None and height > 0.0 else crop.Max.Y
+        box.Max = XYZ(max(xs), top, crop.Max.Z)
         view.CropBoxActive = True
         view.CropBox = box
         if depth is not None and depth > 0.0:

@@ -29,7 +29,7 @@ Helper functions to place views on sheets as viewports.
 
 from duHast.Utilities.Objects.result import Result
 
-from Autodesk.Revit.DB import Viewport
+from Autodesk.Revit.DB import Viewport, XYZ
 
 
 def create_viewport_without_transaction_wrapper(
@@ -46,7 +46,7 @@ def create_viewport_without_transaction_wrapper(
     :type sheet: Autodesk.Revit.DB.ViewSheet
     :param view: The view to place.
     :type view: Autodesk.Revit.DB.View
-    :param centre: Where the centre of the viewport goes on the sheet, in feet (z is ignored).
+    :param centre: Where the centre of the viewport box goes on the sheet, in feet (z is ignored). The box excludes the view title, as Viewport.GetBoxCenter does.
     :type centre: Autodesk.Revit.DB.XYZ
     :param viewport_type_id: The viewport type to apply, defaults to None (the default type).
     :type viewport_type_id: Autodesk.Revit.DB.ElementId, optional
@@ -70,6 +70,10 @@ def create_viewport_without_transaction_wrapper(
         viewport = Viewport.Create(doc, sheet.Id, view.Id, centre)
         if viewport_type_id is not None:
             viewport.ChangeTypeId(viewport_type_id)
+        # Create takes "a location", not documented as the box centre; the box centre (the viewport without its
+        # title, as GetBoxCenter reports it) is what SetBoxCenter places, so say it again once the outline is current
+        doc.Regenerate()
+        viewport.SetBoxCenter(XYZ(centre.X, centre.Y, 0.0))
         # the title is positioned after the type: a type can bring its own title and line
         if label_line_length is not None:
             viewport.LabelLineLength = label_line_length

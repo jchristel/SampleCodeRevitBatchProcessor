@@ -37,6 +37,7 @@ from Autodesk.Revit.DB import (
     ElementTransformUtils,
     ElevationMarker,
     Line,
+    Transform,
     XYZ,
 )
 
@@ -184,6 +185,46 @@ def get_rotation_to_face(look_x, look_y, index_zero_looks=(0.0, 1.0)):
     return turn
 
 
+def _transform_with_line_through(view, transform, line_start, line_end):
+    """
+    The crop box transform with its origin moved along the way the view looks, so the elevation line (the plane
+    through the origin) passes through the given line.
+
+    A view made on a marker starts with its line through the marker; the marker and the line are NOT the same
+    place, and a template's line is usually some distance in front of its marker. Only the distance along the
+    view direction is changed: the width along the line comes from the crop box, so it is unaffected.
+
+    :param view: The elevation view.
+    :type view: Autodesk.Revit.DB.ViewSection
+    :param transform: The crop box transform the view has now.
+    :type transform: Autodesk.Revit.DB.Transform
+    :param line_start: One end of the wanted elevation line, in feet.
+    :type line_start: Autodesk.Revit.DB.XYZ
+    :param line_end: The other end, in feet.
+    :type line_end: Autodesk.Revit.DB.XYZ
+
+    :return: The transform to give the crop box.
+    :rtype: Autodesk.Revit.DB.Transform
+    """
+
+    # ViewDirection points at the viewer, so the view looks along minus it (plan only: the line is vertical)
+    look_x, look_y = -view.ViewDirection.X, -view.ViewDirection.Y
+    length = (look_x * look_x + look_y * look_y) ** 0.5
+    if length == 0.0:
+        return transform
+    look_x, look_y = look_x / length, look_y / length
+    origin = transform.Origin
+    middle_x = (line_start.X + line_end.X) / 2.0
+    middle_y = (line_start.Y + line_end.Y) / 2.0
+    distance = (middle_x - origin.X) * look_x + (middle_y - origin.Y) * look_y
+    moved = Transform.Identity
+    moved.BasisX = transform.BasisX
+    moved.BasisY = transform.BasisY
+    moved.BasisZ = transform.BasisZ
+    moved.Origin = XYZ(origin.X + look_x * distance, origin.Y + look_y * distance, origin.Z)
+    return moved
+
+
 def set_elevation_extent_without_transaction_wrapper(view, line_start, line_end, depth, height=None):
     """
     Sets how wide and how far an elevation view looks.
@@ -215,7 +256,7 @@ def set_elevation_extent_without_transaction_wrapper(view, line_start, line_end,
         inverse = crop.Transform.Inverse
         xs = [inverse.OfPoint(line_start).X, inverse.OfPoint(line_end).X]
         box = BoundingBoxXYZ()
-        box.Transform = crop.Transform
+        box.Transform = _transform_with_line_through(view, crop.Transform, line_start, line_end)
         box.Min = XYZ(min(xs), crop.Min.Y, crop.Min.Z)
         top = crop.Min.Y + height if height is not None and height > 0.0 else crop.Max.Y
         box.Max = XYZ(max(xs), top, crop.Max.Z)
@@ -228,6 +269,11 @@ def set_elevation_extent_without_transaction_wrapper(view, line_start, line_end,
             offset = view.get_Parameter(BuiltInParameter.VIEWER_BOUND_OFFSET_FAR)
             if offset is not None and not offset.IsReadOnly:
                 offset.Set(depth)
+        # the plane is the thing Revit may refuse to move: say so rather than leave a line through the marker
+        wanted = box.Transform.Origin
+        actual = view.CropBox.Transform.Origin
+        if abs(actual.X - wanted.X) + abs(actual.Y - wanted.Y) > 0.01:
+            return_value.append_message("The elevation line of {} did not move to its place.".format(view.Name))
         return_value.append_message("Extent of {} set.".format(view.Name))
     except Exception as e:
         return_value.update_sep(False, "Failed to set the extent of the elevation view with exception: {}".format(e))

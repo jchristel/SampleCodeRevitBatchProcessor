@@ -65,6 +65,11 @@ class DataViewThreeD(DataViewBase):
         self.eye_position = None
         self.forward_direction = None
         self.up_direction = None
+        # the section box: whether it is on, and the smallest and largest corners of the box as the model sees
+        # it (the box's own transform applied; the extent of its eight corners), mm, in the model's own frame
+        self.section_box_active = None
+        self.section_box_min = None  # Point3
+        self.section_box_max = None  # Point3
 
         json_var = None
         # check if any data was past in with constructor!
@@ -107,6 +112,15 @@ class DataViewThreeD(DataViewBase):
                 up_direction = json_var.get(DataPropertyNames.UP_DIRECTION, None)
                 if up_direction is not None:
                     self.up_direction = Point3(j=up_direction)
+
+                self.section_box_active = json_var.get(DataPropertyNames.SECTION_BOX_ACTIVE, None)
+                for attribute, key in (
+                    ("section_box_min", DataPropertyNames.SECTION_BOX_MIN),
+                    ("section_box_max", DataPropertyNames.SECTION_BOX_MAX),
+                ):
+                    value = json_var.get(key, None)
+                    if value is not None:
+                        setattr(self, attribute, Point3(j=value))
 
 
             except Exception as e:

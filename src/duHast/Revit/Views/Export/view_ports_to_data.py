@@ -51,7 +51,7 @@ from duHast.Revit.Views.elevation import (
 from duHast.Revit.Annotation.Export.to_data_tag import get_tags_in_view
 from duHast.Revit.Common.element_id import get_el_id_int
 
-from Autodesk.Revit.DB import BuiltInParameter, SectionType, ViewType
+from Autodesk.Revit.DB import BuiltInParameter, SectionType, ViewType, XYZ
 
 
 def _get_view_port_type(doc, revit_view_port):
@@ -219,6 +219,25 @@ def _get_three_d_view(view):
     data_instance.eye_position = convert_XYZ_to_point3(view_orientation.EyePosition)
     data_instance.forward_direction = convert_XYZ_to_point3(view_orientation.ForwardDirection)
     data_instance.up_direction = convert_XYZ_to_point3(view_orientation.UpDirection)
+
+    # the section box (the extent of its corners in the model, its own transform applied)
+    try:
+        data_instance.section_box_active = bool(view.IsSectionBoxActive)
+        box = view.GetSectionBox()
+        corners = [
+            box.Transform.OfPoint(XYZ(x, y, z))
+            for x in (box.Min.X, box.Max.X)
+            for y in (box.Min.Y, box.Max.Y)
+            for z in (box.Min.Z, box.Max.Z)
+        ]
+        data_instance.section_box_min = convert_XYZ_to_point3(
+            XYZ(min(c.X for c in corners), min(c.Y for c in corners), min(c.Z for c in corners))
+        )
+        data_instance.section_box_max = convert_XYZ_to_point3(
+            XYZ(max(c.X for c in corners), max(c.Y for c in corners), max(c.Z for c in corners))
+        )
+    except Exception:
+        pass
 
     return data_instance
 

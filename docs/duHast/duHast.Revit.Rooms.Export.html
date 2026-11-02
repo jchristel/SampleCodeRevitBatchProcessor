@@ -125,10 +125,12 @@ data points:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Rooms.Export.to_data_room.get_all_room_data">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Export.to_data_room.</span></span><span class="sig-name descname"><span class="pre">get_all_room_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Export.to_data_room.get_all_room_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Export.to_data_room.</span></span><span class="sig-name descname"><span class="pre">get_all_room_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Export.to_data_room.get_all_room_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of room data objects for each room in the model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
+:param level_ids: Only rooms on these levels (Revit level ids as integers) are converted, defaults to None (all rooms).
+:type level_ids: list of int, optional
 :return: A list of room data instances.
 :rtype: list of  <a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_room.DataRoom" title="duHast.Data.Objects.Collectors.data_room.DataRoom"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataRoom</span></code></a></p>
 </dd></dl>

@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Purge Unused &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link rel="up" title="pyRevit" href="index.html" />
+    <link rel="next" title="Verify Push It Area" href="pushit_area_by_room.html" />
+    <link rel="prev" title="Levels" href="levels.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>Purge Unused</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="pushit_area_by_room.html" title="Verify Push It Area" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="levels.html" title="Levels" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Samples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#flows">Flows</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#pyrevit">pyRevit</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">pyRevit</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="readme.html">duHast pyRevit Extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ceilings_by_rooms.html">Ceilings By Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cloud_guids.html">GUIDS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collectors.html">Data Collectors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_compare.html">Compare</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_docmanager.html">docManager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_pdf_dwg.html">PDF and DWG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_at_the_library.html">At The Library</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_catalogue_files.html">Catalogue Files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_change_category.html">Change Category</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_force_update.html">Force Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_io.html">Family IO — Load and Save</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_reload.html">Reload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_rename.html">Rename Families</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_reports.html">Family Reports</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_swap.html">Swap Families</a></li>
+<li class="toctree-l4"><a class="reference internal" href="grids.html">Grids</a></li>
+<li class="toctree-l4"><a class="reference internal" href="levels.html">Levels</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Purge Unused</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_area_by_room.html">Verify Push It Area</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_get_a_room.html">Get A Room!</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_main.html">Push It!</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_place_revit_rooms.html">Place Revit Rooms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_stats.html">PushIt Stats</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_swap_dimensions.html">Swap Width And Depth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="roommate.html">RoomMate Export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="view_templates_import_export.html">View Templates — Import and Export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="view_templates_modify.html">View Templates — Modify</a></li>
+<li class="toctree-l4"><a class="reference internal" href="views_schedules.html">Schedules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="walls_by_rooms.html">Walls By Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="walls_facade_opening.html">Facade Opening To Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="warnings_highlight.html">Highlight Warnings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="warnings_solve.html">Solve Warnings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#apps">Apps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../revit_apps/index.html">Revit Application UI Guides</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/samples/pyRevit/purge_unused.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="purge-unused">
+<h1>Purge Unused<a class="headerlink" href="#purge-unused" title="Permalink to this heading">¶</a></h1>
+<p><strong>Panel:</strong> Purge Unused | <strong>Menu:</strong> Purge</p>
+<img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Icon.png" width="40" alt="button icon">
+<p>Tools to remove unused graphic styles, patterns, parameters, views and templates from the
+current model.</p>
+<p><strong>Every tool in this menu asks you what to remove before it deletes anything.</strong> None of them
+runs unattended. What differs is <em>how</em> they decide what to offer you.</p>
+<section id="two-families-of-tool">
+<h2>Two families of tool<a class="headerlink" href="#two-families-of-tool" title="Permalink to this heading">¶</a></h2>
+<p><strong>Try-and-delete tools</strong> — Line Styles, Line Patterns, Fill Patterns, Shared Parameters.
+These attempt to delete each candidate and keep only the deletions Revit accepts; anything
+still in use is rejected and survives. Each has a plain button that sweeps everything of that
+kind, and a <strong>By Selection</strong> twin that runs the same sweep restricted to items you pick.</p>
+<p><strong>List-and-choose tools</strong> — Filters, Unplaced Legends, Unplaced Schedules, Templates,
+Unplaced Views. These work out the unused items up front and present that list for you to
+choose from. There is no By Selection twin because the selection <em>is</em> the tool.</p>
+</section>
+<hr class="docutils" />
+<section id="line-styles-line-styles-by-selection">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Line%20Styles.pushbutton/Icon.png" width="24" alt="Line Styles icon"> <img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Line%20Styles%20By%20Selection.pushbutton/Icon.png" width="24" alt="Line Styles By selection icon"> Line Styles / Line Styles By selection<a class="headerlink" href="#line-styles-line-styles-by-selection" title="Permalink to this heading">¶</a></h2>
+<p>Removes line styles not referenced by any element.</p>
+<p>The <strong>By Selection</strong> variant lists <strong>every</strong> line style in the model, not just the unused
+ones — the try-and-delete pass still refuses to remove any that are in use, so a selection
+that includes used styles is safe, it simply won’t remove them.</p>
+</section>
+<hr class="docutils" />
+<section id="fill-patterns-fill-patterns-by-selection">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Fill%20Patterns.pushbutton/Icon.png" width="24" alt="Fill Patterns icon"> <img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Fill%20Patterns%20By%20Selection.pushbutton/Icon.png" width="24" alt="Fill Patterns By Selection icon"> Fill Patterns / Fill Patterns By Selection<a class="headerlink" href="#fill-patterns-fill-patterns-by-selection" title="Permalink to this heading">¶</a></h2>
+<p>Removes fill patterns not used by any material, surface pattern or element override. Same
+selection behaviour as line styles.</p>
+</section>
+<hr class="docutils" />
+<section id="line-patterns-line-patterns-by-selection">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Line%20Patterns.pushbutton/Icon.png" width="24" alt="Line Patterns icon"> <img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Line%20Patterns%20By%20Selection.pushbutton/Icon.png" width="24" alt="Line Patterns By Selection icon"> Line Patterns / Line Patterns By Selection<a class="headerlink" href="#line-patterns-line-patterns-by-selection" title="Permalink to this heading">¶</a></h2>
+<p>Removes line patterns not used by any line style, grid, level or other element. Same
+selection behaviour as line styles.</p>
+</section>
+<hr class="docutils" />
+<section id="shared-parameters-shared-parameters-by-selection">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Shared%20Parameters.pushbutton/Icon.png" width="24" alt="Shared Parameters icon"> <img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Shared%20Parameters%20By%20Selection.pushbutton/Icon.png" width="24" alt="Shared Parameters by Selection icon"> Shared Parameters / Shared Parameters by Selection<a class="headerlink" href="#shared-parameters-shared-parameters-by-selection" title="Permalink to this heading">¶</a></h2>
+<p>Removes shared parameter definitions not bound to any category in the project. Same
+selection behaviour as line styles.</p>
+</section>
+<hr class="docutils" />
+<section id="filters">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Unused%20Filters.pushbutton/Icon.png" width="24" alt="Filters icon"> Filters<a class="headerlink" href="#filters" title="Permalink to this heading">¶</a></h2>
+<p>Collects view filters not assigned to any view or view template, then asks which of them to
+purge.</p>
+</section>
+<hr class="docutils" />
+<section id="unplaced-legends">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Unused%20Legends.pushbutton/Icon.png" width="24" alt="Unplaced Legends icon"> Unplaced Legends<a class="headerlink" href="#unplaced-legends" title="Permalink to this heading">¶</a></h2>
+<p>Collects legend views not placed on any sheet, then asks which to purge.</p>
+</section>
+<hr class="docutils" />
+<section id="unplaced-schedules">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Unused%20Schedules.pushbutton/Icon.png" width="24" alt="Unplaced Schedules icon"> Unplaced Schedules<a class="headerlink" href="#unplaced-schedules" title="Permalink to this heading">¶</a></h2>
+<p>Collects schedule views not placed on any sheet, then asks which to purge.</p>
+</section>
+<hr class="docutils" />
+<section id="templates">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Unused%20Templates.pushbutton/Icon.png" width="24" alt="Templates icon"> Templates<a class="headerlink" href="#templates" title="Permalink to this heading">¶</a></h2>
+<p>Collects view templates not applied to any view, then asks which to purge.</p>
+</section>
+<hr class="docutils" />
+<section id="unplaced-views">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Purge%20Unplaced%20Views.pushbutton/Icon.png" width="24" alt="Unplaced Views icon"> Unplaced Views<a class="headerlink" href="#unplaced-views" title="Permalink to this heading">¶</a></h2>
+<p>Collects views not placed on any sheet — floor plans, sections, elevations, 3D views — then
+asks which to purge.</p>
+</section>
+<hr class="docutils" />
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Save or back up the model before purging. Deletions cannot be undone once the file is saved.</p></li>
+<li><p>The list-and-choose tools show nothing to select when there is nothing unused of that kind;
+they report so and exit.</p></li>
+<li><p>Running Revit’s built-in <strong>Purge Unused</strong> afterwards can free up further items these tools
+do not target.</p></li>
+<li><p>These tools cover specific element types. They are not a substitute for a full model audit.</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="../index.html" accesskey="U">Samples</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="index.html" >pyRevit</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                Purge Unused
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

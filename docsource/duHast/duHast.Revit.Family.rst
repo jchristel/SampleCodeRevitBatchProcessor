@@ -65,6 +65,22 @@ duHast.Revit.Family.family\_instance\_create module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Family.family\_instance\_facts module
+--------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.family_instance_facts
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.family\_instance\_place module
+--------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.family_instance_place
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Family.family\_instance\_translate module
 ------------------------------------------------------
 
@@ -157,6 +173,14 @@ duHast.Revit.Family.family\_swap\_instances\_of\_types module
 -------------------------------------------------------------
 
 .. automodule:: duHast.Revit.Family.family_swap_instances_of_types
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.family\_symbol\_lookup module
+-------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.family_symbol_lookup
    :members:
    :undoc-members:
    :show-inheritance:

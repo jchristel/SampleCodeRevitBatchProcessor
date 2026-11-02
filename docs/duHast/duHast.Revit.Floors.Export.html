@@ -121,7 +121,9 @@
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A data floor object instance.</p>
+<dd class="field-even"><p>A data floor object instance. Always an object, never None: a floor
+whose geometry could not be measured comes back with an empty <cite>polygon</cite>
+and every other field populated. See the body for why.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_floor.DataFloor" title="duHast.Data.Objects.Collectors.data_floor.DataFloor"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFloor</span></code></a></p>
@@ -131,11 +133,19 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Floors.Export.to_data_floor.get_all_floor_data">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Floors.Export.to_data_floor.</span></span><span class="sig-name descname"><span class="pre">get_all_floor_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Floors.Export.to_data_floor.get_all_floor_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Floors.Export.to_data_floor.</span></span><span class="sig-name descname"><span class="pre">get_all_floor_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Floors.Export.to_data_floor.get_all_floor_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of floor data objects for each floor element in the model.</p>
+<p>One entry per floor in the model, INCLUDING any whose geometry could not be
+measured - those carry an empty <cite>polygon</cite>. The count of this list can
+therefore be compared against the collector’s count to find a pipeline
+problem, which was impossible while unmeasurable floors were silently
+dropped.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>level_ids</strong> (<em>list</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Only floors on these levels (Revit level ids as integers) are converted, defaults to None (all floors).</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of data floor instances.</p>

@@ -343,6 +343,62 @@ or -1 when the instance is not a shared nested family.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Exports.export_data.get_room_calculation_point">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_data.</span></span><span class="sig-name descname"><span class="pre">get_room_calculation_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_data.get_room_calculation_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the room calculation point of a family instance.</p>
+<p>This is the point Revit itself uses to decide which room a family instance belongs
+to, and it exists only where the family author enabled it on the family. It is
+exported as raw geometry because Revit only resolves the instance to room
+relationship WITHIN a single model: across links the relationship never populates,
+since the rooms are not in the instance’s document. Anything working across models
+therefore has to do that calculation itself, and this is its input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>family_instance</strong> (<em>Autodesk.Revit.DB.FamilyInstance</em>) – A Revit family instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The point as [x, y, z] in decimal feet, or an empty list when the family
+has no room calculation point enabled.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Exports.export_data.get_bounding_box_z_extents">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_data.</span></span><span class="sig-name descname"><span class="pre">get_bounding_box_z_extents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_data.get_bounding_box_z_extents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the lowest and highest Z of a family instance’s solid geometry: the sill
+and head of a window, the threshold and head of a door.</p>
+<p>Both are returned together because they are read from one geometry extraction, and
+because they are only useful as a pair. The lowest Z alone says which level an
+opening sits above; it takes the height as well to say which storey an opening
+SPANNING a level mostly belongs to.</p>
+<p>Measured off the WORLD axis aligned box of the instance’s solids, so the values are
+directly comparable with level elevations. The ORIENTED box behind the exported
+polygon is no use for this - its Min and Max are expressed in the instance’s own
+coordinate system, so on a rotated instance they are not world elevations at all.</p>
+<p>Solids only, which is what is wanted here: a family’s symbolic geometry - a door’s
+plan swing arc - carries no meaningful elevation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>family_instance</strong> (<em>Autodesk.Revit.DB.FamilyInstance</em>) – A Revit family instance.</p></li>
+<li><p><strong>options</strong> (<em>Autodesk.Revit.DB.Options</em>) – Geometry options; a default Options() is used when omitted.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Lowest and highest Z in decimal feet, or (None, None) when the instance
+has no solid geometry.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple(float, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export_data.get_model_data">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_data.</span></span><span class="sig-name descname"><span class="pre">get_model_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_data.get_model_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a revit_model instance with the name populated. If detached and not saved yet it will be named “Detached Model”</p>

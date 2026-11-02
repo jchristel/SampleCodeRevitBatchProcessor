@@ -1,0 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>duHast.Revit.Annotation.Export package &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../index.html" />
+    <link rel="up" title="duHast.Revit.Annotation package" href="duHast.Revit.Annotation.html" />
+    <link rel="next" title="duHast.Revit.Annotation.Reporting package" href="duHast.Revit.Annotation.Reporting.html" />
+    <link rel="prev" title="duHast.Revit.Annotation package" href="duHast.Revit.Annotation.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Annotation.Export package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Annotation.Reporting.html" title="duHast.Revit.Annotation.Reporting package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Annotation.html" title="duHast.Revit.Annotation package" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">duHast</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.html">duHast.pyRevit package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../revit_apps/index.html">Revit Application UI Guides</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Revit.Annotation.Export.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-revit-annotation-export-package">
+<h1>duHast.Revit.Annotation.Export package<a class="headerlink" href="#duhast-revit-annotation-export-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Annotation.Export.to_data_tag">
+<span id="duhast-revit-annotation-export-to-data-tag-module"></span><h2>duHast.Revit.Annotation.Export.to_data_tag module<a class="headerlink" href="#module-duHast.Revit.Annotation.Export.to_data_tag" title="Permalink to this heading">¶</a></h2>
+<section id="reads-the-tags-in-a-view-into-datatag-instances">
+<h3>Reads the tags in a view into <a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_tag.DataTag" title="duHast.Data.Objects.Collectors.data_tag.DataTag"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataTag</span></code></a> instances.<a class="headerlink" href="#reads-the-tags-in-a-view-into-datatag-instances" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>one collector per class of tag: independent tags (any category, keynotes included) and the
+spatial element tags (room, space, area), which are NOT independent tags in Revit</p></li>
+<li><p>reuses <code class="xref py py-mod docutils literal notranslate"><span class="pre">independent_tags_tagged_elements</span></code> and <code class="xref py py-mod docutils literal notranslate"><span class="pre">independent_tags_elbow_properties</span></code>
+rather than reading those again</p></li>
+<li><p>adds what those leave out: the tag’s type and the tagged element’s category, family name,
+type name and location (through the link transform for an element in a linked model)</p></li>
+</ul>
+<p>Raw measurements only: millimetres in the model’s own coordinates, as <cite>DataItem</cite> writes them.
+Where a tag sits relative to its element is for the user of the data to work out.</p>
+<p>A tag that cannot be read is skipped and named in <cite>problems</cite> (or <cite>take_problems</cite>), never half written.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Annotation.Export.to_data_tag.take_problems">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.Export.to_data_tag.</span></span><span class="sig-name descname"><span class="pre">take_problems</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.Export.to_data_tag.take_problems" title="Permalink to this definition">¶</a></dt>
+<dd><p>The lines for every tag skipped since the last call, and clears them.</p>
+<p>The viewport export reads tags without a list of its own to report into, so the skipped ones
+collect here and whoever started the export asks for them afterwards.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>One line per skipped tag.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Annotation.Export.to_data_tag.pick_leader_entry">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.Export.to_data_tag.</span></span><span class="sig-name descname"><span class="pre">pick_leader_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.Export.to_data_tag.pick_leader_entry" title="Permalink to this definition">¶</a></dt>
+<dd><p>The leader properties belonging to one tagged element.</p>
+<p>Revit 2022 onwards gives one entry per tagged reference, each naming its element (and the
+linked element when it is in a link). Earlier versions give a single entry without ids.
+Matched on ids first; only when no entry names any id is the position used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>entries</strong> (<em>[</em><em>dict</em><em>]</em>) – The output of <cite>get_elbow_properties</cite>.</p></li>
+<li><p><strong>host_id</strong> (<em>int</em>) – Element id of the tagged element in this model, -1 when it is in a link.</p></li>
+<li><p><strong>link_id</strong> (<em>int</em>) – Element id of the tagged element in the link, -1 when it is in this model.</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – Position of the tagged element in the tag’s list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The matching entry, or None.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Annotation.Export.to_data_tag.independent_tag_to_data">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.Export.to_data_tag.</span></span><span class="sig-name descname"><span class="pre">independent_tag_to_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.Export.to_data_tag.independent_tag_to_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts one independent tag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>tag</strong> (<em>Autodesk.Revit.DB.IndependentTag</em>) – The tag.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The tag as data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_tag.DataTag" title="duHast.Data.Objects.Collectors.data_tag.DataTag"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataTag</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Annotation.Export.to_data_tag.spatial_tag_to_data">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.Export.to_data_tag.</span></span><span class="sig-name descname"><span class="pre">spatial_tag_to_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.Export.to_data_tag.spatial_tag_to_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts one room, space or area tag.</p>
+<p>The Revit API for these differs from independent tags: they refer to one spatial element,
+have a single leader, and no rotation. Anything not available on a version is left unread.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>tag</strong> (<em>Autodesk.Revit.DB.SpatialElementTag</em>) – The tag.</p></li>
+<li><p><strong>kind</strong> (<em>str</em>) – One of <a class="reference internal" href="duHast.Data.Objects.Collectors.Properties.html#duHast.Data.Objects.Collectors.Properties.data_tag_kind_names.DataTagKindNames" title="duHast.Data.Objects.Collectors.Properties.data_tag_kind_names.DataTagKindNames"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataTagKindNames</span></code></a>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The tag as data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_tag.DataTag" title="duHast.Data.Objects.Collectors.data_tag.DataTag"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataTag</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Annotation.Export.to_data_tag.get_tags_in_view">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.Export.to_data_tag.</span></span><span class="sig-name descname"><span class="pre">get_tags_in_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problems</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.Export.to_data_tag.get_tags_in_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>All tags drawn in a view, of every class this reads.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view.</p></li>
+<li><p><strong>problems</strong> (<em>list</em><em> of </em><em>str</em><em>, </em><em>optional</em>) – Receives a line for each tag that could not be read, defaults to the module’s own list (see <cite>take_problems</cite>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The tags, in the order Revit gives them.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_tag.DataTag" title="duHast.Data.Objects.Collectors.data_tag.DataTag"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataTag</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Annotation.Export">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Annotation.Export" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="modules.html" accesskey="U">duHast</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.html" >duHast package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.html" >duHast.Revit package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.Annotation.html" >duHast.Revit.Annotation package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                duHast.Revit.Annotation.Export package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

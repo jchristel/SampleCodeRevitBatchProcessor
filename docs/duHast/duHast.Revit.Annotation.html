@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
-    <link rel="next" title="duHast.Revit.Annotation.Reporting package" href="duHast.Revit.Annotation.Reporting.html" />
+    <link rel="next" title="duHast.Revit.Annotation.Export package" href="duHast.Revit.Annotation.Export.html" />
     <link rel="prev" title="duHast.Revit package" href="duHast.Revit.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
@@ -31,7 +31,7 @@
         <li id="page_buttons">
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
-            <div class="headerButton"><a href="duHast.Revit.Annotation.Reporting.html" title="duHast.Revit.Annotation.Reporting package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Annotation.Export.html" title="duHast.Revit.Annotation.Export package" accesskey="N">next</a></div>
             <div class="headerButton"><a href="duHast.Revit.html" title="duHast.Revit package" accesskey="P">previous</a></div>
         </li>
     </ul>
@@ -96,6 +96,20 @@
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Annotation.Export.html">duHast.Revit.Annotation.Export package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Annotation.Export.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Annotation.Export.html#module-duHast.Revit.Annotation.Export.to_data_tag">duHast.Revit.Annotation.Export.to_data_tag module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Annotation.Export.html#reads-the-tags-in-a-view-into-datatag-instances">Reads the tags in a view into <code class="xref py py-class docutils literal notranslate"><span class="pre">DataTag</span></code> instances.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Annotation.Export.html#duHast.Revit.Annotation.Export.to_data_tag.take_problems"><code class="docutils literal notranslate"><span class="pre">take_problems()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Annotation.Export.html#duHast.Revit.Annotation.Export.to_data_tag.pick_leader_entry"><code class="docutils literal notranslate"><span class="pre">pick_leader_entry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Annotation.Export.html#duHast.Revit.Annotation.Export.to_data_tag.independent_tag_to_data"><code class="docutils literal notranslate"><span class="pre">independent_tag_to_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Annotation.Export.html#duHast.Revit.Annotation.Export.to_data_tag.spatial_tag_to_data"><code class="docutils literal notranslate"><span class="pre">spatial_tag_to_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Annotation.Export.html#duHast.Revit.Annotation.Export.to_data_tag.get_tags_in_view"><code class="docutils literal notranslate"><span class="pre">get_tags_in_view()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Annotation.Export.html#module-duHast.Revit.Annotation.Export">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Annotation.Reporting.html">duHast.Revit.Annotation.Reporting package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Annotation.Reporting.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Annotation.Reporting.html#module-duHast.Revit.Annotation.Reporting.annotations_report_header">duHast.Revit.Annotation.Reporting.annotations_report_header module</a><ul>
@@ -402,6 +416,43 @@ TODO: This uses a plain english name comparison to get arrow head types…may no
 :type doc: Autodesk.Revit.DB.Document
 :return: List of element ids representing arrow head symbols
 :rtype: list of Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Annotation.independent_tags_create">
+<span id="duhast-revit-annotation-independent-tags-create-module"></span><h2>duHast.Revit.Annotation.independent_tags_create module<a class="headerlink" href="#module-duHast.Revit.Annotation.independent_tags_create" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-to-create-independent-tags">
+<h3>Helper functions to create independent tags.<a class="headerlink" href="#helper-functions-to-create-independent-tags" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Annotation.independent_tags_create.create_independent_tag_without_transaction_wrapper">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.independent_tags_create.</span></span><span class="sig-name descname"><span class="pre">create_independent_tag_without_transaction_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_type_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.TagOrientation.Horizontal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_leader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elbow_point</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_point</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_create.create_independent_tag_without_transaction_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tags an element in a view.</p>
+<p>The tag is made on the element at the head point and then, when a type is wanted, changed to it
+(so a multi category tag family works whatever the element’s category is). A free leader end,
+and an elbow, are set when given; a leader which will not take them keeps Revit’s.</p>
+<p>Changing the model: this needs to run inside a transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view the tag belongs to.</p></li>
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element to tag.</p></li>
+<li><p><strong>head_point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – Where the tag head goes, in feet.</p></li>
+<li><p><strong>tag_type_id</strong> (<em>Autodesk.Revit.DB.ElementId</em><em>, </em><em>optional</em>) – The tag type to use, defaults to None (Revit’s default for the category).</p></li>
+<li><p><strong>orientation</strong> (<em>Autodesk.Revit.DB.TagOrientation</em><em>, </em><em>optional</em>) – Horizontal or vertical, defaults to horizontal.</p></li>
+<li><p><strong>add_leader</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the tag has a leader, defaults to False.</p></li>
+<li><p><strong>elbow_point</strong> (<em>Autodesk.Revit.DB.XYZ</em><em>, </em><em>optional</em>) – Where the leader bends, defaults to None.</p></li>
+<li><p><strong>end_point</strong> (<em>Autodesk.Revit.DB.XYZ</em><em>, </em><em>optional</em>) – Where a free leader ends, defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance. .result holds the tag when it was created.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

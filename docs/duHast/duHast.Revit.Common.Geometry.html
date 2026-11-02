@@ -496,10 +496,10 @@ This is not a size change but a position change!</p>
 <dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>3 x 3 matrix describing rotation, 1 x 3 matrix describing translation</p>
+<dd class="field-even"><p>3 x 3 matrix describing rotation, 3 values describing translation</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list (3) [list(3) int], list [int]</p>
+<dd class="field-odd"><p>list (3) [list(3) float], list [float]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1200,8 +1200,8 @@ If d=0 then the point lies exactly line.</p>
 <dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.solids.get_2d_points_from_solid">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.solids.</span></span><span class="sig-name descname"><span class="pre">get_2d_points_from_solid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.solids.get_2d_points_from_solid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of lists of data geometry instances representing the flattened (2D geometry) of the Element
-List of Lists because an element can be made up of multiple solids. Each nested list represents one element solid.
-Does not work with in place elements.</p>
+List of Lists because an element can be made up of multiple solids. Each nested list represents one element solid.</p>
+<p>Handles in place elements, see <cite>_solids_from_geometry_instances</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – A revit element instance.</p>
@@ -1216,15 +1216,54 @@ Does not work with in place elements.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.solids.get_solids_from_geometry">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.solids.</span></span><span class="sig-name descname"><span class="pre">get_solids_from_geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometry_element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.solids.get_solids_from_geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collects the solids out of a geometry element, recursing into geometry instances.</p>
+<p>Solids only: a geometry element also holds curves (a door family’s plan swing
+arc, for instance), and including those in a bounding box measures the
+annotation rather than the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geometry_element</strong> (<em>Autodesk.Revit.DB.GeometryElement</em>) – The geometry element to walk.</p></li>
+<li><p><strong>solids</strong> (<em>list</em>) – Accumulator, used when recursing.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of solids with a volume greater than zero.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.Solid</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.solids.get_solid_bounding_box">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.solids.</span></span><span class="sig-name descname"><span class="pre">get_solid_bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.solids.get_solid_bounding_box" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a bounding box from a solid.</p>
+<dd><p>Returns the solid’s bounding box in WORLD coordinates, axis aligned to the
+model’s axes.</p>
+<p>Axis aligned by design, not by accident: the returned box carries an
+identity transform and its Min/Max are world coordinates, which is what
+callers comparing, merging or filtering by extents want. A solid placed at
+an angle therefore yields a box LARGER than the solid - that is the correct
+answer to “what world extents does this occupy”, and the wrong one for
+“what shape is this”. For the latter use
+get_oriented_bounding_box_from_family_instance, which keeps the rotation on
+the box transform.</p>
+<p>All EIGHT corners of the solid’s own box are transformed before the world
+extents are taken. Transforming only Min and Max is not enough: they are
+opposite corners of an oriented box, so once it is rotated they are no
+longer the axis aligned extremes. That yields a box which is neither the
+oriented box nor its correct hull - too small in general, and past ninety
+degrees of rotation inverted, with the transformed “min” exceeding the
+transformed “max”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>solid</strong> (<em>Autodesk.Revit.DB.Solid</em>) – The solid to get the bounding box from.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The bounding box of the solid.</p>
+<dd class="field-even"><p>The world axis aligned bounding box of the solid.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.BoundingBoxXYZ</p>
@@ -1235,14 +1274,69 @@ Does not work with in place elements.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.solids.get_bounding_box_from_family_geometry">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.solids.</span></span><span class="sig-name descname"><span class="pre">get_bounding_box_from_family_geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometry_element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.solids.get_bounding_box_from_family_geometry" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a bounding box from the families solid elements geometry only.
-This is different from the family instance bounding box!</p>
+<dd><p>Returns a WORLD axis aligned bounding box covering the family’s SOLIDS only.</p>
+<p>Two things make this different from the family instance bounding box
+(Element.get_BoundingBox), and they are different kinds of difference:</p>
+<ul class="simple">
+<li><p>Content. Only solids are measured. Curves and symbolic geometry - a door
+family’s plan swing arc, say - are ignored, so this is tighter than
+Revit’s own box on any family that draws them.</p></li>
+<li><p>Orientation. This is NOT tighter. Like Revit’s box it is aligned to the
+model axes, so a family placed at an angle yields a box larger than the
+family, and the rotation is not recoverable from the result. Where that
+matters use get_oriented_bounding_box_from_family_instance.</p></li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>geometry_element</strong> (<em>Autodesk.Revit.DB.GeometryElement</em>) – The geometry element of a family instance.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The bounding box of the family geometry.</p>
+<dd class="field-even"><p>The world axis aligned bounding box of the family’s solids, or
+None when it holds no solids.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.BoundingBoxXYZ</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.solids.get_oriented_bounding_box_from_family_instance">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.solids.</span></span><span class="sig-name descname"><span class="pre">get_oriented_bounding_box_from_family_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_sub_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.solids.get_oriented_bounding_box_from_family_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a bounding box of a family instance’s solids that KEEPS the
+instance’s rotation, by measuring it in the instance’s own coordinate system
+and carrying the placement on the box transform.</p>
+<p>The axis aligned alternative cannot be un-rotated afterwards: an axis
+aligned box of a rotated object no longer records the angle, and recovering
+it would mean solving for two extents and a rotation from two measurements -
+degenerate at forty five degrees. An object placed at an angle has to be
+measured in its own frame in the first place.</p>
+<p>To read the footprint back, transform the corners built from Min/Max by the
+box’s Transform. Anything that only wants world extents should keep using
+get_bounding_box_from_family_geometry instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>family_instance</strong> (<em>Autodesk.Revit.DB.FamilyInstance</em>) – The family instance to measure.</p></li>
+<li><p><strong>options</strong> (<em>Autodesk.Revit.DB.Options</em>) – Geometry options; a default Options() is used when omitted.</p></li>
+<li><p><strong>include_sub_components</strong> (<em>bool</em>) – <p>Whether to measure the instance’s shared nested
+sub-components as well as the instance itself.</p>
+<p>Defaults to False, and the default is the point: a door’s sub-components
+are its leaf, panels and hardware, and doors nest heavily - 113 of 205 on
+one measured facade file, 58 of them a single handle family. Merging those
+in would grow every door and window footprint already in production to
+swallow its hardware, and the wider value would look every bit as plausible
+as the correct one. So this is a parameter rather than a change of
+behaviour: doors and windows keep measuring exactly what they always have.</p>
+<p>Opt in where the nested content IS the object being measured, as a casework
+run’s carcass is.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A bounding box in the instance’s coordinate system, with its
+Transform set to the instance transform, or None when the instance has
+no solid geometry.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.BoundingBoxXYZ</p>
@@ -1283,11 +1377,28 @@ Arcs, circles will be tessellated to polygons.
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.to_data_conversion.convert_bounding_box_to_flattened_2d_points">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.to_data_conversion.</span></span><span class="sig-name descname"><span class="pre">convert_bounding_box_to_flattened_2d_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounding_box</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.to_data_conversion.convert_bounding_box_to_flattened_2d_points" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts a bounding box into a 2D polygon by projecting it onto a plane.( Removes Z values…)
-:param bounding_box: A bounding box.
-:type bounding_box: Autodesk.Revit.DB.BoundingBoxXYZ
-:return: A list of data geometry instances.
-:rtype: list of <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometryPolygon</span></code></p>
+<dd><p>Converts a bounding box into a 2D polygon by projecting it onto a plane.( Removes Z values…)</p>
+<p>The box TRANSFORM is applied to the corners. A BoundingBoxXYZ expresses
+Min/Max in its own coordinate system and carries the placement on its
+Transform, so reading Min/Max alone is only correct when that transform
+happens to be the identity. It is the identity for a world aligned box - so
+this is a no-op for those - and it is not for a box measured in an object’s
+own frame, where ignoring it would return the footprint at the model origin
+instead of where the object stands.</p>
+<p>A rigid transform keeps the four base corners planar, so the result is still
+a flat rectangle; it is simply no longer guaranteed to be horizontal if the
+box belongs to a tilted object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bounding_box</strong> (<em>Autodesk.Revit.DB.BoundingBoxXYZ</em>) – A bounding box.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of data geometry instances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometryPolygon</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

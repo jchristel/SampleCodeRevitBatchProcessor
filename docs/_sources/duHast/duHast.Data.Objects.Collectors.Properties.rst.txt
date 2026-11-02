@@ -116,6 +116,14 @@ duHast.Data.Objects.Collectors.Properties.data\_sheet\_size\_names module
    :undoc-members:
    :show-inheritance:
 
+duHast.Data.Objects.Collectors.Properties.data\_tag\_kind\_names module
+-----------------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.Properties.data_tag_kind_names
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Data.Objects.Collectors.Properties.data\_type\_properties module
 -----------------------------------------------------------------------
 

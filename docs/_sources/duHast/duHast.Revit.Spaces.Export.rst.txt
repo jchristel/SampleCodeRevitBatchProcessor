@@ -1,0 +1,21 @@
+duHast.Revit.Spaces.Export package
+==================================
+
+Submodules
+----------
+
+duHast.Revit.Spaces.Export.to\_data\_space module
+-------------------------------------------------
+
+.. automodule:: duHast.Revit.Spaces.Export.to_data_space
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.Spaces.Export
+   :members:
+   :undoc-members:
+   :show-inheritance:

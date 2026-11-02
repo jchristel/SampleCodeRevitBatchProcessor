@@ -143,6 +143,51 @@
 <p>A polygon consists, as a minimum, of an outer loop, but may also have any number of inner loops. Those inner loops describe holes in the surface the outer loop decribes.</p>
 <p>Loops are made up of a number of 2D points.</p>
 </section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Collectors.Properties.Geometry.geometry_polygon_2.loop_point_from_json">
+<span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.Collectors.Properties.Geometry.geometry_polygon_2.</span></span><span class="sig-name descname"><span class="pre">loop_point_from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Objects.Collectors.Properties.Geometry.geometry_polygon_2.loop_point_from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalises a single loop point read from json into a list of doubles.</p>
+<p>Two shapes exist in the wild. Every exporter writes loop points as [x, y] lists,
+via get_point_as_doubles, and that is also the shape data_to_shapely reads back
+out - it indexes point[0] and point[1] and tests len(point) to spot 2D points.
+A Point2, on the other hand, serialises to an {“x”: , “y”: } dictionary.</p>
+<p>Both are accepted here and both come back as [x, y], because a polygon that has
+been through json has to hand downstream code the same type an exported one does.
+Returning Point2 instances - as this used to - produced polygons that no consumer
+in the library could read.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>point</strong> (<em>list</em><em> | </em><em>tuple</em><em> | </em><em>dict</em>) – A single loop point as either [x, y] or {“x”: , “y”: }.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The point as [x, y].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Collectors.Properties.Geometry.geometry_polygon_2.loop_as_tuple">
+<span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.Collectors.Properties.Geometry.geometry_polygon_2.</span></span><span class="sig-name descname"><span class="pre">loop_as_tuple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Objects.Collectors.Properties.Geometry.geometry_polygon_2.loop_as_tuple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a single loop into a nested tuple so that it can take part in a hash.</p>
+<p>Loops are lists of points, and points are themselves lists, neither of which is
+hashable. Both point shapes the class can hold are handled: the [x, y] lists the
+exporters and json produce, and the Point2 instances add_point_to_outer_loop takes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>loop</strong> (<em>list</em>) – A loop as a list of points.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The loop as a tuple of (x, y) tuples.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Data.Objects.Collectors.Properties.Geometry.geometry_polygon_2.DataGeometryPolygon2">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.Collectors.Properties.Geometry.geometry_polygon_2.</span></span><span class="sig-name descname"><span class="pre">DataGeometryPolygon2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Objects.Collectors.Properties.Geometry.geometry_polygon_2.DataGeometryPolygon2" title="Permalink to this definition">¶</a></dt>

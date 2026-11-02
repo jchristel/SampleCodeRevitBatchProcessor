@@ -37,6 +37,7 @@ Subpackages
    duHast.Revit.Roofs
    duHast.Revit.Rooms
    duHast.Revit.SharedParameters
+   duHast.Revit.Spaces
    duHast.Revit.Stairs
    duHast.Revit.UI
    duHast.Revit.Views

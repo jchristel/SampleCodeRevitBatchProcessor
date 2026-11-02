@@ -178,8 +178,10 @@
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#module-duHast.Revit.Common.Geometry.solids">duHast.Revit.Common.Geometry.solids module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#revit-solids-helper-functions">Revit solids helper functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.solids.get_2d_points_from_solid"><code class="docutils literal notranslate"><span class="pre">get_2d_points_from_solid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.solids.get_solids_from_geometry"><code class="docutils literal notranslate"><span class="pre">get_solids_from_geometry()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.solids.get_solid_bounding_box"><code class="docutils literal notranslate"><span class="pre">get_solid_bounding_box()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.solids.get_bounding_box_from_family_geometry"><code class="docutils literal notranslate"><span class="pre">get_bounding_box_from_family_geometry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.solids.get_oriented_bounding_box_from_family_instance"><code class="docutils literal notranslate"><span class="pre">get_oriented_bounding_box_from_family_instance()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.solids.convert_solid_to_flattened_2d_points"><code class="docutils literal notranslate"><span class="pre">convert_solid_to_flattened_2d_points()</span></code></a></li>
 </ul>
 </li>
@@ -1830,6 +1832,73 @@ param doc: The Revit document.
 </dd></dl>
 
 </section>
+<section id="module-duHast.Revit.Common.level_filter">
+<span id="duhast-revit-common-level-filter-module"></span><h2>duHast.Revit.Common.level_filter module<a class="headerlink" href="#module-duHast.Revit.Common.level_filter" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-to-limit-an-export-to-some-levels-before-the-slow-conversion-of-each-element">
+<h3>Helper functions to limit an export to some levels, before the (slow) conversion of each element.<a class="headerlink" href="#helper-functions-to-limit-an-export-to-some-levels-before-the-slow-conversion-of-each-element" title="Permalink to this heading">¶</a></h3>
+<p>The get_all_*_data export functions take an optional level_ids argument. When it is given only the
+elements on those levels are converted; when it is None (the default) the export is as it always was.</p>
+<p>A level is named by its Revit element id, as an integer (text holding an integer, and an ElementId, are
+accepted). Which level an element is on is, for each kind of element, the level its exported data
+reports: the element’s own LevelId. A family instance whose level is worked out from its geometry
+rather than assigned (see Family.Export.to_data_item) is filtered after that is worked out.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.level_filter.get_level_id_values">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.level_filter.</span></span><span class="sig-name descname"><span class="pre">get_level_id_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.level_filter.get_level_id_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalises level ids to a set of integers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>level_ids</strong> (<em>list</em><em> or </em><em>None</em>) – Level ids as integers, text holding an integer, or Autodesk.Revit.DB.ElementId; None for no filter.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The set of integer ids, or None when there is no filter (None passed in). An empty list is a filter that
+lets nothing through, and is returned as an empty set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>set of int or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.level_filter.get_element_level_id_value">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.level_filter.</span></span><span class="sig-name descname"><span class="pre">get_element_level_id_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.level_filter.get_element_level_id_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>The id of the level an element reports as its own (its LevelId), as an integer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – A Revit element.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The level id, or None when the element has no level (an invalid id).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.level_filter.is_on_levels">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.level_filter.</span></span><span class="sig-name descname"><span class="pre">is_on_levels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.level_filter.is_on_levels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether an element is on one of the levels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – A Revit element.</p></li>
+<li><p><strong>level_values</strong> (<em>set</em><em> of </em><em>int</em><em> or </em><em>None</em>) – The ids from get_level_id_values; None means no filter, so everything is on them.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if there is no filter or the element’s level is in it.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Common.parameter_get_utils">
 <span id="duhast-revit-common-parameter-get-utils-module"></span><h2>duHast.Revit.Common.parameter_get_utils module<a class="headerlink" href="#module-duHast.Revit.Common.parameter_get_utils" title="Permalink to this heading">¶</a></h2>
 <section id="revit-api-utility-functions-to-get-parameter-values">
@@ -2513,6 +2582,36 @@ The function needs to accept these args: parameter, new parameter value as strin
 </dd></dl>
 
 </section>
+<section id="module-duHast.Revit.Common.parameter_values_by_category">
+<span id="duhast-revit-common-parameter-values-by-category-module"></span><h2>duHast.Revit.Common.parameter_values_by_category module<a class="headerlink" href="#module-duHast.Revit.Common.parameter_values_by_category" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-functions-around-data-storage-in-revit">
+<h3>This module contains a number of functions around data storage in Revit.<a class="headerlink" href="#this-module-contains-a-number-of-functions-around-data-storage-in-revit" title="Permalink to this heading">¶</a></h3>
+<p>Data storage can be used to project wide settings not associated with a specific element.</p>
+<p>Obsolete in Revit 2025 …</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_values_by_category.get_built_in_parameter_double_by_element_id">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_values_by_category.</span></span><span class="sig-name descname"><span class="pre">get_built_in_parameter_double_by_element_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">built_in_category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">built_in_parameter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_values_by_category.get_built_in_parameter_double_by_element_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value of a built in double parameter for every instance of a category.</p>
+<p>An element without the parameter, or one whose value cannot be read, is left out of the result (absent is not zero).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>built_in_category</strong> (<em>Autodesk.Revit.DB.BuiltInCategory</em>) – The category of interest.</p></li>
+<li><p><strong>built_in_parameter</strong> (<em>Autodesk.Revit.DB.BuiltInParameter</em>) – The parameter to read, e.g. FLOOR_HEIGHTABOVELEVEL_PARAM.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Element id (int) mapped to the parameter value in Revit internal units.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Common.phases">
 <span id="duhast-revit-common-phases-module"></span><h2>duHast.Revit.Common.phases module<a class="headerlink" href="#module-duHast.Revit.Common.phases" title="Permalink to this heading">¶</a></h2>
 <section id="model-phase-functions">
@@ -2619,6 +2718,74 @@ The function needs to accept these args: parameter, new parameter value as strin
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.phases.get_phase_by_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.phases.</span></span><span class="sig-name descname"><span class="pre">get_phase_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.phases.get_phase_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the phase with the given name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>phase_name</strong> (<em>str</em>) – The name of the phase.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The phase, None if the document has no phase of that name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.Phase or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.phases.is_in_phase_range">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.phases.</span></span><span class="sig-name descname"><span class="pre">is_in_phase_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">created_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">demolished_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.phases.is_in_phase_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revit’s phase membership rule on phase sequence indices (position in doc.Phases):
+created &lt;= selected AND (not demolished OR demolished &gt; selected).</p>
+<p>Not ‘created == selected’: equality would drop every element built in an earlier phase and still standing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>created_index</strong> (<em>int</em><em> or </em><em>None</em>) – Sequence index of the phase the element was created in; None if it resolves to no known phase.</p></li>
+<li><p><strong>demolished_index</strong> (<em>int</em><em> or </em><em>None</em>) – Sequence index of the phase the element was demolished in; None if never demolished.</p></li>
+<li><p><strong>selected_index</strong> (<em>int</em>) – Sequence index of the phase of interest.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the element exists in the selected phase. An element created in no known phase is not in any.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.phases.get_ids_of_elements_in_phase">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.phases.</span></span><span class="sig-name descname"><span class="pre">get_ids_of_elements_in_phase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">built_in_category</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.phases.get_ids_of_elements_in_phase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ids of the elements of a category that exist in a phase (created in or before it and not demolished
+by it). Elements are the instances only, not types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>phase_name</strong> (<em>str</em>) – The name of the phase.</p></li>
+<li><p><strong>built_in_category</strong> (<em>Autodesk.Revit.DB.BuiltInCategory</em>) – The category of interest.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – when the document has no phase of that name (a model that cannot be scoped must not pass everything).</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The element ids as integers.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>set of int</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2845,6 +3012,41 @@ added_vals = in_transaction_with_failures(trans, add_func, fail_config)</p>
 <li><p><strong>failure_config</strong> (<a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.FailureHandlingConfiguration.FailureHandlingConfig" title="duHast.Revit.Common.Objects.FailureHandlingConfiguration.FailureHandlingConfig"><em>FailureHandlingConfig</em></a>) – Configuration for the failure handling (Optional)</p></li>
 <li><p><strong>failure_processing_func</strong> (<em>function</em>) – The function to process the failures (Optional)</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.transaction.in_transaction_group">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.transaction.</span></span><span class="sig-name descname"><span class="pre">in_transaction_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assimilate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.transaction.in_transaction_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revit transaction group wrapper.</p>
+<p>Runs an action which itself opens one or more transactions (for example through
+in_transaction or in_transaction_with_failure_handling) inside a transaction group. If the action
+raises, or returns a Result whose status is False, the whole group is rolled back: everything the
+action committed is undone, so a failed piece of work leaves no trace in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>group</strong> (<em>Autodesk.Revit.DB.TransactionGroup</em>) – The transaction group to be executed.</p></li>
+<li><p><strong>action</strong> (<em>action</em><em>(</em><em>)</em><em>.</em>) – The action to be nested within the group. This needs to return a Result class instance!</p></li>
+<li><p><strong>assimilate</strong> (<em>bool</em><em>, </em><em>optional</em>) – True: on success the transactions of the group are merged into one (one entry in the undo list). False: they are committed as they are with the group.</p></li>
+<li><p><strong>*args</strong> – <p>is just a placeholder in case this function is called with the same args than in_transaction</p>
+</p></li>
+<li><p><strong>**kwargs</strong> – <p>is just a placeholder in case this function is called with the same args than in_transaction</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.status True if the action succeeded and the group was committed, otherwise False.</p></li>
+<li><p>.message will contain the action’s messages, or the exception message.</p></li>
+<li><p>.result is whatever the action returned in its result.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>

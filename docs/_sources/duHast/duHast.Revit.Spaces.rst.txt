@@ -1,0 +1,29 @@
+duHast.Revit.Spaces package
+===========================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.Revit.Spaces.Export
+
+Submodules
+----------
+
+duHast.Revit.Spaces.spaces module
+---------------------------------
+
+.. automodule:: duHast.Revit.Spaces.spaces
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.Spaces
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -20,6 +20,14 @@ duHast.Revit.Windows.windows module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Windows.windows\_location\_by\_rooms module
+--------------------------------------------------------
+
+.. automodule:: duHast.Revit.Windows.windows_location_by_rooms
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

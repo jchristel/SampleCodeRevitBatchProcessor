@@ -108,10 +108,34 @@ duHast.Data.Objects.Collectors.data\_sheet\_view\_port module
    :undoc-members:
    :show-inheritance:
 
+duHast.Data.Objects.Collectors.data\_space module
+-------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_space
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Data.Objects.Collectors.data\_tag module
 -----------------------------------------------
 
 .. automodule:: duHast.Data.Objects.Collectors.data_tag
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.data\_tag\_type module
+-----------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_tag_type
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.data\_tagged\_element module
+-----------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_tagged_element
    :members:
    :undoc-members:
    :show-inheritance:

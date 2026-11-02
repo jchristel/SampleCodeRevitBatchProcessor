@@ -170,6 +170,327 @@
 </dd></dl>
 
 </section>
+<section id="module-duHast.Revit.Windows.windows_location_by_rooms">
+<span id="duhast-revit-windows-windows-location-by-rooms-module"></span><h2>duHast.Revit.Windows.windows_location_by_rooms module<a class="headerlink" href="#module-duHast.Revit.Windows.windows_location_by_rooms" title="Permalink to this heading">¶</a></h2>
+<section id="works-out-which-room-a-window-belongs-to-across-federated-models">
+<h3>Works out which room a window belongs to, across federated models.<a class="headerlink" href="#works-out-which-room-a-window-belongs-to-across-federated-models" title="Permalink to this heading">¶</a></h3>
+<p>This is a post processing step. It runs on the output of the exporters, not on a
+Revit model:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="duHast.Revit.Windows.Export.html#duHast.Revit.Windows.Export.to_data_window.get_all_window_data" title="duHast.Revit.Windows.Export.to_data_window.get_all_window_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_all_window_data()</span></code></a> for the windows</p></li>
+<li><p><a class="reference internal" href="duHast.Revit.Rooms.Export.html#duHast.Revit.Rooms.Export.to_data_room.get_all_room_data" title="duHast.Revit.Rooms.Export.to_data_room.get_all_room_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_all_room_data()</span></code></a> for the rooms</p></li>
+<li><p><a class="reference internal" href="duHast.Revit.Levels.Export.html#duHast.Revit.Levels.Export.to_data_level_building.get_all_level_data" title="duHast.Revit.Levels.Export.to_data_level_building.get_all_level_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_all_level_data()</span></code></a> for the level elevations</p></li>
+</ul>
+<p>Each may hold data from several models. All three are expected to have been filtered
+to a single phase already, so nothing here reasons about phasing.</p>
+<section id="why-it-exists">
+<h4>Why it exists<a class="headerlink" href="#why-it-exists" title="Permalink to this heading">¶</a></h4>
+<p>Revit resolves the window to room relationship natively, but only WITHIN one model.
+Where the windows and the rooms live in different models the relationship never
+populates, because the rooms are not in the window’s document. This module does that
+calculation from the exported geometry instead.</p>
+</section>
+<section id="assumptions">
+<h4>Assumptions<a class="headerlink" href="#assumptions" title="Permalink to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>All models are inserted origin to origin with no rotation, so coordinates are
+directly comparable between them. Nothing here applies a link transform.</p></li>
+<li><p>Window and room polygons are in decimal feet, level elevations in millimetres.
+That is the exporters’ convention, not a choice made here.</p></li>
+</ul>
+</section>
+<section id="how-a-window-is-resolved">
+<h4>How a window is resolved<a class="headerlink" href="#how-a-window-is-resolved" title="Permalink to this heading">¶</a></h4>
+<ol class="arabic simple">
+<li><p>Where Revit already reported a room - the same model case - that answer is used.
+It accounts for room upper limits and boundary conditions the 2D test below
+cannot see, so it is better information wherever it exists.</p></li>
+<li><p>Otherwise the window is placed geometrically:</p>
+<ul class="simple">
+<li><p>The storey is the level below the sill, unless the window crosses a level. If
+it does, the window goes to the lowest level it crosses, unless more than half
+of its height sits below that level, in which case it stays on the level below.
+This is self scaling, so it needs no tolerance constant: a floor to ceiling
+window whose sill sits a few millimetres low has almost none of its height
+below the level above, and correctly snaps up rather than dropping a storey.</p></li>
+<li><p>Within that storey the window is tested against each room’s boundary polygon in
+plan. The test point is nudged to BOTH sides of the wall, because the window’s
+own geometry cannot say which side is the interior: the facing direction of a
+family depends on which side it was placed from and whether it has been
+flipped. Probing both sides sidesteps the question - an external window simply
+finds no room on its outward side.</p></li>
+</ul>
+</li>
+</ol>
+<p>Outcomes per window: resolved (one room, or several where models overlap), homeless
+(measured, but no room matched), or invalid (the geometry could not be measured).</p>
+</section>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Windows.windows_location_by_rooms.LEVEL_CROSSING_MAJORITY">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Windows.windows_location_by_rooms.</span></span><span class="sig-name descname"><span class="pre">LEVEL_CROSSING_MAJORITY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.5</span></em><a class="headerlink" href="#duHast.Revit.Windows.windows_location_by_rooms.LEVEL_CROSSING_MAJORITY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Share of an opening’s height which must sit below the lowest level it crosses for
+it to stay on the level underneath. At exactly this share it moves up.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Windows.windows_location_by_rooms.PROBE_MARGIN_MM">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Windows.windows_location_by_rooms.</span></span><span class="sig-name descname"><span class="pre">PROBE_MARGIN_MM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">25.0</span></em><a class="headerlink" href="#duHast.Revit.Windows.windows_location_by_rooms.PROBE_MARGIN_MM" title="Permalink to this definition">¶</a></dt>
+<dd><p>How far past the edge of a window, in millimetres, each probe point is pushed.
+Room boundaries are taken at the wall CENTRE LINE by default, so this only has to
+clear the middle of the wall. Rooms which fell back to their 3D solid - the ones
+bounded only by linked walls - are bounded at the wall FINISH face instead, and
+those may need a larger value. Too small shows up as homeless windows, which is
+visible; too large risks reaching through a thin partition into the next room,
+which is not.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Windows.windows_location_by_rooms.SOURCE_REVIT">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Windows.windows_location_by_rooms.</span></span><span class="sig-name descname"><span class="pre">SOURCE_REVIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'revit'</span></em><a class="headerlink" href="#duHast.Revit.Windows.windows_location_by_rooms.SOURCE_REVIT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Values written to DataRoomToPhase.source.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Windows.windows_location_by_rooms.get_level_elevation_lookup">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Windows.windows_location_by_rooms.</span></span><span class="sig-name descname"><span class="pre">get_level_elevation_lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Windows.windows_location_by_rooms.get_level_elevation_lookup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds a lookup of level elevations keyed by model name and level id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>level_data</strong> (list[<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_level_building.DataLevelBuilding" title="duHast.Data.Objects.Collectors.data_level_building.DataLevelBuilding"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLevelBuilding</span></code></a>]) – Level data, from <a class="reference internal" href="duHast.Revit.Levels.Export.html#duHast.Revit.Levels.Export.to_data_level_building.get_all_level_data" title="duHast.Revit.Levels.Export.to_data_level_building.get_all_level_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_all_level_data()</span></code></a>, possibly spanning
+several models.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Elevations in millimetres, keyed by (model name, level id).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>{(str, int): float}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Windows.windows_location_by_rooms.group_rooms_by_level_elevation">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Windows.windows_location_by_rooms.</span></span><span class="sig-name descname"><span class="pre">group_rooms_by_level_elevation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Windows.windows_location_by_rooms.group_rooms_by_level_elevation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Groups rooms by the elevation of the level they sit on.</p>
+<p>Grouping on elevation rather than on level id is what makes this work across
+models: level ids and even level names need not agree between models, but with
+everything inserted origin to origin the elevations do.</p>
+<p>Only levels which actually carry a room end up as keys, which is the point of
+deriving the storeys from the rooms. Parapet, top of steel and ceiling datums
+never appear, so they can never be picked as “the level above” a window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>room_data</strong> (list[<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_room.DataRoom" title="duHast.Data.Objects.Collectors.data_room.DataRoom"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataRoom</span></code></a>]) – Room data, already filtered to the phase of interest.</p></li>
+<li><p><strong>level_data</strong> (list[<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_level_building.DataLevelBuilding" title="duHast.Data.Objects.Collectors.data_level_building.DataLevelBuilding"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLevelBuilding</span></code></a>]) – Level data, from <a class="reference internal" href="duHast.Revit.Levels.Export.html#duHast.Revit.Levels.Export.to_data_level_building.get_all_level_data" title="duHast.Revit.Levels.Export.to_data_level_building.get_all_level_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_all_level_data()</span></code></a>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple of rooms grouped by level elevation in millimetres, and the rooms
+whose level could not be found in the level data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple({float: list[<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_room.DataRoom" title="duHast.Data.Objects.Collectors.data_room.DataRoom"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataRoom</span></code></a>]}, list[<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_room.DataRoom" title="duHast.Data.Objects.Collectors.data_room.DataRoom"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataRoom</span></code></a>])</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Windows.windows_location_by_rooms.get_level_elevation_for_opening">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Windows.windows_location_by_rooms.</span></span><span class="sig-name descname"><span class="pre">get_level_elevation_for_opening</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sill</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level_elevations</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Windows.windows_location_by_rooms.get_level_elevation_for_opening" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the elevation of the storey an opening belongs to.</p>
+<p>The rules, in order:</p>
+<ul class="simple">
+<li><p>No level at or below the sill: the lowest level is used. An opening below the
+bottom of the building belongs to the bottom of the building.</p></li>
+<li><p>The opening does not reach the next level up: the level below the sill.</p></li>
+<li><p>The opening crosses one or more levels: the LOWEST level it crosses, unless
+more than <code class="xref py py-const docutils literal notranslate"><span class="pre">LEVEL_CROSSING_MAJORITY</span></code> of its height sits below that
+level, in which case the level below the sill.</p></li>
+</ul>
+<p>Taking the lowest CROSSED level rather than the level below the sill for tall
+openings keeps the result monotonic. Were it the level below the sill, making an
+opening taller until it reached a second level would move it back DOWN a storey.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sill</strong> (<em>float</em>) – Lowest point of the opening, in millimetres.</p></li>
+<li><p><strong>head</strong> (<em>float</em>) – Highest point of the opening, in millimetres.</p></li>
+<li><p><strong>level_elevations</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – Level elevations in millimetres, ascending.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The elevation of the storey, or None when there are no levels at all.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Windows.windows_location_by_rooms.get_opening_test_point">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Windows.windows_location_by_rooms.</span></span><span class="sig-name descname"><span class="pre">get_opening_test_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opening</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Windows.windows_location_by_rooms.get_opening_test_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the point in plan used to test an opening against room boundaries.</p>
+<p>The room calculation point is preferred where the family carries one: it is placed
+deliberately by the family author to represent where the opening counts as being,
+which is not always the middle of its extents. The centre of the exported footprint
+is the fallback.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>opening</strong> (<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_window.DataWindow" title="duHast.Data.Objects.Collectors.data_window.DataWindow"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataWindow</span></code></a> | <a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_door.DataDoor" title="duHast.Data.Objects.Collectors.data_door.DataDoor"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataDoor</span></code></a>) – A window or door data instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The point as (x, y) in decimal feet, or None when the opening has no
+usable geometry.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple(float, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Windows.windows_location_by_rooms.get_probe_points">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Windows.windows_location_by_rooms.</span></span><span class="sig-name descname"><span class="pre">get_probe_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opening</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probe_margin_mm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Windows.windows_location_by_rooms.get_probe_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns two points, one either side of the wall the opening sits in.</p>
+<p>Both sides are probed because nothing on the opening says which side is the room.
+A family’s facing direction depends on the side it was placed from and whether it
+has since been flipped, so choosing one side would be a guess. Probing both makes
+the question go away: an external window finds no room on its outward side, and an
+opening in a wall between two rooms legitimately finds one on each.</p>
+<p>The direction comes from the SHORT axis of the exported footprint, which is the
+across the wall direction, a window being far wider than the wall is deep. Its sign
+is arbitrary, which does not matter when both directions are used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>opening</strong> (<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_window.DataWindow" title="duHast.Data.Objects.Collectors.data_window.DataWindow"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataWindow</span></code></a> | <a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_door.DataDoor" title="duHast.Data.Objects.Collectors.data_door.DataDoor"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataDoor</span></code></a>) – A window or door data instance.</p></li>
+<li><p><strong>test_point</strong> (<em>tuple</em><em>(</em><em>float</em><em>, </em><em>float</em><em>)</em>) – The point in plan to probe from, in decimal feet.</p></li>
+<li><p><strong>probe_margin_mm</strong> (<em>float</em>) – How far past the edge of the opening to probe, in
+millimetres.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Two (x, y) points in decimal feet, or an empty list when the direction
+could not be worked out.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[tuple(float, float)]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Windows.windows_location_by_rooms.is_point_in_room">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Windows.windows_location_by_rooms.</span></span><span class="sig-name descname"><span class="pre">is_point_in_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Windows.windows_location_by_rooms.is_point_in_room" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a point in plan falls inside a room.</p>
+<p>A point inside an inner loop is in a hole in the room, not in the room.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>room</strong> (<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_room.DataRoom" title="duHast.Data.Objects.Collectors.data_room.DataRoom"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataRoom</span></code></a>) – A room data instance.</p></li>
+<li><p><strong>point</strong> (<em>tuple</em><em>(</em><em>float</em><em>, </em><em>float</em><em>)</em>) – The point as (x, y) in decimal feet.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True when the point is inside the room.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Windows.windows_location_by_rooms.get_rooms_reported_by_revit">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Windows.windows_location_by_rooms.</span></span><span class="sig-name descname"><span class="pre">get_rooms_reported_by_revit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opening</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rooms_by_key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Windows.windows_location_by_rooms.get_rooms_reported_by_revit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the rooms Revit itself reported for an opening.</p>
+<p>The to room and from room entries an exporter writes cover EVERY phase in the
+model, so they are narrowed here by keeping only those whose room appears in the
+room data past in. Since a room belongs to exactly one phase, a room surviving
+that intersection is by definition in the phase the data was filtered to - no
+phase id needs decoding to work that out.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>opening</strong> (<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_window.DataWindow" title="duHast.Data.Objects.Collectors.data_window.DataWindow"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataWindow</span></code></a> | <a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_door.DataDoor" title="duHast.Data.Objects.Collectors.data_door.DataDoor"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataDoor</span></code></a>) – A window or door data instance.</p></li>
+<li><p><strong>rooms_by_key</strong> ({(str, int): <a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_room.DataRoom" title="duHast.Data.Objects.Collectors.data_room.DataRoom"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataRoom</span></code></a>}) – Rooms keyed by (model name, room id).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The matching rooms.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_room.DataRoom" title="duHast.Data.Objects.Collectors.data_room.DataRoom"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataRoom</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Windows.windows_location_by_rooms.get_rooms_by_geometry">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Windows.windows_location_by_rooms.</span></span><span class="sig-name descname"><span class="pre">get_rooms_by_geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opening</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rooms_by_elevation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level_elevations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probe_margin_mm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Windows.windows_location_by_rooms.get_rooms_by_geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Works out which rooms an opening touches, from its geometry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>opening</strong> (<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_window.DataWindow" title="duHast.Data.Objects.Collectors.data_window.DataWindow"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataWindow</span></code></a> | <a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_door.DataDoor" title="duHast.Data.Objects.Collectors.data_door.DataDoor"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataDoor</span></code></a>) – A window or door data instance.</p></li>
+<li><p><strong>rooms_by_elevation</strong> ({float: list[<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_room.DataRoom" title="duHast.Data.Objects.Collectors.data_room.DataRoom"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataRoom</span></code></a>]}) – Rooms grouped by level elevation in millimetres.</p></li>
+<li><p><strong>level_elevations</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – Level elevations in millimetres, ascending.</p></li>
+<li><p><strong>probe_margin_mm</strong> (<em>float</em>) – How far past the edge of the opening to probe.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple of the matching rooms and a note describing the outcome. The note
+is empty when the opening was measured successfully, whether or not a room was
+found, and describes the problem when it was not.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple(list[<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_room.DataRoom" title="duHast.Data.Objects.Collectors.data_room.DataRoom"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataRoom</span></code></a>], str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Windows.windows_location_by_rooms.augment_windows_with_rooms">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Windows.windows_location_by_rooms.</span></span><span class="sig-name descname"><span class="pre">augment_windows_with_rooms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probe_margin_mm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Windows.windows_location_by_rooms.augment_windows_with_rooms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fills in which room each window belongs to, and returns the windows.</p>
+<p>All three inputs may span several models, and are expected to have been filtered
+to a single phase already.</p>
+<p>Windows are augmented in place. Where a room was found, an entry naming it is
+written to the window’s to_room, tagged with how it was arrived at. Entries
+computed from geometry carry no to/from direction: the exported footprint cannot
+say which side of the wall Revit would have called “to”, so a window found to
+touch two rooms reports both without ordering them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>window_data</strong> (list[<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_window.DataWindow" title="duHast.Data.Objects.Collectors.data_window.DataWindow"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataWindow</span></code></a>]) – Window data, from <a class="reference internal" href="duHast.Revit.Windows.Export.html#duHast.Revit.Windows.Export.to_data_window.get_all_window_data" title="duHast.Revit.Windows.Export.to_data_window.get_all_window_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_all_window_data()</span></code></a>, filtered to one
+phase.</p></li>
+<li><p><strong>room_data</strong> (list[<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_room.DataRoom" title="duHast.Data.Objects.Collectors.data_room.DataRoom"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataRoom</span></code></a>]) – Room data, from <a class="reference internal" href="duHast.Revit.Rooms.Export.html#duHast.Revit.Rooms.Export.to_data_room.get_all_room_data" title="duHast.Revit.Rooms.Export.to_data_room.get_all_room_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_all_room_data()</span></code></a>, filtered to the same
+phase.</p></li>
+<li><p><strong>level_data</strong> (list[<a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_level_building.DataLevelBuilding" title="duHast.Data.Objects.Collectors.data_level_building.DataLevelBuilding"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLevelBuilding</span></code></a>]) – Level data, from <a class="reference internal" href="duHast.Revit.Levels.Export.html#duHast.Revit.Levels.Export.to_data_level_building.get_all_level_data" title="duHast.Revit.Levels.Export.to_data_level_building.get_all_level_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_all_level_data()</span></code></a>.</p></li>
+<li><p><strong>probe_margin_mm</strong> (<em>float</em>) – How far past the edge of a window to probe, in millimetres.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status is False only when the inputs made the job impossible.</p></li>
+<li><p>result.message holds a summary, then a line per window which could not be
+placed.</p></li>
+<li><p>result.result holds the augmented window data instances.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Windows">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Windows" title="Permalink to this heading">¶</a></h2>
 </section>

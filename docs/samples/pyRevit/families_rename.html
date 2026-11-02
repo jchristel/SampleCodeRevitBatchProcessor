@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Rename Families &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link rel="up" title="pyRevit" href="index.html" />
+    <link rel="next" title="Family Reports" href="families_reports.html" />
+    <link rel="prev" title="Reload" href="families_reload.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>Rename Families</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="families_reports.html" title="Family Reports" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="families_reload.html" title="Reload" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Samples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#flows">Flows</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#pyrevit">pyRevit</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">pyRevit</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="readme.html">duHast pyRevit Extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ceilings_by_rooms.html">Ceilings By Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cloud_guids.html">GUIDS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collectors.html">Data Collectors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_compare.html">Compare</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_docmanager.html">docManager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_pdf_dwg.html">PDF and DWG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_at_the_library.html">At The Library</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_catalogue_files.html">Catalogue Files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_change_category.html">Change Category</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_force_update.html">Force Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_io.html">Family IO — Load and Save</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_reload.html">Reload</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Rename Families</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_reports.html">Family Reports</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_swap.html">Swap Families</a></li>
+<li class="toctree-l4"><a class="reference internal" href="grids.html">Grids</a></li>
+<li class="toctree-l4"><a class="reference internal" href="levels.html">Levels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="purge_unused.html">Purge Unused</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_area_by_room.html">Verify Push It Area</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_get_a_room.html">Get A Room!</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_main.html">Push It!</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_place_revit_rooms.html">Place Revit Rooms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_stats.html">PushIt Stats</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_swap_dimensions.html">Swap Width And Depth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="roommate.html">RoomMate Export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="view_templates_import_export.html">View Templates — Import and Export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="view_templates_modify.html">View Templates — Modify</a></li>
+<li class="toctree-l4"><a class="reference internal" href="views_schedules.html">Schedules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="walls_by_rooms.html">Walls By Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="walls_facade_opening.html">Facade Opening To Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="warnings_highlight.html">Highlight Warnings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="warnings_solve.html">Solve Warnings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#apps">Apps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../revit_apps/index.html">Revit Application UI Guides</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/samples/pyRevit/families_rename.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="rename-families">
+<h1>Rename Families<a class="headerlink" href="#rename-families" title="Permalink to this heading">¶</a></h1>
+<p><strong>Panel:</strong> Families | <strong>Menu:</strong> Rename</p>
+<img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/Rename.pulldown/Icon.png" width="40" alt="button icon">
+<p>Tools to rename families and family types, in the open project or on disk in a library folder.</p>
+<p>Each tool asks for a <strong>single CSV file</strong>. The first row is treated as a header and ignored.</p>
+<hr class="docutils" />
+<section id="rename-loaded-families">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/Rename.pulldown/RenameLoadedFamilies.pushbutton/Icon.png" width="24" alt="Rename Loaded Families icon"> Rename Loaded Families<a class="headerlink" href="#rename-loaded-families" title="Permalink to this heading">¶</a></h2>
+<p>Renames families already loaded in the open project.</p>
+<p><strong>CSV columns:</strong> Current family name, File path, Family category, New family name.</p>
+<p>Family names are without the <code class="docutils literal notranslate"><span class="pre">.rfa</span></code> extension. File path may be left blank when renaming
+families inside a project.</p>
+</section>
+<hr class="docutils" />
+<section id="rename-loaded-family-types">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/Rename.pulldown/RenameLoadedFamilyTypes.pushbutton/Icon.png" width="24" alt="Rename Loaded Family Types icon"> Rename Loaded Family Types<a class="headerlink" href="#rename-loaded-family-types" title="Permalink to this heading">¶</a></h2>
+<p>Renames types within families loaded in the open project.</p>
+<p><strong>CSV columns:</strong> Current family name, Old type name, File path, Family category, New type name.</p>
+</section>
+<hr class="docutils" />
+<section id="rename-families-in-folder">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/Rename.pulldown/RenameFamiliesInFolder.pushbutton/Icon.png" width="24" alt="Rename Families In Folder icon"> Rename Families In Folder<a class="headerlink" href="#rename-families-in-folder" title="Permalink to this heading">¶</a></h2>
+<p>Renames <code class="docutils literal notranslate"><span class="pre">.rfa</span></code> files on disk in a library directory, and the family inside each file.</p>
+<p><strong>CSV columns:</strong> Current family name, File path, Family category, New family name.</p>
+<p>Family category may be left blank when only renaming files.</p>
+</section>
+<hr class="docutils" />
+<section id="copy-and-rename-families-in-folder">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/Rename.pulldown/CopyAndRenameFamiliesInFolder.pushbutton/Icon.png" width="24" alt="Copy And Rename Families in Folder icon"> Copy And Rename Families in Folder<a class="headerlink" href="#copy-and-rename-families-in-folder" title="Permalink to this heading">¶</a></h2>
+<blockquote>
+<div><p><strong>Not currently available — unfinished, not merely unwired.</strong> The button prints a greeting
+and does nothing, and the library function behind it
+(<code class="docutils literal notranslate"><span class="pre">lib/families/rename/copy_and_rename_families_in_folder.py</span></code>) stops part way through: it
+asks for the CSV file and then ends without copying or renaming anything. Connecting the
+button would not make it work.</p>
+<p>Use <strong>Rename Families In Folder</strong> on a copy of the library in the meantime.</p>
+</div></blockquote>
+<p>Intended behaviour: create renamed <strong>copies</strong> of <code class="docutils literal notranslate"><span class="pre">.rfa</span></code> files, optionally into a different
+target directory, leaving the originals untouched.</p>
+<p><strong>Intended CSV columns:</strong> Current family name, File path, Family category, New family name,
+Target directory. Target directory may be left blank to copy into the same directory.</p>
+</section>
+<hr class="docutils" />
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Prepare the CSV before running — all four tools are driven entirely by the file.</p></li>
+<li><p>Renaming files on disk does not update families already loaded in any open project. Use
+<strong>Reload</strong> afterwards where needed.</p></li>
+<li><p>The duHast library also recognises directive files named <code class="docutils literal notranslate"><span class="pre">RenameDirective*.csv</span></code> and
+<code class="docutils literal notranslate"><span class="pre">TypeRenameDirective*.csv</span></code> when reading a whole folder; these buttons take one file at a
+time, so the file name does not matter here.</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="../index.html" accesskey="U">Samples</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="index.html" >pyRevit</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                Rename Families
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

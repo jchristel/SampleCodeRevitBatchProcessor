@@ -1,0 +1,540 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>duHast pyRevit Extension &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link rel="up" title="pyRevit" href="index.html" />
+    <link rel="next" title="About" href="about.html" />
+    <link rel="prev" title="pyRevit" href="index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast pyRevit Extension</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="about.html" title="About" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="index.html" title="pyRevit" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Samples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#flows">Flows</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#pyrevit">pyRevit</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">pyRevit</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">duHast pyRevit Extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ceilings_by_rooms.html">Ceilings By Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cloud_guids.html">GUIDS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collectors.html">Data Collectors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_compare.html">Compare</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_docmanager.html">docManager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_pdf_dwg.html">PDF and DWG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_at_the_library.html">At The Library</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_catalogue_files.html">Catalogue Files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_change_category.html">Change Category</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_force_update.html">Force Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_io.html">Family IO — Load and Save</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_reload.html">Reload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_rename.html">Rename Families</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_reports.html">Family Reports</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_swap.html">Swap Families</a></li>
+<li class="toctree-l4"><a class="reference internal" href="grids.html">Grids</a></li>
+<li class="toctree-l4"><a class="reference internal" href="levels.html">Levels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="purge_unused.html">Purge Unused</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_area_by_room.html">Verify Push It Area</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_get_a_room.html">Get A Room!</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_main.html">Push It!</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_place_revit_rooms.html">Place Revit Rooms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_stats.html">PushIt Stats</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_swap_dimensions.html">Swap Width And Depth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="roommate.html">RoomMate Export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="view_templates_import_export.html">View Templates — Import and Export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="view_templates_modify.html">View Templates — Modify</a></li>
+<li class="toctree-l4"><a class="reference internal" href="views_schedules.html">Schedules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="walls_by_rooms.html">Walls By Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="walls_facade_opening.html">Facade Opening To Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="warnings_highlight.html">Highlight Warnings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="warnings_solve.html">Solve Warnings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#apps">Apps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../revit_apps/index.html">Revit Application UI Guides</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/samples/pyRevit/readme.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-pyrevit-extension">
+<h1>duHast pyRevit Extension<a class="headerlink" href="#duhast-pyrevit-extension" title="Permalink to this heading">¶</a></h1>
+<p>A pyRevit toolbar extension for Revit, providing automation tools for BIM workflows across
+family management, export, view management, model maintenance, and more.</p>
+<hr class="docutils" />
+<section id="toolbar-panels">
+<h2>Toolbar Panels<a class="headerlink" href="#toolbar-panels" title="Permalink to this heading">¶</a></h2>
+<p>Panels and button groups are listed in <strong>ribbon order</strong>, matching the extension’s bundle
+layouts. Names are the labels shown in Revit.</p>
+<section id="about">
+<h3>About<a class="headerlink" href="#about" title="Permalink to this heading">¶</a></h3>
+<p>Reference links. Neither button touches the model.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p></p></th>
+<th class="head"><p>Button Group</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/About.panel/About.pulldown/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="about.html"><span class="std std-doc">About</span></a></p></td>
+<td><p>Open the extension licence on GitHub, or the Icons8 site the icons come from</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="cloud">
+<h3>Cloud<a class="headerlink" href="#cloud" title="Permalink to this heading">¶</a></h3>
+<p>Tools for working with cloud-hosted Revit models.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p></p></th>
+<th class="head"><p>Button Group</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Cloud.panel/GUIDS.pushbutton/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="cloud_guids.html"><span class="std std-doc">GUIDS</span></a></p></td>
+<td><p>Retrieve cloud project and model GUIDs for the model and all its links, for Revit Batch Processor task files</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="grids-and-levels">
+<h3>Grids And Levels<a class="headerlink" href="#grids-and-levels" title="Permalink to this heading">¶</a></h3>
+<p>Tools for controlling grid bubble and level header visibility, and 2D/3D extent behaviour, in
+the active view.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p></p></th>
+<th class="head"><p>Button Group</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Grids.pulldown/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="grids.html"><span class="std std-doc">Grids</span></a></p></td>
+<td><p>Show or toggle grid bubbles at either end, switch grids to 2D, extend grids to the view crop, propagate grid setup to other plan views</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Levels.pulldown/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="levels.html"><span class="std std-doc">Levels</span></a></p></td>
+<td><p>Show or toggle level headers at either end, switch levels to 2D</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="view-templates">
+<h3>View Templates<a class="headerlink" href="#view-templates" title="Permalink to this heading">¶</a></h3>
+<p>Tools for propagating and transferring view template settings, filters and colour schemes.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p></p></th>
+<th class="head"><p>Button Group</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/View%20Templates.panel/Modify.pulldown/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="view_templates_modify.html"><span class="std std-doc">Modify</span></a></p></td>
+<td><p>Propagate filter and category overrides from a source view template to many others; delete filters from templates</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/View%20Templates.panel/Import%20Export.pulldown/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="view_templates_import_export.html"><span class="std std-doc">Import Export</span></a></p></td>
+<td><p>Export and import view template overrides and view filters as JSON, and colour fill scheme values as CSV</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="views">
+<h3>Views<a class="headerlink" href="#views" title="Permalink to this heading">¶</a></h3>
+<p>Tools for managing Revit schedules on sheets and in views.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p></p></th>
+<th class="head"><p>Button Group</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Views.panel/Schedules.pulldown/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="views_schedules.html"><span class="std std-doc">Schedules</span></a></p></td>
+<td><p>Manage column widths; report and fix schedule segment overlaps on sheets; export, extract and import Room: Number filter values</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="purge-unused">
+<h3>Purge Unused<a class="headerlink" href="#purge-unused" title="Permalink to this heading">¶</a></h3>
+<p>Tools to remove unused elements from the model. Every tool asks what to remove before
+deleting anything.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p></p></th>
+<th class="head"><p>Button Group</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Purge%20Unused.panel/Purge.pulldown/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="purge_unused.html"><span class="std std-doc">Purge</span></a></p></td>
+<td><p>Purge unused line styles, fill patterns, line patterns, shared parameters, filters, legends, schedules, view templates and unplaced views</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="warnings">
+<h3>Warnings<a class="headerlink" href="#warnings" title="Permalink to this heading">¶</a></h3>
+<p>Tools for resolving and locating common Revit warnings on rooms, areas and annotation.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p></p></th>
+<th class="head"><p>Button Group</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Warnings.panel/Solve%20Warnings.pulldown/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="warnings_solve.html"><span class="std std-doc">Solve Warnings</span></a></p></td>
+<td><p>Fix room tags outside rooms, duplicate marks, and overlapping area or room separation lines</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Warnings.panel/Highlight%20Warnings.pulldown/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="warnings_highlight.html"><span class="std std-doc">Highlight Warnings</span></a></p></td>
+<td><p>Report area and room separation lines carrying warnings, and colour-highlight them in the active view</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="families">
+<h3>Families<a class="headerlink" href="#families" title="Permalink to this heading">¶</a></h3>
+<p>Tools for loading, saving, renaming, swapping and reporting on Revit families and type
+catalogue files.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p></p></th>
+<th class="head"><p>Button Group</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/Reload.pushbutton/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="families_reload.html"><span class="std std-doc">Reload</span></a></p></td>
+<td><p>Reload families from a library folder, with match-status filtering</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/Rename.pulldown/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="families_rename.html"><span class="std std-doc">Rename</span></a></p></td>
+<td><p>Rename loaded families and types, or rename <code class="docutils literal notranslate"><span class="pre">.rfa</span></code> files in a library folder, from a CSV</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/IO.pulldown/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="families_io.html"><span class="std std-doc">IO</span></a></p></td>
+<td><p>Load families from a folder into the project, or save loaded families out to a folder</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/CatalogueFiles.pulldown/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="families_catalogue_files.html"><span class="std std-doc">CatalogueFiles</span></a></p></td>
+<td><p>Export and clean type catalogue files; strip a family back to a single catalogue placeholder type</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/ForceUpdate.pushbutton/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="families_force_update.html"><span class="std std-doc">Force Update</span></a></p></td>
+<td><p>Force Revit to detect a family as changed when source files have been overwritten</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/ChangeFamilyCategory.pushbutton/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="families_change_category.html"><span class="std std-doc">Change Category</span></a></p></td>
+<td><p>Reassign the open family to a different Revit category, preserving subcategories</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/Reports.pulldown/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="families_reports.html"><span class="std std-doc">Reports</span></a></p></td>
+<td><p>Report on and compare family libraries and projects, via XML part atom exports</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/SwapFamilies.pulldown/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="families_swap.html"><span class="std std-doc">SwapFamilies</span></a></p></td>
+<td><p>Replace family instances with a different type, by CSV directive folder, selection or picking</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/AtTheLibrary.pushbutton/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="families_at_the_library.html"><span class="std std-doc">At The Library</span></a></p></td>
+<td><p>Open the AtTheLibrary tool for managing shared type catalogue parameters</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="ceilings">
+<h3>Ceilings<a class="headerlink" href="#ceilings" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p></p></th>
+<th class="head"><p>Button Group</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Ceilings.panel/CeilingsByRooms.pushbutton/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="ceilings_by_rooms.html"><span class="std std-doc">Ceilings By Room</span></a></p></td>
+<td><p>Create a ceiling matching the boundary of each selected room</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="walls">
+<h3>Walls<a class="headerlink" href="#walls" title="Permalink to this heading">¶</a></h3>
+<p>Tools that relate walls and facade openings back to the rooms they bound.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p></p></th>
+<th class="head"><p>Button Group</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Walls.panel/WallsByRooms.pushbutton/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="walls_by_rooms.html"><span class="std std-doc">Walls By Room</span></a></p></td>
+<td><p>Write the room number onto the walls bounding each selected room</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Walls.panel/FacadeOpeningToRoom.pushbutton/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="walls_facade_opening.html"><span class="std std-doc">Facade Opening To Room</span></a></p></td>
+<td><p>Report external wall and window opening areas per room to CSV</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="pushit">
+<h3>PushIt<a class="headerlink" href="#pushit" title="Permalink to this heading">¶</a></h3>
+<p>Tools for managing mock rooms — room-like families that carry room data — and the data pushed
+into them.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p></p></th>
+<th class="head"><p>Button Group</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/PushIt.panel/PushIt.pushbutton/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="pushit_main.html"><span class="std std-doc">Push It!</span></a></p></td>
+<td><p>Open the PushIt application for loading room data and pushing it into mock rooms</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/PushIt.panel/GetARoom.splitbutton/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="pushit_get_a_room.html"><span class="std std-doc">Get A Room!</span></a></p></td>
+<td><p>Build mock room families from filled regions; set the family output directory</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/PushIt.panel/SwapWidthAndDepth.pushbutton/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="pushit_swap_dimensions.html"><span class="std std-doc">Swap Width And Depth</span></a></p></td>
+<td><p>Swap the width and depth values on picked mock rooms and rotate them 90 degrees</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/PushIt.panel/Stats.pulldown/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="pushit_stats.html"><span class="std std-doc">Stats</span></a></p></td>
+<td><p>Report mock room counts by family, creator and owner; flag IDs duplicated across design sets</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/PushIt.panel/PlaceRevitRooms.pushbutton/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="pushit_place_revit_rooms.html"><span class="std std-doc">Place Revit Rooms</span></a></p></td>
+<td><p>Create native Revit rooms at the locations of mock rooms, read from this model or a link</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/PushIt.panel/Area%20By%20Room.pushbutton/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="pushit_area_by_room.html"><span class="std std-doc">Verify Push It Area</span></a></p></td>
+<td><p>Measure mock rooms with temporary Revit rooms and write the area back onto them</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="export">
+<h3>Export<a class="headerlink" href="#export" title="Permalink to this heading">¶</a></h3>
+<p>Tools for exporting sheets, checking exports, and syncing document data.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p></p></th>
+<th class="head"><p>Button Group</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Export.panel/PDF_DWG.splitbutton/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="export_pdf_dwg.html"><span class="std std-doc">PDF and DWG</span></a></p></td>
+<td><p>Export sheets to PDF and/or DWG with configurable naming rules and print sets</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Export.panel/Compare.pushbutton/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="export_compare.html"><span class="std std-doc">Compare</span></a></p></td>
+<td><p>Check the sheets in a Revit schedule against the PDF files in a folder</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Export.panel/docManager.pulldown/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="export_docmanager.html"><span class="std std-doc">docManager</span></a></p></td>
+<td><p>Sync sheets and revisions from the model to a Document Manager database; configure document numbering</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="data">
+<h3>Data<a class="headerlink" href="#data" title="Permalink to this heading">¶</a></h3>
+<p>Scripts for exporting model data to file for reporting and audit purposes.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p></p></th>
+<th class="head"><p>Button Group</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/Data.panel/Collectors.pulldown/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="data_collectors.html"><span class="std std-doc">Collectors</span></a></p></td>
+<td><p>Export rooms, spaces, sheets, ceilings, floors, doors, levels and placed items to JSON — from the active model and its Revit links</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="roommate">
+<h3>RoomMate<a class="headerlink" href="#roommate" title="Permalink to this heading">¶</a></h3>
+<p>Integration with a local RoomMate server.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p></p></th>
+<th class="head"><p>Button Group</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><img src="Extensions/duHast-2025.extension/duHast.tab/RoomMate.panel/RoomMateRooms.pushbutton/Icon.png" width="20" alt=""></p></td>
+<td><p><a class="reference internal" href="roommate.html"><span class="std std-doc">Export</span></a></p></td>
+<td><p>Push room and door data from the model and its links to a local RoomMate server</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<hr class="docutils" />
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Install <a class="reference external" href="https://github.com/pyrevitlabs/pyRevit">pyRevit</a> if not already installed.</p></li>
+<li><p>Copy the extension folder to your pyRevit extensions directory, or add it via pyRevit
+settings.</p></li>
+<li><p>Restart Revit — the <strong>duHast</strong> tab will appear in the ribbon.</p></li>
+<li><p>Refer to the individual docs linked above for prerequisites and configuration before first
+use.</p></li>
+</ol>
+</section>
+<section id="before-you-run-a-tool">
+<h2>Before you run a tool<a class="headerlink" href="#before-you-run-a-tool" title="Permalink to this heading">¶</a></h2>
+<p>Three things decide whether a button will work at all. Each doc repeats the ones that apply
+to it, but they are worth knowing up front.</p>
+<p><strong>Some tools only run on a family open in the Family Editor.</strong> They exit with “This is not a
+family document.” if run from a project: <a class="reference internal" href="families_change_category.html"><span class="std std-doc">Change Category</span></a>,
+<a class="reference internal" href="families_force_update.html"><span class="std std-doc">Force Update</span></a> and all three
+<a class="reference internal" href="families_catalogue_files.html"><span class="std std-doc">Catalogue Files</span></a> tools.</p>
+<p><strong>Some tools store their settings in the Revit model</strong> and refuse to start until a Settings
+button has been run on that model: <a class="reference internal" href="export_pdf_dwg.html"><span class="std std-doc">PDF/DWG Export</span></a>,
+<a class="reference internal" href="export_docmanager.html"><span class="std std-doc">docManager</span></a> and <a class="reference internal" href="pushit_get_a_room.html"><span class="std std-doc">Get A Room!</span></a>. Settings are held
+in an extensible schema, so they travel with the file but do not travel between files.</p>
+<p><strong>Some tools open a .NET window</strong> loaded from the extension’s <code class="docutils literal notranslate"><span class="pre">bin</span></code> folder at run time. If
+that folder is missing or incomplete the button fails immediately with a message about the
+bin directory. This applies to <a class="reference internal" href="pushit_main.html"><span class="std std-doc">Push It!</span></a>,
+<a class="reference internal" href="families_at_the_library.html"><span class="std std-doc">At The Library</span></a>, <a class="reference internal" href="families_reload.html"><span class="std std-doc">Reload</span></a>,
+<a class="reference internal" href="export_pdf_dwg.html"><span class="std std-doc">PDF/DWG Export</span></a> and <a class="reference internal" href="export_docmanager.html"><span class="std std-doc">docManager</span></a>.</p>
+<p>A few tools are also driven by constants edited in the extension’s <code class="docutils literal notranslate"><span class="pre">lib</span></code> folder rather than by
+a dialog — see <a class="reference internal" href="walls_facade_opening.html"><span class="std std-doc">Facade Opening To Room</span></a>,
+<a class="reference internal" href="ceilings_by_rooms.html"><span class="std std-doc">Ceilings By Room</span></a> and <a class="reference internal" href="families_reports.html"><span class="std std-doc">Reports</span></a>.</p>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Revit 2025 or later</strong> — the extension declares <code class="docutils literal notranslate"><span class="pre">min_revit_ver:</span> <span class="pre">2025</span></code>, with engines
+configured for 2025 and 2026.</p></li>
+<li><p>pyRevit (latest stable version recommended).</p></li>
+<li><p>duHast Python library — bundled in the extension under <code class="docutils literal notranslate"><span class="pre">lib/duHast</span></code>.</p></li>
+<li><p>The extension’s <code class="docutils literal notranslate"><span class="pre">bin</span></code> folder, for the tools that open a .NET window.</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="../index.html" accesskey="U">Samples</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="index.html" >pyRevit</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                duHast pyRevit Extension
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

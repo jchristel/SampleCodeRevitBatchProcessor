@@ -170,10 +170,82 @@ that case.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Export.to_data_item.get_authored_level_id">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Export.to_data_item.</span></span><span class="sig-name descname"><span class="pre">get_authored_level_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">revit_family_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Export.to_data_item.get_authored_level_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>The level the MODELLER assigned to this instance, or None when it has none.</p>
+<p>Tried before any geometric guess, because it is an answer rather than an
+inference: the modeller stated it, it is what the Properties palette and
+every schedule show, and it is what a reader comparing an export against
+Revit will check it against.</p>
+<p>Three sources, in the order Revit itself resolves them:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">FamilyInstance.LevelId</span></code> - the association a level-hosted instance has.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">FAMILY_LEVEL_PARAM</span></code> - the “Level” parameter.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SCHEDULE_LEVEL_PARAM</span></code> / <code class="docutils literal notranslate"><span class="pre">INSTANCE_SCHEDULE_ONLY_LEVEL_PARAM</span></code> - the
+“Schedule Level” a face-hosted or unhosted family carries instead, which
+is the only one of the three that some furniture families have.</p></li>
+</ol>
+<p>Each is guarded rather than tested for availability: the parameters are not
+present on every category, and an older API may not define the last id at
+all.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>revit_family_instance</strong> (<em>Autodesk.Revit.DB.FamilyInstance</em>) – A placed Revit family instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The level’s element id, or None.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Export.to_data_item.get_item_level_data">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Export.to_data_item.</span></span><span class="sig-name descname"><span class="pre">get_item_level_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_family_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Export.to_data_item.get_item_level_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>The level an item belongs to: the authored one where there is one, the
+nearest level below its geometry otherwise.</p>
+<p><strong>Authored first, geometry only as a fallback.</strong> The bounding box walk below
+was the only rule for a while, and it is wrong whenever a model carries
+levels the item is not on - which real models do constantly. Measured on one
+hospital job: of 15,070 items in a single linked model, 9,186 were exported
+onto a level they were not assigned to, because the file carries reference
+levels mis-elevated onto other storeys’ heights and the walk picked whichever
+sorted first. The modeller’s own answer was correct for every one of them,
+and was already being exported in <code class="docutils literal notranslate"><span class="pre">instance_properties</span></code> while the derived
+one went into <code class="docutils literal notranslate"><span class="pre">level</span></code>.</p>
+<p>Geometry still answers for an item that states no level at all - a
+face-hosted family on a wall or a ceiling - which is what the walk was
+written for and the reason it stays.</p>
+<p><code class="docutils literal notranslate"><span class="pre">offset_from_level</span></code> is measured from the solid geometry either way, so it
+keeps meaning “how far this item sits above the level it belongs to” rather
+than changing definition with the branch taken.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revit_family_instance</strong> (<em>Autodesk.Revit.DB.FamilyInstance</em>) – A placed Revit family instance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A populated data level instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Data.Objects.Collectors.Properties.html#duHast.Data.Objects.Collectors.Properties.data_level.DataLevel" title="duHast.Data.Objects.Collectors.Properties.data_level.DataLevel"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLevel</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.Export.to_data_item.get_level_data_by_bounding_box">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Export.to_data_item.</span></span><span class="sig-name descname"><span class="pre">get_level_data_by_bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_family_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Export.to_data_item.get_level_data_by_bounding_box" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determines the nearest level below a family instance by comparing the lowest
 Z coordinate of its solid geometry against the ascending list of project levels.</p>
+<p><strong>The fallback, not the rule.</strong> <code class="docutils literal notranslate"><span class="pre">get_item_level_data</span></code> is the entry point
+and prefers the level the modeller assigned; this answers only for an item
+that states none. Called directly it will disagree with the Properties
+palette on any model carrying levels its items are not placed on.</p>
 <p>Algorithm:</p>
 <ol class="arabic simple">
 <li><p>Compute the solid-based bounding box of the instance.</p></li>
@@ -204,6 +276,47 @@ levels are found in the document.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Export.to_data_item.get_footprint_polygons">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Export.to_data_item.</span></span><span class="sig-name descname"><span class="pre">get_footprint_polygons</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_family_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Export.to_data_item.get_footprint_polygons" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the item’s footprint as the list of polygons DataItem.polygon takes,
+or an empty list when there is no solid geometry to measure.</p>
+<p>ORIENTED, so an instance placed at an angle keeps its angle. The world aligned
+alternative is the right answer to “what extents does this occupy” and the wrong
+one to “what shape is this”: a desk rotated thirty degrees would come out as an
+upright rectangle lying across it. That cannot be corrected afterwards, since an
+axis aligned box no longer records the angle, so it has to be measured in the
+instance’s own frame in the first place.</p>
+<p>Sub-components are included, which is where this parts company with doors and
+windows. A casework run’s handles and a fixture’s tap are SHARED nested
+families: separate elements, absent from their host’s own geometry. Measuring
+the host alone returns the carcass, which is not the footprint of the thing on
+the schedule. A door’s nested content is the opposite case - its hardware is not
+the door - which is why the flag is per caller and not a default.</p>
+<p>Decimal feet, via get_point_as_doubles, matching doors, rooms and the rest of
+the polygon geometry. Deliberately NOT the millimetres location_point carries:
+the two units sit side by side in one record, and the polygon is the one that
+has to line up with every other footprint.</p>
+<p>An empty list is an ordinary state rather than a failure, and the reason this
+returns one where to_data_door rejects the element outright. A family with no 3D
+geometry still has a location, a level and its properties, all worth exporting;
+a consumer draws it at its insertion point instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revit_family_instance</strong> (<em>Autodesk.Revit.DB.FamilyInstance</em>) – A placed Revit family instance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of polygon instances, empty when nothing could be measured.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="duHast.Data.Objects.Collectors.Properties.Geometry.html#duHast.Data.Objects.Collectors.Properties.Geometry.geometry_polygon_2.DataGeometryPolygon2" title="duHast.Data.Objects.Collectors.Properties.Geometry.geometry_polygon_2.DataGeometryPolygon2"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometryPolygon2</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.Export.to_data_item.populate_data_item_object">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Export.to_data_item.</span></span><span class="sig-name descname"><span class="pre">populate_data_item_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_family_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Export.to_data_item.populate_data_item_object" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a <a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_item.DataItem" title="duHast.Data.Objects.Collectors.data_item.DataItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataItem</span></code></a> populated from a single placed family instance.</p>
@@ -213,6 +326,7 @@ levels are found in the document.</p>
 <li><p>type name and type parameters</p></li>
 <li><p>level name, level id, and offset from level</p></li>
 <li><p>location point (x/y/z in mm) and rotation matrix</p></li>
+<li><p>footprint polygon (oriented, in decimal feet), when the family has solids</p></li>
 <li><p>phasing (created / demolished)</p></li>
 <li><p>design set / option membership</p></li>
 <li><p>model name</p></li>
@@ -237,7 +351,7 @@ levels are found in the document.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.Export.to_data_item.get_all_item_data">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Export.to_data_item.</span></span><span class="sig-name descname"><span class="pre">get_all_item_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Export.to_data_item.get_all_item_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Export.to_data_item.</span></span><span class="sig-name descname"><span class="pre">get_all_item_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Export.to_data_item.get_all_item_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Collects all placed <code class="xref py py-class docutils literal notranslate"><span class="pre">Autodesk.Revit.DB.FamilyInstance</span></code> elements
 belonging to the given list of categories and returns a list of
 <a class="reference internal" href="duHast.Data.Objects.Collectors.html#duHast.Data.Objects.Collectors.data_item.DataItem" title="duHast.Data.Objects.Collectors.data_item.DataItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataItem</span></code></a> objects.</p>
@@ -248,6 +362,10 @@ belonging to the given list of categories and returns a list of
 <li><p><strong>categories</strong> (<em>list</em><em>[</em><em>Autodesk.Revit.DB.BuiltInCategory</em><em>] or </em><em>None</em>) – List of <code class="xref py py-class docutils literal notranslate"><span class="pre">Autodesk.Revit.DB.BuiltInCategory</span></code> values
 to collect from.  Defaults to <code class="xref py py-data docutils literal notranslate"><span class="pre">DEFAULT_ITEM_CATEGORIES</span></code> when
 <em>None</em> is supplied.</p></li>
+<li><p><strong>level_ids</strong> (<em>list</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Only items on these levels (Revit level ids as integers) are converted, defaults to None (all
+items). An item is on the level its export reports, which is the level the modeller assigned
+(see get_authored_level_id) and, only where there is none, the one worked out from its geometry. The first
+is known before the (slow) conversion and skips it; the second can only be known after it.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

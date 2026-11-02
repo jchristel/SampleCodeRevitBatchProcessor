@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Grids &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link rel="up" title="pyRevit" href="index.html" />
+    <link rel="next" title="Levels" href="levels.html" />
+    <link rel="prev" title="Swap Families" href="families_swap.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>Grids</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="levels.html" title="Levels" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="families_swap.html" title="Swap Families" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Samples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#flows">Flows</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#pyrevit">pyRevit</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">pyRevit</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="readme.html">duHast pyRevit Extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ceilings_by_rooms.html">Ceilings By Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cloud_guids.html">GUIDS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collectors.html">Data Collectors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_compare.html">Compare</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_docmanager.html">docManager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_pdf_dwg.html">PDF and DWG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_at_the_library.html">At The Library</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_catalogue_files.html">Catalogue Files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_change_category.html">Change Category</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_force_update.html">Force Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_io.html">Family IO — Load and Save</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_reload.html">Reload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_rename.html">Rename Families</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_reports.html">Family Reports</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_swap.html">Swap Families</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Grids</a></li>
+<li class="toctree-l4"><a class="reference internal" href="levels.html">Levels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="purge_unused.html">Purge Unused</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_area_by_room.html">Verify Push It Area</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_get_a_room.html">Get A Room!</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_main.html">Push It!</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_place_revit_rooms.html">Place Revit Rooms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_stats.html">PushIt Stats</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_swap_dimensions.html">Swap Width And Depth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="roommate.html">RoomMate Export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="view_templates_import_export.html">View Templates — Import and Export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="view_templates_modify.html">View Templates — Modify</a></li>
+<li class="toctree-l4"><a class="reference internal" href="views_schedules.html">Schedules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="walls_by_rooms.html">Walls By Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="walls_facade_opening.html">Facade Opening To Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="warnings_highlight.html">Highlight Warnings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="warnings_solve.html">Solve Warnings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#apps">Apps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../revit_apps/index.html">Revit Application UI Guides</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/samples/pyRevit/grids.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="grids">
+<h1>Grids<a class="headerlink" href="#grids" title="Permalink to this heading">¶</a></h1>
+<p><strong>Panel:</strong> Grids And Levels | <strong>Menu:</strong> Grids</p>
+<img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Grids.pulldown/Icon.png" width="40" alt="button icon">
+<p>Tools for controlling grid bubble visibility and grid extents in the active view.</p>
+<p>All of these act on the <strong>active view</strong> only, and on the grids visible in it.</p>
+<hr class="docutils" />
+<section id="show-bubbles-start">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Grids.pulldown/All%200%20Bubbles%20On.pushbutton/Icon.png" width="24" alt="Show Bubbles Start icon"> Show Bubbles Start<a class="headerlink" href="#show-bubbles-start" title="Permalink to this heading">¶</a></h2>
+<p>Switches <strong>on</strong> the bubble at the start end (end 0) of every grid visible in the active view.
+It only turns bubbles on; it never turns one off.</p>
+</section>
+<hr class="docutils" />
+<section id="show-bubbles-end">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Grids.pulldown/All%201%20Bubbles%20On.pushbutton/Icon.png" width="24" alt="Show Bubbles End icon"> Show Bubbles End<a class="headerlink" href="#show-bubbles-end" title="Permalink to this heading">¶</a></h2>
+<p>Switches <strong>on</strong> the bubble at the finish end (end 1) of every grid visible in the active view.</p>
+</section>
+<hr class="docutils" />
+<section id="all-bubbles-off">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Grids.pulldown/All%20Bubbles%20Off.pushbutton/Icon.png" width="24" alt="All Bubbles Off icon"> All Bubbles Off<a class="headerlink" href="#all-bubbles-off" title="Permalink to this heading">¶</a></h2>
+<p>Hides the bubbles at <strong>both ends</strong> of every grid visible in the active view.</p>
+</section>
+<hr class="docutils" />
+<section id="all-grids-to-2d">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Grids.pulldown/All%202D.pushbutton/Icon.png" width="24" alt="All Grids to 2D icon"> All Grids to 2D<a class="headerlink" href="#all-grids-to-2d" title="Permalink to this heading">¶</a></h2>
+<p>Sets both ends of every grid visible in the active view to <strong>2D</strong>, so that extent and bubble
+changes made in this view no longer affect other views.</p>
+</section>
+<hr class="docutils" />
+<section id="toggle-bubbles-start">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Grids.pulldown/Toggle%200%20Bubbles%20By%20Selection.pushbutton/Icon.png" width="24" alt="Toggle Bubbles Start icon"> Toggle Bubbles Start<a class="headerlink" href="#toggle-bubbles-start" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="toggle-bubbles-end">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Grids.pulldown/Toggle%201%20Bubbles%20By%20Selection.pushbutton/Icon.png" width="24" alt="Toggle Bubbles End icon"> Toggle Bubbles End<a class="headerlink" href="#toggle-bubbles-end" title="Permalink to this heading">¶</a></h2>
+<p>Toggles the bubble at end 0 (Start) or end 1 (End) for <strong>grids you pick</strong>.</p>
+<p>Run the tool first — it starts a pick prompt (“Select Grids”) filtered to the Grids category.
+Pick the grids, finish the selection, and their bubbles at that end are flipped: on becomes
+off, off becomes on. There is no need to pre-select anything before launching.</p>
+</section>
+<hr class="docutils" />
+<section id="extend-grids">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Grids.pulldown/Extend%20Grids.pushbutton/Icon.png" width="24" alt="Extend Grids icon"> Extend Grids<a class="headerlink" href="#extend-grids" title="Permalink to this heading">¶</a></h2>
+<p>Extends linear grids in the active view out to the <strong>view’s crop box</strong>.</p>
+<p><strong>Requirements:</strong></p>
+<ul class="simple">
+<li><p>The active view must be a <strong>Floor Plan, Ceiling Plan or Area Plan</strong>.</p></li>
+<li><p>The view’s <strong>crop box must be enabled</strong> — the crop region is what the grids are extended to.</p></li>
+<li><p>Only linear grids are handled; arc grids are left alone.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="propagate-grids">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Grids%20And%20Levels.panel/Grids.pulldown/Propagate%20Grids.pushbutton/Icon.png" width="24" alt="Propagate Grids icon"> Propagate Grids<a class="headerlink" href="#propagate-grids" title="Permalink to this heading">¶</a></h2>
+<p>Copies grid bubble visibility and grid extents from the <strong>active view</strong> to views you select.</p>
+<p><strong>Workflow:</strong></p>
+<ol class="arabic simple">
+<li><p>Set the grid display up exactly as you want it in the source view.</p></li>
+<li><p>Run <strong>Propagate Grids</strong>.</p></li>
+<li><p>Select the target views from the list — entries are shown as <code class="docutils literal notranslate"><span class="pre">view</span> <span class="pre">name</span> <span class="pre">(view</span> <span class="pre">type)</span></code>.</p></li>
+</ol>
+<p><strong>Requirements:</strong></p>
+<ul class="simple">
+<li><p>The <strong>active view</strong> must be a Floor Plan, Ceiling Plan or Area Plan; the tool exits with an
+“Unsupported active view type” message otherwise.</p></li>
+<li><p>Only Floor Plans, Ceiling Plans and Area Plans are offered as targets. Sections, elevations
+and 3D views cannot be targeted.</p></li>
+</ul>
+<p>Progress is shown in a cancellable progress bar.</p>
+</section>
+<hr class="docutils" />
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Grids set to 3D share their extents across views. Run <strong>All Grids to 2D</strong> in a view first if
+you want changes there to stay local to it.</p></li>
+<li><p><strong>Propagate Grids</strong> is the efficient way to apply one grid setup across many plan views;
+the per-view tools above are for setting up that one source view.</p></li>
+<li><p>If a tool reports “No grids visible in view”, check the view’s crop, view range and category
+visibility — the tools only see grids the view actually shows.</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="../index.html" accesskey="U">Samples</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="index.html" >pyRevit</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                Grids
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

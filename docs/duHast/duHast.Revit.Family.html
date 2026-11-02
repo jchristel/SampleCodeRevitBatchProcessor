@@ -330,7 +330,10 @@
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.Export.html#module-duHast.Revit.Family.Export.to_data_item">duHast.Revit.Family.Export.to_data_item module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Export.html#duHast.Revit.Family.Export.to_data_item.get_location_data"><code class="docutils literal notranslate"><span class="pre">get_location_data()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Export.html#duHast.Revit.Family.Export.to_data_item.get_room_ids"><code class="docutils literal notranslate"><span class="pre">get_room_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Export.html#duHast.Revit.Family.Export.to_data_item.get_authored_level_id"><code class="docutils literal notranslate"><span class="pre">get_authored_level_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Export.html#duHast.Revit.Family.Export.to_data_item.get_item_level_data"><code class="docutils literal notranslate"><span class="pre">get_item_level_data()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Export.html#duHast.Revit.Family.Export.to_data_item.get_level_data_by_bounding_box"><code class="docutils literal notranslate"><span class="pre">get_level_data_by_bounding_box()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Export.html#duHast.Revit.Family.Export.to_data_item.get_footprint_polygons"><code class="docutils literal notranslate"><span class="pre">get_footprint_polygons()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Export.html#duHast.Revit.Family.Export.to_data_item.populate_data_item_object"><code class="docutils literal notranslate"><span class="pre">populate_data_item_object()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Export.html#duHast.Revit.Family.Export.to_data_item.get_all_item_data"><code class="docutils literal notranslate"><span class="pre">get_all_item_data()</span></code></a></li>
 </ul>
@@ -1027,6 +1030,351 @@ for use in NewFamilyInstance on a horizontal level / plane.</p>
 </dd></dl>
 
 </section>
+<section id="module-duHast.Revit.Family.family_instance_facts">
+<span id="duhast-revit-family-family-instance-facts-module"></span><h2>duHast.Revit.Family.family_instance_facts module<a class="headerlink" href="#module-duHast.Revit.Family.family_instance_facts" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-functions-around-data-storage-in-revit">
+<h3>This module contains a number of functions around data storage in Revit.<a class="headerlink" href="#this-module-contains-a-number-of-functions-around-data-storage-in-revit" title="Permalink to this heading">¶</a></h3>
+<p>Data storage can be used to project wide settings not associated with a specific element.</p>
+<p>Obsolete in Revit 2025 …</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_instance_facts.get_room_or_space_id">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_instance_facts.</span></span><span class="sig-name descname"><span class="pre">get_room_or_space_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">property_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_instance_facts.get_room_or_space_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the id of the room (or space) an instance points at in a phase.</p>
+<p>The phase indexed form of the property is reached through the CLR <a href="#id4"><span class="problematic" id="id5">get_</span></a> accessor, because instance.FromRoom[phase] binds
+to the parameterless property (current phase) on some versions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> (<em>Autodesk.Revit.DB.FamilyInstance</em>) – A placed family instance.</p></li>
+<li><p><strong>phase</strong> (<em>Autodesk.Revit.DB.Phase</em>) – The phase.</p></li>
+<li><p><strong>property_name</strong> (<em>str</em>) – ‘FromRoom’ or ‘ToRoom’ (wall hosted categories), ‘Room’ or ‘Space’ (an instance in one room or space).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The room or space id, None if the instance has none on that side (an external door is a normal case).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_instance_facts.get_family_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_instance_facts.</span></span><span class="sig-name descname"><span class="pre">get_family_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_instance_facts.get_family_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the name of the family an instance’s type belongs to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>Autodesk.Revit.DB.FamilyInstance</em>) – A placed family instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The family name, None if unreadable.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_instance_facts.get_host_info">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_instance_facts.</span></span><span class="sig-name descname"><span class="pre">get_host_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_instance_facts.get_host_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns what an instance is hosted on.</p>
+<p>FamilyInstance.Host is the host element (wall, floor, ceiling) and None for a level hosted instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>Autodesk.Revit.DB.FamilyInstance</em>) – A placed family instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary with keys ‘kind’ (the host’s category name), ‘id’ (int) and ‘face_hosted’ (bool); None when nothing hosts it.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_instance_facts.get_insertion_point">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_instance_facts.</span></span><span class="sig-name descname"><span class="pre">get_insertion_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_instance_facts.get_insertion_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the plan position (Revit internal units, feet) of an instance’s location point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>Autodesk.Revit.DB.FamilyInstance</em>) – A placed family instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary with keys ‘x’ and ‘y’; None if the instance has no location point.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_instance_facts.get_through_wall_normal">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_instance_facts.</span></span><span class="sig-name descname"><span class="pre">get_through_wall_normal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_instance_facts.get_through_wall_normal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the unit vector through the wall, from the from-room towards the to-room: the instance’s FacingOrientation projected to plan.</p>
+<p>The facing and not the host wall’s direction: Revit’s ToRoom follows the facing, so the two cannot disagree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>Autodesk.Revit.DB.FamilyInstance</em>) – A placed family instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary with keys ‘x’ and ‘y’; None if the facing has no plan component (a hatch in a floor).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_instance_facts.get_opening_placements">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_instance_facts.</span></span><span class="sig-name descname"><span class="pre">get_opening_placements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">built_in_category</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_instance_facts.get_opening_placements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns, per instance of a category, its room references in a phase, insertion point and through wall normal.</p>
+<p>One collector pass so the four facts describe the same instance. Each fact is read on its own: an unreadable room
+reference costs that reference and not the position or direction of the same instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>phase</strong> (<em>Autodesk.Revit.DB.Phase</em>) – The phase the room references are read in.</p></li>
+<li><p><strong>built_in_category</strong> (<em>Autodesk.Revit.DB.BuiltInCategory</em>) – The category, e.g. OST_Doors.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Instance id (int) mapped to {‘from_room’: int or None, ‘to_room’: int or None, ‘insertion_point’: dict or None, ‘normal’: dict or None}.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_instance_facts.get_nested_instance_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_instance_facts.</span></span><span class="sig-name descname"><span class="pre">get_nested_instance_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">built_in_category</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_instance_facts.get_nested_instance_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ids of the instances of a category that are a component of another instance of the same category
+(the leaf and hardware of a door that is modelled as a nested shared family).</p>
+<p>Only the immediate SuperComponent is tested, and it is the parent’s category that decides: a door hosting a window category
+sub component is left alone.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>built_in_category</strong> (<em>Autodesk.Revit.DB.BuiltInCategory</em>) – The category, e.g. OST_Doors.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The ids of the nested instances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>set of int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_instance_facts.get_item_facts">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_instance_facts.</span></span><span class="sig-name descname"><span class="pre">get_item_facts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">built_in_categories</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identify_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'room'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_instance_facts.get_item_facts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns, per family instance of the categories, the room or space it is in during a phase, its category name, family name and host.</p>
+<p>ONE spatial reference per instance: identify_by ‘room’ reads get_Room(phase), ‘space’ reads get_Space(phase) (a services model that
+holds spaces and no rooms). Never both, the walk is the slow half of an export. An instance whose lookup raises is recorded with no
+reference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>phase</strong> (<em>Autodesk.Revit.DB.Phase</em>) – The phase the reference is read in.</p></li>
+<li><p><strong>built_in_categories</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.BuiltInCategory</em>) – The categories to walk.</p></li>
+<li><p><strong>identify_by</strong> (<em>str</em>) – ‘room’ or ‘space’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – when identify_by is neither.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Instance id (int) mapped to {‘reference’: int or None, ‘category’: str or None, ‘family_name’: str or None, ‘host’: dict or None}.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_instance_facts.get_instances_by_room_id">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_instance_facts.</span></span><span class="sig-name descname"><span class="pre">get_instances_by_room_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">built_in_categories</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_instance_facts.get_instances_by_room_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the family instances of the categories grouped by the room they are in during a phase.</p>
+<p>An instance whose room can not be read, or which is in no room, is left out.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>phase</strong> (<em>Autodesk.Revit.DB.Phase</em>) – The phase the room is read in.</p></li>
+<li><p><strong>built_in_categories</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.BuiltInCategory</em>) – The categories to walk.</p></li>
+<li><p><strong>allowed_ids</strong> (<em>set</em><em> of </em><em>int</em><em> or </em><em>None</em>) – Only instances with these ids (int) are considered; None considers all.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Room id (int) mapped to the instances in it.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_instance_facts.count_instances_in_room">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_instance_facts.</span></span><span class="sig-name descname"><span class="pre">count_instances_in_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">built_in_categories</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_instance_facts.count_instances_in_room" title="Permalink to this definition">¶</a></dt>
+<dd><p>Counts the family instances of the categories that are in one room during a phase.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>room_id</strong> (<em>int</em>) – The room’s id.</p></li>
+<li><p><strong>phase</strong> (<em>Autodesk.Revit.DB.Phase</em>) – The phase the room is read in.</p></li>
+<li><p><strong>built_in_categories</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.BuiltInCategory</em>) – The categories to walk.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The number of instances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.family_instance_place">
+<span id="duhast-revit-family-family-instance-place-module"></span><h2>duHast.Revit.Family.family_instance_place module<a class="headerlink" href="#module-duHast.Revit.Family.family_instance_place" title="Permalink to this heading">¶</a></h2>
+<section id="id1">
+<h3>This module contains a number of functions around data storage in Revit.<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<p>Data storage can be used to project wide settings not associated with a specific element.</p>
+<p>Obsolete in Revit 2025 …</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_instance_place.get_nearest_wall_on_level">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_instance_place.</span></span><span class="sig-name descname"><span class="pre">get_nearest_wall_on_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reach</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_instance_place.get_nearest_wall_on_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the wall on a level whose location curve is nearest to a point, within a reach.</p>
+<p>The distance is measured in plan.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>level</strong> (<em>Autodesk.Revit.DB.Level</em>) – The level the wall is on.</p></li>
+<li><p><strong>point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The point (feet).</p></li>
+<li><p><strong>reach</strong> (<em>float</em>) – The largest distance accepted (feet).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The wall, None if there is none within the reach.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.Wall or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_instance_place.place_instance_on_level_without_transaction_wrapper">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_instance_place.</span></span><span class="sig-name descname"><span class="pre">place_instance_on_level_without_transaction_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_instance_place.place_instance_on_level_without_transaction_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Places a level based family instance and turns it about the vertical axis through its location.</p>
+<p>Needs to be called within an open transaction. The symbol is activated if it is not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>symbol</strong> (<em>Autodesk.Revit.DB.FamilySymbol</em>) – The family symbol.</p></li>
+<li><p><strong>point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The location (feet).</p></li>
+<li><p><strong>level</strong> (<em>Autodesk.Revit.DB.Level</em>) – The level.</p></li>
+<li><p><strong>rotation</strong> (<em>float</em>) – Counter clockwise angle in radians; 0 does not rotate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The new instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FamilyInstance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_instance_place.place_instance_on_nearest_wall_without_transaction_wrapper">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_instance_place.</span></span><span class="sig-name descname"><span class="pre">place_instance_on_nearest_wall_without_transaction_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reach</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_instance_place.place_instance_on_nearest_wall_without_transaction_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Places a wall hosted family instance on the wall nearest to a point.</p>
+<p>Needs to be called within an open transaction. The symbol is activated if it is not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>symbol</strong> (<em>Autodesk.Revit.DB.FamilySymbol</em>) – The family symbol.</p></li>
+<li><p><strong>point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The location (feet).</p></li>
+<li><p><strong>level</strong> (<em>Autodesk.Revit.DB.Level</em>) – The level.</p></li>
+<li><p><strong>reach</strong> (<em>float</em>) – How far from the point a wall may be (feet).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – when there is no wall within the reach.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The new instance.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Autodesk.Revit.DB.FamilyInstance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_instance_place.flip_facing_towards_without_transaction_wrapper">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_instance_place.</span></span><span class="sig-name descname"><span class="pre">flip_facing_towards_without_transaction_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction_y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_instance_place.flip_facing_towards_without_transaction_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flips a hosted instance whose facing points away from a plan direction. Does nothing if it can not be flipped.</p>
+<p>Needs to be called within an open transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> (<em>Autodesk.Revit.DB.FamilyInstance</em>) – The family instance.</p></li>
+<li><p><strong>direction_x</strong> (<em>float</em>) – X component of the wanted direction.</p></li>
+<li><p><strong>direction_y</strong> (<em>float</em>) – Y component of the wanted direction.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the instance was flipped.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_instance_place.set_created_phase_without_transaction_wrapper">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_instance_place.</span></span><span class="sig-name descname"><span class="pre">set_created_phase_without_transaction_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_instance_place.set_created_phase_without_transaction_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the phase an element is created in.</p>
+<p>Needs to be called within an open transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element.</p></li>
+<li><p><strong>phase</strong> (<em>Autodesk.Revit.DB.Phase</em>) – The phase.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the phase was set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Family.family_instance_translate">
 <span id="duhast-revit-family-family-instance-translate-module"></span><h2>duHast.Revit.Family.family_instance_translate module<a class="headerlink" href="#module-duHast.Revit.Family.family_instance_translate" title="Permalink to this heading">¶</a></h2>
 <section id="revit-family-instance-translation-functions">
@@ -1443,8 +1791,8 @@ target_parameter: The parameter to check in formulas.</p>
 </section>
 <section id="module-duHast.Revit.Family.family_reload_single">
 <span id="duhast-revit-family-family-reload-single-module"></span><h2>duHast.Revit.Family.family_reload_single module<a class="headerlink" href="#module-duHast.Revit.Family.family_reload_single" title="Permalink to this heading">¶</a></h2>
-<section id="id1">
-<h3>Helper functions to load or reload families<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<section id="id2">
+<h3>Helper functions to load or reload families<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_reload_single.reload_family">
@@ -1793,6 +2141,149 @@ loaded family types accordingly.</p>
 </dd></dl>
 
 </section>
+<section id="module-duHast.Revit.Family.family_symbol_lookup">
+<span id="duhast-revit-family-family-symbol-lookup-module"></span><h2>duHast.Revit.Family.family_symbol_lookup module<a class="headerlink" href="#module-duHast.Revit.Family.family_symbol_lookup" title="Permalink to this heading">¶</a></h2>
+<p>Title blocks, tags and other annotation symbols are chosen by a person from a list of “Family : Type”
+names; these functions turn such a name back into the Revit symbol.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_symbol_lookup.get_symbol_full_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_symbol_lookup.</span></span><span class="sig-name descname"><span class="pre">get_symbol_full_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_symbol_lookup.get_symbol_full_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the name of a family symbol as “Family : Type”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>symbol</strong> (<em>Autodesk.Revit.DB.FamilySymbol</em>) – A family symbol (a type).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The family name and the type name joined by “ : “.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_symbol_lookup.get_family_symbols_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_symbol_lookup.</span></span><span class="sig-name descname"><span class="pre">get_family_symbols_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">built_in_category</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_symbol_lookup.get_family_symbols_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all family symbols (types) of a built in category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>built_in_category</strong> (<em>Autodesk.Revit.DB.BuiltInCategory</em>) – The category, for example BuiltInCategory.OST_TitleBlocks</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of family symbols.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.FamilySymbol</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_symbol_lookup.get_symbol_full_names_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_symbol_lookup.</span></span><span class="sig-name descname"><span class="pre">get_symbol_full_names_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">built_in_category</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_symbol_lookup.get_symbol_full_names_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the sorted, distinct “Family : Type” names of all symbols of a category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>built_in_category</strong> (<em>Autodesk.Revit.DB.BuiltInCategory</em>) – The category, for example BuiltInCategory.OST_RoomTags</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sorted names.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_symbol_lookup.get_family_symbol_by_full_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_symbol_lookup.</span></span><span class="sig-name descname"><span class="pre">get_family_symbol_by_full_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">built_in_category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_symbol_lookup.get_family_symbol_by_full_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the family symbol of a category whose name is “Family : Type” (case and surrounding white space are ignored).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>built_in_category</strong> (<em>Autodesk.Revit.DB.BuiltInCategory</em>) – The category the symbol belongs to.</p></li>
+<li><p><strong>full_name</strong> (<em>str</em>) – The name as “Family : Type”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The symbol, or None if there is none by that name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FamilySymbol or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_symbol_lookup.get_title_block_symbol_by_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_symbol_lookup.</span></span><span class="sig-name descname"><span class="pre">get_title_block_symbol_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_symbol_lookup.get_title_block_symbol_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the title block symbol with the name “Family : Type”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>full_name</strong> (<em>str</em>) – The name as “Family : Type”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The title block symbol, or None if the model has none by that name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FamilySymbol or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_symbol_lookup.activate_symbol_without_transaction_wrapper">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_symbol_lookup.</span></span><span class="sig-name descname"><span class="pre">activate_symbol_without_transaction_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_symbol_lookup.activate_symbol_without_transaction_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Activates a family symbol if it is not active, which Revit requires before an instance of it can be placed.</p>
+<p>Activating changes the model: this needs to run inside a transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>symbol</strong> (<em>Autodesk.Revit.DB.FamilySymbol</em>) – The symbol to activate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the symbol was activated by this call, False if it was active already.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_symbol_lookup.get_family_symbols_by_names">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_symbol_lookup.</span></span><span class="sig-name descname"><span class="pre">get_family_symbols_by_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_symbol_lookup.get_family_symbols_by_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns every family symbol in the model keyed by lower case family name and type name.</p>
+<p>The first symbol wins when two share both names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(family name, type name) in lower case mapped to the symbol.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Family.family_types">
 <span id="duhast-revit-family-family-types-module"></span><h2>duHast.Revit.Family.family_types module<a class="headerlink" href="#module-duHast.Revit.Family.family_types" title="Permalink to this heading">¶</a></h2>
 <section id="revit-family-type-helper-functions">
@@ -2063,8 +2554,8 @@ XML where created by Revit API PartAtomExport method.</p>
 </section>
 <section id="module-duHast.Revit.Family.family_types_model_get_data_from_xml">
 <span id="duhast-revit-family-family-types-model-get-data-from-xml-module"></span><h2>duHast.Revit.Family.family_types_model_get_data_from_xml module<a class="headerlink" href="#module-duHast.Revit.Family.family_types_model_get_data_from_xml" title="Permalink to this heading">¶</a></h2>
-<section id="id2">
-<h3>A module with helper function around family types data extraction using Revit xml export functions.<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<section id="id3">
+<h3>A module with helper function around family types data extraction using Revit xml export functions.<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
 <p>Supports 2 methods of data extraction:</p>
 <ul class="simple">
 <li><p>from family file on disk</p></li>

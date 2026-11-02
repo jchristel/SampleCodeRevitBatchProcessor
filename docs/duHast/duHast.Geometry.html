@@ -189,18 +189,6 @@
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.Geometry.bounding_box_2.BoundingBox2.ratio">
-<span class="sig-name descname"><span class="pre">ratio</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.bounding_box_2.BoundingBox2.ratio" title="Permalink to this definition">¶</a></dt>
-<dd><p>The length ration of the bounding box edges by dividing length in X by length in Y direction</p>
-<dl class="simple">
-<dt>Raises:</dt><dd><p>ValueError: Division by 0 if length of Y is 0</p>
-</dd>
-<dt>Returns:</dt><dd><p>float: Edge ration</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 </section>
@@ -211,7 +199,7 @@
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Geometry.bounding_box_3.BoundingBox3">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Geometry.bounding_box_3.</span></span><span class="sig-name descname"><span class="pre">BoundingBox3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.bounding_box_3.BoundingBox3" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Geometry.bounding_box_3.</span></span><span class="sig-name descname"><span class="pre">BoundingBox3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.bounding_box_3.BoundingBox3" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#duHast.Geometry.bounding_box_base.BoundingBoxBase" title="duHast.Geometry.bounding_box_base.BoundingBoxBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">BoundingBoxBase</span></code></a></p>
 <p>A 3D bounding box class.</p>
 <dl class="field-list simple">
@@ -305,6 +293,13 @@
 <section id="a-bounding-box-base-class">
 <h3>A bounding box base class.<a class="headerlink" href="#a-bounding-box-base-class" title="Permalink to this heading">¶</a></h3>
 </section>
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Geometry.bounding_box_base.ZERO_LENGTH_TOLERANCE">
+<span class="sig-prename descclassname"><span class="pre">duHast.Geometry.bounding_box_base.</span></span><span class="sig-name descname"><span class="pre">ZERO_LENGTH_TOLERANCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1e-09</span></em><a class="headerlink" href="#duHast.Geometry.bounding_box_base.ZERO_LENGTH_TOLERANCE" title="Permalink to this definition">¶</a></dt>
+<dd><p>A length at or below this counts as zero. Absolute, in the units of the box, since
+a relative comparison never reports a very small number as close to zero.</p>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Geometry.bounding_box_base.BoundingBoxBase">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Geometry.bounding_box_base.</span></span><span class="sig-name descname"><span class="pre">BoundingBoxBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.bounding_box_base.BoundingBoxBase" title="Permalink to this definition">¶</a></dt>
@@ -366,7 +361,24 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="duHast.Geometry.bounding_box_base.BoundingBoxBase.ratio">
 <span class="sig-name descname"><span class="pre">ratio</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.bounding_box_base.BoundingBoxBase.ratio" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The length ratio of the bounding box edges, dividing the length in X by the
+length in Y.</p>
+<p>Implemented here rather than per subclass, since it is the same calculation for
+a 2D and a 3D box and only needs width() and depth() which the subclasses
+provide. BoundingBox3 previously had no ratio at all and inherited a
+NotImplementedError, while BoundingBox2 carried its own copy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the depth is zero, which would be a division by zero.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Edge ratio.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

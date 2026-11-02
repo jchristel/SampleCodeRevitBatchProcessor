@@ -375,6 +375,36 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
+<section id="module-duHast.Revit.Views.annotation_crop">
+<span id="duhast-revit-views-annotation-crop-module"></span><h2>duHast.Revit.Views.annotation_crop module<a class="headerlink" href="#module-duHast.Revit.Views.annotation_crop" title="Permalink to this heading">¶</a></h2>
+<p>Helper functions to switch a view’s annotation crop on or off and place its edges.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.annotation_crop.set_annotation_crop_without_transaction_wrapper">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.annotation_crop.</span></span><span class="sig-name descname"><span class="pre">set_annotation_crop_without_transaction_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offsets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.annotation_crop.set_annotation_crop_without_transaction_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Switches the annotation crop of a view on or off and, when on, places its four edges.</p>
+<p>The offsets are from the edges of the view crop and in view units, which is paper: Revit keeps them in
+feet on paper, so they hold at any view scale. The annotation crop can not be smaller than the view crop
+(the least offset is 1/8 inch on paper); a smaller offset is raised to it by Revit’s own check, which this
+reports.</p>
+<p>Changing the model: this needs to run inside a transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The plan or elevation view.</p></li>
+<li><p><strong>active</strong> (<em>bool</em>) – Whether the annotation crop is on.</p></li>
+<li><p><strong>offsets</strong> (<em>dict</em><em>, </em><em>optional</em>) – The edges as {“left”, “right”, “top”, “bottom”} in mm on paper; only used when active.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Views.delete">
 <span id="duhast-revit-views-delete-module"></span><h2>duHast.Revit.Views.delete module<a class="headerlink" href="#module-duHast.Revit.Views.delete" title="Permalink to this heading">¶</a></h2>
 <section id="this-module-contains-a-number-of-helper-functions-relating-to-deleting-revit-views">
@@ -523,6 +553,28 @@ If None is passed as the override_graphics_settings parameter, the default setti
 <h3>This module contains a number of helper functions relating to Revit elevations.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-elevations" title="Permalink to this heading">¶</a></h3>
 </section>
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.elevation.get_marker_and_index_of_view">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.elevation.</span></span><span class="sig-name descname"><span class="pre">get_marker_and_index_of_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.elevation.get_marker_and_index_of_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the elevation marker hosting an elevation view and the index the view has on it.</p>
+<p>The index alone does not say which marker it belongs to: a room with two markers has an
+index 0 on each, so the marker is needed to know which views belong together.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – Revit view.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The marker and the index, or (None, None) if the view is not on a marker.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(Autodesk.Revit.DB.ElevationMarker, int) or (None, None)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Views.elevation.get_view_index_on_marker">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.elevation.</span></span><span class="sig-name descname"><span class="pre">get_view_index_on_marker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.elevation.get_view_index_on_marker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the index of the view on the elevation marker.
@@ -536,6 +588,275 @@ If None is passed as the override_graphics_settings parameter, the default setti
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>int or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.elevation.get_marker_location">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.elevation.</span></span><span class="sig-name descname"><span class="pre">get_marker_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">marker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.elevation.get_marker_location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get where an elevation marker sits.</p>
+<p>Revit gives an elevation marker no point of its own: its Location is the bare Location class (it can only
+be moved and rotated), and it has no bounding box outside a plan view. So, when it is not a LocationPoint,
+and a document is given, the centre of the marker’s circle is worked out from its view pointers (see
+get_marker_centre_from_pointers).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>marker</strong> (<em>Autodesk.Revit.DB.ElevationMarker</em>) – The elevation marker.</p></li>
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em><em>, </em><em>optional</em>) – The document the marker is in, defaults to None (only a LocationPoint is then answered).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The marker’s point in Revit’s internal units (feet), None if it cannot be found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.XYZ or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.elevation.get_pointers_of_marker">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.elevation.</span></span><span class="sig-name descname"><span class="pre">get_pointers_of_marker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.elevation.get_pointers_of_marker" title="Permalink to this definition">¶</a></dt>
+<dd><p>The view pointers of an elevation marker: its dependent elements of the Viewers category (OST_Viewers, which
+Revit names “Views”), as ids. Moving one moves the elevation view it belongs to relative to the marker (the
+view’s crop box transform is not honoured when set), and nothing else.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The document the marker is in.</p></li>
+<li><p><strong>marker</strong> (<em>Autodesk.Revit.DB.ElevationMarker</em>) – The elevation marker.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The element ids of the pointers.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.elevation.get_pointer_of_view">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.elevation.</span></span><span class="sig-name descname"><span class="pre">get_pointer_of_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pointers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.elevation.get_pointer_of_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>The pointer of a view among a marker’s pointers: a pointer is made just before its view, so it is the one with
+the largest id below the view’s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pointers</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.ElementId</em>) – The marker’s pointers (get_pointers_of_marker).</p></li>
+<li><p><strong>view_id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the elevation view.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The pointer’s id, None if there is none.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.ElementId or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.elevation.get_marker_centre_from_pointers">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.elevation.</span></span><span class="sig-name descname"><span class="pre">get_marker_centre_from_pointers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.elevation.get_marker_centre_from_pointers" title="Permalink to this definition">¶</a></dt>
+<dd><p>The centre of an elevation marker’s circle, from the pointers of its views.</p>
+<p>Each view on a marker has a pointer (a dependent element of the Viewers category, shown as “Views” in Revit, created just before the
+view, so the one with the largest id below the view’s) that sits along the view’s direction from the
+circle. The pointer’s bounding box in a plan view therefore has its centre on the line through the circle
+along the view’s direction, and the circle is where those lines cross: the least squares point over every
+view. Two opposite views alone fix the point as the middle of their pointers. One view cannot say how far
+along its line the circle is, so a marker with a single view answers None.</p>
+<p>Measured on a marker with four views: the four pointers’ lines crossed at the circle’s centre, where the
+elevation lines’ own middles were 280 mm away (a line can be cropped off-centre).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The document the marker is in.</p></li>
+<li><p><strong>marker</strong> (<em>Autodesk.Revit.DB.ElevationMarker</em>) – The elevation marker.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The centre in feet, None if it cannot be worked out.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.XYZ or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.elevation.get_elevation_footprint">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.elevation.</span></span><span class="sig-name descname"><span class="pre">get_elevation_footprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.elevation.get_elevation_footprint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the elevation line and how far the view looks, in model coordinates.</p>
+<p>The crop box of an elevation is in the view’s own frame (x to the right, y up, z towards
+the viewer) and its transform takes it to the model. The elevation line is the crop box’s
+width on the plane through the view origin (z = 0); the view looks back from it along
+minus z, so the crop box’s minimum z is how far it sees.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>view</strong> (<em>Autodesk.Revit.DB.ViewSection</em>) – The elevation view.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(line start, line end, depth) as XYZ in feet and a length in feet, or None when the
+view has no crop box.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(Autodesk.Revit.DB.XYZ, Autodesk.Revit.DB.XYZ, float) or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.elevation.get_far_clip">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.elevation.</span></span><span class="sig-name descname"><span class="pre">get_far_clip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.elevation.get_far_clip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the far clip settings of an elevation view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>view</strong> (<em>Autodesk.Revit.DB.ViewSection</em>) – The elevation view.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(mode, offset in mm). Mode is 0 for no clip, 1 for clip with line, 2 for clip without
+line (Revit’s own values); either is None when the parameter is missing.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(int or None, float or None)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.elevation_marker">
+<span id="duhast-revit-views-elevation-marker-module"></span><h2>duHast.Revit.Views.elevation_marker module<a class="headerlink" href="#module-duHast.Revit.Views.elevation_marker" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-to-make-an-elevation-marker-at-a-place-and-turn-create-the-views-on-it-and-set-what-they-look-at">
+<h3>Helper functions to make an elevation marker at a place and turn, create the views on it and set what they look at.<a class="headerlink" href="#helper-functions-to-make-an-elevation-marker-at-a-place-and-turn-create-the-views-on-it-and-set-what-they-look-at" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.elevation_marker.create_elevation_marker_without_transaction_wrapper">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.elevation_marker.</span></span><span class="sig-name descname"><span class="pre">create_elevation_marker_without_transaction_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.elevation_marker.create_elevation_marker_without_transaction_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an elevation marker and turns it about its own point.</p>
+<p>A marker holds up to four elevation views, one per index; turning the marker turns all of them,
+which is how an index is made to face a chosen wall.</p>
+<p>Changing the model: this needs to run inside a transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>view_type</strong> (<em>Autodesk.Revit.DB.ViewFamilyType</em>) – The elevation view family type.</p></li>
+<li><p><strong>location</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – Where the marker goes (z is the level it belongs to).</p></li>
+<li><p><strong>scale</strong> (<em>int</em>) – The scale of the views on the marker.</p></li>
+<li><p><strong>rotation</strong> (<em>float</em><em>, </em><em>optional</em>) – Counter clockwise turn about the marker’s point in radians, defaults to 0.0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance. .result holds the marker when it was created.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.elevation_marker.rotate_elevation_marker_without_transaction_wrapper">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.elevation_marker.</span></span><span class="sig-name descname"><span class="pre">rotate_elevation_marker_without_transaction_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.elevation_marker.rotate_elevation_marker_without_transaction_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns an elevation marker, and the views on it, about the marker’s own point.</p>
+<p>Which way index 0 of a new marker looks is Revit’s to say, so a caller which needs a view to look a
+certain way creates the views first, reads where one looks (ViewSection.ViewDirection) and turns the
+marker by the difference.</p>
+<p>Changing the model: this needs to run inside a transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>marker</strong> (<em>Autodesk.Revit.DB.ElevationMarker</em>) – The elevation marker.</p></li>
+<li><p><strong>location</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The marker’s point, in feet.</p></li>
+<li><p><strong>rotation</strong> (<em>float</em>) – Counter clockwise turn in radians.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.elevation_marker.create_elevation_on_marker_without_transaction_wrapper">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.elevation_marker.</span></span><span class="sig-name descname"><span class="pre">create_elevation_on_marker_without_transaction_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_plan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.elevation_marker.create_elevation_on_marker_without_transaction_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the elevation view at one index of a marker.</p>
+<p>Changing the model: this needs to run inside a transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>marker</strong> (<em>Autodesk.Revit.DB.ElevationMarker</em>) – The elevation marker.</p></li>
+<li><p><strong>view_plan</strong> (<em>Autodesk.Revit.DB.ViewPlan</em>) – The plan view the marker is in.</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – The index on the marker, 0 to 3.</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the new view, defaults to None (Revit’s own).</p></li>
+<li><p><strong>phase_id</strong> (<em>Autodesk.Revit.DB.ElementId</em><em>, </em><em>optional</em>) – The phase of the new view, defaults to None (Revit’s own).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance. .result holds the view when it was created.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.elevation_marker.get_rotation_to_face">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.elevation_marker.</span></span><span class="sig-name descname"><span class="pre">get_rotation_to_face</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">look_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">look_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_zero_looks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">1.0)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.elevation_marker.get_rotation_to_face" title="Permalink to this definition">¶</a></dt>
+<dd><p>The turn, in radians counter clockwise, that makes index 0 of an unturned marker look along (look_x, look_y).</p>
+<p>A new marker’s index 0 looks along +y in plan (indices 1 to 3 follow at quarter turns); this is
+the assumption to check when a marker comes out facing the wrong way, and the only place it is made.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>look_x</strong> (<em>float</em>) – x of the direction to look along in plan.</p></li>
+<li><p><strong>look_y</strong> (<em>float</em>) – y of the direction to look along in plan.</p></li>
+<li><p><strong>index_zero_looks</strong> (<em>tuple</em><em>, </em><em>optional</em>) – The direction index 0 looks along on an unturned marker, defaults to (0.0, 1.0).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The turn in radians, in (-pi, pi].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.elevation_marker.set_elevation_extent_without_transaction_wrapper">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.elevation_marker.</span></span><span class="sig-name descname"><span class="pre">set_elevation_extent_without_transaction_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.elevation_marker.set_elevation_extent_without_transaction_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets how wide and how far an elevation view looks.</p>
+<p>The width is the crop box’s extent along the view’s right direction, taken from where the line’s
+two ends fall on it; the depth is the far clip, made active, at that offset from the view plane;
+the height, when given, is the crop box’s extent upwards from where its bottom already is.</p>
+<p>Changing the model: this needs to run inside a transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.ViewSection</em>) – The elevation view.</p></li>
+<li><p><strong>line_start</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – One end of the elevation line in the model, in feet.</p></li>
+<li><p><strong>line_end</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The other end, in feet.</p></li>
+<li><p><strong>depth</strong> (<em>float</em><em> or </em><em>None</em>) – How far the view looks from its plane, in feet; None or 0 leaves the far clip as it is.</p></li>
+<li><p><strong>height</strong> (<em>float</em><em> or </em><em>None</em>) – How tall the crop box is, in feet, measured up from its current bottom; None or 0 leaves the top as it is.</p></li>
+<li><p><strong>bottom</strong> (<em>float</em><em> or </em><em>None</em>) – Where the bottom of the crop box is, as a height in the model in feet (not above the level: absolute); None leaves the bottom as it is. With a height the top is bottom + height.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1215,6 +1536,26 @@ view reference types and view continuation types in the model.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules.get_schedule_by_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules.</span></span><span class="sig-name descname"><span class="pre">get_schedule_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules.get_schedule_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a schedule by its name. Schedule templates and title block revision schedules are not considered.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The schedule name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The schedule, None if there is none of that name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.ViewSchedule or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Views.schedules.get_schedules_by_built_in_category">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules.</span></span><span class="sig-name descname"><span class="pre">get_schedules_by_built_in_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">built_in_category</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules.get_schedules_by_built_in_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all schedules in the current document by built-in category.</p>
@@ -1278,6 +1619,79 @@ view reference types and view continuation types in the model.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of schedules which are split on sheet or an empty list if none are split</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.schedules_create">
+<span id="duhast-revit-views-schedules-create-module"></span><h2>duHast.Revit.Views.schedules_create module<a class="headerlink" href="#module-duHast.Revit.Views.schedules_create" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-to-make-a-schedule-for-one-room-from-a-base-schedule-and-place-it-on-a-sheet">
+<h3>Helper functions to make a schedule for one room from a base schedule and place it on a sheet.<a class="headerlink" href="#helper-functions-to-make-a-schedule-for-one-room-from-a-base-schedule-and-place-it-on-a-sheet" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_create.duplicate_schedule_without_transaction_wrapper">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_create.</span></span><span class="sig-name descname"><span class="pre">duplicate_schedule_without_transaction_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schedule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_create.duplicate_schedule_without_transaction_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Duplicates a schedule (without its sheet placement) and names the copy.</p>
+<p>Changing the model: this needs to run inside a transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>schedule</strong> (<em>Autodesk.Revit.DB.ViewSchedule</em>) – The schedule to duplicate.</p></li>
+<li><p><strong>new_name</strong> (<em>str</em>) – The name of the copy.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance. .result holds the new schedule when it was created.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_create.set_first_filter_value_without_transaction_wrapper">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_create.</span></span><span class="sig-name descname"><span class="pre">set_first_filter_value_without_transaction_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schedule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_create.set_first_filter_value_without_transaction_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the value of a schedule’s FIRST filter, keeping its field and its comparison. A base schedule
+for rooms has the room number as its first filter, so this limits the copy to one room.</p>
+<p>Changing the model: this needs to run inside a transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>schedule</strong> (<em>Autodesk.Revit.DB.ViewSchedule</em>) – The schedule to change.</p></li>
+<li><p><strong>value</strong> (<em>str</em>) – The new filter value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_create.place_schedule_on_sheet_without_transaction_wrapper">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_create.</span></span><span class="sig-name descname"><span class="pre">place_schedule_on_sheet_without_transaction_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schedule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_create.place_schedule_on_sheet_without_transaction_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Places a schedule on a sheet.</p>
+<p>Changing the model: this needs to run inside a transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>sheet</strong> (<em>Autodesk.Revit.DB.ViewSheet</em>) – The sheet.</p></li>
+<li><p><strong>schedule</strong> (<em>Autodesk.Revit.DB.ViewSchedule</em>) – The schedule to place.</p></li>
+<li><p><strong>point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – Where the upper left corner of the schedule goes on the sheet, in feet.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance. .result holds the schedule sheet instance when it was created.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1888,6 +2302,20 @@ sheet (Autodesk.Revit.DB.ViewSheet):The sheet of which to return the title block
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.sheets.get_title_block_size_mm">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.sheets.</span></span><span class="sig-name descname"><span class="pre">get_title_block_size_mm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.sheets.get_title_block_size_mm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the width and height of a sheet’s title block in millimetres, from its bounding box on the sheet.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>doc (Autodesk.Revit.DB.Document): Current Revit model document.
+sheet (Autodesk.Revit.DB.ViewSheet): The sheet.</p>
+</dd>
+<dt>Returns:</dt><dd><p>tuple (float, float) or None: width, height in mm as measured (not snapped to a paper size),
+or None when the sheet has no title block or the box is empty.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Views.sheets.get_sheets_from_schedule_instances">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.sheets.</span></span><span class="sig-name descname"><span class="pre">get_sheets_from_schedule_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schedules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.sheets.get_sheets_from_schedule_instances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of sheets that contain schedule sheet instances of the provided schedules.</p>
@@ -2095,6 +2523,41 @@ schedules (list of Autodesk.Revit.DB.ViewSchedule): List of schedules to check f
 :type doc: Autodesk.Revit.DB.Document
 :return: All view templates Id’s which are not used in the model.
 :rtype: list of Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.view_3d_create">
+<span id="duhast-revit-views-view-3d-create-module"></span><h2>duHast.Revit.Views.view_3d_create module<a class="headerlink" href="#module-duHast.Revit.Views.view_3d_create" title="Permalink to this heading">¶</a></h2>
+<section id="view-crop-utilities">
+<h3>View crop utilities.<a class="headerlink" href="#view-crop-utilities" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.view_3d_create.create_view_3d_around_box_without_transaction_wrapper">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.view_3d_create.</span></span><span class="sig-name descname"><span class="pre">create_view_3d_around_box_without_transaction_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forward</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">up</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">box_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">box_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.view_3d_create.create_view_3d_around_box_without_transaction_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an isometric 3D view that looks along a direction at a box, and cuts the model to that box (the section box). The view is cropped to the section box as the camera sees it (Crop View on, fitted tightly).</p>
+<p>The camera is put back along the direction far enough to see the whole box, so the box is what the view shows
+whatever height the model sits at: the pitch comes from the direction.</p>
+<p>Must be called inside a transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document.</p></li>
+<li><p><strong>view_type</strong> (<em>Autodesk.Revit.DB.ViewFamilyType</em>) – The 3D view family type.</p></li>
+<li><p><strong>view_name</strong> (<em>str</em>) – The name of the new view.</p></li>
+<li><p><strong>forward</strong> (<em>tuple</em><em> of </em><em>float</em>) – The direction the view looks along (x, y, z); any length.</p></li>
+<li><p><strong>up</strong> (<em>tuple</em><em> of </em><em>float</em>) – The view’s up direction (x, y, z); any length.</p></li>
+<li><p><strong>box_min</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The corner of the box with the smallest coordinates, in feet.</p></li>
+<li><p><strong>box_max</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The opposite corner, in feet.</p></li>
+<li><p><strong>phase</strong> (<em>Autodesk.Revit.DB.Phase</em><em>, </em><em>optional</em>) – The phase of the view, defaults to None (Revit’s default).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result with the new view in its result list.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -2351,6 +2814,55 @@ if the view set does not exist, the result will contain the name of the view set
 </dd></dl>
 
 </section>
+<section id="module-duHast.Revit.Views.viewports_create">
+<span id="duhast-revit-views-viewports-create-module"></span><h2>duHast.Revit.Views.viewports_create module<a class="headerlink" href="#module-duHast.Revit.Views.viewports_create" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-to-place-views-on-sheets-as-viewports">
+<h3>Helper functions to place views on sheets as viewports.<a class="headerlink" href="#helper-functions-to-place-views-on-sheets-as-viewports" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.viewports_create.create_viewport_without_transaction_wrapper">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.viewports_create.</span></span><span class="sig-name descname"><span class="pre">create_viewport_without_transaction_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centre</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewport_type_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_line_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.viewports_create.create_viewport_without_transaction_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Places a view on a sheet.</p>
+<p>Changing the model: this needs to run inside a transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>sheet</strong> (<em>Autodesk.Revit.DB.ViewSheet</em>) – The sheet to place the view on.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view to place.</p></li>
+<li><p><strong>centre</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – Where the centre of the viewport box goes on the sheet, in feet (z is ignored). The box excludes the view title, as Viewport.GetBoxCenter does.</p></li>
+<li><p><strong>viewport_type_id</strong> (<em>Autodesk.Revit.DB.ElementId</em><em>, </em><em>optional</em>) – The viewport type to apply, defaults to None (the default type).</p></li>
+<li><p><strong>label_offset</strong> (<em>Autodesk.Revit.DB.XYZ</em><em>, </em><em>optional</em>) – Where the view title goes: from the bottom left corner of the viewport box to the left end of the title line, in feet (z is ignored); defaults to None (Revit’s default place).</p></li>
+<li><p><strong>label_line_length</strong> (<em>float</em><em>, </em><em>optional</em>) – The length of the title line in feet, defaults to None (Revit’s default).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance. .result holds the viewport when it was created.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.viewports_create.get_viewport_outline_size">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.viewports_create.</span></span><span class="sig-name descname"><span class="pre">get_viewport_outline_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">viewport</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.viewports_create.get_viewport_outline_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the size of a viewport on its sheet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>viewport</strong> (<em>Autodesk.Revit.DB.Viewport</em>) – The viewport.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Width and height in feet.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple (float, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Views.views">
 <span id="duhast-revit-views-views-module"></span><h2>duHast.Revit.Views.views module<a class="headerlink" href="#module-duHast.Revit.Views.views" title="Permalink to this heading">¶</a></h2>
 <section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-views">
@@ -2364,6 +2876,47 @@ if the view set does not exist, the result will contain the name of the view set
 :type doc: Autodesk.Revit.DB.Document
 :return: A filtered element collector.
 :rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.views.get_view_family_types">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.views.</span></span><span class="sig-name descname"><span class="pre">get_view_family_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_family</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.views.get_view_family_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the view family types of one view family (floor plan, elevation, section…).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>view_family</strong> (<em>Autodesk.Revit.DB.ViewFamily</em>) – The view family.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The matching view family types.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[Autodesk.Revit.DB.ViewFamilyType]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.views.get_view_family_type_by_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.views.</span></span><span class="sig-name descname"><span class="pre">get_view_family_type_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_family</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.views.get_view_family_type_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the view family type of a view family with the given name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>view_family</strong> (<em>Autodesk.Revit.DB.ViewFamily</em>) – The view family.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The type name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The view family type, None if there is none of that name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.ViewFamilyType or None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -2526,8 +3079,8 @@ if the view set does not exist, the result will contain the name of the view set
 </section>
 <section id="module-duHast.Revit.Views.views_crop">
 <span id="duhast-revit-views-views-crop-module"></span><h2>duHast.Revit.Views.views_crop module<a class="headerlink" href="#module-duHast.Revit.Views.views_crop" title="Permalink to this heading">¶</a></h2>
-<section id="view-crop-utilities">
-<h3>View crop utilities.<a class="headerlink" href="#view-crop-utilities" title="Permalink to this heading">¶</a></h3>
+<section id="id2">
+<h3>View crop utilities.<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Views.views_crop.get_view_crop">
@@ -2633,6 +3186,96 @@ All coordinates are in the coordinate frame of the view.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">duHast.Utilities.Objects.result.Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.views_crop.set_view_crop_around_point_without_transaction_wrapper">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.views_crop.</span></span><span class="sig-name descname"><span class="pre">set_view_crop_around_point_without_transaction_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centre</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.views_crop.set_view_crop_around_point_without_transaction_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Activates the crop of a view and sets it to a rectangle of the given size centred on a point.</p>
+<p>The rectangle is built in the crop box’s own coordinate system and keeps the crop box’s Z range. The crop region is
+made active and its visibility is switched off.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view to crop.</p></li>
+<li><p><strong>centre</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The point to centre the crop on, in model coordinates (feet).</p></li>
+<li><p><strong>width</strong> (<em>float</em>) – The crop width in the view’s horizontal direction (feet).</p></li>
+<li><p><strong>height</strong> (<em>float</em>) – The crop height in the view’s vertical direction (feet).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the operation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">duHast.Utilities.Objects.result.Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.views_names">
+<span id="duhast-revit-views-views-names-module"></span><h2>duHast.Revit.Views.views_names module<a class="headerlink" href="#module-duHast.Revit.Views.views_names" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-to-check-view-names-revit-refuses-to-name-a-view-the-same-as-another-view">
+<h3>Helper functions to check view names. Revit refuses to name a view the same as another view.<a class="headerlink" href="#helper-functions-to-check-view-names-revit-refuses-to-name-a-view-the-same-as-another-view" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.views_names.get_view_names">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.views_names.</span></span><span class="sig-name descname"><span class="pre">get_view_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.views_names.get_view_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the names of all views in the model (not view templates, not schedules’ internal views).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The set of view names, lower case.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>set of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.views_names.is_view_name_in_use">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.views_names.</span></span><span class="sig-name descname"><span class="pre">is_view_name_in_use</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.views_names.is_view_name_in_use" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a view with this name exists (case and surrounding white space are ignored).</p>
+<p>This is the check to run before creating views, to refuse work that would collide, rather than
+letting Revit refuse the name half way through.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The name to check.</p></li>
+<li><p><strong>view_names</strong> (<em>set</em><em> of </em><em>str</em><em>, </em><em>optional</em>) – The names from get_view_names, when the caller checks many names, defaults to None (they are read).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if a view has this name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.views_names.get_views_in_name_collision">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.views_names.</span></span><span class="sig-name descname"><span class="pre">get_views_in_name_collision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.views_names.get_views_in_name_collision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns those of the names which are already the name of a view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>names</strong> (<em>list</em><em> of </em><em>str</em>) – The names to check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The names in use, as given.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of str</p>
 </dd>
 </dl>
 </dd></dl>

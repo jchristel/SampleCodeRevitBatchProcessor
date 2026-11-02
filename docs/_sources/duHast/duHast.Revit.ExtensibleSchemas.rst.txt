@@ -44,6 +44,14 @@ duHast.Revit.ExtensibleSchemas.extensible\_schemas\_create module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.ExtensibleSchemas.project\_text module
+---------------------------------------------------
+
+.. automodule:: duHast.Revit.ExtensibleSchemas.project_text
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

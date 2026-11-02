@@ -119,6 +119,14 @@ duHast.Revit.Common.groups module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Common.level\_filter module
+----------------------------------------
+
+.. automodule:: duHast.Revit.Common.level_filter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Common.parameter\_get\_utils module
 ------------------------------------------------
 
@@ -147,6 +155,14 @@ duHast.Revit.Common.parameter\_set\_utils module
 ------------------------------------------------
 
 .. automodule:: duHast.Revit.Common.parameter_set_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Common.parameter\_values\_by\_category module
+----------------------------------------------------------
+
+.. automodule:: duHast.Revit.Common.parameter_values_by_category
    :members:
    :undoc-members:
    :show-inheritance:

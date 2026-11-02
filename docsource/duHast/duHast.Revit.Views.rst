@@ -18,6 +18,14 @@ Subpackages
 Submodules
 ----------
 
+duHast.Revit.Views.annotation\_crop module
+------------------------------------------
+
+.. automodule:: duHast.Revit.Views.annotation_crop
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Views.delete module
 --------------------------------
 
@@ -38,6 +46,14 @@ duHast.Revit.Views.elevation module
 -----------------------------------
 
 .. automodule:: duHast.Revit.Views.elevation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Views.elevation\_marker module
+-------------------------------------------
+
+.. automodule:: duHast.Revit.Views.elevation_marker
    :members:
    :undoc-members:
    :show-inheritance:
@@ -86,6 +102,14 @@ duHast.Revit.Views.schedules module
 -----------------------------------
 
 .. automodule:: duHast.Revit.Views.schedules
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Views.schedules\_create module
+-------------------------------------------
+
+.. automodule:: duHast.Revit.Views.schedules_create
    :members:
    :undoc-members:
    :show-inheritance:
@@ -186,10 +210,26 @@ duHast.Revit.Views.templates module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Views.view\_3d\_create module
+------------------------------------------
+
+.. automodule:: duHast.Revit.Views.view_3d_create
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Views.view\_sheet\_sets module
 -------------------------------------------
 
 .. automodule:: duHast.Revit.Views.view_sheet_sets
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Views.viewports\_create module
+-------------------------------------------
+
+.. automodule:: duHast.Revit.Views.viewports_create
    :members:
    :undoc-members:
    :show-inheritance:
@@ -206,6 +246,14 @@ duHast.Revit.Views.views\_crop module
 -------------------------------------
 
 .. automodule:: duHast.Revit.Views.views_crop
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Views.views\_names module
+--------------------------------------
+
+.. automodule:: duHast.Revit.Views.views_names
    :members:
    :undoc-members:
    :show-inheritance:

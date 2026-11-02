@@ -39,6 +39,14 @@ duHast.Revit.Rooms.room\_tags module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Rooms.room\_tags\_create module
+--------------------------------------------
+
+.. automodule:: duHast.Revit.Rooms.room_tags_create
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Rooms.rooms module
 -------------------------------
 

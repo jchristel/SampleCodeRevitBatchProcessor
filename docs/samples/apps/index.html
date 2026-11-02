@@ -17,8 +17,8 @@
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
     <link rel="up" title="Samples" href="../index.html" />
-    <link rel="next" title="Revit Application UI Guides" href="../../revit_apps/index.html" />
-    <link rel="prev" title="pyRevit" href="../pyRevit/index.html" />
+    <link rel="next" title="Current Documents Settings" href="dm_CurrentFolderSettings.html" />
+    <link rel="prev" title="Solve Warnings" href="../pyRevit/warnings_solve.html" />
     <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
@@ -31,8 +31,8 @@
         <li id="page_buttons">
             <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
-            <div class="headerButton"><a href="../../revit_apps/index.html" title="Revit Application UI Guides" accesskey="N">next</a></div>
-            <div class="headerButton"><a href="../pyRevit/index.html" title="pyRevit" accesskey="P">previous</a></div>
+            <div class="headerButton"><a href="dm_CurrentFolderSettings.html" title="Current Documents Settings" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="../pyRevit/warnings_solve.html" title="Solve Warnings" accesskey="P">previous</a></div>
         </li>
     </ul>
 </div>
@@ -47,7 +47,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../index.html#flows">Flows</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#pyrevit">pyRevit</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html#apps">Apps</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Apps</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Apps</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dm_CurrentFolderSettings.html">Current Documents Settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dm_CloudDocumentManager_Aconex_Settings.html">Cloud Document Manager Settings (Aconex Implementation)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dm_DatabaseConnection_Settings.html">Database Connection Settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dm_MergeView_RevisionInfo_And_IncomingFiles.html">Merge View - User Guide</a></li>
 </ul>
 </li>
 </ul>
@@ -88,6 +92,70 @@
 <h1>Apps<a class="headerlink" href="#apps" title="Permalink to this heading">¶</a></h1>
 <p>User documentation for the DocManager application.</p>
 <div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="dm_CurrentFolderSettings.html">Current Documents Settings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dm_CurrentFolderSettings.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_CurrentFolderSettings.html#settings-sections">Settings Sections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_CurrentFolderSettings.html#data-persistence">Data Persistence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_CurrentFolderSettings.html#validation-summary">Validation Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_CurrentFolderSettings.html#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_CurrentFolderSettings.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_CurrentFolderSettings.html#related-documentation">Related Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dm_CloudDocumentManager_Aconex_Settings.html">Cloud Document Manager Settings (Aconex Implementation)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dm_CloudDocumentManager_Aconex_Settings.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_CloudDocumentManager_Aconex_Settings.html#general-settings">General Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_CloudDocumentManager_Aconex_Settings.html#aconex-provider-configuration">Aconex Provider Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_CloudDocumentManager_Aconex_Settings.html#how-metadata-export-works">How Metadata Export Works</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_CloudDocumentManager_Aconex_Settings.html#configuration-workflow">Configuration Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_CloudDocumentManager_Aconex_Settings.html#data-persistence">Data Persistence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_CloudDocumentManager_Aconex_Settings.html#validation-summary">Validation Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_CloudDocumentManager_Aconex_Settings.html#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_CloudDocumentManager_Aconex_Settings.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_CloudDocumentManager_Aconex_Settings.html#integration-with-other-features">Integration with Other Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_CloudDocumentManager_Aconex_Settings.html#security-and-privacy-considerations">Security and Privacy Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_CloudDocumentManager_Aconex_Settings.html#future-enhancements">Future Enhancements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_CloudDocumentManager_Aconex_Settings.html#related-documentation">Related Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_CloudDocumentManager_Aconex_Settings.html#glossary">Glossary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dm_DatabaseConnection_Settings.html">Database Connection Settings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dm_DatabaseConnection_Settings.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_DatabaseConnection_Settings.html#technology">Technology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_DatabaseConnection_Settings.html#database-path-and-connection-management">Database Path and Connection Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_DatabaseConnection_Settings.html#import-export-operations">Import/Export Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_DatabaseConnection_Settings.html#custom-fields">Custom Fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_DatabaseConnection_Settings.html#database-schema-overview">Database Schema Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_DatabaseConnection_Settings.html#data-model-relationships">Data Model Relationships</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_DatabaseConnection_Settings.html#validation">Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_DatabaseConnection_Settings.html#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_DatabaseConnection_Settings.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_DatabaseConnection_Settings.html#data-persistence">Data Persistence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_DatabaseConnection_Settings.html#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_DatabaseConnection_Settings.html#integration-with-other-features">Integration with Other Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_DatabaseConnection_Settings.html#security-considerations">Security Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_DatabaseConnection_Settings.html#related-documentation">Related Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_DatabaseConnection_Settings.html#appendix-csv-format-reference">Appendix: CSV Format Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dm_MergeView_RevisionInfo_And_IncomingFiles.html">Merge View - User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dm_MergeView_RevisionInfo_And_IncomingFiles.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_MergeView_RevisionInfo_And_IncomingFiles.html#recording-revision-information">Recording Revision Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_MergeView_RevisionInfo_And_IncomingFiles.html#understanding-your-document-matching-results">Understanding Your Document Matching Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_MergeView_RevisionInfo_And_IncomingFiles.html#understanding-status-priority">Understanding Status Priority</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_MergeView_RevisionInfo_And_IncomingFiles.html#how-revision-sequencing-works">How Revision Sequencing Works</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_MergeView_RevisionInfo_And_IncomingFiles.html#when-does-the-list-update">When Does the List Update?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_MergeView_RevisionInfo_And_IncomingFiles.html#working-with-the-results">Working with the Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_MergeView_RevisionInfo_And_IncomingFiles.html#messages-you-ll-see">Messages You’ll See</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_MergeView_RevisionInfo_And_IncomingFiles.html#tips-for-success">Tips for Success</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_MergeView_RevisionInfo_And_IncomingFiles.html#troubleshooting-common-problems">Troubleshooting Common Problems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_MergeView_RevisionInfo_And_IncomingFiles.html#how-long-does-refresh-take">How Long Does Refresh Take?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_MergeView_RevisionInfo_And_IncomingFiles.html#how-this-connects-to-other-features">How This Connects to Other Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dm_MergeView_RevisionInfo_And_IncomingFiles.html#quick-reference">Quick Reference</a></li>
+</ul>
+</li>
+</ul>
 </div>
 </section>
 

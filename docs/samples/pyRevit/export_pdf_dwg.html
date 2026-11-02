@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>PDF and DWG &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link rel="up" title="pyRevit" href="index.html" />
+    <link rel="next" title="At The Library" href="families_at_the_library.html" />
+    <link rel="prev" title="docManager" href="export_docmanager.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>PDF and DWG</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="families_at_the_library.html" title="At The Library" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="export_docmanager.html" title="docManager" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Samples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#flows">Flows</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#pyrevit">pyRevit</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">pyRevit</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="readme.html">duHast pyRevit Extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ceilings_by_rooms.html">Ceilings By Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cloud_guids.html">GUIDS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collectors.html">Data Collectors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_compare.html">Compare</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_docmanager.html">docManager</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">PDF and DWG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_at_the_library.html">At The Library</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_catalogue_files.html">Catalogue Files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_change_category.html">Change Category</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_force_update.html">Force Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_io.html">Family IO — Load and Save</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_reload.html">Reload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_rename.html">Rename Families</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_reports.html">Family Reports</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_swap.html">Swap Families</a></li>
+<li class="toctree-l4"><a class="reference internal" href="grids.html">Grids</a></li>
+<li class="toctree-l4"><a class="reference internal" href="levels.html">Levels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="purge_unused.html">Purge Unused</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_area_by_room.html">Verify Push It Area</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_get_a_room.html">Get A Room!</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_main.html">Push It!</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_place_revit_rooms.html">Place Revit Rooms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_stats.html">PushIt Stats</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_swap_dimensions.html">Swap Width And Depth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="roommate.html">RoomMate Export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="view_templates_import_export.html">View Templates — Import and Export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="view_templates_modify.html">View Templates — Modify</a></li>
+<li class="toctree-l4"><a class="reference internal" href="views_schedules.html">Schedules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="walls_by_rooms.html">Walls By Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="walls_facade_opening.html">Facade Opening To Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="warnings_highlight.html">Highlight Warnings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="warnings_solve.html">Solve Warnings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#apps">Apps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../revit_apps/index.html">Revit Application UI Guides</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/samples/pyRevit/export_pdf_dwg.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="pdf-and-dwg">
+<h1>PDF and DWG<a class="headerlink" href="#pdf-and-dwg" title="Permalink to this heading">¶</a></h1>
+<p><strong>Panel:</strong> Export | <strong>Button:</strong> PDF and DWG / Settings (split button)</p>
+<img src="Extensions/duHast-2025.extension/duHast.tab/Export.panel/PDF_DWG.splitbutton/Icon.png" width="40" alt="button icon">
+<p>Batch-export sheets from the current Revit project to PDF and/or DWG files, following a configured naming standard.</p>
+<hr class="docutils" />
+<section id="pdf-and-dwg-main-button">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Export.panel/PDF_DWG.splitbutton/PDF_DWG.pushbutton/Icon.png" width="24" alt="PDF and DWG icon"> PDF and DWG (main button)<a class="headerlink" href="#pdf-and-dwg-main-button" title="Permalink to this heading">¶</a></h2>
+<p>Runs the sheet export for all sheets you have selected, producing PDF and DWG output files in the configured destination folder.</p>
+<ul class="simple">
+<li><p>Opens the <a class="reference internal" href="../../revit_apps/pdfdwgexporterselectionui/01_main_ui.html"><span class="std std-doc">PDFDWGExporterSelectionUI</span></a> sheet-selection window.</p></li>
+<li><p>You choose which sheets to export by ticking them individually, selecting a saved <strong>Print Set</strong>, or filtering by a Revit <strong>Schedule</strong>.</p></li>
+<li><p>Preview columns show the generated PDF and DWG filenames before you commit.</p></li>
+<li><p>A three-way switch lets you export <strong>PDF only</strong>, <strong>DWG only</strong>, or <strong>both</strong>.</p></li>
+<li><p>The <strong>export directory</strong> is set in this window, not in Settings.</p></li>
+<li><p>Click <strong>Export</strong> to produce the files and close the window.</p></li>
+</ul>
+<p>Any print sets you create or edit in the selection window are <strong>written back to the model</strong>
+before the export runs.</p>
+<p><strong>Run Settings first.</strong> If no export settings are stored in the model this button exits with
+<em>“Cant find any settings for this file. Please run the settings add-in first.”</em></p>
+</section>
+<hr class="docutils" />
+<section id="settings">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Export.panel/PDF_DWG.splitbutton/Settings.pushbutton/Icon.png" width="24" alt="Settings icon"> Settings<a class="headerlink" href="#settings" title="Permalink to this heading">¶</a></h2>
+<p>Configures the naming rules used to generate PDF and DWG filenames.</p>
+<ul class="simple">
+<li><p>Opens the <a class="reference internal" href="../../revit_apps/pdfdwgexporterui/01_main_ui.html"><span class="std std-doc">PDFDWGExporterUI</span></a> settings window.</p></li>
+<li><p>You select which Revit sheet properties (sheet number, name, revision, etc.) to include in the filename, and set a prefix, suffix, and separator for each component. Any parameter present on sheets in this model can be used.</p></li>
+<li><p>Settings are stored in an <strong>extensible schema in the model</strong> — separate JSON strings for the PDF rule, the DWG rule and the DWG export scheme name — so they travel with the file.</p></li>
+<li><p>DWG-specific: choose an export scheme to control which DWG version and layer standards are applied. The list offered comes from the <strong>predefined DWG export setups in the model</strong>.</p></li>
+</ul>
+<p><strong>Run Settings before your first export</strong> to ensure filenames match your project’s naming convention.</p>
+</section>
+<hr class="docutils" />
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Print sets created in the selection window are saved to the project and can be reused on subsequent exports.</p></li>
+<li><p>DWG export uses the scheme configured in Settings; create the DWG export setup in Revit first, otherwise there is nothing to choose.</p></li>
+<li><p>Both buttons load .NET UI assemblies from the extension’s <code class="docutils literal notranslate"><span class="pre">bin</span></code> folder at run time. If that folder is missing or incomplete, the button fails immediately with a message about the bin directory.</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="../index.html" accesskey="U">Samples</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="index.html" >pyRevit</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                PDF and DWG
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Family Reports &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link rel="up" title="pyRevit" href="index.html" />
+    <link rel="next" title="Swap Families" href="families_swap.html" />
+    <link rel="prev" title="Rename Families" href="families_rename.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>Family Reports</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="families_swap.html" title="Swap Families" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="families_rename.html" title="Rename Families" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Samples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#flows">Flows</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#pyrevit">pyRevit</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">pyRevit</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="readme.html">duHast pyRevit Extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ceilings_by_rooms.html">Ceilings By Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cloud_guids.html">GUIDS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collectors.html">Data Collectors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_compare.html">Compare</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_docmanager.html">docManager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_pdf_dwg.html">PDF and DWG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_at_the_library.html">At The Library</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_catalogue_files.html">Catalogue Files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_change_category.html">Change Category</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_force_update.html">Force Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_io.html">Family IO — Load and Save</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_reload.html">Reload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_rename.html">Rename Families</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Family Reports</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_swap.html">Swap Families</a></li>
+<li class="toctree-l4"><a class="reference internal" href="grids.html">Grids</a></li>
+<li class="toctree-l4"><a class="reference internal" href="levels.html">Levels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="purge_unused.html">Purge Unused</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_area_by_room.html">Verify Push It Area</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_get_a_room.html">Get A Room!</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_main.html">Push It!</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_place_revit_rooms.html">Place Revit Rooms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_stats.html">PushIt Stats</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_swap_dimensions.html">Swap Width And Depth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="roommate.html">RoomMate Export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="view_templates_import_export.html">View Templates — Import and Export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="view_templates_modify.html">View Templates — Modify</a></li>
+<li class="toctree-l4"><a class="reference internal" href="views_schedules.html">Schedules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="walls_by_rooms.html">Walls By Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="walls_facade_opening.html">Facade Opening To Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="warnings_highlight.html">Highlight Warnings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="warnings_solve.html">Solve Warnings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#apps">Apps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../revit_apps/index.html">Revit Application UI Guides</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/samples/pyRevit/families_reports.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="family-reports">
+<h1>Family Reports<a class="headerlink" href="#family-reports" title="Permalink to this heading">¶</a></h1>
+<p><strong>Panel:</strong> Families | <strong>Menu:</strong> Reports</p>
+<img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/Reports.pulldown/Icon.png" width="40" alt="button icon">
+<p>Reporting tools for auditing family libraries and project family data.</p>
+<section id="xml-part-atom-exports-come-first">
+<h2>XML part atom exports come first<a class="headerlink" href="#xml-part-atom-exports-come-first" title="Permalink to this heading">¶</a></h2>
+<p>Three of these tools do <strong>not</strong> read <code class="docutils literal notranslate"><span class="pre">.rfa</span></code> files. They read <strong>XML part atom exports</strong> —
+metadata files Revit can produce for a family without opening it. Run
+<strong>Create XML Files Of Families</strong> over a library before running:</p>
+<ul class="simple">
+<li><p>Report Library Families</p></li>
+<li><p>Compare Library vs Library Families</p></li>
+<li><p>Compare Project vs Library Families</p></li>
+</ul>
+<p>Without the XML files those tools find nothing to report.</p>
+</section>
+<hr class="docutils" />
+<section id="create-xml-files-of-families">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/Reports.pulldown/CreateXMLReportLibrary.pushbutton/Icon.png" width="24" alt="Create XML Files Of Families icon"> Create XML Files Of Families<a class="headerlink" href="#create-xml-files-of-families" title="Permalink to this heading">¶</a></h2>
+<p>Generates XML part atom exports for the family files in a library directory. These are the
+input for the report and compare tools above.</p>
+<p>An optional <code class="docutils literal notranslate"><span class="pre">xml_path_mapper.NETWORK_PATH_MAPPER</span></code> module, if importable from the extension’s
+lib folder, is used to map network paths — useful where the library is reached by different
+paths from different machines.</p>
+</section>
+<hr class="docutils" />
+<section id="delete-orphaned-xml-files">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/Reports.pulldown/CleanXMLFiles.pushbutton/Icon.png" width="24" alt="Delete orphaned XML files icon"> Delete orphaned XML files<a class="headerlink" href="#delete-orphaned-xml-files" title="Permalink to this heading">¶</a></h2>
+<p>Deletes XML part atom exports in a library location that no longer have a matching family
+file. Run it after families have been renamed or removed from the library so the reports do
+not carry stale entries.</p>
+</section>
+<hr class="docutils" />
+<section id="report-library-families">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/Reports.pulldown/ReportLibrary.pushbutton/Icon.png" width="24" alt="Report Library Families icon"> Report Library Families<a class="headerlink" href="#report-library-families" title="Permalink to this heading">¶</a></h2>
+<p>Reports on the families in one or more library directories, from their XML exports.</p>
+<ul class="simple">
+<li><p>You select the library directories to process — <strong>multiple directories</strong> can be chosen.</p></li>
+<li><p>Results are printed as a table in the output window, then a save dialog writes a CSV.</p></li>
+<li><p>If more than 10,000 rows are produced, the tool warns that saving may take a while.</p></li>
+</ul>
+<p><strong>Report data includes:</strong> family name, type names, category, and type parameter names and
+values.</p>
+<p><strong>Optional filtering:</strong> if a module named <code class="docutils literal notranslate"><span class="pre">settings_xml_library_writer</span></code> exposing a
+<code class="docutils literal notranslate"><span class="pre">filter_data(data)</span></code> function is importable, it is applied to the rows before they are
+reported. Use it to trim large libraries down to what you care about.</p>
+<p><strong>Use when:</strong> You need an inventory of a library for documentation or QA.</p>
+</section>
+<hr class="docutils" />
+<section id="compare-project-vs-library-families">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/Reports.pulldown/CompareProjectvsLibrary.pushbutton/Icon.png" width="24" alt="Compare Project vs Library Families icon"> Compare Project vs Library Families<a class="headerlink" href="#compare-project-vs-library-families" title="Permalink to this heading">¶</a></h2>
+<p>Compares the families loaded in the current project against a library, reporting <strong>only the
+differences</strong>.</p>
+<ul class="simple">
+<li><p>Output includes family names, type names, categories and the specific parameters that
+differ.</p></li>
+<li><p>Results are printed as a table, then a save dialog writes a CSV.</p></li>
+</ul>
+<p><strong>Use when:</strong> Identifying which project families have fallen behind the library.</p>
+</section>
+<hr class="docutils" />
+<section id="compare-library-vs-library-families">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/Reports.pulldown/CompareLibraryVsLibrary.pushbutton/Icon.png" width="24" alt="Compare Library vs Library Families icon"> Compare Library vs Library Families<a class="headerlink" href="#compare-library-vs-library-families" title="Permalink to this heading">¶</a></h2>
+<p>Compares families across two or more libraries.</p>
+<ul class="simple">
+<li><p>One column per library, showing each parameter’s value in that library.</p></li>
+<li><p>Where a family, type or parameter is absent from a library, the value is shown as <code class="docutils literal notranslate"><span class="pre">N/A</span></code>.</p></li>
+<li><p>Results are printed as a table, then a save dialog writes a CSV.</p></li>
+</ul>
+<p><strong>Use when:</strong> Maintaining several versions of a library and needing to see what has diverged.</p>
+</section>
+<hr class="docutils" />
+<section id="report-placed-families">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/Reports.pulldown/ReportProjectA.pushbutton/Icon.png" width="24" alt="Report Placed Families icon"> Report Placed Families<a class="headerlink" href="#report-placed-families" title="Permalink to this heading">¶</a></h2>
+<p>Reports on the families placed in the current project, including instance counts by type.</p>
+<blockquote>
+<div><p><strong>Configure before first use.</strong> This report only covers the parameters listed in
+<code class="docutils literal notranslate"><span class="pre">FAMILY_PARAMETERS_TO_REPORT</span></code> in
+<code class="docutils literal notranslate"><span class="pre">Extensions/duHast-2025.extension/duHast.tab/lib/families/report.py</span></code>. That list currently
+holds placeholders — <code class="docutils literal notranslate"><span class="pre">&quot;Sample</span> <span class="pre">Parameter</span> <span class="pre">One&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;Sample</span> <span class="pre">Parameter</span> <span class="pre">Two&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;Sample</span> <span class="pre">Parameter</span> <span class="pre">Three&quot;</span></code> — so as shipped the report returns no useful parameter columns.
+Replace them with your project’s parameter names.</p>
+</div></blockquote>
+<p>Results are printed as a table, then a save dialog writes a CSV.</p>
+</section>
+<hr class="docutils" />
+<section id="report-loaded-families">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Families.panel/Reports.pulldown/ReportProjectB.pushbutton/Icon.png" width="24" alt="Report Loaded Families icon"> Report Loaded Families<a class="headerlink" href="#report-loaded-families" title="Permalink to this heading">¶</a></h2>
+<p>Reports on the families loaded in the current project via XML part atom export of the
+project’s families — a different mechanism to <strong>Report Placed Families</strong>, which reads the
+families directly.</p>
+<p><strong>Report data includes:</strong> family name, type name, category, and type parameters and values.</p>
+<p>Results are printed as a table, then a save dialog writes a CSV.</p>
+</section>
+<hr class="docutils" />
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Neither project report writes to a fixed location; both ask where to save.</p></li>
+<li><p>Large libraries take several minutes; progress is shown in a cancellable progress bar.</p></li>
+<li><p>The two optional hook modules (<code class="docutils literal notranslate"><span class="pre">settings_xml_library_writer</span></code>, <code class="docutils literal notranslate"><span class="pre">xml_path_mapper</span></code>) are looked
+up on import and ignored if absent — no error is raised if you do not use them.</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="../index.html" accesskey="U">Samples</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="index.html" >pyRevit</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                Family Reports
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

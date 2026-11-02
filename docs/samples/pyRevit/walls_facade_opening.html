@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Facade Opening To Room &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link rel="up" title="pyRevit" href="index.html" />
+    <link rel="next" title="Highlight Warnings" href="warnings_highlight.html" />
+    <link rel="prev" title="Walls By Room" href="walls_by_rooms.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>Facade Opening To Room</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="warnings_highlight.html" title="Highlight Warnings" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="walls_by_rooms.html" title="Walls By Room" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Samples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#flows">Flows</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#pyrevit">pyRevit</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">pyRevit</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="readme.html">duHast pyRevit Extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ceilings_by_rooms.html">Ceilings By Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cloud_guids.html">GUIDS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collectors.html">Data Collectors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_compare.html">Compare</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_docmanager.html">docManager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_pdf_dwg.html">PDF and DWG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_at_the_library.html">At The Library</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_catalogue_files.html">Catalogue Files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_change_category.html">Change Category</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_force_update.html">Force Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_io.html">Family IO — Load and Save</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_reload.html">Reload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_rename.html">Rename Families</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_reports.html">Family Reports</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_swap.html">Swap Families</a></li>
+<li class="toctree-l4"><a class="reference internal" href="grids.html">Grids</a></li>
+<li class="toctree-l4"><a class="reference internal" href="levels.html">Levels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="purge_unused.html">Purge Unused</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_area_by_room.html">Verify Push It Area</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_get_a_room.html">Get A Room!</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_main.html">Push It!</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_place_revit_rooms.html">Place Revit Rooms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_stats.html">PushIt Stats</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_swap_dimensions.html">Swap Width And Depth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="roommate.html">RoomMate Export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="view_templates_import_export.html">View Templates — Import and Export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="view_templates_modify.html">View Templates — Modify</a></li>
+<li class="toctree-l4"><a class="reference internal" href="views_schedules.html">Schedules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="walls_by_rooms.html">Walls By Room</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Facade Opening To Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="warnings_highlight.html">Highlight Warnings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="warnings_solve.html">Solve Warnings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#apps">Apps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../revit_apps/index.html">Revit Application UI Guides</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/samples/pyRevit/walls_facade_opening.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="facade-opening-to-room">
+<h1>Facade Opening To Room<a class="headerlink" href="#facade-opening-to-room" title="Permalink to this heading">¶</a></h1>
+<p><strong>Panel:</strong> Walls | <strong>Button:</strong> Facade Opening To Room</p>
+<img src="Extensions/duHast-2025.extension/duHast.tab/Walls.panel/FacadeOpeningToRoom.pushbutton/Icon.png" width="40" alt="button icon">
+<p>Reports the external wall area and the external window opening area for each selected room,
+and writes the result to a CSV file. Nothing is created or modified in the model.</p>
+<section id="what-it-does">
+<h2>What it does<a class="headerlink" href="#what-it-does" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Lists every room in the model and asks you to select the rooms to report on. List entries
+are shown as <code class="docutils literal notranslate"><span class="pre">number-name_phase_level</span></code>.</p></li>
+<li><p>Collects all window opening family instances in the model that belong to one of the
+configured opening families, grouped by the wall hosting them.</p></li>
+<li><p>Works out the boundary segments of each selected room and which wall forms each segment.</p></li>
+<li><p>Keeps only the walls whose <strong>type name</strong> appears in the configured external wall type
+list. Rooms with no such wall are reported as having no match and produce no rows.</p></li>
+<li><p>For each qualifying wall, keeps only the openings that belong to the room — the opening’s
+room, <code class="docutils literal notranslate"><span class="pre">ToRoom</span></code> or <code class="docutils literal notranslate"><span class="pre">FromRoom</span></code> in the configured phase must be the room being reported.</p></li>
+<li><p>Calculates the external wall area as <code class="docutils literal notranslate"><span class="pre">wall</span> <span class="pre">segment</span> <span class="pre">length</span> <span class="pre">x</span> <span class="pre">room</span> <span class="pre">height</span></code> and the combined
+window area from the opening families.</p></li>
+<li><p>Asks for a save location and writes a CSV.</p></li>
+</ol>
+<section id="report-columns">
+<h3>Report columns<a class="headerlink" href="#report-columns" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">room</span> <span class="n">name</span><span class="p">,</span> <span class="n">room</span> <span class="n">number</span><span class="p">,</span> <span class="n">room</span> <span class="n">area</span> <span class="p">(</span><span class="n">sqm</span><span class="p">),</span> <span class="n">external</span> <span class="n">wall</span> <span class="n">area</span> <span class="p">(</span><span class="n">sqm</span><span class="p">),</span>
+<span class="n">external</span> <span class="n">window</span> <span class="n">area</span> <span class="n">combined</span> <span class="p">(</span><span class="n">sqm</span><span class="p">),</span> <span class="n">room</span> <span class="n">level</span><span class="p">,</span> <span class="n">room</span> <span class="n">phase</span><span class="p">,</span> <span class="n">room</span> <span class="n">height</span> <span class="p">(</span><span class="n">mm</span><span class="p">),</span>
+<span class="n">external</span> <span class="n">wall</span> <span class="nb">type</span> <span class="n">name</span><span class="p">,</span> <span class="n">external</span> <span class="n">window</span> <span class="n">fam</span> <span class="n">name</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A room with a qualifying external wall but no openings still produces a row, with
+<code class="docutils literal notranslate"><span class="pre">0.0</span></code> for the window area and <code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">window</span> <span class="pre">families</span> <span class="pre">in</span> <span class="pre">room</span></code> for the family names.</p>
+</section>
+</section>
+<section id="when-to-use-this">
+<h2>When to use this<a class="headerlink" href="#when-to-use-this" title="Permalink to this heading">¶</a></h2>
+<p>Use this to produce a facade-to-room area summary — glazing ratios per room, external
+envelope area per room, or a check that the modelled openings match the brief.</p>
+</section>
+<section id="configuration-read-this-first">
+<h2>Configuration — read this first<a class="headerlink" href="#configuration-read-this-first" title="Permalink to this heading">¶</a></h2>
+<p>The tool is driven by three hard-coded lists in
+<code class="docutils literal notranslate"><span class="pre">Extensions/duHast-2025.extension/duHast.tab/lib/rooms/rooms_facade_openings.py</span></code>. They are
+project-specific, and if they do not match your model the tool runs to completion and
+reports nothing.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Constant</p></th>
+<th class="head"><p>Purpose</p></th>
+<th class="head"><p>Current value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">PHASE_NAME</span></code></p></td>
+<td><p>Phase used to resolve an opening’s room</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;Project</span> <span class="pre">Scope&quot;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">EXTERNAL_WALL_TYPE_NAMES</span></code></p></td>
+<td><p>Wall types treated as external</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[&quot;P43.E_(125)_PB13_S92</span> <span class="pre">(Insulation)</span> <span class="pre">-</span> <span class="pre">External</span> <span class="pre">Lining&quot;]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">OPENING_FAMILY_NAMEs</span></code></p></td>
+<td><p>Window opening families to measure</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[&quot;WDW_Generic_Window</span> <span class="pre">Opening&quot;,</span> <span class="pre">&quot;WDW_Generic_Window</span> <span class="pre">Opening_Instance&quot;]</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">WINDOW_AREA_CALCULATION_MAPPER</span></code> in the same file maps each opening family to the routine
+that measures it — one reads the area from the type, the other from the instance. A new
+opening family needs an entry in both <code class="docutils literal notranslate"><span class="pre">OPENING_FAMILY_NAMEs</span></code> and the mapper.</p>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Rooms must be placed and bounded.</p></li>
+<li><p>Rooms must have a height value — the external wall area is derived from it.</p></li>
+<li><p>The wall types and opening families named above must exist in the model.</p></li>
+</ul>
+</section>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">DEBUG</span> <span class="pre">=</span> <span class="pre">True</span></code> in the module for a verbose run — selected rooms, every opening found,
+and each wall area calculation are then printed to the output window. Useful when the report
+comes back empty and you need to see which of the three constants is not matching.</p></li>
+<li><p>The wall area is a simple <code class="docutils literal notranslate"><span class="pre">length</span> <span class="pre">x</span> <span class="pre">height</span></code> rectangle. It is not reduced by the openings,
+and it does not account for parapets, spandrels or sloping soffits.</p></li>
+<li><p>Room area and height are read in project units and written to the CSV as-is; the column
+headings assume a metric project.</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="../index.html" accesskey="U">Samples</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="index.html" >pyRevit</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                Facade Opening To Room
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

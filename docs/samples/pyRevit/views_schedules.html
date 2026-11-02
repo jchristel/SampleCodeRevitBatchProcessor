@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Schedules &#8212; Sample Code Revit Batch Processor 1.1.16 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.16 documentation" href="../../index.html" />
+    <link rel="up" title="pyRevit" href="index.html" />
+    <link rel="next" title="Walls By Room" href="walls_by_rooms.html" />
+    <link rel="prev" title="View Templates — Modify" href="view_templates_modify.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.16 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>Schedules</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="walls_by_rooms.html" title="Walls By Room" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="view_templates_modify.html" title="View Templates — Modify" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Samples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#flows">Flows</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#pyrevit">pyRevit</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">pyRevit</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="readme.html">duHast pyRevit Extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ceilings_by_rooms.html">Ceilings By Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cloud_guids.html">GUIDS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collectors.html">Data Collectors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_compare.html">Compare</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_docmanager.html">docManager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="export_pdf_dwg.html">PDF and DWG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_at_the_library.html">At The Library</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_catalogue_files.html">Catalogue Files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_change_category.html">Change Category</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_force_update.html">Force Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_io.html">Family IO — Load and Save</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_reload.html">Reload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_rename.html">Rename Families</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_reports.html">Family Reports</a></li>
+<li class="toctree-l4"><a class="reference internal" href="families_swap.html">Swap Families</a></li>
+<li class="toctree-l4"><a class="reference internal" href="grids.html">Grids</a></li>
+<li class="toctree-l4"><a class="reference internal" href="levels.html">Levels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="purge_unused.html">Purge Unused</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_area_by_room.html">Verify Push It Area</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_get_a_room.html">Get A Room!</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_main.html">Push It!</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_place_revit_rooms.html">Place Revit Rooms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_stats.html">PushIt Stats</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pushit_swap_dimensions.html">Swap Width And Depth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="roommate.html">RoomMate Export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="view_templates_import_export.html">View Templates — Import and Export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="view_templates_modify.html">View Templates — Modify</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Schedules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="walls_by_rooms.html">Walls By Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="walls_facade_opening.html">Facade Opening To Room</a></li>
+<li class="toctree-l4"><a class="reference internal" href="warnings_highlight.html">Highlight Warnings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="warnings_solve.html">Solve Warnings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#apps">Apps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../revit_apps/index.html">Revit Application UI Guides</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/samples/pyRevit/views_schedules.md.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="schedules">
+<h1>Schedules<a class="headerlink" href="#schedules" title="Permalink to this heading">¶</a></h1>
+<p><strong>Panel:</strong> Views | <strong>Menu:</strong> Schedules</p>
+<img src="Extensions/duHast-2025.extension/duHast.tab/Views.panel/Schedules.pulldown/Icon.png" width="40" alt="button icon">
+<p>Tools for managing Revit schedules — column widths, sheet placement overlaps, and room number filter values.</p>
+<hr class="docutils" />
+<section id="export-column-width">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Views.panel/Schedules.pulldown/Export%20Column%20Width.pushbutton/Icon.png" width="24" alt="Export Column Width icon"> Export Column Width<a class="headerlink" href="#export-column-width" title="Permalink to this heading">¶</a></h2>
+<p>Saves schedule column widths to a <strong>CSV</strong> file.</p>
+<ul class="simple">
+<li><p>You select the schedules to export — this is a <strong>multi-select</strong> list, not one schedule.</p></li>
+<li><p>A second dialog asks whether to export <strong>all fields</strong> or only <strong>specific fields</strong>.</p></li>
+<li><p>A save dialog asks where to write the <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file.</p></li>
+</ul>
+<p>Use this as a snapshot before changes, or as a source to apply to other schedules.</p>
+</section>
+<hr class="docutils" />
+<section id="resize-column-width-from-export">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Views.panel/Schedules.pulldown/Resize%20Column%20Width%20From%20Export.pushbutton/Icon.png" width="24" alt="Resize Column Width From Export icon"> Resize Column Width From Export<a class="headerlink" href="#resize-column-width-from-export" title="Permalink to this heading">¶</a></h2>
+<p>Applies column widths to schedules from a previously saved CSV.</p>
+<p><strong>Workflow:</strong></p>
+<ol class="arabic simple">
+<li><p>Select the <strong>CSV file</strong> first.</p></li>
+<li><p>Select which <strong>schedules</strong> to update, chosen from those named in the file.</p></li>
+<li><p>The widths are applied with a progress bar.</p></li>
+</ol>
+<ul class="simple">
+<li><p>Matching is by <strong>schedule name and field name</strong>, not by column order.</p></li>
+<li><p>Schedules that do not contain a field named in the file are skipped, and listed at the end
+of the run.</p></li>
+</ul>
+<p><strong>Use when:</strong> A schedule’s column widths have been reset (for example after a template
+upgrade) and you need to restore them to a known-good state.</p>
+</section>
+<hr class="docutils" />
+<section id="resize-column-width-by-name-and-value">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Views.panel/Schedules.pulldown/Resize%20Column%20Width%20By%20Name%20And%20Value.pushbutton/Icon.png" width="24" alt="Resize Column Width By Name And Value icon"> Resize Column Width By Name And Value<a class="headerlink" href="#resize-column-width-by-name-and-value" title="Permalink to this heading">¶</a></h2>
+<p>Sets one column’s width across many schedules, without needing an export file.</p>
+<p><strong>Workflow:</strong></p>
+<ol class="arabic simple">
+<li><p>Select the <strong>schedules</strong> to modify.</p></li>
+<li><p>Select the <strong>single field</strong> whose width you want to set.</p></li>
+<li><p>Enter the width <strong>in millimetres</strong> in the dialog.</p></li>
+</ol>
+<p>Schedules that do not contain that field are skipped and listed at the end of the run.</p>
+<p><strong>Use when:</strong> Applying a standard width to one named column across a set of schedules.</p>
+</section>
+<hr class="docutils" />
+<section id="report-overlaps">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Views.panel/Schedules.pulldown/Report%20Schedules%20Overlaps.pushbutton/Icon.png" width="24" alt="Report Overlaps icon"> Report Overlaps<a class="headerlink" href="#report-overlaps" title="Permalink to this heading">¶</a></h2>
+<p>Checks selected sheets for schedule segments that are incorrectly positioned and saves a CSV report for each overlap type found.</p>
+<ul class="simple">
+<li><p>You select the sheets to check.</p></li>
+<li><p>You choose an output folder for the reports.</p></li>
+<li><p>Three checks are performed:</p>
+<ul>
+<li><p>Schedule segments overlapping each other on the same sheet.</p></li>
+<li><p>Schedule segments placed outside the title block boundary.</p></li>
+<li><p>Schedule segments overlapping viewports on the sheet.</p></li>
+</ul>
+</li>
+<li><p>A separate CSV file is written for each overlap type that has findings, named after the
+model:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;model</span> <span class="pre">title&gt;_schedule_segments_overlap.csv</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;model</span> <span class="pre">title&gt;_schedule_overlaps_title_block.csv</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;model</span> <span class="pre">title&gt;_schedule_overlaps_viewports.csv</span></code></p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Use when:</strong> You need to audit sheet layouts before issue, or after a template change has caused schedule instances to shift.</p>
+</section>
+<hr class="docutils" />
+<section id="fix-segment-overlaps">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Views.panel/Schedules.pulldown/Fix%20Schedule%20Segments%20Overlaps.pushbutton/Icon.png" width="24" alt="Fix Segment Overlaps icon"> Fix Segment Overlaps<a class="headerlink" href="#fix-segment-overlaps" title="Permalink to this heading">¶</a></h2>
+<p>Automatically resolves overlapping schedule segments on sheets by moving them horizontally until no overlaps remain.</p>
+<ul class="simple">
+<li><p>You select the split schedules to fix.</p></li>
+<li><p>The tool adjusts the position of each schedule sheet instance in the horizontal direction until segments no longer overlap.</p></li>
+<li><p>Schedules that do not have overlapping segments are left unchanged.</p></li>
+</ul>
+<p><strong>Use when:</strong> Split schedules (schedules broken into multiple segments across a sheet) have shifted and are overlapping each other after a template upgrade or sheet reorganisation.</p>
+</section>
+<hr class="docutils" />
+<section id="export-room-number-filter-value">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Views.panel/Schedules.pulldown/Export%20Room%20Number%20Filter%20Value.pushbutton/Icon.png" width="24" alt="Export Room Number Filter Value icon"> Export Room Number Filter Value<a class="headerlink" href="#export-room-number-filter-value" title="Permalink to this heading">¶</a></h2>
+<p>Exports the <strong>Room: Number</strong> filter value currently set on each selected schedule to a CSV file.</p>
+<ul class="simple">
+<li><p>You select the schedules to export.</p></li>
+<li><p>The exported CSV contains: Schedule Name, Schedule Id, Field Index, Filter Index, and Room Filter Value.</p></li>
+<li><p>Only the first Room: Number filter per schedule is exported.</p></li>
+</ul>
+<p><strong>Use when:</strong> You want to snapshot which room number each schedule is currently filtered to — for example, before bulk-updating schedules or as part of a handover audit.</p>
+</section>
+<hr class="docutils" />
+<section id="extract-room-number-filter-value">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Views.panel/Schedules.pulldown/Extract%20Room%20Number%20Filter%20Value%20From%20Schedule%20Name.pushbutton/Icon.png" width="24" alt="Extract Room Number Filter Value icon"> Extract Room Number Filter Value<a class="headerlink" href="#extract-room-number-filter-value" title="Permalink to this heading">¶</a></h2>
+<p>Reads each selected schedule’s name, extracts the room number from it using a prefix you specify, and updates that schedule’s <strong>Room: Number</strong> filter value to match.</p>
+<ul class="simple">
+<li><p>You select the schedules to update.</p></li>
+<li><p>You provide a prefix string (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;Room</span> <span class="pre">&quot;</span></code>) — the text immediately after the prefix in the schedule name is used as the room number.</p></li>
+<li><p>The Room: Number filter on each schedule is updated in a Revit transaction.</p></li>
+<li><p>Schedules where no room number can be extracted from the name are skipped and reported.</p></li>
+</ul>
+<p><strong>Use when:</strong> Schedules have been renamed to include a room number in their name (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;Room</span> <span class="pre">1.01</span> <span class="pre">-</span> <span class="pre">Door</span> <span class="pre">Schedule&quot;</span></code>) and you need the schedule’s Room: Number filter to be kept in sync with that name.</p>
+</section>
+<hr class="docutils" />
+<section id="import-room-number-filter-value">
+<h2><img src="Extensions/duHast-2025.extension/duHast.tab/Views.panel/Schedules.pulldown/Import%20Room%20Number%20Filter%20Value.pushbutton/Icon.png" width="24" alt="Import Room Number Filter Value icon"> Import Room Number Filter Value<a class="headerlink" href="#import-room-number-filter-value" title="Permalink to this heading">¶</a></h2>
+<p>Reads a previously exported Room Number filter CSV file and applies the saved filter values back to the matching schedules.</p>
+<ul class="simple">
+<li><p>You select the CSV file produced by <strong>Export Room Number Filter Value</strong>.</p></li>
+<li><p>Schedules are matched by their Revit Element Id (from the CSV).</p></li>
+<li><p>The Room: Number filter on each matched schedule is updated to the value stored in the CSV.</p></li>
+</ul>
+<p><strong>Use when:</strong> You need to restore or bulk-apply room filter values to schedules — for example, after a model was detached and schedules lost their filter settings, or when applying a filter snapshot from another model.</p>
+</section>
+<hr class="docutils" />
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Column width tools act on the <strong>schedule view</strong>, not on placed schedule instances on sheets; changes propagate to all sheet instances of the same schedule.</p></li>
+<li><p>Column widths are handled in <strong>millimetres</strong> throughout; the exported CSV carries the same units.</p></li>
+<li><p>Export column widths immediately after finalising a schedule layout to create a restoration point before sharing the template.</p></li>
+<li><p>The overlap report and fix tools operate on <strong>schedule instances on sheets</strong>, not on the schedule view definition.</p></li>
+<li><p>The Room: Number filter tools work with schedules that have a filter on the built-in <code class="docutils literal notranslate"><span class="pre">Room:</span> <span class="pre">Number</span></code> field; schedules without that filter are skipped.</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="../index.html" accesskey="U">Samples</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="index.html" >pyRevit</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                Schedules
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

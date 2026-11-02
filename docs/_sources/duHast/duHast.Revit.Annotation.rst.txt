@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   duHast.Revit.Annotation.Export
    duHast.Revit.Annotation.Reporting
    duHast.Revit.Annotation.Utility
 
@@ -57,6 +58,14 @@ duHast.Revit.Annotation.independent\_tags module
 ------------------------------------------------
 
 .. automodule:: duHast.Revit.Annotation.independent_tags
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Annotation.independent\_tags\_create module
+--------------------------------------------------------
+
+.. automodule:: duHast.Revit.Annotation.independent_tags_create
    :members:
    :undoc-members:
    :show-inheritance:

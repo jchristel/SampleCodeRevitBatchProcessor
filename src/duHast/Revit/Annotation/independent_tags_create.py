@@ -48,12 +48,16 @@ def create_independent_tag_without_transaction_wrapper(
     add_leader=False,
     elbow_point=None,
     end_point=None,
+    tag_mode=TagMode.TM_ADDBY_CATEGORY,
 ):
     """
     Tags an element in a view.
 
-    The tag is made on the element at the head point and then, when a type is wanted, changed to it
-    (so a multi category tag family works whatever the element's category is). A free leader end,
+    The tag is made on the element at the head point and then, when a type is wanted, changed to it.
+    **The mode it is made in matters**: with the default, `TM_ADDBY_CATEGORY`, Revit needs a tag type loaded for the
+    element's OWN category (Furniture Tags for a chair) and refuses with "There is no loaded tag type that can be used
+    when tagging referenceToTag with tagMode" when the model has none, before the wanted type is ever used. A multi
+    category tag family is made with `TM_ADDBY_MULTICATEGORY`, which works whatever the element's category is. A free leader end,
     and an elbow, are set when given; a leader which will not take them keeps Revit's.
 
     Changing the model: this needs to run inside a transaction.
@@ -76,6 +80,9 @@ def create_independent_tag_without_transaction_wrapper(
     :type elbow_point: Autodesk.Revit.DB.XYZ, optional
     :param end_point: Where a free leader ends, defaults to None.
     :type end_point: Autodesk.Revit.DB.XYZ, optional
+    :param tag_mode: How Revit finds the tag type to start from, defaults to TagMode.TM_ADDBY_CATEGORY (as before). Pass
+        TagMode.TM_ADDBY_MULTICATEGORY for a multi category tag.
+    :type tag_mode: Autodesk.Revit.DB.TagMode, optional
 
     :return: Result class instance. .result holds the tag when it was created.
     :rtype: :class:`.Result`
@@ -85,7 +92,7 @@ def create_independent_tag_without_transaction_wrapper(
     try:
         reference = Reference(element)
         tag = IndependentTag.Create(
-            doc, view.Id, reference, add_leader, TagMode.TM_ADDBY_CATEGORY, orientation, head_point
+            doc, view.Id, reference, add_leader, tag_mode, orientation, head_point
         )
         if tag_type_id is not None and tag.GetTypeId() != tag_type_id:
             tag.ChangeTypeId(tag_type_id)

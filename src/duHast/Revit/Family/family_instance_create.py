@@ -33,6 +33,8 @@ from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common.transaction import in_transaction
 
 from Autodesk.Revit.DB import (
+    FamilyPlacementType,
+    Line,
     Transaction,
     XYZ,
 )
@@ -195,6 +197,125 @@ def place_a_family_instance_in_basic_wall(
     return return_value
 
 
+def project_point_onto_view_plane(view, point):
+    """
+    Projects a point onto the plane of a view (defined by the view origin and view direction).
+
+    :param view: The view.
+    :type view: Autodesk.Revit.DB.View
+    :param point: The point to project.
+    :type point: Autodesk.Revit.DB.XYZ
+
+    :return: The projected point.
+    :rtype: Autodesk.Revit.DB.XYZ
+    """
+    normal = view.ViewDirection.Normalize()
+    distance = (point - view.Origin).DotProduct(normal)
+    return point - normal.Multiply(distance)
+
+
+def place_a_line_based_detail_family_instance_in_view(
+    doc,
+    start_point,
+    end_point,
+    family_symbol,
+    view,
+    transaction_manager=in_transaction,
+    modify_action=None,
+):
+    """
+    Places a line based detail family instance in a view (elevation, section, plan, drafting view).
+
+    matches FamilyPlacementType.CurveBasedDetail
+
+    Start and end point are projected onto the view plane before placement, since the line needs to lie in the view plane.
+
+    Note: It is much faster to modify the family instance after placement in the same transaction than to place it in one transaction
+    and modify its parameters in a separate transaction.
+    Use the modify_action parameter to provide a function that modifies the family instance after placement. Function to accept a family instance as a parameter.
+
+    :param doc: The revit document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param start_point: The start point of the line.
+    :type start_point: Autodesk.Revit.DB.XYZ
+    :param end_point: The end point of the line.
+    :type end_point: Autodesk.Revit.DB.XYZ
+    :param family_symbol: The line based detail family symbol to place.
+    :type family_symbol: Autodesk.Revit.DB.FamilySymbol
+    :param view: The view to place the family instance in.
+    :type view: Autodesk.Revit.DB.View
+    :param transaction_manager: The transaction manager to use.
+    :type transaction_manager: function
+    :param modify_action: An action to run after the family instance is placed to modify its properties.
+    :type modify_action: function
+
+    :return: A result object.
+    :rtype: duHast.Utilities.Objects.result.Result
+    """
+
+    return_value = res.Result()
+
+    # check the family is a line based detail family
+    if (
+        family_symbol.Family.FamilyPlacementType
+        != FamilyPlacementType.CurveBasedDetail
+    ):
+        return_value.update_sep(
+            False,
+            "Family {} is not a line based detail family.".format(
+                family_symbol.Family.Name
+            ),
+        )
+        return return_value
+
+    # the line needs to be in the view plane
+    start = project_point_onto_view_plane(view, start_point)
+    end = project_point_onto_view_plane(view, end_point)
+    if start.DistanceTo(end) <= doc.Application.ShortCurveTolerance:
+        return_value.update_sep(
+            False, "Line is too short after projection onto the view plane."
+        )
+        return return_value
+
+    # places a family in the view
+    def action():
+        action_return_value = res.Result()
+        try:
+            # the symbol needs to be activated before using it
+            # https://thebuildingcoder.typepad.com/blog/2014/08/activate-your-family-symbol-before-using-it.html
+            if not family_symbol.IsActive:
+                family_symbol.Activate()
+                doc.Regenerate()
+
+            # create a new instance
+            line = Line.CreateBound(start, end)
+            element = doc.Create.NewFamilyInstance(line, family_symbol, view)
+
+            action_return_value.append_message("Family placed successfully.")
+            action_return_value.result.append(element)
+
+            # if a modify action is provided, run it
+            if modify_action:
+                modify_result = modify_action(element)
+                if isinstance(modify_result, res.Result):
+                    action_return_value.update(modify_result)
+            else:
+                action_return_value.append_message(
+                    "No modify action provided, skipping."
+                )
+
+        except Exception as e:
+            action_return_value.update_sep(
+                False,
+                "Failed to place line based detail family instance: {}".format(e),
+            )
+        return action_return_value
+
+    transaction = Transaction(doc, "Placing line based detail family")
+    return_value = transaction_manager(transaction, action)
+    return return_value
+
+
 def create_instance_in_family_in_view(doc, location_point, family_symbol, view, transaction_manager=in_transaction,modify_action=None):
     """
     Create a family instance in a specific view within a family document.
@@ -236,7 +357,7 @@ def create_instance_in_family_in_view(doc, location_point, family_symbol, view, 
             # get the item factory
             item_factory = doc.FamilyCreate
 
-            fam_instance_created = item_factory.NewFamilyInstance(location_point,family_symbol,view)
+            element = item_factory.NewFamilyInstance(location_point,family_symbol,view)
 
             action_return_value.append_message("Family placed successfully.")
             action_return_value.result.append(element)
@@ -303,7 +424,7 @@ def create_instance_in_family_on_level(doc, location_point, family_symbol, level
             # get the item factory
             item_factory = doc.FamilyCreate
 
-            fam_instance_created = item_factory.NewFamilyInstance(location_point,family_symbol,level,structural_type)
+            element = item_factory.NewFamilyInstance(location_point,family_symbol,level,structural_type)
 
             action_return_value.append_message("Family placed successfully.")
             action_return_value.result.append(element)

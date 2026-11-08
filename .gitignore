@@ -654,3 +654,6 @@ VS/duHastUI/DocManagerUI/Utils/RevitData/RevitSheet.cs
 VS/duHastUI/DocManagerUI/ViewModels/AppViewModelBase.cs
 /VS/.claude
 /VS/duHastApplications/roommate/data
+
+# Revit API assemblies are Autodesk files: not redistributed, the VS projects use the Nice3point.Revit.Api NuGet packages
+VS/_References/Autodesk/RevitAPI*.dll

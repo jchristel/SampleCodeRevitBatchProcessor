@@ -33,6 +33,7 @@ from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common.transaction import in_transaction
 
 from Autodesk.Revit.DB import (
+    Element,
     FamilyPlacementType,
     Line,
     Transaction,
@@ -263,7 +264,7 @@ def place_a_line_based_detail_family_instance_in_view(
         return_value.update_sep(
             False,
             "Family {} is not a line based detail family.".format(
-                family_symbol.Family.Name
+                Element.Name.GetValue(family_symbol.Family)
             ),
         )
         return return_value

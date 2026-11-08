@@ -178,10 +178,21 @@ runs on is not committed inside it. Use a built copy of the extension, which has
 under `lib/duHast` and the .NET DLLs in `bin`.
 
 1. Install [pyRevit](https://github.com/pyrevitlabs/pyRevit) if not already installed.
-2. Get a built copy of the extension, `duHast-2025.extension-v<version>.zip`, either from the
-   [releases page](https://github.com/jchristel/SampleCodeRevitBatchProcessor/releases) or by
-   building it yourself (see **Building the extension** below).
-3. Close Revit, then unzip it into your pyRevit extensions directory,
+2. Install the extension with the installer or from the zip file, both from the
+   [releases page](https://github.com/jchristel/SampleCodeRevitBatchProcessor/releases) or
+   built yourself (see **Building the extension** below).
+
+   **Installer** (`duHast-2025.extension-setup-v<version>.exe`): run it and follow the steps.
+   It installs for the current user only and does not need admin rights. It asks you to close
+   Revit first, removes the previous version when upgrading, and can be removed again from
+   Windows' installed apps list. If you pick a folder other than the default, it adds that
+   folder to pyRevit for you.
+
+   The installer is not code signed, so Windows SmartScreen will warn that it comes from an
+   unknown publisher. Click **More info**, then **Run anyway**.
+
+   **Zip file** (`duHast-2025.extension-v<version>.zip`): close Revit, then unzip it into your
+   pyRevit extensions directory,
    `%APPDATA%\pyRevit\Extensions`, so you end up with
    `%APPDATA%\pyRevit\Extensions\duHast-2025.extension`. When upgrading, delete the old
    `duHast-2025.extension` folder first so no files from the old version stay behind.
@@ -189,8 +200,8 @@ under `lib/duHast` and the .NET DLLs in `bin`.
    To keep the extension somewhere else, unzip it into any folder and add that folder in
    pyRevit settings under **Custom Extension Directories**, or run
    `pyrevit extensions paths add <folder>`.
-4. Start Revit — the **duHast** tab will appear in the ribbon.
-5. Refer to the individual docs linked above for prerequisites and configuration before first
+3. Start Revit — the **duHast** tab will appear in the ribbon.
+4. Refer to the individual docs linked above for prerequisites and configuration before first
    use.
 
 The installed version is in the extension's `extension.json` and in
@@ -221,6 +232,16 @@ writes the version and zips the result.
    - `--output <folder>`, `--no-zip`.
 
 If a DLL in the manifest is not found in the build output, the script stops and names it.
+
+To build the installer as well, install [Inno Setup 6](https://jrsoftware.org/isinfo.php) and,
+after running the build script, run from the repository root:
+
+```
+iscc Samples\pyRevit\installer\duHast-extension.iss
+```
+
+The installer is written to `dist\pyRevit` and takes its version from the built extension. Pass
+`/DMyAppVersion=<version>`, `/DExtensionDir=<folder>` or `/DOutputDir=<folder>` to override.
 
 ## Before you run a tool
 

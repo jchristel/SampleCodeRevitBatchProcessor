@@ -29,7 +29,7 @@ View crop utilities.
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Common.parameter_set_utils import set_builtin_parameter_without_transaction_wrapper_by_name
 
-from Autodesk.Revit.DB import BoundingBoxXYZ, BuiltInParameter, View3D, ViewOrientation3D, XYZ
+from Autodesk.Revit.DB import BoundingBoxXYZ, BuiltInParameter, Transform, View3D, ViewOrientation3D, XYZ
 
 
 def _unit(x, y, z):
@@ -39,7 +39,7 @@ def _unit(x, y, z):
     return XYZ(x / length, y / length, z / length)
 
 
-def _crop_to_box(doc, view, box_min, box_max):
+def _crop_to_box(doc, view, box_min, box_max, box_transform=None):
     """
     Turn Crop View on and fit the crop box tightly round the section box as the camera sees it: the extent of
     the box's eight corners on the view's own right and up axes.
@@ -56,6 +56,8 @@ def _crop_to_box(doc, view, box_min, box_max):
     :type box_min: Autodesk.Revit.DB.XYZ
     :param box_max: The opposite corner, in feet.
     :type box_max: Autodesk.Revit.DB.XYZ
+    :param box_transform: The section box's Transform when it is turned (the corners are then in its frame), defaults to None.
+    :type box_transform: Autodesk.Revit.DB.Transform, optional
     """
 
     view.CropBoxActive = True
@@ -66,7 +68,10 @@ def _crop_to_box(doc, view, box_min, box_max):
     for x in (box_min.X, box_max.X):
         for y in (box_min.Y, box_max.Y):
             for z in (box_min.Z, box_max.Z):
-                local = inverse.OfPoint(XYZ(x, y, z))
+                corner = XYZ(x, y, z)
+                if box_transform is not None:
+                    corner = box_transform.OfPoint(corner)
+                local = inverse.OfPoint(corner)
                 xs.append(local.X)
                 ys.append(local.Y)
     fitted = BoundingBoxXYZ()
@@ -78,7 +83,7 @@ def _crop_to_box(doc, view, box_min, box_max):
 
 
 def create_view_3d_around_box_without_transaction_wrapper(
-    doc, view_type, view_name, forward, up, box_min, box_max, phase=None
+    doc, view_type, view_name, forward, up, box_min, box_max, phase=None, rotation=0.0
 ):
     """
     Creates an isometric 3D view that looks along a direction at a box, and cuts the model to that box (the section box). The view is cropped to the section box as the camera sees it (Crop View on, fitted tightly).
@@ -104,6 +109,11 @@ def create_view_3d_around_box_without_transaction_wrapper(
     :type box_max: Autodesk.Revit.DB.XYZ
     :param phase: The phase of the view, defaults to None (Revit's default).
     :type phase: Autodesk.Revit.DB.Phase, optional
+    :param rotation: A counter clockwise turn of the section box about its own centre, in radians, defaults to 0.0.
+        box_min and box_max are then the corners of the box before the turn, so a room at an angle is cut by a box
+        square to its walls (measured in Revit 2026: a 3D view keeps a turned section box Transform, unlike a
+        plan view's crop). The direction is not turned with it: pass the forward and up the camera should have.
+    :type rotation: float, optional
 
     :return: Result with the new view in its result list.
     :rtype: Result
@@ -121,7 +131,14 @@ def create_view_3d_around_box_without_transaction_wrapper(
                 element=view, parameter_definition=BuiltInParameter.VIEW_PHASE, parameter_value=phase.Id
             )
 
+        centre = XYZ(
+            (box_min.X + box_max.X) / 2.0, (box_min.Y + box_max.Y) / 2.0, (box_min.Z + box_max.Z) / 2.0
+        )
         box = BoundingBoxXYZ()
+        box_transform = None
+        if abs(rotation) > 1e-9:
+            box_transform = Transform.CreateRotationAtPoint(XYZ.BasisZ, rotation, centre)
+            box.Transform = box_transform
         box.Min = box_min
         box.Max = box_max
         view.SetSectionBox(box)
@@ -129,13 +146,10 @@ def create_view_3d_around_box_without_transaction_wrapper(
 
         forward_unit = _unit(*forward)
         up_unit = _unit(*up)
-        centre = XYZ(
-            (box_min.X + box_max.X) / 2.0, (box_min.Y + box_max.Y) / 2.0, (box_min.Z + box_max.Z) / 2.0
-        )
         diagonal = box_min.DistanceTo(box_max)
         eye = centre - forward_unit * (diagonal * 2.0)
         view.SetOrientation(ViewOrientation3D(eye, up_unit, forward_unit))
-        _crop_to_box(doc, view, box_min, box_max)
+        _crop_to_box(doc, view, box_min, box_max, box_transform)
 
         return_value.append_message("Successfully created 3D view {}".format(view_name))
         return_value.result.append(view)

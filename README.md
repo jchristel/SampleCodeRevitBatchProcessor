@@ -1,4 +1,9 @@
 # Code samples for the Revit Batch Processor
+
+[![GitHub downloads](https://img.shields.io/github/downloads/jchristel/SampleCodeRevitBatchProcessor/total?label=GitHub%20downloads)](https://github.com/jchristel/SampleCodeRevitBatchProcessor/releases)
+[![GitHub downloads (latest release)](https://img.shields.io/github/downloads/jchristel/SampleCodeRevitBatchProcessor/latest/total?label=latest%20release%20downloads)](https://github.com/jchristel/SampleCodeRevitBatchProcessor/releases/latest)
+[![PyPI downloads](https://img.shields.io/pepy/dt/duhast8?label=PyPI%20downloads)](https://pypi.org/project/duHast8/)
+
 This repository contains python code samples for the [Revit Batch Processor](https://github.com/bvn-architecture/RevitBatchProcessor)
 
 A more detailed description of the varies modules, can be found in the online [docs](https://jchristel.github.io/SampleCodeRevitBatchProcessor/) and in the [wiki](https://github.com/jchristel/SampleCodeRevitBatchProcessor/wiki).

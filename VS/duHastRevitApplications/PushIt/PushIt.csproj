@@ -42,17 +42,12 @@
     <PackageReference Include="System.Collections.Immutable" Version="9.0.6" />
     <PackageReference Include="System.Reflection.Metadata" Version="9.0.6" />
     <PackageReference Include="System.Threading.Channels" Version="9.0.6" />
+    <!-- Revit 2025 API, compile only: not copied to output -->
+    <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="2025.4.20" ExcludeAssets="runtime" PrivateAssets="All" />
+    <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="2025.4.20" ExcludeAssets="runtime" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="RevitAPI">
-      <HintPath>..\\..\\_References\\Autodesk\\RevitAPI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIUI">
-      <HintPath>..\\..\\_References\\Autodesk\\RevitAPIUI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="RevitUtils.25.0.1.2">
       <HintPath>..\\..\\_References\\duHast\\RevitUtils.25.0.1.2.dll</HintPath>
       <Private>False</Private>

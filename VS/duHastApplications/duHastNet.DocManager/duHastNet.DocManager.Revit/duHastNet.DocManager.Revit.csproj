@@ -47,15 +47,9 @@
 		<ProjectReference Include="..\duHastNet.DocManager.Core\duHastNet.DocManager.Core.csproj" />
 		<ProjectReference Include="..\duHastNet.DocManager.UI.Shared\duHastNet.DocManager.UI.Shared.csproj" />
 
-		<!-- Revit API references - not copied to output (Private=False) -->
-		<Reference Include="RevitAPI">
-			<HintPath>..\\..\\..\\_References\\Autodesk\\RevitAPI.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="RevitAPIUI">
-			<HintPath>..\\..\\..\\_References\\Autodesk\\RevitAPIUI.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
+		<!-- Revit API references - compile only, not copied to output -->
+		<PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="2025.4.20" ExcludeAssets="runtime" PrivateAssets="All" />
+		<PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="2025.4.20" ExcludeAssets="runtime" PrivateAssets="All" />
     <!-- doc manager settings dll reference -->
     <Reference Include="DocManagerSettingsUI.25.0.1.2">
       <HintPath>..\\..\\..\\_References\\duHast\\DocManagerSettingsUI.25.0.1.2.dll</HintPath>

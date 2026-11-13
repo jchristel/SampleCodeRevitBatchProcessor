@@ -185,7 +185,12 @@ under `lib/duHast` and the .NET DLLs in `bin`.
    **Installer** (`duHast-2025.extension-setup-v<version>.exe`): run it and follow the steps.
    It installs for the current user only and does not need admin rights. It asks you to close
    Revit first, removes the previous version when upgrading, and can be removed again from
-   Windows' installed apps list. If you pick a folder other than the default, it adds that
+   Windows' installed apps list.
+
+   Pick **Choose panels** to install only some of the ribbon panels. The duHast library and the
+   shared files are always installed. An upgrade remembers your choice, and running the
+   installer again lets you add or remove panels. A panel's tools sit together, so leaving one
+   panel out doesn't break another. If you pick a folder other than the default, it adds that
    folder to pyRevit for you.
 
    The installer is not code signed, so Windows SmartScreen will warn that it comes from an
@@ -210,7 +215,9 @@ The installed version is in the extension's `extension.json` and in
 ### Building the extension
 
 Each release from the `net8DuHast` branch builds the zip and the installer automatically and
-attaches them to the release. To build them yourself:
+attaches them to the release. Pull requests that change the extension, `VS` or `src/duHast` build
+them too, and keep them as a `pyrevit-extension` artifact of the workflow run. To build them
+yourself:
 
 The build script lives in `Samples/pyRevit/installer/build_extension.py` and needs Python 3
 (plus the .NET 8 SDK for `--build-vs`). It copies the extension into `dist/pyRevit`, bundles `src/duHast` into the extension's
@@ -247,7 +254,9 @@ after running the build script, run from the repository root:
 iscc Samples\pyRevit\installer\duHast-extension.iss
 ```
 
-The installer is written to `dist\pyRevit` and takes its version from the built extension. Pass
+The installer is written to `dist\pyRevit` and takes its version from the built extension. Its
+list of panels comes from `duHast-2025.extension.panels.iss`, which the build script writes next to
+the built extension, so new panels show up without changing the installer script. Pass
 `/DMyAppVersion=<version>`, `/DExtensionDir=<folder>` or `/DOutputDir=<folder>` to override.
 
 ## Before you run a tool

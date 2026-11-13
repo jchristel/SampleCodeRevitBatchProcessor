@@ -1,0 +1,26 @@
+# DLLs the extension bin folder needs, one per line.
+# Names may leave out the version suffix: PushIt matches PushIt.dll and PushIt.25.0.1.2.dll.
+# build_extension.py takes them from the Visual Studio output folders (VS/**/bin/x64/<configuration>).
+
+AtTheLibrary
+CommunityToolkit.Mvvm
+CsvHelper
+DocManagerRevit
+DocManagerSettingsUI
+duHastNet.DocManager.Core
+duHastNet.DocManager.UI.Shared
+duHastUICustomControls
+e_sqlite3
+FamilyReloaderUI
+FileIOWrapper
+Newtonsoft.Json
+PDFDWGExporterSelectionUI
+PDFDWGExporterUI
+PushIt
+Revit.Async
+RevitUtils
+SQLite-net
+SQLitePCLRaw.batteries_v2
+SQLitePCLRaw.core
+SQLitePCLRaw.provider.e_sqlite3
+Utils

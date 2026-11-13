@@ -173,12 +173,75 @@ Integration with a local RoomMate server.
 
 ## Getting Started
 
+The extension folder in this repository is not ready to use on its own: the duHast library it
+runs on is not committed inside it. Use a built copy of the extension, which has duHast bundled
+under `lib/duHast` and the .NET DLLs in `bin`.
+
 1. Install [pyRevit](https://github.com/pyrevitlabs/pyRevit) if not already installed.
-2. Copy the extension folder to your pyRevit extensions directory, or add it via pyRevit
-   settings.
-3. Restart Revit — the **duHast** tab will appear in the ribbon.
+2. Install the extension with the installer or from the zip file, both from the
+   [releases page](https://github.com/jchristel/SampleCodeRevitBatchProcessor/releases) or
+   built yourself (see **Building the extension** below).
+
+   **Installer** (`duHast-2025.extension-setup-v<version>.exe`): run it and follow the steps.
+   It installs for the current user only and does not need admin rights. It asks you to close
+   Revit first, removes the previous version when upgrading, and can be removed again from
+   Windows' installed apps list. If you pick a folder other than the default, it adds that
+   folder to pyRevit for you.
+
+   The installer is not code signed, so Windows SmartScreen will warn that it comes from an
+   unknown publisher. Click **More info**, then **Run anyway**.
+
+   **Zip file** (`duHast-2025.extension-v<version>.zip`): close Revit, then unzip it into your
+   pyRevit extensions directory,
+   `%APPDATA%\pyRevit\Extensions`, so you end up with
+   `%APPDATA%\pyRevit\Extensions\duHast-2025.extension`. When upgrading, delete the old
+   `duHast-2025.extension` folder first so no files from the old version stay behind.
+
+   To keep the extension somewhere else, unzip it into any folder and add that folder in
+   pyRevit settings under **Custom Extension Directories**, or run
+   `pyrevit extensions paths add <folder>`.
+3. Start Revit — the **duHast** tab will appear in the ribbon.
 4. Refer to the individual docs linked above for prerequisites and configuration before first
    use.
+
+The installed version is in the extension's `extension.json` and in
+`lib/duHast/_bundled_version.txt`.
+
+### Building the extension
+
+The build script lives in `Samples/pyRevit/installer/build_extension.py` and needs Python 3
+only. It copies the extension into `dist/pyRevit`, bundles `src/duHast` into the extension's
+`lib/duHast`, fills `bin` with the DLLs listed in `Samples/pyRevit/installer/bin_manifest.txt`,
+writes the version and zips the result.
+
+1. Build the Visual Studio solutions under `VS` in the Release configuration. The script picks
+   the DLLs up from each project's `bin\x64\Release` folder.
+2. From the repository root, run:
+
+   ```
+   python Samples/pyRevit/installer/build_extension.py
+   ```
+
+   Options:
+
+   - `--version 1.0.5` — the version to write into the extension (default: the version in
+     `pyproject.toml`).
+   - `--configuration Debug` — take the DLLs from a different build configuration.
+   - `--bin-from committed` — use the `bin` folder committed with the extension instead of the
+     Visual Studio output.
+   - `--output <folder>`, `--no-zip`.
+
+If a DLL in the manifest is not found in the build output, the script stops and names it.
+
+To build the installer as well, install [Inno Setup 6](https://jrsoftware.org/isinfo.php) and,
+after running the build script, run from the repository root:
+
+```
+iscc Samples\pyRevit\installer\duHast-extension.iss
+```
+
+The installer is written to `dist\pyRevit` and takes its version from the built extension. Pass
+`/DMyAppVersion=<version>`, `/DExtensionDir=<folder>` or `/DOutputDir=<folder>` to override.
 
 ## Before you run a tool
 
@@ -201,7 +264,7 @@ bin directory. This applies to [Push It!](pushit_main.md),
 [At The Library](families_at_the_library.md), [Reload](families_reload.md),
 [PDF/DWG Export](export_pdf_dwg.md) and [docManager](export_docmanager.md).
 
-A few tools are also driven by constants edited in the extension's `lib` folder rather than by
+A few tools are also driven by constants edited in the extension's `duHast.tab/lib` folder rather than by
 a dialog — see [Facade Opening To Room](walls_facade_opening.md),
 [Ceilings By Room](ceilings_by_rooms.md) and [Reports](families_reports.md).
 
@@ -210,5 +273,7 @@ a dialog — see [Facade Opening To Room](walls_facade_opening.md),
 - **Revit 2025 or later** — the extension declares `min_revit_ver: 2025`, with engines
   configured for 2025 and 2026.
 - pyRevit (latest stable version recommended).
-- duHast Python library — bundled in the extension under `lib/duHast`.
-- The extension's `bin` folder, for the tools that open a .NET window.
+- duHast Python library — bundled in the extension under `lib/duHast` by the build script (see
+  **Building the extension** under Getting Started).
+- The extension's `bin` folder, for the tools that open a .NET window — filled from the Visual
+  Studio build output by the build script.

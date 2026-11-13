@@ -2,6 +2,7 @@
 ;
 ; Packages the extension built by build_extension.py (duHast bundled in lib/duHast, bin filled from the
 ; Visual Studio output) into a per user installer. No admin rights needed.
+; The user can choose which ribbon panels to install; lib, bin and the tab files are always installed.
 ;
 ; Build the extension first, then compile from the repository root:
 ;
@@ -28,6 +29,12 @@
 
 #if !DirExists(ExtensionDir)
   #error Built extension not found. Run build_extension.py first, or pass /DExtensionDir=<folder>.
+#endif
+
+; panel choices written by build_extension.py next to the built extension
+#define PanelsInclude ExtensionDir + ".panels.iss"
+#if !FileExists(PanelsInclude)
+  #error Panel choices (<extension>.panels.iss) not found next to the built extension. Run build_extension.py first.
 #endif
 
 #ifndef MyAppVersion
@@ -69,12 +76,24 @@ WizardStyle=modern
 [Messages]
 SelectDirLabel3=The extension folder {#ExtensionName} will be placed in the folder below.%n%nKeep the default to have pyRevit load it without further setup. A different folder is added to pyRevit's extension folders for you.
 
+[Types]
+Name: "full"; Description: "All panels"
+Name: "custom"; Description: "Choose panels"; Flags: iscustom
+
+[Components]
+; duHast library (lib), .NET DLLs (bin) and the tab files every panel needs
+Name: "core"; Description: "duHast library and shared files (required)"; Types: full custom; Flags: fixed
+
+; one component per ribbon panel
+#include PanelsInclude
+
 [InstallDelete]
 ; remove the previous version first so no files from it stay behind
 Type: filesandordirs; Name: "{app}\{#ExtensionName}"
 
 [Files]
-Source: "{#ExtensionDir}\*"; DestDir: "{app}\{#ExtensionName}"; Flags: recursesubdirs createallsubdirs ignoreversion
+; everything except the panels, which come from the panel components in the include file
+Source: "{#ExtensionDir}\*"; DestDir: "{app}\{#ExtensionName}"; Excludes: "\*.tab\*.panel"; Components: core; Flags: recursesubdirs createallsubdirs ignoreversion
 
 [UninstallDelete]
 ; files pyRevit created at run time (e.g. __pycache__)

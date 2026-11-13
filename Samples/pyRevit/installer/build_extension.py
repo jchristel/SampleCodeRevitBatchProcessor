@@ -3,15 +3,18 @@ Builds a ready to install copy of the duHast pyRevit extension.
 
 - copies the extension folder from Samples/pyRevit/Extensions into an output folder
 - bundles the duHast library from src/duHast (including its lib DLLs) into the extension lib folder
+- optionally builds the Visual Studio projects listed in vs_projects.txt with dotnet (--build-vs)
 - fills the extension bin folder with the DLLs built by Visual Studio (VS/**/bin/x64/<configuration>)
 - writes the version into extension.json and lib/duHast/_bundled_version.txt
 - zips the result
+- writes <extension>.panels.iss, the panel choices for the installer (duHast-extension.iss)
 
 Usage (from anywhere, Python 3):
 
     python Samples/pyRevit/installer/build_extension.py
     python Samples/pyRevit/installer/build_extension.py --version 1.0.5 --configuration Release
     python Samples/pyRevit/installer/build_extension.py --bin-from committed
+    python Samples/pyRevit/installer/build_extension.py --build-vs
 
 """
 #
@@ -43,6 +46,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 import zipfile
 
@@ -54,6 +58,7 @@ DUHAST_SRC_DIR = os.path.join(REPO_ROOT, "src", "duHast")
 VS_ROOT = os.path.join(REPO_ROOT, "VS")
 PYPROJECT = os.path.join(REPO_ROOT, "pyproject.toml")
 BIN_MANIFEST = os.path.join(SCRIPT_DIR, "bin_manifest.txt")
+VS_PROJECTS = os.path.join(SCRIPT_DIR, "vs_projects.txt")
 
 DEFAULT_EXTENSION = "duHast-2025.extension"
 DEFAULT_OUTPUT_DIR = os.path.join(REPO_ROOT, "dist", "pyRevit")
@@ -69,6 +74,9 @@ VS_EXCLUDE_PROJECT_PATTERNS = ["*Test", "*Tester", "*Tests"]
 
 # file name written into lib/duHast holding the bundled version
 BUNDLED_VERSION_FILE = "_bundled_version.txt"
+
+# Inno Setup include file with one installer component per ribbon panel, written next to the built extension
+PANELS_INCLUDE_SUFFIX = ".panels.iss"
 
 
 class BuildError(Exception):
@@ -93,6 +101,25 @@ def read_version_from_pyproject(pyproject_path=PYPROJECT):
     raise BuildError("No version found in {}".format(pyproject_path))
 
 
+def read_list_file(file_path):
+    """
+    Reads a text file with one entry per line, skipping blank lines and # comments.
+
+    :param file_path: Fully qualified path to the file
+    :type file_path: str
+
+    :return: List of entries
+    :rtype: [str]
+    """
+    entries = []
+    with open(file_path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.split("#", 1)[0].strip()
+            if line:
+                entries.append(line)
+    return entries
+
+
 def read_bin_manifest(manifest_path=BIN_MANIFEST):
     """
     Reads the names of the DLLs the extension bin folder needs.
@@ -105,13 +132,35 @@ def read_bin_manifest(manifest_path=BIN_MANIFEST):
     :return: List of DLL base names
     :rtype: [str]
     """
-    names = []
-    with open(manifest_path, "r", encoding="utf-8") as f:
-        for line in f:
-            line = line.split("#", 1)[0].strip()
-            if line:
-                names.append(line)
-    return names
+    return read_list_file(manifest_path)
+
+
+def build_vs_projects(configuration, projects_path=VS_PROJECTS, dotnet="dotnet"):
+    """
+    Builds the Visual Studio projects listed in vs_projects.txt (x64) with the dotnet command line.
+
+    :param configuration: The build configuration, e.g. Release
+    :type configuration: str
+    :param projects_path: Fully qualified path to the project list
+    :type projects_path: str
+    :param dotnet: The dotnet executable
+    :type dotnet: str
+    """
+    for project in read_list_file(projects_path):
+        project_path = os.path.join(REPO_ROOT, os.path.normpath(project))
+        if not os.path.isfile(project_path):
+            raise BuildError("Project not found: {}".format(project_path))
+        print("Building {}".format(project), flush=True)
+        command = [dotnet, "build", project_path, "-c", configuration, "-p:Platform=x64", "-nologo"]
+        # the projects target net8.0-windows: allow building them on other operating systems
+        if not sys.platform.startswith("win"):
+            command.append("-p:EnableWindowsTargeting=true")
+        try:
+            completed = subprocess.run(command)
+        except OSError as e:
+            raise BuildError("Could not run {}: {}".format(dotnet, e))
+        if completed.returncode != 0:
+            raise BuildError("Build failed: {}".format(project))
 
 
 def _is_excluded(name, patterns):
@@ -243,6 +292,125 @@ def write_version(extension_dir, duhast_dir, version):
         f.write(version + "\n")
 
 
+def read_bundle_layout(bundle_yaml_path):
+    """
+    Reads the layout list of a pyRevit bundle.yaml (the order of the items in the ribbon).
+
+    Only the simple form used in this extension is supported:
+
+        layout:
+          - Name
+          - Other Name
+
+    :param bundle_yaml_path: Fully qualified path to the bundle.yaml file
+    :type bundle_yaml_path: str
+
+    :return: Item names in layout order, separators left out. Empty if there is no layout.
+    :rtype: [str]
+    """
+    names = []
+    if not os.path.isfile(bundle_yaml_path):
+        return names
+    in_layout = False
+    with open(bundle_yaml_path, "r", encoding="utf-8") as f:
+        for line in f:
+            stripped = line.strip()
+            if not in_layout:
+                in_layout = stripped == "layout:"
+                continue
+            if stripped.startswith("- "):
+                name = stripped[2:].strip()
+                # separators (-----) and slide outs (>>>>>)
+                if name and not re.match(r"^[-<>]+$", name):
+                    names.append(name)
+            elif stripped and not stripped.startswith("#"):
+                break
+    return names
+
+
+def get_panels(extension_dir):
+    """
+    Gets the ribbon panels of the extension, per tab, in ribbon order (tab bundle.yaml layout first, any other
+    panel after in alphabetical order).
+
+    :param extension_dir: The extension folder
+    :type extension_dir: str
+
+    :return: List of (tab folder name, panel folder name)
+    :rtype: [(str, str)]
+    """
+    panels = []
+    for tab in sorted(d for d in os.listdir(extension_dir) if d.endswith(".tab")):
+        tab_dir = os.path.join(extension_dir, tab)
+        found = sorted(
+            d
+            for d in os.listdir(tab_dir)
+            if d.endswith(".panel") and os.path.isdir(os.path.join(tab_dir, d))
+        )
+        layout = [name + ".panel" for name in read_bundle_layout(os.path.join(tab_dir, "bundle.yaml"))]
+        ordered = [p for p in layout if p in found] + [p for p in found if p not in layout]
+        panels.extend((tab, panel) for panel in ordered)
+    return panels
+
+
+def _inno_component_name(text):
+    return re.sub(r"[^a-z0-9_]", "_", text.lower())
+
+
+def write_panels_include(extension_dir, include_path):
+    """
+    Writes the Inno Setup include file with one component, and its files, per ribbon panel.
+
+    duHast-extension.iss installs everything else in the extension (lib, bin, tab files) whatever is selected,
+    and includes this file for the panels.
+
+    :param extension_dir: The built extension folder
+    :type extension_dir: str
+    :param include_path: Fully qualified path of the include file to write
+    :type include_path: str
+
+    :return: Number of panels written
+    :rtype: int
+    """
+    panels = get_panels(extension_dir)
+    tabs = sorted(set(tab for tab, panel in panels))
+    lines = [
+        "; Generated by build_extension.py: one component per ribbon panel. Do not edit.",
+        "",
+        "[Components]",
+    ]
+    for tab in tabs:
+        lines.append(
+            'Name: "{}"; Description: "{} ribbon panels"; Types: full custom'.format(
+                _inno_component_name(tab), tab[: -len(".tab")]
+            )
+        )
+    for tab, panel in panels:
+        lines.append(
+            'Name: "{}\\{}"; Description: "{}"; Types: full custom'.format(
+                _inno_component_name(tab),
+                _inno_component_name(panel[: -len(".panel")]),
+                panel[: -len(".panel")],
+            )
+        )
+    lines += ["", "[Files]"]
+    for tab, panel in panels:
+        lines.append(
+            'Source: "{{#ExtensionDir}}\\{tab}\\{panel}\\*"; '
+            'DestDir: "{{app}}\\{{#ExtensionName}}\\{tab}\\{panel}"; '
+            "Components: {component}; Flags: recursesubdirs createallsubdirs ignoreversion".format(
+                tab=tab,
+                panel=panel,
+                component="{}\\{}".format(
+                    _inno_component_name(tab), _inno_component_name(panel[: -len(".panel")])
+                ),
+            )
+        )
+    with open(include_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+    return len(panels)
+
+
 def zip_extension(extension_dir, zip_path):
     """
     Zips the extension folder, keeping the extension folder as the top level entry.
@@ -264,6 +432,8 @@ def build(
     configuration="Release",
     vs_root=VS_ROOT,
     make_zip=True,
+    build_vs=False,
+    dotnet="dotnet",
 ):
     """
     Builds the extension. Returns the path of the built extension folder and the zip file (or None).
@@ -298,6 +468,8 @@ def build(
 
     bin_dir = os.path.join(extension_dir, "bin")
     if bin_from == "vs":
+        if build_vs:
+            build_vs_projects(configuration, dotnet=dotnet)
         print("Filling bin from Visual Studio output ({})".format(configuration))
         copied = fill_bin_from_vs_output(bin_dir, manifest_names, vs_root, configuration)
         for dll in copied:
@@ -307,6 +479,10 @@ def build(
         check_bin_against_manifest(bin_dir, manifest_names)
 
     write_version(extension_dir, duhast_dir, version)
+
+    # panel choices for the installer, next to (not inside) the extension folder
+    panel_count = write_panels_include(extension_dir, extension_dir + PANELS_INCLUDE_SUFFIX)
+    print("Installer panel choices: {} panels".format(panel_count))
 
     zip_path = None
     if make_zip:
@@ -350,8 +526,19 @@ def main(argv=None):
     parser.add_argument(
         "--vs-root", default=VS_ROOT, help="Visual Studio solutions root (default: %(default)s)"
     )
+    parser.add_argument(
+        "--build-vs",
+        action="store_true",
+        help="Build the projects in vs_projects.txt with dotnet before filling bin",
+    )
+    parser.add_argument(
+        "--dotnet", default="dotnet", help="dotnet executable for --build-vs (default: %(default)s)"
+    )
     parser.add_argument("--no-zip", action="store_true", help="Do not create the zip file")
     args = parser.parse_args(argv)
+
+    # keep this output in order with the output of dotnet
+    sys.stdout.reconfigure(line_buffering=True)
 
     try:
         extension_dir, zip_path = build(
@@ -362,6 +549,8 @@ def main(argv=None):
             configuration=args.configuration,
             vs_root=args.vs_root,
             make_zip=not args.no_zip,
+            build_vs=args.build_vs,
+            dotnet=args.dotnet,
         )
     except BuildError as e:
         print("Build failed: {}".format(e), file=sys.stderr)

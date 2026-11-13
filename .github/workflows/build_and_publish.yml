@@ -253,3 +253,14 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           skip-existing: true
+  build-pyrevit-extension:
+    name: Build pyRevit extension and installer
+    needs: [determine-package, update-version-and-docs]
+    # the extension targets Revit 2025 and later, which the net8 branch serves
+    if: needs.determine-package.outputs.branch_name == 'net8DuHast'
+    permissions:
+      contents: write  # to attach the files to the release
+    uses: ./.github/workflows/build_pyrevit_extension.yml
+    with:
+      ref: ${{ needs.determine-package.outputs.branch_name }}
+      release_tag: ${{ github.event.release.tag_name }}

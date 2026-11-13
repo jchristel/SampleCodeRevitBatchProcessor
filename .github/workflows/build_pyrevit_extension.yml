@@ -1,0 +1,86 @@
+name: Build pyRevit extension
+
+# Builds the Visual Studio projects, the extension zip and the installer.
+# - on pull requests and manual runs: the files are kept as a workflow artifact, to download and try
+# - called by build_and_publish.yml on a release: the files are also attached to the release
+
+on:
+  pull_request:
+    paths:
+      - 'Samples/pyRevit/**'
+      - 'VS/**'
+      - 'src/duHast/**'
+      - '.github/workflows/build_pyrevit_extension.yml'
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        description: Branch to build
+        type: string
+        required: true
+      release_tag:
+        description: Release to attach the zip and the installer to
+        type: string
+        required: true
+
+# no permissions block: called from a release it gets the caller's (contents: write, to attach the files)
+
+jobs:
+  build:
+    name: Build extension and installer
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        # empty (pull request, manual run): the commit that triggered the run
+        ref: ${{ inputs.ref }}
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.13"
+
+    - name: Build the Visual Studio projects and the extension
+      env:
+        TAG_NUM: ${{ inputs.release_tag }}
+      shell: bash
+      run: |
+        if [ -n "$TAG_NUM" ]; then
+          VERSION=$(echo "$TAG_NUM" | sed 's/^[vV]//' | sed 's/+.*//')
+          python Samples/pyRevit/installer/build_extension.py --build-vs --version "$VERSION"
+        else
+          # version from pyproject.toml
+          python Samples/pyRevit/installer/build_extension.py --build-vs
+        fi
+
+    - name: Build the installer
+      shell: pwsh
+      run: |
+        choco install innosetup -y --no-progress
+        & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" Samples\pyRevit\installer\duHast-extension.iss
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+    - name: Keep the zip and the installer as a workflow artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: pyrevit-extension
+        path: |
+          dist/pyRevit/*.zip
+          dist/pyRevit/*.exe
+
+    - name: Attach the zip and the installer to the release
+      # inputs are empty on pull requests and manual runs
+      if: inputs.release_tag
+      env:
+        GH_TOKEN: ${{ github.token }}
+        TAG_NUM: ${{ inputs.release_tag }}
+      shell: bash
+      run: |
+        # --clobber so a re-run replaces the files
+        gh release upload "$TAG_NUM" dist/pyRevit/*.zip dist/pyRevit/*.exe --clobber

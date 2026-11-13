@@ -3,6 +3,7 @@ Builds a ready to install copy of the duHast pyRevit extension.
 
 - copies the extension folder from Samples/pyRevit/Extensions into an output folder
 - bundles the duHast library from src/duHast (including its lib DLLs) into the extension lib folder
+- optionally builds the Visual Studio projects listed in vs_projects.txt with dotnet (--build-vs)
 - fills the extension bin folder with the DLLs built by Visual Studio (VS/**/bin/x64/<configuration>)
 - writes the version into extension.json and lib/duHast/_bundled_version.txt
 - zips the result
@@ -12,6 +13,7 @@ Usage (from anywhere, Python 3):
     python Samples/pyRevit/installer/build_extension.py
     python Samples/pyRevit/installer/build_extension.py --version 1.0.5 --configuration Release
     python Samples/pyRevit/installer/build_extension.py --bin-from committed
+    python Samples/pyRevit/installer/build_extension.py --build-vs
 
 """
 #
@@ -43,6 +45,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 import zipfile
 
@@ -54,6 +57,7 @@ DUHAST_SRC_DIR = os.path.join(REPO_ROOT, "src", "duHast")
 VS_ROOT = os.path.join(REPO_ROOT, "VS")
 PYPROJECT = os.path.join(REPO_ROOT, "pyproject.toml")
 BIN_MANIFEST = os.path.join(SCRIPT_DIR, "bin_manifest.txt")
+VS_PROJECTS = os.path.join(SCRIPT_DIR, "vs_projects.txt")
 
 DEFAULT_EXTENSION = "duHast-2025.extension"
 DEFAULT_OUTPUT_DIR = os.path.join(REPO_ROOT, "dist", "pyRevit")
@@ -93,6 +97,25 @@ def read_version_from_pyproject(pyproject_path=PYPROJECT):
     raise BuildError("No version found in {}".format(pyproject_path))
 
 
+def read_list_file(file_path):
+    """
+    Reads a text file with one entry per line, skipping blank lines and # comments.
+
+    :param file_path: Fully qualified path to the file
+    :type file_path: str
+
+    :return: List of entries
+    :rtype: [str]
+    """
+    entries = []
+    with open(file_path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.split("#", 1)[0].strip()
+            if line:
+                entries.append(line)
+    return entries
+
+
 def read_bin_manifest(manifest_path=BIN_MANIFEST):
     """
     Reads the names of the DLLs the extension bin folder needs.
@@ -105,13 +128,35 @@ def read_bin_manifest(manifest_path=BIN_MANIFEST):
     :return: List of DLL base names
     :rtype: [str]
     """
-    names = []
-    with open(manifest_path, "r", encoding="utf-8") as f:
-        for line in f:
-            line = line.split("#", 1)[0].strip()
-            if line:
-                names.append(line)
-    return names
+    return read_list_file(manifest_path)
+
+
+def build_vs_projects(configuration, projects_path=VS_PROJECTS, dotnet="dotnet"):
+    """
+    Builds the Visual Studio projects listed in vs_projects.txt (x64) with the dotnet command line.
+
+    :param configuration: The build configuration, e.g. Release
+    :type configuration: str
+    :param projects_path: Fully qualified path to the project list
+    :type projects_path: str
+    :param dotnet: The dotnet executable
+    :type dotnet: str
+    """
+    for project in read_list_file(projects_path):
+        project_path = os.path.join(REPO_ROOT, os.path.normpath(project))
+        if not os.path.isfile(project_path):
+            raise BuildError("Project not found: {}".format(project_path))
+        print("Building {}".format(project), flush=True)
+        command = [dotnet, "build", project_path, "-c", configuration, "-p:Platform=x64", "-nologo"]
+        # the projects target net8.0-windows: allow building them on other operating systems
+        if not sys.platform.startswith("win"):
+            command.append("-p:EnableWindowsTargeting=true")
+        try:
+            completed = subprocess.run(command)
+        except OSError as e:
+            raise BuildError("Could not run {}: {}".format(dotnet, e))
+        if completed.returncode != 0:
+            raise BuildError("Build failed: {}".format(project))
 
 
 def _is_excluded(name, patterns):
@@ -264,6 +309,8 @@ def build(
     configuration="Release",
     vs_root=VS_ROOT,
     make_zip=True,
+    build_vs=False,
+    dotnet="dotnet",
 ):
     """
     Builds the extension. Returns the path of the built extension folder and the zip file (or None).
@@ -298,6 +345,8 @@ def build(
 
     bin_dir = os.path.join(extension_dir, "bin")
     if bin_from == "vs":
+        if build_vs:
+            build_vs_projects(configuration, dotnet=dotnet)
         print("Filling bin from Visual Studio output ({})".format(configuration))
         copied = fill_bin_from_vs_output(bin_dir, manifest_names, vs_root, configuration)
         for dll in copied:
@@ -350,8 +399,19 @@ def main(argv=None):
     parser.add_argument(
         "--vs-root", default=VS_ROOT, help="Visual Studio solutions root (default: %(default)s)"
     )
+    parser.add_argument(
+        "--build-vs",
+        action="store_true",
+        help="Build the projects in vs_projects.txt with dotnet before filling bin",
+    )
+    parser.add_argument(
+        "--dotnet", default="dotnet", help="dotnet executable for --build-vs (default: %(default)s)"
+    )
     parser.add_argument("--no-zip", action="store_true", help="Do not create the zip file")
     args = parser.parse_args(argv)
+
+    # keep this output in order with the output of dotnet
+    sys.stdout.reconfigure(line_buffering=True)
 
     try:
         extension_dir, zip_path = build(
@@ -362,6 +422,8 @@ def main(argv=None):
             configuration=args.configuration,
             vs_root=args.vs_root,
             make_zip=not args.no_zip,
+            build_vs=args.build_vs,
+            dotnet=args.dotnet,
         )
     except BuildError as e:
         print("Build failed: {}".format(e), file=sys.stderr)

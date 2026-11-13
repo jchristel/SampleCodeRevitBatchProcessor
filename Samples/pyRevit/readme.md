@@ -209,13 +209,18 @@ The installed version is in the extension's `extension.json` and in
 
 ### Building the extension
 
+Each release from the `net8DuHast` branch builds the zip and the installer automatically and
+attaches them to the release. To build them yourself:
+
 The build script lives in `Samples/pyRevit/installer/build_extension.py` and needs Python 3
-only. It copies the extension into `dist/pyRevit`, bundles `src/duHast` into the extension's
+(plus the .NET 8 SDK for `--build-vs`). It copies the extension into `dist/pyRevit`, bundles `src/duHast` into the extension's
 `lib/duHast`, fills `bin` with the DLLs listed in `Samples/pyRevit/installer/bin_manifest.txt`,
 writes the version and zips the result.
 
-1. Build the Visual Studio solutions under `VS` in the Release configuration. The script picks
-   the DLLs up from each project's `bin\x64\Release` folder.
+1. Build the Visual Studio projects listed in `Samples/pyRevit/installer/vs_projects.txt` in the
+   Release configuration, either in Visual Studio or by adding `--build-vs` in step 2, which builds
+   them with the .NET 8 SDK (`dotnet`). The script picks the DLLs up from each project's
+   `bin\x64\Release` folder.
 2. From the repository root, run:
 
    ```
@@ -229,6 +234,8 @@ writes the version and zips the result.
    - `--configuration Debug` — take the DLLs from a different build configuration.
    - `--bin-from committed` — use the `bin` folder committed with the extension instead of the
      Visual Studio output.
+   - `--build-vs` — build the projects in `vs_projects.txt` with `dotnet` first (`--dotnet <path>`
+     if `dotnet` is not on the path).
    - `--output <folder>`, `--no-zip`.
 
 If a DLL in the manifest is not found in the build output, the script stops and names it.

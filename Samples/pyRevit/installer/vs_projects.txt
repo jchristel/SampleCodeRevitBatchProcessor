@@ -1,0 +1,17 @@
+# Visual Studio projects whose output fills the extension bin folder (see bin_manifest.txt), one per line,
+# relative to the repository root. build_extension.py --build-vs builds them with dotnet in this order.
+# The projects reference each other's DLLs in VS/_References/duHast, not each other's build output.
+
+VS/duHastUtils/Utils/Utils.csproj
+VS/duHastUtils/CSVHelperWrapper/FileIOWrapper.csproj
+VS/duHastRevitUtils/RevitUtils/RevitUtils.csproj
+VS/duHastUICustomControls/duHastUICustomControls/duHastUICustomControls.csproj
+VS/duHastUI/DocManagerSettingsUI/DocManagerSettingsUI.csproj
+VS/duHastUI/FamilyReloaderUI/FamilyReloaderUI.csproj
+VS/duHastUI/PDFDWGExporterSelectionUI/PDFDWGExporterSelectionUI.csproj
+VS/duHastUI/PDFDWGExporterUI/PDFDWGExporterUI.csproj
+VS/duHastRevitApplications/PushIt/PushIt.csproj
+VS/duHastRevitApplications/AtTheLibrary/AtTheLibrary.csproj
+VS/duHastApplications/duHastNet.DocManager/duHastNet.DocManager.Core/duHastNet.DocManager.Core.csproj
+VS/duHastApplications/duHastNet.DocManager/duHastNet.DocManager.UI.Shared/duHastNet.DocManager.UI.Shared.csproj
+VS/duHastApplications/duHastNet.DocManager/duHastNet.DocManager.Revit/duHastNet.DocManager.Revit.csproj

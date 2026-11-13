@@ -253,3 +253,48 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           skip-existing: true
+  build-pyrevit-extension:
+    name: Build pyRevit extension and installer
+    needs: [determine-package, update-version-and-docs]
+    # the extension targets Revit 2025 and later, which the net8 branch serves
+    if: needs.determine-package.outputs.branch_name == 'net8DuHast'
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ needs.determine-package.outputs.branch_name }}
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.13"
+
+    - name: Build the Visual Studio projects and the extension
+      env:
+        TAG_NUM: ${{ github.event.release.tag_name }}
+      shell: bash
+      run: |
+        VERSION=$(echo "$TAG_NUM" | sed 's/^[vV]//' | sed 's/+.*//')
+        python Samples/pyRevit/installer/build_extension.py --build-vs --version "$VERSION"
+
+    - name: Build the installer
+      shell: pwsh
+      run: |
+        choco install innosetup -y --no-progress
+        & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" Samples\pyRevit\installer\duHast-extension.iss
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+    - name: Upload the zip and the installer to the release
+      env:
+        GH_TOKEN: ${{ github.token }}
+        TAG_NUM: ${{ github.event.release.tag_name }}
+      shell: bash
+      run: |
+        # --clobber so a re-run replaces the files
+        gh release upload "$TAG_NUM" dist/pyRevit/*.zip dist/pyRevit/*.exe --clobber

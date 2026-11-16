@@ -116,7 +116,7 @@ def write_copy_marker_file(file_name):
             enforce_ascii=True,
             quoting=QUOTE_MINIMAL,
         )
-        if write_result.status:
+        if write_result.status is False:
             raise ValueError("Failed to write marker file: {}".format(write_result.message))
         
         output(
@@ -153,7 +153,7 @@ def write_changed_family_marker_file(file_name, revit_category_name):
             enforce_ascii=True,
             quoting=QUOTE_MINIMAL,
         )
-        if write_result.status:
+        if write_result.status is False:
             raise ValueError("Failed to write changed family file: {}".format(write_result.message))
         
         output(

@@ -94,6 +94,15 @@ from duHast.Revit.Family.Data.family_base_data_missing_families import (
 CUSTOM_EXCEPTION_MESSAGES_TO_BE_FLAGGED = ["status: False"]
 
 
+def _log_message_to_string(message):
+    """
+    The log message of a file which failed to process is a list of strings, or a string. Returns it as a single string.
+    """
+    if isinstance(message, list):
+        return "; ".join(str(m) for m in message)
+    return str(message)
+
+
 # ------------------------------------------- user feed back and report to disk -------------------------------------------
 
 
@@ -152,7 +161,7 @@ def process_all_log_files():
     # process logs
     processing_results = process_log_files(
         folder_path=settings.LOG_MARKER_DIRECTORY,
-        debug=CUSTOM_EXCEPTION_MESSAGES_TO_BE_FLAGGED,
+        custom_exception_messages=CUSTOM_EXCEPTION_MESSAGES_TO_BE_FLAGGED,
     )
 
     output("LogResults.... status: {}".format(processing_results.status))
@@ -163,7 +172,7 @@ def process_all_log_files():
         data_to_file = []
         data_to_process_file = []
         for data in processing_results.result:
-            row = [data[0], data[2]]
+            row = [data[0], _log_message_to_string(data[2])]
             data_to_file.append(row)
             # re - process files
             rowProcessData = [data[0]]

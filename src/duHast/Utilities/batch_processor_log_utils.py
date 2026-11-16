@@ -320,7 +320,7 @@ def get_message_from_json(data):
     return outer_message["message"]
 
 
-def process_log_file(file_path):
+def process_log_file(file_path, custom_exception_messages=None):
     """
     Process revit batch processor session log file.
 
@@ -329,6 +329,8 @@ def process_log_file(file_path):
 
     :param file_path: Fully qualified file path to json formatted log file
     :type file_path: str
+    :param custom_exception_messages: Messages which, when found in the log of a processed file, mark its processing as failed, in addition to EXCEPTION_MESSAGES. Defaults to None.
+    :type custom_exception_messages: [str], optional
 
     :return: returns list of arrays in format:
         [[processed Revit file name, status of processing (true or false), message]]
@@ -350,7 +352,9 @@ def process_log_file(file_path):
                 # check for exceptions during file processing
                 for file_to_check in files_to_check:
                     try:
-                        status, message = get_process_status(file_to_check, file_path)
+                        status, message = get_process_status(
+                            file_to_check, file_path, custom_exception_messages
+                        )
                     except Exception as e:
                         output("GetProcessStatus: " + str(e))
                     dummy = [file_to_check, status, message]
@@ -386,7 +390,7 @@ def filter_files_not_found(files_processed, files_not_found):
     return filtered_list
 
 
-def get_process_status(file_to_check, log_file_path):
+def get_process_status(file_to_check, log_file_path, custom_exception_messages=None):
     """
     Reads a log file and checks whether any exception occurred when processing a specific revit file.
 
@@ -394,6 +398,8 @@ def get_process_status(file_to_check, log_file_path):
     :type file_to_check: str
     :param log_file_path: The fully qualified batch processor session log file path.
     :type log_file_path: str
+    :param custom_exception_messages: Messages which, when found in the log, mark the processing as failed, in addition to EXCEPTION_MESSAGES. Defaults to None.
+    :type custom_exception_messages: [str], optional
 
     :return: A process status and a message.
 
@@ -402,6 +408,11 @@ def get_process_status(file_to_check, log_file_path):
 
     :rtype: bool, str
     """
+
+    # messages which mark the processing as failed
+    exception_messages = list(EXCEPTION_MESSAGES)
+    if custom_exception_messages:
+        exception_messages.extend(custom_exception_messages)
 
     message = ["Found no match in log file"]
     # flag indicating whether we managed to retrieve processing data for a file
@@ -433,7 +444,7 @@ def get_process_status(file_to_check, log_file_path):
             for m in message_block:
                 output(m)
                 # check for exceptions
-                for exception_message in EXCEPTION_MESSAGES:
+                for exception_message in exception_messages:
                     if exception_message in m:
                         process_status = False
                         found_problem = True
@@ -655,7 +666,7 @@ def read_log_file(file_path):
     return data
 
 
-def process_log_files(folder_path, debug=False):
+def process_log_files(folder_path, debug=False, custom_exception_messages=None):
     """
     Loops over log files and checks whether any exceptions occurred during revit files processing.
 
@@ -663,13 +674,16 @@ def process_log_files(folder_path, debug=False):
     :type folder_path: str
     :param debug: Flag indicating whether this is running in debug mode which will output some debug messages, defaults to False
     :type debug: bool, optional
+    :param custom_exception_messages: Messages which, when found in the log of a processed file, mark its processing as failed, in addition to EXCEPTION_MESSAGES. Defaults to None.
+    :type custom_exception_messages: [str], optional
 
     :return:
         Result class instance.
 
         - Process status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain message(s) for each revit file found in logs and whether an exception occurred during processing
-        - result.result will be an empty list.
+        - result.result will contain one entry per Revit file which failed to process, a list in format:
+          [processed Revit file name, False, message (a list of strings, or a string)]
 
         On exception:
 
@@ -704,8 +718,9 @@ def process_log_files(folder_path, debug=False):
                     # debug output
                     message = "Processing log file(s): {}".format(lf)
                     # return_value.AppendMessage('Processing log files: ' + lf)
+                    data = []
                     try:
-                        data = process_log_file(lf)
+                        data = process_log_file(lf, custom_exception_messages)
                         if len(data) > 0:
                             message = (
                                 "{} [Got processed Revit file(s) data: {}]".format(
@@ -727,6 +742,10 @@ def process_log_files(folder_path, debug=False):
                 for lf_results in logfile_results:
                     list_to_str = "\t".join(map(str, lf_results))
                     return_value.append_message(list_to_str)
+                # return the files which failed to process
+                return_value.result = [
+                    lf_results for lf_results in logfile_results if lf_results[1] is False
+                ]
                 return_value.status = True
             else:
                 return_value.update_sep(

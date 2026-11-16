@@ -116,6 +116,15 @@ def delete_file_in_input_dir():
 # ------------------------------------------- log file processing -------------------------------------------
 
 
+def _log_message_to_string(message):
+    """
+    The log message of a file which failed to process is a list of strings, or a string. Returns it as a single string.
+    """
+    if isinstance(message, list):
+        return "; ".join(str(m) for m in message)
+    return str(message)
+
+
 def process_log_files():
     """
     Checks log files for any warnings or exceptions and writes out a report file containing any issues in format\
@@ -134,7 +143,7 @@ def process_log_files():
         # re-format output data
         data_to_file = []
         for data in processing_results_.result:
-            row = [data[0], data[2]]
+            row = [data[0], _log_message_to_string(data[2])]
             data_to_file.append(row)
         processing_results_.result = data_to_file
         _UserOutAndLogFile(processing_results_, settings.FILE_NAME_EXCEPTIONS_REPORT)

@@ -188,9 +188,10 @@ def create_follow_up_report_data_file():
     rows = rows_result.result
     
     data_file = []
-    for r in rows:
+    # skip the header row, one row per changed family: its file path
+    for r in rows[1:]:
         data = r[1]
-        data_file.append(data)
+        data_file.append([data])
 
     # write out file list without header
     header = []

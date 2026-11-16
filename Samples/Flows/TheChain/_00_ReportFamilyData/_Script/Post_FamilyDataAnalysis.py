@@ -336,7 +336,6 @@ def combine_current_with_previous_report_files(previous_report_root_directory):
             )
 
         # the storage data type of the report, None if the report can't be read into families
-        # (the family type report: its rows can not be read back into family type data storage)
         report_data_type = get_data_type_by_report_name(to_combine[1])
         if report_data_type is None:
             output(

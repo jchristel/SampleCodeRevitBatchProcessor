@@ -105,7 +105,8 @@ class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
     ]
 
     # number of properties in this class ( used in report reader function )
-    number_of_properties = 10
+    # (the columns of a report row: data type, the constructor arguments and value_as_float)
+    number_of_properties = 12
 
     def __init__(self, 
             root_name_path,
@@ -117,7 +118,9 @@ class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
             type, 
             type_of_parameter, 
             units, 
-            value
+            value,
+            value_as_float=None,
+            **kwargs
         ):
         """
         constructor
@@ -135,6 +138,7 @@ class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
         :param type_of_parameter: unit type of the parameter ( i.e. length, area, volume, string, etc.)
         :param units: units of the parameter, i.e. mm ( there are parameter type which do not have units i.e. string)
         :param value: value of the parameter
+        :param value_as_float: ignored: the value as float is worked out from value. Accepted so the storage can be created from a report row.
         """
 
         super(FamilyTypeParameterDataStorage, self).__init__(

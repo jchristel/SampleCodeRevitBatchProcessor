@@ -56,6 +56,9 @@ from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage im
 from duHast.Revit.Warnings.Data.Objects.warnings_data_storage import (
     FamilyWarningsDataStorage,
 )
+from duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage import (
+    FamilyTypeParameterDataStorage,
+)
 from duHast.Revit.Family.Data.Objects.ifamily_data_storage import IFamilyDataStorage
 from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
     NESTING_SEPARATOR,
@@ -70,6 +73,7 @@ class FamilyDataContainer(base.Base):
         line_pattern_data_storage=None,
         shared_parameter_data_storage=None,
         warnings_data_storage=None,
+        family_type_parameter_data_storage=None,
         **kwargs
     ):
         """
@@ -82,6 +86,7 @@ class FamilyDataContainer(base.Base):
                 - WarningsDataStorage
                 - LinePatternDataStorage
                 - SharedParameterDataStorage
+                - FamilyTypeParameterDataStorage
 
         Note: There is the possibility that only one of the storage classes is populated, this is due to the fact that the data is read from separate files and not all data is always present in each file.
 
@@ -95,6 +100,8 @@ class FamilyDataContainer(base.Base):
         :type shared_parameter_data_storage: [:class:`.FamilySharedParameterDataStorage`]
         :param warnings_data_storage: a list of FamilyWarningsDataStorage instances
         :type warnings_data_storage: [:class:`.FamilyWarningsDataStorage`]
+        :param family_type_parameter_data_storage: a list of FamilyTypeParameterDataStorage instances (one per family type and parameter)
+        :type family_type_parameter_data_storage: [:class:`.FamilyTypeParameterDataStorage`]
         :param kwargs: _description_
         :type kwargs: _type_
         :raises ValueError: type mismatch if any of the past in lists are not of the correct type
@@ -189,6 +196,20 @@ class FamilyDataContainer(base.Base):
         else:
             self.add_warnings_data_storage(warnings_data_storage)
 
+        # family type parameter data storage default is an empty list
+        self.family_type_parameter_data_storage = []
+        if family_type_parameter_data_storage is None:
+            # no change required
+            pass
+        elif isinstance(family_type_parameter_data_storage, list):
+            # add to class property
+            for storage_instance in family_type_parameter_data_storage:
+                self.add_family_type_parameter_data_storage(storage_instance)
+        else:
+            self.add_family_type_parameter_data_storage(
+                family_type_parameter_data_storage
+            )
+
     def _update_base_properties_from_storage(self, storage_instance):
         """
         Will update the base properties of the class from a family base data storage instance.
@@ -249,6 +270,7 @@ class FamilyDataContainer(base.Base):
                 self.line_pattern_data_storage = []
                 self.shared_parameter_data_storage = []
                 self.warnings_data_storage = []
+                self.family_type_parameter_data_storage = []
 
             # set other class properties based on storage
             self._update_base_properties_from_storage(other)
@@ -518,6 +540,55 @@ class FamilyDataContainer(base.Base):
                 )
             )
 
+    def add_family_type_parameter_data_storage(self, other):
+        """
+        Will add a family type parameter data storage instance.
+
+        Note: an exception will be raised if family_nesting_path and family_category_nesting_path do not match the current values!
+
+        :param other: a data storage instance
+        :type other: :class:`.FamilyTypeParameterDataStorage`
+        :raises TypeError: If other is not an instance of FamilyTypeParameterDataStorage a type error will be raised.
+        :raises ValueError: If a storage for the same family type and parameter name was added already.
+        """
+
+        # check is correct object type
+        if isinstance(other, FamilyTypeParameterDataStorage) == False:
+            raise TypeError("other must be type of FamilyTypeParameterDataStorage")
+
+        # check if nesting path and category nesting path are different to the current values but not None!
+        # if so throw error!
+        if (
+            self.family_nesting_path != other.root_name_path
+            and self.family_nesting_path != None
+            or self.family_category_nesting_path != other.root_category_path
+            and self.family_category_nesting_path != None
+        ):
+            raise ValueError(
+                "other root_name_path and root_category_path must match current values"
+            )
+        elif (
+            self.family_nesting_path == None
+            and self.family_category_nesting_path == None
+        ):
+            # looks like this might be the only storage class added or
+            # family base data storage is absent and this is the first storage class added
+            self._update_base_properties_from_storage(other)
+
+        # unique by family type and parameter name
+        # (the storage equality compares the parameter only, so the same parameter value in two family types would count as equal)
+        for entry in self.family_type_parameter_data_storage:
+            if (
+                entry.family_type_name == other.family_type_name
+                and entry.name == other.name
+            ):
+                raise ValueError(
+                    "Family type parameter storage is not unique: family type: {} parameter: {}".format(
+                        other.family_type_name, other.name
+                    )
+                )
+        self.family_type_parameter_data_storage.append(other)
+
     def add_data_storage(self, other):
         """
         Adds a new data storage instance to this container.
@@ -545,6 +616,8 @@ class FamilyDataContainer(base.Base):
             self.add_shared_parameter_data_storage(other=other)
         elif other.data_type == FamilyWarningsDataStorage.data_type:
             self.add_warnings_data_storage(other=other)
+        elif other.data_type == FamilyTypeParameterDataStorage.data_type:
+            self.add_family_type_parameter_data_storage(other=other)
         else:
             raise TypeError(
                 "Data storage type : {} is not supported.".format(other.data_type)
@@ -624,6 +697,18 @@ class FamilyDataContainer(base.Base):
         data = self._get_storage_of_type(storage_property=self.warnings_data_storage)
         return {FamilyWarningsDataStorage.data_type: data}
 
+    def get_family_type_parameter_data_storage_as_string(self):
+        """
+        Returns all family type parameter data instance storage as string
+
+        :return: A dictionary where key is the storage data type, and value is a nested list of strings representing each storage instance
+        :rtype: {str:[[str]]}
+        """
+        data = self._get_storage_of_type(
+            storage_property=self.family_type_parameter_data_storage
+        )
+        return {FamilyTypeParameterDataStorage.data_type: data}
+
     def get_data_string_list(self):
         """
         returns a dictionary where key is the storage data type and value is a list of string representing the data storage
@@ -638,6 +723,9 @@ class FamilyDataContainer(base.Base):
         storage_as_strings.append(self.get_line_pattern_data_storage_as_string())
         storage_as_strings.append(self.get_shared_parameter_data_storage_as_string())
         storage_as_strings.append(self.get_warnings_data_storage_as_string())
+        storage_as_strings.append(
+            self.get_family_type_parameter_data_storage_as_string()
+        )
 
         # build single dictionary by data type:
         for d in storage_as_strings:
@@ -727,6 +815,18 @@ class FamilyDataContainer(base.Base):
         )
         return {FamilyWarningsDataStorage.data_type: data}
 
+    def get_family_type_parameter_data_storage_headers_as_string(self):
+        """
+        Returns all family type parameter data instance storage property names as string
+
+        :return: A dictionary where key is the storage data type, and value is a nested list of strings representing each storage property name
+        :rtype: {str:[[str]]}
+        """
+        data = self._get_storage_headers_of_type(
+            storage_property=self.family_type_parameter_data_storage
+        )
+        return {FamilyTypeParameterDataStorage.data_type: data}
+
     def get_data_headers_list(self):
         """
         returns a dictionary where key is the storage data type and value is a nested list of list of string representing the data storage property names
@@ -749,6 +849,9 @@ class FamilyDataContainer(base.Base):
             self.get_shared_parameter_data_storage_headers_as_string()
         )
         storage_as_strings.append(self.get_warnings_data_storage_headers_as_string())
+        storage_as_strings.append(
+            self.get_family_type_parameter_data_storage_headers_as_string()
+        )
 
         # build single dictionary by data type:
         for d in storage_as_strings:

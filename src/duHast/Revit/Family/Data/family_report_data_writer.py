@@ -51,6 +51,9 @@ from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor_
 from duHast.Revit.Warnings.Data.Objects.warnings_data_processor_defaults import (
     DATA_REPORT_NAME as data_type_warnings_report_name,
 )
+from duHast.Revit.Family.Data.Objects.family_type_data_processor_defaults import (
+    DATA_REPORT_NAME as data_type_family_type_report_name,
+)
 from duHast.Revit.Family.Data.Objects.family_base_data_storage import (
     FamilyBaseDataStorage,
 )
@@ -66,6 +69,9 @@ from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage im
 from duHast.Revit.Warnings.Data.Objects.warnings_data_storage import (
     FamilyWarningsDataStorage,
 )
+from duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage import (
+    FamilyTypeParameterDataStorage,
+)
 
 # report file name (without extension) by storage data type (the first column of each row in a report)
 REPORT_NAME_BY_DATA_TYPE = {
@@ -74,6 +80,8 @@ REPORT_NAME_BY_DATA_TYPE = {
     FamilyLinePatternDataStorage.data_type: data_type_line_pattern_report_name,
     FamilySharedParameterDataStorage.data_type: data_type_shared_parameter_report_name,
     FamilyWarningsDataStorage.data_type: data_type_warnings_report_name,
+    # the family type report holds one row per family, family type and parameter
+    FamilyTypeParameterDataStorage.data_type: data_type_family_type_report_name,
 }
 
 REPORT_FILE_EXTENSION = ".csv"

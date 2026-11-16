@@ -43,6 +43,9 @@ from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage im
 from duHast.Revit.Warnings.Data.Objects.warnings_data_storage import (
     FamilyWarningsDataStorage,
 )
+from duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage import (
+    FamilyTypeParameterDataStorage,
+)
 from duHast.Revit.Family.Data.Objects.family_data_container import FamilyDataContainer
 from duHast.Revit.Family.Data.Objects.family_data_family import FamilyDataFamily
 from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
@@ -62,6 +65,7 @@ DATA_CONVERSION = {
     FamilyLinePatternDataStorage.data_type: FamilyLinePatternDataStorage,
     FamilySharedParameterDataStorage.data_type: FamilySharedParameterDataStorage,
     FamilyWarningsDataStorage.data_type: FamilyWarningsDataStorage,
+    FamilyTypeParameterDataStorage.data_type: FamilyTypeParameterDataStorage,
 }
 
 
@@ -336,6 +340,7 @@ def read_data_into_family_containers(path_to_data):
     - FamilyLinePatternDataStorage
     - FamilySharedParameterDataStorage
     - FamilyWarningsDataStorage
+    - FamilyTypeParameterDataStorage
 
     These are then added to a family container object and returned. The family container object contains all storage instances of a specific root or nested family
     identified by a unique family name nesting path + family category nesting path

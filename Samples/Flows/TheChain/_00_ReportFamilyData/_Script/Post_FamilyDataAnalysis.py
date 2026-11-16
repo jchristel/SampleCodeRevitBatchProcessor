@@ -51,7 +51,8 @@ from duHast.Utilities.files_io import (
 from duHast.Utilities.directory_io import create_directory, directory_exists
 from duHast.Utilities.date_stamps import get_folder_date_stamp
 
-from duHast.Revit.Family.Data.family_report_utils import combine_reports
+# returns the combined report as rows, as written to file below (family_report_utils.combine_reports returns FamilyDataFamily objects)
+from duHast.Revit.Family.Data.family_report_utils_deprecated import combine_reports
 
 
 from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
@@ -349,7 +350,7 @@ def combine_current_with_previous_report_files(previous_report_root_directory):
                     quoting=QUOTE_MINIMAL,
                 )
 
-                output("Wrote updated report to: {} with status:[{}]".format(current_report_file. write_result.status))
+                output("Wrote updated report to: {} with status:[{}]".format(current_report_file, write_result.status))
                 if write_result.status is False:
                     output(
                         "{}".format(

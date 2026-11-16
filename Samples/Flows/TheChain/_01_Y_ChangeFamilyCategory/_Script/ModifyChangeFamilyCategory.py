@@ -76,8 +76,8 @@ from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Utilities.files_io import get_file_name_without_ext
 from duHast.Revit.Common.file_io import save_as_family
 from duHast.Revit.Categories.categories import get_family_category
-from duHast.Revit.Family.Data.family_category_data_utils_deprecated import (
-    read_overall_family_category_change_directives_from_directory,
+from duHast.Revit.Family.family_change_category_utils import (
+    get_category_change_directives,
 )
 from duHast.Revit.Categories.change_family_category import change_family_category
 from duHast.Utilities.Objects.timer import Timer
@@ -196,11 +196,16 @@ def update_family_category(doc):
 
     return_value = Result()
     # read change family directives
-    categories_change_directives = (
-        read_overall_family_category_change_directives_from_directory(
-            settings.INPUT_DIRECTORY
+    directives_result = get_category_change_directives(settings.INPUT_DIRECTORY)
+    if directives_result.status is False:
+        return_value.update_sep(
+            False,
+            "{}: no category change directives: {}".format(
+                _file_name_without_ext, directives_result.message
+            ),
         )
-    )
+        return return_value
+    categories_change_directives = directives_result.result
     # get the family category ( this is a dictionary where key is the category name )
     family_category = get_family_category(doc)
     family_category_name = list(family_category.keys())[0]
@@ -209,22 +214,22 @@ def update_family_category(doc):
     # loop over change directives and find the ones applicable to the current family
     for category_change_directive in categories_change_directives:
         # check if family is in list and if the category needs changing
-        if category_change_directive.filePath == REVIT_FILE_PATH:
+        if category_change_directive.file_path == REVIT_FILE_PATH:
             # save the new category name for later
-            new_category_name = category_change_directive.newCategoryName
-            if category_change_directive.newCategoryName != family_category_name:
+            new_category_name = category_change_directive.new_category_name
+            if category_change_directive.new_category_name != family_category_name:
                 # store marker for later
                 found_category_match = True
                 return_value.append_message(
                     "Attempting to change category from: {} to: {}.".format(
-                        family_category_name, category_change_directive.newCategoryName
+                        family_category_name, category_change_directive.new_category_name
                     )
                 )
                 try:
                     # attempt to update the family category
                     return_value.update(
                         change_family_category(
-                            doc, category_change_directive.newCategoryName
+                            doc, category_change_directive.new_category_name
                         )
                     )
                 except Exception as e:

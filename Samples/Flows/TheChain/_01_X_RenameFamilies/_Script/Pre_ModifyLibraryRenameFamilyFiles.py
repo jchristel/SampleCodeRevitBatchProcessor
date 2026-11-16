@@ -135,20 +135,20 @@ def _write_overall_task_file(result_get_host_families):
         # and the path must therefore be adjusted
         rename_directives_result = get_rename_directives(rename_directives_directory_)
 
-        # host families are root_family named tuples (family_base_data_utils_deprecated)
+        # host families are FamilyDataFamily instances
         for host_family in result_get_host_families.result:
             # check whether fam got renamed
             file_path_new = _get_new_path(
-                rename_directives_result.result, host_family.filePath
+                rename_directives_result.result, host_family.family_file_path
             )
-            if file_path_new != host_family.filePath:
+            if file_path_new != host_family.family_file_path:
                 result.append_message(
                     "Changed path from: {} to: {}".format(
-                        host_family.filePath, file_path_new
+                        host_family.family_file_path, file_path_new
                     )
                 )
             else:
-                result.append_message("Path unchanged: {}".format(host_family.filePath))
+                result.append_message("Path unchanged: {}".format(host_family.family_file_path))
             row = [file_path_new]
             data.append(row)
 

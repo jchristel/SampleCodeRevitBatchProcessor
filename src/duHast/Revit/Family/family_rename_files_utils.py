@@ -84,8 +84,7 @@ def _read_rename_directives(files):
                         FamilyDirectiveRename.RENAME_DIRECTIVE_LIST_INDEX_NEW_FAMILY_NAME
                     ],
                 )
-
-            rename_directives.append(data)
+                rename_directives.append(data)
     return rename_directives
 
 def get_rename_directives(directory_path):

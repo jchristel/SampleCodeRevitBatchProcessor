@@ -467,8 +467,9 @@ class FamilyDataFamily(base.Base):
         for container in self.data_containers_unsorted:
             container_data_storage_dic = container.get_data_headers_list()
             for key, value in container_data_storage_dic.items():
-                # check if that storage key is already in the return dictionary
-                if key not in data_storage_as_string:
+                # check if that storage key is already in the return dictionary with headers
+                # (a container without storage of a type returns an empty header list for it)
+                if len(data_storage_as_string.get(key, [])) == 0:
                     # if not add its value list by the new containers values list
                     data_storage_as_string[key] = value
 
@@ -476,9 +477,8 @@ class FamilyDataFamily(base.Base):
         for nested_family in self.nested_families_unsorted:
             family_data_storage_dic = nested_family.get_all_storage_headers_as_strings()
             for key, value in family_data_storage_dic.items():
-                # check if that storage key is already in the return dictionary
-                if key not in data_storage_as_string:
-                    # if extend its value list by the new containers values list
+                # check if that storage key is already in the return dictionary with headers
+                if len(data_storage_as_string.get(key, [])) == 0:
                     data_storage_as_string[key] = value
         return data_storage_as_string
 
@@ -540,3 +540,75 @@ class FamilyDataFamily(base.Base):
                     node_names.append(test_value)
 
         return duplicated_family_names
+
+    def get_direct_hosts(self, family_name, family_category):
+        """
+        Get the families which directly host (contain at the next nesting level up) the given family within this family's nesting tree.
+
+        The host of a family nested directly into this family is this family itself.
+
+        :param family_name: The name of the nested family.
+        :type family_name: str
+        :param family_category: The Revit category of the nested family.
+        :type family_category: str
+
+        :return: List of unique tuples in format 0 index the host family name, 1 index the host family category
+        :rtype: [(str, str)]
+        """
+
+        hosts = []
+        for nested_family in self.nested_families_unsorted:
+            # nested families without nesting path data can't be checked
+            if not nested_family.family_nesting_path or not nested_family.family_category_nesting_path:
+                continue
+            name_chunks = nested_family.family_nesting_path.split(NESTING_SEPARATOR)
+            category_chunks = nested_family.family_category_nesting_path.split(
+                NESTING_SEPARATOR
+            )
+            if len(name_chunks) != len(category_chunks):
+                raise ValueError(
+                    "Length of nesting name path: {} is not the same as length of nesting category path: {}".format(
+                        len(name_chunks), len(category_chunks)
+                    )
+                )
+            # index 0 is the root of the nesting path, which has no host
+            for i in range(1, len(name_chunks)):
+                if (
+                    name_chunks[i] == family_name
+                    and category_chunks[i] == family_category
+                ):
+                    host = (name_chunks[i - 1], category_chunks[i - 1])
+                    if host not in hosts:
+                        hosts.append(host)
+        return hosts
+
+    def get_category_data_storage(self):
+        """
+        Get the category data storage (one per sub category) of this family itself, not including any nested families.
+
+        :return: List of category data storage instances
+        :rtype: [:class:`.FamilyCategoryDataStorage`]
+        """
+
+        category_data_storage = []
+        for container in self.data_containers_unsorted:
+            category_data_storage.extend(container.category_data_storage)
+        return category_data_storage
+
+    def has_sub_category(self, sub_category_name):
+        """
+        Check whether this family itself (not including any nested families) has a sub category of the given name.
+
+        Requires category data, as read from a family category report.
+
+        :param sub_category_name: The sub category name.
+        :type sub_category_name: str
+
+        :return: True if a sub category of that name was found, otherwise False
+        :rtype: bool
+        """
+
+        for storage in self.get_category_data_storage():
+            if storage.sub_category_name == sub_category_name:
+                return True
+        return False

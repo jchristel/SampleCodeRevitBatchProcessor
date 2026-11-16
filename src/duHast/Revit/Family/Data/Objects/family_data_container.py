@@ -550,7 +550,7 @@ class FamilyDataContainer(base.Base):
                 "Data storage type : {} is not supported.".format(other.data_type)
             )
 
-    def _get_storage_of_type(storage_property):
+    def _get_storage_of_type(self, storage_property):
         """
         Loops of the storage instances saved in the storage property of this class and returns their string values
 
@@ -641,10 +641,11 @@ class FamilyDataContainer(base.Base):
 
         # build single dictionary by data type:
         for d in storage_as_strings:
-            return_value[d.key] = d.value
+            for key, value in d.items():
+                return_value[key] = value
         return return_value
 
-    def _get_storage_headers_of_type(storage_property):
+    def _get_storage_headers_of_type(self, storage_property):
         """
         Loops of the storage instances saved in the storage property names of this class.
 
@@ -751,5 +752,6 @@ class FamilyDataContainer(base.Base):
 
         # build single dictionary by data type:
         for d in storage_as_strings:
-            return_value[d.key] = d.value
+            for key, value in d.items():
+                return_value[key] = value
         return return_value

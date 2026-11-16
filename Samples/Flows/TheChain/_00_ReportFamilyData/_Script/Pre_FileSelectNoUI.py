@@ -46,6 +46,7 @@ from duHast.UI.file_list import (
     write_file_list,
     bucket_to_task_list_bim_360,
     get_revit_files,
+    get_files_from_csv_list_file,
 )
 from duHast.Revit.BIM360.util_bim_360 import get_bim_360_revit_files_from_file_list
 from duHast.Utilities.console_out import output
@@ -91,13 +92,18 @@ result_ = res.Result()
 
 # check if cloud vs file based models
 if settings.IS_CLOUD_PROJECT == False:
-    # get files from a network server
+    # get files from a network server: either the files listed in the process exceptions file (first column),
+    # or all files in the library directory
+    if os.path.isfile(PROCESS_PATH):
+        file_getter = get_files_from_csv_list_file
+    else:
+        file_getter = get_revit_files
     result_ = write_file_list(
         directory_path=PROCESS_PATH,
         file_extension=settings.FILE_EXTENSION_OF_FILES_TO_PROCESS,
         task_list_directory=settings.TASK_FILE_DIRECTORY,
         task_files_number=settings.NUMBER_OF_TASK_FILES,
-        file_getter=get_revit_files,
+        file_getter=file_getter,
     )
 else:
     # get files from a csv file list containing cloud based model data

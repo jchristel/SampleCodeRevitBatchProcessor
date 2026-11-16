@@ -68,7 +68,23 @@ def check_families_have_circular_references(family_base_data_report_file_path):
 
     :param family_base_data_report_file_path: path to the family base data report file
     :type family_base_data_report_file_path: str
-    :return: result object
+    :return:
+        Result class instance.
+
+        - result.status. True if the check completed without an exception, otherwise False.
+        - result.message will contain the summary messages of the process including time stamps.
+        - result.result one entry per family with circular nesting, a tuple in format:
+
+            - 0 index the family data family object
+            - 1 index a list of tuples, one per circular nesting found in that family, in format:
+              0 index the nesting level at which the circular nesting occurs, 1 index a string in format family name :: family category,
+              2 index the family name nesting path the circular nesting appeared on
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain generic exception message.
+        - result.result will be empty
     :rtype: Result
     """
     
@@ -92,21 +108,22 @@ def check_families_have_circular_references(family_base_data_report_file_path):
         if families_processed_result.status == False:
             raise ValueError(families_processed_result.message)
 
-        # get results
-        families = []
-        families_with_circular_nesting = []
-        for nested_tuple in families_processed_result.result:
-            families.append(nested_tuple[0])
-            families_with_circular_nesting.extend(nested_tuple[1])
+        # get results: one tuple per family with circular nesting (family, [circular nesting tuples])
+        families_with_circular_nesting = families_processed_result.result
+        circular_reference_count = 0
+        for nested_tuple in families_with_circular_nesting:
+            circular_reference_count += len(nested_tuple[1])
 
-            # append messages debug
-            return_value.append_message(families_processed_result.message)
+        # append messages debug
+        return_value.append_message(families_processed_result.message)
 
-            return_value.append_message(
-                "{} Found: {} circular references in families.".format(
-                    t_process.stop(), len(families_with_circular_nesting)
-                )
+        return_value.append_message(
+            "{} Found: {} circular references in {} families.".format(
+                t_process.stop(),
+                circular_reference_count,
+                len(families_with_circular_nesting),
             )
+        )
 
         # return families which have circular references
         if len(families_with_circular_nesting) > 0:

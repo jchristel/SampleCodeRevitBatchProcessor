@@ -98,6 +98,9 @@ namespace PythonTests
                 engine.Execute("import duHast.Revit.Family.Data.family_base_data_missing_families as data_family_base_data_missing_families", scope);
                 PythonEngineManager.FamilyMissingFamiliesModule = scope.GetVariable("data_family_base_data_missing_families");
 
+                engine.Execute("from duHast.Revit.Family.Data.Objects.family_nesting_path import FamilyNestingPath", scope);
+                PythonEngineManager.FamilyNestingPathClass = scope.GetVariable("FamilyNestingPath");
+
                 //duHast.Revit.Family.Utilities.family_xml_type_reader
                 engine.Execute("import duHast.Revit.Family.Utility.xml_family_type_reader as xml_family_type_reader", scope);
                 PythonEngineManager.FamilyXMLTypeReaderModule = scope.GetVariable("xml_family_type_reader");

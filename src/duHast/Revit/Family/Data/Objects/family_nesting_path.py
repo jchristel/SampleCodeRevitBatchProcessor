@@ -83,14 +83,24 @@ class FamilyNestingPath(Base):
 
     def is_part_of(self, other):
         """
-        Checks whether both paths of this nesting path are contained in the paths of another nesting path.
+        Checks whether this nesting path is the start of another nesting path (or the same path): its family names and
+        categories are the first entries of the other's.
+
+        Whole entries are compared: Table :: Leg is part of Table :: Leg :: Bolt, but not of Table :: Legacy :: Bolt.
 
         :param other: Another nesting path.
         :type other: :class:`.FamilyNestingPath`
-        :return: True if the name path and the category path are both contained in the other's, otherwise False.
+        :return: True if this path is the start of the other path, otherwise False.
         :rtype: bool
         """
-        return self.name_path in other.name_path and self.category_path in other.category_path
+        names, categories = self.get_chunks()
+        other_names, other_categories = other.get_chunks()
+        number_of_entries = len(names)
+        return (
+            number_of_entries <= len(other_names)
+            and names == other_names[:number_of_entries]
+            and categories == other_categories[:number_of_entries]
+        )
 
     def __repr__(self):
         return "{}<{}>".format(self.name_path, self.category_path)

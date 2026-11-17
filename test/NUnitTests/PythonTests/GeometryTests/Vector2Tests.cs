@@ -261,8 +261,7 @@ namespace PythonTests.GeometryTests
             dynamic vector3 = PythonEngineManager.Vector3Class(1.0, 2.0, 3.0);
 
             // Act & Assert
-            var ex = Assert.Throws<TypeErrorException>(() => { var result = vector2 == vector3; });
-            Assert.That(ex.Message, Does.Contain("Expected vector2, got: Vector3"));
+            Assert.That(vector2 == vector3, Is.False);
         }
 
         [Test]

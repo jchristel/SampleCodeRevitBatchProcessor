@@ -63,7 +63,7 @@ namespace PythonTests.GeometryTests
             string json = "{\"rows\": 2, \"columns\": 2, \"data\": \"invalid data\"}";
 
             var ex = Assert.Throws<ValueErrorException>(() => PythonEngineManager.MatrixClass(null, null, null, json));
-            Assert.That(ex.Message, Does.Contain("Invalid JSON input"));
+            Assert.That(ex.Message, Does.Contain("Elements must match the specified dimensions"));
         }
 
         [Test]

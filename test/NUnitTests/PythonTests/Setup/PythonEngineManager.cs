@@ -188,6 +188,26 @@ namespace PythonTests.Setup
             
         }
 
+        /// <summary>
+        /// Imports a python module (import module as alias) into the shared scope and returns it.
+        /// </summary>
+        public static dynamic Import(string module)
+        {
+            string alias = "_imp_" + module.Replace('.', '_');
+            PythonEngine.Execute("import " + module + " as " + alias, Scope);
+            return Scope.GetVariable(alias);
+        }
+
+        /// <summary>
+        /// Imports a name (class or function) from a python module into the shared scope and returns it.
+        /// </summary>
+        public static dynamic ImportFrom(string module, string name)
+        {
+            string alias = "_impf_" + module.Replace('.', '_') + "_" + name;
+            PythonEngine.Execute("from " + module + " import " + name + " as " + alias, Scope);
+            return Scope.GetVariable(alias);
+        }
+
         public static void Shutdown()
         {
             _pythonEngine?.Runtime.Shutdown();

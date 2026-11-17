@@ -32,7 +32,12 @@ This module contains a number of helper functions
 # from numpy import empty
 import os
 import os.path
-import collections
+try:
+    # python 3.3+ ( collections.MutableMapping was removed in python 3.10 )
+    from collections.abc import MutableMapping as _MutableMapping
+except ImportError:
+    # python 2.7
+    from collections import MutableMapping as _MutableMapping
 
 # import clr
 # clr.AddReference("System.Core")
@@ -204,11 +209,12 @@ def remove_items_from_list(sourceList, removeIdsList):
     :rtype: list var
     """
 
-    try:
-        for item in removeIdsList:
+    # an item not in the list must not stop the removal of the items after it
+    for item in removeIdsList:
+        try:
             sourceList.remove(item)
-    except:
-        pass
+        except ValueError:
+            pass
     return sourceList
 
 
@@ -231,7 +237,7 @@ def flatten(d, parent_key="", sep="_"):
     items = []
     for k, v in d.items():
         new_key = parent_key + sep + k if parent_key else k
-        if isinstance(v, collections.MutableMapping):
+        if isinstance(v, _MutableMapping):
             items.extend(flatten(v, new_key, sep=sep).items())
         else:
             items.append((new_key, v))

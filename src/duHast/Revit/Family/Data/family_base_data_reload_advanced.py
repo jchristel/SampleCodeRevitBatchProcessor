@@ -71,6 +71,48 @@ def _remove_duplicates(list_one, list_two):
     return new_list, duplicates_list
 
 
+def get_reload_levels(root_families, change_list):
+    """
+    Builds the reload levels: the families to reload at each nesting level, in the order to reload them.
+
+    Level 0 holds the families directly hosting a changed family. Level 1 holds the families hosting those, and so on up
+    the (inverted) nesting tree. A family reloads all the families nested in it, so it only needs reloading once: after
+    everything nested in it was reloaded. A family hosting a changed family at more than one level (directly, and via
+    another host) is therefore only kept in the highest level it appears in. Levels left empty by this are kept
+    (as empty lists), so the level numbers still match the nesting levels.
+
+    :param root_families: Root families, with their nested families, as read from a family base data report.
+    :type root_families: [:class:`.FamilyDataFamily`]
+    :param change_list: The changed families.
+    :type change_list: [:class:`.FamilyDataFamily`]
+
+    :raises ValueError: If more than MAXIMUM_NUMBER_OF_TASK_LISTS levels are required (circular nesting).
+
+    :return: One list of root families per level, lowest (deepest nested) level first.
+    :rtype: [[:class:`.FamilyDataFamily`]]
+    """
+
+    levels = []
+    current_level = get_direct_host_root_families(root_families, change_list)
+    while len(current_level) > 0:
+        levels.append(current_level)
+        if len(levels) > MAXIMUM_NUMBER_OF_TASK_LISTS:
+            raise ValueError(
+                "Exceeded maximum number of task list files ({}): circular family nesting?".format(
+                    MAXIMUM_NUMBER_OF_TASK_LISTS
+                )
+            )
+        current_level = get_direct_host_root_families(root_families, current_level)
+
+    # keep every family in the highest level it appears in only
+    for i in range(len(levels)):
+        higher_levels = []
+        for j in range(i + 1, len(levels)):
+            higher_levels.extend(levels[j])
+        levels[i], _ = _remove_duplicates(levels[i], higher_levels)
+    return levels
+
+
 def build_work_lists(
     change_list_file_path,
     family_base_data_report_file_path,
@@ -129,41 +171,28 @@ def build_work_lists(
         )
 
         if len(change_list) > 0:
-            task_list_counter = 0
-            # get the direct hosts of the changed families
+            # work out all levels first: nothing is written if the nesting turns out to be circular
             t_process.start()
-            task_current_level = get_direct_host_root_families(root_families, change_list)
+            levels = get_reload_levels(root_families, change_list)
             return_value.append_message(
-                "{} Direct hosts [{}] found.".format(
-                    t_process.stop(), len(task_current_level)
-                )
+                "{} Reload levels [{}] found.".format(t_process.stop(), len(levels))
             )
-            # get the hosts of the hosts
-            t_process.start()
-            task_next_level = get_direct_host_root_families(
-                root_families, task_current_level
-            )
-            return_value.append_message(
-                "{} Next level hosts [{}] found.".format(
-                    t_process.stop(), len(task_next_level)
-                )
-            )
-            while len(task_current_level) > 0:
-                # a family which is also a host at the next level gets reloaded at that level
-                cleaned_current_tasks, over_lap_tasks = _remove_duplicates(
-                    task_current_level, task_next_level
-                )
-                if len(cleaned_current_tasks) > 0:
+            for task_list_counter in range(len(levels)):
+                level = levels[task_list_counter]
+                if len(level) > 0:
                     t_process.start()
                     result_write_to_disk = write_reload_list_to_file(
-                        cleaned_current_tasks,
+                        level,
                         load_lists_output_directory_path,
                         task_list_counter,
                     )
                     return_value.update_sep(
                         result_write_to_disk,
-                        "{} Wrote task list to file with status: {}".format(
-                            t_process.stop(), result_write_to_disk
+                        "{} Wrote task list [{}] with [{}] families to file with status: {}".format(
+                            t_process.stop(),
+                            task_list_counter,
+                            len(level),
+                            result_write_to_disk,
                         ),
                     )
                 else:
@@ -175,29 +204,6 @@ def build_work_lists(
                         "Wrote empty task list at counter [{}]".format(
                             task_list_counter
                         ),
-                    )
-                # move one level up
-                task_current_level = list(task_next_level)
-                return_value.append_message(
-                    "Swapping next level hosts to direct hosts [{}]".format(
-                        len(task_current_level)
-                    )
-                )
-                t_process.start()
-                task_next_level = get_direct_host_root_families(
-                    root_families, task_current_level
-                )
-                return_value.append_message(
-                    "{} Next level hosts [{}]".format(
-                        t_process.stop(), len(task_next_level)
-                    )
-                )
-                task_list_counter = task_list_counter + 1
-                if task_list_counter > MAXIMUM_NUMBER_OF_TASK_LISTS:
-                    raise ValueError(
-                        "Exceeded maximum number of task list files ({}): circular family nesting?".format(
-                            MAXIMUM_NUMBER_OF_TASK_LISTS
-                        )
                     )
         else:
             return_value.update_sep(

@@ -27,6 +27,7 @@ Helper functions relating to file IO operations.
 #
 
 import os
+import fnmatch
 import shutil
 import re
 import time

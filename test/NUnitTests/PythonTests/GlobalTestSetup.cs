@@ -101,6 +101,20 @@ namespace PythonTests
                 engine.Execute("from duHast.Revit.Family.Data.Objects.family_nesting_path import FamilyNestingPath", scope);
                 PythonEngineManager.FamilyNestingPathClass = scope.GetVariable("FamilyNestingPath");
 
+                // rename and category change directives
+                engine.Execute("from duHast.Revit.Family.Data.Objects.family_directive_base import FamilyDirectiveBase", scope);
+                PythonEngineManager.FamilyDirectiveBaseClass = scope.GetVariable("FamilyDirectiveBase");
+                engine.Execute("from duHast.Revit.Family.Data.Objects.family_directive_rename import FamilyDirectiveRename", scope);
+                PythonEngineManager.FamilyDirectiveRenameClass = scope.GetVariable("FamilyDirectiveRename");
+                engine.Execute("from duHast.Revit.Family.Data.Objects.family_directive_change_category import FamilyDirectiveChangeCategory", scope);
+                PythonEngineManager.FamilyDirectiveChangeCategoryClass = scope.GetVariable("FamilyDirectiveChangeCategory");
+                engine.Execute("from duHast.Revit.Family.Data.Objects.family_directive_change_sub_category import FamilyDirectiveChangeSubCategory", scope);
+                PythonEngineManager.FamilyDirectiveChangeSubCategoryClass = scope.GetVariable("FamilyDirectiveChangeSubCategory");
+                engine.Execute("import duHast.Revit.Family.family_rename_files_utils as family_rename_files_utils", scope);
+                PythonEngineManager.FamilyRenameFilesUtilsModule = scope.GetVariable("family_rename_files_utils");
+                engine.Execute("import duHast.Revit.Family.family_change_category_utils as family_change_category_utils", scope);
+                PythonEngineManager.FamilyChangeCategoryUtilsModule = scope.GetVariable("family_change_category_utils");
+
                 //duHast.Revit.Family.Utilities.family_xml_type_reader
                 engine.Execute("import duHast.Revit.Family.Utility.xml_family_type_reader as xml_family_type_reader", scope);
                 PythonEngineManager.FamilyXMLTypeReaderModule = scope.GetVariable("xml_family_type_reader");

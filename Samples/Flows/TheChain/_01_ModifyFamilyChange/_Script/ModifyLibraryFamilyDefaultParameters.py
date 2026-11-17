@@ -69,11 +69,11 @@ from duHast.Utilities.files_csv import read_csv_file
 from duHast.Utilities.date_stamps import get_file_date_stamp
 from duHast.Utilities.files_io import file_exist
 
-from duHast.Revit.SharedParameters.shared_parameters_tuple import PARAMETER_DATA
+from duHast.Revit.SharedParameters.Objects.shared_parameter_data import ParameterModel
 
 
 # import Revit API
-from Autodesk.Revit.DB import GroupTypeId, Transaction
+from Autodesk.Revit.DB import Transaction
 
 
 # ----------------------------------------------------- default family actions ------------------------------------------
@@ -384,11 +384,15 @@ def swap_shared_parameters_in_family(doc):
 
 
 TODAYS_DATE = get_file_date_stamp()
-# tuple containing the shared parameters to be added
+# the shared parameters to be added: parameter, formula, value, shared parameter file path
+# (group_type_id is a key of PARAMETER_GROUPING_TO_GROUP_TYPE_ID in duHast.Revit.Common.parameter_grouping)
 SHARED_PARAMETERS_TO_ADD = {
     "NewTestParameter": [
-        PARAMETER_DATA(
-            "NewTestParameter", True, GroupTypeId.IdentityData
+        ParameterModel(
+            name="NewTestParameter",
+            is_type_parameter=False,
+            group_type_id="Identity Data",
+            shared_parameter_file_path=settings.SHARED_PARAMETER_FILE_PATH,
         ),
         "",
         "sample value",

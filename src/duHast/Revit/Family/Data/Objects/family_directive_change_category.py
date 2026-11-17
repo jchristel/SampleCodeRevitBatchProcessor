@@ -1,8 +1,11 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains a tuple used to store settings retrieved from a file.
+Class for family category change directives.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 """
+
+
 #
 # License:
 #
@@ -10,7 +13,7 @@ This module contains a tuple used to store settings retrieved from a file.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2026, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -24,10 +27,42 @@ This module contains a tuple used to store settings retrieved from a file.
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
-#
 
-from collections import namedtuple
+import os
+
+from duHast.Revit.Family.Data.Objects.family_directive_base import FamilyDirectiveBase
 
 
-# tuples containing base family data read from file
-PARAMETER_DATA = namedtuple("parameterData", "name isInstance GroupTypeId")
+class FamilyDirectiveChangeCategory(FamilyDirectiveBase):
+
+    # directive file row structure (no header row)
+    CHANGE_CATEGORY_DIRECTIVE_INDEX_FAMILY_FILE_PATH = 0
+    CHANGE_CATEGORY_DIRECTIVE_INDEX_NEW_CATEGORY_NAME = 1
+
+    # file name identifiers for category change directives
+    CHANGE_CATEGORY_DIRECTIVE_FILE_NAME_PREFIX = "CategoryChangeDirective"
+    CHANGE_CATEGORY_DIRECTIVE_FILE_EXTENSION = ".csv"
+
+    EXCEPTION_NO_CHANGE_CATEGORY_DIRECTIVE_FILES = (
+        "Category change directive file does not exist."
+    )
+    EXCEPTION_EMPTY_CHANGE_CATEGORY_DIRECTIVE_FILES = (
+        "Empty category change directive file!"
+    )
+
+    def __init__(self, file_path, new_category_name):
+        """
+        A directive to change the category of a family.
+
+        :param file_path: Fully qualified file path of the family.
+        :type file_path: str
+        :param new_category_name: The Revit category the family is to be changed to.
+        :type new_category_name: str
+        """
+
+        # the family name is the file name, the current category is not part of the directive
+        super(FamilyDirectiveChangeCategory, self).__init__(
+            name=os.path.splitext(os.path.basename(file_path))[0], category=None
+        )
+        self.file_path = file_path
+        self.new_category_name = new_category_name

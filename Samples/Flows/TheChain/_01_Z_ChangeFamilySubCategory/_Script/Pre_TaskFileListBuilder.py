@@ -49,10 +49,16 @@ from csv import QUOTE_MINIMAL
 import settings as settings  # sets up all commonly used variables and path locations!
 
 from duHast.Utilities.console_out import output
-from duHast.Revit.Family.Data.family_category_data_utils_deprecated import (
-    read_overall_family_category_data_from_directory,
-    read_overall_family_sub_category_change_directives_from_directory,
+from duHast.Revit.Family.Data.family_data_family_utils import (
+    get_report_file_path,
+    read_root_families_from_report,
+)
+from duHast.Revit.Family.family_change_category_utils import (
+    get_sub_category_change_directives,
     get_families_requiring_sub_category_change,
+)
+from duHast.Revit.Categories.Data.Objects.category_data_processor_defaults import (
+    DATA_REPORT_NAME as CATEGORY_REPORT_NAME,
 )
 
 from duHast.Utilities.files_csv import write_report_data_as_csv
@@ -69,16 +75,24 @@ output("Python pre process script: Task list builder start ...")
 output("Using path: {}".format(settings.INPUT_DIRECTORY))
 
 try:
-    root_families, nested_Families = read_overall_family_category_data_from_directory(
-        settings.INPUT_DIRECTORY
+    # the family categories report copied into the input folder
+    category_report_path = get_report_file_path(
+        settings.INPUT_DIRECTORY, CATEGORY_REPORT_NAME
     )
+    if category_report_path is None:
+        raise ValueError(
+            "No family categories report found in: {}".format(settings.INPUT_DIRECTORY)
+        )
+    read_result = read_root_families_from_report(category_report_path)
+    if read_result.status is False:
+        raise ValueError(read_result.message)
+    root_families = read_result.result
     # check if any root families where found
     if len(root_families) > 0:
-        sub_category_change_directives = (
-            read_overall_family_sub_category_change_directives_from_directory(
-                settings.INPUT_DIRECTORY
-            )
-        )
+        directives_result = get_sub_category_change_directives(settings.INPUT_DIRECTORY)
+        if directives_result.status is False:
+            raise ValueError(directives_result.message)
+        sub_category_change_directives = directives_result.result
         root_families_needing_change = get_families_requiring_sub_category_change(
             root_families, sub_category_change_directives
         )

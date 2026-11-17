@@ -630,11 +630,11 @@ Samples/pyRevit/Extensions/duHast-202?.extension/lib/*
 !src/duHast/lib
 
 # the chain data output:
-# Ignore everything under _00_ReportFamilyData_Users
-Samples/Flows/TheChain/_00_ReportFamilyData/_Users/*
+# Ignore the user folders (set up by setupUsers.ps1) of every flow
+Samples/Flows/TheChain/*/_Users/*
 
 # But do NOT ignore the _default directory
-!Samples/Flows/TheChain/_00_ReportFamilyData/_Users/_default/
+!Samples/Flows/TheChain/*/_Users/_default/
 
 #include any .msi files in the /Samples/Apps folder
 !Samples/Apps/**/*.msi

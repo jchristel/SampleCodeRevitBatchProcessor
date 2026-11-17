@@ -80,6 +80,9 @@ from Post_FamilyDataAnalysis import (
 from duHast.Revit.Family.Data.family_base_data_circular_referencing import (
     check_families_have_circular_references,
 )
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
+    NESTING_SEPARATOR,
+)
 from duHast.Revit.Family.Data.family_base_data_missing_families import (
     check_families_missing_from_library,
     find_missing_families_direct_host_families,
@@ -92,6 +95,15 @@ from duHast.Revit.Family.Data.family_base_data_missing_families import (
 
 # looking for message indicating one of the data processors failed
 CUSTOM_EXCEPTION_MESSAGES_TO_BE_FLAGGED = ["status: False"]
+
+
+def _log_message_to_string(message):
+    """
+    The log message of a file which failed to process is a list of strings, or a string. Returns it as a single string.
+    """
+    if isinstance(message, list):
+        return "; ".join(str(m) for m in message)
+    return str(message)
 
 
 # ------------------------------------------- user feed back and report to disk -------------------------------------------
@@ -152,7 +164,7 @@ def process_all_log_files():
     # process logs
     processing_results = process_log_files(
         folder_path=settings.LOG_MARKER_DIRECTORY,
-        debug=CUSTOM_EXCEPTION_MESSAGES_TO_BE_FLAGGED,
+        custom_exception_messages=CUSTOM_EXCEPTION_MESSAGES_TO_BE_FLAGGED,
     )
 
     output("LogResults.... status: {}".format(processing_results.status))
@@ -163,7 +175,7 @@ def process_all_log_files():
         data_to_file = []
         data_to_process_file = []
         for data in processing_results.result:
-            row = [data[0], data[2]]
+            row = [data[0], _log_message_to_string(data[2])]
             data_to_file.append(row)
             # re - process files
             rowProcessData = [data[0]]
@@ -209,21 +221,19 @@ def check_circular_references():
         ):
             # re-format output data
             data_to_file = []
-            for data in check_circular_ref_result.result:
-                # write one row per circular nesting found
-                for i in range (len(data[1])):
-
-                    file_path_root = data[0].family_file_path
-                    index_circular_nesting = data[1][i][0]
-                    circular_nested_family = data[1][i][1]
-                    nesting_path = data[1][i][2]
-                    row = [
-                        file_path_root,
-                        str(index_circular_nesting),
-                        circular_nested_family,
-                        nesting_path,
-                    ]
-                    data_to_file.append(row)
+            # write one row per circular nesting found (FamilyCircularNesting)
+            for circular_nesting in check_circular_ref_result.result:
+                row = [
+                    circular_nesting.family.family_file_path,
+                    str(circular_nesting.nesting_level),
+                    "{}{}{}".format(
+                        circular_nesting.family_name,
+                        NESTING_SEPARATOR,
+                        circular_nesting.family_category,
+                    ),
+                    circular_nesting.nesting_path,
+                ]
+                data_to_file.append(row)
             check_circular_ref_result.result = data_to_file
         user_out_and_log_file(
             check_circular_ref_result, settings.FILE_NAME_CIRCULAR_REFERENCE_REPORT
@@ -266,8 +276,8 @@ def check_missing_families():
             data_to_file = []
             for data in check_missing_families.result:
                 try:
-                    # missing family data
-                    row = [data[0], data[1]]
+                    # missing family data (a family identified by name and category)
+                    row = [data.family_name, data.family_category]
                     data_to_file.append(row)
                 except Exception as e:
                     output(

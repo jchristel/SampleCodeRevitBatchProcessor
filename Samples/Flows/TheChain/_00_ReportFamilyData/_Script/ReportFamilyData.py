@@ -205,6 +205,13 @@ def report_data(processor, file_name_prefix):
                 False,
                 "Failed to write {}  data with exception: {}".format(file_name, e),
             )
+    else:
+        result.update_sep(
+            False,
+            "Failed to write {} data: output directory path is too long ({} characters): {}".format(
+                file_name_prefix, len(ROOT_PATH), ROOT_PATH
+            ),
+        )
     return result
 
 

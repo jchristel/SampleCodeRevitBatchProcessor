@@ -48,17 +48,16 @@ def find_circular_reference(family_data, result_list):
 
     :param family_data: list of family data objects
     :type family_data: list
-    :param result_list: list to store families with circular references
-    :type result_list: list of tuples with two entries (0 index the family_data_family object, 1 index list of tuples with two entries in format, 0 index the nesting level as integer at which the circular nesting occurs, 1 index a string in format  family name :: family category )
-    :return: list of tuples containing family with circular references at 0 and circular family data at 1
+    :param result_list: list to store the circular nestings found
+    :type result_list: [:class:`.FamilyCircularNesting`]
+    :return: the circular nestings found, each referencing the family it was found in
+    :rtype: [:class:`.FamilyCircularNesting`]
     """
 
     # loop over all family data
     for family in family_data:
         # process each family and check for circular references
-        circular_families = family.has_circular_nesting()
-        if len(circular_families) > 0:
-            result_list.append((family, circular_families))
+        result_list.extend(family.has_circular_nesting())
     return result_list
 
 
@@ -68,7 +67,19 @@ def check_families_have_circular_references(family_base_data_report_file_path):
 
     :param family_base_data_report_file_path: path to the family base data report file
     :type family_base_data_report_file_path: str
-    :return: result object
+    :return:
+        Result class instance.
+
+        - result.status. True if the check completed without an exception, otherwise False.
+        - result.message will contain the summary messages of the process including time stamps.
+        - result.result one entry per circular nesting found, referencing the family it was found in
+          (:class:`.FamilyCircularNesting`: family, nesting_level, family_name, family_category, nesting_path)
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain generic exception message.
+        - result.result will be empty
     :rtype: Result
     """
     
@@ -92,25 +103,27 @@ def check_families_have_circular_references(family_base_data_report_file_path):
         if families_processed_result.status == False:
             raise ValueError(families_processed_result.message)
 
-        # get results
-        families = []
+        # get results: one entry per circular nesting, each referencing its family
+        circular_nestings = families_processed_result.result
         families_with_circular_nesting = []
-        for nested_tuple in families_processed_result.result:
-            families.append(nested_tuple[0])
-            families_with_circular_nesting.extend(nested_tuple[1])
+        for circular_nesting in circular_nestings:
+            if circular_nesting.family not in families_with_circular_nesting:
+                families_with_circular_nesting.append(circular_nesting.family)
 
-            # append messages debug
-            return_value.append_message(families_processed_result.message)
+        # append messages debug
+        return_value.append_message(families_processed_result.message)
 
-            return_value.append_message(
-                "{} Found: {} circular references in families.".format(
-                    t_process.stop(), len(families_with_circular_nesting)
-                )
+        return_value.append_message(
+            "{} Found: {} circular references in {} families.".format(
+                t_process.stop(),
+                len(circular_nestings),
+                len(families_with_circular_nesting),
             )
+        )
 
-        # return families which have circular references
-        if len(families_with_circular_nesting) > 0:
-            return_value.result = families_with_circular_nesting
+        # return the circular nestings found
+        if len(circular_nestings) > 0:
+            return_value.result = circular_nestings
 
     except Exception as e:
         return_value.update_sep(

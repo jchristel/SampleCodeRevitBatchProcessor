@@ -35,6 +35,10 @@ Family data class.
 
 from duHast.Utilities.Objects import base
 from duHast.Revit.Family.Data.Objects.family_data_container import FamilyDataContainer
+from duHast.Revit.Family.Data.Objects.family_circular_nesting import (
+    FamilyCircularNesting,
+)
+from duHast.Revit.Family.Data.Objects.family_nesting_path import FamilyNestingPath
 from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
     NESTING_SEPARATOR,
 )
@@ -263,8 +267,8 @@ class FamilyDataFamily(base.Base):
         """
         Get the longest unique family name nesting path(s) and family category nesting path(s) of the family data.
 
-        :return: The longest unique nesting path as a list of tuples, or None if family is not processed.
-        :rtype: list[(family_name_nesting, family_category_nesting)] or None
+        :return: The longest unique nesting path(s), or None if family is not processed.
+        :rtype: list[:class:`.FamilyNestingPath`] or None
         """
 
         unique_nesting_paths = []
@@ -272,7 +276,7 @@ class FamilyDataFamily(base.Base):
             return
 
         # loop over nesting by level property and get the longest unique family name nesting path (multiple)
-        # and category nesting path as a tuple where 0 index is the name path, and 1 index the category nesting path
+        # and category nesting path as a nesting path instance
         # nesting by level has the nesting depth as key and the data containers as value
         # start from the highest nesting level and check whether the next level down overlaps with the current level
         # all path in the highest (deepest) level of nesting are unique
@@ -284,7 +288,9 @@ class FamilyDataFamily(base.Base):
         if len(self.nesting_by_level) == 0:
             # if no nesting levels found return the root family only
             unique_nesting_paths.append(
-                (self.family_nesting_path, self.family_category_nesting_path)
+                FamilyNestingPath(
+                    self.family_nesting_path, self.family_category_nesting_path
+                )
             )
         else:
             highest_nesting_level = max(self.nesting_by_level.keys())
@@ -296,9 +302,9 @@ class FamilyDataFamily(base.Base):
 
             # add their nesting path to the unique nesting paths
             for family_data_instance in family_data_instances:
-                # add tuple made up off family name nesting path at 0 and family category nesting path at 1
+                # add the family name nesting path and family category nesting path
                 unique_nesting_paths.append(
-                    (
+                    FamilyNestingPath(
                         family_data_instance.family_nesting_path,
                         family_data_instance.family_category_nesting_path,
                     )
@@ -317,32 +323,20 @@ class FamilyDataFamily(base.Base):
                 # loop over the data containers at the current nesting level
                 for family_data_instance in family_data_instances:
                     # get the nesting path of the current data container
-                    nesting_path_family_name_current_level = (
-                        family_data_instance.family_nesting_path
-                    )
-                    nesting_path_category_current_level = (
-                        family_data_instance.family_category_nesting_path
+                    nesting_path_current_level = FamilyNestingPath(
+                        family_data_instance.family_nesting_path,
+                        family_data_instance.family_category_nesting_path,
                     )
                     # check for match of both path
                     for unique_nesting_path in unique_nesting_paths:
                         found_match = False
                         # check if the current nesting path overlaps with the unique nesting path
-                        if (
-                            nesting_path_family_name_current_level
-                            in unique_nesting_path[0]
-                            and nesting_path_category_current_level
-                            in unique_nesting_path[1]
-                        ):
+                        if nesting_path_current_level.is_part_of(unique_nesting_path):
                             # if it overlaps, remove it from the unique nesting paths
                             found_match = True
                             break
                     if not found_match:
-                        unique_nesting_paths.append(
-                            (
-                                nesting_path_family_name_current_level,
-                                nesting_path_category_current_level,
-                            )
-                        )
+                        unique_nesting_paths.append(nesting_path_current_level)
         # return the unique nesting paths
         return unique_nesting_paths
 
@@ -467,8 +461,9 @@ class FamilyDataFamily(base.Base):
         for container in self.data_containers_unsorted:
             container_data_storage_dic = container.get_data_headers_list()
             for key, value in container_data_storage_dic.items():
-                # check if that storage key is already in the return dictionary
-                if key not in data_storage_as_string:
+                # check if that storage key is already in the return dictionary with headers
+                # (a container without storage of a type returns an empty header list for it)
+                if len(data_storage_as_string.get(key, [])) == 0:
                     # if not add its value list by the new containers values list
                     data_storage_as_string[key] = value
 
@@ -476,9 +471,8 @@ class FamilyDataFamily(base.Base):
         for nested_family in self.nested_families_unsorted:
             family_data_storage_dic = nested_family.get_all_storage_headers_as_strings()
             for key, value in family_data_storage_dic.items():
-                # check if that storage key is already in the return dictionary
-                if key not in data_storage_as_string:
-                    # if extend its value list by the new containers values list
+                # check if that storage key is already in the return dictionary with headers
+                if len(data_storage_as_string.get(key, [])) == 0:
                     data_storage_as_string[key] = value
         return data_storage_as_string
 
@@ -488,12 +482,9 @@ class FamilyDataFamily(base.Base):
 
         Circular nesting is defined as a situation where a nesting path property of a container contains the same family more than once.
 
-        returns a list of tuples in format:
-
-            - 0 index the nesting level at which the circular nesting occurs
-            - 1 index a string in format: family name :: family category
-            - 2 the entire family name nesting path this circular reference appeared on
-
+        :return: One entry per family appearing again in a nesting path, with the nesting level, the family name and
+            category, and the family name nesting path it appeared on.
+        :rtype: [:class:`.FamilyCircularNesting`]
         """
 
         # check if processed and if not process the family data
@@ -508,17 +499,10 @@ class FamilyDataFamily(base.Base):
         # loop over these path and check for multiple occurrence of a family name
         for nesting_path in longest_unique_nesting_path:
 
-            # split path at nesting separator ( should have the same length )
-            nesting_chunks_family_names = nesting_path[0].split(NESTING_SEPARATOR)
-            nesting_chunks_category = nesting_path[1].split(NESTING_SEPARATOR)
-
-            # double check path length are equal!
-            if len(nesting_chunks_family_names) != len(nesting_chunks_category):
-                raise ValueError(
-                    "Length of nesting name path: {} is not the same as length of nesting category path: {}".format(
-                        len(nesting_chunks_family_names), len(nesting_chunks_category)
-                    )
-                )
+            # split path at nesting separator ( raises if they don't have the same length )
+            nesting_chunks_family_names, nesting_chunks_category = (
+                nesting_path.get_chunks()
+            )
 
             # check if a chunk is already in the list, indicating a circular nesting
             node_names = []
@@ -534,9 +518,92 @@ class FamilyDataFamily(base.Base):
                 # check if test value is already in list...indicating a circular nesting reference
                 if test_value in node_names:
                     # add family name and category to duplicated list including the nesting level
-                    duplicated_family_names.append((i, test_value, nesting_path[0]))
+                    duplicated_family_names.append(
+                        FamilyCircularNesting(
+                            family=self,
+                            nesting_level=i,
+                            family_name=nesting_chunks_family_names[i],
+                            family_category=nesting_chunks_category[i],
+                            nesting_path=nesting_path.name_path,
+                        )
+                    )
                 else:
                     # add test value to nodes list
                     node_names.append(test_value)
 
         return duplicated_family_names
+
+    def get_direct_hosts(self, family_name, family_category):
+        """
+        Get the families which directly host (contain at the next nesting level up) the given family within this family's nesting tree.
+
+        The host of a family nested directly into this family is this family itself.
+
+        :param family_name: The name of the nested family.
+        :type family_name: str
+        :param family_category: The Revit category of the nested family.
+        :type family_category: str
+
+        :return: The host families, identified by name and category (no other properties are set).
+        :rtype: [:class:`.FamilyDataFamily`]
+        """
+
+        hosts = []
+        for nested_family in self.nested_families_unsorted:
+            # nested families without nesting path data can't be checked
+            if not nested_family.family_nesting_path or not nested_family.family_category_nesting_path:
+                continue
+            name_chunks = nested_family.family_nesting_path.split(NESTING_SEPARATOR)
+            category_chunks = nested_family.family_category_nesting_path.split(
+                NESTING_SEPARATOR
+            )
+            if len(name_chunks) != len(category_chunks):
+                raise ValueError(
+                    "Length of nesting name path: {} is not the same as length of nesting category path: {}".format(
+                        len(name_chunks), len(category_chunks)
+                    )
+                )
+            # index 0 is the root of the nesting path, which has no host
+            for i in range(1, len(name_chunks)):
+                if (
+                    name_chunks[i] == family_name
+                    and category_chunks[i] == family_category
+                ):
+                    host = FamilyDataFamily(
+                        family_name=name_chunks[i - 1],
+                        family_category=category_chunks[i - 1],
+                    )
+                    if host not in hosts:
+                        hosts.append(host)
+        return hosts
+
+    def get_category_data_storage(self):
+        """
+        Get the category data storage (one per sub category) of this family itself, not including any nested families.
+
+        :return: List of category data storage instances
+        :rtype: [:class:`.FamilyCategoryDataStorage`]
+        """
+
+        category_data_storage = []
+        for container in self.data_containers_unsorted:
+            category_data_storage.extend(container.category_data_storage)
+        return category_data_storage
+
+    def has_sub_category(self, sub_category_name):
+        """
+        Check whether this family itself (not including any nested families) has a sub category of the given name.
+
+        Requires category data, as read from a family category report.
+
+        :param sub_category_name: The sub category name.
+        :type sub_category_name: str
+
+        :return: True if a sub category of that name was found, otherwise False
+        :rtype: bool
+        """
+
+        for storage in self.get_category_data_storage():
+            if storage.sub_category_name == sub_category_name:
+                return True
+        return False

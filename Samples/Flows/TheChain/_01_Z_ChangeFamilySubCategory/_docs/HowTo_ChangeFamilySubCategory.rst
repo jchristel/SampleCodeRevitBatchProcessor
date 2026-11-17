@@ -48,15 +48,8 @@ utilModify.py
 
 User
 ^^^^^^
-User specific folder will be set up by SetupUser.bat script in the TheChain folder. Note: this flow will not execute if no user specific folder is present! After creation, it will require manual updates:
+User specific folder will be set up by the setupUsers.ps1 script in the __A0_TheChain folder (see the set up notes of The Chain). Note: this flow will not execute if no user specific folder is present!
 
-__\_Users\YOURUSERNAME\_Settings
+setupUsers.ps1 points the directory paths in the settings files in __\_Users\YOURUSERNAME\_Settings at your user folder. If needed, update by hand:
 
-    - In all settings files, these properties require updating:
-
-        - "taskScriptFilePath" : update directory path
-        - "revitFileListFilePath" : update directory path
-        - "dataExportFolderPath" : update directory path
-        - "preProcessingScriptFilePath" : update directory path
-        - "PostProcessingScriptFilePath" : update directory path
-        - "batchRevitTaskRevitVersion" : update Revit version
+        - "singleRevitTaskRevitVersion" and "batchRevitTaskRevitVersion" : update Revit version

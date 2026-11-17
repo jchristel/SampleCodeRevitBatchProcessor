@@ -30,9 +30,7 @@ Family base data class.
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Utilities import directory_io as dirIO, files_io as fileIO
 from duHast.Revit.Common import file_io as rFile
-from duHast.Revit.Family.Data import (
-    family_base_data_utils_deprecated as rFamBaseDataUtils,
-)
+from duHast.Revit.Family.Data.family_report_reader import read_family_base_data
 from duHast.Revit.Family.Data.Objects.family_base_data_storage import (
     FamilyBaseDataStorage,
 )
@@ -84,7 +82,7 @@ class FamilyBaseData(IFamData.IFamilyData):
     ):
         """
         Saves a family to file if there is no match for it in the provided reference file. 
-        The reference file is a FamilyBaseDataCombinedReport and is read into tuples using RevitFamilyBaseDataUtils.
+        The reference file is a FamilyBaseDataCombinedReport and is read into family base data storage instances.
 
         :param doc: Current family document
         :type doc: Autodesk.Revit.DB.Document
@@ -106,14 +104,23 @@ class FamilyBaseData(IFamData.IFamilyData):
         # based on file name and category
         if fileIO.file_exist(reference_file_path):
             # read overall family base data from file
-            (
-                overall_family_base_root_data,
-                overall_family_base_nested_data,
-            ) = rFamBaseDataUtils.read_overall_family_data_list(reference_file_path)
+            read_result = read_family_base_data(reference_file_path)
+            if read_result.status is False:
+                raise ValueError(
+                    "Failed to read reference file: {} with: {}".format(
+                        reference_file_path, read_result.message
+                    )
+                )
             found_match = False
-            for root_fam in overall_family_base_root_data:
+            for storage in read_result.result:
+                # root families only (a root family's root path is its name, its root category path its category)
+                if NESTING_SEPARATOR in storage.root_name_path:
+                    continue
                 # check whether name and category are a match
-                if root_fam.name == doc_name and root_fam.category == doc_category:
+                if (
+                    storage.family_name == doc_name
+                    and storage.root_category_path == doc_category
+                ):
                     found_match = True
                     break
             # check if family needs saving out

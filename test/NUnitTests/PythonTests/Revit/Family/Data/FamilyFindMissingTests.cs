@@ -66,7 +66,8 @@ namespace PythonTests.Revit.Family.Data
                 bool foundMatch = false;
                 foreach (var familyData in testResultMissing.result)
                 {
-                    if (familyData[0] == testFile.FileName && familyData[1] == testFile.ExpectedData[0][0])
+                    // missing families are FamilyDataFamily instances identified by name and category
+                    if (familyData.family_name == testFile.FileName && familyData.family_category == testFile.ExpectedData[0][0])
                     {
                         foundMatch = true;
                         break;

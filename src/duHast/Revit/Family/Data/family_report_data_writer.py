@@ -37,49 +37,72 @@ from duHast.Utilities.directory_io import directory_exists
 
 # import report names and identifiers
 from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
-    DATA_TYPE_PROCESSOR as data_type_family_base_processor,
-)
-from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
     DATA_REPORT_NAME as data_type_family_base_report_name,
-)
-
-from duHast.Revit.Categories.Data.Objects.category_data_processor_defaults import (
-    DATA_TYPE_PROCESSOR as data_type_category_processor,
 )
 from duHast.Revit.Categories.Data.Objects.category_data_processor_defaults import (
     DATA_REPORT_NAME as data_type_category_report_name,
 )
-
-from duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor_defaults import (
-    DATA_TYPE_PROCESSOR as data_type_line_pattern_processor,
-)
 from duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor_defaults import (
     DATA_REPORT_NAME as data_type_line_pattern_report_name,
-)
-
-from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor_defaults import (
-    DATA_TYPE_PROCESSOR as data_type_shared_parameter_processor,
 )
 from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor_defaults import (
     DATA_REPORT_NAME as data_type_shared_parameter_report_name,
 )
-
-from duHast.Revit.Warnings.Data.Objects.warnings_data_processor_defaults import (
-    DATA_TYPE_PROCESSOR as data_type_warnings_processor,
-)
 from duHast.Revit.Warnings.Data.Objects.warnings_data_processor_defaults import (
     DATA_REPORT_NAME as data_type_warnings_report_name,
 )
+from duHast.Revit.Family.Data.Objects.family_type_data_processor_defaults import (
+    DATA_REPORT_NAME as data_type_family_type_report_name,
+)
+from duHast.Revit.Family.Data.Objects.family_base_data_storage import (
+    FamilyBaseDataStorage,
+)
+from duHast.Revit.Categories.Data.Objects.category_data_storage import (
+    FamilyCategoryDataStorage,
+)
+from duHast.Revit.LinePattern.Data.Objects.line_pattern_data_storage import (
+    FamilyLinePatternDataStorage,
+)
+from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage import (
+    FamilySharedParameterDataStorage,
+)
+from duHast.Revit.Warnings.Data.Objects.warnings_data_storage import (
+    FamilyWarningsDataStorage,
+)
+from duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage import (
+    FamilyTypeParameterDataStorage,
+)
 
-
-# contains the report name depending on data type
+# report file name (without extension) by storage data type (the first column of each row in a report)
 REPORT_NAME_BY_DATA_TYPE = {
-    data_type_family_base_processor: data_type_family_base_report_name,
-    data_type_category_processor: data_type_category_report_name,
-    data_type_line_pattern_processor: data_type_line_pattern_report_name,
-    data_type_shared_parameter_processor: data_type_shared_parameter_report_name,
-    data_type_warnings_processor: data_type_warnings_report_name,
+    FamilyBaseDataStorage.data_type: data_type_family_base_report_name,
+    FamilyCategoryDataStorage.data_type: data_type_category_report_name,
+    FamilyLinePatternDataStorage.data_type: data_type_line_pattern_report_name,
+    FamilySharedParameterDataStorage.data_type: data_type_shared_parameter_report_name,
+    FamilyWarningsDataStorage.data_type: data_type_warnings_report_name,
+    # the family type report holds one row per family, family type and parameter
+    FamilyTypeParameterDataStorage.data_type: data_type_family_type_report_name,
 }
+
+REPORT_FILE_EXTENSION = ".csv"
+
+
+def get_data_type_by_report_name(report_name):
+    """
+    Returns the storage data type of a report.
+
+    :param report_name: The report file name, with or without file extension, e.g. FamilyCategoriesCombinedReport.csv
+    :type report_name: str
+    :return: The storage data type, or None if the report is not supported.
+    :rtype: str or None
+    """
+
+    if report_name.endswith(REPORT_FILE_EXTENSION):
+        report_name = report_name[: -len(REPORT_FILE_EXTENSION)]
+    for data_type, name in REPORT_NAME_BY_DATA_TYPE.items():
+        if name == report_name:
+            return data_type
+    return None
 
 
 def get_storage_data(family_data):
@@ -98,7 +121,7 @@ def get_storage_data(family_data):
 
     return_value = {}
     for family_instance in family_data:
-        data_dic = family_instance.get_all_storage_data_as_strings
+        data_dic = family_instance.get_all_storage_data_as_strings()
         for key, item in data_dic.items():
             if key in return_value:
                 return_value[key].extend(item)
@@ -120,10 +143,101 @@ def get_storage_headers(family_data):
 
     return_value = {}
     for family_instance in family_data:
-        data_dic = family_instance.get_all_storage_headers_as_strings
+        data_dic = family_instance.get_all_storage_headers_as_strings()
         for key, item in data_dic.items():
-            if key not in return_value:
+            # families without storage of a type return an empty header list for it
+            if len(return_value.get(key, [])) == 0:
                 return_value[key] = item
+    return return_value
+
+
+def _write_report(file_path, headers, rows):
+    """
+    Writes report rows to file.
+
+    :param file_path: Fully qualified file path of the report.
+    :type file_path: str
+    :param headers: The storage property names as returned by get_storage_headers: a list containing a single list of names.
+    :type headers: [[str]]
+    :param rows: The report rows.
+    :type rows: [[str]]
+    :return: Result class instance.
+    :rtype: :class:`.Result`
+    """
+
+    return_value = Result()
+    try:
+        header_data = headers[0] if len(headers) > 0 else []
+        write_result = write_report_data_as_csv(
+            file_name=file_path,
+            header=header_data,
+            data=rows,
+            enforce_ascii=True,
+            encoding="utf-8",
+            bom=None,
+            quoting=QUOTE_MINIMAL,
+        )
+        if write_result.status is False:
+            raise ValueError(write_result.message)
+        return_value.append_message(
+            "Successfully wrote {} rows to: {}".format(len(rows), file_path)
+        )
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "Failed to write report: {} with exception: {}".format(file_path, e),
+        )
+    return return_value
+
+
+def write_data_type_from_families_to_file(family_data, data_type, file_path):
+    """
+    Writes the family data of one storage data type (one report) to file, e.g. after combining reports.
+
+    :param family_data: List of family instances
+    :type family_data: [:class:`.FamilyDataFamily`]
+    :param data_type: The storage data type to write, e.g. FamilyCategoryDataStorage.data_type
+    :type data_type: str
+    :param file_path: Fully qualified file path of the report.
+    :type file_path: str
+
+    :return:
+        Result class instance.
+
+        - result.status: True if the report was written, otherwise False.
+        - result.message: Will contain the number of rows written.
+        - result.result: Will contain the fully qualified file path written.
+
+        On exception
+
+        - result.status (bool) will be False
+        - result.message will contain the exception message
+
+    :rtype: :class:`.Result`
+    """
+
+    return_value = Result()
+    try:
+        if isinstance(family_data, list) == False:
+            raise TypeError(
+                "Family_data needs to be a list. Got {} instead.".format(
+                    type(family_data)
+                )
+            )
+        rows = get_storage_data(family_data=family_data).get(data_type, [])
+        if len(rows) == 0:
+            raise ValueError("No {} data in the families past in.".format(data_type))
+        headers = get_storage_headers(family_data=family_data).get(data_type, [])
+        return_value = _write_report(file_path, headers, rows)
+        if return_value.status:
+            return_value.result.append(file_path)
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "Failed to write {} data to file: {} with exception: {}".format(
+                data_type, file_path, e
+            ),
+        )
     return return_value
 
 
@@ -187,43 +301,21 @@ def write_data_from_families_to_files(family_data, directory_path):
             raise ValueError("Failed to get any storage data from family data past in.")
 
         for key, item in storage_data_dic.items():
+            # families without storage of a type still return an (empty) entry for it
+            if len(item) == 0:
+                continue
             # write to file
             if key in REPORT_NAME_BY_DATA_TYPE:
                 # build output file name
                 full_file_name = os.path.join(
-                    directory_path, REPORT_NAME_BY_DATA_TYPE[key], ".csv"
+                    directory_path, REPORT_NAME_BY_DATA_TYPE[key] + REPORT_FILE_EXTENSION
                 )
-                try:
-                    # get file header
-                    header_data = []
-                    if key in storage_headers_dic:
-                        header_data = storage_headers_dic[key]
-
-                    write_result = write_report_data_as_csv(
-                        file_name=full_file_name, 
-                        header=header_data, 
-                        data=item,
-                        enforce_ascii=True,
-                        encoding="utf-8",
-                        bom=None,
-                        quoting=QUOTE_MINIMAL,
-                    )
-                    if write_result.status is False:
-                        raise ValueError(write_result.message)
-                    
-                    return_value.append_message(
-                        "Successfully wrote data type: {} report to: {}".format(
-                            key, full_file_name
-                        )
-                    )
+                write_result = _write_report(
+                    full_file_name, storage_headers_dic.get(key, []), item
+                )
+                return_value.update(write_result)
+                if write_result.status:
                     return_value.result.append(full_file_name)
-                except Exception as e:
-                    return_value.update_sep(
-                        False,
-                        "Failed to write report for data type: {} to file: {}".format(
-                            key, full_file_name
-                        ),
-                    )
             else:
                 return_value.update_sep(
                     False, "Data type: {} has no report file name assigned".format(key)

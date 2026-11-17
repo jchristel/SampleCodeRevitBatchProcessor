@@ -117,30 +117,30 @@ function start-wrapper {
         [Parameter(Mandatory = $true)]
         [string[]]$arguments
     )
-    # Create a temp file to capture output of the ui file selection script
+    # Create temp files to capture the output and the errors (e.g. python tracebacks) of the script
     $tempFile = New-TemporaryFile
+    $tempFileErrors = New-TemporaryFile
 
     # Start the process and wait for it to finish
-    $process_result = Start-Process $path -ArgumentList $arguments -NoNewWindow -PassThru -RedirectStandardOutput $tempFile.FullName -Wait
- 
-    # Read the contents of the temporary file into a variable
-    $output_temp_file = Get-Content $tempFile.FullName
- 
-    # Convert array of strings to single string with preserved formatting
-    $output_string = $output_temp_file | Out-String
+    $process_result = Start-Process $path -ArgumentList $arguments -NoNewWindow -PassThru -RedirectStandardOutput $tempFile.FullName -RedirectStandardError $tempFileErrors.FullName -Wait
 
-    # Write the contents of the temporary file to the console
-    Write-Host $output_string 
- 
+    foreach ($temp in @($tempFile, $tempFileErrors)) {
+        # Read the contents of the temporary file into a variable
+        $output_temp_file = Get-Content $temp.FullName
+        if ($output_temp_file) {
+            # Write the contents of the temporary file to the console, with preserved formatting
+            Write-Host ($output_temp_file | Out-String)
+            # Append the contents of the temporary file to the log file
+            # (Out-File, not Tee-Object: Tee-Object would add the lines to this function's return value)
+            $output_temp_file | Out-File -Append -FilePath $log_file_path
+        }
+        # Remove the temporary file
+        Remove-Item $temp.FullName
+    }
+
     # Flush the output buffer to ensure all output is immediately visible
     [Console]::Out.Flush()
- 
-    # Append the contents of the temporary file to the log file
-    $output_temp_file | Tee-Object -FilePath $log_file_path -Append
- 
-    # Remove the temporary file
-    Remove-Item $tempFile.FullName
- 
+
     # Return the process result object
     return $process_result
 }
@@ -150,19 +150,26 @@ function start-wrapper {
 A count down with progress bar...
 
 .DESCRIPTION
-Counts for 180 seconds.
+Counts for the given number of seconds, 180 by default.
+
+.PARAMETER seconds
+How long to count down for, in seconds. Default is 180.
 
 .EXAMPLE
 wait-seconds
+wait-seconds -seconds 120
 
 .NOTES
 General notes
 #>
 function wait-seconds() {
+    param (
+        [int]$seconds = 180
+    )
     $progressId = 2
-    for ($i = 0; $i -le 180; $i++) {
-        $timeLeft = 180 - $i
-        $percentComplete = ($i / 180) * 100
+    for ($i = 0; $i -le $seconds; $i++) {
+        $timeLeft = $seconds - $i
+        $percentComplete = ($i / $seconds) * 100
         $status = "Time left: $($timeLeft)s"
         Write-Progress -Id $progressId -Activity "Countdown till next Revit session start" -Status $status -PercentComplete $percentComplete
         Start-Sleep 1
@@ -186,6 +193,13 @@ The fully qualified directory path containing the Revit Batch Processor settings
 .PARAMETER settings_file_names
 A list containing the individual Revit Batch Processor settings file names.
 
+.PARAMETER batch_processor_path
+The fully qualified file path of BatchRvt.exe. Default is the per user install location:
+%LOCALAPPDATA%\RevitBatchProcessor\BatchRvt.exe
+
+.PARAMETER start_interval_seconds
+How long to wait between starting sessions, in seconds. Default is 180.
+
 .EXAMPLE
 # Define the paths to your batch processor settings as a list
 $settings_step_one = @(
@@ -205,19 +219,25 @@ function start-batchProcessor {
         [Parameter(Mandatory = $true)]
         [string]$settings_directory,
         [Parameter(Mandatory = $true)]
-        [string[]]$settings_file_names
+        [string[]]$settings_file_names,
+        [string]$batch_processor_path = (Join-Path $env:LOCALAPPDATA "RevitBatchProcessor\BatchRvt.exe"),
+        [int]$start_interval_seconds = 180
     )
 
-    # Define batch processor path
-    
-    $batch_processor_path = "C:\Path_To_\BatchRvt.exe"
+    if (-not (Test-Path $batch_processor_path -PathType Leaf)) {
+        Write-ToLogAndConsole -Message "Revit Batch Processor not found at: $batch_processor_path"
+        throw "Revit Batch Processor not found at: $batch_processor_path"
+    }
+
+    # the sessions started here: only these are waited on, not other Revit Batch Processor sessions running on this machine
+    $sessions = @()
     for ($i = 0; $i -lt $settings_file_names.Length; $i++) {
         $settings = $settings_file_names[$i]
         Write-ToLogAndConsole -Message "Starting Revit Batch Processor with settings: $settings_directory$settings"
-        Start-Process $batch_processor_path -ArgumentList "--settings_file `"$settings_directory$settings`""
+        $sessions += Start-Process $batch_processor_path -ArgumentList "--settings_file `"$settings_directory$settings`"" -PassThru
         if ($i -lt ($settings_file_names.Length - 1)) {
             #This won't execute on the final iteration
-            wait-seconds
+            wait-seconds -seconds $start_interval_seconds
         }
     }
 
@@ -227,7 +247,7 @@ function start-batchProcessor {
 
     $progressId = 1
     # display a progress bar waiting for batch p to finish
-    while ((Get-Process BatchRvt -ErrorAction SilentlyContinue | Where-Object { $_.HasExited -eq $false }).Count -gt 0) {
+    while (@($sessions | Where-Object { -not $_.HasExited }).Count -gt 0) {
         Write-Progress -Id $progressId -Activity "Waiting for scripts to finish" -Status "Waiting" -PercentComplete $progress -CurrentOperation "Running Revit Batch Processor script(s)"
         $progress = ($progress + 10) % 100
         Start-Sleep -Seconds 2 
@@ -418,17 +438,42 @@ function start-PythonInSecureEnclave {
 # global settings...
 
 
-# set up the log file name
-# get the script working directory
-$log_dir = "$PWD\logs" 
-# create a logs folder in the script's working directory if not exists already
-if (!(Test-Path $log_dir)) {
-    New-Item -ItemType Directory -Path $log_dir
+<#
+.SYNOPSIS
+Sets the log file Write-ToLogAndConsole and start-wrapper write to.
+
+.DESCRIPTION
+Creates the log file's directory if it does not exist. Returns the previous log file path, so a caller can switch back.
+
+.PARAMETER Path
+The fully qualified log file path.
+
+.EXAMPLE
+$previous_log = Set-LogFile -Path "C:\flow directory path\_Output\Log.log"
+Set-LogFile -Path $previous_log | Out-Null
+#>
+function Set-LogFile {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$Path
+    )
+    $previous = $global:log_file_path
+    $directory = Split-Path -Path $Path -Parent
+    if ($directory -and !(Test-Path $directory)) {
+        New-Item -ItemType Directory -Path $directory | Out-Null
+    }
+    $global:log_file_path = $Path
+    return $previous
 }
-$log_file_name = "Log_$(Get-Date -Format 'yyyy-MM-dd').log" # create log file name with current date
-$log_file_path_ = Join-Path $log_dir $log_file_name   # join the log directory and filename
-# and store it in a global variable
-New-Variable -Name "log_file_path" -Value $log_file_path_ -Scope "Global"
+
+# set up the default log file, unless a log file is set up already (this script loaded before, or by the caller)
+if (-not $global:log_file_path) {
+    # get the script working directory
+    $log_dir = "$PWD\logs"
+    $log_file_name = "Log_$(Get-Date -Format 'yyyy-MM-dd').log" # create log file name with current date
+    # create a logs folder in the script's working directory if not exists already, and store the path in a global variable
+    Set-LogFile -Path (Join-Path $log_dir $log_file_name) | Out-Null
+}
 
 # set console text to green, matrix style
 $host.UI.RawUI.ForegroundColor = "Green"

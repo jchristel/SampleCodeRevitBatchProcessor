@@ -33,6 +33,8 @@ from Autodesk.Revit.DB import Transaction
 from duHast.Revit.Common import transaction as rTran
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.SharedParameters.shared_parameters import get_family_parameters
+from duHast.Revit.SharedParameters.Objects.shared_parameter_data import ParameterModel
+from duHast.Revit.Common.parameter_grouping import PARAMETER_GROUPING_TO_GROUP_TYPE_ID
 
 
 def change_shared_parameter_to_family_parameter(doc, parameter_name, prefix="_"):
@@ -121,8 +123,8 @@ def change_family_parameter_to_shared_parameter(
     :type doc: Autodesk.Revit.DB.Document
     :param parameter_name: The family parameter name.
     :type parameter_name: str
-    :param parameter_data: A named tup[le containing the shared parameter information
-    :type parameter_data: RevitSharedParametersTuple.parameterData
+    :param parameter_data: The shared parameter information: name, is_type_parameter and group_type_id (a key of PARAMETER_GROUPING_TO_GROUP_TYPE_ID)
+    :type parameter_data: :class:`.ParameterModel`
     :param parameter_def: The external definition of the shared parameter.
     :type parameter_def: Autodesk.Revit.DB.ExternalDefinition
 
@@ -139,6 +141,29 @@ def change_family_parameter_to_shared_parameter(
     """
 
     return_value = res.Result()
+
+    if isinstance(parameter_data, ParameterModel) == False:
+        return_value.update_sep(
+            False,
+            "parameter_data must be of type ParameterModel. Got {} instead.".format(
+                type(parameter_data)
+            ),
+        )
+        return return_value
+    # the grouping of the parameter (where it appears in the Revit UI)
+    group_type_id = PARAMETER_GROUPING_TO_GROUP_TYPE_ID.get(
+        parameter_data.group_type_id, None
+    )
+    if group_type_id == None:
+        return_value.update_sep(
+            False,
+            "Invalid group type id: {}. Please provide one of the following: {}".format(
+                parameter_data.group_type_id,
+                list(PARAMETER_GROUPING_TO_GROUP_TYPE_ID.keys()),
+            ),
+        )
+        return return_value
+
     # get the family manager
     manager = doc.FamilyManager
     # get family parameters
@@ -156,8 +181,8 @@ def change_family_parameter_to_shared_parameter(
                     parameter_new = manager.ReplaceParameter(
                         p,
                         parameter_def,
-                        parameter_data.builtInParameterGroup,
-                        parameter_data.isInstance,
+                        group_type_id,
+                        not (parameter_data.is_type_parameter),
                     )
 
                     action_return_value.update_sep(

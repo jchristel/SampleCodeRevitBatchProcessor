@@ -35,8 +35,6 @@ from System import Int64 # revit element Id expects 64 bit integer
 
 # class used for stats reporting
 from duHast.Utilities.Objects import result as res
-from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
-from duHast.Revit.SharedParameters.Data.Objects import shared_parameter_data as rSharedParaData
 from duHast.Revit.Categories import categories as rCat
 from duHast.Revit.Common import delete as rDel
 
@@ -79,20 +77,21 @@ def purge_unused(doc, processor):
     fam_cat_name = list(rCat.get_family_category(doc))[0]
     if fam_cat_name != "Generic Annotations" and fam_cat_name.endswith("Tags") == False:
         ids_to_delete = []
-        # get categories found in root processor data only
-        root_fam_data = processor._find_root_family_data()
-        # get all root line pattern entries where usage counter == 0.
-        for root_fam in root_fam_data:
-            if root_fam[IFamData.USAGE_COUNTER] == 0:
-                return_value.append_message(
-                    "Found unused shared parameter: {} [{}]".format(
-                        root_fam[rSharedParaData.PARAMETER_NAME],
-                        root_fam[rSharedParaData.PARAMETER_GUID],
+        # get the shared parameter data storage of the root family only (its usage counters include the usage in nested families)
+        # get all entries where usage counter == 0
+        # (a family without shared parameters has a single placeholder storage with parameter id -1)
+        for root_fam_data in processor._find_root_family_data():
+            for storage in root_fam_data.get_data():
+                if storage.use_counter == 0 and int(storage.parameter_id) > 0:
+                    return_value.append_message(
+                        "Found unused shared parameter: {} [{}]".format(
+                            storage.parameter_name,
+                            storage.parameter_guid,
+                        )
                     )
-                )
-                ids_to_delete.append(
-                    rdb.ElementId(Int64(root_fam[rSharedParaData.PARAMETER_ID]))
-                )
+                    ids_to_delete.append(
+                        rdb.ElementId(Int64(int(storage.parameter_id)))
+                    )
         # delete any subcategories found
         if len(ids_to_delete) > 0:
             result_delete = rDel.delete_by_element_ids(

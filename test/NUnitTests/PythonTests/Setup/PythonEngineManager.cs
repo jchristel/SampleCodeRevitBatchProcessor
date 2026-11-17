@@ -79,6 +79,7 @@ namespace PythonTests.Setup
         //duHast.Revit.Family.Data
         public static dynamic? FamilyReportReaderModule { get; set; }
         public static dynamic? FamilyMissingFamiliesModule { get; set; }
+        public static dynamic? FamilyNestingPathClass { get; set; }
 
         public static dynamic? FamilyTypeDataStorageManagerClass { get; set; }
 

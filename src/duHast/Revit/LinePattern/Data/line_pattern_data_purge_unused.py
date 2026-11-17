@@ -36,8 +36,6 @@ from System import Int64 # revit element Id expects 64 bit integer
 # class used for stats reporting
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common import delete as rDel
-from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
-from duHast.Revit.LinePattern.Data.Objects import line_pattern_data as rLinePatData
 
 from Autodesk.Revit.DB  import ElementId
 
@@ -68,18 +66,18 @@ def purge_unused(doc, processor):
     return_value = res.Result()
 
     ids_to_delete = []
-    # get categories found in root processor data only
-    root_fam_data = processor._find_root_family_data()
-    # get all root line pattern entries where usage counter == 0.
-    for root_fam in root_fam_data:
-        if root_fam[IFamData.USAGE_COUNTER] == 0:
-            return_value.append_message(
-                "Found unused line patterns: {} [{}]".format(
-                    root_fam[rLinePatData.PATTERN_NAME],
-                    root_fam[rLinePatData.PATTERN_ID],
+    # get the line pattern data storage of the root family only (its usage counters include the usage in nested families)
+    # get all entries where usage counter == 0.
+    for root_fam_data in processor._find_root_family_data():
+        for storage in root_fam_data.get_data():
+            if storage.use_counter == 0 and int(storage.pattern_id) > 0:
+                return_value.append_message(
+                    "Found unused line patterns: {} [{}]".format(
+                        storage.pattern_name,
+                        storage.pattern_id,
+                    )
                 )
-            )
-            ids_to_delete.append(ElementId(Int64(root_fam[rLinePatData.PATTERN_ID])))
+                ids_to_delete.append(ElementId(Int64(int(storage.pattern_id))))
     # delete any subcategories found
     if len(ids_to_delete) > 0:
         result_delete = rDel.delete_by_element_ids(

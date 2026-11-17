@@ -120,13 +120,13 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
         if not isinstance(other, FamilyTypeDataStorage):
             return NotImplemented
         return (
-            self.data_type == other.data_type,
-            self.root_name_path == other.root_name_path,
-            self.root_category_path == other.root_category_path,
-            self.family_name == other.family_name,
-            self.family_file_path == other.family_file_path,
-            self.family_type_name == other.family_type_name,
-            self.parameters == other.parameters,
+            self.data_type == other.data_type
+            and self.root_name_path == other.root_name_path
+            and self.root_category_path == other.root_category_path
+            and self.family_name == other.family_name
+            and self.family_file_path == other.family_file_path
+            and self.family_type_name == other.family_type_name
+            and self.parameters == other.parameters
         )
 
     def __ne__(self, other):
@@ -153,7 +153,8 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
                 self.family_name,
                 self.family_file_path,
                 self.family_type_name,
-                self.parameters,
+                # parameters is a list, which can't be hashed
+                tuple(self.parameters) if self.parameters is not None else None,
             )
         )
 

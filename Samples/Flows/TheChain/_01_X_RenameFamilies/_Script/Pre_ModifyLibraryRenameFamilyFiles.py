@@ -69,8 +69,8 @@ def _get_new_path(rename_directives, current_file_path):
     Checks wether the current file path exists in one of the rename directives. If so it will return the file path of the renamed file,
     otherwise it will return the past in file path.
 
-    :param rename_directives: list of tuples representing rename directives
-    :type rename_directives: [named tuple]
+    :param rename_directives: list of rename directives
+    :type rename_directives: [:class:`.FamilyDirectiveRename`]
     :param current_file_path: The fully qualified file path to a revit family file.
     :type current_file_path: str
 
@@ -81,15 +81,15 @@ def _get_new_path(rename_directives, current_file_path):
     for rename_directive in rename_directives:
         # check if the rename directive got a file path, if not ignore it!
         if (
-            len(rename_directive.filePath) > 0
-            and rename_directive.filePath == current_file_path
+            len(rename_directive.file_path) > 0
+            and rename_directive.file_path == current_file_path
         ):
             new_file_path = (
-                rename_directive.filePath[
-                    : len(rename_directive.filePath)
+                rename_directive.file_path[
+                    : len(rename_directive.file_path)
                     - len(rename_directive.name + ".rfa")
                 ]
-                + rename_directive.newName
+                + rename_directive.new_name
                 + ".rfa"
             )
             return new_file_path
@@ -135,19 +135,20 @@ def _write_overall_task_file(result_get_host_families):
         # and the path must therefore be adjusted
         rename_directives_result = get_rename_directives(rename_directives_directory_)
 
+        # host families are FamilyDataFamily instances
         for host_family in result_get_host_families.result:
             # check whether fam got renamed
             file_path_new = _get_new_path(
-                rename_directives_result.result, host_family.file_path
+                rename_directives_result.result, host_family.family_file_path
             )
-            if file_path_new != host_family.file_path:
+            if file_path_new != host_family.family_file_path:
                 result.append_message(
                     "Changed path from: {} to: {}".format(
-                        host_family.file_path, file_path_new
+                        host_family.family_file_path, file_path_new
                     )
                 )
             else:
-                result.append_message("Path unchanged: {}".format(host_family.file_path))
+                result.append_message("Path unchanged: {}".format(host_family.family_file_path))
             row = [file_path_new]
             data.append(row)
 

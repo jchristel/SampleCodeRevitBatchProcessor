@@ -52,6 +52,10 @@ from duHast.Utilities.directory_io import create_directory, directory_exists
 from duHast.Utilities.date_stamps import get_folder_date_stamp
 
 from duHast.Revit.Family.Data.family_report_utils import combine_reports
+from duHast.Revit.Family.Data.family_report_data_writer import (
+    get_data_type_by_report_name,
+    write_data_type_from_families_to_file,
+)
 
 
 from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
@@ -331,25 +335,32 @@ def combine_current_with_previous_report_files(previous_report_root_directory):
                 "No match found for: {} previous report folder.".format(to_combine[1])
             )
 
-        if current_report_file != "" and previous_report_file != "":
+        # the storage data type of the report, None if the report can't be read into families
+        report_data_type = get_data_type_by_report_name(to_combine[1])
+        if report_data_type is None:
+            output(
+                "Report: {} can not be combined with previous reports. Kept the current report.".format(
+                    to_combine[1]
+                )
+            )
+        elif current_report_file != "" and previous_report_file != "":
             # put try catch around this in case report files are empty...
             try:
-                # update report
-                updated_report_rows_status = combine_reports(
+                # update report: combined families of the current and the previous report
+                combined_result = combine_reports(
                     previous_report_file, current_report_file
                 )
-                output(updated_report_rows_status.message)
-                updated_report_rows = updated_report_rows_status.result
+                output(combined_result.message)
+                if combined_result.status is False:
+                    raise ValueError(combined_result.message)
                 # write out new report on top of old one
-                write_result = write_report_data_as_csv(
-                    file_name=current_report_file,
-                    header=[],
-                    data=updated_report_rows,
-                    enforce_ascii=True,
-                    quoting=QUOTE_MINIMAL,
+                write_result = write_data_type_from_families_to_file(
+                    family_data=combined_result.result,
+                    data_type=report_data_type,
+                    file_path=current_report_file,
                 )
 
-                output("Wrote updated report to: {} with status:[{}]".format(current_report_file. write_result.status))
+                output("Wrote updated report to: {} with status:[{}]".format(current_report_file, write_result.status))
                 if write_result.status is False:
                     output(
                         "{}".format(

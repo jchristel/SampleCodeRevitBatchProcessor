@@ -57,8 +57,8 @@ from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Utilities.files_io import get_file_name_without_ext
 from duHast.Revit.Common.file_io import save_as_family
 from duHast.Revit.Categories.categories import get_family_category, does_main_sub_category_exists
-from duHast.Revit.Family.Data.family_category_data_utils_deprecated import (
-    read_overall_family_sub_category_change_directives_from_directory,
+from duHast.Revit.Family.family_change_category_utils import (
+    get_sub_category_change_directives,
 )
 from duHast.Revit.Categories.change_family_category import change_family_category
 from duHast.Revit.Categories.family_sub_categories import (
@@ -177,11 +177,14 @@ def UpdateSubCategoryNames(doc):
 
     return_value = Result()
     # read rename directives
-    sub_category_change_directives = (
-        read_overall_family_sub_category_change_directives_from_directory(
-            settings.INPUT_DIRECTORY
+    directives_result = get_sub_category_change_directives(settings.INPUT_DIRECTORY)
+    if directives_result.status is False:
+        return_value.update_sep(
+            False,
+            "No sub category change directives: {}".format(directives_result.message),
         )
-    )
+        return return_value
+    sub_category_change_directives = directives_result.result
     # get the family category ( this is a dictionary where key is the cat name )
     family_category = get_family_category(doc)
     family_category_name = list(family_category.keys())[0]
@@ -189,12 +192,12 @@ def UpdateSubCategoryNames(doc):
     found_sub_category_match = False
     # loop over change directives and find the ones applicable to the category of the current family
     for sub_category_change_directive in sub_category_change_directives:
-        if sub_category_change_directive.familyCategory in family_category:
+        if sub_category_change_directive.category in family_category:
             found_category_match = True
             
             # check if old subcategory name is in family to start with
             already_in_family_old = does_main_sub_category_exists(
-                doc, sub_category_change_directive.oldSubCategoryName
+                doc, sub_category_change_directive.old_sub_category_name
             )
 
             # if a name match attempt to rename
@@ -203,14 +206,14 @@ def UpdateSubCategoryNames(doc):
                 return_value.update(
                     rename_sub_category(
                         doc,
-                        sub_category_change_directive.oldSubCategoryName,
-                        sub_category_change_directive.newSubCategoryName,
+                        sub_category_change_directive.old_sub_category_name,
+                        sub_category_change_directive.new_sub_category_name,
                     )
                 )
             else:
                 return_value.append_message(
                     "Subcategory: {}  does not exist in family file.".format(
-                        sub_category_change_directive.oldSubCategoryName
+                        sub_category_change_directive.old_sub_category_name
                     )
                 )
     if found_category_match == False:

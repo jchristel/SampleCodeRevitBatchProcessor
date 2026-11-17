@@ -2,27 +2,49 @@
 Setting Up - The Chain
 #############################################
 
-- copy folder structure from:
-    \\bvn\Data\studio\infotech\standards\Scripts\Revit Python\RBP\Workflows\TheChain
-    to your project folder location
+Requirements
+============
 
-- change file path in all settings files in all _default folders per work flow: (use visual studio code: find and replace in files)
+- Windows PowerShell 5.1 (part of Windows) or PowerShell 7
+- `Revit Batch Processor <https://github.com/bvn-architecture/RevitBatchProcessor>`_
+- IronPython 3.4, used to run the pre and post processing scripts of each flow
+- the duHast library
 
-    - "taskScriptFilePath": "C:\\Users\\chrjx\\Documents\\github\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_00_ReportFamilyData\\_Script\\ReportFamilyData.py",
-    - "revitFileListFilePath": "C:\\Users\\chrjx\\Documents\\github\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_00_ReportFamilyData\\_Users\\jchristel\\_TaskList\\Tasklist_1.txt",
-    - "dataExportFolderPath": "C:\\Users\\chrjx\\Documents\\github\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_00_ReportFamilyData\\_Users\\jchristel\\_Users\\jchristel\\SessionData",
-    - "preProcessingScriptFilePath": "C:\\Users\\chrjx\\Documents\\github\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_00_ReportFamilyData\\_Script\\Pre_MarkerFiles.py",
-    - "PostProcessingScriptFilePath": "C:\\Users\\chrjx\\Documents\\github\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_00_ReportFamilyData\\_Script\\Post_KillWSM.py",
+Set up
+======
 
-- check Revit version in _default settings to match your required version
+- copy the TheChain folder to your project folder location
 
-    - "singleRevitTaskRevitVersion": "Revit2020"
-    - "batchRevitTaskRevitVersion": "Revit2022"
+- edit __A0_TheChain\\TheChainSettings.ps1:
 
-- change file path to Revit library in python util files:
-    
-    - Report (utilModify.py), Modify (utilModify.py) & Reload (utilReload.py):
+    - chain_utils_path : the shared PowerShell helpers, Samples\\PowerShell\\BatchProcessorUtils.ps1 in this repository.
+      The default works while The Chain is inside the repository. When The Chain is copied elsewhere, point this at a copy of that file.
+    - iron_python_path : IronPython (default: C:\\Program Files\\IronPython 3.4\\ipy.exe)
+    - batch_processor_path : Revit Batch Processor (default: the per user install location, %LOCALAPPDATA%\\RevitBatchProcessor\\BatchRvt.exe)
 
-        - REVIT_LIBRARY_PATH = r'path to your Revit family library'
+- in each flow's _Script\\settings.py:
 
-- run setupUser.bat located in ___A0_TheChain to create a user specific folder in each flow. Note: without a user specific folder the flow will not work.
+    - DU_HAST_PATH : where the duHast library is installed
+    - REVIT_LIBRARY_PATH : the root directory of your Revit family library (also in _01_X_RenameFamilies\\_Script\\utilModify.py
+      and _02_ModifyFamilyLibraryReloadAdvanced\\_Script\\utilReload.py)
+
+- check the Revit version in the settings files in each flow's _Users\\_default\\_Settings folder matches your required version:
+
+    - "singleRevitTaskRevitVersion": "Revit2024"
+    - "batchRevitTaskRevitVersion": "Revit2024"
+
+- run setupUsers.ps1 located in __A0_TheChain to create a user specific folder in each flow:
+
+    .. code-block:: powershell
+
+        powershell -ExecutionPolicy Bypass -File setupUsers.ps1
+
+  It copies each flow's _Users\\_default folder to _Users\\YOURUSERNAME and points the paths in the settings files in it at your
+  user folder, wherever The Chain is located. Note: without a user specific folder the flows will not run.
+
+  After moving or copying The Chain to another location, run it again with -RefreshSettings to update the paths in the settings
+  files of user folders that exist already:
+
+    .. code-block:: powershell
+
+        powershell -ExecutionPolicy Bypass -File setupUsers.ps1 -RefreshSettings

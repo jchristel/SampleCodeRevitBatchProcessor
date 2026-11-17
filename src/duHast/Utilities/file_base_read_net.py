@@ -127,8 +127,28 @@ def read_from_delimited_text_file(file_path, delimiter=","):
 def get_first_row_from_delimited_text_file(file_path, delimiter=","):
     """
     Reads the first row from a text file using the FileIOWrapper library.
+
+    :param file_path: Path to the text file.
+    :type file_path: str
+    :param delimiter: Delimiter used in the text file. Default is ",".
+    :type delimiter: str
+
+    :return:
+        Result class instance.
+
+        - result.status (bool) True if the first row was read without an exception, otherwise False. An empty file is a failure.
+        - result.message contains log messages.
+        - result.result will contain the first row as a list of strings.
+    :rtype: :class:`.Result`
     """
-    return _read_text_file(file_path, delimiter, row_count=1)
+    read_result = _read_text_file(file_path, delimiter, row_count=1)
+    if read_result.status:
+        if len(read_result.result) == 0:
+            read_result.update_sep(False, "File {} is empty, no first row.".format(file_path))
+        else:
+            # return the row itself rather than a list holding that row
+            read_result.result = read_result.result[0]
+    return read_result
 
 
 def get_unique_headers(files, delimiter=","):

@@ -6,6 +6,27 @@ namespace PythonTests.Revit.Family.Data
 {
     public class FamilyIndividualReportReaderTests
     {
+        /// <summary>
+        /// Compares value lists element by element. Elements holding JSON are compared by content,
+        /// since the order of the keys in the serialised python dictionaries is not guaranteed.
+        /// </summary>
+        private static void AssertSameValues(dynamic actual, List<string> expected)
+        {
+            Assert.That((int)actual.Count, Is.EqualTo(expected.Count), "number of values");
+            for (int i = 0; i < expected.Count; i++)
+            {
+                string actualValue = (string)actual[i];
+                if (expected[i].StartsWith("[{") || expected[i].StartsWith("{"))
+                {
+                    Assert.That(Newtonsoft.Json.Linq.JToken.DeepEquals(Newtonsoft.Json.Linq.JToken.Parse(actualValue), Newtonsoft.Json.Linq.JToken.Parse(expected[i])), Is.True, $"value {i}: expected {expected[i]} but got {actualValue}");
+                }
+                else
+                {
+                    Assert.That(actualValue, Is.EqualTo(expected[i]), $"value {i}");
+                }
+            }
+        }
+
         private string dataTestDirectory;
         private List<TestFileData> familyBaseTestFiles;
         private List<TestFileData> familyWarningsTestFiles;
@@ -278,7 +299,7 @@ namespace PythonTests.Revit.Family.Data
                     var expectedData = testFile.ExpectedData[i];
                     Console.WriteLine(data.formatted_indented_str(1, "..."));
                     var dataValues = data.get_data_values_as_list_of_strings();
-                    Assert.That(dataValues, Is.EqualTo(expectedData), $"Expecting data {expectedData} but got {dataValues}");
+                    AssertSameValues(dataValues, expectedData);
                 }
             }
         }
@@ -307,7 +328,7 @@ namespace PythonTests.Revit.Family.Data
                     var expectedData = testFile.ExpectedData[i];
                     Console.WriteLine(data.formatted_indented_str(1, "..."));
                     var dataValues = data.get_data_values_as_list_of_strings();
-                    Assert.That(dataValues, Is.EqualTo(expectedData), $"Expecting data {expectedData} but got {dataValues}");
+                    AssertSameValues(dataValues, expectedData);
                 }
             }
         }

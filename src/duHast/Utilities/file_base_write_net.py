@@ -33,7 +33,7 @@ from System.Collections.Generic import List
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.Objects.file_encoding_bom import BOMValue as bom_value
-from duHast.Revit.NetSupport.dll_names import FILE_WRAPPER 
+from duHast.Revit.NetSupport.dll_names import FILE_WRAPPER, CSV_HELPER
 
 
 # load the wrapper dll from the libs folder
@@ -41,13 +41,17 @@ from duHast.Revit.NetSupport.dll_names import FILE_WRAPPER
 current_directory = os.path.dirname(__file__)
 parent_directory = os.path.dirname(current_directory)
 dll_path = os.path.join(parent_directory, "lib", FILE_WRAPPER)
+# the wrapper depends on CsvHelper, load it from the same folder first (outside Revit it is not resolved automatically)
+csv_helper_path = os.path.join(parent_directory, "lib", CSV_HELPER)
+if os.path.exists(csv_helper_path):
+    clr.AddReferenceToFileAndPath(csv_helper_path)
 clr.AddReferenceToFileAndPath(dll_path)
 
 # import the WriteToFile class from the CSVHelperWrapper namespace
 from duHastNet.FileIOWrapper import WriteToColumnBasedTextFile
 from duHastNet.FileIOWrapper import BOMValue
 
-def write_to_delimited_text_file(file_path, header, data, write_type="w", bom=None, delimiter=","):
+def write_to_delimited_text_file(file_path, header, data, write_type="w", bom=None, delimiter=",", quoting=0, encoding=None):
     """
     Write data to a text file using the CSVHelperWrapper library.
     
@@ -63,6 +67,10 @@ def write_to_delimited_text_file(file_path, header, data, write_type="w", bom=No
     :type bom: BOMValue or None
     :param delimiter: Delimiter used in the text file. Default is ",".
     :type delimiter: str
+    :param quoting: Quoting style, same values as python's csv module: 0 = csv.QUOTE_MINIMAL (default, only fields containing the delimiter, a quote or a line break get quoted), 1 = csv.QUOTE_ALL, 2 = csv.QUOTE_NONNUMERIC, 3 = csv.QUOTE_NONE (no quoting and no escaping).
+    :type quoting: int
+    :param encoding: Name of the encoding to write the file in (python or .net name, e.g. 'utf-8', 'latin-1', 'cp1252'). Default is None: utf-8. Ignored if a bom is supplied.
+    :type encoding: str or None
     
     :return:
         Result class instance.
@@ -86,16 +94,30 @@ def write_to_delimited_text_file(file_path, header, data, write_type="w", bom=No
         # do some type checking to ensure the inputs are valid
         if not isinstance(file_path, str):
             raise ValueError("file_path must be a string")
-        if not isinstance(header, list) or not all(isinstance(item, str) for item in header):
+        
+        # accept any sequence (python list, tuple, .net list...) and convert to python lists
+        try:
+            header = list(header) if header is not None else []
+            data = [list(row) for row in data] if data is not None else []
+        except TypeError:
+            raise ValueError("header must be a list of strings and data must be a list of lists of strings")
+        if not all(isinstance(item, str) for item in header):
             raise ValueError("header must be a list of strings")
-        if not isinstance(data, list) or not all(isinstance(row, list) and all(isinstance(item, str) for item in row) for row in data):
+        if not all(isinstance(item, str) for row in data for item in row):
             raise ValueError("data must be a list of lists of strings")
         
-        
+        if quoting not in (0, 1, 2, 3):
+            raise ValueError("quoting must be one of csv.QUOTE_MINIMAL (0), csv.QUOTE_ALL (1), csv.QUOTE_NONNUMERIC (2) or csv.QUOTE_NONE (3)")
+
+        # python and .net do not share all encoding names
+        encoding_net = None
+        if encoding is not None:
+            encoding_net = {"latin-1": "iso-8859-1", "latin1": "iso-8859-1", "l1": "iso-8859-1", "ascii": "us-ascii", "utf8": "utf-8", "utf_8": "utf-8"}.get(encoding.lower(), encoding)
+
         # map bom values to the BOMValue enum
         if bom is not None:
             if bom == bom_value.UTF_8:
-                bom = BOMValue.UTF8
+                bom = BOMValue.UTF_8
             elif bom == bom_value.UTF_16_LITTLE_ENDIAN:
                 bom = BOMValue.UTF_16_LITTLE_ENDIAN
             elif bom == bom_value.UTF_16_BIG_ENDIAN:
@@ -137,6 +159,8 @@ def write_to_delimited_text_file(file_path, header, data, write_type="w", bom=No
             writeType=write_type, 
             bom=bom, 
             delimiter=delimiter,
+            quoting=quoting,
+            encodingName=encoding_net,
         )
         
         # get all error messages from the WriteToFile class

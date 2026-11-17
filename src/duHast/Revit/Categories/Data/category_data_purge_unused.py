@@ -36,8 +36,6 @@ from System import Int64 # revit element Id expects 64 bit integer
 # class used for stats reporting
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common import delete as rDel
-from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
-from duHast.Revit.Categories.Data.Objects import category_data as rCatData
 
 from Autodesk.Revit.DB import ElementId
 
@@ -68,22 +66,19 @@ def purge_unused_sub_categories(doc, processor):
     return_value = res.Result()
 
     ids_to_delete = []
-    # get categories found in root processor data only
-    root_fam_data = processor._find_root_family_data()
-    # get all root category entries where usage counter == 0 and subCategoryId > 0 (pointing to a custom sub category and not a built in one).
-    for root_fam in root_fam_data:
-        if (
-            root_fam[IFamData.USAGE_COUNTER] == 0
-            and root_fam[rCatData.SUB_CATEGORY_ID] > 0
-        ):
-            return_value.append_message(
-                "Found unused sub category: {} : {} [{}]".format(
-                    root_fam[rCatData.CATEGORY_NAME],
-                    root_fam[rCatData.SUB_CATEGORY_NAME],
-                    (root_fam[rCatData.SUB_CATEGORY_ID]),
+    # get the category data storage of the root family only (its usage counters include the usage in nested families)
+    # get all entries where usage counter == 0 and sub category id > 0 (pointing to a custom sub category and not a built in one).
+    for root_fam_data in processor._find_root_family_data():
+        for storage in root_fam_data.get_data():
+            if storage.use_counter == 0 and int(storage.sub_category_id) > 0:
+                return_value.append_message(
+                    "Found unused sub category: {} : {} [{}]".format(
+                        storage.category_name,
+                        storage.sub_category_name,
+                        storage.sub_category_id,
+                    )
                 )
-            )
-            ids_to_delete.append(ElementId(Int64(root_fam[rCatData.SUB_CATEGORY_ID])))
+                ids_to_delete.append(ElementId(Int64(int(storage.sub_category_id))))
     # delete any subcategories found
     if len(ids_to_delete) > 0:
         result_delete = rDel.delete_by_element_ids(

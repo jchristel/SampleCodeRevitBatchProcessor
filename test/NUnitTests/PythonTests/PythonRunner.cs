@@ -23,6 +23,13 @@ namespace PythonTests
             var path = engine.GetSearchPaths();
             path.Add(duHastDir);
 
+            // add the generated Revit API stubs (Autodesk.Revit.DB...) so modules importing the Revit API can be loaded without Revit
+            var stubsDir = Path.GetFullPath(Path.Combine(duHastDir, "..", "test", "RevitApiStubs", "2026"));
+            if (Directory.Exists(stubsDir))
+            {
+                path.Add(stubsDir);
+            }
+
             // add local python 3.4 install lib to path
             path.Add(@"C:\Program Files\IronPython 3.4\Lib");
 

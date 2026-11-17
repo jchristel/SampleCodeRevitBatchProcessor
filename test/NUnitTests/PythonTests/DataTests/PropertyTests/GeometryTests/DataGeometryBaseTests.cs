@@ -26,7 +26,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             dynamic instance = PythonEngineManager.DataGeometryBaseClass(dataType);
 
             // Assert
-            Assert.That(dataType,Is.EqualTo( instance.DataType));
+            Assert.That(dataType,Is.EqualTo( instance.data_type));
         }
 
         [Test]

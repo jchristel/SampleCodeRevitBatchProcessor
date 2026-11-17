@@ -23,11 +23,11 @@ namespace PythonTests.DataTests.PropertyTests
 
             // Assert
             Assert.That(instance.polygon, Is.Not.Null);
-            Assert.That(0.0,Is.EqualTo( instance.polygon.outer_loop[0].x));
-            Assert.That(0.0, Is.EqualTo(instance.polygon.outer_loop[0].y));
-            Assert.That(0.1, Is.EqualTo(instance.polygon.outer_loop[1].x));
-            Assert.That(1.0, Is.EqualTo(instance.polygon.outer_loop[1].y));
-            Assert.That(0, Is.EqualTo(instance.polygon.inner_loops.Count));
+            Assert.That(0.0,Is.EqualTo( instance.polygon[0].outer_loop[0][0]));
+            Assert.That(0.0, Is.EqualTo(instance.polygon[0].outer_loop[0][1]));
+            Assert.That(0.1, Is.EqualTo(instance.polygon[0].outer_loop[1][0]));
+            Assert.That(1.0, Is.EqualTo(instance.polygon[0].outer_loop[1][1]));
+            Assert.That(0, Is.EqualTo(instance.polygon[0].inner_loops.Count));
         }
 
         [Test]
@@ -52,8 +52,7 @@ namespace PythonTests.DataTests.PropertyTests
 
             // Assert
             Assert.That(instance.polygon, Is.Not.Null);
-            Assert.That(0, Is.EqualTo(instance.polygon.outer_loop.Count));
-            Assert.That(0, Is.EqualTo(instance.polygon.inner_loops.Count));
+            Assert.That(0, Is.EqualTo(instance.polygon.Count));
         }
 
         [Test]
@@ -71,8 +70,7 @@ namespace PythonTests.DataTests.PropertyTests
 
             // Assert
             Assert.That(instance.polygon, Is.Not.Null);
-            Assert.That(0, Is.EqualTo(instance.polygon.outer_loop.Count));
-            Assert.That(0, Is.EqualTo(instance.polygon.inner_loops.Count));
+            Assert.That(0, Is.EqualTo(instance.polygon.Count));
         }
 
         [Test]
@@ -86,9 +84,8 @@ namespace PythonTests.DataTests.PropertyTests
             string jsonString = JsonConvert.SerializeObject(jsonDictWithMalformedPolygon);
             //Console.WriteLine(jsonString);
             // Act & Assert
-            var ex = Assert.Throws<TypeErrorException>(() => PythonEngineManager.DataElementGeometryBaseClass(jsonString));
+            var ex = Assert.Throws<ValueErrorException>(() => PythonEngineManager.DataElementGeometryBaseClass(jsonString));
             Console.WriteLine(ex.Message);
-            Assert.That(ex.Message, Does.Contain("failed to initialise"));
         }
 
         [Test]
@@ -99,8 +96,7 @@ namespace PythonTests.DataTests.PropertyTests
 
             // Assert
             Assert.That(instance.polygon, Is.Not.Null);
-            Assert.That(0, Is.EqualTo(instance.polygon.outer_loop.Count));
-            Assert.That(0, Is.EqualTo(instance.polygon.inner_loops.Count));
+            Assert.That(0, Is.EqualTo(instance.polygon.Count));
             Console.WriteLine(instance.to_json_ordered());
         }
 

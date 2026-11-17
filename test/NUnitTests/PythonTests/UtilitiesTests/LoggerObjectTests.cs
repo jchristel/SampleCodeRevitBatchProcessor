@@ -65,7 +65,7 @@ namespace PythonTests.UtilitiesTests
             var loggerObj = logger.get_logger_obj();
 
             Assert.That(loggerObj, Is.Not.Null);
-            Assert.That(loggerObj.GetType().Name, Is.EqualTo("Logger"));
+            Assert.That(loggerObj.name, Is.EqualTo("duHast"));
         }
     }
 }

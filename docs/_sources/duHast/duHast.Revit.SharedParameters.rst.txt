@@ -70,14 +70,6 @@ duHast.Revit.SharedParameters.shared\_parameters\_delete module
    :undoc-members:
    :show-inheritance:
 
-duHast.Revit.SharedParameters.shared\_parameters\_tuple module
---------------------------------------------------------------
-
-.. automodule:: duHast.Revit.SharedParameters.shared_parameters_tuple
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Module contents
 ---------------
 

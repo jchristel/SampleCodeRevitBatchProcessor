@@ -411,16 +411,12 @@ add category to an existing binding if one exists already
 <li><p>column 5: parameter grouping name ( refer to module: RevitParameterGrouping)</p></li>
 </ul>
 </section>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameter_swap.PARAMETER_SETTINGS_DATA">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameter_swap.</span></span><span class="sig-name descname"><span class="pre">PARAMETER_SETTINGS_DATA</span></span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameter_swap.PARAMETER_SETTINGS_DATA" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">parameterSettingsData</span></code></p>
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameter_swap.swap_shared_parameters">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameter_swap.</span></span><span class="sig-name descname"><span class="pre">swap_shared_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">change_directive_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameter_swap.swap_shared_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Swaps out a shared parameter for another. (refer to module header for details)</p>
+<p>The new shared parameter definition is retrieved before the family is changed: if it can’t be found, the old
+shared parameter is left as it is.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -491,7 +487,7 @@ On exception (handled by optimizer itself!):
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>parameter_name</strong> (<em>str</em>) – The family parameter name.</p></li>
-<li><p><strong>parameter_data</strong> (<em>RevitSharedParametersTuple.parameterData</em>) – A named tup[le containing the shared parameter information</p></li>
+<li><p><strong>parameter_data</strong> (<a class="reference internal" href="duHast.Revit.SharedParameters.Objects.html#duHast.Revit.SharedParameters.Objects.shared_parameter_data.ParameterModel" title="duHast.Revit.SharedParameters.Objects.shared_parameter_data.ParameterModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">ParameterModel</span></code></a>) – The shared parameter information: name, is_type_parameter and group_type_id (a key of PARAMETER_GROUPING_TO_GROUP_TYPE_ID)</p></li>
 <li><p><strong>parameter_def</strong> (<em>Autodesk.Revit.DB.ExternalDefinition</em>) – The external definition of the shared parameter.</p></li>
 </ul>
 </dd>
@@ -865,18 +861,6 @@ is pointing at
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
-</dd></dl>
-
-</section>
-<section id="module-duHast.Revit.SharedParameters.shared_parameters_tuple">
-<span id="duhast-revit-sharedparameters-shared-parameters-tuple-module"></span><h2>duHast.Revit.SharedParameters.shared_parameters_tuple module<a class="headerlink" href="#module-duHast.Revit.SharedParameters.shared_parameters_tuple" title="Permalink to this heading">¶</a></h2>
-<section id="this-module-contains-a-tuple-used-to-store-settings-retrieved-from-a-file">
-<h3>This module contains a tuple used to store settings retrieved from a file.<a class="headerlink" href="#this-module-contains-a-tuple-used-to-store-settings-retrieved-from-a-file" title="Permalink to this heading">¶</a></h3>
-</section>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters_tuple.PARAMETER_DATA">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters_tuple.</span></span><span class="sig-name descname"><span class="pre">PARAMETER_DATA</span></span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters_tuple.PARAMETER_DATA" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">parameterData</span></code></p>
 </dd></dl>
 
 </section>

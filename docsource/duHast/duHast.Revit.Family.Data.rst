@@ -28,26 +28,10 @@ duHast.Revit.Family.Data.family\_base\_data\_missing\_families module
    :undoc-members:
    :show-inheritance:
 
-duHast.Revit.Family.Data.family\_base\_data\_reload\_advanced\_deprecated module
---------------------------------------------------------------------------------
+duHast.Revit.Family.Data.family\_base\_data\_reload\_advanced module
+--------------------------------------------------------------------
 
-.. automodule:: duHast.Revit.Family.Data.family_base_data_reload_advanced_deprecated
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-duHast.Revit.Family.Data.family\_base\_data\_utils\_deprecated module
----------------------------------------------------------------------
-
-.. automodule:: duHast.Revit.Family.Data.family_base_data_utils_deprecated
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-duHast.Revit.Family.Data.family\_category\_data\_utils\_deprecated module
--------------------------------------------------------------------------
-
-.. automodule:: duHast.Revit.Family.Data.family_category_data_utils_deprecated
+.. automodule:: duHast.Revit.Family.Data.family_base_data_reload_advanced
    :members:
    :undoc-members:
    :show-inheritance:
@@ -56,6 +40,14 @@ duHast.Revit.Family.Data.family\_data\_family\_processor\_utils module
 ----------------------------------------------------------------------
 
 .. automodule:: duHast.Revit.Family.Data.family_data_family_processor_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Data.family\_data\_family\_utils module
+-----------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.family_data_family_utils
    :members:
    :undoc-members:
    :show-inheritance:
@@ -96,14 +88,6 @@ duHast.Revit.Family.Data.family\_report\_utils module
 -----------------------------------------------------
 
 .. automodule:: duHast.Revit.Family.Data.family_report_utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-duHast.Revit.Family.Data.family\_report\_utils\_deprecated module
------------------------------------------------------------------
-
-.. automodule:: duHast.Revit.Family.Data.family_report_utils_deprecated
    :members:
    :undoc-members:
    :show-inheritance:

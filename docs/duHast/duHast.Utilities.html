@@ -386,7 +386,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.process_log_file">
-<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.batch_processor_log_utils.</span></span><span class="sig-name descname"><span class="pre">process_log_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.process_log_file" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.batch_processor_log_utils.</span></span><span class="sig-name descname"><span class="pre">process_log_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_exception_messages</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.process_log_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process revit batch processor session log file.</p>
 <ul class="simple">
 <li><p>find Revit files processed:</p></li>
@@ -394,7 +394,10 @@
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – Fully qualified file path to json formatted log file</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>str</em>) – Fully qualified file path to json formatted log file</p></li>
+<li><p><strong>custom_exception_messages</strong> (<em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Messages which, when found in the log of a processed file, mark its processing as failed, in addition to EXCEPTION_MESSAGES. Defaults to None.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>returns list of arrays in format:
@@ -413,13 +416,14 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_process_status">
-<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.batch_processor_log_utils.</span></span><span class="sig-name descname"><span class="pre">get_process_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_to_check</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_process_status" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.batch_processor_log_utils.</span></span><span class="sig-name descname"><span class="pre">get_process_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_to_check</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_exception_messages</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_process_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads a log file and checks whether any exception occurred when processing a specific revit file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>file_to_check</strong> (<em>str</em>) – Fully qualified file path of Revit file which was processed</p></li>
 <li><p><strong>log_file_path</strong> (<em>str</em>) – The fully qualified batch processor session log file path.</p></li>
+<li><p><strong>custom_exception_messages</strong> (<em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Messages which, when found in the log, mark the processing as failed, in addition to EXCEPTION_MESSAGES. Defaults to None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -539,13 +543,14 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.process_log_files">
-<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.batch_processor_log_utils.</span></span><span class="sig-name descname"><span class="pre">process_log_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.process_log_files" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.batch_processor_log_utils.</span></span><span class="sig-name descname"><span class="pre">process_log_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_exception_messages</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.process_log_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loops over log files and checks whether any exceptions occurred during revit files processing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>folder_path</strong> (<em>str</em>) – Fully qualified directory path where marker files are stored.</p></li>
 <li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag indicating whether this is running in debug mode which will output some debug messages, defaults to False</p></li>
+<li><p><strong>custom_exception_messages</strong> (<em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Messages which, when found in the log of a processed file, mark its processing as failed, in addition to EXCEPTION_MESSAGES. Defaults to None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -553,7 +558,8 @@
 <ul class="simple">
 <li><p>Process status returned in result.status. False if an exception occurred, otherwise True.</p></li>
 <li><p>result.message will contain message(s) for each revit file found in logs and whether an exception occurred during processing</p></li>
-<li><p>result.result will be an empty list.</p></li>
+<li><p>result.result will contain one entry per Revit file which failed to process, a list in format:
+[processed Revit file name, False, message (a list of strings, or a string)]</p></li>
 </ul>
 <p>On exception:</p>
 <ul class="simple">

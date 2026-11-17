@@ -44,6 +44,14 @@ duHast.Revit.Family.Data.Objects.family\_base\_data\_storage\_used\_by module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Family.Data.Objects.family\_circular\_nesting module
+-----------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.Objects.family_circular_nesting
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Family.Data.Objects.family\_data\_collector module
 ---------------------------------------------------------------
 
@@ -76,6 +84,22 @@ duHast.Revit.Family.Data.Objects.family\_directive\_base module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Family.Data.Objects.family\_directive\_change\_category module
+---------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.Objects.family_directive_change_category
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Data.Objects.family\_directive\_change\_sub\_category module
+--------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.Objects.family_directive_change_sub_category
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Family.Data.Objects.family\_directive\_copy module
 ---------------------------------------------------------------
 
@@ -104,6 +128,14 @@ duHast.Revit.Family.Data.Objects.family\_directive\_swap\_instances\_of\_type mo
 ------------------------------------------------------------------------------------
 
 .. automodule:: duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Data.Objects.family\_nesting\_path module
+-------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.Objects.family_nesting_path
    :members:
    :undoc-members:
    :show-inheritance:

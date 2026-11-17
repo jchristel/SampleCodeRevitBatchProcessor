@@ -475,14 +475,83 @@ into them.</p>
 <hr class="docutils" />
 <section id="getting-started">
 <h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h2>
-<ol class="arabic simple">
+<p>The extension folder in this repository is not ready to use on its own: the duHast library it
+runs on is not committed inside it. Use a built copy of the extension, which has duHast bundled
+under <code class="docutils literal notranslate"><span class="pre">lib/duHast</span></code> and the .NET DLLs in <code class="docutils literal notranslate"><span class="pre">bin</span></code>.</p>
+<ol class="arabic">
 <li><p>Install <a class="reference external" href="https://github.com/pyrevitlabs/pyRevit">pyRevit</a> if not already installed.</p></li>
-<li><p>Copy the extension folder to your pyRevit extensions directory, or add it via pyRevit
-settings.</p></li>
-<li><p>Restart Revit — the <strong>duHast</strong> tab will appear in the ribbon.</p></li>
+<li><p>Install the extension with the installer or from the zip file, both from the
+<a class="reference external" href="https://github.com/jchristel/SampleCodeRevitBatchProcessor/releases">releases page</a> or
+built yourself (see <strong>Building the extension</strong> below).</p>
+<p><strong>Installer</strong> (<code class="docutils literal notranslate"><span class="pre">duHast-2025.extension-setup-v&lt;version&gt;.exe</span></code>): run it and follow the steps.
+It installs for the current user only and does not need admin rights. It asks you to close
+Revit first, removes the previous version when upgrading, and can be removed again from
+Windows’ installed apps list.</p>
+<p>Pick <strong>Choose panels</strong> to install only some of the ribbon panels. The duHast library and the
+shared files are always installed. An upgrade remembers your choice, and running the
+installer again lets you add or remove panels. A panel’s tools sit together, so leaving one
+panel out doesn’t break another. If you pick a folder other than the default, it adds that
+folder to pyRevit for you.</p>
+<p>The installer is not code signed, so Windows SmartScreen will warn that it comes from an
+unknown publisher. Click <strong>More info</strong>, then <strong>Run anyway</strong>.</p>
+<p><strong>Zip file</strong> (<code class="docutils literal notranslate"><span class="pre">duHast-2025.extension-v&lt;version&gt;.zip</span></code>): close Revit, then unzip it into your
+pyRevit extensions directory,
+<code class="docutils literal notranslate"><span class="pre">%APPDATA%\pyRevit\Extensions</span></code>, so you end up with
+<code class="docutils literal notranslate"><span class="pre">%APPDATA%\pyRevit\Extensions\duHast-2025.extension</span></code>. When upgrading, delete the old
+<code class="docutils literal notranslate"><span class="pre">duHast-2025.extension</span></code> folder first so no files from the old version stay behind.</p>
+<p>To keep the extension somewhere else, unzip it into any folder and add that folder in
+pyRevit settings under <strong>Custom Extension Directories</strong>, or run
+<code class="docutils literal notranslate"><span class="pre">pyrevit</span> <span class="pre">extensions</span> <span class="pre">paths</span> <span class="pre">add</span> <span class="pre">&lt;folder&gt;</span></code>.</p>
+</li>
+<li><p>Start Revit — the <strong>duHast</strong> tab will appear in the ribbon.</p></li>
 <li><p>Refer to the individual docs linked above for prerequisites and configuration before first
 use.</p></li>
 </ol>
+<p>The installed version is in the extension’s <code class="docutils literal notranslate"><span class="pre">extension.json</span></code> and in
+<code class="docutils literal notranslate"><span class="pre">lib/duHast/_bundled_version.txt</span></code>.</p>
+<section id="building-the-extension">
+<h3>Building the extension<a class="headerlink" href="#building-the-extension" title="Permalink to this heading">¶</a></h3>
+<p>Each release from the <code class="docutils literal notranslate"><span class="pre">net8DuHast</span></code> branch builds the zip and the installer automatically and
+attaches them to the release. Pull requests that change the extension, <code class="docutils literal notranslate"><span class="pre">VS</span></code> or <code class="docutils literal notranslate"><span class="pre">src/duHast</span></code> build
+them too, and keep them as a <code class="docutils literal notranslate"><span class="pre">pyrevit-extension</span></code> artifact of the workflow run. To build them
+yourself:</p>
+<p>The build script lives in <code class="docutils literal notranslate"><span class="pre">Samples/pyRevit/installer/build_extension.py</span></code> and needs Python 3
+(plus the .NET 8 SDK for <code class="docutils literal notranslate"><span class="pre">--build-vs</span></code>). It copies the extension into <code class="docutils literal notranslate"><span class="pre">dist/pyRevit</span></code>, bundles <code class="docutils literal notranslate"><span class="pre">src/duHast</span></code> into the extension’s
+<code class="docutils literal notranslate"><span class="pre">lib/duHast</span></code>, fills <code class="docutils literal notranslate"><span class="pre">bin</span></code> with the DLLs listed in <code class="docutils literal notranslate"><span class="pre">Samples/pyRevit/installer/bin_manifest.txt</span></code>,
+writes the version and zips the result.</p>
+<ol class="arabic">
+<li><p>Build the Visual Studio projects listed in <code class="docutils literal notranslate"><span class="pre">Samples/pyRevit/installer/vs_projects.txt</span></code> in the
+Release configuration, either in Visual Studio or by adding <code class="docutils literal notranslate"><span class="pre">--build-vs</span></code> in step 2, which builds
+them with the .NET 8 SDK (<code class="docutils literal notranslate"><span class="pre">dotnet</span></code>). The script picks the DLLs up from each project’s
+<code class="docutils literal notranslate"><span class="pre">bin\x64\Release</span></code> folder.</p></li>
+<li><p>From the repository root, run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Samples</span><span class="o">/</span><span class="n">pyRevit</span><span class="o">/</span><span class="n">installer</span><span class="o">/</span><span class="n">build_extension</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>Options:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--version</span> <span class="pre">1.0.5</span></code> — the version to write into the extension (default: the version in
+<code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--configuration</span> <span class="pre">Debug</span></code> — take the DLLs from a different build configuration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--bin-from</span> <span class="pre">committed</span></code> — use the <code class="docutils literal notranslate"><span class="pre">bin</span></code> folder committed with the extension instead of the
+Visual Studio output.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--build-vs</span></code> — build the projects in <code class="docutils literal notranslate"><span class="pre">vs_projects.txt</span></code> with <code class="docutils literal notranslate"><span class="pre">dotnet</span></code> first (<code class="docutils literal notranslate"><span class="pre">--dotnet</span> <span class="pre">&lt;path&gt;</span></code>
+if <code class="docutils literal notranslate"><span class="pre">dotnet</span></code> is not on the path).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--output</span> <span class="pre">&lt;folder&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">--no-zip</span></code>.</p></li>
+</ul>
+</li>
+</ol>
+<p>If a DLL in the manifest is not found in the build output, the script stops and names it.</p>
+<p>To build the installer as well, install <a class="reference external" href="https://jrsoftware.org/isinfo.php">Inno Setup 6</a> and,
+after running the build script, run from the repository root:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">iscc</span> <span class="n">Samples</span>\<span class="n">pyRevit</span>\<span class="n">installer</span>\<span class="n">duHast</span><span class="o">-</span><span class="n">extension</span><span class="o">.</span><span class="n">iss</span>
+</pre></div>
+</div>
+<p>The installer is written to <code class="docutils literal notranslate"><span class="pre">dist\pyRevit</span></code> and takes its version from the built extension. Its
+list of panels comes from <code class="docutils literal notranslate"><span class="pre">duHast-2025.extension.panels.iss</span></code>, which the build script writes next to
+the built extension, so new panels show up without changing the installer script. Pass
+<code class="docutils literal notranslate"><span class="pre">/DMyAppVersion=&lt;version&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">/DExtensionDir=&lt;folder&gt;</span></code> or <code class="docutils literal notranslate"><span class="pre">/DOutputDir=&lt;folder&gt;</span></code> to override.</p>
+</section>
 </section>
 <section id="before-you-run-a-tool">
 <h2>Before you run a tool<a class="headerlink" href="#before-you-run-a-tool" title="Permalink to this heading">¶</a></h2>
@@ -501,7 +570,7 @@ that folder is missing or incomplete the button fails immediately with a message
 bin directory. This applies to <a class="reference internal" href="pushit_main.html"><span class="std std-doc">Push It!</span></a>,
 <a class="reference internal" href="families_at_the_library.html"><span class="std std-doc">At The Library</span></a>, <a class="reference internal" href="families_reload.html"><span class="std std-doc">Reload</span></a>,
 <a class="reference internal" href="export_pdf_dwg.html"><span class="std std-doc">PDF/DWG Export</span></a> and <a class="reference internal" href="export_docmanager.html"><span class="std std-doc">docManager</span></a>.</p>
-<p>A few tools are also driven by constants edited in the extension’s <code class="docutils literal notranslate"><span class="pre">lib</span></code> folder rather than by
+<p>A few tools are also driven by constants edited in the extension’s <code class="docutils literal notranslate"><span class="pre">duHast.tab/lib</span></code> folder rather than by
 a dialog — see <a class="reference internal" href="walls_facade_opening.html"><span class="std std-doc">Facade Opening To Room</span></a>,
 <a class="reference internal" href="ceilings_by_rooms.html"><span class="std std-doc">Ceilings By Room</span></a> and <a class="reference internal" href="families_reports.html"><span class="std std-doc">Reports</span></a>.</p>
 </section>
@@ -511,8 +580,10 @@ a dialog — see <a class="reference internal" href="walls_facade_opening.html">
 <li><p><strong>Revit 2025 or later</strong> — the extension declares <code class="docutils literal notranslate"><span class="pre">min_revit_ver:</span> <span class="pre">2025</span></code>, with engines
 configured for 2025 and 2026.</p></li>
 <li><p>pyRevit (latest stable version recommended).</p></li>
-<li><p>duHast Python library — bundled in the extension under <code class="docutils literal notranslate"><span class="pre">lib/duHast</span></code>.</p></li>
-<li><p>The extension’s <code class="docutils literal notranslate"><span class="pre">bin</span></code> folder, for the tools that open a .NET window.</p></li>
+<li><p>duHast Python library — bundled in the extension under <code class="docutils literal notranslate"><span class="pre">lib/duHast</span></code> by the build script (see
+<strong>Building the extension</strong> under Getting Started).</p></li>
+<li><p>The extension’s <code class="docutils literal notranslate"><span class="pre">bin</span></code> folder, for the tools that open a .NET window — filled from the Visual
+Studio build output by the build script.</p></li>
 </ul>
 </section>
 </section>

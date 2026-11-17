@@ -17,6 +17,14 @@ Subpackages
 Submodules
 ----------
 
+duHast.Revit.Family.family\_change\_category\_utils module
+----------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.family_change_category_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Family.family\_element\_utils module
 -------------------------------------------------
 

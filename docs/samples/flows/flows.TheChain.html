@@ -132,104 +132,121 @@
 <img alt="General Flow of the Chain" src="samples/flows/graphViz/TrinityOfTheChain.dot.svg" /></section>
 <section id="putting-it-all-together">
 <h2>Putting it all together<a class="headerlink" href="#putting-it-all-together" title="Permalink to this heading">¶</a></h2>
-<p>The batch script ‘theChain.bat’ executes the 3 workflows in the following order:</p>
+<p>The PowerShell script theChain.ps1 in __A0_TheChain runs the flows switched on, in this order, passing each flow’s results on to the next:</p>
 <ol class="arabic simple">
-<li><p>Changing</p></li>
-<li><p>Reloading</p></li>
-<li><p>Reporting</p></li>
+<li><p>InitialReport : report on all families in the library</p></li>
+<li><p>FollowUpReport : report again on the families the last report could not process</p></li>
+<li><p>SaveMissingFamilies : save families missing from the library out of their host families</p></li>
+<li><p>ModifyDefault : modify families with the default set of actions</p></li>
+<li><p>RenameFamilies : rename families and the nested families in them, followed by a follow up report</p></li>
+<li><p>ChangeFamilyCategories : change family categories, followed by a follow up report</p></li>
+<li><p>RenameSubCategories : rename sub categories, followed by a follow up report</p></li>
+<li><p>ReloadFamilies : reload the changed families into their host families, followed by a follow up report on the reloaded families
+(or, with FullReportAfterReload, a full report and a follow up report)</p></li>
 </ol>
-<p>In between executing flows, it will copy the following files from the flow just finished to the one about to be executed:</p>
-<ol class="arabic">
-<li><p>Changing</p>
-<blockquote>
-<div><ul>
-<li><p>Change list ChangedFilesTaskList.csv</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>from folder:  ___01_ModifyFamilyChange_Output</p></li>
-<li><p>to folder: ___02_ModifyFamilyLibraryReloadAdvanced_Input</p></li>
-</ul>
-</div></blockquote>
-</li>
-</ul>
-</div></blockquote>
-</li>
-<li><p>Reloading</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="c"># initial report only (also what runs without any switch)</span>
+<span class="n">powershell</span> <span class="n">-ExecutionPolicy</span> <span class="n">Bypass</span> <span class="o">-File</span> <span class="n">theChain</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-InitialReport</span>
+
+<span class="c"># rename families, change categories, and reload everything that changed</span>
+<span class="n">powershell</span> <span class="n">-ExecutionPolicy</span> <span class="n">Bypass</span> <span class="o">-File</span> <span class="n">theChain</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-RenameFamilies</span> <span class="n">-ChangeFamilyCategories</span> <span class="n">-ReloadFamilies</span>
+</pre></div>
+</div>
+<p>Get-Help .theChain.ps1 -Detailed lists all switches.</p>
+<p>Each flow can also be run on its own with the start script in its _Script folder, e.g. _00_ReportFamilyData_ScriptstartReportFamilyData.ps1.</p>
+<p>Run setupUsers.ps1 once before the first run (see <a class="reference external" href="setup.rst">SET UP</a>).</p>
+<section id="files-passed-between-flows">
+<h3>Files passed between flows<a class="headerlink" href="#files-passed-between-flows" title="Permalink to this heading">¶</a></h3>
+<p>Before a flow runs, theChain.ps1 copies its input files into the flow’s _UsersYOURUSERNAME_Input folder:</p>
+<ul>
+<li><p>the report’s _Analysis_Current folder provides:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>no files copied to next flow</p></li>
+<li><p>FamilyBaseDataCombinedReport.csv : to the rename and reload flows</p></li>
+<li><p>FamilyCategoriesCombinedReport.csv : to the change family category and change sub category flows</p></li>
+<li><p>HostsMissingFamilies.csv : to the save missing families flow</p></li>
+<li><p>SecondProcessFamilies.csv : the families listed in it are reported on in a follow up report</p></li>
 </ul>
 </div></blockquote>
 </li>
-<li><p>Reporting</p>
-<blockquote>
-<div><ul>
-<li><p>FamilyBaseDataCombinedReport.csv</p>
-<blockquote>
-<div><ul>
-<li><p>from folder: ___00_ReportFamilyData_OutputuserName</p></li>
-<li><p>to folders:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>___00_ReportFamilyData_AnalysisYYMMDD</p></li>
-<li><p>___00_ReportFamilyData_Analysis_Current</p></li>
-<li><p>___01_ModifyFamilyChange_Input</p></li>
-<li><p>___02_ModifyFamilyLibraryReloadAdvanced_Input</p></li>
+<li><p>the changed families lists (_OutputChangedFilesTaskList.csv) of the modify, rename, change category and change sub category flows
+run in the same run are combined into the reload flow’s _InputChangedFilesTaskList.csv, so every family changed in the run is reloaded.
+If none of them ran, the reload uses the changed families list already in its _Input folder.</p></li>
+<li><p>a follow up report runs on the families in the changed families list of the flow before it, and its results are merged into the
+current reports.</p></li>
 </ul>
-</div></blockquote>
-</li>
+<p>A flow’s changed families list from a previous run is deleted before the flow runs, so it can’t be passed on as if it were new.</p>
+<p>If a flow fails, The Chain stops, since the flows after it would work on incomplete data. A flow with nothing to process,
+for example without any change directives, is skipped and The Chain carries on.</p>
+</section>
+<section id="logs">
+<h3>Logs<a class="headerlink" href="#logs" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>The Chain: __A0_TheChainlogsYOURUSERNAME_TheChain_YYYY-MM-DD.log</p></li>
+<li><p>each flow: _UsersYOURUSERNAME_OutputYOURUSERNAME_FLOWNAME_YYYY-MM-DD.log</p></li>
 </ul>
-</div></blockquote>
-</li>
-</ul>
-</div></blockquote>
-</li>
-</ol>
+</section>
 </section>
 </section>
 <section id="setting-up-the-chain">
 <h1>Setting Up - The Chain<a class="headerlink" href="#setting-up-the-chain" title="Permalink to this heading">¶</a></h1>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Windows PowerShell 5.1 (part of Windows) or PowerShell 7</p></li>
+<li><p><a class="reference external" href="https://github.com/bvn-architecture/RevitBatchProcessor">Revit Batch Processor</a></p></li>
+<li><p>IronPython 3.4, used to run the pre and post processing scripts of each flow</p></li>
+<li><p>the duHast library</p></li>
+</ul>
+</section>
+<section id="id1">
+<h2>Set up<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
 <ul>
-<li><dl class="simple">
-<dt>copy folder structure from:</dt><dd><p>\bvnDatastudioinfotechstandardsScriptsRevit PythonRBPWorkflowsTheChain
-to your project folder location</p>
-</dd>
-</dl>
-</li>
-<li><p>change file path in all settings files in all _default folders per work flow: (use visual studio code: find and replace in files)</p>
+<li><p>copy the TheChain folder to your project folder location</p></li>
+<li><p>edit __A0_TheChain\TheChainSettings.ps1:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>“taskScriptFilePath”: “C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\Samples\Flows\TheChain\_00_ReportFamilyData\_Script\ReportFamilyData.py”,</p></li>
-<li><p>“revitFileListFilePath”: “C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\Samples\Flows\TheChain\_00_ReportFamilyData\_Users\jchristel\_TaskList\Tasklist_1.txt”,</p></li>
-<li><p>“dataExportFolderPath”: “C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\Samples\Flows\TheChain\_00_ReportFamilyData\_Users\jchristel\_Users\jchristel\SessionData”,</p></li>
-<li><p>“preProcessingScriptFilePath”: “C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\Samples\Flows\TheChain\_00_ReportFamilyData\_Script\Pre_MarkerFiles.py”,</p></li>
-<li><p>“PostProcessingScriptFilePath”: “C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\Samples\Flows\TheChain\_00_ReportFamilyData\_Script\Post_KillWSM.py”,</p></li>
+<li><p>chain_utils_path : the shared PowerShell helpers, Samples\PowerShell\BatchProcessorUtils.ps1 in this repository.
+The default works while The Chain is inside the repository. When The Chain is copied elsewhere, point this at a copy of that file.</p></li>
+<li><p>iron_python_path : IronPython (default: C:\Program Files\IronPython 3.4\ipy.exe)</p></li>
+<li><p>batch_processor_path : Revit Batch Processor (default: the per user install location, %LOCALAPPDATA%\RevitBatchProcessor\BatchRvt.exe)</p></li>
 </ul>
 </div></blockquote>
 </li>
-<li><p>check Revit version in _default settings to match your required version</p>
+<li><p>in each flow’s _Script\settings.py:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>“singleRevitTaskRevitVersion”: “Revit2020”</p></li>
-<li><p>“batchRevitTaskRevitVersion”: “Revit2022”</p></li>
+<li><p>DU_HAST_PATH : where the duHast library is installed</p></li>
+<li><p>REVIT_LIBRARY_PATH : the root directory of your Revit family library (also in _01_X_RenameFamilies\_Script\utilModify.py
+and _02_ModifyFamilyLibraryReloadAdvanced\_Script\utilReload.py)</p></li>
 </ul>
 </div></blockquote>
 </li>
-<li><p>change file path to Revit library in python util files:</p>
-<blockquote>
-<div><ul>
-<li><p>Report (utilModify.py), Modify (utilModify.py) &amp; Reload (utilReload.py):</p>
+<li><p>check the Revit version in the settings files in each flow’s _Users\_default\_Settings folder matches your required version:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>REVIT_LIBRARY_PATH = r’path to your Revit family library’</p></li>
+<li><p>“singleRevitTaskRevitVersion”: “Revit2024”</p></li>
+<li><p>“batchRevitTaskRevitVersion”: “Revit2024”</p></li>
 </ul>
 </div></blockquote>
 </li>
-</ul>
+<li><p>run setupUsers.ps1 located in __A0_TheChain to create a user specific folder in each flow:</p>
+<blockquote>
+<div><div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">powershell</span> <span class="n">-ExecutionPolicy</span> <span class="n">Bypass</span> <span class="o">-File</span> <span class="n">setupUsers</span><span class="p">.</span><span class="n">ps1</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>It copies each flow’s _Users\_default folder to _Users\YOURUSERNAME and points the paths in the settings files in it at your
+user folder, wherever The Chain is located. Note: without a user specific folder the flows will not run.</p>
+<p>After moving or copying The Chain to another location, run it again with -RefreshSettings to update the paths in the settings
+files of user folders that exist already:</p>
+<blockquote>
+<div><div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">powershell</span> <span class="n">-ExecutionPolicy</span> <span class="n">Bypass</span> <span class="o">-File</span> <span class="n">setupUsers</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-RefreshSettings</span>
+</pre></div>
+</div>
 </div></blockquote>
 </li>
-<li><p>run setupUser.bat located in ___A0_TheChain to create a user specific folder in each flow. Note: without a user specific folder the flow will not work.</p></li>
 </ul>
+</section>
 </section>
 
 

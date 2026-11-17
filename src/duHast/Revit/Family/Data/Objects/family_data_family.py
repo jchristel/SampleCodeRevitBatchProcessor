@@ -35,6 +35,9 @@ Family data class.
 
 from duHast.Utilities.Objects import base
 from duHast.Revit.Family.Data.Objects.family_data_container import FamilyDataContainer
+from duHast.Revit.Family.Data.Objects.family_circular_nesting import (
+    FamilyCircularNesting,
+)
 from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
     NESTING_SEPARATOR,
 )
@@ -488,12 +491,9 @@ class FamilyDataFamily(base.Base):
 
         Circular nesting is defined as a situation where a nesting path property of a container contains the same family more than once.
 
-        returns a list of tuples in format:
-
-            - 0 index the nesting level at which the circular nesting occurs
-            - 1 index a string in format: family name :: family category
-            - 2 the entire family name nesting path this circular reference appeared on
-
+        :return: One entry per family appearing again in a nesting path, with the nesting level, the family name and
+            category, and the family name nesting path it appeared on.
+        :rtype: [:class:`.FamilyCircularNesting`]
         """
 
         # check if processed and if not process the family data
@@ -534,7 +534,15 @@ class FamilyDataFamily(base.Base):
                 # check if test value is already in list...indicating a circular nesting reference
                 if test_value in node_names:
                     # add family name and category to duplicated list including the nesting level
-                    duplicated_family_names.append((i, test_value, nesting_path[0]))
+                    duplicated_family_names.append(
+                        FamilyCircularNesting(
+                            family=self,
+                            nesting_level=i,
+                            family_name=nesting_chunks_family_names[i],
+                            family_category=nesting_chunks_category[i],
+                            nesting_path=nesting_path[0],
+                        )
+                    )
                 else:
                     # add test value to nodes list
                     node_names.append(test_value)
@@ -552,8 +560,8 @@ class FamilyDataFamily(base.Base):
         :param family_category: The Revit category of the nested family.
         :type family_category: str
 
-        :return: List of unique tuples in format 0 index the host family name, 1 index the host family category
-        :rtype: [(str, str)]
+        :return: The host families, identified by name and category (no other properties are set).
+        :rtype: [:class:`.FamilyDataFamily`]
         """
 
         hosts = []
@@ -577,7 +585,10 @@ class FamilyDataFamily(base.Base):
                     name_chunks[i] == family_name
                     and category_chunks[i] == family_category
                 ):
-                    host = (name_chunks[i - 1], category_chunks[i - 1])
+                    host = FamilyDataFamily(
+                        family_name=name_chunks[i - 1],
+                        family_category=category_chunks[i - 1],
+                    )
                     if host not in hosts:
                         hosts.append(host)
         return hosts

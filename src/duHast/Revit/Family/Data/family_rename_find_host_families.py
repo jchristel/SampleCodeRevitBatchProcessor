@@ -53,6 +53,7 @@ from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import
     DATA_REPORT_NAME as FAMILY_BASE_DATA_REPORT_NAME,
 )
 from duHast.Revit.Family import family_rename_files_utils as rFamRenameUtils
+from duHast.Revit.Family.Data.Objects.family_data_family import FamilyDataFamily
 
 # ---------------------------------------------------------------------------------------------------------------
 #                      find families containing nested families needing to be renamed
@@ -123,7 +124,10 @@ def find_host_families_with_nested_families_requiring_rename(input_directory_pat
                 host_root_families = get_direct_host_root_families(
                     root_families,
                     [
-                        (directive.name, directive.category)
+                        FamilyDataFamily(
+                            family_name=directive.name,
+                            family_category=directive.category,
+                        )
                         for directive in file_rename_list_status.result
                     ],
                 )

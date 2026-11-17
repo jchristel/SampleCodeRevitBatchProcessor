@@ -103,17 +103,19 @@ def find_all_direct_host_families(root_families, families):
 
     :param root_families: Root families, with their nested families, to search.
     :type root_families: [:class:`.FamilyDataFamily`]
-    :param families: Families to find the hosts of, as tuples in format 0 index family name, 1 index family category.
-    :type families: [(str, str)]
+    :param families: Families to find the hosts of (identified by family name and category).
+    :type families: [:class:`.FamilyDataFamily`]
 
-    :return: List of unique tuples in format 0 index the host family name, 1 index the host family category
-    :rtype: [(str, str)]
+    :return: The host families, identified by name and category (no other properties are set).
+    :rtype: [:class:`.FamilyDataFamily`]
     """
 
     hosts = []
-    for family_name, family_category in families:
+    for family in families:
         for root_family in root_families:
-            for host in root_family.get_direct_hosts(family_name, family_category):
+            for host in root_family.get_direct_hosts(
+                family.family_name, family.family_category
+            ):
                 if host not in hosts:
                     hosts.append(host)
     return hosts
@@ -125,21 +127,17 @@ def find_root_families_from_hosts(root_families, hosts):
 
     :param root_families: Root families to search.
     :type root_families: [:class:`.FamilyDataFamily`]
-    :param hosts: Host families as tuples in format 0 index family name, 1 index family category.
-    :type hosts: [(str, str)]
+    :param hosts: Host families (identified by family name and category).
+    :type hosts: [:class:`.FamilyDataFamily`]
 
     :return: List of root families.
     :rtype: [:class:`.FamilyDataFamily`]
     """
 
     matches = []
-    for host_name, host_category in hosts:
+    for host in hosts:
         for root_family in root_families:
-            if (
-                root_family.family_name == host_name
-                and root_family.family_category == host_category
-                and root_family not in matches
-            ):
+            if root_family.compare_name_and_category(host) and root_family not in matches:
                 matches.append(root_family)
     return matches
 
@@ -150,18 +148,19 @@ def get_direct_host_root_families(root_families, families):
 
     :param root_families: Root families, with their nested families, to search.
     :type root_families: [:class:`.FamilyDataFamily`]
-    :param families: Families to find the hosts of: family instances, or tuples in format 0 index family name, 1 index family category.
-    :type families: [:class:`.FamilyDataFamily`] or [(str, str)]
+    :param families: Families to find the hosts of (identified by family name and category).
+    :type families: [:class:`.FamilyDataFamily`]
 
     :return: List of root families.
     :rtype: [:class:`.FamilyDataFamily`]
     """
 
-    names_and_categories = []
     for family in families:
-        if isinstance(family, FamilyDataFamily):
-            names_and_categories.append((family.family_name, family.family_category))
-        else:
-            names_and_categories.append((family[0], family[1]))
-    hosts = find_all_direct_host_families(root_families, names_and_categories)
+        if not isinstance(family, FamilyDataFamily):
+            raise TypeError(
+                "families must be FamilyDataFamily instances. Got: {}".format(
+                    type(family)
+                )
+            )
+    hosts = find_all_direct_host_families(root_families, families)
     return find_root_families_from_hosts(root_families, hosts)

@@ -33,7 +33,7 @@ from duHast.Utilities.directory_io import directory_exists
 
 from Autodesk.Revit.DB import ExportColumnHeaders, ExportTextQualifier, ViewSchedule, ViewScheduleExportOptions
 
-def export_schedule_to_file(schedule, file_path, field_delimiter=",", export_title=False, export_column_headers = ExportColumnHeaders.None ,export_text_qualifier=ExportTextQualifier.DoubleQuote):
+def export_schedule_to_file(schedule, file_path, field_delimiter=",", export_title=False, export_column_headers = getattr(ExportColumnHeaders, "None"),export_text_qualifier=ExportTextQualifier.DoubleQuote):
 
     """
     Exports a Revit schedule to a file.

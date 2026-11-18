@@ -231,4 +231,3 @@ def export_sheets_to_pdf(doc, sheets, sheet_name_string, output_directory, callb
         # handle the exception
         return_value.update_sep(False, "Error exporting sheets to PDF: {}".format(str(e)))
         return return_value
-   

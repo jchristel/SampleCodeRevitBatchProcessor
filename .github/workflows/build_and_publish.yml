@@ -264,3 +264,15 @@ jobs:
     with:
       ref: ${{ needs.determine-package.outputs.branch_name }}
       release_tag: ${{ github.event.release.tag_name }}
+
+  build-docmanager-installer:
+    name: Build DocManager installer
+    needs: [determine-package, update-version-and-docs]
+    # DocManager is part of the net8 branch
+    if: needs.determine-package.outputs.branch_name == 'net8DuHast'
+    permissions:
+      contents: write  # to attach the MSI to the release
+    uses: ./.github/workflows/build_docmanager_installer.yml
+    with:
+      ref: ${{ needs.determine-package.outputs.branch_name }}
+      release_tag: ${{ github.event.release.tag_name }}

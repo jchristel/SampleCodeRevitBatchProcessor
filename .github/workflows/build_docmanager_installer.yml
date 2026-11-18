@@ -1,0 +1,66 @@
+name: Build DocManager installer
+
+# Builds the DocManager MSI (WiX Toolset v5, no Visual Studio needed).
+# - on pull requests and manual runs: the MSI is kept as a workflow artifact, to download and try
+# - called by build_and_publish.yml on a release: the MSI is also attached to the release
+#
+# The MSI version is the Version of the DocManager Standalone project (see VS/duHastApplications/duHastNet.DocManager/DocManager.Installer/README.md),
+# not the release tag: the tag is the duHast package version.
+
+on:
+  pull_request:
+    paths:
+      - 'VS/duHastApplications/duHastNet.DocManager/**'
+      - 'VS/_References/**'
+      - '.github/workflows/build_docmanager_installer.yml'
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        description: Branch to build
+        type: string
+        required: true
+      release_tag:
+        description: Release to attach the MSI to
+        type: string
+        required: true
+
+# no permissions block: called from a release it gets the caller's (contents: write, to attach the file)
+
+jobs:
+  build:
+    name: Build the MSI
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        # empty (pull request, manual run): the commit that triggered the run
+        ref: ${{ inputs.ref }}
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Build the MSI
+      shell: pwsh
+      run: dotnet build VS/duHastApplications/duHastNet.DocManager/DocManager.Installer -c Release
+
+    - name: Keep the MSI as a workflow artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: docmanager-msi
+        path: VS/duHastApplications/duHastNet.DocManager/DocManager.Installer/bin/Release/*.msi
+        if-no-files-found: error
+
+    - name: Attach the MSI to the release
+      # inputs are empty on pull requests and manual runs
+      if: inputs.release_tag
+      env:
+        GH_TOKEN: ${{ github.token }}
+        TAG_NUM: ${{ inputs.release_tag }}
+      shell: bash
+      run: |
+        # --clobber so a re-run replaces the file
+        gh release upload "$TAG_NUM" VS/duHastApplications/duHastNet.DocManager/DocManager.Installer/bin/Release/*.msi --clobber

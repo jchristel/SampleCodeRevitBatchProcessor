@@ -1,0 +1,46 @@
+<Project Sdk="WixToolset.Sdk/5.0.2">
+
+  <!--
+    MSI installer for DocManager (WiX Toolset v5, builds with 'dotnet build', no Visual Studio needed).
+
+      dotnet build VS/duHastApplications/duHastNet.DocManager/DocManager.Installer -c Release
+      dotnet build VS/duHastApplications/duHastNet.DocManager/DocManager.Installer -c Release -p:InstallerVersion=1.2.3
+
+    The build publishes the Standalone app (framework dependent, win-x64) and packages the published files.
+    The MSI ends up in bin\x64\Release\en-US\ .
+
+    InstallerVersion: major.minor.build (numbers only). Default: the Version of the Standalone project.
+    The published app gets the same version, so there is one version number per installer.
+  -->
+
+  <PropertyGroup>
+    <InstallerPlatform>x64</InstallerPlatform>
+    <StandaloneProject>$(MSBuildThisFileDirectory)..\duHastNet.DocManager.Standalone\duHastNet.DocManager.Standalone.csproj</StandaloneProject>
+    <InstallerVersion Condition="'$(InstallerVersion)' == ''">$([System.Text.RegularExpressions.Regex]::Match($([System.IO.File]::ReadAllText($(StandaloneProject))), '&lt;Version&gt;([0-9.]+)&lt;/Version&gt;').Groups[1].Value)</InstallerVersion>
+    <OutputName>DocManager-$(InstallerVersion)-x64</OutputName>
+    <PublishFolder>$(MSBuildThisFileDirectory)obj\publish\</PublishFolder>
+    <DefineConstants>$(DefineConstants);InstallerVersion=$(InstallerVersion);PublishFolder=$(PublishFolder);LicenseFile=$(MSBuildThisFileDirectory)License.rtf</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.UI.wixext" Version="5.0.2" />
+    <PackageReference Include="WixToolset.Netfx.wixext" Version="5.0.2" />
+  </ItemGroup>
+
+  <!--
+    The Visual Studio installers this replaces were version 1.1.0. Windows Installer treats a package with a lower or equal
+    version as a downgrade and refuses to replace an installed one, so the version has to be above 1.1.0.
+  -->
+  <Target Name="CheckInstallerVersion" BeforeTargets="BeforeBuild">
+    <Warning Condition="$([MSBuild]::VersionLessThanOrEquals('$(InstallerVersion)', '1.1.0'))"
+             Text="InstallerVersion $(InstallerVersion) is not above 1.1.0, the version of the previous (Visual Studio) installers: it will not replace an installed DocManager." />
+  </Target>
+
+  <!-- publish the app into obj\publish before the package is built -->
+  <Target Name="PublishDocManager" BeforeTargets="BeforeBuild">
+    <Error Condition="'$(InstallerVersion)' == ''" Text="No version: pass -p:InstallerVersion=major.minor.build or add a Version to the Standalone project." />
+    <RemoveDir Directories="$(PublishFolder)" />
+    <Exec Command="dotnet publish &quot;$(StandaloneProject)&quot; -c Release -r win-x64 --self-contained false -p:Platform=x64 -p:Version=$(InstallerVersion) -p:AssemblyVersion=$(InstallerVersion).0 -p:FileVersion=$(InstallerVersion).0 -o &quot;$(PublishFolder)&quot;" />
+  </Target>
+
+</Project>

@@ -176,4 +176,3 @@ def room_lines_without_warnings_by_design_option_and_level(doc):
    
 
     return room_line_instances_by_design_option_and_level
-  

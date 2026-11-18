@@ -286,8 +286,8 @@ namespace PythonTests.Revit.Family.Data
             bool written = reloadUtils.write_reload_list_to_file(roots, outputDirectory, 3);
             Assert.That(written, Is.True);
             string[] lines = File.ReadAllLines(Path.Combine(outputDirectory, "TaskOutput 03.txt"));
-            // note: the csv writer escapes backslashes (C:\\lib\\A.rfa), which Windows reads as the same path
-            Assert.That(lines.Select(l => l.Trim('"').Replace(@"\\", @"\")), Is.EquivalentTo(new[] { @"C:\lib\A.rfa", @"C:\lib\B.rfa" }));
+            // paths are written as they are: no escaped backslashes
+            Assert.That(lines.Select(l => l.Trim()), Is.EquivalentTo(new[] { @"C:\lib\A.rfa", @"C:\lib\B.rfa" }));
         }
 
         [Test]

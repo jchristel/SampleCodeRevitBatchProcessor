@@ -217,11 +217,12 @@ def read_csv_file(file_path, increase_max_field_size_limit=False):
     :rtype: :class:`.Result`
     """
 
-    # read with encoding enabled
-    read_result = read_column_based_text_file(
-        file_path=file_path,
-        increase_max_field_size_limit=increase_max_field_size_limit,
-        delimiter=",",
+    # imported here to avoid loading the .net dlls when this module is merely imported
+    from duHast.Utilities.file_base_read_net import read_from_delimited_text_file
+
+    # use the .net (CsvHelper) reader, increase_max_field_size_limit is not required by it
+    read_result = read_from_delimited_text_file(
+        file_path=file_path, delimiter=","
     )
 
     return read_result
@@ -247,11 +248,14 @@ def get_first_row_in_csv_file(file_path):
     :rtype: :class:`.Result`
     """
 
-    return_value = Result()
-    return_value = get_first_row_in_column_based_text_file(
+    # imported here to avoid loading the .net dlls when this module is merely imported
+    from duHast.Utilities.file_base_read_net import (
+        get_first_row_from_delimited_text_file,
+    )
+
+    return get_first_row_from_delimited_text_file(
         file_path=file_path, delimiter=","
     )
-    return return_value
 
 
 def write_report_data_as_csv(
@@ -262,7 +266,7 @@ def write_report_data_as_csv(
     enforce_ascii=False,
     encoding="utf-8",
     bom=None,
-    quoting=csv.QUOTE_NONE,
+    quoting=csv.QUOTE_MINIMAL,
     delimiter=",",
 ):
     """
@@ -277,11 +281,11 @@ def write_report_data_as_csv(
     :type write_type: str, optional
     :param enforce_ascii: Flag to enforce ASCII encoding on data. If True, data will be encoded to ASCII. Defaults to False.
     :type enforce_ascii: bool, optional
-    :param encoding: Encoding used to write the file. Defaults to 'utf-8'.
+    :param encoding: Encoding used to write the file. Defaults to 'utf-8'. Ignored if a bom is supplied.
     :type encoding: str, optional
     :param bom: the byte order mark, Default is None (none will be written). BOM: "utf-16" = , "utf-16-le" = ,  utf-8 =
     :type bom: str, default is NoneType
-    :param quoting: Quoting style used by the csv writer. Defaults to csv.QUOTE_NONE. Options are csv.QUOTE_ALL, csv.QUOTE_MINIMAL, csv.QUOTE_NONNUMERIC, csv.QUOTE_NONE
+    :param quoting: Quoting style, as per the csv module. Defaults to csv.QUOTE_MINIMAL (only fields containing the delimiter, a quote or a line break are quoted). Options are csv.QUOTE_MINIMAL, csv.QUOTE_ALL, csv.QUOTE_NONNUMERIC, csv.QUOTE_NONE
     :type quoting: int, optional
 
     :return:
@@ -298,19 +302,24 @@ def write_report_data_as_csv(
     :rtype: :class:`.Result`
     """
 
-    return_value = Result()
+    # imported here to avoid loading the .net dlls when this module is merely imported
+    from duHast.Utilities.file_base_write_net import write_to_delimited_text_file
 
-    # use base function to write the data
-    return_value = write_report_data(
-        file_name=file_name,
+    # the .net writer cannot strip non ascii characters, do it here if required
+    if enforce_ascii:
+        header = [s.encode("ascii", "ignore").decode("ascii") for s in header]
+        data = [
+            [s.encode("ascii", "ignore").decode("ascii") for s in row] for row in data
+        ]
+
+    # use the .net (CsvHelper) writer to write the data
+    return write_to_delimited_text_file(
+        file_path=file_name,
         header=header,
         data=data,
         write_type=write_type,
-        enforce_ascii=enforce_ascii,
-        encoding=encoding,
         bom=bom,
+        delimiter=",",
         quoting=quoting,
-        delimiter=delimiter,
+        encoding=encoding,
     )
-
-    return return_value

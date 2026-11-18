@@ -23,11 +23,36 @@ namespace PythonTests
             var path = engine.GetSearchPaths();
             path.Add(duHastDir);
 
+            // add the generated Revit API stubs (Autodesk.Revit.DB...) so modules importing the Revit API can be loaded without Revit
+            var stubsDir = Path.GetFullPath(Path.Combine(duHastDir, "..", "test", "RevitApiStubs", "2026"));
+            if (Directory.Exists(stubsDir))
+            {
+                path.Add(stubsDir);
+            }
+            var fakesDir = Path.GetFullPath(Path.Combine(duHastDir, "..", "test", "RevitApiStubs", "overrides"));
+            if (Directory.Exists(fakesDir))
+            {
+                path.Add(fakesDir);
+            }
+
+            // add the lib folder of the pyRevit sample toolbar (modules the buttons import: families.*, ...). Added last so it cannot shadow duHast or the stubs.
+            var toolbarLibDir = Path.GetFullPath(Path.Combine(duHastDir, "..", "Samples", "pyRevit", "Extensions", "duHast-2025.extension", "duHast.tab", "lib"));
+            if (Directory.Exists(toolbarLibDir))
+            {
+                path.Add(toolbarLibDir);
+            }
+
             // add local python 3.4 install lib to path
             path.Add(@"C:\Program Files\IronPython 3.4\Lib");
 
             //ensure search path are set
             engine.SetSearchPaths(path);
+
+            // replace the few stub classes tests need behaviour from (before any duHast module is loaded)
+            if (Directory.Exists(fakesDir))
+            {
+                engine.Execute("import revit_api_fakes");
+            }
 
             //return engine
             return engine;

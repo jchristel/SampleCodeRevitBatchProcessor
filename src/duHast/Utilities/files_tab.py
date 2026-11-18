@@ -202,7 +202,7 @@ def write_report_data_as_tab_separated_file(
     enforce_ascii=False,
     encoding="utf-8",
     bom=None,
-    quoting=csv.QUOTE_NONE,
+    quoting=csv.QUOTE_MINIMAL,
 ):
     """
     Function writing out report information in tab separated format.
@@ -221,25 +221,34 @@ def write_report_data_as_tab_separated_file(
     :type encoding: str, optional
     :param bom: the byte order mark, Default is None (none will be written). BOM: "utf-16" = , "utf-16-le" = ,  utf-8 =
     :type bom: str, default is NoneType
-    :param quoting: Quoting style used by the csv writer. Defaults to csv.QUOTE_NONE. Options are csv.QUOTE_ALL, csv.QUOTE_MINIMAL, csv.QUOTE_NONNUMERIC, csv.QUOTE_NONE
+    :param quoting: Quoting style, as per the csv module. Defaults to csv.QUOTE_MINIMAL (only fields containing the delimiter, a quote or a line break are quoted). Options are csv.QUOTE_ALL, csv.QUOTE_MINIMAL, csv.QUOTE_NONNUMERIC, csv.QUOTE_NONE
     :type quoting: int, optional
 
     :return: A Result object, with the result attribute set to True if the file was written successfully, False otherwise.
     :rtype: :class:`.Result`
     """
 
-    write_result = write_report_data(
-        file_name=file_name,
+    # imported here to avoid loading the .net dlls when this module is merely imported
+    from duHast.Utilities.file_base_write_net import write_to_delimited_text_file
+
+    # the .net writer cannot strip non ascii characters, do it here if required
+    if enforce_ascii:
+        header = [s.encode("ascii", "ignore").decode("ascii") for s in header]
+        data = [
+            [s.encode("ascii", "ignore").decode("ascii") for s in row] for row in data
+        ]
+
+    # use the .net (CsvHelper) writer to write the data
+    return write_to_delimited_text_file(
+        file_path=file_name,
         header=header,
         data=data,
         write_type=write_type,
-        enforce_ascii=enforce_ascii,
-        encoding=encoding,
-        quoting=quoting,
         bom=bom,
         delimiter="\t",
+        quoting=quoting,
+        encoding=encoding,
     )
-    return write_result
 
 
 def get_first_row_in_tab_separated_file(file_path):
@@ -292,11 +301,12 @@ def read_tab_separated_file(file_path, increase_max_field_size_limit=False):
     :rtype: :class:`.Result`
     """
 
-    # read with encoding enabled
-    read_result = read_column_based_text_file(
-        file_path=file_path,
-        increase_max_field_size_limit=increase_max_field_size_limit,
-        delimiter="\t",
+    # imported here to avoid loading the .net dlls when this module is merely imported
+    from duHast.Utilities.file_base_read_net import read_from_delimited_text_file
+
+    # use the .net (CsvHelper) reader, increase_max_field_size_limit is not required by it
+    read_result = read_from_delimited_text_file(
+        file_path=file_path, delimiter="\t"
     )
 
     return read_result

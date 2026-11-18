@@ -305,7 +305,7 @@ def create_xml_file(revit_application, family_file):
     try:
         xml_file = os.path.splitext(family_file)[0] + ".xml"
         result_write = write_data_to_xml_file(revit_application, family_file, xml_file)
-        return_value.update_sep(result_write)
+        return_value.update(result_write)
     except Exception as e:
         return_value.update_sep(
             False,
@@ -588,13 +588,24 @@ def create_family_xml_files(
                         progress_callback.update(fam_counter, max_fam, fam_name)
 
                     # create the xml file
-                    create_xml_file(revit_application, family_name_temp)
-                    return_value.append_message(
-                        "Created xml file for family: {}".format(family_name_temp)
-                    )
+                    create_xml_result = create_xml_file(revit_application, family_name_temp)
 
                     # update counter
                     fam_counter += 1
+
+                    # do not carry on with a family the xml file could not be created for
+                    if create_xml_result.status is False:
+                        return_value.update_sep(
+                            False,
+                            "Failed to create xml file for family: {}: {}".format(
+                                family_name_temp, create_xml_result.message
+                            ),
+                        )
+                        continue
+
+                    return_value.append_message(
+                        "Created xml file for family: {}".format(family_name_temp)
+                    )
 
                     # copy the xml file back to the original directory if we used a local directory mapper or temp directory
                     if family_name_temp != family:

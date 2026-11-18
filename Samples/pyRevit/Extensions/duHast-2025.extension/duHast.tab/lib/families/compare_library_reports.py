@@ -79,7 +79,6 @@ def get_library_reports(forms):
         return library_files
 
 
-    files = []
     # get all csv files in the directories
     for directory in directories_result.result:
         files = get_files_single_directory(folder_path=directory, file_prefix="", file_suffix="", file_extension=".csv")
@@ -87,8 +86,13 @@ def get_library_reports(forms):
         if files and len(files) > 0:
             library_files.extend(files)
 
+    # nothing to choose from
+    if len(library_files) == 0:
+        return library_files
+
     # display a list to the user where they can select the files to process
-    selected_files = forms.SelectFromList.show(sorted(files), button_name='{}'.format("Select library reports"), multiselect= True)
+    # (the files of all directories, not just the last one)
+    selected_files = forms.SelectFromList.show(sorted(library_files), button_name='{}'.format("Select library reports"), multiselect= True)
 
     if selected_files and len(selected_files) > 0:
         return selected_files

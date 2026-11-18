@@ -37,7 +37,7 @@ def get_entry_value_storage_type(entry):
     if isinstance(entry, ColorFillSchemeEntry) == False:
         raise TypeError("entry must be of type ColorFillSchemeEntry. Got {}".format(type(entry)))
 
-    if entry.StorageType == StorageType.None:
+    if entry.StorageType == getattr(StorageType, "None"):
         return (None,0)
     elif entry.StorageType == StorageType.Integer:
         return (entry.GetIntegerValue(), 1)
@@ -87,7 +87,7 @@ def set_entry_value (entry, value):
     if isinstance(entry, ColorFillSchemeEntry) == False:
         raise TypeError("entry must be of type ColorFillSchemeEntry. Got {}".format(type(entry)))
 
-    if entry.StorageType == StorageType.None:
+    if entry.StorageType == getattr(StorageType, "None"):
         raise TypeError("entry has no storage type. Got {}".format(type(entry)))
     elif entry.StorageType == StorageType.Integer:
         if isinstance(value, int):

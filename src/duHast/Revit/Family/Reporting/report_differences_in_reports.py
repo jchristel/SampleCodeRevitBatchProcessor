@@ -76,7 +76,7 @@ def outer_join_report_a_vs_b(report_a, report_b):
     # Perform the outer join
     outer_join = {}
     for key in all_keys:
-        outer_join[key] = [report_a_dict.get(key), report_a_dict.get(key)]
+        outer_join[key] = [report_a_dict.get(key), report_b_dict.get(key)]
     
     return outer_join
 

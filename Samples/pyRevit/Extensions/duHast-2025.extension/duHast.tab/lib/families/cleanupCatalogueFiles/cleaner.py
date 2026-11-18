@@ -62,7 +62,8 @@ def _print_clean_data(cleaned_csv_data, output):
     :type output: module
     """
 
-    format_by_columns = [""] * len(cleaned_csv_data)
+    # one (empty) format per column, not per row
+    format_by_columns = [""] * len(cleaned_csv_data[0])
 
     output.print_table(
         table_data=cleaned_csv_data[1:],
@@ -260,17 +261,9 @@ def get_column_indices_to_ignore(parameter_name_list, header_row):
     column_matches = []
     for i in range(1, len(header_row)):
 
-        column_header = header_row[i]
-        # go with full length
-        parameter_end_index = len(column_header)
         # parameter end is either indicated by an open square bracket or a double cross
-        if "[" in column_header:
-            parameter_end_index = column_header.index("[")
-        else:
-            # double cross is definitely in the header name
-            parameter_end_index = column_header.index("#")
-
-        parameter_name = column_header[:parameter_end_index]
+        # (a header cell with neither is taken as the parameter name as is, rather than raising)
+        parameter_name = extract_parameter_name(header_row[i])
         # print("parameter in header: {}".format(parameter_name))
         if parameter_name in parameter_name_list:
             column_matches.append(i)

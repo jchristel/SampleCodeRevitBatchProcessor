@@ -31,7 +31,7 @@ namespace PythonTests.UtilitiesTests
             Assert.That(result.status, Is.True);
             Assert.That(File.Exists(fileName), Is.True);
             string reportContent = File.ReadAllText(fileName);
-            string[] lines = reportContent.Split(new[] { '\r', '\n' });
+            string[] lines = reportContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var line in lines)
             {
@@ -77,7 +77,7 @@ namespace PythonTests.UtilitiesTests
             Assert.That(result.status, Is.True);
             Assert.That(File.Exists(fileName), Is.True);
             string reportContent = File.ReadAllText(fileName);
-            string[] lines = reportContent.Split(new[] { '\r', '\n' });
+            string[] lines = reportContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var line in lines)
             {
@@ -121,7 +121,7 @@ namespace PythonTests.UtilitiesTests
             Assert.That(result.status, Is.True);
             Assert.That(File.Exists(fileName), Is.True);
             string reportContent = File.ReadAllText(fileName);
-            string[] lines = reportContent.Split(new[] { '\r', '\n' });
+            string[] lines = reportContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var line in lines)
             {
@@ -258,7 +258,7 @@ namespace PythonTests.UtilitiesTests
             Assert.That(result.status, Is.True);
             Assert.That(File.Exists(fileName), Is.True);
             string reportContent = File.ReadAllText(fileName);
-            string[] lines = reportContent.Split(new[] { '\r', '\n' });
+            string[] lines = reportContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var line in lines)
             {
@@ -301,7 +301,7 @@ namespace PythonTests.UtilitiesTests
             Assert.That(result.status, Is.True);
             Assert.That(File.Exists(fileName), Is.True);
             string reportContent = File.ReadAllText(fileName, Encoding.GetEncoding("utf-8"));
-            string[] lines = reportContent.Split(new[] { '\r', '\n' });
+            string[] lines = reportContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var line in lines)
             {
@@ -348,7 +348,7 @@ namespace PythonTests.UtilitiesTests
             Assert.That(result.status, Is.True);
             Assert.That(File.Exists(fileName), Is.True);
             string reportContent = File.ReadAllText(fileName, Encoding.GetEncoding("utf-8"));
-            string[] lines = reportContent.Split(new[] { '\r', '\n' });
+            string[] lines = reportContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var line in lines)
             {
@@ -392,7 +392,7 @@ namespace PythonTests.UtilitiesTests
             Assert.That(result.status, Is.True);
             Assert.That(File.Exists(fileName), Is.True);
             string reportContent = File.ReadAllText(fileName, Encoding.GetEncoding("utf-8"));
-            string[] lines = reportContent.Split(new[] { '\r', '\n' });
+            string[] lines = reportContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var line in lines)
             {
@@ -438,7 +438,7 @@ namespace PythonTests.UtilitiesTests
             Assert.That(result.status, Is.True);
             Assert.That(File.Exists(fileName), Is.True);
             string reportContent = File.ReadAllText(fileName, Encoding.GetEncoding("utf-8"));
-            string[] lines = reportContent.Split(new[] { '\r', '\n' });
+            string[] lines = reportContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var line in lines)
             {
@@ -484,7 +484,7 @@ namespace PythonTests.UtilitiesTests
             Assert.That(result.status, Is.True);
             Assert.That(File.Exists(fileName), Is.True);
             string reportContent = File.ReadAllText(fileName, Encoding.GetEncoding("utf-8"));
-            string[] lines = reportContent.Split(new[] { '\r', '\n' });
+            string[] lines = reportContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var line in lines)
             {
@@ -529,7 +529,7 @@ namespace PythonTests.UtilitiesTests
             Assert.That(result.status, Is.True);
             Assert.That(File.Exists(fileName), Is.True);
             string reportContent = File.ReadAllText(fileName, Encoding.GetEncoding("utf-8"));
-            string[] lines = reportContent.Split(new[] { '\r', '\n' });
+            string[] lines = reportContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var line in lines)
             {
@@ -573,7 +573,7 @@ namespace PythonTests.UtilitiesTests
             Assert.That(result.status, Is.True);
             Assert.That(File.Exists(fileName), Is.True);
             string reportContent = File.ReadAllText(fileName);
-            string[] lines = reportContent.Split(new[] { '\r', '\n' });
+            string[] lines = reportContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var line in lines)
             {
@@ -627,7 +627,7 @@ namespace PythonTests.UtilitiesTests
             Assert.That(fileBytes.Take(expected.Length).SequenceEqual(expected), Is.True);
 
             string reportContent = File.ReadAllText(fileName);
-            string[] lines = reportContent.Split(new[] { '\r', '\n' });
+            string[] lines = reportContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var line in lines)
             {
@@ -674,7 +674,7 @@ namespace PythonTests.UtilitiesTests
             // Assert
             Assert.That(File.Exists(fileName), Is.True);
             string reportContent = File.ReadAllText(fileName, System.Text.Encoding.Latin1);
-            string[] lines = reportContent.Split(new[] { '\r', '\n' });
+            string[] lines = reportContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var line in lines)
             {
                 Console.WriteLine("{" + line);

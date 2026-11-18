@@ -69,7 +69,8 @@ def _read_swap_directives(files):
         
         # read rows in tuples ignoring the header row
         for i in range(1, len(rows)):
-            if len(rows[i]) >= 4:
+            # all five columns are read below
+            if len(rows[i]) >= 5:
 
                 data = FamilyDirectiveSwap(
                     name=rows[i][
@@ -89,7 +90,7 @@ def _read_swap_directives(files):
                     ],
                 )
 
-            rename_directives.append(data)
+                rename_directives.append(data)
     return rename_directives
 
 def get_swap_directives(directory_path):

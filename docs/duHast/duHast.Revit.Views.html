@@ -1748,8 +1748,35 @@ for rooms has the room number as its first filter, so this limits the copy to on
 </dd></dl>
 
 </section>
-<section id="duhast-revit-views-schedules-export-module">
-<h2>duHast.Revit.Views.schedules_export module<a class="headerlink" href="#duhast-revit-views-schedules-export-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-duHast.Revit.Views.schedules_export">
+<span id="duhast-revit-views-schedules-export-module"></span><h2>duHast.Revit.Views.schedules_export module<a class="headerlink" href="#module-duHast.Revit.Views.schedules_export" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-view-schedules-export-to-file">
+<h3>This module contains a number of helper functions relating to Revit view schedules export to file.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-view-schedules-export-to-file" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_export.export_schedule_to_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_export.</span></span><span class="sig-name descname"><span class="pre">export_schedule_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schedule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_delimiter='</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_title=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_column_headers=Autodesk.Revit.DB.ExportColumnHeaders.None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_text_qualifier=Autodesk.Revit.DB.ExportTextQualifier.DoubleQuote</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_export.export_schedule_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports a Revit schedule to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>schedule</strong> (<em>Autodesk.Revit.DB.ViewSchedule</em>) – The schedule to export.</p></li>
+<li><p><strong>file_path</strong> (<em>str</em>) – The file path to export the schedule to.</p></li>
+<li><p><strong>field_delimiter</strong> (<em>str</em><em>, </em><em>optional</em>) – The delimiter to use between fields in the exported file.</p></li>
+<li><p><strong>export_title</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to include the schedule title in the exported file.</p></li>
+<li><p><strong>export_column_headers</strong> (<em>Autodesk.Revit.DB.ExportColumnHeaders</em><em>, </em><em>optional</em>) – The type of column headers to include in the exported file.</p></li>
+<li><p><strong>export_text_qualifier</strong> (<em>Autodesk.Revit.DB.ExportTextQualifier</em><em>, </em><em>optional</em>) – The text qualifier to use in the exported file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object containing success status and messages.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">duHast.Utilities.Objects.result.Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Revit.Views.schedules_fields">
 <span id="duhast-revit-views-schedules-fields-module"></span><h2>duHast.Revit.Views.schedules_fields module<a class="headerlink" href="#module-duHast.Revit.Views.schedules_fields" title="Permalink to this heading">¶</a></h2>

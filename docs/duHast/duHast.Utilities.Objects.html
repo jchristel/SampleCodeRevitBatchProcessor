@@ -323,14 +323,14 @@ logger_obj.error(“This is an error message”)</p>
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Utilities.Objects.logger_object.LoggerObject">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Utilities.Objects.logger_object.</span></span><span class="sig-name descname"><span class="pre">LoggerObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_name='duHast'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path='C:\\Users\\runneradmin\\AppData\\Roaming'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level=(10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">30)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_format='.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fil_stream_hndlr=&lt;class</span> <span class="pre">'logging.handlers.RotatingFileHandler'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fil_stream_frmt=&lt;function</span> <span class="pre">level_time_local_msg_formatter&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cons_stream_hndlr=&lt;class</span> <span class="pre">'logging.StreamHandler'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cons_stream_frmt=&lt;function</span> <span class="pre">msg_only&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.logger_object.LoggerObject" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Utilities.Objects.logger_object.</span></span><span class="sig-name descname"><span class="pre">LoggerObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_name='duHast'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level=(10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">30)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_format='.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fil_stream_hndlr=&lt;class</span> <span class="pre">'logging.handlers.RotatingFileHandler'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fil_stream_frmt=&lt;function</span> <span class="pre">level_time_local_msg_formatter&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cons_stream_hndlr=&lt;class</span> <span class="pre">'logging.StreamHandler'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cons_stream_frmt=&lt;function</span> <span class="pre">msg_only&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.logger_object.LoggerObject" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Logger</span></code>, <a class="reference internal" href="#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
 <p>Constructor for the LoggerObject class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>log_name</strong> (<em>str</em>) – The name of the log.</p></li>
-<li><p><strong>output_path</strong> (<em>str</em>) – The path to the output directory.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em>) – The path to the output directory. Defaults to the APPDATA directory (Windows), or the user’s home directory if there is none.</p></li>
 <li><p><strong>log_level</strong> (<em>tuple</em>) – The log levels for the file and console handlers.</p></li>
 <li><p><strong>file_format</strong> (<em>str</em>) – The file format for the log file.</p></li>
 <li><p><strong>fil_stream_hndlr</strong> (<em>class</em>) – The file stream handler class.</p></li>
@@ -379,6 +379,37 @@ logger_obj.error(“This is an error message”)</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>logging.Logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.logger_object.LoggerObject.push_log_level">
+<span class="sig-name descname"><span class="pre">push_log_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_level</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.logger_object.LoggerObject.push_log_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests log levels for the duration of a call, e.g. of a function decorated with the add_logger decorator.</p>
+<p>Any number of requests can be active at the same time (nested calls, several threads): while there are any, the levels in use
+are the most verbose of the requested ones (lowest level per handler). Once the last request is withdrawn the levels
+from before the first request are restored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>log_level</strong> (<em>tuple</em>) – A tuple containing the requested log levels for the file and console handlers.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A token to hand to pop_log_level to withdraw this request.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.logger_object.LoggerObject.pop_log_level">
+<span class="sig-name descname"><span class="pre">pop_log_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.logger_object.LoggerObject.pop_log_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Withdraws a log level request made with push_log_level. Withdrawing a request twice, or one that does not exist, does nothing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>token</strong> (<em>object</em>) – The token push_log_level returned.</p>
 </dd>
 </dl>
 </dd></dl>

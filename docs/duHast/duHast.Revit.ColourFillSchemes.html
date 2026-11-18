@@ -113,7 +113,10 @@
 <li class="toctree-l1"><a class="reference internal" href="duHast.Revit.ColourFillSchemes.Reporting.html">duHast.Revit.ColourFillSchemes.Reporting package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.ColourFillSchemes.Reporting.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.ColourFillSchemes.Reporting.html#module-duHast.Revit.ColourFillSchemes.Reporting.colour_fill_scheme_defaults">duHast.Revit.ColourFillSchemes.Reporting.colour_fill_scheme_defaults module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.ColourFillSchemes.Reporting.html#duhast-revit-colourfillschemes-reporting-colour-fill-scheme-report-module">duHast.Revit.ColourFillSchemes.Reporting.colour_fill_scheme_report module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.ColourFillSchemes.Reporting.html#module-duHast.Revit.ColourFillSchemes.Reporting.colour_fill_scheme_report">duHast.Revit.ColourFillSchemes.Reporting.colour_fill_scheme_report module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.ColourFillSchemes.Reporting.html#duHast.Revit.ColourFillSchemes.Reporting.colour_fill_scheme_report.get_report_data_of_colour_fill_scheme"><code class="docutils literal notranslate"><span class="pre">get_report_data_of_colour_fill_scheme()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.ColourFillSchemes.Reporting.html#module-duHast.Revit.ColourFillSchemes.Reporting">Module contents</a></li>
 </ul>
 </li>
@@ -123,8 +126,59 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
-<section id="duhast-revit-colourfillschemes-colour-fill-scheme-entry-module">
-<h2>duHast.Revit.ColourFillSchemes.colour_fill_scheme_entry module<a class="headerlink" href="#duhast-revit-colourfillschemes-colour-fill-scheme-entry-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-duHast.Revit.ColourFillSchemes.colour_fill_scheme_entry">
+<span id="duhast-revit-colourfillschemes-colour-fill-scheme-entry-module"></span><h2>duHast.Revit.ColourFillSchemes.colour_fill_scheme_entry module<a class="headerlink" href="#module-duHast.Revit.ColourFillSchemes.colour_fill_scheme_entry" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.ColourFillSchemes.colour_fill_scheme_entry.get_entry_value_storage_type">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ColourFillSchemes.colour_fill_scheme_entry.</span></span><span class="sig-name descname"><span class="pre">get_entry_value_storage_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.ColourFillSchemes.colour_fill_scheme_entry.get_entry_value_storage_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value and storage type of a given colour fill scheme entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>entry</strong> (<em>Autodesk.Revit.DB.ColorFillSchemeEntry</em>) – The colour fill scheme entry from which to retrieve the value and storage type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing the value and storage type.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.ColourFillSchemes.colour_fill_scheme_entry.get_entry_value_as_string">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ColourFillSchemes.colour_fill_scheme_entry.</span></span><span class="sig-name descname"><span class="pre">get_entry_value_as_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.ColourFillSchemes.colour_fill_scheme_entry.get_entry_value_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of a given colour fill scheme entry as a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>entry</strong> (<em>Autodesk.Revit.DB.ColorFillSchemeEntry</em>) – The colour fill scheme entry from which to retrieve the value.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The value as a string.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.ColourFillSchemes.colour_fill_scheme_entry.set_entry_value">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ColourFillSchemes.colour_fill_scheme_entry.</span></span><span class="sig-name descname"><span class="pre">set_entry_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.ColourFillSchemes.colour_fill_scheme_entry.set_entry_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value of a given colour fill scheme entry depending on its storage type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>entry</strong> (<em>Autodesk.Revit.DB.ColorFillSchemeEntry</em>) – The colour fill scheme entry to set the value for.</p></li>
+<li><p><strong>value</strong> (<em>str</em>) – The value to set.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Revit.ColourFillSchemes.colour_fill_schemes">
 <span id="duhast-revit-colourfillschemes-colour-fill-schemes-module"></span><h2>duHast.Revit.ColourFillSchemes.colour_fill_schemes module<a class="headerlink" href="#module-duHast.Revit.ColourFillSchemes.colour_fill_schemes" title="Permalink to this heading">¶</a></h2>
@@ -141,8 +195,48 @@
 </dd></dl>
 
 </section>
-<section id="duhast-revit-colourfillschemes-colour-fill-schemes-updates-module">
-<h2>duHast.Revit.ColourFillSchemes.colour_fill_schemes_updates module<a class="headerlink" href="#duhast-revit-colourfillschemes-colour-fill-schemes-updates-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-duHast.Revit.ColourFillSchemes.colour_fill_schemes_updates">
+<span id="duhast-revit-colourfillschemes-colour-fill-schemes-updates-module"></span><h2>duHast.Revit.ColourFillSchemes.colour_fill_schemes_updates module<a class="headerlink" href="#module-duHast.Revit.ColourFillSchemes.colour_fill_schemes_updates" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.ColourFillSchemes.colour_fill_schemes_updates.update_by_values">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ColourFillSchemes.colour_fill_schemes_updates.</span></span><span class="sig-name descname"><span class="pre">update_by_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour_fill_scheme</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour_fill_scheme_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.ColourFillSchemes.colour_fill_schemes_updates.update_by_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the colours and fill patterns of a colour fill scheme by values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>colour_fill_scheme</strong> (<em>ColourFillScheme</em>) – The colour fill scheme.</p></li>
+<li><p><strong>colour_fill_scheme_data</strong> (<em>dict</em>) – The colour fill scheme data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the update operation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.ColourFillSchemes.colour_fill_schemes_updates.update_existing_and_add_new_values">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ColourFillSchemes.colour_fill_schemes_updates.</span></span><span class="sig-name descname"><span class="pre">update_existing_and_add_new_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour_fill_scheme</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour_fill_scheme_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.ColourFillSchemes.colour_fill_schemes_updates.update_existing_and_add_new_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the colours and fill patterns of a colour fill scheme by values and adds new values if provided in colour fill scheme data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>colour_fill_scheme</strong> (<em>ColourFillScheme</em>) – The colour fill scheme.</p></li>
+<li><p><strong>colour_fill_scheme_data</strong> (<em>dict</em>) – The colour fill scheme data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the update operation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Revit.ColourFillSchemes">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.ColourFillSchemes" title="Permalink to this heading">¶</a></h2>

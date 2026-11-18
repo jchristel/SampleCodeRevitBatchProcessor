@@ -703,6 +703,34 @@ so families are reloaded bottom up in their nesting hierarchy</p></li>
 </ul>
 </section>
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_base_data_reload_advanced.get_reload_levels">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.family_base_data_reload_advanced.</span></span><span class="sig-name descname"><span class="pre">get_reload_levels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_families</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">change_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_base_data_reload_advanced.get_reload_levels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds the reload levels: the families to reload at each nesting level, in the order to reload them.</p>
+<p>Level 0 holds the families directly hosting a changed family. Level 1 holds the families hosting those, and so on up
+the (inverted) nesting tree. A family reloads all the families nested in it, so it only needs reloading once: after
+everything nested in it was reloaded. A family hosting a changed family at more than one level (directly, and via
+another host) is therefore only kept in the highest level it appears in. Levels left empty by this are kept
+(as empty lists), so the level numbers still match the nesting levels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root_families</strong> ([<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_data_family.FamilyDataFamily" title="duHast.Revit.Family.Data.Objects.family_data_family.FamilyDataFamily"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyDataFamily</span></code></a>]) – Root families, with their nested families, as read from a family base data report.</p></li>
+<li><p><strong>change_list</strong> ([<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_data_family.FamilyDataFamily" title="duHast.Revit.Family.Data.Objects.family_data_family.FamilyDataFamily"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyDataFamily</span></code></a>]) – The changed families.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If more than MAXIMUM_NUMBER_OF_TASK_LISTS levels are required (circular nesting).</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>One list of root families per level, lowest (deepest nested) level first.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>[[<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_data_family.FamilyDataFamily" title="duHast.Revit.Family.Data.Objects.family_data_family.FamilyDataFamily"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyDataFamily</span></code></a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_base_data_reload_advanced.build_work_lists">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.family_base_data_reload_advanced.</span></span><span class="sig-name descname"><span class="pre">build_work_lists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">change_list_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_base_data_report_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_lists_output_directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_base_data_reload_advanced.build_work_lists" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes a file change list and a family base data report. From both reports it builds a lists for reloading families bottom up in their nesting hierarchy.</p>

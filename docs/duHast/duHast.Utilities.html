@@ -134,6 +134,8 @@
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.LoggerObject.init_handlers"><code class="docutils literal notranslate"><span class="pre">LoggerObject.init_handlers()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.LoggerObject.get_logger_obj"><code class="docutils literal notranslate"><span class="pre">LoggerObject.get_logger_obj()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.LoggerObject.update_log_level"><code class="docutils literal notranslate"><span class="pre">LoggerObject.update_log_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.LoggerObject.push_log_level"><code class="docutils literal notranslate"><span class="pre">LoggerObject.push_log_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.LoggerObject.pop_log_level"><code class="docutils literal notranslate"><span class="pre">LoggerObject.pop_log_level()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -2864,7 +2866,8 @@ If deemed appropriate, the record may be modified in-place.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.logger_formatting.level_time_utc_msg_formatter">
 <span class="sig-prename descclassname"><span class="pre">duHast.Utilities.logger_formatting.</span></span><span class="sig-name descname"><span class="pre">level_time_utc_msg_formatter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.logger_formatting.level_time_utc_msg_formatter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Standard output formatting for console and file handlers</p>
+<dd><p>Standard output formatting for console and file handlers: level, UTC time of the record, message.
+The time is that of each record (it used to be the time the formatter was created).</p>
 </dd></dl>
 
 <dl class="py function">
@@ -2885,8 +2888,32 @@ If deemed appropriate, the record may be modified in-place.</p>
 <dt class="sig sig-object py" id="duHast.Utilities.logging_handlers.CustomStreamHandler">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Utilities.logging_handlers.</span></span><span class="sig-name descname"><span class="pre">CustomStreamHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">custom_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.logging_handlers.CustomStreamHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">StreamHandler</span></code></p>
+<p>A stream handler passing every formatted log message to a custom function (e.g. to show it in a UI)
+instead of writing it to a stream.</p>
+<p>To use it with LoggerObject (which creates its console handler as handler_class(sys.stdout))
+hand the class over with the function already set:</p>
+<blockquote>
+<div><p>LoggerObject(cons_stream_hndlr=functools.partial(CustomStreamHandler, my_function))</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>custom_function</strong> (<em>function</em><em>(</em><em>str</em><em>)</em>) – Called with the formatted message of each record the handler lets through.</p>
+</dd>
+</dl>
 <p>Initialize the handler.</p>
 <p>If stream is not specified, sys.stderr is used.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.logging_handlers.CustomStreamHandler.emit">
+<span class="sig-name descname"><span class="pre">emit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.logging_handlers.CustomStreamHandler.emit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Emit a record.</p>
+<p>If a formatter is specified, it is used to format the record.
+The record is then written to the stream with a trailing newline.  If
+exception information is present, it is formatted using
+traceback.print_exception and appended to the stream.  If the stream
+has an ‘encoding’ attribute, it is used to determine how to do the
+output to the stream.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="duHast.Utilities.logging_handlers.CustomStreamHandler.write">
 <span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.logging_handlers.CustomStreamHandler.write" title="Permalink to this definition">¶</a></dt>

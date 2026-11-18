@@ -100,7 +100,7 @@ def _rename_associated_files(rename_directive):
                 )
     except Exception as e:
         return_value.update_sep(
-            False, "Failed to rename associated files with exception: ".format(e)
+            False, "Failed to rename associated files with exception: {}".format(e)
         )
 
     return return_value
@@ -179,7 +179,7 @@ def _rename_files(rename_directives, progress_callback=None):
                 )  # nothing gone wrong here...just not required to rename a file
         except Exception as e:
             return_value.update_sep(
-                False, "Failed to rename files with exception: ".format(e)
+                False, "Failed to rename files with exception: {}".format(e)
             )
         
         # check for user cancel

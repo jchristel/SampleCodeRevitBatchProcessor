@@ -5,9 +5,30 @@ from duHast.Utilities.logger_filtering import FilterConsole, FilterFile
 
 
 class CustomStreamHandler(logging.StreamHandler):
+    """
+    A stream handler passing every formatted log message to a custom function (e.g. to show it in a UI)
+    instead of writing it to a stream.
+
+    To use it with LoggerObject (which creates its console handler as handler_class(sys.stdout))
+    hand the class over with the function already set:
+
+        LoggerObject(cons_stream_hndlr=functools.partial(CustomStreamHandler, my_function))
+
+    :param custom_function: Called with the formatted message of each record the handler lets through.
+    :type custom_function: function(str)
+    """
+
     def __init__(self, custom_function, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.custom_function = custom_function
+
+    def emit(self, record):
+        # logging.StreamHandler.emit writes to self.stream, never to the handler itself:
+        # override it, otherwise the custom function would not be called
+        try:
+            self.custom_function(self.format(record))
+        except Exception:
+            self.handleError(record)
 
     def write(self, msg):
         self.custom_function(msg)

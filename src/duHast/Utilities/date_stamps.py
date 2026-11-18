@@ -105,13 +105,10 @@ def date_time_stamp_builder(format):
         # check if the format is a valid date format
         try:
             d = datetime.datetime.now()
-            formatted_time = d.strftime(format)
-            
-            # Check if the format includes microseconds and trim to milliseconds if needed
-            if "%f" in format:
-                formatted_time = formatted_time[:-3]
-
-            return formatted_time
+            # milliseconds (3 digits) in place of microseconds, wherever %f is in the format
+            # ( trimming the last 3 characters of the result is only correct if %f is the last thing in the format )
+            format = format.replace("%f", "%03d" % (d.microsecond // 1000))
+            return d.strftime(format)
         except ValueError:
             raise ValueError("Invalid date format string provided.")
     else:

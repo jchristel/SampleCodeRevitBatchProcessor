@@ -68,6 +68,7 @@ logger_obj.error("This is an error message")
 import logging
 from logging.handlers import RotatingFileHandler
 import os
+import threading
 
 from duHast.Utilities.directory_io import create_target_directory
 from duHast.Utilities.Objects.base import Base
@@ -79,7 +80,7 @@ class LoggerObject(logging.Logger, Base):
     def __init__(
         self,
         log_name="duHast",
-        output_path=os.getenv("APPDATA"),
+        output_path=None,
         log_level=(10, 30),
         file_format=".txt",
         fil_stream_hndlr=RotatingFileHandler,
@@ -93,7 +94,7 @@ class LoggerObject(logging.Logger, Base):
 
         :param log_name: The name of the log.
         :type log_name: str
-        :param output_path: The path to the output directory.
+        :param output_path: The path to the output directory. Defaults to the APPDATA directory (Windows), or the user's home directory if there is none.
         :type output_path: str
         :param log_level: The log levels for the file and console handlers.
         :type log_level: tuple
@@ -111,13 +112,15 @@ class LoggerObject(logging.Logger, Base):
         
         # Get log naming and output path
         self.log_name = log_name
+        # default output path: APPDATA (windows) or, where there is none, the user's home directory
+        if output_path is None:
+            output_path = os.getenv("APPDATA") or os.path.expanduser("~")
         self.output_path = output_path
         self.log_file_dir = os.path.join(self.output_path, self.log_name)
         # Create the directory and the full log file path
         create_target_directory(self.output_path, self.log_name)
         self.log_file_path = os.path.join(self.log_file_dir, log_name + file_format)
         logging.Logger.__init__(self, log_name)
-        logging.basicConfig(filename=self.log_file_path, level=logging.INFO)
         # Get log levels
         self.level = log_level
         self.file_log_level, self.console_log_level = self.level
@@ -128,6 +131,11 @@ class LoggerObject(logging.Logger, Base):
         self.console_handler = std_console_handler(
             self, cons_hndlr=cons_stream_hndlr, cons_formatter=cons_stream_frmt
         )
+
+        # log levels requested by functions currently running (see push_log_level)
+        self._level_lock = threading.RLock()
+        self._level_requests = []
+        self._levels_before_requests = None
 
         # Create logger object
         self.new_logger = logging.getLogger(self.log_name)
@@ -151,7 +159,9 @@ class LoggerObject(logging.Logger, Base):
         
         self.clear_handlers()
         ex_handlers = [h.__class__.__name__ for h in self.new_logger.handlers]
-        self.new_logger.setLevel(logging.INFO)
+        # the logger itself must not be more restrictive than its most verbose handler:
+        # a handler can only ever see what the logger lets through
+        self.new_logger.setLevel(min(self.file_log_level, self.console_log_level))
 
         if not "FileHandler" in ex_handlers:
             self.new_logger.addHandler(self.file_handler)
@@ -179,6 +189,64 @@ class LoggerObject(logging.Logger, Base):
         """
         
         log_level_file, log_level_console = log_level
+        self.level = log_level
+        self.file_log_level = log_level_file
+        self.console_log_level = log_level_console
         self.file_handler.setLevel(log_level_file)
         self.console_handler.setLevel(log_level_console)
+        # keep the logger itself as verbose as the most verbose handler (see init_handlers)
+        self.new_logger.setLevel(min(log_level_file, log_level_console))
         return self.get_logger_obj()
+
+    def push_log_level(self, log_level):
+        """
+        Requests log levels for the duration of a call, e.g. of a function decorated with the add_logger decorator.
+
+        Any number of requests can be active at the same time (nested calls, several threads): while there are any, the levels in use
+        are the most verbose of the requested ones (lowest level per handler). Once the last request is withdrawn the levels
+        from before the first request are restored.
+
+        :param log_level: A tuple containing the requested log levels for the file and console handlers.
+        :type log_level: tuple
+        :return: A token to hand to pop_log_level to withdraw this request.
+        :rtype: object
+        """
+
+        with self._level_lock:
+            if len(self._level_requests) == 0:
+                self._levels_before_requests = (
+                    self.file_handler.level,
+                    self.console_handler.level,
+                )
+            token = object()
+            self._level_requests.append((token, tuple(log_level)))
+            self._apply_requested_levels()
+            return token
+
+    def pop_log_level(self, token):
+        """
+        Withdraws a log level request made with push_log_level. Withdrawing a request twice, or one that does not exist, does nothing.
+
+        :param token: The token push_log_level returned.
+        :type token: object
+        """
+
+        with self._level_lock:
+            self._level_requests = [r for r in self._level_requests if r[0] is not token]
+            self._apply_requested_levels()
+
+    def _apply_requested_levels(self):
+        """
+        Sets the handler levels to the most verbose of the active requests, or back to the levels before any request.
+        """
+
+        if len(self._level_requests) > 0:
+            levels = (
+                min(r[1][0] for r in self._level_requests),
+                min(r[1][1] for r in self._level_requests),
+            )
+        elif self._levels_before_requests is not None:
+            levels = self._levels_before_requests
+        else:
+            return
+        self.update_log_level(levels)

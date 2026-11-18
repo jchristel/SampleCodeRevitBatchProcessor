@@ -47,8 +47,9 @@ def measure_time_wrapper(func, logger=None, measure=True):
         # Get the end time
         end = time.time()
         # Calculate the elapsed time
-        elapsed = round(float(end - start), 5)
-        message = "Elapsed time for {} is : {}".format(func_name, elapsed)
+        elapsed = float(end - start)
+        # fixed number of decimals: the plain float shows as 0.00025000000000000001 under IronPython
+        message = "Elapsed time for {} is : {:.5f}".format(func_name, elapsed)
         if logger:
             # Log the elapsed time
             logger.info(message)

@@ -77,18 +77,21 @@ def get_add_logger_decorator(
             def wrapper(*args, **kwargs):
                 func_name = func.__name__
                 logger_in = log_obj_inst
-                # First check to see if the log levels passed in are different and update
-                cur_file_log_level = logger_in.file_handler.level
-                cur_console_log_level = logger_in.console_handler.level
-                updated_levels = False
-                if (
-                    cur_file_log_level != log_level[0]
-                    or cur_console_log_level != log_level[1]
-                ):
-                    # Update the log levels
-                    logger = logger_in.update_log_level(log_level)
-                    logger.info("Updated log levels to {}".format(log_level))
-                    updated_levels = True
+                # always have a logger: the code below (and the finally block) uses it
+                logger = logger_in.get_logger_obj()
+                # Request the log levels for the duration of this call. Requests of calls running at the same time
+                # (nested calls, other threads) are combined by the logger object: the most verbose levels apply.
+                cur_levels = (
+                    logger_in.file_handler.level,
+                    logger_in.console_handler.level,
+                )
+                level_request = logger_in.push_log_level(log_level)
+                new_levels = (
+                    logger_in.file_handler.level,
+                    logger_in.console_handler.level,
+                )
+                if new_levels != cur_levels:
+                    logger.info("Updated log levels to {}".format(new_levels))
                 try:
                     # Log the start of the function execution
                     logger = logger_in.get_logger_obj()
@@ -145,9 +148,11 @@ def get_add_logger_decorator(
                     else:
                         logger.error(log_msg, extra={"block": "console"})
 
+                    # flag the error before a possible re-raise: the finally block reports it
+                    error = True
+
                     if not suppress_exceptions:
                         raise e
-                    error = True
                 finally:
                     # Log the return value
                     if error:
@@ -164,11 +169,8 @@ def get_add_logger_decorator(
                             )
                         else:
                             logger.info("Finished function: {}".format(func_name))
-                    # Reset the log levels if they were updated
-                    if updated_levels:
-                        logger = logger_in.update_log_level(
-                            (cur_file_log_level, cur_console_log_level)
-                        )
+                    # Withdraw the log level request of this call
+                    logger_in.pop_log_level(level_request)
 
             return wrapper
 

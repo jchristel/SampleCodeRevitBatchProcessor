@@ -243,4 +243,3 @@ def update_existing_and_add_new_values (doc, colour_fill_scheme, colour_fill_sch
     except Exception as e:
         return_value.update_sep(False, "Error updating colour fill scheme: {}".format(e))
         return return_value
-   

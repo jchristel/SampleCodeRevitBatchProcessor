@@ -194,5 +194,3 @@ def get_all_family_type_names(doc):
         return_value.update_sep(False, "Failed to get all type names with exception: {}".format(e))
     
     return return_value
-
-   

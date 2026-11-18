@@ -102,7 +102,7 @@ class FamilyTypeData(IFamData.IFamilyData):
                 fam_name = Element.Name.GetValue(family)
                 # strip .rfa of name
                 if fam_name.lower().endswith(".rfa"):
-                    fam_name = family_name[:-4]
+                    fam_name = fam_name[:-4]
                 fam_root_path = "{}{}{}".format(self.root_path,NESTING_SEPARATOR ,fam_name)
             except Exception as e:
                 #print("Failed to get family name: {}".format(e))

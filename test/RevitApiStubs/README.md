@@ -18,6 +18,13 @@ e.g. `%USERPROFILE%\.nuget\packages\nice3point.revit.api.revitapi\2026.4.10\ref\
 
 For another Revit version generate into a sibling folder (`2027`...) and point `PythonRunner` at it.
 
+## Overrides and test doubles
+
+`overrides/revit_api_fakes.py` is imported when the test engine is created and replaces the few stub classes whose behaviour duHast code
+needs: a value based `ElementId`, the `Element.Name.GetValue(element)` shim and a `FilteredElementCollector` that reads the `elements`
+list of a fake document. `overrides/revit_test_doubles.py` holds the fake documents / families / warnings / shared parameters the tests
+build on (`FakeFamilyDoc`, `FakeFamily`, `FakeWarning`, `FakeSharedParameterElement`...).
+
 ## Limits
 
 - Stubs only reproduce names. A stubbed `FilteredElementCollector(doc).OfClass(...)` returns `None`, so code that iterates

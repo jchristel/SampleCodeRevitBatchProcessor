@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui"
+     xmlns:netfx="http://wixtoolset.org/schemas/v4/wxs/netfx">
+
+  <!--
+    DocManager installer.
+
+    One package for both ways of installing (the two Visual Studio installer projects it replaces): the setup asks
+    "Install just for you" or "Install for all users". All users goes to Program Files\duHast\DocManager (needs admin
+    rights), just for you to %LocalAppData%\Programs\duHast\DocManager.
+
+    UpgradeCode is that of the previous installers: this package replaces an installed older version.
+    (Windows Installer does not upgrade across scopes: a version installed for all users is replaced by a new
+    all users installation, not by a per user one.)
+  -->
+  <Package Name="DocManager"
+           Manufacturer="duHast"
+           Version="$(InstallerVersion)"
+           UpgradeCode="0AB55A6E-64AB-4CF4-92E7-CB19D15D31DC"
+           Scope="perUserOrMachine"
+           InstallerVersion="500"
+           Language="1033">
+
+    <SummaryInformation Description="Document Manager for tracking and managing project documentation" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of DocManager is already installed." />
+
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+
+    <Icon Id="DocManager.ico" SourceFile="$(PublishFolder)Icon.ico" />
+    <Property Id="ARPPRODUCTICON" Value="DocManager.ico" />
+    <Property Id="ARPCONTACT" Value="duHast" />
+    <Property Id="ARPCOMMENTS" Value="Document Manager for tracking and managing project documentation" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/jchristel/SampleCodeRevitBatchProcessor" />
+
+    <!-- the app needs the .NET 8 Desktop Runtime (x64) -->
+    <netfx:DotNetCompatibilityCheck Id="DotNet8DesktopRuntime"
+                                    Property="DOTNET8_DESKTOP_RUNTIME"
+                                    RuntimeType="desktop"
+                                    Platform="x64"
+                                    Version="8.0.0"
+                                    RollForward="latestMinor" />
+    <Launch Condition="Installed OR DOTNET8_DESKTOP_RUNTIME = &quot;0&quot;"
+            Message="DocManager needs the .NET 8 Desktop Runtime (x64). Install it from https://dotnet.microsoft.com/download/dotnet/8.0 and run this setup again." />
+
+    <!-- install dialogs: licence, then per user or all users, then the folder -->
+    <Property Id="ApplicationFolderName" Value="duHast\DocManager" />
+    <Property Id="WixAppFolder" Value="WixPerMachineFolder" />
+    <WixVariable Id="WixUILicenseRtf" Value="$(LicenseFile)" />
+    <ui:WixUI Id="WixUI_Advanced" />
+
+    <Feature Id="Main" Title="DocManager" Level="1" ConfigurableDirectory="APPLICATIONFOLDER" AllowAdvertise="no">
+      <ComponentGroupRef Id="AppFiles" />
+      <ComponentRef Id="StartMenuShortcut" />
+    </Feature>
+
+    <!-- the install folder: the all users location; the dialogs replace it with the choice of the user -->
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="DuHastProgramFolder" Name="duHast">
+        <Directory Id="APPLICATIONFOLDER" Name="DocManager" />
+      </Directory>
+    </StandardDirectory>
+
+    <!-- everything the publish produced (the pdb files are left out) -->
+    <ComponentGroup Id="AppFiles" Directory="APPLICATIONFOLDER">
+      <Files Include="$(PublishFolder)**">
+        <Exclude Files="$(PublishFolder)**\*.pdb" />
+      </Files>
+    </ComponentGroup>
+
+    <!-- Start menu entry; the registry value is the key path (required for per user installs) -->
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="DuHastStartMenuFolder" Name="duHast">
+        <Component Id="StartMenuShortcut" Guid="*">
+          <Shortcut Id="DocManagerShortcut"
+                    Name="DocManager"
+                    Description="Document Manager"
+                    Target="[APPLICATIONFOLDER]duHastNet.DocManager.Standalone.exe"
+                    WorkingDirectory="APPLICATIONFOLDER"
+                    Icon="DocManager.ico" />
+          <RemoveFolder Id="RemoveStartMenuFolder" On="uninstall" />
+          <RegistryValue Root="HKCU" Key="Software\duHast\DocManager" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+        </Component>
+      </Directory>
+    </StandardDirectory>
+
+  </Package>
+</Wix>

@@ -137,7 +137,7 @@ def pass_fam_types_through_filters(fam_type_manager, filters):
                     removed_type_flag = fam_type_manager.remove_family_type( fam_type_storage.family_type_name)
                     return_value.update_sep( removed_type_flag, "Removed family type: {} with status: {}".format(fam_type_storage.family_type_name, removed_type_flag))
                 else:
-                    return_value.append_message(True, "Family type: {} passed filters.".format(fam_type_storage.family_type_name))
+                    return_value.append_message("Family type: {} passed filters.".format(fam_type_storage.family_type_name))
 
             
             # return the updated family type manager

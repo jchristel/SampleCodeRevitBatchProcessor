@@ -35,6 +35,13 @@ namespace PythonTests
                 path.Add(fakesDir);
             }
 
+            // add the lib folder of the pyRevit sample toolbar (modules the buttons import: families.*, ...). Added last so it cannot shadow duHast or the stubs.
+            var toolbarLibDir = Path.GetFullPath(Path.Combine(duHastDir, "..", "Samples", "pyRevit", "Extensions", "duHast-2025.extension", "duHast.tab", "lib"));
+            if (Directory.Exists(toolbarLibDir))
+            {
+                path.Add(toolbarLibDir);
+            }
+
             // add local python 3.4 install lib to path
             path.Add(@"C:\Program Files\IronPython 3.4\Lib");
 

@@ -25,6 +25,10 @@ needs: a value based `ElementId`, the `Element.Name.GetValue(element)` shim and 
 list of a fake document. `overrides/revit_test_doubles.py` holds the fake documents / families / warnings / shared parameters the tests
 build on (`FakeFamilyDoc`, `FakeFamily`, `FakeWarning`, `FakeSharedParameterElement`...).
 
+`overrides/pyrevit/` is a minimal stand-in for the pyRevit modules the toolbar and duHast import (`pyrevit.script.get_output()` returns a recording
+output). `PythonRunner` also puts the toolbar's `lib` folder (`Samples/pyRevit/.../duHast.tab/lib`) on the search path, so the modules behind the
+pyRevit buttons can be tested. pyRevit dialogs (`forms`) are not tested: tests patch the function that asks the user.
+
 ## Limits
 
 - Stubs only reproduce names. A stubbed `FilteredElementCollector(doc).OfClass(...)` returns `None`, so code that iterates

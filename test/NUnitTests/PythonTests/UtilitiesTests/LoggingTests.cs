@@ -458,5 +458,248 @@ _outer()
             Assert.That(((IEnumerable<object>)seen).Select(t => $"{((dynamic)t)[0]}={((dynamic)t)[1]}"), Is.EqualTo(new[] { "outer before=40", "inner=10", "outer after=40" }));
             Assert.That((int)loggerObject.console_handler.level, Is.EqualTo(30));
         }
+
+        // ---------------------------------------- default output path ----------------------------------------
+
+        private string RunPython(string script, string resultVariable)
+        {
+            PythonEngineManager.PythonEngine.Execute(script, PythonEngineManager.Scope);
+            return Convert.ToString(PythonEngineManager.Scope.GetVariable(resultVariable)) ?? "";
+        }
+
+        [Test]
+        public void DefaultOutputPath_IsAppData()
+        {
+            string appData = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            Directory.CreateDirectory(appData);
+            try
+            {
+                PythonEngineManager.Scope.SetVariable("_app_data", appData);
+                string logFile = RunPython(@"
+import os
+_saved = os.environ.get('APPDATA')
+os.environ['APPDATA'] = _app_data
+try:
+    _lo2 = LoggerObject(log_name='default_path_appdata')
+    _path = _lo2.log_file_path
+    _lo2.clear_handlers()
+finally:
+    if _saved is None:
+        del os.environ['APPDATA']
+    else:
+        os.environ['APPDATA'] = _saved
+", "_path");
+                Assert.That(logFile, Is.EqualTo(Path.Combine(appData, "default_path_appdata", "default_path_appdata.txt")));
+            }
+            finally
+            {
+                try { Directory.Delete(appData, true); } catch { }
+            }
+        }
+
+        [Test]
+        public void DefaultOutputPath_WithoutAppData_IsTheHomeDirectory()
+        {
+            string home = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            Directory.CreateDirectory(home);
+            try
+            {
+                PythonEngineManager.Scope.SetVariable("_home", home);
+                string logFile = RunPython(@"
+import os
+_saved = os.environ.pop('APPDATA', None)
+_expanduser = os.path.expanduser
+os.path.expanduser = lambda path: _home
+try:
+    _lo2 = LoggerObject(log_name='default_path_home')
+    _path = _lo2.log_file_path
+    _lo2.clear_handlers()
+finally:
+    os.path.expanduser = _expanduser
+    if _saved is not None:
+        os.environ['APPDATA'] = _saved
+", "_path");
+                Assert.That(logFile, Is.EqualTo(Path.Combine(home, "default_path_home", "default_path_home.txt")));
+            }
+            finally
+            {
+                try { Directory.Delete(home, true); } catch { }
+            }
+        }
+
+        [Test]
+        public void ExplicitOutputPath_IsUsed()
+        {
+            Assert.That((string)loggerObject.log_file_path, Does.StartWith(logDirectory));
+        }
+
+        // ---------------------------------------- no global logging configuration ----------------------------------------
+
+        [Test]
+        public void CreatingALogger_DoesNotConfigureTheRootLogger()
+        {
+            string result = RunPython(@"
+_root = logging.getLogger()
+_saved_handlers = list(_root.handlers)
+_saved_level = _root.level
+for _h in _saved_handlers:
+    _root.removeHandler(_h)
+try:
+    _lo3, _console3, _dir3 = _make_logger('root_probe_' + str(id(_root)), (10, 30))
+    _root.warning('written by somebody else through the root logger')
+    _handlers_after = len(_root.handlers)
+    _level_after = _root.level
+    _in_file = 'somebody else' in _file_text(_lo3)
+    _lo3.clear_handlers()
+    _result = '%d|%d|%s' % (_handlers_after, 1 if _level_after == _saved_level else 0, _in_file)
+finally:
+    for _h in _saved_handlers:
+        _root.addHandler(_h)
+", "_result");
+            Assert.That(result, Is.EqualTo("0|1|False"), "no root handler added, root level untouched, root records not in the log file");
+        }
+
+        // ---------------------------------------- log level requests ----------------------------------------
+
+        private (int file, int console, int logger) Levels() =>
+            ((int)loggerObject.file_handler.level, (int)loggerObject.console_handler.level, (int)loggerObject.new_logger.level);
+
+        [Test]
+        public void LevelRequests_MostVerboseWins_BaseLevelsComeBackWithTheLastRequest()
+        {
+            dynamic first = loggerObject.push_log_level(new PythonTuple(new object[] { 20, 40 }));
+            Assert.That(Levels(), Is.EqualTo((20, 40, 20)));
+
+            dynamic second = loggerObject.push_log_level(new PythonTuple(new object[] { 10, 50 }));
+            Assert.That(Levels(), Is.EqualTo((10, 40, 10)), "lowest level per handler");
+
+            loggerObject.pop_log_level(first);
+            Assert.That(Levels(), Is.EqualTo((10, 50, 10)));
+
+            loggerObject.pop_log_level(second);
+            Assert.That(Levels(), Is.EqualTo((10, 30, 10)), "the levels from before the first request");
+        }
+
+        [Test]
+        public void LevelRequests_WithdrawingTwiceOrAnUnknownRequest_ChangesNothing()
+        {
+            dynamic token = loggerObject.push_log_level(new PythonTuple(new object[] { 20, 40 }));
+            loggerObject.pop_log_level(token);
+            loggerObject.pop_log_level(token);
+            loggerObject.pop_log_level(new object());
+            Assert.That(Levels(), Is.EqualTo((10, 30, 10)));
+        }
+
+        [Test]
+        public void LevelRequests_QuieterRequestThanTheBaseLevels_IsHonouredWhileItIsTheOnlyOne()
+        {
+            dynamic token = loggerObject.push_log_level(new PythonTuple(new object[] { 40, 50 }));
+            Assert.That(Levels(), Is.EqualTo((40, 50, 40)));
+            loggerObject.pop_log_level(token);
+            Assert.That(Levels(), Is.EqualTo((10, 30, 10)));
+        }
+
+        // ---------------------------------------- decorator and threads ----------------------------------------
+
+        [Test]
+        public void Decorator_CallsRunningAtTheSameTime_CombineTheirLevels_AndTheBaseLevelsComeBack()
+        {
+            PythonEngineManager.Scope.SetVariable("_lo", loggerObject);
+            string result = RunPython(@"
+import threading
+_add_logger = get_add_logger_decorator(_lo)
+_a_in, _b_in, _a_go, _b_go = threading.Event(), threading.Event(), threading.Event(), threading.Event()
+_seen = {}
+def _levels():
+    return (_lo.file_handler.level, _lo.console_handler.level)
+
+@_add_logger(log_level=(20, 40))
+def _fa():
+    _a_in.set()
+    _b_in.wait(10)
+    _seen['a'] = _levels()
+    _a_go.wait(10)
+
+@_add_logger(log_level=(10, 10))
+def _fb():
+    _b_in.set()
+    _a_in.wait(10)
+    _seen['b'] = _levels()
+    _b_go.wait(10)
+
+_ta = threading.Thread(target=_fa)
+_tb = threading.Thread(target=_fb)
+_ta.start(); _tb.start()
+_a_in.wait(10); _b_in.wait(10)
+_a_go.set(); _ta.join(10)
+_seen['b_still_running'] = _levels()
+_b_go.set(); _tb.join(10)
+_seen['end'] = _levels()
+_result = '%s|%s|%s|%s' % (_seen['a'], _seen['b'], _seen['b_still_running'], _seen['end'])
+", "_result");
+            Assert.That(result, Is.EqualTo("(10, 10)|(10, 10)|(10, 10)|(10, 30)"));
+        }
+
+        [Test]
+        public void Decorator_ManyThreadsWithDifferentLevels_NoErrors_AndTheBaseLevelsComeBack()
+        {
+            PythonEngineManager.Scope.SetVariable("_lo", loggerObject);
+            string result = RunPython(@"
+import threading, random
+_errors = []
+_add_logger = get_add_logger_decorator(_lo)
+_level_choices = [(10, 10), (20, 40), (30, 30), (40, 50)]
+
+def _make_function(levels):
+    @_add_logger(log_level=levels)
+    def _work(n):
+        return n * 2
+    return _work
+
+_functions = [_make_function(l) for l in _level_choices]
+
+def _run(seed):
+    rnd = random.Random(seed)
+    try:
+        for i in range(60):
+            if rnd.choice(_functions)(i) != i * 2:
+                _errors.append('wrong result')
+    except Exception as e:
+        _errors.append(repr(e))
+
+_threads = [threading.Thread(target=_run, args=(s,)) for s in range(8)]
+for t in _threads: t.start()
+for t in _threads: t.join(60)
+_result = '%d|%s|%d' % (len(_errors), (_lo.file_handler.level, _lo.console_handler.level), len(_lo._level_requests))
+", "_result");
+            Assert.That(result, Is.EqualTo("0|(10, 30)|0"), "no errors, base levels restored, no request left behind");
+        }
+
+        // ---------------------------------------- elapsed time format ----------------------------------------
+
+        [Test]
+        public void Decorator_ElapsedTime_FixedNumberOfDecimals()
+        {
+            dynamic function = Decorated(NewDecorator(recordTime: true), "", "    return 'x'");
+            function();
+            Assert.That(FileText(), Does.Match(@"Elapsed time for _decorated is : \d+\.\d{5}\r?\n"));
+        }
+
+        [Test]
+        public void MeasureTimeWrapper_ReportsTheElapsedTimeWithFiveDecimals()
+        {
+            string message = RunPython(@"
+from duHast.Utilities.benchmarking import measure_time_wrapper
+_messages = []
+class _FakeLogger(object):
+    def info(self, message):
+        _messages.append(message)
+def _quick():
+    return 1
+measure_time_wrapper(_quick, _FakeLogger())()
+_message = _messages[0]
+", "_message");
+            Assert.That(message, Does.Match(@"^Elapsed time for _quick is : \d+\.\d{5}$"));
+        }
     }
 }

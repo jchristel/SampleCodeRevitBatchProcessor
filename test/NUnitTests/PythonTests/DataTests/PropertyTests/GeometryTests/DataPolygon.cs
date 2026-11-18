@@ -28,14 +28,14 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
 
             // Act & Assert for outer loop
             Assert.That(3, Is.EqualTo(instance.outer_loop.Count));
-            Assert.That(0.0, Is.EqualTo(instance.outer_loop[0].x));
-            Assert.That(2.0, Is.EqualTo(instance.outer_loop[2].y));
+            Assert.That(0.0, Is.EqualTo(instance.outer_loop[0][0]));
+            Assert.That(2.0, Is.EqualTo(instance.outer_loop[2][1]));
 
             // Act & Assert for inner loops
             Assert.That(1, Is.EqualTo(instance.inner_loops.Count));
             Assert.That(3, Is.EqualTo(instance.inner_loops[0].Count));
-            Assert.That(1.5, Is.EqualTo(instance.inner_loops[0][1].x));
-            Assert.That(1.5, Is.EqualTo(instance.inner_loops[0][1].y));
+            Assert.That(1.5, Is.EqualTo(instance.inner_loops[0][1][0]));
+            Assert.That(1.5, Is.EqualTo(instance.inner_loops[0][1][1]));
         }
 
         [Test]
@@ -84,8 +84,8 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
 
             // Act & Assert for outer loop
             Assert.That(3, Is.EqualTo(instance.outer_loop.Count));
-            Assert.That(3.0, Is.EqualTo(instance.outer_loop[2].x));
-            Assert.That(3.0, Is.EqualTo(instance.outer_loop[2].y));
+            Assert.That(3.0, Is.EqualTo(instance.outer_loop[2][0]));
+            Assert.That(3.0, Is.EqualTo(instance.outer_loop[2][1]));
 
             // Act & Assert for inner loops
             Assert.That(0, Is.EqualTo(instance.inner_loops.Count)); // Should be empty as no inner loops were provided
@@ -106,14 +106,14 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
 
             // Act & Assert for outer loop
             Assert.That(3, Is.EqualTo(instance.outer_loop.Count));
-            Assert.That(4.0, Is.EqualTo(instance.outer_loop[2].x));
-            Assert.That(4.0, Is.EqualTo(instance.outer_loop[2].y));
+            Assert.That(4.0, Is.EqualTo(instance.outer_loop[2][0]));
+            Assert.That(4.0, Is.EqualTo(instance.outer_loop[2][1]));
 
             // Act & Assert for inner loops
             Assert.That(2, Is.EqualTo(instance.inner_loops.Count));
             Assert.That(3, Is.EqualTo(instance.inner_loops[0].Count));
-            Assert.That(3.0, Is.EqualTo(instance.inner_loops[0][2].x));
-            Assert.That(7.0, Is.EqualTo(instance.inner_loops[1][2].y));
+            Assert.That(3.0, Is.EqualTo(instance.inner_loops[0][2][0]));
+            Assert.That(7.0, Is.EqualTo(instance.inner_loops[1][2][1]));
         }
 
 

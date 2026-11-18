@@ -139,7 +139,7 @@ class LoggerObject(logging.Logger, Base):
         """
         
         self.new_logger.propagate = 0
-        for handler in self.new_logger.handlers:
+        for handler in list(self.new_logger.handlers):
             handler.flush()
             handler.close()
             self.new_logger.removeHandler(handler)

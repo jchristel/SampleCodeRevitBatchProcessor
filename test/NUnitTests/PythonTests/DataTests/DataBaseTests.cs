@@ -23,7 +23,7 @@ namespace PythonTests.DataTests
             dynamic instance = PythonEngineManager.DataBaseClass(dataType);
 
             // Assert
-            Assert.That(dataType,Is.EqualTo( instance.DataType));
+            Assert.That(dataType,Is.EqualTo( instance.data_type));
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace PythonTests.DataTests
             dynamic instance = PythonEngineManager.DataBaseClass(dataType);
 
             // Act
-            string result = instance.DataType;
+            string result = instance.data_type;
 
             // Assert
             Assert.That(result, Is.EqualTo("test_type"));
@@ -50,7 +50,7 @@ namespace PythonTests.DataTests
             dynamic instance = PythonEngineManager.DataBaseClass(dataType);
 
             // Assert
-            Assert.That(dataType, Is.EqualTo(instance.DataType));
+            Assert.That(dataType, Is.EqualTo(instance.data_type));
         }
 
         [Test]

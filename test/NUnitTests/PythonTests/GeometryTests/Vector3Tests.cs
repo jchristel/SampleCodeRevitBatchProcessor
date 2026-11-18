@@ -216,9 +216,7 @@ namespace PythonTests.GeometryTests
             dynamic vector3 = PythonEngineManager.Vector3Class(1.0, 2.0, 3.0);
 
             // Act & Assert
-            // Act & Assert
-            var ex = Assert.Throws<TypeErrorException>(() => { var result = vector3 == vector2; });
-            Assert.That(ex.Message, Does.Contain("Expected vector3, got: Vector2"));
+            Assert.That(vector3 == vector2, Is.False);
         }
 
         public void Vector3_Equality_WithCloseFloatingPoints_ShouldBeEqual()

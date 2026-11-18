@@ -46,7 +46,7 @@ namespace PythonTests.DataTests
             );
 
             // Act: initialize instance with JSON data
-            var model = PythonEngineManager.DataFamilyBaseClass(jsonString);
+            var model = PythonEngineManager.DataFamilyBaseClass(j: jsonString);
 
             // Assert: verify that each sub-object and property is correctly set
             Assert.That(123, Is.EqualTo(model.instance_properties.id), "Expected instance properties id to be '123'.");
@@ -66,7 +66,7 @@ namespace PythonTests.DataTests
             var jsonString = JsonConvert.SerializeObject(new { });
 
             // Act: initialize instance with empty JSON
-            var model = PythonEngineManager.DataFamilyBaseClass(jsonString);
+            var model = PythonEngineManager.DataFamilyBaseClass(j: jsonString);
 
             // Assert: verify default values are set
             Assert.That(-1, Is.EqualTo(model.instance_properties.id), "Expected default instance properties id to be -1.");
@@ -90,8 +90,8 @@ namespace PythonTests.DataTests
                 new Dictionary<string, object> { { "phase", "Phase1" } },
                 new Dictionary<string, object> { { "option_name", "OptionA" } }
             );
-            var modelA = PythonEngineManager.DataFamilyBaseClass(jsonString);
-            var modelB = PythonEngineManager.DataFamilyBaseClass(jsonString);
+            var modelA = PythonEngineManager.DataFamilyBaseClass(j: jsonString);
+            var modelB = PythonEngineManager.DataFamilyBaseClass(j: jsonString);
 
             // Act & Assert: verify equality comparison
             Assert.That(modelA == modelB, Is.True,"Expected two instances with identical data to be equal.");
@@ -104,8 +104,8 @@ namespace PythonTests.DataTests
             // Arrange: JSON with differing instance properties
             var jsonStringA = CreateJson(new Dictionary<string, object> { { "id", 123 } });
             var jsonStringB = CreateJson(new Dictionary<string, object> { { "id", 124 } });
-            var modelA = PythonEngineManager.DataFamilyBaseClass(jsonStringA);
-            var modelB = PythonEngineManager.DataFamilyBaseClass(jsonStringB);
+            var modelA = PythonEngineManager.DataFamilyBaseClass(j: jsonStringA);
+            var modelB = PythonEngineManager.DataFamilyBaseClass(j: jsonStringB);
 
             // Act & Assert: verify inequality due to different instance properties
             Assert.That(modelA == modelB, Is.False,"Expected instances with different instance properties to not be equal.");
@@ -121,14 +121,14 @@ namespace PythonTests.DataTests
                 new Dictionary<string, object> { { "name", "TypeA" } },
                 null, null, null, null
             );
-            var modelA = PythonEngineManager.DataFamilyBaseClass(jsonStringA);
+            var modelA = PythonEngineManager.DataFamilyBaseClass(j: jsonStringA);
             var jsonStringB = CreateJson(
                 new Dictionary<string, object> { { "id", 123 } },
                 new Dictionary<string, object> { { "name", "TypeA" } },
                 null, null, null, null
             );
 
-            var modelB = PythonEngineManager.DataFamilyBaseClass(jsonStringB);
+            var modelB = PythonEngineManager.DataFamilyBaseClass(j: jsonStringB);
             modelB.AssociatedElements = new List<object> { "DifferentElement" };
 
             // Act & Assert: verify equality despite different associated elements

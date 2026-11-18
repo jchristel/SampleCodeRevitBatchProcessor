@@ -81,6 +81,14 @@ namespace PythonTests.Setup
         public static dynamic? FamilyMissingFamiliesModule { get; set; }
         public static dynamic? FamilyNestingPathClass { get; set; }
 
+        //duHast.Revit.Family directives
+        public static dynamic? FamilyDirectiveBaseClass { get; set; }
+        public static dynamic? FamilyDirectiveRenameClass { get; set; }
+        public static dynamic? FamilyDirectiveChangeCategoryClass { get; set; }
+        public static dynamic? FamilyDirectiveChangeSubCategoryClass { get; set; }
+        public static dynamic? FamilyRenameFilesUtilsModule { get; set; }
+        public static dynamic? FamilyChangeCategoryUtilsModule { get; set; }
+
         public static dynamic? FamilyTypeDataStorageManagerClass { get; set; }
 
         //duHast.Revit.Family.Utilities

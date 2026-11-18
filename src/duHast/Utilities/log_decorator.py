@@ -77,6 +77,8 @@ def get_add_logger_decorator(
             def wrapper(*args, **kwargs):
                 func_name = func.__name__
                 logger_in = log_obj_inst
+                # always have a logger: the code below (and the finally block) uses it
+                logger = logger_in.get_logger_obj()
                 # First check to see if the log levels passed in are different and update
                 cur_file_log_level = logger_in.file_handler.level
                 cur_console_log_level = logger_in.console_handler.level
@@ -145,9 +147,11 @@ def get_add_logger_decorator(
                     else:
                         logger.error(log_msg, extra={"block": "console"})
 
+                    # flag the error before a possible re-raise: the finally block reports it
+                    error = True
+
                     if not suppress_exceptions:
                         raise e
-                    error = True
                 finally:
                     # Log the return value
                     if error:

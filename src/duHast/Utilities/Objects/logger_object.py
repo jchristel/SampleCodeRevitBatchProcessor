@@ -151,7 +151,9 @@ class LoggerObject(logging.Logger, Base):
         
         self.clear_handlers()
         ex_handlers = [h.__class__.__name__ for h in self.new_logger.handlers]
-        self.new_logger.setLevel(logging.INFO)
+        # the logger itself must not be more restrictive than its most verbose handler:
+        # a handler can only ever see what the logger lets through
+        self.new_logger.setLevel(min(self.file_log_level, self.console_log_level))
 
         if not "FileHandler" in ex_handlers:
             self.new_logger.addHandler(self.file_handler)
@@ -179,6 +181,11 @@ class LoggerObject(logging.Logger, Base):
         """
         
         log_level_file, log_level_console = log_level
+        self.level = log_level
+        self.file_log_level = log_level_file
+        self.console_log_level = log_level_console
         self.file_handler.setLevel(log_level_file)
         self.console_handler.setLevel(log_level_console)
+        # keep the logger itself as verbose as the most verbose handler (see init_handlers)
+        self.new_logger.setLevel(min(log_level_file, log_level_console))
         return self.get_logger_obj()
